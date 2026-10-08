@@ -21,6 +21,11 @@ pub const OPERATIONS: &[Operation] = &[
     Operation {
         name: "search",
         path: "/api/search",
+        tool: Some("search"),
+        description: "Search the catalog's registers, variables, classifications and codes \
+            in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` \
+            (a FQID or a bare name) and `period` (2019, 2015..2019, LA2019, 2019-03) \
+            filter; pass `next_cursor` back as `cursor` for the next page.",
         params: &[
             Param {
                 name: "q",
@@ -39,6 +44,8 @@ pub const OPERATIONS: &[Operation] = &[
     Operation {
         name: "context",
         path: "/api/context",
+        tool: None,
+        description: "The catalog's branding, identity and headline counts, for the SPA.",
         params: &[optional("scope")],
         run: context,
         result: component::<Context>,
@@ -96,7 +103,15 @@ fn context(server: &Server, scope: Scope, _: &Params) -> Result<Value, Error> {
         ))?,
     };
     let context = Context {
-        steward: server.steward.clone(),
+        // `serve` always loads branding at startup and `context` has no MCP tool, so
+        // only an `mcp` process lacks it, and that process never routes here.
+        steward: server.steward.clone().ok_or_else(|| {
+            Error::new(
+                Code::InternalError,
+                "No steward branding is loaded.",
+                vec![],
+            )
+        })?,
         schema_version: catalog.manifest("schema_version").to_owned(),
         import_date: catalog.manifest("import_date").to_owned(),
         period_span,

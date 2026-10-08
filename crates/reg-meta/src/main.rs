@@ -2,13 +2,18 @@
 //!
 //! ```text
 //! reg-meta serve --db DIR [--catalog NAME] --stewards DIR --port N
+//! reg-meta mcp --db DIR [--catalog NAME]
 //! ```
 //!
-//! `serve` admits `DIR/reg_meta.db` (as `--catalog NAME` when given), loads the
-//! catalog's branding from `DIR/<catalog>/steward.json` under `--stewards`, and serves
-//! every registered operation plus `/openapi.json` on 127.0.0.1. A refusal prints the
-//! error document on stderr and exits with the code's status.
+//! Both admit `DIR/reg_meta.db` (as `--catalog NAME` when given). `serve` loads the
+//! catalog's branding from `DIR/<catalog>/steward.json` under `--stewards` and serves
+//! every registered operation, `/openapi.json` and MCP at `/mcp` on 127.0.0.1; `mcp`
+//! serves the MCP tools over stdio. A refusal prints the error document on stderr and
+//! exits with the code's status.
 
+mod mcp;
+
+use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::sync::Arc;
 
@@ -19,21 +24,24 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use reg_catalog::ops::{self, Meta, Operation, Server, Steward};
 use reg_catalog::{Catalog, Error, Scope, hex};
+use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
+enum Mode {
+    Serve { stewards: PathBuf, port: u16 },
+    Mcp,
+}
+
 struct Args {
     db: PathBuf,
     catalog: Option<String>,
-    stewards: PathBuf,
-    port: u16,
+    mode: Mode,
 }
 
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
-    if args.next().as_deref() != Some("serve") {
-        return Err(Error::invalid_parameter("mode"));
-    }
+    let mode = args.next();
     let (mut db, mut catalog, mut stewards, mut port) = (None, None, None, None);
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
@@ -45,36 +53,59 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
         };
         *slot = Some(args.next().ok_or_else(|| Error::invalid_parameter(&flag))?);
     }
+    let mode = match mode.as_deref() {
+        Some("serve") => Mode::Serve {
+            stewards: stewards
+                .ok_or_else(|| Error::invalid_parameter("--stewards"))?
+                .into(),
+            port: port
+                .and_then(|p| p.parse().ok())
+                .ok_or_else(|| Error::invalid_parameter("--port"))?,
+        },
+        // `mcp` loads no branding and listens on no port.
+        Some("mcp") if stewards.is_some() => return Err(Error::invalid_parameter("--stewards")),
+        Some("mcp") if port.is_some() => return Err(Error::invalid_parameter("--port")),
+        Some("mcp") => Mode::Mcp,
+        _ => return Err(Error::invalid_parameter("mode")),
+    };
     Ok(Args {
         db: db.ok_or_else(|| Error::invalid_parameter("--db"))?.into(),
         catalog,
-        stewards: stewards
-            .ok_or_else(|| Error::invalid_parameter("--stewards"))?
-            .into(),
-        port: port
-            .and_then(|p| p.parse().ok())
-            .ok_or_else(|| Error::invalid_parameter("--port"))?,
+        mode,
     })
 }
 
-fn admit(args: &Args) -> Result<Server, Error> {
-    let catalog = Catalog::open(&args.db, args.catalog.as_deref())?;
-    let steward = Steward::load(&args.stewards, catalog.name())?;
-    Ok(Server {
-        catalog,
-        steward,
-        version: VERSION,
-    })
+/// Print the refusal's error document on stderr and exit with the code's status.
+fn refuse(err: &Error) -> ! {
+    eprintln!("{}", serde_json::to_string(err).expect("Error serializes"));
+    std::process::exit(err.exit());
 }
 
 #[tokio::main]
 async fn main() {
-    let started =
-        parse_args(std::env::args().skip(1)).and_then(|args| Ok((admit(&args)?, args.port)));
-    let (server, port) = started.unwrap_or_else(|err| {
-        eprintln!("{}", serde_json::to_string(&err).expect("Error serializes"));
-        std::process::exit(err.exit());
+    let args = parse_args(std::env::args().skip(1)).unwrap_or_else(|err| refuse(&err));
+    let catalog =
+        Catalog::open(&args.db, args.catalog.as_deref()).unwrap_or_else(|err| refuse(&err));
+    let (steward, port) = match args.mode {
+        Mode::Serve { stewards, port } => {
+            let steward =
+                Steward::load(&stewards, catalog.name()).unwrap_or_else(|err| refuse(&err));
+            (Some(steward), Some(port))
+        }
+        Mode::Mcp => (None, None),
+    };
+    let server = Arc::new(Server {
+        catalog,
+        steward,
+        version: VERSION,
     });
+    match port {
+        Some(port) => serve(server, port).await,
+        None => mcp::stdio(server).await,
+    }
+}
+
+async fn serve(server: Arc<Server>, port: u16) {
     let openapi = ops::openapi(VERSION).to_json().expect("OpenAPI serializes");
     let mut app = Router::new().route("/openapi.json", get(|| async move { json(openapi) }));
     for op in ops::all() {
@@ -83,12 +114,54 @@ async fn main() {
             get(move |state, query, headers| answer(op, state, query, headers)),
         );
     }
+    let app = app
+        .with_state(Arc::clone(&server))
+        .merge(mcp::router(server));
     let listener = tokio::net::TcpListener::bind(("127.0.0.1", port))
         .await
         .expect("bind the port");
-    axum::serve(listener, app.with_state(Arc::new(server)))
+    // The client address keys the `/mcp` rate limit.
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await
+    .expect("serve");
+}
+
+/// A response document: `{data, meta}` with status 200, or `{error, meta}` with the
+/// code's status. HTTP and MCP send the same document.
+struct Answer {
+    scope: Scope,
+    status: StatusCode,
+    body: Value,
+}
+
+impl Answer {
+    fn new(server: &Server, scope: Scope, result: Result<Value, Error>) -> Self {
+        let meta = Meta::new(&server.catalog, scope);
+        let (status, body) = match result {
+            Ok(data) => (StatusCode::OK, json!({"data": data, "meta": meta})),
+            Err(err) => (
+                StatusCode::from_u16(err.status()).expect("catalogued status"),
+                json!({"error": err, "meta": meta}),
+            ),
+        };
+        Self {
+            scope,
+            status,
+            body,
+        }
+    }
+}
+
+/// Answer `op` for the request's parameters on the blocking pool.
+async fn run(server: &Arc<Server>, op: &'static Operation, query: Vec<(String, String)>) -> Answer {
+    let task = Arc::clone(server);
+    let (scope, result) = tokio::task::spawn_blocking(move || ops::call(&task, op, &query))
         .await
-        .expect("serve");
+        .expect("operation task");
+    Answer::new(server, scope, result)
 }
 
 fn json(body: String) -> Response {
@@ -104,21 +177,12 @@ async fn answer(
     Query(query): Query<Vec<(String, String)>>,
     headers: HeaderMap,
 ) -> Response {
-    let task = Arc::clone(&server);
-    let (scope, result) = tokio::task::spawn_blocking(move || ops::call(&task, op, &query))
-        .await
-        .expect("operation task");
-    let meta = Meta::new(&server.catalog, scope);
-    let data = match result {
-        Ok(data) => data,
-        Err(err) => {
-            let body = serde_json::json!({"error": err, "meta": meta}).to_string();
-            let status = StatusCode::from_u16(err.status()).expect("catalogued status");
-            return (status, json(body)).into_response();
-        }
-    };
-    let body = serde_json::json!({"data": data, "meta": meta}).to_string();
-    let etag = etag(&server, scope, body.as_bytes());
+    let answer = run(&server, op, query).await;
+    let body = answer.body.to_string();
+    if answer.status != StatusCode::OK {
+        return (answer.status, json(body)).into_response();
+    }
+    let etag = etag(&server, answer.scope, body.as_bytes());
     let revalidated = headers
         .get(header::IF_NONE_MATCH)
         .and_then(|value| value.to_str().ok())

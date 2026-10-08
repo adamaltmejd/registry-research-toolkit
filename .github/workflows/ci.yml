@@ -61,7 +61,8 @@ jobs:
       - run: cargo clippy --workspace --all-targets --locked -- -D warnings
       - run: cargo test --workspace --locked
       # The Rust HTTP run (RUST_RUNTIME_SPEC.md section 10): the conformance cases of
-      # the operations `reg-meta serve` implements, out of process.
+      # the operations `reg-meta serve` implements and the MCP equivalence suite, out
+      # of process.
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
@@ -69,8 +70,9 @@ jobs:
       - run: cargo build -p reg-meta --locked
       - run: >-
           uv run python -m pytest conformance -q -n auto
-          -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging]'
+          -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging] or test_mcp'
           --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}'
+          --mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'
 
   check-versions:
     runs-on: ubuntu-latest

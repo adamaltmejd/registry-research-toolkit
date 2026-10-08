@@ -1,6 +1,7 @@
 //! The operation set (section 7). Each slice registers its operations in its own file
 //! (`slice_3a.rs`, ...), and both transports are generated from the registrations: the
-//! HTTP routes and `/openapi.json` here and in `reg-meta`, the MCP tools later.
+//! HTTP routes and `/openapi.json` here and in `reg-meta`, and the MCP tools in
+//! `reg-meta`.
 
 mod search;
 pub mod slice_3a;
@@ -21,10 +22,11 @@ use utoipa::openapi::{
 use crate::{CONTRACT_VERSION, Catalog, Code, Error, Scope};
 
 /// What a running server answers from: the admitted catalog, its steward branding
-/// and the server's version (`reg_meta_version`).
+/// (`serve` only: `mcp` loads none, since branding is read only by `context`, which
+/// has no tool) and the server's version (`reg_meta_version`).
 pub struct Server {
     pub catalog: Catalog,
-    pub steward: Steward,
+    pub steward: Option<Steward>,
     pub version: &'static str,
 }
 
@@ -80,11 +82,14 @@ type Components = Vec<(String, RefOr<Schema>)>;
 /// An operation's validated parameters, `scope` excluded.
 pub type Params<'a> = BTreeMap<&'a str, &'a str>;
 
-/// One operation: its name and route (`operations.toml`), its parameters, the
-/// function that answers it and its `data` schema.
+/// One operation: its name, route and MCP tool (`operations.toml`), the description
+/// both transports publish, its parameters, the function that answers it and its
+/// `data` schema.
 pub struct Operation {
     pub name: &'static str,
     pub path: &'static str,
+    pub tool: Option<&'static str>,
+    pub description: &'static str,
     pub params: &'static [Param],
     pub run: fn(&Server, Scope, &Params) -> Result<Value, Error>,
     pub result: fn(&mut Components) -> RefOr<Schema>,
@@ -193,7 +198,9 @@ pub fn openapi(version: &str) -> OpenApi {
     component::<Error>(&mut components);
     let mut paths = PathsBuilder::new();
     for op in all() {
-        let mut operation = OperationBuilder::new().operation_id(Some(op.name));
+        let mut operation = OperationBuilder::new()
+            .operation_id(Some(op.name))
+            .description(Some(op.description));
         for param in op.params {
             operation = operation.parameter(
                 ParameterBuilder::new()
