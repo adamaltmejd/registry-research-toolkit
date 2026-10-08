@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Ad-hoc verifier for .claude/hooks/block_no_verify.sh.
+# Verifier for .claude/hooks/block_no_verify.sh. Run it directly; the `hook-tests`
+# job in .github/workflows/ci.yml runs it on ubuntu-latest (not wired into pytest).
 # Each case feeds the hook a synthetic PreToolUse payload and asserts the
 # hook either denies (exit 0 with a "deny" payload) or allows (exit 0 with
 # no payload).

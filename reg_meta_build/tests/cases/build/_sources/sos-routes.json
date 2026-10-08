@@ -1,0 +1,131 @@
+{
+  "description": "SOS routing shapes: SYD has no Deldatamängder sheet; SYR routes TOKEN to subsets A and B; SYS has one subset with only the Styrtabell label and one with only the 'Ej relevant' aggregation level; SYL has a Styrtabell lookup subset A and a view V. Plus the SCB sample VALUE column.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "SYD",
+      "title": "Variantlöst",
+      "subsets": [],
+      "variables": [
+        {
+          "name": "COL",
+          "deldatamangd": "TOKEN",
+          "label": "Col",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": null,
+          "external_classification": null
+        }
+      ]
+    },
+    {
+      "abbrev": "SYR",
+      "title": "Routat",
+      "subsets": [
+        {"name": "A", "label": "A", "data_from": 2005, "data_to": 2015, "aggregation_level": null},
+        {"name": "B", "label": "B", "data_from": 2005, "data_to": 2015, "aggregation_level": null}
+      ],
+      "variables": [
+        {
+          "name": "COL",
+          "deldatamangd": "TOKEN",
+          "label": "Col",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": null,
+          "external_classification": null
+        },
+        {
+          "name": "HALV",
+          "deldatamangd": "HALV",
+          "label": "Halv",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": null,
+          "external_classification": null
+        }
+      ]
+    },
+    {
+      "abbrev": "SYS",
+      "title": "Signaler",
+      "subsets": [
+        {
+          "name": "A",
+          "label": "Styrtabell A",
+          "data_from": 2005,
+          "data_to": 2015,
+          "aggregation_level": null
+        },
+        {
+          "name": "B",
+          "label": "Vy B",
+          "data_from": 2005,
+          "data_to": 2015,
+          "aggregation_level": "Ej relevant"
+        }
+      ],
+      "variables": [
+        {
+          "name": "KOD",
+          "deldatamangd": "A",
+          "label": "Kod",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": null,
+          "external_classification": null
+        }
+      ]
+    },
+    {
+      "abbrev": "SYL",
+      "title": "Uppslag",
+      "subsets": [
+        {
+          "name": "A",
+          "label": "Styrtabell A",
+          "data_from": 2005,
+          "data_to": 2015,
+          "aggregation_level": "Ej relevant"
+        },
+        {"name": "V", "label": "V", "data_from": 2005, "data_to": 2015, "aggregation_level": null}
+      ],
+      "variables": [
+        {
+          "name": "COL",
+          "deldatamangd": "TOKEN",
+          "label": "Col",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": null,
+          "external_classification": null
+        },
+        {
+          "name": "KOD",
+          "deldatamangd": "A",
+          "label": "Kod",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": null,
+          "external_classification": null
+        }
+      ]
+    }
+  ]
+}

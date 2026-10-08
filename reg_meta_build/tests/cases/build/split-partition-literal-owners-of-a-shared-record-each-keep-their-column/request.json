@@ -1,0 +1,14 @@
+{
+  "replaces": [
+    "test_curation_split_partition_boundary.py::test_shared_ref_literal_owners_each_keep_their_own_column"
+  ],
+  "sources": {
+    "description": "Variable 1.5 delivers FIRST and SECOND under one source record (CVID 20).",
+    "scb": {
+      "registerinformation": [
+        {"colname": "FIRST", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {"colname": "SECOND", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020}
+      ]
+    }
+  }
+}

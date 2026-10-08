@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_split_sos_boundary.py::test_text_split_assigns_rows_of_one_source_record_by_text[description-reversed]"
+  ],
+  "note": "Parts declared in reverse order. Two texts under one owner in one subset conflict, so only the shared owner carries resolution errors.",
+  "sources": "sos-par-atc-three-descriptions"
+}

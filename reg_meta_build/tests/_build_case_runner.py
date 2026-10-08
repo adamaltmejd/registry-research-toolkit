@@ -1,0 +1,736 @@
+"""Run one `cases/build/` case: readable sources and curation through the real build.
+
+`cases/build/README.md` is the case format. This module turns a case directory into
+the boundary outputs its `expected.json` names: it materializes the source spec
+(`_csv_fixtures` SCB rows, `_sos_fixtures` workbooks), prepares and accepts it
+through the real input pipeline, renders the curation tree's authoring
+placeholders from the accepted prepared records with the public capture helpers a
+curator uses, runs `build_catalog`, and reads the result, the report ledger and the
+built artifact through a fixed set of named projections.
+
+Prepared inputs are cached by the content hash of their source spec, so cases that
+share a source set prepare it once per session. An entry is written to a private
+staging directory and renamed into place: concurrent xdist workers never write the
+same path, and a failed preparation never leaves a partial entry.
+"""
+
+from __future__ import annotations
+
+import functools
+import hashlib
+import json
+import os
+import re
+import shutil
+import sqlite3
+import tempfile
+from contextlib import closing
+from dataclasses import dataclass
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+from _csv_fixtures import (
+    replace_registerinformation_cell,
+    summary_rows,
+    var_row,
+    write_scb_input,
+)
+from _pipeline_catalog_support import prepare_accepted, report_events
+from _sos_fixtures import (
+    SosCodeList,
+    SosRegister,
+    SosSubset,
+    SosVariable,
+    write_sos_input,
+)
+from openpyxl import load_workbook
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.pipeline import build_catalog
+from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
+from reg_meta_build.source_coding import coding_source_sha256
+from reg_meta_build.source_coordinates import native_variant_key
+from reg_meta_build.source_curation import (
+    acknowledgement_evidence_sha256,
+    capture_expectations,
+)
+from reg_meta_build.source_records import SourceFields
+from reg_meta_build.source_value_bindings import bind_code_lists, open_value_bindings
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from reg_meta_build.source_records import SourceRecord
+
+CASES = Path(__file__).with_name("cases") / "build"
+SOURCES = CASES / "_sources"
+
+
+def case_dirs() -> list[Path]:
+    """Every case directory, sorted; `_`-prefixed directories hold shared data."""
+    return sorted(
+        path
+        for path in CASES.iterdir()
+        if path.is_dir() and not path.name.startswith("_")
+    )
+
+
+def case_steps(case: Path) -> list[Path]:
+    """A case is one step (its own `request.json`) or ordered step subdirectories."""
+    if (case / "request.json").is_file():
+        return [case]
+    return sorted(path for path in case.iterdir() if path.is_dir())
+
+
+# -- Sources -------------------------------------------------------------------
+
+
+def source_spec(reference: str | dict) -> dict:
+    """A source spec: inline, or the name of a shared `_sources/<name>.json`."""
+    if isinstance(reference, dict):
+        return reference
+    return json.loads((SOURCES / f"{reference}.json").read_text(encoding="utf-8"))
+
+
+def _scb_row(row: dict) -> str:
+    """One Registerinformation row: `var_row` arguments, then raw `cells` overrides."""
+    text = var_row(
+        **{
+            key: tuple(value) if key == "register" else value
+            for key, value in row.items()
+            if key != "cells"
+        }
+    )
+    for name, value in row.get("cells", {}).items():
+        text = replace_registerinformation_cell(text, name, value)
+    return text
+
+
+def write_sources(spec: dict, source: Path) -> None:
+    """Materialize a source spec as provider deliveries under ``source``."""
+    scb = spec["scb"]
+    rows = [_scb_row(row) for row in scb["registerinformation"]]
+    values = scb.get("vardemangder", [])
+    # `"unika": null` delivers no Unika summary file at all.
+    unika = scb.get("unika", summary_rows(rows))
+    write_scb_input(
+        source,
+        registerinformation_rows=rows,
+        vardemangder_rows=values,
+        unika_rows=unika or [],
+        # Default: every value item is valid over the whole fixture window.
+        valid_dates_rows=scb.get(
+            "valid_dates",
+            sorted({f"{row.split('|')[-1]}|2000-01-01|2030-12-31" for row in values}),
+        ),
+        include=("registerinformation",)
+        + (("unika",) if unika is not None else ())
+        + (("vardemangder", "valid_dates") if values else ()),
+    )
+    for relative, text in spec.get("files", {}).items():
+        path = source / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    for register in spec.get("sos", ()):
+        workbook_spec = SosRegister(
+            abbrev=register["abbrev"],
+            title_sv=register["title"],
+            description_sv=register.get("description"),
+            variables=tuple(SosVariable(**row) for row in register["variables"]),
+            deldatamangder=tuple(
+                SosSubset(**row) for row in register.get("subsets", ())
+            ),
+            kodlistor=tuple(
+                SosCodeList(hint, tuple(tuple(row) for row in rows))
+                for hint, rows in register.get("code_lists", {}).items()
+            ),
+        )
+        sos_dir = write_sos_input(source, registers=(workbook_spec,))
+        path = (
+            sos_dir / f"Metadata {register['title']} ({register['abbrev']})_webb.xlsx"
+        )
+        # A delivered blank `Kopplingsvariabel` column is SOS's explicit "not an
+        # identifier" claim; without it every variable's flag is unknown and withheld.
+        workbook = load_workbook(path)
+        sheet = workbook["Metadata - Variabelnivå"]
+        sheet.cell(row=1, column=sheet.max_column + 1, value="Kopplingsvariabel")
+        workbook.save(path)
+        workbook.close()
+
+
+@dataclass(frozen=True)
+class PreparedSet:
+    """One accepted prepared input: what `build_catalog` and authoring read."""
+
+    prepared: Path
+    commit: str
+    digest: str
+
+    def records(self) -> tuple[SourceRecord, ...]:
+        return _records(self.prepared, self.commit, self.digest)
+
+    def coding_sha256(self, records: tuple[SourceRecord, ...]) -> list[str]:
+        """The bound physical code-list evidence of ``records``, as curators pin it."""
+        opened = open_prepared_catalog_sources(
+            self.prepared, expected_sha256=self.digest, input_commit=self.commit
+        )
+        with open_value_bindings(opened.value_sources) as sessions:
+            return [
+                coding_source_sha256(claim)
+                for record in records
+                for claim in bind_code_lists(record, sessions).claims
+            ]
+
+    def revision(self, record: SourceRecord) -> dict:
+        opened = open_prepared_catalog_sources(
+            self.prepared, expected_sha256=self.digest, input_commit=self.commit
+        )
+        return next(
+            revision.model_dump(mode="json")
+            for revision in opened.records.manifest.revisions
+            if revision.revision_id == record.source_revision_id
+        )
+
+
+@functools.cache
+def _records(prepared: Path, commit: str, digest: str) -> tuple[SourceRecord, ...]:
+    opened = open_prepared_catalog_sources(
+        prepared, expected_sha256=digest, input_commit=commit
+    )
+    return tuple(opened.records.records)
+
+
+class PreparedCache:
+    """Accepted prepared inputs keyed by the content hash of their source spec."""
+
+    def __init__(self, root: Path) -> None:
+        self.root = root
+        root.mkdir(parents=True, exist_ok=True)
+
+    def get(self, spec: dict) -> PreparedSet:
+        key = hashlib.sha256(
+            json.dumps(spec, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        entry = self.root / key
+        if not (entry / "selection.json").is_file():
+            staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=self.root))
+            try:
+                write_sources(spec, staging / "source")
+                _, commit, digest = prepare_accepted(staging, staging / "source")
+                # Only the accepted prepared repository is read after preparation.
+                shutil.rmtree(staging / "source")
+                shutil.rmtree(staging / "inputs")
+                (staging / "selection.json").write_text(
+                    json.dumps({"commit": commit, "digest": digest}), encoding="utf-8"
+                )
+                try:
+                    staging.rename(entry)
+                except OSError:
+                    if not (entry / "selection.json").is_file():
+                        raise
+            finally:
+                shutil.rmtree(staging, ignore_errors=True)
+        selection = json.loads((entry / "selection.json").read_text(encoding="utf-8"))
+        return PreparedSet(
+            entry / "prepared" / "catalog", selection["commit"], selection["digest"]
+        )
+
+
+def cache_root(basetemp: Path) -> Path:
+    """The session's prepared-input cache, shared by its xdist workers.
+
+    A worker's basetemp is `<session>/popen-gwN`, so the cache sits beside the
+    workers under the session directory; a serial run keeps it in its own basetemp.
+    """
+    session = basetemp.parent if os.environ.get("PYTEST_XDIST_WORKER") else basetemp
+    return session / "build-case-prepared"
+
+
+# -- Curation authoring placeholders --------------------------------------------
+
+PROSE = ("name", "definition", "description", "operational_definition")
+_PLACEHOLDER = re.compile(r"\{\{\s*([a-z0-9_]+)((?:\s+[a-z_]+=[^\s}]*)*)\s*\}\}")
+
+
+def toml_inline(value) -> str:
+    """A JSON-shaped value as one inline TOML value; ``None`` members are omitted."""
+    if isinstance(value, dict):
+        items = ", ".join(
+            f"{json.dumps(key)} = {toml_inline(item)}"
+            for key, item in value.items()
+            if item is not None
+        )
+        return "{ " + items + " }"
+    if isinstance(value, (list, tuple)):
+        return "[" + ", ".join(toml_inline(item) for item in value) + "]"
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, str):
+        return json.dumps(value, ensure_ascii=False)
+    return str(value)
+
+
+def _column(record: SourceRecord) -> str:
+    column = record.fields.column_name
+    return (column and column.value) or ""
+
+
+_FILTERS: dict[str, Callable[[SourceRecord], object]] = {
+    "source": lambda r: r.source,
+    "key": lambda r: r.locators[0].semantic_record_key[-1],
+    "column": _column,
+    "member": lambda r: r.subject.member.name,
+    "variable": lambda r: str(
+        r.subject.native.variable_id
+        if r.subject.native.variable_id is not None
+        else r.subject.variable.native_id
+    ),
+    "edition": lambda r: str(r.subject.native.edition_id),
+}
+
+
+def _select(records: tuple[SourceRecord, ...], args: dict[str, str]) -> tuple:
+    """Records matching every filter argument; a value may list alternatives."""
+    filters = {key: value.split(",") for key, value in args.items() if key in _FILTERS}
+    selected = tuple(
+        record
+        for record in records
+        if all(
+            str(_FILTERS[key](record)).startswith(tuple(values))
+            if key == "source"
+            else str(_FILTERS[key](record)) in values
+            for key, values in filters.items()
+        )
+    )
+    assert selected, f"placeholder selects no prepared record: {args}"
+    return selected
+
+
+def _one(records: tuple[SourceRecord, ...], args: dict[str, str]) -> SourceRecord:
+    selected = _select(records, args)
+    assert len(selected) == 1, f"placeholder needs exactly one record: {args}"
+    return selected[0]
+
+
+def _fields(args: dict[str, str]) -> tuple[str, ...]:
+    named = args.get("fields", "all")
+    return (
+        tuple(SourceFields.model_fields)
+        if named == "all"
+        else tuple(PROSE if named == "prose" else named.split(","))
+    )
+
+
+def _scope(record: SourceRecord, args: dict[str, str], attribute: str) -> dict:
+    scope = getattr(record, attribute).model_dump(mode="json")
+    if "end" in args:
+        scope["intervals"][0]["end"] = args["end"]
+    return scope
+
+
+_DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
+    "evidence_sha256": lambda s, a: acknowledgement_evidence_sha256(
+        _select(s.records(), a)
+    ),
+    "coding_evidence_sha256": lambda s, a: acknowledgement_evidence_sha256(
+        selected := _select(s.records(), a), s.coding_sha256(selected)
+    ),
+    "expected_records": lambda s, a: [
+        expectation.model_dump(mode="json")
+        for expectation in capture_expectations(
+            _select(s.records(), a), fields=_fields(a), parents=True, coding=True
+        )
+    ],
+    "expected_fields": lambda s, a: [
+        field.model_dump(mode="json")
+        for field in capture_expectations((_one(s.records(), a),), fields=_fields(a))[0]
+        .alternatives[0]
+        .fields
+    ],
+    "period_text": lambda s, a: _one(s.records(), a).original_period_text,
+    "edition_scope": lambda s, a: _scope(_one(s.records(), a), a, "edition_scope"),
+    "period_scope": lambda s, a: _scope(
+        _one(s.records(), a), a, "edition_period_scope"
+    ),
+    "revision": lambda s, a: s.revision(_one(s.records(), a)),
+    "locators": lambda s, a: [
+        locator.model_dump(mode="json") for locator in _one(s.records(), a).locators
+    ],
+    "variant_key": lambda s, a: _variant_key(_one(s.records(), a)),
+}
+
+
+def _variant_key(record: SourceRecord) -> list:
+    key = native_variant_key(record)
+    assert key is not None, f"record has no native variant: {record.record_id}"
+    return list(key)
+
+
+def render_curation(source: Path, target: Path, authored: PreparedSet) -> Path:
+    """Copy a case's curation tree, resolving each `{{directive arg=value}}`."""
+
+    def resolve(match: re.Match[str]) -> str:
+        name, raw = match.group(1), match.group(2).split()
+        args = dict(item.split("=", 1) for item in raw)
+        assert name in _DIRECTIVES, f"unknown curation placeholder: {name}"
+        return toml_inline(_DIRECTIVES[name](authored, args))
+
+    for path in source.rglob("*"):
+        if path.is_file():
+            out = target / path.relative_to(source)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(
+                _PLACEHOLDER.sub(resolve, path.read_text(encoding="utf-8")),
+                encoding="utf-8",
+            )
+    (target / "classifications").mkdir(parents=True, exist_ok=True)
+    return target
+
+
+# -- Projections ----------------------------------------------------------------
+
+
+def _locator(detail: str) -> str | None:
+    return detail.split(":", 1)[0] if detail.startswith("curation/") else None
+
+
+@dataclass(frozen=True)
+class Outcome:
+    result: dict
+    events: list[dict]
+    db: Path
+    built: PreparedSet
+
+    def table(self, name: str) -> list[dict]:
+        return _TABLES[name](self)
+
+    def _sql(self, sql: str) -> list[dict]:
+        with closing(sqlite3.connect(self.db)) as conn:
+            conn.row_factory = sqlite3.Row
+            return [dict(row) for row in conn.execute(sql)]
+
+
+def _issues(outcome: Outcome) -> list[dict]:
+    return [
+        {
+            "code": event["code"],
+            "severity": event["severity"],
+            "subject": str(event["subject"]),
+            "case_id": event.get("case_id"),
+            "locator": _locator(str(event.get("detail") or "")),
+            "detail": event.get("detail"),
+        }
+        for event in outcome.events
+        if event["kind"] == "issue"
+    ]
+
+
+def _issue_refs(outcome: Outcome) -> list[dict]:
+    """One row per source record an issue cites."""
+    return [
+        {
+            "code": event["code"],
+            "case_id": event.get("case_id"),
+            "source": ref["source"],
+            "key": ref["semantic_record_key"],
+        }
+        for event in outcome.events
+        if event["kind"] == "issue"
+        for ref in event.get("refs", ())
+    ]
+
+
+def _dispositions(outcome: Outcome) -> list[tuple[dict, list[str]]]:
+    """Each ledger disposition of a prepared source record occurrence as a `uses`
+    row, with the curation case ids the disposition names."""
+    by_id = {
+        event["record_id"]: event["dispositions"]
+        for event in outcome.events
+        if event["kind"] == "source_occurrence"
+    }
+    rows = []
+    for record in outcome.built.records():
+        fields = {
+            name: value.value
+            if (value := getattr(record.fields, name)) is not None
+            else None
+            for name in ("column_name", "data_type", "name", "description")
+        }
+        for disposition in by_id.get(record.record_id, ()):
+            row = {
+                "source": record.source,
+                "native_variable": _FILTERS["variable"](record),
+                "key": record.locators[0].semantic_record_key[-1],
+                **fields,
+                "use": disposition["use"],
+                "variable": disposition["variable"],
+            }
+            rows.append((row, disposition["cases"]))
+    return rows
+
+
+def _case_uses(outcome: Outcome) -> list[dict]:
+    """One row per curation case a source record's ledger disposition names."""
+    return [
+        {"case_id": case_id, **{key: row[key] for key in _CASE_USE_FIELDS}}
+        for row, cases in _dispositions(outcome)
+        for case_id in cases
+    ]
+
+
+_CASE_USE_FIELDS = ("source", "key", "use", "variable")
+
+
+def _variables(outcome: Outcome) -> list[dict]:
+    """Each built variable's distinct delivery columns; one null row when it has none."""
+    rows = outcome._sql(
+        "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
+        "s.delivery_column_name AS column, v.provider_key, v.description, "
+        "v.is_identifier, v.is_sensitive FROM variable v "
+        "JOIN register r USING (register_id) "
+        "LEFT JOIN variable_state s USING (variable_id)"
+    )
+    named = {
+        (row["register"], row["variable"]) for row in rows if row["column"] is not None
+    }
+    return [
+        row
+        for row in rows
+        if row["column"] is not None or (row["register"], row["variable"]) not in named
+    ]
+
+
+def _concept_groups(outcome: Outcome) -> list[dict]:
+    """Each concept group as the sorted slugs of its member variables."""
+    groups: dict[int, list[str]] = {}
+    for row in outcome._sql(
+        "SELECT gv.group_id, v.slug FROM concept_group_variable gv "
+        "JOIN variable v USING (variable_id)"
+    ):
+        groups.setdefault(row["group_id"], []).append(row["slug"])
+    return [{"variables": sorted(slugs)} for slugs in groups.values()]
+
+
+def _warnings(outcome: Outcome) -> list[dict]:
+    return [
+        {
+            "column": row["delivery_column_name"],
+            "valid_from": payload["valid_from"],
+            "valid_to": payload["valid_to"],
+            "variable_fqid": payload.get("variable_fqid"),
+            "variant": payload.get("variant"),
+            "summary": payload.get("summary"),
+            "fields": payload.get("fields"),
+        }
+        for row in outcome._sql(
+            "SELECT delivery_column_name, warning_json FROM data_warning"
+        )
+        for payload in (json.loads(row["warning_json"]),)
+    ]
+
+
+_STATE_JOIN = (
+    "FROM variable_state s JOIN variable v USING (variable_id) "
+    "JOIN register r ON r.register_id = v.register_id "
+    "JOIN register_variant rv ON rv.register_variant_id = s.register_variant_id "
+)
+_TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
+    "issues": _issues,
+    "issue_refs": _issue_refs,
+    "cases": lambda o: [
+        {"case_id": event["case_id"], "status": event["status"]}
+        for event in o.events
+        if event["kind"] == "case"
+    ],
+    "uses": lambda o: [row for row, _ in _dispositions(o)],
+    "case_uses": _case_uses,
+    "states": lambda o: o._sql(
+        "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
+        "s.delivery_column_name AS column, s.valid_from, s.valid_to, s.data_type, "
+        "v.name, s.name AS state_name, s.provenance, s.pooled " + _STATE_JOIN
+    ),
+    "state_codes": lambda o: o._sql(
+        "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
+        "s.delivery_column_name AS column, s.valid_from, s.valid_to, c.code, c.label "
+        + _STATE_JOIN
+        + "LEFT JOIN value_set_member m ON m.value_set_id = s.value_set_id "
+        "LEFT JOIN value_code c ON c.code_id = m.code_id"
+    ),
+    "variables": _variables,
+    "variants": lambda o: o._sql(
+        "SELECT r.slug AS register, rv.slug AS variant, rv.name "
+        "FROM register_variant rv JOIN register r USING (register_id)"
+    ),
+    "aliases": lambda o: o._sql(
+        "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
+        "a.delivery_column_name AS column FROM variable_alias a "
+        "JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN register_variant rv ON rv.register_variant_id = a.register_variant_id"
+    ),
+    "same_as": lambda o: o._sql(
+        "SELECT a_provider || '/' || a_register || '/' || a_variable AS a, "
+        "b_provider || '/' || b_register || '/' || b_variable AS b "
+        "FROM variable_same_as"
+    ),
+    "concept_groups": _concept_groups,
+    "warnings": _warnings,
+    "search_pins": lambda o: o._sql(
+        "SELECT key AS query, type, position, entity FROM search_pin"
+    ),
+    "manifest": lambda o: o._sql("SELECT key, value FROM import_manifest"),
+}
+
+
+# The fields of each table, as cases/build/README.md documents them.
+FIELDS: dict[str, frozenset[str]] = {
+    name: frozenset(fields.split())
+    for name, fields in {
+        "issues": "code severity subject case_id locator detail",
+        "issue_refs": "code case_id source key",
+        "cases": "case_id status",
+        "uses": "source native_variable key column_name data_type name description "
+        "use variable",
+        "case_uses": "case_id source key use variable",
+        "states": "register variable variant column valid_from valid_to data_type "
+        "name state_name provenance pooled",
+        "state_codes": "register variable variant column valid_from valid_to code label",
+        "variables": "register variable column provider_key description "
+        "is_identifier is_sensitive",
+        "variants": "register variant name",
+        "aliases": "register variable variant column",
+        "same_as": "a b",
+        "concept_groups": "variables",
+        "warnings": "column valid_from valid_to variable_fqid variant summary fields",
+        "search_pins": "query type position entity",
+        "manifest": "key value",
+    }.items()
+}
+
+
+def _matches(row: dict, where: dict) -> bool:
+    for key, wanted in where.items():
+        value = row[key]
+        if isinstance(wanted, dict):
+            if wanted.keys() != {"contains"}:
+                raise ValueError(f"unknown where operator: {wanted}")
+            texts = wanted["contains"]
+            if value is None or not all(
+                text in str(value)
+                for text in ([texts] if isinstance(texts, str) else texts)
+            ):
+                return False
+        elif isinstance(wanted, list):
+            if value not in wanted:
+                return False
+        elif value != wanted:
+            return False
+    return True
+
+
+def _sorted(rows: list[list]) -> list[list]:
+    return sorted(rows, key=lambda row: json.dumps(row, ensure_ascii=False))
+
+
+def project(outcome: Outcome, spec: dict) -> dict:
+    """The actual value of one expected projection, shaped like ``spec``."""
+    known = FIELDS[spec["table"]]
+    where = spec.get("where", {})
+    if not set(spec["fields"]) | set(where) <= known:
+        raise ValueError(f"unknown field in projection {spec}")
+    if any(isinstance(w, dict) and w.keys() != {"contains"} for w in where.values()):
+        raise ValueError(f"unknown where operator in projection {spec}")
+    if spec.get("match", "exact") not in {"exact", "set", "includes"}:
+        raise ValueError(f"unknown match in projection {spec}")
+    table = outcome.table(spec["table"])
+    # Every row must carry exactly the documented fields, so an empty table
+    # cannot hide a misspelled field.
+    assert all(row.keys() == known for row in table), spec["table"]
+    rows = [
+        [row[field] for field in spec["fields"]]
+        for row in table
+        if _matches(row, spec.get("where", {}))
+    ]
+    match = spec.get("match", "exact")
+    if match == "set":
+        unique: list[list] = []
+        for row in rows:
+            if row not in unique:
+                unique.append(row)
+        rows = unique
+    elif match == "includes":
+        rows = [row for row in spec["rows"] if row in rows]
+    elif match != "exact":
+        raise ValueError(f"unknown match: {match}")
+    return {**spec, "rows": _sorted(rows)}
+
+
+# -- Running a step ---------------------------------------------------------------
+
+
+def _refusal(error: Exception) -> dict:
+    """A build refusal as `reg-meta-build build` reports it.
+
+    The command wraps a `ValueError`, `OSError` or `KeyError` from the build in the
+    configuration error `pipeline_build_failed` (`cli._cmd_build`).
+    """
+    if isinstance(error, RegMetaError):
+        return {
+            "code": error.code,
+            "exit_code": error.exit_code,
+            "message": error.message,
+        }
+    return {
+        "code": "pipeline_build_failed",
+        "exit_code": EXIT_CONFIG,
+        "message": str(error),
+    }
+
+
+def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dict]:
+    """Run one case step; return ``(actual, expected)`` in the same shape."""
+    request = json.loads((step / "request.json").read_text(encoding="utf-8"))
+    expected = json.loads((step / "expected.json").read_text(encoding="utf-8"))
+    built = cache.get(source_spec(request["sources"]))
+    authored = cache.get(source_spec(request.get("authored_from", request["sources"])))
+    curation = render_curation(step / "curation", scratch / "curation", authored)
+    output, report = scratch / "reg_meta.db", scratch / "report"
+    try:
+        result = build_catalog(
+            built.prepared,
+            built.commit,
+            built.digest,
+            output,
+            report,
+            curation_dir=curation,
+            diagnostic=request.get("diagnostic", True),
+            registers=tuple(request.get("registers", ())),
+        )
+    except (RegMetaError, ValueError, OSError, KeyError) as error:
+        if "error" not in expected:
+            raise
+        refusal = _refusal(error)
+        wanted = expected["error"]
+        refusal["message_contains"] = [
+            text for text in wanted["message_contains"] if text in refusal["message"]
+        ]
+        return {
+            "error": {key: refusal[key] for key in wanted if key in refusal}
+        }, expected
+    actual: dict = {}
+    if "error" in expected:
+        actual["error"] = None
+    if "status" in expected:
+        actual["status"] = result["status"]
+    if "projections" in expected:
+        outcome = Outcome(result, report_events(report), output, built)
+        actual["projections"] = [
+            project(outcome, spec) for spec in expected["projections"]
+        ]
+        expected = {
+            **expected,
+            "projections": [
+                {**spec, "rows": _sorted(spec["rows"])}
+                for spec in expected["projections"]
+            ],
+        }
+    return actual, expected

@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_sos_errata_boundary.py::test_classification_reference_entry_fails_closed_on_changed_facts"
+  ],
+  "note": "A changed link, representation or column, a blank link, a missing or changed description witness, or several subset peers apply nothing; only the exact original and the matching witness are corrected.",
+  "sources": "sos-syx-errata"
+}

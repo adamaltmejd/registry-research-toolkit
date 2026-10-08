@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "classification_curation_invalid",
+    "message_contains": ["curation/registers/scb/sample.toml", "negative-column"]
+  }
+}

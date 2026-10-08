@@ -1,0 +1,50 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {
+          "type": "classification_succession",
+          "fqid": "class/ec",
+          "short_name": "EC",
+          "name": "Yrkesgrupp edition C",
+          "matched_count": 4,
+          "editions": [
+            {
+              "slug": "ec",
+              "fqid": "class/ec",
+              "name": "Yrkesgrupp edition C",
+              "effective_year": null
+            },
+            {
+              "slug": "eb",
+              "fqid": "class/eb",
+              "name": "Yrkesgrupp edition B",
+              "effective_year": null
+            },
+            {
+              "slug": "ed",
+              "fqid": "class/ed",
+              "name": "Yrkesgrupp edition D",
+              "effective_year": 2010
+            },
+            {
+              "slug": "ea",
+              "fqid": "class/ea",
+              "name": "Yrkesgrupp edition A",
+              "effective_year": 2000
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "class/ec"
+      ]
+    }
+  }
+]

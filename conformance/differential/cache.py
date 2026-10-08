@@ -1,38 +1,45 @@
-"""The shared G1 cache: pinned release artifacts, their derived copies and the
-baseline reader environment.
+"""The shared G1 cache: pinned release artifacts, their reference and candidate
+copies, and the baseline environment.
 
 Layout under the cache root (``$REG_META_G1_CACHE``, else
 ``$XDG_CACHE_HOME/reg-meta-g1``, else ``~/.cache/reg-meta-g1``)::
 
     artifacts/<tag>/global/reg_meta.db       + reg_meta_docs.db
+    artifacts/<tag>/global/reference/        reg_meta.db + reg_meta_docs.db -> ..
     artifacts/<tag>/global/derived/          reg_meta.db + reg_meta_docs.db -> ..
     artifacts/<tag>/swecov/reg_meta.db       + reg_meta_docs.db -> ../global/...
-    artifacts/<tag>/swecov/derived/          reg_meta.db + reg_meta_docs.db -> ..
-    baseline/<commit>/venv/                  the baseline reader and webapp's environment
-    baseline/<commit>/stewards/              the baseline webapp's steward branding
+    artifacts/<tag>/swecov/{reference,derived}/
+    baseline/<commit>/src/                   detached worktree of the commit + .venv
 
 Each asset is streamed once: hashed against its pinned SHA-256 while it is
 decompressed, so no ``.zst`` is kept. A stamp beside the database records the
 verified asset digest and the file's size and mtime; a later run refetches when they
-no longer match (readers open the files immutable, so they never change). A derived
-copy is ``reg-meta-build derive`` of its catalog, stamped the same way with a key over
-the base's asset digest and the builder source tree, and remade when either changes.
-Anything not pinned is deleted, so the cache never holds more than the pinned set. Callers hold ``locked`` for a whole run, which serializes runs from
-concurrent worktrees (they share the report directory and the CPU budget).
+no longer match (readers open the files immutable, so they never change).
+
+The baseline commit is both the baseline reader and the reference builder: one
+detached worktree with its own locked environment (``uv sync``, where maturin builds
+``reg-core-py``), since derive records ``builder_commit`` and needs a clean source
+checkout. A reference copy is that builder's ``reg-meta-build derive`` of its catalog,
+stamped with a key over the base's asset digest and the commit plus its output
+SHA-256; the baseline reads it. A derived (candidate) copy is the checkout's derive,
+keyed over the base's asset digest and the builder source tree; the checkout reads
+it. Each is remade when its key changes. Anything not pinned is deleted, so the cache
+never holds more than the pinned set. Callers hold ``locked`` for a whole run, which
+serializes runs from concurrent worktrees (they share the report directory and the
+CPU budget).
 """
 
 from __future__ import annotations
 
 import fcntl
 import hashlib
-import io
 import json
 import os
 import shutil
+import sqlite3
 import subprocess
 import sys
-import tarfile
-import tempfile
+import time
 import urllib.request
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -47,18 +54,6 @@ DOWNLOAD_URL = f"https://github.com/{REPO}/releases/download/{{tag}}/{{asset}}"
 DB_FILENAME = "reg_meta.db"
 DOC_DB_FILENAME = "reg_meta_docs.db"
 STAMP_SUFFIX = ".pin.json"
-# What uv export needs to read the commit's workspace lock, plus the three packages
-# and the webapp's steward branding.
-BASELINE_PATHS = (
-    "pyproject.toml",
-    "uv.lock",
-    "reg_meta",
-    "reg_schema",
-    "reg_meta_build/pyproject.toml",
-    "reg_webapp/backend",
-    "reg_webapp/stewards",
-)
-BASELINE_PACKAGES = ("reg_schema", "reg_meta", "reg_webapp/backend")
 CHUNK = 1 << 20
 REPO_ROOT = Path(__file__).resolve().parents[2]
 # What a derived copy depends on: the builder, the reader code derive moved, the
@@ -173,7 +168,7 @@ def _download(tag: str, asset: Asset, dest: Path) -> None:
     _write_stamp(dest, asset)
 
 
-def _write_stamp(dest: Path, asset: Asset) -> None:
+def _write_stamp(dest: Path, asset: Asset, **provenance: str) -> None:
     st = dest.stat()
     _stamp_path(dest).write_text(
         json.dumps(
@@ -182,6 +177,7 @@ def _write_stamp(dest: Path, asset: Asset) -> None:
                 "asset_sha256": asset.sha256,
                 "size": st.st_size,
                 "mtime_ns": st.st_mtime_ns,
+                **provenance,
             },
             indent=2,
         )
@@ -234,30 +230,39 @@ def _repo(*args: str) -> str:
     ).stdout.strip()
 
 
-def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
-    """Return ``{catalog: directory}`` of the derived copies, deriving as needed.
+def _file_sha256(path: Path) -> str:
+    with path.open("rb") as handle:
+        return hashlib.file_digest(handle, "sha256").hexdigest()
 
-    Derive stamps the builder commit into each copy and refuses a tree with tracked
-    changes, so G1 runs on a committed tree.
+
+def _derive_copies(
+    dirs: dict[str, Path],
+    name: str,
+    keys: dict[str, Asset],
+    python: str,
+    env: dict[str, str],
+) -> dict[str, Path]:
+    """Return ``{catalog: <directory>/<name>}``, each holding ``python``'s builder's
+    derived copy of the catalog, stamped with its key and provenance: the copy's
+    ``builder_commit`` and SHA-256.
+
+    Stale copies derive at once: derive parallelizes only its resolver phase, so
+    deriving the catalogs together overlaps their serial index and validation phases
+    (the G1 budget).
     """
-    if _repo("status", "--porcelain", "--untracked-files=no"):
-        raise RuntimeError("G1 derives with the committed builder; commit first")
-    source = _repo("rev-parse", *(f"HEAD:{path}" for path in DERIVE_SOURCES))
-    derived: dict[str, Path] = {}
+    started = time.monotonic()
+    procs: dict[str, tuple[Path, subprocess.Popen]] = {}
     for catalog, directory in sorted(dirs.items()):
-        out = directory / "derived" / DB_FILENAME
-        key = Asset(
-            "derive",
-            hashlib.sha256(
-                f"{pins.catalogs[catalog].sha256}\n{source}".encode()
-            ).hexdigest(),
-        )
-        if not _stamp_ok(out, key):
-            sys.stderr.write(f"g1: deriving {catalog}\n")
-            _stamp_path(out).unlink(missing_ok=True)
-            result = subprocess.run(
+        out = directory / name / DB_FILENAME
+        if _stamp_ok(out, keys[catalog]):
+            continue
+        sys.stderr.write(f"g1: deriving the {name} copy of {catalog}\n")
+        _stamp_path(out).unlink(missing_ok=True)
+        procs[catalog] = (
+            out,
+            subprocess.Popen(
                 [
-                    sys.executable,
+                    python,
                     "-m",
                     "reg_meta_build.cli",
                     "derive",
@@ -268,36 +273,99 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
                 ],
                 stdout=subprocess.PIPE,
                 text=True,
-                check=False,
-                # A perturbation run's PYTHONPATH would derive from the perturbed
-                # tree and cache it under the committed tree's key.
-                env={k: v for k, v in os.environ.items() if k != "PYTHONPATH"},
-            )
-            if result.returncode:
-                raise RuntimeError(f"derive {catalog} failed: {result.stdout}")
-            # The atomic publish keeps the replaced copy aside; disk is tight.
-            out.with_name(out.name + ".prev").unlink(missing_ok=True)
-            _write_stamp(out, key)
-        docs = out.parent / DOC_DB_FILENAME
+                env=env,
+            ),
+        )
+    failures = []
+    for catalog, (out, proc) in procs.items():
+        # Derive prints one JSON envelope, so reading the pipes in turn cannot block.
+        stdout = proc.communicate()[0]
+        # The atomic publish keeps the replaced copy aside; disk is tight.
+        out.with_name(out.name + ".prev").unlink(missing_ok=True)
+        if proc.returncode:
+            failures.append(f"derive {name} {catalog} failed: {stdout}")
+            continue
+        conn = sqlite3.connect(f"file:{out}?mode=ro&immutable=1", uri=True)
+        try:
+            (commit,) = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'builder_commit'"
+            ).fetchone()
+        finally:
+            conn.close()
+        _write_stamp(
+            out, keys[catalog], builder_commit=commit, output_sha256=_file_sha256(out)
+        )
+    if failures:
+        raise RuntimeError("\n".join(failures))
+    if procs:
+        seconds = time.monotonic() - started
+        sys.stderr.write(f"g1: derived the {name} copies in {seconds:.1f} s\n")
+    for directory in dirs.values():
+        docs = directory / name / DOC_DB_FILENAME
         if not docs.is_symlink():
             docs.symlink_to(Path("..") / DOC_DB_FILENAME)
-        derived[catalog] = out.parent
-    return derived
+    return {catalog: directory / name for catalog, directory in dirs.items()}
+
+
+def _keys(pins: Pins, source: str) -> dict[str, Asset]:
+    return {
+        catalog: Asset(
+            "derive", hashlib.sha256(f"{asset.sha256}\n{source}".encode()).hexdigest()
+        )
+        for catalog, asset in pins.catalogs.items()
+    }
+
+
+def ensure_reference(pins: Pins, dirs: dict[str, Path], tree: Path) -> dict[str, Path]:
+    """Return ``{catalog: directory}`` of the reference copies: the baseline commit's
+    derive (from its worktree ``tree``) of each original, keyed by the original's
+    asset digest and the commit, never by the checkout's code.
+    """
+    return _derive_copies(
+        dirs,
+        "reference",
+        _keys(pins, pins.baseline_commit),
+        str(baseline_python(tree)),
+        isolated_env(),
+    )
+
+
+def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
+    """Return ``{catalog: directory}`` of the candidate copies: the checkout's derive
+    of each original, keyed by the original's asset digest and the builder sources.
+
+    Derive stamps the builder commit into each copy and refuses a tree with tracked
+    changes, so G1 runs on a committed tree.
+    """
+    if _repo("status", "--porcelain", "--untracked-files=no"):
+        raise RuntimeError("G1 derives with the committed builder; commit first")
+    source = _repo("rev-parse", *(f"HEAD:{path}" for path in DERIVE_SOURCES))
+    return _derive_copies(
+        dirs,
+        "derived",
+        _keys(pins, source),
+        sys.executable,
+        # A perturbation run's PYTHONPATH would derive from the perturbed tree and
+        # cache it under the committed tree's key.
+        isolated_env(),
+    )
 
 
 def ensure_server() -> Path:
-    """Build the checkout's ``reg-meta`` and return the binary."""
+    """Build the checkout's ``reg-meta`` and return the binary: optimized, as served,
+    which also keeps the served cases inside the G1 budget."""
     subprocess.run(
-        ["cargo", "build", "--quiet", "--locked", "-p", "reg-meta"],
+        ["cargo", "build", "--quiet", "--locked", "--release", "-p", "reg-meta"],
         cwd=REPO_ROOT,
         check=True,
     )
     target = REPO_ROOT / os.environ.get("CARGO_TARGET_DIR", "target")
-    return target / "debug" / "reg-meta"
+    return target / "release" / "reg-meta"
 
 
 def isolated_env() -> dict[str, str]:
-    """The baseline arm's environment: no path or venv leaks from the caller."""
+    """An environment with no path or venv leaks from the caller, for the baseline
+    arm and every derive."""
     env = {
         k: v
         for k, v in os.environ.items()
@@ -308,59 +376,46 @@ def isolated_env() -> dict[str, str]:
     return env
 
 
-def ensure_baseline(pins: Pins) -> Path:
-    """Return the baseline interpreter: the pinned commit's reader and webapp in their
-    own venv, with the commit's steward branding in ``stewards/`` beside it.
+def baseline_python(tree: Path) -> Path:
+    """The baseline interpreter in the tree ``ensure_baseline`` returns."""
+    return tree / ".venv" / "bin" / "python"
 
-    The venv gets the commit's locked third-party dependencies (``uv export`` from the
-    commit's ``uv.lock``) and non-editable ``reg_schema``, ``reg_meta`` and
-    ``reg_webapp`` built from a ``git archive`` of the commit, which is deleted after
-    the install.
+
+def ensure_baseline(pins: Pins) -> Path:
+    """Return the baseline tree: a detached worktree of the pinned commit with the
+    commit's locked environment in ``.venv`` (``uv sync --frozen --no-dev``; maturin
+    builds ``reg-core-py`` from the commit's crates). It holds the baseline reader and
+    webapp, the webapp's steward branding and the reference builder.
     """
     root = cache_root()
     commit = pins.baseline_commit
     _prune(root / "baseline", {commit})
     home = root / "baseline" / commit
-    python = home / "venv" / "bin" / "python"
-    marker = f"{commit} {' '.join(BASELINE_PACKAGES)}\n"
-    if (home / "installed").is_file() and (home / "installed").read_text() == marker:
-        return python
+    tree = home / "src"
+    # Outside worktree cleanup can delete the tree and leave the marker.
+    if (home / "installed").is_file() and tree.is_dir():
+        return tree
     shutil.rmtree(home, ignore_errors=True)
     home.mkdir(parents=True)
-    sys.stderr.write(f"g1: installing the baseline reader at {commit}\n")
-    archive = subprocess.run(
-        ["git", "archive", "--format=tar", commit, *BASELINE_PATHS],
-        # Pathspecs are relative to cwd, so archive from the repo root.
-        cwd=REPO_ROOT,
-        stdout=subprocess.PIPE,
+    sys.stderr.write(f"g1: installing the baseline at {commit}\n")
+    # Forget the worktrees whose directories were deleted (repo-wide: git drops every
+    # registration whose directory is missing), so the add below cannot collide.
+    _repo("worktree", "prune")
+    # The repo's post-checkout hook provisions a dev environment; this tree needs none.
+    _repo(
+        "-c",
+        "core.hooksPath=/dev/null",
+        "worktree",
+        "add",
+        "--detach",
+        str(tree),
+        commit,
+    )
+    subprocess.run(
+        ["uv", "sync", "--quiet", "--frozen", "--no-dev"],
+        cwd=tree,
+        env=isolated_env(),
         check=True,
-    ).stdout
-    env = isolated_env()
-    with tempfile.TemporaryDirectory(dir=home) as tmp:
-        src = Path(tmp)
-        with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
-            tar.extractall(src, filter="data")
-        requirements = src / "requirements.txt"
-        uv_pip = ["uv", "pip", "install", "--quiet", "--python", str(python)]
-        for cmd in (
-            [
-                "uv",
-                "export",
-                "--quiet",
-                "--frozen",
-                "--no-dev",
-                "--package",
-                "reg-webapp",
-                "--no-emit-workspace",
-                "--no-header",
-                "--output-file",
-                str(requirements),
-            ],
-            ["uv", "venv", "--quiet", "--python", "3.14", str(home / "venv")],
-            [*uv_pip, "--require-hashes", "-r", str(requirements)],
-            [*uv_pip, "--no-deps", *(str(src / p) for p in BASELINE_PACKAGES)],
-        ):
-            subprocess.run(cmd, cwd=src, env=env, check=True)
-        (src / "reg_webapp/stewards").rename(home / "stewards")
-    (home / "installed").write_text(marker)
-    return python
+    )
+    (home / "installed").write_text(f"{commit}\n")
+    return tree

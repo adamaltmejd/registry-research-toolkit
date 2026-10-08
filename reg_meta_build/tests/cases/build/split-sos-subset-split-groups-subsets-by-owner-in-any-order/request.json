@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_split_sos_boundary.py::test_subset_split_groups_subsets_by_declared_owner[reversed]"
+  ],
+  "note": "Parts declared in reverse order. The shared owner's native identity still carries its first delivered subset PAR_OV, so the PAR_SV row's classification warning subject names PAR_OV as its accepted shape.",
+  "sources": "sos-par-atc-three-subsets"
+}

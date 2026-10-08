@@ -1,0 +1,31 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_compact_choices_on_two_columns_check_each_columns_own_lists"
+  ],
+  "sources": {
+    "description": "VALUE (CVID 1001) and OTHER (CVID 1002) of variable 101, each under its own two competing lists.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {"cvid": 1002, "var_id": 101, "colname": "OTHER"}
+      ],
+      "unika": [
+        "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2010|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|GenericVar|OTHER|2020|2020|0|0|0"
+      ],
+      "vardemangder": [
+        "keep|1|01|Label|1001|7001",
+        "other|1|02|Other|1001|7002",
+        "keep2|1|11|Kept|1002|7011",
+        "other2|1|12|Dropped|1002|7012"
+      ],
+      "valid_dates": [
+        "7001|2000-01-01|2030-12-31",
+        "7002|2000-01-01|2030-12-31",
+        "7003|2000-01-01|2030-12-31",
+        "7011|2000-01-01|2030-12-31",
+        "7012|2000-01-01|2030-12-31"
+      ]
+    }
+  }
+}

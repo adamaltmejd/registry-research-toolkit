@@ -52,6 +52,82 @@
     },
     "outputSchema": {
       "$defs": {
+        "CodeClassification": {
+          "properties": {
+            "fqid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "short_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "CodeVariable": {
+          "properties": {
+            "fqid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "register_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "Edition": {
+          "properties": {
+            "effective_year": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "fqid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "slug": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "slug"
+          ],
+          "type": "object"
+        },
         "Error": {
           "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
           "properties": {
@@ -132,8 +208,40 @@
           "type": "string"
         },
         "SearchHit": {
-          "description": "`shape.SearchHit`, of the types the variable arm returns.",
+          "description": "`shape.SearchHit`.",
           "oneOf": [
+            {
+              "properties": {
+                "fqid": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "purpose": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "type": {
+                  "enum": [
+                    "register"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            },
             {
               "properties": {
                 "definition": {
@@ -225,6 +333,140 @@
                 "label",
                 "matched_count",
                 "members",
+                "type"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "fqid": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "short_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "terminal_fqid": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "type": {
+                  "enum": [
+                    "classification"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "editions": {
+                  "items": {
+                    "$ref": "#/$defs/Edition"
+                  },
+                  "type": "array"
+                },
+                "fqid": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "matched_count": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "short_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "type": {
+                  "enum": [
+                    "classification_succession"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "matched_count",
+                "editions",
+                "type"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "classification_count": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "classifications": {
+                  "items": {
+                    "$ref": "#/$defs/CodeClassification"
+                  },
+                  "type": "array"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "code_system": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "label": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "code"
+                  ],
+                  "type": "string"
+                },
+                "variable_count": {
+                  "format": "int64",
+                  "type": "integer"
+                },
+                "variables": {
+                  "items": {
+                    "$ref": "#/$defs/CodeVariable"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "code",
+                "label",
+                "variable_count",
+                "variables",
+                "classification_count",
+                "classifications",
                 "type"
               ],
               "type": "object"

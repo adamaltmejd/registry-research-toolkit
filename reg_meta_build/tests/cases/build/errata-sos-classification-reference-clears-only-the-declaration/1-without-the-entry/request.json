@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_sos_errata_boundary.py::test_classification_reference_correction_clears_only_the_declaration"
+  ],
+  "note": "Without the entry, the SYX_A MARK original reports its link as an unresolved classification reference.",
+  "sources": "sos-syx-errata"
+}

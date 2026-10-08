@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[code_label_pair]]
+code = "scb/sample/kod"
+label = "scb/sample/namn"
+[[code_label_pair]]
+code = "scb/sample/kod"
+label = "scb/sample/namn"

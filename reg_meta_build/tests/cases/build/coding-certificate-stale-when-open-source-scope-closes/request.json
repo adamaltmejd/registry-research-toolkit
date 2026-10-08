@@ -1,0 +1,59 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_changed_source_scope_makes_an_own_scope_certificate_stale[2005-2024]"
+  ],
+  "sources": {
+    "description": "sos-kon-decimal-comma-semicolon-open after its open KON delivery closed at 2024.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ],
+      "unika": ["TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2010|2020|0|0|0"]
+    },
+    "sos": [
+      {
+        "abbrev": "SYN",
+        "title": "Syntetiskt register",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {"name": "SYN_A", "label": "Vy A", "description": "Första vyn", "data_from": 2005, "data_to": 2015},
+          {"name": "SYN_B", "label": "Vy B", "description": "Andra vyn", "data_from": 2010}
+        ],
+        "variables": [
+          {
+            "name": "DIAGNOS",
+            "deldatamangd": "SYN_A",
+            "label": "Diagnoskod",
+            "description": "ICD-kod",
+            "data_from": 2005,
+            "data_to": 2015
+          },
+          {
+            "name": "DIAGNOS",
+            "deldatamangd": "SYN_B",
+            "label": "Diagnoskod",
+            "description": "ICD-kod",
+            "data_from": 2010
+          },
+          {
+            "name": "KON",
+            "deldatamangd": "SYN_A",
+            "label": "Kön",
+            "description": "Personens kön",
+            "data_type": "Heltal",
+            "data_from": 2005,
+            "data_to": 2024,
+            "value_set": "0=(ogitligt), 1=enbart trygghetslarm; 9=uppgift saknas"
+          }
+        ],
+        "code_lists": {
+          "DIAGNOS": [
+            ["2005-2015", "A01", "Diagnos A"],
+            ["2005-2015", "B02", "Diagnos B"]
+          ]
+        }
+      }
+    ]
+  },
+  "authored_from": "sos-kon-decimal-comma-semicolon-open"
+}

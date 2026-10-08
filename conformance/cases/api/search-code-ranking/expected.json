@@ -1,0 +1,51 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "R2",
+        "R3",
+        "R1",
+        "R5",
+        "R4"
+      ],
+      "/data/items/*/classification_count": [
+        3,
+        1,
+        1,
+        1,
+        1
+      ],
+      "/data/items/*/variable_count": [
+        0,
+        3,
+        1,
+        0,
+        0
+      ],
+      "/data/items/*/code_system": [
+        "ASET",
+        "ASET",
+        "ASET",
+        "ASET",
+        "ASET"
+      ],
+      "/data/items/0/classifications/*/short_name": [
+        "ASET",
+        "BSET",
+        "CSET"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "R6"
+      ],
+      "/data/items/*/code_system": [
+        null
+      ]
+    }
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "pipeline_build_failed",
+    "exit_code": 10,
+    "message_contains": [
+      "accepted-authored:Forsakringskassan/fk.toml:r:COL: empty or inverted thin coverage window for 'v'"
+    ]
+  }
+}

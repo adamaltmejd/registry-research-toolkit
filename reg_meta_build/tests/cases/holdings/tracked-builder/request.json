@@ -1,5 +1,1 @@
-[
-  {"output":"generated/reg_meta.db","tracked_change":false},
-  {"output":"reg_meta.db","tracked_change":false},
-  {"output":"generated/reg_meta.db","tracked_change":true}
-]
+{"output": "reg_meta.db"}

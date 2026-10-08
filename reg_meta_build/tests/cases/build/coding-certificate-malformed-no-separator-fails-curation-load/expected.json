@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "classification_curation_invalid",
+    "message_contains": [
+      "curation/registers/sos/syn.toml [[coding.documented", "assignment_separators", "at least 1 item"]
+  }
+}

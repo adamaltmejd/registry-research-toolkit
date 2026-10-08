@@ -64,12 +64,20 @@ pub(crate) fn variable(scope: Scope, id: &str, narrow: Narrow) -> String {
 
 /// The register `id` holds some variable in scope.
 pub(crate) fn register(scope: Scope, id: &str) -> String {
+    register_in(scope, id, None)
+}
+
+/// The register `id` holds some variable in scope, in tables of `years` when given.
+pub(crate) fn register_in(scope: Scope, id: &str, years: Option<(u16, u16)>) -> String {
     match scope {
         Scope::Reference => "1".to_owned(),
         Scope::Holdings => held(
             "variable hv JOIN holding_mapping hm ON hm.variable_id = hv.variable_id",
             &format!("hv.register_id = {id}"),
-            Narrow::default(),
+            Narrow {
+                years,
+                ..Narrow::default()
+            },
         ),
     }
 }

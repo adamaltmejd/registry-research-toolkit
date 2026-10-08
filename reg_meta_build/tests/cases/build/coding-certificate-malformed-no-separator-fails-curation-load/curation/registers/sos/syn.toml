@@ -1,0 +1,28 @@
+[register]
+provider = "sos"
+slug = "syn"
+name = "Syntetiskt register"
+native_id = "8646299464352216667"
+[[variant]]
+slug = "syn-a"
+native_id = "8646299464352216667.8787440101791605432"
+[[variant]]
+slug = "syn-b"
+native_id = "8646299464352216667.4735845016717668974"
+[[variable]]
+slug = "diagnos"
+native_id = "8646299464352216667.DIAGNOS"
+[[variable]]
+slug = "kon"
+native_id = "8646299464352216667.KON"
+
+[[coding.documented]]
+variable = "8646299464352216667.KON"
+variant = "8646299464352216667.8787440101791605432"
+column = "KON"
+periods = [["2005-01-01", "2015-12-31"]]
+members = [["0", "giltigt pnr"], ["8", "Ogiltigt pnr"]]
+version_label = "Exact source decimal meanings"
+reason = "Reviewed own enumeration"
+source = "fixture"
+source_authority = { revision = {{revision source=Socialstyrelsen/ member=KON}}, locators = {{locators source=Socialstyrelsen/ member=KON}}, records = {{expected_records source=Socialstyrelsen/ member=KON}}, codings = [], raw_codings = [], enumeration = { field = "representation", syntax = "ascii-decimal-comma-equals", assignment_separators = [], lines = ["0=giltigt pnr", "8=Ogiltigt pnr"] } }

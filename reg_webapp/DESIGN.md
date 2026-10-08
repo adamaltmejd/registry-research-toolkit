@@ -57,8 +57,7 @@ conn = reg_meta.db.open_db(db_path)  # mode=ro + _check_schema_compat
 wrong major / too-old minor raises at startup;
 `conformance/cases/boot/schema-major-mismatch` covers it). The boot connection is closed
 once the manifest is read; the parsed manifest AND the resolved `db_path` are stashed on
-`app.state` (the keys `/api/context` surfaces are validated at boot so a malformed DB
-fails fast). The lifespan holds **no** long-lived query connection — see the connection
+`app.state`. The lifespan holds **no** long-lived query connection — see the connection
 model below. The boot also loads the steward and builds its in-memory catalog index
 (below), stashing both on `app.state`.
 
@@ -438,147 +437,55 @@ NEVER a FastAPI generator `Depends` (which is entered on a different threadpool 
 cross-thread `ProgrammingError`). Each DB-backed route gets its OWN `ThreadPoolExecutor`
 concurrency smoke (the `TestClient` sequential default masks the bug).
 
-## Global catalog search (`routes/search.py` + `conn.py`)
+## Global catalog search (the Rust server, 3a.11)
 
-`GET /api/search?q=&limit=&type=&cursor=&scope=` (#350) is the discovery surface
-consumed by the global header omnibox (`SearchOmnibox.svelte`, shipped in this PR). It
-returns **typed result groups** over the shipped FTS5 indexes, reusing reg_meta's
-concept-group-folded `search` (`reg_meta.queries.search`, #322) — the webapp does NOT
-reimplement folding or FTS. `?type=` (#393) scopes the search to ONE group: `all` (the
-default, or omitted) preserves the fixed-order four-group response; any single type
-(`register` / `variable` / `classification` / `value`) runs AND emits only that one
-group. An unknown value 422s at the boundary (the valid set mirrors reg_meta's
-`SEARCH_TYPES`). Holdings scope restricts register and variable rows through the
-compiled SQL predicate before grouping and pagination; see § Compiled artifact identity
-and read scope. Classification and code surfaces remain reference evidence in both
-scopes.
+`GET /api/search` is answered by the Rust server (`reg-meta serve`, the `search`
+operation in `conformance/api/operations.toml`): one ranked list per call (decision 17),
+as `{data: {items, next_cursor}, meta}`. With `type` the list is one arm's hits
+(`register`, `variable`, `classification`, `classification_code`, `register_value`), its
+curated pins first; without it, every arm's hits ranked together, grouped variable
+members hidden. Ranking, curated pins (`reg_meta_build/curation/search_pins.toml`, read
+from the catalog's `search_pin` table), concept-group folding, input limits and cursors
+live in `crates/reg-catalog`. Locally, the Vite dev proxy sends `/api/search` to the
+Rust server. Maintainers measure relevance with `scripts/run_search_eval.py`
+(`search_eval.toml`, #393 item 10) against a running `reg-meta serve`.
 
 The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
-`/search?q=` results page (`SearchView.svelte`) that renders an optional compact
-cross-group `Top results` group above the four typed groups when multiple candidates
-compete, with navigation to catalog nodes. The router gained `search` and `doc` routes
-(query lives in `?q=`, keyed on pathname so the page re-runs on every query change) and
-a `router.replace()` method (mirrors the `?period` URL-as-single-source-of-truth
-pattern: the omnibox syncs back to the URL, and the URL drives the view). `api.ts`
-gained `search(q, {limit?, type?, cursor?})` typed off the codegen'd contract. Off
-`/search`, typing in the omnibox stays local until Enter/form submit and shows an Enter
-hint while focused; on `/search`, typing live-refines with replaceState. `SearchView`
-renders an "All · Registers · Variables · Classifications · Codes" scope toggle backed
-by `?type=` (URL state, like `?q=`/`?period`; `all` is omitted from the canonical URL),
-a Close control that `replace()`s back to the route that entered search (or `/catalog`
-for a cold deep-link), and variable rows whose heading carries delivery-column pills
-while register, definition, and `operational_definition` live in the muted detail line.
-When several search hits address the same variable, `SearchView` folds them into one row
-and merges the delivery-column pills so a column-code search shows one variable with the
-matched columns inline; the "Variables" group heading itself stays plain text. The
-omnibox preserves an active scope when re-querying. Global search does **not** render
-documentation results; documentation is reached from item pages via `DocMentionsPanel`
-and then the `/doc/<filename>` route (router `Route` union arm
-`{name:"doc",identifier}`), which renders `DocView.svelte`: title,
+`/search?q=` results page (`SearchView.svelte`) with navigation to catalog nodes. The
+router has `search` and `doc` routes (query lives in `?q=`, keyed on pathname so the
+page re-runs on every query change) and a `router.replace()` method (mirrors the
+`?period` URL-as-single-source-of-truth pattern: the omnibox syncs back to the URL, and
+the URL drives the view). `api.ts` has `search(q, {limit?, type?, cursor?})` typed off
+the generated `api-types-rust.ts`. Off `/search`, typing in the omnibox stays local
+until Enter/form submit and shows an Enter hint while focused; on `/search`, typing
+live-refines with replaceState. `SearchView` renders an "All · Registers · Variables ·
+Classifications · Codes" scope toggle backed by `?type=` (URL state, like
+`?q=`/`?period`; `all` is omitted from the canonical URL; `value` is the SPA's name for
+both code arms), a Close control that `replace()`s back to the route that entered search
+(or `/catalog` for a cold deep-link), and variable rows whose heading carries
+delivery-column pills while register, definition, and `operational_definition` live in
+the muted detail line. The omnibox preserves an active scope when re-querying. Global
+search does **not** render documentation results; documentation is reached from item
+pages via `DocMentionsPanel` and then the `/doc/<filename>` route (router `Route` union
+arm `{name:"doc",identifier}`), which renders `DocView.svelte`: title,
 register/variable/tags, a `source_url` link to the SCB source PDF (resolved from the
 curated map at doc-DB build, #372; None when uncurated) with `source_title` as label,
 and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
 `snippet`/`excerpt` are rendered as TEXT, never `{@html}`, and the full converted body
 is never fetched.
 
-Each rendered group starts with at most 3 results. A `Load more` control requests that
-group's cursor and appends the next bounded page; query or scope changes discard the
-continuation state. The heading uses `N+ results` while `has_more` is true, rather than
-claiming an exact total. The control is keyboard-native, announces its busy state, and
-keeps continuation errors local to the group.
-
-**The response contract is the point — designed to extend.** The body is
-`{kind, query, groups: SearchGroup[]}`; each `SearchGroup` is a discriminated arm
-(`group` literal) carrying bounded typed `results`, `has_more`, and `next_cursor`.
-`top_results` is presentation-only and never paginates. Today: `top_results` (#393 items
-6/7 — optional, all-scope-only, and emitted only when multiple candidates compete; built
-from the already-prepared typed rows, exact identifier/name/code matches first, then
-type priors register → variable/group → classification → code; a code row earns *prefix*
-authority from its code identifier only, its label and owning code system counting as
-identity on an exact match alone, so a topical term that merely starts an incidental
-value label cannot displace the register or variable carrying that term in its purpose
-or definition), `registers`, `variables` (leaf hits ⧺ folded concept groups),
-`classifications` (leaf hits ⧺ folded classification-succession rows
-(`type: "classification_succession"`, #571 — a query that hits ≥2 editions of the same
-chain collapses to one `ClassificationSuccessionSearchResult` keyed on the terminal
-edition, carrying the full `editions` chain and `matched_count`) ⧺ folded umbrella
-concept-group rows (`type: "group"`, #516 — e.g. `group:sun`)), and `codes` (#352 —
-value-label hits annotated with their owning variables/classifications). The reserved
-docs arm remains unused by global search; docs stay on the separate `/api/docs/*`
-endpoints and item-page hooks. The SPA must tolerate an unknown `group` value (skip it)
-so a new group can ship before the SPA renders it (the same payload-skew tolerance the
-`?period` additive fields rely on). Each result carries its navigable `fqid` and a
-`rank: float` (the FTS rank the CLI's doc-merge interleaves by, #701); results within a
-group are pre-sorted by FTS rank before grouping, so the SPA may ignore `rank` — it is
-present on the wire as the shared sort key.
-
-- **One reg_meta call per group**: register/variable/classification via the FTS
-  `field="description"` path; **codes (#352) via the `field="value", type="value"`
-  path** (`value_code_fts` label match + code-shape exact/prefix on `value_code.code`,
-  ranked bm25 + rarity-downweight, owner-annotated — see reg_meta DESIGN.md → FTS5
-  configuration). Each group gets its own bounded page and context-bound cursor; codes
-  don't fold into concept groups (`fold_groups=False`). The codes page is then re-ranked
-  (#393) so classification-backed (curated) codes lead, then by `classification_count`,
-  then `variable_count` — but only WITHIN the FTS-top-N page reg_meta already annotated,
-  so it can't pull a curated code that ranked below the FTS cutoff into view. Each
-  `CodeSearchResult` carries `code_system` (the primary owning classification's
-  `short_name`, else null); the SPA renders the codes group in per-code-system
-  subsections, register-local/bespoke (null) codes last.
-- **Input gates** (`query_input.validate_text_query` / `_validated_limit` /
-  `_has_searchable_token`): a query is length-capped (422 over 200 chars) and
-  NUL-rejected (422); `limit` is clamped to \[1, 50\] (not 422'd). A blank / whitespace
-  / punctuation-only query returns ALL groups EMPTY (200, not 422) — it never reaches
-  reg_meta (whose LIKE label-fold would otherwise turn `%%` into a match-everything).
-  FTS-operator neutralization + prefix-matching + diacritic folding all live in reg_meta
-  (`_fts_match_query`); the webapp passes the raw query through. The query reaches FTS
-  only as a bound parameter (no SQLi surface), so the gates guard cost/abuse, not
-  injection.
-- **Bounded-origin budget (#1135):** every reg_meta SQL arm receives a finite prefix
-  bound and expensive folding, owner annotation, golden construction, and top-results
-  construction operate only on bounded candidates. The default is 3 per group (maximum
-  50). The route emits per-phase `Server-Timing` entries for controlled profiling.
-  Representative broad all-scope cache-miss p95 is budgeted at 500 ms and browser-cold
-  search LCP below 2.5 s; edge-cache hits are not accepted as cold-origin evidence.
-  Invalid/context-stale cursors map to an actionable HTTP 422 at the route boundary.
-  There is no in-process response cache.
-- **Golden-boost** (`golden.apply_golden_boost`, #393 item 4 / #311): a curated-pin
-  INJECTION (no longer the old no-op seam). For an exact query under `fold_search` (case
-  fold, diacritics dropped, whitespace trimmed and runs collapsed to one space — so
-  `sysselsattning` matches the `sysselsättning` pin), a curated pin (build input,
-  `reg_meta_build/curation/search_pins.toml`, read from the catalog's `search_pin`
-  table) prepends a canonical result to the TOP of its group even when FTS would not
-  surface it — e.g. `sysselsättning` → `scb/lisa` (RAMS is stale → BAS; steer to LISA)
-  and `diagnos` → `sos/par` (Patientregistret), both registers that don't rank for those
-  terms today. It operates on reg_meta's typed search models (the `SearchResult` union,
-  #701) so the route AND the eval runner (`scripts/run_search_eval.py`) apply the SAME
-  function — that's what makes the eval measure the route's TRUE behavior. Pins dedup by
-  `fqid` (a pin already an FTS hit injects nothing). The route passes every matching pin
-  to reg_meta's cursor-bound `exclude_fqids`, so the origin universe omits it on every
-  page and a deep natural FTS hit cannot duplicate the injected pin. When a net-new pin
-  displaces an origin row, continuation advances only past the origin prefix actually
-  shown, so the displaced row appears on the next page. If configured pins outnumber the
-  requested page limit, a signed opaque wrapper carries the next pin position plus the
-  unchanged reg_meta origin cursor; its context binds the normalized query, group,
-  ordered pin identities, and the origin cursor retains the catalog/steward binding.
-  Pins therefore span pages in config order without being duplicated or lost; only the
-  current page's pin slice is resolved, keeping golden construction bounded by the
-  requested limit. Pins exist for `register` and `classification` only. The build
-  validates them and refuses a complete catalog whose pin does not resolve, so the
-  webapp reads them without checks; a catalog without pins boosts nothing. Eval gaps the
-  pins close are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains the lone
-  gap — a concept-group modeling issue, not a golden-boost one).
-- **ETag/cache-header wiring is automatic; cache effectiveness is not assumed**:
-  `/api/search` is a GET, so the `ETagMiddleware` stamps a body-derived ETag (the query
-  is part of the URL → part of the CF edge cache key, and part of the body → part of the
-  ETag). No per-route caching code. The pending v1 performance probe must separately
-  prove edge MISS→HIT and no-origin warm behavior for this query route.
-- **Connection seam** (`conn.py`): the per-request read-only open (`catalog_conn`, the
-  threadpool-safe pattern from #168) is shared with the catalog routes — extracted to
-  `conn.py` so search doesn't import the catalog route module just for the connection.
-
-The shared `?q=` input gate (`query_input.validate_text_query`: length cap + NUL reject,
-both → 422) is reused by the docs endpoints below; per-group `?limit` is clamped, not
-422'd.
+Under `All`, `SearchView` makes one untyped call (5 hits) for a `Top results` strip,
+shown only when it ranks more than one hit, and one call per arm (3 hits each) for the
+sections below it, in the fixed order registers → variables → classifications →
+classification codes → register-local value sets. A scoped `?type=` asks only its arm
+(`value` asks both code arms). Any failed call fails the search as a whole. Each section
+has a `Load more` control that requests that section's cursor at the same page size and
+appends the next page; query or scope changes discard the continuation state. A
+section's heading uses `N+ results` while it has a `next_cursor`, rather than claiming
+an exact total. The control is keyboard-native, announces its busy state, and keeps
+continuation errors local to the section. Classification codes render in per-code-system
+subsections, register-local value sets in their own section; a code's owning variables
+and classifications are its navigable targets.
 
 ## Docs library endpoints (`routes/docs.py`)
 
@@ -620,24 +527,22 @@ query logic beyond plumbing + the response policy.
   (search / for-variable / related metadata) or 404 "not ingested" (doc get / PDF file).
   When present, the per-request open is `conn.docs_conn` (same threadpool-safe model as
   `catalog_conn`, `check_schema=False`).
-- **Not folded into `/api/search` or global SearchView**: the `SearchGroup` union
-  reserves a `docs` arm (#350 contract), but it remains unused — the docs index is a
-  *separate optional DB* and its `ingested` degradation doesn't map onto a group's
-  `total_count`/`results` shape, so folding it into the omnibox endpoint would couple
-  `/api/search` to a second DB open on every search request. `SearchView.svelte` no
-  longer calls `/api/docs/search` or renders a docs section; the docs search endpoint
-  remains available for doc-specific callers, while the SPA entrypoint is through item
-  pages. The `/api/docs/for-variable` leaf hook has its own SPA consumer (#402):
-  `BindingLeafView.svelte` renders a `DocMentionsPanel` sibling of the lineage panels,
-  firing a SEPARATE independent `asyncResource` at `/api/docs/for-variable` — a distinct
-  failure domain (a docs error, timeout, or absent index never blanks the leaf). The
-  panel omits the entire section when the response is empty in any sense
-  (`ingested:false`, `register_ingested:false`, or zero results), mirroring the
-  omit-when-empty behaviour of the picker graph mode and `LineageDetails` (#612);
-  loading and error states still render inline, so an in-flight or errored fetch never
-  reads as a confirmed absence. When results are present, fuzzy hits are labelled as
-  such; each hit links to the `/doc/<filename>` viewer and renders the FTS snippet via a
-  safe inline-emphasis subset (`**…**` → `<mark>` for matched-term highlight,
+- **Not folded into `/api/search` or global SearchView**: the docs index is a *separate
+  optional DB* and its `ingested` degradation doesn't map onto a ranked list, so folding
+  it into the omnibox search would couple `/api/search` to a second DB open on every
+  search request. `SearchView.svelte` does not call `/api/docs/search` or render a docs
+  section; the docs search endpoint remains available for doc-specific callers, while
+  the SPA entrypoint is through item pages. The `/api/docs/for-variable` leaf hook has
+  its own SPA consumer (#402): `BindingLeafView.svelte` renders a `DocMentionsPanel`
+  sibling of the lineage panels, firing a SEPARATE independent `asyncResource` at
+  `/api/docs/for-variable` — a distinct failure domain (a docs error, timeout, or absent
+  index never blanks the leaf). The panel omits the entire section when the response is
+  empty in any sense (`ingested:false`, `register_ingested:false`, or zero results),
+  mirroring the omit-when-empty behaviour of the picker graph mode and `LineageDetails`
+  (#612); loading and error states still render inline, so an in-flight or errored fetch
+  never reads as a confirmed absence. When results are present, fuzzy hits are labelled
+  as such; each hit links to the `/doc/<filename>` viewer and renders the FTS snippet
+  via a safe inline-emphasis subset (`**…**` → `<mark>` for matched-term highlight,
   `*…*`/`_…_` → `<em>`) through auto-escaped Svelte interpolation — never `{@html}`,
   still excerpt-only.
 - **Source documents on register pages (#742/#967)**: `CatalogNodeView.svelte` renders
@@ -915,38 +820,33 @@ variable pages to add one column each.
   distance through a long list (LISA's ~740 variables) still leaves the count and the
   Add in reach at the bottom edge.
 
-## Catalog stats (`routes/stats.py`, #675)
+## Context and catalog sizes (the Rust server, 3a.10)
 
-`GET /api/stats` returns the headline catalog-size counts
-(`{providers, registers, variables}`) the landing page renders. It is a **TOP-LEVEL**
-route (a sibling of `/api/context`), deliberately NOT under `/api/catalog`: that prefix
-is the `{fqid:path}` catch-all, so a `/api/catalog/stats` would be swallowed by the
-catch-all (or need a reserved-slug carve-out + above-the-catch-all declaration).
-
-Both artifact kinds call `Catalog.catalog_sizes()` on the per-request connection with
-the effective read scope. Counts come from SQL before the response is serialized:
-providers and registers require a surviving binding, and variables count once per
-binding FQID. Catalog artifacts default to reference; steward artifacts default to
-holdings. Explicit browse scope follows the same contract as catalog and search routes.
-
-ETag + Cache-Control ride the generic `ETagMiddleware`. `/api/stats` keeps the short
-`public, max-age=60, must-revalidate` tier so a same-steward redeploy promptly exposes
-counts from the new generation.
+`GET /api/context` is answered by the Rust server (`reg-meta serve`, the `context`
+operation in `crates/reg-catalog/src/ops/slice_3a.rs`), not by this backend. One call
+returns the steward branding, schema version, import date, the steward's period span,
+the `reg_meta` version and the headline `sizes` (`{providers, registers, variables}` in
+the read scope), as `{data, meta}`; it replaces FastAPI's `/api/context` and
+`/api/stats` (`RUST_RUNTIME_SPEC.md` decision 15). App fetches it once and threads
+`steward` and `sizes` to Home, which makes no request of its own. The SPA's types for it
+are generated from the committed `crates/reg-meta/openapi.json` into
+`frontend/src/lib/api-types-rust.ts` (a `cargo test` keeps the snapshot equal to the
+server). Locally, the Vite dev proxy sends `/api/context` to the Rust server and the
+rest of `/api` here.
 
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
-Every read endpoint (`/api/context`, `/api/stats`, the `/api/catalog` root + catch-all,
-the 7 binding-suffix sub-endpoints) carries an ETag derived from the full catalog
-generation, effective read scope, package version, steward identity, and response body
-and a per-route `Cache-Control` (`cache_control_for`) in three tiers: `/api/context`
-revalidates always (see below); scope-sensitive reads (`/api/catalog/*`, `/api/search`,
-and `/api/stats`) keep `public, max-age=60, must-revalidate`; rebuild-stable doc-library
-reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A matching
-`If-None-Match` yields a **304** with no body, but the current body-derived middleware
-still executes the route and serializes the response first: it saves transfer, not
-origin computation or latency. The pure logic lives in `etag.py` (`compute_etag` +
-`etag_matches` + `cache_control_for`); an ASGI middleware (`ETagMiddleware`) wires it
-DRY onto every GET read response.
+Every read endpoint (the `/api/catalog` root + catch-all, the 7 binding-suffix
+sub-endpoints and docs) carries an ETag derived from the full catalog generation,
+effective read scope, package version, steward identity, and response body and a
+per-route `Cache-Control` (`cache_control_for`) in two tiers: scope-sensitive reads
+(`/api/catalog/*`) keep `public, max-age=60, must-revalidate`; rebuild-stable
+doc-library reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A
+matching `If-None-Match` yields a **304** with no body, but the current body-derived
+middleware still executes the route and serializes the response first: it saves
+transfer, not origin computation or latency. The pure logic lives in `etag.py`
+(`compute_etag` + `etag_matches` + `cache_control_for`); an ASGI middleware
+(`ETagMiddleware`) wires it DRY onto every GET read response.
 
 **V1 early-revalidation correction (decision 2026-07-14; not implemented at this
 head).** App code, compiled catalog DB, steward branding configuration and paired docs
@@ -976,23 +876,19 @@ path meets it, so no second in-process response cache is warranted.
 - **The body-hash** makes `If-None-Match` per-URL coherent — the `?period` / `?variant`
   query is part of the URL, so it's already part of the cache key (different periods are
   different ETags).
-- **`/api/context` revalidates always** (`Cache-Control: no-cache`, in
-  `REVALIDATE_ALWAYS_PATHS`): the SPA vintage footer reads it to assert a specific
-  deploy version/date, so a sub-24h-stale copy would *visibly lie* right after a deploy.
-  The current ETag keeps an unchanged body off the wire; the early-validator correction
-  above makes that path computationally cheap too. A deploy bump produces a fresh 200.
-  Catalog and search endpoints use `max-age=60` because both embed the #322
-  concept-group folds, which can change at the same browser URL on redeploy. A long
-  browser-fresh copy would surface the old grouping to a returning user even though the
-  edge generation changed; `/api/stats` shares that short browser tier because filtered
-  counts can also change on a same-id redeploy. The body-hash ETag avoids retransmitting
-  unchanged bodies, and `public` keeps the CF edge cacheable (the #220 probe survives);
-  early validation is what removes repeated route work. Only `/api/docs/*` keeps
-  `max-age=86400` — doc-library content is rebuild-stable and a sub-day-stale list is
-  acceptable there; the ETag still guarantees correctness on revalidation. The edge
-  worker (`reg_webapp/edge/`) defers to this origin's `Cache-Control` contract (it only
-  stamps the `__edge_v` cache-generation param, orthogonal to caching policy), so the
-  per-route policy needs no edge change.
+- **`/api/context` revalidates always** (`Cache-Control: no-cache`, now set by the Rust
+  server): the SPA vintage footer reads it to assert a specific deploy version/date, so
+  a sub-24h-stale copy would *visibly lie* right after a deploy. Catalog and search
+  endpoints use `max-age=60` because both embed the #322 concept-group folds, which can
+  change at the same browser URL on redeploy. A long browser-fresh copy would surface
+  the old grouping to a returning user even though the edge generation changed. The
+  body-hash ETag avoids retransmitting unchanged bodies, and `public` keeps the CF edge
+  cacheable (the #220 probe survives); early validation is what removes repeated route
+  work. Only `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable
+  and a sub-day-stale list is acceptable there; the ETag still guarantees correctness on
+  revalidation. The edge worker (`reg_webapp/edge/`) defers to this origin's
+  `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
+  orthogonal to caching policy), so the per-route policy needs no edge change.
 - **Middleware skips WRITE endpoints** via a method gate: only `GET` reads are stamped,
   so the POST endpoints pass through with no ETag. It also skips non-200 responses — an
   error body isn't a cacheable representation, and handing the client a validator for a
@@ -1052,14 +948,14 @@ steward. A mismatch fails with the DB path and `REG_WEBAPP_STEWARD` locator. Onl
 reconciliation, drift warnings, the in-memory index, and the runtime release gate are
 removed; builder publication validation owns those invariants.
 
-Catalog, search, and stats accept `?scope=holdings|reference`. Catalog artifacts default
-to reference and reject holdings; steward artifacts default to holdings and allow
-reference. Scope is applied inside the shared reader before hydration, grouping,
-ranking, counts, or pagination. The adapter consumes scoped pages directly. Finite
-curated pins are admitted through `Catalog.exists` before ranking and pagination.
-Cursors bind both scope and the full artifact generation. Project endpoints reject any
-`scope` query parameter with a located 422; browse scope cannot override the selected
-artifact's orderability.
+Catalog reads, and the Rust server's `context` and `search`, accept
+`?scope=holdings|reference`. Catalog artifacts default to reference and reject holdings;
+steward artifacts default to holdings and allow reference. Scope is applied inside the
+shared reader before hydration, grouping, ranking, counts, or pagination. The adapter
+consumes scoped pages directly. Finite curated pins are admitted through
+`Catalog.exists` before ranking and pagination. Cursors bind both scope and the full
+artifact generation. Project endpoints reject any `scope` query parameter with a located
+422; browse scope cannot override the selected artifact's orderability.
 
 Provider and register discovery requires a mapped binding. Variable discovery unions
 mappings across source variants; states and deliveries retain their actual mapped
@@ -1073,12 +969,12 @@ graph edges, and lineage remain reference evidence. The browse subject is scoped
 reference neighbor does not grant holdings or orderability. Hydrated graph states use
 the scoped reader; unheld neighboring variables remain thin with no selectable states.
 
-`/api/context` reports artifact kind, manifest steward, full generation, and default
-scope alongside branding and package versions. Its optional `catalog_period_span` is
-computed once at boot from compiled physical `holding_period` MIN/MAX bounds of known
-tables with an explicit mapping, then capped at the catalog import year. It is a coarse
-UI slider bound, never a coverage or validity check. Catalog artifacts and holdings
-without dated periods return null.
+The Rust server's `context` reports branding, schema version, import date and the
+`reg_meta` version; its `meta` carries the full generation and the effective scope. Its
+optional `period_span` is computed from compiled physical `holding_period` MIN/MAX
+bounds of known tables with an explicit mapping, then capped at the catalog import year.
+It is a coarse UI slider bound, never a coverage or validity check. Catalog artifacts
+and holdings without dated periods return null.
 
 `REG_WEBAPP_STEWARDS_DIR` overrides the branding root for wheels and Docker images.
 SWECOV is the proving steward; extracting its branding and delivery pipeline into its
@@ -1388,19 +1284,19 @@ them twice.
 
 `App.svelte` renders a `<footer class="vintage">` on every route showing the reg_meta
 version, schema version, and DB build date sourced from `/api/context`
-(`context.webapp.reg_meta_version`, `context.reg_meta.schema_version`,
-`context.reg_meta.import_date`). The footer is guarded on `context` (same as the header
-`.build` chip) so it is absent until `/api/context` resolves. `import_date` is a UTC
-timestamp string (`"2026-06-12T08:30:00Z"`); the footer displays only the leading
-`YYYY-MM-DD` (split on `"T"`). The intent is citation stability: a reader quoting any
-catalog node can see which reg_meta build it reflects without navigating away.
+(`context.reg_meta_version`, `context.schema_version`, `context.import_date`). The
+footer is guarded on `context` (same as the header `.build` chip) so it is absent until
+`/api/context` resolves. `import_date` is a UTC timestamp string
+(`"2026-06-12T08:30:00Z"`); the footer displays only the leading `YYYY-MM-DD` (split on
+`"T"`). The intent is citation stability: a reader quoting any catalog node can see
+which reg_meta build it reflects without navigating away.
 
 `AppShell`'s rail carries a `YearWindowSlider` dual-thumb year slider (#614/#611) as the
 "Study window" control — a global control reachable on every route and inside the mobile
 drawer. It sets the active project window (1960 floor → the catalog vintage year from
-`context.reg_meta.import_date`; current year as the pre-context fallback), with bounds
-threaded down from `App.svelte`. It writes through `windowStore`
-(`src/lib/window.svelte.ts`) — see the store description below.
+`context.import_date`; current year as the pre-context fallback), with bounds threaded
+down from `App.svelte`. It writes through `windowStore` (`src/lib/window.svelte.ts`) —
+see the store description below.
 
 ## SPA routing + production fallback
 
@@ -1774,7 +1670,7 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   order — without the guard an older commit's slow build could overwrite a newer deploy;
   it also makes non-main dispatches deploy-inert). Two gates guard a bad image: the
   entrypoint smoke gate (container exits non-zero before ever serving when artifact
-  admission or a required route fails) and fly.toml's `/api/context` HTTP check (flyctl
+  admission or a required route fails) and fly.toml's `/api/catalog` HTTP check (flyctl
   reports failure if it never passes). Rollback: `flyctl releases --image` lists
   history; `flyctl deploy --image <old>` restores in seconds.
 - **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
@@ -1920,7 +1816,7 @@ Backend tests build artifacts in temporary directories and point the app at them
 `REG_META_DB`; they do not fetch released DB assets. Compiled stewardship cases load
 readable logical JSON, inventory TOML, policies, and census CSV through the real builder
 and compiler. HTTP requests and expected status/body projections live in the owning JSON
-corpora. Boot cases vary manifest admission and deployment identity; catalog, search,
+corpora. Boot cases vary manifest admission and deployment identity; catalog,
 validation, scope, and cache cases assert their public boundaries. No runtime index
 fixtures or release-marked inventory reconciliation suite remains.
 
@@ -2257,18 +2153,18 @@ passive "no data here", not a selection warning), while an explicit out-of-cover
 `?period` still renders honestly with its not-delivered gap. Open-ended coverage
 additionally surfaces a **"coverage through \<vintage\>"** note (M21). The per-page
 picker shares the rail slider's vintage ceiling (#631): `App.svelte` threads the ceiling
-(`context.reg_meta.import_date`'s year) down through `CatalogNodeView` →
-`BindingLeafView` → `PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker`
-(#638). On the concept-group subject page the picker is a **client-side availability
-lens** over the union of member coverage spans — it greys members not delivered in the
-active window but drives no refetch (`getConceptGroup` takes no period parameter). The
-vintage is the ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still
-delivered") projects to — the catalog only knows delivery up to its vintage — so the
-coverage band ends at the vintage and a selection past it reads as "not delivered after
-`<vintage>`". It is NOT a floor on the slider bounds: a FINITE coverage keeps its real
-end (never extended to the vintage), and a window/selection past the vintage still
-widens the bounds (the thumb renders the real value) without extending coverage.
-Wall-clock is the pre-context fallback only.
+(`context.import_date`'s year) down through `CatalogNodeView` → `BindingLeafView` →
+`PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker` (#638). On the
+concept-group subject page the picker is a **client-side availability lens** over the
+union of member coverage spans — it greys members not delivered in the active window but
+drives no refetch (`getConceptGroup` takes no period parameter). The vintage is the
+ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still delivered") projects to —
+the catalog only knows delivery up to its vintage — so the coverage band ends at the
+vintage and a selection past it reads as "not delivered after `<vintage>`". It is NOT a
+floor on the slider bounds: a FINITE coverage keeps its real end (never extended to the
+vintage), and a window/selection past the vintage still widens the bounds (the thumb
+renders the real value) without extending coverage. Wall-clock is the pre-context
+fallback only.
 
 Precedence — two backing stores, one source of truth:
 
@@ -2294,11 +2190,10 @@ update it), so the new project starts windowless (full history) unless the user 
 one. An opened project (an open / restore) keeps its own `window` unchanged. The rail
 slider also exposes an explicit ✕ clear control that writes `null` back to the store,
 making full history reachable at any time after the first interaction. Filtered steward
-deployments seed the rail and per-page picker bounds from
-`/api/context.steward.catalog_period_span` (#1037), a best-effort year span derived from
-admitted physical holding-period bounds and capped at the catalog import year. Catalog
-artifacts and holdings without dated periods fall back to the fixed 1960 →
-catalog-vintage bounds.
+deployments seed the rail and per-page picker bounds from `/api/context`'s `period_span`
+(#1037), a best-effort year span derived from admitted physical holding-period bounds
+and capped at the catalog import year. Catalog artifacts and holdings without dated
+periods fall back to the fixed 1960 → catalog-vintage bounds.
 
 ## Common study window (decision 2026-07-11)
 
@@ -2365,9 +2260,9 @@ POSTs are not. Catalog browse paths use FQID segments directly.
 
   | Method | Path                                             | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
   | ------ | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | GET    | `/api/context`                                   | Admitted artifact identity, branding, build info, default read scope.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+  | GET    | `/api/context`                                   | The Rust server's `context`: branding, build info, period span, catalog sizes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
   | GET    | `/api/catalog`                                   | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-  | GET    | `/api/search`                                    | Global FTS search → bounded typed groups (`top_results`, `registers`, folded `variables`, `classifications`, `classification_codes`, `register_value_sets`); extensible, with unknown groups skipped by the SPA. Each emitted group carries `has_more` and an opaque `next_cursor`. `?q=` is required; `?limit=` caps each group; `?type=` scopes the response (`all` default); `?cursor=` continues the requested context-bound page. Documentation is not rendered in global search.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+  | GET    | `/api/search`                                    | The Rust server's `search`: one ranked list per call (`?type=` keeps one arm), `{items, next_cursor}`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
   | GET    | `/api/docs/search`                               | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
   | GET    | `/api/docs/doc/{identifier}`                     | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
   | GET    | `/api/docs/for-variable`                         | Parsed-document hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -2385,8 +2280,8 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | POST   | `/api/project/validate`                          | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
   | POST   | `/api/project/order`                             | The materialized JSON order manifest, downloaded as `order.json`; 422 (`OrderBlockedModel`: `detail` + typed `findings`) when the result is not an order.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
-Global FTS search shipped as `GET /api/search` (#350); the docs library shipped as
-`/api/docs/*` (#354).
+Global FTS search shipped as `GET /api/search` (#350) and moved to the Rust server in
+3a.11; the docs library shipped as `/api/docs/*` (#354).
 
 ## §16 input-validation gates (security boundary)
 

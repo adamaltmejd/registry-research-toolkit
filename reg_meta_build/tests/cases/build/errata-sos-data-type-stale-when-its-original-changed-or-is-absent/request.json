@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_sos_errata_boundary.py::test_data_type_entry_with_a_changed_or_absent_original_is_stale"
+  ],
+  "note": "A changed type, representation or column, a blank or formula type cell, a blank representation, or no such variable leaves the entry stale and the type unchanged.",
+  "sources": "sos-syx-errata"
+}

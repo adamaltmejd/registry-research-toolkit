@@ -1,0 +1,50 @@
+{
+  "kind": "catalog",
+  "fixture": "search-ranking",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Q90",
+        "limit": 1
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Q90",
+        "limit": 1
+      },
+      "cursor_from": [
+        0,
+        "/data/next_cursor"
+      ]
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Q90",
+        "limit": 1
+      },
+      "cursor_from": [
+        1,
+        "/data/next_cursor"
+      ]
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Q90",
+        "limit": 1
+      },
+      "cursor_from": [
+        2,
+        "/data/next_cursor"
+      ]
+    }
+  ]
+}

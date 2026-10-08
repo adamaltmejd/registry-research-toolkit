@@ -1,0 +1,60 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_changed_source_cell_makes_the_certificate_stale[prefixed]"
+  ],
+  "note": "The parsed assignments are unchanged; only the exact source cell differs.",
+  "sources": {
+    "description": "sos-kon-decimal-comma with text before its enumeration.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ],
+      "unika": ["TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2010|2020|0|0|0"]
+    },
+    "sos": [
+      {
+        "abbrev": "SYN",
+        "title": "Syntetiskt register",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {"name": "SYN_A", "label": "Vy A", "description": "Första vyn", "data_from": 2005, "data_to": 2015},
+          {"name": "SYN_B", "label": "Vy B", "description": "Andra vyn", "data_from": 2010}
+        ],
+        "variables": [
+          {
+            "name": "DIAGNOS",
+            "deldatamangd": "SYN_A",
+            "label": "Diagnoskod",
+            "description": "ICD-kod",
+            "data_from": 2005,
+            "data_to": 2015
+          },
+          {
+            "name": "DIAGNOS",
+            "deldatamangd": "SYN_B",
+            "label": "Diagnoskod",
+            "description": "ICD-kod",
+            "data_from": 2010
+          },
+          {
+            "name": "KON",
+            "deldatamangd": "SYN_A",
+            "label": "Kön",
+            "description": "Personens kön",
+            "data_type": "Heltal",
+            "data_from": 2005,
+            "data_to": 2015,
+            "value_set": "Prefix 0=giltigt pnr,  8=Ogiltigt pnr"
+          }
+        ],
+        "code_lists": {
+          "DIAGNOS": [
+            ["2005-2015", "A01", "Diagnos A"],
+            ["2005-2015", "B02", "Diagnos B"]
+          ]
+        }
+      }
+    ]
+  },
+  "authored_from": "sos-kon-decimal-comma"
+}

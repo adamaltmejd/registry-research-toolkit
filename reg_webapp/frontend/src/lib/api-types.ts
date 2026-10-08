@@ -392,23 +392,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/context": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Context */
-        get: operations["get_context_api_context_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/docs/doc/{identifier}": {
         parameters: {
             query?: never;
@@ -591,65 +574,6 @@ export interface paths {
          *     recur).
          */
         post: operations["validate_project_api_project_validate_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/search": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Search
-         * @description Search registers, variables (concept-folded, #322), classifications, and
-         *     codes/values (#352) over the shipped FTS indexes. Each typed group is an
-         *     independent reg_meta `search()` call (register/variable/classification via the
-         *     FTS `field="description"` path; codes via the `field="value"` path) so each
-         *     carries its own bounded continuation cursor; the value surface is split
-         *     into classification codes and register-local value sets so each gets its own
-         *     page. The all-scope response prepends a `top_results` best-bets group built
-         *     from those same typed rows when multiple candidates compete (#393 items 6/7);
-         *     scoped responses emit only the requested typed surface (`type=value` emits the
-         *     two value groups). A query with no usable token returns the selected group(s)
-         *     empty (total 0) — not a 422.
-         *
-         *     ``?type=`` (#393 item 1) scopes the search: ``all`` (the default) preserves the
-         *     optional top-results→register→variable→classification→value behavior; any
-         *     single type runs AND emits only that typed surface. Group ORDER is fixed for
-         *     the ``all`` case.
-         *
-         *     The reader applies artifact scope before ranking and pagination. Codes and
-         *     classifications retain reference semantics; finite editorial pins use the same
-         *     reader existence predicate.
-         */
-        get: operations["get_search_api_search_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Stats
-         * @description Headline counts after the shared SQL scope predicate.
-         */
-        get: operations["get_stats_api_stats_get"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -876,29 +800,6 @@ export interface components {
             warnings: components["schemas"]["DataWarning"][];
         };
         /**
-         * CatalogPeriodSpan
-         * @description Best-effort inclusive year span for a steward's catalog holdings.
-         */
-        CatalogPeriodSpan: {
-            /** From */
-            from: number;
-            /** To */
-            to: number;
-        };
-        /**
-         * CatalogSizes
-         * @description Headline catalog-size counts — browse-addressable (slugged)
-         *     providers/registers/variables; the grain the catalog listings render.
-         */
-        CatalogSizes: {
-            /** Providers */
-            providers: number;
-            /** Registers */
-            registers: number;
-            /** Variables */
-            variables: number;
-        };
-        /**
          * ClassificationCode
          * @description One code/label entry in a classification edition's value set (#609), as
          *     returned by `Catalog.classification_codes`. Keyed per EDITION
@@ -934,26 +835,6 @@ export interface components {
              * @description The hierarchy depth, or None when the classification is flat.
              */
             level: number | null;
-        };
-        /**
-         * ClassificationCodeSearchGroup
-         * @description One bounded page of classification-owned code results (#352/#393).
-         */
-        ClassificationCodeSearchGroup: {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            group: "classification_codes";
-            /**
-             * Has More
-             * @default false
-             */
-            has_more: boolean;
-            /** Next Cursor */
-            next_cursor?: string | null;
-            /** Results */
-            results: components["schemas"]["CodeSearchResult"][];
         };
         /**
          * ClassificationConformance
@@ -1272,106 +1153,6 @@ export interface components {
             name: string;
         };
         /**
-         * ClassificationSearchGroup
-         * @description The `classifications` result group: leaf hits ⧺ folded classification
-         *     succession rows (#571, edition chains) ⧺ folded umbrella concept-group rows
-         *     (#516, e.g. `group:sun`).
-         */
-        ClassificationSearchGroup: {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            group: "classifications";
-            /**
-             * Has More
-             * @default false
-             */
-            has_more: boolean;
-            /** Next Cursor */
-            next_cursor?: string | null;
-            /** Results */
-            results: (components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ClassificationSuccessionSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
-        };
-        /**
-         * ClassificationSearchResult
-         * @description A classification hit (`classification_fts` short_name/name/name_en/
-         *     description — #350 activates this previously-unsearched index). When the hit
-         *     is a LONE member of a vintage group (the family didn't fold because only one
-         *     member matched), `concept_group`/`concept_group_label` annotate the family so
-         *     it stays discoverable — symmetric with `VariableSearchResult`; both None
-         *     otherwise.
-         */
-        ClassificationSearchResult: {
-            /** Concept Group */
-            concept_group?: string | null;
-            /** Concept Group Label */
-            concept_group_label?: string | null;
-            /** Fqid */
-            fqid: string | null;
-            /** Name */
-            name?: string | null;
-            /** Rank */
-            rank: number;
-            /** Short Name */
-            short_name?: string | null;
-            /**
-             * Terminal Fqid
-             * @description When this is a non-current edition that the query hit alone, the fqid of the current/terminal edition in its succession chain (#571) — lets the UI link to the current edition; None for a current edition or a non-edition classification.
-             */
-            terminal_fqid?: string | null;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "classification";
-        };
-        /**
-         * ClassificationSuccessionSearchResult
-         * @description A folded classification-succession row (#571): a query hit ≥2 distinct
-         *     editions of one classification chain (the vintages, e.g. SUN 1996/2000), so they
-         *     collapse to a single result keyed on the TERMINAL (current) edition. `editions`
-         *     is the full chain (terminal-first, descending year) so the SPA can render "this
-         *     classification has editions …"; `matched_count` is how many editions the query
-         *     actually hit. A succession row is NOT itself a concept group — the terminal
-         *     `fqid` is the navigable target.
-         */
-        ClassificationSuccessionSearchResult: {
-            /**
-             * Editions
-             * @default []
-             */
-            editions: components["schemas"]["SearchClassificationEdition"][];
-            /**
-             * Fqid
-             * @description The terminal (current) edition's classification FQID — the navigable target. None only when the slug is malformed/unresolvable (the terminal is always a live classification row).
-             */
-            fqid: string | null;
-            /**
-             * Matched Count
-             * @description How many editions in the chain the query hit.
-             * @default 0
-             */
-            matched_count: number;
-            /**
-             * Name
-             * @description The terminal edition's display name.
-             */
-            name?: string | null;
-            /** Rank */
-            rank: number;
-            /**
-             * Short Name
-             * @description The terminal edition's short name (e.g. 'SUN').
-             */
-            short_name?: string | null;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "classification_succession";
-        };
-        /**
          * ClipReport
          * @description One informational availability clip (reported, never silent, never
          *     an error): the binding asked for `requested_period` and is ordered for
@@ -1387,76 +1168,6 @@ export interface components {
             source: string;
             /** Variable */
             variable: string;
-        };
-        /**
-         * CodeOwnerClassification
-         * @description A classification that carries a code (#352) — catalog-scoped (no owning
-         *     register).
-         */
-        CodeOwnerClassification: {
-            /** Fqid */
-            fqid: string | null;
-            /** Name */
-            name?: string | null;
-            /** Short Name */
-            short_name?: string | null;
-        };
-        /**
-         * CodeOwnerVariable
-         * @description A variable that carries a code (#352). `register` is the owning register's
-         *     display name (context for the omnibox); the Python attr is `register_name` to
-         *     avoid the `BaseModel.register` method shadow (see catalog's `VariableRef`).
-         */
-        CodeOwnerVariable: {
-            /** Fqid */
-            fqid: string | null;
-            /** Name */
-            name?: string | null;
-            /** Register */
-            register?: string | null;
-        };
-        /**
-         * CodeSearchResult
-         * @description A code/value hit (`value_code_fts` label match + code-shape match, #352).
-         *     `code`/`label` are the SCB value pair; `variables`/`classifications` annotate
-         *     owning entities (the researcher's actual target), and `variable_count`/
-         *     `classification_count` are the full totals before any caller-selected owner
-         *     slice cap.
-         */
-        CodeSearchResult: {
-            /**
-             * Classification Count
-             * @default 0
-             */
-            classification_count: number;
-            /**
-             * Classifications
-             * @default []
-             */
-            classifications: components["schemas"]["CodeOwnerClassification"][];
-            /** Code */
-            code: string;
-            /** Code System */
-            code_system?: string | null;
-            /** Label */
-            label: string;
-            /** Rank */
-            rank: number;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "code";
-            /**
-             * Variable Count
-             * @default 0
-             */
-            variable_count: number;
-            /**
-             * Variables
-             * @default []
-             */
-            variables: components["schemas"]["CodeOwnerVariable"][];
         };
         /**
          * ConceptGroupMember
@@ -1546,59 +1257,6 @@ export interface components {
             name: string | null;
         };
         /**
-         * ConceptGroupSearchResult
-         * @description A folded concept-group row (#322): ≥2 sibling members matched OR the
-         *     group's own label matched, so the family collapses to one result. `kind` is
-         *     'variable' or 'classification' (which group bucket it belongs to);
-         *     `member_count` is the family's full size, `matched_count` how many members the
-         *     query hit, `label_matched` whether the group label/key matched directly.
-         *     `members` is the full facet-ordered member list (each a real leaf FQID) so the
-         *     SPA can derive a group-page link when available, or fall back to member links.
-         *     A group is not itself an FQID-addressable catalog leaf.
-         */
-        ConceptGroupSearchResult: {
-            /** Group Key */
-            group_key: string;
-            /** Group Label */
-            group_label: string;
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "variable" | "classification";
-            /**
-             * Label Matched
-             * @default false
-             */
-            label_matched: boolean;
-            /**
-             * Matched Count
-             * @default 0
-             */
-            matched_count: number;
-            /**
-             * Member Count
-             * @default 0
-             */
-            member_count: number;
-            /**
-             * Members
-             * @default []
-             */
-            members: components["schemas"]["ConceptGroupMember"][];
-            /** Rank */
-            rank: number;
-            /** Register */
-            register?: string | null;
-            /** Source */
-            source?: string | null;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "group";
-        };
-        /**
          * ConceptGroupSummary
          * @description One derived concept group. `key` is the scope-unique derivation key
          *     (slug stem / min member slug / curated key) — a stable anchor for UI
@@ -1628,18 +1286,6 @@ export interface components {
              * @default []
              */
             tags: components["schemas"]["TagMembership"][];
-        };
-        /**
-         * ContextResponse
-         * @description ``GET /api/context`` — deployment identity, branding, build info.
-         *
-         *     Identity is read from the admitted artifact; branding remains deployment config.
-         *     The optional physical-period bound is only a UI hint.
-         */
-        ContextResponse: {
-            reg_meta: components["schemas"]["RegMetaInfo"];
-            steward: components["schemas"]["StewardInfo"];
-            webapp: components["schemas"]["WebappInfo"];
         };
         /**
          * DataWarning
@@ -2394,36 +2040,6 @@ export interface components {
             name?: string | null;
         };
         /**
-         * RegMetaInfo
-         * @description reg_meta build provenance, read from the DB ``import_manifest``.
-         */
-        RegMetaInfo: {
-            /**
-             * Catalog Artifact Kind
-             * @enum {string}
-             */
-            catalog_artifact_kind: "catalog" | "steward";
-            /**
-             * Default Scope
-             * @enum {string}
-             */
-            default_scope: "holdings" | "reference";
-            /** Generation Id */
-            generation_id: string;
-            /**
-             * Import Date
-             * @description UTC timestamp the reg_meta DB was built/imported.
-             */
-            import_date: string;
-            /**
-             * Schema Version
-             * @description Schema version of the reg_meta DB build (e.g. '5.2.0').
-             */
-            schema_version: string;
-            /** Steward */
-            steward: string | null;
-        };
-        /**
          * RegisterCoverage
          * @description Coverage aggregate for one register (#351): `variable_count` is its
          *     slugged (browsable) variables; the span is over ALL their states.
@@ -2503,66 +2119,6 @@ export interface components {
              * @default []
              */
             warnings: components["schemas"]["DataWarning"][];
-        };
-        /**
-         * RegisterSearchGroup
-         * @description One bounded page of register results.
-         */
-        RegisterSearchGroup: {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            group: "registers";
-            /**
-             * Has More
-             * @default false
-             */
-            has_more: boolean;
-            /** Next Cursor */
-            next_cursor?: string | null;
-            /** Results */
-            results: components["schemas"]["RegisterSearchResult"][];
-        };
-        /**
-         * RegisterSearchResult
-         * @description A register hit (`register_fts` name/purpose).
-         */
-        RegisterSearchResult: {
-            /** Fqid */
-            fqid: string | null;
-            /** Name */
-            name?: string | null;
-            /** Purpose */
-            purpose?: string | null;
-            /** Rank */
-            rank: number;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "register";
-        };
-        /**
-         * RegisterValueSetSearchGroup
-         * @description The `register_value_sets` result group (#352/#393): register-local value
-         *     codes with no owning classification.
-         */
-        RegisterValueSetSearchGroup: {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            group: "register_value_sets";
-            /**
-             * Has More
-             * @default false
-             */
-            has_more: boolean;
-            /** Next Cursor */
-            next_cursor?: string | null;
-            /** Results */
-            results: components["schemas"]["CodeSearchResult"][];
         };
         /**
          * RegisterVersionMetadata
@@ -2696,55 +2252,6 @@ export interface components {
             valid_to: string | null;
         };
         /**
-         * SearchClassificationEdition
-         * @description One edition of a folded classification succession chain (#571): a vintage
-         *     of the same classification (e.g. `sun1996`, `sun2000`). Carried by
-         *     `ClassificationSuccessionSearchResult.editions`, terminal-first then descending
-         *     `effective_year`. Every edition is a live `classification` row (the build
-         *     validator guarantees succession editions are live), so `fqid` is None only when
-         *     the slug is malformed/unresolvable. A nested node — no `type`/`rank`.
-         */
-        SearchClassificationEdition: {
-            /**
-             * Effective Year
-             * @description The year this edition was superseded by its successor (from its outbound succession edge); None for the terminal (head) edition, which has no outbound edge.
-             */
-            effective_year?: number | null;
-            /**
-             * Fqid
-             * @description The edition's 2-seg classification FQID, None only when the slug is malformed/unresolvable (succession editions are live rows).
-             */
-            fqid?: string | null;
-            /**
-             * Name
-             * @description The edition's display name, None when un-hydrated.
-             */
-            name?: string | null;
-            /**
-             * Slug
-             * @description The edition's literal slug (e.g. 'sun2000').
-             */
-            slug: string;
-        };
-        /**
-         * SearchResponse
-         * @description `GET /api/search?q=` — typed result groups over the shipped FTS indexes.
-         *     `query` echoes the raw user query; `groups` is the ordered list of typed
-         *     groups (see the `SearchGroup` union for the extension contract).
-         */
-        SearchResponse: {
-            /** Groups */
-            groups: (components["schemas"]["TopSearchGroup"] | components["schemas"]["RegisterSearchGroup"] | components["schemas"]["VariableSearchGroup"] | components["schemas"]["ClassificationSearchGroup"] | components["schemas"]["ClassificationCodeSearchGroup"] | components["schemas"]["RegisterValueSetSearchGroup"])[];
-            /**
-             * Kind
-             * @default search
-             * @constant
-             */
-            kind: "search";
-            /** Query */
-            query: string;
-        };
-        /**
          * Source
          * @description A data source / table in the spec.
          *
@@ -2802,20 +2309,6 @@ export interface components {
             binding: string;
             /** States */
             states: components["schemas"]["VariableState"][];
-        };
-        /**
-         * StewardInfo
-         * @description Deployment identity + branding, from ``steward.json``.
-         */
-        StewardInfo: {
-            /** @description Compiled physical-period year span for UI slider bounds; null for catalog artifacts or holdings with no dated periods. */
-            catalog_period_span?: components["schemas"]["CatalogPeriodSpan"] | null;
-            /** Id */
-            id: string;
-            /** Long Name */
-            long_name: string;
-            /** Name */
-            name: string;
         };
         /**
          * StudyWindow
@@ -2883,29 +2376,6 @@ export interface components {
          */
         TimeRange: {
             range: components["schemas"]["PeriodRange"];
-        };
-        /**
-         * TopSearchGroup
-         * @description Cross-group best-bets (#393 item 6): the strongest rows from the typed
-         *     groups, scored with exact-match boosts and type priors. The original typed
-         *     groups remain unchanged below it.
-         */
-        TopSearchGroup: {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            group: "top_results";
-            /**
-             * Has More
-             * @default false
-             * @constant
-             */
-            has_more: false;
-            /** Next Cursor */
-            next_cursor?: null;
-            /** Results */
-            results: (components["schemas"]["RegisterSearchResult"] | components["schemas"]["VariableSearchResult"] | components["schemas"]["ClassificationSearchResult"] | components["schemas"]["ClassificationSuccessionSearchResult"] | components["schemas"]["ConceptGroupSearchResult"] | components["schemas"]["CodeSearchResult"])[];
         };
         /** ValidationError */
         ValidationError: {
@@ -3221,65 +2691,6 @@ export interface components {
             variable: string;
         };
         /**
-         * VariableSearchGroup
-         * @description The `variables` result group (leaf hits ⧺ folded concept groups).
-         */
-        VariableSearchGroup: {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            group: "variables";
-            /**
-             * Has More
-             * @default false
-             */
-            has_more: boolean;
-            /** Next Cursor */
-            next_cursor?: string | null;
-            /** Results */
-            results: (components["schemas"]["VariableSearchResult"] | components["schemas"]["ConceptGroupSearchResult"])[];
-        };
-        /**
-         * VariableSearchResult
-         * @description A variable hit (`variable_fts` name/definition/description/
-         *     operational_definition/delivery_column_names). `register` is the owning
-         *     register's display name (context for the omnibox). When the hit is a LONE
-         *     member of a concept group (#322 — the family didn't fold because only one
-         *     member matched), `concept_group`/`concept_group_label` annotate the family so
-         *     it stays discoverable; both None otherwise. `delivery_column_names` carries
-         *     the delivery aliases that matched the query when the query hit aliases, falling
-         *     back to display aliases for non-alias hits.
-         */
-        VariableSearchResult: {
-            /** Concept Group */
-            concept_group?: string | null;
-            /** Concept Group Label */
-            concept_group_label?: string | null;
-            /** Definition */
-            definition?: string | null;
-            /**
-             * Delivery Column Names
-             * @default []
-             */
-            delivery_column_names: string[];
-            /** Fqid */
-            fqid: string | null;
-            /** Name */
-            name?: string | null;
-            /** Operational Definition */
-            operational_definition?: string | null;
-            /** Rank */
-            rank: number;
-            /** Register */
-            register?: string | null;
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            type: "variable";
-        };
-        /**
          * VariableState
          * @description One `variable_state` row (see DESIGN.md → Two-level variable model) — a variable's per-delivery shape, tagged
          *     with the **variant coordinate** it was delivered in. The longitudinal
@@ -3432,22 +2843,6 @@ export interface components {
             register: string;
             /** Variants */
             variants: components["schemas"]["VariantSummary"][];
-        };
-        /**
-         * WebappInfo
-         * @description Package versions for the deployed backend + its reg_meta dependency.
-         */
-        WebappInfo: {
-            /**
-             * Reg Meta Version
-             * @description Installed reg_meta package version — distinct from reg_meta.schema_version, which is the DB build.
-             */
-            reg_meta_version: string;
-            /**
-             * Version
-             * @description Installed reg_webapp package version.
-             */
-            version: string;
         };
     };
     responses: never;
@@ -3964,26 +3359,6 @@ export interface operations {
             };
         };
     };
-    get_context_api_context_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ContextResponse"];
-                };
-            };
-        };
-    };
     get_doc_api_docs_doc__identifier__get: {
         parameters: {
             query?: never;
@@ -4198,72 +3573,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationResultModel"];
-                };
-            };
-        };
-    };
-    get_search_api_search_get: {
-        parameters: {
-            query: {
-                cursor?: string | null;
-                scope?: ("holdings" | "reference") | null;
-                q: string;
-                limit?: number;
-                type?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SearchResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_stats_api_stats_get: {
-        parameters: {
-            query?: {
-                scope?: ("holdings" | "reference") | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CatalogSizes"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

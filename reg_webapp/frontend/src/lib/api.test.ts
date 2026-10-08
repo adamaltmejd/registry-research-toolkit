@@ -6,6 +6,7 @@ import {
   getBindingLineageWarnings,
   getCatalogNode,
   getConceptGroup,
+  getContext,
   getDoc,
   getDocsForVariable,
   getValueSetCodes,
@@ -55,6 +56,33 @@ describe("apiGet", () => {
     expect((err as ApiError).message).toBe("bad period");
   });
 
+  it("surfaces the message of the Rust server's {error, meta} document", async () => {
+    // Fails if messageFromBody stops reading `error.message` (the banner would
+    // show the bare status line).
+    stubFetch(async () => ({
+      ok: false,
+      status: 422,
+      json: async () => ({
+        error: {
+          code: "scope_unavailable",
+          class: "usage",
+          message: "This catalog has no holdings scope.",
+          remediation: "Drop `scope`.",
+          fields: ["holdings"],
+        },
+        meta: {
+          contract_version: "4.0.0",
+          generation: "0",
+          scope: "reference",
+        },
+      }),
+    }));
+    const err = (await getContext().catch((e) => e)) as ApiError;
+    expect(err).toBeInstanceOf(ApiError);
+    expect(err.status).toBe(422);
+    expect(err.message).toBe("This catalog has no holdings scope.");
+  });
+
   it("falls back to a status-line message when the error body is not JSON", async () => {
     stubFetch(async () => ({
       ok: false,
@@ -68,6 +96,19 @@ describe("apiGet", () => {
     expect(err.status).toBe(502);
     expect(err.body).toBeNull();
     expect(err.message).toContain("502");
+  });
+});
+
+describe("getContext", () => {
+  it("returns the `data` of the Rust server's {data, meta} envelope", async () => {
+    // Fails if getContext returns the envelope instead of its `data`.
+    const data = { schema_version: "9.3.0" };
+    stubFetch(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ data, meta: { scope: "reference" } }),
+    }));
+    expect(await getContext()).toEqual(data);
   });
 });
 
@@ -198,7 +239,10 @@ describe("search", () => {
         return Promise.resolve({
           ok: true,
           status: 200,
-          json: async () => ({ kind: "search", query: q, groups: [] }),
+          json: async () => ({
+            data: { items: [], next_cursor: null },
+            meta: {},
+          }),
         });
       }),
     );
@@ -211,14 +255,33 @@ describe("search", () => {
     expect(url).toBe("/api/search?q=k%C3%B6+n");
   });
 
-  it("appends an explicit non-'all' type (#393 item 1)", async () => {
-    const { url } = await callFor("kon", { type: "value" });
-    expect(url).toBe("/api/search?q=kon&type=value");
+  it("sends the page's type, limit and cursor", async () => {
+    // Fails if a continuation drops `limit` (the Rust default is 50, not the
+    // SPA's page size) or the arm it continues.
+    const { url } = await callFor("kon", {
+      type: "register_value",
+      limit: 3,
+      cursor: "ab",
+    });
+    expect(url).toBe("/api/search?q=kon&limit=3&type=register_value&cursor=ab");
   });
 
-  it("OMITS type=all (the server default → clean canonical URL)", async () => {
-    const { url } = await callFor("kon", { type: "all" });
-    expect(url).toBe("/api/search?q=kon");
+  it("returns the page inside the Rust server's {data, meta}", async () => {
+    // Fails if `search` hands callers the envelope instead of `data`.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            data: { items: [], next_cursor: "c1" },
+            meta: { scope: "reference" },
+          }),
+        }),
+      ),
+    );
+    expect(await search("kon")).toEqual({ items: [], next_cursor: "c1" });
   });
 
   it("always passes an AbortSignal to fetch (the ~12s timeout floor)", async () => {

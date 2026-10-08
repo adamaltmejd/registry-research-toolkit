@@ -1,0 +1,22 @@
+{
+  "replaces": [
+    "test_curation_split_partition_boundary.py::test_guarded_column_owner_is_stale_when_a_role_fact_changes[None]"
+  ],
+  "sources": {
+    "description": "Variable 1.5 delivers ANSWER (CVID 20) with unit SEK, operational definition Amount and source Authority.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "unit": "SEK",
+          "varopdef": "Amount",
+          "varsource": "Authority"
+        }
+      ]
+    }
+  }
+}

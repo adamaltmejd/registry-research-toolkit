@@ -1,0 +1,38 @@
+{
+  "replaces": [
+    "test_curation_support_errata_boundary.py::test_checked_support_is_stale_when_its_shared_target_changes[shared-record-extra]"
+  ],
+  "note": "Both still select and match; the coding fingerprint over the guarded families moves because the shared record gains a THIRD projection.",
+  "sources": {
+    "description": "scb-support-question changed: Both still select and match; the coding fingerprint over the guarded families moves because the shared record gains a THIRD projection.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "FIRST", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {"colname": "SECOND", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {
+          "colname": "FIRST",
+          "cvid": 21,
+          "var_id": 6,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Authority"
+        },
+        {
+          "colname": "FIRST",
+          "cvid": 22,
+          "var_id": 6,
+          "year": "2021",
+          "regver_id": 2021,
+          "varname": "Authority"
+        },
+        {"colname": "THIRD", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020}
+      ],
+      "vardemangder": [
+        "Svar|1|1|Legacy category|20|7102",
+        "Svar|1|1|Authoritative yes|21|7101",
+        "Svar|1|1|Authoritative yes|22|7101"
+      ]
+    }
+  },
+  "authored_from": "scb-support-question"
+}

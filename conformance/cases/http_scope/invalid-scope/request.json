@@ -7,18 +7,6 @@
       "query": {
         "scope": "global"
       }
-    },
-    {
-      "path": "/api/search",
-      "query": {
-        "scope": "global"
-      }
-    },
-    {
-      "path": "/api/stats",
-      "query": {
-        "scope": "global"
-      }
     }
   ]
 }

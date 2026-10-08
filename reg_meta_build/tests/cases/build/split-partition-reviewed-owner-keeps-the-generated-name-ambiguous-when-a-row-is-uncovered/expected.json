@@ -1,0 +1,29 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject"],
+      "rows": [
+        ["ambiguous_named_identity", "scb/sample/answer"],
+        [
+          "unresolved_catalog_identity",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)"
+        ]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key", "description"],
+      "rows": [
+        ["reviewed", "5.reviewed", null]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": [
+        ["reviewed", "people", "2020-01-01", "ANSWER"]
+      ]
+    }
+  ]
+}

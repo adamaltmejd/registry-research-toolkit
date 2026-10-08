@@ -1,0 +1,23 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "state_codes",
+      "where": {"column": "VALUE"},
+      "fields": ["valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["2020-01-01", "2020-12-31", null, null]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": {"contains": "scb/sample/value"}
+      },
+      "fields": ["code"],
+      "rows": [
+        ["conflicting_code_memberships"]
+      ]
+    }
+  ]
+}

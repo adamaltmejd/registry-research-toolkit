@@ -1,0 +1,19 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {"register": "r"},
+      "fields": ["variable", "variant", "data_type", "valid_from", "valid_to"],
+      "rows": [
+        ["col", "v", "int", "2010-01-01", "2018-12-31"]
+      ]
+    },
+    {
+      "table": "cases",
+      "fields": ["case_id", "status"],
+      "rows": [
+        ["accepted-authored:Forsakringskassan/fk.toml:r:COL", "applicable"]
+      ]
+    }
+  ]
+}

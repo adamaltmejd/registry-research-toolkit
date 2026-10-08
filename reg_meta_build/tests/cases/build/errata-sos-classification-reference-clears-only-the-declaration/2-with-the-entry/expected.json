@@ -1,0 +1,77 @@
+{
+  "projections": [
+    {
+      "table": "cases",
+      "fields": ["case_id", "status"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/1", "applicable"]
+      ]
+    },
+    {
+      "table": "case_uses",
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.classification_reference/1"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "unresolved_classification_reference",
+        "key": [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:MARK"],
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_B", "variable:MARK"],
+          ["register:Syntetiskt grannregister", "deldatamangd:SYX_A", "variable:MARK"]
+        ]
+      },
+      "fields": ["source", "key"],
+      "rows": [
+        [
+          "Socialstyrelsen/Metadata Syntetiskt felregister (SYX)_webb.xlsx",
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_B", "variable:MARK"]
+        ],
+        [
+          "Socialstyrelsen/Metadata Syntetiskt grannregister (SYY)_webb.xlsx",
+          ["register:Syntetiskt grannregister", "deldatamangd:SYX_A", "variable:MARK"]
+        ]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "unknown_classification_declaration",
+        "key": [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:MARK"],
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_B", "variable:MARK"],
+          ["register:Syntetiskt grannregister", "deldatamangd:SYX_A", "variable:MARK"]
+        ]
+      },
+      "fields": ["key"],
+      "rows": [
+        [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:MARK"]
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syx", "variable": "mark", "variant": "syx-a"},
+      "fields": ["data_type", "provenance"],
+      "rows": [
+        [
+          "text",
+          "curation/registers/sos/syx.toml#/errata.classification_reference/1: The linked classification cannot classify this output."
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "syx", "variable": "mark", "variant": "syx-a"},
+      "fields": ["code", "label"],
+      "rows": [
+        ["0", "nej"],
+        ["1", "ja"]
+      ]
+    }
+  ]
+}

@@ -25,8 +25,9 @@
 # ---------------------------------------------------------------------------
 # Stage 1 — frontend: build the Svelte SPA with bun.
 # ---------------------------------------------------------------------------
-# The SPA codegens src/lib/api-types.ts from the committed backend/openapi.json,
-# which is already in the tree (CI gates it against drift), so no backend is
+# The SPA codegens src/lib/api-types.ts and api-types-rust.ts from the committed
+# backend/openapi.json and crates/reg-meta/openapi.json,
+# which are already in the tree (CI gates them against drift), so no server is
 # needed at SPA-build time. Output is the static dist/ bundle (Vite default
 # outDir), carried forward to the runtime stage. The backend stays a pure JSON
 # API (see reg_webapp/DESIGN.md → "SPA routing + production fallback"): it mounts
@@ -52,8 +53,11 @@ WORKDIR /build/frontend
 COPY reg_webapp/frontend/package.json reg_webapp/frontend/bun.lock ./
 RUN bun install --frozen-lockfile
 
-# The committed API contract the SPA types are generated from.
+# The committed API contracts the SPA types are generated from: FastAPI's and
+# the Rust server's (`gen:types` reads it at ../../crates/reg-meta/openapi.json,
+# which from /build/frontend is /crates/reg-meta/openapi.json).
 COPY reg_webapp/backend/openapi.json /build/backend/openapi.json
+COPY crates/reg-meta/openapi.json /crates/reg-meta/openapi.json
 COPY reg_webapp/frontend/ ./
 
 # Regenerate types from the committed contract, then production-build. gen:types
@@ -251,8 +255,8 @@ ENV PATH="/app/.venv/bin:$PATH" \
 USER app
 EXPOSE 8000
 
-# The entrypoint runs the per-deploy smoke gate (golden /api/context + shallow
-# /api/catalog walk) IN-PROCESS before exec'ing uvicorn — a smoke failure exits
+# The entrypoint runs the per-deploy smoke gate (a shallow /api/catalog walk)
+# IN-PROCESS before exec'ing uvicorn — a smoke failure exits
 # non-zero and the container never serves traffic (reg_webapp/DESIGN.md →
 # Deployment).
 ENTRYPOINT ["docker-entrypoint.sh"]

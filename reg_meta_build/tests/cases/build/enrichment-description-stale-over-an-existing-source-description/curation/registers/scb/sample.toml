@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "a"
+
+[[enrichment.description]]
+register = "scb/sample"
+variable = "a"
+description = "Accepted prose"
+provenance = "delivery list"

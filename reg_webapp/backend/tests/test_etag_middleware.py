@@ -9,6 +9,8 @@ schema_version manifest).
 
 from __future__ import annotations
 
+import re
+
 import pytest
 from fastapi.testclient import TestClient
 from reg_webapp.app import create_app
@@ -24,9 +26,8 @@ def test_etag_prefix_is_installed_reg_meta_version_not_manifest(catalog_db):
     # `5.1.999` manifest — distinct, and must NOT appear in the ETag).
     with TestClient(create_app()) as client:
         etag = client.get("/api/catalog").headers["etag"]
-        generation = client.get("/api/context").json()["reg_meta"]["generation_id"]
     assert etag.startswith(f'"{reg_meta.__version__}-global-')
-    assert f"-{generation}-reference-" in etag
+    assert re.search(r"-[0-9a-f]{64}-reference-", etag)
     assert "5.1.999" not in etag
 
 
@@ -46,8 +47,8 @@ def test_error_response_has_no_etag(catalog_db):
 
 def test_304_drops_content_type_and_length(catalog_db):
     with TestClient(create_app()) as client:
-        etag = client.get("/api/context").headers["etag"]
-        resp = client.get("/api/context", headers={"If-None-Match": etag})
+        etag = client.get("/api/catalog").headers["etag"]
+        resp = client.get("/api/catalog", headers={"If-None-Match": etag})
     assert resp.status_code == 304
     assert resp.content == b""
     # The empty 304 entity carries no content-type/length, but keeps the validator.
@@ -58,14 +59,9 @@ def test_304_drops_content_type_and_length(catalog_db):
 @pytest.mark.parametrize(
     ("path", "cache_control"),
     [
-        # The vintage footer asserts a deploy version/date: always revalidate.
-        ("/api/context", "no-cache"),
         # Fold- or steward-dependent reads get the short window (#499, #506, #726).
         ("/api/catalog/scb/lisa/kon/states", _SHORT),
-        ("/api/search?q=lisa", _SHORT),
-        ("/api/stats", _SHORT),
-        # Rebuild-stable doc reads keep 24h; `/api/docs/search` must not collide
-        # with the `/api/search` prefix.
+        # Rebuild-stable doc reads keep 24h.
         ("/api/docs/search?q=kon", "public, max-age=86400, must-revalidate"),
     ],
 )
@@ -90,9 +86,9 @@ def test_read_cache_control_tier(docs_db, path, cache_control):
 )
 def test_if_none_match_forms(catalog_db, if_none_match, status):
     with TestClient(create_app()) as client:
-        etag = client.get("/api/context").headers["etag"]
+        etag = client.get("/api/catalog").headers["etag"]
         resp = client.get(
-            "/api/context",
+            "/api/catalog",
             headers={"If-None-Match": if_none_match.format(etag=etag)},
         )
     assert resp.status_code == status
@@ -154,12 +150,11 @@ def test_different_bodies_under_identical_metadata_do_not_share_a_validator(
 ):
     # Fails if compute_etag drops the body digest: version, steward, generation
     # and scope are identical here, so only the body can tell the two apart, and
-    # an ETag cached for `?q=lisa` would otherwise turn `?q=rams` into a stale 304.
+    # an ETag cached for one register would otherwise turn the next into a stale 304.
     with TestClient(create_app()) as client:
-        lisa = client.get("/api/search", params={"q": "lisa"})
+        lisa = client.get("/api/catalog/scb/lisa")
         rams = client.get(
-            "/api/search",
-            params={"q": "rams"},
+            "/api/catalog/scb/rams",
             headers={"If-None-Match": lisa.headers["etag"]},
         )
     assert lisa.status_code == rams.status_code == 200

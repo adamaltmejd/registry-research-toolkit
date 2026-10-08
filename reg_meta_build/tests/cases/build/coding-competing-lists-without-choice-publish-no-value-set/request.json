@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_competing_lists_without_a_choice_publish_no_value_set"
+  ],
+  "sources": "scb-value-competing-lists"
+}

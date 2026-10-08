@@ -1,0 +1,23 @@
+{
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Example",
+        "type": "register",
+        "period": "2012"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Example",
+        "type": "register",
+        "period": "2030"
+      }
+    }
+  ]
+}

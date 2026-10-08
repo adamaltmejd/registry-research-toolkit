@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_split_sos_boundary.py::test_split_owner_resolves_a_reference_from_an_unselected_register[subset-split]"
+  ],
+  "note": "A scoped SCB build (register 1) defers a reference to an unselected SOS split owner.",
+  "sources": "sos-par-atc-three-subsets",
+  "registers": ["1"]
+}

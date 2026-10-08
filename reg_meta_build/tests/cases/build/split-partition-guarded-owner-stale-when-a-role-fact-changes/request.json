@@ -1,0 +1,23 @@
+{
+  "replaces": [
+    "test_curation_split_partition_boundary.py::test_guarded_column_owner_is_stale_when_a_role_fact_changes[varopdef]"
+  ],
+  "note": "The owner's guard is one expected-fields list; the operational definition, the middle of its three facts, stands for each.",
+  "sources": {
+    "description": "The guarded ANSWER delivery with its operational definition changed.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "unit": "SEK",
+          "varopdef": "Changed",
+          "varsource": "Authority"
+        }
+      ]
+    }
+  }
+}

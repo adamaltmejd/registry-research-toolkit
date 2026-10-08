@@ -5,7 +5,9 @@ from __future__ import annotations
 import json
 import unicodedata
 
+import pytest
 from acceptance_requests import response_fqids
+from http_cases import CASES
 from reg_meta.cli import run
 from reg_meta.db import get_manifest, open_db
 from reg_meta.order import materialize_order, project_from_raw
@@ -104,6 +106,28 @@ def require(condition, message):
         raise AssertionError(message)
 
 
+def search_client(request, directory):
+    """An HTTP client on the Rust server (`--server-cmd`) for the artifact in
+    `directory`, which answers `/api/search`; the FastAPI app no longer does.
+
+    Without `--server-cmd` the test skips, except under `--run-release`: release
+    admission must not pass without its search traversal."""
+    servers = request.getfixturevalue("http_servers")
+    if servers is None:
+        if request.config.getoption("--run-release"):
+            pytest.fail("Release admission searches the Rust server: pass --server-cmd")
+        pytest.skip("search runs against --server-cmd")
+    with open_db(directory / "reg_meta.db") as conn:
+        steward = get_manifest(conn).get("steward", "global")
+    return servers.client(
+        {
+            "REG_META_DB": str(directory),
+            "REG_WEBAPP_STEWARD": steward,
+            "REG_WEBAPP_STEWARDS_DIR": str(CASES.parents[1] / "reg_webapp/stewards"),
+        }
+    )
+
+
 def cli_json(directory, capsys, arguments):
     code = run(["--db", str(directory), "--format", "json", *arguments])
     captured = capsys.readouterr()
@@ -137,7 +161,8 @@ def _identity_texts(row):
 
     A leaf row offers its FQID and slug leaf, names and delivery columns; a group
     row offers its key and label and each member's FQID, name, delivery column
-    and facets (member slug leaves are not identity texts).
+    and facets (member slug leaves are not identity texts). CLI rows name the group
+    key and label `group_key` and `group_label`; HTTP rows `key` and `label`.
     """
     fqid = row.get("fqid")
     texts = [
@@ -148,6 +173,8 @@ def _identity_texts(row):
         *(row.get("delivery_column_names") or ()),
         row.get("group_key"),
         row.get("group_label"),
+        row.get("key"),
+        row.get("label"),
     ]
     for member in row.get("members") or ():
         texts.extend((member.get("fqid"), member.get("name")))
@@ -178,14 +205,13 @@ def http_search_traversal(client, query, scope, binding):
     while True:
         response = client.get("/api/search", params=params)
         require(response.status_code == 200, "Acceptance HTTP search failed")
-        groups = response.json()["groups"]
-        if binding in response_fqids(groups):
+        page = response.json()["data"]
+        if binding in response_fqids(page["items"]):
             return True, rows
-        rows.extend(row for group in groups for row in group["results"])
-        group = next((group for group in groups if group["has_more"]), None)
-        if group is None:
+        rows.extend(page["items"])
+        cursor = page["next_cursor"]
+        if cursor is None:
             return False, rows
-        cursor = group["next_cursor"]
         require(
             cursor and cursor not in cursors, "Acceptance HTTP search cursor stalled"
         )
@@ -213,7 +239,7 @@ def cli_search_traversal(directory, capsys, argv, binding):
     return True, rows
 
 
-def require_search_reaches(directory, client, capsys, query, scope, binding):
+def require_search_reaches(directory, search, capsys, query, scope, binding):
     """Require CLI and HTTP name search to reach an admitted binding.
 
     A traversal may miss it only when the miss is contractual: the traversal
@@ -224,8 +250,7 @@ def require_search_reaches(directory, client, capsys, query, scope, binding):
     search has no register refinement, and the binding's HTTP reachability is
     proven by the caller's `/api/catalog/<fqid>` browse checks.
 
-    Edge cases: a query with exactly 1,000 results looks like a truncated one, and
-    HTTP rows include net-new golden pins (latent: no variable pins exist today).
+    Edge cases: a query with exactly 1,000 results looks like a truncated one.
     Returns whether the refinement was needed.
     """
     argv = [
@@ -248,7 +273,7 @@ def require_search_reaches(directory, client, capsys, query, scope, binding):
         cli_found or ceiling_exhausted(query, cli_rows),
         "Sample missing from CLI search traversal",
     )
-    http_found, http_rows = http_search_traversal(client, query, scope, binding)
+    http_found, http_rows = http_search_traversal(search, query, scope, binding)
     require(
         http_found or ceiling_exhausted(query, http_rows),
         "Sample missing from HTTP search traversal",
@@ -265,8 +290,9 @@ def require_search_reaches(directory, client, capsys, query, scope, binding):
     return True
 
 
-def assert_sampled_agreement(artifact_dir, artifact_client, tmp_path, capsys):
-    """Observe the same adapter contracts for admitted and regression artifacts."""
+def assert_sampled_agreement(artifact_dir, artifact_client, search, tmp_path, capsys):
+    """Observe the same adapter contracts for admitted and regression artifacts.
+    `search` is the Rust server's client (`search_client`)."""
     with open_db(artifact_dir / "reg_meta.db") as conn:
         project = sample_project(conn)
         result = materialize_order(project_from_raw(project), conn)
@@ -278,10 +304,10 @@ def assert_sampled_agreement(artifact_dir, artifact_client, tmp_path, capsys):
     require(browse.json()["fqid"] == fqid, "Browse identity disagrees with sample")
     query = browse.json()["name"]
     params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
-    search = artifact_client.get("/api/search", params=params)
-    require(search.status_code == 200, "Sample search failed")
+    first_page = search.get("/api/search", params=params)
+    require(first_page.status_code == 200, "Sample search failed")
     require(
-        search.content == artifact_client.get("/api/search", params=params).content,
+        first_page.content == search.get("/api/search", params=params).content,
         "Repeated HTTP first page differs",
     )
     argv = [
@@ -304,7 +330,7 @@ def assert_sampled_agreement(artifact_dir, artifact_client, tmp_path, capsys):
     first = capsys.readouterr().out
     require(run(argv) == 0, "Repeated CLI sample search failed")
     require(capsys.readouterr().out == first, "Repeated CLI first page differs")
-    require_search_reaches(artifact_dir, artifact_client, capsys, query, scope, fqid)
+    require_search_reaches(artifact_dir, search, capsys, query, scope, fqid)
     validated = artifact_client.post("/api/project/validate", json=project)
     require(
         validated.status_code == 200 and validated.json()["ok"],

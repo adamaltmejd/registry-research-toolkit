@@ -1,0 +1,23 @@
+{
+  "fixture": "compiled",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Choice",
+        "type": "classification_code",
+        "scope": "holdings"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Choice",
+        "type": "classification_code",
+        "scope": "reference"
+      }
+    }
+  ]
+}

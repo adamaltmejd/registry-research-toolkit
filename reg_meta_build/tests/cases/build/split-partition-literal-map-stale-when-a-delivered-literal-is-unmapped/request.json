@@ -1,0 +1,41 @@
+{
+  "replaces": [
+    "test_curation_partition_map_boundary.py::test_map_that_misses_a_delivered_or_names_an_absent_literal_is_stale[columns0-uncovered0-absent0]"
+  ],
+  "sources": {
+    "description": "Variable 5 delivers ANSWER, OTHER, MISSING in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "MISSING",
+          "cvid": 23,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|OTHER|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|MISSING|2020|2020|0|0|0"
+      ]
+    }
+  }
+}

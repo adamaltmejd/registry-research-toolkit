@@ -1,0 +1,32 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "a"
+[[variable]]
+native_id = "1.NewCol"
+slug = "new-col"
+
+[[errata.column]]
+variant = "people"
+column = "NewCol"
+name = "New column"
+definition = "Documented"
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "scb-docs"
+evidence = "held"
+noted = "2026-09-25"
+versions = ["2020"]
+
+[[enrichment.alias]]
+register = "scb/sample"
+variable = "new-col"
+delivery_column = "FormerA"
+provenance = "delivery list"

@@ -1,0 +1,22 @@
+{
+  "kind": "catalog",
+  "fixture": "reader/classification-editions",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Yrkesgrupp",
+        "type": "classification"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Y10",
+        "type": "classification"
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {"register": "r"},
+      "fields": ["variable", "variant", "data_type", "valid_from", "valid_to"],
+      "rows": [
+        ["col", "default", "text", "2010-01-01", "9999-12-31"]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {"variable": "col"},
+      "fields": ["code", "label"],
+      "rows": [
+        ["01", "First"],
+        ["02", "Second"]
+      ]
+    }
+  ]
+}

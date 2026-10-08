@@ -9,7 +9,8 @@ argument-hint: "[package] <patch|minor|major>"
 
 # Release pipeline
 
-Create and publish a release for one or more of the PyPI packages.
+Create and publish a release for one or more of the packages (reg_meta and reg_schema go
+to PyPI; reg_meta_build does not).
 
 **Never start a release unless the user explicitly asks for one.** This skill may be
 invoked via `/release` or merely referenced in conversation — either way, do not proceed
@@ -43,19 +44,18 @@ exists, follow Error recovery below first so publication uses the repaired revis
 
 ## Packages
 
-  | Package        | pyproject.toml                  | `__init__.py`                                   | Publish workflow                                                                              |
-  | -------------- | ------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
-  | reg_meta       | `reg_meta/pyproject.toml`       | `reg_meta/src/reg_meta/__init__.py`             | `publish_reg_meta.yml` (unattended — `pypi` environment review gate removed 2026-06-10)       |
-  | reg_meta_build | `reg_meta_build/pyproject.toml` | `reg_meta_build/src/reg_meta_build/__init__.py` | `publish_reg_meta_build.yml` (unattended — `pypi` environment review gate removed 2026-06-10) |
-  | reg_schema     | `reg_schema/pyproject.toml`     | `reg_schema/src/reg_schema/__init__.py`         | `publish_reg_schema.yml` (unattended — same gate-free `pypi` environment)                     |
+  | Package        | pyproject.toml                  | `__init__.py`                                   | Publish workflow                                                                        |
+  | -------------- | ------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------- |
+  | reg_meta       | `reg_meta/pyproject.toml`       | `reg_meta/src/reg_meta/__init__.py`             | `publish_reg_meta.yml` (unattended — `pypi` environment review gate removed 2026-06-10) |
+  | reg_meta_build | `reg_meta_build/pyproject.toml` | `reg_meta_build/src/reg_meta_build/__init__.py` | none (not published to PyPI; tag and GitHub release only)                               |
+  | reg_schema     | `reg_schema/pyproject.toml`     | `reg_schema/src/reg_schema/__init__.py`         | `publish_reg_schema.yml` (unattended — same gate-free `pypi` environment)               |
 
-reg_meta_build is the build pipeline that produces `reg_meta`'s SQLite assets. It has
-its own PyPI release on the `reg_meta_build/v*` tag but ships no DB release assets
-(those attach to the parallel `reg_meta/v*` release). It **depends on `reg-meta`** (a
-`reg-meta>=` floor in its pyproject), so reg_meta is upstream. That floor is normally
-already satisfied by the published reg_meta, so either publish order resolves — but if a
-release raises the floor to the new reg_meta, publish reg_meta first and verify it is on
-PyPI before publishing the builder.
+reg_meta_build is the build pipeline that produces `reg_meta`'s SQLite assets. It is
+**not published to PyPI**: it depends on `reg-core-py`, a PyO3 module that is not on the
+index, and the builder is maintainer-only and runs from a checkout. A reg_meta_build
+release is a version bump, the `reg_meta_build/v*` tag and a GitHub release, with no
+publish workflow and no assets (the DB assets attach to the parallel `reg_meta/v*`
+release).
 
 `reg_schema` is the `project_data.json` schema library. It releases on the
 `reg_schema/v*` tag through `publish_reg_schema.yml` and ships **nothing but the wheel**
@@ -68,10 +68,10 @@ which is authoritative — never a version quoted in this skill:
 grep 'reg-schema>=' reg_meta/pyproject.toml
 ```
 
-As with reg_meta_build above, an already-satisfied floor resolves in either order — but
-when a release raises reg_meta's `reg-schema` floor, publish reg_schema **first** and
-confirm the version-specific PyPI JSON is a 200 before publishing reg_meta, or the
-reg_meta wheel lands unresolvable for `uv tool install reg-meta`:
+An already-satisfied floor resolves in either order — but when a release raises
+reg_meta's `reg-schema` floor, publish reg_schema **first** and confirm the
+version-specific PyPI JSON is a 200 before publishing reg_meta, or the reg_meta wheel
+lands unresolvable for `uv tool install reg-meta`:
 
 ```sh
 curl -s -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/reg-schema/X.Y.Z/json
@@ -171,9 +171,8 @@ now:
   DB rebuild before the package release is usable.
 
 A `SCHEMA_VERSION` bump may require a coordinated `reg_meta_build` release if the
-matching DDL also needs to ship in the builder wheel (so an end-user
-`reg-meta-build build-db` produces the new schema). Release `reg_meta_build` first in
-that case.
+matching DDL also changes in the builder (so `reg-meta-build build-db` from a checkout
+produces the new schema). Release `reg_meta_build` first in that case.
 
 **reg_meta only — doc-DB schema version check:** run
 `git diff <tag>..HEAD -- reg_meta_build/src/reg_meta_build/doc_db.py reg_meta/src/reg_meta/doc_db.py`
@@ -543,7 +542,7 @@ reg_meta wheel cannot be withdrawn, only superseded.
 
 ### 9. Publish the draft release
 
-This is what fires the publish workflow.
+This is what fires the publish workflow (none for reg_meta_build).
 
 ```sh
 gh release edit <package>/vX.Y.Z --draft=false
@@ -608,8 +607,9 @@ on the release's assets — and re-validate with
 `gh workflow run integration.yml --ref main` (then watch that dispatched run). Do
 **not** re-release a working package over a stale test.
 
-If the package has no publish workflow, report the release is done after the tag is
-created.
+If the package has no publish workflow (reg_meta_build), report the release is done
+after the tag is created and the GitHub release is published (step 9). Skip the PyPI
+verification.
 
 ### 11. Verify published compiled artifacts (reg_meta releases)
 
@@ -621,8 +621,14 @@ public deployment requires a `catalog` artifact and `global` branding; the named
 deployment requires a `steward` artifact naming that exact steward.
 
 Boot the webapp against each selected shipped artifact with its matching configuration
-and run the existing smoke gate. `/api/context` must report that artifact's full
-identity and default read scope; catalog artifacts default to reference and steward
+and run the existing smoke gate. Until package 3a.9 the FastAPI deploy has no
+`/api/context`: the `ETag` of `GET /api/catalog` must carry that artifact's steward id,
+full generation and default read scope (`"<version>-<steward>-<generation>-<scope>-…"`;
+through the Cloudflare edge it arrives weakened as `W/"…"`, with the same fields), and
+on the catalog deployment `GET /api/catalog?scope=holdings` must refuse with
+`scope_unavailable`. From 3a.9 on, `reg-meta serve` answers `/api/context`: its `meta`
+carries the full generation and the default scope, and the same `scope=holdings` refusal
+identifies a catalog artifact. Catalog artifacts default to reference and steward
 artifacts to holdings. Spot-check a scoped catalog or search read and a known order
 through the shared materializer. Record what these checks actually exercised; a digest
 or compiler report alone does not prove deployed HTTP behavior.

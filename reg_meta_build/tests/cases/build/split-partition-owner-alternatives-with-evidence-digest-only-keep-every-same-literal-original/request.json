@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_curation_split_partition_boundary.py::test_owner_alternatives_keep_every_same_literal_original[digest-only]"
+  ],
+  "sources": "scb-partition-owner-alternatives"
+}

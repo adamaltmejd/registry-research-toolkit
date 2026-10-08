@@ -1,0 +1,27 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key", "description"],
+      "match": "set",
+      "rows": [
+        ["a", "5", "Accepted prose"]
+      ]
+    },
+    {
+      "table": "aliases",
+      "fields": ["variable", "variant", "column"],
+      "rows": [
+        ["a", "others", "A"],
+        ["a", "others", "FormerA"],
+        ["a", "people", "A"],
+        ["a", "people", "FormerA"]
+      ]
+    }
+  ]
+}

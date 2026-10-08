@@ -22,11 +22,6 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
 
 # A healthy provider node the catalog walk descends into.
-_GOOD_CONTEXT = {
-    "steward": {"id": "global", "name": "Global"},
-    "reg_meta": {"schema_version": "5.2.0", "import_date": "2026-06-10"},
-    "webapp": {"version": "0.1.0"},
-}
 _GOOD_ROOT = {
     "kind": "root",
     "children": [
@@ -78,7 +73,6 @@ def _serve(routes: dict[str, tuple[int, object]]) -> Iterator[str]:
 @pytest.fixture
 def healthy_server() -> Iterator[str]:
     routes = {
-        "/api/context": (200, _GOOD_CONTEXT),
         "/api/catalog": (200, _GOOD_ROOT),
         "/api/catalog/scb": (200, _GOOD_PROVIDER),
     }
@@ -92,25 +86,16 @@ def test_run_smoke_passes_on_healthy_server(healthy_server: str) -> None:
 
 
 def test_run_smoke_fails_on_empty_catalog() -> None:
-    routes = {
-        "/api/context": (200, _GOOD_CONTEXT),
-        "/api/catalog": (200, {"kind": "root", "children": []}),
-    }
+    routes = {"/api/catalog": (200, {"kind": "root", "children": []})}
     with _serve(routes) as base, pytest.raises(SmokeError, match="zero providers"):
         run_smoke(base, ready_deadline_s=5.0, timeout_s=2.0)
 
 
-def test_run_smoke_fails_on_bad_context_shape() -> None:
-    routes = {"/api/context": (200, {"steward": {"id": "global"}})}  # missing keys
-    with _serve(routes) as base, pytest.raises(SmokeError, match="missing key"):
-        run_smoke(base, ready_deadline_s=5.0, timeout_s=2.0)
-
-
-def test_run_smoke_fails_on_500_context() -> None:
+def test_run_smoke_fails_on_500_catalog() -> None:
     # A reachable-but-failing server (boot-time 500) must FAIL the smoke (exit 1
     # equivalent), NOT be retried for the full deadline → exit 2. The readiness
-    # wait stops on the reachable non-200, and _check_context reports the code.
-    routes = {"/api/context": (500, {"detail": "boot failed"})}
+    # wait stops on the reachable non-200, and the catalog walk reports the code.
+    routes = {"/api/catalog": (500, {"detail": "boot failed"})}
     start = time.monotonic()
     with _serve(routes) as base, pytest.raises(SmokeError, match="returned 500"):
         run_smoke(base, ready_deadline_s=30.0, timeout_s=2.0)

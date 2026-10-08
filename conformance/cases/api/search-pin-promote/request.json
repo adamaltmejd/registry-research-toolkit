@@ -1,0 +1,68 @@
+{
+  "kind": "catalog",
+  "fixture": "search-ranking",
+  "search_pins": "search_pins.toml",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "deeptopic",
+        "type": "register"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "deeptopic",
+        "type": "register",
+        "limit": 1
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "deeptopic",
+        "type": "register",
+        "limit": 1
+      },
+      "cursor_from": [
+        1,
+        "/data/next_cursor"
+      ]
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "deeptopic",
+        "type": "register",
+        "limit": 1
+      },
+      "cursor_from": [
+        2,
+        "/data/next_cursor"
+      ]
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "deeptopic",
+        "type": "register",
+        "register": "scb/alpha"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "deeptopic",
+        "type": "register",
+        "period": "2030"
+      }
+    }
+  ]
+}

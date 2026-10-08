@@ -1,0 +1,10 @@
+[register]
+provider = "fk"
+slug = "r"
+native_id = "5711326129917387810"
+[[variant]]
+slug = "table"
+native_id = "5711326129917387810.4659111896167270899"
+[[variable]]
+slug = "header"
+native_id = "5711326129917387810.HEADER"

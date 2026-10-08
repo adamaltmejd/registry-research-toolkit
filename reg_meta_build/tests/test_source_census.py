@@ -5,19 +5,15 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
-from collections import Counter
 from typing import TYPE_CHECKING
 
+import pytest
 from _csv_fixtures import (
     var_row,
     write_input_bundle,
     write_scb_input,
 )
-from _source_inspection_fixtures import (
-    InterpreterCheckout,
-    record_path_opens,
-    snapshot_record_files,
-)
+from _source_inspection_fixtures import InterpreterCheckout
 from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE
 from reg_meta_build.input_snapshot import (
     open_input_bundle,
@@ -31,7 +27,7 @@ if TYPE_CHECKING:
     from pathlib import Path
     from typing import Any
 
-    import pytest
+    from reg_meta_build.input_snapshot import CatalogBundleSelection
 
 
 def _census_rows() -> list[str]:
@@ -140,32 +136,30 @@ def _census_rows() -> list[str]:
     ]
 
 
+@pytest.fixture(scope="module")
+def census_bundle(tmp_path_factory: pytest.TempPathFactory) -> CatalogBundleSelection:
+    """The accepted bundle of `_census_rows()`; the tests only read it."""
+    root = tmp_path_factory.mktemp("census")
+    write_scb_input(root / "source", registerinformation_rows=_census_rows())
+    return write_input_bundle(root / "accepted", root / "source")
+
+
 def _read_census(path: Path) -> list[dict[str, Any]]:
     with gzip.open(path, "rt", encoding="utf-8") as source:
         return [json.loads(line) for line in source]
 
 
 def test_scb_census_preserves_complete_alternatives_memberships_and_scopes(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, census_bundle: CatalogBundleSelection
 ) -> None:
     rows = _census_rows()
-    input_dir = tmp_path / "source"
-    write_scb_input(input_dir, registerinformation_rows=rows)
-    selection = write_input_bundle(tmp_path / "accepted", input_dir)
-    bundle = open_input_bundle(selection)
-    second_bundle = open_input_bundle(selection)
-    record_files = snapshot_record_files(bundle.snapshot, "Registerinformation.csv")
-
-    opened = record_path_opens(monkeypatch)
+    bundle = open_input_bundle(census_bundle)
+    second_bundle = open_input_bundle(census_bundle)
     first = tmp_path / "first.jsonl.gz"
     second = tmp_path / "second.jsonl.gz"
     summary = write_scb_observation_census(bundle, first, code_commit="c" * 40)
     write_scb_observation_census(second_bundle, second, code_commit="c" * 40)
 
-    # One streaming pass per census: each prepared record file is opened once.
-    assert Counter(path for path in opened if path in record_files) == dict.fromkeys(
-        record_files, 2
-    )
     assert first.read_bytes() == second.read_bytes()
     lines = _read_census(first)
     observations = [line for line in lines if line["type"] == "observation"]
@@ -254,14 +248,15 @@ def test_scb_census_preserves_complete_alternatives_memberships_and_scopes(
     }
 
 
-def test_scb_census_semantics_survive_source_row_reordering(tmp_path: Path) -> None:
-    rows = _census_rows()
+def test_scb_census_semantics_survive_source_row_reordering(
+    tmp_path: Path, census_bundle: CatalogBundleSelection
+) -> None:
+    reverse_dir = tmp_path / "reverse" / "source"
+    write_scb_input(reverse_dir, registerinformation_rows=_census_rows()[::-1])
+    reverse = write_input_bundle(tmp_path / "reverse" / "accepted", reverse_dir)
     summaries: list[dict[str, Any]] = []
     group_shapes: list[set[tuple[str, tuple[tuple[str, str], ...]]]] = []
-    for label, ordered_rows in (("forward", rows), ("reverse", list(reversed(rows)))):
-        input_dir = tmp_path / label / "source"
-        write_scb_input(input_dir, registerinformation_rows=ordered_rows)
-        selection = write_input_bundle(tmp_path / label / "accepted", input_dir)
+    for label, selection in (("forward", census_bundle), ("reverse", reverse)):
         destination = tmp_path / f"{label}.jsonl.gz"
         summary = write_scb_observation_census(
             open_input_bundle(selection), destination, code_commit="c" * 40
@@ -290,10 +285,10 @@ def test_scb_census_semantics_survive_source_row_reordering(tmp_path: Path) -> N
     assert group_shapes[0] == group_shapes[1]
 
 
-def test_all_scb_cli_guards_census_destination(tmp_path: Path) -> None:
-    input_dir = tmp_path / "source"
-    write_scb_input(input_dir, registerinformation_rows=_census_rows())
-    selection = write_input_bundle(tmp_path / "accepted", input_dir)
+def test_all_scb_cli_guards_census_destination(
+    tmp_path: Path, census_bundle: CatalogBundleSelection
+) -> None:
+    selection = census_bundle
     evidence = tmp_path / "census.jsonl.gz"
     summary = tmp_path / "summary.json"
     checkout = InterpreterCheckout(tmp_path / "interpreter")

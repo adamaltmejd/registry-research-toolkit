@@ -2,13 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import App from "./App.svelte";
-import type { CatalogStats, Context, RootResponse } from "./lib/api";
-import {
-  getCatalogRoot,
-  getContext,
-  getStats,
-  validateProject,
-} from "./lib/api";
+import type { Context, RootResponse } from "./lib/api";
+import { getCatalogRoot, getContext, validateProject } from "./lib/api";
 import type { ProjectData } from "./lib/project_data";
 import { projectStore, setPersistence } from "./lib/project_store.svelte";
 import { router } from "./lib/router.svelte";
@@ -19,44 +14,32 @@ vi.mock("./lib/api", async (importOriginal) => {
     ...actual,
     getCatalogRoot: vi.fn(),
     getContext: vi.fn(),
-    getStats: vi.fn(),
     validateProject: vi.fn(),
   };
 });
 
 const context: Context = {
-  reg_meta: {
-    import_date: "2026-07-14T00:00:00Z",
-    schema_version: "5.2.0",
-    catalog_artifact_kind: "catalog",
-    steward: null,
-    generation_id: "0".repeat(64),
-    default_scope: "reference",
-  },
+  import_date: "2026-07-14T00:00:00Z",
+  schema_version: "9.3.0",
+  period_span: null,
+  reg_meta_version: "1.0.0",
+  sizes: { providers: 1, registers: 2, variables: 3 },
   steward: {
     id: "global",
     name: "Global",
     long_name: "Register Research Catalog",
-    catalog_period_span: null,
   },
-  webapp: { reg_meta_version: "1.0.0", version: "1.0.0" },
 };
 
 beforeEach(() => {
   router.navigate("/");
   vi.mocked(getContext).mockReset();
   vi.mocked(getCatalogRoot).mockReset();
-  vi.mocked(getStats).mockReset();
   vi.mocked(getContext).mockResolvedValue(context);
   vi.mocked(getCatalogRoot).mockResolvedValue({
     kind: "root",
     children: [],
   } as unknown as RootResponse);
-  vi.mocked(getStats).mockResolvedValue({
-    providers: 1,
-    registers: 2,
-    variables: 3,
-  } satisfies CatalogStats);
   vi.mocked(validateProject).mockReset();
   vi.mocked(validateProject).mockResolvedValue({ ok: true, issues: [] });
 });
@@ -88,6 +71,26 @@ describe("App viewport geometry", () => {
     expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(
       document.documentElement.clientHeight,
     );
+  });
+});
+
+describe("App renders the landing page from one context read", () => {
+  it("shows Home's catalog sizes and the footer from the context", async () => {
+    // Fails if Home stops reading the sizes App threads from `context`, or the
+    // footer reads a field the Rust `context` shape does not carry.
+    await render(App);
+
+    await expect
+      .element(page.getByText("1 providers · 2 registers · 3 variables"))
+      .toBeVisible();
+    await expect
+      .element(
+        page.getByText(
+          "as of reg_meta v1.0.0 · schema 9.3.0 · built 2026-07-14",
+        ),
+      )
+      .toBeVisible();
+    expect(getContext).toHaveBeenCalledTimes(1);
   });
 });
 

@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_support_errata_boundary.py::test_checked_support_keeps_the_twin_and_complete_authority_in_catalog"
+  ],
+  "note": "Only the contradicted FIRST projection of CVID 20 becomes support; its SECOND twin and the authority stay catalog.",
+  "sources": "scb-support-question"
+}

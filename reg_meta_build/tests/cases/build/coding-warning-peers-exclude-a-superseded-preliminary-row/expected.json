@@ -1,0 +1,18 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "warnings",
+      "fields": ["valid_from", "valid_to"],
+      "rows": [
+        ["2020-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["case_id"],
+      "rows": []
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "replaces": ["test_curation_split_sos_boundary.py::test_type_split_gives_each_delivered_type_its_owner"],
+  "sources": "sos-par-atc-two-types"
+}

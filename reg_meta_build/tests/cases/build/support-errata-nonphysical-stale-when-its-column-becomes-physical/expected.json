@@ -1,0 +1,19 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator"],
+      "match": "includes",
+      "rows": [
+        ["curation/registers/scb/sample.toml#/errata.support/1"]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation", "use": "support"},
+      "fields": ["key"],
+      "rows": []
+    }
+  ]
+}

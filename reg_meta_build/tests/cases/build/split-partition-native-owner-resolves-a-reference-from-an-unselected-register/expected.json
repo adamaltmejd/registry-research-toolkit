@@ -1,0 +1,30 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "subject"],
+      "rows": [
+        ["deferred_out_of_slice_reference", "warning", "variable_same_as:0"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "detail": {"contains": "('variable', 'scb/sample/quantity')"}
+      },
+      "fields": ["code"],
+      "rows": [
+        ["deferred_out_of_slice_reference"]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {"register": "other"},
+      "fields": ["variable", "column"],
+      "match": "set",
+      "rows": [
+        ["value", "OTHER"]
+      ]
+    }
+  ]
+}

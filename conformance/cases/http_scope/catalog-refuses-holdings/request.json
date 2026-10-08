@@ -13,18 +13,6 @@
       "query": {
         "scope": "holdings"
       }
-    },
-    {
-      "path": "/api/search",
-      "query": {
-        "scope": "holdings"
-      }
-    },
-    {
-      "path": "/api/stats",
-      "query": {
-        "scope": "holdings"
-      }
     }
   ]
 }

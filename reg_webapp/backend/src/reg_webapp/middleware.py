@@ -5,7 +5,7 @@ DRY alternative to per-handler header wiring: one ASGI middleware stamps the
 (etag.py + middleware.py)) on every GET read response and turns a
 matching ``If-None-Match`` into a 304. Centralizing it here keeps the route
 handlers free of caching boilerplate and guarantees the scheme is uniform across
-``/api/context``, the ``/api/catalog`` root, the catch-all, and the 7 suffixed
+the ``/api/catalog`` root, the catch-all, and the 7 suffixed
 sub-endpoints (the read surface A5.2a-ii ships).
 
 Skips WRITE endpoints (``/api/project/*`` do NOT set ETag) — those land in
@@ -75,10 +75,8 @@ class ETagMiddleware(BaseHTTPMiddleware):
         # ever emits a duplicate-key header.
         headers = dict(response.headers)
         headers["etag"] = etag
-        # Per-route Cache-Control (three tiers, see cache_control_for): the
-        # deployment-identity read (/api/context) revalidates every request so the
-        # vintage footer can't serve a stale version after a deploy; the fold-bearing
-        # /api/catalog/* and /api/search reads carry a short 60s window so curated
+        # Per-route Cache-Control (two tiers, see cache_control_for): the fold-bearing
+        # /api/catalog/* reads carry a short 60s window so curated
         # concept-group folds surface promptly for returning users; the
         # rebuild-stable /api/docs/* reads keep the 24h policy. Computed from
         # request.url.path (query stripped) once here so both the 200 and the

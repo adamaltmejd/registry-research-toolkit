@@ -1,0 +1,159 @@
+{
+  "replaces": [
+    "test_curation_sibling_heuristics_boundary.py::test_only_same_shape_non_code_label_siblings_form_a_group"
+  ],
+  "note": "Co-delivered siblings of one source definition group unless a guard keeps them apart: a code/label pair (either column order), a numeric/text type mismatch (Swedish labels classify by ASCII fold), or differing lengths when the type is unclassifiable. Only FORNAMN/EFTERNAMN remain eligible.",
+  "sources": {
+    "description": "SCB register 1 delivers eight source variables, each as two columns of one edition; (var_id, column, Datatyp, Datalängd) per row.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1000,
+          "var_id": 100,
+          "colname": "LID",
+          "varname": "Var100",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1001,
+          "var_id": 100,
+          "colname": "LNAMN",
+          "varname": "Var100",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1002,
+          "var_id": 200,
+          "colname": "KOMMUN",
+          "varname": "Var200",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1003,
+          "var_id": 200,
+          "colname": "KOMMUNNAMN",
+          "varname": "Var200",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1004,
+          "var_id": 300,
+          "colname": "FORNAMN",
+          "varname": "Var300",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1005,
+          "var_id": 300,
+          "colname": "EFTERNAMN",
+          "varname": "Var300",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1006,
+          "var_id": 400,
+          "colname": "BELOPP",
+          "varname": "Var400",
+          "data_type": "Heltal",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1007,
+          "var_id": 400,
+          "colname": "BELOPPTXT",
+          "varname": "Var400",
+          "data_type": "Sträng (text)",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1008,
+          "var_id": 500,
+          "colname": "DAG",
+          "varname": "Var500",
+          "data_type": "Datum",
+          "data_length": "8"
+        },
+        {
+          "cvid": 1009,
+          "var_id": 500,
+          "colname": "DAGTXT",
+          "varname": "Var500",
+          "data_type": "Datum",
+          "data_length": "10"
+        },
+        {
+          "cvid": 1010,
+          "var_id": 600,
+          "colname": "SUN2000KOD",
+          "varname": "Var600",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1011,
+          "var_id": 600,
+          "colname": "SUN2000NAMN",
+          "varname": "Var600",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1012,
+          "var_id": 700,
+          "colname": "ANTAL",
+          "varname": "Var700",
+          "data_type": "Heltal",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1013,
+          "var_id": 700,
+          "colname": "ANTALTXT",
+          "varname": "Var700",
+          "data_type": "Sträng",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1014,
+          "var_id": 800,
+          "colname": "X",
+          "varname": "Var800",
+          "data_type": "",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1015,
+          "var_id": 800,
+          "colname": "XTXT",
+          "varname": "Var800",
+          "data_type": "int",
+          "data_length": "2"
+        }
+      ],
+      "unika": [
+        "TESTREG|Testregistret|Individer|Individer|Var100|LID|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var100|LNAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var200|KOMMUN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var200|KOMMUNNAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var300|FORNAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var300|EFTERNAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var400|BELOPP|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var400|BELOPPTXT|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var500|DAG|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var500|DAGTXT|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var600|SUN2000KOD|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var600|SUN2000NAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var700|ANTAL|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var700|ANTALTXT|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var800|X|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var800|XTXT|2020|2020|0|0|0"
+      ]
+    }
+  }
+}

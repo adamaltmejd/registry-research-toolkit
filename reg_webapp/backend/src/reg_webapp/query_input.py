@@ -2,8 +2,8 @@
 
 The query reaches FTS only as a BOUND parameter (no SQLi surface), so this gate
 guards cost/abuse and the NUL byte sqlite rejects — not injection. Used as a
-FastAPI dependency (`Depends(validate_text_query)`) by `routes/search.py` and
-`routes/docs.py` so the `?q=` contract is identical across both.
+FastAPI dependency (`Depends(validate_text_query)`) by `routes/docs.py` and
+`routes/catalog.py` so the `?q=` contract is identical across both.
 
 `clamp_limit` is the one page-size rule every paged read shares (clamp, never
 422 — a nonsense `?limit` is display intent, not a contract break), and

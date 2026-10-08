@@ -1,0 +1,28 @@
+{
+  "/results/*/code": [
+    "1",
+    "2",
+    "0"
+  ],
+  "/results/*/code_system": [
+    "Example codes",
+    "Example codes",
+    "Example codes"
+  ],
+  "/results/*/classification_count": [
+    1,
+    1,
+    1
+  ],
+  "/results/*/classifications/*/fqid": [
+    [
+      "class/example-codes"
+    ],
+    [
+      "class/example-codes"
+    ],
+    [
+      "class/example-codes"
+    ]
+  ]
+}

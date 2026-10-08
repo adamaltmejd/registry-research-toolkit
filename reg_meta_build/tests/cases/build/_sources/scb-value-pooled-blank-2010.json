@@ -1,0 +1,10 @@
+{
+  "description": "Variable 101 delivered with a blank column name in 2010 (CVID 1010) and as VALUE in 2013 (CVID 1013).",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1010, "var_id": 101, "colname": "", "year": "2010", "regver_id": 110},
+      {"cvid": 1013, "var_id": 101, "colname": "VALUE", "year": "2013", "regver_id": 113}
+    ],
+    "unika": ["TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2010|2020|0|0|0"]
+  }
+}

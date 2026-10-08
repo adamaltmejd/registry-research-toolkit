@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_changed_competing_list_makes_the_reviewed_choice_stale"
+  ],
+  "sources": "scb-value-changed-competing-list",
+  "authored_from": "scb-value-competing-lists"
+}

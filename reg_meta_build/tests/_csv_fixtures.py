@@ -1136,6 +1136,42 @@ def write_csv(
     path.write_bytes(content.encode(encoding))
 
 
+def summary_rows(rows: list[str]) -> list[str]:
+    """One non-sensitive, non-identifier Unika summary row per delivered column.
+
+    The summary carries each variable's flags; without it the build withholds the
+    variable as `unresolved_flag`.
+    """
+    header = REGISTERINFORMATION_HEADER.split("|")
+    out = []
+    for row in rows:
+        cells = dict(zip(header, row.split("|"), strict=True))
+        if cells["Kolumnnamn"] in {"", '""'}:
+            continue  # A member without a physical column has no column summary.
+        year = cells["Registerversion_ForstaGodkannandeDatum"][:4]
+        line = "|".join(
+            (
+                cells["Registernamn"],
+                cells["Registerrubrik"],
+                cells["Registervariantnamn"],
+                cells["Registervariantrubrik"],
+                cells["Variabelnamn"],
+                cells["Kolumnnamn"],
+                year,
+                year,
+                "0",
+                "0",
+                "0",
+            )
+        )
+        if line not in out:
+            out.append(line)
+    # The reader needs a non-empty summary file; an unmatched row is only a warning.
+    return out or [
+        "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
+    ]
+
+
 def write_scb_input(
     input_dir: Path,
     *,

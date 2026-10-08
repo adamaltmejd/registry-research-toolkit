@@ -1,0 +1,23 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "detail"],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/bu.toml [[variant]] entry 1 binds no native family or parent"
+        ]
+      ]
+    },
+    {
+      "table": "variants",
+      "where": {"register": "bu"},
+      "fields": ["variant"],
+      "rows": [
+        ["b"]
+      ]
+    }
+  ]
+}

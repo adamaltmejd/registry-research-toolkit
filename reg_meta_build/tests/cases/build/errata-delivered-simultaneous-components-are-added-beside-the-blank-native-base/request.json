@@ -1,0 +1,50 @@
+{
+  "replaces": [
+    "test_curation_partition_delivered_boundary.py::test_simultaneous_components_are_added_beside_the_blank_native_base"
+  ],
+  "note": "Each component gets its own 2021 addition; the blank row stays as evidence.",
+  "sources": {
+    "description": "Variable 5 delivers A, B and C in 2020 (CVIDs 20-22), and one literal blank member in 2021 (CVID 30).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "B",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "C",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "\"\"",
+          "cvid": 30,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|A|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|B|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|C|2020|2020|0|0|0"
+      ]
+    }
+  }
+}

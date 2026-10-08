@@ -1,0 +1,18 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "where": {"register": "sample"},
+      "fields": ["variable", "column"],
+      "match": "set",
+      "rows": [
+        ["amount", "ANSWER"]
+      ]
+    }
+  ]
+}

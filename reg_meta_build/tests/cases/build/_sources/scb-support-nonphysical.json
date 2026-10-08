@@ -1,0 +1,9 @@
+{
+  "description": "Variable 1.5 delivers a literal blank column (quoted empty Kolumnnamn) at 2021 (CVID 21); its FIRST delivery at 2020 (CVID 20) witnesses the same quantity.",
+  "scb": {
+    "registerinformation": [
+      {"colname": "\"\"", "cvid": 21, "var_id": 5, "year": "2021", "regver_id": 2021},
+      {"colname": "FIRST", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020}
+    ]
+  }
+}

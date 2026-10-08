@@ -1,0 +1,27 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5.old"
+slug = "old"
+[[variable]]
+native_id = "1.5.new"
+slug = "new"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.2"
+column = "ANSWER"
+owner = "1.5.old"
+ref = "old basis"
+source_editions = ["2020"]
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.2"
+column = "ANSWER"
+owner = "1.5.new"
+ref = "new basis"
+source_editions = ["2021"]

@@ -1,0 +1,4 @@
+{
+  "note": "The matching SYX_A original no longer binds its link (an unspecified declaration instead of an unresolved one) and keeps its inline value set; the SYX_B peer and the other register still report their link as unresolved.",
+  "sources": "sos-syx-errata"
+}

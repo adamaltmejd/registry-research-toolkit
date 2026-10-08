@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_coding_warning_peers_include_rows_pooled_into_the_column"
+  ],
+  "note": "The blank-named 2010 row joins VALUE through [[errata.delivered]]; a warning reviewed over both original rows applies to the pooled 2010 state.",
+  "sources": "scb-value-pooled-blank-2010"
+}

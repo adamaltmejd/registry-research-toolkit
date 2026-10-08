@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_reviewed_decimal_comma_certificate_states_exact_source_members"
+  ],
+  "sources": "sos-kon-decimal-comma"
+}

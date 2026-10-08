@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_support_errata_boundary.py::test_checked_support_authority_must_ask_the_same_physical_question"
+  ],
+  "note": "The load validator compares register, variant, column and edition in one condition; the edition (same column and variant, another year) stands for the other three.",
+  "sources": "scb-support-question"
+}

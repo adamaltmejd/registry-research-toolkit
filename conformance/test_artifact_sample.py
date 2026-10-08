@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
-from artifact_requests import assert_sampled_agreement, sample_project
+from artifact_requests import assert_sampled_agreement, sample_project, search_client
 from fastapi.testclient import TestClient
 from reader_artifacts import CASES, FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta.cli import run
@@ -18,16 +18,18 @@ from reg_webapp.app import create_app
 @pytest.mark.parametrize(
     "case", sorted((CASES / "artifact_sample").iterdir()), ids=lambda p: p.name
 )
-def test_sampled_order_and_search_contracts(case, tmp_path, monkeypatch, capsys):
-    request = json.loads((case / "request.json").read_text())
+def test_sampled_order_and_search_contracts(
+    case, tmp_path, monkeypatch, capsys, request
+):
+    spec = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
-    fixture = request["fixture"]
+    fixture = spec["fixture"]
     if fixture.startswith("artifact_sample/"):
         fixture = CASES / fixture
     path = build_reader_artifact(
         tmp_path / "artifact",
         fixture,
-        request["artifact"],
+        spec["artifact"],
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
     with open_db(path) as conn:
@@ -39,21 +41,22 @@ def test_sampled_order_and_search_contracts(case, tmp_path, monkeypatch, capsys)
     }
     monkeypatch.setenv("REG_META_DB", str(path.parent))
     monkeypatch.setenv(
-        "REG_WEBAPP_STEWARD", "global" if request["artifact"] == "catalog" else "swecov"
+        "REG_WEBAPP_STEWARD", "global" if spec["artifact"] == "catalog" else "swecov"
     )
     monkeypatch.setenv(
         "REG_WEBAPP_STEWARDS_DIR",
         str(Path(__file__).resolve().parents[1] / "reg_webapp/stewards"),
     )
+    search = search_client(request, path.parent)
     with TestClient(create_app(rate_limit_per_minute=1000)) as client:
         if absent := expected.get("absent_from_first_search_page"):
-            response = client.get(
+            response = search.get(
                 "/api/search", params={"q": "Value", "type": "variable", "limit": 100}
             )
             assert response.status_code == 200
-            group = response.json()["groups"][0]
-            assert group["has_more"]
-            assert all(hit.get("fqid") != absent for hit in group["results"])
+            page = response.json()["data"]
+            assert page["next_cursor"] is not None
+            assert all(hit.get("fqid") != absent for hit in page["items"])
             assert (
                 run(
                     [
@@ -76,4 +79,4 @@ def test_sampled_order_and_search_contracts(case, tmp_path, monkeypatch, capsys)
             page = json.loads(capsys.readouterr().out)
             assert page["has_more"]
             assert all(hit.get("fqid") != absent for hit in page["results"])
-        assert_sampled_agreement(path.parent, client, tmp_path, capsys)
+        assert_sampled_agreement(path.parent, client, search, tmp_path, capsys)

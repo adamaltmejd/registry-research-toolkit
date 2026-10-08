@@ -1,0 +1,30 @@
+{
+  "kind": "catalog",
+  "search_pins": "search_pins.toml",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Example",
+        "type": "register"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Lisa",
+        "type": "register"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Example",
+        "limit": 3
+      }
+    }
+  ]
+}

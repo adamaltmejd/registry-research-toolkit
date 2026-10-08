@@ -1,0 +1,36 @@
+{
+  "description": "Register 1 (TEST) delivers variable 5 as columns A (CVID 21) and B (CVID 22); register 9 (ANCHOR) delivers VALUE.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "A",
+        "cvid": 21,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2]
+      },
+      {
+        "colname": "B",
+        "cvid": 22,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 9001,
+        "var_id": 901,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["ANCHOR", 9, 90]
+      }
+    ],
+    "unika": [
+      "TEST|Testregistret|Individer|Individer|GenericVar|A|2020|2020|0|0|0",
+      "TEST|Testregistret|Individer|Individer|GenericVar|B|2020|2020|0|0|0",
+      "ANCHOR|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
+    ]
+  }
+}

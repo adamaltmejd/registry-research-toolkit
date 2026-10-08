@@ -1,0 +1,9 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/period_span": {"from": 2018, "to": 2018},
+      "/data/import_date": "2018-12-31T00:00:00Z"
+    }
+  }
+]

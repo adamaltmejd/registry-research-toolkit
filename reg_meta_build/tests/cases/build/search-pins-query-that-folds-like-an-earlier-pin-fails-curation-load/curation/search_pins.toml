@@ -1,0 +1,8 @@
+[[pin]]
+query = "Sysselsättning"
+type = "register"
+fqids = ["scb/a"]
+[[pin]]
+query = " sysselsattning"
+type = "register"
+fqids = ["scb/b"]

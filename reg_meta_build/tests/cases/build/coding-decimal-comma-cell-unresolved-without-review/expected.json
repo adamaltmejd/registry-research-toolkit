@@ -1,0 +1,26 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "state_codes",
+      "where": {"column": "KON"},
+      "fields": ["valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["2005-01-01", "2015-12-31", null, null]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "('Socialstyrelsen/Metadata Syntetiskt register (SYN)_webb.xlsx', 'sos', 'register', 'name', 'Syntetiskt register', 'variable', 'native-str', 'KON'"
+        }
+      },
+      "fields": ["code"],
+      "match": "includes",
+      "rows": [
+        ["unresolved_member_list"]
+      ]
+    }
+  ]
+}

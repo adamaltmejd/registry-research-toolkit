@@ -1,0 +1,37 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "fields": ["variable"],
+      "match": "set",
+      "rows": [
+        ["lid"],
+        ["lnamn"],
+        ["kommun"],
+        ["kommunnamn"],
+        ["fornamn"],
+        ["efternamn"],
+        ["belopp"],
+        ["belopptxt"],
+        ["dag"],
+        ["dagtxt"],
+        ["sun-kod"],
+        ["namn-sun"],
+        ["antal"],
+        ["antaltxt"],
+        ["x"],
+        ["xtxt"]
+      ]
+    },
+    {
+      "table": "concept_groups",
+      "fields": ["variables"],
+      "rows": [
+        [
+          ["efternamn", "fornamn"]
+        ]
+      ]
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 """Per-deploy smoke gate (reg_webapp/DESIGN.md → Deployment).
 
-Probes a RUNNING reg_webapp over loopback: a golden ``/api/context`` shape check
-plus a shallow ``/api/catalog`` walk (root → first provider node). Run by the
+Probes a RUNNING reg_webapp over loopback: a shallow ``/api/catalog`` walk (root
+→ first provider node). ``/api/context`` is the Rust server's (package 3a.10), so
+this gate no longer probes it; 3a.9 replaces the gate with the Rust server's. Run by the
 container entrypoint BEFORE traffic is admitted; a failure must halt the deploy
 with a non-zero exit so a container that booted against a broken DB bake / empty
 catalog never serves.
@@ -80,12 +81,12 @@ def _wait_until_ready(
     poll_s: float = 0.5,
     server_pid: int | None = None,
 ) -> None:
-    """Poll ``/api/context`` until it answers 200 or the deadline elapses.
+    """Poll ``/api/catalog`` until it answers 200 or the deadline elapses.
 
     The lifespan opens the baked DB at startup; until that completes the socket
     may not yet accept, so transport errors during warmup are expected and
     retried. A non-200 once reachable is a real failure and is NOT retried away
-    (it surfaces in the golden check). If ``server_pid`` is supplied and that
+    (it surfaces in the catalog walk). If ``server_pid`` is supplied and that
     process dies (e.g. uvicorn aborts on a lifespan/boot failure), the wait
     fails fast instead of burning the whole deadline.
     """
@@ -98,38 +99,19 @@ def _wait_until_ready(
                 + (f" (last error: {last_err})" if last_err else "")
             )
         try:
-            status, _ = _get(f"{base_url}/api/context", timeout=poll_s * 2)
+            status, _ = _get(f"{base_url}/api/catalog", timeout=poll_s * 2)
         except (urllib.error.URLError, ConnectionError, OSError) as exc:
             last_err = exc
             time.sleep(poll_s)
             continue
         if status == 200:
             return
-        # Reachable but unhealthy — let the golden check report the detail.
+        # Reachable but unhealthy — let the catalog walk report the detail.
         return
     raise TimeoutError(
         f"server at {base_url} not reachable within {deadline_s:.0f}s"
         + (f" (last error: {last_err})" if last_err else "")
     )
-
-
-def _check_context(base_url: str, timeout: float) -> None:
-    status, body = _get(f"{base_url}/api/context", timeout=timeout)
-    if status != 200:
-        raise SmokeError(f"/api/context returned {status}, expected 200")
-    if not isinstance(body, dict):
-        raise SmokeError("/api/context body is not a JSON object")
-    # Golden keys the lifespan validates at boot — their presence proves the DB
-    # manifest read + steward load succeeded.
-    for key in ("steward", "reg_meta", "webapp"):
-        if key not in body:
-            raise SmokeError(f"/api/context missing key {key!r}")
-    steward = body["steward"]
-    if not isinstance(steward, dict) or not steward.get("id"):
-        raise SmokeError("/api/context steward.id is missing or empty")
-    reg_meta_info = body["reg_meta"]
-    if not isinstance(reg_meta_info, dict) or not reg_meta_info.get("schema_version"):
-        raise SmokeError("/api/context reg_meta.schema_version is missing or empty")
 
 
 def _check_catalog_walk(base_url: str, timeout: float) -> None:
@@ -165,7 +147,6 @@ def run_smoke(
 ) -> None:
     """Wait for readiness, then run the golden checks. Raises on any failure."""
     _wait_until_ready(base_url, ready_deadline_s, server_pid=server_pid)
-    _check_context(base_url, timeout_s)
     _check_catalog_walk(base_url, timeout_s)
 
 
@@ -199,7 +180,7 @@ def main(argv: list[str] | None = None) -> int:
     except (urllib.error.URLError, ConnectionError, OSError) as exc:
         sys.stderr.write(f"smoke: FAILED: transport error during check: {exc}\n")
         return EXIT_SMOKE_FAILED
-    sys.stdout.write("smoke: OK (/api/context + /api/catalog walk)\n")
+    sys.stdout.write("smoke: OK (/api/catalog walk)\n")
     return EXIT_OK
 
 

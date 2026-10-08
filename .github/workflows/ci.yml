@@ -61,9 +61,9 @@ jobs:
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --locked -- -D warnings
       - run: cargo test --workspace --locked
-      # The Rust HTTP run (RUST_RUNTIME_SPEC.md section 10): the conformance cases of
-      # the operations `reg-meta serve` implements and the MCP equivalence suite, out
-      # of process.
+      # The Rust HTTP run (RUST_RUNTIME_SPEC.md section 10): the whole `api`
+      # conformance corpus and the MCP equivalence suite against `reg-meta serve`,
+      # out of process.
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
@@ -73,7 +73,7 @@ jobs:
       - run: cargo build --workspace --locked
       - run: >-
           uv run python -m pytest conformance -q -n auto
-          -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging] or test_mcp'
+          -k '[api/ or test_mcp or test_artifact_sample or test_acceptance_agreement'
           --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}'
           --mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'
 
@@ -90,6 +90,26 @@ jobs:
       - run: uv sync --frozen
       - run: bash scripts/check_versions.sh
 
+  # Exit-code and message tests for the repo's Claude Code hooks
+  # (.claude/hooks/tests). Plain bash, python3 and git, all preinstalled on the
+  # runner; the bootstrap test stubs uv and bun, so no `uv sync`. Budget:
+  # ARCHITECTURE.md "Tiers".
+  hook-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v7.0.1
+      # Run every script so one failure does not hide another, then fail if any did.
+      - name: Run hook tests
+        run: |
+          status=0
+          for t in .claude/hooks/tests/test_*.sh; do
+            echo "::group::$t"
+            bash "$t" || status=1
+            echo "::endgroup::"
+          done
+          exit "$status"
+
   # One leg per root `testpaths` entry (pyproject.toml); keep the two lists in
   # step. `budget` is the suite's CI-job budget in ARCHITECTURE.md "Tiers",
   # setup included: a leg over it is a test-audit finding, not a reason to
@@ -104,6 +124,8 @@ jobs:
         include:
           - suite: reg_meta_build
             budget: 6
+            # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
+            hypothesis_profile: thorough
           # The full suite against the in-process Python adapters. The `rust`
           # job reruns the admission/context cases against the Rust server:
           # the same cases, a different implementation under test.
@@ -127,6 +149,8 @@ jobs:
       - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
       - run: uv run python -m pytest "${{ matrix.suite }}" -m "not integration"
+        env:
+          HYPOTHESIS_PROFILE: ${{ matrix.hypothesis_profile }}
 
   package-integration:
     runs-on: ubuntu-latest
@@ -172,6 +196,7 @@ jobs:
             webapp:
               - 'reg_webapp/frontend/**'
               - 'reg_webapp/backend/openapi.json'
+              - 'crates/reg-meta/openapi.json'
               - 'reg_webapp/backend/src/**'
               # Oracles the frontend unit tests read: the fold corpus
               # (catalog.fold.test.ts) and reg_schema's corpus + version
@@ -226,8 +251,9 @@ jobs:
       # (`*.browser.test.ts`); the shared vite.config compiles `.svelte`/`.svelte.ts`.
       - run: bun run test
       - run: bun run build
-      # TS types are codegen'd from ../backend/openapi.json and committed.
+      # TS types are codegen'd from ../backend/openapi.json and the Rust
+      # server's ../../crates/reg-meta/openapi.json, and committed.
       # Regenerating must produce no diff — a dirty tree means the SPA's types
       # drifted from the API contract.
       - run: bun run gen:types
-      - run: git diff --exit-code -- src/lib/api-types.ts
+      - run: git diff --exit-code -- src/lib/api-types.ts src/lib/api-types-rust.ts

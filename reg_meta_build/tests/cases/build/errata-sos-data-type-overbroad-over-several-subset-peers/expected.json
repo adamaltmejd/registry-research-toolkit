@@ -1,0 +1,36 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "overbroad_curation_entry"},
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/sos/syx.toml#/errata.data_type/1"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "overbroad_curation_entry"},
+      "fields": ["key"],
+      "rows": [
+        [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:DUP"]
+        ],
+        [
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:DUP"]
+        ]
+      ]
+    },
+    {
+      "table": "case_uses",
+      "fields": ["case_id"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["code"],
+      "rows": []
+    }
+  ]
+}

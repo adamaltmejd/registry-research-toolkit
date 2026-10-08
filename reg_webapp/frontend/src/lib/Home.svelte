@@ -1,20 +1,18 @@
 <script lang="ts">
-import { getStats, type StewardInfo } from "./api";
-import { asyncResource } from "./async.svelte";
+import type { CatalogSizes, Steward } from "./api";
 
 // The landing/home page (#675), served at `/` — split from the data browser
 // (`/catalog`). It welcomes the visitor with the deployment's `long_name`, a
 // one-line catalog stats summary, and three entry-point cards.
 //
-// `steward` is threaded from App (which already holds `/api/context`) so Home
-// makes NO duplicate context fetch; it fetches only `/api/stats` itself. `null`
-// until the context resolves (App passes `context?.steward ?? null`) — the page
-// renders without the steward name in that brief window, corrected on load.
-let { steward = null }: { steward?: StewardInfo | null } = $props();
-
-// The catalog counts (#675). Fetched here (not blocking the whole page) so the
-// cards render immediately; the stats line fills in / is omitted on error.
-const stats = asyncResource(() => getStats());
+// `steward` and `sizes` are threaded from App, which holds `/api/context`, so
+// Home makes no request of its own. Both are `null` until the context resolves —
+// the page renders without the steward name and with the stats line's space
+// reserved in that brief window, corrected on load.
+let {
+  steward = null,
+  sizes = null,
+}: { steward?: Steward | null; sizes?: CatalogSizes | null } = $props();
 
 // The entry points into the app. `/catalog` is the data browser, `/search` the
 // results page (a no-`?q=` `/search` renders a "start typing" prompt), `/project`
@@ -49,15 +47,15 @@ const entries = [
       {/if}
     </h1>
     <p class="tagline">Browse and search Swedish register metadata.</p>
-    {#if stats.data}
+    {#if sizes}
       <p class="stats">
-        {stats.data.providers.toLocaleString()} providers ·
-        {stats.data.registers.toLocaleString()} registers ·
-        {stats.data.variables.toLocaleString()} variables
+        {sizes.providers.toLocaleString()} providers ·
+        {sizes.registers.toLocaleString()} registers ·
+        {sizes.variables.toLocaleString()} variables
       </p>
-    {:else if stats.loading}
+    {:else}
       <!-- A subtle placeholder so the hero block doesn't reflow when the
-           stats line arrives; an error simply omits the line. -->
+           stats line arrives. -->
       <p class="stats placeholder" aria-hidden="true">&nbsp;</p>
     {/if}
   </header>

@@ -30,17 +30,12 @@ from .limits import (
     RateLimitMiddleware,
 )
 from .middleware import ETagMiddleware
-from .routes import catalog, context, docs, project, search, stats
+from .routes import catalog, docs, project
 from .stewards import load_steward
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
     from pathlib import Path
-
-# Manifest keys /api/context surfaces; validated at boot so a malformed DB fails
-# fast instead of as an opaque per-request 500. schema_version is already
-# guaranteed by open_db's gate; import_date is the one this adds.
-_REQUIRED_MANIFEST_KEYS = ("schema_version", "import_date")
 
 
 class _RegistryApp(FastAPI):
@@ -78,26 +73,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
                 f"artifact steward {artifact_steward!r} ({kind})"
             )
         app.state.default_scope = resolve_scope(conn)
-        app.state.artifact_steward = artifact_steward
-        # Bounds describe admitted physical tables, never semantic validity.
-        app.state.catalog_period_bounds = (
-            conn.execute(
-                "SELECT MIN(hp.lo), MAX(hp.hi) FROM holding_period hp "
-                "JOIN holding_table ht USING(table_id) "
-                "WHERE ht.scope != 'unknown' AND EXISTS ("
-                "SELECT 1 FROM holding_column hc "
-                "JOIN holding_mapping hm USING(column_id) "
-                "WHERE hc.table_id = ht.table_id)"
-            ).fetchone()
-            if kind == "steward"
-            else None
-        )
     finally:
         conn.close()
-    if missing := [key for key in _REQUIRED_MANIFEST_KEYS if key not in manifest]:
-        raise RuntimeError(
-            f"reg_meta manifest at {db_path} missing key(s): {', '.join(missing)}"
-        )
     app.state.manifest = manifest
     app.state.steward = steward
     # The catalog routes open a FRESH read-only connection PER REQUEST from this
@@ -162,14 +139,7 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     app.add_middleware(ETagMiddleware)
     app.add_middleware(BodySizeLimitMiddleware)
     app.add_middleware(RateLimitMiddleware, per_minute=rate_limit_per_minute)
-    app.include_router(context.router)
-    # Headline catalog-size counts for the landing page (#675) — a top-level GET
-    # read (sibling of /api/context), so it rides the same ETag/edge-cache axis.
-    app.include_router(stats.router)
     app.include_router(catalog.router)
-    # Global FTS search (#350) — a GET read, so it rides the same ETag/edge-cache
-    # axis as the catalog routes.
-    app.include_router(search.router)
     # Docs library (#354) — GET reads over the optional reg_meta_docs.db; same
     # ETag/edge-cache axis as the catalog routes.
     app.include_router(docs.router)

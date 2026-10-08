@@ -1,17 +1,17 @@
 """G1 for the operations ``reg-meta serve`` implements.
 
-The Rust server serves each derived copy; the baseline commit's ``reg_webapp``, from
-the baseline environment, serves the original artifact and is the oracle. Each case
+The Rust server serves each candidate copy; the baseline commit's ``reg_webapp``, from
+the baseline environment, serves the reference copy and is the oracle. Each case
 maps the baseline's responses onto the operation's shape, so the two arms compare as
 JSON in the CLI cases' result form (``exit``, ``stdout``, ``stderr``).
 
 - ``context``: ``data`` and ``meta.scope`` against the baseline's ``/api/context``
   plus ``/api/stats`` in the same scope, for the default scope and each available
   scope.
-- ``variable-page``: ``search`` with ``type=variable`` against the baseline's
-  variables group, for the search-eval corpus terms and the edge terms, page by page
-  to the same depth, each arm following its own cursor. Items map to
-  ``shape.SearchHit``; ``more`` is whether the page continues.
+- ``<type>-page``: ``search`` with each ``type`` against the baseline's group of that
+  type, for the search-eval corpus terms and the edge terms, page by page to the same
+  depth, each arm following its own cursor. Items map to ``shape.SearchHit``;
+  ``more`` is whether the page continues.
 """
 
 from __future__ import annotations
@@ -19,7 +19,6 @@ from __future__ import annotations
 import json
 import shlex
 from concurrent.futures import ThreadPoolExecutor
-from functools import partial
 from typing import TYPE_CHECKING
 
 from conformance.differential.cache import REPO_ROOT
@@ -29,18 +28,36 @@ from conformance.http_cases import ServerPool
 if TYPE_CHECKING:
     from pathlib import Path
 
-# The production rate limit (30 writes per minute) does not bind GETs; this matches
-# the conformance runner's FastAPI template.
+# The production rate limit (30 writes per minute) does not bind GETs. Eight worker
+# processes, since one Python process serves one search at a time (G1 budget).
 BASELINE_APP = (
-    "import sys, uvicorn; from reg_webapp.app import create_app; "
-    "uvicorn.run(create_app(rate_limit_per_minute=1000), port=int(sys.argv[1]), "
-    "log_level='warning')"
+    "import sys, uvicorn; uvicorn.run('reg_webapp.app:create_app', factory=True, "
+    "workers=8, port=int(sys.argv[1]), log_level='warning')"
 )
 # The baseline caps a group at 50; two pages of ten cover a continuation.
 PAGE_LIMIT = 10
 PAGES = 2
+TYPES = (
+    "register",
+    "variable",
+    "classification",
+    "classification_code",
+    "register_value",
+)
+# The `shape.SearchHit` fields a baseline row of these types keeps as they are.
+SHAPES = {
+    "register": ("fqid", "name", "purpose"),
+    "classification": ("fqid", "short_name", "name", "terminal_fqid"),
+    "classification_succession": (
+        "fqid",
+        "short_name",
+        "name",
+        "matched_count",
+        "editions",
+    ),
+}
 # Requests in flight per server pair; each search takes ~0.4 s on the baseline.
-PARALLEL = 8
+PARALLEL = 16
 
 
 def _result(value) -> dict:
@@ -58,8 +75,21 @@ def _get(client, path: str, params: dict) -> dict:
 
 
 def _hit(item: dict) -> dict:
-    """A baseline variables-group row as ``shape.SearchHit``."""
-    if item["type"] == "group":
+    """A baseline search row as ``shape.SearchHit``."""
+    kind = item["type"]
+    if kind == "code":
+        return {
+            **{k: item[k] for k in ("type", "code", "label", "code_system")},
+            **{k: item[k] for k in ("variable_count", "classification_count")},
+            "variables": [
+                {"fqid": v["fqid"], "name": v["name"], "register_name": v["register"]}
+                for v in item["variables"]
+            ],
+            "classifications": item["classifications"],
+        }
+    if kind in SHAPES:
+        return {"type": kind, **{k: item[k] for k in SHAPES[kind]}}
+    if kind == "group":
         return {
             "type": "group",
             "kind": item["kind"],
@@ -83,8 +113,9 @@ def _hit(item: dict) -> dict:
     }
 
 
-def _pages(client, term: str, scope: str | None, *, baseline: bool) -> list:
-    params = {"q": term, "type": "variable", "limit": PAGE_LIMIT, "scope": scope}
+def _pages(client, job: tuple, baseline: bool) -> list:
+    scope, kind, term = job
+    params = {"q": term, "type": kind, "limit": PAGE_LIMIT, "scope": scope}
     pages = []
     for _ in range(PAGES):
         answer = _get(client, "/api/search", params)
@@ -102,15 +133,6 @@ def _pages(client, term: str, scope: str | None, *, baseline: bool) -> list:
             break
         params["cursor"] = cursor
     return pages
-
-
-def _page_pair(base, cand, job: tuple) -> tuple:
-    scope, _, term = job
-    return (
-        job,
-        _pages(base, term, scope, baseline=True),
-        _pages(cand, term, scope, baseline=False),
-    )
 
 
 def _context(base, cand, scope: str | None) -> tuple[dict, dict]:
@@ -144,7 +166,7 @@ def served_cases(
     baseline_python: Path,
     baseline_stewards: Path,
     server: Path,
-    dirs: dict[str, Path],
+    reference: dict[str, Path],
     derived: dict[str, Path],
     log_dir: Path,
 ) -> list[tuple[str, dict, dict]]:
@@ -175,10 +197,10 @@ def served_cases(
     terms = list(dict.fromkeys([*eval_terms(), *EDGE_TERMS]))
     cases = []
     try:
-        for catalog in sorted(dirs):
+        for catalog in sorted(reference):
             base = baseline.client(
                 {
-                    "REG_META_DB": str(dirs[catalog]),
+                    "REG_META_DB": str(reference[catalog]),
                     "REG_WEBAPP_STEWARD": catalog,
                     "REG_WEBAPP_STEWARDS_DIR": str(baseline_stewards),
                 }
@@ -193,15 +215,26 @@ def served_cases(
                 cases.append((f"{prefix}/context", _result(expected), _result(actual)))
             # The default scope is one of the named ones, so pages run per name.
             named = [s for s in scopes if s is not None]
-            work = [(scope, i, term) for scope in named for i, term in enumerate(terms)]
+            # Untyped pages are not compared: the baseline has no single ranked list
+            # (decision 17); the `api` corpus pins them.
+            work = [
+                (scope, kind, term)
+                for scope in named
+                for kind in TYPES
+                for term in terms
+            ]
             with ThreadPoolExecutor(PARALLEL) as pool:
-                pages = pool.map(partial(_page_pair, base, cand), work)
-                for (scope, i, _), expected, actual in pages:
+                # Each job's two arms side by side, so both servers stay busy.
+                runs = [(c, job, c is base) for job in work for c in (base, cand)]
+                pages = list(pool.map(_pages, *zip(*runs, strict=True)))
+                for (scope, kind, term), base_pages, cand_pages in zip(
+                    work, pages[::2], pages[1::2], strict=True
+                ):
                     cases.append(
                         (
-                            f"{catalog}/{scope}/variable-page/{i}",
-                            _result(expected),
-                            _result(actual),
+                            f"{catalog}/{scope}/{kind}-page/{terms.index(term)}",
+                            _result(base_pages),
+                            _result(cand_pages),
                         )
                     )
     finally:

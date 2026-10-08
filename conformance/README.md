@@ -9,8 +9,12 @@ solely for testing. No private product imports or internal patches are allowed.
 
 ```sh
 uv run python -m pytest conformance -q
-uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog -q
+cargo build --workspace
+uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q
 ```
+
+Release admission searches the Rust server, so `--run-release` without `--server-cmd`
+fails; without `--run-release`, the search-carrying artifact tests skip.
 
 The first invocation runs the artifact checks on the synthetic catalog and steward
 artifacts. Fixture-bound cases always build their own named readable source; they never
@@ -40,19 +44,19 @@ pin raw bytes: `media_type` (the content type without parameters), `headers` (ex
 values by lower-case name) and `bytes` (a file in the case directory compared byte for
 byte), as `validate/gap-clipped` does for its order download.
 
-  | Surface directory                                             | Boundary and request interpretation                                                |
-  | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-  | cli_scope                                                     | CLI argv, optional second page, observe projection                                 |
-  | order                                                         | Public materializer plus CLI bytes, project and observe projection                 |
-  | coverage                                                      | Public coverage return models, provider/register                                   |
-  | logical                                                       | Public query/catalog operation, args/kwargs and observe projection                 |
-  | reader                                                        | Public listing/cursor/concept group return models; also source fixtures            |
-  | selection                                                     | CLI artifact selection; implicit annual-series source                              |
-  | update                                                        | Downloaded-artifact identity via CLI/update library; implicit annual-series source |
-  | boot                                                          | App startup; implicit reader source, kind and manifest mutation                    |
-  | http_catalog, http_context, http_scope, http_search, validate | HTTP request sequence and status/pointer oracle; implicit compiled source          |
-  | validate (also)                                               | CLI validate/order bytes or refusal against each HTTP project response             |
-  | fixtures                                                      | HTTP readable sources, not independently executed cases                            |
+  | Surface directory                  | Boundary and request interpretation                                                |
+  | ---------------------------------- | ---------------------------------------------------------------------------------- |
+  | cli_scope                          | CLI argv, optional second page, observe projection                                 |
+  | order                              | Public materializer plus CLI bytes, project and observe projection                 |
+  | coverage                           | Public coverage return models, provider/register                                   |
+  | logical                            | Public query/catalog operation, args/kwargs and observe projection                 |
+  | reader                             | Public listing/cursor/concept group return models; also source fixtures            |
+  | selection                          | CLI artifact selection; implicit annual-series source                              |
+  | update                             | Downloaded-artifact identity via CLI/update library; implicit annual-series source |
+  | boot                               | App startup; implicit reader source, kind and manifest mutation                    |
+  | http_catalog, http_scope, validate | HTTP request sequence and status/pointer oracle; implicit compiled source          |
+  | validate (also)                    | CLI validate/order bytes or refusal against each HTTP project response             |
+  | fixtures                           | HTTP readable sources, not independently executed cases                            |
 
 ## Out-of-process runner
 
@@ -81,13 +85,12 @@ directory that the artifact build stores (fixtures have no pins otherwise); an e
 `build_error` is that build's located refusal, and such a case sends no requests. Every
 other suite, boot cases included, is unchanged.
 
-The Rust server (`reg-meta serve`), on the cases of the operations it implements and the
-MCP equivalence suite (the Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part of
-G0 and CI):
+The Rust server (`reg-meta serve`), on the whole `api` corpus and the MCP equivalence
+suite (the Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part of G0 and CI):
 
 ```sh
 cargo build --workspace
-uv run python -m pytest conformance -q -n auto -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging] or test_mcp' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' --mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'
+uv run python -m pytest conformance -q -n auto -k '[api/ or test_mcp' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' --mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'
 ```
 
 `test_mcp.py` (section 9's MCP equivalence) sends raw JSON-RPC to `/mcp` on the
@@ -198,7 +201,7 @@ accepted-input table/cell accounting, authored mappings and policy digests run o
 explicit `--holdings-input` alongside both tier-3 flags:
 
 ```sh
-uv run python -m pytest conformance --run-release --artifact-dir=/path/to/steward/catalog --holdings-input=/path/to/accepted-candidate -q
+uv run python -m pytest conformance --run-release --artifact-dir=/path/to/steward/catalog --holdings-input=/path/to/accepted-candidate --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q
 ```
 
 Admission requires a steward artifact, a clean accepted-input Git tree, matching commit

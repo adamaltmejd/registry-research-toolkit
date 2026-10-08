@@ -1,0 +1,17 @@
+{
+  "description": "scb-value-competing-lists after the competing list other changed its code 02 to 03.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ],
+    "unika": ["TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2010|2020|0|0|0"],
+    "vardemangder": ["keep|1|01|Label|1001|7001", "other|1|03|Other|1001|7003"],
+    "valid_dates": [
+      "7001|2000-01-01|2030-12-31",
+      "7002|2000-01-01|2030-12-31",
+      "7003|2000-01-01|2030-12-31",
+      "7011|2000-01-01|2030-12-31",
+      "7012|2000-01-01|2030-12-31"
+    ]
+  }
+}
