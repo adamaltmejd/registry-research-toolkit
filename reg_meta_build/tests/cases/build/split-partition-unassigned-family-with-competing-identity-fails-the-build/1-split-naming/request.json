@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_compile_partitions.py::test_unassigned_family_rejects_competing_identity[\\n[[variable]]\\nnative_id = \"1.5.answer\"\\nslug = \"answer\"\\n]"
+  ],
+  "fails_if": "`compile_partitions` lets an `[[identity.unassigned]]` family keep a split naming (1.5.answer) instead of refusing it with `unassigned_identity_competing_ownership` at the entry, so one family is both withheld and owned",
+  "sources": "scb-partition-answer-and-left"
+}

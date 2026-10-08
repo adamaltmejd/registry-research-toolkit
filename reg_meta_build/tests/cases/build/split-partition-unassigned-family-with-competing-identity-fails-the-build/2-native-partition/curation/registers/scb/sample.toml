@@ -1,0 +1,15 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[identity.unassigned]]
+variable = "1.5"
+expected_evidence_sha256 = {{evidence_sha256 variable=5}}
+evidence = "complete source review"
+[[identity.partition]]
+variable = "1.5"
+columns = { ANSWER = "1.5", LEFT = "1.5" }
+columns_ref = "competing owner"

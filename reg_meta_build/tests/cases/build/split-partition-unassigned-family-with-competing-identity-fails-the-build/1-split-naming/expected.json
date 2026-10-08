@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "unassigned_identity_competing_ownership",
+    "exit_code": 10,
+    "message_contains": [
+      "curation/registers/scb/sample.toml#/identity.unassigned/1"
+    ]
+  }
+}
