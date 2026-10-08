@@ -1025,14 +1025,21 @@ def _rebuild_in_fresh_process(args: dict) -> None:
 
 
 def _tree_bytes(path: Path) -> dict[str, bytes]:
-    """Every file under ``path`` (or ``path`` itself), by relative name."""
+    """Every file under ``path`` (or ``path`` itself), by relative name.
+
+    A missing or empty output is refused: two builds that both skip an output would
+    otherwise compare equal and pass the rebuild check.
+    """
     if path.is_file():
         return {"": path.read_bytes()}
-    return {
+    files = {
         str(file.relative_to(path)): file.read_bytes()
         for file in sorted(path.rglob("*"))
         if file.is_file()
     }
+    if not files:
+        raise AssertionError(f"rebuilt_identical: {path} holds no output to compare")
+    return files
 
 
 def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dict]:
