@@ -15,7 +15,7 @@ seed = 0
 #   name = "search-rank-ties"        # reported per difference
 #   reason = "why the new behavior is correct"
 #   case = "*/search/*"              # fnmatch glob over `<catalog>/<scope>/<command>/<key>`
-#   paths = ["/results"]             # JSON pointer prefixes
+#   paths = ["/results"]             # JSON pointer prefixes or fnmatch globs
 #
 # The fold sweep's one exception, `baseline-ucd-unassigned`, is defined in `folds.py`:
 # its scalar set comes from the baseline interpreter's `unicodedata`.
@@ -59,6 +59,12 @@ name = "derived-schema-minor-order"
 reason = "A stage-3 schema PR bumps the builder's minor (section 10, schema minors): the checkout's derived copies carry it, while the release originals keep theirs until the next release and re-pin. The order manifest records that schema version beside the generation, which differs as in derived-generation-order."
 case = "*/*/order/*"
 paths = ["/provenance/catalog_generation_id", "/provenance/catalog_schema_version"]
+
+[[exception]]
+name = "february-period-token"
+reason = "rust-only fix: the baseline ends every February on the 29th (`_MONTH_LAST_DAY`), so it renders a non-leap February window as `YYYY-02-01..YYYY-02-28`; `states` renders `YYYY-02`, the token whose bounds those are. Pinned by api/states-window-fallback. The token sits at a row index that varies per variable, hence the glob."
+case = "*/*/states*"
+paths = ["/*/period_token"]
 
 # The baseline reader (CLI and webapp), run from a detached worktree with its own
 # locked environment. It reads the release originals, so code under change never

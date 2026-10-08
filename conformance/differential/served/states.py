@@ -9,17 +9,12 @@ routes, for a seeded sample of variables:
   the variable and of its register, unfiltered and by the sampled year, the first
   state's variant and column, and ``unassigned_only``, against ``/data_warnings``.
 
-The baseline renders a non-leap February window's token as
-``YYYY-02-01..YYYY-02-28``; ``states`` renders ``YYYY-02``, the token whose bounds
-those are (a Rust-only fix pinned by ``api/states-window-fallback``, stage 3b–3e
-decision 6). The mapping converts the baseline's token, since the difference sits
-at no fixed path.
+A non-leap February window's token differs by a Rust-only fix, covered by the
+``february-period-token`` exception in ``config.toml``.
 """
 
 from __future__ import annotations
 
-import calendar
-import re
 import sqlite3
 import tomllib
 from concurrent.futures import ThreadPoolExecutor
@@ -33,18 +28,10 @@ from conformance.differential.served.common import get
 PARALLEL = 16
 VARIABLES = 80
 SEED = tomllib.loads((Path(__file__).parents[1] / "config.toml").read_text())["seed"]
-FEBRUARY = re.compile(r"^(\d{4})-02-01\.\.\1-02-28$")
 
 
 def _route(ref: str) -> str:
     return "/".join(quote(s, safe="") for s in ref.split("/"))
-
-
-def _token(state: dict) -> dict:
-    match = FEBRUARY.match(state.get("period_token") or "")
-    if match and not calendar.isleap(int(match[1])):
-        return {**state, "period_token": f"{match[1]}-02"}
-    return state
 
 
 def _baseline_states(base, fqid: str, scope: str, period: str | None) -> object:
@@ -53,7 +40,7 @@ def _baseline_states(base, fqid: str, scope: str, period: str | None) -> object:
     )
     if answer["status"] != 200:
         return {"status": answer["status"]}
-    return [_token(s) for s in answer["body"]["states"]]
+    return answer["body"]["states"]
 
 
 def _candidate_states(cand, fqid: str, scope: str, period: str | None) -> object:
