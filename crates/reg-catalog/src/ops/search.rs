@@ -301,39 +301,35 @@ fn page(
     };
     let end = (offset + request.limit).min(DEPTH);
     let more = end < DEPTH && hits.len() > end;
-    let shown: Vec<Hit> = hits.drain(offset.min(end)..end.min(hits.len())).collect();
+    let shown: Vec<Hit> = hits.drain(offset..end.min(hits.len())).collect();
     let next_cursor = match shown.last() {
         Some(last) if more => Some(cursor(offset + shown.len(), &identity(last))),
         _ => None,
     };
-    let ids: Vec<i64> = shown
-        .iter()
-        .filter_map(|hit| match hit {
-            Hit::Variable(v) => Some(v.variable_id),
-            Hit::Group(_) => None,
-        })
-        .collect();
-    let mut columns = delivery_columns(conn, scope, request.years, &ids)?;
     let terms = fts_terms(request.q);
     let items = shown
         .into_iter()
         .map(|hit| match hit {
             Hit::Variable(v) => {
-                let all = columns.remove(&v.variable_id).unwrap_or_default();
                 let public = [
                     &v.name,
                     &v.definition,
                     &v.description,
                     &v.operational_definition,
                 ];
-                let matched = matched_columns(&all, &terms, &public);
+                let matched = matched_columns(&v.columns, &terms, &public);
                 SearchHit::Variable {
                     fqid: v.fqid,
                     name: v.name,
                     register_name: v.register_name,
                     definition: v.definition,
                     operational_definition: v.operational_definition,
-                    delivery_column_names: if matched.is_empty() { all } else { matched },
+                    // The columns that satisfied the query, else all of them.
+                    delivery_column_names: if matched.is_empty() {
+                        v.columns
+                    } else {
+                        matched
+                    },
                 }
             }
             Hit::Group(g) => SearchHit::Group {

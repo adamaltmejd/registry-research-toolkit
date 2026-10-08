@@ -86,7 +86,7 @@ Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part of G0 and CI):
 
 ```sh
 cargo build -p reg-meta
-uv run python -m pytest conformance -q -n auto -k '[api/admission or [api/context' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}'
+uv run python -m pytest conformance -q -n auto -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging]' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}'
 ```
 
 ## Fixture cache
@@ -137,16 +137,15 @@ additions:
   `{"error": ..., "meta": ...}` on failure, for example `/data/items/*/fqid`,
   `/data/next_cursor` or `/error/fields/parameter`.
 - `artifacts` maps a name to `{"identity": {...}}`, a second artifact built from the
-  same fixture and kind with those `identity.json` overrides (a new generation); a step
-  with `artifact: <name>` is sent to it. The stale-cursor case uses this.
+  same fixture and kind with those `identity.json` overrides, applied over the fixed
+  import date every case uses (a new generation); a step with `artifact: <name>` is sent
+  to it. The stale-cursor case uses this.
 - A startup case sets `serve: {"catalog": <name>}` and optional `manifest` overrides,
   which are written to `import_manifest` of a private copy after the build, and expects
   `{"startup_error": {"code": ...}}`: the template, run with `{catalog}` set to that
   name, prints the error document as the last line of stderr and exits with the code's
   `exit` status in `api/errors.toml`, without listening.
 - A step with `etag_from: N` sends step N's `ETag` as `If-None-Match`.
-
-The out-of-process runner does not yet run `artifacts` (package 3a.5).
 
 ## Artifact checks
 

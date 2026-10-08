@@ -69,7 +69,7 @@ jobs:
       - run: cargo build -p reg-meta --locked
       - run: >-
           uv run python -m pytest conformance -q -n auto
-          -k '[api/admission or [api/context'
+          -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging]'
           --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}'
 
   check-versions:
