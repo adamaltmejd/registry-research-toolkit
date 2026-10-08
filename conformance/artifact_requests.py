@@ -141,6 +141,10 @@ def cli_json(directory, capsys, arguments):
 # depth only when more exact matches than the ceiling share the name; it is then,
 # by contract, unreachable through that name alone.
 SEARCH_DEPTH_CEILING = 1_000
+# conformance/api/operations.toml (search): `q` is at most 200 characters (Unicode
+# scalar values; Python `len`). A longer name is out of contract for HTTP search,
+# which refuses it located on `q`; the CLI has no such cap.
+MAX_QUERY_CHARS = 200
 
 
 def _fold(text):
@@ -239,6 +243,18 @@ def cli_search_traversal(directory, capsys, argv, binding):
     return True, rows
 
 
+def require_query_refused(search, query, scope):
+    """Require HTTP search to refuse an over-cap query as `invalid_parameter` on `q`."""
+    params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
+    response = search.get("/api/search", params=params)
+    require(
+        response.status_code == 422
+        and response.json()["error"]["code"] == "invalid_parameter"
+        and response.json()["error"]["fields"]["parameter"] == "q",
+        "Over-cap HTTP search query was not refused on q",
+    )
+
+
 def require_search_reaches(directory, search, capsys, query, scope, binding):
     """Require CLI and HTTP name search to reach an admitted binding.
 
@@ -249,6 +265,9 @@ def require_search_reaches(directory, search, capsys, query, scope, binding):
     binding. That proves READER reachability, not HTTP search reachability: HTTP
     search has no register refinement, and the binding's HTTP reachability is
     proven by the caller's `/api/catalog/<fqid>` browse checks.
+
+    A name longer than `MAX_QUERY_CHARS` is out of contract for HTTP search: HTTP
+    must refuse it on `q` instead, and only the CLI traversal must reach it.
 
     Edge cases: a query with exactly 1,000 results looks like a truncated one.
     Returns whether the refinement was needed.
@@ -273,11 +292,15 @@ def require_search_reaches(directory, search, capsys, query, scope, binding):
         cli_found or ceiling_exhausted(query, cli_rows),
         "Sample missing from CLI search traversal",
     )
-    http_found, http_rows = http_search_traversal(search, query, scope, binding)
-    require(
-        http_found or ceiling_exhausted(query, http_rows),
-        "Sample missing from HTTP search traversal",
-    )
+    if len(query) > MAX_QUERY_CHARS:
+        require_query_refused(search, query, scope)
+        http_found = True  # the located refusal is HTTP's whole contract here
+    else:
+        http_found, http_rows = http_search_traversal(search, query, scope, binding)
+        require(
+            http_found or ceiling_exhausted(query, http_rows),
+            "Sample missing from HTTP search traversal",
+        )
     if cli_found and http_found:
         return False
     refined, _ = cli_search_traversal(
@@ -305,7 +328,6 @@ def assert_sampled_agreement(artifact_dir, artifact_client, search, tmp_path, ca
     query = browse.json()["name"]
     params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
     first_page = search.get("/api/search", params=params)
-    require(first_page.status_code == 200, "Sample search failed")
     require(
         first_page.content == search.get("/api/search", params=params).content,
         "Repeated HTTP first page differs",

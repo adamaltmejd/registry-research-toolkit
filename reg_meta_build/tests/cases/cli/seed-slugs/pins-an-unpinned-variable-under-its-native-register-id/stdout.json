@@ -1,0 +1,9 @@
+{
+  "files": [
+    "registers/scb/foretag.auto.toml",
+    "registers/scb/komvux.auto.toml",
+    "registers/scb/other.auto.toml",
+    "registers/scb/part.auto.toml",
+    "registers/scb/sample.auto.toml"
+  ]
+}

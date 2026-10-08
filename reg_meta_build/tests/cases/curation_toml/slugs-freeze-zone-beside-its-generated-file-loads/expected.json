@@ -1,0 +1,8 @@
+{
+  "loader": "freeze_states",
+  "replaces": "test_fqid_slugs_load.py::TestLoadFreezeStates::test_auto_toml_is_not_a_zone",
+  "fails_if": "a generated `scb.auto.toml` beside `scb.toml` makes the freeze loader refuse or rename the `scb` zone",
+  "loads": {
+    "scb": "frozen"
+  }
+}

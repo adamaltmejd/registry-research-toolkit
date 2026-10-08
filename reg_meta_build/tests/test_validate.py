@@ -9,9 +9,11 @@ rather than reach `validate_built_db`.
 from __future__ import annotations
 
 import sqlite3
+from contextlib import closing
 from typing import TYPE_CHECKING
 
 import pytest
+from _shared_fixtures import connect_built_db
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
@@ -23,25 +25,24 @@ def test_missing_db_raises(tmp_path: Path):
         validate_built_db(tmp_path / "no_such.db")
 
 
-def test_duplicate_whole_variable_member_rejected_by_index():
+def test_duplicate_whole_variable_member_rejected_by_index(
+    fixture_db: Path, tmp_path: Path
+):
     # The COALESCE unique index closes the NULL-distinctness footgun: a second
-    # whole-variable (NULL delivery_column) member of `vara` in group 10 — which
+    # whole-variable (NULL delivery_column) member of `kon` in one group — which
     # a bare composite UNIQUE would silently admit — is rejected at insert time.
-    from _slugged_db import add_variable, build_slugged_db
-
-    conn = build_slugged_db(classification=None)  # scb/lisa (register 1)
-    add_variable(conn, register_id=1, var_id=901, name="A", slug="vara")
-    conn.execute(
-        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (10, 'variable', 1, 'vara', 'A', 'edge')"
-    )
-    conn.execute(
-        "INSERT INTO concept_group_variable (variable_id, group_id) "
-        "SELECT variable_id, 10 FROM variable WHERE slug = 'vara'"
-    )
-    with pytest.raises(sqlite3.IntegrityError):
+    db = tmp_path / "reg_meta.db"
+    db.write_bytes(fixture_db.read_bytes())
+    with closing(connect_built_db(db)) as conn:
         conn.execute(
-            "INSERT INTO concept_group_variable (group_id, variable_id, "
-            "delivery_column_name) SELECT 10, variable_id, NULL FROM variable "
-            "WHERE slug = 'vara'"
+            "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
+            "label, source) VALUES (999, 'variable', 1, 'kon', 'Kön', 'edge')"
         )
+        conn.execute(
+            "INSERT INTO concept_group_variable (variable_id, group_id) VALUES (1, 999)"
+        )
+        with pytest.raises(sqlite3.IntegrityError):
+            conn.execute(
+                "INSERT INTO concept_group_variable (group_id, variable_id, "
+                "delivery_column_name) VALUES (999, 1, NULL)"
+            )

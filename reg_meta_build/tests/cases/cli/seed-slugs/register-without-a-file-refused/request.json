@@ -1,0 +1,12 @@
+{
+  "replaces": "test_fqid_slug_cli_boundary.py::test_pipeline_catalog_register_without_file_refused",
+  "fails_if": "seed-slugs falls back to the surrogate register id, or skips a register with no register file silently",
+  "note": "The out dir holds no register files. The refusal names the first register by slug, `foretag`.",
+  "argv": [
+    "--db",
+    "{db}",
+    "seed-slugs",
+    "--out-dir",
+    "{work}/empty"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "3.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "composite_keys",
+  "sources": [
+    {
+      "name": "a",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2018,
+      "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}]
+    },
+    {
+      "name": "b",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2019,
+      "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}]
+    },
+    {
+      "name": "c",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2020,
+      "bindings": [{"variable": "scb/lisa/kon", "type": "categorical"}]
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "literal",
+      "entity_key": ["LopNr"],
+      "members": [{"source": "a", "time_key": [2018]}]
+    },
+    {
+      "panel_id": "refs",
+      "entity_key": ["LopNr", "Kon"],
+      "time_key": ["AR", "Manad"],
+      "members": ["b", "c"]
+    }
+  ]
+}

@@ -26,21 +26,6 @@ def write_text_file(path: Path, body: str) -> Path:
     return path
 
 
-def write_register_file(
-    root: Path, slug: str, native_id: str, *, provider: str = "scb", body: str = ""
-) -> Path:
-    """Author a register file under ``root``; seed-slugs reads the register's
-    native id from it."""
-    path = root / "registers" / provider / f"{slug}.toml"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        f'[register]\nprovider = "{provider}"\nslug = "{slug}"\n'
-        f'native_id = "{native_id}"\n{body}',
-        encoding="utf-8",
-    )
-    return path
-
-
 def run_precheck(
     db_dir: Path,
     slug_dir: Path,
@@ -109,28 +94,3 @@ class PopulateVariableSlugsHelpers:
             (var_id,),
         ).fetchone()
         return row[0] if row else None
-
-
-def add_single_variant_register(
-    conn: sqlite3.Connection,
-    *,
-    register_id: int,
-    register_slug: str,
-    register_variant_id: int,
-    name: str,
-    variant_name: str,
-    variant_slug: str | None,
-    provider_id: int = 1,
-) -> None:
-    """Insert a register with exactly one variant for iter-candidate tests."""
-    conn.execute(
-        "INSERT INTO register (register_id, provider_id, slug, name) "
-        "VALUES (?, ?, ?, ?)",
-        (register_id, provider_id, register_slug, name),
-    )
-    conn.execute(
-        "INSERT INTO register_variant "
-        "(register_variant_id, register_id, slug, name) "
-        "VALUES (?, ?, ?, ?)",
-        (register_variant_id, register_id, variant_slug, variant_name),
-    )

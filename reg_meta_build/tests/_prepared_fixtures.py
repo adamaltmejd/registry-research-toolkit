@@ -1,18 +1,18 @@
 """Accept synthetic prepared artifacts at the same Git boundary as real inputs.
 
-Also holds the shared source-record inputs and the process-boundary recorders (Git
-argv via ``subprocess.run``, Python file opens via ``io.open``/``builtins.open``) that
-the prepared-input tests use to observe warm opens and preparation.
+Also holds the shared source-record inputs and the process-boundary recorder (Python
+file opens via ``io.open``/``builtins.open``) that the prepared-input tests use to
+observe warm opens and preparation.
 """
 
 from __future__ import annotations
 
 import builtins
 import io
-import subprocess
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from _csv_fixtures import commit_fixture, init_fixture_repo
 from reg_meta.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.prepared_sources import prepare_source_records
 from reg_meta_build.source_records import (
@@ -35,23 +35,10 @@ if TYPE_CHECKING:
 def accept_prepared(root: Path) -> str:
     repository = root.parent
     if not (repository / ".git").exists():
-        subprocess.run(["git", "init", "-q", "-b", "main", str(repository)], check=True)
-        for key, value in (
-            ("user.name", "Prepared fixture"),
-            ("user.email", "prepared@example.invalid"),
-            ("core.autocrlf", "false"),
-        ):
-            subprocess.run(
-                ["git", "-C", str(repository), "config", key, value], check=True
-            )
-    subprocess.run(["git", "-C", str(repository), "add", "--", root.name], check=True)
-    subprocess.run(
-        ["git", "-C", str(repository), "commit", "-q", "-m", "Accept fixture inputs"],
-        check=True,
-    )
-    return subprocess.check_output(
-        ["git", "-C", str(repository), "rev-parse", "HEAD"], text=True
-    ).strip()
+        init_fixture_repo(
+            repository, name="Prepared fixture", email="prepared@example.invalid"
+        )
+    return commit_fixture(repository, "Accept fixture inputs", root.name)
 
 
 def record_file_opens(

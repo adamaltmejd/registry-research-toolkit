@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_fqid_slugs_precheck_cli.py::test_update_snapshot_records_a_clean_tree",
+    "test_fqid_slugs_precheck.py::TestSnapshot::test_snapshot_missing_file_returns_empty"
+  ],
+  "fails_if": "precheck joins catalog rows to pins by the catalog's surrogate `register_id` instead of the slug path (#1215): every row would be missing and every pin stale",
+  "note": "No snapshot file yet: an absent baseline reads as empty, so every pin is added and written. The written snapshot is the pins file, key for key.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

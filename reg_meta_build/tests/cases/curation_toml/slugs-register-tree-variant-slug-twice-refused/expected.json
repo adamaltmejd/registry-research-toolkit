@@ -1,0 +1,13 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_load.py::test_variant_slug_reused_within_register_fails",
+  "fails_if": "the register-owned slug loader lets two variants of one register share a slug",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variant]] entry 2",
+    "message_contains": [
+      "slug 'same' reused",
+      "[[variant]] entry 1 ('1.10')"
+    ]
+  }
+}

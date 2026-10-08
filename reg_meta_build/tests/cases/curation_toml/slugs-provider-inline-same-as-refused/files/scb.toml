@@ -1,0 +1,3 @@
+[variable."34.137"]
+slug = "civilstand"
+same_as = [{ provider = "scb", register = "lisa", variable_slug = "civilstand-legacy" }]

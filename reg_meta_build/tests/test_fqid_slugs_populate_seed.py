@@ -1,4 +1,4 @@
-"""populate_slugs (register/variant slugs and panel columns), seed-slugs auto.toml output, and the freeze-state auto.toml regeneration gate."""
+"""populate_slugs (register/variant slugs and panel columns) and the freeze-state auto.toml regeneration gate."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
-from _fqid_slug_support import write_register_file, write_text_file as _write
+from _fqid_slug_support import write_text_file as _write
 from _slugged_db import (
     add_register,
     add_state,
@@ -22,7 +22,6 @@ from reg_meta_build.fqid_slugs import (
     load_provider_toml,
     populate_slugs,
     populate_variable_slugs,
-    seed_all,
 )
 
 if TYPE_CHECKING:
@@ -189,60 +188,6 @@ class TestPopulateSlugs:
         with pytest.raises(RegMetaError) as exc:
             populate_slugs(conn, d, strict=True)
         assert exc.value.code == "slug_unknown_source_id"
-
-
-class TestSeedSlugs:
-    def test_writes_only_register_auto_files(self, tmp_path: Path):
-        conn = build_slugged_db()
-        out = tmp_path / "out"
-        authored = write_register_file(out, "lisa", "1")
-        before = authored.read_bytes()
-        written = seed_all(conn, out)
-        assert set(written) == {"registers/scb/lisa.auto.toml"}
-        body = written["registers/scb/lisa.auto.toml"].read_text()
-        assert "[[variable]]" in body
-        assert 'native_id = "1.44"' in body
-        assert "[register]" not in body
-        assert authored.read_bytes() == before
-
-    def test_authored_pin_removes_matching_generated_pin_on_regeneration(
-        self, tmp_path: Path
-    ):
-        conn = build_slugged_db()
-        out = tmp_path / "out"
-        write_register_file(out, "lisa", "1")
-        seed_all(conn, out)
-        write_register_file(
-            out, "lisa", "1", body='[[variable]]\nnative_id = "1.44"\nslug = "kon"\n'
-        )
-        seed_all(conn, out)
-        body = (out / "registers" / "scb" / "lisa.auto.toml").read_text()
-        assert 'native_id = "1.44"' not in body
-        assert "never recomputed. Curator overrides" in body
-        assert "\n\n\n" not in body
-
-
-def _flag_identifier(conn: sqlite3.Connection, register_id: int, var_id: int) -> None:
-    conn.execute(
-        "UPDATE variable SET is_identifier = 1 "
-        "WHERE register_id = ? AND provider_key = CAST(? AS TEXT)",
-        (register_id, var_id),
-    )
-    conn.commit()
-
-
-class TestSeedPanelMetadata:
-    def test_seed_never_writes_authored_panel_metadata(self, tmp_path: Path):
-        conn = build_slugged_db()
-        _flag_identifier(conn, register_id=1, var_id=44)
-        out = tmp_path / "out"
-        authored = write_register_file(out, "lisa", "1")
-        before = authored.read_bytes()
-        seed_all(conn, out)
-        body = (out / "registers" / "scb" / "lisa.auto.toml").read_text()
-        assert "panel_entity_key" not in body
-        assert "panel_time_key" not in body
-        assert authored.read_bytes() == before
 
 
 class TestVariableOverridesAcceptedByPopulateSlugs:

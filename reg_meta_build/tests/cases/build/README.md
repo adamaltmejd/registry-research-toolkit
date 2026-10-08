@@ -57,6 +57,7 @@ the behavior in plain words. For example,
   | `period-family-`    | relations into a curated `[[representation.period_family]]`                                  |
   | `source-relation-`  | literal source relationships, unbound code lists and source findings                         |
   | `value-`            | source code lists bound to native members                                                    |
+  | `naming-`           | generated and authored slug pins under the zone freeze states                                |
 
 Later stages add their own prefixes to this table.
 
@@ -135,8 +136,12 @@ case cannot fail and does not belong here.
   `classifications/<slug>.csv` code list. The text is a string, or a list of lines
   joined with newlines.
 
-The runner prepares each distinct spec once per test session and caches it by the spec's
-content hash.
+The runner prepares each distinct spec once and caches it by the spec's content hash.
+The cache is the reader fixture cache (see `conformance/README.md`, "Fixture cache"):
+`$REG_FIXTURE_CACHE`, else the system temp directory, shared by sessions, worktrees and
+xdist workers. Its generation is keyed by the builder sources, the installed
+distributions, the test modules that prepare a spec and the Git version. CI sets no
+`REG_FIXTURE_CACHE`, so each fresh runner starts cold.
 
 ## `curation/`
 

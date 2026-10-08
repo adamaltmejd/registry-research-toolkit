@@ -1,0 +1,12 @@
+{
+  "loader": "freeze_states",
+  "replaces": "test_fqid_slugs_load.py::TestLoadFreezeStates::test_unknown_state_value_rejected",
+  "fails_if": "the freeze loader accepts a state outside churning, curating and frozen",
+  "error": {
+    "code": "slug_freeze_state_invalid",
+    "locator": "zone 'scb'",
+    "message_contains": [
+      "thawing"
+    ]
+  }
+}

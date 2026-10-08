@@ -1,0 +1,9 @@
+{
+  "loader": "freeze_states",
+  "replaces": "test_fqid_slugs_load.py::TestLoadFreezeStates::test_auto_toml_is_not_a_zone",
+  "fails_if": "the freeze loader counts a generated `scb.auto.toml` as a zone of its own",
+  "error": {
+    "code": "slug_freeze_zone_unknown",
+    "locator": "unknown zone 'scb.auto'"
+  }
+}

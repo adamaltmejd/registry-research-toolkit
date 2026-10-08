@@ -1,0 +1,29 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/1/filename": "Bilaga för register.pdf",
+      "/data/1/sha256": "ded2102f44a3d07016204a60b6d50cea2dec8c8d0d891342cacc3b1da39bbdb9",
+      "/data/1/byte_size": 24
+    }
+  },
+  {
+    "status": 200,
+    "media_type": "application/pdf",
+    "headers": {
+      "content-length": "24",
+      "content-disposition": "inline; filename=\"Bilaga f_r register.pdf\"; filename*=UTF-8''Bilaga%20f%C3%B6r%20register.pdf",
+      "x-content-type-options": "nosniff",
+      "cache-control": "public, max-age=86400, must-revalidate"
+    },
+    "bytes": "../../fixtures/docs/related/example/Bilaga för register.pdf"
+  },
+  {"status": 304},
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields/ref": "scb/example/missing.pdf"
+    }
+  }
+]

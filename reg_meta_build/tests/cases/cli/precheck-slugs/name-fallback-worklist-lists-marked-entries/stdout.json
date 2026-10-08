@@ -1,0 +1,44 @@
+{
+  "missing_registers": [],
+  "missing_variants": [],
+  "stale_registers": [],
+  "stale_variants": [],
+  "name_fallback_variables": [
+    {
+      "provider": "scb",
+      "source_id": "1.20",
+      "slug": "inkomst",
+      "derivation": "name-fallback"
+    },
+    {
+      "provider": "scb",
+      "source_id": "1.21",
+      "slug": "utgift",
+      "derivation": "name-fallback"
+    },
+    {
+      "provider": "scb",
+      "source_id": "1.40",
+      "slug": "v40",
+      "derivation": "v-provider-key"
+    },
+    {
+      "provider": "scb",
+      "source_id": "1.50",
+      "slug": "belopp",
+      "derivation": "name-fallback"
+    },
+    {
+      "provider": "scb",
+      "source_id": "1.51",
+      "slug": "belopp-2",
+      "derivation": "name-fallback+disambiguated"
+    },
+    {
+      "provider": "scb",
+      "source_id": "1.BefolkningPerKommun",
+      "slug": "befolkning",
+      "derivation": "drift-name"
+    }
+  ]
+}

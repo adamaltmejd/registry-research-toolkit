@@ -1,0 +1,9 @@
+{
+  "fixture": "reader/var-id-bands",
+  "kind": "catalog",
+  "docs": "docs",
+  "requests": [
+    {"operation": "docs_related", "path": "/api/docs/related/band%20fixture"},
+    {"operation": "docs_related", "path": "/api/docs/related/scb/bands"}
+  ]
+}
