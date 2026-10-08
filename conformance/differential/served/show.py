@@ -249,12 +249,13 @@ def _refs(conn: sqlite3.Connection, catalog: str) -> list[tuple[str, str, str]]:
     return rows
 
 
-def _owning(base_cli: dict | None, cand_answer: dict) -> tuple[dict, dict]:
+def _owning(base_cli: dict | None, cand_answer: dict) -> tuple[object, object]:
     """The CLI baseline's ``--variables`` listing and the candidate's first rows."""
     if base_cli is None or base_cli["exit"] != 0:
         expected = {"exit": None if base_cli is None else base_cli["exit"]}
     else:
-        rows = json.loads(base_cli["stdout"])["data"]["variables"]
+        # `--format json` prints the data bare, without the envelope.
+        rows = json.loads(base_cli["stdout"])["variables"]
         expected = [[r["register_name"], r["variable_name"]] for r in rows]
     if cand_answer["status"] != 200:
         return expected, {"status": cand_answer["status"]}
