@@ -1,7 +1,8 @@
 # CLI cases
 
 Each directory here is one boundary claim about a `reg-meta-build` command run on a
-built catalog. The claim is stated as data:
+built catalog, or about a maintainer program that compares databases of its own
+(`dbdiff`). The claim is stated as data:
 
 - the argument list a maintainer types,
 - the files in the working directory before the run,
@@ -20,13 +21,20 @@ cases/cli/
     curation/                     the curation tree that builds it
   <command>/<case>/
     request.json                  the argument list and the replaced test
+    *.sql                         optional: the case's own databases (`databases`)
     files/**                      laid into the working directory before the run
     expected.json                 the exit code, stderr and file claims
     stdout.json                   optional: a projection of the printed JSON
 ```
 
-`<command>` is the subcommand the case runs (`seed-slugs`, `precheck-slugs`). The runner
-checks that the argument list names it.
+`<command>` is the subcommand the case runs (`seed-slugs`, `precheck-slugs`), run
+through `reg_meta_build.cli.run`; the runner checks that the argument list names it. A
+command directory named in the runner's `_PROGRAMS` table is a program of its own and
+runs through that entry point instead, with the argument list after its program name:
+
+  | `<command>` | Entry point                  | Program                           |
+  | ----------- | ---------------------------- | --------------------------------- |
+  | `dbdiff`    | `reg_meta_build.dbdiff.main` | `python -m reg_meta_build.dbdiff` |
 
 ## The artifact
 
@@ -66,6 +74,16 @@ Each case runs in its own empty directory, `{work}`:
 
 The copy is cheap, so every case gets one, whether or not its command writes.
 
+## Per-case databases
+
+A command that compares databases (`dbdiff`) reads databases of its own, not the shared
+artifact. Their per-case source is readable SQL in the case directory: `databases` maps
+a path under `{work}` to a `.sql` file beside `request.json`, and the runner builds each
+database with `sqlite3.executescript` after laying in `files/` and before the first run.
+Two paths may name the same file, for two databases with the same content. Write a BLOB
+as an `X'..'` literal and a control character as `char(n)`, so the file stays readable
+as text.
+
 ## `request.json`
 
   | Key             | Meaning                                                                                                                                               |
@@ -77,6 +95,7 @@ The copy is cheap, so every case gets one, whether or not its command writes.
   | `env`           | Optional environment variables set for the run, such as `{"REG_META_QUIET": "1"}`. The runner unsets `REG_META_QUIET` otherwise.                      |
   | `runs`          | Instead of `argv` and `env`: a list of `{argv, env}` run in order in one working directory. The runner refuses a top-level `argv` or `env` beside it. |
   | `curation_dirs` | Optional. Where the artifact's curation tree is copied; defaults to `["curation"]`.                                                                   |
+  | `databases`     | Optional. `{path under {work}: SQL file in the case directory}`: the databases built before the run (above).                                          |
 
 `fails_if` has the meaning it has in the build cases (`cases/build/README.md`): name a
 change to the product, not the behavior restated. It sits in `request.json` there and
@@ -115,13 +134,14 @@ result:
 
 ## `stdout.json`
 
-The command prints the JSON payload of its envelope, or `{"error": {...}}` when it
-refuses. `stdout.json` is a projection of what the last run printed, compared the way an
-`includes` projection is in `cases/curation_toml/README.md` → "`loads` projection": an
-object compares only the keys it names, a list compares element by element and must have
-the same length, a scalar compares by value and JSON type, `{"$exact": value}` compares
-a value whole, and `{"$any": true}` is a value that must be present but is not claimed.
-A bare `{}` is refused. Strings take the `{work}` placeholder.
+A `reg-meta-build` subcommand prints the JSON payload of its envelope, or
+`{"error": {...}}` when it refuses; `dbdiff --json` prints its report. `stdout.json` is
+a projection of what the last run printed, compared the way an `includes` projection is
+in `cases/curation_toml/README.md` → "`loads` projection": an object compares only the
+keys it names, a list compares element by element and must have the same length, a
+scalar compares by value and JSON type, `{"$exact": value}` compares a value whole, and
+`{"$any": true}` is a value that must be present but is not claimed. A bare `{}` is
+refused. Strings take the `{work}` placeholder.
 
 Do not project values the catalog mints, such as a built register id: they are
 surrogates, not claims.

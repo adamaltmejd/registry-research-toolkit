@@ -5,9 +5,11 @@ a maintainer types, the files laid into the working directory first, and the
 oracle: the exit code, a projection of the stdout JSON envelope, stderr, and the
 files the command writes. Every case reads one synthetic artifact built from the
 readable source in `cases/cli/_artifact/`, once per test session and read-only.
-The command runs in-process through `reg_meta_build.cli.run`, the real CLI entry
-point (argv to JSON envelope and exit code). Expected values are read from the
-test each case replaces.
+The command runs in-process through its real entry point: `reg_meta_build.cli.run`
+(argv to JSON envelope and exit code) for a `reg-meta-build` subcommand, or the
+program's own `main` for a command directory in `_PROGRAMS`. A command that compares
+databases of its own builds them from the case's SQL files (`databases`). Expected
+values are read from the test each case replaces.
 """
 
 from __future__ import annotations
@@ -15,6 +17,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import sqlite3
 import tempfile
 import tomllib
 from dataclasses import dataclass
@@ -25,10 +28,13 @@ import pytest
 from _case_projection import mismatch, unclaimed
 from _pipeline_catalog_support import CatalogFixture
 from reg_meta_build.cli import run
+from reg_meta_build.dbdiff import main as dbdiff_main
 
 from reg_meta_build.fqid_slugs import load_slug_dir, snapshot_payload
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from _build_case_runner import PreparedCache
 
 CASES = Path(__file__).resolve().parent / "cases" / "cli"
@@ -151,7 +157,20 @@ def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) ->
         assert snippet not in text, (path, snippet, text)
 
 
-_REQUEST_KEYS = {"replaces", "fails_if", "note", "argv", "env", "runs", "curation_dirs"}
+# The entry point each command directory runs, when it is a program of its own
+# rather than a `reg-meta-build` subcommand run through `cli.run`.
+_PROGRAMS: dict[str, Callable[[list[str]], int]] = {"dbdiff": dbdiff_main}
+
+_REQUEST_KEYS = {
+    "replaces",
+    "fails_if",
+    "note",
+    "argv",
+    "env",
+    "runs",
+    "curation_dirs",
+    "databases",
+}
 _STEP_KEYS = {"argv", "env"}
 _EXPECTED_KEYS = {
     "exit_code",
@@ -182,6 +201,10 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
         # A misspelled step key (say "evn") would otherwise be ignored silently.
         assert "argv" in step, f"{case.name}: every run step needs argv"
         assert step.keys() <= _STEP_KEYS, (case.name, step.keys() - _STEP_KEYS)
+    for path, source in request.get("databases", {}).items():
+        # A misspelled SQL file name would otherwise fail later as a missing table.
+        assert isinstance(source, str), (case.name, path, source)
+        assert (case / source).is_file(), f"{case.name}: no SQL file {source}"
     assert "exit_code" in expected, f"{case.name}: exit_code is required"
     assert expected.keys() <= _EXPECTED_KEYS, (
         case.name,
@@ -218,19 +241,30 @@ def test_cli_case(
         shutil.copytree(cli_artifact.curation, work / name)
     if (case / "files").is_dir():
         shutil.copytree(case / "files", work, dirs_exist_ok=True)
+    for path, source in request.get("databases", {}).items():
+        target = work / path
+        assert not target.exists(), f"{case.name}: {path} is already in {{work}}"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        conn = sqlite3.connect(target)
+        try:
+            conn.executescript((case / source).read_text(encoding="utf-8"))
+        finally:
+            conn.close()
     before = _tree_bytes(work)
     places = {"db": str(cli_artifact.db_dir), "work": str(work)}
     fingerprint = cli_artifact.fingerprint()
 
+    program = _PROGRAMS.get(case.parent.name, run)
     monkeypatch.delenv("REG_META_QUIET", raising=False)
     for step in runs:
         argv = _fill(step["argv"], places)
-        assert case.parent.name in argv, f"{case.name}: argv names another command"
+        if program is run:
+            assert case.parent.name in argv, f"{case.name}: argv names another command"
         with monkeypatch.context() as env:
             for name, value in step.get("env", {}).items():
                 env.setenv(name, value)
             capsys.readouterr()
-            code = run(argv)
+            code = program(argv)
             captured = capsys.readouterr()
         assert code == expected["exit_code"], (argv, captured.out, captured.err)
 
