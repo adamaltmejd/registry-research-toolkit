@@ -4,6 +4,7 @@ import { playwright } from "@vitest/browser-playwright";
 // Vitest 4 dropped the module augmentation that let a `/// <reference types="vitest/config" />`
 // add `test` to vite's own UserConfig, so import the vitest-aware defineConfig directly.
 import { configDefaults, defineConfig } from "vitest/config";
+import type { BrowserCommand } from "vitest/node";
 
 // vite.config.ts runs under Node; read the env via globalThis so we don't pull a
 // @types/node dep for one lookup. REG_WEBAPP_BACKEND_URL repoints the dev /api proxy
@@ -32,6 +33,31 @@ const needsSingleProcessChromium = isMacOS && isCodexSeatbeltSandbox;
 const chromiumLaunchArgs = needsSingleProcessChromium
   ? ["--single-process"]
   : [];
+
+// The Playwright provider implements `vi.mock` as a `context.route()` per test
+// file and removes it when the file ends, so request interception switches off
+// between files and back on at the next file's `vi.mock`. Chromium applies the
+// re-enable to the already-loaded test iframe a few ms after `route()` resolves:
+// an import issued in that window reaches Vite unintercepted and the test runs
+// against the real module (`vi.mocked(...).mockReset is not a function`, ~5% of
+// Linux CI runs). This route stays for the whole context, so interception never
+// switches off; test-setup.browser.ts arms it and waits until its iframe's
+// requests are intercepted before any test file loads.
+// simplify: drop once the provider keeps interception live across files, or
+// Playwright's `route()` resolves only when interception is in effect.
+const ROUTE_PROBE_PATH = "/__route_probe__";
+const ROUTE_PROBE_MARKER = "intercepted";
+const armedContexts = new WeakSet<object>();
+const keepRequestInterception: BrowserCommand<[]> = async ({ context }) => {
+  if (!armedContexts.has(context)) {
+    armedContexts.add(context);
+    await context.route(
+      (url) => url.pathname === ROUTE_PROBE_PATH,
+      (route) => route.fulfill({ body: ROUTE_PROBE_MARKER }),
+    );
+  }
+  return { path: ROUTE_PROBE_PATH, marker: ROUTE_PROBE_MARKER };
+};
 
 export default defineConfig({
   plugins: [svelte()],
@@ -107,6 +133,7 @@ export default defineConfig({
             // decoration, and passes `exact: true` per call where it means it.
             locators: { exact: false },
             instances: [{ browser: "chromium" }],
+            commands: { keepRequestInterception },
           },
         },
       },
