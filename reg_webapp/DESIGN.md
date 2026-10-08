@@ -542,32 +542,31 @@ present on the wire as the shared sort key.
   Invalid/context-stale cursors map to an actionable HTTP 422 at the route boundary.
   There is no in-process response cache.
 - **Golden-boost** (`golden.apply_golden_boost`, #393 item 4 / #311): a curated-pin
-  INJECTION (no longer the old no-op seam). For an exact (normalized: diacritic-fold +
-  casefold + strip — so `sysselsattning` matches the `sysselsättning` pin, consistent
-  with FTS unicode61 folding) query, a steward pin
-  (`reg_webapp/backend/src/reg_webapp/search_golden.toml`, packaged inside reg_webapp so
-  it ships with the runtime image) prepends a canonical result to the TOP of its group
-  even when FTS would not surface it — e.g. `sysselsättning` → `scb/lisa` (RAMS is stale
-  → BAS; steer to LISA) and `diagnos` → `sos/par` (Patientregistret), both registers
-  that don't rank for those terms today. It operates on reg_meta's typed search models
-  (the `SearchResult` union, #701) so the route AND the eval runner
-  (`scripts/run_search_eval.py`) apply the SAME function — that's what makes the eval
-  measure the route's TRUE behavior. Pins dedup by `fqid` (a pin already an FTS hit
-  injects nothing). The route passes every matching pin to reg_meta's cursor-bound
-  `exclude_fqids`, so the origin universe omits it on every page and a deep natural FTS
-  hit cannot duplicate the injected pin. When a net-new pin displaces an origin row,
-  continuation advances only past the origin prefix actually shown, so the displaced row
-  appears on the next page. If configured pins outnumber the requested page limit, a
-  signed opaque wrapper carries the next pin position plus the unchanged reg_meta origin
-  cursor; its context binds the normalized query, group, ordered pin identities, and the
-  origin cursor retains the catalog/steward binding. Pins therefore span pages in config
-  order without being duplicated or lost; only the current page's pin slice is resolved,
-  keeping golden construction bounded by the requested limit. `register` +
-  `classification` pins are implemented (resolve cheaply by slug); a `variable`/`value`
-  pin is a config error at LOAD (fail fast). The TOML is parsed + validated once at
-  import; a typo'd fqid raises at apply (never silently drops). Eval gaps the pins close
-  are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains the lone gap — a
-  concept-group modeling issue, not a golden-boost one).
+  INJECTION (no longer the old no-op seam). For an exact query under `fold_search` (case
+  fold, diacritics dropped, whitespace trimmed and runs collapsed to one space — so
+  `sysselsattning` matches the `sysselsättning` pin), a curated pin (build input,
+  `reg_meta_build/curation/search_pins.toml`, read from the catalog's `search_pin`
+  table) prepends a canonical result to the TOP of its group even when FTS would not
+  surface it — e.g. `sysselsättning` → `scb/lisa` (RAMS is stale → BAS; steer to LISA)
+  and `diagnos` → `sos/par` (Patientregistret), both registers that don't rank for those
+  terms today. It operates on reg_meta's typed search models (the `SearchResult` union,
+  #701) so the route AND the eval runner (`scripts/run_search_eval.py`) apply the SAME
+  function — that's what makes the eval measure the route's TRUE behavior. Pins dedup by
+  `fqid` (a pin already an FTS hit injects nothing). The route passes every matching pin
+  to reg_meta's cursor-bound `exclude_fqids`, so the origin universe omits it on every
+  page and a deep natural FTS hit cannot duplicate the injected pin. When a net-new pin
+  displaces an origin row, continuation advances only past the origin prefix actually
+  shown, so the displaced row appears on the next page. If configured pins outnumber the
+  requested page limit, a signed opaque wrapper carries the next pin position plus the
+  unchanged reg_meta origin cursor; its context binds the normalized query, group,
+  ordered pin identities, and the origin cursor retains the catalog/steward binding.
+  Pins therefore span pages in config order without being duplicated or lost; only the
+  current page's pin slice is resolved, keeping golden construction bounded by the
+  requested limit. Pins exist for `register` and `classification` only. The build
+  validates them and refuses a complete catalog whose pin does not resolve, so the
+  webapp reads them without checks; a catalog without pins boosts nothing. Eval gaps the
+  pins close are flipped to `expect = "hit"` in `search_eval.toml` (SUN remains the lone
+  gap — a concept-group modeling issue, not a golden-boost one).
 - **ETag/cache-header wiring is automatic; cache effectiveness is not assumed**:
   `/api/search` is a GET, so the `ETagMiddleware` stamps a body-derived ETag (the query
   is part of the URL → part of the CF edge cache key, and part of the body → part of the

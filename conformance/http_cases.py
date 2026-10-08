@@ -11,12 +11,10 @@ from __future__ import annotations
 import json
 import os
 import shlex
-import shutil
 import signal
 import socket
 import sqlite3
 import subprocess
-import sys
 import time
 import tomllib
 from contextlib import closing, suppress
@@ -24,9 +22,8 @@ from pathlib import Path
 
 import httpx2
 from fastapi.testclient import TestClient
+from reg_meta.errors import RegMetaError
 from reg_webapp.app import create_app
-
-import reg_webapp
 
 CASES = Path(__file__).parent / "cases"
 READY_PATH = "/openapi.json"
@@ -68,8 +65,11 @@ def fixture_source(request):
     return fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
 
 
-def case_artifact(request, monkeypatch):
-    """Point the app at a case's cached, read-only artifact; return its path."""
+def case_artifact(request, monkeypatch, case=None):
+    """Point the app at a case's cached, read-only artifact; return its path.
+
+    A `search_pins` key names a pins file in the `case` directory that the build
+    stores; fixtures have no pins otherwise."""
     from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
 
     kind = request.get("kind", "steward")
@@ -77,6 +77,7 @@ def case_artifact(request, monkeypatch):
         fixture_source(request),
         kind,
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+        search_pins=case / request["search_pins"] if "search_pins" in request else None,
     )
     for name, value in artifact_env(path, kind).items():
         monkeypatch.setenv(name, value)
@@ -84,7 +85,10 @@ def case_artifact(request, monkeypatch):
 
 
 def assert_http_case(case, tmp_path, monkeypatch, servers=None):
-    """Run a case in-process, or against `servers` (a `ServerPool`) when given."""
+    """Run a case in-process, or against `servers` (a `ServerPool`) when given.
+
+    An expected `build_error` (`code`, `message`) is the artifact build's refusal;
+    the case sends no requests."""
     request = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
     if "startup_error" in expected:
@@ -92,36 +96,15 @@ def assert_http_case(case, tmp_path, monkeypatch, servers=None):
         assert_startup_refusal(request, expected["startup_error"], servers, tmp_path)
         return
     kind = request.get("kind", "steward")
-    path = case_artifact(request, monkeypatch)
-    if "golden_config" in request:
-        # Pins are loaded at import, so exercise packaged files in a fresh runtime,
-        # in-process even with --server-cmd. No raw bytes cross the pipe.
-        runtime = tmp_path / "runtime"
-        package = runtime / "reg_webapp"
-        shutil.copytree(
-            Path(reg_webapp.__file__).parent,
-            package,
-            ignore=shutil.ignore_patterns("__pycache__"),
-        )
-        shutil.copyfile(case / request["golden_config"], package / "search_golden.toml")
-        completed = subprocess.run(
-            [
-                sys.executable,
-                "-c",
-                "import json, sys; from http_cases import run_http_requests; "
-                "print(json.dumps([r | {'content': None} "
-                "for r in run_http_requests(json.load(sys.stdin))]))",
-            ],
-            input=json.dumps(request["requests"]),
-            text=True,
-            capture_output=True,
-            check=False,
-            env=artifact_env(path, kind)
-            | {"PYTHONPATH": os.pathsep.join((str(runtime), str(CASES.parent)))},
-        )
-        assert completed.returncode == 0, completed.stderr
-        responses = json.loads(completed.stdout)
-    elif servers is not None:
+    if "build_error" in expected:
+        try:
+            case_artifact(request, monkeypatch, case)
+        except RegMetaError as exc:
+            assert {"code": exc.code, "message": exc.message} == expected["build_error"]
+            return
+        raise AssertionError("the artifact build was expected to fail")
+    path = case_artifact(request, monkeypatch, case)
+    if servers is not None:
         client = servers.client(artifact_env(path, kind))
         responses = run_http_requests(request["requests"], client)
     else:
@@ -200,8 +183,7 @@ def request_body(step):
 
 
 def run_http_requests(steps, client=None):
-    """Send the steps through `client`, or the app in this process (which
-    exercises fail-fast packaged configuration errors)."""
+    """Send the steps through `client`, or the app in this process."""
     if client is None:
         with TestClient(
             create_app(rate_limit_per_minute=1000), raise_server_exceptions=False

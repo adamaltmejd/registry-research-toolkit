@@ -356,7 +356,16 @@ The target layout:
 - `curation/classifications/<short>.toml` holds one classification: its metadata,
   sentinels, the label list behind the binding rule, and overrides.
 - Global files keep the cross-register curation: relations and `same_as`, tags, lineage,
-  successions spanning registers, and slug freeze state.
+  successions spanning registers, slug freeze state, and search pins.
+- `curation/search_pins.toml` lists, per query and result type (`register` or
+  `classification`), the entities that lead that type's search list. Every build loads
+  it, so a malformed entry fails even a diagnostic build. Only a complete build stores
+  it, as `search_pin` rows keyed by `fold_search(query)` (`reg-core-py`, the fold the
+  reader applies to `q`), and a pin that does not resolve fails that build with the
+  file, entry and FQID. Scoped and diagnostic builds store no pins. The manifest's
+  `search_pins_sha256` hashes the stored rows and joins the generation; derive gives an
+  older-minor base an empty table and the empty-pins hash. Pins are build input, not
+  ranking: the reader applies them.
 - `worklists/concept_groups.auto.toml` is generated from a built DB for the worklist
   tool, not curation. Enrichment is register-scoped curation in each register file. The
   concept-group generator treats a matching literal register `[[group]]` as an already

@@ -1,4 +1,4 @@
 [[pin]]
 query = "deeptopic"
-group = "register"
+type = "register"
 fqids = ["scb/gamma"]

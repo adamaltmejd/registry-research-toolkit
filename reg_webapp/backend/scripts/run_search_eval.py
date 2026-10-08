@@ -144,7 +144,7 @@ def main() -> int:
         # Apply golden boost over one bounded result window, matching the route's
         # page-sized pin work. Exact totals are intentionally unavailable: report the
         # returned page size and whether another origin/boosted row exists.
-        pin_fqids = pinned_fqids(c["query"], c["group"])
+        pin_fqids = pinned_fqids(conn, c["query"], c["group"])
         boosted = apply_golden_boost(
             conn,
             c["query"],

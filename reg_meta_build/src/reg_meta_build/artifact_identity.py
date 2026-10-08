@@ -10,7 +10,7 @@ from reg_meta.source_evidence import canonical_sha256
 from .input_snapshot import SnapshotError, _builder_source_identity, _git
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Iterable, Mapping
 
 GENERATION_KEYS = (
     "schema_version",
@@ -19,6 +19,7 @@ GENERATION_KEYS = (
     "prepared_commit",
     "prepared_manifest_sha256",
     "curation_tree_sha256",
+    "search_pins_sha256",
 )
 STEWARD_GENERATION_KEYS = (
     "steward",
@@ -28,6 +29,16 @@ STEWARD_GENERATION_KEYS = (
     "holdings_policy_sha256",
     "holdings_accounting_sha256",
 )
+
+
+def search_pins_sha256(rows: Iterable[tuple[str, str, int, str]]) -> str:
+    """Hash of the `search_pin` rows `(key, type, position, entity)` in key order.
+
+    It hashes what the artifact stores, so a pin file's comments and notes leave
+    this key unchanged (`curation_tree_sha256` still hashes the file's bytes); no
+    pins hash as `[]`.
+    """
+    return canonical_sha256(sorted(rows))
 
 
 def builder_commit() -> str:

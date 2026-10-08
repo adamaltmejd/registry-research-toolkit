@@ -1,4 +1,4 @@
 [[pin]]
 query = "sunx"
-group = "classification"
+type = "classification"
 fqids = ["class/sunx2020"]

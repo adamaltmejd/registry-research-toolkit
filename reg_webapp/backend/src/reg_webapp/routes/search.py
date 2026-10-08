@@ -579,7 +579,7 @@ def get_search(
             phase_timings.append(("variable", perf_counter() - phase_start))
         if want_classification:
             phase_start = perf_counter()
-            classification_pin_fqids = golden.pinned_fqids(q, "classification")
+            classification_pin_fqids = golden.pinned_fqids(conn, q, "classification")
             classification_cursor, classification_pin_offset = _golden_cursor_boundary(
                 cursor, q, "classification", classification_pin_fqids
             )

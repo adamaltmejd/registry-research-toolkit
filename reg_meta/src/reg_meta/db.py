@@ -325,7 +325,9 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 # 9.2.0: the four catalog FTS5 indexes hold `fold_search` text (regular tables,
 #   `unicode61 remove_diacritics 0`); readers fold the query the same way and read
 #   display text from the base tables.
-SCHEMA_VERSION = "9.2.0"
+# 9.3.0: curated `search_pin` rows the webapp reads; a 9.3 artifact derived from an
+#   older base has the table empty.
+SCHEMA_VERSION = "9.3.0"
 DB_FILENAME = "reg_meta.db"
 
 

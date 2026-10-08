@@ -1,5 +1,6 @@
 {
   "fixture": "compiled",
+  "search_pins": "search_pins.toml",
   "requests": [
     {
       "path": "/api/search",

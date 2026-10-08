@@ -14,7 +14,7 @@ from graphlib import CycleError, TopologicalSorter
 from itertools import combinations
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Annotated, Literal, Self
+from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import (
     Field,
@@ -33,7 +33,13 @@ from reg_meta.db import (
 from reg_meta.fqid import Fqid, validate_slug
 from reg_meta.source_evidence import canonical_sha256
 
-from reg_meta_build._curation import SentinelCode  # noqa: TC001
+from reg_meta_build._curation import (
+    SEARCH_PINS_FILE,
+    SearchPin,
+    SentinelCode,
+    curation_error,
+    resolve_register_id,
+)
 from reg_meta_build._resolved_common import (
     _classification_id,
     _require_trimmed,
@@ -42,6 +48,7 @@ from reg_meta_build._resolved_common import (
     _ResolvedWindow,
     _storage_id,
 )
+from reg_meta_build.artifact_identity import search_pins_sha256
 from reg_meta_build.data_warnings import write_data_warnings
 from reg_meta_build.db import (
     DDL,
@@ -59,6 +66,9 @@ from reg_meta_build.resolved_metadata import (
     write_resolved_metadata,
 )
 from reg_meta_build.validate import column_state_overlap_failure, validate_built_db
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 CURATION_TREE_SHA256_KEY = "curation_tree_sha256"
 
@@ -1026,6 +1036,39 @@ def _write_conformance(
     )
 
 
+def _write_search_pins(
+    conn: sqlite3.Connection,
+    search_pins: tuple[SearchPin, ...],
+    rows: Iterable[tuple[str, str, int, str]],
+) -> None:
+    """Store `rows`, the pins' rows, after their registers and classifications; a
+    pin that does not resolve fails the build, located by entry and FQID."""
+    for index, pin in enumerate(search_pins, start=1):
+        for fqid in pin.fqids:
+            if pin.type == "register":
+                provider, register = fqid.split("/")
+                resolves = resolve_register_id(conn, provider, register) is not None
+            else:
+                resolves = (
+                    conn.execute(
+                        "SELECT 1 FROM classification WHERE slug = ?",
+                        (fqid.removeprefix("class/"),),
+                    ).fetchone()
+                    is not None
+                )
+            if not resolves:
+                raise curation_error(
+                    "search_pin_unresolved",
+                    f"{SEARCH_PINS_FILE} [[pin]] entry {index}: {fqid} does not "
+                    f"resolve to a {pin.type} in this catalog.",
+                    "Fix the FQID or drop it from the pin.",
+                )
+    conn.executemany(
+        "INSERT INTO search_pin (key, type, position, entity) VALUES (?, ?, ?, ?)",
+        rows,
+    )
+
+
 def write_resolved_catalog(
     variables: tuple[ResolvedVariable, ...],
     output: Path,
@@ -1041,6 +1084,7 @@ def write_resolved_catalog(
     classification_successions: tuple[ResolvedClassificationSuccession, ...] = (),
     metadata: ResolvedMetadata | None = None,
     data_warnings: tuple[DataWarning, ...] = (),
+    search_pins: tuple[SearchPin, ...] = (),
 ) -> Path:
     """Validate and atomically place a strict catalog or create-only diagnostic.
 
@@ -1053,6 +1097,8 @@ def write_resolved_catalog(
     even when their variable states are withheld. Shared definitions must agree.
     The complete pipeline additionally requires corpus safeguards before strict
     publication; partial writer fixtures leave those volume expectations disabled.
+    Only a complete catalog stores `search_pins`, each of which must resolve; a
+    partial one stores none.
     """
     diagnostic = TypeAdapter(bool).validate_python(diagnostic, strict=True)
     partial = diagnostic or TypeAdapter(bool).validate_python(scoped, strict=True)
@@ -1098,6 +1144,14 @@ def write_resolved_catalog(
         variants,
         classifications,
     )
+    search_pins = TypeAdapter(tuple[SearchPin, ...]).validate_python(
+        () if partial else search_pins
+    )
+    pin_rows = [
+        (pin.key, pin.type, position, fqid)
+        for pin in search_pins
+        for position, fqid in enumerate(pin.fqids)
+    ]
     import_metadata = TypeAdapter(dict[str, str]).validate_python(manifest, strict=True)
     for key in (CURATION_TREE_SHA256_KEY,):
         if (value := import_metadata.get(key)) is not None and (
@@ -1112,6 +1166,7 @@ def write_resolved_catalog(
         CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY: str(
             CLASSIFICATION_SUCCESSION_AS_OF_YEAR
         ),
+        "search_pins_sha256": search_pins_sha256(pin_rows),
     }.items():
         if key in import_metadata and import_metadata[key] != value:
             raise ValueError(
@@ -1386,6 +1441,7 @@ def write_resolved_catalog(
                                     else None,
                                 ),
                             )
+            _write_search_pins(conn, search_pins, pin_rows)
             write_data_warnings(conn, data_warnings, demote_missing_variables=True)
             write_resolved_metadata(conn, metadata_rows)
             conn.execute(

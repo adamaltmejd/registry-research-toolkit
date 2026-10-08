@@ -1,4 +1,4 @@
 [[pin]]
 query = "example"
-group = "register"
+type = "register"
 fqids = ["scb/lisa"]
