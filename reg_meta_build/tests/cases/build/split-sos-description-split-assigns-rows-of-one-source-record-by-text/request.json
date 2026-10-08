@@ -1,0 +1,56 @@
+{
+  "replaces": [
+    "test_curation_split_sos_boundary.py::test_text_split_assigns_rows_of_one_source_record_by_text[description-reversed]"
+  ],
+  "note": "Parts declared in reverse order. Two texts under one owner in one subset conflict, so only the shared owner carries resolution errors.",
+  "sources": {
+    "description": "Three PAR_OV ATC rows of one source record key, described First, Second and Other.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "PAR",
+        "title": "Patientregistret",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {
+            "name": "PAR_OV",
+            "label": "PAR_OV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ],
+        "variables": [
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_OV",
+            "description": "First",
+            "label": "ATC",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_OV",
+            "description": "Second",
+            "label": "ATC",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_OV",
+            "description": "Other",
+            "label": "ATC",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ]
+      }
+    ]
+  }
+}

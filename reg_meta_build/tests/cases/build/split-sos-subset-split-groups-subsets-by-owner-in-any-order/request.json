@@ -1,0 +1,67 @@
+{
+  "replaces": [
+    "test_curation_split_sos_boundary.py::test_subset_split_groups_subsets_by_declared_owner[reversed]"
+  ],
+  "note": "Parts declared in reverse order. The shared owner's native identity still carries its first delivered subset PAR_OV, so the PAR_SV row's classification warning subject names PAR_OV as its accepted shape.",
+  "sources": {
+    "description": "ATC delivered in subsets PAR_OV, PAR_SV and PAR_TV.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "PAR",
+        "title": "Patientregistret",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {
+            "name": "PAR_OV",
+            "label": "PAR_OV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_SV",
+            "label": "PAR_SV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_TV",
+            "label": "PAR_TV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ],
+        "variables": [
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_OV",
+            "label": "ATC",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_SV",
+            "label": "ATC",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_TV",
+            "label": "ATC",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ]
+      }
+    ]
+  }
+}

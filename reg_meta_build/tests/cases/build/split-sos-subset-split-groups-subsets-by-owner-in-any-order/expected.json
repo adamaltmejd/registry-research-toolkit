@@ -1,0 +1,69 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "par"},
+      "fields": ["variable", "variant", "column", "data_type", "name"],
+      "rows": [
+        ["other", "par-tv", "ATC", "text", "ATC"],
+        ["shared", "par-ov", "ATC", "text", "ATC"],
+        ["shared", "par-sv", "ATC", "text", "ATC"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unknown_classification_declaration"},
+      "fields": ["code"],
+      "rows": [
+        ["unknown_classification_declaration"],
+        ["unknown_classification_declaration"],
+        ["unknown_classification_declaration"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unknown_classification_declaration",
+        "subject": {
+          "contains": ["'accepted-shape', 'PAR_OV',", "'variant', 'name', 'PAR_OV',"]
+        }
+      },
+      "fields": ["code"],
+      "rows": [
+        ["unknown_classification_declaration"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unknown_classification_declaration",
+        "subject": {
+          "contains": ["'accepted-shape', 'PAR_OV',", "'variant', 'name', 'PAR_SV',"]
+        }
+      },
+      "fields": ["code"],
+      "rows": [
+        ["unknown_classification_declaration"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unknown_classification_declaration",
+        "subject": {
+          "contains": ["'accepted-shape', 'PAR_TV',", "'variant', 'name', 'PAR_TV',"]
+        }
+      },
+      "fields": ["code"],
+      "rows": [
+        ["unknown_classification_declaration"]
+      ]
+    }
+  ]
+}

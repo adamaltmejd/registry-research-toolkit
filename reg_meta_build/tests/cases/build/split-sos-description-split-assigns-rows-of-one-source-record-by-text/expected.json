@@ -1,0 +1,41 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "uses",
+      "where": {
+        "source": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+        "native_variable": "ATC"
+      },
+      "fields": ["description", "key", "use", "variable"],
+      "rows": [
+        ["First", "variable:ATC", "catalog", "sos/par/shared"],
+        ["Other", "variable:ATC", "catalog", "sos/par/other"],
+        ["Second", "variable:ATC", "catalog", "sos/par/shared"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["subject"],
+      "match": "set",
+      "rows": [
+        ["sos/par/shared"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "par"},
+      "fields": ["variable"],
+      "match": "includes",
+      "rows": [
+        ["other"]
+      ]
+    }
+  ]
+}

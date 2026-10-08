@@ -1,0 +1,24 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "par"},
+      "fields": ["variable", "variant", "column", "data_type", "name"],
+      "rows": [
+        ["new-name", "par-ov", "INVARN9", "integer", "target"]
+      ]
+    }
+  ]
+}

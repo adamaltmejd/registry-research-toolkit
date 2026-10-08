@@ -1,0 +1,46 @@
+{
+  "replaces": [
+    "test_curation_split_sos_boundary.py::test_type_split_gives_each_delivered_type_its_owner"
+  ],
+  "sources": {
+    "description": "A PAR_OV ATC row typed Heltal and one typed text, under one source record key.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "PAR",
+        "title": "Patientregistret",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {
+            "name": "PAR_OV",
+            "label": "PAR_OV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ],
+        "variables": [
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_OV",
+            "label": "ATC",
+            "data_type": "Heltal",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_OV",
+            "label": "ATC",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ]
+      }
+    ]
+  }
+}

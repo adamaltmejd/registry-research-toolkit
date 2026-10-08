@@ -1,0 +1,41 @@
+{
+  "replaces": [
+    "test_curation_split_sos_boundary.py::test_split_owner_resolves_a_reference_from_an_unselected_register[rename]"
+  ],
+  "note": "A scoped SCB build (register 1) defers a reference to an unselected SOS split owner.",
+  "sources": {
+    "description": "PAR_OV delivers INVARN8, labelled target.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "PAR",
+        "title": "Patientregistret",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {
+            "name": "PAR_OV",
+            "label": "PAR_OV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ],
+        "variables": [
+          {
+            "name": "INVARN8",
+            "deldatamangd": "PAR_OV",
+            "label": "target",
+            "data_type": "Heltal",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ]
+      }
+    ]
+  },
+  "registers": ["1"]
+}

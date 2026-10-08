@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "par"},
+      "fields": ["variable", "variant", "column", "data_type", "name"],
+      "rows": [
+        ["atc", "par-ov", "ATC", "integer", "ATC"],
+        ["atc-1", "par-ov", "ATC", "text", "ATC"]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {
+        "source": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+        "native_variable": "ATC"
+      },
+      "fields": ["data_type", "key", "use", "variable"],
+      "rows": [
+        ["integer", "variable:ATC", "catalog", "sos/par/atc"],
+        ["text", "variable:ATC", "catalog", "sos/par/atc-1"]
+      ]
+    }
+  ]
+}
