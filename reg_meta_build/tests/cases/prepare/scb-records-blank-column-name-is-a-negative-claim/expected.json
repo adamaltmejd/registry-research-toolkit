@@ -1,0 +1,20 @@
+{
+  "reader": "scb_records",
+  "replaces": [
+    "test_source_records.py::test_scb_delivered_blank_column_is_a_negative_claim",
+    "test_source_records.py::test_scb_undelivered_column_stays_unknown",
+    "test_source_records.py::test_scb_nonblank_uninterpretable_column_stays_unknown"
+  ],
+  "fails_if": "the SCB records reader reads an undelivered or whitespace Kolumnnamn as the claim that the member has no physical column, or reads a delivered empty Kolumnnamn as an unknown column",
+  "note": "Only a delivered empty cell states that the member has no column (an aggregate-statistics register). The raw value of a column field is the cell's text, so the undelivered cell's is `\"\"` too.",
+  "projections": [
+    {
+      "of": "",
+      "rows": [
+        {"record": {"fields": {"column_name": {"$exact": {"status": "negative", "value": null, "raw_value": ""}}}}},
+        {"record": {"fields": {"column_name": {"$exact": {"status": "unknown", "value": null, "raw_value": ""}}}}},
+        {"record": {"fields": {"column_name": {"$exact": {"status": "unknown", "value": null, "raw_value": " "}}}}}
+      ]
+    }
+  ]
+}

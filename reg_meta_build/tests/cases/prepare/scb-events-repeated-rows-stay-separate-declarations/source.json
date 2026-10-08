@@ -1,0 +1,9 @@
+{
+  "description": "Timeseries.csv delivering one event (Ersätter on AktuellVariabel 0007, ID2 8) twice.",
+  "scb": {
+    "timeseries": [
+      "TESTREG|Ersätter||AktuellVariabel|0007|8|1",
+      "TESTREG|Ersätter||AktuellVariabel|0007|8|1"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "description": "Members of two editions named by a date (`2025-12-31`, `1 jan 2010`) whose VariabelReferenstid declares the padded ` Under  föregående<NBSP>kalenderår `; then the same editions with VariabelReferenstid a delivered empty cell (`\"\"`), and an edition `2025-12-31` that leaves it empty (not delivered).",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "versionname": "2025-12-31", "cells": {"VariabelReferenstid": " Under  föregående kalenderår "}},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "versionname": "1 jan 2010", "cells": {"VariabelReferenstid": " Under  föregående kalenderår "}},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "versionname": "2025-12-31", "cells": {"VariabelReferenstid": "\"\""}},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "versionname": "1 jan 2010", "cells": {"VariabelReferenstid": "\"\""}},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "versionname": "2025-12-31"}
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "reader": "scb_values",
+  "replaces": "test_scb_value_records.py::test_normalized_payloads_keep_missing_distinct_from_supplied_empty",
+  "fails_if": "the SCB value reader reads an undelivered code, label, version, level or validity date as a delivered empty one (or the reverse)",
+  "projections": [
+    {
+      "of": "associations",
+      "rows": [
+        {
+          "value": {
+            "code": null,
+            "label": null
+          },
+          "descriptor": {
+            "version": null
+          }
+        },
+        {
+          "value": {
+            "code": "",
+            "label": ""
+          },
+          "descriptor": {
+            "version": ""
+          }
+        }
+      ]
+    },
+    {
+      "of": "validity",
+      "rows": [
+        {
+          "valid_from": null
+        },
+        {
+          "valid_from": ""
+        }
+      ]
+    }
+  ]
+}

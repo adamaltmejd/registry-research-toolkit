@@ -1,0 +1,29 @@
+{
+  "description": "Vardemangder labels with raw bytes swapped in after writing: the DOS cp850 remnants 0x81, 0x8D, 0x90 and 0x9D (undefined in cp1252) alone, 0x90 inside ordinary text, and cp1252's own 0x80 (euro sign) beside a remnant and alone. CP_EURO_MIXED is replaced before its prefix CP_EURO. The validity file is the fixture default (its rows name no listed item), as the replaced test delivered it.",
+  "scb": {
+    "vardemangder": [
+      "Version|Level|001|DOS_U_UML|100|",
+      "Version|Level|002|DOS_I_GRAVE|100|",
+      "Version|Level|003|DOS_E_ACUTE|100|",
+      "Version|Level|004|DOS_O_SLASH|100|",
+      "Version|Level|005|DOS_MIXED|100|",
+      "Version|Level|006|CP_EURO_MIXED|100|",
+      "Version|Level|007|CP_EURO|100|"
+    ],
+    "replace_bytes": {
+      "Vardemangder.csv": {
+        "DOS_U_UML": "",
+        "DOS_I_GRAVE": "",
+        "DOS_E_ACUTE": "",
+        "DOS_O_SLASH": "",
+        "DOS_MIXED": "MURCILAGO",
+        "CP_EURO_MIXED": " ",
+        "CP_EURO": ""
+      }
+    },
+    "valid_dates": [
+      "5001|2000-01-01|2030-12-31",
+      "5003|2015-01-01|2030-12-31"
+    ]
+  }
+}
