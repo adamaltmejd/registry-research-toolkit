@@ -113,7 +113,7 @@ About 70% of the hotspots are A or B. The main ones:
   | Classification/variable chains, terminal successors, editions, families                                                  | A     | `succession_terminal`, `classification_chain`, `classification_family`  |
   | `same_as` BFS                                                                                                            | A     | none: unreachable, not ported (3d.1)                                    |
   | Concept-group tag N+1, group member assembly                                                                             | A     | `concept_group_tag`, pre-ordered member rows                            |
-  | `get coded-variables` (72 s)                                                                                             | A     | `coded_variable_stats` per scope; reader applies only filters and limit |
+  | `get coded-variables` (72 s; 5.5 s unfiltered since #1175)                                                               | A     | `coded_variable_stats` per scope; reader only orders and pages the rows |
   | `variable_search_text` view (correlated `group_concat` for 43k variables)                                                | A     | Materialized FTS content table                                          |
   | Search arm merge, scoring, cursor, fold decisions; period intersection with a request; `get diff`; order materialization | C     | Stays in the reader                                                     |
 
@@ -1264,7 +1264,7 @@ in-flight list.
   | `derived-generation-*` G1 exceptions                                                                                                                          | while the baseline reads the release originals and the checkout its derived copies (all of stage 3) |
   | `reader-version` G1 exception (the arms' release versions)                                                                                                    | stage 4                                                                                             |
   | `rust-only fix:` G1 exceptions                                                                                                                                | stage 4 (D1)                                                                                        |
-  | Derive calling the reader in place (`from reg_meta.catalog import Catalog` in derive)                                                                         | stage 4 (moved into `reg_meta_build`)                                                               |
+  | Derive calling the reader in place (`from reg_meta.catalog import Catalog` in derive; `reg_meta.queries.get_coded_variables` in `derive/schema.py`)           | stage 4 (moved into `reg_meta_build`)                                                               |
   | Two project validators and project-schema versions (`reg_schema`, `reg-core`)                                                                                 | stage 4                                                                                             |
   | Request-time terminal walks (search's `terminal()` reading the `classification_succession_as_of_year` manifest key; 3b.3's refs) beside `succession_terminal` | 3d.2                                                                                                |
   | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                                   | stage 4 (proven twins earlier)                                                                      |
@@ -1415,10 +1415,10 @@ checkpoint-2 decision 3 (`doc_fts` folding).
 
 **3c.1 Schema, coverage and coded-variable tables.** Implements the 3c rows of section 3.
 
-- Changes: `coded_variable_stats` per scope (the 72 s `get coded-variables`), and the
-  per-scope delivery windows `schema`, `diff` and `coverage` read (`delivery_window`),
-  from `expanded_state` and `browse_delivery`; derive family module `schema.py`; next
-  free schema minor.
+- Changes: `coded_variable_stats` per scope (`get coded-variables`, 5.5 s unfiltered),
+  and the per-scope delivery windows `schema`, `diff` and `coverage` read
+  (`delivery_window`), from `expanded_state` and `browse_delivery`; derive family module
+  `schema.py`; next free schema minor.
 - `validate_built_db`: each table equals a recomputation; windows disjoint per scope.
 - Paths: `reg_meta_build/src/reg_meta_build/{derive/,db,validate}.py`,
   `reg_meta/src/reg_meta/db.py` (version), the fixture scripts as in 3b.1, tests and

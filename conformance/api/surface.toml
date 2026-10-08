@@ -1446,6 +1446,15 @@ note = "Judgment: a version-name year heuristic, not the period grammar, so it m
 
 [[row]]
 kind = "import"
+id = "reg_meta.queries.get_coded_variables"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/cases/cli_scope/coded-variables-explicit-reference"]
+note = "Derive's `coded_variable_stats` calls the reader's aggregate in place (section 4 bootstrap, package 3c.1); stage 4 moves it into reg_meta_build."
+
+[[row]]
+kind = "import"
 id = "reg_meta.queries.fold_search"
 used_by = ["conformance", "crates", "reg_webapp"]
 disposition = "removed"

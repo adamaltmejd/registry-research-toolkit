@@ -1533,17 +1533,21 @@ the global source-cleaning boundary.
 
 The extension derives over base plus overlay before compiling holdings, because holdings
 canonicalize against `resolver_column`, the projection of `expanded_state`. Once the
-manifest names the steward, `derive_holdings` adds the `holdings`-scope browse rows,
-which read the compiled holdings. Derive keeps one module per table family in the
-`derive/` package (`states.py`, `browse.py`, `search_index.py`), each with the
-`validate_built_db` check that recomputes its tables. The derived states and browse
-tables call the reader's resolver in place until stage 4 moves it into this package. The
-extension refolds the search indexes over base plus overlay. Structural, mapping and
-accounting gates run before atomic publication of one steward artifact. Strict steward
-publication requires accepted provider overlays, inventory and policy plus committed
-steward slug pins; no skip flag bypasses compilation or accounting. Provider
-regeneration and input acceptance remain separate maintainer operations. Diagnostic
-output remains explicitly nonpublishable and cannot replace the active artifact.
+manifest names the steward, `derive_holdings` adds the `holdings`-scope browse and
+coded-variable rows, which read the compiled holdings. Derive keeps one module per table
+family in the `derive/` package (`states.py`, `browse.py`, `chains.py`, `schema.py`,
+`search_index.py`), each with the `validate_built_db` check that recomputes its tables.
+The derived states, browse and coded-variable tables call the reader in place until
+stage 4 moves it into this package. Derive compiles only work a request would repeat:
+`coded_variable_stats` is an aggregate over every coded state, while `schema`, `diff`
+and `coverage` read one register's `expanded_state`, `variable_state` and
+`browse_delivery` rows directly. The extension refolds the search indexes over base plus
+overlay. Structural, mapping and accounting gates run before atomic publication of one
+steward artifact. Strict steward publication requires accepted provider overlays,
+inventory and policy plus committed steward slug pins; no skip flag bypasses compilation
+or accounting. Provider regeneration and input acceptance remain separate maintainer
+operations. Diagnostic output remains explicitly nonpublishable and cannot replace the
+active artifact.
 
 Panel entity keys must not drift with a reslug (#546). On the global build, compile
 enforces this: every variable needs an authored `[[variable]]` pin, and a variable

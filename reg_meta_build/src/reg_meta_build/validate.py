@@ -68,6 +68,7 @@ from reg_meta_build.db import (
 )
 from reg_meta_build.derive.browse import check_browse
 from reg_meta_build.derive.chains import CHAIN_TABLES, check_chains
+from reg_meta_build.derive.schema import check_coded
 from reg_meta_build.derive.search_index import SEARCH_INDEXES, register_fold_search
 from reg_meta_build.derive.states import check_states
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
@@ -258,6 +259,7 @@ def validate_built_db(
         check_states(conn, result, tables)
         check_browse(conn, result, tables)
         check_chains(conn, result, tables)
+        check_coded(conn, result, tables)
         _check_search_pins(conn, result, tables)
         result.section("[compiled holdings]")
         from .holdings_validation import validate_compiled_holdings
@@ -314,6 +316,7 @@ def _check_schema_shape(
         "delivery_window",
         "resolver_column",
         *CHAIN_TABLES,
+        "coded_variable_stats",
         "search_pin",
     ):
         if required in tables:
