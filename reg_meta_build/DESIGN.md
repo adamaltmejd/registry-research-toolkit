@@ -1264,8 +1264,10 @@ false. Sensitivity follows a disclosure-control ratchet across declarations: any
 sensitive or sometimes-sensitive claim makes `is_sensitive` true, even when another
 range says false. It is false only when the supplied claims say false and none says
 sometimes sensitive; without a claim it stays unknown except for source-specific
-defaults. A checked sensitivity correction takes precedence over source claims. The
-original records remain attached so a curator can audit every contributing declaration.
+defaults. Sensitivity comes only from source data or an authored `is_sensitive`
+(`[[errata.column]]`, a documented-blank matrix answer), and no curation or code path
+can lower a sensitive claim. The original records remain attached so a curator can audit
+every contributing declaration.
 
 A curation `[[acknowledge]]` entry names one exact issue code, its subject, refs, fields
 and period as the diagnostic carries them, plus a reason and evidence. Once its scope is

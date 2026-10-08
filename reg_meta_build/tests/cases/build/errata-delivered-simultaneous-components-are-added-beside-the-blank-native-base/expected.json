@@ -1,6 +1,14 @@
 {
   "projections": [
     {
+      "table": "issue_refs",
+      "where": {"code": "omitted_columnless_occurrence"},
+      "fields": ["severity", "key"],
+      "rows": [
+        ["warning", ["register:1", "variant:2", "edition:2021", "variable:5", "member:30"]]
+      ]
+    },
+    {
       "table": "issues",
       "fields": ["code", "subject"],
       "rows": [

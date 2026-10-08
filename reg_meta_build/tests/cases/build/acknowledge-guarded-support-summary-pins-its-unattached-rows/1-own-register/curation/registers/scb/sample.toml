@@ -1,0 +1,19 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+
+[[acknowledge]]
+code = "unknown_support_key"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 1)), ('scb-unikaregisterochvariabler@sha256:b8b36c16cfdc95da10a66bbb04537748b579634d92fb937b9dc92bff67fd4b74',))"
+fields = ["identifier", "sensitivity", "conditional_sensitivity"]
+refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"b4657752ebc1068fdc97a0d983e29c3d465ebb0471834f7262119337fb66fd4e\"]}"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-unikaregisterochvariabler key=b4657752ebc1068fdc97a0d983e29c3d465ebb0471834f7262119337fb66fd4e}}
+reason = "The summary row has no column name; its flags stay unattached."
+evidence = "Synthetic fixture."

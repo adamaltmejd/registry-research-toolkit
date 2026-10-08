@@ -1,0 +1,19 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["subject", "locator"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"variable": "ku"},
+      "fields": ["column", "valid_from", "state_name"],
+      "rows": [
+        ["KU", "2020-01-01", "Income"],
+        ["KU", "2021-01-01", "Taxable income"]
+      ]
+    }
+  ]
+}

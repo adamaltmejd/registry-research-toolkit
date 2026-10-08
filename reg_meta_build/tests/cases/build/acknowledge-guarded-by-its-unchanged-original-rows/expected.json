@@ -5,17 +5,24 @@
   "projections": [
     {
       "table": "issues",
-      "where": {"code": "unresolved_catalog_identity"},
-      "fields": ["severity", "acknowledged_by"],
+      "fields": ["code", "severity", "acknowledged_by"],
       "rows": [
-        ["warning", "curation/registers/scb/sample.toml#/acknowledge/1"]
+        ["unresolved_catalog_identity", "warning", "curation/registers/scb/sample.toml#/acknowledge/1"]
       ]
     },
     {
-      "table": "issues",
-      "where": {"code": "stale_curation_entry"},
-      "fields": ["case_id"],
-      "rows": []
+      "table": "variables",
+      "fields": ["variable"],
+      "rows": [
+        ["value"]
+      ]
+    },
+    {
+      "table": "warnings",
+      "fields": ["register", "variable", "code", "detail"],
+      "rows": [
+        ["sample", null, "unresolved_catalog_identity", "Accepted while the source stays unresolved."]
+      ]
     }
   ]
 }

@@ -1,0 +1,7 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/sample/value"
+to = "scb/sample/two"
+from_column = "Value"
+to_column = "tWO"
+effective_year = 2021

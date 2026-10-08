@@ -1,0 +1,14 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5.answer"
+slug = "answer"
+[[identity.partition]]
+variable = "1.5"
+columns = { ANSWER = "1.5.answer", OTHER = "1.5.unknown" }
+columns_ref = "fixture"

@@ -1,0 +1,21 @@
+{
+  "replaces": ["test_source_siblings.py::test_negative_availability_and_different_editions_are_not_co_delivery"],
+  "note": "The same-shape FORNAMN/EFTERNAMN pair of siblings-only-same-shape-non-code-label-siblings-form-a-group (its allowed twin, where both are delivered in 2020), but EFTERNAMN is delivered only in 2021. Value from the replaced test: siblings in different editions form no pair. Its negative-availability leg is not portable: no provider adapter or curation correction produces a negative availability. The `variables` rows are the two variables the curation fixture declares; they show the empty group is not caused by a withheld variable.",
+  "fails_if": "`resolve_sibling_pairs` (reg_meta_build/src/reg_meta_build/source_siblings.py) keeps a source family with no co-delivered pair, so FORNAMN (2020) and EFTERNAMN (2021) still group",
+  "sources": {
+    "description": "Register 1, variable 300: FORNAMN (CVID 1004, int) in 2020 and EFTERNAMN (CVID 1005, int) in 2021.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1004, "var_id": 300, "colname": "FORNAMN", "varname": "Var300"},
+        {
+          "cvid": 1005,
+          "var_id": 300,
+          "colname": "EFTERNAMN",
+          "varname": "Var300",
+          "year": "2021",
+          "regver_id": 2021
+        }
+      ]
+    }
+  }
+}

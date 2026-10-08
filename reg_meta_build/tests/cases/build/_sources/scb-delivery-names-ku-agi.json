@@ -1,0 +1,51 @@
+{
+  "description": "Variable 5: KU names its 2020 final (CVID 31) and its 2021 delivery (CVID 33) differently; AGI (CVID 32) is a sibling; a superseded 2020 preliminary KU edition (CVID 30) has the unit 'Olika valutor'.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "KU",
+        "cvid": 31,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020, slutlig version",
+        "regver_id": 11,
+        "vardef": "Supplied income quantity",
+        "unit": "100-tal kronor"
+      },
+      {
+        "colname": "AGI",
+        "cvid": 32,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020, slutlig version",
+        "regver_id": 11,
+        "vardef": "Supplied income quantity",
+        "unit": "100-tal kronor"
+      },
+      {
+        "colname": "KU",
+        "cvid": 33,
+        "var_id": 5,
+        "varname": "Taxable income",
+        "year": "2021",
+        "versionname": "2021",
+        "regver_id": 2021,
+        "vardef": "Supplied income quantity",
+        "unit": "100-tal kronor"
+      },
+      {
+        "colname": "KU",
+        "cvid": 30,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020, preliminär version",
+        "regver_id": 10,
+        "vardef": "Supplied income quantity",
+        "unit": "Olika valutor"
+      }
+    ]
+  }
+}

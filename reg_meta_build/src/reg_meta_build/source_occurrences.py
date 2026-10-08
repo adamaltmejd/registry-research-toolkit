@@ -41,8 +41,6 @@ class EffectiveOccurrence:
     corrections: tuple[AppliedCorrection, ...] = ()
     identity_checked: bool = False
     withheld_fields: tuple[str, ...] = ()
-    # Reviewed field changes and authored additions can override source claims.
-    checked_fields: tuple[str, ...] = ()
     use: Literal["catalog", "support"] = "catalog"
 
     @property

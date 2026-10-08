@@ -1,0 +1,18 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["subject", "locator"],
+      "rows": [
+        ["1.5.ku", "curation/registers/scb/sample.toml#/representation.delivery_metadata/1"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"variable": "ku"},
+      "fields": ["column", "valid_from", "state_name"],
+      "rows": []
+    }
+  ]
+}

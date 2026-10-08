@@ -21,6 +21,13 @@
       ]
     },
     {
+      "table": "warnings",
+      "fields": ["fields"],
+      "rows": [
+        [["data_type", "coding"]]
+      ]
+    },
+    {
       "table": "states",
       "fields": ["column", "data_type"],
       "rows": [

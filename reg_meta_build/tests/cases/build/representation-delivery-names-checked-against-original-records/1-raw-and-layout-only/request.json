@@ -1,0 +1,69 @@
+{
+  "replaces": ["test_source_curation.py::test_raw_registerinformation_whitespace_does_not_stale_clean_projection", "test_source_curation_lisa_lova.py::test_lisa_unresolved_case_ignores_layout_raw_and_unprojected_changes", "test_source_parent_facts.py::test_parent_guards_track_semantics_without_changing_variable_guards"],
+  "note": "The entry is the stay case's [[representation.delivery_metadata]] for 1.5.ku, authored from _sources/scb-delivery-names-ku-agi (that case's delivery, unchanged) and built from the changed delivery below. The stale row's subject is the entry's `variable` and its locator the entry's file, table and index, both read from the curation fixture. A stale entry withholds its decision (the replaced tests assert `decision is None`); without the checked names KU's two delivery names conflict, so KU forms no state. Allowed twin of steps 2 and 3. Values from the replaced tests: register '  TESTREG  ' vs 'TESTREG' and population '  Hela befolkningen  ' vs 'Hela befolkningen' (whitespace test), Registersyfte 'Testning ' vs 'Testning' (parent-guard test, whitespace leg), a new artifact and new physical row positions (LISA test: changed revision, row and raw cell); each asserts the case stays applicable. Applicable means no stale_curation_entry and the checked names kept: one KU state per delivery, named by its own row (CVID 31, 2020, 'Income'; CVID 33, 2021, 'Taxable income' in the fixture). The LISA test's 'unprojected description change' leg is not here: TOML records are complete projections, so a description change stales every TOML-pinned entry.",
+  "fails_if": "the SCB parent-fact cleaner `_parent_facts` (reg_meta_build/src/reg_meta_build/sources/scb_records.py) keeps the raw Registersyfte cell instead of `normalize_text` of it, so the purpose's trailing space differs from the authored parent facts and the entry goes stale. (Keeping the padded register or population name raw instead fails this step earlier: the resolved catalog refuses an untrimmed name.)",
+  "sources": {
+    "description": "The stay delivery with only raw and layout changes: rows in reverse order, the register and population names padded with spaces and the register purpose (Registersyfte) with a trailing space.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "KU",
+          "cvid": 30,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020, preliminär version",
+          "regver_id": 10,
+          "vardef": "Supplied income quantity",
+          "unit": "Olika valutor",
+          "register": ["  TESTREG  ", 1, 10],
+          "population_name": "  Hela befolkningen  ",
+          "cells": {"Registersyfte": "Testning "}
+        },
+        {
+          "colname": "KU",
+          "cvid": 33,
+          "var_id": 5,
+          "varname": "Taxable income",
+          "year": "2021",
+          "versionname": "2021",
+          "regver_id": 2021,
+          "vardef": "Supplied income quantity",
+          "unit": "100-tal kronor",
+          "register": ["  TESTREG  ", 1, 10],
+          "population_name": "  Hela befolkningen  ",
+          "cells": {"Registersyfte": "Testning "}
+        },
+        {
+          "colname": "AGI",
+          "cvid": 32,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020, slutlig version",
+          "regver_id": 11,
+          "vardef": "Supplied income quantity",
+          "unit": "100-tal kronor",
+          "register": ["  TESTREG  ", 1, 10],
+          "population_name": "  Hela befolkningen  ",
+          "cells": {"Registersyfte": "Testning "}
+        },
+        {
+          "colname": "KU",
+          "cvid": 31,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020, slutlig version",
+          "regver_id": 11,
+          "vardef": "Supplied income quantity",
+          "unit": "100-tal kronor",
+          "register": ["  TESTREG  ", 1, 10],
+          "population_name": "  Hela befolkningen  ",
+          "cells": {"Registersyfte": "Testning "}
+        }
+      ]
+    }
+  },
+  "authored_from": "scb-delivery-names-ku-agi"
+}

@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_source_scope_partitions.py::test_pooled_variant_dependency_withholds_only_its_panel_axis"],
+  "note": "value delivers supported 2019/2021 states in variant people but only a rangeless pooled edition in variant others (CVID 1024), which is an unsupported occurrence; so value stays available while its others states are withheld. Both variants name value as their panel entity key and 'period' as their time key. From the old test: the withheld dependency is exactly ('variant_states', value, the pooled variant), caused by the pooled row alone (refs == (second,)); the supported variant keeps panel_entity_key value, the pooled variant's entity key is cleared, and its panel_time_key 'period' stays. The pruning surfaces as one withheld_catalog_dependency issue on the pooled variant's panel_entity_key output citing that row (CVID 1024 from the fixture). Unlike dependency-withheld-variable-prunes-its-dependents, the variable itself is never withheld here.",
+  "fails_if": "`resolve_panel_dependencies` (catalog_dependencies.py) requires only the ('variable', ...) parent and no longer checks the ('variant_states', fqid, variant) key, so others keeps panel_entity_key value; or it clears the key on every variant of a variable with any withheld variant, so people loses it too",
+  "sources": "scb-coverage-claims"
+}

@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_catalog_dependency_withholding.py::test_group_with_fewer_than_two_members_is_explicitly_withheld[slugs0]"],
+  "note": "The [one-key] case: group (value, key) with key withheld keeps one member, so the group itself is withheld (old: no variable_groups, last diagnostic withheld_output variable_group:<register>/<key>, the cause's refs). [key-absent] (no member left) is the easier case of the same two-member rule.",
+  "fails_if": "`resolve_metadata_dependencies` (catalog_dependencies.py) writes a group once its parent resolves, without the `len(members) >= 2` check, so the pair group is built with value alone",
+  "sources": "scb-withheld-key-and-gone"
+}

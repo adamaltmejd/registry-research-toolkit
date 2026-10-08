@@ -1,0 +1,10 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "edges",
+      "fields": ["type", "a", "b"],
+      "rows": []
+    }
+  ]
+}

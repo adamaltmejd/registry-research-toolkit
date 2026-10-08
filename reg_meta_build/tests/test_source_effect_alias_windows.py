@@ -5,7 +5,6 @@ from __future__ import annotations
 from contextlib import closing
 from typing import TYPE_CHECKING
 
-import pytest
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
@@ -71,50 +70,6 @@ def _search_alias_fixture():
     )
 
 
-def test_search_alias_is_guarded_metadata_without_added_availability(
-    tmp_path: Path,
-) -> None:
-    record, case, variable, key, variants = _search_alias_fixture()
-    result = apply_alias_cases(
-        (record,), (case,), variables={key: variable}, variants=variants
-    )
-    assert result.diagnostics == ()
-    updated = result.variables[key]
-    assert updated is not None and updated.states == variable.states
-    assert [
-        (alias.delivery_column_name, alias.windows) for alias in updated.aliases
-    ] == [("ALTERNATIVE", ())]
-    output = tmp_path / "aliases.db"
-    write_resolved_catalog((updated,), output, manifest=synthetic_manifest())
-    with closing(open_built_db(output)) as conn:
-        assert (
-            conn.execute(
-                "SELECT delivery_column_name FROM variable_alias WHERE delivery_column_name='ALTERNATIVE'"
-            ).fetchone()[0]
-            == "ALTERNATIVE"
-        )
-        assert (
-            conn.execute("SELECT count(*) FROM variable_alias_window").fetchone()[0]
-            == 0
-        )
-        assert conn.execute("SELECT count(*) FROM variable_state").fetchone()[0] == 1
-    same = apply_alias_cases(
-        (_record(column=" VALUE "),),
-        (case,),
-        variables={key: variable},
-        variants=variants,
-    )
-    assert same.diagnostics == () and same.variables == result.variables
-    stale = apply_alias_cases(
-        (record, _record(cvid=21, column="VALUE", year="2021")),
-        (case,),
-        variables={key: variable},
-        variants=variants,
-    )
-    assert stale.variables[key] == variable
-    assert stale.evaluations[0].status == "stale"
-
-
 def test_search_alias_preserves_existing_precise_windows() -> None:
     record, case, variable, key, variants = _search_alias_fixture()
     alias = ResolvedAlias(
@@ -127,23 +82,6 @@ def test_search_alias_preserves_existing_precise_windows() -> None:
         (record,), (case,), variables={key: variable}, variants=variants
     )
     assert result.diagnostics == () and result.variables[key] == variable
-
-
-def test_search_alias_distinguishes_withheld_dependencies_from_missing_conversion() -> (
-    None
-):
-    record, case, variable, key, variants = _search_alias_fixture()
-    withheld = apply_alias_cases(
-        (record,), (case,), variables={key: None}, variants=variants
-    )
-    assert withheld.variables[key] is None
-    assert [issue.code for issue in withheld.diagnostics] == [
-        "withheld_alias_dependency"
-    ]
-    assert withheld.evaluations[0].status == "applicable"
-    for variables, parents in (({}, variants), ({key: variable}, {})):
-        with pytest.raises(ValueError, match="unconverted"):
-            apply_alias_cases((record,), (case,), variables=variables, variants=parents)
 
 
 def _window_case(
@@ -265,44 +203,6 @@ def test_alias_window_checks_original_ownership_and_complete_period_coverage() -
     assert result.variables[key] == gap
 
 
-def test_overlapping_alias_windows_compose_with_scoped_provenance_and_stale_guards() -> (
-    None
-):
-    record, search, variable, key, variants = _search_alias_fixture()
-    variant_key, variant = next(iter(variants.items()))
-    owned = variable.model_copy(
-        update={
-            "aliases": (
-                ResolvedAlias(variant=variant, delivery_column_name="ALTERNATIVE"),
-            )
-        }
-    )
-    first = _window_case(search, key, variant_key, name="first")
-    second = _window_case(
-        search, key, variant_key, start="2020-04-01", end="2020-05-31", name="second"
-    )
-    result = apply_alias_cases(
-        (record,), (first, second), variables={key: owned}, variants=variants
-    )
-    assert result == apply_alias_cases(
-        (record,), (second, first), variables={key: owned}, variants=variants
-    )
-    updated = result.variables[key]
-    assert updated is not None and result.diagnostics == ()
-    windows = updated.aliases[0].windows
-    assert [(w.valid_from, w.valid_to) for w in windows] == [
-        ("2020-03-01", "2020-03-31"),
-        ("2020-04-01", "2020-04-30"),
-        ("2020-05-01", "2020-05-31"),
-    ]
-    assert windows[1].provenance is not None
-    assert "first:" in windows[1].provenance and "second:" in windows[1].provenance
-    stale = apply_alias_cases(
-        (_record(column="OTHER"),), (first,), variables={key: owned}, variants=variants
-    )
-    assert stale.variables[key] == owned and stale.evaluations[0].status == "stale"
-
-
 def test_alias_window_rejects_another_supported_owner_in_the_same_period() -> None:
     record, search, variable, key, variants = _search_alias_fixture()
     variant_key, variant = next(iter(variants.items()))
@@ -394,30 +294,3 @@ def test_competing_alias_window_decisions_withhold_only_their_overlap() -> None:
         for v in (result.variables[key], result.variables[other_key])
         if v is not None
     ] == [[("2020-03-01", "2020-03-31")], [("2020-05-01", "2020-05-31")]]
-
-
-def test_dated_alias_window_cannot_annualize_independent_delivery():
-    record, search, variable, key, variants = _search_alias_fixture()
-    variant_key = next(iter(variants))
-    independent = variable.model_copy(
-        update={
-            "states": tuple(
-                state.model_copy(
-                    update={
-                        "period_scope": "year_independent",
-                        "valid_from": None,
-                        "valid_to": None,
-                    }
-                )
-                for state in variable.states
-            )
-        }
-    )
-    result = apply_alias_cases(
-        (record,),
-        (_window_case(search, key, variant_key),),
-        variables={key: independent},
-        variants=variants,
-    )
-    assert result.variables[key] == independent
-    assert [issue.code for issue in result.diagnostics] == ["unsupported_alias_scope"]

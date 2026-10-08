@@ -14,6 +14,14 @@
       "fields": ["variable", "column"],
       "match": "set",
       "rows": []
+    },
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": [
+        ["stale_curation_entry"],
+        ["unresolved_catalog_identity"]
+      ]
     }
   ]
 }

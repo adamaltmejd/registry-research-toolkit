@@ -1,0 +1,10 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_curation.py::test_an_acknowledgement_names_its_issue_and_pins_no_source_members",
+  "fails_if": "the [[acknowledge]] entry model in reg_meta_build/src/reg_meta_build/curation_tree.py stops running `_require_trimmed` on `evidence`, so an acknowledgement with blank evidence loads",
+  "note": "The replaced test refused an AcknowledgeDecision whose evidence is \" \" (blank). At the TOML boundary the entry's own trimmed-text check refuses it first; the decision-level check is never reached. The file is acknowledge-untrimmed-field-refused's with its `fields` made valid and evidence = \" \", so the blank evidence is the only defect. The locator is the file, the pydantic path (acknowledge.evidence) and the entry index (1). The replaced test's other legs (an acknowledge case with targets or a case-level evidence pin) are unreachable: curation_compile builds acknowledge cases with targets=() and puts the pin on the decision. Allowed twin: cases/build/acknowledge-guarded-by-its-unchanged-original-rows, whose entry with non-blank evidence loads and acknowledges its issue.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[acknowledge.evidence]] entry 1"
+  }
+}

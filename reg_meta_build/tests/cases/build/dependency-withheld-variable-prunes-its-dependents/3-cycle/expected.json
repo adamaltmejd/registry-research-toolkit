@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "replaced_by_cycle",
+    "message_contains": ["scb/sample/key", "scb/sample/gone"]
+  }
+}

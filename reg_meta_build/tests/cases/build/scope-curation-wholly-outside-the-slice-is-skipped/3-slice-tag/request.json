@@ -1,0 +1,8 @@
+{
+  "replaces": ["test_catalog_dependency_withholding.py::test_a_tag_whose_members_all_lie_outside_the_slice_is_omitted"],
+  "note": "In a slice of register 1, a tag whose every member lies in the unselected register is skipped and not written at all, not written empty (old: metadata.tags == (), skipped == 1, no diagnostics); a tag with a selected member stays.",
+  "fails_if": "`resolve_metadata_dependencies` (catalog_dependencies.py) appends a tag even when its entry was skipped (drops `if dependencies.skipped > skipped_before: continue`), so an empty 'outside' tag is written",
+  "sources": "scb-two-registers",
+  "registers": ["1"],
+  "diagnostic": false
+}

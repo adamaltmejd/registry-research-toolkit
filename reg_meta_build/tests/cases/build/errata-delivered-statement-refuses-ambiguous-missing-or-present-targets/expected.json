@@ -1,0 +1,33 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
+      "fields": ["code", "detail"],
+      "rows": [
+        ["overbroad_curation_entry", "curation/registers/scb/sample.toml#/errata.delivered/1: ambiguous_documented_column_identity"],
+        ["stale_curation_entry", "curation/registers/scb/sample.toml#/errata.delivered/2: native_variable_id_not_documented_for_column"],
+        ["stale_curation_entry", "curation/registers/scb/sample.toml#/errata.delivered/3: now_present:2020"],
+        ["stale_curation_entry", "curation/registers/scb/sample.toml#/errata.delivered/4: now_present:2020"],
+        ["stale_curation_entry", "curation/registers/scb/sample.toml#/errata.delivered/5: unsupported_storage_header"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"valid_from": "2020-01-01", "column": ["AMB", "MISS", "ADDW"]},
+      "fields": ["variable", "column"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "valid_from": "2020-01-01",
+        "column": ["NOW", "ADDN"],
+        "provenance": {"contains": "errata:"}
+      },
+      "fields": ["variable", "column"],
+      "rows": []
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "replaces": ["test_source_scope_acknowledgements.py::test_guarded_support_acknowledgement_pins_unattached_originals[flag]"],
+  "note": "The entry's evidence hash is authored from scb-two-registers-unknown-support; the build reads the same export with TESTREG's summary now declaring an identifier (last Unika cell 1). The flag is outside the summary's semantic key, so the ref is unchanged. The subject names the BUILT file's revision id (the one the issue now carries; copied, as no placeholder renders it inside the subject string), so the entry still matches its issue and only the evidence guard differs: with the authored revision it would match no issue and go stale whatever the guard does. From the old test (change='flag'): nothing is acknowledged and the entry is stale. Allowed twin: step 1, the same entry over the unchanged summary, which acknowledges the issue.",
+  "fails_if": "`acknowledgement_evidence_sha256` (source_curation.py) stops hashing a record's source fields (for example it hashes only the record refs), so the guarded summary row's flipped Identitetsvariabel leaves the entry's pin matching and register 1's summary issue is acknowledged",
+  "authored_from": "scb-two-registers-unknown-support",
+  "sources": {
+    "description": "scb-two-registers-unknown-support, with TESTREG's blank-column Unika summary now declaring an identifier.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {
+          "cvid": 2001,
+          "var_id": 201,
+          "colname": "OTHER",
+          "varname": "OtherVar",
+          "register": ["OTHERREG", 2, 20]
+        }
+      ],
+      "unika": ["TESTREG|Testregistret|Individer|Individer|GenericVar||2020|2020|0|0|1", "OTHERREG|Testregistret|Individer|Individer|OtherVar||2020|2020|0|0|0"]
+    }
+  }
+}

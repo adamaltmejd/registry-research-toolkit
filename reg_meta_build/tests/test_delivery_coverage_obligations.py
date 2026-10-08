@@ -1,4 +1,14 @@
-"""Delivery coverage obligations refuse unexplained changes to claimed delivery facts and coverage."""
+"""Delivery coverage obligations refuse unexplained changes to claimed delivery facts and coverage.
+
+Kept as unit tests of the public, pure ``check_delivery_coverage`` by maintainer
+decision (#1267). No boundary reaches these refusals: each obligation is minted
+from the same segment the writer turns into the written state
+(``source_formation.form_native_variable``), so only a product defect can make a
+written state disagree with its claim. The former pipeline witnesses had to
+monkeypatch ``_coded_states`` and were deleted in #1158. Each test states the
+damaged written catalog as input and the refusal it must raise; the allowed side
+is pinned by ``cases/build/coverage-*`` and ``dependency-*``.
+"""
 
 import pytest
 from _catalog_dependency_support import cause as _cause, variable as _variable
@@ -61,35 +71,13 @@ def _fact_variable(
     return variable.model_copy(update={"states": (state,), "aliases": ()})
 
 
-def test_delivery_facts_retype_is_refused_with_claimed_and_written():
-    obligation = _fact_obligation(attributions=())
-    check_delivery_coverage((_fact_variable(),), (obligation,), withheld={})
-    damaged = _fact_variable(data_type="text")
-    with pytest.raises(
-        ValueError,
-        match="supported delivery facts changed without an explicit source outcome",
-    ) as failure:
-        check_delivery_coverage((damaged,), (obligation,), withheld={})
-    message = str(failure.value)
-    assert "scb/example/value people/VALUE 2020-01-01..2020-12-31" in message
-    assert "claimed data_type='integer' written 'text'" in message
-    assert "fixture/key" in message
-
-
-def test_delivery_facts_length_mismatch_is_refused():
-    obligation = _fact_obligation(attributions=())
-    with pytest.raises(
-        ValueError, match="claimed data_length='1' written '0'"
-    ) as failure:
-        check_delivery_coverage(
-            (_fact_variable(data_length="0"),), (obligation,), withheld={}
-        )
-    assert "supported delivery facts changed without an explicit source outcome" in str(
-        failure.value
-    )
-
-
 def test_delivery_facts_attributions_require_exact_provenance_elements():
+    """A claimed correction must remain an exact blank-line-separated provenance element.
+
+    Input: provenance "correction:one-extended" or none against the claimed
+    "correction:one". Refusal: "claimed attributions". Fails if the guard matches
+    attributions by substring, or skips them when provenance is empty.
+    """
     obligation = _fact_obligation()
     check_delivery_coverage(
         (_fact_variable(provenance="correction:one\n\ncomment"),),
@@ -113,6 +101,12 @@ def test_delivery_facts_attributions_require_exact_provenance_elements():
 
 
 def test_delivery_facts_shared_state_behind_alias_window_is_checked():
+    """An alias window's claim is checked against the shared state behind it.
+
+    Input: the First state behind Second's 2020-07..12 window retyped to text.
+    Refusal: facts changed, naming people/Second. Fails if alias-window claims
+    are accepted without comparing the backing state's facts.
+    """
     variant = ResolvedVariant(slug="people", name="People")
     shared = (
         _fact_variable().states[0].model_copy(update={"delivery_column_name": "First"})
@@ -152,6 +146,14 @@ def test_delivery_facts_shared_state_behind_alias_window_is_checked():
 
 
 def test_delivery_facts_unknown_claim_is_never_compared():
+    """No claim is never compared; a present claim always is.
+
+    Input: unknown (None) claims against any written facts, direct or behind an
+    alias, and a withheld variable. Allowed. Then a present length claim "0"
+    against a written "1". Refusal: "claimed data_length='0' written '1'". Fails
+    if a None claim is compared, if a withheld variable is still checked, or if
+    the length comparison is dropped.
+    """
     unknown = _fact_obligation(
         data_type_claim=None, data_length_claim=None, attributions=()
     )
@@ -207,30 +209,14 @@ def test_delivery_facts_unknown_claim_is_never_compared():
         )
 
 
-def test_delivery_facts_negative_claim_requires_absent_written_facts():
-    negative = _fact_obligation(
-        data_type_claim=("negative", None),
-        data_length_claim=("negative", None),
-        attributions=(),
-    )
-    check_delivery_coverage(
-        (_fact_variable(data_type=None, data_length=None, provenance=None),),
-        (negative,),
-        withheld={},
-    )
-    with pytest.raises(
-        ValueError,
-        match="supported delivery facts changed without an explicit source outcome",
-    ) as failure:
-        check_delivery_coverage(
-            (_fact_variable(data_type="integer", data_length="0", provenance=None),),
-            (negative,),
-            withheld={},
-        )
-    assert "negative source claim" in str(failure.value)
-
-
 def test_delivery_facts_backfilled_absent_length_is_refused():
+    """A negative claim refuses a fact backfilled from a neighbouring state.
+
+    Input: a 2021 state carrying 2020's type and length where 2021 claims
+    negative (absent) facts. Refusal: facts changed, "negative source claim",
+    naming 2021. The honest twin with absent facts passes. Fails if a negative
+    claim is treated as no claim.
+    """
     base = _fact_variable(data_type="integer", data_length="0", provenance=None)
     first = base.states[0]
     leaked = first.model_copy(
@@ -272,6 +258,12 @@ def test_delivery_facts_backfilled_absent_length_is_refused():
 
 
 def test_deleted_or_truncated_shared_state_behind_alias_window_is_refused():
+    """An alias window needs a written state for its whole claimed window.
+
+    Input: the backing state deleted, or truncated to 2020-09-30. Refusal: "no
+    written state carries the claimed facts for" the exact missing window. Fails
+    if an alias window counts as delivery without a backing state.
+    """
     variant = ResolvedVariant(slug="people", name="People")
     shared = (
         _fact_variable().states[0].model_copy(update={"delivery_column_name": "First"})
@@ -328,6 +320,12 @@ def test_deleted_or_truncated_shared_state_behind_alias_window_is_refused():
 
 
 def test_overlapping_backing_states_behind_alias_window_are_refused():
+    """Two overlapping backing states make the alias backing ambiguous.
+
+    Input: First and Extra both cover the Second window. Refusal: "alias backing
+    is ambiguous: 2 states of variant people overlap ...". Fails if the guard
+    picks one of the overlapping states instead of refusing.
+    """
     variant = ResolvedVariant(slug="people", name="People")
     first = (
         _fact_variable().states[0].model_copy(update={"delivery_column_name": "First"})
@@ -372,6 +370,14 @@ def test_overlapping_backing_states_behind_alias_window_are_refused():
 
 
 def test_delivery_fact_change_in_diagnostic_mode_returns_an_error_diagnostic():
+    """A retyped state is refused in strict mode and reported in diagnostic mode.
+
+    Input: the written type "text" against the claimed "integer". Strict: raises
+    "supported delivery facts changed ..." naming the coordinate, the claim and
+    the source ref. Diagnostic: one ``unexplained_delivery_fact_change`` error
+    with the obligation's refs and the same text. Fails if either mode drops the
+    type comparison or the diagnostic loses its code, severity or refs.
+    """
     obligation = _fact_obligation(attributions=())
     assert (
         check_delivery_coverage(
@@ -403,6 +409,14 @@ def test_delivery_fact_change_in_diagnostic_mode_returns_an_error_diagnostic():
 
 
 def test_delivery_coverage_loss_in_diagnostic_mode_returns_an_error_diagnostic():
+    """Lost coverage is refused in strict mode and reported in diagnostic mode.
+
+    Input: the 2020 state truncated to 2020-06-30. Strict: raises "supported
+    delivery coverage was lost ..." with the lost window. Diagnostic: one
+    ``unexplained_delivery_coverage_loss`` error. A claim-free obligation owes its
+    window too; a withheld variable owes nothing. Fails if the loss check is gated
+    on fact claims, or if withheld variables are still checked.
+    """
     obligation = _fact_obligation(attributions=())
     state = _fact_variable().states[0].model_copy(update={"valid_to": "2020-06-30"})
     truncated = _fact_variable().model_copy(update={"states": (state,)})
@@ -457,6 +471,13 @@ def test_delivery_coverage_loss_in_diagnostic_mode_returns_an_error_diagnostic()
 
 
 def test_year_independent_delivery_proof_compares_exact_column_facts_without_calendar_coverage():
+    """A year-independent claim is met only by a year-independent state.
+
+    Input: a dated state, another column, or a dated claim against the
+    independent state. Refusal: "coverage was lost"; a changed type: "facts
+    changed". No build-case source delivers year-independent states (LISA only).
+    Fails if calendar coverage stands in for a year-independent claim.
+    """
     variant = ResolvedVariant(slug="birth", name="Birth")
     dated = _variable(variant)
     independent = dated.model_copy(
@@ -512,17 +533,18 @@ def test_year_independent_delivery_proof_compares_exact_column_facts_without_cal
     )
     with pytest.raises(ValueError, match="facts changed"):
         check_delivery_coverage((wrong_fact,), (claim,), withheld={})
-    from reg_meta_build.catalog_dependencies import variable_dependency_keys
-
-    keys = variable_dependency_keys(independent)
-    assert ("independent_state", "scb/example/value", "birth", "value", "") in keys
-    assert not any(key[0] == "state" for key in keys)
 
 
-@pytest.mark.parametrize(
-    "damage", [None, "missing", "domain", "version", "common", "classified"]
-)
+@pytest.mark.parametrize("damage", [None, "missing", "domain", "common", "classified"])
 def test_per_column_alias_coding_preserves_exact_delivery_claims(damage):
+    """Per-column coding windows must carry exactly their claimed value sets.
+
+    Input: an undamaged pair (allowed); a window without a value set, a window
+    with the other column's domain, or a backing state that carries its own
+    value set or classification. Refusal: "supported delivery facts changed".
+    Fails if per-column windows skip the coding claim or accept a classified
+    or coded backing state.
+    """
     from dataclasses import replace
 
     variant = ResolvedVariant(slug="people", name="People")
@@ -549,15 +571,13 @@ def test_per_column_alias_coding_preserves_exact_delivery_claims(damage):
         )
         for domain, version in ((first, "First question"), (second, "Second question"))
     )
-    if damage in {"missing", "domain", "version"}:
+    if damage in {"missing", "domain"}:
         windows = (
             windows[0],
             windows[1].model_copy(
                 update={"value_set": None}
                 if damage == "missing"
                 else {"value_set": first}
-                if damage == "domain"
-                else {"value_set_version_label": "Changed"}
             ),
         )
     elif damage == "common":
