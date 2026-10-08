@@ -27,6 +27,7 @@ from reg_meta_build.pipeline import load_search_pins  # tests skip private _cura
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
+    ResolvedEdition,
     ResolvedVariable,
     write_resolved_catalog,
 )
@@ -407,10 +408,17 @@ def _build_artifact(
         if warning_source.exists()
         else ()
     )
+    edition_source = source / "editions.json"
     write_resolved_catalog(
         variables,
         path,
         manifest=identity,
+        editions=tuple(
+            ResolvedEdition.model_validate_json(json.dumps(value))
+            for value in json.loads(edition_source.read_text())
+        )
+        if edition_source.exists()
+        else (),
         classifications=classifications,
         classification_successions=successions,
         metadata=metadata,

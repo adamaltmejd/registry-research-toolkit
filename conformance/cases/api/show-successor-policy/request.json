@@ -1,0 +1,12 @@
+{
+  "note": "The last request walks retired pre-split to its terminal, the live scb/beta/fodland, which itself splits: it fails if refs check only the ref's own successors for a split, not the terminal's (`refs.rs` `successor`, the `end != start` branch).",
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/scb/alpha/split"},
+    {"operation": "show", "path": "/api/catalog/scb/alpha/later"},
+    {"operation": "show", "path": "/api/catalog/scb/beta/kon"},
+    {"operation": "show", "path": "/api/catalog/scb/alpha/sex"},
+    {"operation": "show", "path": "/api/catalog/scb/alpha/pre-split"}
+  ]
+}

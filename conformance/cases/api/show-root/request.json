@@ -1,0 +1,7 @@
+{
+  "requests": [
+    {"operation": "show", "path": "/api/catalog"},
+    {"operation": "show", "path": "/api/catalog", "query": {"scope": "reference"}},
+    {"operation": "show", "path": "/api/catalog", "query": {"ref": "scb"}}
+  ]
+}

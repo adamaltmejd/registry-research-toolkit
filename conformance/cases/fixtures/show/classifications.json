@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "icd-9",
+    "short_name": "ICD-9",
+    "name": "Diagnoses, edition 9",
+    "codes": [{"code": "A1", "label": "Old"}]
+  },
+  {
+    "slug": "icd-10",
+    "short_name": "ICD-10",
+    "name": "Diagnoses, edition 10",
+    "codes": [{"code": "A1", "label": "New"}]
+  },
+  {
+    "slug": "ks87-p",
+    "short_name": "KS87-P",
+    "name": "Diagnoses, primary care setting",
+    "codes": [{"code": "A1", "label": "Primary"}]
+  },
+  {
+    "slug": "sunx-a",
+    "short_name": "SUNX-A",
+    "name": "Education, level",
+    "codes": [{"code": "1", "label": "Level 1"}]
+  },
+  {
+    "slug": "sunx-b",
+    "short_name": "SUNX-B",
+    "name": "Education, field",
+    "codes": [{"code": "1", "label": "Field 1"}]
+  }
+]

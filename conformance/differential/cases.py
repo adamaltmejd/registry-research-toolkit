@@ -117,6 +117,11 @@ def _sample(rng: random.Random, rows: list, k: int) -> list:
     return rows if len(rows) <= k else sorted(rng.sample(rows, k))
 
 
+def seeded_sample(seed: int, catalog: str, purpose: str, rows: list, k: int) -> list:
+    """``k`` of ``rows`` (all when fewer), drawn as every sample here is."""
+    return _sample(_rng(seed, catalog, purpose), rows, k)
+
+
 def _connect(db_dir: Path, name: str = "reg_meta.db") -> sqlite3.Connection:
     return sqlite3.connect(f"file:{db_dir / name}?mode=ro&immutable=1", uri=True)
 

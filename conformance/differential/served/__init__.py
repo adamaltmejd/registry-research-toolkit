@@ -10,22 +10,30 @@ cases' result form (``exit``, ``stdout``, ``stderr``).
 - ``search``: each ``type``'s pages per scope and term.
 - ``docs``: ``docs_get`` per document, ``docs_related`` per register with documents,
   and each related document's download.
+- ``show``: every catalog node kind per named scope, retired refs, and owning
+  variables against the CLI baseline.
+
+``show``'s ``cases`` also takes ``baseline_cli``, a future of the CLI arm's baseline
+results by case id, set once the CLI arms finish, so it compares with a CLI baseline
+case instead of running it again.
 """
 
 from __future__ import annotations
 
 import json
 import shlex
+import time
 from typing import TYPE_CHECKING
 
 from conformance.differential.cache import REPO_ROOT
-from conformance.differential.served import context, docs, search
+from conformance.differential.served import context, docs, search, show
 from conformance.http_cases import ServerPool
 
 if TYPE_CHECKING:
+    from concurrent.futures import Future
     from pathlib import Path
 
-FAMILIES = (context, search, docs)
+FAMILIES = (context, search, docs, show)
 # The production rate limit (30 writes per minute) does not bind GETs. Eight worker
 # processes, since one Python process serves one search at a time (G1 budget).
 BASELINE_APP = (
@@ -50,6 +58,7 @@ def served_cases(
     originals: dict[str, Path],
     derived: dict[str, Path],
     log_dir: Path,
+    baseline_cli: Future[dict[str, dict]],
 ) -> list[tuple[str, dict, dict]]:
     """``(case id, baseline result, checkout result)`` for every served case."""
     for arm in ("baseline", "rust"):
@@ -90,12 +99,25 @@ def served_cases(
             )
             scopes = [None, "reference"] + (["holdings"] if catalog != "global" else [])
             for family in FAMILIES:
-                for key, expected, actual in family.cases(
-                    base, cand, catalog, scopes, originals[catalog]
-                ):
-                    cases.append(
-                        (f"{catalog}/{key}", _result(expected), _result(actual))
-                    )
+                started = time.monotonic()
+                args = (base, cand, catalog, scopes, originals[catalog])
+                found = (
+                    show.cases(*args, baseline_cli)
+                    if family is show
+                    else family.cases(*args)
+                )
+                cases += [
+                    (f"{catalog}/{key}", _result(expected), _result(actual))
+                    for key, expected, actual in found
+                ]
+                # Wall time per family (G1 budget); a family that waits on
+                # `baseline_cli` includes the wait.
+                name = family.__name__.rpartition(".")[2]
+                print(
+                    f"served {catalog} {name}: {len(found)} cases in "
+                    f"{time.monotonic() - started:.1f} s",
+                    flush=True,
+                )
     finally:
         baseline.close()
         rust.close()

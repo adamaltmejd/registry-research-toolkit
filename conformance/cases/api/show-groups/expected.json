@@ -1,0 +1,32 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "concept_group",
+      "/data/fqid": "group/scb/example/value-family",
+      "/data/register": "scb/example",
+      "/data/key": "value-family",
+      "/data/label": "Value family",
+      "/data/source": "curated",
+      "/data/axes": [],
+      "/data/members/*/fqid": ["scb/example/value"],
+      "/data/members/*/delivery_column": ["value"],
+      "/data/tags": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/members/*/delivery_column": [null, "Secondhidden", "Secret", "value"],
+      "/data/tags/*/slug": ["hidden-sibling"]
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "group/scb/example/nope"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "group/class/nope"}
+  }
+]

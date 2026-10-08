@@ -1,0 +1,14 @@
+{
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/K%C3%B6n"},
+    {"operation": "show", "path": "/api/catalog/%C3%85lder"},
+    {"operation": "show", "path": "/api/catalog/ICD-10"},
+    {"operation": "show", "path": "/api/catalog/beta"},
+    {"operation": "show", "path": "/api/catalog/Nothing%20here"},
+    {"operation": "show", "path": "/api/catalog/scb/Alpha"},
+    {"operation": "show", "path": "/api/catalog/group/scb"},
+    {"operation": "show", "path": "/api/catalog/scb", "query": {"scope": "holdings"}}
+  ]
+}

@@ -41,7 +41,7 @@ import threading
 import time
 import tomllib
 from collections import Counter
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 
 from conformance.differential import cache, cases, folds, served
@@ -174,7 +174,10 @@ def run(config: dict) -> int:
     report_dir = cache.cache_root() / "report"
     shutil.rmtree(report_dir, ignore_errors=True)
     all_cases = cases.generate(dirs, config, report_dir / "projects")
-    # The served cases run beside the CLI arms (G1 budget).
+    # The served cases run beside the CLI arms (G1 budget); a family that compares
+    # with a CLI baseline case waits for `baseline_cli`, set when the arms finish.
+    baseline_cli: Future[dict[str, dict]] = Future()
+    baseline_results: dict[str, dict] = {}
     with ThreadPoolExecutor(1) as served_pool:
         served_future = served_pool.submit(
             served.served_cases,
@@ -184,66 +187,74 @@ def run(config: dict) -> int:
             dirs,
             derived,
             report_dir / "servers",
+            baseline_cli,
         )
 
-        # Half the cores per arm; both arms run at once.
-        workers = max(1, (os.cpu_count() or 2) // 2)
-        arms = {
-            "baseline": (
-                [str(baseline_python), "-I"],
-                cache.isolated_env(),
-                {},
-            ),
-            "checkout": (
-                [sys.executable, "-P"],
-                dict(os.environ),
-                {str(dirs[c]): str(derived[c]) for c in dirs},
-            ),
-        }
-        done: queue.Queue = queue.Queue()
-        threads = []
-        for arm, (python, env, db_dirs) in arms.items():
-            todo: queue.Queue = queue.Queue()
-            # Holdings-scope cases hold the slowest reads; queue them first so they
-            # do not form the tail.
-            for case in sorted(all_cases, key=lambda c: "/holdings/" not in c.id):
-                todo.put(case)
-            for _ in range(workers):
-                t = threading.Thread(
-                    target=_worker,
-                    args=(python, env, db_dirs, todo, done, arm),
-                    daemon=True,
-                )
-                t.start()
-                threads.append(t)
+        # A failure in the CLI arms still releases the served thread, so the pool
+        # exit cannot hang on it.
+        try:
+            # Half the cores per arm; both arms run at once.
+            workers = max(1, (os.cpu_count() or 2) // 2)
+            arms = {
+                "baseline": (
+                    [str(baseline_python), "-I"],
+                    cache.isolated_env(),
+                    {},
+                ),
+                "checkout": (
+                    [sys.executable, "-P"],
+                    dict(os.environ),
+                    {str(dirs[c]): str(derived[c]) for c in dirs},
+                ),
+            }
+            done: queue.Queue = queue.Queue()
+            threads = []
+            for arm, (python, env, db_dirs) in arms.items():
+                todo: queue.Queue = queue.Queue()
+                # Holdings-scope cases hold the slowest reads; queue them first so they
+                # do not form the tail.
+                for case in sorted(all_cases, key=lambda c: "/holdings/" not in c.id):
+                    todo.put(case)
+                for _ in range(workers):
+                    t = threading.Thread(
+                        target=_worker,
+                        args=(python, env, db_dirs, todo, done, arm),
+                        daemon=True,
+                    )
+                    t.start()
+                    threads.append(t)
 
-        pending: dict[str, dict[str, dict]] = {}
-        differences: list[dict] = []
-        compared: Counter[str] = Counter()
-        seconds: Counter[str] = Counter()
-        finished = 0
-        while finished < len(threads):
-            arm, result = done.get()
-            if result is None:
-                finished += 1
-                continue
-            slot = pending.setdefault(result["id"], {})
-            slot[arm] = result
-            if len(slot) == 2:
-                del pending[result["id"]]
-                command = result["id"].split("/")[2]
-                compared[command] += 1
-                seconds[command] += slot["baseline"]["seconds"]
-                diff = compare(result["id"], slot["baseline"], slot["checkout"])
-                if diff is not None:
-                    differences.append(diff)
-        for case_id, slot in pending.items():
-            compared[case_id.split("/")[2]] += 1
-            differences.append(
-                compare(case_id, slot.get("baseline"), slot.get("checkout"))
-            )
-        for t in threads:
-            t.join()
+            pending: dict[str, dict[str, dict]] = {}
+            differences: list[dict] = []
+            compared: Counter[str] = Counter()
+            seconds: Counter[str] = Counter()
+            finished = 0
+            while finished < len(threads):
+                arm, result = done.get()
+                if result is None:
+                    finished += 1
+                    continue
+                slot = pending.setdefault(result["id"], {})
+                slot[arm] = result
+                if arm == "baseline":
+                    baseline_results[result["id"]] = result
+                if len(slot) == 2:
+                    del pending[result["id"]]
+                    command = result["id"].split("/")[2]
+                    compared[command] += 1
+                    seconds[command] += slot["baseline"]["seconds"]
+                    diff = compare(result["id"], slot["baseline"], slot["checkout"])
+                    if diff is not None:
+                        differences.append(diff)
+            for case_id, slot in pending.items():
+                compared[case_id.split("/")[2]] += 1
+                differences.append(
+                    compare(case_id, slot.get("baseline"), slot.get("checkout"))
+                )
+            for t in threads:
+                t.join()
+        finally:
+            baseline_cli.set_result(baseline_results)
         fold_sweep = folds.sweep(baseline_python, dirs)
         for case_id, base, cand in served_future.result():
             compared[case_id.split("/")[2]] += 1

@@ -1,0 +1,18 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/fqid": ["scb/example/value"],
+      "/data/variants/*/slug": ["annual"],
+      "/data/groups/*/members/*/fqid": [["scb/example/value"]]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/fqid": ["scb/example/reference", "scb/example/value"],
+      "/data/variants/*/slug": ["annual", "archive"],
+      "/data/groups/*/members/*/fqid": [["scb/example/reference", "scb/example/value"]]
+    }
+  }
+]
