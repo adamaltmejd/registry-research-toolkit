@@ -10,7 +10,7 @@
 //! catalog's branding from `DIR/<catalog>/steward.json` under `--stewards` and serves
 //! every registered operation, `/openapi.json` and MCP at `/mcp` on `--host` (default
 //! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
-//! names. `mcp` serves the MCP tools over stdio. A refusal prints the error document on
+//! names, and the edge token in `REG_META_EDGE_TOKEN` (`mcp.rs`). `mcp` serves the MCP tools over stdio. A refusal prints the error document on
 //! stderr and exits with the code's status.
 
 mod mcp;
