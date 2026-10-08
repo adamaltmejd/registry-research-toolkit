@@ -87,48 +87,6 @@ def test_acknowledgement_compiler_preserves_optional_evidence_guard(tmp_path):
         )
 
 
-def test_global_families_and_manifest_wiring_compile_for_subset(tmp_path):
-    tree = _tree(tmp_path / "curation")
-    result = compile_curation(tree, _prepared(), (_scope(),), subset=True)
-    assert [book.metadata["slug"] for book in result.fields["classifications"]] == [
-        "alpha",
-        "beta",
-    ]
-    assert [book.source for book in result.fields["classifications"]] == [
-        "classifications/alpha.csv",
-        "classifications/beta.csv",
-    ]
-    assert len(result.fields["classification_successions"]) == 1
-    metadata = result.fields["metadata"]
-    assert len(metadata.variable_groups) == 1
-    assert metadata.variable_groups[0].members[0].variable == "scb/sample/one"
-    assert len(metadata.classification_groups) == 1
-    assert len(metadata.classification_derivations) == 1
-    assert len(metadata.successions) == 1
-    assert len(metadata.variable_same_as) == 1
-    assert [member.target for member in metadata.tags[0].members] == [
-        "scb/sample/one",
-        "scb/other/one",
-    ]
-    assert len(result.fields["code_label_pairs"]) == 1
-    assert result.fields["lineage_defaults"] == (
-        ("scb/other", "people"),
-        ("scb/sample", "people"),
-    )
-    assert result.fields["identifier_sources"] == ("scb-identifierare",)
-    assert result.fields["event_sources"] == (
-        ("scb-timeseries", "scb-registerinformation"),
-    )
-    assert result.report["_subset"]["dropped"] == []
-    assert len(result.report["_classifications"]["not_evaluated_in_subset"]) == 1
-    assert (
-        "classifications/ALPHA.toml#/binding/value_set_labels/1"
-        not in result.report["_classifications"]["not_evaluated_in_subset"]
-    )
-    full = compile_curation(tree, _prepared(), (_scope(),))
-    assert full.report["_classifications"]["not_evaluated_in_subset"] == []
-
-
 def test_compilation_is_byte_identical_with_shuffled_register_order(tmp_path):
     tree = _tree(tmp_path / "curation")
     first = compile_curation(tree, _prepared(), (_scope(),))
@@ -223,14 +181,6 @@ def test_coding_register_rejects_duplicate_entry(tmp_path):
     with pytest.raises(RegMetaError) as exc:
         load_curation_tree(root)
     assert "[[coding.uncoded]] entry 2: duplicate entry" in exc.value.message
-
-
-def test_source_event_without_selected_target_reaches_scoped_resolver(tmp_path):
-    result = compile_curation(_tree(tmp_path / "curation"), _prepared(), ())
-    assert result.fields["event_sources"] == (
-        ("scb-timeseries", "scb-registerinformation"),
-    )
-    assert result.report["_subset"]["dropped"] == []
 
 
 def test_event_sources_pair_within_same_snapshot_revision(tmp_path):

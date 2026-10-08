@@ -1,0 +1,39 @@
+{
+  "replaces": [
+    "test_curation_compile_occurrence_corrections.py::test_checked_occurrence_corrections_preserve_originals_and_unselected_editions[False]"
+  ],
+  "note": "Name is one register-level fact per variable. Edition 100 already delivers 'Reviewed label'; renaming only edition 99 makes the two agree.",
+  "fails_if": "`compile_occurrence_corrections` stops applying the reviewed `[[errata.field]]` name to edition 99, so 'GenericVar' and 'Reviewed label' conflict and ANSWER forms no states",
+  "sources": {
+    "description": "Variable 5 delivers ANSWER in edition 99 (2009, CVID 20) named 'GenericVar' and in edition 100 (2017, CVID 21) named 'Reviewed label'.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "varname": "Reviewed label"
+        }
+      ]
+    }
+  }
+}

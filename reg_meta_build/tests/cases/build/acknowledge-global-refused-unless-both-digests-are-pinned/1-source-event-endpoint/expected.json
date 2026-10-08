@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "acknowledge_global_guards_missing",
+    "exit_code": 10,
+    "message_contains": [
+      "curation/registers/scb/sample.toml#/acknowledge/1"
+    ]
+  }
+}

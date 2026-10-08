@@ -1,0 +1,29 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/sample/answer"
+      },
+      "fields": [
+        "code"
+      ],
+      "match": "includes",
+      "rows": [
+        [
+          "conflicting_variable_fact"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": []
+    }
+  ]
+}

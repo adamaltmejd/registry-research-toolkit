@@ -1,3 +1,4 @@
 {
-  "damage": "damage.sql"
+  "damage": "damage.sql",
+  "derive": true
 }

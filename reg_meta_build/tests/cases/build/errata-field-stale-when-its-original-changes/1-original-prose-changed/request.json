@@ -1,0 +1,40 @@
+{
+  "replaces": [
+    "test_curation_compile_occurrence_corrections.py::test_checked_occurrence_corrections_fail_closed_on_source_changes[prose]"
+  ],
+  "fails_if": "`compile_occurrence_corrections` stops comparing the entry's `expected_fields` with the original's current prose, so the `[[errata.field]]` entry still applies",
+  "sources": {
+    "description": "CVID 20's operational definition changed after review.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "varopdef": "Changed source meaning"
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  },
+  "authored_from": "scb-answer-2009-and-2017",
+  "note": "The replaced test changed the description. Description is a register-level fact, so a changed description would stop ANSWER forming states at all; the operational definition is a delivery-level text the same prose guard covers."
+}

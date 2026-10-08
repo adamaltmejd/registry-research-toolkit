@@ -1,0 +1,40 @@
+{
+  "replaces": [
+    "test_curation_compile_delivery_metadata.py::test_disjoint_edition_splits_share_native_variant_but_not_target_edition"
+  ],
+  "note": "Beside the loader case curation_toml/identity-edition-split-edition-assigned-to-two-split-variants-refused: two splits of one native variant are allowed while their editions are disjoint, and each takes its own edition.",
+  "fails_if": "the register loader refuses a second `[[identity.edition_split]]` of the same native variant even when its editions are disjoint, or `compile_edition_splits` applies only one split per native variant",
+  "sources": {
+    "description": "Variant 2 of register 1 delivers SHARED (variable 5) in editions '2007' (CVID 20) and '2007-12-31' (CVID 21).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "SHARED",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2007",
+          "versionname": "2007",
+          "regver_id": 1,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "SHARED",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2007",
+          "versionname": "2007-12-31",
+          "regver_id": 2,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  }
+}

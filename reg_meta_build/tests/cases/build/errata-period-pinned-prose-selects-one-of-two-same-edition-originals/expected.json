@@ -1,0 +1,35 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "answer"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "data_type"
+      ],
+      "rows": [
+        [
+          "2009-01-01",
+          "2009-12-31",
+          "text"
+        ],
+        [
+          "2016-01-01",
+          "2016-12-31",
+          "integer"
+        ]
+      ]
+    }
+  ]
+}

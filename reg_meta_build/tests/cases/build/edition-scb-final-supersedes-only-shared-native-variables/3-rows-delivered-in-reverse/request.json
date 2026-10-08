@@ -1,0 +1,35 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_scb_final_supersedes_only_shared_native_variables"
+  ],
+  "note": "Prepared records keep delivery order, so this step reaches the compiler with the preliminary rows in the opposite order to step 1.",
+  "fails_if": "`compile_scb_preliminary` decides supersession from the first-delivered row of the preliminary edition (for example `preliminary[:1]`), so with OTHER's row delivered first VALUE's preliminary row (CVID 1) stays in the catalog",
+  "sources": {
+    "description": "Step 1's rows delivered in reverse order.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 3,
+          "var_id": 5,
+          "versionname": "2020, slutlig version",
+          "regver_id": 11
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 2,
+          "var_id": 6,
+          "versionname": " 2020, preliminär version ",
+          "regver_id": 10
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 1,
+          "var_id": 5,
+          "versionname": " 2020, preliminär version ",
+          "regver_id": 10
+        }
+      ]
+    }
+  }
+}

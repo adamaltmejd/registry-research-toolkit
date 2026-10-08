@@ -1,0 +1,35 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_scb_final_supersedes_only_shared_native_variables"
+  ],
+  "fails_if": "`compile_scb_preliminary` retains every row of a paired preliminary edition as support instead of only the rows whose native variable the final edition delivers, so OTHER's preliminary row (CVID 2) leaves the catalog",
+  "note": "The SCB edition-name rule: a final edition supersedes only the preliminary rows of the native variables it delivers itself, and the preliminary name is matched after trimming its delivered padding.",
+  "sources": {
+    "description": "Edition 10 is VALUE's and OTHER's ' 2020, preliminär version ' (padded as delivered); edition 11, the final, delivers only VALUE.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 1,
+          "var_id": 5,
+          "versionname": " 2020, preliminär version ",
+          "regver_id": 10
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 2,
+          "var_id": 6,
+          "versionname": " 2020, preliminär version ",
+          "regver_id": 10
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 3,
+          "var_id": 5,
+          "versionname": "2020, slutlig version",
+          "regver_id": 11
+        }
+      ]
+    }
+  }
+}

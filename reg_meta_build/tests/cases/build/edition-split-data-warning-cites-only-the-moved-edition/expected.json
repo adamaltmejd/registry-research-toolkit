@@ -1,0 +1,36 @@
+{
+  "projections": [
+    {
+      "table": "warnings",
+      "fields": [
+        "variant",
+        "column",
+        "summary",
+        "fields"
+      ],
+      "rows": [
+        [
+          "stock",
+          "SHARED",
+          "Range interpretation is unavailable",
+          [
+            "availability"
+          ]
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "fields": [
+        "refs"
+      ],
+      "rows": [
+        [
+          [
+            "scb-registerinformation#register:1/variant:2/edition:2/variable:5/member:21"
+          ]
+        ]
+      ]
+    }
+  ]
+}

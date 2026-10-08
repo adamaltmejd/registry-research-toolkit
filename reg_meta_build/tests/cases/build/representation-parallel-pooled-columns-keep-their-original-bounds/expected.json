@@ -1,0 +1,61 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": [
+        "code"
+      ],
+      "rows": []
+    },
+    {
+      "table": "uses",
+      "where": {
+        "source": "scb-registerinformation"
+      },
+      "fields": [
+        "column_name",
+        "key",
+        "use",
+        "variable"
+      ],
+      "rows": [
+        [
+          "First",
+          "member:100",
+          "catalog",
+          "scb/sample/income"
+        ],
+        [
+          "Second",
+          "member:101",
+          "catalog",
+          "scb/sample/income"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2021-12-31"
+        ],
+        [
+          "2022-01-01",
+          "2022-12-31"
+        ],
+        [
+          "2023-01-01",
+          "2024-12-31"
+        ]
+      ]
+    }
+  ]
+}

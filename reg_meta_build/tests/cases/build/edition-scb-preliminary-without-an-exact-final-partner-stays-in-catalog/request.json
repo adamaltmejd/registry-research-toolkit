@@ -1,0 +1,176 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_scb_preliminary_requires_exact_same_variant_final_partner[2010 preliminär-2010, slutlig version-2]",
+    "test_curation_compile_editions.py::test_scb_preliminary_requires_exact_same_variant_final_partner[2020, preliminär version-2020, slutlig version-3]",
+    "test_curation_compile_editions.py::test_scb_preliminary_requires_exact_same_variant_final_partner[2020, preliminär version-2019, slutlig version-2]",
+    "test_curation_compile_editions.py::test_scb_preliminary_requires_exact_same_variant_final_partner[2020, Preliminär version-2020, slutlig version-2]",
+    "test_curation_compile_editions.py::test_scb_preliminary_requires_exact_same_variant_final_partner[2020,  preliminär version-2020, slutlig version-2]",
+    "test_curation_compile_editions.py::test_scb_unpaired_preliminary_is_untouched",
+    "test_curation_compile_editions.py::test_scb_pair_without_shared_native_variable_needs_no_case"
+  ],
+  "note": "Each variant holds one near miss of the SCB supersession rule: a preliminary name not in the exact 'YYYY, preliminär version' form (v21, v25, v26), a final partner in another variant (v22/v23) or another year (v24), no final at all (v27), or a final that shares no native variable (v28). Beside edition-scb-final-supersedes-only-shared-native-variables, the allowed outcome.",
+  "fails_if": "`compile_scb_preliminary` loosens its exact `(\\d{4}), (preliminär|slutlig) version` match (case-insensitive, whitespace-collapsing or year-only), pairs a final edition from another variant or year, or supersedes a preliminary row whose native variable the final does not deliver, so one of these preliminary rows becomes support",
+  "sources": {
+    "description": "Register 1, variants 21-28, each with one near-miss preliminary/final edition pair of VALUE (variable 5) or OTHER (variable 6).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 100,
+          "var_id": 5,
+          "versionname": "2010 preliminär",
+          "regver_id": 1,
+          "register": [
+            "TESTREG",
+            1,
+            21
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 101,
+          "var_id": 5,
+          "versionname": "2010, slutlig version",
+          "regver_id": 2,
+          "register": [
+            "TESTREG",
+            1,
+            21
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 102,
+          "var_id": 5,
+          "versionname": "2020, preliminär version",
+          "regver_id": 3,
+          "register": [
+            "TESTREG",
+            1,
+            22
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 103,
+          "var_id": 5,
+          "versionname": "2020, slutlig version",
+          "regver_id": 4,
+          "register": [
+            "TESTREG",
+            1,
+            23
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 104,
+          "var_id": 5,
+          "versionname": "2020, preliminär version",
+          "regver_id": 5,
+          "register": [
+            "TESTREG",
+            1,
+            24
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 105,
+          "var_id": 5,
+          "versionname": "2019, slutlig version",
+          "regver_id": 6,
+          "register": [
+            "TESTREG",
+            1,
+            24
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 106,
+          "var_id": 5,
+          "versionname": "2020, Preliminär version",
+          "regver_id": 7,
+          "register": [
+            "TESTREG",
+            1,
+            25
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 107,
+          "var_id": 5,
+          "versionname": "2020, slutlig version",
+          "regver_id": 8,
+          "register": [
+            "TESTREG",
+            1,
+            25
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 108,
+          "var_id": 5,
+          "versionname": "2020,  preliminär version",
+          "regver_id": 9,
+          "register": [
+            "TESTREG",
+            1,
+            26
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 109,
+          "var_id": 5,
+          "versionname": "2020, slutlig version",
+          "regver_id": 10,
+          "register": [
+            "TESTREG",
+            1,
+            26
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 110,
+          "var_id": 5,
+          "versionname": "2020, preliminär version",
+          "regver_id": 11,
+          "register": [
+            "TESTREG",
+            1,
+            27
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 111,
+          "var_id": 5,
+          "versionname": "2020, preliminär version",
+          "regver_id": 12,
+          "register": [
+            "TESTREG",
+            1,
+            28
+          ]
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 112,
+          "var_id": 6,
+          "versionname": "2020, slutlig version",
+          "regver_id": 13,
+          "register": [
+            "TESTREG",
+            1,
+            28
+          ]
+        }
+      ]
+    }
+  }
+}

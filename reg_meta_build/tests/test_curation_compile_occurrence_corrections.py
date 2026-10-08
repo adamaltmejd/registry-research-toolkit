@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 import pytest
 from _curation_compile_support import (
     checked_correction_fixture as _checked_correction_fixture,
-    compile_partition_fixture as _compile_partition_fixture,
     errata_fixture as _errata_fixture,
     errata_record as _errata_record,
     make_tree as _tree,
@@ -33,7 +32,6 @@ from reg_meta_build.source_coding import (
     resolve_code_membership,
 )
 from reg_meta_build.source_coordinates import (
-    native_variable_key,
     native_variant_key,
 )
 from reg_meta_build.source_curation import (
@@ -55,93 +53,6 @@ from reg_meta_build.source_records import (
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-
-@pytest.mark.parametrize("period", [False, True])
-def test_checked_occurrence_corrections_preserve_originals_and_unselected_editions(
-    tmp_path, period
-):
-    tree, scope, original, negative, entry = _checked_correction_fixture(
-        tmp_path, period=period
-    )
-    cases, issues, report = _run_checked_correction(tree, scope, (original, negative))
-    assert not issues
-    assert len(report["scb/sample"]["entries_matched"]) == 1
-    result = apply_occurrence_cases((original, negative), cases[scope.source, None])
-    assert not result.diagnostics
-    changed, untouched = result.occurrences
-    assert changed.source_records == (original,)
-    assert untouched == source_occurrence(negative)
-    if period:
-        assert changed.edition_scope == entry.edition_scope
-        assert changed.edition_period_scope == entry.edition_period_scope
-        assert changed.edition_scope.intervals[0].end is None
-        assert changed.fields == original.fields
-    else:
-        assert changed.fields.name.value == entry.value
-        assert changed.edition_scope == original.edition_scope
-        assert changed.edition_period_scope == original.edition_period_scope
-    assert changed.variable_key == native_variable_key(original)
-
-
-@pytest.mark.parametrize(
-    "change", ["prose", "period", "period-text", "missing", "new-peer", "new-match"]
-)
-def test_checked_occurrence_corrections_fail_closed_on_source_changes(tmp_path, change):
-    tree, scope, original, negative, _ = _checked_correction_fixture(tmp_path)
-    cases, _, _ = _run_checked_correction(tree, scope, (original, negative))
-    records = (original, negative)
-    if change == "prose":
-        records = (
-            original.model_copy(
-                update={
-                    "fields": original.fields.model_copy(
-                        update={"description": value_field("Changed source meaning")}
-                    )
-                }
-            ),
-            negative,
-        )
-    elif change == "period":
-        records = (
-            original.model_copy(
-                update={
-                    "edition_scope": TemporalScope(
-                        kind="pooled",
-                        label="Unknown annual assignment",
-                        pooled_start="2009-01-01",
-                        pooled_end="2010-12-31",
-                    )
-                }
-            ),
-            negative,
-        )
-    elif change == "period-text":
-        records = (
-            original.model_copy(
-                update={"original_period_text": "Changed original edition text"}
-            ),
-            negative,
-        )
-    elif change == "missing":
-        records = (negative,)
-    elif change == "new-match":
-        records = (
-            *records,
-            _errata_record(column="ANSWER", year="2009", member=22, edition_id=99),
-        )
-    else:
-        records = (
-            *records,
-            _errata_record(column="ANSWER", year="2018", member=22, edition_id=101),
-        )
-    result = apply_occurrence_cases(records, cases[scope.source, None])
-    if change != "period-text":
-        assert result.diagnostics
-        assert result.occurrences == tuple(source_occurrence(r) for r in records)
-    if change != "new-peer":
-        refreshed, issues, _ = _run_checked_correction(tree, scope, records)
-        assert issues and not refreshed
 
 
 def test_checked_text_corrections_compose_and_withhold_conflicting_assignments(
@@ -233,41 +144,6 @@ def test_checked_field_shared_ref_changes_only_target_literal(tmp_path):
     assert result.occurrences[1] == source_occurrence(records[1])
     assert result.occurrences[0].source_records == (records[0],)
     assert len(cases[0].targets[0].alternatives) == 2
-
-
-@pytest.mark.parametrize("change", ["changed", "missing", "new"])
-@pytest.mark.parametrize("field_correction", [False, True])
-def test_shared_ref_literal_effects_reject_changed_physical_peers(
-    tmp_path, change, field_correction
-):
-    if field_correction:
-        _, _, records, cases = _shared_ref_field_fixture(tmp_path)
-    else:
-        root, records = _shared_ref_column_fixture(tmp_path)
-        compiled, key, _ = _compile_partition_fixture(root, records)
-        cases = compiled[0][key]
-    if change == "missing":
-        altered = records[:1]
-    elif change == "new":
-        altered = (*records, _errata_record(column="THIRD", year="2020", member=20))
-    else:
-        altered = (
-            records[0],
-            records[1].model_copy(
-                update={
-                    "fields": records[1].fields.model_copy(
-                        update={
-                            (
-                                "name" if field_correction else "column_name"
-                            ): value_field("Changed second construct")
-                        }
-                    )
-                }
-            ),
-        )
-    result = apply_occurrence_cases(altered, cases)
-    assert result.diagnostics
-    assert result.occurrences == tuple(source_occurrence(r) for r in altered)
 
 
 def test_checked_period_correction_rejects_shared_ref_physical_columns(tmp_path):
@@ -506,18 +382,3 @@ def test_sos_period_correction_without_native_edition_preserves_disjoint_years(
         ("2011-01-01", "2011-12-31"),
         ("2013-01-01", "2013-12-31"),
     ]
-
-
-def test_scb_period_correction_still_requires_native_edition(tmp_path: Path):
-    tree, scope, original, negative, entry = _checked_correction_fixture(
-        tmp_path, period=True
-    )
-    reg = tree.registers[0]
-    bad = entry.model_copy(update={"edition": None})
-    reg = reg.model_copy(
-        update={"errata": reg.errata.model_copy(update={"occurrence_period": [bad]})}
-    )
-    cases, issues, _ = _run_checked_correction(
-        replace(tree, registers=(reg,)), scope, (original, negative)
-    )
-    assert issues and not cases

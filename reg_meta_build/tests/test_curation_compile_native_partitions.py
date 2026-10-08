@@ -22,7 +22,6 @@ from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_compile import (
     compile_partitions,
     compile_provider_declarations,
-    convert_column_partitions,
 )
 from reg_meta_build.curation_tree import (
     ErrataFieldEntry,
@@ -318,27 +317,6 @@ def test_maintained_provider_coverage_uses_input_role_not_provider_name(
     )
     assert addition.fields == variable.fields
     assert result.occurrences[1].source_records == (variable,)
-
-
-@pytest.mark.parametrize(
-    "columns, owners, reference",
-    [
-        ({"OLD": "1.5"}, ("1.5",), "review"),
-        ({"OLD": "1.6", "NEW": "1.6"}, ("1.6",), "review"),
-        (None, ("1.5",), None),
-    ],
-)
-def test_native_partition_requires_complete_explicit_own_family(
-    columns, owners, reference
-):
-    with pytest.raises(ValueError):
-        convert_column_partitions(
-            _scb_partition_records(("OLD", "NEW")),
-            source_id="1.5",
-            split_ids=owners,
-            declared_columns=columns,
-            declaration_reference=reference,
-        )
 
 
 @pytest.mark.parametrize(
