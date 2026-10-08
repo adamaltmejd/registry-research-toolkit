@@ -1,0 +1,140 @@
+{
+  "description": "Two SOS workbooks (PBA, PBE), each delivering one variable (VA, VE) over 2019-2021 whose Kodlista states a dated 2019-2020 block (00 Original, then the undated 2-3 Range token and blank No type) followed by a dated 2021 block (00 Later meaning, undated blank Later missing meaning). A blank period is a year-independent row.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 1001,
+        "var_id": 101,
+        "colname": "VALUE"
+      }
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "PBA",
+      "title": "Applied",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBA_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VA",
+          "deldatamangd": "PBA_A",
+          "label": "VA",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VA": [
+          [
+            "Variabelnamn",
+            "VA"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    },
+    {
+      "abbrev": "PBE",
+      "title": "Outside",
+      "description": "Ett syntetiskt SOS-register med en periodbunden kodlista.",
+      "subsets": [
+        {
+          "name": "PBE_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "VE",
+          "deldatamangd": "PBE_A",
+          "label": "VE",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "sheets": {
+        "Kodlista_VE": [
+          [
+            "Variabelnamn",
+            "VE"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
+          ],
+          [
+            "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
+            "blank",
+            "No type"
+          ],
+          [
+            "2021",
+            "00",
+            "Later meaning"
+          ],
+          [
+            "",
+            "blank",
+            "Later missing meaning"
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[None]",
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[outside]"
+  ],
+  "note": "periodblock documents VA's 2019-2020 block: its dated 00 'Original' row (the `period_block` anchor) and the undated rows up to the next dated row, so 2-3 'Range token' and blank 'No type' are the members and the later block's rows are not. periodoutside names 2021 for the same block, which the block does not cover. The members, data warning and refusal come from the replaced test's `pairs[:3]`, `data_warning` and `outside` branch. The drift ids of the replaced test have no two-step form here: every prepare of a workbook writes new xlsx bytes, so a second source spec changes each SOS revision and stales every entry for that reason alone (Findings).",
+  "fails_if": "`documented_period_block` stops at the anchor row, or runs past the next dated row, so VA's 2020 state is not exactly 00 Original, 2-3 Range token and blank No type; or `documented_period_block_matches` accepts a window outside the anchor's supplied 2019-2020 period, so periodoutside's 2021 entry applies",
+  "sources": "sos-coding-period-blocks"
+}

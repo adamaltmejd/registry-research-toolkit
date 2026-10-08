@@ -61,37 +61,25 @@ def _scoped_sentinel_case(setup, *, start="2020-01-01", end="2020-12-31"):
     )
 
 
-def test_scoped_sentinel_preserves_source_list_and_only_affects_its_window():
-    setup = _setup(code="99")
-    case = _scoped_sentinel_case(setup, start="2020-07-01")
-    result = _apply(setup, (setup[1], case))
-    segments = result.coding[case.decision.column_key].segments
-    assert [(s.valid_from, s.valid_to, _sole_classification(s)) for s in segments] == [
-        ("2020-01-01", "2020-06-30", "fixture"),
-        ("2020-07-01", "2020-12-31", "fixture"),
-    ]
-    assert segments[0].code_set == segments[1].code_set
-    assert (
-        result.coding[case.decision.column_key].claims
-        == setup[2][case.decision.column_key].claims
-    )
-    assert _sole_conformance(segments[1]).sentinel_members == (("99", "Source label"),)
-    certificate = _sole_conformance(segments[1]).scoped_sentinels[0]
-    assert certificate.members == _sole_conformance(segments[1]).sentinel_members
-    assert certificate.classification_sha256 == case.decision.expected_classification
-    assert certificate.source_fingerprints == case.decision.expected_source_codings
-    assert certificate.valid_from == "2020-07-01"
-    assert certificate.delivery_column_name == case.decision.column_key[-1]
-    assert "scoped-sentinel" in certificate.provenance
-    assert setup[3]["fixture"].sentinel_codes == ()
-    assert [d.code for d in result.diagnostics] == [
-        "nonconforming_classification_codes",
-        "sentinel_classification_codes",
-    ]
+# The build compiles a `[[coding.sentinel]]` and applies it from the same build's code
+# lists and books, so the build reaches only the compile-time member/label/book match
+# (case `coding-checked-entries-apply-then-go-stale-on-drift`). The tests below keep the
+# application-time sentinel guards no build reaches (maintainer decision, as for the
+# Stage 7b delivery-coverage arms).
 
 
-@pytest.mark.parametrize("change", ["label", "member", "outside-window", "book"])
+@pytest.mark.parametrize("change", ["member", "outside-window", "book"])
 def test_scoped_sentinel_rejects_changed_coding_and_codebook(change):
+    """A sentinel case reviewed against one code list and book, applied to a changed
+    one (a new in-window member, a new list outside the window, or a renamed book),
+    refuses with `classification_evidence_changed` and binds no window.
+
+    No boundary reaches it: `compile_coding_register` recomputes `expected_codings`,
+    `expected_source_codings` and `expected_classification` from the same build it
+    applies to, so they never disagree. Fails if `apply_classification_cases` stops
+    comparing a scoped sentinel's pinned codings, source fingerprints or book digest
+    with the evidence it binds.
+    """
     setup = _setup(code="99")
     case = _scoped_sentinel_case(setup, start="2020-07-01")
     key = case.decision.column_key
@@ -116,12 +104,7 @@ def test_scoped_sentinel_rejects_changed_coding_and_codebook(change):
             ),
         )
     else:
-        members = claims[0].members
-        members = (
-            (replace(members[0], label="Substantive industry"),)
-            if change == "label"
-            else (*members, replace(members[0], code="02"))
-        )
+        members = (*claims[0].members, replace(claims[0].members[0], code="02"))
         claims = (replace(claims[0], members=members),)
     result = _apply(
         setup,
@@ -143,6 +126,15 @@ def test_scoped_sentinel_rejects_changed_coding_and_codebook(change):
 
 
 def test_scoped_sentinel_guard_uses_accepted_owner_and_complete_effective_peers():
+    """A sentinel case on an accepted partition owner's column binds the book; applied
+    to evidence with a new peer record, no effective occurrence, or a narrowed
+    occurrence period, it binds no window and reports a diagnostic.
+
+    No boundary reaches the refusal: the peer guard is compiled from the same build's
+    effective columns it is applied to. Fails if `apply_classification_cases` stops
+    checking a sentinel case's `peer_guards` against the effective column's members
+    and period, or reads the original column key instead of the accepted owner's.
+    """
     from reg_meta_build.source_curation import SourceEvidence
 
     setup = _setup(code="99")
@@ -214,41 +206,15 @@ def test_scoped_sentinel_guard_uses_accepted_owner_and_complete_effective_peers(
         )
 
 
-def test_scoped_sentinel_leaves_substantive_same_literal_in_another_window():
-    setup = _setup(code="99")
-    key = setup[1].decision.column_key
-    current = setup[2][key].claims[0]
-    older = replace(
-        current,
-        claim_id="older",
-        scope=TemporalScope(
-            kind="intervals", intervals=(ScopeInterval(start="2019", end="2019"),)
-        ),
-        members=(replace(current.members[0], label="Substantive industry"),),
-    )
-    coding = {key: resolve_code_membership((older, current))}
-    setup = (*setup[:2], coding, setup[3])
-    case = _scoped_sentinel_case(setup)
-    declared = setup[1].model_copy(
-        update={
-            "decision": setup[1].decision.model_copy(
-                update={"valid_from": "2019-01-01"}
-            )
-        }
-    )
-    result = _apply(setup, (declared, case))
-    old, new = result.coding[key].segments
-    assert (
-        _sole_classification(old) == "fixture"
-        and _sole_conformance(old).sentinel_members == ()
-    )
-    assert old.code_set.members == (("99", "Substantive industry"),)
-    assert _sole_classification(new) == "fixture"
-    assert _sole_conformance(new).sentinel_members == (("99", "Source label"),)
-    assert result.coding[key].claims == (older, current)
-
-
 def test_scoped_sentinel_requires_every_shared_ref_original_projection():
+    """A sentinel case whose target is one record projected as two physical columns
+    binds the book while both projections are delivered; applied with one projection
+    missing, it is not applicable and binds nothing.
+
+    No boundary reaches the refusal: the build captures the targets from the same
+    records it applies the case to. Fails if `apply_classification_cases` compares a
+    target's ref instead of every captured projection alternative.
+    """
     from reg_meta_build.source_curation import SourceEvidence
 
     setup = _setup(code="99")

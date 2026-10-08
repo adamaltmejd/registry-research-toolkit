@@ -433,6 +433,20 @@ def _marker_bindings(s: PreparedSet, record: SourceRecord, args: dict[str, str])
     return list(markers)
 
 
+def _association(s: PreparedSet, args: dict[str, str]):
+    """The one source-list association behind member ``code=``/``label=`` (blank if
+    omitted) of the claims bound to the selected records."""
+    found = [
+        association
+        for claim in s.claims(_select(s.records(), args))
+        for member in claim.members
+        if member.code == args["code"] and (member.label or "") == args.get("label", "")
+        for association in member.associations
+    ]
+    assert len(found) == 1, f"placeholder needs exactly one association: {args}"
+    return found[0]
+
+
 def _scope(record: SourceRecord, args: dict[str, str], attribute: str) -> dict:
     scope = getattr(record, attribute).model_dump(mode="json")
     if "end" in args:
@@ -475,6 +489,8 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
     "source_codings": lambda s, a: list(
         copied_coding_fingerprints(s.claims(_select(s.records(), a)))
     ),
+    "association": lambda s, a: _association(s, a).locator,
+    "association_sha256": lambda s, a: coding_source_sha256(_association(s, a)),
     "relationship_row": lambda s, a: s.relationship(a["table"]).locator.physical_record,
     "relationship_sha256": lambda s, a: canonical_sha256(
         s.relationship(a["table"]).model_dump(mode="json")

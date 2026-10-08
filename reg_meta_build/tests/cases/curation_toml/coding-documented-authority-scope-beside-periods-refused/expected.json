@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_row_authority.py::test_source_row_coding_follows_exact_supplied_open_scope[mixed_periods]",
+  "fails_if": "`CodingDocumentedEntry._finite_documented_periods` accepts both authored periods and the authority's own `source_scope`, so the entry claims two windows",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.documented]] entry 1",
+    "message_contains": [
+      "documented coding requires finite periods or exact source scope, exclusively"
+    ]
+  },
+  "note": "The source authority is a structurally complete literal (one SCB Registerinformation member's captured record, revision and locators, with placeholder 64-hex fingerprints): the loader checks its shape, never its values, so only the named field is wrong."
+}

@@ -1,0 +1,36 @@
+[register]
+provider = "scb"
+slug = "pdfconflict"
+native_id = "23"
+[[variant]]
+native_id = "23.2"
+slug = "people"
+[[variable]]
+native_id = "23.5"
+slug = "value"
+
+[[coding.documented]]
+variable = "23.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["1", "ja"]]
+version_label = "Official 2020 questionnaire"
+document_url = "https://example.org/official.pdf"
+document_sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+document_pages = [12]
+reason = "Reviewed coding"
+source = "fixture"
+
+[[coding.documented]]
+variable = "23.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-06-01", "2020-12-31"]]
+members = [["2", "nej"]]
+version_label = "Official 2020 questionnaire"
+document_url = "https://example.org/official.pdf"
+document_sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+document_pages = [12]
+reason = "Reviewed coding"
+source = "fixture"

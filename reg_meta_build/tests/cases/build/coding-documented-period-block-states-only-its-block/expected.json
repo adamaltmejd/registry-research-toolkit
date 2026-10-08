@@ -1,0 +1,104 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "case_id",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "curation/registers/sos/periodoutside.toml#/coding.documented/1/period/1",
+          "2021-01-01",
+          "2021-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": [
+          "periodblock",
+          "periodoutside"
+        ]
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "periodblock",
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodblock",
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "periodblock",
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "periodblock",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodoutside",
+          "2019-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "periodoutside",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "The documented block states its three literal members on the 2019-2020 state; without an entry the two disagreeing blocks publish no members."
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "register": "periodblock",
+        "code": "response_domain_assumption"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "summary"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ]
+      ],
+      "note": "The entry's `data_warning` is published on its window."
+    }
+  ]
+}
