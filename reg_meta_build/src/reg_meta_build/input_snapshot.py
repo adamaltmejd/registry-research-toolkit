@@ -2211,22 +2211,40 @@ def _committed_inventory_sizes(
     *,
     context: str,
 ) -> dict[str, int]:
+    return {
+        path: size
+        for path, (size, _blob) in _committed_inventory(
+            repo, commit, base_path, roots, context=context
+        ).items()
+    }
+
+
+def _committed_inventory(
+    repo: Path,
+    commit: str,
+    base_path: str,
+    roots: Sequence[str],
+    *,
+    context: str,
+) -> dict[str, tuple[int, str]]:
+    """Each committed blob under ``roots`` as ``{path: (size, blob id)}``."""
     tree = _git_bytes(repo, "ls-tree", "-r", "-l", "-z", commit, "--", *roots)
-    actual: dict[str, int] = {}
+    actual: dict[str, tuple[int, str]] = {}
     prefix = f"{base_path}/" if base_path != "." else ""
     for entry in tree.split(b"\0"):
         if not entry:
             continue
         try:
             metadata, raw_path = entry.split(b"\t", 1)
-            _mode, object_type, _object_id, raw_size = metadata.split(b" ", 3)
+            _mode, object_type, object_id, raw_size = metadata.split(b" ", 3)
             path = raw_path.decode("utf-8")
             size = int(raw_size)
+            blob = object_id.decode("ascii")
         except (UnicodeDecodeError, ValueError) as exc:
             raise SnapshotError(f"invalid Git tree entry in {context}") from exc
         if object_type != b"blob" or not path.startswith(prefix):
             raise SnapshotError(f"invalid Git object in {context}: {path}")
-        actual[path.removeprefix(prefix)] = size
+        actual[path.removeprefix(prefix)] = (size, blob)
     return actual
 
 
