@@ -1,7 +1,7 @@
 """G1 for the operations ``reg-meta serve`` implements.
 
 The Rust server serves each candidate copy; the baseline commit's ``reg_webapp``, from
-the baseline environment, serves the reference copy and is the oracle. Each operation
+the baseline environment, serves the release original and is the oracle. Each operation
 family is a module here, listed in ``FAMILIES``: its ``cases`` maps the baseline's
 responses onto its operations' shapes, so the two arms compare as JSON in the CLI
 cases' result form (``exit``, ``stdout``, ``stderr``).
@@ -47,7 +47,7 @@ def served_cases(
     baseline_python: Path,
     baseline_stewards: Path,
     server: Path,
-    reference: dict[str, Path],
+    originals: dict[str, Path],
     derived: dict[str, Path],
     log_dir: Path,
 ) -> list[tuple[str, dict, dict]]:
@@ -77,10 +77,10 @@ def served_cases(
     )
     cases = []
     try:
-        for catalog in sorted(reference):
+        for catalog in sorted(originals):
             base = baseline.client(
                 {
-                    "REG_META_DB": str(reference[catalog]),
+                    "REG_META_DB": str(originals[catalog]),
                     "REG_WEBAPP_STEWARD": catalog,
                     "REG_WEBAPP_STEWARDS_DIR": str(baseline_stewards),
                 }
@@ -91,7 +91,7 @@ def served_cases(
             scopes = [None, "reference"] + (["holdings"] if catalog != "global" else [])
             for family in FAMILIES:
                 for key, expected, actual in family.cases(
-                    base, cand, catalog, scopes, reference[catalog]
+                    base, cand, catalog, scopes, originals[catalog]
                 ):
                     cases.append(
                         (f"{catalog}/{key}", _result(expected), _result(actual))

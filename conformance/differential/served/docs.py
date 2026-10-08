@@ -54,8 +54,8 @@ def _download(client, path: str, params: dict) -> dict:
     }
 
 
-def cases(base, cand, catalog, scopes, reference) -> list[tuple[str, dict, dict]]:
-    with closing(_connect(reference, "reg_meta_docs.db")) as conn:
+def cases(base, cand, catalog, scopes, originals) -> list[tuple[str, dict, dict]]:
+    with closing(_connect(originals, "reg_meta_docs.db")) as conn:
         documents = conn.execute(
             "SELECT filename, variable FROM doc ORDER BY doc_id"
         ).fetchall()
@@ -69,7 +69,7 @@ def cases(base, cand, catalog, scopes, reference) -> list[tuple[str, dict, dict]
         files = conn.execute(
             "SELECT register, filename FROM related_document ORDER BY id"
         ).fetchall()
-    with closing(_connect(reference, "reg_meta.db")) as conn:
+    with closing(_connect(originals, "reg_meta.db")) as conn:
         providers = {
             register: [
                 row[0]
