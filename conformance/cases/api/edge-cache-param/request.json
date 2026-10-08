@@ -1,0 +1,15 @@
+{
+  "fixture": "reader/logical",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Valø",
+        "type": "variable",
+        "scope": "reference",
+        "__edge_v": "deploy-1"
+      }
+    }
+  ]
+}

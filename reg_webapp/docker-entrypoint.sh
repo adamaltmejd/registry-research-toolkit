@@ -1,73 +1,71 @@
 #!/bin/sh
-# reg_webapp container entrypoint — per-deploy smoke gate (REFACTOR_SPEC.md §6.5
-# + "Remaining test coverage → Per-deploy smoke tests").
+# reg_webapp container entrypoint: `reg-meta serve` behind a per-deploy smoke gate
+# (reg_webapp/DESIGN.md → Deployment).
 #
-# Why an entrypoint gate, not a HEALTHCHECK: a Docker HEALTHCHECK only flips the
-# container's health STATUS after start — it does not stop the container from
-# accepting traffic in the meantime, and an orchestrator can route to it before
-# the first probe. The spec requires the smoke FAILURE to HALT the container
-# before serving. So we start uvicorn, probe it once over loopback, and only
-# keep it running if the golden checks pass; on failure we kill it and exit
-# non-zero. One process tree, stable exit codes, no extra deps.
+# Why an entrypoint gate, not a HEALTHCHECK: a HEALTHCHECK only flips the container's
+# health STATUS after start; it does not stop the container from accepting traffic
+# in the meantime. A smoke FAILURE must HALT the container before it serves. So we
+# start the server, probe it over loopback, and keep it running only if every probe
+# passes; on failure we kill it and exit non-zero.
 #
 # POSIX sh (the slim base ships no bash). `set -eu`: fail on error / unset var.
 set -eu
 
-HOST="${REG_WEBAPP_HOST:-0.0.0.0}"
-PORT="${REG_WEBAPP_PORT:-8000}"
-# Probe the actual bind host so a deployment that binds a SPECIFIC interface
-# (not loopback) is still reachable by the gate. A wildcard bind (0.0.0.0 / ::)
-# isn't a connectable address, so fall back to loopback only in that case.
-case "$HOST" in
-    0.0.0.0 | ::) PROBE_HOST="127.0.0.1" ;;
-    *) PROBE_HOST="$HOST" ;;
-esac
-SMOKE_URL="http://${PROBE_HOST}:${PORT}"
-SMOKE_READY_DEADLINE="${REG_WEBAPP_SMOKE_READY_DEADLINE:-60}"
-SMOKE_TIMEOUT="${REG_WEBAPP_SMOKE_TIMEOUT:-10}"
+PORT=8000
+BASE="http://127.0.0.1:${PORT}"
+# Every probe carries the edge's cache-generation parameter, as proxied requests do,
+# so a server that rejects it never serves.
+EDGE_V="__edge_v=smoke"
+READY_DEADLINE=60
+# Per request, so a stalled server cannot hang the gate past its deadline.
+MAX_TIME=10
 
-# Start uvicorn in the background so the smoke gate can probe the real serving
-# path (lifespan, baked-DB open, middleware) — not just an in-process app object.
-uvicorn reg_webapp.app:create_app \
-    --factory \
-    --host "$HOST" \
-    --port "$PORT" \
-    --no-access-log &
+# `/mcp` admits the public host's `Host` header only where the deployment names one
+# (the global catalog; the SWECOV deployment serves no public MCP).
+set -- serve --db /opt/reg_meta --catalog "$REG_META_CATALOG" \
+    --stewards /opt/reg_webapp/stewards --host 0.0.0.0 --port "$PORT"
+if [ -n "${REG_META_PUBLIC_HOST:-}" ]; then
+    set -- "$@" --public-host "$REG_META_PUBLIC_HOST"
+fi
+reg-meta "$@" &
 SERVER_PID=$!
 
-# If we exit before handing off (smoke failure / signal), don't leak uvicorn.
-# Cleared once the gate passes and we transfer to the foreground wait.
+# If we exit before handing off (smoke failure / signal), don't leak the server.
 # shellcheck disable=SC2329  # invoked indirectly via the EXIT/INT/TERM trap
 cleanup() {
-    if [ -n "${SERVER_PID:-}" ] && kill -0 "$SERVER_PID" 2>/dev/null; then
-        kill "$SERVER_PID" 2>/dev/null || true
-        wait "$SERVER_PID" 2>/dev/null || true
-    fi
+    kill "$SERVER_PID" 2>/dev/null || true
+    wait "$SERVER_PID" 2>/dev/null || true
 }
 trap cleanup EXIT INT TERM
 
-# Run the golden gate: waits for readiness, then walks
-# /api/catalog. --server-pid lets the readiness wait fail FAST if uvicorn aborts
-# on a boot/lifespan failure (broken DB bake) instead of burning the full
-# deadline. Non-zero return halts the container (the trap reaps uvicorn).
-if ! python -m reg_webapp.smoke \
-    --base-url "$SMOKE_URL" \
-    --ready-deadline "$SMOKE_READY_DEADLINE" \
-    --timeout "$SMOKE_TIMEOUT" \
-    --server-pid "$SERVER_PID"; then
-    echo "entrypoint: smoke gate failed — refusing to serve traffic" >&2
+fail() {
+    echo "entrypoint: smoke gate failed ($1) — refusing to serve traffic" >&2
     exit 1
-fi
+}
 
-# Gate passed. Hand the foreground to uvicorn: clear the EXIT-kill trap, keep
-# SIGINT/SIGTERM forwarding for graceful shutdown, then wait on the server so
-# the container's lifetime tracks uvicorn's (and its exit code propagates).
+# Readiness: admission runs before the bind, so a refused artifact exits the server
+# (its error document is on stderr) and the wait fails at once.
+waited=0
+until curl -fsS --max-time "$MAX_TIME" -o /dev/null "$BASE/api/context?$EDGE_V" 2>/dev/null; do
+    kill -0 "$SERVER_PID" 2>/dev/null || fail "reg-meta exited"
+    [ "$waited" -lt "$READY_DEADLINE" ] || fail "no answer within ${READY_DEADLINE}s"
+    sleep 1
+    waited=$((waited + 1))
+done
+curl -fsS --max-time "$MAX_TIME" -o /dev/null "$BASE/api/search?q=inkomst&$EDGE_V" \
+    || fail "search"
+curl -fsS --max-time "$MAX_TIME" "$BASE/mcp?$EDGE_V" \
+    -H 'accept: application/json, text/event-stream' \
+    -H 'content-type: application/json' \
+    -H 'mcp-protocol-version: 2025-11-25' \
+    -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' \
+    | grep -q '"name":"search"' || fail "/mcp tools/list"
+
+# Gate passed. Hand the foreground to the server: clear the EXIT-kill trap, forward
+# SIGINT/SIGTERM, and wait until it has exited so its exit code propagates (a trapped
+# signal makes `wait` return early while the server is still stopping).
 trap - EXIT
 trap 'kill -TERM "$SERVER_PID" 2>/dev/null || true' INT TERM
-# A trapped signal makes `wait` return early (128+sig) while uvicorn is still
-# draining — exiting then would kill PID 1 and SIGKILL uvicorn mid-shutdown.
-# Re-wait until the server has actually exited, then propagate its real exit
-# code. The if-form keeps `set -e` from aborting on the early-return status.
 rc=0
 while kill -0 "$SERVER_PID" 2>/dev/null; do
     if wait "$SERVER_PID"; then rc=0; else rc=$?; fi
