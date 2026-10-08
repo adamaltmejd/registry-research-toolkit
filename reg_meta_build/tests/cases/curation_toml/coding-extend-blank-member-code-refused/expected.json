@@ -1,7 +1,7 @@
 {
   "loader": "register_files",
   "replaces": "test_source_coding_documented.py::test_existing_extension_selector_still_rejects_blank_codes",
-  "fails_if": "`_coding_members` lets `[[coding.extend]]` members have a blank code, so an extension adds the empty code",
+  "fails_if": "`_coding_members` lets `[[coding.extend]]` members have a blank code (as `[[coding.choice]]` keep_members may), so an extension adds the empty code",
   "error": {
     "code": "register_entry_invalid",
     "locator": "curation/registers/scb/sample.toml [[coding.extend.list_members]] entry 1",

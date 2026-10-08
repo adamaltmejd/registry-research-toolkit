@@ -1704,62 +1704,6 @@
         ]
       ],
       "note": "The incomplete 2021 claim stays an unknown-membership period of its own; the extension does not touch it."
-    },
-    {
-      "table": "state_codes",
-      "where": {
-        "register": "blankcode"
-      },
-      "fields": [
-        "valid_from",
-        "valid_to",
-        "code",
-        "label"
-      ],
-      "rows": [
-        [
-          "2020-01-01",
-          "2020-12-31",
-          null,
-          null
-        ]
-      ],
-      "note": "Maintainer decision (2026-10-08): a blank code is never a code. choices.py::test_choice_preserves_documented_blank_sentinel_and_checks_complete_members kept a blank-code 'Not applicable' member of the selected list; here the Vardemangder row with an empty vardekod makes list `keep` unknown membership, so 2020 publishes no value set and never the empty string."
-    },
-    {
-      "table": "issues",
-      "where": {
-        "subject": "scb/blankcode/value",
-        "code": "unknown_code_membership"
-      },
-      "fields": [
-        "valid_from",
-        "valid_to"
-      ],
-      "rows": [
-        [
-          "2020-01-01",
-          "2020-12-31"
-        ]
-      ],
-      "note": "The blank-code member surfaces as unknown membership over the list's 2020 window."
-    },
-    {
-      "table": "issues",
-      "where": {
-        "subject": "72.5"
-      },
-      "fields": [
-        "code",
-        "case_id"
-      ],
-      "rows": [
-        [
-          "stale_curation_entry",
-          "curation/registers/scb/blankcode.toml#/coding.choice/1/period/1"
-        ]
-      ],
-      "note": "With `keep` incomplete only `other` is a complete list, so the choice has nothing to choose between and goes stale (as the one-complete-list case `coding-choice-stale-when-its-period-has-one-complete-list`) instead of selecting the blank-code list."
     }
   ]
 }

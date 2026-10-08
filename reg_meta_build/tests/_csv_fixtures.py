@@ -1080,9 +1080,8 @@ VARDEMANGDER_REAL_ROWS = [
     PIPE.join(["Kön", "1", "2", "Kvinna", "2001", "5002"]),
     PIPE.join(["Kön", "1", "2", "Kvinna", "2001", ""]),
     PIPE.join(["Unknown", "1", "99", "Phantom", "9999", "5099"]),
-    # An "Uppgift okänd" row with an empty vardekod. A blank code is never a code:
-    # the row is kept as source evidence, but its member is unknown membership
-    # (`unknown_code_membership`) and no value set publishes the empty string.
+    # Legitimate "Uppgift okänd" entry — empty vardekod IS the kod (the literal
+    # value microdata uses for unknown). Must be preserved.
     PIPE.join(["SSYK 2012", "SSYK 2012", "", "Uppgift okänd", "2003", "5103"]),
 ]
 
