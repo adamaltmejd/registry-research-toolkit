@@ -1,6 +1,6 @@
 # Fly.io config for the reg_webapp `global` deployment (REFACTOR_SPEC.md §6.5).
 #
-# Deploy from the REPO ROOT — the Dockerfile needs the whole uv workspace as
+# Deploy from the REPO ROOT — the Dockerfile needs the uv and Cargo workspaces as
 # build context (see reg_webapp/Dockerfile header):
 #
 #   fly deploy . --config reg_webapp/fly.toml --ha=false
@@ -18,8 +18,12 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   # REG_META_TAG (cache-bust knob for DATA-only reg_meta releases) can be
   # pinned per-deploy: fly deploy ... --build-arg REG_META_TAG=reg_meta/vX.Y.Z
 
-# Runtime env (REG_META_DB, REG_WEBAPP_*) is baked into the image with the
-# right defaults; nothing to override here.
+[env]
+  # The hosted MCP endpoint (RUST_RUNTIME_SPEC.md decision 12): `/mcp` admits this
+  # `Host` besides loopback. Only the global catalog serves it. The edge token
+  # (REG_META_EDGE_TOKEN, a Fly secret matching the edge worker's EDGE_TOKEN)
+  # lets `/mcp` rate-limit each edge client by its own address.
+  REG_META_PUBLIC_HOST = "catalog.swecov.se"
 
 [http_service]
   internal_port = 8000
@@ -34,16 +38,16 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   # past its restart policy, the proxy boots it on the next request.
   auto_start_machines = true
 
-  # Gate deploys on the live API, same endpoint the entrypoint smoke gate
-  # validates in-process before exec'ing uvicorn.
+  # Gate deploys on the live API: the first endpoint the entrypoint smoke gate
+  # probes before it hands the foreground to `reg-meta serve`.
   [[http_service.checks]]
     interval = "30s"
     timeout = "5s"
-    # The entrypoint runs the smoke gate (a shallow /api/catalog
-    # walk) before uvicorn binds — allow it time before checks count.
+    # The entrypoint's smoke gate runs before the server takes traffic; allow it
+    # time before checks count.
     grace_period = "60s"
     method = "GET"
-    path = "/api/catalog"
+    path = "/api/context"
 
 [[vm]]
   size = "shared-cpu-1x"

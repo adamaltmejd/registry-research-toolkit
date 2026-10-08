@@ -11,7 +11,7 @@ use std::time::{Duration, Instant};
 use axum::Router;
 use axum::body::Bytes;
 use axum::extract::{ConnectInfo, DefaultBodyLimit, FromRequest, Request, State};
-use axum::http::{StatusCode, header};
+use axum::http::{HeaderMap, StatusCode, header};
 use axum::middleware::{Next, from_fn_with_state};
 use axum::response::{IntoResponse, Response};
 use reg_catalog::ops::{self, Server};
@@ -25,6 +25,7 @@ use rmcp::transport::streamable_http_server::session::never::NeverSessionManager
 use rmcp::transport::{StreamableHttpServerConfig, StreamableHttpService};
 use rmcp::{ErrorData, RoleServer, ServerHandler, ServiceExt};
 use serde_json::{Map, Value, json};
+use sha2::{Digest, Sha256};
 
 use crate::{Answer, VERSION, run};
 
@@ -37,6 +38,11 @@ const MAX_BODY_BYTES: usize = 1024 * 1024;
 /// tracked; make it a time-ordered sweep if a hosted burst of addresses shows in RSS
 /// or in `/mcp` latency.
 const MAX_TRACKED: usize = 10_000;
+/// The secret the edge worker sends as [`EDGE_TOKEN_HEADER`] on every origin request.
+/// A request carrying it came through the edge, so its `CF-Connecting-IP` is the
+/// client's address; any other request is keyed on its peer address.
+const EDGE_TOKEN_ENV: &str = "REG_META_EDGE_TOKEN";
+const EDGE_TOKEN_HEADER: &str = "x-edge-token";
 
 /// The tool handler: one per stdio process, and per request over stateless HTTP.
 #[derive(Clone)]
@@ -185,12 +191,14 @@ pub async fn stdio(server: Arc<Server>) {
 }
 
 /// `/mcp`: streamable HTTP without sessions (each POST stands alone and is answered
-/// with JSON), behind the rate limit and then the body cap.
-pub fn router(server: Arc<Server>) -> Router {
+/// with JSON), behind the rate limit and then the body cap. `Host` may be a loopback
+/// name or `public_host`.
+pub fn router(server: Arc<Server>, public_host: Option<String>) -> Router {
     let tools = Tools::new(Arc::clone(&server));
     let mut config = StreamableHttpServerConfig::default();
     config.legacy_session_mode = false;
     config.json_response = true;
+    config.allowed_hosts.extend(public_host);
     let service = StreamableHttpService::new(
         move || Ok(tools.clone()),
         Arc::new(NeverSessionManager::default()),
@@ -198,6 +206,10 @@ pub fn router(server: Arc<Server>) -> Router {
     );
     let limits = Arc::new(Limits {
         server,
+        edge_token: std::env::var(EDGE_TOKEN_ENV)
+            .ok()
+            .filter(|token| !token.is_empty())
+            .map(|token| Sha256::digest(token).into()),
         buckets: Mutex::default(),
     });
     Router::new()
@@ -208,6 +220,8 @@ pub fn router(server: Arc<Server>) -> Router {
 
 struct Limits {
     server: Arc<Server>,
+    /// The SHA-256 of the edge token; `None` trusts no request as the edge's.
+    edge_token: Option<[u8; 32]>,
     buckets: Mutex<HashMap<IpAddr, Bucket>>,
 }
 
@@ -227,6 +241,27 @@ impl Bucket {
 }
 
 impl Limits {
+    /// The address a request is limited by: the edge-supplied `CF-Connecting-IP` when
+    /// the request carries the edge token, otherwise its peer.
+    fn client(&self, headers: &HeaderMap, peer: IpAddr) -> IpAddr {
+        let header = |name| headers.get(name).and_then(|value| value.to_str().ok());
+        let from_edge = self.edge_token.is_some_and(|token| {
+            header(EDGE_TOKEN_HEADER).is_some_and(|sent| {
+                // Equal digests, compared without an early exit.
+                let sent: [u8; 32] = Sha256::digest(sent).into();
+                let diff = sent
+                    .iter()
+                    .zip(token)
+                    .fold(0, |diff, (a, b)| diff | (a ^ b));
+                diff == 0
+            })
+        });
+        from_edge
+            .then(|| header("cf-connecting-ip")?.parse().ok())
+            .flatten()
+            .unwrap_or(peer)
+    }
+
     /// Take a token from `client`'s bucket; false when it is empty.
     fn allow(&self, client: IpAddr) -> bool {
         let now = Instant::now();
@@ -257,15 +292,15 @@ impl Limits {
 }
 
 /// The `/mcp` limits, answered with the error document: `rate_limited` per client
-/// address, then `payload_too_large` over [`MAX_BODY_BYTES`] (read through
-/// `DefaultBodyLimit`, which the MCP service itself does not consult).
+/// address ([`Limits::client`]), then `payload_too_large` over [`MAX_BODY_BYTES`]
+/// (read through `DefaultBodyLimit`, which the MCP service itself does not consult).
 async fn guard(
     State(limits): State<Arc<Limits>>,
-    ConnectInfo(client): ConnectInfo<SocketAddr>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
     next: Next,
 ) -> Response {
-    if !limits.allow(client.ip()) {
+    if !limits.allow(limits.client(request.headers(), peer.ip())) {
         let err = Error::new(
             Code::RateLimited,
             format!("More than {RATE_PER_MINUTE} MCP requests a minute from this address."),

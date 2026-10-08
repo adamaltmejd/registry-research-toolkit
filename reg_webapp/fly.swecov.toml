@@ -1,6 +1,6 @@
 # Fly.io config for the reg_webapp `swecov` deployment (REFACTOR_SPEC.md §11).
 #
-# Deploy from the REPO ROOT — the Dockerfile needs the whole uv workspace as
+# Deploy from the REPO ROOT — the Dockerfile needs the uv and Cargo workspaces as
 # build context (see reg_webapp/Dockerfile header):
 #
 #   fly deploy . --config reg_webapp/fly.swecov.toml --ha=false \
@@ -8,7 +8,9 @@
 #
 # The bake runs `reg-meta update --catalog swecov --tag REG_META_TAG`, which
 # fetches `reg_meta_swecov.db.zst` (plus the shared docs asset) from that
-# reg_meta/v* release and fails the build if the release lacks it.
+# reg_meta/v* release and fails the build if the release lacks it. The image
+# serves it as `--catalog swecov`, with no public MCP host (decision 12: steward
+# catalogs are never served over hosted MCP).
 
 app = "reg-webapp-swecov"
 primary_region = "arn" # Stockholm — the user base is Swedish register researchers.
@@ -19,12 +21,6 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
 
 [build.args]
   REG_META_FLAVOR = "swecov"
-  REG_WEBAPP_STEWARD = "swecov"
-
-[env]
-  REG_WEBAPP_STEWARD = "swecov"
-  # Keep the entrypoint smoke deadline aligned with Fly's health-check grace.
-  REG_WEBAPP_SMOKE_READY_DEADLINE = "420"
 
 [http_service]
   internal_port = 8000
@@ -38,9 +34,9 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   [[http_service.checks]]
     interval = "30s"
     timeout = "5s"
-    grace_period = "420s"
+    grace_period = "60s"
     method = "GET"
-    path = "/api/catalog"
+    path = "/api/context"
 
 [[vm]]
   size = "shared-cpu-1x"

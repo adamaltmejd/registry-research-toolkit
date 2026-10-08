@@ -1638,6 +1638,29 @@ and officially documents the Cloudflare-in-front topology
 (`fly.io/docs/networking/understanding-cloudflare`). Lock-in is nil: the artifact is the
 plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 
+- **The image runs the Rust server alone** (RUST_RUNTIME_SPEC.md package 3a.9, decision
+  15): `reg-meta serve` with the baked DB pair and the steward branding, no uvicorn and
+  no Python at runtime. The Dockerfile has three stages: the `regmeta-db` bake (still
+  the Python `reg-meta update` fetch until stage 4), a pinned Rust stage building
+  `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate. The image serves
+  the API and `/mcp` only; the edge workers serve the SPA, which `container-build.yml`'s
+  edge jobs build themselves. The FastAPI routes not yet ported to Rust (browse, project
+  authoring, orders) are unavailable in production until their slice ships (checkpoint
+  2: no users, so no proxy or fallback); the backend package stays for dev and tests
+  until stage 4.
+- **Hosted MCP** (decision 12): `/mcp` on `catalog.swecov.se`. The global worker
+  forwards `/mcp` (`ROUTE_MCP` in `wrangler.jsonc` only; the SWECOV worker does not,
+  since a steward catalog is never served over hosted MCP), and `fly.toml` passes
+  `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
+  `/mcp` rate-limits per client address (60 a minute, apart from the SPA's limits).
+  Behind Fly the peer is Fly's proxy, so the worker proves a request came through the
+  edge with a shared secret (`EDGE_TOKEN` on the worker, `REG_META_EDGE_TOKEN` on the
+  Fly app, sent as `x-edge-token`); only such a request is keyed on its
+  `CF-Connecting-IP`. Any other request, a direct-origin hit included, is keyed on its
+  peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret every edge
+  `/mcp` client shares the proxy's bucket. After each global edge deploy,
+  `container-build.yml` sends `initialize`, `tools/list` and one `search` to the public
+  `/mcp`.
 - **Apps**: `reg-webapp-global` serves `catalog.swecov.se`; `reg-webapp-swecov` serves
   `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/1GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
@@ -1669,52 +1692,54 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   HEAD-of-main guard (GHA concurrency serializes by build-completion order, not commit
   order — without the guard an older commit's slow build could overwrite a newer deploy;
   it also makes non-main dispatches deploy-inert). Two gates guard a bad image: the
-  entrypoint smoke gate (container exits non-zero before ever serving when artifact
-  admission or a required route fails) and fly.toml's `/api/catalog` HTTP check (flyctl
+  entrypoint smoke gate (it probes `context`, `search` and `/mcp` with `curl`, each
+  carrying `__edge_v`, and the container exits non-zero before ever serving when
+  artifact admission or a probe fails) and fly.toml's `/api/context` HTTP check (flyctl
   reports failure if it never passes). Rollback: `flyctl releases --image` lists
   history; `flyctl deploy --image <old>` restores in seconds.
 - **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
-  `DOC_SCHEMA_VERSION` is AHEAD of the latest released `reg_meta/v*` asset (same major,
-  higher minor), the bake's `reg-meta update` would refuse the behind-schema asset (exit 10)
-  and turn `build-image` red — pausing **all** deploys for a state that is expected (the
-  owed reg_meta release ships the matching asset). A standalone `schema-guard` job
-  compares the code constants against the released tag's (`git show <tag>:…`) via the
-  pure `scripts/schema_pending_bump.py` helper, which returns a three-way verdict
-  (`break` / `pending` / `compatible`). On a detected code-ahead `pending` bump (with
-  both assets present) it publishes a `pending_bump=true` job output that defers the
-  bake + deploy with a GREEN `build-image` and a `::notice::`. The guard is its **own**
-  job (not a step inside `build-image`) so **every** deploy path can consult it —
-  `build-image`, `deploy`, AND `edge-deploy` all gate on
-  `needs.schema-guard.result == 'success'` (and on `pending_bump`); it runs whenever the
-  image OR edge filter matches (or on dispatch), so an edge-only push still gets a
-  verdict even though `build-image` is skipped. Once the owed release ships, the
-  **build** self-clears on the next image-affecting main push (the bake now passes), and
-  the **deploy** is self-clearing on release too: publishing the owed `reg_meta/v*`
-  release auto-dispatches `container-build.yml` (via `publish_reg_meta.yml`'s
-  `deploy-image` job, after the PyPI publish succeeds), which re-resolves the
-  now-current asset and deploys — no manual `workflow_dispatch` needed. During a
-  pending-bump window a later **edge-only** main push now correctly waits too:
-  `schema-guard` ran (the edge filter matched), so `edge-deploy` sees
-  `pending_bump == true` and holds its SPA/cache-gen ship alongside the origin, rather
-  than going live against the still-pre-bump origin. The guard green-neutralizes
-  **only** the safe code-ahead case; on a genuine **major break** — or a `pending`
-  release that is ALSO **missing** a `.zst` asset (a #343 invariant violation, verified
-  via `gh release view`) — `schema-guard` **fails red (exits non-zero)** rather than
-  emitting `pending_bump=false`. Because all three deploy jobs gate on
-  `needs.schema-guard.result == 'success'`, a failed guard cleanly blocks build-image +
-  deploy + edge-deploy — closing the edge-only hole where a skipped bake left nothing to
-  fail (pre-fix the break surfaced only as the bake's exit 10 on image pushes, so an
-  edge-only push shipped a new SPA/cache generation against a still-stuck origin) and
-  giving a clearer red than a bake exit-10. The guard is also bypassed for an explicit
-  `workflow_dispatch` `reg_meta_tag` pin — a deliberate pin of a specific (possibly
-  older) release has no owed release coming, so it must fail loud in the bake if
-  incompatible, not green-no-op (and dispatch always runs build-image, so there is no
+  `DOC_SCHEMA_VERSION` or the Rust server's minimum (`SCHEMA` in
+  `crates/reg-catalog/src/lib.rs`) is AHEAD of the latest released `reg_meta/v*` asset
+  (same major, higher minor), the bake's `reg-meta update` would refuse the
+  behind-schema asset (exit 10), or the image would refuse to boot on it, and turn
+  `build-image` red — pausing **all** deploys for a state that is expected (the owed
+  reg_meta release ships the matching asset). A standalone `schema-guard` job compares
+  the code constants against the released tag's (`git show <tag>:…`) via the pure
+  `scripts/schema_pending_bump.py` helper, which returns a three-way verdict (`break` /
+  `pending` / `compatible`). On a detected code-ahead `pending` bump (with both assets
+  present) it publishes a `pending_bump=true` job output that defers the bake + deploy
+  with a GREEN `build-image` and a `::notice::`. The guard is its **own** job (not a
+  step inside `build-image`) so **every** deploy path can consult it — `build-image`,
+  `deploy`, AND `edge-deploy` all gate on `needs.schema-guard.result == 'success'` (and
+  on `pending_bump`); it runs whenever the image OR edge filter matches (or on
+  dispatch), so an edge-only push still gets a verdict even though `build-image` is
+  skipped. Once the owed release ships, the **build** self-clears on the next
+  image-affecting main push (the bake now passes), and the **deploy** is self-clearing
+  on release too: publishing the owed `reg_meta/v*` release auto-dispatches
+  `container-build.yml` (via `publish_reg_meta.yml`'s `deploy-image` job, after the PyPI
+  publish succeeds), which re-resolves the now-current asset and deploys — no manual
+  `workflow_dispatch` needed. During a pending-bump window a later **edge-only** main
+  push now correctly waits too: `schema-guard` ran (the edge filter matched), so
+  `edge-deploy` sees `pending_bump == true` and holds its SPA/cache-gen ship alongside
+  the origin, rather than going live against the still-pre-bump origin. The guard
+  green-neutralizes **only** the safe code-ahead case; on a genuine **major break** — or
+  a `pending` release that is ALSO **missing** a `.zst` asset (a #343 invariant
+  violation, verified via `gh release view`) — `schema-guard` **fails red (exits
+  non-zero)** rather than emitting `pending_bump=false`. Because all three deploy jobs
+  gate on `needs.schema-guard.result == 'success'`, a failed guard cleanly blocks
+  build-image + deploy + edge-deploy — closing the edge-only hole where a skipped bake
+  left nothing to fail (pre-fix the break surfaced only as the bake's exit 10 on image
+  pushes, so an edge-only push shipped a new SPA/cache generation against a still-stuck
+  origin) and giving a clearer red than a bake exit-10. The guard is also bypassed for
+  an explicit `workflow_dispatch` `reg_meta_tag` pin — a deliberate pin of a specific
+  (possibly older) release has no owed release coming, so it must fail loud in the bake
+  if incompatible, not green-no-op (and dispatch always runs build-image, so there is no
   edge-only leak there). The comparison rule is unit-tested because CI can't reach the
   code-ahead branch on a normal commit (main's schema usually equals the latest
-  release); its source of truth is `_check_schema_compat` in
-  `reg_meta/src/reg_meta/db.py`. Trade-off: during the bump window the Dockerfile bake
-  isn't exercised (a build-only PR goes green-skipped), re-exercised once the release
-  lands.
+  release); its sources of truth are `_check_schema_compat` in
+  `reg_meta/src/reg_meta/db.py` and `reg-catalog`'s schema gate. Trade-off: during the
+  bump window the Dockerfile bake isn't exercised (a build-only PR goes green-skipped),
+  re-exercised once the release lands.
 - **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
   stage (`regmeta-db`) whose cache key covers only the workspace skeleton, the reg_meta
   source tree, and `REG_META_TAG` — app-code edits reuse the cached DB layer instead of
@@ -1738,17 +1763,16 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `catalog.swecov.se/*` and `data.swecov.se/*` serving the SPA `dist/` with
   `single-page-application` deep-link fallback. They use the same Worker source and SPA
   assets, but separate Worker names/configs so each hostname gets an independent
-  `DEPLOY_VERSION` cache generation after its own Fly origin deploys. Backend paths
-  (`/api/*`, `/openapi.json`, `/docs`) are `run_worker_first` + `fetch(request)`
-  passthrough to the incoming hostname's zone origin (Fly), so the origin
-  ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
+  `DEPLOY_VERSION` cache generation after its own Fly origin deploys. Origin paths
+  (`/api/*`, `/openapi.json`, and `/mcp` on the global worker) are `run_worker_first` +
+  `fetch(request)` passthrough to the incoming hostname's zone origin (Fly), so the
+  origin ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
   `run_worker_first` is required: SPA mode otherwise serves `index.html` to browser
   navigations without invoking the worker, shadowing `/api` deep-opens. The glob list
   and the worker's `ORIGIN_PATHS` regexes are a LOCKSTEP pair (comments in both files);
-  the backend disables `/redoc` (`create_app` passes `redoc_url=None`) so its surface is
-  exactly the forwarded set. Cloudflare downgrades the origin's strong ETag to weak
-  (`W/`) when compression applies — weak comparison is correct for GET revalidation, not
-  a bug.
+  `reg-meta serve` answers exactly the forwarded set. Cloudflare downgrades the origin's
+  strong ETag to weak (`W/`) when compression applies — weak comparison is correct for
+  GET revalidation, not a bug.
 - **Edge cache generations (#318)**: the worker stamps a per-deploy `DEPLOY_VERSION`
   (wrangler var; CI passes the commit SHA, `-<run_id>`-suffixed on dispatch so same-SHA
   data-only rebuilds still count) onto every origin-bound URL as an `__edge_v` query
@@ -1756,27 +1780,29 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   cache entries — fresh payloads immediately after deploy, while the per-route TTL still
   bounds origin traffic *within* a generation (60s for catalog + search, 24h for
   doc-library). This is the free-plan substitute for `cf.cacheKey` (Enterprise-only) and
-  needs no purge credentials. Origin-side the param is inert: FastAPI ignores undeclared
-  query params and the ETag is content-derived. Consequence: `edge-deploy` runs on
-  **image-affecting** pushes too, not just edge paths — an origin deploy that changes
-  API payloads without touching the SPA/contract must still ship a new cache generation.
-  The motivating incident (#303 rollout) had the edge serving 11h-old pre-deploy catalog
-  JSON against a freshly deployed SPA; the #317 defensive-rendering rule (SPA tolerates
-  one cache generation of payload skew on additive fields) stays in force regardless,
-  for clients holding *browser*-cached payloads (catalog + search browser TTL is 60s;
-  doc-library is 86400s — both unversioned). Deploys: the `edge-deploy` job in
-  `container-build.yml` rebuilds the SPA (bun pinned to the Dockerfile's version — bump
-  together) and runs `wrangler deploy` on main pushes touching the SPA, the edge worker,
-  the committed `openapi.json`, or the image surface (cache generation, above)
-  (`CLOUDFLARE_API_TOKEN` repo secret, "Edit Cloudflare Workers" template scoped to the
-  account + swecov.se). The job `needs:` the origin deploy — on a contract-changing push
-  the SPA never goes live before the origin serves the new endpoints (deploy-skew guard;
-  skew 404s are NOT negatively cached: the Cache Rule's Edge TTL is "bypass if no
-  cache-control", and the origin only stamps 200s). After each edge deploy a probe
-  asserts a catalog read returns `CF-Cache-Status: HIT` with a young `Age` (a stale
-  `Age` means cache-key versioning broke) and an edge 304 — the #220 gate as a standing
-  regression check against silent Cache Rule / zone drift. Manual fallback: build the
-  SPA, then `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
+  needs no purge credentials. Origin-side the param is inert: `reg-meta serve` drops it
+  before validating the query (it rejects every other unknown parameter) and the ETag is
+  content-derived. Consequence: `edge-deploy` runs on **image-affecting** pushes too,
+  not just edge paths — an origin deploy that changes API payloads without touching the
+  SPA/contract must still ship a new cache generation. The motivating incident (#303
+  rollout) had the edge serving 11h-old pre-deploy catalog JSON against a freshly
+  deployed SPA; the #317 defensive-rendering rule (SPA tolerates one cache generation of
+  payload skew on additive fields) stays in force regardless, for clients holding
+  *browser*-cached payloads (catalog + search browser TTL is 60s; doc-library is 86400s
+  — both unversioned). Deploys: the `edge-deploy` job in `container-build.yml` rebuilds
+  the SPA (bun pinned to the Dockerfile's version — bump together) and runs
+  `wrangler deploy` on main pushes touching the SPA, the edge worker, the committed
+  `openapi.json`, or the image surface (cache generation, above) (`CLOUDFLARE_API_TOKEN`
+  repo secret, "Edit Cloudflare Workers" template scoped to the account + swecov.se).
+  The job `needs:` the origin deploy — on a contract-changing push the SPA never goes
+  live before the origin serves the new endpoints (deploy-skew guard; skew 404s are NOT
+  negatively cached: the Cache Rule's Edge TTL is "bypass if no cache-control", and the
+  origin only stamps 200s). After each edge deploy a probe asserts a catalog read
+  returns `CF-Cache-Status: HIT` with a young `Age` (a stale `Age` means cache-key
+  versioning broke) and an edge 304 — the #220 gate as a standing regression check
+  against silent Cache Rule / zone drift. It reads `/api/search`, the cacheable Rust
+  route (`/api/context` is `no-cache`). Manual fallback: build the SPA, then
+  `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
   `wrangler.jsonc`'s header — the config's literal `"dev"` default must not ship).
 - **Zone rules (dashboard, free plan)**: a Cache Rule making `/api/*` on the hostname
   cache-eligible (Cloudflare never caches extensionless API paths by default, even with

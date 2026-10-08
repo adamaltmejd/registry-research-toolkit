@@ -1,19 +1,21 @@
 //! `reg-meta`: run modes only, no query CLI (`RUST_RUNTIME_SPEC.md` sections 6 and 7).
 //!
 //! ```text
-//! reg-meta serve --db DIR [--catalog NAME] --stewards DIR --port N
+//! reg-meta serve --db DIR [--catalog NAME] --stewards DIR --port N [--host ADDR]
+//!                [--public-host HOST]
 //! reg-meta mcp --db DIR [--catalog NAME]
 //! ```
 //!
 //! Both admit `DIR/reg_meta.db` (as `--catalog NAME` when given). `serve` loads the
 //! catalog's branding from `DIR/<catalog>/steward.json` under `--stewards` and serves
-//! every registered operation, `/openapi.json` and MCP at `/mcp` on 127.0.0.1; `mcp`
-//! serves the MCP tools over stdio. A refusal prints the error document on stderr and
-//! exits with the code's status.
+//! every registered operation, `/openapi.json` and MCP at `/mcp` on `--host` (default
+//! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
+//! names. `mcp` serves the MCP tools over stdio. A refusal prints the error document on
+//! stderr and exits with the code's status.
 
 mod mcp;
 
-use std::net::SocketAddr;
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::path::PathBuf;
 use std::sync::Arc;
 
@@ -30,7 +32,12 @@ use sha2::{Digest, Sha256};
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 enum Mode {
-    Serve { stewards: PathBuf, port: u16 },
+    Serve {
+        stewards: PathBuf,
+        port: u16,
+        host: IpAddr,
+        public_host: Option<String>,
+    },
     Mcp,
 }
 
@@ -43,12 +50,15 @@ struct Args {
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     let mode = args.next();
     let (mut db, mut catalog, mut stewards, mut port) = (None, None, None, None);
+    let (mut host, mut public_host) = (None, None);
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--db" => &mut db,
             "--catalog" => &mut catalog,
             "--stewards" => &mut stewards,
             "--port" => &mut port,
+            "--host" => &mut host,
+            "--public-host" => &mut public_host,
             _ => return Err(Error::invalid_parameter(&flag)),
         };
         *slot = Some(args.next().ok_or_else(|| Error::invalid_parameter(&flag))?);
@@ -61,11 +71,27 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
             port: port
                 .and_then(|p| p.parse().ok())
                 .ok_or_else(|| Error::invalid_parameter("--port"))?,
+            host: match host {
+                Some(host) => host
+                    .parse()
+                    .map_err(|_| Error::invalid_parameter("--host"))?,
+                None => Ipv4Addr::LOCALHOST.into(),
+            },
+            public_host,
         },
         // `mcp` loads no branding and listens on no port.
-        Some("mcp") if stewards.is_some() => return Err(Error::invalid_parameter("--stewards")),
-        Some("mcp") if port.is_some() => return Err(Error::invalid_parameter("--port")),
-        Some("mcp") => Mode::Mcp,
+        Some("mcp") => {
+            let serve_only = [
+                ("--stewards", &stewards),
+                ("--port", &port),
+                ("--host", &host),
+                ("--public-host", &public_host),
+            ];
+            if let Some((flag, _)) = serve_only.iter().find(|(_, value)| value.is_some()) {
+                return Err(Error::invalid_parameter(flag));
+            }
+            Mode::Mcp
+        }
         _ => return Err(Error::invalid_parameter("mode")),
     };
     Ok(Args {
@@ -87,7 +113,12 @@ async fn main() {
     let catalog =
         Catalog::open(&args.db, args.catalog.as_deref()).unwrap_or_else(|err| refuse(&err));
     match args.mode {
-        Mode::Serve { stewards, port } => {
+        Mode::Serve {
+            stewards,
+            port,
+            host,
+            public_host,
+        } => {
             let steward =
                 Steward::load(&stewards, catalog.name()).unwrap_or_else(|err| refuse(&err));
             let server = Server {
@@ -95,7 +126,7 @@ async fn main() {
                 steward: Some(steward),
                 version: VERSION,
             };
-            serve(Arc::new(server), port).await;
+            serve(Arc::new(server), (host, port).into(), public_host).await;
         }
         Mode::Mcp => {
             let server = Server {
@@ -108,7 +139,7 @@ async fn main() {
     }
 }
 
-async fn serve(server: Arc<Server>, port: u16) {
+async fn serve(server: Arc<Server>, addr: SocketAddr, public_host: Option<String>) {
     let openapi = ops::openapi(VERSION).to_json().expect("OpenAPI serializes");
     let mut app = Router::new().route("/openapi.json", get(|| async move { json(openapi) }));
     for op in ops::all() {
@@ -119,11 +150,12 @@ async fn serve(server: Arc<Server>, port: u16) {
     }
     let app = app
         .with_state(Arc::clone(&server))
-        .merge(mcp::router(server));
-    let listener = tokio::net::TcpListener::bind(("127.0.0.1", port))
+        .merge(mcp::router(server, public_host));
+    let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("bind the port");
-    // The client address keys the `/mcp` rate limit.
+    // The peer address keys the `/mcp` rate limit of a request not proven to come
+    // through the edge.
     axum::serve(
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>(),
@@ -171,15 +203,20 @@ fn json(body: String) -> Response {
     ([(header::CONTENT_TYPE, "application/json")], body).into_response()
 }
 
+/// The edge worker's cache-generation parameter (`reg_webapp/edge/src/index.ts`):
+/// part of the edge cache key, never an operation parameter.
+const EDGE_VERSION_PARAM: &str = "__edge_v";
+
 /// One operation over HTTP: `{data, meta}` with today's `ETag` and `Cache-Control`
 /// policy and a 304 for a matching `If-None-Match`, or `{error, meta}` with the
 /// code's status.
 async fn answer(
     op: &'static Operation,
     State(server): State<Arc<Server>>,
-    Query(query): Query<Vec<(String, String)>>,
+    Query(mut query): Query<Vec<(String, String)>>,
     headers: HeaderMap,
 ) -> Response {
+    query.retain(|(name, _)| name != EDGE_VERSION_PARAM);
     let answer = run(&server, op, query).await;
     let body = answer.body.to_string();
     if answer.status != StatusCode::OK {

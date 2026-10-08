@@ -2,8 +2,9 @@
 # (REFACTOR_SPEC.md §6.5; topology in reg_webapp/DESIGN.md → "Deployment").
 #
 # PRs: build-ONLY — proves the multi-stage Dockerfile still builds, including
-# the `reg-meta update` DB bake and the #224 provenance-confinement assertion
-# #3 (the RUN check fails the build if reg_meta.provenance.db* is present).
+# the `reg-meta update` DB bake, the `reg-meta` Rust build and the #224
+# provenance-confinement assertion #3 (the RUN check fails the build if
+# reg_meta.provenance.db* is present).
 #
 # Pushes to main: a `changes` filter scopes the work — image-affecting paths
 # rebuild + push + `flyctl deploy` the origin; SPA/edge-affecting paths build
@@ -80,8 +81,7 @@ jobs:
           # are worth avoiding.
           filters: |
             image:
-              - "reg_webapp/backend/**"
-              - "reg_webapp/frontend/**"
+              - "reg_webapp/backend/pyproject.toml"
               - "reg_webapp/stewards/**"
               - "reg_webapp/Dockerfile"
               - "reg_webapp/docker-entrypoint.sh"
@@ -89,7 +89,9 @@ jobs:
               - "reg_webapp/fly.swecov.toml"
               - "reg_meta/**"
               - "reg_meta_build/pyproject.toml"
-              - "crates/reg-core-py/pyproject.toml"
+              - "crates/**"
+              - "Cargo.toml"
+              - "Cargo.lock"
               - ".dockerignore"
               - ".github/workflows/container-build.yml"
               - "uv.lock"
@@ -98,6 +100,7 @@ jobs:
               - "reg_webapp/frontend/**"
               - "reg_webapp/edge/**"
               - "reg_webapp/backend/openapi.json"
+              - "crates/reg-meta/openapi.json"
               - ".github/workflows/container-build.yml"
 
   # Pending-schema-bump guard (#448) — its OWN job so EVERY deploy path can consult
@@ -148,7 +151,9 @@ jobs:
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "Baking reg_meta release: $tag"
       # Pending-schema-bump guard (#448). Compares main's SCHEMA_VERSION /
-      # DOC_SCHEMA_VERSION against the released tag's via a three-way verdict
+      # DOC_SCHEMA_VERSION (the bake's `reg-meta update` refuses an asset behind
+      # them) and the Rust server's minimum (`reg-meta serve` refuses to boot on
+      # an older asset) against the released tag's via a three-way verdict
       # (break / pending / compatible) and FAILS RED (non-zero exit) on a genuine
       # break or a schema-behind release that's also MISSING a DB asset. Because
       # build-image, deploy, AND edge-deploy all gate on `needs.schema-guard.result
@@ -194,9 +199,11 @@ jobs:
           # Anchored grep (^…) so it can't match an f-string/usage of the constant.
           code_db=$(grep -oP '^SCHEMA_VERSION = "\K[^"]+' reg_meta/src/reg_meta/db.py)
           code_doc=$(grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+' reg_meta/src/reg_meta/doc_db.py)
+          # `pub const SCHEMA: (u32, u32) = (9, 3);` -> 9.3
+          code_rust=$(grep -oP '^pub const SCHEMA: \(u32, u32\) = \(\K\d+, \d+' crates/reg-catalog/src/lib.rs | tr -d ' ' | tr , .)
           asset_db=$(git show "$TAG:reg_meta/src/reg_meta/db.py" | grep -oP '^SCHEMA_VERSION = "\K[^"]+')
           asset_doc=$(git show "$TAG:reg_meta/src/reg_meta/doc_db.py" | grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+')
-          verdict=$(python3 scripts/schema_pending_bump.py --code-db "$code_db" --code-doc "$code_doc" --asset-db "$asset_db" --asset-doc "$asset_doc")
+          verdict=$(python3 scripts/schema_pending_bump.py --code-db "$code_db" --code-doc "$code_doc" --code-rust "$code_rust" --asset-db "$asset_db" --asset-doc "$asset_doc")
           case "$verdict" in
             break)
               # A major schema mismatch is a genuine incompatibility — NOT the neutralizable
@@ -339,7 +346,6 @@ jobs:
           build-args: |
             REG_META_TAG=${{ needs.schema-guard.outputs.tag }}
             REG_META_FLAVOR=swecov
-            REG_WEBAPP_STEWARD=swecov
 
   deploy:
     needs: [build-image, wait-ci, schema-guard]
@@ -379,9 +385,10 @@ jobs:
         if: steps.head.outputs.skip != 'true'
         with:
           version: "0.4.101"
-      # Two gates guard a bad image: the container entrypoint runs the smoke
-      # gate before uvicorn serves (a bad image exits non-zero), and fly.toml's
-      # /api/context HTTP check must pass before flyctl reports success.
+      # Two gates guard a bad image: the container entrypoint probes
+      # `context`, `search` and `/mcp` before `reg-meta serve` takes traffic (a
+      # bad image exits non-zero), and fly.toml's /api/context HTTP check must
+      # pass before flyctl reports success.
       # --ha=false keeps the single-machine topology (see fly.toml header).
       - if: steps.head.outputs.skip != 'true'
         run: >-
@@ -528,7 +535,7 @@ jobs:
               fi
             done
 
-  # Edge worker (SPA + /api passthrough) for catalog.swecov.se. Runs AFTER the
+  # Edge worker (SPA + /api and /mcp passthrough) for catalog.swecov.se. Runs AFTER the
   # global origin deploy (deploy-skew guard): on a contract-changing push the SPA
   # must not go live before the origin serves the new endpoints. `needs.deploy`
   # being skipped (edge-only change → no image rebuild) is fine; a FAILED
@@ -604,7 +611,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
       # Standing #220 regression probe: the /api/* Cache Rule and the ETag
       # contract are zone-dashboard state (click-ops, no IaC) — assert after
-      # every edge deploy that a catalog read still caches (MISS/HIT family,
+      # every edge deploy that a search read still caches (MISS/HIT family,
       # not DYNAMIC) and revalidates with an edge 304. Catches silent Cache
       # Rule deletion / zone drift that nothing else in CI would notice.
       # Also asserts the HIT is YOUNG (#318): this deploy started a new cache
@@ -614,7 +621,7 @@ jobs:
       - name: Edge cache probe (#220 + #318)
         if: steps.head.outputs.skip != 'true'
         run: |
-          url="https://catalog.swecov.se/api/catalog"
+          url="https://catalog.swecov.se/api/search?q=inkomst"
           curl -sfo /dev/null "$url"   # warm the colo
           status=""
           for _ in 1 2 3; do
@@ -631,6 +638,27 @@ jobs:
           code=$(curl -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
           echo "If-None-Match -> $code"
           [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
+      # Public-host MCP smoke (RUST_RUNTIME_SPEC.md package 3a.9): the hosted
+      # endpoint answers JSON-RPC through the edge — `initialize`, `tools/list`
+      # naming `search`, and one `search` call that is not a tool error. Fails
+      # when the worker stops routing /mcp, the origin's allowed hosts drop the
+      # public host, or the tool stops answering.
+      - name: Public MCP smoke
+        if: steps.head.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          rpc() {
+            curl -sfS https://catalog.swecov.se/mcp \
+              -H 'accept: application/json, text/event-stream' \
+              -H 'content-type: application/json' \
+              -H 'mcp-protocol-version: 2025-11-25' \
+              -d "{\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"$1\", \"params\": $2}"
+          }
+          rpc initialize '{"protocolVersion": "2025-11-25", "capabilities": {}, "clientInfo": {"name": "container-build", "version": "0"}}' \
+            | jq -e '.result.serverInfo.name == "reg-meta"'
+          rpc tools/list '{}' | jq -e '[.result.tools[].name] | index("search")'
+          rpc tools/call '{"name": "search", "arguments": {"q": "inkomst", "limit": 1}}' \
+            | jq -e '.result.isError == false'
 
   # Edge worker (SPA + /api passthrough) for data.swecov.se. Separate Worker
   # deployment from catalog.swecov.se so each origin can bump its own cache
@@ -683,7 +711,7 @@ jobs:
       - name: SWECOV edge cache probe (#220 + #318)
         if: steps.head.outputs.skip != 'true'
         run: |
-          url="https://data.swecov.se/api/catalog"
+          url="https://data.swecov.se/api/search?q=inkomst"
           curl -sfo /dev/null "$url"   # warm the colo
           status=""
           for _ in 1 2 3; do
