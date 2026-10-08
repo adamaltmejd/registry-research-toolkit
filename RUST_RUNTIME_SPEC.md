@@ -112,7 +112,7 @@ About 70% of the hotspots are A or B. The main ones:
   | `same_as` BFS                                                                                                            | A     | `same_as_resolution` table                                              |
   | Concept-group tag N+1, group member assembly                                                                             | A     | `concept_group_tag`, pre-ordered member rows                            |
   | `get coded-variables` (72 s)                                                                                             | A     | `coded_variable_stats` per scope; reader applies only filters and limit |
-  | `variable_fts_content` view (correlated `group_concat` for 43k variables)                                                | A     | Materialized FTS content table                                          |
+  | `variable_search_text` view (correlated `group_concat` for 43k variables)                                                | A     | Materialized FTS content table                                          |
   | Search arm merge, scoring, cursor, fold decisions; period intersection with a request; `get diff`; order materialization | C     | Stays in the reader                                                     |
 
 Consequences:
