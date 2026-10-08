@@ -1,0 +1,27 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "quantity"
+
+[[errata.support]]
+variable = "1.5"
+variant = "1.10"
+column = ""
+edition = "2021"
+expected_fields = {{expected_fields source=scb-registerinformation variable=5 column= edition=2021 fields=all}}
+expected_period_text = {{period_text source=scb-registerinformation variable=5 column= edition=2021}}
+expected_scope = {{edition_scope source=scb-registerinformation variable=5 column= edition=2021}}
+expected_period = {{period_scope source=scb-registerinformation variable=5 column= edition=2021}}
+evidence = "A blank physical column is source support; the witness establishes quantity only."
+noted = "2026-09-30"
+kind = "nonphysical_projection"
+authority = { variable = "1.5", variant = "1.10", column = "FIRST", edition = "2020", expected_fields = {{expected_fields source=scb-registerinformation variable=5 column=FIRST edition=2020 fields=prose}}, expected_period_text = {{period_text source=scb-registerinformation variable=5 column=FIRST edition=2020}}, expected_scope = {{edition_scope source=scb-registerinformation variable=5 column=FIRST edition=2020}}, expected_period = {{period_scope source=scb-registerinformation variable=5 column=FIRST edition=2020}}, evidence = "A blank physical column is source support; the witness establishes quantity only.", noted = "2026-09-30" }
+# Recorded by running the code under test on this fixture; no public
+# authoring tool computes it (carried over from the replaced test).
+expected_coding_sha256 = "71aaef38bb90625035a38986013a58560ae3b7378fdfe62a40f1f573a26c3259"

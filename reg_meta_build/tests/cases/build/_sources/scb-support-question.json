@@ -1,0 +1,30 @@
+{
+  "description": "Variable 1.5 delivers FIRST and SECOND under one source record (CVID 20); its FIRST projection asserts a question that variable 1.6 (CVIDs 21, 22) supplies authoritatively.",
+  "scb": {
+    "registerinformation": [
+      {"colname": "FIRST", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
+      {"colname": "SECOND", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
+      {
+        "colname": "FIRST",
+        "cvid": 21,
+        "var_id": 6,
+        "year": "2020",
+        "regver_id": 2020,
+        "varname": "Authority"
+      },
+      {
+        "colname": "FIRST",
+        "cvid": 22,
+        "var_id": 6,
+        "year": "2021",
+        "regver_id": 2021,
+        "varname": "Authority"
+      }
+    ],
+    "vardemangder": [
+      "Svar|1|1|Legacy category|20|7102",
+      "Svar|1|1|Authoritative yes|21|7101",
+      "Svar|1|1|Authoritative yes|22|7101"
+    ]
+  }
+}

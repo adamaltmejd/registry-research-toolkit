@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_curation_support_errata_boundary.py::test_nonphysical_support_is_stale_when_its_column_becomes_physical"
+  ],
+  "note": "The projection is selected as a negative column: once the blank column carries a name, nothing selects.",
+  "sources": {
+    "description": "scb-support-nonphysical after the blank 2021 column is delivered as NEW.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "NEW", "cvid": 21, "var_id": 5, "year": "2021", "regver_id": 2021},
+        {"colname": "FIRST", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020}
+      ]
+    }
+  },
+  "authored_from": "scb-support-nonphysical"
+}
