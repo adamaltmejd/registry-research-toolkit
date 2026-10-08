@@ -87,6 +87,13 @@ simplification reads as intent and a deferral can't silently rot.
 
 # Testing policy
 
+Most changes need no new test. Verify by running the existing suite or the real
+pipeline; a check run once is not a permanent test. Add or extend a test only when you
+can name the behavior it pins, a credible regression that makes it fail, and why no
+existing boundary case already catches that failure. Two kinds are defects on sight:
+**tautological** tests (the expected value comes from the code under test) and
+**change-detector** tests (they break on a refactor that changes no boundary).
+
 Tests pin **contracts and behavior**, never implementation. The toolkit is a
 deterministic compiler (`reg_meta_build`) that feeds an immutable artifact to stateless
 readers (`reg_meta`, `reg_webapp`), so nearly every behavior is observable at a boundary
@@ -99,37 +106,30 @@ skill applies them to a change and to a sweep.
   server from a boundary and observes its output. A unit test is the exception: allowed
   only where it pins behavior a boundary case cannot reach well (a grammar, interval
   algebra, a pure fold), stated as input → expected output, and it must survive a
-  rewrite of the code behind it. A test that breaks on a refactor that changes no
-  boundary is the defect, not the refactor.
+  rewrite of the code behind it.
 - **Assert only at a named boundary**: built-artifact content, CLI JSON, library return
   models, HTTP responses, `project_data.json` validation results, order-manifest bytes,
   curation-TOML load or located failure, the FQID and period grammars. Anything else is
-  reached through one of those, not tested on its own. Repository tooling under
+  reached through one of those, not tested on its own; conformance cases use only public
+  contracts (`ARCHITECTURE.md` → "Testing strategy"). No private-name imports
+  (`from x import _helper`) and no patching of internal modules; mock only process
+  boundaries: network, clock, filesystem, subprocess. Repository tooling under
   `scripts/tests` and `.claude/hooks/tests` asserts that tool's own contract (skill
   discovery, a lint's verdict, a hook's exit code and message).
-- **Conformance uses public contracts.** Cases may exercise CLI JSON, HTTP responses,
-  order manifests, or documented public library return-model contracts. A public
-  function name alone does not establish a contract: assert observable domain results or
-  located errors, never object internals, call graphs or query implementation. Do not
-  add product adapters solely to expose a test seam. Keep requests and expected results
-  readable as data; Python-specific operation names can be revised in a separate
-  portability pass after a byte-identical relocation.
-- **No private-name imports in tests** (`from x import _helper`) and no patching of
-  internal modules. Mock only process boundaries: network, clock, filesystem,
-  subprocess.
 - **Oracles are data.** Expected behavior lives in golden corpora and snapshot files
   (`input → expected`) readable without Python. Changing an expected file is a content
-  decision reviewed in the diff; never regenerate goldens to make a run pass without
-  reading what changed and saying why in the commit.
+  decision reviewed in the diff, with the reason in the commit. Never weaken, regenerate
+  or delete a test only to get a passing run.
 - **Fixtures come from readable source** (TOML/JSON/CSV run through the real pipeline),
   never from Python literals of database rows. The synthetic artifact is the unit.
-- **About one test per stated behavior, at its hardest case**: a second run, reordered
-  input, an interval edge, a refusal beside its allowed twin. Not the first case that
-  passes. Named by behavior; no test file over 800 lines, split by contract surface.
-- **Expected values come from outside the code under test**: a golden, the source
-  fixture, the spec, or agreement between two adapters. Never its own output or a copy
-  of its logic.
-- **Every test can fail.** A new or changed test's comment names the product change that
+- **At most one case per behavior, at its hardest case, and only where no existing case
+  covers it**: a second run, reordered input, an interval edge, a refusal beside its
+  allowed twin. Not the first case that passes. Named by behavior; no test file over 800
+  lines, split by contract surface.
+- **Expected values come from outside the code under test**, or the test is
+  tautological: a golden, the source fixture, the spec, or agreement between two
+  adapters. Derive them from the spec or fixture before implementing.
+- **Every test can fail.** A new or changed test's comment names the regression that
   makes it fail. A refusal asserts the located error code, not only that something
   failed. A contract is asserted once, at the outermost boundary that reaches it; a twin
   is deleted.
@@ -140,11 +140,14 @@ skill applies them to a change and to a sweep.
   Hypothesis for grammars and interval algebra.
 - **Structural validation has one authority.** `validate_built_db` owns artifact
   invariants; tests run it on the synthetic artifact, they do not re-derive its checks.
-- **Bug fix = a regression case in the owning corpus**, extending its behavior's test,
-  not a new assertion block in a helper test.
+- **A bug fix adds a regression case to the owning corpus only when no existing case
+  reaches the bug**, extending that behavior's case rather than a helper test. The case
+  must fail on the pre-fix code.
 - **Within budget.** Each package's suite stays inside its time budget in
   `ARCHITECTURE.md` → "Tiers". A check that costs more than its behavior is worth moves
   to a slower tier (real-seed or release gate) or goes.
+- **Report what ran.** Name the checks you ran and the ones you did not; never claim an
+  unrun check passed.
 - **Frontend follows the same rule**: assert on rendered DOM, the accessibility tree and
   the codegen'd API types, not component internals. No screenshot regression. A
   UI-specific regime is a separate, later decision.
