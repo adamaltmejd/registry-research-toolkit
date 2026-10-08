@@ -232,13 +232,7 @@ fn read_manifest(path: &Path) -> rusqlite::Result<BTreeMap<String, String>> {
         .collect()
 }
 
-/// The FQID slug grammar `^[a-z](?:-?[a-z0-9])*$` (`reg_meta.fqid`).
+/// A steward id is a slug: exactly what parses as a one-segment FQID.
 fn is_slug(value: &str) -> bool {
-    let bytes = value.as_bytes();
-    bytes.first().is_some_and(u8::is_ascii_lowercase)
-        && !bytes.ends_with(b"-")
-        && !value.contains("--")
-        && bytes
-            .iter()
-            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || *b == b'-')
+    matches!(value.parse(), Ok(reg_core::Fqid::Provider { .. }))
 }
