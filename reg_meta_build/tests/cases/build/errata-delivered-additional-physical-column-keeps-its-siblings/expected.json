@@ -1,0 +1,26 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "where": {"variable": ["v27-add", "v27-other", "v27-second", "v27-earlier"]},
+      "fields": ["variable", "column", "valid_from"],
+      "rows": [
+        ["v27-add", "ADD", "2020-01-01"],
+        ["v27-add", "ADD", "2022-01-01"],
+        ["v27-other", "OTHER", "2020-01-01"],
+        ["v27-second", "SECOND", "2020-01-01"],
+        ["v27-earlier", "EARLIER", "2018-01-01"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"valid_from": "2020-01-01", "column": ["ADD", "ADDP"]},
+      "fields": ["variable", "data_type"],
+      "rows": [
+        ["v27-add", null],
+        ["v28-addp", "text"]
+      ]
+    }
+  ]
+}

@@ -27,6 +27,15 @@
         ["NEW", "member:22", "catalog", "scb/sample/quantity"],
         ["OLD", "member:21", "catalog", "scb/sample/quantity"]
       ]
+    },
+    {
+      "table": "states",
+      "where": {"column": ["OLD", "NEW"]},
+      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["quantity", "OLD", "2020-01-01", "2020-12-31"],
+        ["quantity", "NEW", "2021-01-01", "2021-12-31"]
+      ]
     }
   ]
 }
