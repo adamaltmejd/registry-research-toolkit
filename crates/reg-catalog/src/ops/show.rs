@@ -9,6 +9,10 @@ use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
 
+mod browse;
+
+use browse::{Coverage, Delivery, RegisterCoverage};
+
 use super::refs::{self, Target, fqid};
 use super::{Params, Server};
 use crate::held::{self, Narrow};
@@ -56,6 +60,7 @@ pub struct RegisterChild {
     name: Option<String>,
     purpose: Option<String>,
     tags: Vec<Tag>,
+    coverage: Option<RegisterCoverage>,
 }
 
 /// A register: its variables, concept groups and variants in scope.
@@ -74,6 +79,10 @@ pub struct Register {
 pub struct VariableChild {
     fqid: String,
     name: Option<String>,
+    /// Null in holdings for a variable with no held delivery.
+    coverage: Option<Coverage>,
+    /// Every `(variant, column)` the variable is delivered under in scope.
+    deliveries: Vec<Delivery>,
 }
 
 /// A variable's shared metadata. Its states, lineage and succession chain are the
@@ -206,6 +215,10 @@ pub struct Member {
     name: Option<String>,
     facets: Vec<Facet>,
     delivery_column: Option<String>,
+    /// Present on a group's own page only: the member's coverage, its column's
+    /// for a representation member (empty when no state delivers the column).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    coverage: Option<Coverage>,
 }
 
 #[derive(Clone, Serialize, ToSchema)]
@@ -290,11 +303,12 @@ pub fn show(server: &Server, scope: Scope, params: &Params) -> Result<Value, Err
             Show::Classification(classification(&conn, scope, id, &slug)?)
         }
         Target::Group {
+            register_id,
             provider,
             register,
             key,
         } => {
-            let group = concept_groups(&conn, scope, &provider, &register)?
+            let group = concept_groups(&conn, scope, &provider, &register, Some(register_id))?
                 .into_iter()
                 .find(|g| g.key == key)
                 .ok_or_else(not_found)?;
@@ -384,6 +398,7 @@ fn provider(conn: &Connection, scope: Scope, id: i64, slug: &str) -> Result<Prov
             row.get(3)?,
         ))
     })?;
+    let mut coverage = browse::register_coverage(conn, scope, id)?;
     let children = registers
         .into_iter()
         .map(|(register_id, register, name, purpose)| {
@@ -392,6 +407,7 @@ fn provider(conn: &Connection, scope: Scope, id: i64, slug: &str) -> Result<Prov
                 name,
                 purpose,
                 tags: register_tags(conn, register_id)?,
+                coverage: coverage.remove(&register_id),
             })
         })
         .collect::<Result<_, Error>>()?;
@@ -505,35 +521,44 @@ fn register(
         |row| Ok((row.get(0)?, row.get(1)?)),
     )?;
     let sql = format!(
-        "SELECT v.slug, v.name FROM variable v WHERE v.register_id = ? \
+        "SELECT v.variable_id, v.slug, v.name FROM variable v WHERE v.register_id = ? \
          AND v.slug IS NOT NULL AND {} ORDER BY v.slug",
         held::variable(scope, "v.variable_id", Narrow::default())
     );
+    let mut deliveries = browse::deliveries(conn, scope, id)?;
+    let coverage = browse::variable_coverage(conn, scope, id, &deliveries)?;
     let children = rows(conn, &sql, [id], |row| {
-        Ok(VariableChild {
-            fqid: format!("{provider}/{slug}/{}", row.get::<_, String>(0)?),
-            name: row.get(1)?,
-        })
-    })?;
+        Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?, row.get(2)?))
+    })?
+    .into_iter()
+    .map(|(variable_id, variable, name)| VariableChild {
+        fqid: format!("{provider}/{slug}/{variable}"),
+        name,
+        coverage: coverage.get(&variable_id).cloned(),
+        deliveries: deliveries.remove(&variable_id).unwrap_or_default(),
+    })
+    .collect();
     Ok(Register {
         fqid: format!("{provider}/{slug}"),
         name,
         purpose,
         tags: register_tags(conn, id)?,
         children,
-        groups: concept_groups(conn, scope, provider, slug)?,
+        groups: concept_groups(conn, scope, provider, slug, None)?,
         variants: variants(conn, scope, id, provider, slug)?,
     })
 }
 
 /// Today's `list_concept_groups`: a register's concept groups with their members in
 /// scope, by key. Members order by their first facet value, FQID and column; a
-/// group's tags aggregate its members' tags.
+/// group's tags aggregate its members' tags. With `coverage_of` (the register's id,
+/// for a group's own page) each member carries its coverage, as today's group node.
 fn concept_groups(
     conn: &Connection,
     scope: Scope,
     provider: &str,
     register: &str,
+    coverage_of: Option<i64>,
 ) -> Result<Vec<Group>, Error> {
     /// A group being assembled: members by member id (with their variable id) and
     /// axes by ordinal.
@@ -584,6 +609,7 @@ fn concept_groups(
                     name: row.get(8)?,
                     facets: Vec::new(),
                     delivery_column: row.get(5)?,
+                    coverage: None,
                 },
             ))
             .1;
@@ -603,23 +629,25 @@ fn concept_groups(
         }
     }
     drop(cursor);
+    if let Some(register_id) = coverage_of {
+        let coverage = browse::MemberCoverage::new(conn, scope, register_id)?;
+        for (id, member) in groups.values_mut().flat_map(|g| g.members.values_mut()) {
+            member.coverage = coverage.of(*id, member.delivery_column.as_deref());
+        }
+    }
     groups
         .into_values()
         .map(|group| {
             let ids: BTreeSet<i64> = group.members.values().map(|(id, _)| *id).collect();
             let mut members: Vec<Member> = group.members.into_values().map(|(_, m)| m).collect();
-            members.sort_by(|a, b| {
-                let key = |m: &Member| {
-                    (
-                        m.facets
-                            .first()
-                            .map(|f| f.value.clone())
-                            .unwrap_or_default(),
-                        m.fqid.clone(),
-                        m.delivery_column.clone().unwrap_or_default(),
-                    )
-                };
-                key(a).cmp(&key(b))
+            members.sort_by_cached_key(|m| {
+                let first = m.facets.first().map(|f| f.value.clone());
+                let column = m.delivery_column.clone();
+                (
+                    first.unwrap_or_default(),
+                    m.fqid.clone(),
+                    column.unwrap_or_default(),
+                )
             });
             Ok(Group {
                 fqid: format!("group/{provider}/{register}/{}", group.key),
@@ -1047,6 +1075,7 @@ fn classification_groups(conn: &Connection) -> Result<Vec<Group>, Error> {
                         label: row.get(8)?,
                     }],
                     delivery_column: None,
+                    coverage: None,
                 },
             ))
         },
