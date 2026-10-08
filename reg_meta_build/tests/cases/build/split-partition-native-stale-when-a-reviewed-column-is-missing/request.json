@@ -1,9 +1,10 @@
 {
   "replaces": [
-    "test_curation_split_partition_boundary.py::test_native_partition_is_stale_when_its_reviewed_columns_change[reviewed-column-missing]"
+    "test_curation_split_partition_boundary.py::test_native_partition_is_stale_when_its_reviewed_columns_change[reviewed-column-missing]",
+    "test_source_scope_partitions.py::test_stale_partition_case_withholds_unsplit_family_in_diagnostic_mode"
   ],
-  "note": "A native partition guards its complete column set; drift withholds the family.",
-  "fails_if": "`_column_partition_plan` accepts a declared column map that is a superset of the delivered columns, so the partition naming NEW still applies when only OLD is delivered",
+  "note": "A native partition guards its complete column set; drift withholds the family. The exact issue list comes from test_source_scope_partitions.py's stale-partition test: the stale partition plus the withheld unsplit family's unresolved_catalog_identity, and nothing else (the old test's target_projection_changed is how a stored case reported the staleness; a build reports it at compile as this case's stale_curation_entry).",
+  "fails_if": "`_column_partition_plan` accepts a declared column map that is a superset of the delivered columns, so the partition naming NEW still applies when only OLD is delivered; or the compile stops mapping the stale partition's base to an explicit unresolved provider key, so the unsplit family is formed (or the build aborts) instead of reporting unresolved_catalog_identity",
   "sources": {
     "description": "Variable 1.5 delivered only as OLD (2020, CVID 21).",
     "scb": {

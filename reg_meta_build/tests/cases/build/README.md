@@ -57,6 +57,9 @@ the behavior in plain words. For example,
   | `period-family-`    | relations into a curated `[[representation.period_family]]`                                  |
   | `source-relation-`  | literal source relationships, unbound code lists and source findings                         |
   | `value-`            | source code lists bound to native members                                                    |
+  | `errata-column-`    | `[[errata.column]]` declared columns: flags, periods and steward storage types               |
+  | `dependency-`       | curated groups, tags, panel keys and relations whose catalog dependency is withheld          |
+  | `coverage-`         | delivery the formed variables owe the catalog, written or explicitly withdrawn               |
 
 Later stages add their own prefixes to this table.
 

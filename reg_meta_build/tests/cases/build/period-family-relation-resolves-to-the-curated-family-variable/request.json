@@ -1,8 +1,9 @@
 {
   "replaces": [
-    "test_build_catalog_period_family_boundary.py::test_relation_resolves_to_curated_period_family_variable"
+    "test_build_catalog_period_family_boundary.py::test_relation_resolves_to_curated_period_family_variable",
+    "test_source_scope_naming.py::test_stored_period_family_name_keeps_its_provider_key_beside_native_names"
   ],
-  "note": "The family variable slug, calendar, exists only through the period-family curation.",
-  "fails_if": "the period-family compile in curation_compile.py stops declaring the family variable slug `calendar` for register 2's month columns, so the relations.toml edge to scb/other/calendar has no target and no same_as rows are built",
+  "note": "The family variable slug, calendar, exists only through the period-family curation. From the scope naming test: a curated period-family name beside native names leaves each native variable its literal provider key (the fixture's VarId 101 for value).",
+  "fails_if": "the period-family compile in curation_compile.py stops declaring the family variable slug `calendar` for register 2's month columns, so the relations.toml edge to scb/other/calendar has no target and no same_as rows are built; or `native_provider_keys` (source_naming.py) derives provider keys from non-native naming targets too, so the family's non-R.V source id aborts the build",
   "sources": "scb-calendar-months"
 }

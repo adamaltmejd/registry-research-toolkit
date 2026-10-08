@@ -16,6 +16,20 @@
       "where": {"code": "stale_curation_entry"},
       "fields": ["case_id"],
       "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable"],
+      "rows": [
+        ["value"]
+      ]
+    },
+    {
+      "table": "warnings",
+      "fields": ["register", "variable", "code", "detail"],
+      "rows": [
+        ["sample", null, "unresolved_catalog_identity", "Accepted while the source stays unresolved."]
+      ]
     }
   ]
 }
