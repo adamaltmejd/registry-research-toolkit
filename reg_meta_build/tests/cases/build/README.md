@@ -33,34 +33,36 @@ the behavior in plain words. For example,
 `coding-choice-stale-when-competing-list-changes` or
 `split-partition-native-stale-when-a-reviewed-column-is-missing`.
 
-  | Surface prefix      | Covers                                                                                       |
-  | ------------------- | -------------------------------------------------------------------------------------------- |
-  | `coding-`           | `[[coding.choice]]`, `[[coding.warning]]` and `[[coding.documented]]` certificates           |
-  | `support-errata-`   | `[[errata.support]]` source-support decisions                                                |
-  | `split-sos-`        | SOS `[[identity.split]]` and `[[identity.rename]]`                                           |
-  | `split-partition-`  | SCB `[[identity.partition]]` and `[[identity.column_owner]]`, and slices that reference them |
-  | `errata-delivered-` | `[[errata.delivered]]` additions                                                             |
-  | `errata-sos-`       | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                         |
-  | `errata-field-`     | `[[errata.field]]` checked corrections of one source occurrence                              |
-  | `errata-period-`    | `[[errata.occurrence_period]]` checked period corrections                                    |
-  | `enrichment-`       | `[[enrichment.description]]` and `[[enrichment.alias]]`                                      |
-  | `route-sos-`        | SOS `[[identity.route]]` and styrtabell lookup subsets                                       |
-  | `topology-sos-`     | SOS variants formed from delivered subset names                                              |
-  | `thin-`             | authored thin-provider registers (`Forsakringskassan/`, `scb_canonical/`)                    |
-  | `representation-`   | `[[representation.delivery_metadata]]` and `[[representation.parallel]]`                     |
-  | `matrix-`           | `[[representation.matrix]]` answer matrices                                                  |
-  | `siblings-`         | sibling grouping of co-delivered columns                                                     |
-  | `relations-`        | `relations.toml` edges                                                                       |
-  | `code-label-pair-`  | `[[code_label_pair]]`                                                                        |
-  | `search-pins-`      | `search_pins.toml`                                                                           |
-  | `acknowledge-`      | `[[acknowledge]]` entries matched against build issues                                       |
-  | `classification-`   | classification books, references and label bindings                                          |
-  | `scope-`            | register-scoped builds and checks, and references out of the slice                           |
-  | `period-family-`    | relations into a curated `[[representation.period_family]]`                                  |
-  | `source-relation-`  | literal source relationships, unbound code lists and source findings                         |
-  | `value-`            | source code lists bound to native members                                                    |
-  | `naming-`           | generated and authored slug pins under the zone freeze states                                |
-  | `edition-`          | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]` |
+  | Surface prefix         | Covers                                                                                                                  |
+  | ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+  | `coding-`              | `[[coding.choice]]`, `[[coding.warning]]`, `[[coding.documented]]`, `[[coding.sentinel]]` and `[[coding.uncoded]]`      |
+  | `support-errata-`      | `[[errata.support]]` source-support decisions                                                                           |
+  | `split-sos-`           | SOS `[[identity.split]]` and `[[identity.rename]]`                                                                      |
+  | `split-partition-`     | SCB `[[identity.partition]]`, `[[identity.column_owner]]` and `[[identity.unassigned]]`, and slices that reference them |
+  | `errata-delivered-`    | `[[errata.delivered]]` additions                                                                                        |
+  | `errata-column-`       | `[[errata.column]]` placements and `[[errata.version]]` declared editions                                               |
+  | `errata-sos-`          | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                                                    |
+  | `errata-field-`        | `[[errata.field]]` checked corrections of one source occurrence                                                         |
+  | `errata-period-`       | `[[errata.occurrence_period]]` checked period corrections                                                               |
+  | `checked-corrections-` | several checked corrections in one build, one register per claim                                                        |
+  | `enrichment-`          | `[[enrichment.description]]` and `[[enrichment.alias]]`                                                                 |
+  | `route-sos-`           | SOS `[[identity.route]]` and styrtabell lookup subsets                                                                  |
+  | `topology-sos-`        | SOS variants formed from delivered subset names                                                                         |
+  | `thin-`                | authored thin-provider registers (`Forsakringskassan/`, `scb_canonical/`)                                               |
+  | `representation-`      | `[[representation.delivery_metadata]]` and `[[representation.parallel]]`                                                |
+  | `matrix-`              | `[[representation.matrix]]` answer matrices                                                                             |
+  | `siblings-`            | sibling grouping of co-delivered columns                                                                                |
+  | `relations-`           | `relations.toml` edges                                                                                                  |
+  | `code-label-pair-`     | `[[code_label_pair]]`                                                                                                   |
+  | `search-pins-`         | `search_pins.toml`                                                                                                      |
+  | `acknowledge-`         | `[[acknowledge]]` entries matched against build issues                                                                  |
+  | `classification-`      | classification books, references and label bindings                                                                     |
+  | `scope-`               | register-scoped builds and checks, and references out of the slice                                                      |
+  | `period-family-`       | relations into a curated `[[representation.period_family]]`                                                             |
+  | `source-relation-`     | literal source relationships, unbound code lists and source findings                                                    |
+  | `value-`               | source code lists bound to native members                                                                               |
+  | `naming-`              | generated and authored slug pins under the zone freeze states                                                           |
+  | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                            |
 
 Later stages add their own prefixes to this table.
 
@@ -225,6 +227,8 @@ Every key is optional, and only the keys that are present get checked.
     - `exact` (the default): the rows match, duplicates included.
     - `set`: the distinct rows match.
     - `includes`: every expected row is present.
+  - `note` is optional prose: which claim of the case this projection pins. The runner
+    does not compare it.
 
   | Table                   | One row per                                                             | Fields                                                                                                                                                                  |
   | ----------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
