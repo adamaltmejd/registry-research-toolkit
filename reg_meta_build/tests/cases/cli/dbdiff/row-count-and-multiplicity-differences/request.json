@@ -1,0 +1,17 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestContentDiffs::test_row_count_diff",
+    "test_dbdiff.py::TestContentDiffs::test_duplicate_row_diff"
+  ],
+  "fails_if": "the fingerprint XORs the row hashes, or hashes the distinct rows: `tag` holds four rows of x and y in both databases (x three times in A, y three times in B), x^x^x^y equals x^y^y^y, so either change reads it as identical; or widget's extra row 4 is not listed as net -1 in B",
+  "note": "Harder than the replaced duplicate test, whose row counts already differed (3 against 2), so it passed whatever the fingerprint did with multiplicity. Here only the multiplicities differ.",
+  "argv": [
+    "--json",
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

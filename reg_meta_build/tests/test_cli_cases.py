@@ -6,9 +6,11 @@ oracle: the exit code, a projection of the stdout JSON envelope, stderr, and the
 files the command writes. Every case reads a synthetic artifact built from the
 readable source in `cases/cli/_artifact/` (or from it with the case's curation files
 laid over it), once per test session and read-only.
-The command runs in-process through `reg_meta_build.cli.run`, the real CLI entry
-point (argv to JSON envelope and exit code). Expected values are read from the
-test each case replaces.
+The command runs in-process through its real entry point: `reg_meta_build.cli.run`
+(argv to JSON envelope and exit code) for a `reg-meta-build` subcommand, or the
+program's own `main` for a command directory in `_PROGRAMS`. A command that compares
+databases of its own builds them from the case's SQL files (`databases`). Expected
+values are read from the test each case replaces.
 """
 
 from __future__ import annotations
@@ -16,6 +18,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import sqlite3
 import tempfile
 import tomllib
 from dataclasses import dataclass
@@ -27,10 +30,16 @@ from _build_case_runner import fixture_generation
 from _case_projection import mismatch, unclaimed
 from _pipeline_catalog_support import CatalogFixture
 from reg_meta_build.cli import run
+from reg_meta_build.concept_groups import load_worklist_concept_groups
+from reg_meta_build.dbdiff import main as dbdiff_main
+from reg_meta_build.doc_db import build_doc_db
+from reg_meta_build.relations import load_relations
 
 from reg_meta_build.fqid_slugs import load_slug_dir, snapshot_payload
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from _build_case_runner import PreparedCache
 
 CASES = Path(__file__).resolve().parent / "cases" / "cli"
@@ -68,9 +77,9 @@ class Artifacts:
     prepared inputs (`fixture_generation`), so it is reused across sessions,
     worktrees and xdist workers and dropped with the generation when a builder
     source changes. Within it, an entry is keyed by the content hash of the source,
-    the curation it is built from and this runner (which sets the build options),
-    and published by an atomic rename, so workers share one build and never write a
-    path another worker reads.
+    the curation it is built from, its docs and this runner (which sets the build
+    options), and published by an atomic rename, so workers share one build and
+    never write a path another worker reads.
     """
 
     def __init__(self, prepared_cache: PreparedCache) -> None:
@@ -92,6 +101,10 @@ class Artifacts:
                 [
                     spec,
                     {path: data.hex() for path, data in curation.items()},
+                    {
+                        path: data.hex()
+                        for path, data in _tree_bytes(ARTIFACT / "docs").items()
+                    },
                     Path(__file__).read_bytes().hex(),
                 ],
                 sort_keys=True,
@@ -126,6 +139,7 @@ class Artifacts:
                 ):
                     raise RuntimeError(f"the CLI artifact did not build: {result}")
                 shutil.rmtree(staging / "report")
+                build_doc_db(ARTIFACT / "docs", output.parent)
                 try:
                     staging.rename(entry)
                 except OSError:
@@ -162,6 +176,16 @@ def _fill(value: Any, places: dict[str, str]) -> Any:
     return value
 
 
+def _refuse_constant(name: str) -> object:
+    raise ValueError(f"stdout is not JSON: it holds {name}")
+
+
+def _strict_json(text: str) -> Any:
+    """``text`` parsed as JSON. Python's parser also accepts ``NaN``, ``Infinity``
+    and ``-Infinity``, which are not JSON; they are refused here."""
+    return json.loads(text, parse_constant=_refuse_constant)
+
+
 def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) -> None:
     matches = sorted(work.glob(path))
     if claim.get("absent"):
@@ -184,6 +208,10 @@ def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) ->
         assert snippet not in text, (path, snippet, text)
 
 
+# The entry point each command directory runs, when it is a program of its own
+# rather than a `reg-meta-build` subcommand run through `cli.run`.
+_PROGRAMS: dict[str, Callable[[list[str]], int]] = {"dbdiff": dbdiff_main}
+
 _REQUEST_KEYS = {
     "replaces",
     "fails_if",
@@ -193,6 +221,7 @@ _REQUEST_KEYS = {
     "runs",
     "curation_dirs",
     "artifact_curation",
+    "databases",
 }
 _STEP_KEYS = {"argv", "env"}
 _EXPECTED_KEYS = {
@@ -227,6 +256,10 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
         # A misspelled step key (say "evn") would otherwise be ignored silently.
         assert "argv" in step, f"{case.name}: every run step needs argv"
         assert step.keys() <= _STEP_KEYS, (case.name, step.keys() - _STEP_KEYS)
+    for path, source in request.get("databases", {}).items():
+        # A misspelled SQL file name would otherwise fail later as a missing table.
+        assert isinstance(source, str), (case.name, path, source)
+        assert (case / source).is_file(), f"{case.name}: no SQL file {source}"
     assert "exit_code" in expected, f"{case.name}: exit_code is required"
     assert expected.keys() <= _EXPECTED_KEYS, (
         case.name,
@@ -240,10 +273,52 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
     stderr = expected.get("stderr", {})
     assert stderr.keys() <= {"empty", "contains", "excludes"}, (case.name, stderr)
     if "reloads_with" in expected:
-        assert expected["reloads_with"].keys() == {"loader", "path", "slugs"}, case.name
+        reload = expected["reloads_with"]
+        assert reload.keys() == {"loader", "path", "result"}, case.name
+        assert reload["loader"] in _RELOADERS, (case.name, reload["loader"])
 
 
-_RELOADERS = {"slug_dir": lambda root: snapshot_payload(load_slug_dir(root))}
+def _relations(path: Path) -> dict[str, Any]:
+    """The `replaced_by` edges `load_relations` reads, in file order."""
+    return {
+        "replaced_by": [
+            {
+                "from": str(edge.predecessor),
+                "to": str(edge.successor),
+                "from_column": edge.predecessor_column,
+                "to_column": edge.successor_column,
+                "variant": edge.variant,
+                "effective_year": edge.effective_year,
+            }
+            for edge in load_relations(path).replaced_by
+        ]
+    }
+
+
+def _concept_group_worklist(path: Path) -> dict[str, Any]:
+    """The groups `load_worklist_concept_groups` reads, by `provider/register/key`."""
+    return {
+        f"{group.provider}/{group.register}/{group.key}": {
+            "label": group.label,
+            "axes": [list(axis) for axis in group.axes],
+            "members": [
+                {
+                    "variable": member.variable,
+                    "delivery_column": member.delivery_column,
+                    "coords": [list(coord) for coord in member.coords],
+                }
+                for member in group.members
+            ],
+        }
+        for group in load_worklist_concept_groups(path)
+    }
+
+
+_RELOADERS = {
+    "slug_dir": lambda root: snapshot_payload(load_slug_dir(root)),
+    "relations": _relations,
+    "concept_group_worklist": _concept_group_worklist,
+}
 
 
 @pytest.mark.parametrize(
@@ -263,24 +338,36 @@ def test_cli_case(
     overlay = request.get("artifact_curation")
     cli_artifact = cli_artifacts.get(None if overlay is None else case / overlay)
 
-    work = tmp_path / "work"
+    # Resolved, so `{work}` matches the resolved paths a command prints.
+    work = tmp_path.resolve() / "work"
     for name in request.get("curation_dirs", ["curation"]):
         shutil.copytree(cli_artifact.curation, work / name)
     if (case / "files").is_dir():
         shutil.copytree(case / "files", work, dirs_exist_ok=True)
+    for path, source in request.get("databases", {}).items():
+        target = work / path
+        assert not target.exists(), f"{case.name}: {path} is already in {{work}}"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        conn = sqlite3.connect(target)
+        try:
+            conn.executescript((case / source).read_text(encoding="utf-8"))
+        finally:
+            conn.close()
     before = _tree_bytes(work)
     places = {"db": str(cli_artifact.db_dir), "work": str(work)}
     fingerprint = cli_artifact.fingerprint()
 
+    program = _PROGRAMS.get(case.parent.name, run)
     monkeypatch.delenv("REG_META_QUIET", raising=False)
     for step in runs:
         argv = _fill(step["argv"], places)
-        assert case.parent.name in argv, f"{case.name}: argv names another command"
+        if program is run:
+            assert case.parent.name in argv, f"{case.name}: argv names another command"
         with monkeypatch.context() as env:
             for name, value in step.get("env", {}).items():
                 env.setenv(name, value)
             capsys.readouterr()
-            code = run(argv)
+            code = program(argv)
             captured = capsys.readouterr()
         assert code == expected["exit_code"], (argv, captured.out, captured.err)
 
@@ -289,7 +376,7 @@ def test_cli_case(
     if stdout.is_file():
         claim = _fill(json.loads(stdout.read_text(encoding="utf-8")), places)
         assert unclaimed(claim, "$stdout", exact=False) is None
-        departure = mismatch(json.loads(captured.out), claim, "$stdout", exact=False)
+        departure = mismatch(_strict_json(captured.out), claim, "$stdout", exact=False)
         assert departure is None, departure
     for snippet in _fill(expected.get("stdout_contains", []), places):
         assert snippet in captured.out, (snippet, captured.out)
@@ -310,4 +397,4 @@ def test_cli_case(
     if "reloads_with" in expected:
         reload = expected["reloads_with"]
         loaded = _RELOADERS[reload["loader"]](work / reload["path"])
-        assert loaded == reload["slugs"], loaded
+        assert loaded == reload["result"], loaded

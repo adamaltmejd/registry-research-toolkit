@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "files": {
+    "pins.toml": {
+      "toml": {
+        "variable": {
+          "1.101": {
+            "slug": "value"
+          }
+        }
+      }
+    }
+  }
+}

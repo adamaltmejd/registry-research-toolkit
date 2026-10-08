@@ -1,0 +1,37 @@
+{
+  "exit_code": 0,
+  "files": {
+    "pins/*.toml": {
+      "toml": {
+        "variable": {
+          "1.101": {
+            "slug": "value"
+          },
+          "1.102": {
+            "slug": "kon"
+          },
+          "4.7.lopnrny": {
+            "slug": "lopnr"
+          }
+        }
+      },
+      "contains": [
+        "--slug-dir <steward dir>",
+        "fqid_slugs/<steward>/<provider>.toml"
+      ]
+    }
+  },
+  "reloads_with": {
+    "loader": "slug_dir",
+    "path": "pins",
+    "result": {
+      "register": {},
+      "register_variant": {},
+      "variable": {
+        "scb/1.101": "value",
+        "scb/1.102": "kon",
+        "scb/4.7.lopnrny": "lopnr"
+      }
+    }
+  }
+}

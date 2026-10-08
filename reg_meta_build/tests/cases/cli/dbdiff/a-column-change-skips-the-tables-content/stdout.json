@@ -1,0 +1,23 @@
+{
+  "identical": false,
+  "schema": {
+    "column_diffs": [
+      {
+        "table": "widget",
+        "only_in_a": [],
+        "only_in_b": [
+          "note"
+        ]
+      }
+    ]
+  },
+  "tables": [
+    {
+      "table": "widget",
+      "identical": false,
+      "skipped_reason": "columns differ (see schema diff)",
+      "sample_a_not_b": [],
+      "sample_b_not_a": []
+    }
+  ]
+}

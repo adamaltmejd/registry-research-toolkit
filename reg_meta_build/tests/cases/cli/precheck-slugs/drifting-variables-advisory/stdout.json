@@ -13,6 +13,16 @@
         "VALUE",
         "VALUE_NY"
       ]
+    },
+    {
+      "provider": "scb",
+      "provider_key": "700",
+      "slug": "kod-gammal",
+      "name": "Kod",
+      "columns": [
+        "KOD",
+        "KODX"
+      ]
     }
   ],
   "name_fallback_variables": []

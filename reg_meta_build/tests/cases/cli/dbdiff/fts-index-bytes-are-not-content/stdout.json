@@ -1,0 +1,9 @@
+{
+  "identical": true,
+  "tables": [
+    {
+      "table": "doc",
+      "identical": true
+    }
+  ]
+}

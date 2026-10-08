@@ -1,0 +1,26 @@
+{
+  "replaces": [
+    "test_entity_key_pins.py::TestEnumerate::test_resolves_bare_key_to_source_id",
+    "test_entity_key_pins.py::TestEnumerate::test_composite_key_resolves_every_element",
+    "test_entity_key_pins.py::TestEnumerate::test_yields_three_part_source_id_for_split_sibling",
+    "test_entity_key_pins.py::TestGenerator::test_emits_pin_for_non_curated",
+    "test_entity_key_pins.py::TestGenerator::test_emitted_toml_binds_to_source_ids",
+    "test_entity_key_pins.py::TestGenerator::test_split_sibling_pin_binds_to_correct_sibling",
+    "test_entity_key_pins.py::TestGenerator::test_pins_sorted_numeric_aware",
+    "test_entity_key_pins.py::TestGenerator::test_header_points_at_steward_dir",
+    "test_entity_key_pins.py::TestGenerator::test_scopes_to_steward_dir_registers",
+    "test_entity_key_pins.py::TestCli::test_counts_only_the_steward_provider",
+    "test_entity_key_pins.py::TestCli::test_out_dir_writes_one_file_per_provider"
+  ],
+  "fails_if": "entity-key-pins keys a pin on the variable slug or the bare var_id instead of the partition member's native id, resolves only the first element of a composite key, pins a register the steward dir does not name, or writes a block the slug loader cannot read",
+  "note": "From the artifact curation: variant 1.10 carries the composite key [value, kon] (variables 1.101 and 1.102); variant 4.40 carries `lopnr`, the slug of partition member 4.7.lopnrny (its native id names its column, not its slug); variant 3.30 carries `komvux`, but the steward dir names only registers 1 and 4. So the pins are 1.101, 1.102 and 4.7.lopnrny, numeric-aware, in one scb file; they reload as exactly those slugs.",
+  "argv": [
+    "--db",
+    "{db}",
+    "entity-key-pins",
+    "--slug-dir",
+    "{work}/slugs",
+    "--out-dir",
+    "{work}/pins"
+  ]
+}

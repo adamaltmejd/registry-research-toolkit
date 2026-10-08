@@ -6,6 +6,7 @@ native_id = "1"
 [[variant]]
 native_id = "1.10"
 slug = "people"
+panel_entity_key = ["value", "kon"]
 
 [[variable]]
 native_id = "1.101"
