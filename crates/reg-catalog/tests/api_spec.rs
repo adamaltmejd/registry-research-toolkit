@@ -172,22 +172,26 @@ fn openapi_matches_operations_toml() {
                 })
                 .collect();
             assert_body(&route, operation, rows[name]);
-            let actual: BTreeMap<String, Value> = operation["parameters"]
-                .as_array()
-                .into_iter()
-                .flatten()
-                .map(|p| {
-                    (
-                        p["name"].as_str().unwrap().to_owned(),
-                        json!({"in": p["in"], "required": p["required"], "schema": p["schema"]}),
-                    )
-                })
-                .collect();
-            assert_eq!(actual, expected, "{route}");
+            assert_eq!(served_params(operation), expected, "{route}");
             served.insert(name.to_owned());
         }
     }
     assert!(served.contains("context") && served.contains("search"));
+}
+
+/// A served operation's path and query parameters as `{in, required, schema}` by name.
+fn served_params(operation: &Value) -> BTreeMap<String, Value> {
+    operation["parameters"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .map(|p| {
+            (
+                p["name"].as_str().unwrap().to_owned(),
+                json!({"in": p["in"], "required": p["required"], "schema": p["schema"]}),
+            )
+        })
+        .collect()
 }
 
 /// A row with a `project` parameter takes it as the route's JSON object body, never a
