@@ -743,7 +743,7 @@ fn panel_key(raw: Option<String>) -> Option<PanelKey> {
 /// Today's `_variant_families_for_register_id`: the register's variant succession
 /// components of two or more, each keyed by its first head (a variant without a
 /// successor) and labelled by `family_label`.
-fn variant_families(
+pub(super) fn variant_families(
     conn: &Connection,
     register_id: i64,
     provider: &str,

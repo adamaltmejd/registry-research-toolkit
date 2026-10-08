@@ -1374,8 +1374,10 @@ fallback, warning clipping).
   `logical/{narrowed-state-token,narrowed-state-warnings,canonical-case-twin-state-warnings,warnings-*}`
   and `http_catalog/{states-and-deliveries,warnings}`; `variant` and `value_set_version`
   without `period`; MCP equivalence for `states`.
-- G1 (run in C): webapp baseline `/states` and the catch-all `?period` subset for the
-  variable samples and sampled periods; `/data_warnings` with each filter.
+- G1 (run in C): webapp baseline: the states the variable node embeds and the catch-all
+  `?period` subset for the variable samples and sampled periods (not `/states`: same
+  rows and order, but full hydration, while `states` serves the node's light one);
+  `/data_warnings` with each filter.
 - Paths: `crates/reg-catalog/src/ops/{slice_3b.rs,states.rs,warnings.rs}`,
   `conformance/cases/api/`, `conformance/test_mcp.py`,
   `conformance/differential/served/`, the generated files.

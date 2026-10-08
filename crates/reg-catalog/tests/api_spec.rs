@@ -64,6 +64,7 @@ fn param_schema(ty: &str) -> Value {
         "scope" => json!({"$ref": "#/components/schemas/Scope"}),
         "string" | "ref" | "period" | "cursor" => json!({"type": "string"}),
         "limit" => json!({"type": "integer", "minimum": 1, "maximum": 200}),
+        "boolean" => json!({"type": "boolean"}),
         _ => panic!("map parameter type {ty:?}"),
     }
 }

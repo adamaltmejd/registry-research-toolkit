@@ -1,0 +1,33 @@
+{
+  "note": "Fails if the cursor stops continuing the same ordered list, or accepts a malformed cursor.",
+  "fixture": "states",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink",
+      "query": {
+        "limit": 2
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink",
+      "query": {
+        "limit": 2
+      },
+      "cursor_from": [
+        0,
+        "/data/next_cursor"
+      ]
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink",
+      "query": {
+        "period": "2018",
+        "cursor": "zz"
+      }
+    }
+  ]
+}

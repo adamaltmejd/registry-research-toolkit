@@ -1,0 +1,132 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": [
+        "register-limit",
+        "case-limit",
+        "binding-limit"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": [
+        "register-limit",
+        "unheld-limit",
+        "case-limit",
+        "binding-limit"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": [
+        "register-limit"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": [
+        "register-limit"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": [
+        "register-limit"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": [
+        "register-limit",
+        "case-limit",
+        "binding-limit"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": [
+        "register-limit"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data": [
+        {
+          "acknowledged_by": null,
+          "case_id": null,
+          "code": "register-limit",
+          "delivery_column_name": null,
+          "detail": "Read the fixture source contract.",
+          "diagnostic_detail_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "fields": [],
+          "refs": [],
+          "register_fqid": "scb/example",
+          "severity": "warning",
+          "source_subject": "Fixture",
+          "summary": "Fixture limitation",
+          "valid_from": null,
+          "valid_to": null,
+          "variable_fqid": null,
+          "variant": null,
+          "warning_id": "1c4e4839456e92c09b23355aa4ee3ac2c3ef376558e99d4d7da2f78605995725",
+          "withheld_output": []
+        },
+        {
+          "acknowledged_by": null,
+          "case_id": null,
+          "code": "case-limit",
+          "delivery_column_name": "value",
+          "detail": "Read the fixture source contract.",
+          "diagnostic_detail_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "fields": [],
+          "refs": [],
+          "register_fqid": "scb/example",
+          "severity": "warning",
+          "source_subject": "Fixture",
+          "summary": "Fixture limitation",
+          "valid_from": null,
+          "valid_to": null,
+          "variable_fqid": "scb/example/value",
+          "variant": "annual",
+          "warning_id": "b17f479dddd2ff2ccdc329a4d56b093b2b1348338b88985bcae79895eef568ed",
+          "withheld_output": []
+        },
+        {
+          "acknowledged_by": null,
+          "case_id": null,
+          "code": "binding-limit",
+          "delivery_column_name": null,
+          "detail": "Read the fixture source contract.",
+          "diagnostic_detail_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "fields": [],
+          "refs": [],
+          "register_fqid": "scb/example",
+          "severity": "warning",
+          "source_subject": "Fixture",
+          "summary": "Fixture limitation",
+          "valid_from": null,
+          "valid_to": null,
+          "variable_fqid": "scb/example/value",
+          "variant": null,
+          "warning_id": "f28e90edef4712b90f1e8e4dcf7262203492f5f01306e10a34d1efcbcbec40af",
+          "withheld_output": []
+        }
+      ]
+    }
+  }
+]

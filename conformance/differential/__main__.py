@@ -116,7 +116,14 @@ def _excepted(diff: dict, exceptions: list[dict]) -> str | None:
             continue
         prefixes = exc.get("paths", [""])
         if diff["fields"] == ["stdout"] and all(
-            any(not pre or p == pre or p.startswith(pre + "/") for pre in prefixes)
+            any(
+                not pre
+                # A glob without wildcards matches only itself, so this also
+                # covers an exact pointer.
+                or fnmatch.fnmatchcase(p, pre)
+                or p.startswith(pre + "/")
+                for pre in prefixes
+            )
             for p in diff["paths"]
         ):
             return exc["name"]

@@ -11,6 +11,8 @@ mod search;
 mod show;
 pub mod slice_3a;
 pub mod slice_3b;
+mod states;
+mod warnings;
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -119,6 +121,7 @@ pub enum Type {
     Limit,
     /// An opaque `next_cursor`.
     Cursor,
+    Boolean,
     Enum(&'static [&'static str]),
 }
 
@@ -256,6 +259,69 @@ pub fn call<T>(
     (scope, result)
 }
 
+/// `limit` (`operations.toml`): 1 to 200, default 50.
+pub(crate) fn limit(params: &Params) -> Result<usize, Error> {
+    params.get("limit").map_or(Ok(50), |v| {
+        v.parse()
+            .ok()
+            .filter(|n| (1..=200).contains(n))
+            .ok_or_else(|| Error::invalid_parameter("limit"))
+    })
+}
+
+/// `period`, in the FQID/project period grammar.
+pub(crate) fn period(params: &Params) -> Result<Option<reg_core::Period>, Error> {
+    params
+        .get("period")
+        .map(|p| {
+            p.parse().map_err(|err| {
+                Error::new(
+                    Code::InvalidPeriod,
+                    format!("Invalid period {p:?}: {err}."),
+                    vec!["period".into()],
+                )
+            })
+        })
+        .transpose()
+}
+
+/// `variant`: a register variant's slug, or `_default` (today's
+/// `validate_slug(allow_default=True)`).
+pub(crate) fn variant<'a>(params: &Params<'a>) -> Result<Option<&'a str>, Error> {
+    match params.get("variant").copied() {
+        Some(v) if v != "_default" && !reg_core::is_slug(v) => {
+            Err(Error::invalid_parameter("variant"))
+        }
+        v => Ok(v),
+    }
+}
+
+/// `value_set_version`: a free-text label, so only sanity-checked as today's
+/// `parse_value_set_version`: not blank, at most 200 characters, no C0, DEL or C1
+/// control characters.
+pub(crate) fn value_set_version<'a>(params: &Params<'a>) -> Result<Option<&'a str>, Error> {
+    match params.get("value_set_version").copied() {
+        Some(v)
+            if reg_core::py_strip(v).is_empty()
+                || v.chars().count() > 200
+                || v.chars()
+                    .any(|c| c < ' ' || ('\u{7f}'..='\u{9f}').contains(&c)) =>
+        {
+            Err(Error::invalid_parameter("value_set_version"))
+        }
+        v => Ok(v),
+    }
+}
+
+/// A boolean parameter, `true` or `false` (default false).
+pub(crate) fn flag(params: &Params, name: &str) -> Result<bool, Error> {
+    match params.get(name).copied() {
+        None | Some("false") => Ok(false),
+        Some("true") => Ok(true),
+        Some(_) => Err(Error::invalid_parameter(name)),
+    }
+}
+
 /// The response `meta` (`shape.Meta`).
 #[derive(Serialize, ToSchema)]
 pub struct Meta {
@@ -289,6 +355,7 @@ fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
         // A ref, a period and a cursor are strings in their grammars.
         Type::String | Type::Ref | Type::Period | Type::Cursor => string().into(),
         Type::Enum(members) => string().enum_values(Some(members.iter().copied())).into(),
+        Type::Boolean => ObjectBuilder::new().schema_type(Json::Boolean).into(),
         Type::Limit => ObjectBuilder::new()
             .schema_type(Json::Integer)
             .minimum(Some(1))
