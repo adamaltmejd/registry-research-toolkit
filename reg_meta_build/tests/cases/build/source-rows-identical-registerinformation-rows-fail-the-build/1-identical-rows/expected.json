@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "source_rows_duplicated",
+    "exit_code": 10,
+    "message_contains": ["Registerinformation.csv", "row:2", "row:3"]
+  }
+}

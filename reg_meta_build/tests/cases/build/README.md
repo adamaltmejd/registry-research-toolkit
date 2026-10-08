@@ -61,6 +61,7 @@ the behavior in plain words. For example,
   | `value-`            | source code lists bound to native members                                                    |
   | `naming-`           | generated and authored slug pins under the zone freeze states                                |
   | `edition-`          | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]` |
+  | `source-rows-`      | physical source rows the build refuses when it loads a scope                                 |
 
 Later stages add their own prefixes to this table.
 
