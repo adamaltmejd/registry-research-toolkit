@@ -1,0 +1,11 @@
+{
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/class/ks87-p"},
+    {"operation": "show", "path": "/api/catalog/class/icd-10"},
+    {"operation": "show", "path": "/api/catalog/class/sunx-a"},
+    {"operation": "show", "path": "/api/catalog/class/nope"},
+    {"operation": "show", "path": "/api/catalog/class"}
+  ]
+}

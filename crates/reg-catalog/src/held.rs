@@ -62,6 +62,18 @@ pub(crate) fn variable(scope: Scope, id: &str, narrow: Narrow) -> String {
     }
 }
 
+/// The register variant `id` holds some variable in scope.
+pub(crate) fn variant(scope: Scope, id: &str) -> String {
+    match scope {
+        Scope::Reference => "1".to_owned(),
+        Scope::Holdings => held(
+            "holding_mapping hm",
+            &format!("hm.variant_id = {id}"),
+            Narrow::default(),
+        ),
+    }
+}
+
 /// The register `id` holds some variable in scope.
 pub(crate) fn register(scope: Scope, id: &str) -> String {
     register_in(scope, id, None)

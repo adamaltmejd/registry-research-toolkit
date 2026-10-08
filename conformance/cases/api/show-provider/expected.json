@@ -1,0 +1,32 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "provider",
+      "/data/fqid": "scb",
+      "/data/name": "Statistiska Centralbyrån",
+      "/data/children/*/fqid": ["scb/example"],
+      "/data/children/0/name": "Example"
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/children/*/fqid": ["scb/example", "scb/lisa"]}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "fk"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/fqid": "fk", "/data/children/*/fqid": ["fk/unheld"]}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "bogus"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/kind": "root", "/data/children/*/fqid": ["scb", "class"]}
+  }
+]

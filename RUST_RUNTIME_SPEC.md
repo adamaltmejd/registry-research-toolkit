@@ -1252,25 +1252,25 @@ in-flight list.
 
 #### Transitional inventory
 
-  | Dual structure                                                                                                                                                | Deleted in                                                                                          |
-  | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-  | Three-server dev setup (`dev.sh`: uvicorn, `reg-meta serve`, vite) and the per-route vite proxy                                                               | F                                                                                                   |
-  | Dual TS types (`api-types.ts`, `api-types-rust.ts`) and dual OpenAPI (`backend/openapi.json`, `crates/reg-meta/openapi.json`)                                 | F                                                                                                   |
-  | Three-axis schema guard (`scripts/schema_pending_bump.py`: Python main DB, doc DB, Rust minimum)                                                              | stage 4 (Rust axes only)                                                                            |
-  | Python `SCHEMA_VERSION` bumped for tables only Rust reads                                                                                                     | stage 4                                                                                             |
-  | Release admission needing `--server-cmd` beside `test_http.py`'s in-process surfaces                                                                          | stage 4 (in-process surfaces end in 3e.4)                                                           |
-  | Image DB bake through the Python `reg-meta update` (Dockerfile `regmeta-db` stage)                                                                            | stage 4 (curl, SHA-256, zstd)                                                                       |
-  | G1's two arms: Python-vs-Python CLI cases and the `served` arm                                                                                                | stage 4                                                                                             |
-  | `derived-generation-*` G1 exceptions                                                                                                                          | while the baseline reads the release originals and the checkout its derived copies (all of stage 3) |
-  | `reader-version` G1 exception (the arms' release versions)                                                                                                    | stage 4                                                                                             |
-  | `rust-only fix:` G1 exceptions                                                                                                                                | stage 4 (D1)                                                                                        |
-  | Derive calling the reader in place (`from reg_meta.catalog import Catalog` in derive; `reg_meta.queries.get_coded_variables` in `derive/schema.py`)           | stage 4 (moved into `reg_meta_build`)                                                               |
-  | Two project validators and project-schema versions (`reg_schema`, `reg-core`)                                                                                 | stage 4                                                                                             |
-  | Request-time terminal walks (search's `terminal()` reading the `classification_succession_as_of_year` manifest key; 3b.3's refs) beside `succession_terminal` | 3d.2                                                                                                |
-  | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                                   | stage 4 (proven twins earlier)                                                                      |
-  | Frozen Python `same_as` BFS (`_resolve_*_via_same_as` in `catalog.py`), unreachable since the writer requires live `same_as` endpoints (3d.1); not ported     | stage 4 (deleted with the Python runtime)                                                           |
-  | `scripts/check_versions.sh` keeping the `reg-meta` crate and `reg_meta` versions equal                                                                        | stage 4                                                                                             |
-  | Docs DB symlinked unfolded into G1's candidate directories                                                                                                    | 3b.6 (candidate copy refolded)                                                                      |
+  | Dual structure                                                                                                                                            | Deleted in                                                                                          |
+  | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+  | Three-server dev setup (`dev.sh`: uvicorn, `reg-meta serve`, vite) and the per-route vite proxy                                                           | F                                                                                                   |
+  | Dual TS types (`api-types.ts`, `api-types-rust.ts`) and dual OpenAPI (`backend/openapi.json`, `crates/reg-meta/openapi.json`)                             | F                                                                                                   |
+  | Three-axis schema guard (`scripts/schema_pending_bump.py`: Python main DB, doc DB, Rust minimum)                                                          | stage 4 (Rust axes only)                                                                            |
+  | Python `SCHEMA_VERSION` bumped for tables only Rust reads                                                                                                 | stage 4                                                                                             |
+  | Release admission needing `--server-cmd` beside `test_http.py`'s in-process surfaces                                                                      | stage 4 (in-process surfaces end in 3e.4)                                                           |
+  | Image DB bake through the Python `reg-meta update` (Dockerfile `regmeta-db` stage)                                                                        | stage 4 (curl, SHA-256, zstd)                                                                       |
+  | G1's two arms: Python-vs-Python CLI cases and the `served` arm                                                                                            | stage 4                                                                                             |
+  | `derived-generation-*` G1 exceptions                                                                                                                      | while the baseline reads the release originals and the checkout its derived copies (all of stage 3) |
+  | `reader-version` G1 exception (the arms' release versions)                                                                                                | stage 4                                                                                             |
+  | `rust-only fix:` G1 exceptions                                                                                                                            | stage 4 (D1)                                                                                        |
+  | Derive calling the reader in place (`from reg_meta.catalog import Catalog` in derive; `reg_meta.queries.get_coded_variables` in `derive/schema.py`)       | stage 4 (moved into `reg_meta_build`)                                                               |
+  | Two project validators and project-schema versions (`reg_schema`, `reg-core`)                                                                             | stage 4                                                                                             |
+  | Request-time terminal walk (search's `terminal()` reading the `classification_succession_as_of_year` manifest key) beside `succession_terminal`           | 3d.2                                                                                                |
+  | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                               | stage 4 (proven twins earlier)                                                                      |
+  | Frozen Python `same_as` BFS (`_resolve_*_via_same_as` in `catalog.py`), unreachable since the writer requires live `same_as` endpoints (3d.1); not ported | stage 4 (deleted with the Python runtime)                                                           |
+  | `scripts/check_versions.sh` keeping the `reg-meta` crate and `reg_meta` versions equal                                                                    | stage 4                                                                                             |
+  | Docs DB symlinked unfolded into G1's candidate directories                                                                                                | 3b.6 (candidate copy refolded)                                                                      |
 
 #### Packages
 
@@ -1338,10 +1338,11 @@ transport pieces 3b–3e share, each exercised here, and two docs operations.
 
 - Changes: the refs module covers every FQID kind, group refs (`group/<p>/<r>/<key>`,
   `group/class/<key>`), bare names (unique, or `ambiguous_ref` with candidates) and a
-  retired FQID resolved to its terminal successor by today's walk, extended from
-  `search/classification.rs` to registers and variables. `show` serves every kind of
-  `shape.Show`, a register's variants and a classification's owning variables unpaged;
-  Rust `SCHEMA` 9.4 (`browse_delivery`).
+  retired register or variable FQID resolved to its terminal successor from 3d.1's
+  `succession_terminal` (a split is `ambiguous_ref`; done here, not in 3d.2). `show`
+  serves every kind of `shape.Show`, a register's variants and a classification's owning
+  variables unpaged; Rust `SCHEMA` 9.6 (main's schema at merge; `browse_delivery` needs
+  9.4).
 - Cases, red first: the fields of Show per kind; twins of
   `http_catalog/{admission,concept-group-admission,group-coverage,redirects,unheld-group,provider-pages-follow-scope,provider-register-coverage,live-unheld-register-successor}`
   and `cli_scope/{register,groups,varinfo,classification-variables}-*`; MCP equivalence
@@ -1488,22 +1489,25 @@ operations.
 **3d.2 `graph` and `lineage`.** Implements both on the `graph` tool.
 
 - Changes: one `graph` route for variable, classification and group refs; `lineage` with
-  edges, warnings and per-register provenance. The refs module and search's
-  classification arm read `succession_terminal`; their request-time walks go. The reader
-  does not port the `same_as` fallback (unreachable, 3d.1). `succession_terminal` stops
-  at a split and applies the policy year to every kind (search's rule; ratified
-  2026-10-08). A retired ref whose walk stops at a split answers `ambiguous_ref` with
-  the split's successors as `candidates`, never a bare `not_found`; a ref behind a
-  future-dated edge is still live at the policy year and resolves to itself. 3b.3's refs
-  follow the same rule. The baseline's `resolve_terminal_successor` takes the first
-  branch of a split and ignores the year for registers and variables, so both cases
-  differ from the baseline's 301 target under a narrow `rust-only fix:` exception naming
-  their `api` case. `succession_terminal` is unscoped: in holdings scope the refs module
-  checks at read time that the terminal is held, as the frozen
-  `resolve_terminal_successor` does. Search's terminal-centric `editions()` may be read
-  from `classification_chain` (the anchor's rows up to its own position) only while no
-  edition has two predecessors and a split's outbound edges share one year; 3d.2
-  verifies this against the reader rather than assuming it.
+  edges, warnings and per-register provenance. Search's classification arm reads
+  `succession_terminal`; its request-time walk goes (the refs module reads it since
+  3b.3). The reader does not port the `same_as` fallback (unreachable, 3d.1).
+  `succession_terminal` stops at a split and applies the policy year to every kind
+  (search's rule; ratified 2026-10-08). A retired ref whose walk stops at a split
+  answers `ambiguous_ref` with the split's successors as `candidates`, never a bare
+  `not_found`; a ref behind a future-dated edge is still live at the policy year and
+  resolves to itself. 3b.3's refs apply this rule. The baseline's
+  `resolve_terminal_successor` takes the first branch of a split and ignores the year
+  for registers and variables, so both cases differ from the baseline's 301 target under
+  a narrow `rust-only fix:` exception naming their `api` case. `succession_terminal` is
+  unscoped: in holdings scope the refs module checks at read time that the terminal is
+  held, as the frozen `resolve_terminal_successor` does. Search's terminal-centric
+  `editions()` may be read from `classification_chain` (the anchor's rows up to its own
+  position) only while no edition has two predecessors and a split's outbound edges
+  share one year; 3d.2 verifies this against the reader rather than assuming it. `show`
+  reads `classification_family`: its `editions` join the `classification_family` kind,
+  the classification root's `families` and a classification's `family` (3b.3 serves
+  their key and label), and its membership replaces 3b.3's slug-prefix family lookup.
 - Cases: twins of `http_catalog/{reference-edges,whole-variable-group-graph}`,
   `cli_scope/lineage-unheld-reference` and
   `logical/{edges-unheld-owner,unheld-terminal-*}`; a split successor; a retired ref

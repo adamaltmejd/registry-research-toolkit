@@ -16,9 +16,6 @@ use utoipa::ToSchema;
 use super::{HORIZON, Hit, Member, Request, fold, fqid, is_code_shaped, like_escape};
 use crate::{Error, Scope};
 
-/// Today's default succession policy year (`CLASSIFICATION_SUCCESSION_AS_OF_YEAR`),
-/// read when the manifest names none.
-const POLICY_YEAR: i64 = 2026;
 /// Code-containment hits rank after every name hit (bm25 is negative).
 const CODE_RANK_BASE: f64 = 1000.0;
 /// The classification is not pinned for the query (`?` binds `fold_search(q)`).
@@ -169,15 +166,7 @@ fn members(conn: &Connection, group: i64) -> Result<Vec<Member>, Error> {
 /// chain are hits, they become one row for the chain's terminal edition, at its
 /// first hit's place. A lone old edition stays a hit that names its terminal.
 fn fold_succession(conn: &Connection, hits: Vec<ClassificationHit>) -> Result<Vec<Hit>, Error> {
-    let policy = conn
-        .query_row(
-            "SELECT value FROM import_manifest WHERE key = 'classification_succession_as_of_year'",
-            [],
-            |row| row.get::<_, String>(0),
-        )
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(POLICY_YEAR);
+    let policy = super::super::refs::policy_year(conn)?;
     let terminals: Vec<Option<String>> = hits
         .iter()
         .map(|hit| {

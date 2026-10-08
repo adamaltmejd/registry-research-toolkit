@@ -1,0 +1,7 @@
+{
+  "fixture": "reader/logical",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/scb/example"},
+    {"operation": "show", "path": "/api/catalog/scb/example", "query": {"scope": "reference"}}
+  ]
+}

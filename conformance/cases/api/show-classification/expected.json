@@ -1,0 +1,58 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data": {
+        "kind": "classification",
+        "fqid": "class/ks87-p",
+        "short_name": "KS87-P",
+        "name": "Diagnoses, primary care setting",
+        "dimensions": [],
+        "family": null,
+        "derived_from": [
+          {
+            "fqid": "class/icd-9",
+            "short_name": "ICD-9",
+            "name": "Diagnoses, edition 9",
+            "note": "Primary-care setting"
+          }
+        ],
+        "derivatives": [],
+        "variables": []
+      }
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/family": {"fqid": "group/class/icd", "key": "icd", "label": "ICD"},
+      "/data/variables": [
+        {"fqid": "scb/alpha/kon", "name": "Kön", "register_name": "Alpha"},
+        {"fqid": "scb/beta/kon", "name": "Kön", "register_name": "Beta"}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/dimensions/*/fqid": ["group/class/sunx"], "/data/family": null}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "class/nope"}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "classification_root",
+      "/data/fqid": "class",
+      "/data/name": "Classifications",
+      "/data/children": [
+        {"fqid": "class/ks87-p", "short_name": "KS87-P", "name": "Diagnoses, primary care setting"},
+        {"fqid": "class/sunx-a", "short_name": "SUNX-A", "name": "Education, level"},
+        {"fqid": "class/sunx-b", "short_name": "SUNX-B", "name": "Education, field"}
+      ],
+      "/data/groups/*/fqid": ["group/class/sunx"],
+      "/data/families": [{"fqid": "group/class/icd", "key": "icd", "label": "ICD"}]
+    }
+  }
+]

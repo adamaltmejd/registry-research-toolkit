@@ -1,0 +1,41 @@
+[
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "Kön",
+      "/error/fields/candidates": [
+        {"fqid": "scb/alpha/kon", "kind": "variable", "name": "Kön"},
+        {"fqid": "scb/beta/kon", "kind": "variable", "name": "Kön"}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/kind": "variable", "/data/fqid": "scb/alpha/alder"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/kind": "classification", "/data/fqid": "class/icd-10"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/kind": "register", "/data/fqid": "scb/beta"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "Nothing here"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "scb/Alpha"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "group/scb"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "scope_unavailable"}
+  }
+]

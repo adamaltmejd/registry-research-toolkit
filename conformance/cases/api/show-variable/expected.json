@@ -1,0 +1,35 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data": {
+        "kind": "variable",
+        "fqid": "scb/alpha/kon",
+        "name": "Kön",
+        "definition": "Legal sex",
+        "description": null,
+        "operational_definition": null,
+        "measurement_unit": null,
+        "is_sensitive": false,
+        "is_identifier": false,
+        "deprecated": false,
+        "source_register_text": null,
+        "same_as": ["scb/beta/kon"],
+        "group": "group/scb/alpha/person",
+        "tags": [{"slug": "core", "label": "Core", "rank": 2, "starred": false, "note": null}]
+      }
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/kind": "variable", "/data/fqid": "scb/alpha/kon"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/alpha/missing"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/same_as": ["scb/alpha/kon"], "/data/group": null, "/data/tags": []}
+  }
+]

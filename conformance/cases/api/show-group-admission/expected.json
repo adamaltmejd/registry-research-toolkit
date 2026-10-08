@@ -1,0 +1,10 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/members/*/delivery_column": ["value"]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/members/*/delivery_column": ["Unknown", "value"]}
+  }
+]

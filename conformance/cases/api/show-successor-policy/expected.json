@@ -1,0 +1,36 @@
+[
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "scb/alpha/split",
+      "/error/fields/candidates": [
+        {"fqid": "scb/alpha/alder", "kind": "variable", "name": "Ålder"},
+        {"fqid": "scb/alpha/kon", "kind": "variable", "name": "Kön"}
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/alpha/later"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/fqid": "scb/beta/kon"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/fqid": "scb/alpha/kon"}
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "scb/alpha/pre-split",
+      "/error/fields/candidates": [
+        {"fqid": "scb/alpha/alder", "kind": "variable", "name": "Ålder"},
+        {"fqid": "scb/alpha/kon", "kind": "variable", "name": "Kön"}
+      ]
+    }
+  }
+]

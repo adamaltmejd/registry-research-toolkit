@@ -4,6 +4,40 @@
  */
 
 export interface paths {
+    "/api/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`. */
+        get: operations["show_without_ref"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/catalog/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`. */
+        get: operations["show"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/context": {
         parameters: {
             query?: never;
@@ -129,6 +163,51 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        Axis: {
+            label: string;
+            name: string;
+        };
+        /** @description A classification edition. Its codes are `values`, its edition chain `graph`. */
+        Classification: {
+            derivatives: components["schemas"]["Derivation"][];
+            derived_from: components["schemas"]["Derivation"][];
+            /** @description The classification groups it belongs to. */
+            dimensions: components["schemas"]["Group"][];
+            family?: components["schemas"]["Family"] | null;
+            fqid: string;
+            name?: string | null;
+            short_name?: string | null;
+            /**
+             * @description The variables in scope with a state coded by it (today's `get classification
+             *     --variables`), unpaged.
+             */
+            variables: components["schemas"]["OwningVariable"][];
+        };
+        ClassificationChild: {
+            fqid: string;
+            name?: string | null;
+            short_name?: string | null;
+        };
+        /** @description A curated group of classifications. */
+        ClassificationGroup: {
+            axes: components["schemas"]["Axis"][];
+            fqid: string;
+            key: string;
+            label: string;
+            members: components["schemas"]["Member"][];
+            source: string;
+        };
+        /**
+         * @description Every current classification, with the classification groups and families.
+         *     Editions a family stands for are reached through it.
+         */
+        ClassificationRoot: {
+            children: components["schemas"]["ClassificationChild"][];
+            families: components["schemas"]["Family"][];
+            fqid: string;
+            groups: components["schemas"]["Group"][];
+            name: string;
+        };
         CodeClassification: {
             fqid?: string | null;
             name?: string | null;
@@ -139,6 +218,18 @@ export interface components {
             name?: string | null;
             register_name?: string | null;
         };
+        /** @description A register's concept group: its members in scope. */
+        ConceptGroup: {
+            axes: components["schemas"]["Axis"][];
+            fqid: string;
+            key: string;
+            label: string;
+            members: components["schemas"]["Member"][];
+            /** @description The register's FQID. */
+            register: string;
+            source: string;
+            tags: components["schemas"]["Tag"][];
+        };
         /** @description `shape.Context`: branding, artifact identity and headline counts for the SPA. */
         Context: {
             import_date: string;
@@ -147,6 +238,38 @@ export interface components {
             schema_version: string;
             sizes: components["schemas"]["Sizes"];
             steward: components["schemas"]["Steward"];
+        };
+        /**
+         * @description The span a variable or column is delivered over: its earliest start and latest
+         *     finite end (null when unknown, or when `open_ended`), and the states (held
+         *     periods in holdings) behind it.
+         */
+        Coverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            state_count: number;
+        };
+        /**
+         * @description One `(variant, delivery column)` a variable is delivered under, with its disjoint
+         *     windows by start and their span. `column` is null for a state SCB named no
+         *     column for.
+         */
+        Delivery: {
+            column?: string | null;
+            coverage: components["schemas"]["Coverage"];
+            /** @description `intervals`, or `year_independent` (no windows). */
+            period_scope: string;
+            variant: string;
+            windows: components["schemas"]["Window"][];
+        };
+        /** @description A non-temporal derivation link between classifications. */
+        Derivation: {
+            fqid?: string | null;
+            name?: string | null;
+            note?: string | null;
+            short_name?: string | null;
         };
         /** @description A documentation entry: its metadata, a preview and the full markdown. */
         DocDetail: {
@@ -178,8 +301,37 @@ export interface components {
             message: string;
             remediation: string;
         };
+        Facet: {
+            axis?: string | null;
+            label: string;
+            value: string;
+        };
+        /** @description A one-dimensional classification succession family (ICD, LKF, SNI, SSYK). */
+        Family: {
+            fqid: string;
+            key: string;
+            label: string;
+        };
+        /** @description A group as listed by its register, classification root or member classification. */
+        Group: {
+            axes: components["schemas"]["Axis"][];
+            fqid: string;
+            key: string;
+            label: string;
+            members: components["schemas"]["Member"][];
+            source: string;
+            tags: components["schemas"]["Tag"][];
+        };
         GroupMember: {
             delivery_column?: string | null;
+            fqid: string;
+            name?: string | null;
+        };
+        /** @description A group member; two members of one variable differ by `delivery_column`. */
+        Member: {
+            coverage?: components["schemas"]["Coverage"] | null;
+            delivery_column?: string | null;
+            facets: components["schemas"]["Facet"][];
             fqid: string;
             name?: string | null;
         };
@@ -189,12 +341,60 @@ export interface components {
             generation: string;
             scope: components["schemas"]["Scope"];
         };
+        ObjectType: {
+            definition?: string | null;
+            name: string;
+        };
+        OwningVariable: {
+            fqid?: string | null;
+            name?: string | null;
+            register_name?: string | null;
+        };
+        /** @description A panel key: a variable slug (or `period`), or several (a composite key). */
+        PanelKey: string | string[];
         /** @description The first and last year of the steward's held periods. */
         PeriodSpan: {
             /** Format: int64 */
             from: number;
             /** Format: int64 */
             to: number;
+        };
+        Population: {
+            comment?: string | null;
+            date_range?: string | null;
+            definition?: string | null;
+            name: string;
+        };
+        /** @description A provider and its registers in scope. */
+        Provider: {
+            children: components["schemas"]["RegisterChild"][];
+            fqid: string;
+            name?: string | null;
+        };
+        /** @description A register: its variables, concept groups and variants in scope. */
+        Register: {
+            children: components["schemas"]["VariableChild"][];
+            fqid: string;
+            groups: components["schemas"]["Group"][];
+            name?: string | null;
+            purpose?: string | null;
+            tags: components["schemas"]["Tag"][];
+            variants: components["schemas"]["Variant"][];
+        };
+        RegisterChild: {
+            coverage?: components["schemas"]["RegisterCoverage"] | null;
+            fqid: string;
+            name?: string | null;
+            purpose?: string | null;
+            tags: components["schemas"]["Tag"][];
+        };
+        /** @description A register's span: its variables and the earliest and latest of their states. */
+        RegisterCoverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            variable_count: number;
         };
         /** @description A related document's metadata; the download route serves its bytes. */
         RelatedDocument: {
@@ -206,6 +406,21 @@ export interface components {
             sha256: string;
             source_url: string;
             title: string;
+        };
+        /** @description The catalog root: the providers in scope and the classification root. */
+        Root: {
+            children: components["schemas"]["RootChild"][];
+        };
+        RootChild: {
+            fqid: string;
+            /** @enum {string} */
+            kind: "provider";
+            name?: string | null;
+        } | {
+            fqid: string;
+            /** @enum {string} */
+            kind: "classification_root";
+            name: string;
         };
         /**
          * @description The read scope (section 7); every read takes it.
@@ -270,6 +485,35 @@ export interface components {
             items: components["schemas"]["SearchHit"][];
             next_cursor?: string | null;
         };
+        /** @description A `kind`-tagged summary of a ref. */
+        Show: (components["schemas"]["Root"] & {
+            /** @enum {string} */
+            kind: "root";
+        }) | (components["schemas"]["Provider"] & {
+            /** @enum {string} */
+            kind: "provider";
+        }) | (components["schemas"]["Register"] & {
+            /** @enum {string} */
+            kind: "register";
+        }) | (components["schemas"]["Variable"] & {
+            /** @enum {string} */
+            kind: "variable";
+        }) | (components["schemas"]["ClassificationRoot"] & {
+            /** @enum {string} */
+            kind: "classification_root";
+        }) | (components["schemas"]["Classification"] & {
+            /** @enum {string} */
+            kind: "classification";
+        }) | (components["schemas"]["ConceptGroup"] & {
+            /** @enum {string} */
+            kind: "concept_group";
+        }) | (components["schemas"]["ClassificationGroup"] & {
+            /** @enum {string} */
+            kind: "classification_group";
+        }) | (components["schemas"]["Family"] & {
+            /** @enum {string} */
+            kind: "classification_family";
+        });
         /** @description Browse-addressable (slugged) providers, registers and variables in the scope. */
         Sizes: {
             /** Format: int64 */
@@ -285,6 +529,68 @@ export interface components {
             long_name: string;
             name: string;
         };
+        /** @description A tag membership: the tag and this member's rank, star and note. */
+        Tag: {
+            label: string;
+            note?: string | null;
+            /** Format: int64 */
+            rank: number;
+            slug: string;
+            starred: boolean;
+        };
+        /**
+         * @description A variable's shared metadata. Its states, lineage and succession chain are the
+         *     `states`, `lineage` and `graph` operations.
+         */
+        Variable: {
+            definition?: string | null;
+            deprecated: boolean;
+            description?: string | null;
+            fqid: string;
+            /** @description The ref of the concept group the variable belongs to. */
+            group?: string | null;
+            is_identifier: boolean;
+            is_sensitive: boolean;
+            measurement_unit?: string | null;
+            name?: string | null;
+            operational_definition?: string | null;
+            /** @description The FQIDs of the variables curated as the same variable. */
+            same_as: string[];
+            source_register_text?: string | null;
+            tags: components["schemas"]["Tag"][];
+        };
+        VariableChild: {
+            coverage?: components["schemas"]["Coverage"] | null;
+            /** @description Every `(variant, column)` the variable is delivered under in scope. */
+            deliveries: components["schemas"]["Delivery"][];
+            fqid: string;
+            name?: string | null;
+        };
+        /** @description A register variant (the `variant` filter of `states`), with its versions' prose. */
+        Variant: {
+            description?: string | null;
+            display_group?: string | null;
+            name?: string | null;
+            panel_entity_key?: components["schemas"]["PanelKey"] | null;
+            panel_time_grain?: string | null;
+            panel_time_key?: components["schemas"]["PanelKey"] | null;
+            slug: string;
+            /** @description The key of the variant's succession family: its first head. */
+            variant_family?: string | null;
+            variant_family_label?: string | null;
+            versions: components["schemas"]["Version"][];
+        };
+        Version: {
+            description?: string | null;
+            measurement_information?: string | null;
+            name?: string | null;
+            object_types: components["schemas"]["ObjectType"][];
+            populations: components["schemas"]["Population"][];
+        };
+        Window: {
+            valid_from: string;
+            valid_to: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -294,6 +600,82 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    show_without_ref: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Show"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    show: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Show"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
     context: {
         parameters: {
             query?: {
