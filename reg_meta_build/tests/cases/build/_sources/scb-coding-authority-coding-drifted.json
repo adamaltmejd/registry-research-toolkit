@@ -1,5 +1,5 @@
 {
-  "description": "",
+  "description": "scb-coding-authority-reviewed with code lists drifted per register (Registerinformation unchanged): CHOICE's kept 1 relabelled 'Changed'; REPEAT's kept 1 gains a second row; EXTEND's 2021 item 1 valid only from 2021-05-01; LABELS' 'Region' becomes 'Different'; SUPPORT's 'Pachygyria' becomes 'Changed'; ROWS gains token 2; MARKER's Tal row text changes; MARKERLATER's 2020 Tal row becomes list 'new'; book FIX gains 99; SUBSTANTIVE's 2020 99 becomes 'Not stated'. New rows take item ids 9001-9002, so no other row moves.",
   "scb": {
     "registerinformation": [
       {

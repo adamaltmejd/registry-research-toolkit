@@ -26,8 +26,10 @@ import shutil
 import sqlite3
 import subprocess
 import tempfile
+import zipfile
 from contextlib import closing
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -185,8 +187,33 @@ def write_sources(spec: dict, source: Path) -> None:
         if register.get("blank_dataset"):
             # The `Datamängd` cell names the register; blank, the workbook has none.
             workbook["Generell information"]["C4"] = None
+        workbook.properties.created = workbook.properties.modified = _XLSX_EPOCH
         workbook.save(path)
         workbook.close()
+        _fix_zip_times(path)
+
+
+# openpyxl stamps the save time into docProps/core.xml and every zip entry, so two
+# prepares of one spec would deliver different workbook bytes (and revisions), and a
+# drift case could go stale on the timestamp alone.
+_XLSX_EPOCH = datetime(2000, 1, 1)  # noqa: DTZ001 - openpyxl writes naive times as UTC
+
+
+def _fix_zip_times(path: Path) -> None:
+    with zipfile.ZipFile(path) as archive:
+        entries = [(info, archive.read(info)) for info in archive.infolist()]
+    with zipfile.ZipFile(path, "w") as archive:
+        for info, data in entries:
+            if info.filename == "docProps/core.xml":
+                # `save` restamps `modified` with the current time.
+                data = re.sub(
+                    rb"(<dcterms:modified[^>]*>)[^<]*",
+                    rb"\g<1>2000-01-01T00:00:00Z",
+                    data,
+                )
+            fixed = zipfile.ZipInfo(info.filename, date_time=(1980, 1, 1, 0, 0, 0))
+            fixed.compress_type = info.compress_type
+            archive.writestr(fixed, data)
 
 
 @dataclass(frozen=True)

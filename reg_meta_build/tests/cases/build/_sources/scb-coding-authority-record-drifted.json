@@ -1,5 +1,5 @@
 {
-  "description": "",
+  "description": "scb-coding-authority-reviewed with Registerinformation rows drifted per register (code lists unchanged): CHOICE's description changes; EXTEND gains a 2022 row and ROWS a 2021 row (appended); ALTERNATIVES' second physical row's data_length becomes 11; ALPHA's name gains a 'Not ' prefix.",
   "scb": {
     "registerinformation": [
       {
