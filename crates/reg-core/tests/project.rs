@@ -128,6 +128,11 @@ fn name(case: &Path) -> &str {
 /// writing absent optionals as `null` or expanding panel-member shorthand, or the
 /// canonical encoding changes; and when a corpus gains an accepted project the
 /// golden lacks.
+///
+/// To add a project's hash, from the repository root with frozen Python:
+/// `uv run python -c 'import json, sys; from reg_meta.order import _project_hash;
+/// from reg_schema import ProjectData;
+/// print(_project_hash(ProjectData.model_validate(json.load(sys.stdin))))' < project.json`.
 #[test]
 fn project_hashes() {
     let golden = json(&PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/project/hashes.json"));

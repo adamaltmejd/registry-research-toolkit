@@ -28,7 +28,7 @@ pub struct ValidationIssue {
 }
 
 /// Every issue a validation found, in the order the layers emitted them.
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ValidationResult {
     pub issues: Vec<ValidationIssue>,
 }
