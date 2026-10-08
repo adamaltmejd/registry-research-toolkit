@@ -2,6 +2,6 @@
   "passed": false,
   "failures_contain": [
     "1 source row(s) not held as folded text in classification_fts: rowids [1]",
-    "1 classification_fts row(s) differ from every source row: rowids [99]"
+    "1 classification_fts row(s) differ from every source row: rowids [1]"
   ]
 }

@@ -2,11 +2,8 @@
 type="value")` → `_search_values_fts`).
 
 Builds a minimal in-memory DB from the shared DDL and seeds exactly the
-value_code / code_variable_map / value_code_fts rows each case needs (the SCB
-build pipeline can't dial these knobs precisely). value_code_fts is external
-content, so it's populated via the FTS5 'rebuild' command after the value_code
-INSERTs — the stoplist isn't reproduced here (none of these labels are
-stoplisted), which is faithful for the ranking/dedup/scope behaviour under test.
+value_code / code_variable_map rows each case needs (the SCB build pipeline can't
+dial these knobs precisely); derive's search-index step then indexes them.
 """
 
 from __future__ import annotations
@@ -20,6 +17,7 @@ import pytest
 from reg_meta.db import register_py_lower
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
+from reg_meta_build.derive import derive_search_indexes
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -56,14 +54,13 @@ def _map(conn: sqlite3.Connection, code_id: int, variable_id: int) -> None:
 
 
 def _finalize(conn: sqlite3.Connection) -> None:
-    """Compute mapping_count + (re)build the external-content FTS index, mirroring
-    the build's post-passes over the seeded rows."""
+    """Compute mapping_count + build the search indexes, mirroring the build's
+    post-passes over the seeded rows."""
     conn.execute(
         "UPDATE value_code SET mapping_count = ("
         "SELECT COUNT(*) FROM code_variable_map WHERE code_id = value_code.code_id)"
     )
-    conn.execute("INSERT INTO value_code_fts(value_code_fts) VALUES('rebuild')")
-    conn.commit()
+    derive_search_indexes(conn)
 
 
 @pytest.fixture

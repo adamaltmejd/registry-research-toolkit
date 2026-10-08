@@ -322,7 +322,10 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 # 6.17.0: persistent scoped data-quality warnings and explicit classification extensions.
 # 6.18.0: concise diagnostic warnings retain the exact original-detail SHA256.
 # 8.1.0: plural state/window books, typed source extensions and scoped sentinels.
-SCHEMA_VERSION = "9.0.0"
+# 9.2.0: the four catalog FTS5 indexes hold `fold_search` text (regular tables,
+#   `unicode61 remove_diacritics 0`); readers fold the query the same way and read
+#   display text from the base tables.
+SCHEMA_VERSION = "9.2.0"
 DB_FILENAME = "reg_meta.db"
 
 

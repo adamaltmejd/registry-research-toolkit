@@ -217,10 +217,8 @@ _VAR_ID_EXPR = (
 )
 # Pre-rendered per qualifier (the variable_id / provider_key column references vary
 # by query alias). Plain strings so they splice into the SQL fragments by
-# concatenation, no f-string. `vf` is `variable_fts`, whose `rowid` IS the
-# variable_id (content-synced rowid alias; see `_search_description_variables`).
+# concatenation, no f-string.
 _VAR_ID_V = _VAR_ID_EXPR.format(vid="v.variable_id", pk="v.provider_key") + " AS var_id"
-_VAR_ID_VF = _VAR_ID_EXPR.format(vid="vf.rowid", pk="vf.provider_key") + " AS var_id"
 _VAR_ID_VAR = (
     _VAR_ID_EXPR.format(vid="var.variable_id", pk="var.provider_key") + " AS var_id"
 )
@@ -458,20 +456,16 @@ def _fts_match_query(raw: str) -> str | None:
     stray or hostile syntax can neither raise a ``SyntaxError`` nor change
     semantics; the trailing ``*`` makes it a prefix match ("ink" → "inkomst").
     Tokens are space-joined (implicit AND). Embedded double quotes are doubled
-    per FTS5 string-literal escaping. Diacritics are NOT folded here — unicode61
-    folds both the index AND query side (å→a), so a Python fold would be
-    redundant (and would double-fold). Returns None when no token carries an
-    alphanumeric char (empty / whitespace / punctuation-only)."""
+    per FTS5 string-literal escaping. Nothing is folded here: the catalog indexes
+    hold `fold_search` text, so their callers pass `fold_search(raw)`; `doc_fts`
+    still folds with unicode61 and takes the raw query. Returns None when no
+    token carries an alphanumeric char (empty / whitespace / punctuation-only)."""
     terms = [f"{phrase}*" for phrase in _fts_quoted_tokens(raw)]
     return " ".join(terms) if terms else None
 
 
 def _fts_quoted_tokens(raw: str) -> list[str]:
-    """Each whitespace token with a word char as a quoted FTS5 phrase, raw.
-
-    The raw token reaches unicode61, which tokenizes and folds it exactly as the
-    index; a Python ASCII fold would delete letters with no decomposition (ø, æ,
-    ß, ł) instead of matching them."""
+    """Each whitespace token with a word char as a quoted FTS5 phrase, as given."""
     return [
         f'"{tok.replace(chr(34), chr(34) * 2)}"'
         for tok in raw.split()
@@ -479,17 +473,8 @@ def _fts_quoted_tokens(raw: str) -> list[str]:
     ]
 
 
-def _fold_fts_text(text: str) -> str:
-    return (
-        unicodedata.normalize("NFKD", text)
-        .encode("ascii", "ignore")
-        .decode("ascii")
-        .casefold()
-    )
-
-
 def _fts_terms(text: str) -> tuple[str, ...]:
-    return tuple(_FTS_TOKEN.findall(_fold_fts_text(text)))
+    return tuple(_FTS_TOKEN.findall(fold_search(text)))
 
 
 def _matches_fts_term(text: str | None, term: str) -> bool:
@@ -741,13 +726,14 @@ def search(
 
     like_pattern = f"%{_escape_like(query)}%"
     # The FTS path (register/variable/classification indexes) takes a SAFE FTS5
-    # MATCH expression built from the raw query — quoted prefix terms that
-    # neutralize FTS operators and won't error on stray syntax (see
-    # `_fts_match_query`). LIKE paths use an escaped substring pattern so user
-    # `%` / `_` input stays literal; the arms over authored text additionally
-    # fold BOTH sides through `py_lower` (see DESIGN.md → FTS5 configuration).
+    # MATCH expression built from the folded query, as the indexes hold
+    # `fold_search` text — quoted prefix terms that neutralize FTS operators and
+    # won't error on stray syntax (see `_fts_match_query`). LIKE paths use an
+    # escaped substring pattern so user `%` / `_` input stays literal; the arms
+    # over authored text additionally fold BOTH sides through `py_lower` (see
+    # DESIGN.md → FTS5 configuration).
     # None = the query had no usable token, so the FTS indexes contribute nothing.
-    fts_query = _fts_match_query(query)
+    fts_query = _fts_match_query(fold_search(query))
 
     # BOTH classification surfaces — the name-FTS arm and the code-containment arm
     # (#393 item 5) — are off under the same two scopes. Classifications are
@@ -1119,24 +1105,25 @@ def _fill_exact_variables(
 
     It holds the variables whose `variable.name` or in-scope delivery column (the
     ranking aliases, so an unheld alias cannot win admission) folds, as
-    `_search_identity_score` folds, to the query. FTS phrase matches of the raw
-    query tokens on those two columns narrow the candidates.
+    `_search_identity_score` folds, to the query. FTS phrase matches of the
+    folded query tokens on those two columns narrow the candidates.
 
     Admission is narrower than the scorer, which also treats an FQID or slug leaf
     as exact and, for a variable with no `variable.name`, reads the state and
-    alias-window names `variable_fts.name` falls back to. Rows exact only by those
-    texts are promoted when the bound already holds them, not admitted.
+    alias-window names `variable_search_text.name` falls back to. Rows exact
+    only by those texts are promoted when the bound already holds them, not
+    admitted.
     """
     conn.execute("DROP TABLE IF EXISTS _search_exact_variables")
     conn.execute(
         "CREATE TEMP TABLE _search_exact_variables (variable_id INTEGER PRIMARY KEY)"
     )
     folded_query = fold_search(query)
-    phrases = _fts_quoted_tokens(query)
+    phrases = _fts_quoted_tokens(folded_query)
     if not folded_query or not phrases:
         return
-    # `variable.name`, not `variable_fts.name`: reading an external-content column
-    # evaluates the whole content view per row, ~25x slower.
+    # `variable.name`, not `variable_search_text.name`: the view evaluates its
+    # state and alias-window fallbacks per row, ~25x slower.
     # simplify: past `limit` exact matches the admitted subset is by id, not by
     # rank; rank them in SQL if a real name is ever shared by ~1,000 variables.
     conn.execute(
@@ -1565,7 +1552,7 @@ def _search_description_registers(
         "v_year.register_id = rf.register_id",
     )
     rows = conn.execute(
-        "SELECT rf.register_id, rf.name, rf.purpose, rf.rank, "
+        "SELECT rf.register_id, r.name, r.purpose, rf.rank, "
         "r.slug AS register_slug, p.slug AS provider_slug "
         "FROM register_fts rf "
         "JOIN register r ON r.register_id = rf.register_id "
@@ -1614,9 +1601,9 @@ def _search_description_variables(
     year_range: tuple[int | None, int | None] | None,
     scope: ReadScope,
 ) -> list[dict[str, Any]]:
-    # `variable_fts` is content-synced to `variable` (content_rowid='rowid', and
-    # `variable_id` is the INTEGER PRIMARY KEY rowid alias), so `vf.rowid` IS
-    # the variable_id — carried for concept-group folding (#322).
+    # `vf.rowid` IS the variable_id — carried for concept-group folding (#322).
+    # Display text comes from `variable_search_text` (the unfolded text the index
+    # was folded from, with its state-name fallbacks), never from the index.
     # Join `variable`/`provider` for the slugs so each hit carries its 3-seg
     # binding `fqid` (#350) — the navigation key /api/search needs. `v.slug` /
     # `p.slug` feed `try_emit`, which yields None for an unslugged variable.
@@ -1659,10 +1646,10 @@ def _search_description_variables(
     )
     rows = conn.execute(
         "SELECT vf.register_id, vf.rowid AS variable_id, "
-        "" + _VAR_ID_VF + ", "
-        "vf.name AS variable_name, vf.definition AS variable_definition, "
-        "vf.description AS variable_description, "
-        "vf.operational_definition AS variable_operational_definition, "
+        "" + _VAR_ID_V + ", "
+        "vt.name AS variable_name, vt.definition AS variable_definition, "
+        "vt.description AS variable_description, "
+        "vt.operational_definition AS variable_operational_definition, "
         "bm25(variable_fts, 0.2, 0.2, 6.0, 4.0, 2.0, 1.0, 0.4) AS rank, "
         "r.name AS register_name, r.purpose AS register_purpose, "
         "r.slug AS register_slug, p.slug AS provider_slug, v.slug AS variable_slug "
@@ -1670,6 +1657,7 @@ def _search_description_variables(
         "JOIN register r ON vf.register_id = r.register_id "
         "JOIN provider p ON p.provider_id = r.provider_id "
         "JOIN variable v ON v.variable_id = vf.rowid "
+        "JOIN variable_search_text vt ON vt.variable_id = vf.rowid "
         "WHERE variable_fts MATCH ? "
         + " AND "
         + scope_predicate(scope, "variable", "v", bounds=_year_bounds(year_range))
@@ -1935,9 +1923,9 @@ def _code_owner_annotations_batch(
         # Classifications: catalog-scoped, so a register scope leaves them empty.
         # This owner definition (variables ∪ classifications, with NO is_valid/validity
         # filter on classification_code) is MIRRORED at build time by the value_code_fts
-        # owner filter in reg_meta_build/db.py `_populate_fts` (#478). Any change to what
-        # counts as a classification owner here (e.g. adding an is_valid predicate) MUST
-        # be mirrored there, or the search index and the owner annotation desync —
+        # owner filter in reg_meta_build/derive.py `_VALUE_CODE_OWNED` (#478). Any
+        # change to what counts as a classification owner here (e.g. adding an
+        # is_valid predicate) MUST be mirrored there, or the search index and the owner annotation desync —
         # context-less hits leak into search, or valid classification codes vanish.
         if not reg_ids:
             for row in conn.execute(
@@ -2013,7 +2001,7 @@ def _search_values_fts(
     letting common-but-relevant labels (Småort) drop out entirely. Code-shaped
     exact/prefix hits are seeded ABOVE all label hits (rank below the FTS floor),
     since an exact code match is the strongest signal a code query can get."""
-    fts_query = _fts_match_query(query)
+    fts_query = _fts_match_query(fold_search(query))
     owner_filter = ""
     if code_owner_scope == "classification":
         owner_filter = (
@@ -2081,7 +2069,7 @@ def _search_values_fts(
     if _is_code_shaped(query):
         q = query.strip()
         # The owner clause mirrors the build-side `value_code_fts` owner filter in
-        # `reg_meta_build/db.py` `_populate_fts` and the owner definition in
+        # `reg_meta_build/derive.py` `_VALUE_CODE_OWNED` and the owner definition in
         # `_code_owner_annotations_batch` (variables ∪ classifications, no is_valid
         # filter): without it this direct code-shape lookup bypasses the index and
         # leaks context-less hits for exact/prefix code searches (#478). The
@@ -2250,11 +2238,11 @@ def _search_classifications(
     """FTS search over `classification_fts` (#350) — the third shipped FTS index,
     built but previously unsearched (see DESIGN.md → FTS5 configuration). Indexes
     `short_name` + `name` + `name_en` + `description`; `classification_fts.rowid`
-    is `classification.id` (content_rowid='id'), so the join recovers the `slug`
+    is `classification.id`, so the join recovers the display text and the `slug`
     for the `class/<slug>` FQID. A NULL-slug classification isn't FQID-addressable
     (`try_emit` → None), mirroring the catalog enumeration's slug filter."""
     rows = conn.execute(
-        "SELECT c.id AS classification_id, cf.short_name, cf.name, c.slug, cf.rank "
+        "SELECT c.id AS classification_id, c.short_name, c.name, c.slug, cf.rank "
         "FROM classification_fts cf "
         "JOIN classification c ON c.id = cf.rowid "
         "WHERE classification_fts MATCH ? "

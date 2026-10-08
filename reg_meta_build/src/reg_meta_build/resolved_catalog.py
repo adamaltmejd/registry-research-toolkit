@@ -46,7 +46,6 @@ from reg_meta_build.data_warnings import write_data_warnings
 from reg_meta_build.db import (
     DDL,
     SCHEMA_VERSION,
-    _populate_fts,
     _provider_id_for,
     _value_set_hash,
     publish_db,
@@ -1416,7 +1415,6 @@ def write_resolved_catalog(
                 conn.execute(f"DROP TABLE {table}")
             conn.commit()
             derive(conn)
-            _populate_fts(conn)
             # Last write: readers plan with these statistics. ANALYZE is a pure
             # function of the table contents, so rebuilds stay byte-identical.
             conn.execute("ANALYZE")

@@ -15,5 +15,6 @@ INSERT INTO classification_conformance (
 INSERT INTO classification_conformance_code (
     state_id, declared_classification_id, code_id, member_kind, sentinel_meaning, scoped_sentinels
 ) VALUES (6, 1, 3, 'sentinel', NULL, '[{"valid_from": "2021-01-01", "valid_to": "2021-12-31", "delivery_column_name": "UniqCol", "classification_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "source_fingerprints": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"], "members": [["2", "Övriga civilstånd"]], "provenance": "checked-source-sentinel: synthetic case"}]');
--- The writer indexes every classification row for name search.
-INSERT INTO classification_fts(classification_fts) VALUES ('rebuild');
+-- Derive indexes the classification and its owned code label as fold_search text.
+INSERT INTO classification_fts(rowid, short_name, name) VALUES (1, 'testklass', 'testklassning');
+INSERT INTO value_code_fts(rowid, label) VALUES (10, 'kanonisk');

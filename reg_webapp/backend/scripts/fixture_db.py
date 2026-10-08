@@ -311,22 +311,11 @@ def _seed_first_provider_register(
 
 
 def _rebuild_fts(src: sqlite3.Connection) -> None:
-    """Populate the external-content FTS5 indexes from their content tables, so
-    the slugged fixture exercises ``/api/search`` (#350/#352). Base-table INSERTs
-    don't sync external-content FTS5; the 'rebuild' command repopulates each
-    index from its `content=` table — mirrors what the real build does.
+    """Fill the search indexes from the seeded rows, as derive does, so the
+    slugged fixture exercises ``/api/search`` (#350/#352)."""
+    from reg_meta_build.derive import derive_search_indexes
 
-    `value_code_fts` (#352) gets 'rebuild' too. The build-time stoplist exclusion
-    is NOT reproduced here (rebuild indexes every content row); the fixture's
-    value labels ("Man"/"Kvinna") aren't stoplisted anyway, so this is faithful
-    for the codes-group test."""
-    for index in (
-        "register_fts",
-        "variable_fts",
-        "classification_fts",
-        "value_code_fts",
-    ):
-        src.execute(f"INSERT INTO {index}({index}) VALUES('rebuild')")
+    derive_search_indexes(src)
 
 
 def _seed_tags(src: sqlite3.Connection) -> None:

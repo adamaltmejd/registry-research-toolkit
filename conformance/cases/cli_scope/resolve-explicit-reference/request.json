@@ -6,7 +6,7 @@
     "reference",
     "resolve",
     "--columns",
-    "Value,Secret,Archived,Valuereference"
+    "Value,Secret,Valørarkiv,Valuereference"
   ],
   "observe": "logical-resolve"
 }

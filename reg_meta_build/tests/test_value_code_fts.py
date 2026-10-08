@@ -16,6 +16,7 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 from catalog_manifest import synthetic_manifest
+from reg_core_py import fold_search
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationCode,
@@ -88,17 +89,13 @@ def _build(tmp_path: Path, classifications: tuple[ResolvedClassification, ...] =
 
 
 def _indexed(conn, label: str) -> bool:
-    """Whether `label` is actually in the FTS INDEX.
-
-    A `SELECT label FROM value_code_fts` reads back from the CONTENT table
-    (external-content FTS5 → value_code), so it lists every label whether indexed
-    or not. The only honest probe is a MATCH for the label's exact text and
-    confirming the matched rowid is this label's code_id."""
+    """Whether `label` is in the FTS index: a MATCH for its folded text, as the
+    reader queries, whose matched rowid is this label's code_id."""
     rows = conn.execute(
         "SELECT vc.label FROM value_code_fts "
         "JOIN value_code vc ON vc.code_id = value_code_fts.rowid "
         "WHERE value_code_fts MATCH ?",
-        (f'"{label}"',),
+        (f'"{fold_search(label)}"',),
     ).fetchall()
     return any(r[0] == label for r in rows)
 
@@ -219,20 +216,5 @@ def test_classification_owned_code_without_variable_is_indexed(
             ).fetchone()[0]
             == 0
         )
-    finally:
-        conn.close()
-
-
-def test_docsize_reflects_index_not_content(tmp_path: Path) -> None:
-    """The FTS5 docsize shadow table is the honest indexed-row count (COUNT(*) on
-    an external-content FTS5 table reads the CONTENT table, so it can't see the
-    stoplist exclusion). docsize must be < value_code here (two labels stoplisted)."""
-    conn = _build(tmp_path)
-    try:
-        n_vc = conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0]
-        n_idx = conn.execute("SELECT COUNT(*) FROM value_code_fts_docsize").fetchone()[
-            0
-        ]
-        assert 0 < n_idx < n_vc
     finally:
         conn.close()

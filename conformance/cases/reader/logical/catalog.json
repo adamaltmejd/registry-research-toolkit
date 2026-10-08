@@ -100,7 +100,7 @@
         },
         "valid_from": "2018-01-01",
         "valid_to": "2019-12-31",
-        "delivery_column_name": "Archived",
+        "delivery_column_name": "Valørarkiv",
         "data_type": "integer",
         "data_length": "8",
         "operational_definition": null,

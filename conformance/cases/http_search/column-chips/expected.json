@@ -12,5 +12,13 @@
         "Secret"
       ]
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/groups/0/results/0/delivery_column_names": [
+        "Valørarkiv"
+      ]
+    }
   }
 ]

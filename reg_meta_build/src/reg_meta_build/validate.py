@@ -64,7 +64,11 @@ from reg_meta_build.db import (
     PROVIDER_ID_SCB,
     PROVIDER_ID_SOS,
 )
-from reg_meta_build.derive import resolver_columns
+from reg_meta_build.derive import (
+    SEARCH_INDEXES,
+    register_fold_search,
+    resolver_columns,
+)
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
 from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
@@ -240,8 +244,7 @@ def validate_built_db(
         # Skipped under corpus=False so synthetic CI builds don't false-fail.
         if corpus:
             _check_sos_sanity(conn, result, tables)
-        _check_value_code_search(conn, result, tables, corpus=corpus)
-        _check_classification_search(conn, result, tables)
+        _check_search_indexes(conn, result, tables, corpus=corpus)
         _check_planner_statistics(conn, result, tables)
         _check_tags(conn, result, tables)
         _check_variable_alias_window(conn, result, tables, corpus=corpus)
@@ -359,18 +362,13 @@ def _check_schema_shape(
     else:
         result.fail("variable_state.period_scope missing")
 
-    # #352: code/value search additions — value_code.mapping_count column +
-    # value_code_fts index.
+    # #352: code/value search additions — value_code.mapping_count column.
     if "value_code" in tables:
         vc_cols = {r["name"] for r in conn.execute("PRAGMA table_info(value_code)")}
         if "mapping_count" in vc_cols:
             result.ok("value_code.mapping_count present")
         else:
             result.fail("value_code.mapping_count missing")
-    if "value_code_fts" in tables:
-        result.ok("value_code_fts present")
-    else:
-        result.fail("value_code_fts missing")
 
     # #311: curated thematic tag layer — tag + tag_member tables.
     for required in ("tag", "tag_member"):
@@ -1541,34 +1539,51 @@ _SOS_MIN_VARIABLES = 1_400
 _SOS_MAX_VARIABLES = 2_000
 
 
-def _check_value_code_search(
+def _check_search_indexes(
     conn: sqlite3.Connection,
     result: ValidationResult,
     tables: set[str],
     *,
     corpus: bool,
 ) -> None:
-    """#352 code/value search invariants.
+    """Each full-text index holds exactly `fold_search` of its source rows.
 
-    Structural (corpus-independent):
-      - the indexed-label count <= `value_code` row count — the stoplist hides
-        some labels from the index, so the index is a subset; it can never exceed
-        the leaf table. NB: `COUNT(*) FROM value_code_fts` reads the CONTENT table
-        (external-content FTS5), so it always equals value_code and can't see the
-        exclusion; the honest indexed count is the `_docsize` shadow table.
-      - `value_code.mapping_count` is non-negative everywhere.
-    Volume floor (corpus only): a real build indexes > 0 labels; a tiny synthetic
-    fixture may stoplist its whole label set, so this floor would false-fail there."""
-    result.section("[value-code search]")
-    if "value_code" not in tables or "value_code_fts" not in tables:
-        result.ok("value_code / value_code_fts absent — search check skipped")
-        return
-    n_vc = conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0]
-    n_idx = conn.execute("SELECT COUNT(*) FROM value_code_fts_docsize").fetchone()[0]
-    if n_idx <= n_vc:
-        result.ok(f"value_code_fts indexes {n_idx:,} of {n_vc:,} labels")
-    else:
-        result.fail(f"value_code_fts indexes {n_idx:,} > value_code {n_vc:,}")
+    The stored row (rowid, verbatim keys, folded text) must equal the derive
+    source's, both ways, so a missing, stray, misaligned or unfolded row fails.
+    Corpus only: a real build indexes some value-code labels; a tiny synthetic
+    fixture may stoplist its whole label set."""
+    result.section("[search indexes]")
+    register_fold_search(conn)
+    for table, source in SEARCH_INDEXES.items():
+        if table not in tables:
+            result.fail(f"{table} missing")
+            continue
+        stored = f"SELECT rowid, * FROM {table}"
+        unmatched = [
+            row[0]
+            for row in conn.execute(
+                f"SELECT * FROM ({source} EXCEPT {stored}) ORDER BY 1"
+            )
+        ]
+        stray = [
+            row[0]
+            for row in conn.execute(
+                f"SELECT * FROM ({stored} EXCEPT {source}) ORDER BY 1"
+            )
+        ]
+        if unmatched:
+            result.fail(
+                f"{len(unmatched):,} source row(s) not held as folded text in "
+                f"{table}: rowids {unmatched[:10]}"
+            )
+        if stray:
+            result.fail(
+                f"{len(stray):,} {table} row(s) differ from every source row: "
+                f"rowids {stray[:10]}"
+            )
+        if not unmatched and not stray:
+            (n_rows,) = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()
+            result.ok(f"{table} holds the folded text of all {n_rows:,} source rows")
     n_neg = conn.execute(
         "SELECT COUNT(*) FROM value_code WHERE mapping_count < 0"
     ).fetchone()[0]
@@ -1576,54 +1591,12 @@ def _check_value_code_search(
         result.ok("value_code.mapping_count non-negative")
     else:
         result.fail(f"{n_neg:,} value_code rows have negative mapping_count")
-    if corpus:
+    if corpus and "value_code_fts" in tables:
+        (n_idx,) = conn.execute("SELECT COUNT(*) FROM value_code_fts").fetchone()
         if n_idx > 0:
             result.ok(f"value_code_fts populated ({n_idx:,} labels)")
         else:
             result.fail("value_code_fts is EMPTY on a corpus build")
-
-
-def _check_classification_search(
-    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
-) -> None:
-    """Every classification row is indexed in ``classification_fts`` by its id.
-
-    ``classification_fts`` reads the external content table, so the index itself
-    is the ``_docsize`` shadow table (as for value codes). Matching by rowid, not
-    by count, also catches index entries that point at no classification."""
-    result.section("[classification search]")
-    if "classification" not in tables or "classification_fts" not in tables:
-        result.fail("classification / classification_fts missing")
-        return
-    unindexed = [
-        row[0]
-        for row in conn.execute(
-            "SELECT c.id FROM classification c "
-            "LEFT JOIN classification_fts_docsize d ON d.id = c.id "
-            "WHERE d.id IS NULL ORDER BY c.id"
-        )
-    ]
-    stray = [
-        row[0]
-        for row in conn.execute(
-            "SELECT d.id FROM classification_fts_docsize d "
-            "LEFT JOIN classification c ON c.id = d.id "
-            "WHERE c.id IS NULL ORDER BY d.id"
-        )
-    ]
-    if unindexed:
-        result.fail(
-            f"{len(unindexed):,} classification(s) not in classification_fts: "
-            f"ids {unindexed[:10]}"
-        )
-    if stray:
-        result.fail(
-            f"{len(stray):,} classification_fts entr(ies) match no classification: "
-            f"ids {stray[:10]}"
-        )
-    if not unindexed and not stray:
-        (n_rows,) = conn.execute("SELECT COUNT(*) FROM classification").fetchone()
-        result.ok(f"classification_fts indexes all {n_rows:,} classifications")
 
 
 def _check_planner_statistics(
