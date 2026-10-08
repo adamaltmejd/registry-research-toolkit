@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "variable_replaced_by has a succession cycle through scb/testreg/kon"
+  ]
+}

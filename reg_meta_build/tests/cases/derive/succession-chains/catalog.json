@@ -1,0 +1,162 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg",
+      "name": "Successionsregistret",
+      "purpose": "Successioner"
+    },
+    "slug": "v1",
+    "provider_key": "v1",
+    "name": "V1",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "V1",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg",
+      "name": "Successionsregistret",
+      "purpose": "Successioner"
+    },
+    "slug": "v2",
+    "provider_key": "v2",
+    "name": "V2",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "V2",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg",
+      "name": "Successionsregistret",
+      "purpose": "Successioner"
+    },
+    "slug": "v3",
+    "provider_key": "v3",
+    "name": "V3",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "V3",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg",
+      "name": "Successionsregistret",
+      "purpose": "Successioner"
+    },
+    "slug": "s1",
+    "provider_key": "s1",
+    "name": "S1",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "S1",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "reg",
+      "name": "Successionsregistret",
+      "purpose": "Successioner"
+    },
+    "slug": "s2",
+    "provider_key": "s2",
+    "name": "S2",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "S2",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  }
+]
