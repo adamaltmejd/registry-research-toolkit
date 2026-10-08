@@ -1,6 +1,6 @@
 {
   "passed": false,
   "failures_contain": [
-    "delivery_window overlaps within browse_delivery_id [1]"
+    "delivery_window overlaps within (scope, variable_id, browse_delivery_id) [('reference', 7, 1)]"
   ]
 }

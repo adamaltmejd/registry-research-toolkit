@@ -1273,15 +1273,17 @@ in-flight list.
 `browse_delivery`, `canonical_column`, scope as data) and §13 decision 1.
 
 - Changes: derive emits `expanded_state` from the pass `resolver_columns` already makes:
-  one whole-history `_expand_state_windows` call per (variable, variant) on the same
-  worker pool, so derive runs the resolver once. Each row references its source state
-  and carries its own id, kind (base fallback, source window, curated window, coded
-  window), bounds, `canonical_column` and the representation fields the reader needs for
-  the window fallback (section 3). `resolver_column` becomes a SQL projection of
-  `expanded_state`. `browse_delivery` holds `register_variable_deliveries` per scope
-  (`scope = 'holdings'` rows in steward artifacts). Warning attribution is not compiled
-  (decision 2; section 3): `reg_meta/DESIGN.md` records its exact predicate. Builder and
-  `reg_meta` `SCHEMA_VERSION` 9.4.0; `derive.py` becomes the `derive/` package.
+  one whole-history call per (variable, variant) on the same worker pool of the
+  participation rule inside `_expand_state_windows` (`_applicable_alias_windows`, since
+  `_expand_state_windows` drops a replaced base), so derive runs the resolver once. Each
+  row references its source state and carries its own id, kind (base fallback, source
+  window, curated window, coded window), bounds, `canonical_column` and the
+  representation fields the reader needs for the window fallback (section 3).
+  `resolver_column` becomes a SQL projection of `expanded_state`. `browse_delivery`
+  holds `register_variable_deliveries` per scope (`scope = 'holdings'` rows in steward
+  artifacts). Warning attribution is not compiled (decision 2; section 3):
+  `reg_meta/DESIGN.md` records its exact predicate. Builder and `reg_meta`
+  `SCHEMA_VERSION` 9.4.0; `derive.py` becomes the `derive/` package.
 - `validate_built_db`: `expanded_state` equals one recomputation and `resolver_column`
   equals its projection (replacing today's second resolver pass); browse windows
   disjoint; one canonical spelling per (variable, variant, fold); fixed insertion order.

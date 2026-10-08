@@ -59,7 +59,10 @@ def browse_deliveries(conn: sqlite3.Connection, scope: Scope) -> list[BrowseRow]
                 "FROM variable_state UNION SELECT variable_id, register_variant_id "
                 "FROM variable_alias_window UNION SELECT variable_id, "
                 "register_variant_id FROM variable_alias) JOIN variable v "
-                "USING(variable_id) JOIN register_variant rv USING(register_variant_id)"
+                "USING(variable_id) JOIN register_variant rv USING(register_variant_id) "
+                # A slug twin across registers resolves to its highest id, so the
+                # last write is fixed whatever plan SQLite picks.
+                "ORDER BY 1, 2, 3, 4, 5"
             )
         }
         out: list[BrowseRow] = []
@@ -159,15 +162,17 @@ def check_browse(
             f"{', '.join(scopes)} ({len(stored):,} rows)"
         )
     overlapping = conn.execute(
-        "SELECT DISTINCT a.browse_delivery_id FROM delivery_window a "
-        "JOIN delivery_window b ON b.browse_delivery_id = a.browse_delivery_id "
+        "SELECT DISTINCT d.scope, d.variable_id, a.browse_delivery_id "
+        "FROM delivery_window a JOIN delivery_window b "
+        "ON b.browse_delivery_id = a.browse_delivery_id "
         "AND b.valid_from > a.valid_from AND b.valid_from <= a.valid_to "
-        "ORDER BY 1 LIMIT 5"
+        "JOIN browse_delivery d ON d.browse_delivery_id = a.browse_delivery_id "
+        "ORDER BY 3 LIMIT 5"
     ).fetchall()
     if overlapping:
         result.fail(
-            "delivery_window overlaps within browse_delivery_id "
-            f"{[row[0] for row in overlapping]}"
+            "delivery_window overlaps within (scope, variable_id, browse_delivery_id) "
+            f"{[tuple(row) for row in overlapping]}"
         )
     else:
         result.ok("delivery windows are disjoint")
