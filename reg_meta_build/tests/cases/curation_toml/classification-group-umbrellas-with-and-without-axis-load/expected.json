@@ -12,10 +12,12 @@
       "axis": "dimension",
       "members": [
         {
-          "classification": "sun-niva2020"
+          "classification": "sun-niva2020",
+          "value": "niva"
         },
         {
-          "classification": "sun-grupp2020"
+          "classification": "sun-grupp2020",
+          "value": "grupp"
         }
       ]
     },
@@ -24,9 +26,13 @@
       "axis": null,
       "members": [
         {
+          "classification": "sun-niva2020",
           "value": "niva"
         },
-        {}
+        {
+          "classification": "sun-grupp2020",
+          "value": "grupp"
+        }
       ]
     }
   ]
