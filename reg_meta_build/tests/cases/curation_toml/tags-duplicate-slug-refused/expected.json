@@ -1,0 +1,9 @@
+{
+  "loader": "tags",
+  "replaces": "test_tags.py::test_load_tags_rejects_duplicate_slug",
+  "fails_if": "load_tags lets two [[tag]] entries share a slug in the global tag vocabulary",
+  "error": {
+    "code": "tags_invalid",
+    "locator": "duplicate slug 'income'"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "loader": "tags",
+  "replaces": [
+    "test_tags.py::test_load_tags_rejects_malformed_fqid[variable = \"scb/lisa\"]",
+    "test_tags.py::test_load_tags_rejects_malformed_fqid[register = \"scb/lisa/kon\"]"
+  ],
+  "fails_if": "load_tags stops checking that a `variable` member is a 3-segment provider/register/variable FQID",
+  "note": "A 2-segment register FQID is the hardest malformed variable reference: it is valid for the other grain.",
+  "error": {
+    "code": "tags_invalid",
+    "locator": "tag 'x' member variable 'scb/lisa'",
+    "message_contains": [
+      "3-segment"
+    ]
+  }
+}
