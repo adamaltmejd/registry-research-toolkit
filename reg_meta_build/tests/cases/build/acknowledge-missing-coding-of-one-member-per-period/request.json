@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_source_physical_alternatives_boundary.py::test_one_member_keeps_a_missing_coding_issue_per_period"
+  ],
+  "note": "Pooled member 1005 delivers 2020-2022; the annual 2021 member 1006 wins its year and carries the code list, so 1005 lacks coding in 2020 and in 2022.",
+  "sources": {
+    "description": "Pooled member 1005 (2020-2022) beside annual 2021 member 1006, which alone carries the code list.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "VALUE", "cvid": 1005, "var_id": 1, "versionname": "2020-2022"},
+        {"colname": "VALUE", "cvid": 1006, "var_id": 1, "year": "2021", "regver_id": 2021}
+      ],
+      "vardemangder": ["Kön|1|1|Man|1006|5001"]
+    }
+  }
+}

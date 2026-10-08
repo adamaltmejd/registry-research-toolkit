@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_build_db_scope_selection.py::test_undeclared_reference_is_fatal_even_when_register_is_unselected[scb/nosuch/value]"
+  ],
+  "note": "A register-scoped check cannot see every register, so it passes without claiming the edge groups or the delivery coverage.",
+  "sources": "scb-two-registers",
+  "mode": "check",
+  "registers": ["1"]
+}

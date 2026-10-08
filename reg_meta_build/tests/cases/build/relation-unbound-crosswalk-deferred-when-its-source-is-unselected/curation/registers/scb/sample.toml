@@ -1,0 +1,15 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101.a"
+slug = "value"
+[[identity.partition]]
+variable = "1.101"
+columns = { VALUE = "1.101.a" }
+unassigned_columns = ["ALTVALUE"]
+columns_ref = "exact fixture"

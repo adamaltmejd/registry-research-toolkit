@@ -1,0 +1,29 @@
+{
+  "replaces": [
+    "test_build_catalog_classification_boundary.py::test_declared_family_alias_binds_state_to_the_covering_edition"
+  ],
+  "sources": {
+    "description": "FK AMOUNT (2020) declares the family alias 'Source pair'; books old and new.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "fk": [
+      "[[register]]",
+      "key = \"remote\"",
+      "name = \"Remote\"",
+      "valid_from = \"2020-01-01\"",
+      "valid_to = \"2020-12-31\"",
+      "[[register.variable]]",
+      "name = \"Amount\"",
+      "column = \"AMOUNT\"",
+      "data_type = \"int\"",
+      "classification = \"Source pair\""
+    ],
+    "classifications": {
+      "old": ["code,label", "1,One", "2,Two"],
+      "new": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

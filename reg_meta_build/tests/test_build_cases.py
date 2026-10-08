@@ -12,21 +12,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from _build_case_runner import (
-    PreparedCache,
-    cache_root,
-    case_dirs,
-    case_steps,
-    run_step,
-)
+from _build_case_runner import case_dirs, case_steps, run_step
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-
-@pytest.fixture(scope="session")
-def prepared_cache(tmp_path_factory: pytest.TempPathFactory) -> PreparedCache:
-    return PreparedCache(cache_root(tmp_path_factory.getbasetemp()))
+    from _build_case_runner import PreparedCache
 
 
 @pytest.mark.parametrize("case", case_dirs(), ids=lambda case: case.name)

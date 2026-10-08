@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "classification_curation_invalid",
+    "message_contains": [
+      "classifications/C.toml: classification reference 'Shared' is also declared in classifications/A.toml."
+    ]
+  }
+}

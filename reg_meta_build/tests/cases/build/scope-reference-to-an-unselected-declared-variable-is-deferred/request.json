@@ -1,0 +1,5 @@
+{
+  "replaces": ["test_build_db_scope_selection.py::test_unselected_declared_variable_name_is_deferred"],
+  "sources": "scb-two-registers",
+  "registers": ["1"]
+}

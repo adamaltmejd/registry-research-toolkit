@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_acknowledgement_boundary.py::test_a_guarded_acknowledgement_lapses_when_its_original_rows_change[unchanged]"
+  ],
+  "sources": "scb-unnamed-variable"
+}

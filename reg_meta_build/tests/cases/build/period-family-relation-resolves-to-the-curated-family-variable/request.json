@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_build_catalog_period_family_boundary.py::test_relation_resolves_to_curated_period_family_variable"
+  ],
+  "note": "The family variable slug, calendar, exists only through the period-family curation.",
+  "sources": "scb-calendar-months"
+}

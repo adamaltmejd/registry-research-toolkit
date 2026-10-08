@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_build_catalog_source_relationship_boundary.py::test_unbound_crosswalk_defers_only_when_its_occurrence_source_is_unselected[sos-selected]"
+  ],
+  "sources": "scb-sos-crosswalk",
+  "registers": ["Syntetiskt register"]
+}

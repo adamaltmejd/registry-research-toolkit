@@ -1,0 +1,4 @@
+{
+  "replaces": ["test_build_db_scope_selection.py::test_full_build_compiles_every_prepared_scope"],
+  "sources": "scb-two-registers"
+}

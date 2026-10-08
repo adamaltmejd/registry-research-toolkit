@@ -1,0 +1,5 @@
+{
+  "replaces": ["test_build_db_scope_selection.py::test_reference_into_unselected_thin_provider_is_deferred"],
+  "sources": "scb-value-fk-remote",
+  "registers": ["1"]
+}

@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_build_catalog_scope_boundary.py::test_relations_into_unselected_register_are_deferred[1]",
+    "test_build_catalog_scope_boundary.py::test_relations_into_unselected_register_are_deferred[2]"
+  ],
+  "note": "The full build half of the replaced test; a same_as edge is stored in both directions.",
+  "sources": "scb-two-registers"
+}

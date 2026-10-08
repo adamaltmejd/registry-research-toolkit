@@ -1,0 +1,8 @@
+{
+  "description": "Register 1 (TESTREG, variant 10) delivers VALUE (member 1001, variable 101) in 2020.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "SCB register 1 delivers VALUE; FK's thin register remote delivers AMOUNT.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "fk": [
+    "[[register]]",
+    "key = \"remote\"",
+    "name = \"Remote\"",
+    "valid_from = \"2020-01-01\"",
+    "valid_to = \"2020-12-31\"",
+    "[[register.variable]]",
+    "name = \"Amount\"",
+    "column = \"AMOUNT\"",
+    "data_type = \"int\""
+  ]
+}

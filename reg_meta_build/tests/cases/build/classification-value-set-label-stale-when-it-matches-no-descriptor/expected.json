@@ -1,0 +1,11 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "subject"],
+      "rows": [
+        ["stale_curation_entry", "error", "classifications/A.toml#/binding/value_set_labels/1"]
+      ]
+    }
+  ]
+}

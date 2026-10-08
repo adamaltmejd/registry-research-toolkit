@@ -1,0 +1,15 @@
+{
+  "replaces": [
+    "test_source_value_bindings_boundary.py::test_native_member_tokens_bind_by_number_and_keep_their_raw_spelling"
+  ],
+  "note": "The zero-padded token 01001 and the plain 1001 name one native member, so both rows join VALUE's member 1001 and state one list; the unparseable token broken binds nothing and is reported once with its raw spelling. Codes are non-blank: SCB reads a blank code with a label as unknown membership, which the replaced test's generic source did not.",
+  "sources": {
+    "description": "VALUE (member 1001) and a Vardemangder list whose rows name the member as 01001, 1001 and broken.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ],
+      "vardemangder": ["list|1|01|One|01001|7001", "list|1|02|Two|1001|7002", "list|1|01|One|broken|7003"]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[classification]
+short_name = "ALPHA"
+slug = "alpha"
+name = "ALPHA"
+codes_file = "alpha.csv"
+name_en = "Distinctive nomenclature"

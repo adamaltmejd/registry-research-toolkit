@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_build_catalog_scope_boundary.py::test_relations_into_unselected_register_are_deferred[2]"
+  ],
+  "sources": "scb-two-registers",
+  "registers": ["2"]
+}

@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_build_catalog_classification_boundary.py::test_full_build_reports_value_set_label_matching_no_descriptor"
+  ],
+  "sources": "scb-fk-book-a"
+}

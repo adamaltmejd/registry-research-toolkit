@@ -1,0 +1,15 @@
+{
+  "replaces": [
+    "test_source_coding_window_boundary.py::test_a_choice_over_a_period_with_one_complete_list_is_stale"
+  ],
+  "note": "With one complete list the period is uncontested, so the choice is stale for that reason although its evidence digest and kept label still match the source.",
+  "sources": {
+    "description": "VALUE (member 1001) with one complete code list, keep.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ],
+      "vardemangder": ["keep|1|01|Label|1001|7001"]
+    }
+  }
+}

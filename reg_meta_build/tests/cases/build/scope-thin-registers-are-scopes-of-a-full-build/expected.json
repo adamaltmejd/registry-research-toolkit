@@ -1,0 +1,7 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "counts": {"scopes": 3},
+    "variables": 3
+  }
+}

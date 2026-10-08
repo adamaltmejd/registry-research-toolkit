@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_acknowledgement_boundary.py::test_acknowledged_fields_match_only_in_the_issue_order[issue-order]"
+  ],
+  "sources": "scb-value-two-spellings"
+}

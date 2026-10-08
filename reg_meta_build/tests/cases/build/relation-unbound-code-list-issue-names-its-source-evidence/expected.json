@@ -1,0 +1,56 @@
+{
+  "projections": [
+    {
+      "table": "source_issues",
+      "where": {"kind": "value_source_issue"},
+      "fields": ["descriptor_key", "physical_associations"],
+      "rows": [
+        ["sheet:Kodlista_DIAGNOS", 2],
+        ["sheet:Kodlista_EMPTY", 0]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unresolved_list_reference"},
+      "fields": ["severity"],
+      "rows": [
+        ["error"],
+        ["error"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unresolved_list_reference",
+        "subject": {
+          "contains": [
+            "'sheet:Kodlista_DIAGNOS'",
+            "'Socialstyrelsen/Metadata Syntetiskt register (SYN)_webb.xlsx@sha256:",
+            ", 2, "
+          ]
+        }
+      },
+      "fields": ["severity"],
+      "rows": [
+        ["error"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unresolved_list_reference",
+        "subject": {
+          "contains": [
+            "'sheet:Kodlista_EMPTY'",
+            "'Socialstyrelsen/Metadata Syntetiskt register (SYN)_webb.xlsx@sha256:",
+            ", 0, "
+          ]
+        }
+      },
+      "fields": ["severity"],
+      "rows": [
+        ["error"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[[edge]]
+type = "same_as"
+a = "scb/sample/value"
+b = "scb/other/value"
+[[edge]]
+type = "replaced_by"
+from = "scb/sample/value"
+to = "scb/other/value"
+effective_year = 2021

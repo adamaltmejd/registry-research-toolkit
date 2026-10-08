@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_build_catalog_scope_boundary.py::test_slice_build_holds_only_the_selected_register"],
+  "sources": "scb-two-registers",
+  "registers": ["2"],
+  "diagnostic": false
+}

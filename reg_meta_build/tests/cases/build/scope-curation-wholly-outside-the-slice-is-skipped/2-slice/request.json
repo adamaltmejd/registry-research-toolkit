@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_build_db_scope_selection.py::test_curation_wholly_outside_slice_is_skipped_without_claiming_proof"
+  ],
+  "note": "Strict: the skipped edge is neither checked nor reported deferred.",
+  "sources": "scb-two-registers",
+  "registers": ["1"],
+  "diagnostic": false
+}

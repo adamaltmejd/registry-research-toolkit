@@ -1,0 +1,22 @@
+{
+  "description": "SCB VALUE and FK AMOUNT, no classification declared; book a's code list.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "fk": [
+    "[[register]]",
+    "key = \"remote\"",
+    "name = \"Remote\"",
+    "valid_from = \"2020-01-01\"",
+    "valid_to = \"2020-12-31\"",
+    "[[register.variable]]",
+    "name = \"Amount\"",
+    "column = \"AMOUNT\"",
+    "data_type = \"int\""
+  ],
+  "classifications": {
+    "a": ["code,label", "1,One", "2,Two"]
+  }
+}

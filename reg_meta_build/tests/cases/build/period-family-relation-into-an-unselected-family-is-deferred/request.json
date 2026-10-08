@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_build_catalog_period_family_boundary.py::test_slice_defers_relation_into_unselected_period_family"
+  ],
+  "sources": "scb-calendar-months",
+  "registers": ["1"]
+}

@@ -817,7 +817,7 @@ id = "reg_meta.db.DB_FILENAME"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_catalog_cli_output_boundary.py"]
+covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
 note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
 
 [[row]]
@@ -1471,10 +1471,10 @@ covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
 [[row]]
 kind = "import"
 id = "reg_meta.queries.search"
-used_by = ["conformance", "reg_meta_build", "reg_webapp"]
+used_by = ["conformance", "reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/cases/http_search", "reg_meta/tests/test_search_ranking.py", "reg_meta_build/tests/test_build_catalog_classification_boundary.py"]
+covered_by = ["conformance/cases/http_search", "reg_meta/tests/test_search_ranking.py"]
 note = "The search core: the webapp's search route and conformance's reader cases switch to the 3a search operation. The build's only importer is a test (test_build_catalog_classification_boundary asserts search hits on a built catalog), which becomes a 3a search api case or goes."
 
 [[row]]

@@ -1,0 +1,33 @@
+{
+  "replaces": [
+    "test_build_db_scope_selection.py::test_sos_workbook_without_register_coordinate_stays_whole_source"
+  ],
+  "note": "The workbook's Datamängd cell is blank, so it names no register and its only scope is the whole source. Its 6 physical occurrences are the prepared reader's count for the workbook (register_coordinates), the oracle of the replaced test.",
+  "sources": {
+    "description": "SCB register 1 delivers VALUE; one SOS workbook without a Deldatamängder sheet and with a blank Datamängd cell delivers LOPNR.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "SYT",
+        "title": "Syntetiskt variantlöst register",
+        "description": "Saknar Deldatamängder-blad; adaptern syntetiserar _default.",
+        "blank_dataset": true,
+        "variables": [
+          {
+            "name": "LOPNR",
+            "label": "Löpnummer",
+            "description": "Radens löpnummer",
+            "data_type": "Heltal",
+            "data_from": 2000,
+            "data_to": 2020
+          }
+        ]
+      }
+    ]
+  },
+  "registers": ["Socialstyrelsen/Metadata Syntetiskt variantlöst register (SYT)_webb.xlsx"]
+}

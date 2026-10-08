@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_build_catalog_source_relationship_boundary.py::test_unbound_code_list_issue_identity_is_its_exact_source_evidence"
+  ],
+  "note": "Each value-source issue (a code list bound to no variable) is reported once, under a subject that names its own descriptor and source revision.",
+  "sources": "scb-sos-crosswalk"
+}

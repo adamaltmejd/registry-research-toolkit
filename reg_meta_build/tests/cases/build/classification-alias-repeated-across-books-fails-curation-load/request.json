@@ -1,0 +1,28 @@
+{
+  "replaces": [
+    "test_build_catalog_classification_boundary.py::test_ambiguous_classification_reference_spelling_fails_at_its_file[alias-repeated-across-books]"
+  ],
+  "sources": {
+    "description": "Books a, b, unreferenced.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "fk": [
+      "[[register]]",
+      "key = \"remote\"",
+      "name = \"Remote\"",
+      "valid_from = \"2020-01-01\"",
+      "valid_to = \"2020-12-31\"",
+      "[[register.variable]]",
+      "name = \"Amount\"",
+      "column = \"AMOUNT\"",
+      "data_type = \"int\""
+    ],
+    "classifications": {
+      "a": ["code,label", "1,One", "2,Two"],
+      "b": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

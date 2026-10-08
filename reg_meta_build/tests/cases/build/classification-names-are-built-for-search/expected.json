@@ -1,0 +1,11 @@
+{
+  "projections": [
+    {
+      "table": "classifications",
+      "fields": ["slug", "short_name", "name", "name_en"],
+      "rows": [
+        ["alpha", "ALPHA", "ALPHA", "Distinctive nomenclature"]
+      ]
+    }
+  ]
+}

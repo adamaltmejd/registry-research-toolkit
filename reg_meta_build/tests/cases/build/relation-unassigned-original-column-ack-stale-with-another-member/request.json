@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_build_catalog_source_relationship_boundary.py::test_unassigned_original_column_finding_reaches_exact_ack[ALTVALUE_REF1]"
+  ],
+  "sources": "scb-sos-crosswalk",
+  "registers": ["1"]
+}

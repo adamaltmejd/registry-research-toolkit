@@ -1,0 +1,29 @@
+{
+  "replaces": [
+    "test_build_catalog_classification_boundary.py::test_declared_short_name_or_alias_binds_state_to_its_classification[A]"
+  ],
+  "sources": {
+    "description": "FK AMOUNT declares classification 'A'; books a and b.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "fk": [
+      "[[register]]",
+      "key = \"remote\"",
+      "name = \"Remote\"",
+      "valid_from = \"2020-01-01\"",
+      "valid_to = \"2020-12-31\"",
+      "[[register.variable]]",
+      "name = \"Amount\"",
+      "column = \"AMOUNT\"",
+      "data_type = \"int\"",
+      "classification = \"A\""
+    ],
+    "classifications": {
+      "a": ["code,label", "1,One", "2,Two"],
+      "b": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

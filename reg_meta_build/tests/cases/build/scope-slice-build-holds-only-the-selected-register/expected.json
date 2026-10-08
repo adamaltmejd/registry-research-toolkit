@@ -1,0 +1,17 @@
+{
+  "status": "complete",
+  "result": {
+    "counts": {"scopes": 1, "physical_occurrences": 1},
+    "variables": 1
+  },
+  "projections": [
+    {
+      "table": "variables",
+      "fields": ["register"],
+      "match": "set",
+      "rows": [
+        ["other"]
+      ]
+    }
+  ]
+}

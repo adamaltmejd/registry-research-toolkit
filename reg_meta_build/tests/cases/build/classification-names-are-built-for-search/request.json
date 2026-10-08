@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_build_catalog_classification_boundary.py::test_classification_is_found_by_name_search_on_the_built_artifact"
+  ],
+  "note": "The replaced test searched the built artifact by name and name_en. The builder's side is that both are built: validate_built_db checks the search index holds the classification rows, and the search hit itself belongs to the reader's search corpus.",
+  "sources": "scb-fk-book-alpha"
+}

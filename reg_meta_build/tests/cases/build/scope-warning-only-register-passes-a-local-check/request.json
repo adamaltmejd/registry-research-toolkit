@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_build_db_scope_selection.py::test_warning_only_register_is_compiled_and_warning_roundtrips"],
+  "sources": "scb-value",
+  "mode": "check",
+  "registers": ["1"]
+}

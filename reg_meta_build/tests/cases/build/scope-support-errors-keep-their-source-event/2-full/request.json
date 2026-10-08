@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_build_db_scope_selection.py::test_pipeline_routes_real_support_errors_without_dropping_source_event"
+  ],
+  "sources": "scb-two-registers-unknown-support"
+}

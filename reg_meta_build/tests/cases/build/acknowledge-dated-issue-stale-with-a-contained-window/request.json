@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_acknowledgement_boundary.py::test_a_dated_issue_is_acknowledged_only_by_its_exact_period[contained-window]"
+  ],
+  "sources": "scb-value-unit-conflict"
+}

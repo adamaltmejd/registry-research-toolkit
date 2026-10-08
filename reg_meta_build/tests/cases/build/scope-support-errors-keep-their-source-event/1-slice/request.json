@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_build_db_scope_selection.py::test_pipeline_routes_real_support_errors_without_dropping_source_event"
+  ],
+  "note": "One support source issue names both summary rows; in a slice the unselected register's half is deferred. The refs are the two Unika rows; the replaced test asserted the issue refs equal the source event's refs.",
+  "sources": "scb-two-registers-unknown-support",
+  "registers": ["1"]
+}

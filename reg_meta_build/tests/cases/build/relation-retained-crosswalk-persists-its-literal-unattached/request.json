@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_build_catalog_source_relationship_boundary.py::test_retained_crosswalk_persists_literal_without_catalog_link"
+  ],
+  "sources": "scb-sos-crosswalk"
+}

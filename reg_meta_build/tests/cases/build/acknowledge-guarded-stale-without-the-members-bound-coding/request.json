@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_source_acknowledgement_boundary.py::test_a_guarded_acknowledgement_also_pins_the_members_bound_coding"
+  ],
+  "note": "The guard covers member 1003's original rows alone, but 1003 carries a bound source code list, so the guard is not its full evidence.",
+  "sources": "scb-unnamed-variable-coded"
+}

@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_source_acknowledgement_boundary.py::test_a_guarded_acknowledgement_lapses_when_its_original_rows_change[changed-definition]"
+  ],
+  "note": "The changed definition alters no coordinate of the issue itself.",
+  "sources": {
+    "description": "scb-unnamed-variable after member 1003's definition changed.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {"cvid": 1003, "var_id": 102, "colname": "OTHER", "vardef": "Changed source meaning"}
+      ]
+    }
+  },
+  "authored_from": "scb-unnamed-variable"
+}
