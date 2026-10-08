@@ -23,7 +23,9 @@ from __future__ import annotations
 import json
 import random
 import sqlite3
+import time
 import tomllib
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from pathlib import Path
@@ -286,12 +288,26 @@ def cases(
 
     def run(job):
         scope, command, key, ref = job
+        started = time.monotonic()
         expected = _baseline(base, _path(ref), scope, command == "show-register")
         actual = _candidate(cand, ref, scope, command == "show-retired")
-        return (f"{scope}/{command}/{key}".rstrip("/"), expected, actual)
+        case = (f"{scope}/{command}/{key}".rstrip("/"), expected, actual)
+        return case, command, time.monotonic() - started
 
+    started = time.monotonic()
     with ThreadPoolExecutor(PARALLEL) as pool:
-        out = list(pool.map(run, work))
+        timed = list(pool.map(run, work))
+    wall = time.monotonic() - started
+    out = [case for case, _, _ in timed]
+    seconds: Counter[str] = Counter()
+    for _, command, elapsed in timed:
+        seconds[command] += elapsed
+    # Request seconds per command, summed over the parallel requests (G1 budget).
+    print(
+        f"served {catalog} show: {len(timed)} requests in {wall:.1f} s; seconds: "
+        + ", ".join(f"{c} {s:.0f}" for c, s in seconds.most_common()),
+        flush=True,
+    )
     # Owning variables against the CLI arm's baseline results, reused by case id.
     results = baseline_cli.result()
     prefix = f"{catalog}/"

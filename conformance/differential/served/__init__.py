@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import shlex
+import time
 from typing import TYPE_CHECKING
 
 from conformance.differential.cache import REPO_ROOT
@@ -98,12 +99,22 @@ def served_cases(
             )
             scopes = [None, "reference"] + (["holdings"] if catalog != "global" else [])
             for family in FAMILIES:
-                for key, expected, actual in family.cases(
+                started = time.monotonic()
+                found = family.cases(
                     base, cand, catalog, scopes, originals[catalog], baseline_cli
-                ):
-                    cases.append(
-                        (f"{catalog}/{key}", _result(expected), _result(actual))
-                    )
+                )
+                cases += [
+                    (f"{catalog}/{key}", _result(expected), _result(actual))
+                    for key, expected, actual in found
+                ]
+                # Wall time per family (G1 budget); a family that waits on
+                # `baseline_cli` includes the wait.
+                name = family.__name__.rpartition(".")[2]
+                print(
+                    f"served {catalog} {name}: {len(found)} cases in "
+                    f"{time.monotonic() - started:.1f} s",
+                    flush=True,
+                )
     finally:
         baseline.close()
         rust.close()
