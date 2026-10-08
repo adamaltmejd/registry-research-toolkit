@@ -1,0 +1,14 @@
+[register]
+provider = "sos"
+slug = "test"
+native_id = "1"
+
+[[identity.route]]
+deldatamangd = "TOKEN"
+variants = ["Variant"]
+
+[[identity.rename]]
+deldatamangd = "TOKEN"
+variable = "OLD"
+name = "Name"
+column = "NEW"

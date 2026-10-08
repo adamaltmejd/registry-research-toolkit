@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree_registers.py::test_edition_split_requires_declared_native_split_and_unique_names",
+  "fails_if": "the register loader accepts an [[identity.edition_split]] listing one edition twice",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [[identity.edition_split]] entry 1",
+    "message_contains": [
+      "editions must be non-empty and unique"
+    ]
+  }
+}

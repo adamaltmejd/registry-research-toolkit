@@ -1,0 +1,15 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[variant]]
+native_id = "1.2.stock"
+slug = "stock"
+[[errata.edition_period]]
+variant = "stock"
+name = "Edition"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+evidence = "SCB source text"
+noted = "2026-09-27"

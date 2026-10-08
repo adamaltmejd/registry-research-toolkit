@@ -1,0 +1,129 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree_registers.py::test_each_register_table_loads[0]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[1]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[2]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[3]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[4]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[5]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[6]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[7]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[8]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[9]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[10]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[11]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[12]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[13]",
+    "test_curation_tree_registers.py::test_each_register_table_loads[14]",
+    "test_curation_tree_registers.py::test_register_source_labels_load",
+    "test_curation_tree_registers.py::test_acknowledge_keeps_ordered_fields_and_period",
+    "test_curation_tree_registers.py::test_edition_split_requires_declared_native_split_and_unique_names",
+    "test_curation_tree.py::test_delivered_anchor_is_optional_strict_int_and_rejects_extra_keys",
+    "test_alias_windows.py::test_valid_alias_window_parses",
+    "test_period_family_merges.py::test_load_period_family_parses_explicit_slug"
+  ],
+  "fails_if": "the register loader drops or refuses a documented table, reorders acknowledged fields, coerces an omitted errata.delivered native_variable_id to a value, or loses an alias window's, period family's or edition split's declared coordinates",
+  "note": "Every strict register table at once: one SCB file with the thirteen SCB tables (plus an edition split under its declared split variant) and one SOS file with the two SOS-only identity tables. The projected fields are the ones the replaced single-table load tests asserted; the edition-split test contributes only its load step, its refusals are identity-edition-split-* cases.",
+  "loads": [
+    {
+      "register_info": {
+        "slug": "test",
+        "source_labels": [
+          "Former register name (AGI)"
+        ]
+      },
+      "errata": {
+        "delivered": [
+          {
+            "native_variable_id": null
+          },
+          {
+            "native_variable_id": 39310
+          }
+        ],
+        "column": [
+          {}
+        ],
+        "version": [
+          {}
+        ]
+      },
+      "enrichment": {
+        "description": [
+          {}
+        ],
+        "alias": [
+          {}
+        ]
+      },
+      "group": [
+        {}
+      ],
+      "code_label_pair": [
+        {}
+      ],
+      "representation": {
+        "period_family": [
+          {
+            "register_fqid": "scb/test",
+            "family_stem": "lonfink",
+            "label": "Lön per månad",
+            "slug": "lone-eller-foretagarinkomst-manad"
+          }
+        ],
+        "alias_window": [
+          {
+            "variable": "scb/test/test-variable",
+            "variant": "test-variant",
+            "column": "AEBUY",
+            "source_editions": [
+              "2018"
+            ]
+          }
+        ]
+      },
+      "identity": {
+        "partition": [
+          {}
+        ],
+        "column_owner": [
+          {}
+        ],
+        "split": [
+          {}
+        ],
+        "edition_split": [
+          {
+            "editions": [
+              "2007-12-31"
+            ]
+          }
+        ]
+      },
+      "acknowledge": [
+        {
+          "fields": [
+            "description",
+            "name"
+          ],
+          "valid_from": "2020-01-01",
+          "valid_to": "2020-12-31"
+        }
+      ]
+    },
+    {
+      "register_info": {
+        "slug": "test"
+      },
+      "identity": {
+        "route": [
+          {}
+        ],
+        "rename": [
+          {}
+        ]
+      }
+    }
+  ]
+}

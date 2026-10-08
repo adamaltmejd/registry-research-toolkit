@@ -1,0 +1,35 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[0]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[1]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[2]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[3]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[4]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[5]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[6]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[7]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[8]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[9]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[10]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[11]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[12]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[13]",
+    "test_curation_tree_registers.py::test_each_register_table_rejects_unknown_keys[14]",
+    "test_curation_tree.py::test_delivered_anchor_is_optional_strict_int_and_rejects_extra_keys",
+    "test_curation_tree.py::test_edition_period_entry_is_strict[unexpected = true-Extra inputs are not permitted]",
+    "test_curation_tree.py::test_sos_data_type_row_is_checked_at_load[unknown = \"x\"-Extra inputs are not permitted]",
+    "test_curation_tree.py::test_sos_classification_reference_entry_is_bounded_and_keeps_inner_spaces",
+    "test_alias_windows.py::test_unknown_key_is_rejected",
+    "test_period_family_merges.py::test_load_period_family_rejects_unknown_key"
+  ],
+  "fails_if": "the register loader accepts a key outside a register table's closed field set, or locates it at the wrong entry",
+  "note": "One case for the closed-table rule every register table shares: the unknown key sits in entry 2 behind a valid entry 1, and is a key the sibling [[errata.column]] table accepts. The replaced classification-reference test contributes only its extra-key parameter (`replacement`).",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [[errata.delivered.definition]] entry 2",
+    "message_contains": [
+      "Extra inputs are not permitted"
+    ]
+  }
+}

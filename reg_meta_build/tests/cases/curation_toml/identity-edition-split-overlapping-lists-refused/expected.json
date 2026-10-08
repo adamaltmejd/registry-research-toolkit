@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree_registers.py::test_edition_split_lists_must_not_overlap",
+  "fails_if": "the register loader accepts an edition named both as a split edition and a source edition",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [[identity.edition_split]] entry 1",
+    "message_contains": [
+      "editions and source_editions must be disjoint"
+    ]
+  }
+}
