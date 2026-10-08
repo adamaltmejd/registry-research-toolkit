@@ -9,7 +9,8 @@
   sorted list (the CLI lists them in state order).
 
 A refusal compares as ``error``; a variable answer of no ref compares as ``error``,
-as the CLI refuses a name none of its variables covers.
+as the CLI refuses a name none of its variables covers, unless the name also
+matches a register, whose coverage the CLI answers instead (compared by its name).
 """
 
 from __future__ import annotations
@@ -109,7 +110,14 @@ def cases(
             get(cand, "/api/coverage/" + quote(ref), {"scope": scope})
             for ref in refs[f"{catalog}/{case_id}"]
         ]
-        expected = _variables([data]) if data else "error"
+        if data is None:
+            expected = "error"
+        elif data["target_type"] == "register":
+            # A name none of whose variables is dated falls through to the CLI's
+            # register lookup, which also matches a register by substring.
+            expected = {"register_name": data["register_name"]}
+        else:
+            expected = _variables([data])
         actual = _variables([a["body"]["data"] for a in answers if a["status"] == 200])
         return case_id, expected, actual
 
