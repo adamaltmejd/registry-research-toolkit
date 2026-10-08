@@ -54,9 +54,10 @@ the behavior in plain words. For example,
 
 Later stages add their own prefixes to this table.
 
-Refusals end in `-fails-curation-load` (the build refuses its curation) or name the
-stale outcome (`-stale-when-...`). A case that shows the allowed outcome of a guard sits
-beside its refusal twin.
+Refusals end in `-fails-curation-load` (the build refuses its curation),
+`-fails-the-build` or `-refuses-...` (the build stops after its curation loaded), or
+name the stale outcome (`-stale-when-...`). A case that shows the allowed outcome of a
+guard sits beside its refusal twin.
 
 ## `request.json`
 
