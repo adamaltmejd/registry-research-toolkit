@@ -1,0 +1,15 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[coding.choice]]
+variable = "1.101"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "keep"
+keep_members = [["1", "Label"], ["", "Not applicable"]]
+over = ["other"]
+reason = "Reviewed competing lists"
+source = "fixture"

@@ -1641,6 +1641,125 @@
         ]
       ],
       "note": "Same test: `empty_active_coding` remains only for the window the acceptance does not cover (2021; 2020 has member 01), and the entry is not stale."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendlater"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "choices.py::test_extend_ignores_incomplete_same_label_claim, at year grain: the 2020 witness list `list` (01 Label) extends to the listless 2019 target although a later 2021 claim also labelled `list` is incomplete (03 has no label). The 2021 row follows the fold's rule that a member without a label withholds its whole list where it applies."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "71.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [],
+      "note": "Same test: `not diagnostics` and one case: the incomplete same-label claim is no ambiguous competitor, so the extension is neither stale nor overbroad."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/extendlater/value",
+        "code": "unknown_code_membership"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "2021-01-01",
+          "2021-12-31"
+        ]
+      ],
+      "note": "The incomplete 2021 claim stays an unknown-membership period of its own; the extension does not touch it."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "blankcode"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "Maintainer decision (2026-10-08): a blank code is never a code. choices.py::test_choice_preserves_documented_blank_sentinel_and_checks_complete_members kept a blank-code 'Not applicable' member of the selected list; here the Vardemangder row with an empty vardekod makes list `keep` unknown membership, so 2020 publishes no value set and never the empty string."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/blankcode/value",
+        "code": "unknown_code_membership"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31"
+        ]
+      ],
+      "note": "The blank-code member surfaces as unknown membership over the list's 2020 window."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "72.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/blankcode.toml#/coding.choice/1/period/1"
+        ]
+      ],
+      "note": "With `keep` incomplete only `other` is a complete list, so the choice has nothing to choose between and goes stale (as the one-complete-list case `coding-choice-stale-when-its-period-has-one-complete-list`) instead of selecting the blank-code list."
     }
   ]
 }
