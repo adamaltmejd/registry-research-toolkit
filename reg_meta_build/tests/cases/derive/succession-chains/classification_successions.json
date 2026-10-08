@@ -15,6 +15,11 @@
     "effective_year": 2030
   },
   {
+    "predecessor": "pre1990",
+    "successor": "root1996",
+    "effective_year": 1996
+  },
+  {
     "predecessor": "root1996",
     "successor": "b-x",
     "effective_year": 2000

@@ -1498,7 +1498,12 @@ operations.
   follow the same rule. The baseline's `resolve_terminal_successor` takes the first
   branch of a split and ignores the year for registers and variables, so both cases
   differ from the baseline's 301 target under a narrow `rust-only fix:` exception naming
-  their `api` case.
+  their `api` case. `succession_terminal` is unscoped: in holdings scope the refs module
+  checks at read time that the terminal is held, as the frozen
+  `resolve_terminal_successor` does. Search's terminal-centric `editions()` may be read
+  from `classification_chain` (the anchor's rows up to its own position) only while no
+  edition has two predecessors and a split's outbound edges share one year; 3d.2
+  verifies this against the reader rather than assuming it.
 - Cases: twins of `http_catalog/{reference-edges,whole-variable-group-graph}`,
   `cli_scope/lineage-unheld-reference` and
   `logical/{edges-unheld-owner,unheld-terminal-*}`; a split successor; a retired ref

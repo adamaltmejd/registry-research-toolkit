@@ -3,6 +3,7 @@ classification families, compiled at the manifest's classification policy year."
 
 from __future__ import annotations
 
+from graphlib import CycleError, TopologicalSorter
 from typing import TYPE_CHECKING
 
 from reg_meta.db import classification_succession_as_of_year
@@ -96,9 +97,7 @@ def classification_chains(
             "SELECT slug FROM classification WHERE slug IS NOT NULL ORDER BY slug"
         )
     ]
-    factory = conn.row_factory
-    try:
-        catalog = reader_catalog(conn)
+    with reader_catalog(conn) as catalog:
         return [
             (
                 anchor,
@@ -112,8 +111,6 @@ def classification_chains(
                 catalog.classification_chain(Fqid.classification_fqid(anchor))
             )
         ]
-    finally:
-        conn.row_factory = factory
 
 
 def classification_families(
@@ -122,11 +119,8 @@ def classification_families(
     """`(family_key, family_label, position, slug, effective_year, is_current,
     is_self)`: the reader's one-dimensional classification families in key order,
     each edition as its family lists it."""
-    factory = conn.row_factory
-    try:
-        families = reader_catalog(conn).list_classification_families()
-    finally:
-        conn.row_factory = factory
+    with reader_catalog(conn) as catalog:
+        families = catalog.list_classification_families()
     return [
         (
             family.key,
@@ -167,26 +161,6 @@ def derive_chains(conn: sqlite3.Connection) -> None:
         )
 
 
-def _cycle_node(successors: _Successors) -> tuple[str, ...] | None:
-    """A node on a cycle, or None. Peels nodes that reach no cycle, then walks the
-    remainder from its least node until a node repeats."""
-    remaining = set(successors) | {s for nxt in successors.values() for s in nxt}
-    while sinks := {
-        node
-        for node in remaining
-        if not any(s in remaining for s in successors.get(node, ()))
-    }:
-        remaining -= sinks
-    if not remaining:
-        return None
-    seen: set[tuple[str, ...]] = set()
-    node = min(remaining)
-    while node not in seen:
-        seen.add(node)
-        node = min(s for s in successors[node] if s in remaining)
-    return node
-
-
 def check_chains(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
@@ -196,9 +170,13 @@ def check_chains(
     for table, fqid, keys in _SUCCESSION:
         if table not in tables:
             continue  # its own check reports the missing table
-        node = _cycle_node(_successors(conn, table, keys, active_year=None))
-        if node is not None:
+        try:
+            TopologicalSorter(
+                _successors(conn, table, keys, active_year=None)
+            ).prepare()
+        except CycleError as exc:
             cyclic = True
+            node = exc.args[1][0]
             result.fail(f"{table} has a succession cycle through {fqid(*node)}")
     if not cyclic:
         result.ok("succession tables are acyclic")
@@ -206,11 +184,7 @@ def check_chains(
         if table not in tables:
             continue  # _check_schema_shape already failed
         stored = set(map(tuple, conn.execute(f"SELECT {columns} FROM {table}")))
-        try:
-            expected = set(compute(conn))
-        except (ValueError, TypeError) as exc:
-            result.fail(f"{table} cannot be recomputed: {exc}")
-            continue
+        expected = set(compute(conn))
         if stored != expected:
             missing, surplus = len(expected - stored), len(stored - expected)
             result.fail(

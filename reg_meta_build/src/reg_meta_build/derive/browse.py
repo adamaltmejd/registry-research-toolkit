@@ -39,9 +39,7 @@ def browse_deliveries(conn: sqlite3.Connection, scope: Scope) -> list[BrowseRow]
     Rows in `browse_delivery_id` order: registers by (provider, register) slug,
     variables by slug, then each variable's deliveries in the reader's order.
     """
-    factory = conn.row_factory
-    try:
-        catalog = reader_catalog(conn, scope)
+    with reader_catalog(conn, scope) as catalog:
         registers = conn.execute(
             "SELECT p.slug, r.slug, r.register_id FROM register r "
             "JOIN provider p USING(provider_id) "
@@ -79,8 +77,6 @@ def browse_deliveries(conn: sqlite3.Connection, scope: Scope) -> list[BrowseRow]
                 for delivery in deliveries[slug]
             )
         return out
-    finally:
-        conn.row_factory = factory
 
 
 def derive_browse(conn: sqlite3.Connection, scopes: tuple[Scope, ...]) -> None:
