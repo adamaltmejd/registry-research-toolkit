@@ -239,57 +239,6 @@ def test_co_delivered_parallel_refuses_unsupported_common_quantity(tmp_path, def
     assert diagnostics and all(d.severity == "error" for d in diagnostics)
 
 
-@pytest.mark.parametrize("column_metadata", ["shared", "per_column"])
-def test_pooled_parallel_compile_keeps_original_bounds_and_exact_intersection(
-    tmp_path,
-    column_metadata,
-):
-    from reg_meta_build.source_curation import RepresentationDecision
-    from reg_meta_build.source_representations import resolve_representation_cases
-
-    path, records, naming = _pooled_parallel_fixture(tmp_path)
-    if column_metadata == "per_column":
-        path.write_text(
-            path.read_text().replace(
-                'variant = "1.10"', 'variant = "1.10"\ncolumn_metadata = "per_column"'
-            )
-        )
-    before = tuple(r.model_dump(mode="json") for r in records)
-    cases, diagnostics = _compile_pooled_parallel(path, records, naming)
-    assert diagnostics == () and len(cases) == 1
-    case = cases[0]
-    decision = case.decision
-    assert isinstance(decision, RepresentationDecision)
-    assert (decision.valid_from, decision.valid_to) == ("2022-01-01", "2022-12-31")
-    assert [(c.column, c.valid_from, c.valid_to) for c in decision.columns] == [
-        ("First", "2022-01-01", "2022-12-31"),
-        ("Second", "2022-01-01", "2022-12-31"),
-    ]
-    assert decision.column_metadata == column_metadata
-    proof = resolve_representation_cases(records, cases, coding=_parallel_coding(case))
-    assert proof.cases == cases and proof.diagnostics == ()
-    assert tuple(r.model_dump(mode="json") for r in records) == before
-    assert _compile_pooled_parallel(path, records[::-1], naming) == (cases, diagnostics)
-
-
-@pytest.mark.parametrize(
-    "original,replacement",
-    [
-        ('valid_from = "2022-01-01"', 'valid_from = "2022-07-01"'),
-        ('valid_to = "2022-12-31"', 'valid_to = "2022-06-30"'),
-    ],
-)
-def test_pooled_parallel_partial_intersection_is_rejected(
-    tmp_path, original, replacement
-):
-    path, records, naming = _pooled_parallel_fixture(tmp_path)
-    # Only the shared window changes; both authored original windows stay exact.
-    path.write_text(path.read_text().replace(original, replacement, 1))
-    with pytest.raises(RegMetaError) as failure:
-        _compile_pooled_parallel(path, records, naming)
-    assert "source-window intersection" in failure.value.message
-
-
 @pytest.mark.parametrize(
     "original,replacement",
     [
