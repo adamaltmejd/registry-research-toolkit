@@ -26,6 +26,8 @@
     "status": 200,
     "json": {
       "/data/family/fqid": "group/class/icd",
+      "/data/family/key": "icd",
+      "/data/family/label": "ICD",
       "/data/family/editions/*/slug": ["icd-9", "icd-10"],
       "/data/variables": [
         {"fqid": "scb/alpha/kon", "name": "Kön", "register_name": "Alpha"},

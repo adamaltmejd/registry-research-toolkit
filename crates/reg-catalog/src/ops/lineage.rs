@@ -117,8 +117,9 @@ pub fn lineage(server: &Server, scope: Scope, params: &Params) -> Result<Value, 
     )?;
     // Today's `get lineage <name>`, whose match is SQLite's ASCII `LOWER`; a
     // variable without a name matches only itself.
-    // simplify: `LOWER(v.name)` scans every variable (about 0.2 s on the pinned
-    // global copy, debug build); give `variable` a lowered-name index if it grows.
+    // simplify: `LOWER(v.name)` scans every variable (about 0.2 s on the pinned global
+    // copy, debug build); add a lowered-name expression index if lineage passes
+    // 100 ms on the release build.
     let sql = format!(
         "SELECT p.slug, r.slug, r.name, v.slug, v.source_register_text, \
          v.source_register_id = v.register_id, sp.slug, sr.slug, \

@@ -128,7 +128,7 @@ pub fn graph(server: &Server, scope: Scope, params: &Params) -> Result<Value, Er
         Target::Variable { id } => {
             let slugs = slugs(&conn, id)?;
             let focus = builder.add_variable(&slugs)?;
-            if let Some(key) = group_key(&conn, id)?
+            if let Some(key) = show::group_key(&conn, id)?
                 && let Some(group) = builder.group(&slugs[0], &slugs[1], &key)?
             {
                 builder.add_members(&group)?;
@@ -209,19 +209,6 @@ fn member_slugs(group: &Group) -> Vec<String> {
         .iter()
         .filter_map(|m| m.fqid.strip_prefix("class/").map(str::to_owned))
         .collect()
-}
-
-/// The key of a variable's concept group (`show`'s `group`).
-fn group_key(conn: &Connection, id: i64) -> Result<Option<String>, Error> {
-    Ok(conn
-        .query_row(
-            "SELECT DISTINCT g.group_key FROM concept_group_variable m \
-             JOIN concept_group g ON g.group_id = m.group_id \
-             WHERE m.variable_id = ? AND g.kind = 'variable' ORDER BY g.group_key",
-            [id],
-            |row| row.get(0),
-        )
-        .optional()?)
 }
 
 /// A `variable_replaced_by` edge seen from one end: the other end's slugs, the
@@ -358,7 +345,7 @@ impl<'c> Builder<'c> {
                     ))
                 },
             )?;
-        let (group_key, facets, group_label) = match group_key(self.conn, id)? {
+        let (group_key, facets, group_label) = match show::group_key(self.conn, id)? {
             Some(key) => {
                 let group = self.group(&slugs[0], &slugs[1], &key)?;
                 let member = group
@@ -376,21 +363,10 @@ impl<'c> Builder<'c> {
             }
             None => (None, Vec::new(), None),
         };
-        let same_as = show::rows(
-            self.conn,
-            "SELECT b_provider, b_register, b_variable FROM variable_same_as \
-             WHERE a_provider = ? AND a_register = ? AND a_variable = ? \
-             ORDER BY b_provider, b_register, b_variable",
-            [&slugs[0], &slugs[1], &slugs[2]],
-            |row| {
-                let register: String = row.get(1)?;
-                Ok(fqid(&[row.get(0)?, Some(register.clone()), row.get(2)?])
-                    .map(|fqid| SameAs { fqid, register }))
-            },
-        )?
-        .into_iter()
-        .flatten()
-        .collect();
+        let same_as = show::same_as(self.conn, slugs)?
+            .into_iter()
+            .map(|(fqid, register)| SameAs { fqid, register })
+            .collect();
         Ok(VariableNode {
             label: name.unwrap_or_else(|| node_id.clone()),
             id: node_id.clone(),
@@ -554,6 +530,10 @@ impl<'c> Builder<'c> {
         if chain.len() < 2 {
             return Ok(());
         }
+        // Each edition's edges to editions already placed, both ways: a branch that
+        // rejoins another (S→A→C, S→B→C) reaches C before B. Adding edges as each
+        // edition is placed keeps today's edge order on a linear chain, where a
+        // chain edition's representation edges follow the edges before it.
         let mut placed: Vec<(Vec<String>, String)> = Vec::new();
         for edition in &chain {
             let Some(node_id) = self.ensure_edition(edition)? else {
@@ -562,6 +542,11 @@ impl<'c> Builder<'c> {
             for (pred, year, reason) in self.variable_edges(edition, Side::Predecessors)? {
                 if let Some((_, pred_id)) = placed.iter().find(|(p, _)| *p == pred) {
                     self.edge(succession(pred_id, &node_id, reason, year));
+                }
+            }
+            for (succ, year, reason) in self.variable_edges(edition, Side::Successors)? {
+                if let Some((_, succ_id)) = placed.iter().find(|(s, _)| *s == succ) {
+                    self.edge(succession(&node_id, succ_id, reason, year));
                 }
             }
             placed.push((edition.clone(), node_id));

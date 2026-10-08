@@ -90,5 +90,17 @@
   {
     "status": 422,
     "json": {"/error/code": "invalid_ref", "/error/fields/ref": "scb/alpha"}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/nodes/*/fqid": ["scb/beta/d-start", "scb/beta/d-left", "scb/beta/d-end", "scb/beta/d-right"],
+      "/data/edges/*/id": [
+        "succession:scb/beta/d-start->scb/beta/d-left",
+        "succession:scb/beta/d-left->scb/beta/d-end",
+        "succession:scb/beta/d-start->scb/beta/d-right",
+        "succession:scb/beta/d-right->scb/beta/d-end"
+      ]
+    }
   }
 ]

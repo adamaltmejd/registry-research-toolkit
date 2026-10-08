@@ -950,27 +950,11 @@ fn variable(conn: &Connection, scope: Scope, id: i64) -> Result<Variable, Error>
             ))
         },
     )?;
-    variable.same_as = rows(
-        conn,
-        "SELECT b_provider, b_register, b_variable FROM variable_same_as \
-         WHERE a_provider = ? AND a_register = ? AND a_variable = ? \
-         ORDER BY b_provider, b_register, b_variable",
-        [&p, &r, &v],
-        |row| Ok(fqid(&[row.get(0)?, row.get(1)?, row.get(2)?])),
-    )?
-    .into_iter()
-    .flatten()
-    .collect();
-    variable.group = conn
-        .query_row(
-            "SELECT DISTINCT g.group_key FROM concept_group_variable m \
-             JOIN concept_group g ON g.group_id = m.group_id \
-             WHERE m.variable_id = ? AND g.kind = 'variable' ORDER BY g.group_key",
-            [id],
-            |row| row.get::<_, String>(0),
-        )
-        .optional()?
-        .map(|key| format!("group/{p}/{r}/{key}"));
+    variable.same_as = same_as(conn, &[p.clone(), r.clone(), v])?
+        .into_iter()
+        .map(|(fqid, _)| fqid)
+        .collect();
+    variable.group = group_key(conn, id)?.map(|key| format!("group/{p}/{r}/{key}"));
     // Today's `tags_for_variable`: the variable's own tags, then the tags of its
     // group's members in scope as neutral memberships.
     let own = rows(
@@ -1011,6 +995,38 @@ fn variable(conn: &Connection, scope: Scope, id: i64) -> Result<Variable, Error>
     tags.sort_by(|a, b| (a.rank, &a.slug).cmp(&(b.rank, &b.slug)));
     variable.tags = tags;
     Ok(variable)
+}
+
+/// The variables curated as the same variable as the one at `slugs`: each one's
+/// FQID and register slug.
+pub(super) fn same_as(conn: &Connection, slugs: &[String]) -> Result<Vec<(String, String)>, Error> {
+    Ok(rows(
+        conn,
+        "SELECT b_provider, b_register, b_variable FROM variable_same_as \
+         WHERE a_provider = ? AND a_register = ? AND a_variable = ? \
+         ORDER BY b_provider, b_register, b_variable",
+        [&slugs[0], &slugs[1], &slugs[2]],
+        |row| {
+            let register: String = row.get(1)?;
+            Ok(fqid(&[row.get(0)?, Some(register.clone()), row.get(2)?]).map(|f| (f, register)))
+        },
+    )?
+    .into_iter()
+    .flatten()
+    .collect())
+}
+
+/// The key of a variable's concept group (the first by key).
+pub(super) fn group_key(conn: &Connection, id: i64) -> Result<Option<String>, Error> {
+    Ok(conn
+        .query_row(
+            "SELECT DISTINCT g.group_key FROM concept_group_variable m \
+             JOIN concept_group g ON g.group_id = m.group_id \
+             WHERE m.variable_id = ? AND g.kind = 'variable' ORDER BY g.group_key",
+            [id],
+            |row| row.get(0),
+        )
+        .optional()?)
 }
 
 /// The one-dimensional succession families (today's `list_classification_families`),

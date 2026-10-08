@@ -282,7 +282,7 @@ fn successor(
 
 /// The manifest's succession policy year, `classification_succession_as_of_year`
 /// (today's reader default when the manifest has none).
-pub(crate) fn policy_year(conn: &Connection) -> Result<i64, Error> {
+fn policy_year(conn: &Connection) -> Result<i64, Error> {
     const DEFAULT: i64 = 2026;
     let value: Option<String> = conn
         .query_row(

@@ -1526,9 +1526,10 @@ operations.
 - G1 (run in C): webapp baseline for the three graph routes and `/lineage_warnings`; CLI
   baseline `get lineage`.
 - Paths:
-  `crates/reg-catalog/src/ops/{slice_3d.rs,graph.rs,lineage.rs,refs.rs,search/classification.rs}`,
+  `crates/reg-catalog/src/ops/{slice_3d.rs,graph.rs,lineage.rs,refs.rs,search/classification.rs,show.rs}`,
   `crates/reg-catalog/src/lib.rs` (`SCHEMA`), `conformance/cases/api/`,
-  `conformance/test_mcp.py`, `conformance/differential/`, the generated files.
+  `conformance/cases/fixtures/show/`, `conformance/test_mcp.py`,
+  `conformance/differential/`, the generated files.
 - Acceptance: full gate; 3a's search cases unchanged. Depends on: 3b.3, 3b.4 (graph's
   variable nodes read its states leaf), 3d.1.
 

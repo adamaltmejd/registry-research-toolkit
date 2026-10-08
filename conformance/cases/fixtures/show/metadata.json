@@ -53,7 +53,11 @@
     {"predecessor": "scb/alpha/split", "successor": "scb/alpha/kon"},
     {"predecessor": "scb/alpha/split", "successor": "scb/alpha/alder"},
     {"predecessor": "scb/alpha/later", "successor": "scb/alpha/kon", "effective_year": 2099},
-    {"predecessor": "scb/beta/kon", "successor": "scb/alpha/kon", "effective_year": 2099}
+    {"predecessor": "scb/beta/kon", "successor": "scb/alpha/kon", "effective_year": 2099},
+    {"predecessor": "scb/beta/d-start", "successor": "scb/beta/d-left"},
+    {"predecessor": "scb/beta/d-start", "successor": "scb/beta/d-right"},
+    {"predecessor": "scb/beta/d-left", "successor": "scb/beta/d-end"},
+    {"predecessor": "scb/beta/d-right", "successor": "scb/beta/d-end"}
   ],
   "historical_predecessors": [
     {
