@@ -8,9 +8,10 @@
   so the matched variables' answers are unioned. Each year's columns compare as a
   sorted list (the CLI lists them in state order).
 
-A refusal compares as ``error``; a variable answer of no ref compares as ``error``,
-as the CLI refuses a name none of its variables covers, unless the name also
-matches a register, whose coverage the CLI answers instead (compared by its name).
+A refusal compares as ``error``, and so does a variable answer of no ref: the CLI
+refuses a name none of its variables covers, unless the name also matches a register
+(by substring, too), whose coverage it answers instead. That answer is about another
+entity than the variables asked for, so it compares as the refusal it stands for.
 """
 
 from __future__ import annotations
@@ -43,7 +44,7 @@ def _register(data: dict, slugs: dict | None = None) -> dict:
     variants = sorted(
         (
             [
-                slugs.get(v["register_variant_id"]) if slugs else v["variant"],
+                slugs.get(int(v["register_variant_id"])) if slugs else v["variant"],
                 v["variant_name"],
                 v["years"],
             ]
@@ -110,14 +111,9 @@ def cases(
             get(cand, "/api/coverage/" + quote(ref), {"scope": scope})
             for ref in refs[f"{catalog}/{case_id}"]
         ]
-        if data is None:
-            expected = "error"
-        elif data["target_type"] == "register":
-            # A name none of whose variables is dated falls through to the CLI's
-            # register lookup, which also matches a register by substring.
-            expected = {"register_name": data["register_name"]}
-        else:
-            expected = _variables([data])
+        # A register answer is the CLI's fallback for a name with no dated variable.
+        found = data is not None and data["target_type"] == "variable"
+        expected = _variables([data]) if found else "error"
         actual = _variables([a["body"]["data"] for a in answers if a["status"] == 200])
         return case_id, expected, actual
 

@@ -14,7 +14,8 @@ seed = 0
 #   [[exception]]
 #   name = "search-rank-ties"        # reported per difference
 #   reason = "why the new behavior is correct"
-#   case = "*/search/*"              # fnmatch glob over `<catalog>/<scope>/<command>/<key>`
+#   case = "*/search/*"              # fnmatch glob over `<catalog>/<scope>/<command>/<key>`,
+#                                    # or a list of them
 #   paths = ["/results"]             # JSON pointer prefixes or fnmatch globs
 #
 # The fold sweep's one exception, `baseline-ucd-unassigned`, is defined in `folds.py`:
@@ -65,6 +66,36 @@ name = "february-period-token"
 reason = "rust-only fix: the baseline ends every February on the 29th (`_MONTH_LAST_DAY`), so it renders a non-leap February window as `YYYY-02-01..YYYY-02-28`; `states` renders `YYYY-02`, the token whose bounds those are. Pinned by api/states-window-fallback. The token sits at a row index that varies per variable, hence the glob. Blind spot: the glob excepts every period_token difference on a states case, not only February's; api/states-* and reg-core's grammar tests (period_token_inverts_bounds, period_token_edges_and_next_day) pin the token rule, so February is the only difference expected here."
 case = "*/*/states*"
 paths = ["/*/period_token"]
+
+[[exception]]
+name = "schema-alias-windows"
+reason = "rust-only fix: `schema` lists the representations the resolver emits over the whole history in reference as in holdings, so a variable whose source alias windows replace its state (shared metadata, no per-column window) lists its windows; the frozen reference `get schema` expands only variables with a per-column window and lists such a state raw. Pinned by api/schema-alias-windows. The added rows shift every later row of the sorted comparison, so the whole answer is excepted, for each register G1 reports."
+case = [
+  "*/reference/get-schema-*/scb/bas",
+  "*/reference/get-schema-*/scb/ekonomiskt-bistand",
+  "*/reference/get-schema-*/scb/hreg",
+  "*/reference/get-schema-*/scb/innovation-foretag",
+  "*/reference/get-schema-*/scb/it-anvandning",
+  "*/reference/get-schema-*/scb/lisa",
+  "*/reference/get-schema-*/scb/rams",
+  "swecov/reference/get-schema-*/inera/bestallda-prover",
+  "swecov/reference/get-schema-*/inera/samtal",
+  "swecov/reference/get-schema-*/swecov/population",
+  "swecov/reference/get-schema-*/swedbank/konsumtion",
+  "swecov/reference/get-schema-*/tillvaxtverket/korttidsarbete",
+]
+
+[[exception]]
+name = "schema-held-request-clip"
+reason = "rust-only fix: holdings `schema` with a period clips each held window to the requested years (today's `_scope_states` with request bounds, as `states` does); the frozen `get schema --years` keeps the held window whole. Pinned by api/schema-register (holdings with period 2019). Only the window bounds differ."
+case = "*/holdings/get-schema-year/*"
+paths = ["/*/1", "/*/2"]
+
+[[exception]]
+name = "coverage-alias-windows"
+reason = "rust-only fix: reference `coverage` names the columns the resolver emits each year, so a variable's source alias windows name their own column (Different in 2019 rather than its state's Value); the frozen reference `get availability` reads raw states. Pinned by api/coverage-alias-windows. Only the per-year column lists differ (years are equal: the replacing windows tile their states)."
+case = "*/reference/get-availability-variable/*"
+paths = ["/registers/*/3/*"]
 
 # The baseline reader (CLI and webapp), run from a detached worktree with its own
 # locked environment. It reads the release originals, so code under change never

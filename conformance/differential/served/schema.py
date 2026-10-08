@@ -56,6 +56,12 @@ def _row(variant: str | None, valid_from, valid_to, column: dict) -> list:
     ]
 
 
+def _order(row: list) -> str:
+    """A row's sort key with its window last, so a window that differs between the
+    arms (holdings clips to the request; the CLI does not) keeps its row's place."""
+    return json.dumps([row[0], *row[3:], row[1], row[2]])
+
+
 def _schema_baseline(data: dict, register: str) -> list:
     rows = []
     for variant in data["variants"]:
@@ -76,13 +82,13 @@ def _schema_baseline(data: dict, register: str) -> list:
                         mapped,
                     )
                 )
-    return sorted(rows, key=json.dumps)
+    return sorted(rows, key=_order)
 
 
 def _schema_candidate(rows: list[dict]) -> list:
     return sorted(
         (_row(r["variant"], r["valid_from"], r["valid_to"], r) for r in rows),
-        key=json.dumps,
+        key=_order,
     )
 
 
