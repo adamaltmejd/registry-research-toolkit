@@ -78,7 +78,10 @@ def test_hint_names_default_candidate_on_stderr(
     assert data["files"] == ["registers/scb/komvux.auto.toml", "/".join(_AUTO)]
     assert "single-variant register(s)" in err
     assert "_default" in err
-    assert "scb/42.124" in err
+    # The register is named by its slug, never by the catalog's surrogate
+    # `<register_id>.<variant_id>`, which no curation file carries.
+    assert "scb/komvux" in err
+    assert "42.124" not in err
     # The hint is advice only: it never reaches the generated pins.
     body = out.joinpath(*_AUTO).read_text(encoding="utf-8")
     assert "Hint:" not in body
@@ -108,7 +111,7 @@ def test_pins_byte_identical_with_or_without_hint(
     db_dir = _db_dir(tmp_path)
     _seed(capsys, db_dir, tmp_path / "quiet", "--quiet")
     _code, _data, err = _seed(capsys, db_dir, tmp_path / "loud", "--all-hints")
-    assert "scb/42.124" in err
+    assert "scb/komvux" in err
     quiet = (tmp_path / "quiet").joinpath(*_AUTO).read_bytes()
     assert (tmp_path / "loud").joinpath(*_AUTO).read_bytes() == quiet
 

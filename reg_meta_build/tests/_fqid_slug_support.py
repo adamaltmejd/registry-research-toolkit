@@ -115,6 +115,7 @@ def add_single_variant_register(
     conn: sqlite3.Connection,
     *,
     register_id: int,
+    register_slug: str,
     register_variant_id: int,
     name: str,
     variant_name: str,
@@ -125,7 +126,7 @@ def add_single_variant_register(
     conn.execute(
         "INSERT INTO register (register_id, provider_id, slug, name) "
         "VALUES (?, ?, ?, ?)",
-        (register_id, provider_id, "todo", name),
+        (register_id, provider_id, register_slug, name),
     )
     conn.execute(
         "INSERT INTO register_variant "

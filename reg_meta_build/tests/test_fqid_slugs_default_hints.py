@@ -96,6 +96,7 @@ class TestIterDefaultSlugCandidates:
         _add_single_variant_register(
             conn,
             register_id=42,
+            register_slug="komvux",
             register_variant_id=124,
             name="Nybörjare i Komvux",
             variant_name="Nybörjare i Komvux",
@@ -104,6 +105,7 @@ class TestIterDefaultSlugCandidates:
         _add_single_variant_register(
             conn,
             register_id=60,
+            register_slug="kls",
             register_variant_id=168,
             name="Konjunkturstatistik, löner för statlig sektor (KLS)",
             variant_name="Konjunkturstatistik, löner för statlig sektor",
@@ -112,29 +114,30 @@ class TestIterDefaultSlugCandidates:
         _add_single_variant_register(
             conn,
             register_id=346,
+            register_slug="boende",
             register_variant_id=1158,
             name="Hushållens boende",
             variant_name="Individer",
             variant_slug="individer",
         )
         cands = list(iter_default_slug_candidates(conn))
-        classes = {c.source_id: c.classification for c in cands}
+        classes = {c.register_slug: c.classification for c in cands}
         assert classes == {
-            "42.124": "exact",
-            "60.168": "near",
-            "346.1158": "kept",
+            "komvux": "exact",
+            "kls": "near",
+            "boende": "kept",
         }
         # Carries current slug so the hint can suppress already-applied rows.
-        by_id = {c.source_id: c for c in cands}
-        assert by_id["42.124"].current_slug == "nyborjare-i-komvux"
-        assert by_id["60.168"].current_slug is None
+        by_slug = {c.register_slug: c for c in cands}
+        assert by_slug["komvux"].current_slug == "nyborjare-i-komvux"
+        assert by_slug["kls"].current_slug is None
 
 
 class TestFormatDefaultSlugHints:
     def _make(
         self,
         provider: str,
-        source_id: str,
+        register_slug: str,
         register_name: str,
         variant_name: str,
         classification: str,
@@ -144,7 +147,7 @@ class TestFormatDefaultSlugHints:
 
         return DefaultSlugCandidate(
             provider=provider,
-            source_id=source_id,
+            register_slug=register_slug,
             register_name=register_name,
             variant_name=variant_name,
             classification=classification,  # type: ignore[arg-type]
@@ -155,47 +158,47 @@ class TestFormatDefaultSlugHints:
     def test_returns_none_when_no_actionable_candidates(self):
         # Both candidates already carry `_default` → nothing to suggest.
         cands = [
-            self._make("scb", "42.124", "X", "X", "exact", "_default"),
-            self._make("scb", "50.171", "Y", "Y", "exact", "_default"),
+            self._make("scb", "komvux", "X", "X", "exact", "_default"),
+            self._make("scb", "kls", "Y", "Y", "exact", "_default"),
         ]
         assert format_default_slug_hints(cands, all_hints=False) is None
 
     def test_skips_kept_candidates(self):
-        cands = [self._make("scb", "13.20", "A", "B", "kept", None)]
+        cands = [self._make("scb", "boende", "A", "B", "kept", None)]
         assert format_default_slug_hints(cands, all_hints=False) is None
 
     def test_truncated_preview_by_default(self):
         cands = [
-            self._make("scb", f"{i}.{i + 100}", f"Reg{i}", f"Reg{i}", "exact", None)
+            self._make("scb", f"reg{i}", f"Reg{i}", f"Reg{i}", "exact", None)
             for i in range(1, 11)
         ]
         out = format_default_slug_hints(cands, all_hints=False)
         assert out is not None
         assert "10 single-variant register(s)" in out
-        assert "scb/1.101" in out
-        assert "scb/5.105" in out
+        assert "scb/reg1 " in out
+        assert "scb/reg5 " in out
         # Tail is omitted; sentinel mentions `--all-hints`.
-        assert "scb/10.110" not in out
+        assert "scb/reg10 " not in out
         assert "--all-hints" in out
         assert "5 more" in out
 
     def test_all_hints_shows_full_list(self):
         cands = [
-            self._make("scb", f"{i}.{i + 100}", f"Reg{i}", f"Reg{i}", "exact", None)
+            self._make("scb", f"reg{i}", f"Reg{i}", f"Reg{i}", "exact", None)
             for i in range(1, 11)
         ]
         out = format_default_slug_hints(cands, all_hints=True)
         assert out is not None
-        assert "scb/10.110" in out
+        assert "scb/reg10 " in out
         assert "--all-hints" not in out
 
     def test_excludes_candidates_already_default(self):
         cands = [
-            self._make("scb", "42.124", "X", "X", "exact", "_default"),
-            self._make("scb", "50.171", "Y", "Y", "exact", None),
+            self._make("scb", "komvux", "X", "X", "exact", "_default"),
+            self._make("scb", "kls", "Y", "Y", "exact", None),
         ]
         out = format_default_slug_hints(cands, all_hints=True)
         assert out is not None
         assert "1 single-variant register(s)" in out
-        assert "scb/50.171" in out
-        assert "scb/42.124" not in out
+        assert "scb/kls" in out
+        assert "scb/komvux" not in out

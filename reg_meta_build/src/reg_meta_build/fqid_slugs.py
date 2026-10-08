@@ -3131,7 +3131,9 @@ class DefaultSlugCandidate:
     """One single-variant register that's a candidate for ``slug = "_default"``."""
 
     provider: str
-    source_id: str  # `<RegisterId>.<RegVarID>`
+    # The register's slug: a built catalog keys registers by a surrogate id and
+    # keeps no native id (#1215), and the slug names the register file to edit.
+    register_slug: str | None
     register_name: str
     variant_name: str
     classification: DefaultCandidateClass
@@ -3149,8 +3151,7 @@ def iter_default_slug_candidates(
     exact + near; the bootstrap script shows all three classes.
     """
     rows = conn.execute(
-        "SELECT p.slug, r.register_id, r.name, "
-        "rv.register_variant_id, rv.name, rv.slug "
+        "SELECT p.slug, r.slug, r.name, rv.name, rv.slug "
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
@@ -3160,11 +3161,11 @@ def iter_default_slug_candidates(
         ") "
         "ORDER BY p.slug, r.register_id, rv.register_variant_id"
     ).fetchall()
-    for provider, rid, rname, vid, vname, current_slug in rows:
+    for provider, register_slug, rname, vname, current_slug in rows:
         cls, reason = classify_default_candidate(rname or "", vname or "")
         yield DefaultSlugCandidate(
             provider=provider,
-            source_id=f"{rid}.{vid}",
+            register_slug=register_slug,
             register_name=rname or "",
             variant_name=vname or "",
             classification=cls,
@@ -3200,7 +3201,10 @@ def format_default_slug_hints(
         f'consider `slug = "_default"`.',
     ]
     for cand in shown:
-        lines.append(f"  {cand.provider}/{cand.source_id}   {cand.register_name!r}")
+        lines.append(
+            f"  {cand.provider}/{cand.register_slug or '(unslugged)'}   "
+            f"{cand.register_name!r}"
+        )
     if not all_hints and total > len(shown):
         remaining = total - len(shown)
         lines.append(
