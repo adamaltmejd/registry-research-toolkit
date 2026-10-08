@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_compile_owner_alternatives.py::test_global_event_acknowledgement_is_routed_out_of_local_scope[unresolved_lineage_ambiguous_source_variant-False]"
+  ],
+  "fails_if": "the curation compiler accepts a `unresolved_lineage_ambiguous_source_variant` acknowledgement that pins only one of the two digests (here `expected_diagnostic_sha256` is missing), for example by requiring just one of them, instead of refusing it with `acknowledge_global_guards_missing` at its entry",
+  "sources": "scb-value"
+}
