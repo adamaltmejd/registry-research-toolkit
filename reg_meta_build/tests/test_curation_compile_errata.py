@@ -90,17 +90,6 @@ def test_compiled_errata_delivered_addition_and_blank_target(tmp_path: Path):
     )
 
 
-def test_compiled_errata_uses_loaded_tree_when_authored_files_change(tmp_path: Path):
-    donor = _errata_record(column="A", year="2020")
-    other = _errata_record(column="B", year="2021", variable=6, member=21)
-    tree, prepared, scope = _errata_fixture(tmp_path, (donor, other), _DELIVERED)
-    expected = compile_errata(tree, prepared, (scope,), {}, subset=False)
-    assert expected[0]
-    for path in tree.root.rglob("*.toml"):
-        path.write_text("invalid TOML [", encoding="utf-8")
-    assert compile_errata(tree, prepared, (scope,), {}, subset=False) == expected
-
-
 def test_same_column_delivery_entries_preserve_distinct_blank_and_missing_editions(
     tmp_path: Path,
 ) -> None:
@@ -465,17 +454,6 @@ def test_compiled_errata_blockers_are_errors(tmp_path: Path, records, code):
         diagnostics[0].subject
         == "curation/registers/scb/sample.toml#/errata.delivered/1"
     )
-
-
-def test_compiled_errata_missing_edition_is_stale(tmp_path: Path):
-    donor = _errata_record(column="A", year="2020")
-    tree, prepared, scope = _errata_fixture(tmp_path, (donor,), _DELIVERED)
-    cases, _, _, diagnostics, _ = compile_errata(
-        tree, prepared, (scope,), {}, subset=False
-    )
-    assert cases == {}
-    assert diagnostics[0].code == "stale_curation_entry"
-    assert "2021" in diagnostics[0].detail
 
 
 @pytest.mark.parametrize("drift", ["parent", "coding"])

@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_pooled_parallel.py::test_pooled_parallel_partial_intersection_is_rejected[valid_from = \"2022-01-01\"-valid_from = \"2022-07-01\"]",
+  "fails_if": "the `[[representation.parallel]]` entry model accepts a shared window that starts after the start of its columns' source-window intersection (First 2020-2022, Second 2022-2024, so 2022), while both column windows are unchanged",
+  "note": "Only the shared window differs from the build case representation-parallel-pooled-columns-keep-their-original-bounds, the allowed twin.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[representation.parallel]] entry 1",
+    "message_contains": [
+      "shared window must equal the source-window intersection"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_compiled_edition_period_stale_when_missing_or_parseable[2020]"
+  ],
+  "fails_if": "`compile_errata` lets an `[[errata.edition_period]]` override an edition whose own name already parses as a period, instead of reporting the entry stale",
+  "sources": {
+    "description": "Variant 2 delivers A (variable 5, CVID 20) in the parseable edition '2020'.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "versionname": "2020",
+          "regver_id": 2020,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  }
+}

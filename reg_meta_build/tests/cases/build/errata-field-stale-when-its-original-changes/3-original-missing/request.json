@@ -1,0 +1,26 @@
+{
+  "replaces": [
+    "test_curation_compile_occurrence_corrections.py::test_checked_occurrence_corrections_fail_closed_on_source_changes[missing]"
+  ],
+  "fails_if": "`compile_occurrence_corrections` accepts an entry whose pinned edition no longer delivers the column, so the `[[errata.field]]` entry still applies",
+  "sources": {
+    "description": "Edition 99 (CVID 20) is no longer delivered.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  },
+  "authored_from": "scb-answer-2009-and-2017"
+}

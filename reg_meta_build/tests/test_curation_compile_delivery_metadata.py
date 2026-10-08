@@ -4,20 +4,17 @@ from __future__ import annotations
 
 from dataclasses import replace
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Any, cast
+from typing import Any, cast
 
 import pytest
 from _curation_compile_support import (
     checked_correction_fixture as _checked_correction_fixture,
     pooled_parallel_fixture as _pooled_parallel_fixture,
-    run_checked_correction as _run_checked_correction,
 )
-from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_compile import (
     compile_occurrence_corrections,
 )
 from reg_meta_build.curation_tree import (
-    load_curation_tree,
     load_register_files,
 )
 from reg_meta_build.source_coordinates import (
@@ -30,19 +27,14 @@ from reg_meta_build.source_curation import (
     evaluate_cases,
 )
 from reg_meta_build.source_effects import (
-    apply_occurrence_cases,
     record_ref,
 )
-from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     NativeCoordinates,
     SourceCoordinate,
     SourceFields,
     value_field,
 )
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 @pytest.mark.parametrize("drift", [None, "unit", "missing", "new", "partial", "window"])
@@ -211,41 +203,6 @@ def test_delivery_metadata_compiler_keeps_complete_literal_source_guards(
     assert bool(diagnostics) == (drift is not None)
 
 
-def test_disjoint_edition_splits_share_native_variant_but_not_target_edition(
-    tmp_path: Path,
-) -> None:
-    root = tmp_path / "curation"
-    path = root / "registers/scb/sample.toml"
-    path.parent.mkdir(parents=True)
-    (root / "classifications").mkdir()
-    prefix = (
-        '[register]\nprovider="scb"\nslug="sample"\nnative_id="1"\n'
-        '[[variant]]\nnative_id="1.2"\nslug="flow"\n'
-        '[[variant]]\nnative_id="1.2.marriage"\nslug="marriage"\n'
-        '[[variant]]\nnative_id="1.2.divorce"\nslug="divorce"\n'
-    )
-    entries = (
-        '[[identity.edition_split]]\nvariant="1.2"\nsplit="1.2.marriage"\n'
-        'editions=["Married"]\nsource_editions=["Divorced"]\n'
-        'evidence="Explicit source event edition"\nnoted="2026-09-30"\n'
-        '[[identity.edition_split]]\nvariant="1.2"\nsplit="1.2.divorce"\n'
-        'editions=["Divorced"]\nsource_editions=["Married"]\n'
-        'evidence="Explicit source event edition"\nnoted="2026-09-30"\n'
-    )
-    path.write_text(prefix + entries)
-    assert len(load_curation_tree(root).registers[0].identity.edition_split) == 2
-    path.write_text(
-        prefix
-        + entries.replace(
-            'editions=["Divorced"]\nsource_editions=["Married"]',
-            'editions=["Married"]\nsource_editions=["Divorced"]',
-        )
-    )
-    with pytest.raises(RegMetaError) as exc:
-        load_curation_tree(root)
-    assert "editions assigned twice" in exc.value.message
-
-
 @pytest.mark.parametrize(
     "change",
     [None, "scope", "parent-prose", "missing", "duplicate", "unrelated", "new-parent"],
@@ -396,50 +353,3 @@ def test_occurrence_period_parent_authority_guards_fresh_and_stored_cases(
         assert not fresh and diagnostics
         # Identical physical duplicates retain the existing semantic dedup policy.
         assert stored[0].status == ("applicable" if change == "duplicate" else "stale")
-
-
-def test_period_correction_uses_exact_prose_to_distinguish_same_column_originals(
-    tmp_path,
-):
-    tree, scope, original, negative, entry = _checked_correction_fixture(
-        tmp_path, period=True
-    )
-    negative = negative.model_copy(
-        update={
-            "edition_scope": original.edition_scope,
-            "edition_period_scope": original.edition_period_scope,
-            "original_period_text": original.original_period_text,
-            "fields": original.fields.model_copy(
-                update={"name": value_field("Distinct ninth event")}
-            ),
-        }
-    )
-    cases, issues, _ = _run_checked_correction(tree, scope, (original, negative))
-    assert not issues
-    (case,) = cases[scope.source, None]
-    assert {target.ref for target in case.targets} == {record_ref(original)}
-    assert {support.ref for support in case.support} == {record_ref(negative)}
-    result = apply_occurrence_cases((original, negative), (case,))
-    assert not result.diagnostics
-    assert result.occurrences[0].edition_scope == entry.edition_scope
-    assert result.occurrences[1] == source_occurrence(negative)
-    drift = original.model_copy(
-        update={
-            "fields": original.fields.model_copy(
-                update={"name": value_field("Changed event")}
-            )
-        }
-    )
-    assert _run_checked_correction(tree, scope, (drift, negative))[1]
-    assert evaluate_cases((case,), (drift, negative))[0].status == "stale"
-    extra = original.model_copy(
-        update={
-            "locators": (
-                original.locators[0].model_copy(
-                    update={"semantic_record_key": ("new-original",)}
-                ),
-            )
-        }
-    )
-    assert _run_checked_correction(tree, scope, (original, negative, extra))[1]
-    assert evaluate_cases((case,), (original, negative, extra))[0].status == "stale"

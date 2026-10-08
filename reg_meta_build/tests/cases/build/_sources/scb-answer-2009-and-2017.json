@@ -1,0 +1,31 @@
+{
+  "description": "Variable 5 delivers ANSWER in edition 99 (2009, CVID 20) and edition 100 (2017, CVID 21), both named 'GenericVar'.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "ANSWER",
+        "cvid": 20,
+        "var_id": 5,
+        "year": "2009",
+        "regver_id": 99,
+        "register": [
+          "TESTREG",
+          1,
+          2
+        ]
+      },
+      {
+        "colname": "ANSWER",
+        "cvid": 21,
+        "var_id": 5,
+        "year": "2017",
+        "regver_id": 100,
+        "register": [
+          "TESTREG",
+          1,
+          2
+        ]
+      }
+    ]
+  }
+}

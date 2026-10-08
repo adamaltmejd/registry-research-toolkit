@@ -1,0 +1,82 @@
+{
+  "projections": [
+    {
+      "table": "uses",
+      "where": {
+        "source": "scb-registerinformation"
+      },
+      "fields": [
+        "column_name",
+        "key",
+        "use"
+      ],
+      "rows": [
+        [
+          "VALUE",
+          "member:100",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:101",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:102",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:103",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:104",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:105",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:106",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:107",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:108",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:109",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:110",
+          "catalog"
+        ],
+        [
+          "VALUE",
+          "member:111",
+          "catalog"
+        ],
+        [
+          "OTHER",
+          "member:112",
+          "catalog"
+        ]
+      ]
+    }
+  ]
+}

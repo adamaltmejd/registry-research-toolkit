@@ -1,0 +1,55 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_named_edition_split_withholds_when_native_inventory_changes[added-unlisted native editions ['2008']]"
+  ],
+  "fails_if": "`compile_edition_splits` stops comparing the variant's complete native edition inventory with the entry's `editions` and `source_editions`, so a newly delivered '2008' edition is silently left in the flow variant",
+  "sources": {
+    "description": "As edition-split-moves-the-named-edition-to-its-split-variant, plus a '2008' edition (CVID 22).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "SHARED",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2007",
+          "versionname": "2007",
+          "regver_id": 1,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "data_type": "int"
+        },
+        {
+          "colname": "SHARED",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2007",
+          "versionname": "2007-12-31",
+          "regver_id": 2,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "data_type": "str"
+        },
+        {
+          "colname": "SHARED",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2008",
+          "versionname": "2008",
+          "regver_id": 3,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "data_type": "int"
+        }
+      ]
+    }
+  }
+}

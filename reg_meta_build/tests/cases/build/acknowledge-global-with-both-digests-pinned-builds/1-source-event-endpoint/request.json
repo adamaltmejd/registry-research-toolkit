@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_owner_alternatives.py::test_global_event_acknowledgement_is_routed_out_of_local_scope[unresolved_source_event_endpoint-True]"
+  ],
+  "fails_if": "the curation compiler refuses a `unresolved_source_event_endpoint` acknowledgement that pins both digests (for example it refuses every global acknowledgement), so the build stops instead of completing",
+  "sources": "scb-value",
+  "note": "The allowed twin of acknowledge-global-refused-unless-both-digests-are-pinned: with both digests pinned (well-formed fingerprints) the build completes and does not refuse the entry. The source delivers no event, so the entry matches no issue and the build reports it stale at its own case id."
+}

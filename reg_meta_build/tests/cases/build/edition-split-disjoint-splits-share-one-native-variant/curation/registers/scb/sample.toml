@@ -1,0 +1,30 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "flow"
+[[variant]]
+native_id = "1.2.marriage"
+slug = "marriage"
+[[variant]]
+native_id = "1.2.divorce"
+slug = "divorce"
+[[variable]]
+native_id = "1.5"
+slug = "shared"
+[[identity.edition_split]]
+variant = "1.2"
+split = "1.2.marriage"
+editions = ["2007"]
+source_editions = ["2007-12-31"]
+evidence = "Explicit source event edition"
+noted = "2026-09-30"
+[[identity.edition_split]]
+variant = "1.2"
+split = "1.2.divorce"
+editions = ["2007-12-31"]
+source_editions = ["2007"]
+evidence = "Explicit source event edition"
+noted = "2026-09-30"

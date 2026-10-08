@@ -1,0 +1,28 @@
+{
+  "replaces": [
+    "test_curation_compile_partitions.py::test_implicit_partition_refuses_unsafe_slug_twins[columns0-years0]"
+  ],
+  "note": "Beside split-partition-implicit-case-twins-in-different-years-bind-to-one-split: the unsafe twin binds no column to the split, which the build reports as an ambiguous named identity. The replaced test asserted the compile-level `split_identity_conversion_pending`, which does not reach the ledger without an [[identity.partition]].",
+  "fails_if": "`convert_column_partitions` folds co-delivered case twins onto the one declared split, so the split gets states instead of the family staying unresolved",
+  "sources": {
+    "description": "Variable 5 delivers Kon (CVID 20) and KON (CVID 21) together in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "Kon",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "KON",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        }
+      ]
+    }
+  }
+}

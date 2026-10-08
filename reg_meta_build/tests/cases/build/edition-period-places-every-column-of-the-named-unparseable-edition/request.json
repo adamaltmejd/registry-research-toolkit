@@ -1,0 +1,53 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_compiled_edition_period_places_only_named_unparseable_edition"
+  ],
+  "note": "The entry names the edition, not a column: both columns of 'Födelseland' take its period, and the sibling variant's parseable edition keeps its own.",
+  "fails_if": "`compile_errata` places an `[[errata.edition_period]]` on only the first matching record of the named edition, or on records of another variant, so C keeps no period or B moves to 2018",
+  "sources": {
+    "description": "Variant 2 delivers A (variable 5, CVID 20) and C (variable 6, CVID 22) in the topic-named edition 'Födelseland', which names no period; variant 3 delivers B (variable 7, CVID 21) in edition '2021'.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "versionname": "Födelseland",
+          "regver_id": 2020,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "C",
+          "cvid": 22,
+          "var_id": 6,
+          "year": "2020",
+          "versionname": "Födelseland",
+          "regver_id": 2020,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 21,
+          "var_id": 7,
+          "year": "2021",
+          "versionname": "2021",
+          "regver_id": 2021,
+          "register": [
+            "TESTREG",
+            1,
+            3
+          ]
+        }
+      ]
+    }
+  }
+}

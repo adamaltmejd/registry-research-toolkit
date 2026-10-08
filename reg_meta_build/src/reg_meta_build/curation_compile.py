@@ -6942,6 +6942,16 @@ def compile_deferred_naming(
     return naming, ambiguities
 
 
+_GLOBAL_ACK_GUARDS = "acknowledge_global_guards_missing"
+_GLOBAL_ACK_GUARDS_FIX = (
+    "Give an unresolved_source_event_endpoint or "
+    "unresolved_lineage_ambiguous_source_variant [[acknowledge]] both "
+    "expected_evidence_sha256 and expected_diagnostic_sha256: it is matched "
+    "outside its register's scope, so only both digests pin the one issue it "
+    "acknowledges."
+)
+
+
 def compile_curation(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -7184,8 +7194,10 @@ def compile_curation(
                         ack.expected_evidence_sha256 is None
                         or ack.expected_diagnostic_sha256 is None
                     ):
-                        raise ValueError(
-                            f"{case_id}: global acknowledgements need full evidence and diagnostic guards"
+                        raise curation_error(
+                            _GLOBAL_ACK_GUARDS,
+                            f"{case_id}: global acknowledgements need full evidence and diagnostic guards",
+                            _GLOBAL_ACK_GUARDS_FIX,
                         )
                     if ack.code == "unresolved_source_event_endpoint":
                         event_acknowledgements.append(case)
