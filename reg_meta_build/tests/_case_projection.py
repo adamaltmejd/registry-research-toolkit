@@ -11,8 +11,8 @@ from typing import Any
 MATCH_MODES = frozenset({"exact", "includes"})
 
 # The keys of an `includes` claim on a list whose elements are claimed by
-# membership rather than by position.
-ELEMENT_CLAIMS = frozenset({"$contains", "$lacks"})
+# membership rather than by position, with its length and its last element.
+ELEMENT_CLAIMS = frozenset({"$contains", "$once", "$lacks", "$length", "$last"})
 # An `includes` object's value for a key the actual object must not have, such as
 # a field a JSON dump leaves out when it is None.
 ABSENT = {"$absent": True}
@@ -29,9 +29,12 @@ def mismatch(
     value that is present but not claimed. A list compares element by element and
     must have the same length; `{"$contains": [...]}` inside an `includes` object
     claims that each listed projection matches some element of a list, in any
-    order, and `{"$lacks": [...]}` that none matches any element. `{"$absent":
-    true}` as a key's value claims that the object has no such key. A scalar
-    compares by value and JSON type, so `true` never matches `1`.
+    order, `{"$once": [...]}` that each matches exactly one element, and
+    `{"$lacks": [...]}` that none matches any element; beside them
+    `"$length": n` claims the list's length and `"$last": projection` its last
+    element (a terminal record, say). `{"$absent": true}` as a key's value claims
+    that the object has no such key. A scalar compares by value and JSON type, so
+    `true` never matches `1`.
     """
     if isinstance(expected, dict) and expected.keys() == {"$any"}:
         return None
@@ -43,10 +46,24 @@ def mismatch(
         for want in expected.get("$contains", ()):
             if all(mismatch(got, want, path, exact=exact) for got in actual):
                 return f"{path}: no element matches {want!r}"
+        for want in expected.get("$once", ()):
+            matched = [
+                got for got in actual if not mismatch(got, want, path, exact=exact)
+            ]
+            if len(matched) != 1:
+                return f"{path}: {len(matched)} elements match {want!r}, expected one"
         for unwanted in expected.get("$lacks", ()):
             for index, got in enumerate(actual):
                 if mismatch(got, unwanted, path, exact=exact) is None:
                     return f"{path}[{index}]: matches {unwanted!r}"
+        if "$length" in expected and len(actual) != expected["$length"]:
+            return f"{path}: expected {expected['$length']} items, got {len(actual)}"
+        if "$last" in expected:
+            if not actual:
+                return f"{path}: expected a last element, got an empty list"
+            last = f"{path}[{len(actual) - 1}]"
+            if found := mismatch(actual[-1], expected["$last"], last, exact=exact):
+                return found
         return None
     if isinstance(expected, dict):
         if not isinstance(actual, dict):
@@ -82,8 +99,10 @@ def unclaimed(expected: Any, path: str = "$result", *, exact: bool) -> str | Non
     whose `fails_if` names its content cannot fail; an unclaimed element is
     written `{"$any": true}` instead. Under `exact` (and inside `$exact`) `{}`
     means empty and `$any` would weaken the claim, so `$any` is refused there.
-    `$contains` and `$lacks` are refused there for the same reason, and an empty
-    list under either claims nothing.
+    `$contains`, `$once`, `$lacks`, `$length` and `$last` are refused there for the
+    same reason; an empty list under `$contains`, `$once` or `$lacks` claims nothing,
+    and
+    `$length` takes a non-negative integer.
     """
     if isinstance(expected, dict):
         if expected.keys() == {"$any"}:
@@ -98,6 +117,14 @@ def unclaimed(expected: Any, path: str = "$result", *, exact: bool) -> str | Non
                     f"{path}: {sorted(expected)} is only for an `includes` projection"
                 )
             for key, items in expected.items():
+                if key == "$length":
+                    if type(items) is not int or items < 0:
+                        return f"{path}.$length: a non-negative integer is required"
+                    continue
+                if key == "$last":
+                    if found := unclaimed(items, f"{path}.$last", exact=False):
+                        return found
+                    continue
                 if not isinstance(items, list) or not items:
                     return f"{path}.{key}: a non-empty list of projections is required"
                 for index, item in enumerate(items):

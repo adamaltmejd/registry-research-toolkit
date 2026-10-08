@@ -58,6 +58,7 @@
           ]
         },
         "interpretation_issues": {
+          "$length": 3,
           "$contains": [
             {"kind": "unparseable_period", "incomplete": true, "source_record_ids": ["scb:2"]},
             {"kind": "pooled_period", "incomplete": false, "source_record_ids": ["scb:3"]},
@@ -94,7 +95,7 @@
           "interpretation_issue_counts": {"pooled_period": 1, "unparseable_period": 1}
         },
         "workbook_context": {
-          "$contains": [
+          "$once": [
             "worksheet-context Företag!A48: Ekonomiska nyckeltal och ekonomisk grunddata finns för företag som ingår i Företagens ekonomi (FEK).",
             "worksheet-context Företag!A49: FEK täcker näringslivet (exklusive de finansiella och offentliga sektorerna samt hushållens icke-vinstdrivande",
             "worksheet-context Företag!A50:  organisationer).",
@@ -109,6 +110,7 @@
           "assumption_ids": ["unestablished-workbook-to-scb-variant-scope"]
         },
         "source_records": {
+          "$length": 3,
           "$contains": [{"record_id": "scb:11"}, {"record_id": "scb:12"}, {"record_id": "scb:13"}],
           "$lacks": [
             {
@@ -143,12 +145,14 @@
           ]
         },
         "interpretation_issues": {
+          "$length": 2,
           "$contains": [
             {"kind": "unparseable_period", "incomplete": true, "source_record_ids": ["scb:12"]},
             {"kind": "pooled_period", "incomplete": false, "source_record_ids": ["scb:13"]}
           ]
         },
         "comparison_outcomes": {
+          "$length": 3,
           "$contains": [
             {"status": "source_only_observation", "workbook_record_ids": [], "scb_record_ids": ["scb:11"]},
             {

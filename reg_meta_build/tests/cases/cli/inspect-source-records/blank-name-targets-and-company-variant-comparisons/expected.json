@@ -85,7 +85,13 @@
         },
         "summary": {"scb_retained_occurrences": 12},
         "source_records": {
+          "$length": 17,
           "$contains": [
+            {"record_id": "Företag!row:9"},
+            {"record_id": "Företag!row:53"},
+            {"record_id": "Företag!row:92"},
+            {"record_id": "Företag!row:94"},
+            {"record_id": "Företag!row:112"},
             {"record_id": "scb:11"},
             {"record_id": "scb:12"},
             {"record_id": "scb:21"},

@@ -171,8 +171,8 @@ record is `scb:<native member id>` (the source spec's `cvid`), a workbook record
 `<sheet>!row:<n>` (`Företag!row:9`). A claim then reads `"scb_record_ids": ["scb:12"]`.
 Two records with one alias fail the case. A report lists records and outcomes in the
 order of their hashes, so a case claims a list of them by membership (`$contains`,
-`$lacks`, below) and its length through the report's own counts (`summary`,
-`expected_source_target_count`, an outcome's sorted `member_ids`).
+`$once`, `$lacks`, below) and its exact length with `$length` where the replaced test
+counted it.
 
 ## `request.json`
 
@@ -253,11 +253,13 @@ projection": an object compares only the keys it names, a list compares element 
 element and must have the same length, a scalar compares by value and JSON type,
 `{"$exact": value}` compares a value whole, and `{"$any": true}` is a value that must be
 present but is not claimed. `{"$contains": [...]}` claims a list by membership, each
-listed projection matching some element in any order; `{"$lacks": [...]}` claims that no
-element matches any listed projection; and `{"$absent": true}` claims that an object has
-no such key (a report leaves out a field that is None). A bare `{}` is refused. Strings
-take the `{work}` placeholder. A printed `inspect-source-records` report has its record
-ids aliased first (above).
+listed projection matching some element in any order; `{"$once": [...]}` that each
+matches exactly one element; `{"$lacks": [...]}` that no element matches any listed
+projection; `"$length": n` beside them claims the list's length and
+`"$last": projection` its last element (a census file's terminal completion record); and
+`{"$absent": true}` claims that an object has no such key (a report leaves out a field
+that is None). A bare `{}` is refused. Strings take the `{work}` placeholder. A printed
+`inspect-source-records` report has its record ids aliased first (above).
 
 Do not project values the catalog mints, such as a built register id: they are
 surrogates, not claims.

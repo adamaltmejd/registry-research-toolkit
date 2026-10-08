@@ -12,8 +12,9 @@
     "target_record_ids": [],
     "assumption_ids": ["unestablished-workbook-to-scb-variant-scope"]
   },
-  "source_records": {"$contains": [{"record_id": "Individ!row:42"}, {"record_id": "Individ årsoberoende!row:43"}]},
+  "source_records": {"$length": 2, "$contains": [{"record_id": "Individ!row:42"}, {"record_id": "Individ årsoberoende!row:43"}]},
   "comparison_outcomes": {
+    "$length": 2,
     "$contains": [
       {
         "status": "unknown_applicability",

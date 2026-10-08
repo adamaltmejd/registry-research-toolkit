@@ -2,9 +2,11 @@
   "target_preview": {
     "expected_source_target_count": 9,
     "target_record_ids": {
+      "$length": 9,
       "$contains": ["scb:2011", "scb:2012", "scb:2013", "scb:2014", "scb:2015", "scb:2016", "scb:2017", "scb:2018", "scb:2019"]
     },
     "existing_named_record_ids": {
+      "$length": 25,
       "$contains": [
         "scb:1990",
         "scb:1991",

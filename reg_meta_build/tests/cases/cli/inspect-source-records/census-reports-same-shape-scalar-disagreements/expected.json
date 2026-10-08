@@ -9,10 +9,12 @@
             "column": {"interpreted_value": "Scalar"},
             "comparison_scope": "same_native_edition_and_exact_column",
             "alternatives": {
+              "$length": 2,
               "$contains": [
                 {
                   "context_fingerprint": "context@row:2,row:3",
                   "members": {
+                    "$length": 2,
                     "$contains": [
                       {
                         "locator": {"physical_record": "row:2"},
@@ -67,7 +69,22 @@
               "delivered_cells": {"$contains": [{"name": "Variabeldefinition", "interpreted_value": "Definition B"}]}
             }
           }
-        ]
+        ],
+        "$length": 5,
+        "$last": {
+          "type": "completion",
+          "schema_version": 3,
+          "pins": {"interpretation_id": "scb-registerinformation-observation-census-v7"},
+          "counts": {
+            "unique_observations": 2,
+            "duplicate_occurrences": 1,
+            "same_complete_context_groups": 0,
+            "context_separated_groups": 0,
+            "non_shape_scalar_groups": 1,
+            "non_shape_scalar_cvids": 1
+          },
+          "affected_memberships": {"non_shape_scalar_cvids": [4242]}
+        }
       }
     }
   }
