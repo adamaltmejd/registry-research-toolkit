@@ -128,23 +128,43 @@ def test_body_over_the_cap_is_payload_too_large(servers):
 
 
 def test_burst_is_rate_limited(request, tmp_path):
-    # Fails when `/mcp` stops limiting a client's burst, or answers it without the
-    # error document. A server of its own: a drained bucket would refuse the other
-    # MCP cases from this address.
+    # Fails when `/mcp` stops limiting a client's burst, answers it without the error
+    # document, keys a request on a `CF-Connecting-IP` that lacks the edge token (each
+    # forged address would get a fresh bucket and the burst would never be refused),
+    # keys an edge client on its full IPv6 address instead of its /64 (rotating within
+    # the /64 would never be refused), or keys an edge request on its peer (every edge
+    # client would share one bucket). A server of its own: a drained bucket would
+    # refuse the other MCP cases from this address.
     template = request.config.getoption("--server-cmd")
     if template is None:
         pytest.skip("MCP cases run against --server-cmd")
     pool = ServerPool(template, tmp_path)
+    env = artifact_env(cached_case_artifact(READER), "steward")
     try:
-        client = pool.client(artifact_env(cached_case_artifact(READER), "steward"))
-        statuses = []
-        while 429 not in statuses and len(statuses) < 500:
-            response = rpc(client, "tools/list", {})
-            statuses.append(response.status_code)
-        assert statuses[0] == 200
+        client = pool.client(env | {"REG_META_EDGE_TOKEN": "edge-secret"})
+
+        def tools_list(address, token):
+            return client.post(
+                "/mcp",
+                json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
+                headers=HEADERS | {"cf-connecting-ip": address, "x-edge-token": token},
+            )
+
+        def drain(address, token):
+            statuses = []
+            while 429 not in statuses and len(statuses) < 500:
+                response = tools_list(address(len(statuses)), token)
+                statuses.append(response.status_code)
+            assert statuses[0] == 200
+            return response
+
+        response = drain(lambda n: f"203.0.113.{n % 250}", "not-the-secret")
         assert response.status_code == 429
         assert response.headers["retry-after"] == "1"
         assert response.json()["error"]["fields"] == {"retry_after_seconds": 1}
+        response = drain(lambda n: f"2001:db8::{n + 1:x}", "edge-secret")
+        assert response.status_code == 429
+        assert tools_list("2001:db8:0:1::1", "edge-secret").status_code == 200
     finally:
         pool.close()
 
