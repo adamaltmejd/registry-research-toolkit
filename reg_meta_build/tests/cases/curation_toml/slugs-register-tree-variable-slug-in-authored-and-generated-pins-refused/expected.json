@@ -1,0 +1,14 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_load.py::test_variable_slug_reused_across_authored_and_auto_fails",
+  "fails_if": "the slug loader stops checking a curating zone's generated pins against the authored ones, so two variables of one register share a slug",
+  "note": "The other entry is named by its absolute path, not `curation/...` like the authored one (finding: a located error should name the repository path).",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variable]] entry 1",
+    "message_contains": [
+      "variable slug 'same' reused",
+      "registers/scb/lisa.auto.toml [[variable]] entry 1 ('1.45')"
+    ]
+  }
+}

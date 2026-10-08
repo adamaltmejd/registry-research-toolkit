@@ -1,0 +1,30 @@
+{
+  "exit_code": 0,
+  "stderr": {
+    "contains": [
+      "'Nybörjare i Komvux'"
+    ]
+  },
+  "same_bytes": [
+    [
+      "quiet/registers/scb/foretag.auto.toml",
+      "loud/registers/scb/foretag.auto.toml"
+    ],
+    [
+      "quiet/registers/scb/komvux.auto.toml",
+      "loud/registers/scb/komvux.auto.toml"
+    ],
+    [
+      "quiet/registers/scb/other.auto.toml",
+      "loud/registers/scb/other.auto.toml"
+    ],
+    [
+      "quiet/registers/scb/part.auto.toml",
+      "loud/registers/scb/part.auto.toml"
+    ],
+    [
+      "quiet/registers/scb/sample.auto.toml",
+      "loud/registers/scb/sample.auto.toml"
+    ]
+  ]
+}

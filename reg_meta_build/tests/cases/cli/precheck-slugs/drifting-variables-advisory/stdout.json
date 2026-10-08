@@ -1,0 +1,19 @@
+{
+  "missing_registers": [],
+  "missing_variants": [],
+  "stale_registers": [],
+  "stale_variants": [],
+  "drifting_variables": [
+    {
+      "provider": "scb",
+      "provider_key": "101",
+      "slug": "value",
+      "name": "GenericVar",
+      "columns": [
+        "VALUE",
+        "VALUE_NY"
+      ]
+    }
+  ],
+  "name_fallback_variables": []
+}

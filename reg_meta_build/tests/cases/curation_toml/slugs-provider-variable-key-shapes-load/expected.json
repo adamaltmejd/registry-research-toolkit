@@ -1,0 +1,34 @@
+{
+  "loader": "provider_slugs",
+  "replaces": [
+    "test_fqid_slug_naming_boundary.py::test_variable_key_shapes_load[34.10]",
+    "test_fqid_slug_naming_boundary.py::test_variable_key_shapes_load[34.10.kon]",
+    "test_fqid_slug_naming_boundary.py::test_variable_key_shapes_load[5028920659479690770.ALDER]",
+    "test_fqid_slug_naming_boundary.py::test_variable_key_shapes_load[123.FOD_DATUMN.heltal]"
+  ],
+  "fails_if": "the slug loader refuses a split-sibling discriminator, a minted register id or a text VarId in a variable key",
+  "note": "An SCB integer VarId, a split sibling, an SOS minted register id with a text VarId, and a text VarId with a discriminator. The old test loaded each with slug `kon` from its own file; one file needs a slug per entry.",
+  "match": "includes",
+  "loads": [
+    {
+      "kind": "variable",
+      "source_id": "34.10",
+      "slug": "kon"
+    },
+    {
+      "kind": "variable",
+      "source_id": "34.10.kon",
+      "slug": "kon-split"
+    },
+    {
+      "kind": "variable",
+      "source_id": "5028920659479690770.ALDER",
+      "slug": "alder"
+    },
+    {
+      "kind": "variable",
+      "source_id": "123.FOD_DATUMN.heltal",
+      "slug": "fodelsedatum"
+    }
+  ]
+}

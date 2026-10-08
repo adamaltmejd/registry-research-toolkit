@@ -1,0 +1,13 @@
+{
+  "replaces": "test_fqid_slugs_drift_markers.py::TestPopulateVariableSlugs::test_advisory_worklist_survives_malformed_auto_toml",
+  "fails_if": "the advisory worklist raises on a malformed generated slug file instead of skipping the provider",
+  "note": "The scb zone is churning, so the build ignores this generated file and the precheck stays clean; only the worklist reads it.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

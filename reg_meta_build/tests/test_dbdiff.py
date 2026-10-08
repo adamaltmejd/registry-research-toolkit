@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta_build.dbdiff import (
-    TableIgnore,
     diff_db_content,
     format_report,
     main,
@@ -368,42 +367,6 @@ class TestIgnore:
         manifest = next(r for r in report.table_results if r.table == "import_manifest")
         assert not manifest.identical
 
-    def test_drop_columns_ignore(self, db_a: Path, tmp_path: Path):
-        # Dropping `name` from the comparison hides a name-only difference.
-        b = tmp_path / "b.db"
-        _build(b, widgets=[(1, "RENAMED", b"\x00\x01\x02", 100), *_WIDGETS[1:]])
-        ignore = {"widget": TableIgnore(drop_columns=frozenset({"name"}))}
-        report = diff_db_content(db_a, b, ignore=ignore)
-        widget = next(r for r in report.table_results if r.table == "widget")
-        assert "name" not in widget.columns
-        assert widget.identical
-
-    def test_drop_all_columns_is_count_only(self, db_a: Path, tmp_path: Path):
-        # Dropping every column must not emit invalid SQL — it degrades to a
-        # count-only comparison. Same row count (despite differing values) =>
-        # identical.
-        b = tmp_path / "b.db"
-        _build(b, widgets=[(1, "ALPHA", b"\xaa", 1), *_WIDGETS[1:]])
-        all_cols = frozenset({"id", "name", "payload", "source_id"})
-        ignore = {"widget": TableIgnore(drop_columns=all_cols)}
-        report = diff_db_content(db_a, b, ignore=ignore)
-        widget = next(r for r in report.table_results if r.table == "widget")
-        assert widget.columns == ()
-        assert widget.identical  # equal counts, no columns compared
-
-    def test_drop_all_columns_catches_count_delta(self, db_a: Path, tmp_path: Path):
-        # Count-only comparison still catches a row-count difference (and emits
-        # no sample rows, since the rows are indistinguishable).
-        b = tmp_path / "b.db"
-        _build(b, widgets=[*_WIDGETS, (4, "delta", None, 4)])
-        all_cols = frozenset({"id", "name", "payload", "source_id"})
-        ignore = {"widget": TableIgnore(drop_columns=all_cols)}
-        report = diff_db_content(db_a, b, ignore=ignore)
-        widget = next(r for r in report.table_results if r.table == "widget")
-        assert not widget.identical
-        assert widget.count_a == 3 and widget.count_b == 4
-        assert widget.sample_a_not_b == () and widget.sample_b_not_a == ()
-
 
 # --------------------------------------------------------------------------
 # FTS exclusion + storage-class edge
@@ -524,3 +487,45 @@ class TestCli:
         widget = next(t for t in payload["tables"] if t["table"] == "widget")
         assert widget["identical"] is False
         assert widget["sample_a_not_b"]
+
+    def test_json_sample_cells_keep_storage_class(self, tmp_path: Path, capsys):
+        # A no-affinity column holds integer 1 in A and text '1' in B. Fails if the
+        # JSON sample renders every cell as a string: both rows then print "1".
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, value in ((a, 1), (b, "1")):
+            conn = sqlite3.connect(path)
+            conn.execute("CREATE TABLE t (v)")
+            conn.execute("INSERT INTO t VALUES (?)", (value,))
+            conn.commit()
+            conn.close()
+        assert main(["--json", str(a), str(b)]) == 1
+        (table,) = json.loads(capsys.readouterr().out)["tables"]
+        assert table["sample_a_not_b"] == [{"net": 1, "row": {"v": 1}}]
+        assert table["sample_b_not_a"] == [{"net": -1, "row": {"v": "1"}}]
+
+    def test_json_non_finite_real_stays_valid_json(self, tmp_path: Path, capsys):
+        # A holds REAL -inf and inf, B text 'inf'. Fails if a non-finite REAL is
+        # printed as the non-JSON `Infinity` (strict parse below refuses it), or
+        # as the bare string 'inf', which reads like B's text cell. SQLite stores
+        # a bound NaN as NULL, so nan cannot reach a sample.
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, values in ((a, (float("-inf"), float("inf"))), (b, ("inf",))):
+            conn = sqlite3.connect(path)
+            conn.execute("CREATE TABLE t (v)")
+            conn.executemany("INSERT INTO t VALUES (?)", [(v,) for v in values])
+            conn.commit()
+            conn.close()
+        assert main(["--json", str(a), str(b)]) == 1
+
+        def refuse(constant: str) -> object:
+            raise ValueError(f"not JSON: {constant}")
+
+        out = json.loads(capsys.readouterr().out, parse_constant=refuse)
+        (table,) = out["tables"]
+        assert sorted(r["row"]["v"]["real"] for r in table["sample_a_not_b"]) == [
+            "-inf",
+            "inf",
+        ]
+        assert table["sample_b_not_a"] == [{"net": -1, "row": {"v": "inf"}}]

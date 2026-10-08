@@ -1,0 +1,18 @@
+{
+  "missing_registers": [],
+  "missing_variants": [],
+  "stale_registers": [],
+  "stale_variants": [],
+  "snapshot": {
+    "update_skipped_reason": "frozen_zone_violation",
+    "renamed": [
+      "register/scb/1: 'lisa' -> 'sample'"
+    ],
+    "removed": [
+      "register/sos/9 (was 'deaths')"
+    ],
+    "blocked": [
+      "register/scb/1: 'lisa' -> 'sample'"
+    ]
+  }
+}

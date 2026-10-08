@@ -1,0 +1,24 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_load.py::test_preloaded_registers_load_the_same_entries",
+  "fails_if": "the slug loader skips a curating zone's generated `<register>.auto.toml`, so its pins drop out of the snapshot and the build",
+  "note": "The register file pins 1.44; the generated file beside it pins 1.45; `slug_state.toml` pins the scb zone as curating. The replaced test also compared a load given the preparsed registers with a fresh one, an internal shortcut no boundary sees.",
+  "match": "includes",
+  "loads": [
+    {
+      "kind": "variable",
+      "source_id": "1.45",
+      "slug": "alder"
+    },
+    {
+      "kind": "register",
+      "source_id": "1",
+      "slug": "lisa"
+    },
+    {
+      "kind": "variable",
+      "source_id": "1.44",
+      "slug": "kon"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "replaces": "test_fqid_slug_cli_boundary.py::test_pipeline_catalog_partition_owners_key_on_their_split_ids",
+  "fails_if": "the shared source-id derivation refuses a dotted provider key (as before #1222) or re-derives a split discriminator, emitting pins under ids no register entry carries",
+  "note": "Register 4's partition owners `4.5.first` and `4.5.second` are already pinned by their authored native ids.",
+  "argv": [
+    "--db",
+    "{db}",
+    "seed-slugs",
+    "--out-dir",
+    "{work}/curation",
+    "--quiet"
+  ]
+}

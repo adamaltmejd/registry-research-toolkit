@@ -1,10 +1,8 @@
 """Tests for the read-only succession-candidate diagnostic
 (`succession_candidates.py`).
 
-Modelled on `test_split_sibling_suspects.py` (the diagnostic this one mirrors —
-same corpus, opposite temporal gate): `infer_succession_candidates` over a
-hand-built synthetic DB exercises the two candidate shapes plus every gate
-(already-edged, co-delivered, non-adjacent, an era pair across variants), and
+`infer_succession_candidates` over a hand-built synthetic DB exercises the
+candidate shape plus every gate (already-edged, co-delivered, non-adjacent), and
 `render_succession_toml` is round-tripped BOTH through a plain TOML parse and
 through `relations.py`'s real loader —
 the emitted worklist must be in the exact `[[edge]]` grammar
@@ -67,10 +65,9 @@ def _add_era(
     valid_to: str,
     variant_id: int = _VARIANT_ID,
 ) -> None:
-    """Add one delivered era: the `variable` (minted on first use, sharing
-     `var_id`/provider_key with its split family), its `variable_state` window, and
-     the `variable_alias` row that makes the `(variable, column)` representation LIVE
-    ."""
+    """Add one delivered era: the `variable` (minted on first use), its
+    `variable_state` window, and the `variable_alias` row that makes the
+    `(variable, column)` representation LIVE."""
     exists = conn.execute(
         "SELECT 1 FROM variable WHERE register_id = ? AND slug = ?",
         (_REGISTER_ID, slug),
@@ -109,18 +106,15 @@ def _add_variable_edge(conn: sqlite3.Connection, pred: str, succ: str) -> None:
 
 
 def _seed_corpus(conn: sqlite3.Connection) -> None:
-    """Seed the five families the diagnostic must separate:
+    """Seed the four families the diagnostic must separate:
 
     - var 31395 / 47670 `ForvErs` — the SAME column re-minted under a new var_id,
-      adjacent windows (2021-12-31 → 2022-01-01) → candidate `cross_var_id`;
-    - var 56 `PeOrgNr` / `PeOrgNr_LISA` — two split-container siblings of ONE
-      var_id whose columns differ across adjacent windows → candidate
-      `split_rename`, scoped to the single delivering variant;
+      adjacent windows (2021-12-31 → 2022-01-01) → candidate;
     - var 41660 / 37046 `AnnInk` — the cross-var_id shape, but the pair is ALREADY
       joined by a `variable_replaced_by` edge → skipped;
     - var 700 / 701 `Kod` — the cross-var_id shape over adjacent windows, but the
       predecessor also ships a LATER era co-delivered with the successor in the
-      same variant → skipped (split-sibling-suspects' territory);
+      same variant → skipped (co-delivered);
     - var 800 / 801 `Ort` — the cross-var_id shape but with a YEAR-WIDE GAP between
       the windows → skipped (not adjacent, so not one column's era chain).
     """
@@ -140,24 +134,6 @@ def _seed_corpus(conn: sqlite3.Connection) -> None:
         name="Förvärvsinkomst",
         column="ForvErs",
         valid_from="2022-01-01",
-        valid_to="2023-12-31",
-    )
-    _add_era(
-        conn,
-        var_id=56,
-        slug="person-orgnr",
-        name="Person-/organisationsnummer",
-        column="PeOrgNr",
-        valid_from="2010-01-01",
-        valid_to="2015-12-31",
-    )
-    _add_era(
-        conn,
-        var_id=56,
-        slug="person-orgnr-2",
-        name="Person-/organisationsnummer",
-        column="PeOrgNr_LISA",
-        valid_from="2016-01-01",
         valid_to="2023-12-31",
     )
     _add_era(
@@ -230,28 +206,20 @@ def _seed_corpus(conn: sqlite3.Connection) -> None:
 
 
 class TestInfer:
-    def test_only_the_two_real_successions(self) -> None:
+    def test_only_the_real_succession(self) -> None:
         conn = _base_db()
         _seed_corpus(conn)
         result = infer_succession_candidates(conn)
-        assert [
-            (c.kind, c.predecessor.fqid, c.successor.fqid) for c in result.candidates
-        ] == [
-            ("cross_var_id", "scb/lisa/forvink-ers-aktiv", "scb/lisa/forvink-ers"),
-            ("split_rename", "scb/lisa/person-orgnr", "scb/lisa/person-orgnr-2"),
+        assert [(c.predecessor.fqid, c.successor.fqid) for c in result.candidates] == [
+            ("scb/lisa/forvink-ers-aktiv", "scb/lisa/forvink-ers"),
         ]
-        assert result.total == 2
-        assert result.per_register_counts == {"scb/lisa": 2}
-        assert result.per_kind_counts == {"cross_var_id": 1, "split_rename": 1}
+        assert result.total == 1
+        assert result.per_register_counts == {"scb/lisa": 1}
 
     def test_cross_var_id_evidence(self) -> None:
         conn = _base_db()
         _seed_corpus(conn)
-        cross = next(
-            c
-            for c in infer_succession_candidates(conn).candidates
-            if c.kind == "cross_var_id"
-        )
+        (cross,) = infer_succession_candidates(conn).candidates
         assert cross.predecessor.provider_key == "31395"
         assert cross.successor.provider_key == "47670"
         assert cross.predecessor.column == cross.successor.column == "ForvErs"
@@ -262,23 +230,8 @@ class TestInfer:
         assert cross.effective_year == 2022
         assert cross.register_fqid == "scb/lisa"
 
-    def test_split_rename_evidence_is_variant_scoped(self) -> None:
-        conn = _base_db()
-        _seed_corpus(conn)
-        rename = next(
-            c
-            for c in infer_succession_candidates(conn).candidates
-            if c.kind == "split_rename"
-        )
-        assert rename.predecessor.provider_key == rename.successor.provider_key == "56"
-        assert rename.predecessor.column == "PeOrgNr"
-        assert rename.successor.column == "PeOrgNr_LISA"
-        assert rename.effective_year == 2016
-        # A rename is emitted scoped to the variant its two eras meet in.
-        assert rename.variant == "individer-15plus"
-
     def test_the_curated_edge_is_what_suppresses_the_anninkf_pair(self) -> None:
-        # `test_only_the_two_real_successions` proves the AnnInk pair is absent;
+        # `test_only_the_real_succession` proves the AnnInk pair is absent;
         # this proves the EDGE is why — drop it and the pair is a candidate.
         conn = _base_db()
         _seed_corpus(conn)
@@ -302,27 +255,25 @@ class TestInfer:
         )
 
     def test_representation_edge_also_skips(self) -> None:
-        # The other grain this diagnostic proposes: a curated column rename between
-        # the two siblings settles the pair whatever columns it names.
+        # A curated column-grain edge between the two variables settles the pair
+        # whatever columns it names. Fails if the edge gate reads only
+        # `variable_replaced_by`.
         conn = _base_db()
         _seed_corpus(conn)
         conn.execute(
             "INSERT INTO representation_replaced_by (predecessor_provider, "
             "predecessor_register, predecessor_variable, predecessor_column, "
             "successor_provider, successor_register, successor_variable, "
-            "successor_column) VALUES ('scb', 'lisa', 'person-orgnr', 'PeOrgNr', "
-            "'scb', 'lisa', 'person-orgnr-2', 'PeOrgNr_LISA')"
+            "successor_column) VALUES ('scb', 'lisa', 'forvink-ers-aktiv', "
+            "'ForvErs', 'scb', 'lisa', 'forvink-ers', 'ForvErs')"
         )
         conn.commit()
-        assert all(
-            c.kind != "split_rename"
-            for c in infer_succession_candidates(conn).candidates
-        )
+        assert infer_succession_candidates(conn).total == 0
 
     def test_the_overlapping_era_is_what_suppresses_the_kod_pair(self) -> None:
         # var 700/701's windows are adjacent; the pair is absent only because var
-        # 700 also ships an era overlapping the successor in the same variant
-        # (#918's territory). Drop that era and the succession is a candidate.
+        # 700 also ships an era overlapping the successor in the same variant.
+        # Drop that era and the succession is a candidate.
         conn = _base_db()
         _seed_corpus(conn)
         conn.execute("DELETE FROM variable_state WHERE valid_to = '2018-12-31'")
@@ -382,133 +333,6 @@ class TestInfer:
         assert result.total == 1
         assert result.candidates[0].predecessor.column == "Belopp"
 
-    def test_one_variables_own_column_rename_is_not_a_candidate(self) -> None:
-        # Two adjacent eras of ONE variable that renamed its column need no edge —
-        # they are already one catalog row.
-        conn = _base_db()
-        _add_era(
-            conn,
-            var_id=17,
-            slug="arbetsstalle",
-            name="Arbetsställenummer",
-            column="AstNr",
-            valid_from="2010-01-01",
-            valid_to="2015-12-31",
-        )
-        _add_era(
-            conn,
-            var_id=17,
-            slug="arbetsstalle",
-            name="Arbetsställenummer",
-            column="AstNr_LISA",
-            valid_from="2016-01-01",
-            valid_to="2023-12-31",
-        )
-        conn.commit()
-        assert infer_succession_candidates(conn).total == 0
-
-    def test_a_rename_meeting_across_variants_is_not_a_candidate(self) -> None:
-        # Two variant-specific columns of ONE split container that happen to abut
-        # in time (Ast_SektorKod in one variant, SektorKod in the other) are
-        # parallel siblings, not one coordinate renaming its header.
-        conn = _base_db()
-        _add_era(
-            conn,
-            var_id=95,
-            slug="ast-sektorkod",
-            name="Sektorkod, arbetsställe",
-            column="Ast_SektorKod",
-            valid_from="1990-01-01",
-            valid_to="1992-12-31",
-            variant_id=_VARIANT_ID,
-        )
-        _add_era(
-            conn,
-            var_id=95,
-            slug="sektorkod",
-            name="Sektorkod",
-            column="SektorKod",
-            valid_from="1993-01-01",
-            valid_to="1999-12-31",
-            variant_id=_OTHER_VARIANT_ID,
-        )
-        conn.commit()
-        assert infer_succession_candidates(conn).total == 0
-
-    def test_a_cross_variant_pair_does_not_sink_the_same_variant_one(self) -> None:
-        # The LISA `PeOrgNr` shape: the predecessor delivers in ONE variant, the
-        # successor in that one AND another. The gate is per era PAIR, so the
-        # cross-variant pair is dropped on its own and the same-variant rename
-        # still stands, scoped to the variant it meets in.
-        conn = _base_db()
-        _add_era(
-            conn,
-            var_id=56,
-            slug="person-orgnr",
-            name="Person-/organisationsnummer",
-            column="PeOrgNr",
-            valid_from="2010-01-01",
-            valid_to="2015-12-31",
-            variant_id=_VARIANT_ID,
-        )
-        for variant_id in (_VARIANT_ID, _OTHER_VARIANT_ID):
-            _add_era(
-                conn,
-                var_id=56,
-                slug="person-orgnr-2",
-                name="Person-/organisationsnummer",
-                column="PeOrgNr_LISA",
-                valid_from="2016-01-01",
-                valid_to="2023-12-31",
-                variant_id=variant_id,
-            )
-        conn.commit()
-        result = infer_succession_candidates(conn)
-        assert [
-            (c.kind, c.predecessor.fqid, c.successor.fqid, c.variant)
-            for c in result.candidates
-        ] == [
-            (
-                "split_rename",
-                "scb/lisa/person-orgnr",
-                "scb/lisa/person-orgnr-2",
-                "individer-15plus",
-            )
-        ]
-
-    def test_a_rename_inside_two_variants_emits_one_candidate_each(self) -> None:
-        # The same rename meeting INSIDE variant A and INSIDE variant B is two
-        # scoped edges, not one unscoped one: `relations.py` keys a representation
-        # edge on (…, column, variant), so both load.
-        conn = _base_db()
-        for variant_id in (_VARIANT_ID, _OTHER_VARIANT_ID):
-            _add_era(
-                conn,
-                var_id=14,
-                slug="cfar-nummer",
-                name="CFAR-nummer",
-                column="CfarNr",
-                valid_from="2010-01-01",
-                valid_to="2015-12-31",
-                variant_id=variant_id,
-            )
-            _add_era(
-                conn,
-                var_id=14,
-                slug="cfar-nummer-2",
-                name="CFAR-nummer",
-                column="CfarNr_LISA",
-                valid_from="2016-01-01",
-                valid_to="2023-12-31",
-                variant_id=variant_id,
-            )
-        conn.commit()
-        result = infer_succession_candidates(conn)
-        assert [(c.kind, c.variant) for c in result.candidates] == [
-            ("split_rename", "individer-15plus"),
-            ("split_rename", "individer-16plus"),
-        ]
-
     @pytest.mark.parametrize(
         ("predecessor_to", "successor_from", "successor_to", "emitted"),
         [
@@ -558,17 +382,16 @@ class TestInfer:
         )
         conn.commit()
         pairs = [
-            (c.kind, c.predecessor.fqid, c.successor.fqid)
+            (c.predecessor.fqid, c.successor.fqid)
             for c in infer_succession_candidates(conn).candidates
         ]
-        expected = [("cross_var_id", "scb/lisa/wert-gammal", "scb/lisa/wert-ny")]
+        expected = [("scb/lisa/wert-gammal", "scb/lisa/wert-ny")]
         assert pairs == (expected if emitted else [])
 
     def test_empty_db(self) -> None:
         conn = _base_db()
         result = infer_succession_candidates(conn)
         assert result.total == 0
-        assert result.per_kind_counts == {"cross_var_id": 0, "split_rename": 0}
         assert (
             render_succession_toml(result)
             .strip()
@@ -590,23 +413,13 @@ class TestRender:
                 "to": "scb/lisa/forvink-ers",
                 "effective_year": 2022,
             },
-            {
-                "type": "replaced_by",
-                "from": "scb/lisa/person-orgnr",
-                "to": "scb/lisa/person-orgnr-2",
-                "from_column": "PeOrgNr",
-                "to_column": "PeOrgNr_LISA",
-                "variant": "individer-15plus",
-                "effective_year": 2016,
-            },
         ]
 
     def test_evidence_comments_carry_the_columns_and_windows(self) -> None:
         conn = _base_db()
         _seed_corpus(conn)
         toml_text = render_succession_toml(infer_succession_candidates(conn))
-        assert "# === register scb/lisa — 2 candidate(s) ===" in toml_text
-        assert "# cross_var_id" in toml_text
+        assert "# === register scb/lisa — 1 candidate(s) ===" in toml_text
         assert (
             "#   from: scb/lisa/forvink-ers-aktiv (Förvärvsinkomst, aktiv) "
             "var_id 31395, column ForvErs, variant individer-15plus, "
@@ -624,39 +437,24 @@ class TestRender:
             render_succession_toml(infer_succession_candidates(conn)), encoding="utf-8"
         )
         relations = load_relations(path)
-        assert len(relations.replaced_by) == 2
-        variable, representation = relations.replaced_by
+        (variable,) = relations.replaced_by
         assert (
             variable.predecessor.variable,
             variable.successor.variable,
             variable.effective_year,
         ) == ("forvink-ers-aktiv", "forvink-ers", 2022)
-        assert (
-            representation.predecessor_column,
-            representation.successor_column,
-            representation.variant,
-            representation.effective_year,
-        ) == ("PeOrgNr", "PeOrgNr_LISA", "individer-15plus", 2016)
 
     def test_emitted_candidates_are_no_longer_candidates(self, tmp_path: Path) -> None:
-        # A catalog containing accepted edges retires the worklist: the already-edged
-        # gate drops both pairs.
+        # A catalog containing the accepted edge retires the worklist: the
+        # already-edged gate drops the pair.
         conn = _base_db()
         _seed_corpus(conn)
         path = tmp_path / "worklist.toml"
         path.write_text(
             render_succession_toml(infer_succession_candidates(conn)), encoding="utf-8"
         )
-        assert len(load_relations(path).replaced_by) == 2
+        assert len(load_relations(path).replaced_by) == 1
         _add_variable_edge(conn, "forvink-ers-aktiv", "forvink-ers")
-        conn.execute(
-            "INSERT INTO representation_replaced_by "
-            "(predecessor_provider, predecessor_register, predecessor_variable, "
-            "predecessor_column, successor_provider, successor_register, "
-            "successor_variable, successor_column, variant, effective_year) "
-            "VALUES ('scb','lisa','person-orgnr','PeOrgNr','scb','lisa',"
-            "'person-orgnr-2','PeOrgNr_LISA','individer-15plus',2016)"
-        )
         assert infer_succession_candidates(conn).total == 0
 
 

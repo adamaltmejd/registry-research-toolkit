@@ -1,0 +1,15 @@
+{
+  "loader": "provider_slugs",
+  "replaces": [
+    "test_fqid_slugs_load.py::TestEntryParseIds::test_register_key_not_integer",
+    "test_fqid_slugs_load.py::TestCanonicalIntegerKeys::test_malformed_id_rejected_at_load_not_populate"
+  ],
+  "fails_if": "the slug loader accepts a register key that is not an integer RegisterId",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register.'abc'",
+    "message_contains": [
+      "RegisterId"
+    ]
+  }
+}
