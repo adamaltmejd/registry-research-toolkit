@@ -69,7 +69,7 @@ const CANONICAL: &str = "COALESCE(\
 pub fn warnings(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
     let period = super::period(params)?;
     let unassigned_only = super::flag(params, "unassigned_only")?;
-    let variant = params.get("variant").copied();
+    let variant = super::variant(params)?;
     let representation = params.get("representation").copied();
     if representation.is_some_and(|r| {
         reg_core::py_strip(r).is_empty()

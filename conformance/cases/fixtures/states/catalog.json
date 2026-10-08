@@ -89,6 +89,18 @@
     "states": [
       {
         "variant": {
+          "slug": "fixed",
+          "name": "Fixed"
+        },
+        "period_scope": "year_independent",
+        "delivery_column_name": "Kod",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
           "slug": "annual",
           "name": "Annual"
         },

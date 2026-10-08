@@ -285,6 +285,34 @@ pub(crate) fn period(params: &Params) -> Result<Option<reg_core::Period>, Error>
         .transpose()
 }
 
+/// `variant`: a register variant's slug, or `_default` (today's
+/// `validate_slug(allow_default=True)`).
+pub(crate) fn variant<'a>(params: &Params<'a>) -> Result<Option<&'a str>, Error> {
+    match params.get("variant").copied() {
+        Some(v) if v != "_default" && !reg_core::is_slug(v) => {
+            Err(Error::invalid_parameter("variant"))
+        }
+        v => Ok(v),
+    }
+}
+
+/// `value_set_version`: a free-text label, so only sanity-checked as today's
+/// `parse_value_set_version`: not blank, at most 200 characters, no C0, DEL or C1
+/// control characters.
+pub(crate) fn value_set_version<'a>(params: &Params<'a>) -> Result<Option<&'a str>, Error> {
+    match params.get("value_set_version").copied() {
+        Some(v)
+            if reg_core::py_strip(v).is_empty()
+                || v.chars().count() > 200
+                || v.chars()
+                    .any(|c| c < ' ' || ('\u{7f}'..='\u{9f}').contains(&c)) =>
+        {
+            Err(Error::invalid_parameter("value_set_version"))
+        }
+        v => Ok(v),
+    }
+}
+
 /// A boolean parameter, `true` or `false` (default false).
 pub(crate) fn flag(params: &Params, name: &str) -> Result<bool, Error> {
     match params.get(name).copied() {

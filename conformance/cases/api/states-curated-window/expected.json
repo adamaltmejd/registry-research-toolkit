@@ -4,19 +4,23 @@
     "json": {
       "/data/items/*/delivery_column_name": [
         "Kod",
-        "KodAlt"
+        "KodAlt",
+        "Kod"
       ],
       "/data/items/*/valid_from": [
         "2018-01-01",
-        "2019-01-01"
+        "2019-01-01",
+        null
       ],
       "/data/items/*/valid_to": [
         "2019-12-31",
-        "2019-12-31"
+        "2019-12-31",
+        null
       ],
       "/data/items/*/period_token": [
         "2018-01-01..2019-12-31",
-        "2019"
+        "2019",
+        "_default"
       ]
     }
   },

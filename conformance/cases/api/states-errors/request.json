@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a non-variable ref, a missing or ambiguous ref, a bad period, an unavailable scope or a bad limit stops answering with its located error.",
+  "note": "Fails if a non-variable ref, a missing or ambiguous ref, a bad period, an unavailable scope or a bad limit stops answering with its located error. Also fails if a malformed variant (not a slug or `_default`) or a blank value_set_version is accepted instead of refused.",
   "fixture": "states",
   "kind": "catalog",
   "requests": [
@@ -34,6 +34,20 @@
       "path": "/api/states/scb/example/kod",
       "query": {
         "limit": 0
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/kod",
+      "query": {
+        "variant": "Kön"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/kod",
+      "query": {
+        "value_set_version": ""
       }
     }
   ]

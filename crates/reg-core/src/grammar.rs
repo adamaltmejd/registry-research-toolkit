@@ -72,8 +72,9 @@ pub enum Fqid {
     },
 }
 
-/// `^[a-z](?:-?[a-z0-9])*$` and not `class`.
-fn is_slug(s: &str) -> bool {
+/// The slug grammar: `^[a-z](?:-?[a-z0-9])*$` and not `class`.
+#[must_use]
+pub fn is_slug(s: &str) -> bool {
     let b = s.as_bytes();
     s != CLASSIFICATION_PREFIX
         && b.first().is_some_and(u8::is_ascii_lowercase)

@@ -3,11 +3,11 @@
 //! fallback, held and requested clipping and warning attribution
 //! (`reg_meta/DESIGN.md`, "Compiled states and browse deliveries").
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::{fold_identity, next_iso_day, period_token_for_bounds};
 use rusqlite::{Connection, OptionalExtension, Row, params};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
@@ -119,22 +119,22 @@ pub(crate) fn emitted(
         )?
         .query_row([variable_id], |row| row.get(0))?;
     if windowed {
-        out.sort_by(|a, b| {
-            let key = |e: &Emitted| {
-                (
-                    e.period_scope.clone(),
-                    e.valid_from.clone().unwrap_or_default(),
-                    e.valid_to.clone().unwrap_or_default(),
-                    e.delivery_column_name.clone().unwrap_or_default(),
-                )
-            };
-            key(a).cmp(&key(b))
-        });
+        out.sort_by(|a, b| sort_key(a).cmp(&sort_key(b)));
     }
     match scope {
         Scope::Reference => Ok(out),
         Scope::Holdings => held(conn, variable_id, out, bounds),
     }
+}
+
+/// Today's sort key of a windowed variable's expansion; a missing value sorts as "".
+fn sort_key(e: &Emitted) -> (&str, &str, &str, &str) {
+    (
+        e.period_scope.as_str(),
+        e.valid_from.as_deref().unwrap_or_default(),
+        e.valid_to.as_deref().unwrap_or_default(),
+        e.delivery_column_name.as_deref().unwrap_or_default(),
+    )
 }
 
 /// A held representation's periods (none on a year-independent table).
@@ -362,6 +362,8 @@ pub fn states(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
     let catalog = &server.catalog;
     let limit = super::limit(params)?;
     let period = super::period(params)?;
+    let variant = super::variant(params)?;
+    let version = super::value_set_version(params)?;
     let conn = catalog.connect()?;
     let reference = params["ref"];
     let Target::Variable { id } = refs::resolve(&conn, scope, Some(reference))? else {
@@ -371,32 +373,34 @@ pub fn states(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
             vec![reference.into()],
         ));
     };
-    let context = json!([
-        id,
-        period.map(|p| p.to_string()),
-        params.get("variant"),
-        params.get("value_set_version"),
-        scope
-    ]);
+    let context = json!([id, period.map(|p| p.to_string()), variant, version, scope]);
     let context = hex(&Sha256::digest(context.to_string().as_bytes()));
     let after = params
         .get("cursor")
         .map(|c| cursor::decode(c, catalog.generation(), &context, DEPTH))
         .transpose()?;
-    let variant = match params.get("variant") {
+    let variant = match variant {
         None => None,
-        // A slug no variant of the register has emits nothing (today's
-        // `resolve_at`).
-        Some(slug) => Some(
-            conn.query_row(
-                "SELECT rv.register_variant_id FROM register_variant rv \
-                 JOIN variable v USING(register_id) WHERE v.variable_id = ? AND rv.slug = ?",
-                params![id, slug],
-                |row| row.get(0),
-            )
-            .optional()?
-            .unwrap_or(-1),
-        ),
+        Some(slug) => {
+            let found = conn
+                .query_row(
+                    "SELECT rv.register_variant_id FROM register_variant rv \
+                     JOIN variable v USING(register_id) WHERE v.variable_id = ? AND rv.slug = ?",
+                    params![id, slug],
+                    |row| row.get(0),
+                )
+                .optional()?;
+            // A slug no variant of the register has emits nothing (today's
+            // `resolve_at`).
+            let Some(found) = found else {
+                let empty = StatesPage {
+                    items: Vec::new(),
+                    next_cursor: None,
+                };
+                return Ok(serde_json::to_value(empty).expect("StatesPage serializes"));
+            };
+            Some(found)
+        }
     };
     let bounds = period.map(reg_core::Period::iso_bounds);
     let mut found = emitted(
@@ -407,8 +411,8 @@ pub fn states(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
         bounds.as_ref().map(|(lo, hi)| (lo.as_str(), hi.as_str())),
     )?;
     let mut hydrate = Hydrate::new(&conn, id)?;
-    if let Some(version) = params.get("value_set_version") {
-        let version = if *version == NO_VERSION { "" } else { version };
+    if let Some(version) = version {
+        let version = if version == NO_VERSION { "" } else { version };
         let mut kept = Vec::new();
         for e in found {
             if hydrate.version_label(&e)? == version {
@@ -778,30 +782,59 @@ impl<'a> Hydrate<'a> {
     }
 }
 
+/// A coded window's stored conformance evidence (today's `_AliasConformanceEvidence`).
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct AliasEvidence {
+    declared_classification: String,
+    status: AliasStatus,
+    checked_codes: Vec<String>,
+    #[serde(default)]
+    nonconforming_members: Vec<(String, String)>,
+    #[serde(default)]
+    sentinel_members: Vec<(String, String)>,
+    // Admitted for the shape check only: per-code evidence is the `values` facet's.
+    #[serde(default, rename = "scoped_sentinels")]
+    _scoped_sentinels: Vec<Value>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "lowercase")]
+enum AliasStatus {
+    Conforming,
+    Extended,
+}
+
+/// The conformance counts of a coded window from its evidence; corrupt evidence, or
+/// evidence declaring another book, is an `internal_error`.
 fn alias_conformance(
     slug: &str,
     short_name: &str,
     name: &str,
     evidence: &str,
 ) -> Result<Conformance, Error> {
-    let evidence: Value = serde_json::from_str(evidence).map_err(|err| {
+    let corrupt = |detail: String| {
         Error::new(
             Code::InternalError,
-            format!("Unreadable alias conformance for {slug}: {err}"),
+            format!("Unreadable alias conformance for {slug}: {detail}"),
             vec![],
         )
-    })?;
-    let codes = |key: &str| -> std::collections::BTreeSet<String> {
-        evidence[key]
-            .as_array()
-            .into_iter()
-            .flatten()
-            .filter_map(|member| member[0].as_str().or_else(|| member.as_str()))
-            .map(str::to_owned)
-            .collect()
     };
-    let checked = i64::try_from(codes("checked_codes").len()).expect("a count fits");
-    let (nonstandard, sentinel) = (codes("nonconforming_members"), codes("sentinel_members"));
+    let evidence: AliasEvidence =
+        serde_json::from_str(evidence).map_err(|err| corrupt(err.to_string()))?;
+    if evidence.declared_classification != slug {
+        return Err(corrupt(format!(
+            "it declares {:?}",
+            evidence.declared_classification
+        )));
+    }
+    let codes = |members: &[(String, String)]| -> BTreeSet<String> {
+        members.iter().map(|(code, _)| code.clone()).collect()
+    };
+    let checked: BTreeSet<&String> = evidence.checked_codes.iter().collect();
+    let checked = i64::try_from(checked.len()).expect("a count fits");
+    let nonstandard = codes(&evidence.nonconforming_members);
+    let sentinel = codes(&evidence.sentinel_members);
     let unmatched = i64::try_from(nonstandard.union(&sentinel).count()).expect("a count fits");
     #[allow(clippy::cast_precision_loss)]
     let overlap = if checked == 0 {
@@ -813,7 +846,11 @@ fn alias_conformance(
         declared_classification_slug: slug.to_owned(),
         declared_classification_short_name: short_name.to_owned(),
         declared_classification_name: name.to_owned(),
-        status: evidence["status"].as_str().unwrap_or_default().to_owned(),
+        status: match evidence.status {
+            AliasStatus::Conforming => "conforming",
+            AliasStatus::Extended => "extended",
+        }
+        .to_owned(),
         checked_code_count: checked,
         matched_code_count: checked - unmatched,
         nonconforming_code_count: unmatched,
@@ -833,7 +870,7 @@ fn dense_integer_range(members: &[(String, String)]) -> Option<IntegerRange> {
     if members.len() < MIN_COUNT {
         return None;
     }
-    let mut seen = std::collections::BTreeSet::new();
+    let mut seen = BTreeSet::new();
     for (code, label) in members {
         let code = reg_core::py_strip(code);
         let digits = code.strip_prefix('-').unwrap_or(code);
