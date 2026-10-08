@@ -7,7 +7,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::fold_search;
+use reg_core::{fold_search, py_strip};
 use rusqlite::{Connection, Row, params_from_iter};
 use serde::Serialize;
 use serde_json::json;
@@ -103,7 +103,7 @@ pub(super) fn arm(
     if is_code_shaped(request.q) {
         // Classifications containing the code (exact first), once each: a name hit
         // or a pin is not repeated.
-        let q = request.q.trim();
+        let q = py_strip(request.q);
         let named: Vec<i64> = hits.iter().map(|h| h.id).collect();
         let mut stmt = conn.prepare(&format!(
             "SELECT c.id, c.short_name, c.name, c.slug, \

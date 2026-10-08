@@ -7,6 +7,7 @@
 use std::cmp::Reverse;
 use std::collections::BTreeMap;
 
+use reg_core::py_strip;
 use rusqlite::types::Value as Sql;
 use rusqlite::{Connection, Row, params_from_iter};
 use serde::Serialize;
@@ -54,18 +55,23 @@ pub struct CodeClassification {
     name: Option<String>,
 }
 
-impl CodeHit {
-    /// Today's `_rank_codes` key, descending: classification-owned first, then more
-    /// classifications, then more variables.
-    pub(super) fn owner_rank(&self) -> Reverse<(bool, i64, i64)> {
-        let o = &self.owners;
-        Reverse((
+impl Hit {
+    /// Today's `_rank_codes` key of a code, descending: classification-owned first,
+    /// then more classifications, then more variables.
+    pub(super) fn owner_rank(&self) -> Option<Reverse<(bool, i64, i64)>> {
+        let Self::Code(code) = self else {
+            return None;
+        };
+        let o = &code.owners;
+        Some(Reverse((
             o.classification_count > 0,
             o.classification_count,
             o.variable_count,
-        ))
+        )))
     }
+}
 
+impl CodeHit {
     pub(super) fn into_item(self) -> SearchHit {
         SearchHit::Code {
             code: self.code,
@@ -138,7 +144,7 @@ pub(super) fn arm(
         hits.insert(hit.id, hit);
     }
     if is_code_shaped(request.q) {
-        let q = request.q.trim();
+        let q = py_strip(request.q);
         let mut args: Vec<Sql> = vec![q.to_owned().into(), format!("{}%", like_escape(q)).into()];
         args.extend(owner_args);
         args.push(q.to_owned().into());
@@ -196,10 +202,8 @@ pub(super) fn annotate(
         None => ("", Vec::new()),
     };
     args.insert(0, ids.clone().into());
-    for code in codes.values_mut() {
-        // `mapping_count` is the unscoped variable count.
-        code.owners.variable_count = code.mapping_count;
-    }
+    // `mapping_count` is the unscoped variable count; a register scope counts its own.
+    let mut counts: BTreeMap<i64, i64> = BTreeMap::new();
     if register.is_some() {
         let mut stmt = conn.prepare(&format!(
             "SELECT cvm.code_id, COUNT(*) FROM code_variable_map cvm \
@@ -207,19 +211,17 @@ pub(super) fn annotate(
              WHERE cvm.code_id IN (SELECT value FROM json_each(?)){in_register} \
              GROUP BY cvm.code_id"
         ))?;
-        for code in codes.values_mut() {
-            code.owners.variable_count = 0;
-        }
-        for row in stmt.query_map(params_from_iter(&args), |row| {
-            Ok((row.get::<_, i64>(0)?, row.get::<_, i64>(1)?))
-        })? {
-            let (id, count) = row?;
-            codes
-                .get_mut(&id)
-                .expect("a shown code")
-                .owners
-                .variable_count = count;
-        }
+        counts = stmt
+            .query_map(params_from_iter(&args), |row| {
+                Ok((row.get(0)?, row.get(1)?))
+            })?
+            .collect::<rusqlite::Result<_>>()?;
+    }
+    for (id, code) in &mut codes {
+        code.owners.variable_count = match register {
+            Some(_) => counts.get(id).copied().unwrap_or(0),
+            None => code.mapping_count,
+        };
     }
     let mut stmt = conn.prepare(&format!(
         "WITH owners AS (SELECT cvm.code_id, v.variable_id, v.name, v.slug AS variable_slug, \

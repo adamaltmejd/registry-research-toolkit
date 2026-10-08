@@ -59,8 +59,8 @@ case = "*/*/variable-page/*"
 # A failed page (`/0/status`, `/1/status`) stays a difference.
 paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
 
-# 3a.6's other typed pages (`served.py`). Before
-# `typed-page-folded-index`, which also matches terms 4 and 5.
+# 3a.6's other typed pages (`served.py`). Before `typed-page-folded-index`, which
+# also matches terms 4 and 5.
 [[exception]]
 name = "register-page-baseline-pins"
 reason = "The baseline webapp at 760d70fa pins `scb/lisa` for `sysselsättning` and `sos/par` for `diagnos` (G1 terms 4 and 5) from its own `search_golden.toml`; the Rust server reads the derived copies' `search_pin` table, which derive writes empty on the 9.0 originals. All 6 register pages of the two terms differ (3 scope runs each). Provisional: deleted by 3a.2a, whose baseline reads the reference copies' empty table, or at the latest by 3a.13."

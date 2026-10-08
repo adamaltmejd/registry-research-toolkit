@@ -136,10 +136,6 @@ def _pages(client, job: tuple, *, baseline: bool) -> list:
     return pages
 
 
-def _pair(base, cand, job: tuple) -> tuple:
-    return job, _pages(base, job, baseline=True), _pages(cand, job, baseline=False)
-
-
 def _context(base, cand, scope: str | None) -> tuple[dict, dict]:
     context = _get(base, "/api/context", {"scope": scope})
     stats = _get(base, "/api/stats", {"scope": scope})
@@ -229,13 +225,16 @@ def served_cases(
                 for term in terms
             ]
             with ThreadPoolExecutor(PARALLEL) as pool:
-                pairs = pool.map(partial(_pair, base, cand), work)
-                for (scope, kind, term), expected, actual in pairs:
+                expected = pool.map(partial(_pages, base, baseline=True), work)
+                actual = pool.map(partial(_pages, cand, baseline=False), work)
+                for (scope, kind, term), base_pages, cand_pages in zip(
+                    work, expected, actual, strict=True
+                ):
                     cases.append(
                         (
                             f"{catalog}/{scope}/{kind}-page/{terms.index(term)}",
-                            _result(expected),
-                            _result(actual),
+                            _result(base_pages),
+                            _result(cand_pages),
                         )
                     )
     finally:

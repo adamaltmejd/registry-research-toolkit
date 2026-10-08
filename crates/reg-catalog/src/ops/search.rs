@@ -11,7 +11,7 @@ mod code;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 
-use reg_core::{Fqid, Period, fold_search, fts_match_query, fts_terms};
+use reg_core::{Fqid, Period, fold_search, fts_match_query, fts_terms, py_isdecimal, py_strip};
 use rusqlite::types::Value as Sql;
 use rusqlite::{Connection, Row, params_from_iter};
 use serde::Serialize;
@@ -398,10 +398,7 @@ fn page(
     if matches!(request.ty, Some("classification_code" | "register_value")) {
         // Today's `_rank_codes`: owner counts reorder the shown page only, so the
         // cursor follows the arm's order.
-        shown.sort_by_key(|hit| match hit {
-            Hit::Code(c) => c.owner_rank(),
-            _ => std::cmp::Reverse((false, 0, 0)),
-        });
+        shown.sort_by_key(Hit::owner_rank);
     }
     let items = shown.into_iter().map(|hit| item(hit, &terms)).collect();
     Ok(SearchPage { items, next_cursor })
@@ -1323,12 +1320,11 @@ fn fqid(slugs: &[Option<String>]) -> Option<String> {
     joined.parse::<Fqid>().ok().map(|_| joined)
 }
 
-/// Today's `_is_code_shaped`: at least three characters once trimmed, one a digit.
-/// `char::is_numeric` reads every number category where Python's `\d` reads decimal
-/// digits only, so a query whose only digits are, say, superscripts also qualifies.
+/// Today's `_is_code_shaped`: at least three characters once stripped, one a decimal
+/// digit.
 fn is_code_shaped(q: &str) -> bool {
-    let q = q.trim();
-    q.chars().count() >= 3 && q.chars().any(char::is_numeric)
+    let q = py_strip(q);
+    q.chars().count() >= 3 && q.chars().any(py_isdecimal)
 }
 
 fn invalid_cursor(message: &str) -> Error {
