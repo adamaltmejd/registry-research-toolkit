@@ -1,109 +1,22 @@
-"""Slug boundary cases: variable source-ID keys at TOML load, seed output read back
-through the public slug loader, and name-derived `variable.slug` values in the
-populated artifact."""
+"""Name-derived `variable.slug` values written by `populate_variable_slugs`, the
+extend-db steward overlay's slug engine. Variable source-ID keys at TOML load are
+`cases/curation_toml/slugs-provider-variable-key-*`; seed output read back through
+the slug loader is `cases/cli/seed-slugs/`."""
 
 from __future__ import annotations
 
-import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
-from _fqid_slug_support import write_register_file
 from _slugged_db import add_state, add_variable, build_slugged_db
-from reg_meta.errors import RegMetaError
 from reg_meta.fqid import validate_slug
 
 from reg_meta_build.fqid_slugs import (
-    GLOBAL_FREEZE_STATE_FILE,
-    load_provider_toml,
-    load_slug_dir,
     populate_variable_slugs,
-    seed_all,
 )
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-
-# ---------------------------------------------------------------------------
-# Variable source-ID keys (`<RegisterId>.<VarId>[.<discriminator>]`)
-# ---------------------------------------------------------------------------
-
-
-@pytest.mark.parametrize(
-    "source_id",
-    [
-        "34.10",  # SCB integer VarId
-        "34.10.kon",  # split sibling
-        "5028920659479690770.ALDER",  # SOS: minted register id, text VarId
-        "123.FOD_DATUMN.heltal",  # text VarId in a split-sibling key
-    ],
-)
-def test_variable_key_shapes_load(tmp_path: Path, source_id: str) -> None:
-    path = tmp_path / "scb.toml"
-    path.write_text(f'[variable."{source_id}"]\nslug = "kon"\n', encoding="utf-8")
-    [entry] = load_provider_toml(path)
-    assert (entry.kind, entry.source_id, entry.slug) == ("variable", source_id, "kon")
-
-
-@pytest.mark.parametrize(
-    ("source_id", "message"),
-    [
-        ("034.10", "RegisterId must be an integer"),
-        ("1.010", "numeric VarId must be in canonical"),  # `1.10` / `1.010` alias
-        ("1.", "VarId segment is empty"),
-        ("1.10.", "split-sibling discriminator is empty"),
-        ("1", "expected"),
-        ("1.10.kon.extra", "expected"),
-    ],
-)
-def test_malformed_variable_key_rejected_at_load(
-    tmp_path: Path, source_id: str, message: str
-) -> None:
-    path = tmp_path / "scb.toml"
-    path.write_text(f'[variable."{source_id}"]\nslug = "kon"\n', encoding="utf-8")
-    with pytest.raises(RegMetaError) as exc:
-        load_provider_toml(path)
-    assert exc.value.code == "slug_toml_invalid"
-    assert message in exc.value.message
-
-
-# ---------------------------------------------------------------------------
-# Seed output read back as generated pins
-# ---------------------------------------------------------------------------
-
-
-def _pin_register(out: Path) -> None:
-    """Author LISA's register file (seed-slugs reads its native id) and pin the
-    scb zone, so `load_slug_dir` reads the seeded `lisa.auto.toml` back as LISA's
-    generated pins."""
-    write_register_file(out, "lisa", "1")
-    (out / GLOBAL_FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
-
-
-def _variable_pins(out: Path) -> dict[str, str | None]:
-    return {e.source_id: e.slug for e in load_slug_dir(out) if e.kind == "variable"}
-
-
-def test_seeded_pins_load_as_register_variables(tmp_path: Path) -> None:
-    out = tmp_path / "curation"
-    _pin_register(out)
-    seed_all(build_slugged_db(), out)
-    assert _variable_pins(out) == {"1.44": "kon"}
-
-
-def test_reseed_keeps_first_sight_pin(tmp_path: Path) -> None:
-    conn = build_slugged_db()
-    out = tmp_path / "curation"
-    _pin_register(out)
-    seed_all(conn, out)
-    conn.execute("UPDATE variable SET slug = 'changed' WHERE provider_key = '44'")
-    seed_all(conn, out)
-    body = tomllib.loads(
-        (out / "registers" / "scb" / "lisa.auto.toml").read_text(encoding="utf-8")
-    )
-    assert body == {"variable": [{"native_id": "1.44", "slug": "kon"}]}
-    assert _variable_pins(out) == {"1.44": "kon"}
 
 
 # ---------------------------------------------------------------------------

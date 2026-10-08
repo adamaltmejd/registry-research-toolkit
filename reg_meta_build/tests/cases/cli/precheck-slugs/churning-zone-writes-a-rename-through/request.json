@@ -1,0 +1,12 @@
+{
+  "replaces": "test_fqid_slugs_precheck_cli.py::test_churning_zone_writes_a_rename_through",
+  "fails_if": "a churning zone refuses a rename like a frozen one (#470), or stops reporting the rename it writes through",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

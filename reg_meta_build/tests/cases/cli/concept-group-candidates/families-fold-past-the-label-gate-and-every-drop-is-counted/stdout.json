@@ -1,0 +1,7 @@
+{
+  "foldable": 11,
+  "excluded_batteries": 1,
+  "skipped_existing_key": 1,
+  "skipped_trim_collision": 1,
+  "output_toml": "{work}/candidates.toml"
+}

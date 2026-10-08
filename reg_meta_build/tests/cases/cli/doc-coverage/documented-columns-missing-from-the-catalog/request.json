@@ -1,0 +1,19 @@
+{
+  "replaces": [
+    "test_doc_coverage.py::TestComputeDocCoverage::test_documented_but_missing_column_surfaces",
+    "test_doc_coverage.py::TestComputeDocCoverage::test_documented_and_present_column_is_excluded",
+    "test_doc_coverage.py::TestComputeDocCoverage::test_per_register_grouping_and_totals",
+    "test_doc_coverage.py::TestComputeDocCoverage::test_unmapped_doc_register_is_reported_not_dropped",
+    "test_doc_coverage.py::TestRenderDocCoverageToml::test_worklist_is_review_only_and_carries_evidence",
+    "test_doc_coverage.py::TestDocCoverageCli::test_cli_emits_summary_and_worklist"
+  ],
+  "fails_if": "doc-coverage joins doc directories on the register name instead of its slug, compares columns case-sensitively, lists an appendix with no column, drops or diffs a doc directory that names no register, or writes an uncommented `[[column]]` table",
+  "note": "The artifact's `docs/` tree documents, for register slug `sample` (named TESTREG): `kon` (delivered as Kon), MissingOne and MissingTwo (absent), and an appendix with no column; for `komvux` (named `Nybörjare i Komvux`): `Komvux` (delivered as KOMVUX) and GapCol (absent); and `nowhere`, which is no register's slug. Neither register's name lower-matches its doc directory, so only the slug join finds the three gaps. The source cell is canonicalized without its `.md` suffix. Present columns and the unmapped directory's column are absent from the worklist.",
+  "argv": [
+    "--db",
+    "{db}",
+    "doc-coverage",
+    "-o",
+    "{work}/doc-coverage.toml"
+  ]
+}

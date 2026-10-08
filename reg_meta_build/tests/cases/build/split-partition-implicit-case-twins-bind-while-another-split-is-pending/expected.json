@@ -1,0 +1,34 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "register": "sample"
+      },
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "rows": [
+        [
+          "kon",
+          "Kon"
+        ],
+        [
+          "kon",
+          "KON"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "ambiguous_named_identity"
+      },
+      "fields": [
+        "subject"
+      ],
+      "rows": []
+    }
+  ]
+}

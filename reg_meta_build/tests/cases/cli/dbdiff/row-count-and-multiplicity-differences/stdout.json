@@ -1,0 +1,45 @@
+{
+  "identical": false,
+  "tables": [
+    {
+      "table": "tag",
+      "identical": false,
+      "count_a": 4,
+      "count_b": 4,
+      "sample_a_not_b": [
+        {
+          "net": 2,
+          "row": {
+            "label": "x",
+            "n": 1
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -2,
+          "row": {
+            "label": "y",
+            "n": 2
+          }
+        }
+      ]
+    },
+    {
+      "table": "widget",
+      "identical": false,
+      "count_a": 3,
+      "count_b": 4,
+      "sample_a_not_b": [],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "id": 4,
+            "name": "delta"
+          }
+        }
+      ]
+    }
+  ]
+}

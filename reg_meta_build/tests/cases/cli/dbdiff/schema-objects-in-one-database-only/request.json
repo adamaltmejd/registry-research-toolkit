@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestSchemaDiffs::test_table_only_in_one",
+    "test_dbdiff.py::TestSchemaDiffs::test_index_diff",
+    "test_dbdiff.py::TestSchemaDiffs::test_view_only_in_one",
+    "test_dbdiff.py::TestSchemaDiffs::test_view_definition_diff",
+    "test_dbdiff.py::TestCli::test_exit_one_when_different"
+  ],
+  "fails_if": "the schema compare reads only the tables both databases share, so B's extra table, A's index, B's extra view or the changed SELECT of view widget_names passes as identical; widget's rows are the same in both, so no content difference covers for it",
+  "argv": [
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

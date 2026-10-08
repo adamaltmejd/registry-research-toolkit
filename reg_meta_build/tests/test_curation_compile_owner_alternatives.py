@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import replace
 from types import SimpleNamespace
 
@@ -10,9 +9,6 @@ import pytest
 from _curation_compile_support import (
     errata_fixture as _errata_fixture,
     errata_record as _errata_record,
-    make_prepared as _prepared,
-    make_scope as _scope,
-    make_tree as _tree,
     partition_scope as _partition_scope,
     scb_partition_records as _scb_partition_records,
     scb_partition_tree as _scb_partition_tree,
@@ -20,7 +16,6 @@ from _curation_compile_support import (
 )
 from reg_meta_build.curation_compile import (
     compile_coding_register,
-    compile_curation,
     compile_deferred_partitions,
     compile_partitions,
     convert_column_partitions,
@@ -408,50 +403,3 @@ def test_guarded_uncoded_text_role_preserves_attached_book_and_refuses_drift(
         update={"coding": register.coding.model_copy(update={"uncoded": [ordinary]})}
     )
     assert compile_rows(originals, claims)[0] == ()
-
-
-@pytest.mark.parametrize("guarded", [True, False])
-@pytest.mark.parametrize(
-    "code",
-    ["unresolved_source_event_endpoint", "unresolved_lineage_ambiguous_source_variant"],
-)
-def test_global_event_acknowledgement_is_routed_out_of_local_scope(
-    tmp_path, guarded, code
-):
-    root = tmp_path / "curation"
-    _tree(root)
-    source_ref = json.dumps(
-        {"source": "scb-timeseries", "semantic_record_key": ["event", "exact"]}
-    )
-    fragment = (
-        f'\n[[acknowledge]]\ncode = "{code}"\n'
-        'subject = "exact"\nreason = "Source endpoint is absent"\n'
-        'evidence = "Complete accepted evidence reviewed"\n'
-        f"refs = [{json.dumps(source_ref)}]\n"
-    )
-    if guarded:
-        fragment += (
-            f'expected_evidence_sha256 = "{"0" * 64}"\n'
-            f'expected_diagnostic_sha256 = "{"1" * 64}"\n'
-        )
-    with (root / "registers/scb/sample.toml").open("a") as handle:
-        handle.write(fragment)
-    tree = load_curation_tree(root)
-    if not guarded:
-        with pytest.raises(ValueError, match="full evidence and diagnostic guards"):
-            compile_curation(tree, _prepared(), (_scope(),), subset=True)
-        return
-    compiled = compile_curation(tree, _prepared(), (_scope(),), subset=True)
-    assert (
-        len(
-            compiled.event_acknowledgements
-            if code == "unresolved_source_event_endpoint"
-            else compiled.lineage_acknowledgements
-        )
-        == 1
-    )
-    assert not any(
-        case.decision.kind == "acknowledge"
-        for cases in compiled.cases.values()
-        for case in cases
-    )

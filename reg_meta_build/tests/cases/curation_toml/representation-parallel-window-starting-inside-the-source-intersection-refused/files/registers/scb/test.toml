@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[representation.parallel]]
+variable = "1.1"
+variant = "1.10"
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+evidence = "Reviewed original boundary"
+noted = "2026-09-29"
+columns = [{column = "First", valid_from = "2020-01-01", valid_to = "2022-12-31", source_editions = ["2020-2022"]}, {column = "Second", valid_from = "2022-01-01", valid_to = "2024-12-31", source_editions = ["2022-2024"]}]

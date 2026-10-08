@@ -1,0 +1,233 @@
+[register]
+provider = "scb"
+slug = "foretag"
+native_id = "6"
+
+# A curated group that claims one member of the dodsorsak1/2/3 family.
+[[group]]
+register = "scb/foretag"
+key = "dodsorsak-forsta"
+label = "Underliggande dödsorsak"
+axis = "ordinal"
+members = [{ variable = "dodsorsak1", value = "1", label = "kod" }, { variable = "dodsorsak-text", value = "2", label = "text" }]
+
+[[variant]]
+native_id = "6.60"
+slug = "foretag"
+
+[[variant]]
+native_id = "6.61"
+slug = "arbetsstallen"
+
+[[variable]]
+native_id = "6.601"
+slug = "f1"
+
+[[variable]]
+native_id = "6.602"
+slug = "f2"
+
+# Succession candidates: the same column under two var_ids in adjacent years.
+[[variable]]
+native_id = "6.31395"
+slug = "forvink-ers-aktiv"
+
+[[variable]]
+native_id = "6.47670"
+slug = "forvink-ers"
+
+# The same shape, already joined by a curated replaced_by edge (relations.toml).
+[[variable]]
+native_id = "6.41660"
+slug = "anninkf"
+
+[[variable]]
+native_id = "6.37046"
+slug = "anninkf04"
+
+# The same shape, but var 700 also delivers (as KODX) beside var 701 in 2020.
+[[variable]]
+native_id = "6.700"
+slug = "kod-gammal"
+
+[[variable]]
+native_id = "6.701"
+slug = "kod-ny"
+
+# The same shape with a year's gap (2018, then 2020).
+[[variable]]
+native_id = "6.800"
+slug = "ort-gammal"
+
+[[variable]]
+native_id = "6.801"
+slug = "ort-ny"
+
+# Concept-group families: digit-suffixed slugs.
+[[variable]]
+native_id = "6.9001"
+slug = "morsak1"
+
+[[variable]]
+native_id = "6.9002"
+slug = "morsak2"
+
+[[variable]]
+native_id = "6.9003"
+slug = "morsak3"
+
+[[variable]]
+native_id = "6.9011"
+slug = "flop1"
+
+[[variable]]
+native_id = "6.9012"
+slug = "flop2"
+
+[[variable]]
+native_id = "6.9013"
+slug = "flop3"
+
+[[variable]]
+native_id = "6.9021"
+slug = "tillsyn-1-skolbarn-1"
+
+[[variable]]
+native_id = "6.9022"
+slug = "tillsyn-1-skolbarn-2"
+
+[[variable]]
+native_id = "6.9023"
+slug = "tillsyn-1-skolbarn-3"
+
+[[variable]]
+native_id = "6.9031"
+slug = "artal-person-1"
+
+[[variable]]
+native_id = "6.9032"
+slug = "artal-person-2"
+
+[[variable]]
+native_id = "6.9033"
+slug = "artal-person-3"
+
+[[variable]]
+native_id = "6.9034"
+slug = "artal-person4"
+
+[[variable]]
+native_id = "6.9035"
+slug = "artal-person5"
+
+[[variable]]
+native_id = "6.9036"
+slug = "artal-person6"
+
+[[variable]]
+native_id = "6.9041"
+slug = "foo-1"
+
+[[variable]]
+native_id = "6.9042"
+slug = "foo-2"
+
+[[variable]]
+native_id = "6.9043"
+slug = "foo-3"
+
+[[variable]]
+native_id = "6.9044"
+slug = "foo4"
+
+[[variable]]
+native_id = "6.9045"
+slug = "foo5"
+
+[[variable]]
+native_id = "6.9046"
+slug = "foo6"
+
+[[variable]]
+native_id = "6.9051"
+slug = "q1"
+
+[[variable]]
+native_id = "6.9052"
+slug = "q2"
+
+[[variable]]
+native_id = "6.9053"
+slug = "q3"
+
+[[variable]]
+native_id = "6.9061"
+slug = "sun-niva2000"
+
+[[variable]]
+native_id = "6.9062"
+slug = "sun-niva2010"
+
+[[variable]]
+native_id = "6.9063"
+slug = "inkomst1-2000"
+
+[[variable]]
+native_id = "6.9064"
+slug = "inkomst1-2010"
+
+[[variable]]
+native_id = "6.9071"
+slug = "kod3"
+
+[[variable]]
+native_id = "6.9072"
+slug = "kod7"
+
+[[variable]]
+native_id = "6.9073"
+slug = "kod11"
+
+[[variable]]
+native_id = "6.9081"
+slug = "dodsorsak1"
+
+[[variable]]
+native_id = "6.9082"
+slug = "dodsorsak2"
+
+[[variable]]
+native_id = "6.9083"
+slug = "dodsorsak3"
+
+[[variable]]
+native_id = "6.9084"
+slug = "dodsorsak-text"
+
+[[variable]]
+native_id = "6.9091"
+slug = "ink1"
+
+[[variable]]
+native_id = "6.9092"
+slug = "ink2"
+
+[[variable]]
+native_id = "6.9101"
+slug = "solo1"
+
+[[variable]]
+native_id = "6.9111"
+slug = "agi1lonfink"
+
+[[variable]]
+native_id = "6.9112"
+slug = "agi2lonfink"
+
+[[variable]]
+native_id = "6.9121"
+slug = "diag1"
+
+[[variable]]
+native_id = "6.9122"
+slug = "diag2"

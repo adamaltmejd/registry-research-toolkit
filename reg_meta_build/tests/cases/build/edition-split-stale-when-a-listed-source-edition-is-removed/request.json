@@ -1,0 +1,28 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_named_edition_split_withholds_when_native_inventory_changes[removed-listed names without exactly one native edition ['2007']]"
+  ],
+  "fails_if": "`compile_edition_splits` stops requiring exactly one native edition per listed name, so the split applies after the '2007' source edition is no longer delivered",
+  "sources": {
+    "description": "Only the '2007-12-31' edition (CVID 21) of SHARED is delivered.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "SHARED",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2007",
+          "versionname": "2007-12-31",
+          "regver_id": 2,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "data_type": "str"
+        }
+      ]
+    }
+  },
+  "note": "The stale split moves nothing: the delivered '2007-12-31' row stays on flow and stock has no state."
+}

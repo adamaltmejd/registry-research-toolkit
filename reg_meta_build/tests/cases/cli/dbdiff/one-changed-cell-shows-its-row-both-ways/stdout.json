@@ -1,0 +1,33 @@
+{
+  "identical": false,
+  "tables": [
+    {
+      "table": "tag",
+      "identical": true
+    },
+    {
+      "table": "widget",
+      "identical": false,
+      "count_a": 3,
+      "count_b": 3,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "id": 1,
+            "name": "alpha"
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "id": 1,
+            "name": "ALPHA"
+          }
+        }
+      ]
+    }
+  ]
+}

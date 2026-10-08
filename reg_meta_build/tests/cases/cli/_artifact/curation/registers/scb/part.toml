@@ -1,0 +1,46 @@
+[register]
+provider = "scb"
+slug = "part"
+native_id = "4"
+
+[[variant]]
+native_id = "4.40"
+slug = "people"
+panel_entity_key = "lopnr"
+
+[[variable]]
+native_id = "4.5.first"
+slug = "first"
+
+[[variable]]
+native_id = "4.5.second"
+slug = "second"
+
+# The entity-key variable is a partition member whose slug is not its native id's
+# discriminator.
+[[variable]]
+native_id = "4.7.lopnrny"
+slug = "lopnr"
+
+[[variable]]
+native_id = "4.7.konx"
+slug = "kon"
+
+# Slugs that suffix the key of the `first` edge group.
+[[variable]]
+native_id = "4.41"
+slug = "first1"
+
+[[variable]]
+native_id = "4.42"
+slug = "first2"
+
+[[identity.partition]]
+variable = "4.5"
+columns = { FIRST = "4.5.first", SECOND = "4.5.second" }
+columns_ref = "fixture"
+
+[[identity.partition]]
+variable = "4.7"
+columns = { LOPNRNY = "4.7.lopnrny", KONX = "4.7.konx" }
+columns_ref = "fixture"

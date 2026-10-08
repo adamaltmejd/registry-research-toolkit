@@ -1,0 +1,29 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "acknowledge_global_guards_missing"
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {
+        "case_id": "curation/registers/scb/sample.toml#/acknowledge/1"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry"
+        ]
+      ]
+    }
+  ]
+}

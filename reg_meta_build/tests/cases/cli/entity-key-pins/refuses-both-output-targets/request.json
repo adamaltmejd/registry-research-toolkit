@@ -1,0 +1,16 @@
+{
+  "replaces": "test_entity_key_pins.py::TestCli::test_out_dir_and_output_toml_is_usage_error",
+  "fails_if": "entity-key-pins silently prefers one of --out-dir and --output-toml when both are passed",
+  "argv": [
+    "--db",
+    "{work}/no-db",
+    "entity-key-pins",
+    "--slug-dir",
+    "{work}/slugs",
+    "--out-dir",
+    "{work}/pins",
+    "--output-toml",
+    "{work}/pins.toml"
+  ],
+  "note": "The guard fires before the database opens, so `--db` names no database: a missing guard surfaces a different error."
+}

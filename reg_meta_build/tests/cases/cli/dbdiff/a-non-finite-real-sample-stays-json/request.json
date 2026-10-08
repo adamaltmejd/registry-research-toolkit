@@ -1,0 +1,14 @@
+{
+  "replaces": "test_dbdiff.py::TestCli::test_json_non_finite_real_stays_valid_json",
+  "fails_if": "`dbdiff --json` prints a non-finite REAL sample cell as a JSON number, which comes out as the non-JSON `Infinity` (or, with `allow_nan=False`, fails at the dump), or as the bare string `inf`, which reads like B's text cell",
+  "note": "A holds REAL -inf and inf, B the text 'inf'. A non-finite REAL prints as `{\"real\": \"inf\"}` / `{\"real\": \"-inf\"}`, the tag dbdiff's `_json_cell` documents; the runner parses stdout strictly, so `Infinity` fails the case. The dump orders sample rows by their columns' values, so -inf comes before inf.",
+  "argv": [
+    "--json",
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

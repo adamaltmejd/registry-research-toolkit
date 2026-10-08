@@ -1,0 +1,28 @@
+{
+  "replaces": [
+    "test_curation_compile_partitions.py::test_implicit_partition_refuses_unsafe_slug_twins[columns1-years1]"
+  ],
+  "note": "Beside split-partition-implicit-case-twins-in-different-years-bind-to-one-split: the unsafe twin binds no column to the split, which the build reports as an ambiguous named identity. The replaced test asserted the compile-level `split_identity_conversion_pending`, which does not reach the ledger without an [[identity.partition]].",
+  "fails_if": "`convert_column_partitions` folds two literals that differ beyond case onto the one declared split, so the split gets states instead of the family staying unresolved",
+  "sources": {
+    "description": "Variable 5 delivers A_B in 2020 (CVID 20) and A-B in 2021 (CVID 21): two literals that differ beyond case and slug to one suffix.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A_B",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "A-B",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021
+        }
+      ]
+    }
+  }
+}

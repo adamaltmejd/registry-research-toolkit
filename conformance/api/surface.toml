@@ -712,7 +712,7 @@ id = "reg_meta.catalog._decode_panel_entity_key"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_entity_key_pins.py", "reg_meta/tests/test_catalog_listing.py"]
+covered_by = ["reg_meta_build/tests/cases/cli/entity-key-pins", "reg_meta/tests/test_catalog_listing.py"]
 note = "Private-name import, which the repo rules forbid; it moves with its module. The decoder belongs beside the build's panel-key encoder."
 
 [[row]]
@@ -889,7 +889,7 @@ id = "reg_meta.doc_db.DOC_DB_FILENAME"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_doc_coverage.py"]
+covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
 note = "The docs DB schema has one home, reg_meta_build."
 
 [[row]]
@@ -898,7 +898,7 @@ id = "reg_meta.doc_db.DOC_SCHEMA_VERSION"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_doc_coverage.py"]
+covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
 note = "The docs DB schema has one home, reg_meta_build."
 
 [[row]]
@@ -915,7 +915,7 @@ id = "reg_meta.doc_db.doc_db_path"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_doc_coverage.py"]
+covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
 
 [[row]]
 kind = "import"
@@ -923,7 +923,7 @@ id = "reg_meta.doc_db.open_doc_db"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_doc_coverage.py"]
+covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
 
 [[row]]
 kind = "import"

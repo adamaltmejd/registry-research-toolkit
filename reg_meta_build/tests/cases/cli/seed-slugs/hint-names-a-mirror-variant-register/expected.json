@@ -1,0 +1,26 @@
+{
+  "exit_code": 0,
+  "stderr": {
+    "contains": [
+      "Hint: 2 single-variant register(s)",
+      "`slug = \"_default\"`",
+      "'Nybörjare i Komvux'",
+      "'Konjunkturstatistik, löner för statlig sektor (KLS)'",
+      "scb/komvux",
+      "scb/other"
+    ],
+    "excludes": [
+      "'Företag'",
+      "'TESTREG'",
+      "--all-hints"
+    ]
+  },
+  "files": {
+    "curation/registers/scb/komvux.auto.toml": {
+      "excludes": [
+        "Hint:",
+        "_default"
+      ]
+    }
+  }
+}

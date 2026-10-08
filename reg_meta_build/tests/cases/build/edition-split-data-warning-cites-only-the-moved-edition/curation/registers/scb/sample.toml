@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "flow"
+[[variant]]
+native_id = "1.2.stock"
+slug = "stock"
+[[variable]]
+native_id = "1.5"
+slug = "shared"
+[[identity.edition_split]]
+variant = "1.2"
+split = "1.2.stock"
+editions = ["2007-12-31"]
+source_editions = ["2007"]
+evidence = "SCB population text distinguishes stock"
+noted = "2026-09-27"
+data_warning = "Range interpretation is unavailable"

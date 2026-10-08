@@ -1,0 +1,11 @@
+[register."1"]
+slug = "sample"
+
+[register."4"]
+slug = "part"
+
+[variable."1.102"]
+slug = "kon"
+
+[variable."4.7.lopnrny"]
+slug = "lopnr"

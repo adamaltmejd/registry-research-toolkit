@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestEntryParseIds::test_variant_key_non_integer_halves",
+  "fails_if": "the slug loader accepts a variant key whose RegVarID is not an integer",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register_variant.'1.x'",
+    "message_contains": [
+      "both halves must be integers"
+    ]
+  }
+}

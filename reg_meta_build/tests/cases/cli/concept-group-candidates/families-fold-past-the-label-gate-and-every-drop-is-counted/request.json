@@ -1,0 +1,34 @@
+{
+  "replaces": [
+    "test_concept_group_candidates.py::TestGenerator::test_strong_family_emitted_as_ordinal",
+    "test_concept_group_candidates.py::TestGenerator::test_mid_label_number_family_emitted",
+    "test_concept_group_candidates.py::TestGenerator::test_fixed_qualifier_family_emitted",
+    "test_concept_group_candidates.py::TestGenerator::test_trailing_hyphen_trimmed_from_key",
+    "test_concept_group_candidates.py::TestGenerator::test_trim_collision_skipped_not_merged",
+    "test_concept_group_candidates.py::TestGenerator::test_noise_singleton_does_not_poison_valid_family",
+    "test_concept_group_candidates.py::TestGenerator::test_battery_peer_does_not_suppress_valid_family",
+    "test_concept_group_candidates.py::TestGenerator::test_slug_without_trailing_digits_is_not_a_family_member",
+    "test_concept_group_candidates.py::TestGenerator::test_battery_excluded_and_counted",
+    "test_concept_group_candidates.py::TestGenerator::test_below_min_siblings_not_emitted",
+    "test_concept_group_candidates.py::TestGenerator::test_vintage_family_axis",
+    "test_concept_group_candidates.py::TestGenerator::test_vintage_axis_uses_raw_stem_not_trimmed_key",
+    "test_concept_group_candidates.py::TestGenerator::test_numeric_axis_for_sparse_suffixes",
+    "test_concept_group_candidates.py::TestGenerator::test_existing_group_key_collision_skipped",
+    "test_concept_group_candidates.py::TestGenerator::test_existing_key_collision_counted_once_not_as_battery",
+    "test_concept_group_candidates.py::TestGenerator::test_ranking_is_deterministic",
+    "test_concept_group_candidates.py::TestGenerator::test_group_label_preserves_original_case",
+    "test_concept_group_candidates_worklist.py::TestGenerator::test_render_escapes_control_chars_and_roundtrips",
+    "test_concept_group_candidates_worklist.py::TestGenerator::test_render_roundtrips_through_loader"
+  ],
+  "fails_if": "concept-group-candidates scores agreement on raw names (so a mid-label or fixed number breaks the prefix), keeps the trailing hyphen in a key, merges two stems that trim to one key, lets a battery or a lone peer suppress a valid family, emits a battery or a family whose key collides with an existing group, proposes the axis from the trimmed key, ranks by anything but agreement first, or renders a label the worklist loader cannot read",
+  "note": "Families from the artifact source, register 6 (`foretag`). Foldable: morsak1-3, flop1-3 (number mid-label), tillsyn-1-skolbarn-1-3 (a fixed `1` in every name), foo-1-3 (beside the battery peer foo4-6, raw stem `foo`), kod3/7/11 (sparse: numeric axis, values padded to the widest suffix), sun-niva2000/2010 and inkomst1-2000/2010 (years on a non-digit raw stem: vintage), diag1-2 (quotes and a backslash in the name), ink1-2 (mixed-case shared prefix, lower agreement), the existing f1/f2 (both `GenericVar`) and dodsorsak1-3: the artifact's literal `[[group]] dodsorsak-forsta` claims dodsorsak1, but the case passes the curation that built the artifact, where every literal `[[group]]` is an accepted scope, so its members stay eligible and the run 1-3 is ordinal. Dropped: q1-3 (a battery, counted), artal-person-1-3 beside artal-person4-6 (both qualify and trim to one key: a trim collision), register 4's first1/first2 (key `first` is the partition's edge group; counted once as a collision, not as a battery although the names disagree), solo1 (one suffix) and agi1lonfink/agi2lonfink (no trailing digits). Order: agreement descending, then member count descending, then register and key, the generator's documented ranking. Every member's label is its bare suffix. An already-grouped member and the accepted-family re-emit are `an-accepted-group-re-emits-only-under-the-tree-that-declares-it`. The old newline-in-a-name case is unreachable: a newline cannot travel through the Registerinformation source.",
+  "argv": [
+    "--db",
+    "{db}",
+    "concept-group-candidates",
+    "-o",
+    "{work}/candidates.toml",
+    "--curation-dir",
+    "{work}/curation"
+  ]
+}

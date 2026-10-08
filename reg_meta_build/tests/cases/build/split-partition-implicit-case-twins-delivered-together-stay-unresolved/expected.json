@@ -1,0 +1,28 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "variable": "kon"
+      },
+      "fields": [
+        "column"
+      ],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "ambiguous_named_identity"
+      },
+      "fields": [
+        "subject"
+      ],
+      "rows": [
+        [
+          "scb/sample/kon"
+        ]
+      ]
+    }
+  ]
+}

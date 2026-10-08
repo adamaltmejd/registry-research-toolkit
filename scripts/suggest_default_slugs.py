@@ -83,7 +83,8 @@ def main(argv: list[str]) -> int:
                 else "  [unslugged]"
             )
             print(
-                f"  {cand.provider}/{cand.source_id}{already}\n"
+                f"  {cand.provider}/{cand.register_slug or '(unslugged)'}"
+                f"{already}\n"
                 f"    register: {cand.register_name!r}\n"
                 f"    variant : {cand.variant_name!r}\n"
                 f"    reason  : {cand.reason}"

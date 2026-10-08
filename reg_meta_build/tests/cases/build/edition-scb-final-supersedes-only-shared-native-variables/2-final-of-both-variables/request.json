@@ -1,0 +1,41 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_scb_final_supersedes_only_shared_native_variables"
+  ],
+  "fails_if": "`compile_scb_preliminary` stops re-deriving its targets from the current final edition, so OTHER's preliminary row (CVID 2) stays in the catalog once the final edition delivers OTHER",
+  "sources": {
+    "description": "As step 1, and the final edition 11 now also delivers OTHER (CVID 4).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 1,
+          "var_id": 5,
+          "versionname": " 2020, preliminär version ",
+          "regver_id": 10
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 2,
+          "var_id": 6,
+          "versionname": " 2020, preliminär version ",
+          "regver_id": 10
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 3,
+          "var_id": 5,
+          "versionname": "2020, slutlig version",
+          "regver_id": 11
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 4,
+          "var_id": 6,
+          "versionname": "2020, slutlig version",
+          "regver_id": 11
+        }
+      ]
+    }
+  }
+}

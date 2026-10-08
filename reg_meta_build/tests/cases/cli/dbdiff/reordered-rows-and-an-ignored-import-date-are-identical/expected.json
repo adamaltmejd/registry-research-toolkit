@@ -1,0 +1,6 @@
+{
+  "exit_code": 0,
+  "stdout_contains": [
+    "[IDENTICAL] schema matches; 2 content table(s) match."
+  ]
+}

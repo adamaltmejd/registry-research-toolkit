@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slug_naming_boundary.py::test_malformed_variable_key_rejected_at_load[034.10-RegisterId must be an integer]",
+  "fails_if": "the slug loader accepts the malformed variable key `034.10`",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "variable.'034.10'",
+    "message_contains": [
+      "RegisterId must be an integer"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_fqid_slugs_precheck.py::TestPrecheckSlugs::test_drifting_variables_advisory",
+    "test_fqid_slugs_precheck.py::TestPrecheckSlugs::test_wobble_variable_absent_from_drifting_advisory"
+  ],
+  "fails_if": "the drift advisory counts raw delivery columns instead of their slugs (so `Kön`/`Kon` is flagged), drops a variable whose column was renamed, or lets the advisory fail the clean precheck",
+  "note": "From the artifact source: variable 101 is delivered as VALUE in 2019 and VALUE_NY in 2020 (drift); variable 102 as Kön then Kon, one slug (no drift). In register 6, variable 700 is delivered as KOD in 2019 and KODX in 2020 (drift; it is the succession cases' co-delivered predecessor), and its name is the source's `Kod`. Every other variable has one column, and with no generated file the name-fallback worklist is empty. The columns are listed raw, in delivery order. The variable name is the source's `GenericVar`. The register is not projected: a built catalog's register id is a surrogate.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

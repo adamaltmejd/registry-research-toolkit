@@ -1,0 +1,12 @@
+{
+  "loader": "freeze_states",
+  "replaces": "test_fqid_slugs_load.py::TestLoadFreezeStates::test_non_string_value_rejected",
+  "fails_if": "the freeze loader accepts a non-string state",
+  "error": {
+    "code": "slug_freeze_state_invalid",
+    "locator": "zone 'scb'",
+    "message_contains": [
+      "must be a string"
+    ]
+  }
+}

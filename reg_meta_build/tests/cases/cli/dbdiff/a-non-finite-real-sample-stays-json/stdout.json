@@ -1,0 +1,37 @@
+{
+  "identical": false,
+  "tables": [
+    {
+      "table": "t",
+      "identical": false,
+      "count_a": 2,
+      "count_b": 1,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": {
+              "real": "-inf"
+            }
+          }
+        },
+        {
+          "net": 1,
+          "row": {
+            "v": {
+              "real": "inf"
+            }
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": "inf"
+          }
+        }
+      ]
+    }
+  ]
+}

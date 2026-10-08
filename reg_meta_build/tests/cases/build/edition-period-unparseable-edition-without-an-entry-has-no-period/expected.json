@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "register": "sample"
+      },
+      "fields": [
+        "variable",
+        "variant",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "fields": [
+        "code",
+        "subject"
+      ],
+      "match": "includes",
+      "rows": [
+        [
+          "unsupported_occurrence",
+          "scb/sample/a"
+        ]
+      ]
+    }
+  ]
+}

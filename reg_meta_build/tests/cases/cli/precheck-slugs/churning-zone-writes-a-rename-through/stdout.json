@@ -1,0 +1,12 @@
+{
+  "missing_registers": [],
+  "missing_variants": [],
+  "stale_registers": [],
+  "stale_variants": [],
+  "snapshot": {
+    "updated": true,
+    "renamed": [
+      "register/scb/1: 'lisa' -> 'sample'"
+    ]
+  }
+}

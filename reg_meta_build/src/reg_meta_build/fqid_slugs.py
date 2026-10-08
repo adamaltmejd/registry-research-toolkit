@@ -741,7 +741,8 @@ def _known_provider_stems(slug_dir: Path) -> frozenset[str]:
 
 
 def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
-    """Parse ``<slug_dir>/freeze.toml`` into ``{zone: state}``.
+    """Parse the zone-state file into ``{zone: state}``: ``slug_state.toml`` in
+    a register-owned tree, else ``<slug_dir>/freeze.toml``.
 
     An absent file → ``{}`` (every zone defaults to "churning"). Fails fast
     (``EXIT_CONFIG``) on an unknown state value, a non-string value, or an
@@ -763,20 +764,20 @@ def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
         if not isinstance(state, str):
             raise curation_error(
                 "slug_freeze_state_invalid",
-                f"{FREEZE_STATE_FILE}: zone {zone!r} state must be a string, "
+                f"{path.name}: zone {zone!r} state must be a string, "
                 f"got {type(state).__name__}.",
                 f"Set it to one of {sorted(_FREEZE_STATES)}.",
             )
         if state not in _FREEZE_STATES:
             raise curation_error(
                 "slug_freeze_state_invalid",
-                f"{FREEZE_STATE_FILE}: zone {zone!r} has unknown state {state!r}.",
+                f"{path.name}: zone {zone!r} has unknown state {state!r}.",
                 f"Use one of {sorted(_FREEZE_STATES)}.",
             )
         if zone not in known_zones:
             raise curation_error(
                 "slug_freeze_zone_unknown",
-                f"{FREEZE_STATE_FILE}: unknown zone {zone!r}.",
+                f"{path.name}: unknown zone {zone!r}.",
                 f"A zone is a provider stem ({sorted(known_zones)}).",
             )
         states[zone] = cast("SlugFreezeState", state)  # membership-checked above
@@ -1007,7 +1008,7 @@ def load_slug_dir(
     if not slug_dir.is_dir():
         raise curation_error(
             "slug_dir_not_found",
-            f"Slug directory not found: {slug_dir}",
+            f"Slug directory not found: {display_path(slug_dir)}",
             "Create the directory or pass --slug-dir.",
         )
     states = load_freeze_states(slug_dir)
@@ -1123,11 +1124,11 @@ def _load_register_slug_tree(
             entries.extend(local)
             continue
         auto_entries = _load_register_auto_file(auto_path, provider, reg_id)
+        # Named like the authored file (`curation/registers/...`), so the pair
+        # reads the same wherever the tree lives.
+        auto_file = f"curation/{auto_path.relative_to(root).as_posix()}"
         effective: dict[str, tuple[SlugEntry, str]] = {
-            entry.source_id: (
-                entry,
-                f"{display_path(auto_path)} [[variable]] entry {index}",
-            )
+            entry.source_id: (entry, f"{auto_file} [[variable]] entry {index}")
             for index, entry in enumerate(auto_entries, 1)
         }
         for entry in local:
@@ -3131,7 +3132,9 @@ class DefaultSlugCandidate:
     """One single-variant register that's a candidate for ``slug = "_default"``."""
 
     provider: str
-    source_id: str  # `<RegisterId>.<RegVarID>`
+    # The register's slug: a built catalog keys registers by a surrogate id and
+    # keeps no native id (#1215), and the slug names the register file to edit.
+    register_slug: str | None
     register_name: str
     variant_name: str
     classification: DefaultCandidateClass
@@ -3149,8 +3152,7 @@ def iter_default_slug_candidates(
     exact + near; the bootstrap script shows all three classes.
     """
     rows = conn.execute(
-        "SELECT p.slug, r.register_id, r.name, "
-        "rv.register_variant_id, rv.name, rv.slug "
+        "SELECT p.slug, r.slug, r.name, rv.name, rv.slug "
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
@@ -3160,11 +3162,11 @@ def iter_default_slug_candidates(
         ") "
         "ORDER BY p.slug, r.register_id, rv.register_variant_id"
     ).fetchall()
-    for provider, rid, rname, vid, vname, current_slug in rows:
+    for provider, register_slug, rname, vname, current_slug in rows:
         cls, reason = classify_default_candidate(rname or "", vname or "")
         yield DefaultSlugCandidate(
             provider=provider,
-            source_id=f"{rid}.{vid}",
+            register_slug=register_slug,
             register_name=rname or "",
             variant_name=vname or "",
             classification=cls,
@@ -3200,181 +3202,16 @@ def format_default_slug_hints(
         f'consider `slug = "_default"`.',
     ]
     for cand in shown:
-        lines.append(f"  {cand.provider}/{cand.source_id}   {cand.register_name!r}")
+        lines.append(
+            f"  {cand.provider}/{cand.register_slug or '(unslugged)'}   "
+            f"{cand.register_name!r}"
+        )
     if not all_hints and total > len(shown):
         remaining = total - len(shown)
         lines.append(
             f"  ... ({remaining} more — pass --all-hints to see the full list)"
         )
     return "\n".join(lines) + "\n"
-
-
-# A4.4c-ii panel proposer defaults: the LISA-style delivery-aligned majority
-# (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)). The rare row-level case (PAR-style `indatum`) is left to A4.4d hand
-# curation — auto-detecting it inline is brittle, so the proposer never emits it.
-_PANEL_DEFAULT_TIME_KEY = "period"
-_PANEL_DEFAULT_TIME_GRAIN = "delivery"
-
-
-def propose_panel_entity_key(
-    conn: sqlite3.Connection, register_id: int, register_variant_id: int
-) -> str | tuple[str, ...] | None:
-    """Propose a starter ``panel_entity_key`` for one register_variant (A4.4c-ii).
-
-    The entity key is the variant's panel entity-identifier variable slug(s)
-    proposed from the persisted ``variable.is_identifier`` flag (the
-    entity-key driver): the slugs of identifier variables that actually
-    deliver on THIS variant (joined through ``variable_state.register_variant_id``
-    so a register's identifier set doesn't fan onto sibling variants that don't
-    carry it).
-
-    A single identifier → a bare slug; several → a sorted tuple (the composite
-    case, persisted as a JSON array by ``populate_slugs``). No identifier →
-    ``None``, so the field is left off for A4.4d curation. This covers SOS
-    (``is_join_variable`` is adapter-time-only, not on the universal ``variable``)
-    and any SCB variant with no flagged identifier.
-
-    Two signals are deliberately NOT used: (a) ``source_join_key`` — its
-    ``table_name`` does not map to a ``register_id``, so a column-name match
-    cannot be register-scoped and would over-propose a non-identifier (e.g. a geo
-    join column) as the entity grain; ``is_identifier`` is the precise signal.
-    (b) Tabelldefinitioner PRIMARY KEY — the SQL parser captures only column
-    type/nullability, never the table-level PK clause (``scb.py`` ``_SQL_COL_RE``).
-
-    Proposals are starter hints — the curator reviews them in A4.4d; this need
-    not be exhaustive or perfect.
-    """
-    # Primary: is_identifier variables delivering on this variant. Restricting to
-    # the variant (via variable_state) keeps a register's identifier set from
-    # fanning onto sibling variants that don't carry it.
-    id_slugs = [
-        r[0]
-        for r in conn.execute(
-            "SELECT DISTINCT v.slug FROM variable v "
-            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
-            "WHERE v.register_id = ? AND vs.register_variant_id = ? "
-            "AND v.is_identifier = 1 AND v.slug IS NOT NULL "
-            "ORDER BY v.slug",
-            (register_id, register_variant_id),
-        ).fetchall()
-    ]
-    if id_slugs:
-        return id_slugs[0] if len(id_slugs) == 1 else tuple(id_slugs)
-    return None
-
-
-def _emit_panel_proposal(
-    lines: list[str], entity_key: str | tuple[str, ...] | None
-) -> None:
-    """Append the proposed panel lines to a register_variant's seed block.
-
-    ``panel_time_key`` / ``panel_time_grain`` always default to the
-    delivery-aligned majority. ``panel_entity_key`` is emitted only when a signal
-    proposed one — otherwise a comment marks it for A4.4d curation (the SOS arm
-    and any signal-less SCB variant). Emitted live (not commented) so the seed
-    round-trips through ``load_provider_toml`` / ``_validate_entry`` and a curator
-    edits real values; the file header already flags every line as hand-review.
-    """
-    if entity_key is None:
-        lines.append(
-            "# panel_entity_key: no is_identifier / join-key signal — "
-            "set in A4.4d if this variant is a panel."
-        )
-    elif isinstance(entity_key, tuple):
-        inner = ", ".join(_toml_str(s) for s in entity_key)
-        lines.append(f"panel_entity_key = [{inner}]")
-    else:
-        lines.append(f"panel_entity_key = {_toml_str(entity_key)}")
-    lines.append(f"panel_time_key = {_toml_str(_PANEL_DEFAULT_TIME_KEY)}")
-    lines.append(f"panel_time_grain = {_toml_str(_PANEL_DEFAULT_TIME_GRAIN)}")
-
-
-def seed_provider_toml(
-    conn: sqlite3.Connection,
-    provider_slug: str,
-    *,
-    propose_panel: bool = False,
-) -> str:
-    """Emit a starter TOML for ``provider_slug`` from the live build.
-
-    Auto-derives a slug for each register/register_variant from
-    ``registernamn`` / ``registervariantnamn``; the maintainer edits the
-    result by hand before committing. Variables are auto-slugged from
-    kolumnnamn at build time, so they're omitted from the seed.
-
-    ``propose_panel`` (A4.4c-ii) additionally emits proposed
-    ``panel_entity_key`` / ``panel_time_key`` / ``panel_time_grain`` lines on
-    each register_variant — starter hints for the A4.4d panel-shape curation
-    seam (see ``propose_panel_entity_key``).
-    """
-    lines: list[str] = [
-        f"# Starter slug TOML for provider {provider_slug!r}.",
-        "# Generated by `reg-meta-build seed-slugs`. Hand-review every slug,",
-        "# then commit to reg_meta_build/fqid_slugs/.",
-        "",
-    ]
-    regs = conn.execute(
-        "SELECT r.register_id, r.name, r.slug FROM register r "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? ORDER BY r.register_id",
-        (provider_slug,),
-    ).fetchall()
-    if not regs:
-        lines.append(f"# (no registers found for provider {provider_slug!r})\n")
-        return "\n".join(lines)
-    # Pre-fetch variants and versions, grouped by register_id for hierarchical
-    # emission (register → its variants → its version overrides).
-    variants_by_reg: dict[int, list[tuple[int, str | None, str | None]]] = {}
-    for row in conn.execute(
-        "SELECT rv.register_id, rv.register_variant_id, rv.name, rv.slug "
-        "FROM register_variant rv "
-        "JOIN register r ON rv.register_id = r.register_id "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? "
-        "ORDER BY rv.register_id, rv.register_variant_id",
-        (provider_slug,),
-    ).fetchall():
-        register_id, register_variant_id, name, existing_slug = row
-        variants_by_reg.setdefault(register_id, []).append(
-            (register_variant_id, name, existing_slug)
-        )
-
-    # A2.6: register_version is not seeded — version is not an FQID segment and
-    # has no slug column anymore. Only register + register_variant emit.
-    for register_id, name, existing_slug in regs:
-        candidate = existing_slug or derive_variable_slug(name) or "TODO"
-        # Register-level audit comment: the `registernamn` is the
-        # authoritative source of what this register is. Makes the file
-        # scannable when the slug is an opaque acronym (e.g. `fou`, `kkv`).
-        if name:
-            lines.append(f"# {_toml_comment(name)}")
-        lines.append(f"[register.{_toml_str(str(register_id))}]")
-        lines.append(f"slug = {_toml_str(candidate)}")
-        lines.append("")
-
-        for register_variant_id, vname, existing_slug in variants_by_reg.get(
-            register_id, []
-        ):
-            v_candidate = existing_slug or (
-                derive_variable_slug(vname) if vname else None
-            )
-            v_candidate = v_candidate or "TODO"
-            lines.append(
-                f"[register_variant.{_toml_str(f'{register_id}.{register_variant_id}')}]"
-            )
-            lines.append(f"slug = {_toml_str(v_candidate)}")
-            # Strip at the origin: SCB names carry stray whitespace; trim so the
-            # seeded label is clean (load_provider_toml also trims defensively).
-            v_display = vname.strip() if vname else ""
-            if v_display:
-                lines.append(f"display_group = {_toml_str(v_display)}")
-            if propose_panel:
-                _emit_panel_proposal(
-                    lines,
-                    propose_panel_entity_key(conn, register_id, register_variant_id),
-                )
-            lines.append("")
-    return "\n".join(lines)
 
 
 def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
@@ -3937,7 +3774,6 @@ __all__ = (
     "render_entity_key_pins_toml",
     "repo_slug_dir",
     "seed_all",
-    "seed_provider_toml",
     "snapshot_payload",
     "write_auto_toml",
     "write_entity_key_pins",

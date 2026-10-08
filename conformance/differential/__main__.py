@@ -3,11 +3,10 @@
     uv run python -m conformance.differential
 
 Fetches (once) the pinned artifacts and the baseline environment into the shared
-cache, derives a reference copy of each artifact with the baseline commit's builder
-(once per base and commit) and a candidate copy with the checkout's builder (once per
+cache, derives a candidate copy of each artifact with the checkout's builder (once per
 base and builder source, so on a committed tree), generates the seeded cases from the
 originals, runs each case through both readers' ``reg-meta`` CLI JSON in parallel
-worker processes (the baseline on the reference copies, the checkout on the candidate
+worker processes (the baseline on the release originals, the checkout on the candidate
 copies), and compares exit code, stdout bytes and stderr per case. Then runs the
 fold sweep (``folds.py``): the baseline's ``fold_search`` against ``reg-core-py``.
 Writes ``report.json`` into ``<cache>/report/`` and prints a plain-text summary. Exit 0
@@ -25,7 +24,7 @@ byte.
 
 The operations the Rust server implements also run over HTTP (``served.py``): the
 checkout's ``reg-meta serve`` on the candidate copies against the baseline webapp on
-the reference copies, compared the same way after mapping the baseline's responses.
+the release originals, compared the same way after mapping the baseline's responses.
 """
 
 from __future__ import annotations
@@ -169,7 +168,6 @@ def run(config: dict) -> int:
     baseline_tree = cache.ensure_baseline(pins)
     baseline_python = cache.baseline_python(baseline_tree)
     dirs = cache.ensure_artifacts(pins)
-    reference = cache.ensure_reference(pins, dirs, baseline_tree)
     derived = cache.ensure_derived(pins, dirs)
     server = cache.ensure_server()
     setup_seconds = time.monotonic() - started
@@ -183,7 +181,7 @@ def run(config: dict) -> int:
             baseline_python,
             baseline_tree / "reg_webapp" / "stewards",
             server,
-            reference,
+            dirs,
             derived,
             report_dir / "servers",
         )
@@ -194,7 +192,7 @@ def run(config: dict) -> int:
             "baseline": (
                 [str(baseline_python), "-I"],
                 cache.isolated_env(),
-                {str(dirs[c]): str(reference[c]) for c in dirs},
+                {},
             ),
             "checkout": (
                 [sys.executable, "-P"],

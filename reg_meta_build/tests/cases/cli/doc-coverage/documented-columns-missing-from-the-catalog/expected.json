@@ -1,0 +1,23 @@
+{
+  "exit_code": 0,
+  "files": {
+    "doc-coverage.toml": {
+      "contains": [
+        "REVIEW artifact",
+        "#400 PR2",
+        "#   - nowhere",
+        "# display_name=Saknad kolumn 1, source=sample-bakgrund, filename=sample__MissingOne.md",
+        "# [[column]]\n# register = \"sample\"\n# column = \"MissingOne\"",
+        "# column = \"MissingTwo\"",
+        "# register = \"komvux\"\n# column = \"GapCol\""
+      ],
+      "excludes": [
+        "\n[[column]]",
+        "# column = \"kon\"",
+        "# column = \"Komvux\"",
+        "SomeCol",
+        "appendix"
+      ]
+    }
+  }
+}

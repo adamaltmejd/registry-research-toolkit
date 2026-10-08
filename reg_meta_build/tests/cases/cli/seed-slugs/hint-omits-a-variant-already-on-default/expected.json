@@ -1,0 +1,12 @@
+{
+  "exit_code": 0,
+  "stderr": {
+    "contains": [
+      "Hint: 1 single-variant register(s)",
+      "'Konjunkturstatistik, löner för statlig sektor (KLS)'"
+    ],
+    "excludes": [
+      "'Nybörjare i Komvux'"
+    ]
+  }
+}

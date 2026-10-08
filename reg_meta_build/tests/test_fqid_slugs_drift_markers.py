@@ -20,7 +20,6 @@ from reg_meta_build.fqid_slugs import (
     load_provider_toml,
     load_slug_dir,
     populate_variable_slugs,
-    precheck_slugs,
     read_auto_derivations,
     snapshot_payload,
 )
@@ -432,10 +431,10 @@ class TestAutoDerivationMarker:
         assert deriv["1.30"] == "drift-name"
         assert deriv["1.40"] == "v-provider-key"
 
-    def test_disambiguator_marked_and_in_worklist(self, tmp_path: Path) -> None:
+    def test_disambiguator_marked(self, tmp_path: Path) -> None:
         # Two distinct vars whose NAMES fold to the same slug → the second is
-        # `_uniquify`-suffixed. The marker carries `+disambiguated` and the row
-        # lands in the worklist regardless of its base class.
+        # `_uniquify`-suffixed and its marker carries `+disambiguated` (the
+        # worklist listing it is `cases/cli/precheck-slugs/`).
         conn = build_slugged_db(variable=None)
         # Shared generic column forces the name fallback for both; identical
         # names collide so the second gets `-2`.
@@ -447,96 +446,12 @@ class TestAutoDerivationMarker:
         # One is plain name-fallback, the other carries +disambiguated.
         kinds = {deriv["1.50"], deriv["1.51"]}
         assert kinds == {"name-fallback", "name-fallback+disambiguated"}
-        result = precheck_slugs(conn, d)
-        worklist = {(sid, kind) for _p, sid, _s, kind in result.name_fallback_variables}
-        assert ("1.50", "name-fallback") in worklist
-        assert ("1.51", "name-fallback+disambiguated") in worklist
 
-    def test_worklist_excludes_column_derived(self, tmp_path: Path) -> None:
-        # The worklist is the curation BACKLOG: name / `-N` / `v<key>` only.
-        # kolumnnamn, fold, and drift-earliest-column (column-derived) bases are
-        # EXCLUDED — they have a stable, canonical basis already.
-        conn = build_slugged_db(variable=None)
-        self._add_variable(conn, var_id=10, name="Kön", cols=["Kon"])  # kolumnnamn
-        # Two drifting vars sharing a name → each routes to earliest column
-        # (drift-earliest-column), which must NOT be in the worklist.
-        self._add_variable(
-            conn, var_id=70, name="Inriktning", cols=["AlfaKod", "alfa_ny"]
-        )
-        self._add_variable(
-            conn, var_id=71, name="Inriktning", cols=["BetaKod", "beta_ny"]
-        )
-        # A name-fallback var that IS in the worklist (control).
-        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
-        self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
-        d = self._slug_dir(tmp_path)
-        populate_variable_slugs(conn, d)
-        result = precheck_slugs(conn, d)
-        by_sid = {sid: kind for _p, sid, _s, kind in result.name_fallback_variables}
-        assert "1.10" not in by_sid  # kolumnnamn
-        assert "1.70" not in by_sid  # drift-earliest-column
-        assert "1.71" not in by_sid  # drift-earliest-column
-        assert by_sid.get("1.20") == "name-fallback"
-        assert by_sid.get("1.21") == "name-fallback"
-
-    def test_worklist_carries_slug_and_provider(self, tmp_path: Path) -> None:
-        # Each worklist row is (provider, source_id, slug, derivation); the slug
-        # is read from the auto file (no DB join needed).
-        conn = build_slugged_db(variable=None)
-        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
-        self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
-        d = self._slug_dir(tmp_path)
-        populate_variable_slugs(conn, d)
-        result = precheck_slugs(conn, d)
-        rows = {
-            sid: (prov, slug, kind)
-            for prov, sid, slug, kind in result.name_fallback_variables
-        }
-        assert rows["1.20"] == ("scb", "inkomst", "name-fallback")
-        assert rows["1.21"] == ("scb", "utgift", "name-fallback")
-
-    def test_worklist_is_advisory_only(self, tmp_path: Path) -> None:
-        # A populated worklist must NOT flip `ok` or the precheck exit. Curate the
-        # register/variant/classification slugs so the gating checks are all
-        # clean, then confirm `ok` is True DESPITE a non-empty name-fallback
-        # worklist (variables auto-slug, so they never feed the missing/stale
-        # gates anyway).
-        conn = build_slugged_db(variable=None)
-        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
-        self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
-        d = self._slug_dir(
-            tmp_path,
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
-        )
-        populate_variable_slugs(conn, d)
-        result = precheck_slugs(conn, d)
-        assert result.name_fallback_variables  # worklist non-empty
-        assert result.ok  # ... yet the gating checks are all clean
-
-    def test_read_auto_derivations_tolerates_missing_and_unmarked(
-        self, tmp_path: Path
-    ) -> None:
-        # Robustness: a missing file → {}; an entry without a `# source:` comment
-        # (legacy pre-A4.4a row) → simply absent (never crashes).
-        d = self._slug_dir(tmp_path)
-        auto = self._auto_path(d)
-        assert read_auto_derivations(auto) == {}  # no file yet
-        auto.write_text(
-            '[variable."1.44"]\nslug = "kon"\n\n'
-            '[variable."1.55"]\nslug = " inkomst "  # source: name-fallback\n',
-            encoding="utf-8",
-        )
-        deriv = read_auto_derivations(auto)
-        assert "1.44" not in deriv  # unmarked legacy row
-        assert deriv["1.55"] == "name-fallback"
-
-    def test_worklist_tolerates_nonnumeric_provider_key(self, tmp_path: Path) -> None:
+    def test_text_provider_key_marked_drift_name(self, tmp_path: Path) -> None:
         # `variable.provider_key` is TEXT — a SOS key is a merged variable name,
         # not a numeric var_id, so the auto.toml key is `1.BefolkningPerKommun`.
-        # The validating loader rejects that grammar, so the worklist must read
-        # the auto file RAW (like `_drifting_variables` tolerates the TEXT key)
-        # — otherwise this otherwise-non-fatal precheck would crash.
+        # Drift + a name unique among drifters → `drift-name` (the worklist reading
+        # that text key is `cases/cli/precheck-slugs/`).
         conn = build_slugged_db(variable=None)
         vid = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) "
@@ -553,13 +468,14 @@ class TestAutoDerivationMarker:
         conn.commit()
         d = self._slug_dir(tmp_path)
         populate_variable_slugs(conn, d)
-        result = precheck_slugs(conn, d)  # must not raise on the non-numeric key
-        hit = [
-            r for r in result.name_fallback_variables if r[1] == "1.BefolkningPerKommun"
-        ]
-        assert len(hit) == 1
-        # drift + name-unique-among-drifters → drift-name (a worklist class).
-        assert hit[0] == ("scb", "1.BefolkningPerKommun", "befolkning", "drift-name")
+        deriv = read_auto_derivations(self._auto_path(d))
+        assert deriv["1.BefolkningPerKommun"] == "drift-name"
+        assert (
+            conn.execute(
+                "SELECT slug FROM variable WHERE variable_id = ?", (vid,)
+            ).fetchone()[0]
+            == "befolkning"
+        )
 
     def test_existing_markers_carried_forward_on_rebuild(self, tmp_path: Path) -> None:
         # An incremental rebuild (prior auto.toml + a NEW variable → auto_dirty)
@@ -600,79 +516,6 @@ class TestAutoDerivationMarker:
             b'[variable."1.44"]\nslug = "\xff\xfe"  # source: name-fallback\n'
         )
         assert read_auto_derivations(auto) == {}
-
-    def test_advisory_worklist_survives_malformed_auto_toml(
-        self, tmp_path: Path
-    ) -> None:
-        # A malformed `<provider>.auto.toml` is precheck's job to report via
-        # parse_errors; the advisory worklist must NOT turn it into a crash —
-        # it skips the unparseable provider.
-        conn = build_slugged_db(variable=None)
-        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
-        d = self._slug_dir(tmp_path)
-        # Unterminated string → tomllib raises → _parse_toml → RegMetaError.
-        self._auto_path(d).write_text(
-            '[variable."1.20"]\nslug = "inkomst\n', encoding="utf-8"
-        )
-        result = precheck_slugs(conn, d)  # must not raise
-        assert all(r[0] != "scb" for r in result.name_fallback_variables)
-
-    def test_worklist_excludes_curated_override(self, tmp_path: Path) -> None:
-        # A variable a curator FIXED via a [variable] override in <provider>.toml
-        # is no longer backlog, even though its frozen auto entry + marker linger
-        # in the auto file across the rebuild. The lingering auto entry across the
-        # rebuild is the pinned-auto behavior — `curating` (#470); churning would
-        # re-derive 1.21 (now the only pending var) to a non-fallback slug.
-        conn = build_slugged_db(variable=None)
-        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
-        self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
-        # Generate build (churning) writes the baseline .auto.toml; pinning requires
-        # that committed file (#471), so flip to curating only AFTER it exists.
-        d = self._slug_dir(tmp_path)
-        populate_variable_slugs(conn, d)
-        (d / FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
-        before = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
-        assert {"1.20", "1.21"} <= before
-        # Curate 1.20 — its auto entry/marker persist, but it drops from the list.
-        (d / "scb.toml").write_text(
-            '[variable."1.20"]\nslug = "hushalls-inkomst"\n', encoding="utf-8"
-        )
-        populate_variable_slugs(conn, d)
-        after = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
-        assert "1.20" not in after  # curated → excluded from the backlog
-        assert "1.21" in after  # still backlog
-
-    def test_advisory_worklist_survives_nontable_variable(self, tmp_path: Path) -> None:
-        # A syntactically-valid auto.toml whose `variable` is a non-table value
-        # must not crash the worklist (precheck reports it via parse_errors).
-        conn = build_slugged_db(variable=None)
-        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
-        d = self._slug_dir(tmp_path)
-        self._auto_path(d).write_text('variable = "bad"\n', encoding="utf-8")
-        result = precheck_slugs(conn, d)  # must not raise on the odd shape
-        assert all(r[0] != "scb" for r in result.name_fallback_variables)
-
-    def test_worklist_keeps_metadata_only_override(self, tmp_path: Path) -> None:
-        # A [variable] entry WITHOUT a string slug leaves the auto slug unchanged,
-        # so it stays backlog regardless of other metadata: a `replaced_by`
-        # within-file rename pointer and `deprecated` (still slugged so old
-        # references resolve) both keep their variable in the list. Only a string
-        # `slug` override drops it (Codex: don't treat every [variable] row as a
-        # slug fix).
-        conn = build_slugged_db(variable=None)
-        self._add_variable(conn, var_id=20, name="Inkomst", cols=["OBS_VALUE"])
-        self._add_variable(conn, var_id=21, name="Utgift", cols=["OBS_VALUE"])
-        d = self._slug_dir(tmp_path)
-        populate_variable_slugs(conn, d)
-        (d / "scb.toml").write_text(
-            '[variable."1.20"]\nreplaced_by = "1.21"\n'
-            '[variable."1.21"]\ndeprecated = true\n',
-            encoding="utf-8",
-        )
-        populate_variable_slugs(conn, d)
-        worklist = {r[1] for r in precheck_slugs(conn, d).name_fallback_variables}
-        assert "1.20" in worklist  # replaced_by only → slug unfixed → stays
-        assert "1.21" in worklist  # deprecated-only → slug still ships → stays
 
     def test_dotted_provider_key_fails_fast(self, tmp_path: Path) -> None:
         # A provider_key containing '.' would mis-parse the variable source-ID as
