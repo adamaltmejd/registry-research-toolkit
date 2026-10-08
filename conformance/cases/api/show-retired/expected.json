@@ -1,0 +1,34 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/kind": "variable", "/data/fqid": "scb/example/second"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/example/retired-unheld"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/fqid": "fk/unheld/reference", "/meta/scope": "reference"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/kind": "register", "/data/fqid": "scb/example"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/example/reference"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/fqid": "scb/example/reference"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "fk/unheld"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/kind": "register", "/data/fqid": "fk/unheld"}
+  }
+]

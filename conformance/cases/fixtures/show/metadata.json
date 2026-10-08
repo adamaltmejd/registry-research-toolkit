@@ -1,0 +1,64 @@
+{
+  "variable_groups": [
+    {
+      "register": "scb/alpha",
+      "key": "person",
+      "label": "Person",
+      "source": "curated",
+      "axes": [{"axis": "kind", "ordinal": 0, "label": "Kind"}],
+      "members": [
+        {"variable": "scb/alpha/kon", "facets": [{"axis": "kind", "value": "1", "label": "Sex"}]},
+        {"variable": "scb/alpha/alder", "facets": [{"axis": "kind", "value": "2", "label": "Age"}]}
+      ]
+    }
+  ],
+  "classification_groups": [
+    {
+      "key": "sunx",
+      "label": "Sunx",
+      "source": "curated",
+      "members": [
+        {"classification": "sunx-b", "facet_value": "field", "facet_label": "Field"},
+        {"classification": "sunx-a", "facet_value": "level", "facet_label": "Level"}
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "slug": "core",
+      "label": "Core",
+      "members": [
+        {"target": "scb/alpha", "rank": 1, "starred": true, "note": "Start here"},
+        {"target": "scb/alpha/alder", "rank": 2, "starred": false}
+      ]
+    }
+  ],
+  "variable_same_as": [{"a": "scb/alpha/kon", "b": "scb/beta/kon"}],
+  "successions": [
+    {"predecessor": "scb/old-alpha", "successor": "scb/alpha"},
+    {"predecessor": "scb/alpha/sex", "successor": "scb/alpha/kon"}
+  ],
+  "historical_predecessors": [
+    {
+      "target": "scb/old-alpha",
+      "kind": "register",
+      "reason": "Renamed synthetic register",
+      "decision_reference": "fixture"
+    },
+    {
+      "target": "scb/alpha/sex",
+      "kind": "variable",
+      "reason": "Renamed synthetic variable",
+      "decision_reference": "fixture"
+    }
+  ],
+  "variant_successions": [
+    {
+      "predecessor": {"register": "scb/alpha", "variant": "older"},
+      "successor": {"register": "scb/alpha", "variant": "annual"}
+    }
+  ],
+  "classification_derivations": [
+    {"derived": "ks87-p", "source": "icd-9", "note": "Primary-care setting"}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "fixture": "reader/logical",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/Example%20codes"},
+    {
+      "operation": "show",
+      "path": "/api/catalog/Example%20codes",
+      "query": {"scope": "reference"}
+    }
+  ]
+}

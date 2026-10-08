@@ -1,0 +1,33 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "root",
+      "/data/children": [
+        {"kind": "provider", "fqid": "scb", "name": "Statistiska Centralbyrån"},
+        {"kind": "classification_root", "fqid": "class", "name": "Classifications"}
+      ],
+      "/meta/scope": "holdings"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/fqid": [
+        "fk",
+        "fohm",
+        "lakemedelsverket",
+        "pliktverket",
+        "riksarkivet",
+        "scb",
+        "sos",
+        "umu",
+        "class"
+      ]
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "ref"}
+  }
+]

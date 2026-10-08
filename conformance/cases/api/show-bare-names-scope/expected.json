@@ -1,0 +1,18 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/kind": "variable", "/data/fqid": "scb/example/value"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "Value reference"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/fqid": "scb/example/reference"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "Valuereference"}
+  }
+]

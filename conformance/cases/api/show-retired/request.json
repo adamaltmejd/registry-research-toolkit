@@ -1,0 +1,20 @@
+{
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/scb/example/retired"},
+    {"operation": "show", "path": "/api/catalog/scb/example/retired-unheld"},
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb/example/retired-unheld",
+      "query": {"scope": "reference"}
+    },
+    {"operation": "show", "path": "/api/catalog/scb/old-example"},
+    {"operation": "show", "path": "/api/catalog/scb/example/reference"},
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb/example/reference",
+      "query": {"scope": "reference"}
+    },
+    {"operation": "show", "path": "/api/catalog/fk/unheld"},
+    {"operation": "show", "path": "/api/catalog/fk/unheld", "query": {"scope": "reference"}}
+  ]
+}

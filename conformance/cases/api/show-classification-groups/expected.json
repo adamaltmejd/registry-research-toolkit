@@ -1,0 +1,50 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data": {
+        "kind": "classification_group",
+        "fqid": "group/class/sunx",
+        "key": "sunx",
+        "label": "Sunx",
+        "source": "curated",
+        "axes": [],
+        "members": [
+          {
+            "fqid": "class/sunx-b",
+            "name": "Education, field",
+            "facets": [{"axis": null, "value": "field", "label": "Field"}],
+            "delivery_column": null
+          },
+          {
+            "fqid": "class/sunx-a",
+            "name": "Education, level",
+            "facets": [{"axis": null, "value": "level", "label": "Level"}],
+            "delivery_column": null
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data": {
+        "kind": "classification_family",
+        "fqid": "group/class/icd",
+        "key": "icd",
+        "label": "ICD"
+      }
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "concept_group",
+      "/data/axes": [{"name": "kind", "label": "Kind"}],
+      "/data/members/*/fqid": ["scb/alpha/kon", "scb/alpha/alder"],
+      "/data/members/0/facets": [{"axis": "kind", "value": "1", "label": "Sex"}],
+      "/data/tags": [{"slug": "core", "label": "Core", "rank": 2, "starred": false, "note": null}]
+    }
+  }
+]

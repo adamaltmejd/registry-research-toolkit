@@ -1,0 +1,89 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "register",
+      "/data/fqid": "scb/alpha",
+      "/data/name": "Alpha",
+      "/data/purpose": "Synthetic register for show",
+      "/data/tags": [
+        {"slug": "core", "label": "Core", "rank": 1, "starred": true, "note": "Start here"}
+      ],
+      "/data/children/*/fqid": ["scb/alpha/alder", "scb/alpha/kon"],
+      "/data/children/*/name": ["Ålder", "Kön"],
+      "/data/groups": [
+        {
+          "fqid": "group/scb/alpha/person",
+          "key": "person",
+          "label": "Person",
+          "source": "curated",
+          "axes": [{"name": "kind", "label": "Kind"}],
+          "members": [
+            {
+              "fqid": "scb/alpha/kon",
+              "name": "Kön",
+              "facets": [{"axis": "kind", "value": "1", "label": "Sex"}],
+              "delivery_column": null
+            },
+            {
+              "fqid": "scb/alpha/alder",
+              "name": "Ålder",
+              "facets": [{"axis": "kind", "value": "2", "label": "Age"}],
+              "delivery_column": null
+            }
+          ],
+          "tags": [{"slug": "core", "label": "Core", "rank": 2, "starred": false, "note": null}]
+        }
+      ],
+      "/data/variants": [
+        {
+          "slug": "annual",
+          "name": "Individer, 16 år och äldre",
+          "description": null,
+          "display_group": null,
+          "variant_family": "annual",
+          "variant_family_label": "Individer",
+          "panel_entity_key": ["kon", "alder"],
+          "panel_time_key": "period",
+          "panel_time_grain": "delivery",
+          "versions": [
+            {
+              "name": "Alpha 2018",
+              "description": "The 2018 edition",
+              "measurement_information": "December 31",
+              "populations": [
+                {
+                  "name": "Residents",
+                  "definition": "Registered on 31 December",
+                  "comment": null,
+                  "date_range": null
+                }
+              ],
+              "object_types": [{"name": "Person", "definition": "A registered person"}]
+            }
+          ]
+        },
+        {
+          "slug": "older",
+          "name": "Individer, 15 år och äldre",
+          "description": null,
+          "display_group": null,
+          "variant_family": "annual",
+          "variant_family_label": "Individer",
+          "panel_entity_key": null,
+          "panel_time_key": null,
+          "panel_time_grain": null,
+          "versions": []
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/kind": "register", "/data/fqid": "scb/alpha"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/fqid": "scb/alpha"}
+  }
+]

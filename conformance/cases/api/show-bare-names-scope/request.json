@@ -1,0 +1,13 @@
+{
+  "fixture": "reader/logical",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/Value", "query": {"scope": "reference"}},
+    {"operation": "show", "path": "/api/catalog/Value%20reference"},
+    {
+      "operation": "show",
+      "path": "/api/catalog/Value%20reference",
+      "query": {"scope": "reference"}
+    },
+    {"operation": "show", "path": "/api/catalog/Valuereference"}
+  ]
+}
