@@ -258,11 +258,11 @@ least at every maintainer checkpoint.
 **Three verification gates, with budgets.** They are named G0–G2 so they are not
 confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
-  | Gate | What runs                                                                                                                                                                                                                                                     | Budget                                      | When                                                                                                                                                        |
-  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q`, `cargo test --workspace` and, from slice 3a, the Rust HTTP run (section 10), all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).              | under 60 s, plus 30 s for the Rust HTTP run | every change                                                                                                                                                |
-  | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min                                 | every PR touching derive or the docs build, and once per slice before its cutover (stage 3b–3e decision 7; earlier: every PR touching derive or the reader) |
-  | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today                                  | checkpoints and releases, never per PR                                                                                                                      |
+  | Gate | What runs                                                                                                                                                                                                                                                     | Budget                                                 | When                                                                                                                                                        |
+  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q`, `cargo test --workspace` and, from slice 3a, the Rust HTTP run (section 10), all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).              | under 60 s, plus 30 s for the Rust HTTP run            | every change                                                                                                                                                |
+  | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min warm; a cold run is reported, not budgeted | every PR touching derive or the docs build, and once per slice before its cutover (stage 3b–3e decision 7; earlier: every PR touching derive or the reader) |
+  | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today                                             | checkpoints and releases, never per PR                                                                                                                      |
 
 The G1 baseline is the Python reader **at a pinned commit, installed in its own
 environment**, never the checkout under change, so a regression moved into derive cannot
@@ -1097,10 +1097,12 @@ Shared definitions:
   before its cutover** (3b and 3d in C, 3b's docs in 3b.6, 3c in 3c.3, 3e in 3e.4).
   Other PRs rely on the `api` corpus. An operation package still writes its `served`
   mapping; differences the slice run finds are fixed in the package that owns the
-  operation, before the cutover merges. Budget: under 5 min on the re-derive path; each
-  derive PR records derive time, G1 time and the artifact size delta. G1 on a table-only
-  PR protects existing behavior only; a new table's semantics rest on
-  `validate_built_db` and the `api` corpus until the slice's served comparison reads it.
+  operation, before the cutover merges. Budget: under 5 min on a warm run; a cold run
+  (re-deriving after a derive-source change) is reported in the PR but does not fail the
+  budget (maintainer, 2026-10-08); each derive PR records derive time, G1 time and the
+  artifact size delta. G1 on a table-only PR protects existing behavior only; a new
+  table's semantics rest on `validate_built_db` and the `api` corpus until the slice's
+  served comparison reads it.
 - **Frozen Python runtime** (D6). The Python runtime (the `reg_meta` reader and CLI,
   `reg_schema`) is frozen: defect fixes go in Rust only. The build stays Python (section
   11), so a derived table gets the correct logic in derive, even where the frozen reader
