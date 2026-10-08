@@ -7,7 +7,6 @@
     "source_id 1.44"
   ],
   "report_contains": [
-    "--flavored",
     "--slug-dir <steward dir>",
     "fqid_slugs/<steward>/<provider>.toml"
   ],

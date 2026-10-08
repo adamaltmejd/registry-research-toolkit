@@ -192,18 +192,19 @@ def validate_built_db(
     ``flavored`` is independent of ``corpus``; a flavor build never sets
     ``corpus`` (it has no full SCB/SOS corpus to floor-check).
 
-    ``slug_dir`` (#546) is the resolved curation directory the build loaded; it
-    feeds the mandatory entity-key curation gate
-    (``_check_entity_key_vars_curated``), which fails if a panel entity-key
-    variable has no curated ``[variable]`` pin. ``None`` (the default, used by
-    synthetic CI) SKIPS that gate — the synthetic fixtures carry no curated slug
-    dir. On the flavored extend-db path (#559) the hook threads the STEWARD
-    ``slug_dir`` (the dir the overlay populated) so the gate runs, scoped to the
-    steward providers that dir covers; the global base's entity-key vars stay out
-    of scope (validated at global build, and ``_variable_source_ids`` is unsafe on
-    a flavored DB for global registers).
+    ``slug_dir`` (#559) is the STEWARD slug dir a flavored extend-db overlay
+    populated; it feeds the steward entity-key curation gate
+    (``_check_entity_key_vars_curated``). It is refused without ``flavored``:
+    a global build needs no gate, because compile already refuses any variable
+    without an authored ``[[variable]]`` pin (``unresolved_catalog_identity``,
+    #1222). ``None`` skips the steward gate.
 
     """
+    if slug_dir is not None and not flavored:
+        raise ValueError(
+            "slug_dir is the steward slug dir of a flavored build; "
+            "pass flavored=True or no slug_dir"
+        )
     db_path = Path(db_path)
     if not db_path.exists():
         raise FileNotFoundError(f"DB not found: {db_path}")
@@ -231,9 +232,8 @@ def validate_built_db(
         _check_slugs_present(conn, result, tables)
         _check_panel_refs_resolve(conn, result, tables)
         _check_panel_refs_have_states(conn, result, tables)
-        _check_entity_key_vars_curated(
-            conn, result, tables, slug_dir, flavored=flavored
-        )
+        if flavored:
+            _check_entity_key_vars_curated(conn, result, tables, slug_dir)
         _check_minted_id_bands(conn, result, tables, flavored=flavored)
         _check_errata_column_band(conn, result, tables)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
@@ -1270,54 +1270,32 @@ def _check_entity_key_vars_curated(
     result: ValidationResult,
     tables: set[str],
     slug_dir: Path | None,
-    *,
-    flavored: bool = False,
 ) -> None:
-    """#546/#554: every panel entity-key variable must carry a curated
-    ``[variable]`` slug pin so the slug its ``panel_entity_key`` ref binds to
-    can't drift.
+    """#546/#559: every steward panel entity-key variable must carry a curated
+    ``[variable]`` slug pin in the steward slug dir, so the slug its
+    ``panel_entity_key`` ref binds to can't drift.
 
-    A variable's auto-slug CHURNS each build (the default freeze zone re-derives
-    it from the latest delivery column). A ``panel_entity_key`` ref binds to that
-    slug, so a reslug silently dangles the ref — caught only by
-    ``_check_panel_refs_resolve``, after a full real build. The pin (precedence 1
-    in ``populate_variable_slugs``) freezes the slug; this gate makes it
-    MANDATORY, so a newly-onboarded entity-key variable can't ship un-pinned.
+    extend-db auto-slugs overlay variables (``populate_variable_slugs``): an
+    auto-slug can change when a delivery column changes, and a reslug would
+    silently dangle the ref. The pin (precedence 1) freezes the slug; this gate
+    makes it MANDATORY. The global build needs no such gate: compile refuses any
+    variable without an authored pin (``unresolved_catalog_identity``, #1222).
 
-    Generate the missing pins with ``reg-meta-build entity-key-pins --out-dir``
-    and fold each emitted block into its
-    ``curation/registers/<provider>/<register>.toml`` (global build), or into
-    the steward slug dir's ``<provider>.toml`` (flavored build).
+    The gate scopes to the STEWARD REGISTERS ``slug_dir`` curates (its
+    ``[register]`` entries). Scoping by register (not provider) matters because
+    ``extend_db`` lets a steward overlay reuse a provider slug that ALSO has
+    global base registers, and ``_variable_source_ids`` is unsafe on a flavored
+    DB for global registers. The enumeration is shared with the generator
+    (``fqid_slugs.iter_entity_key_variables`` / ``infer_entity_key_pins``) so
+    gate and generator can't disagree on which variables need a pin.
 
-    GLOBAL build (``flavored=False``): scope = ALL global providers (#554). Every
-    provider's entity-key slug can churn and dangle a panel ref, so every provider
-    present in the build-db DB is enforced — no provider filter (the set is
-    whatever the DB holds, so onboarding a provider can't silently drop it).
-    A variable's ``source_id`` takes its register's native id from the slug dir's
-    register entry for the catalog row's slug path, since a built catalog's
-    ``register_id`` is a surrogate (#1215); a register no entry names fails with
-    ``entity_key_register_unknown``.
-
-    FLAVORED extend-db (``flavored=True``, #559): the steward overlay threads its
-    own ``slug_dir`` here, and the gate scopes to the STEWARD REGISTERS that dir
-    curates (its ``[register]`` entries). The global base's entity-key vars are
-    NOT re-enforced — they were validated at global-build time and live in the
-    global slug dir, not the steward one. Scoping by register (not provider)
-    matters because ``extend_db`` lets a steward overlay reuse a provider slug
-    that ALSO has global base registers; a provider-slug scope would re-pull those
-    global registers, and ``iter_entity_key_variables``'s ``_variable_source_ids``
-    is unsafe on a flavored DB for GLOBAL registers, so the register filter skips
-    them. The enumeration is shared with the generator
-    (``fqid_slugs.iter_entity_key_variables`` / ``infer_entity_key_pins``) so gate
-    and generator can't disagree on which variables need a pin.
-
-    ``slug_dir is None`` (synthetic CI, direct ``validate_built_db(corpus=False)``
-    calls) SKIPS the gate — there's no curated dir to read. Local imports dodge
-    any build-time import cycle (the pattern this module already uses for
+    ``slug_dir is None`` (a standalone derive, direct validation of a steward
+    artifact) SKIPS the gate — there's no curated dir to read. Local imports
+    dodge any build-time import cycle (the pattern this module already uses for
     build-side helpers)."""
-    result.section("[panel: entity-key variables are curated]")
+    result.section("[panel: steward entity-key variables are curated]")
     if slug_dir is None:
-        result.ok("entity-key curation gate skipped (no slug_dir)")
+        result.ok("entity-key curation gate skipped (no steward slug_dir)")
         return
     if not {"register_variant", "variable"}.issubset(tables):
         result.ok("register_variant / variable absent — entity-key gate skipped")
@@ -1330,20 +1308,17 @@ def _check_entity_key_vars_curated(
         iter_entity_key_variables,
     )
 
-    # Glob the curated dir once: the curated slug map and the register native ids
-    # (the steward scope, when flavored) both come from the same entry list. Shared with the generator
-    # so gate and generator read the identical basis.
+    # Glob the steward dir once: the curated slug map and the register native ids
+    # (the steward scope) come from the same entry list, shared with the generator.
     curated, native_ids = _entity_key_curation_basis(slug_dir)
     try:
-        entity_key_vars = list(
-            iter_entity_key_variables(conn, native_ids, scoped=flavored)
-        )
+        entity_key_vars = list(iter_entity_key_variables(conn, native_ids))
     except RegMetaError as exc:
         result.fail(f"{exc.code}: {exc.message}")
         result.info(exc.remediation)
         return
     if not entity_key_vars:
-        result.ok("no variant carries an entity key — nothing to curate")
+        result.ok("no steward variant carries an entity key — nothing to curate")
         return
     failures: list[str] = []
     for ek in entity_key_vars:
@@ -1360,22 +1335,11 @@ def _check_entity_key_vars_curated(
             result.info(
                 f"... and {len(failures) - 10} more un-pinned entity-key var(s)"
             )
-        # The remediation scope differs by build: the global gate curates into the
-        # register files under curation/registers/<provider>/; the flavored
-        # (steward) gate curates into fqid_slugs/<steward>/<provider>.toml and
-        # MUST regenerate via `--flavored --slug-dir <steward dir>` (the global
-        # `--out-dir` path would emit the wrong, global-scoped pins).
-        if flavored:
-            result.info(
-                "run `reg-meta-build --db <flavored-db> entity-key-pins --flavored "
-                "--slug-dir <steward dir>` and fold each <provider>.toml block into "
-                "fqid_slugs/<steward>/<provider>.toml"
-            )
-        else:
-            result.info(
-                "run `reg-meta-build entity-key-pins --out-dir <dir>` and commit each "
-                "register block to curation/registers/<provider>/<register>.toml"
-            )
+        result.info(
+            "run `reg-meta-build --db <flavored-db> entity-key-pins "
+            "--slug-dir <steward dir>` and fold each <provider>.toml block into "
+            "fqid_slugs/<steward>/<provider>.toml"
+        )
     else:
         result.ok(f"all {len(entity_key_vars):,} entity-key var(s) are curated")
 

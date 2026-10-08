@@ -1680,17 +1680,17 @@ def declared_column_ownership(
 def _entity_key_curation_basis(
     slug_dir: Path,
 ) -> tuple[dict[tuple[str, str], str], dict[tuple[str, str], str]]:
-    """The (curated `[variable]` slug map, register native-id map) the entity-key
-    gate and generator BOTH read, from a single glob of ``slug_dir``.
+    """The (curated `[variable]` slug map, register native-id map) the steward
+    entity-key gate and generator BOTH read, from a single glob of the steward
+    ``slug_dir``.
 
     Returns ``(curated, native_ids)``: ``curated`` is the
     ``{(provider, source_id): slug}`` map and ``native_ids`` is
     ``{(provider, register slug): register native id}``, from the dir's register
-    entries, handed to `iter_entity_key_variables`. A built catalog keys registers
-    by a surrogate minted from the slug path and keeps no native id (#1215), so a
-    catalog register finds the native id its variable pins are keyed on through its
-    slug path. On the flavored path (#559) the same map is the steward scope: the
-    registers the steward ``slug_dir`` names. Shared so the gate
+    entries, handed to `iter_entity_key_variables` as the steward scope. A built
+    catalog keys registers by a surrogate minted from the slug path and keeps no
+    native id (#1215), so a catalog register finds the native id its variable pins
+    are keyed on through its slug path. Shared so the gate
     (`validate._check_entity_key_vars_curated`) and generator
     (`infer_entity_key_pins`) enumerate the identical basis."""
     entries = iter_curated_provider_entries(slug_dir)
@@ -1781,47 +1781,38 @@ def write_auto_toml(
 
 
 # ---------------------------------------------------------------------------
-# Panel entity-key slug pins (#546)
+# Steward panel entity-key slug pins (#546, #559)
 # ---------------------------------------------------------------------------
 #
 # A `register_variant.panel_entity_key` is a curated slug ref (bare slug or a
 # json-array composite) that names the variable(s) keying the variant's panel.
-# It binds to `variable.slug`, but a variable's auto-slug CHURNS every build
-# (the default "churning" freeze zone re-derives it from the latest delivery
-# column). When a reslug moves the keyed variable's slug — as the #143
-# slug-space drift reslug did to 31 SCB entity-key vars (see the #539 block in
-# scb.toml) — the panel ref silently dangles (`_check_panel_refs_resolve`
-# catches it, but only after a 20-min real build). The fix is a CURATED
-# `[variable]` pin per entity-key var (precedence 1 in `populate_variable_slugs`
-# — pins are absolute), so the slug the panel ref depends on can't drift.
+# It binds to `variable.slug`. extend-db auto-slugs a steward overlay's variables
+# (`populate_variable_slugs`), so a changed delivery column can reslug the keyed
+# variable and silently dangle the panel ref. The fix is a CURATED `[variable]`
+# pin per entity-key var in the steward slug dir (precedence 1 — pins are
+# absolute), so the slug the panel ref depends on can't drift.
 #
-# This generator emits those pins from a built DB; the build-side gate
+# This generator emits those pins from a flavored DB; the steward gate
 # (`validate._check_entity_key_vars_curated`) makes the pin MANDATORY so a NEW
 # entity-key var can't ship un-pinned. Both share `iter_entity_key_variables`
 # so they enumerate the exact same set.
 #
-# GLOBAL-build scope = ALL global providers (#554). On the global build-db path
-# every provider present in the DB is under mandatory curation (no provider
-# filter — the set is whatever the DB holds, so onboarding a provider can't
-# silently drop it): any provider's entity-key vars can dangle a panel ref as its
-# slug churns.
+# The global build has no such gate or generator (retired in #1222): compile
+# refuses any variable without an authored `[[variable]]` pin
+# (`unresolved_catalog_identity`), entity key or not.
 #
-# FLAVORED (extend-db) scope = the STEWARD registers the steward slug dir
-# curates only (#559). The flavored DB = released global base + steward overlay,
-# so it carries BOTH global and steward entity-key vars; the global ones are
-# already enforced at global-build time and live in the global slug dir, not the
-# steward dir. Scoping by REGISTER (not provider): `extend_db` lets a steward
+# Scope = the STEWARD registers the steward slug dir curates. The flavored DB =
+# released global base + steward overlay, so it carries both global and steward
+# entity-key vars. Scoping by REGISTER (not provider): `extend_db` lets a steward
 # overlay reuse an existing provider slug that ALSO has global base registers, so
-# a provider-slug filter would re-pull that provider's global registers too. The
-# flavored caller scopes to the registers its steward slug_dir names (`[register]`
-# entries) so the gate/generator enforce/emit ONLY the steward-overlay
-# registers. Register-scoping is REQUIRED for correctness, not just to dodge
-# false failures: `_variable_source_ids` is unsafe on a flavored DB for GLOBAL
+# a provider-slug filter would re-pull that provider's global registers too.
+# Register-scoping is REQUIRED for correctness, not just to dodge false
+# failures: `_variable_source_ids` is unsafe on a flavored DB for GLOBAL
 # registers (split-sibling discriminators can diverge from the incremental slug
 # path), so the filter must skip a non-steward register's row BEFORE that helper
 # runs.
 #
-# Both scopes key a variable's source_id on its register's NATIVE id, the key its
+# A variable's source_id is keyed on its register's NATIVE id, the key its
 # curated pin carries. A built catalog's `register_id` is a surrogate minted from
 # the slug path (#1215), so the native id comes from the slug dir's register entry
 # for the catalog row's (provider, register slug), as `seed_all` does.
@@ -1885,8 +1876,10 @@ def _variable_source_ids(
     fourth segment. On the pipeline only a CIS matrix's cells share a
     provider_key (`cis2016_matrix`), and no panel entity key names one.
 
-    The split discriminators match `populate_variable_slugs`'s only when it
-    sees every variable of the register; it filters to new variables on an
+    Used by the steward entity-key gate and generator (steward registers of a
+    flavored DB) and by `seed_all` (a global pipeline catalog). The split
+    discriminators match `populate_variable_slugs`'s only when it sees every
+    variable of the register; it filters to new variables on an
     incremental/extend-db DB, so do NOT reuse this for a flavored DB's global
     registers."""
     rows = conn.execute(
@@ -1917,10 +1910,9 @@ def _variable_source_ids(
 def iter_entity_key_variables(
     conn: sqlite3.Connection,
     register_native_ids: Mapping[tuple[str, str], str],
-    *,
-    scoped: bool = False,
 ) -> Iterator[EntityKeyVariable]:
-    """Yield every panel entity-key variable on a built DB.
+    """Yield every panel entity-key variable of the registers
+    ``register_native_ids`` names on a built (flavored) DB.
 
     Enumerates `register_variant` rows carrying a `panel_entity_key`, decodes
     each (bare slug or composite json-array) the same way
@@ -1928,33 +1920,22 @@ def iter_entity_key_variables(
     `variable` in the variant's OWN register (slug is only register-unique).
     A ref that resolves to no variable is SKIPPED here (the resolution gate
     `_check_panel_refs_resolve` is the one that fails on a dangle). Each resolved
-    variable is yielded ONCE per (variable, entity-key value); a variable keyed
-    by several variants is de-duplicated on `variable_id`.
+    variable is yielded ONCE; a variable keyed by several variants is
+    de-duplicated on `variable_id`.
 
-    Shared by the pin generator (`infer_entity_key_pins`) and the curation gate
+    Shared by the pin generator (`infer_entity_key_pins`) and the steward gate
     (`validate._check_entity_key_vars_curated`) so the two can't disagree on
     which variables need a pin.
 
     ``register_native_ids`` maps ``(provider, register slug)`` to the register's
     native id, the prefix of its variables' source ids (the key a curated pin
-    carries). A built catalog's ``register_id`` is a surrogate minted from the slug
-    path (#1215), so it is never the prefix. Default (``scoped=False``) is GENERAL:
-    it yields every register's entity-key vars, the unscoped behavior the GLOBAL
-    build/generator + gate use (#554, all global providers under mandatory
-    curation), and refuses a register with no native id
-    (``entity_key_register_unknown``) rather than skip its variables.
-
-    ``scoped=True`` feeds the FLAVORED (steward-scoped) gate/generator (#559): a
-    flavored DB carries the global base PLUS a steward overlay, but only the
-    STEWARD-OVERLAY registers belong to the steward slug dir, so a register the map
-    does not name is skipped — leaving the global base's registers out even when a
-    steward register reuses their provider (`extend_db` allows that overlap). The
-    filter is applied at the TOP of the row loop — a non-matching register's row is
-    skipped BEFORE `_variable_source_ids` runs for it, which MATTERS for
-    correctness: `_variable_source_ids` is documented unsafe on a flavored DB for
-    GLOBAL registers (split-sibling discriminators can diverge from the incremental
-    slug path), so a global register's row must never reach it. Steward-overlay
-    registers are all-new variables, so `_variable_source_ids` is safe on them."""
+    carries); a built catalog's ``register_id`` is a surrogate minted from the slug
+    path (#1215), so it is never the prefix. The map is the steward scope: a
+    register it does not name is skipped at the TOP of the row loop, BEFORE
+    `_variable_source_ids` runs for it. That MATTERS for correctness:
+    `_variable_source_ids` is unsafe on a flavored DB for GLOBAL registers, so a
+    global register's row must never reach it. Steward-overlay registers are
+    all-new variables, so it is safe on them."""
     rows = conn.execute(
         "SELECT rv.register_id, rv.panel_entity_key, "
         "       r.slug AS register_slug, r.name AS register_name, "
@@ -1971,15 +1952,7 @@ def iter_entity_key_variables(
             (row["provider_slug"], row["register_slug"])
         )
         if native_id is None:
-            if scoped:
-                continue  # flavored scope: skip non-steward registers before _variable_source_ids
-            raise _err(
-                "entity_key_register_unknown",
-                f"{row['provider_slug']}/{row['register_slug']}: no register entry "
-                "in the slug dir names its native id, so its entity-key variables "
-                "have no pin key.",
-                "Pass the curation tree that built the catalog (`--slug-dir`).",
-            )
+            continue  # not a steward register: skip before _variable_source_ids
         register_id = row["register_id"]
         for slug in _decode_panel_entity_key_refs(row["panel_entity_key"]):
             hit = conn.execute(
@@ -2032,28 +2005,18 @@ def _source_id_sort_key(source_id: str) -> tuple[int, int, int, str]:
 
 
 def infer_entity_key_pins(
-    conn: sqlite3.Connection, slug_dir: Path, *, flavored: bool = False
+    conn: sqlite3.Connection, slug_dir: Path
 ) -> list[EntityKeyPin]:
-    """Pins for every entity-key variable NOT already curated.
+    """Pins for every steward entity-key variable NOT already curated.
 
-    Reads a built DB; never mutates it. For each entity-key variable
-    (`iter_entity_key_variables`), emits a pin binding its build `source_id` to
-    its current `variable.slug` — UNLESS `(provider, source_id)` already has a
-    hand-curated `[variable]` slug (the generator is idempotent: re-running after
-    the pins are committed emits nothing, and the existing #539 pins are never
-    duplicated). Sorted numeric-aware by source_id within provider, matching the
-    committed files' ordering.
-
-    Default (``flavored=False``, GLOBAL build) covers ALL global providers (#554):
-    a panel ref dangles whenever its keyed variable's slug churns, regardless of
-    provider, so every global provider is pinned.
-
-    ``flavored=True`` (#559) reads the STEWARD ``slug_dir`` and scopes to the
-    steward registers that dir curates — emitting steward pins only. The steward
-    scope is the set of registers the ``[register]`` entries name, so the
-    global base's registers are excluded even when a steward register reuses their
-    provider (and `iter_entity_key_variables`'s flavored-unsafe
-    `_variable_source_ids` never runs on a global register)."""
+    Reads a flavored DB; never mutates it. For each entity-key variable of the
+    steward registers ``slug_dir`` names (`iter_entity_key_variables`), emits a
+    pin binding its `source_id` to its current `variable.slug` — UNLESS
+    `(provider, source_id)` already has a hand-curated `[variable]` slug (the
+    generator is idempotent: re-running after the pins are committed emits
+    nothing). Sorted numeric-aware by source_id within provider, matching the
+    committed files' ordering. The global base's registers are excluded even when
+    a steward register reuses their provider."""
     curated, native_ids = _entity_key_curation_basis(slug_dir)
     pins = [
         EntityKeyPin(
@@ -2063,113 +2026,66 @@ def infer_entity_key_pins(
             register_slug=ek.register_slug,
             variable_slug=ek.variable_slug,
         )
-        for ek in iter_entity_key_variables(conn, native_ids, scoped=flavored)
+        for ek in iter_entity_key_variables(conn, native_ids)
         if (ek.provider_slug, ek.source_id) not in curated
     ]
     pins.sort(key=lambda p: (p.provider_slug, _source_id_sort_key(p.source_id)))
     return pins
 
 
-def render_entity_key_pins_toml(
-    pins: list[EntityKeyPin], *, flavored: bool = False
-) -> str:
-    """Render entity-key pins (#546/#554) as a self-contained `[variable]` block
-    to fold into a global register file
-    (``curation/registers/<provider>/<register>.toml``) or a steward slug dir's
-    ``<provider>.toml``.
+def render_entity_key_pins_toml(pins: list[EntityKeyPin]) -> str:
+    """Render steward entity-key pins (#546/#559) as a self-contained
+    `[variable]` block to fold into a steward slug dir's
+    ``fqid_slugs/<steward>/<provider>.toml``.
 
-    The caller groups pins (the `--out-dir` path writes one block per global
-    register, or per provider for steward pins; `--output-toml` writes all
+    The caller groups pins per provider (the `--out-dir` path writes one
+    `<provider>.toml` block per provider; `--output-toml` writes all providers'
     pins in one inspection file). Built by hand (not `tomli_w`) so the trailing
     `# <reg>: panel_entity_key` comments survive. `source_id` segments are
     integers / kebab discriminators and slugs are kebab identifiers, so no TOML
     escaping is needed (the `_toml_str` quoting still applies to the key for
-    safety).
-
-    ``flavored`` (#559) only swaps the comment HEADER's scope + regenerate
-    instructions so the curator is pointed at the steward slug dir
-    (``fqid_slugs/<steward>/<provider>.toml``) and the ``--flavored`` regenerate
-    command, instead of the GLOBAL flow. The pin LINES are identical either way —
-    ``flavored=False`` output stays BYTE-IDENTICAL to today's so the committed
-    global pin blocks never churn."""
-    if flavored:
-        header = [
-            "# GENERATED entity-key slug pins — reg-meta-build entity-key-pins "
-            "--flavored (#559).",
-            "#",
-            "# A panel_entity_key ref binds to a variable.slug, which CHURNS every build",
-            "# (the default freeze zone re-derives it). These pins freeze the slug each",
-            "# entity-key ref depends on so a reslug can't dangle the ref. The build-side",
-            "# curation gate (validate._check_entity_key_vars_curated) makes the pin",
-            "# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: the",
-            "# STEWARD-overlay registers this slug dir curates (#559) — the global base's",
-            "# entity-key vars are pinned at global-build time in the global slug dir.",
-            "#",
-            "# Regenerate after onboarding/repointing a panel: run",
-            "#   reg-meta-build --db <flavored-db> entity-key-pins --flavored "
-            "--slug-dir <steward dir>",
-            "# and fold the NON-duplicate entries into "
-            "fqid_slugs/<steward>/<provider>.toml.",
-            "# dbdiff-identical (slug values only — pins reproduce the slug the",
-            "# variable already carries).",
-            f"# {len(pins)} pin(s).",
-            "",
-        ]
-    else:
-        header = [
-            "# GENERATED entity-key slug pins — reg-meta-build entity-key-pins "
-            "(#546, #554).",
-            "#",
-            "# A panel_entity_key ref binds to a variable.slug, which CHURNS every build",
-            "# (the default freeze zone re-derives it). These pins freeze the slug each",
-            "# entity-key ref depends on so a reslug can't dangle the ref. The build-side",
-            "# curation gate (validate._check_entity_key_vars_curated) makes the pin",
-            "# MANDATORY — a new entity-key variable can't ship un-pinned. Scope: ALL",
-            "# global providers (#554).",
-            "#",
-            "# Regenerate after onboarding/repointing a panel: run",
-            "#   reg-meta-build --db <built-db> entity-key-pins --out-dir /tmp/pins/",
-            "# and fold the NON-duplicate entries from each /tmp/pins/registers/",
-            "# <provider>/<register>.toml into the matching register file.",
-            "# pins reproduce the slug the variable already carries).",
-            f"# {len(pins)} pin(s).",
-            "",
-        ]
-    lines = list(header)
+    safety)."""
+    lines = [
+        "# GENERATED steward entity-key slug pins — reg-meta-build entity-key-pins "
+        "(#559).",
+        "#",
+        "# A panel_entity_key ref binds to a variable.slug, which extend-db",
+        "# auto-derives. These pins freeze the slug each entity-key ref depends on so",
+        "# a reslug can't dangle the ref. The steward curation gate",
+        "# (validate._check_entity_key_vars_curated) makes the pin MANDATORY — a new",
+        "# entity-key variable can't ship un-pinned. Scope: the STEWARD-overlay",
+        "# registers this slug dir curates.",
+        "#",
+        "# Regenerate after onboarding/repointing a panel: run",
+        "#   reg-meta-build --db <flavored-db> entity-key-pins --slug-dir <steward dir>",
+        "# and fold the NON-duplicate entries into "
+        "fqid_slugs/<steward>/<provider>.toml.",
+        "# dbdiff-identical (slug values only — pins reproduce the slug the",
+        "# variable already carries).",
+        f"# {len(pins)} pin(s).",
+        "",
+    ]
     for p in pins:
-        if flavored:
-            lines.append(
-                f"[variable.{_toml_str(p.source_id)}]  "
-                f"# {p.register_slug}: panel_entity_key = {p.variable_slug!r}"
-            )
-        else:
-            lines.extend(("[[variable]]", f"native_id = {_toml_str(p.source_id)}"))
+        lines.append(
+            f"[variable.{_toml_str(p.source_id)}]  "
+            f"# {p.register_slug}: panel_entity_key = {p.variable_slug!r}"
+        )
         lines.append(f"slug = {_toml_str(p.slug)}")
         lines.append("")
     return "\n".join(lines) + "\n"
 
 
 def write_entity_key_pins(
-    pins: list[EntityKeyPin],
-    out_dir: Path,
-    *,
-    flavored: bool = False,
-    force: bool = False,
+    pins: list[EntityKeyPin], out_dir: Path, *, force: bool = False
 ) -> dict[str, str]:
-    """Write one ``<out-dir>/registers/<provider>/<register>.toml`` pin block per
-    global register, or one ``<out-dir>/<provider>.toml`` per provider for
-    steward pins, returning the written paths.
+    """Write one ``<out-dir>/<provider>.toml`` steward pin block per provider,
+    returning ``{provider: written_path}``.
 
     Groups by `provider_slug` via dict accumulation (order-independent — does NOT
     rely on `pins` being provider-sorted). Mirrors `seed-slugs`'s overwrite guard:
     if `out_dir` already holds any `*.toml` and `force` is False, refuses
-    (``EXIT_CONFIG``) rather than clobbering — pointing `--out-dir` at the curated
-    `curation/` or a steward slug dir is the footgun this guards.
-
-    ``flavored`` (#559) is threaded into the per-provider
-    `render_entity_key_pins_toml` so each written block carries the steward-flow
-    header (steward dir + ``--flavored`` regenerate command) when generating
-    flavored pins."""
+    (``EXIT_CONFIG``) rather than clobbering — pointing `--out-dir` at a curated
+    steward slug dir is the footgun this guards."""
     if out_dir.exists() and any(out_dir.rglob("*.toml")) and not force:
         raise _err(
             "entity_key_pins_would_overwrite",
@@ -2177,24 +2093,15 @@ def write_entity_key_pins(
             "Pass --force to overwrite, or point --out-dir at an empty "
             "directory for hand-review.",
         )
-    by_provider: dict[tuple[str, str], list[EntityKeyPin]] = defaultdict(list)
+    by_provider: dict[str, list[EntityKeyPin]] = defaultdict(list)
     for pin in pins:
-        by_provider[(pin.provider_slug, "" if flavored else pin.register_slug)].append(
-            pin
-        )
+        by_provider[pin.provider_slug].append(pin)
     out_dir.mkdir(parents=True, exist_ok=True)
     written: dict[str, str] = {}
-    for (provider, register_slug), group in by_provider.items():
-        path = (
-            out_dir / f"{provider}.toml"
-            if flavored
-            else out_dir / "registers" / provider / f"{register_slug}.toml"
-        )
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(
-            render_entity_key_pins_toml(group, flavored=flavored), encoding="utf-8"
-        )
-        written[provider if flavored else f"{provider}/{register_slug}"] = str(path)
+    for provider, group in by_provider.items():
+        path = out_dir / f"{provider}.toml"
+        path.write_text(render_entity_key_pins_toml(group), encoding="utf-8")
+        written[provider] = str(path)
     return written
 
 

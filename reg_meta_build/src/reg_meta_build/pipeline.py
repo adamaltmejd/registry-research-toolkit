@@ -1662,9 +1662,6 @@ def _run_pipeline(
                             data_warnings[k] for k in sorted(data_warnings)
                         ),
                         search_pins=search_pins,
-                        # The entity-key curation gate (#1222) runs on the strict
-                        # publishable build only, like the corpus floors.
-                        slug_dir=curation_dir if publishable else None,
                     )
                     build_result.update(
                         status="diagnostic_complete" if diagnostic else "complete",

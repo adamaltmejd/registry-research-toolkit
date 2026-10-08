@@ -1085,7 +1085,6 @@ def write_resolved_catalog(
     metadata: ResolvedMetadata | None = None,
     data_warnings: tuple[DataWarning, ...] = (),
     search_pins: tuple[SearchPin, ...] = (),
-    slug_dir: Path | None = None,
 ) -> Path:
     """Validate and atomically place a strict catalog or create-only diagnostic.
 
@@ -1100,8 +1099,6 @@ def write_resolved_catalog(
     publication; partial writer fixtures leave those volume expectations disabled.
     Only a complete catalog stores `search_pins`, each of which must resolve; a
     partial one stores none.
-    `slug_dir` is the curation tree the strict build loaded; validation then runs
-    the entity-key curation gate against it (`validate_built_db`).
     """
     diagnostic = TypeAdapter(bool).validate_python(diagnostic, strict=True)
     partial = diagnostic or TypeAdapter(bool).validate_python(scoped, strict=True)
@@ -1479,7 +1476,7 @@ def write_resolved_catalog(
             conn.execute("ANALYZE")
             conn.commit()
             conn.execute("VACUUM")
-        validation = validate_built_db(staged, corpus=corpus, slug_dir=slug_dir)
+        validation = validate_built_db(staged, corpus=corpus)
         if not validation.passed:
             raise ValueError(
                 "resolved catalog validation failed: " + "; ".join(validation.failures)
