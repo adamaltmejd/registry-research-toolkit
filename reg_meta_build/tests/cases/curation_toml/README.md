@@ -31,29 +31,29 @@ in plain words. A case whose loader refuses ends in `-refused`; a case that load
 in `-load` or `-loads`. Keep a refusal beside the allowed twin it guards when the twin
 is the harder claim.
 
-  | Surface prefix          | Covers                                                                                        |
-  | ----------------------- | --------------------------------------------------------------------------------------------- |
-  | `register-`             | the register file itself: `[register]`, paths, duplicates, unknown tables                     |
-  | `errata-`               | `[[errata.*]]` register tables                                                                |
-  | `scb-errata-`           | SCB errata as the build resolves them (`[[errata.column]]` and its siblings)                  |
-  | `enrichment-`           | `[[enrichment.description]]` and `[[enrichment.alias]]`                                       |
-  | `identity-`             | `[[identity.*]]` register tables                                                              |
-  | `representation-`       | `[[representation.*]]` register tables                                                        |
-  | `acknowledge-`          | `[[acknowledge]]`                                                                             |
-  | `group-`                | register `[[group]]` concept groups                                                           |
-  | `classification-`       | `classifications/<short_name>.toml` books and families                                        |
-  | `classification-group-` | `classification_groups.toml` umbrellas                                                        |
-  | `worklist-group-`       | the concept-group candidate worklist (`concept_groups.auto.toml`)                             |
-  | `relations-`            | `relations.toml` edges                                                                        |
-  | `tags-`                 | `tags.toml`                                                                                   |
-  | `lineage-`              | `lineage.toml`                                                                                |
-  | `curation-tree-`        | rules that span files of one curation tree                                                    |
-  | `slugs-`                | register-owned and provider slug files, panel keys, reserved slugs and the zone freeze states |
-  | `column-ownership-`     | declared column ownership of a split variable family                                          |
-  | `matrix-`               | CIS answer-matrix evidence JSON                                                               |
-  | `codes-`                | classification code-list CSVs                                                                 |
-  | `related-documents-`    | `related_documents.toml`                                                                      |
-  | `curated-source-`       | authored thin-provider source TOML (`Forsakringskassan/`, `scb_canonical/`)                   |
+  | Surface prefix          | Covers                                                                       |
+  | ----------------------- | ---------------------------------------------------------------------------- |
+  | `register-`             | the register file itself: `[register]`, paths, duplicates, unknown tables    |
+  | `errata-`               | `[[errata.*]]` register tables                                               |
+  | `scb-errata-`           | SCB errata as the build resolves them (`[[errata.column]]` and its siblings) |
+  | `enrichment-`           | `[[enrichment.description]]` and `[[enrichment.alias]]`                      |
+  | `identity-`             | `[[identity.*]]` register tables                                             |
+  | `representation-`       | `[[representation.*]]` register tables                                       |
+  | `acknowledge-`          | `[[acknowledge]]`                                                            |
+  | `group-`                | register `[[group]]` concept groups                                          |
+  | `classification-`       | `classifications/<short_name>.toml` books and families                       |
+  | `classification-group-` | `classification_groups.toml` umbrellas                                       |
+  | `worklist-group-`       | the concept-group candidate worklist (`concept_groups.auto.toml`)            |
+  | `relations-`            | `relations.toml` edges                                                       |
+  | `tags-`                 | `tags.toml`                                                                  |
+  | `lineage-`              | `lineage.toml`                                                               |
+  | `curation-tree-`        | rules that span files of one curation tree                                   |
+  | `slugs-`                | register-owned and provider slug files, panel keys and reserved slugs        |
+  | `column-ownership-`     | declared column ownership of a split variable family                         |
+  | `matrix-`               | CIS answer-matrix evidence JSON                                              |
+  | `codes-`                | classification code-list CSVs                                                |
+  | `related-documents-`    | `related_documents.toml`                                                     |
+  | `curated-source-`       | authored thin-provider source TOML (`Forsakringskassan/`, `scb_canonical/`)  |
 
 ## `expected.json`
 
@@ -156,7 +156,7 @@ Each loader reads `files/` as the curation root, or the named file inside it.
   | `lineage`                 | `load_lineage_config(files/lineage.toml)`                                                                                                                              |
   | `slug_dir`                | `load_slug_dir(files)`: register-owned slugs, or the provider slug files when there is no `registers/`                                                                 |
   | `provider_slugs`          | `load_provider_toml` of the one `*.toml` file                                                                                                                          |
-  | `freeze_states`           | `load_freeze_states(files)`: the zone freeze states of `freeze.toml` (`slug_state.toml` when there is a `registers/` tree)                                             |
+  | `freeze_states`           | `load_freeze_states(files)`: the zone states in `freeze.toml`, or `slug_state.toml` beside a `registers/` tree                                                         |
   | `column_ownership`        | `declared_column_ownership` of `args.provider` / `args.source_id` over `load_slug_dir(files)`                                                                          |
   | `matrix_evidence`         | `load_matrix(files/matrix.json)` with `args.source_mode` and `args.expected_selector`                                                                                  |
   | `valid_codes`             | `load_valid_codes(files/codes.csv)`                                                                                                                                    |

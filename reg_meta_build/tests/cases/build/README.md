@@ -57,6 +57,7 @@ the behavior in plain words. For example,
   | `period-family-`    | relations into a curated `[[representation.period_family]]`                                  |
   | `source-relation-`  | literal source relationships, unbound code lists and source findings                         |
   | `value-`            | source code lists bound to native members                                                    |
+  | `naming-`           | generated and authored slug pins under the zone freeze states                                |
 
 Later stages add their own prefixes to this table.
 
