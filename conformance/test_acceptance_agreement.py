@@ -298,12 +298,19 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
     )
     name = reference.json()["name"]
     if len(name) > MAX_QUERY_CHARS:
+        # The name is out of contract for HTTP search (search has no FQID arm);
+        # prove holdings exclusion by its in-cap prefix, which reference search
+        # must reach for the holdings miss to count.
         require_query_refused(search, name, "holdings")
-    else:
+        name = name[:MAX_QUERY_CHARS]
         require(
-            not http_search_contains(search, name, "holdings", binding),
-            "Unheld binding entered holdings search",
+            http_search_contains(search, name, "reference", binding),
+            "Unheld binding missing from reference search by name prefix",
         )
+    require(
+        not http_search_contains(search, name, "holdings", binding),
+        "Unheld binding entered holdings search",
+    )
     require(
         artifact_client.get(
             "/api/catalog/" + binding, params={"scope": "holdings"}
