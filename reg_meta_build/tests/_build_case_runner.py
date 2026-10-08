@@ -291,9 +291,17 @@ def prepared_cache() -> PreparedCache:
     `$REG_FIXTURE_CACHE`, else the system temp directory. Entries are reused across
     sessions, worktrees and xdist workers; a fresh CI runner starts cold.
     """
-    return PreparedCache(
-        generation_dir(_prepared_inputs_digest()) / "build-case-prepared"
-    )
+    return PreparedCache(fixture_generation() / "build-case-prepared")
+
+
+@functools.cache
+def fixture_generation() -> Path:
+    """This checkout's generation of the shared fixture cache.
+
+    Keyed by `_prepared_inputs_digest`, so any cache under it (the prepared inputs,
+    the `cases/cli/` artifact) is invalidated by a builder or fixture-module edit.
+    """
+    return generation_dir(_prepared_inputs_digest())
 
 
 # The test modules that write and accept a source spec's provider deliveries; an

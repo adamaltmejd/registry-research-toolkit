@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import pytest
+from _build_case_runner import fixture_generation
 from _case_projection import mismatch, unclaimed
 from _pipeline_catalog_support import CatalogFixture
 from reg_meta_build.cli import run
@@ -61,10 +62,12 @@ def _tree_bytes(root: Path) -> dict[str, bytes]:
 def cli_artifact(prepared_cache: PreparedCache) -> Artifact:
     """The artifact built once from `cases/cli/_artifact/`.
 
-    It sits beside the prepared inputs, keyed by the content hash of its source,
-    its curation and this runner (which sets the build options), and is published
-    by an atomic rename, so xdist workers share one build and never write a path
-    another worker reads.
+    It lives in the shared fixture cache's generation beside the prepared inputs
+    (`fixture_generation`), so it is reused across sessions, worktrees and xdist
+    workers and dropped with the generation when a builder source changes. Within
+    it, the entry is keyed by the content hash of its source, its curation and this
+    runner (which sets the build options), and published by an atomic rename, so
+    workers share one build and never write a path another worker reads.
     """
     spec = json.loads((ARTIFACT / "source.json").read_text(encoding="utf-8"))
     inputs = _tree_bytes(ARTIFACT / "curation")
@@ -75,7 +78,7 @@ def cli_artifact(prepared_cache: PreparedCache) -> Artifact:
             sort_keys=True,
         ).encode()
     ).hexdigest()
-    root = prepared_cache.root.with_name("cli-artifact")
+    root = fixture_generation() / "cli-artifact"
     root.mkdir(parents=True, exist_ok=True)
     entry = root / key
     if not (entry / "db" / "reg_meta.db").is_file():
