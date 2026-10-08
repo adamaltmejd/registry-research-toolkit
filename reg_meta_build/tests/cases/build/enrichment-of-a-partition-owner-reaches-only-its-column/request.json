@@ -1,0 +1,32 @@
+{
+  "replaces": [
+    "test_curation_enrichment_target_boundary.py::test_enrichment_of_a_partition_owner_reaches_only_its_column"
+  ],
+  "sources": {
+    "description": "Variable 5 delivers A (CVID 21) and B (CVID 22) in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "B",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|A|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|B|2020|2020|0|0|0"
+      ]
+    }
+  }
+}

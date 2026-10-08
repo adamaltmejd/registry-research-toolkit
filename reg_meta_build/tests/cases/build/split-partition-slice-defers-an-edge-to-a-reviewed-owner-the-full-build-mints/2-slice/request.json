@@ -1,0 +1,5 @@
+{
+  "note": "Register 9 only: scb/sample is out of the slice, so the edge defers.",
+  "sources": "scb-anchor-and-reviewed-owner",
+  "registers": ["9"]
+}

@@ -1,0 +1,18 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "edges",
+      "where": {"type": "same_as"},
+      "fields": ["a", "b"],
+      "match": "includes",
+      "rows": [
+        ["scb/anchor/value", "scb/sample/new"]
+      ]
+    }
+  ]
+}

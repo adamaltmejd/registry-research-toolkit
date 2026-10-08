@@ -1,0 +1,26 @@
+[register]
+provider = "sos"
+slug = "syr"
+name = "Routat"
+native_id = "8849649376171291563"
+[[variant]]
+slug = "a"
+native_id = "8849649376171291563.6014027937173237086"
+[[variant]]
+slug = "b"
+native_id = "8849649376171291563.5573356947550215425"
+[[variable]]
+slug = "col"
+native_id = "8849649376171291563.COL"
+[[variable]]
+slug = "halv"
+native_id = "8849649376171291563.HALV"
+[[identity.route]]
+deldatamangd = "TOKEN"
+variants = ["A", "B"]
+[[identity.route]]
+deldatamangd = "MISSING"
+variants = ["A"]
+[[identity.route]]
+deldatamangd = "HALV"
+variants = ["A", "SAKNAS"]

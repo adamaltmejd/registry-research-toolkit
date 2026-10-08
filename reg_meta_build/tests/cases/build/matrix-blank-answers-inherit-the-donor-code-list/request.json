@@ -1,0 +1,25 @@
+{
+  "replaces": ["test_curation_matrix_blank_boundary.py::test_blank_matrix_answers_inherit_the_donor_code_list"],
+  "note": "Each declared answer becomes a variable under the donor's var_id with the reviewed storage facts and the blank donor's complete code list; the blank donor itself publishes no state.",
+  "sources": {
+    "description": "SCB register 257 (variant 553) delivers one blank-column source instance (var_id 15662, CVID 400684, edition '2012 - 2014') whose value set is the single code 1/Yes; no Unika file.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 400684,
+          "var_id": 15662,
+          "colname": "",
+          "varname": "Partner location",
+          "register": ["Innovation", 257, 553],
+          "regver_id": 7293,
+          "versionname": "2012 - 2014",
+          "year": "2014",
+          "data_type": "varchar"
+        }
+      ],
+      "vardemangder": ["Svar|1|1|Yes|400684|7001"],
+      "valid_dates": ["7001|2012-01-01|2014-12-31"],
+      "unika": null
+    }
+  }
+}

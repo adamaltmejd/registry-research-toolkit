@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "subject"],
+      "rows": [
+        ["delivery_text_projected", "warning", "scb/sample/ku"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"variable": "ku"},
+      "fields": ["column", "valid_from", "state_name"],
+      "rows": [
+        ["KU", "2020-01-01", "Income"],
+        ["KU", "2021-01-01", "Taxable income"]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation"},
+      "fields": ["column_name", "key", "use", "variable"],
+      "rows": [
+        ["AGI", "member:32", "catalog", "scb/sample/agi"],
+        ["KU", "member:30", "support", "scb/sample/ku"],
+        ["KU", "member:31", "catalog", "scb/sample/ku"],
+        ["KU", "member:33", "catalog", "scb/sample/ku"]
+      ]
+    }
+  ]
+}

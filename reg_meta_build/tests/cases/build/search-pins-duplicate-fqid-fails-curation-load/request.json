@@ -1,0 +1,15 @@
+{
+  "replaces": [
+    "test_curation_toml_load_boundary.py::test_malformed_search_pin_fails_the_build_located[duplicate-fqid]"
+  ],
+  "note": "A malformed pin fails even a diagnostic build, before anything is resolved.",
+  "sources": {
+    "description": "Register 1 delivers Kod (var_id 100); no Unika file.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1000, "var_id": 100, "colname": "Kod", "varname": "Kod"}
+      ],
+      "unika": null
+    }
+  }
+}

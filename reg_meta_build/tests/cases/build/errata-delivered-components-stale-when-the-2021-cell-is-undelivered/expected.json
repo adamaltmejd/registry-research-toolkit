@@ -1,0 +1,26 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["detail"],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/errata.delivered/1: unproved_negative_native_base:2021:variable:5"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/errata.delivered/2: unproved_negative_native_base:2021:variable:5"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/errata.delivered/3: unproved_negative_native_base:2021:variable:5"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"valid_from": "2021-01-01"},
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": []
+    }
+  ]
+}

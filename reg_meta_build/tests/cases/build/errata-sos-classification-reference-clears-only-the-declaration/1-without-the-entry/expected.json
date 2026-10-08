@@ -1,0 +1,33 @@
+{
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {"code": "unresolved_classification_reference"},
+      "fields": ["source", "key"],
+      "match": "includes",
+      "rows": [
+        [
+          "Socialstyrelsen/Metadata Syntetiskt felregister (SYX)_webb.xlsx",
+          ["register:Syntetiskt felregister", "deldatamangd:SYX_A", "variable:MARK"]
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syx", "variable": "mark", "variant": "syx-a"},
+      "fields": ["data_type"],
+      "rows": [
+        ["text"]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "syx", "variable": "mark", "variant": "syx-a"},
+      "fields": ["code", "label"],
+      "rows": [
+        ["0", "nej"],
+        ["1", "ja"]
+      ]
+    }
+  ]
+}

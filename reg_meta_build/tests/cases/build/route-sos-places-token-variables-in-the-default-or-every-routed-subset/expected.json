@@ -1,0 +1,42 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {"register": "syd"},
+      "fields": ["variable", "variant"],
+      "rows": [
+        ["col", "_default"]
+      ]
+    },
+    {
+      "table": "cases",
+      "where": {"case_id": "accepted-sos-routes:syd:COL"},
+      "fields": ["status"],
+      "rows": [
+        ["applicable"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syr"},
+      "fields": ["variable", "variant"],
+      "rows": [
+        ["col", "a"],
+        ["col", "b"],
+        ["halv", "a"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "case_id": {"contains": "/syr.toml"}
+      },
+      "fields": ["case_id", "subject"],
+      "rows": [
+        ["curation/registers/sos/syr.toml#/identity.route/2", "MISSING"],
+        ["curation/registers/sos/syr.toml#/identity.route/3", "HALV"]
+      ]
+    }
+  ]
+}

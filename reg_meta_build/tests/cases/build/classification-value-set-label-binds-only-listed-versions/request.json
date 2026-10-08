@@ -18,19 +18,19 @@
         "Grouped report|1|2|Two|1003|10032"
       ]
     },
-    "fk": [
-      "[[register]]",
-      "key = \"remote\"",
-      "name = \"Remote\"",
-      "valid_from = \"2020-01-01\"",
-      "valid_to = \"2020-12-31\"",
-      "[[register.variable]]",
-      "name = \"Amount\"",
-      "column = \"AMOUNT\"",
-      "data_type = \"int\""
-    ],
-    "classifications": {
-      "a": ["code,label", "1,One", "2,Two"]
+    "files": {
+      "Forsakringskassan/fk.toml": [
+        "[[register]]",
+        "key = \"remote\"",
+        "name = \"Remote\"",
+        "valid_from = \"2020-01-01\"",
+        "valid_to = \"2020-12-31\"",
+        "[[register.variable]]",
+        "name = \"Amount\"",
+        "column = \"AMOUNT\"",
+        "data_type = \"int\""
+      ],
+      "classifications/a.csv": ["code,label", "1,One", "2,Two"]
     }
   }
 }

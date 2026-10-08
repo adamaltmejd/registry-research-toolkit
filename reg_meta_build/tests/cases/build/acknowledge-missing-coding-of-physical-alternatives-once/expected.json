@@ -4,12 +4,13 @@
   },
   "projections": [
     {
-      "table": "issues",
+      "table": "issue_refs",
       "where": {"code": "missing_coding_period"},
-      "fields": ["refs", "valid_from", "severity", "acknowledged_by"],
+      "fields": ["source", "key", "valid_from", "severity", "acknowledged_by"],
       "rows": [
         [
-          ["scb-registerinformation#register:1/variant:10/edition:2021/variable:1/member:1002"],
+          "scb-registerinformation",
+          ["register:1", "variant:10", "edition:2021", "variable:1", "member:1002"],
           "2021-01-01",
           "warning",
           "curation/registers/scb/sample.toml#/acknowledge/1"

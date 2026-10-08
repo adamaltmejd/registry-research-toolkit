@@ -1,0 +1,36 @@
+{
+  "description": "Register 1 (TEST) delivers variable 5 as ANSWER in 2020 (CVID 20) and 2021 (CVID 21); register 9 (ANCHOR) delivers VALUE.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "ANSWER",
+        "cvid": 20,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2]
+      },
+      {
+        "colname": "ANSWER",
+        "cvid": 21,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 2021,
+        "register": ["TEST", 1, 2]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 9001,
+        "var_id": 901,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["ANCHOR", 9, 90]
+      }
+    ],
+    "unika": [
+      "TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2020|2020|0|0|0",
+      "TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2021|2021|0|0|0",
+      "ANCHOR|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
+    ]
+  }
+}

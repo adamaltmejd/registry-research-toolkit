@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_sos_errata_boundary.py::test_data_type_correction_replaces_only_the_named_original_type"
+  ],
+  "note": "The one matching SYX_A original becomes `date` with the entry's attribution; the same variable under SYX_B and in another register keeps its delivered type.",
+  "sources": "sos-syx-errata"
+}

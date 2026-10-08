@@ -33,24 +33,37 @@ the behavior in plain words. For example,
 `coding-choice-stale-when-competing-list-changes` or
 `split-partition-native-stale-when-a-reviewed-column-is-missing`.
 
-  | Surface prefix     | Covers                                                                             |
-  | ------------------ | ---------------------------------------------------------------------------------- |
-  | `coding-`          | `[[coding.choice]]`, `[[coding.warning]]` and `[[coding.documented]]` certificates |
-  | `support-errata-`  | `[[errata.support]]` source-support decisions                                      |
-  | `split-sos-`       | SOS `[[identity.split]]` and `[[identity.rename]]`                                 |
-  | `split-partition-` | SCB `[[identity.partition]]` and `[[identity.column_owner]]`                       |
-  | `acknowledge-`     | `[[acknowledge]]` entries matched against build issues                             |
-  | `classification-`  | classification books, references and label bindings                                |
-  | `scope-`           | register-scoped builds and checks, and references out of the slice                 |
-  | `period-family-`   | relations into a curated `[[representation.period_family]]`                        |
-  | `relation-`        | literal source relationships, unbound code lists and source findings               |
-  | `value-`           | source code lists bound to native members                                          |
+  | Surface prefix      | Covers                                                                                       |
+  | ------------------- | -------------------------------------------------------------------------------------------- |
+  | `coding-`           | `[[coding.choice]]`, `[[coding.warning]]` and `[[coding.documented]]` certificates           |
+  | `support-errata-`   | `[[errata.support]]` source-support decisions                                                |
+  | `split-sos-`        | SOS `[[identity.split]]` and `[[identity.rename]]`                                           |
+  | `split-partition-`  | SCB `[[identity.partition]]` and `[[identity.column_owner]]`, and slices that reference them |
+  | `errata-delivered-` | `[[errata.delivered]]` additions                                                             |
+  | `errata-sos-`       | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                         |
+  | `enrichment-`       | `[[enrichment.description]]` and `[[enrichment.alias]]`                                      |
+  | `route-sos-`        | SOS `[[identity.route]]` and styrtabell lookup subsets                                       |
+  | `topology-sos-`     | SOS variants formed from delivered subset names                                              |
+  | `thin-`             | authored thin-provider registers (`Forsakringskassan/`, `scb_canonical/`)                    |
+  | `representation-`   | `[[representation.delivery_metadata]]` and `[[representation.parallel]]`                     |
+  | `matrix-`           | `[[representation.matrix]]` answer matrices                                                  |
+  | `siblings-`         | sibling grouping of co-delivered columns                                                     |
+  | `relations-`        | `relations.toml` edges                                                                       |
+  | `code-label-pair-`  | `[[code_label_pair]]`                                                                        |
+  | `search-pins-`      | `search_pins.toml`                                                                           |
+  | `acknowledge-`      | `[[acknowledge]]` entries matched against build issues                                       |
+  | `classification-`   | classification books, references and label bindings                                          |
+  | `scope-`            | register-scoped builds and checks, and references out of the slice                           |
+  | `period-family-`    | relations into a curated `[[representation.period_family]]`                                  |
+  | `source-relation-`  | literal source relationships, unbound code lists and source findings                         |
+  | `value-`            | source code lists bound to native members                                                    |
 
 Later stages add their own prefixes to this table.
 
-Refusals end in `-fails-curation-load` (the build refuses its curation) or name the
-stale outcome (`-stale-when-...`). A case that shows the allowed outcome of a guard sits
-beside its refusal twin.
+Refusals end in `-fails-curation-load` (the build refuses its curation),
+`-fails-the-build` or `-refuses-...` (the build stops after its curation loaded), or
+name the stale outcome (`-stale-when-...`). A case that shows the allowed outcome of a
+guard sits beside its refusal twin.
 
 ## `request.json`
 
@@ -76,20 +89,24 @@ beside its refusal twin.
     "valid_dates": ["7001|2000-01-01|2030-12-31"]
   },
   "sos": [{"abbrev": "PAR", "title": "Patientregistret", "subsets": [], "variables": [], "code_lists": {}}],
-  "fk": ["[[register]]", "key = \"remote\"", "..."],
-  "classifications": {"a": ["code,label", "1,One"]}
+  "files": {
+    "Forsakringskassan/fk.toml": ["[[register]]", "key = \"remote\"", "..."],
+    "classifications/a.csv": ["code,label", "1,One"]
+  }
 }
 ```
 
 - `scb` is required, because every input bundle carries an SCB snapshot.
   - `registerinformation` rows are the keyword arguments of `_csv_fixtures.var_row`:
     `cvid`, `var_id`, `colname`, `year`, `regver_id`, `versionname`, `varname`,
-    `vardef`, `unit`, `varopdef`, `varsource`, and `register` as
-    `[name, register_id, variant_id]`. Fields left out take that function's defaults:
-    register `TESTREG` (native 1, variant 10), year 2020, type `int`.
+    `vardef`, `vardesc`, `unit`, `varopdef`, `varsource`, `data_type`, `data_length`,
+    and `register` as `[name, register_id, variant_id]`. Fields left out take that
+    function's defaults: register `TESTREG` (native 1, variant 10), year 2020, type
+    `int`. A row's optional `cells` maps a Registerinformation header to a raw cell
+    value that replaces the generated one, for cells `var_row` has no argument for.
   - `vardemangder` rows are raw pipe-delimited Vardemangder lines.
   - `unika` defaults to one non-sensitive, non-identifier summary row per delivered
-    column.
+    column. `null` delivers no Unika file.
   - `valid_dates` defaults to every value item being valid from 2000 to 2030.
 - `sos` lists Socialstyrelsen workbooks.
   - `subsets` are Deldatamängder rows: `name`, `label`, `description`, `data_from`,
@@ -105,9 +122,10 @@ beside its refusal twin.
     workbook names no register.
   - Every workbook gets a blank delivered `Kopplingsvariabel` column. That column is
     SOS's explicit "not a linkage variable" claim.
-- `fk` is Försäkringskassan's thin source, `Forsakringskassan/fk.toml`, as its lines.
-- `classifications` maps a book slug to the lines of its `classifications/<slug>.csv`
-  code list.
+- `files` maps a path under the source directory to its text, for deliveries the other
+  keys do not model: an authored `Forsakringskassan/fk.toml` or a
+  `classifications/<slug>.csv` code list. The text is a string, or a list of lines
+  joined with newlines.
 
 The runner prepares each distinct spec once per test session and caches it by the spec's
 content hash.
@@ -142,6 +160,7 @@ expected_evidence_sha256 = {{coding_evidence_sha256 key=member:1001}}
   | `relationship_sha256`    | the content hash of that relationship's declaration                                          |
   | `table_sha256`           | the content hash of the one prepared evidence table named `table=`                           |
   | `naming_id`              | `authored_naming_id(kind=, provider=, register_key=, member_key=)`, a thin or SOS native id  |
+  | `variant_key`            | one record's native variant key                                                              |
 
 Record selectors are `key=value` arguments, and all of them must match. A
 comma-separated value lists alternatives. An argument value cannot contain a space.
@@ -176,10 +195,14 @@ Every key is optional, and only the keys that are present get checked.
 - `result`: keys of the build or check result dict, nested. Only the named keys are
   compared; a missing key reads as `null`, and a list names members that must be
   present.
-- `error`: the build must refuse with this located error code. Each string in
-  `message_contains` must appear in the error message. A refusal without a located code
-  (a `ValueError` such as `CatalogDependencyError`) is named by `type`, its class name,
-  instead of `code`.
+- `error`: the build or check must refuse. Only the keys present are compared:
+  - `code` and `exit_code` are the located error the `build-db` and `check-curation`
+    commands report. A `RegMetaError` keeps its own; a `ValueError`, `OSError` or
+    `KeyError` from the pipeline is wrapped as `pipeline_build_failed`, exit code 10.
+  - `type` is the Python class the pipeline raised, for example
+    `CatalogDependencyError`. It tells apart refusals that the commands all wrap as
+    `pipeline_build_failed`.
+  - Each string in `message_contains` must appear in the error message.
 - `projections`: the rows of one named table.
   - `where` filters rows before projecting. A scalar means equality. A list means
     membership. `{"contains": text}` or `{"contains": [text, ...]}` requires the text to
@@ -190,22 +213,32 @@ Every key is optional, and only the keys that are present get checked.
     - `set`: the distinct rows match.
     - `includes`: every expected row is present.
 
-  | Table                   | One row per                                                             | Fields                                                                                                                                                         |
-  | ----------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `issues`                | report-ledger issue                                                     | `code`, `severity`, `subject`, `case_id`, `locator` (the `curation/...` entry its detail names), `detail`, `acknowledged_by`, `valid_from`, `valid_to`, `refs` |
-  | `uses`                  | ledger disposition of a prepared source record                          | `source`, `native_variable`, `key`, `column_name`, `data_type`, `name`, `description`, `use`, `variable`                                                       |
-  | `states`                | built variable state                                                    | `register`, `variable`, `variant` (slugs), `column`, `valid_from`, `valid_to`, `data_type`, `name`, `provenance`                                               |
-  | `state_codes`           | built state and value-set member (or one null-code row)                 | `register`, `variable`, `column`, `valid_from`, `valid_to`, `code`, `label`                                                                                    |
-  | `variables`             | built variable and delivery column (one null-column row if it has none) | `register`, `variable`, `column`                                                                                                                               |
-  | `warnings`              | built data warning                                                      | `register`, `variable` (slugs), `column`, `valid_from`, `valid_to`, `code`, `variant`, `detail`, `refs`                                                        |
-  | `edges`                 | built variable relation                                                 | `type` (`same_as` or `replaced_by`), `a`, `b` (`provider/register/variable`; `replaced_by` runs `a` to `b`)                                                    |
-  | `state_classifications` | built state bound to a classification                                   | `column`, `classification` (slug)                                                                                                                              |
-  | `classifications`       | built classification                                                    | `slug`, `short_name`, `name`, `name_en`                                                                                                                        |
-  | `relationships`         | built literal source relationship                                       | `kind`, `binding_status`, `source_dataset`, `owner` (variable slug), `endpoints` (bound variables)                                                             |
-  | `evidence`              | ledger disposition of prepared auxiliary evidence                       | `kind`, `disposition`                                                                                                                                          |
-  | `source_issues`         | ledger support- and value-source issue (the evidence behind issues)     | `kind`, `severity`, `descriptor_key`, `physical_associations`, `refs`                                                                                          |
+  | Table                   | One row per                                                             | Fields                                                                                                                                                                  |
+  | ----------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `issues`                | report-ledger issue                                                     | `code`, `severity`, `subject`, `case_id`, `locator` (the `curation/...` entry its detail names), `detail`, `acknowledged_by`, `valid_from`, `valid_to`                  |
+  | `issue_refs`            | source record a report-ledger issue cites                               | every `issues` field, then `source` and `key` (the full semantic record key, a list)                                                                                    |
+  | `cases`                 | report-ledger curation case                                             | `case_id`, `status`                                                                                                                                                     |
+  | `uses`                  | ledger disposition of a prepared source record                          | `source`, `native_variable`, `key`, `column_name`, `data_type`, `name`, `description`, `use`, `variable`                                                                |
+  | `case_uses`             | curation case a ledger disposition names                                | `case_id`, `source`, `key`, `use`, `variable`                                                                                                                           |
+  | `states`                | built variable state                                                    | `register`, `variable`, `variant` (slugs), `column`, `valid_from`, `valid_to`, `data_type`, `name` (the variable's), `state_name` (the state's), `provenance`, `pooled` |
+  | `state_codes`           | built state and value-set member (or one null-code row)                 | `register`, `variable`, `variant`, `column`, `valid_from`, `valid_to`, `code`, `label`                                                                                  |
+  | `variables`             | built variable and delivery column (one null-column row if it has none) | `register`, `variable`, `column`, `provider_key`, `description`, `is_identifier`, `is_sensitive`                                                                        |
+  | `variants`              | built register variant                                                  | `register`, `variant`, `name`                                                                                                                                           |
+  | `aliases`               | built search alias                                                      | `register`, `variable`, `variant`, `column`                                                                                                                             |
+  | `edges`                 | built variable relation                                                 | `type` (`same_as` or `replaced_by`), `a`, `b` (`provider/register/variable`; each `same_as` direction is its own row; `replaced_by` runs `a` to `b`)                    |
+  | `concept_groups`        | built concept group                                                     | `variables` (its member slugs, sorted)                                                                                                                                  |
+  | `warnings`              | built data warning                                                      | `register`, `variable` (slugs), `column`, `valid_from`, `valid_to`, `code`, `variant`, `detail`, `summary`, `fields`, `refs`                                            |
+  | `search_pins`           | built search pin                                                        | `query` (the folded key), `type`, `position`, `entity`                                                                                                                  |
+  | `manifest`              | import-manifest entry                                                   | `key`, `value`                                                                                                                                                          |
+  | `state_classifications` | built state bound to a classification                                   | `column`, `classification` (slug)                                                                                                                                       |
+  | `classifications`       | built classification                                                    | `slug`, `short_name`, `name`, `name_en`                                                                                                                                 |
+  | `relationships`         | built literal source relationship                                       | `kind`, `binding_status`, `source_dataset`, `owner` (variable slug), `endpoints` (bound variables)                                                                      |
+  | `evidence`              | ledger disposition of prepared auxiliary evidence                       | `kind`, `disposition`                                                                                                                                                   |
+  | `source_issues`         | ledger support- and value-source issue (the evidence behind issues)     | `kind`, `severity`, `descriptor_key`, `physical_associations`, `refs`                                                                                                   |
 
-A `refs` value lists source record refs as `<source>#<semantic key parts joined by />`.
+A `refs` value (on `warnings` and `source_issues`) lists source record refs as
+`<source>#<semantic key parts joined by />`. An issue's refs are the `issue_refs` rows,
+so a case can filter and project them one ref at a time.
 
 Expected values are read from the test a case replaces, or from the source fixture or
 the spec. Never copy them from a run of the code under test. A new table or placeholder

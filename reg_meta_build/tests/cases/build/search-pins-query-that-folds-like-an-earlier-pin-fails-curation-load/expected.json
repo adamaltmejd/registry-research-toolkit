@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "search_pins_invalid",
+    "exit_code": 10,
+    "message_contains": [
+      "search_pins.toml [[pin]] ",
+      "entry 2: duplicate register pin"
+    ]
+  }
+}

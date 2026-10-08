@@ -1,0 +1,271 @@
+{
+  "description": "SOS SYX (subsets SYX_A, SYX_B): for each declared correction the exact original row it names or one changed fact; SYY repeats the corrected DATUM and MARK rows under SYX_A. Plus the SCB sample VALUE column.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "SYX",
+      "title": "Syntetiskt felregister",
+      "subsets": [
+        {"name": "SYX_A", "label": "SYX_A", "data_from": 2005, "data_to": 2015, "aggregation_level": null},
+        {"name": "SYX_B", "label": "SYX_B", "data_from": 2005, "data_to": 2015, "aggregation_level": null}
+      ],
+      "variables": [
+        {
+          "name": "DATUM",
+          "deldatamangd": "SYX_A",
+          "label": "Datum",
+          "description": null,
+          "data_type": "Decimal",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "DATUM",
+          "deldatamangd": "SYX_B",
+          "label": "Datum",
+          "description": null,
+          "data_type": "Decimal",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "TYP",
+          "deldatamangd": "SYX_A",
+          "label": "Typ",
+          "description": null,
+          "data_type": "Datum",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "REPR",
+          "deldatamangd": "SYX_A",
+          "label": "Repr",
+          "description": null,
+          "data_type": "Decimal",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "YYYYMMDD",
+          "external_classification": null
+        },
+        {
+          "name": "UTANTYP",
+          "deldatamangd": "SYX_A",
+          "label": "Utantyp",
+          "description": null,
+          "data_type": null,
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "UTANREPR",
+          "deldatamangd": "SYX_A",
+          "label": "Utanrepr",
+          "description": null,
+          "data_type": "Decimal",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": null,
+          "external_classification": null
+        },
+        {
+          "name": "FORMEL",
+          "deldatamangd": "SYX_A",
+          "label": "Formel",
+          "description": null,
+          "data_type": "=\"Decimal\"",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "KOLUMN",
+          "deldatamangd": "SYX_A",
+          "label": "Kolumn",
+          "description": null,
+          "data_type": "Decimal",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "DUP",
+          "deldatamangd": "SYX_A",
+          "label": "Dup",
+          "description": null,
+          "data_type": "Decimal",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "DUP",
+          "deldatamangd": "SYX_A",
+          "label": "Dup",
+          "description": null,
+          "data_type": "Text",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "X",
+          "external_classification": null
+        },
+        {
+          "name": "MARK",
+          "deldatamangd": "SYX_A",
+          "label": "Mark",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja\n0 = nej",
+          "external_classification": "https://example.test/klassifikationer/yrken"
+        },
+        {
+          "name": "MARK",
+          "deldatamangd": "SYX_B",
+          "label": "Mark",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja\n0 = nej",
+          "external_classification": "https://example.test/klassifikationer/yrken"
+        },
+        {
+          "name": "ANNANLANK",
+          "deldatamangd": "SYX_A",
+          "label": "Annanlank",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja\n0 = nej",
+          "external_classification": "https://example.test/klassifikationer/yrken/annan"
+        },
+        {
+          "name": "ANNANREPR",
+          "deldatamangd": "SYX_A",
+          "label": "Annanrepr",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja",
+          "external_classification": "https://example.test/klassifikationer/yrken"
+        },
+        {
+          "name": "UTANLANK",
+          "deldatamangd": "SYX_A",
+          "label": "Utanlank",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja\n0 = nej",
+          "external_classification": null
+        },
+        {
+          "name": "VITTNE",
+          "deldatamangd": "SYX_A",
+          "label": "Vittne",
+          "description": "Skapad med kontrollsiffra",
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja\n0 = nej",
+          "external_classification": "https://example.test/klassifikationer/yrken"
+        },
+        {
+          "name": "ANNATVITTNE",
+          "deldatamangd": "SYX_A",
+          "label": "Annatvittne",
+          "description": "Annan",
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja\n0 = nej",
+          "external_classification": "https://example.test/klassifikationer/yrken"
+        },
+        {
+          "name": "UTANVITTNE",
+          "deldatamangd": "SYX_A",
+          "label": "Utanvittne",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja\n0 = nej",
+          "external_classification": "https://example.test/klassifikationer/yrken"
+        },
+        {
+          "name": "FLER",
+          "deldatamangd": "SYX_A",
+          "label": "Fler",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja\n0 = nej",
+          "external_classification": "https://example.test/klassifikationer/yrken"
+        },
+        {
+          "name": "FLER",
+          "deldatamangd": "SYX_A",
+          "label": "Fler",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "2 = kanske",
+          "external_classification": "https://example.test/klassifikationer/yrken"
+        }
+      ]
+    },
+    {
+      "abbrev": "SYY",
+      "title": "Syntetiskt grannregister",
+      "subsets": [
+        {"name": "SYX_A", "label": "SYX_A", "data_from": 2005, "data_to": 2015, "aggregation_level": null}
+      ],
+      "variables": [
+        {
+          "name": "DATUM",
+          "deldatamangd": "SYX_A",
+          "label": "Datum",
+          "description": null,
+          "data_type": "Decimal",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "MARK",
+          "deldatamangd": "SYX_A",
+          "label": "Mark",
+          "description": null,
+          "data_type": "Sträng (text)",
+          "data_from": 2005,
+          "data_to": 2015,
+          "value_set": "1 = ja\n0 = nej",
+          "external_classification": "https://example.test/klassifikationer/yrken"
+        }
+      ]
+    }
+  ]
+}

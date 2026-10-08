@@ -1,0 +1,48 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "invalid_sos_lookup_signals"},
+      "fields": ["subject", "severity"],
+      "rows": [
+        ["A", "error"],
+        ["B", "error"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "invalid_sos_lookup_signals"},
+      "fields": ["source"],
+      "match": "set",
+      "rows": [
+        ["Socialstyrelsen/Metadata Signaler (SYS)_webb.xlsx"]
+      ]
+    },
+    {
+      "table": "case_uses",
+      "where": {"source": "Socialstyrelsen/Metadata Uppslag (SYL)_webb.xlsx", "use": "support"},
+      "fields": ["case_id"],
+      "rows": [
+        ["existing-source-use:Socialstyrelsen/Metadata Uppslag (SYL)_webb.xlsx"],
+        ["existing-source-use:Socialstyrelsen/Metadata Uppslag (SYL)_webb.xlsx"],
+        ["existing-source-use:Socialstyrelsen/Metadata Uppslag (SYL)_webb.xlsx"]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {"source": "Socialstyrelsen/Metadata Uppslag (SYL)_webb.xlsx", "use": "support"},
+      "fields": ["use"],
+      "rows": [
+        ["support"],
+        ["support"],
+        ["support"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syl"},
+      "fields": ["variable", "variant"],
+      "rows": []
+    }
+  ]
+}

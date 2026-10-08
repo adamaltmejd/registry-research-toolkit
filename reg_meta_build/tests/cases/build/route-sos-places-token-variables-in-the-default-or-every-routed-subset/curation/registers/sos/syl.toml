@@ -1,0 +1,20 @@
+[register]
+provider = "sos"
+slug = "syl"
+name = "Uppslag"
+native_id = "7014865350762362457"
+[[variant]]
+slug = "a"
+native_id = "7014865350762362457.6344316295286438128"
+[[variant]]
+slug = "v"
+native_id = "7014865350762362457.8342361446659475065"
+[[variable]]
+slug = "col"
+native_id = "7014865350762362457.COL"
+[[variable]]
+slug = "kod"
+native_id = "7014865350762362457.KOD"
+[[identity.route]]
+deldatamangd = "TOKEN"
+variants = ["A"]
