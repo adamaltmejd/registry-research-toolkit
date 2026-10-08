@@ -81,6 +81,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sqlite3
 import struct
 import sys
@@ -762,9 +763,13 @@ def _json_cell(value: object) -> object:
     """A sample cell as JSON that keeps its SQLite storage class: NULL is null,
     INTEGER and REAL stay numbers, TEXT is a string (long text truncated) and a
     BLOB is a ``{"blob": preview}`` object. Integer 1, text '1', blob b'1' and NULL
-    are different rows to the diff, so they must not print alike."""
+    are different rows to the diff, so they must not print alike. A non-finite
+    REAL has no JSON number, so it is a ``{"real": "inf" | "-inf" | "nan"}``
+    object rather than the invalid ``Infinity``/``NaN`` or the string 'inf'."""
     if isinstance(value, (bytes, bytearray, memoryview)):
         return {"blob": _fmt_cell(value)}
+    if isinstance(value, float) and not math.isfinite(value):
+        return {"real": str(value)}
     if isinstance(value, str):
         return _fmt_cell(value, width=200)
     return value
@@ -874,7 +879,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"dbdiff: error: {exc}", file=sys.stderr)
         return 2
     if args.json:
-        print(json.dumps(_report_to_dict(report), indent=2, ensure_ascii=False))
+        print(
+            json.dumps(
+                _report_to_dict(report), indent=2, ensure_ascii=False, allow_nan=False
+            )
+        )
     else:
         print(format_report(report))
     return 0 if report.identical else 1

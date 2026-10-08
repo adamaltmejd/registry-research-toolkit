@@ -503,3 +503,29 @@ class TestCli:
         (table,) = json.loads(capsys.readouterr().out)["tables"]
         assert table["sample_a_not_b"] == [{"net": 1, "row": {"v": 1}}]
         assert table["sample_b_not_a"] == [{"net": -1, "row": {"v": "1"}}]
+
+    def test_json_non_finite_real_stays_valid_json(self, tmp_path: Path, capsys):
+        # A holds REAL -inf and inf, B text 'inf'. Fails if a non-finite REAL is
+        # printed as the non-JSON `Infinity` (strict parse below refuses it), or
+        # as the bare string 'inf', which reads like B's text cell. SQLite stores
+        # a bound NaN as NULL, so nan cannot reach a sample.
+        a = tmp_path / "a.db"
+        b = tmp_path / "b.db"
+        for path, values in ((a, (float("-inf"), float("inf"))), (b, ("inf",))):
+            conn = sqlite3.connect(path)
+            conn.execute("CREATE TABLE t (v)")
+            conn.executemany("INSERT INTO t VALUES (?)", [(v,) for v in values])
+            conn.commit()
+            conn.close()
+        assert main(["--json", str(a), str(b)]) == 1
+
+        def refuse(constant: str) -> object:
+            raise ValueError(f"not JSON: {constant}")
+
+        out = json.loads(capsys.readouterr().out, parse_constant=refuse)
+        (table,) = out["tables"]
+        assert sorted(r["row"]["v"]["real"] for r in table["sample_a_not_b"]) == [
+            "-inf",
+            "inf",
+        ]
+        assert table["sample_b_not_a"] == [{"net": -1, "row": {"v": "inf"}}]
