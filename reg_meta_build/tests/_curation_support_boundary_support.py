@@ -9,15 +9,10 @@ event ledger.
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING, Literal
 
-from _csv_fixtures import (
-    REGISTERINFORMATION_HEADER,
-    var_row,
-    write_scb_input,
-)
+from _csv_fixtures import summary_rows, var_row, write_scb_input
 from _pipeline_catalog_support import (
     BuiltCatalog,
     prepare_accepted,
@@ -172,60 +167,6 @@ class Sources:
         path = self.curation / "registers" / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
-
-
-def toml_inline(value) -> str:
-    """A JSON-shaped value (``model_dump(mode="json")``) as an inline TOML value."""
-    if isinstance(value, dict):
-        items = ", ".join(
-            f"{key} = {toml_inline(item)}"
-            for key, item in value.items()
-            if item is not None
-        )
-        return "{ " + items + " }"
-    if isinstance(value, (list, tuple)):
-        return "[" + ", ".join(toml_inline(item) for item in value) + "]"
-    if isinstance(value, bool):
-        return "true" if value else "false"
-    if isinstance(value, str):
-        return json.dumps(value)
-    return str(value)
-
-
-def summary_rows(rows: list[str]) -> list[str]:
-    """One non-sensitive, non-identifier Unika summary row per delivered column.
-
-    The summary carries each variable's flags; without it the build withholds the
-    variable as `unresolved_flag`.
-    """
-    header = REGISTERINFORMATION_HEADER.split("|")
-    out = []
-    for row in rows:
-        cells = dict(zip(header, row.split("|"), strict=True))
-        if cells["Kolumnnamn"] in {"", '""'}:
-            continue  # A member without a physical column has no column summary.
-        year = cells["Registerversion_ForstaGodkannandeDatum"][:4]
-        line = "|".join(
-            (
-                cells["Registernamn"],
-                cells["Registerrubrik"],
-                cells["Registervariantnamn"],
-                cells["Registervariantrubrik"],
-                cells["Variabelnamn"],
-                cells["Kolumnnamn"],
-                year,
-                year,
-                "0",
-                "0",
-                "0",
-            )
-        )
-        if line not in out:
-            out.append(line)
-    # The reader needs a non-empty summary file; an unmatched row is only a warning.
-    return out or [
-        "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
-    ]
 
 
 def _deliver_blank_join_markers(path: Path) -> None:

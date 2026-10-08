@@ -12,12 +12,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
+from _build_case_runner import toml_inline
 from _csv_fixtures import replace_registerinformation_cell, var_row
 from _curation_support_boundary_support import (
     SCB_SAMPLE,
     SCB_VARIANT,
     prepare_sources,
-    toml_inline,
 )
 from reg_meta_build.source_coordinates import native_variant_key
 from reg_meta_build.source_curation import capture_expectations

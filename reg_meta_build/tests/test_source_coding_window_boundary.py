@@ -16,12 +16,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from _build_case_runner import toml_inline
 from _csv_fixtures import PIPE, var_row
 from _curation_support_boundary_support import (
     SCB_SAMPLE,
     SCB_VARIANT,
     prepare_sources,
-    toml_inline,
 )
 from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
 from reg_meta_build.source_coding import coding_source_sha256
