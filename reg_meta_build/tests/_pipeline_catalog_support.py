@@ -138,6 +138,16 @@ def prepare_accepted(tmp_path: Path, source: Path) -> tuple[Path, str, str]:
     return prepared, accept_prepared(prepared), manifest.sha256
 
 
+def write_curation_tree(root: Path, files: dict[str, str]) -> Path:
+    """Write an authored curation tree; ``files`` maps root-relative paths to text."""
+    (root / "classifications").mkdir(parents=True)
+    for relative, text in files.items():
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+    return root
+
+
 def report_events(report: Path) -> list[dict]:
     """Every event of a build or check report ledger, decoded, in ledger order."""
     with gzip.open(report / "events.jsonl.gz", "rt", encoding="utf-8") as stream:
