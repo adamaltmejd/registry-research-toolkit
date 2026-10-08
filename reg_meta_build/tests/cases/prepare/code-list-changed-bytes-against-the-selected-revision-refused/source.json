@@ -1,0 +1,7 @@
+{
+  "description": "A code list whose label changed (1,B) after its revision was declared from the reviewed bytes (1,A): same size, other content.",
+  "files": {
+    "classifications/codes.csv": "code,label\n1,B\n",
+    "reviewed/codes.csv": "code,label\n1,A\n"
+  }
+}

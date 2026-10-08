@@ -106,7 +106,7 @@ def source_spec(reference: str | dict) -> dict:
     return json.loads((SOURCES / f"{reference}.json").read_text(encoding="utf-8"))
 
 
-def _scb_row(row: dict) -> str:
+def scb_row(row: dict) -> str:
     """One Registerinformation row: `var_row` arguments, then raw `cells` overrides."""
     text = var_row(
         **{
@@ -123,7 +123,7 @@ def _scb_row(row: dict) -> str:
 def write_sources(spec: dict, source: Path) -> None:
     """Materialize a source spec as provider deliveries under ``source``."""
     scb = spec["scb"]
-    rows = [_scb_row(row) for row in scb["registerinformation"]]
+    rows = [scb_row(row) for row in scb["registerinformation"]]
     values = scb.get("vardemangder", [])
     # `"unika": null` delivers no Unika summary file at all.
     unika = scb.get("unika", summary_rows(rows))

@@ -23,16 +23,14 @@ The abbrev the adapter mints from is the parenthesized code in the FILENAME stem
 from __future__ import annotations
 
 import hashlib
+import json
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from pathlib import Path
 
+from _workbook_spec import write_workbook
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.sources.sos import parse_register_file
 from reg_meta_build.sources.sos_records import clean_sos_source
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
 
 # The three `SPEC` `Värdemängd` cells of `Metadata - Variabelnivå` in
 # `Metadata_Insatser till barn och unga (BU)_webb.xlsx` (G71/G83/G99), byte for byte.
@@ -279,116 +277,15 @@ def write_sos_input(
 
 # Source-record workbook fixtures shared by the SOS source-record test modules.
 CLASSIFICATION_URL = "https://example.test/classifications/ssyk"
+_PREPARE_SOURCES = Path(__file__).parent / "cases" / "prepare" / "_sources"
 
 
 def write_source_workbook(path: Path) -> None:
-    import openpyxl
-    from openpyxl.worksheet.hyperlink import Hyperlink
-
-    workbook = openpyxl.Workbook()
-    general = workbook.active
-    general.title = "Generell information"
-    general.append(["", "Om datamängden version", None])
-    general.append(["", "Datamängd", "Patientregistret källa"])
-    general.append(["", "Version", "2026:1"])
-
-    variables = workbook.create_sheet("Metadata - Variabelnivå")
-    variables.append(
-        [
-            "Deldatamängdsnamn",
-            "Variabelnamn",
-            "Variabeletikett",
-            "Variabelbeskrivning",
-            "Värdemängd",
-            "Länk kodverk",
-            "Datatyp",
-            "Data från",
-            "Data till",
-            "Specificera källa",
-            "Eget källfält",
-            "Kopplingsvariabel",
-        ]
+    """The `cases/prepare/_sources/sos-source.json` workbook, written to ``path``."""
+    spec = json.loads(
+        (_PREPARE_SOURCES / "sos-source.json").read_text(encoding="utf-8")
     )
-    base = [
-        "PAR_OV",
-        "HDIA",
-        " Huvuddiagnos ",
-        "Första raden\r\nandra raden  ",
-        "Se kodlista",
-        CLASSIFICATION_URL,
-        "Heltal",
-        2001,
-        2020,
-        "Patientregistret",
-        "bevaras",
-        None,
-    ]
-    variables.append(base)
-    variables.append(base)
-    variables.append([*base[:2], "Annan etikett", *base[3:]])
-    variables.append([*base[:7], "2001", 2020, *base[9:]])
-    for row_number in range(2, 6):
-        variables[f"F{row_number}"].hyperlink = CLASSIFICATION_URL
-    variables.append(
-        [
-            "PAR_OV",
-            "PARTIELL",
-            "Partiell",
-            None,
-            None,
-            None,
-            "Sträng (text)",
-            2010,
-            None,
-            None,
-            None,
-            None,
-        ]
-    )
-    variables["F6"] = "Visad kodlista"
-    variables["F6"].hyperlink = Hyperlink(
-        ref="F6",
-        location="'Kodlista_HDIA'!A1",
-        display="Visad kodlista",
-    )
-    variables.append(
-        [
-            "PAR_OV",
-            "MALFORMED",
-            "Malformed",
-            None,
-            None,
-            None,
-            "Heltal",
-            "+2001",
-            "2020",
-            None,
-            None,
-            None,
-        ]
-    )
-    variables.append(
-        [
-            None,
-            "UTAN_DEL",
-            "Utan deldatamängd",
-            None,
-            None,
-            None,
-            "Datum",
-            None,
-            None,
-            None,
-            None,
-            None,
-        ]
-    )
-
-    codes = workbook.create_sheet("Kodlista_HDIA")
-    codes.append(["Tidsperiod", "Kod", "Beskrivning"])
-    codes.append(["2001-2020", 1, "Kod ett"])
-    codes["B2"].number_format = "000"
-    workbook.save(path)
+    write_workbook(spec["workbook"], path, base=None)
 
 
 def source_revision(path: Path) -> SourceRevision:

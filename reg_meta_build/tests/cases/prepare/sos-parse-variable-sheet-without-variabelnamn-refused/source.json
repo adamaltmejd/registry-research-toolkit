@@ -1,0 +1,11 @@
+{
+  "description": "A minimal SOS workbook whose variable sheet header names no Variabelnamn column (Foo, Bar), as an upstream rename would leave it.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Test (TST)_webb.xlsx",
+    "sheets": {
+      "Generell information": [],
+      "Metadata-Datamängd (DCAT-AP)": [],
+      "Metadata - Variabelnivå": [["Foo", "Bar"], ["TESTVAR"]]
+    }
+  }
+}
