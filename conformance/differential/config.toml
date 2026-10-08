@@ -34,7 +34,7 @@ paths = ["/provenance/catalog_generation_id"]
 
 [[exception]]
 name = "reader-version"
-reason = "The reader's release version is build identity, not behavior; it differs whenever main bumps a version between re-pins."
+reason = "The reader's release version is build identity, not behavior: the frozen baseline commit reports its own version, and main bumps versions between re-pins, so the two differ."
 case = "*/*/context"
 paths = ["/data/reg_meta_version"]
 
