@@ -68,5 +68,3 @@ def test_missing_conversion_is_fatal():
     item = record()
     with pytest.raises(ValueError, match="missing explicit provider key"):
         resolve((item,), provider_keys={})
-    with pytest.raises(ValueError, match="missing checked parent naming"):
-        resolve((item,), naming=())

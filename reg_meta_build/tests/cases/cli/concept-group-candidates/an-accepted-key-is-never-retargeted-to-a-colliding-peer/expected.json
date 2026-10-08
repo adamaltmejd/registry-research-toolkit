@@ -7,9 +7,10 @@
         "# excluded batteries (weak label agreement): 1",
         "# skipped (key collides with an existing group): 3",
         "# skipped (trailing-hyphen trim collapsed two distinct stems): 0",
-        "variable = \"dodsorsak1\""
+        "variable = \"dodsorsak2\""
       ],
       "excludes": [
+        "variable = \"dodsorsak1\"",
         "key = \"artal-person\"",
         "variable = \"artal-person-1\"",
         "variable = \"artal-person4\"",

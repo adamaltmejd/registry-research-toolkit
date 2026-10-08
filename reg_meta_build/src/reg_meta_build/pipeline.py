@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict
-from reg_meta.errors import EXIT_USAGE, RegMetaError
+from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
 from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build._curation import (
@@ -114,6 +114,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
     from reg_meta_build.curation_tree import CurationTree
+    from reg_meta_build.source_records import SourceRecord
     from reg_meta_build.source_value_bindings import (
         ValueBindingIssue,
         ValueBindingSession,
@@ -267,6 +268,48 @@ def _selected_scopes(
             )
         )
     return {key for spec in specs for key in names[spec]}
+
+
+def _refuse_duplicated_rows(records: Iterable[SourceRecord]) -> None:
+    """Refuse two physical rows that prepare to one source record.
+
+    A record id hashes a record's semantic key and content, not its physical row,
+    so byte-identical rows share one id and the build cannot account for both.
+    The real deliveries carry none (2026-10-08: 0 duplicates in 996,840 SCB
+    Registerinformation rows), so a duplicate is refused as a delivery defect
+    rather than collapsed.
+    """
+    first: dict[str, SourceRecord] = {}
+    for record in records:
+        seen = first.setdefault(record.record_id, record)
+        if seen is record:
+            continue
+        # Each row is located on its own: a slice holds one source, so today both
+        # rows share a file (and SOS sheet), but nothing here should assume it.
+        kept, repeat = (
+            " ".join(
+                part
+                for part in (
+                    locator.physical_file,
+                    f"sheet {locator.physical_table}"
+                    if locator.physical_table != locator.physical_file
+                    else "",
+                    locator.physical_record,
+                )
+                if part
+            )
+            for locator in (seen.locators[0], record.locators[0])
+        )
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="source_rows_duplicated",
+                error_class="configuration",
+                message=f"{record.source}: {kept} and {repeat} are identical rows.",
+                remediation="Remove the repeated row from the input bundle (and "
+                "report it to the provider), then prepare a new candidate.",
+            )
+        )
 
 
 def _value_source_issue(
@@ -1106,6 +1149,7 @@ def _run_pipeline(
                     )
                 )
                 for register, originals in slices:
+                    _refuse_duplicated_rows(originals)
                     scope_started = time.perf_counter()
                     scope_key = source, register
                     scope = scopes.pop(scope_key)
@@ -1288,9 +1332,10 @@ def _run_pipeline(
                                 (r.source, r.locators[0].semantic_record_key)
                                 for r in occurrence.evidence
                             )
-                    # Invariant kept as a fail-fast guard: source-scope resolution
-                    # accounts for every original record, so no public input reaches
-                    # this. A dropped record would vanish from the catalog silently.
+                    # Invariant kept as a fail-fast guard: identical physical rows
+                    # (one record id) are refused when the slice loads, and
+                    # source-scope resolution accounts for every original record. A
+                    # dropped record would vanish from the catalog silently.
                     if set(uses) != {r.record_id for r in originals} or len(
                         uses
                     ) != len(originals):

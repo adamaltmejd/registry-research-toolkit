@@ -1,6 +1,0 @@
-{
-  "replaces": "test_curation_compile_tree.py::test_thin_default_variant_carries_panel_fields",
-  "fails_if": "variable formation skips an occurrence whose variant has no resolved mapping instead of refusing it, so a thin register whose `_default` variant has no tracked slug builds without stopping",
-  "note": "FK's remote delivers AMOUNT with no named variant, so the register binds the not-applicable `_default` variant; remote.toml names the register and the variable but declares no `[[variant]]`. The replaced test asserted the compile-level stale_curation_entry (\"has no tracked default slug entry\"). In a build, formation then meets the withheld variant and stops with a bare ValueError, so that diagnostic never reaches the ledger: the build fails as `pipeline_build_failed`. The message is pinned because the code alone does not identify the refusal. Allowed twin: scope-reference-into-an-unselected-thin-provider-is-deferred, which builds the same source with a tracked [[variant]] `_default` entry in remote.toml.",
-  "sources": "scb-value-fk-remote"
-}

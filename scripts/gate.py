@@ -11,9 +11,10 @@ first failure. `all` runs g0, rust, release, flows and frontend; `crates` is g0'
 part, for CI's `rust` job; `regen` and `g1` run only when named. The CI jobs in
 `.github/workflows/ci.yml` call these steps, so the commands live here once.
 
-Steps that build or run the Rust workspace hold one machine-wide advisory lock
-(`flock` on `$XDG_CACHE_HOME/registry-research-toolkit-heavy.lock`), so parallel
-sessions run one heavy job at a time instead of overloading the machine; `heavy -- CMD`
+Steps that build or run the Rust workspace hold one of three machine-wide advisory
+slots (`flock` on `$XDG_CACHE_HOME/registry-research-toolkit-heavy-<n>.lock`), so
+parallel sessions run at most three heavy jobs at a time instead of overloading the
+machine; `heavy -- CMD`
 runs any other heavy command (a parallel pytest, a cargo build, a derive or probe) under
 the same lock. Stdlib only:
 `--no-project` keeps the frontend CI job free of the workspace build.
@@ -43,6 +44,9 @@ SERVER_CMD = (
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'"
 ALL = ("g0", "rust", "release", "flows", "frontend")
+# A few slots, not one: a single long job (a real-seed build) must not stall every
+# other session's gate, while the cap still keeps parallel sessions off load 30.
+SLOTS = 3
 HEAVY = {"g0", "crates", "rust", "release", "flows", "regen", "g1"}
 
 
@@ -163,16 +167,30 @@ STEPS = {f.__name__: f for f in (g0, crates, rust, release, flows, frontend, reg
 
 @contextmanager
 def heavy_lock():
-    cache = os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache"
-    path = Path(cache) / "registry-research-toolkit-heavy.lock"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w") as handle:
-        try:
-            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            print(f"gate: waiting for the heavy-job lock {path}", flush=True)
-            fcntl.flock(handle, fcntl.LOCK_EX)
-        yield
+    """Hold one of SLOTS machine-wide heavy-job slots (one flock file each)."""
+    cache = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
+    cache.mkdir(parents=True, exist_ok=True)
+    handles = [
+        (cache / f"registry-research-toolkit-heavy-{i}.lock").open("w")
+        for i in range(SLOTS)
+    ]
+    try:
+        waiting = False
+        while True:
+            for handle in handles:
+                try:
+                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except BlockingIOError:
+                    continue
+                yield
+                return
+            if not waiting:
+                print(f"gate: waiting for one of {SLOTS} heavy-job slots", flush=True)
+                waiting = True
+            time.sleep(5)
+    finally:
+        for handle in handles:
+            handle.close()
 
 
 def main() -> int:

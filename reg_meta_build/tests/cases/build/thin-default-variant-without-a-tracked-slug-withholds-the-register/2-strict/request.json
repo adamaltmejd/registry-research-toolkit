@@ -1,0 +1,7 @@
+{
+  "fails_if": "a strict build stops counting the stale default-variant entry (or the withheld register) as an error, so it places a catalog without fk/remote instead of stopping blocked",
+  "note": "The same tree as step 1, built strict over both registers (a register list keeps a strict build from needing a publishable, clean checkout): the error-level issues block the build and nothing is placed.",
+  "sources": "scb-value-fk-remote",
+  "registers": ["1", "remote"],
+  "diagnostic": false
+}

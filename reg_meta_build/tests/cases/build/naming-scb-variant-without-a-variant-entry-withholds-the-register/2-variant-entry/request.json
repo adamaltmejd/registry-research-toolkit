@@ -1,0 +1,5 @@
+{
+  "fails_if": "source-scope resolution withholds a register whose delivered variant its file names, so scb/sample is missing",
+  "note": "The allowed twin: sample.toml adds `[[variant]] native_id = \"1.10\"`, so the register builds with no error.",
+  "sources": "scb-value"
+}

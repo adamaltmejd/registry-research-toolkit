@@ -1,0 +1,18 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity"],
+      "rows": [
+        ["unnamed_delivered_variant", "error"],
+        ["withheld_register_dependency", "error"]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["register", "variable"],
+      "rows": []
+    }
+  ]
+}

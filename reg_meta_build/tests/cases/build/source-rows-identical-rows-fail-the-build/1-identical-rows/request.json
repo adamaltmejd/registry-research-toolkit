@@ -1,0 +1,13 @@
+{
+  "fails_if": "the build stops refusing two byte-identical physical rows when it loads a scope (for example, the duplicate reaches the occurrence-accounting guard again and fails as a bare `pipeline_build_failed`, or one copy is silently dropped and the build completes)",
+  "note": "Registerinformation repeats member 1001's row. The record id hashes a row's semantic key and content, not its row number, so both rows prepare to one record id. The real delivery has no such row (2026-10-08: 0 duplicates in 996,840 Registerinformation rows), so the build refuses it with a located code naming the file and both rows (the header is row 1, so the data rows are 2 and 3). A diagnostic build refuses too: the input is defective, not the curation.",
+  "sources": {
+    "description": "Register 1 delivers VALUE (member 1001) in two byte-identical Registerinformation rows.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    }
+  }
+}

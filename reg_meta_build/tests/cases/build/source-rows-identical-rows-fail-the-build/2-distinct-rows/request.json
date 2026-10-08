@@ -1,0 +1,13 @@
+{
+  "fails_if": "the duplicate-row refusal compares something coarser than the whole record (say the semantic key alone), so two rows of one member that differ in a delivered cell are refused",
+  "note": "The allowed twin: the same member in two rows that differ in one delivered cell (the unit), so the rows prepare to two record ids and the build completes.",
+  "sources": {
+    "description": "Register 1 delivers VALUE (member 1001) in two Registerinformation rows that differ only in the unit.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE", "unit": "kr"},
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE", "unit": "tkr"}
+      ]
+    }
+  }
+}

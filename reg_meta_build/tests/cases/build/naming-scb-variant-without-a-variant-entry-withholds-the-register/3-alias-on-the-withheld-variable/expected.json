@@ -1,0 +1,24 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "case_id"],
+      "rows": [
+        ["unnamed_delivered_variant", "error", null],
+        ["withheld_alias_dependency", "error", "curation/registers/scb/sample.toml#/enrichment.alias/1"],
+        ["withheld_register_dependency", "error", null]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["register", "variable"],
+      "rows": []
+    },
+    {
+      "table": "aliases",
+      "fields": ["register", "variable", "column"],
+      "rows": []
+    }
+  ]
+}
