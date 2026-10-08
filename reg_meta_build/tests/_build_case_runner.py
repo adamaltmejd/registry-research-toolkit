@@ -736,6 +736,51 @@ def _warnings(outcome: Outcome) -> list[dict]:
     ]
 
 
+def _alias_windows(outcome: Outcome) -> list[dict]:
+    """Each alias window of a delivery column, with its per-column facts, the
+    members of its per-column value set and the books bound to it."""
+    key = "w.variable_id, w.register_variant_id, w.delivery_column_name, w.valid_from"
+    codes: dict[tuple, list[list[str]]] = {}
+    for row in outcome._sql(
+        f"SELECT {key}, c.code, c.label FROM variable_alias_window w "
+        "JOIN value_set_member m ON m.value_set_id = w.value_set_id "
+        "JOIN value_code c ON c.code_id = m.code_id"
+    ):
+        codes.setdefault(tuple(row.values())[:4], []).append(
+            [row["code"], row["label"]]
+        )
+    books: dict[tuple, list[str]] = {}
+    for row in outcome._sql(
+        f"SELECT {key}, c.slug FROM alias_window_classification w "
+        "JOIN classification c ON c.id = w.classification_id"
+    ):
+        books.setdefault(tuple(row.values())[:4], []).append(row["slug"])
+    rows = []
+    for row in outcome._sql(
+        f"SELECT {key}, r.slug AS register, v.slug AS variable, rv.slug AS variant, "
+        "w.delivery_column_name AS column, w.valid_to, w.column_metadata, "
+        "w.coding_metadata, w.data_type, w.data_length, w.definition, "
+        "w.measurement_unit, w.name, w.description, w.operational_definition "
+        "FROM variable_alias_window w JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN register_variant rv ON rv.register_variant_id = w.register_variant_id"
+    ):
+        ident = tuple(row.values())[:4]
+        row = {
+            k: v
+            for k, v in row.items()
+            if k not in {"variable_id", "register_variant_id", "delivery_column_name"}
+        }
+        rows.append(
+            {
+                **row,
+                "codes": sorted(codes.get(ident, [])),
+                "classifications": sorted(books.get(ident, [])),
+            }
+        )
+    return rows
+
+
 def _conformance_codes(outcome: Outcome) -> list[dict]:
     """Each source member a state's book conformance records outside the book.
 
@@ -783,7 +828,9 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "states": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
         "s.delivery_column_name AS column, s.valid_from, s.valid_to, s.data_type, "
-        "v.name, s.name AS state_name, s.provenance, s.pooled " + _STATE_JOIN
+        "v.name, s.name AS state_name, s.provenance, s.pooled, s.data_length, "
+        "s.definition, s.measurement_unit, s.description, s.operational_definition "
+        + _STATE_JOIN
     ),
     "state_codes": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
@@ -817,6 +864,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "JOIN register r ON r.register_id = v.register_id "
         "JOIN register_variant rv ON rv.register_variant_id = a.register_variant_id"
     ),
+    "alias_windows": _alias_windows,
     "concept_groups": _concept_groups,
     "warnings": _warnings,
     "search_pins": lambda o: o._sql(
@@ -888,13 +936,18 @@ FIELDS: dict[str, frozenset[str]] = {
         "use variable",
         "case_uses": "case_id source key use variable",
         "states": "register variable variant column valid_from valid_to data_type "
-        "name state_name provenance pooled",
+        "name state_name provenance pooled data_length definition measurement_unit "
+        "description operational_definition",
         "state_codes": "register variable variant column valid_from valid_to code label",
         "variables": "register variable column provider_key description "
         "is_identifier is_sensitive",
         "variants": "register variant name panel_entity_key panel_time_key",
         "tags": "slug member",
         "aliases": "register variable variant column",
+        "alias_windows": "register variable variant column valid_from valid_to "
+        "column_metadata coding_metadata data_type data_length definition "
+        "measurement_unit name description operational_definition codes "
+        "classifications",
         "concept_groups": "variables",
         "warnings": "register variable column valid_from valid_to code variant detail "
         "summary fields refs",
