@@ -930,6 +930,13 @@
         "Family": {
           "description": "A one-dimensional classification succession family (ICD, LKF, SNI, SSYK).",
           "properties": {
+            "editions": {
+              "description": "Its editions in chain order.",
+              "items": {
+                "$ref": "#/$defs/FamilyEdition"
+              },
+              "type": "array"
+            },
             "fqid": {
               "type": "string"
             },
@@ -943,7 +950,62 @@
           "required": [
             "fqid",
             "key",
-            "label"
+            "label",
+            "editions"
+          ],
+          "type": "object"
+        },
+        "FamilyEdition": {
+          "description": "An edition of a succession family.",
+          "properties": {
+            "effective_year": {
+              "description": "The year of the edge by which the edition is superseded on the chain.",
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "is_current": {
+              "description": "Started and without an active successor at the policy year.",
+              "type": "boolean"
+            },
+            "is_self": {
+              "description": "The edition the family's chain was read from.",
+              "type": "boolean"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "short_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "slug": {
+              "type": "string"
+            },
+            "version_year": {
+              "description": "The edition's own vintage year.",
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "slug",
+            "fqid",
+            "is_current",
+            "is_self"
           ],
           "type": "object"
         },
@@ -2558,6 +2620,659 @@
                 "$ref": "#/$defs/RelatedDocument"
               },
               "type": "array"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "graph",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `graph` (ref, scope?): The succession graph of a variable, a classification or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`): variable nodes with their states folded into representation runs, classification edition nodes, and directed succession edges. A variable draws its concept group's members, a classification its classification groups; `focus_id` is the requested node. No nodes means nothing to draw.\n- `lineage` (ref, scope?): A variable's lineage: the source states feeding each of its states (`edges`), the build's lineage `warnings`, and, for every variable in scope with its name, its register's provenance role (`registers`).",
+    "inputSchema": {
+      "$defs": {
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        }
+      },
+      "properties": {
+        "operation": {
+          "enum": [
+            "graph",
+            "lineage"
+          ],
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "ClassificationNode": {
+          "description": "A classification edition, a point in time.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "group_key": {
+              "description": "`class/<key>` of the classification group or family it is drawn in.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "group_label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "id": {
+              "description": "`class/<slug>`.",
+              "type": "string"
+            },
+            "is_current": {
+              "type": "boolean"
+            },
+            "label": {
+              "type": "string"
+            },
+            "short_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "version_year": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "fqid",
+            "label",
+            "is_current"
+          ],
+          "type": "object"
+        },
+        "Edge": {
+          "description": "A directed succession edge, predecessor to successor. A representation edge\nnames its columns and, when scoped, its variant.",
+          "properties": {
+            "effective_year": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source": {
+              "type": "string"
+            },
+            "source_column": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "target": {
+              "type": "string"
+            },
+            "target_column": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "source",
+            "target"
+          ],
+          "type": "object"
+        },
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Facet": {
+          "properties": {
+            "axis": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "label": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "label"
+          ],
+          "type": "object"
+        },
+        "Graph": {
+          "description": "The graph; no nodes means there is nothing to draw.",
+          "properties": {
+            "edges": {
+              "items": {
+                "$ref": "#/$defs/Edge"
+              },
+              "type": "array"
+            },
+            "focus_id": {
+              "description": "The node of the requested variable or classification; none for a group.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "nodes": {
+              "items": {
+                "$ref": "#/$defs/Node"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "nodes",
+            "edges"
+          ],
+          "type": "object"
+        },
+        "GraphState": {
+          "description": "One emitted state; states sharing `representation_run_id` form one cell.",
+          "properties": {
+            "classification_slugs": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "delivery_column_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "period_scope": {
+              "type": "string"
+            },
+            "representation_run_id": {
+              "description": "Increments at a change of variant, period scope, or (between states) value\nset, version label, classifications or delivery column.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "state_id": {
+              "type": "string"
+            },
+            "valid_from": {
+              "description": "None for an unknown start.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "valid_to": {
+              "description": "None for an open end.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "value_set_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "value_set_version_label": {
+              "type": "string"
+            },
+            "variant": {
+              "type": "string"
+            },
+            "variant_family": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant_family_label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant_label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "state_id",
+            "period_scope",
+            "variant",
+            "representation_run_id",
+            "value_set_version_label",
+            "classification_slugs"
+          ],
+          "type": "object"
+        },
+        "Lineage": {
+          "properties": {
+            "edges": {
+              "items": {
+                "$ref": "#/$defs/LineageEdge"
+              },
+              "type": "array"
+            },
+            "registers": {
+              "description": "Each variable in scope with the variable's name (compared case-insensitively\nin ASCII), across registers: whether its register is the variable's source.",
+              "items": {
+                "$ref": "#/$defs/Provenance"
+              },
+              "type": "array"
+            },
+            "warnings": {
+              "items": {
+                "$ref": "#/$defs/LineageWarning"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "edges",
+            "warnings",
+            "registers"
+          ],
+          "type": "object"
+        },
+        "LineageEdge": {
+          "description": "A state of the variable fed by a state of a source variable over the two\nstates' intersection.",
+          "properties": {
+            "consumer_state_id": {
+              "type": "string"
+            },
+            "source_fqid": {
+              "description": "The source state's variable.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_state_id": {
+              "type": "string"
+            },
+            "valid_from": {
+              "type": "string"
+            },
+            "valid_to": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "consumer_state_id",
+            "source_state_id",
+            "valid_from",
+            "valid_to"
+          ],
+          "type": "object"
+        },
+        "LineageWarning": {
+          "description": "A build-time warning on one of the variable's states: `no_source_state` or\n`ambiguous_source_variant`.",
+          "properties": {
+            "consumer_state_id": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "warning_kind": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "consumer_state_id",
+            "warning_kind",
+            "message"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            },
+            "scope": {
+              "$ref": "#/$defs/Scope"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "scope"
+          ],
+          "type": "object"
+        },
+        "Node": {
+          "oneOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/VariableNode"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "variable"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/ClassificationNode"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "classification"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            }
+          ]
+        },
+        "Provenance": {
+          "description": "A variable's provenance in its register.",
+          "properties": {
+            "instance_count": {
+              "description": "Its states.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "register": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "register_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "role": {
+              "description": "`source` when the register is its own source, `consumer` when it names\nanother, `unknown` without a source text.",
+              "type": "string"
+            },
+            "source_register": {
+              "description": "The register the source text was resolved to.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_register_text": {
+              "type": "string"
+            },
+            "variable": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "year_range": {
+              "description": "The first and last year its states span (an open end counts its start\nyear); empty without a dated state.",
+              "items": {
+                "format": "int64",
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "role",
+            "source_register_text",
+            "instance_count",
+            "year_range"
+          ],
+          "type": "object"
+        },
+        "SameAs": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "register": {
+              "description": "The register slug.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "register"
+          ],
+          "type": "object"
+        },
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        },
+        "VariableNode": {
+          "description": "A variable with its state history. A succession edition that is not live in\nscope is a bare node: no states, group or metadata.",
+          "properties": {
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "facets": {
+              "description": "Its facets in its concept group (the first member that is this variable).",
+              "items": {
+                "$ref": "#/$defs/Facet"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "group_key": {
+              "description": "`<provider>/<register>/<key>` of its concept group.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "group_label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "id": {
+              "description": "The variable's FQID.",
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "operational_definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "same_as": {
+              "items": {
+                "$ref": "#/$defs/SameAs"
+              },
+              "type": "array"
+            },
+            "states": {
+              "items": {
+                "$ref": "#/$defs/GraphState"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "id",
+            "fqid",
+            "label",
+            "states",
+            "same_as",
+            "facets"
+          ],
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Graph"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Lineage"
             },
             "meta": {
               "$ref": "#/$defs/Meta"

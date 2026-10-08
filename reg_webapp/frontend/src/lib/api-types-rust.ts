@@ -142,6 +142,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/graph/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The succession graph of a variable, a classification or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`): variable nodes with their states folded into representation runs, classification edition nodes, and directed succession edges. A variable draws its concept group's members, a classification its classification groups; `focus_id` is the requested node. No nodes means nothing to draw. */
+        get: operations["graph"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/lineage/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description A variable's lineage: the source states feeding each of its states (`edges`), the build's lineage `warnings`, and, for every variable in scope with its name, its register's provenance role (`registers`). */
+        get: operations["lineage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/search": {
         parameters: {
             query?: never;
@@ -230,6 +264,20 @@ export interface components {
             label: string;
             members: components["schemas"]["Member"][];
             source: string;
+        };
+        /** @description A classification edition, a point in time. */
+        ClassificationNode: {
+            fqid: string;
+            /** @description `class/<key>` of the classification group or family it is drawn in. */
+            group_key?: string | null;
+            group_label?: string | null;
+            /** @description `class/<slug>`. */
+            id: string;
+            is_current: boolean;
+            label: string;
+            short_name?: string | null;
+            /** Format: int64 */
+            version_year?: number | null;
         };
         /**
          * @description Every current classification, with the classification groups and families.
@@ -370,6 +418,22 @@ export interface components {
             tags: string[];
             variable?: string | null;
         };
+        /**
+         * @description A directed succession edge, predecessor to successor. A representation edge
+         *     names its columns and, when scoped, its variant.
+         */
+        Edge: {
+            /** Format: int64 */
+            effective_year?: number | null;
+            id: string;
+            kind: string;
+            label?: string | null;
+            source: string;
+            source_column?: string | null;
+            target: string;
+            target_column?: string | null;
+            variant?: string | null;
+        };
         Edition: {
             /** Format: int64 */
             effective_year?: number | null;
@@ -392,9 +456,62 @@ export interface components {
         };
         /** @description A one-dimensional classification succession family (ICD, LKF, SNI, SSYK). */
         Family: {
+            /** @description Its editions in chain order. */
+            editions: components["schemas"]["FamilyEdition"][];
             fqid: string;
             key: string;
             label: string;
+        };
+        /** @description An edition of a succession family. */
+        FamilyEdition: {
+            /**
+             * Format: int64
+             * @description The year of the edge by which the edition is superseded on the chain.
+             */
+            effective_year?: number | null;
+            fqid: string;
+            /** @description Started and without an active successor at the policy year. */
+            is_current: boolean;
+            /** @description The edition the family's chain was read from. */
+            is_self: boolean;
+            name?: string | null;
+            short_name?: string | null;
+            slug: string;
+            /**
+             * Format: int64
+             * @description The edition's own vintage year.
+             */
+            version_year?: number | null;
+        };
+        /** @description The graph; no nodes means there is nothing to draw. */
+        Graph: {
+            edges: components["schemas"]["Edge"][];
+            /** @description The node of the requested variable or classification; none for a group. */
+            focus_id?: string | null;
+            nodes: components["schemas"]["Node"][];
+        };
+        /** @description One emitted state; states sharing `representation_run_id` form one cell. */
+        GraphState: {
+            classification_slugs: string[];
+            delivery_column_name?: string | null;
+            period_scope: string;
+            /**
+             * Format: int64
+             * @description Increments at a change of variant, period scope, or (between states) value
+             *     set, version label, classifications or delivery column.
+             */
+            representation_run_id: number;
+            state_id: string;
+            /** @description None for an unknown start. */
+            valid_from?: string | null;
+            /** @description None for an open end. */
+            valid_to?: string | null;
+            value_set_id?: string | null;
+            value_set_version_label: string;
+            variant: string;
+            variant_family?: string | null;
+            variant_family_label?: string | null;
+            variant_label?: string | null;
         };
         /** @description A group as listed by its register, classification root or member classification. */
         Group: {
@@ -417,6 +534,36 @@ export interface components {
             /** Format: int64 */
             min: number;
         };
+        Lineage: {
+            edges: components["schemas"]["LineageEdge"][];
+            /**
+             * @description Each variable in scope with the variable's name (compared case-insensitively
+             *     in ASCII), across registers: whether its register is the variable's source.
+             */
+            registers: components["schemas"]["Provenance"][];
+            warnings: components["schemas"]["LineageWarning"][];
+        };
+        /**
+         * @description A state of the variable fed by a state of a source variable over the two
+         *     states' intersection.
+         */
+        LineageEdge: {
+            consumer_state_id: string;
+            /** @description The source state's variable. */
+            source_fqid?: string | null;
+            source_state_id: string;
+            valid_from: string;
+            valid_to: string;
+        };
+        /**
+         * @description A build-time warning on one of the variable's states: `no_source_state` or
+         *     `ambiguous_source_variant`.
+         */
+        LineageWarning: {
+            consumer_state_id: string;
+            message: string;
+            warning_kind: string;
+        };
         /** @description A group member; two members of one variable differ by `delivery_column`. */
         Member: {
             coverage?: components["schemas"]["Coverage"] | null;
@@ -431,6 +578,13 @@ export interface components {
             generation: string;
             scope: components["schemas"]["Scope"];
         };
+        Node: (components["schemas"]["VariableNode"] & {
+            /** @enum {string} */
+            kind: "variable";
+        }) | (components["schemas"]["ClassificationNode"] & {
+            /** @enum {string} */
+            kind: "classification";
+        });
         ObjectType: {
             definition?: string | null;
             name: string;
@@ -454,6 +608,30 @@ export interface components {
             date_range?: string | null;
             definition?: string | null;
             name: string;
+        };
+        /** @description A variable's provenance in its register. */
+        Provenance: {
+            /**
+             * Format: int64
+             * @description Its states.
+             */
+            instance_count: number;
+            register?: string | null;
+            register_name?: string | null;
+            /**
+             * @description `source` when the register is its own source, `consumer` when it names
+             *     another, `unknown` without a source text.
+             */
+            role: string;
+            /** @description The register the source text was resolved to. */
+            source_register?: string | null;
+            source_register_text: string;
+            variable?: string | null;
+            /**
+             * @description The first and last year its states span (an open end counts its start
+             *     year); empty without a dated state.
+             */
+            year_range: number[];
         };
         /** @description A provider and its registers in scope. */
         Provider: {
@@ -511,6 +689,11 @@ export interface components {
             /** @enum {string} */
             kind: "classification_root";
             name: string;
+        };
+        SameAs: {
+            fqid: string;
+            /** @description The register slug. */
+            register: string;
         };
         /**
          * @description The read scope (section 7); every read takes it.
@@ -724,6 +907,26 @@ export interface components {
             fqid: string;
             name?: string | null;
         };
+        /**
+         * @description A variable with its state history. A succession edition that is not live in
+         *     scope is a bare node: no states, group or metadata.
+         */
+        VariableNode: {
+            definition?: string | null;
+            description?: string | null;
+            /** @description Its facets in its concept group (the first member that is this variable). */
+            facets: components["schemas"]["Facet"][];
+            fqid: string;
+            /** @description `<provider>/<register>/<key>` of its concept group. */
+            group_key?: string | null;
+            group_label?: string | null;
+            /** @description The variable's FQID. */
+            id: string;
+            label: string;
+            operational_definition?: string | null;
+            same_as: components["schemas"]["SameAs"][];
+            states: components["schemas"]["GraphState"][];
+        };
         /** @description A register variant (the `variant` filter of `states`), with its versions' prose. */
         Variant: {
             description?: string | null;
@@ -931,6 +1134,84 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["RelatedDocument"][];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    graph: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Graph"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    lineage: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Lineage"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

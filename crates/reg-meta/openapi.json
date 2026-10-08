@@ -403,6 +403,146 @@
         }
       }
     },
+    "/api/graph/{ref}": {
+      "get": {
+        "description": "The succession graph of a variable, a classification or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`): variable nodes with their states folded into representation runs, classification edition nodes, and directed succession edges. A variable draws its concept group's members, a classification its classification groups; `focus_id` is the requested node. No nodes means nothing to draw.",
+        "operationId": "graph",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Graph"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lineage/{ref}": {
+      "get": {
+        "description": "A variable's lineage: the source states feeding each of its states (`edges`), the build's lineage `warnings`, and, for every variable in scope with its name, its register's provenance role (`registers`).",
+        "operationId": "lineage",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Lineage"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/search": {
       "get": {
         "description": "Search the catalog's registers, variables, classifications and codes in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` (a FQID or a bare name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back as `cursor` for the next page.",
@@ -880,6 +1020,57 @@
           },
           "source": {
             "type": "string"
+          }
+        }
+      },
+      "ClassificationNode": {
+        "type": "object",
+        "description": "A classification edition, a point in time.",
+        "required": [
+          "id",
+          "fqid",
+          "label",
+          "is_current"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "group_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "`class/<key>` of the classification group or family it is drawn in."
+          },
+          "group_label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "`class/<slug>`."
+          },
+          "is_current": {
+            "type": "boolean"
+          },
+          "label": {
+            "type": "string"
+          },
+          "short_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "version_year": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
           }
         }
       },
@@ -1376,6 +1567,61 @@
           }
         }
       },
+      "Edge": {
+        "type": "object",
+        "description": "A directed succession edge, predecessor to successor. A representation edge\nnames its columns and, when scoped, its variant.",
+        "required": [
+          "id",
+          "kind",
+          "source",
+          "target"
+        ],
+        "properties": {
+          "effective_year": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "source_column": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "target": {
+            "type": "string"
+          },
+          "target_column": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variant": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "Edition": {
         "type": "object",
         "required": [
@@ -1461,9 +1707,17 @@
         "required": [
           "fqid",
           "key",
-          "label"
+          "label",
+          "editions"
         ],
         "properties": {
+          "editions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FamilyEdition"
+            },
+            "description": "Its editions in chain order."
+          },
           "fqid": {
             "type": "string"
           },
@@ -1472,6 +1726,170 @@
           },
           "label": {
             "type": "string"
+          }
+        }
+      },
+      "FamilyEdition": {
+        "type": "object",
+        "description": "An edition of a succession family.",
+        "required": [
+          "slug",
+          "fqid",
+          "is_current",
+          "is_self"
+        ],
+        "properties": {
+          "effective_year": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "The year of the edge by which the edition is superseded on the chain."
+          },
+          "fqid": {
+            "type": "string"
+          },
+          "is_current": {
+            "type": "boolean",
+            "description": "Started and without an active successor at the policy year."
+          },
+          "is_self": {
+            "type": "boolean",
+            "description": "The edition the family's chain was read from."
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "short_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "slug": {
+            "type": "string"
+          },
+          "version_year": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "The edition's own vintage year."
+          }
+        }
+      },
+      "Graph": {
+        "type": "object",
+        "description": "The graph; no nodes means there is nothing to draw.",
+        "required": [
+          "nodes",
+          "edges"
+        ],
+        "properties": {
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            }
+          },
+          "focus_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The node of the requested variable or classification; none for a group."
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Node"
+            }
+          }
+        }
+      },
+      "GraphState": {
+        "type": "object",
+        "description": "One emitted state; states sharing `representation_run_id` form one cell.",
+        "required": [
+          "state_id",
+          "period_scope",
+          "variant",
+          "representation_run_id",
+          "value_set_version_label",
+          "classification_slugs"
+        ],
+        "properties": {
+          "classification_slugs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "delivery_column_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "period_scope": {
+            "type": "string"
+          },
+          "representation_run_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Increments at a change of variant, period scope, or (between states) value\nset, version label, classifications or delivery column."
+          },
+          "state_id": {
+            "type": "string"
+          },
+          "valid_from": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "None for an unknown start."
+          },
+          "valid_to": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "None for an open end."
+          },
+          "value_set_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value_set_version_label": {
+            "type": "string"
+          },
+          "variant": {
+            "type": "string"
+          },
+          "variant_family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variant_family_label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variant_label": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
@@ -1560,6 +1978,86 @@
           }
         }
       },
+      "Lineage": {
+        "type": "object",
+        "required": [
+          "edges",
+          "warnings",
+          "registers"
+        ],
+        "properties": {
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineageEdge"
+            }
+          },
+          "registers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Provenance"
+            },
+            "description": "Each variable in scope with the variable's name (compared case-insensitively\nin ASCII), across registers: whether its register is the variable's source."
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineageWarning"
+            }
+          }
+        }
+      },
+      "LineageEdge": {
+        "type": "object",
+        "description": "A state of the variable fed by a state of a source variable over the two\nstates' intersection.",
+        "required": [
+          "consumer_state_id",
+          "source_state_id",
+          "valid_from",
+          "valid_to"
+        ],
+        "properties": {
+          "consumer_state_id": {
+            "type": "string"
+          },
+          "source_fqid": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The source state's variable."
+          },
+          "source_state_id": {
+            "type": "string"
+          },
+          "valid_from": {
+            "type": "string"
+          },
+          "valid_to": {
+            "type": "string"
+          }
+        }
+      },
+      "LineageWarning": {
+        "type": "object",
+        "description": "A build-time warning on one of the variable's states: `no_source_state` or\n`ambiguous_source_variant`.",
+        "required": [
+          "consumer_state_id",
+          "warning_kind",
+          "message"
+        ],
+        "properties": {
+          "consumer_state_id": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "warning_kind": {
+            "type": "string"
+          }
+        }
+      },
       "Member": {
         "type": "object",
         "description": "A group member; two members of one variable differ by `delivery_column`.",
@@ -1621,6 +2119,52 @@
             "$ref": "#/components/schemas/Scope"
           }
         }
+      },
+      "Node": {
+        "oneOf": [
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VariableNode"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "kind"
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "variable"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClassificationNode"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "kind"
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "classification"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
       },
       "ObjectType": {
         "type": "object",
@@ -1720,6 +2264,63 @@
           },
           "name": {
             "type": "string"
+          }
+        }
+      },
+      "Provenance": {
+        "type": "object",
+        "description": "A variable's provenance in its register.",
+        "required": [
+          "role",
+          "source_register_text",
+          "instance_count",
+          "year_range"
+        ],
+        "properties": {
+          "instance_count": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Its states."
+          },
+          "register": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "register_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "description": "`source` when the register is its own source, `consumer` when it names\nanother, `unknown` without a source text."
+          },
+          "source_register": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The register the source text was resolved to."
+          },
+          "source_register_text": {
+            "type": "string"
+          },
+          "variable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "year_range": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "The first and last year its states span (an open end counts its start\nyear); empty without a dated state."
           }
         }
       },
@@ -1970,6 +2571,22 @@
             }
           }
         ]
+      },
+      "SameAs": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "register"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "register": {
+            "type": "string",
+            "description": "The register slug."
+          }
+        }
       },
       "Scope": {
         "type": "string",
@@ -2928,6 +3545,80 @@
               "string",
               "null"
             ]
+          }
+        }
+      },
+      "VariableNode": {
+        "type": "object",
+        "description": "A variable with its state history. A succession edition that is not live in\nscope is a bare node: no states, group or metadata.",
+        "required": [
+          "id",
+          "fqid",
+          "label",
+          "states",
+          "same_as",
+          "facets"
+        ],
+        "properties": {
+          "definition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "facets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Facet"
+            },
+            "description": "Its facets in its concept group (the first member that is this variable)."
+          },
+          "fqid": {
+            "type": "string"
+          },
+          "group_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "`<provider>/<register>/<key>` of its concept group."
+          },
+          "group_label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "description": "The variable's FQID."
+          },
+          "label": {
+            "type": "string"
+          },
+          "operational_definition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "same_as": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SameAs"
+            }
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GraphState"
+            }
           }
         }
       },
