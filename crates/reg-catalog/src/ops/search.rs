@@ -11,7 +11,7 @@ mod code;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 
-use reg_core::{Fqid, Period, fold_search, fts_match_query, fts_terms, py_isdecimal, py_strip};
+use reg_core::{Period, fold_search, fts_match_query, fts_terms, py_isdecimal, py_strip};
 use rusqlite::types::Value as Sql;
 use rusqlite::{Connection, Row, params_from_iter};
 use serde::Serialize;
@@ -19,7 +19,8 @@ use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
-use super::{Params, Server};
+use super::refs::{self, fqid};
+use super::{Params, Server, cursor};
 use crate::held::{self, Narrow};
 use crate::{Code, Error, Scope, hex};
 use classification::{ClassificationHit, Edition, SuccessionHit};
@@ -259,7 +260,7 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
     let conn = catalog.connect()?;
     let register = params
         .get("register")
-        .map(|r| resolve_register(&conn, scope, r))
+        .map(|r| refs::register(&conn, scope, r).map(|register| register.id))
         .transpose()?;
     // The cursor binds what selects and orders the rows, never `limit`.
     let context = json!([
@@ -272,7 +273,7 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
     let context = hex(&Sha256::digest(context.to_string().as_bytes()));
     let after = params
         .get("cursor")
-        .map(|c| decode_cursor(c, catalog.generation(), &context))
+        .map(|c| cursor::decode(c, catalog.generation(), &context, DEPTH))
         .transpose()?;
     let request = Request {
         q,
@@ -283,71 +284,9 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
         after,
     };
     let page = page(&conn, scope, &request, |offset, position| {
-        encode_cursor(catalog.generation(), &context, offset, position)
+        cursor::encode(catalog.generation(), &context, offset, position)
     })?;
     Ok(serde_json::to_value(page).expect("SearchPage serializes"))
-}
-
-/// Today's register lookup for `--register`, as a ref: a FQID with a `/` resolves
-/// by slugs; a one-segment ref is a bare name, matched on `fold_identity`. Either
-/// must name a register in scope.
-fn resolve_register(conn: &Connection, scope: Scope, value: &str) -> Result<i64, Error> {
-    let in_scope = held::register(scope, "r.register_id");
-    let not_found = || {
-        Error::new(
-            Code::NotFound,
-            format!("No register {value:?} in this scope."),
-            vec![value.into()],
-        )
-    };
-    if value.contains('/') {
-        let Ok(Fqid::Register { provider, register }) = value.parse() else {
-            return Err(Error::new(
-                Code::InvalidRef,
-                format!("{value:?} is not a register FQID or name."),
-                vec![value.into()],
-            ));
-        };
-        let sql = format!(
-            "SELECT r.register_id FROM register r JOIN provider p USING(provider_id) \
-             WHERE p.slug = ? AND r.slug = ? AND {in_scope}"
-        );
-        let id: Option<i64> = conn
-            .query_row(&sql, [provider, register], |row| row.get(0))
-            .map(Some)
-            .or_else(|err| match err {
-                rusqlite::Error::QueryReturnedNoRows => Ok(None),
-                err => Err(err),
-            })?;
-        return id.ok_or_else(not_found);
-    }
-    let sql = format!(
-        "SELECT r.register_id, p.slug, r.slug, r.name FROM register r \
-         JOIN provider p USING(provider_id) \
-         WHERE fold_identity(r.name) = fold_identity(?) AND {in_scope} ORDER BY r.register_id"
-    );
-    let mut stmt = conn.prepare(&sql)?;
-    let found: Vec<(i64, Option<String>, String)> = stmt
-        .query_map([value], |row| {
-            let fqid = fqid(&[row.get(1)?, row.get(2)?]);
-            Ok((row.get(0)?, fqid, row.get(3)?))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    match found.as_slice() {
-        [] => Err(not_found()),
-        [(id, ..)] => Ok(*id),
-        _ => Err(Error::new(
-            Code::AmbiguousRef,
-            format!("{} registers are named {value:?}.", found.len()),
-            vec![
-                value.into(),
-                found
-                    .iter()
-                    .map(|(_, fqid, name)| json!({"fqid": fqid, "kind": "register", "name": name}))
-                    .collect(),
-            ],
-        )),
-    }
 }
 
 /// The page the request names: the typed list or the untyped ranking, cut at the
@@ -371,7 +310,7 @@ fn page(
         (None, _) => 0,
         (Some((offset, after)), Some(_)) => {
             if *offset > hits.len() || (*offset > 0 && identity(&hits[offset - 1]) != *after) {
-                return Err(invalid_cursor(
+                return Err(cursor::invalid(
                     "Search cursor no longer matches the result ordering.",
                 ));
             }
@@ -379,7 +318,7 @@ fn page(
         }
         (Some((_, after)), None) => {
             let after: Key = serde_json::from_str(after)
-                .map_err(|_| invalid_cursor("Search cursor is malformed."))?;
+                .map_err(|_| cursor::invalid("Search cursor is malformed."))?;
             keys.partition_point(|key| *key <= after)
         }
     };
@@ -1309,75 +1248,9 @@ fn identity(hit: &Hit) -> String {
     }
 }
 
-/// A FQID from its slugs, or None when one is missing or not a slug (today's
-/// `try_emit`).
-fn fqid(slugs: &[Option<String>]) -> Option<String> {
-    let joined = slugs
-        .iter()
-        .map(|s| s.as_deref().filter(|s| !s.is_empty()))
-        .collect::<Option<Vec<_>>>()?
-        .join("/");
-    joined.parse::<Fqid>().ok().map(|_| joined)
-}
-
 /// Today's `_is_code_shaped`: at least three characters once stripped, one a decimal
 /// digit.
 fn is_code_shaped(q: &str) -> bool {
     let q = py_strip(q);
     q.chars().count() >= 3 && q.chars().any(py_isdecimal)
-}
-
-fn invalid_cursor(message: &str) -> Error {
-    Error::new(Code::InvalidCursor, message, vec![])
-}
-
-/// A cursor is the hex of `generation.context.offset.position`: the generation it
-/// was issued on, the request it continues (`context`), where the next page starts
-/// and the position of the row before it.
-fn encode_cursor(generation: &str, context: &str, offset: usize, position: &str) -> String {
-    hex(format!("{generation}.{context}.{offset}.{position}").as_bytes())
-}
-
-/// The cursor's offset and position.
-///
-/// # Errors
-///
-/// `stale_cursor` for another generation's cursor; `invalid_cursor` for one that
-/// does not decode, continues another request or passes the depth.
-fn decode_cursor(cursor: &str, generation: &str, context: &str) -> Result<(usize, String), Error> {
-    let malformed = || invalid_cursor("Search cursor is malformed.");
-    let bytes = (0..cursor.len())
-        .step_by(2)
-        .map(|i| {
-            cursor
-                .get(i..i + 2)
-                .and_then(|b| u8::from_str_radix(b, 16).ok())
-        })
-        .collect::<Option<Vec<u8>>>()
-        .ok_or_else(malformed)?;
-    let text = String::from_utf8(bytes).map_err(|_| malformed())?;
-    let mut parts = text.splitn(4, '.');
-    let (Some(issued), Some(issued_for), Some(offset), Some(after)) =
-        (parts.next(), parts.next(), parts.next(), parts.next())
-    else {
-        return Err(malformed());
-    };
-    if issued != generation {
-        return Err(Error::new(
-            Code::StaleCursor,
-            "The catalog changed since this cursor was issued.",
-            vec![generation.into()],
-        ));
-    }
-    if issued_for != context {
-        return Err(invalid_cursor(
-            "Search cursor was issued for other parameters or another scope.",
-        ));
-    }
-    let offset = offset
-        .parse()
-        .ok()
-        .filter(|o| (1..=DEPTH).contains(o))
-        .ok_or_else(malformed)?;
-    Ok((offset, after.to_owned()))
 }

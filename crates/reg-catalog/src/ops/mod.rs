@@ -1,10 +1,15 @@
 //! The operation set (section 7). Each slice registers its operations in its own file
 //! (`slice_3a.rs`, ...), and both transports are generated from the registrations: the
 //! HTTP routes and `/openapi.json` here and in `reg-meta`, and the MCP tools in
-//! `reg-meta`.
+//! `reg-meta`. Shared request pieces live in their own modules: refs (`refs.rs`) and
+//! cursors (`cursor.rs`).
 
+mod cursor;
+mod docs;
+mod refs;
 mod search;
 pub mod slice_3a;
+pub mod slice_3b;
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -16,16 +21,18 @@ use utoipa::openapi::path::{OperationBuilder, ParameterBuilder, ParameterIn};
 use utoipa::openapi::response::ResponseBuilder;
 use utoipa::openapi::{
     ComponentsBuilder, ContentBuilder, HttpMethod, InfoBuilder, ObjectBuilder, OpenApi,
-    OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema, Type,
+    OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema, Type as Json,
 };
 
-use crate::{CONTRACT_VERSION, Catalog, Code, Error, Scope};
+use crate::{CONTRACT_VERSION, Catalog, Code, Docs, Error, Scope};
 
-/// What a running server answers from: the admitted catalog, its steward branding
-/// (`serve` only: `mcp` loads none, since branding is read only by `context`, which
-/// has no tool) and the server's version (`reg_meta_version`).
+/// What a running server answers from: the admitted catalog and its docs database
+/// (when present), its steward branding (`serve` only: `mcp` loads none, since
+/// branding is read only by `context`, which has no tool) and the server's version
+/// (`reg_meta_version`).
 pub struct Server {
     pub catalog: Catalog,
+    pub docs: Option<Docs>,
     pub steward: Option<Steward>,
     pub version: &'static str,
 }
@@ -71,64 +78,162 @@ impl Steward {
     }
 }
 
-/// A query parameter. Its schema follows from its name: one parameter per concept,
-/// the same everywhere (section 7).
+/// A parameter: a query parameter, or a path parameter when the route names it as
+/// `{name}`.
 pub struct Param {
     pub name: &'static str,
+    pub ty: Type,
     pub required: bool,
+}
+
+impl Param {
+    #[must_use]
+    pub const fn required(name: &'static str, ty: Type) -> Self {
+        Self {
+            name,
+            ty,
+            required: true,
+        }
+    }
+
+    #[must_use]
+    pub const fn optional(name: &'static str, ty: Type) -> Self {
+        Self {
+            name,
+            ty,
+            required: false,
+        }
+    }
+}
+
+/// A parameter type of `operations.toml`, which fixes its schema.
+#[derive(Clone, Copy)]
+pub enum Type {
+    String,
+    /// A FQID or a bare name (section 7).
+    Ref,
+    /// The FQID/project period grammar.
+    Period,
+    Scope,
+    Limit,
+    /// An opaque `next_cursor`.
+    Cursor,
+    Enum(&'static [&'static str]),
+}
+
+/// The `Cache-Control` tier of a 200 (today's three): identity reads revalidate every
+/// request, fold-bearing reads get a minute, and rebuild-stable documents a day.
+#[derive(Clone, Copy)]
+pub enum Cache {
+    Revalidate,
+    Minute,
+    Day,
+}
+
+impl Cache {
+    #[must_use]
+    pub fn header(self) -> &'static str {
+        match self {
+            Self::Revalidate => "no-cache",
+            Self::Minute => "public, max-age=60, must-revalidate",
+            Self::Day => "public, max-age=86400, must-revalidate",
+        }
+    }
 }
 
 type Components = Vec<(String, RefOr<Schema>)>;
 /// An operation's validated parameters, `scope` excluded.
 pub type Params<'a> = BTreeMap<&'a str, &'a str>;
+/// The function that answers a route.
+pub type Run<T> = fn(&Server, Scope, &Params) -> Result<T, Error>;
 
 /// One operation: its name, route and MCP tool (`operations.toml`), the description
-/// both transports publish, its parameters, the function that answers it and its
-/// `data` schema.
+/// both transports publish, its parameters, its `Cache-Control` tier, the function
+/// that answers it and its `data` schema.
 pub struct Operation {
     pub name: &'static str,
     pub path: &'static str,
     pub tool: Option<&'static str>,
     pub description: &'static str,
     pub params: &'static [Param],
-    pub run: fn(&Server, Scope, &Params) -> Result<Value, Error>,
+    pub cache: Cache,
+    pub run: Run<Value>,
     pub result: fn(&mut Components) -> RefOr<Schema>,
+}
+
+/// A raw-bytes response (section 7): the body and the headers it adds besides its
+/// download's media type.
+pub struct Raw {
+    pub bytes: Vec<u8>,
+    pub headers: Vec<(&'static str, String)>,
+}
+
+/// A download route (`operations.toml`'s `[[download]]`): the raw bytes whose
+/// metadata `operation` answers as JSON.
+pub struct Download {
+    pub path: &'static str,
+    pub operation: &'static str,
+    pub description: &'static str,
+    pub media_type: &'static str,
+    pub params: &'static [Param],
+    pub cache: Cache,
+    pub run: Run<Raw>,
 }
 
 /// Every registered operation.
 pub fn all() -> impl Iterator<Item = &'static Operation> {
-    slice_3a::OPERATIONS.iter()
+    slice_3a::OPERATIONS.iter().chain(slice_3b::OPERATIONS)
 }
 
-/// Answer `op` for the request's parameters, returning the effective scope (the
-/// artifact's default when the request's scope is not usable) with the result.
-pub fn call(
+/// Every registered download.
+pub fn downloads() -> impl Iterator<Item = &'static Download> {
+    slice_3b::DOWNLOADS.iter()
+}
+
+/// Every MCP tool with its operations, in registration order.
+#[must_use]
+pub fn tools() -> Vec<(&'static str, Vec<&'static Operation>)> {
+    let mut tools: Vec<(&str, Vec<&Operation>)> = Vec::new();
+    for op in all() {
+        let Some(tool) = op.tool else { continue };
+        match tools.iter_mut().find(|(name, _)| *name == tool) {
+            Some((_, ops)) => ops.push(op),
+            None => tools.push((tool, vec![op])),
+        }
+    }
+    tools
+}
+
+/// Answer a route's request parameters (path and query) with `run`, returning the
+/// effective scope (the artifact's default when the request's scope is not usable)
+/// with the result.
+pub fn call<T>(
     server: &Server,
-    op: &Operation,
+    declared: &[Param],
+    run: Run<T>,
     query: &[(String, String)],
-) -> (Scope, Result<Value, Error>) {
+) -> (Scope, Result<T, Error>) {
     let mut scope = server.catalog.default_scope();
     let result = (|| {
         let mut params = BTreeMap::new();
         for (name, value) in query {
             // Unknown and repeated parameters are errors, never ignored.
-            if !op.params.iter().any(|p| p.name == name)
+            if !declared.iter().any(|p| p.name == name)
                 || params.insert(name.as_str(), value.as_str()).is_some()
             {
                 return Err(Error::invalid_parameter(name));
             }
         }
-        if let Some(missing) = op
-            .params
+        if let Some(missing) = declared
             .iter()
             .find(|p| p.required && !params.contains_key(p.name))
         {
             return Err(Error::invalid_parameter(missing.name));
         }
-        if op.params.iter().any(|p| p.name == "scope") {
+        if declared.iter().any(|p| p.name == "scope") {
             scope = server.catalog.scope(params.remove("scope"))?;
         }
-        (op.run)(server, scope, &params)
+        run(server, scope, &params)
     })();
     (scope, result)
 }
@@ -159,23 +264,53 @@ fn component<T: ToSchema>(components: &mut Components) -> RefOr<Schema> {
     Ref::from_schema_name(T::name()).into()
 }
 
-fn param_schema(name: &str, components: &mut Components) -> RefOr<Schema> {
-    let string = || ObjectBuilder::new().schema_type(Type::String);
-    match name {
-        "scope" => component::<Scope>(components),
-        // A ref is a FQID or a bare name; a period and a cursor are strings in
-        // their grammars.
-        "q" | "register" | "period" | "cursor" => string().into(),
-        "type" => string()
-            .enum_values(Some(search::TYPES.iter().copied()))
-            .into(),
-        "limit" => ObjectBuilder::new()
-            .schema_type(Type::Integer)
+fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
+    let string = || ObjectBuilder::new().schema_type(Json::String);
+    match ty {
+        Type::Scope => component::<Scope>(components),
+        // A ref, a period and a cursor are strings in their grammars.
+        Type::String | Type::Ref | Type::Period | Type::Cursor => string().into(),
+        Type::Enum(members) => string().enum_values(Some(members.iter().copied())).into(),
+        Type::Limit => ObjectBuilder::new()
+            .schema_type(Json::Integer)
             .minimum(Some(1))
             .maximum(Some(200))
             .into(),
-        _ => panic!("no schema for parameter {name:?}"),
     }
+}
+
+/// `route`'s parameters as `OpenAPI` parameters: in the path when the route names
+/// them, else in the query.
+fn parameters(
+    mut operation: OperationBuilder,
+    route: &str,
+    params: &[Param],
+    components: &mut Components,
+) -> OperationBuilder {
+    for param in params {
+        let located = if route.contains(&format!("{{{}}}", param.name)) {
+            ParameterIn::Path
+        } else {
+            ParameterIn::Query
+        };
+        operation = operation.parameter(
+            ParameterBuilder::new()
+                .name(param.name)
+                .parameter_in(located)
+                .required(if param.required {
+                    Required::True
+                } else {
+                    Required::False
+                })
+                .schema(Some(param_schema(param.ty, components))),
+        );
+    }
+    operation
+}
+
+fn error_response() -> ResponseBuilder {
+    envelope("error", Ref::from_schema_name("Error").into())
+        .description("An error in `api/errors.toml`")
 }
 
 fn envelope(key: &str, schema: RefOr<Schema>) -> ResponseBuilder {
@@ -198,31 +333,27 @@ pub fn openapi(version: &str) -> OpenApi {
     component::<Error>(&mut components);
     let mut paths = PathsBuilder::new();
     for op in all() {
-        let mut operation = OperationBuilder::new()
+        let operation = OperationBuilder::new()
             .operation_id(Some(op.name))
             .description(Some(op.description));
-        for param in op.params {
-            operation = operation.parameter(
-                ParameterBuilder::new()
-                    .name(param.name)
-                    .parameter_in(ParameterIn::Query)
-                    .required(if param.required {
-                        Required::True
-                    } else {
-                        Required::False
-                    })
-                    .schema(Some(param_schema(param.name, &mut components))),
-            );
-        }
+        let operation = parameters(operation, op.path, op.params, &mut components);
         let data = (op.result)(&mut components);
-        operation = operation
+        let operation = operation
             .response("200", envelope("data", data).description("Success"))
-            .response(
-                "default",
-                envelope("error", Ref::from_schema_name("Error").into())
-                    .description("An error in `api/errors.toml`"),
-            );
+            .response("default", error_response());
         paths = paths.path(op.path, PathItem::new(HttpMethod::Get, operation));
+    }
+    // A download has no operation id of its own: it serves its operation's bytes.
+    for download in downloads() {
+        let operation = OperationBuilder::new().description(Some(download.description));
+        let operation = parameters(operation, download.path, download.params, &mut components);
+        let bytes = ResponseBuilder::new()
+            .description("The raw bytes")
+            .content(download.media_type, ContentBuilder::new().build());
+        let operation = operation
+            .response("200", bytes)
+            .response("default", error_response());
+        paths = paths.path(download.path, PathItem::new(HttpMethod::Get, operation));
     }
     OpenApiBuilder::new()
         .info(InfoBuilder::new().title("reg-meta").version(version))

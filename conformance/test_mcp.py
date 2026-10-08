@@ -11,9 +11,11 @@ only out of process, like the `api` cases; the oracles are the HTTP responses, w
 from __future__ import annotations
 
 import json
+import re
 import shlex
 import subprocess
 import tomllib
+from urllib.parse import unquote
 
 import pytest
 from http_cases import (
@@ -31,23 +33,32 @@ HEADERS = {
     "accept": "application/json, text/event-stream",
     "mcp-protocol-version": PROTOCOL,
 }
-# `search` cases of the `api` corpus whose steps cover a success and every domain
-# error `search` lists in `operations.toml`. Every `/mcp` request in this module on a
-# worker's shared server draws on one 127.0.0.1 rate bucket (60 a minute), so keep
-# their total well under it.
-SEARCH_CASES = (
-    "meta",
-    "invalid-parameters",
-    "search-register",
-    "search-period",
-    "scope-unavailable",
-    "cursor-invalid",
-    "cursor-stale",
-)
+# Per operation, the `api` cases whose steps of that operation cover a success and
+# every domain error it lists in `operations.toml`. Every `/mcp` request in this
+# module on a worker's server for one artifact draws on one 127.0.0.1 rate bucket (60
+# a minute), so keep each artifact's total well under it.
+EQUIVALENCE = {
+    "search": (
+        "meta",
+        "invalid-parameters",
+        "search-register",
+        "search-period",
+        "scope-unavailable",
+        "cursor-invalid",
+        "cursor-stale",
+    ),
+    "docs_get": ("docs-get", "docs-unavailable"),
+    "docs_related": ("docs-related", "docs-related-ambiguous", "docs-unavailable"),
+}
 READER = {"fixture": "reader"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.
 TOOLS = json.loads((CASES / "mcp/tools-list.json").read_text())
-OPERATIONS = tomllib.loads((CASES.parent / "api/operations.toml").read_text())
+OPERATIONS = {
+    op["name"]: op
+    for op in tomllib.loads((CASES.parent / "api/operations.toml").read_text())[
+        "operation"
+    ]
+}
 
 
 @pytest.fixture
@@ -66,38 +77,82 @@ def rpc(client, method, params):
     )
 
 
-def call(client, arguments):
-    """`tools/call search` as (is_error, structuredContent)."""
-    result = rpc(client, "tools/call", {"name": "search", "arguments": arguments})
+def call(client, tool, arguments):
+    """`tools/call` as (is_error, structuredContent)."""
+    result = rpc(client, "tools/call", {"name": tool, "arguments": arguments})
     result = result.json()["result"]
     return result["isError"], result["structuredContent"]
 
 
-def test_search_tool_matches_http(servers):
+def path_arguments(op, path):
+    """The parameters `path` carries by one of `op`'s routes (`{ref}` spans
+    segments, other placeholders one), or None when it is none of them (a
+    download, which is HTTP only)."""
+    for route in op["http"]:
+        template = route.split(" ", 1)[1]
+        pattern = "".join(
+            f"(?P<{part[1:-1]}>{'.+' if part == '{ref}' else '[^/]+'})"
+            if part.startswith("{")
+            else re.escape(part)
+            for part in re.split(r"(\{\w+\})", template)
+        )
+        if match := re.fullmatch(pattern, path):
+            return {name: unquote(value) for name, value in match.groupdict().items()}
+    return None
+
+
+@pytest.mark.parametrize("operation", EQUIVALENCE)
+def test_tool_matches_http(servers, operation):
     # Fails when a tool call's document drifts from the HTTP body (envelope, meta,
-    # error fields, argument conversion), or when the cases stop covering an error.
+    # error fields, argument conversion, the `operation` argument of a tool of
+    # several), or when the cases stop covering an error.
+    op = OPERATIONS[operation]
+    (tool,) = (t for t in TOOLS if t["name"] == op["tool"])
+    selector = (
+        {"operation": operation}
+        if "operation" in tool["inputSchema"]["properties"]
+        else {}
+    )
     codes = set()
-    for name in SEARCH_CASES:
+    for name in EQUIVALENCE[operation]:
         case = CASES / "api" / name
         request = json.loads((case / "request.json").read_text())
         steps, clients = request["requests"], case_clients(request, case, servers)
         http = run_http_requests(steps, clients)
-        documents = []
+        documents = {}
         for index, step in enumerate(steps):
-            arguments = dict(step.get("query", {}))
+            path = path_arguments(op, step["path"])
+            query = step.get("query", {})
+            # A download, and a parameter sent in both the path and the query, have
+            # no tool-call spelling.
+            if step["operation"] != operation or path is None or path.keys() & query:
+                continue
+            arguments = selector | path | query
             if "cursor_from" in step:
                 source, pointer = step["cursor_from"]
                 arguments["cursor"] = select_json(documents[source], pointer)
-            is_error, document = call(clients[step.get("artifact")], arguments)
-            documents.append(document)
+            is_error, document = call(
+                clients[step.get("artifact")], tool["name"], arguments
+            )
+            documents[index] = document
             assert (is_error, document) == (
                 http[index]["status"] != 200,
                 http[index]["body"],
             ), f"{name} step {index}"
             if is_error:
                 codes.add(document["error"]["code"])
-    (search,) = (op for op in OPERATIONS["operation"] if op["name"] == "search")
-    assert codes == {"invalid_parameter", *search["errors"]}
+    assert codes == {"invalid_parameter", *op["errors"]}
+
+
+def test_tool_of_several_needs_an_operation(servers):
+    # Fails when a tool of several operations answers a call that names none of them
+    # (it would have to guess one) with anything but `invalid_parameter`.
+    client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    for arguments in ({"identifier": "Kon"}, {"operation": "search", "q": "Kon"}):
+        is_error, document = call(client, "docs", arguments)
+        assert is_error
+        assert document["error"]["code"] == "invalid_parameter"
+        assert document["error"]["fields"] == {"parameter": "operation"}
 
 
 def test_tools_list_matches_golden(servers):
@@ -105,16 +160,18 @@ def test_tools_list_matches_golden(servers):
     # `cases/mcp/tools-list.json`, or a tool name drifts from `operations.toml`.
     client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
     served = {
-        operation["operationId"]
+        operation.get("operationId")
         for item in client.get("/openapi.json").json()["paths"].values()
         for operation in item.values()
     }
     tools = rpc(client, "tools/list", {}).json()["result"]["tools"]
     assert tools == TOOLS
     assert sorted(tool["name"] for tool in tools) == sorted(
-        op["tool"]
-        for op in OPERATIONS["operation"]
-        if op["name"] in served and "tool" in op
+        {
+            op["tool"]
+            for name, op in OPERATIONS.items()
+            if name in served and "tool" in op
+        }
     )
 
 

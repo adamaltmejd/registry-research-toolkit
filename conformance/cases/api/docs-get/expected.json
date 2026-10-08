@@ -1,0 +1,55 @@
+[
+  {
+    "status": 200,
+    "headers": {"cache-control": "public, max-age=86400, must-revalidate"},
+    "json": {
+      "/data": {
+        "register": "example",
+        "variable": "Kon",
+        "filename": "Kon.md",
+        "display_name": "Kön",
+        "tags": ["type/variable", "topic/demography"],
+        "source": null,
+        "source_url": null,
+        "source_title": null,
+        "excerpt": "Könstillhörighet för individen.",
+        "body": "**Kön Kon**\n\nKönstillhörighet för individen.\n"
+      },
+      "/meta/scope": "holdings"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/filename": "Sysselsattning.md",
+      "/data/variable": "SyssStat"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/filename": "Tabell.md"
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields/ref": "DoesNotExist"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "identifier"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "register"
+    }
+  }
+]
