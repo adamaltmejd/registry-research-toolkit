@@ -5,7 +5,7 @@
     "test_scb_errata.py::TestColumnEntry::test_same_column_on_two_variants_is_one_variable",
     "test_scb_errata.py::TestColumnEntry::test_two_variants_may_have_different_evidence"
   ],
-  "fails_if": "resolve_scb_errata refuses one column on two variants of a register, or makes their per-variant evidence agree",
+  "fails_if": "resolve_scb_errata refuses one column on two variants of a register, or makes their per-variant evidence agree, or mints a different variable key per variant",
   "note": "The minted variable's key is (register_id, folded column): both entries share it while keeping their own variant and evidence.",
   "loads": {
     "columns": [
@@ -13,13 +13,21 @@
         "register_id": 34,
         "register_variant_id": 153,
         "column": "Ssyk4_J16",
-        "provenance": "errata:scb-docs\nSCB doc library lisa-bakgrundsfakta-1990-2017."
+        "provenance": "errata:scb-docs\nSCB doc library lisa-bakgrundsfakta-1990-2017.",
+        "key": [
+          34,
+          "ssyk4_j16"
+        ]
       },
       {
         "register_id": 34,
         "register_variant_id": 1335,
         "column": "Ssyk4_J16",
-        "provenance": "errata:scb-docs\nThe second holdings list."
+        "provenance": "errata:scb-docs\nThe second holdings list.",
+        "key": [
+          34,
+          "ssyk4_j16"
+        ]
       }
     ]
   }
