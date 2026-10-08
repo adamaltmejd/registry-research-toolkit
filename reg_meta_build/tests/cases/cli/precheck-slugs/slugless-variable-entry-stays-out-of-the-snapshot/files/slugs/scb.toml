@@ -1,0 +1,37 @@
+[register."1"]
+slug = "sample"
+
+[register."2"]
+slug = "other"
+
+[register."3"]
+slug = "komvux"
+
+[register."4"]
+slug = "part"
+
+[register."6"]
+slug = "foretag"
+
+[register_variant."1.10"]
+slug = "people"
+
+[register_variant."2.20"]
+slug = "people"
+
+[register_variant."3.30"]
+slug = "nyborjare"
+
+[register_variant."4.40"]
+slug = "people"
+
+[register_variant."6.60"]
+slug = "foretag"
+
+[register_variant."6.61"]
+slug = "arbetsstallen"
+[variable."1.101"]
+deprecated = true
+
+[variable."1.102"]
+slug = "kon"

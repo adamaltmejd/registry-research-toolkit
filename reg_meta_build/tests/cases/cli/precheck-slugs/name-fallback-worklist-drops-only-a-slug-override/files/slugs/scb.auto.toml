@@ -1,0 +1,8 @@
+[variable."1.20"]
+slug = "inkomst"  # source: name-fallback
+
+[variable."1.21"]
+slug = "utgift"  # source: name-fallback
+
+[variable."1.22"]
+slug = "sparande"  # source: name-fallback

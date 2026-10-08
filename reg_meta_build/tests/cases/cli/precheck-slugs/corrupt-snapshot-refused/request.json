@@ -1,0 +1,11 @@
+{
+  "replaces": "test_fqid_slugs_precheck.py::TestSnapshotCorrupt::test_corrupt_json_raises",
+  "fails_if": "precheck reads an unparseable snapshot as an empty baseline instead of refusing with `slug_snapshot_unreadable`",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs"
+  ]
+}

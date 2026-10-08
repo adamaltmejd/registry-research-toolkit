@@ -1,0 +1,6 @@
+{
+  "replaces": "test_build_db_scope_selection.py::test_native_compiler_respects_tracked_slug_freeze_state",
+  "fails_if": "the native naming compiler reads a churning zone's generated `sample.auto.toml`, so a leftover from an earlier build names a published variable",
+  "note": "The register file pins no variable; the generated file beside it pins 1.101 as `value`, and no `slug_state.toml` takes the scb zone out of `churning`. The replaced test compiled the naming directly (no variable slug); at the build boundary variable 101 has no identity, so it is withheld. Twin: `naming-generated-pin-binds-when-curating`.",
+  "sources": "scb-value"
+}

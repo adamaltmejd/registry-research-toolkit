@@ -1,0 +1,14 @@
+{
+  "replaces": "test_fqid_slug_naming_boundary.py::test_reseed_keeps_first_sight_pin",
+  "fails_if": "regeneration overwrites a generated pin with the catalog's current slug, so a published slug changes",
+  "note": "The generated file pins 1.101 as `first-sight`; the catalog now carries `value` for it.",
+  "argv": [
+    "--db",
+    "{db}",
+    "seed-slugs",
+    "--out-dir",
+    "{work}/curation",
+    "--force",
+    "--quiet"
+  ]
+}

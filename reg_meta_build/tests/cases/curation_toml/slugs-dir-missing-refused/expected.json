@@ -1,0 +1,10 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_load.py::TestLoadSlugDir::test_missing_dir",
+  "fails_if": "the slug loader reads a missing slug directory as empty, so a mistyped `--slug-dir` passes precheck with nothing pinned",
+  "note": "The case has no `files/` directory.",
+  "error": {
+    "code": "slug_dir_not_found",
+    "locator": "Slug directory not found"
+  }
+}

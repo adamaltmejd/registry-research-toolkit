@@ -1,0 +1,12 @@
+{
+  "replaces": "test_fqid_slugs_precheck_cli.py::test_stale_snapshot_fails_the_read_only_check",
+  "fails_if": "the read-only precheck stops treating a pin the snapshot lacks (`added`) as fatal",
+  "note": "Every catalog row is pinned, so the only failure is the baseline that lacks register 2 and its variant. The old test used an empty baseline; leaving two pins out states the same claim with a short `added` list, read from the fixture's pins.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs"
+  ]
+}

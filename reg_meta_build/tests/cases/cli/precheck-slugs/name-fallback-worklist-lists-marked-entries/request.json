@@ -1,0 +1,20 @@
+{
+  "replaces": [
+    "test_fqid_slugs_drift_markers.py::TestPopulateVariableSlugs::test_worklist_excludes_column_derived",
+    "test_fqid_slugs_drift_markers.py::TestPopulateVariableSlugs::test_worklist_carries_slug_and_provider",
+    "test_fqid_slugs_drift_markers.py::TestPopulateVariableSlugs::test_worklist_is_advisory_only",
+    "test_fqid_slugs_drift_markers.py::TestPopulateVariableSlugs::test_read_auto_derivations_tolerates_missing_and_unmarked",
+    "test_fqid_slugs_drift_markers.py::TestPopulateVariableSlugs::test_disambiguator_marked_and_in_worklist",
+    "test_fqid_slugs_drift_markers.py::TestPopulateVariableSlugs::test_worklist_tolerates_nonnumeric_provider_key"
+  ],
+  "fails_if": "the worklist lists a column-derived class (`kolumnnamn`, `drift-earliest-column`) or an unmarked legacy row, drops a `+disambiguated` or `v-provider-key` row, crashes on a text variable key, or lets a non-empty worklist fail the clean precheck",
+  "note": "The generated `scb.auto.toml` carries one entry per derivation class, as `populate_variable_slugs` writes them (its own tests pin which class each arm stamps). The worklist reads the markers, not the database, so the keys need not be catalog rows. Rows sort numerically, then the text key.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

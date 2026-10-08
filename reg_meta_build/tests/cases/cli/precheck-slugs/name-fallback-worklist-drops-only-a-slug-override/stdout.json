@@ -1,0 +1,16 @@
+{
+  "name_fallback_variables": [
+    {
+      "provider": "scb",
+      "source_id": "1.21",
+      "slug": "utgift",
+      "derivation": "name-fallback"
+    },
+    {
+      "provider": "scb",
+      "source_id": "1.22",
+      "slug": "sparande",
+      "derivation": "name-fallback"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "files": {
+    "curation/registers/scb/sample.auto.toml": {
+      "toml": {},
+      "contains": [
+        "never recomputed. Curator overrides"
+      ],
+      "excludes": [
+        "\n\n\n"
+      ]
+    }
+  }
+}

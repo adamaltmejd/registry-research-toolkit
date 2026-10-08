@@ -1,0 +1,20 @@
+[register]
+provider = "scb"
+slug = "foretag"
+native_id = "6"
+
+[[variant]]
+native_id = "6.60"
+slug = "foretag"
+
+[[variant]]
+native_id = "6.61"
+slug = "arbetsstallen"
+
+[[variable]]
+native_id = "6.601"
+slug = "f1"
+
+[[variable]]
+native_id = "6.602"
+slug = "f2"
