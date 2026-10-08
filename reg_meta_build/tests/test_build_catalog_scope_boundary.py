@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _pipeline_catalog_support import report_issues
+from reg_meta.errors import EXIT_USAGE, RegMetaError
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -98,11 +99,16 @@ def test_unknown_register_scope_is_refused(
     catalog: CatalogFixture, tmp_path: Path, command: str
 ) -> None:
     output = tmp_path / "bad.db"
-    with pytest.raises(ValueError, match=r"names no selected scope: \['3'\]"):
+    with pytest.raises(RegMetaError) as refused:
         if command == "build":
             catalog.build(output, tmp_path / "report", registers=("1", "3"))
         else:
             catalog.check(tmp_path / "report", registers=("1", "3"))
+    assert (refused.value.code, refused.value.exit_code) == (
+        "pipeline_registers_unknown",
+        EXIT_USAGE,
+    )
+    assert "names no selected scope: ['3']" in refused.value.message
     assert not output.exists()
     assert not (tmp_path / "report").exists()
 

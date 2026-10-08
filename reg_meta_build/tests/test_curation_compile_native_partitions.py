@@ -18,6 +18,7 @@ from _curation_compile_support import (
     scb_partition_records as _scb_partition_records,
     scb_partition_tree as _scb_partition_tree,
 )
+from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_compile import (
     compile_partitions,
     compile_provider_declarations,
@@ -286,10 +287,12 @@ def test_maintained_provider_coverage_uses_input_role_not_provider_name(
         records=SimpleNamespace(iter_records=lambda *, source: iter(records)),
     )
     if source_role == "thin_provider" and declared_start is None:
-        with pytest.raises(ValueError, match="empty or inverted thin coverage window"):
+        with pytest.raises(RegMetaError) as refused:
             compile_provider_declarations(
                 SimpleNamespace(registers=(register,)), prepared, (scope,), subset=False
             )
+        assert refused.value.code == "thin_coverage_window_invalid"
+        assert "empty or inverted thin coverage window" in refused.value.message
         assert parent.parent_facts[0].fields.coverage_from is None
         return
     cases, diagnostics, _ = compile_provider_declarations(

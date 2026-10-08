@@ -151,7 +151,9 @@ def test_panel_requires_state_in_its_own_variant_not_only_variable():
     populated = ResolvedVariant(slug="populated", name="Populated")
     independent = ResolvedVariant(slug="other", name="Other", panel_entity_key="key")
     key = _variable(populated, "key")
-    with pytest.raises(ValueError, match="unexplained missing catalog dependenc"):
+    with pytest.raises(
+        CatalogDependencyError, match="unexplained missing catalog dependenc"
+    ):
         resolve_panel_dependencies(
             (key,), variants=((key.register_ref, independent),), withheld={}
         )
@@ -172,7 +174,7 @@ def test_panel_checks_every_composite_member_before_withholding():
     variant = ResolvedVariant(
         slug="people", name="People", panel_entity_key=("key", "typo")
     )
-    with pytest.raises(ValueError, match="typo"):
+    with pytest.raises(CatalogDependencyError, match="typo"):
         resolve_panel_dependencies(
             (_variable(variant),),
             withheld={("variable", "scb/example/key"): (_cause(),)},
@@ -302,7 +304,7 @@ def test_missing_relation_endpoint_does_not_hide_unconverted_other_endpoint():
             ResolvedVariableSameAs(a="scb/example/key", b="scb/example/typo"),
         )
     )
-    with pytest.raises(ValueError, match="typo"):
+    with pytest.raises(CatalogDependencyError, match="typo"):
         _metadata_result(
             metadata, withheld={("variable", "scb/example/key"): (_cause(),)}
         )
@@ -389,7 +391,9 @@ def test_representation_withholding_is_literal_but_succession_preserves_its_cont
             ),
         ),
     )
-    with pytest.raises(ValueError, match="unexplained missing catalog dependenc"):
+    with pytest.raises(
+        CatalogDependencyError, match="unexplained missing catalog dependenc"
+    ):
         _metadata_result(ResolvedMetadata(variable_groups=(group,)))
     result = _metadata_result(
         ResolvedMetadata(variable_groups=(group,)),
@@ -416,7 +420,9 @@ def test_exact_missing_state_withholds_lineage_without_removing_live_variables()
             ),
         )
     )
-    with pytest.raises(ValueError, match="unexplained missing catalog dependenc"):
+    with pytest.raises(
+        CatalogDependencyError, match="unexplained missing catalog dependenc"
+    ):
         _metadata_result(metadata)
     result = _metadata_result(
         metadata,

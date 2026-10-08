@@ -16,6 +16,8 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
+
 from reg_meta_build._components import DisjointSet
 from reg_meta_build._resolved_common import _ResolvedWindow, remaining_windows
 from reg_meta_build.concept_groups import (
@@ -722,15 +724,23 @@ class MissingCatalogDependency:
     output: str
 
 
-class CatalogDependencyError(ValueError):
+class CatalogDependencyError(RegMetaError):
     """All unexplained missing references; no resolved result may be written."""
 
     def __init__(self, missing: tuple[MissingCatalogDependency, ...]) -> None:
         self.missing = missing
         super().__init__(
-            f"{len(missing)} unexplained missing catalog dependencies: "
-            + "; ".join(f"{m.key!r} for {m.output}" for m in missing[:10])
+            exit_code=EXIT_CONFIG,
+            code="catalog_dependency_missing",
+            error_class="configuration",
+            message=f"{len(missing)} unexplained missing catalog dependencies: "
+            + "; ".join(f"{m.key!r} for {m.output}" for m in missing[:10]),
+            remediation="Point each named reference at an entity the complete build "
+            "mints (a curated slug that exists), or remove the curation entry that "
+            "names it.",
         )
+        # RegMetaError's dataclass init leaves `args` empty; keep str() readable.
+        self.args = (self.message,)
 
 
 # Shared inputs: keys of these kinds lie in no register.
