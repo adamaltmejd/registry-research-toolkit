@@ -47,9 +47,10 @@ jobs:
   # the workspace has no minimum-version policy.
   rust:
     runs-on: ubuntu-latest
-    # The crates/ CI budget (ARCHITECTURE.md "Tiers"). The job also builds
-    # reg-meta and runs the Rust HTTP cases: 38-72 s warm, 98 s with dependencies
-    # recompiled after a Cargo.lock change. A fully cold cache is unmeasured.
+    # The crates/ CI budget (ARCHITECTURE.md "Tiers"). The job also builds the
+    # workspace and runs the Rust HTTP and MCP cases. Measured on #1231
+    # (2026-10-08): 71 s warm; 2 min 10 s with dependencies compiled after a
+    # Cargo.lock change (rmcp's ~70 crates). A fully cold cache is unmeasured.
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v7.0.1
