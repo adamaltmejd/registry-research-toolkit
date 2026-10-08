@@ -102,7 +102,10 @@ fn openapi_matches_operations_toml() {
     for (path, item) in openapi["paths"].as_object().unwrap() {
         for (method, operation) in item.as_object().unwrap() {
             let route = format!("{} {path}", method.to_uppercase());
-            let (name, mut params) = if let Some(name) = operation["operationId"].as_str() {
+            let (name, mut params) = if let Some(id) = operation["operationId"].as_str() {
+                // A route without some of its operation's path parameters carries
+                // the name with `_without_` and them (`show_without_ref`).
+                let name = id.split("_without_").next().unwrap();
                 let row = rows
                     .get(name)
                     .unwrap_or_else(|| panic!("{name} is not in the table"));
@@ -114,7 +117,21 @@ fn openapi_matches_operations_toml() {
                         .any(|r| r.as_str() == Some(&route)),
                     "{route}"
                 );
-                (name, expected_params(row))
+                // A parameter another of the row's routes names in its path is a
+                // path parameter only (`show`'s `ref` on `GET /api/catalog`), and
+                // required on the route that names it, as OpenAPI requires of any
+                // path parameter.
+                let mut params = expected_params(row);
+                params.retain(|param, _| {
+                    let placeholder = format!("{{{param}}}");
+                    path.contains(&placeholder)
+                        || !row["http"]
+                            .as_array()
+                            .unwrap()
+                            .iter()
+                            .any(|r| r.as_str().unwrap().contains(&placeholder))
+                });
+                (name, params)
             } else {
                 let download = downloads
                     .get(route.as_str())
@@ -144,6 +161,9 @@ fn openapi_matches_operations_toml() {
                         "query"
                     };
                     value["in"] = located.into();
+                    if located == "path" {
+                        value["required"] = true.into();
+                    }
                     (param, value)
                 })
                 .collect();

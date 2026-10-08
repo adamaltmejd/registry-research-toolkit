@@ -13,7 +13,7 @@ use crate::{Code, Error, Scope};
 pub const OPERATIONS: &[Operation] = &[
     Operation {
         name: "search",
-        path: "/api/search",
+        paths: &["/api/search"],
         tool: Some("search"),
         description: "Search the catalog's registers, variables, classifications and codes \
             in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` \
@@ -34,7 +34,7 @@ pub const OPERATIONS: &[Operation] = &[
     },
     Operation {
         name: "context",
-        path: "/api/context",
+        paths: &["/api/context"],
         tool: None,
         description: "The catalog's branding, identity and headline counts, for the SPA.",
         params: &[Param::optional("scope", Type::Scope)],

@@ -1,0 +1,9 @@
+{
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/scb/alpha"},
+    {"operation": "show", "path": "/api/catalog/scb/old-alpha"},
+    {"operation": "show", "path": "/api/catalog/Alpha"}
+  ]
+}

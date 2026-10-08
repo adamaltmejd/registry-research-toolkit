@@ -1,0 +1,93 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/fqid": ["scb/example/second", "scb/example/value"],
+      "/data/children/1/coverage": {
+        "coverage_from": "2018-01-01",
+        "coverage_to": "2019-12-31",
+        "open_ended": false,
+        "state_count": 2
+      },
+      "/data/children/1/deliveries": [
+        {
+          "variant": "annual",
+          "column": "Value",
+          "period_scope": "intervals",
+          "coverage": {
+            "coverage_from": "2018-01-01",
+            "coverage_to": "2019-12-31",
+            "open_ended": false,
+            "state_count": 2
+          },
+          "windows": [{"valid_from": "2018-01-01", "valid_to": "2019-12-31"}]
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/coverage/state_count": [1, 2, 4],
+      "/data/children/2/coverage": {
+        "coverage_from": "2018-01-01",
+        "coverage_to": "2020-12-31",
+        "open_ended": false,
+        "state_count": 4
+      },
+      "/data/children/2/deliveries/*/variant": ["annual", "annual", "annual", "archive"],
+      "/data/children/2/deliveries/*/column": ["Secret", "Value", "value", "Archived"],
+      "/data/children/2/deliveries/*/windows": [
+        [{"valid_from": "2020-01-01", "valid_to": "2020-12-31"}],
+        [{"valid_from": "2018-01-01", "valid_to": "2018-12-31"}],
+        [{"valid_from": "2019-01-01", "valid_to": "2019-12-31"}],
+        [{"valid_from": "2018-01-01", "valid_to": "2019-12-31"}]
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/members/*/coverage": [
+        {
+          "coverage_from": "2018-01-01",
+          "coverage_to": "2019-12-31",
+          "open_ended": false,
+          "state_count": 2
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/members/*/delivery_column": [null, "Secondhidden", "Secret", "value"],
+      "/data/members/*/coverage": [
+        {
+          "coverage_from": "2010-01-01",
+          "coverage_to": "2025-12-31",
+          "open_ended": false,
+          "state_count": 1
+        },
+        {
+          "coverage_from": "2020-01-01",
+          "coverage_to": "2020-12-31",
+          "open_ended": false,
+          "state_count": 1
+        },
+        {
+          "coverage_from": "2020-01-01",
+          "coverage_to": "2020-12-31",
+          "open_ended": false,
+          "state_count": 1
+        },
+        {
+          "coverage_from": "2018-01-01",
+          "coverage_to": "2019-12-31",
+          "open_ended": false,
+          "state_count": 2
+        }
+      ]
+    }
+  }
+]

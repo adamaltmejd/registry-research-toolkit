@@ -54,6 +54,7 @@ EQUIVALENCE = {
         "docs-unavailable",
         "docs-scope-unavailable",
     ),
+    "show": ("show-provider", "show-bare-names"),
 }
 READER = {"fixture": "reader"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.
