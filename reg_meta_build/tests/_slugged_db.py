@@ -274,30 +274,6 @@ def add_state(
     return cur.lastrowid
 
 
-def add_value_set(
-    conn: sqlite3.Connection,
-    *,
-    value_set_id: int,
-    codes: list[tuple[str, str]],
-) -> None:
-    """Mint a `value_set` + its `value_code` / `value_set_member` rows so a state
-    can carry hydratable codes. `codes` is a list of (code, label). The
-    member_hash is a throwaway 32-byte blob (content-addressing isn't exercised
-    by Catalog reads — it joins by value_set_id)."""
-    conn.execute(
-        "INSERT INTO value_set (value_set_id, member_hash) VALUES (?, ?)",
-        (value_set_id, bytes(32)[:31] + bytes([value_set_id % 256])),
-    )
-    for code, label in codes:
-        cur = conn.execute(
-            "INSERT INTO value_code (code, label) VALUES (?, ?)", (code, label)
-        )
-        conn.execute(
-            "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
-            (value_set_id, cur.lastrowid),
-        )
-
-
 def add_binding(
     conn: sqlite3.Connection,
     *,
