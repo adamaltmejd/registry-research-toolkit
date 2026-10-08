@@ -1,12 +1,13 @@
-"""Tests for the panel entity-key slug-pin generator (#546; `fqid_slugs.py`).
+"""Tests for the steward panel entity-key slug-pin generator (#546, #559;
+`fqid_slugs.py`).
 
 The generator (`infer_entity_key_pins` / `render_entity_key_pins_toml`) emits a
-mandatory-curation worklist: a `[variable]` slug pin per `panel_entity_key`
-variable so the slug its panel ref binds to can't drift across the
-re-derive-every-build churn. The build-side gate that consumes the SAME
-enumeration (`iter_entity_key_variables`) is tested in `test_validate.py`.
+mandatory-curation worklist for a flavored DB: a `[variable]` slug pin per
+`panel_entity_key` variable of the steward registers a steward slug dir names, so
+the slug its panel ref binds to can't drift when extend-db re-derives it. The
+steward gate consumes the SAME enumeration (`iter_entity_key_variables`).
 
-Fully synthetic (CLAUDE.md): builds its own in-memory DBs and an empty/seeded
+Fully synthetic (CLAUDE.md): builds its own in-memory DBs and a flat steward-style
 slug dir under tmp_path; never reads the shipped fqid_slugs TOMLs."""
 
 from __future__ import annotations
@@ -36,23 +37,19 @@ from reg_meta_build.fqid_slugs import (
 )
 
 
-def _global_pin_file(
-    root: Path, provider: str, register: str, native_id: str, body: str
-) -> Path:
-    path = root / "registers" / provider / f"{register}.toml"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        f'[register]\nprovider = "{provider}"\nslug = "{register}"\nnative_id = "{native_id}"\n'
-        + body,
-        encoding="utf-8",
-    )
+def _steward_pin_file(root: Path, body: str) -> Path:
+    """A flat steward slug dir whose `scb.toml` names register 1 (lisa), plus
+    ``body`` (rendered pins)."""
+    root.mkdir(parents=True, exist_ok=True)
+    path = root / "scb.toml"
+    path.write_text('[register."1"]\nslug = "lisa"\n' + body, encoding="utf-8")
     return path
 
 
 def _pin_values(path: Path) -> dict[str, str]:
     return {
-        row["native_id"]: row["slug"]
-        for row in tomllib.loads(path.read_text())["variable"]
+        source_id: row["slug"]
+        for source_id, row in tomllib.loads(path.read_text())["variable"].items()
     }
 
 
@@ -81,8 +78,8 @@ def _db_with_entity_key(entity_key: str | list[str]) -> sqlite3.Connection:
 
 def _add_sos_entity_key(conn: sqlite3.Connection) -> None:
     """Add a NON-SCB (sos, provider_id 2) register/variant/variable carrying a
-    `panel_entity_key` (`lopnr`, source_id `500.LOPNR`), so the all-providers
-    generator/gate (#554) emit/enforce it alongside the SCB one."""
+    `panel_entity_key` (`lopnr`, source_id `500.LOPNR`), a second register the
+    steward scope can include or leave out."""
     add_register(conn, register_id=500, slug="dors", name="Dödsorsaker", provider_id=2)
     add_variable(conn, register_id=500, var_id="LOPNR", name="Löpnummer", slug="lopnr")
     add_variant(conn, register_variant_id=5000, register_id=500, slug="grund", name="G")
@@ -106,7 +103,7 @@ _NATIVE_IDS = {("scb", "lisa"): "1", ("sos", "dors"): "500"}
 
 
 def _slug_dir(tmp_path: Path, scb_body: str = "") -> Path:
-    """A global slug dir naming both fixture registers; ``scb_body`` adds pins."""
+    """A steward slug dir naming both fixture registers; ``scb_body`` adds pins."""
     d = tmp_path / "slugs"
     d.mkdir()
     (d / "scb.toml").write_text(
@@ -210,39 +207,6 @@ class TestEnumerate:
         }
         assert keyed == {"kon"}
 
-    def test_enumerates_all_providers_unscoped(self):
-        """The enumerator is PROVIDER-GENERAL — it yields a non-SCB (sos)
-        entity-key var too. Since #554 both callers cover all global providers,
-        so no provider filter is applied anywhere; this guards against
-        re-narrowing `iter_entity_key_variables` itself."""
-        conn = _db_with_entity_key("kon")
-        _add_sos_entity_key(conn)
-        providers = {
-            ek.provider_slug for ek in iter_entity_key_variables(conn, _NATIVE_IDS)
-        }
-        assert providers == {"scb", "sos"}
-
-    def test_scoped_skips_unnamed_register_unscoped_refuses_it(self):
-        """#559: `scoped=True` yields only the registers the native-id map names —
-        a flavored caller scopes to its steward registers so the global base's
-        entity-key vars (whose `_variable_source_ids` is flavored-unsafe, and which
-        may share a provider slug with a steward overlay) are skipped before that
-        helper runs. Unscoped, the same unnamed register has no pin key, so the
-        enumeration refuses it rather than skip it (#1215: falling back to the
-        catalog's surrogate id would key pins nothing can apply)."""
-        conn = _db_with_entity_key("kon")
-        _add_sos_entity_key(conn)  # sos register 500
-        steward = {("sos", "dors"): "500"}
-        scoped = list(iter_entity_key_variables(conn, steward, scoped=True))
-        assert {(ek.provider_slug, ek.source_id) for ek in scoped} == {
-            ("sos", "500.LOPNR")
-        }
-        assert list(iter_entity_key_variables(conn, {}, scoped=True)) == []
-        with pytest.raises(RegMetaError) as exc:
-            list(iter_entity_key_variables(conn, steward))
-        assert exc.value.code == "entity_key_register_unknown"
-        assert "scb/lisa" in exc.value.message
-
     def test_yields_three_part_source_id_for_split_sibling(self):
         """A split-sibling entity-key var carries a 3-part `<reg>.<pk>.<disc>`
         source_id (the disc is its own column slug, NOT the panel-ref slug), so a
@@ -254,23 +218,6 @@ class TestEnumerate:
         # 3-part key: register.provider_key.discriminator (the column slug).
         assert ek.source_id.count(".") == 2
         assert (ek.source_id, ek.variable_slug) == ("1.50.lopnrny", "lopnr")
-
-    def test_dot_in_provider_key_raises(self):
-        """A `provider_key` containing '.' would mis-parse the source-ID as a
-        phantom split-sibling 3-part key, so enumeration fails fast (the build's
-        own guard) rather than mis-attributing a pin to the wrong sibling."""
-        conn = _db_with_entity_key("kon")
-        # A dotted provider_key in the entity-key var's OWN register trips the
-        # source-ID grammar when `_variable_source_ids` enumerates the register.
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (1, 'FOO.BAR', 'Foo', 'foo')"
-        )
-        conn.commit()
-        with pytest.raises(RegMetaError) as exc:
-            list(iter_entity_key_variables(conn, _NATIVE_IDS))
-        assert exc.value.code == "slug_toml_invalid"
-        assert "contains '.'" in exc.value.message
 
 
 class TestGenerator:
@@ -304,8 +251,7 @@ class TestGenerator:
         conn = _db_with_entity_key(["kon", "ar"])
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
         toml = render_entity_key_pins_toml(pins)
-        reparse_dir = tmp_path / "reparse"
-        path = _global_pin_file(reparse_dir, "scb", "lisa", "1", toml)
+        path = _steward_pin_file(tmp_path / "reparse", toml)
         assert _pin_values(path) == {"1.44": "kon", "1.99": "ar"}
 
     def test_emitted_toml_populates_variable_slug(self, tmp_path: Path):
@@ -323,7 +269,7 @@ class TestGenerator:
         fresh.execute("UPDATE variable SET slug = NULL")
         fresh.commit()
         slug_dir = tmp_path / "apply"
-        _global_pin_file(slug_dir, "scb", "lisa", "1", toml)
+        _steward_pin_file(slug_dir, toml)
         populate_variable_slugs(fresh, slug_dir)
         kon = fresh.execute(
             "SELECT slug FROM variable WHERE register_id = 1 AND provider_key = '44'"
@@ -355,7 +301,7 @@ class TestGenerator:
         # to `lopnr`, leaving its `kon` sibling untouched.
         fresh = _db_with_split_sibling_entity_key(entity_key_slug=None)
         slug_dir = tmp_path / "apply"
-        _global_pin_file(slug_dir, "scb", "lisa", "1", toml)
+        _steward_pin_file(slug_dir, toml)
         populate_variable_slugs(fresh, slug_dir)
         slugs = dict(
             fresh.execute(
@@ -377,63 +323,22 @@ class TestGenerator:
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
         assert [p.source_id for p in pins] == ["1.44", "1.99"]
 
-    def test_flavored_header_points_at_steward_dir(self, tmp_path: Path):
-        """#559 Fix 1: `render_entity_key_pins_toml(pins, flavored=True)` rewrites
-        the comment HEADER to the steward flow — the `--flavored --slug-dir`
-        regenerate command and the `fqid_slugs/<steward>/` fold target — and drops
-        the GLOBAL `--out-dir`-to-`fqid_slugs/<provider>.toml` instruction so a
-        steward curator isn't pointed at the wrong location. The pin LINES are
-        unchanged (they still bind the same source ids)."""
+    def test_header_points_at_steward_dir(self, tmp_path: Path):
+        """#559: the rendered block tells the curator to regenerate with
+        `--slug-dir <steward dir>` and fold into `fqid_slugs/<steward>/`."""
         conn = _db_with_entity_key("kon")
         pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
-        toml = render_entity_key_pins_toml(pins, flavored=True)
-        assert "--flavored" in toml
-        assert "--slug-dir" in toml
-        assert "fqid_slugs/<steward>/" in toml
-        # The GLOBAL regenerate instruction must NOT survive into the steward
-        # header (it points the curator at the wrong place).
-        assert "--out-dir /tmp/pins/" not in toml
-        assert "into fqid_slugs/<provider>.toml" not in toml
-        # The pin line itself is identical regardless of header flavor.
+        toml = render_entity_key_pins_toml(pins)
+        assert "--slug-dir <steward dir>" in toml
+        assert "fqid_slugs/<steward>/<provider>.toml" in toml
         assert '[variable."1.44"]' in toml
         assert 'slug = "kon"' in toml
 
-    def test_global_header_unchanged_byte_for_byte(self, tmp_path: Path):
-        """#559 Fix 1: `flavored=False` (default) output is BYTE-IDENTICAL to the
-        committed global pin blocks — the steward header swap must not churn them.
-        Asserts both that the explicit default matches the no-arg call and that the
-        original global header text is still present."""
-        conn = _db_with_entity_key("kon")
-        pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
-        default = render_entity_key_pins_toml(pins)
-        assert render_entity_key_pins_toml(pins, flavored=False) == default
-        # The original GLOBAL header markers are intact.
-        assert "(#546, #554)" in default
-        assert "Scope: ALL" in default
-        assert "--out-dir /tmp/pins/" in default
-        assert "matching register file" in default
-        # ...and the steward-only markers are absent from the global header.
-        assert "--flavored" not in default
-        assert "fqid_slugs/<steward>/" not in default
-
-    def test_write_flavored_writes_steward_header(self, tmp_path: Path):
-        """#559 Fix 1: `write_entity_key_pins(..., flavored=True)` threads the flag
-        into the per-provider render, so the written `<provider>.toml` carries the
-        steward header."""
-        conn = _db_with_entity_key("kon")
-        pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
-        out_dir = tmp_path / "out"
-        written = write_entity_key_pins(pins, out_dir, flavored=True)
-        body = Path(written["scb"]).read_text(encoding="utf-8")
-        assert "--flavored" in body
-        assert "fqid_slugs/<steward>/" in body
-        assert "--out-dir /tmp/pins/" not in body
-
-    def test_flavored_scopes_to_steward_dir_registers(self, tmp_path: Path):
-        """#559: `infer_entity_key_pins(conn, steward_dir, flavored=True)` scopes to
-        the steward REGISTERS the dir curates. With a DB carrying BOTH a global (scb)
-        and a steward (sos register 500) entity-key var and a steward dir curating
-        ONLY the steward register, the emitted pins are for that register alone — the
+    def test_scopes_to_steward_dir_registers(self, tmp_path: Path):
+        """#559: `infer_entity_key_pins(conn, steward_dir)` scopes to the steward
+        REGISTERS the dir curates. With a DB carrying BOTH a global (scb) and a
+        steward (sos register 500) entity-key var and a steward dir curating ONLY
+        the steward register, the emitted pins are for that register alone — the
         scb var (the global base's, whose `_variable_source_ids` is flavored-unsafe)
         is excluded entirely."""
         conn = _db_with_entity_key("kon")  # scb register 1, 1.44/kon
@@ -449,27 +354,8 @@ class TestGenerator:
             '[register."500"]\nslug = "dors"\n', encoding="utf-8"
         )
 
-        pins = infer_entity_key_pins(conn, steward_dir, flavored=True)
+        pins = infer_entity_key_pins(conn, steward_dir)
         assert [(p.provider_slug, p.source_id) for p in pins] == [("sos", "500.LOPNR")]
-
-        # Default (flavored=False) over the same dir is unscoped — it reaches the
-        # scb register too and refuses it (no entry names its native id), proving
-        # the scope is what excludes scb, not the curated-skip.
-        with pytest.raises(RegMetaError) as exc:
-            infer_entity_key_pins(conn, steward_dir, flavored=False)
-        assert exc.value.code == "entity_key_register_unknown"
-
-    def test_non_scb_entity_key_emitted(self, tmp_path: Path):
-        """#554: ALL global providers are under mandatory curation, so a non-SCB
-        (sos) entity-key var IS emitted alongside the SCB one — the generator no
-        longer filters by provider."""
-        conn = _db_with_entity_key("kon")
-        _add_sos_entity_key(conn)
-        pins = infer_entity_key_pins(conn, _slug_dir(tmp_path))
-        assert sorted((p.provider_slug, p.source_id) for p in pins) == [
-            ("scb", "1.44"),
-            ("sos", "500.LOPNR"),
-        ]
 
     def test_write_groups_per_provider_regardless_of_order(self, tmp_path: Path):
         """`write_entity_key_pins` groups by provider via dict accumulation, so a
@@ -502,19 +388,14 @@ class TestGenerator:
         ]
         out_dir = tmp_path / "pins"
         written = write_entity_key_pins(pins, out_dir)
-        assert set(written) == {"scb/lisa", "sos/dors"}
-        assert _pin_values(out_dir / "registers" / "scb" / "lisa.toml") == {
-            "1.44": "kon",
-            "1.99": "ar",
-        }
-        assert _pin_values(out_dir / "registers" / "sos" / "dors.toml") == {
-            "500.LOPNR": "lopnr"
-        }
+        assert set(written) == {"scb", "sos"}
+        assert _pin_values(out_dir / "scb.toml") == {"1.44": "kon", "1.99": "ar"}
+        assert _pin_values(out_dir / "sos.toml") == {"500.LOPNR": "lopnr"}
 
     def test_overwrite_guard_refuses_without_force(self, tmp_path: Path):
         """A non-empty `out_dir` (any `*.toml`) refuses without `force`, then
         succeeds with `force=True` — mirrors `seed-slugs`, so pointing `--out-dir`
-        at the curated `fqid_slugs/` can't clobber it."""
+        at a curated steward dir can't clobber it."""
         pin = EntityKeyPin(
             provider_slug="scb",
             source_id="1.44",
@@ -530,10 +411,8 @@ class TestGenerator:
         assert exc.value.code == "entity_key_pins_would_overwrite"
 
         written = write_entity_key_pins([pin], out_dir, force=True)
-        assert set(written) == {"scb/lisa"}
-        assert _pin_values(out_dir / "registers" / "scb" / "lisa.toml") == {
-            "1.44": "kon"
-        }
+        assert set(written) == {"scb"}
+        assert _pin_values(out_dir / "scb.toml") == {"1.44": "kon"}
 
 
 def _file_db(conn: sqlite3.Connection, tmp_path: Path) -> Path:
@@ -574,11 +453,11 @@ class TestCli:
     DB. Usage-guard cases point `--db` at a missing directory: each guard fires
     before the DB open, so a missing guard surfaces a different error code."""
 
-    def test_flavored_counts_only_the_steward_provider(
+    def test_counts_only_the_steward_provider(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ):
         # The DB carries an scb and an sos entity key; the steward dir curates only
-        # sos register 500, so `--flavored` scopes the pins to sos alone.
+        # sos register 500, so the pins are scoped to sos alone.
         conn = _db_with_entity_key("kon")
         _add_sos_entity_key(conn)
         db = _file_db(conn, tmp_path)
@@ -587,15 +466,15 @@ class TestCli:
         (steward_dir / "sos.toml").write_text(
             '[register."500"]\nslug = "dors"\n', encoding="utf-8"
         )
-        code, data = _cli(capsys, db, "--slug-dir", steward_dir, "--flavored")
+        code, data = _cli(capsys, db, "--slug-dir", steward_dir)
         assert code == 0
         assert data["counts"] == {"sos": 1}
         assert data["count"] == 1
 
-    def test_flavored_without_slug_dir_is_usage_error(
+    def test_without_slug_dir_is_usage_error(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ):
-        code, data = _cli(capsys, tmp_path / "missing", "--flavored")
+        code, data = _cli(capsys, tmp_path / "missing")
         assert code == 2
         assert data["error"]["code"] == "entity_key_pins_flavored_needs_slug_dir"
 
@@ -605,14 +484,13 @@ class TestCli:
         code, data = _cli(
             capsys,
             tmp_path / "missing",
-            "--flavored",
             "--slug-dir",
             tmp_path / "does-not-exist",
         )
         assert code == 2
         assert data["error"]["code"] == "slug_dir_not_a_directory"
 
-    def test_flavored_checkout_global_slug_root_is_usage_error(
+    def test_checkout_global_slug_root_is_usage_error(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ):
         # The checkout's global curation root (read only). It both equals the
@@ -620,13 +498,11 @@ class TestCli:
         # rejects it; the boundary observes the shared error, not which fired.
         global_root = Path(__file__).resolve().parents[1] / "curation"
         assert any(child.is_dir() for child in global_root.iterdir())
-        code, data = _cli(
-            capsys, tmp_path / "missing", "--flavored", "--slug-dir", global_root
-        )
+        code, data = _cli(capsys, tmp_path / "missing", "--slug-dir", global_root)
         assert code == 2
         assert data["error"]["code"] == "entity_key_pins_flavored_global_slug_dir"
 
-    def test_flavored_slug_dir_nesting_a_directory_is_global_root(
+    def test_slug_dir_nesting_a_directory_is_global_root(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ):
         # Not the checkout's root, but it nests a steward dir (only the global
@@ -638,13 +514,11 @@ class TestCli:
             '[register."500"]\nslug = "dors"\n', encoding="utf-8"
         )
         (global_root / "swecov").mkdir()
-        code, data = _cli(
-            capsys, tmp_path / "missing", "--flavored", "--slug-dir", global_root
-        )
+        code, data = _cli(capsys, tmp_path / "missing", "--slug-dir", global_root)
         assert code == 2
         assert data["error"]["code"] == "entity_key_pins_flavored_global_slug_dir"
 
-    def test_flavored_slug_dir_without_register_entries_is_usage_error(
+    def test_slug_dir_without_register_entries_is_usage_error(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ):
         steward_dir = tmp_path / "steward"
@@ -652,13 +526,11 @@ class TestCli:
         (steward_dir / "sos.toml").write_text(
             '[variable."500.LOPNR"]\nslug = "sosvar"\n', encoding="utf-8"
         )
-        code, data = _cli(
-            capsys, tmp_path / "missing", "--flavored", "--slug-dir", steward_dir
-        )
+        code, data = _cli(capsys, tmp_path / "missing", "--slug-dir", steward_dir)
         assert code == 2
         assert data["error"]["code"] == "entity_key_pins_flavored_empty_scope"
 
-    def test_out_dir_writes_one_file_per_provider_register(
+    def test_out_dir_writes_one_file_per_provider(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
     ):
         conn = _db_with_entity_key("kon")
@@ -669,13 +541,9 @@ class TestCli:
         code, data = _cli(capsys, db, "--slug-dir", slug_dir, "--out-dir", out_dir)
         assert code == 0
         assert data["counts"] == {"scb": 1, "sos": 1}
-        assert set(data["files"]) == {"scb/lisa", "sos/dors"}
-        assert _pin_values(out_dir / "registers" / "scb" / "lisa.toml") == {
-            "1.44": "kon"
-        }
-        assert _pin_values(out_dir / "registers" / "sos" / "dors.toml") == {
-            "500.LOPNR": "lopnr"
-        }
+        assert set(data["files"]) == {"scb", "sos"}
+        assert _pin_values(out_dir / "scb.toml") == {"1.44": "kon"}
+        assert _pin_values(out_dir / "sos.toml") == {"500.LOPNR": "lopnr"}
 
     def test_counts_in_no_target_and_output_toml_modes(
         self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
