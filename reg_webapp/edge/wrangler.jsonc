@@ -22,20 +22,20 @@
   // (command above) — `wrangler deploy` REPLACES the var set, so deploying
   // with this literal default would reuse the "dev" generation and can
   // resurface stale entries from an earlier "dev" deploy.
-  "vars": { "DEPLOY_VERSION": "dev" },
+  "vars": { "DEPLOY_VERSION": "dev", "ROUTE_MCP": "true" },
   "assets": {
     // Relative to this config file.
     "directory": "../frontend/dist",
     "binding": "ASSETS",
     // Deep links to client routes (/catalog/...) fall back to index.html.
     "not_found_handling": "single-page-application",
-    // Backend-owned paths ALWAYS hit the worker (→ origin), never the SPA
+    // Origin-owned paths ALWAYS hit the worker (→ origin), never the SPA
     // fallback. Without this, single-page-application mode serves index.html
     // to browser navigation requests directly, shadowing /api deep-opens.
-    // LOCKSTEP: this glob list and ORIGIN_PATHS in src/index.ts encode the
-    // same set — edit both together (and create_app in the backend owns which
-    // paths exist; /redoc is deliberately disabled there).
-    "run_worker_first": ["/api", "/api/*", "/openapi.json", "/docs", "/docs/*"]
+    // LOCKSTEP: this glob list and ORIGIN_PATHS (plus MCP_PATH, which
+    // ROUTE_MCP enables here only) in src/index.ts encode the same set — edit
+    // them together; `reg-meta serve` owns which paths exist.
+    "run_worker_first": ["/api", "/api/*", "/openapi.json", "/mcp"]
   },
   "routes": [{ "pattern": "catalog.swecov.se/*", "zone_name": "swecov.se" }],
   "observability": { "enabled": true }

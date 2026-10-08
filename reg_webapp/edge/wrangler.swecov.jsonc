@@ -3,7 +3,8 @@
 // Same Worker code and SPA assets as the global catalog, but a separate Worker
 // route/name so data.swecov.se gets its own DEPLOY_VERSION cache generation.
 // That keeps a failed SWECOV origin deploy from blocking the global edge bump,
-// and vice versa.
+// and vice versa. It does not set ROUTE_MCP: a steward catalog is never served
+// over hosted MCP (RUST_RUNTIME_SPEC.md decision 12).
 //
 // Deploy (after building the SPA: `bun run gen:types && bun run build` in
 // reg_webapp/frontend/):
@@ -19,7 +20,7 @@
     "directory": "../frontend/dist",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api", "/api/*", "/openapi.json", "/docs", "/docs/*"]
+    "run_worker_first": ["/api", "/api/*", "/openapi.json"]
   },
   "routes": [{ "pattern": "data.swecov.se/*", "zone_name": "swecov.se" }],
   "observability": { "enabled": true }

@@ -1,19 +1,19 @@
 # syntax=docker/dockerfile:1.27@sha256:bde3983e9c939224420ddaf6b784cc30e09b035a4dea01f581230c50809f372e
 
-# reg_webapp deployment image (REFACTOR_SPEC.md §6.5 — Deployment).
+# reg_webapp deployment image: the Rust server (`reg-meta serve`) alone, with the
+# baked reg_meta DB pair and the steward branding (RUST_RUNTIME_SPEC.md section 8,
+# package 3a.9). It serves the API and `/mcp` only; the edge worker serves the SPA
+# (reg_webapp/edge/, built by container-build.yml's edge jobs).
 #
-# Build context is the REPO ROOT (not reg_webapp/), because reg-webapp is a uv
-# workspace member whose deps (reg-meta / reg-schema) resolve via
-# [tool.uv.sources] against the root uv.lock — the lockfile and the sibling
-# member source trees must all be in context. Build from the repo root with:
+# Build context is the REPO ROOT (not reg_webapp/): the bake stage needs the uv
+# workspace skeleton and the server stage the Cargo workspace. Build with:
 #
 #   docker build -f reg_webapp/Dockerfile -t reg-webapp .
 #
-# Four baked-in stages: (1) bun builds the SPA, (2) a DB-bake stage fetches the
-# reg_meta release DB pair and, for steward deployments, swaps in the private
-# flavored main DB — isolated so app-code edits don't re-download it (#290),
-# (3) uv installs the Python backend + workspace deps, (4) a lean runtime that
-# serves the JSON API with uvicorn behind an entrypoint smoke gate.
+# Three stages: (1) a DB-bake stage fetches the reg_meta release DB pair with the
+# Python `reg-meta update` — isolated so server edits don't re-download it (#290),
+# (2) a pinned Rust stage builds `reg-meta`, (3) a lean runtime that runs
+# `reg-meta serve` behind an entrypoint smoke gate.
 #
 # Every external image — the syntax frontend, each FROM base, and the uv tool
 # image — is pinned as a readable exact tag PLUS its immutable multi-arch
@@ -23,61 +23,19 @@
 # non-reproducible.
 
 # ---------------------------------------------------------------------------
-# Stage 1 — frontend: build the Svelte SPA with bun.
+# Stage 1 — regmeta-db: fetch + bake the reg_meta DB pair.
 # ---------------------------------------------------------------------------
-# The SPA codegens src/lib/api-types.ts and api-types-rust.ts from the committed
-# backend/openapi.json and crates/reg-meta/openapi.json,
-# which are already in the tree (CI gates them against drift), so no server is
-# needed at SPA-build time. Output is the static dist/ bundle (Vite default
-# outDir), carried forward to the runtime stage. The backend stays a pure JSON
-# API (see reg_webapp/DESIGN.md → "SPA routing + production fallback"): it mounts
-# no StaticFiles, so the SPA is shipped as a static artifact for the edge /
-# reverse proxy to serve. This image bakes dist/ at /opt/reg_webapp/spa so a
-# single-container deploy can point any static server at it; the production edge
-# (Cloudflare) does the deep-link → index.html rewrite.
-FROM oven/bun:1.4.2-alpine@sha256:d888c0ae6c86d7866ff10c5aafdd9077b36aee6455b33dd270fb93c0dd5cef6f AS frontend
-
-# node: the frontend tools' launchers (`openapi-typescript`, `vite`) are
-# `#!/usr/bin/env node` scripts, and this base answers them itself — it ships
-# `/usr/local/bun-node-fallback-bin/node -> bun`, last on the image PATH — so
-# without this COPY the shipped bundle is built by bun's runtime, the one
-# runtime CI does not exercise. Copy in the node CI pin;
-# /usr/local/bin precedes that fallback dir. Alpine (musl) build to match this
-# base, whose libstdc++/libgcc/musl are all that binary needs.
-COPY --from=node:26.8.1-alpine@sha256:2d984a15c9b54fd0aeb608b8e0d0d83529eb34d2966db27a1fb4f1edc3d298a3 /usr/local/bin/node /usr/local/bin/node
-
-WORKDIR /build/frontend
-
-# Install deps against the committed lockfile first (cache layer keyed on the
-# manifests only — source edits don't bust the dep install).
-COPY reg_webapp/frontend/package.json reg_webapp/frontend/bun.lock ./
-RUN bun install --frozen-lockfile
-
-# The committed API contracts the SPA types are generated from: FastAPI's and
-# the Rust server's (`gen:types` reads it at ../../crates/reg-meta/openapi.json,
-# which from /build/frontend is /crates/reg-meta/openapi.json).
-COPY reg_webapp/backend/openapi.json /build/backend/openapi.json
-COPY crates/reg-meta/openapi.json /crates/reg-meta/openapi.json
-COPY reg_webapp/frontend/ ./
-
-# Regenerate types from the committed contract, then production-build. gen:types
-# is a no-op against a clean tree (CI pins it), but running it keeps the image
-# build self-consistent if a stale base-layer cache carried older types.
-RUN bun run gen:types && bun run build
-
-# ---------------------------------------------------------------------------
-# Stage 2 — regmeta-db: fetch + bake the reg_meta DB pair.
-# ---------------------------------------------------------------------------
-# Isolated from the app-code stages (#290): its cache key covers only the
+# Isolated from the server stage (#290): its cache key covers only the
 # workspace skeleton (root pyproject + lockfile + member pyprojects/READMEs),
 # the reg_meta source tree, REG_META_TAG, and REG_META_FLAVOR — so
-# backend/frontend edits reuse the cached DB layer (~70 MB download, several
+# server edits reuse the cached DB layer (~70 MB download, several
 # hundred MB unpacked) instead of re-fetching it on every build. `reg-meta
 # update` (not raw curl) fetches the public release pair: it owns release
 # resolution, asset naming, and zstd unpack, and tag slashes (`reg_meta/vX.Y.Z`)
 # make hand-built download URLs fragile. A steward flavor then replaces only
 # `reg_meta.db` from a private zstd URL; `reg_meta_docs.db` stays the public
-# release asset for the same tag.
+# release asset for the same tag. This stage is the image's only Python; the
+# fetch stays here until stage 4 (RUST_RUNTIME_SPEC.md section 10).
 FROM python:3.14.7-slim-bookworm@sha256:9ab8d9c8514b44f90cf0029dd42fdd7e9e211e639c8b995304cc04568dee900f AS regmeta-db
 COPY --from=ghcr.io/astral-sh/uv:0.12.11@sha256:79c6f4776b851471cc73b7d21d0cc834bb94383c292e83640d27eff512864df7 /uv /usr/local/bin/uv
 
@@ -108,7 +66,7 @@ RUN uv sync --frozen --no-dev --package reg-meta
 # the data root, a steward name fetches reg_meta_<NAME>.db.zst into its own
 # subdirectory, and both take the shared reg_meta_docs.db.zst beside it. The
 # selected directory is then moved to /opt/reg_meta, which the runtime stage
-# serves through REG_META_DB. An explicit `--db` update is NOT usable here: it
+# serves with `reg-meta serve --db`. An explicit `--db` update is NOT usable here: it
 # requires an existing admitted catalog before any writes (reg_meta/DESIGN.md →
 # Artifact selection), and this layer starts empty.
 #
@@ -129,8 +87,8 @@ RUN uv sync --frozen --no-dev --package reg-meta
 # every main-push build in #343 and fails this RUN with exit 10 — including a
 # steward build whose release lacks reg_meta_<NAME>.db.zst, #1091).
 # REG_META_FLAVOR is the catalog name: `global` (public catalog) or a steward
-# slug such as `swecov`. The runtime's REG_WEBAPP_STEWARD must name the same
-# steward; artifact admission at boot rejects a mismatch.
+# slug such as `swecov`. The runtime serves it as `--catalog`, so artifact
+# admission at boot rejects a baked DB of another catalog.
 #
 # ARGs declared after the sync layer so a tag/flavor change re-runs only the
 # bake.
@@ -148,77 +106,33 @@ RUN XDG_DATA_HOME=/opt/reg_meta_data /app/.venv/bin/reg-meta update \
 # `immutable=1` (#283) — no WAL checkpoint / sidecar cleanup needed here.
 
 # ---------------------------------------------------------------------------
-# Stage 3 — backend build: install the Python backend venv.
+# Stage 2 — server: build the `reg-meta` binary.
 # ---------------------------------------------------------------------------
-# Pin BOTH the interpreter and uv deterministically: base on python:3.14-slim
-# (same image the runtime stage uses, so the baked venv's interpreter path
-# matches) and copy a version-pinned uv binary off its official image. uv's own
-# combined `uv:<ver>-python<x>-bookworm-slim` tags don't pin the uv version and
-# python jointly the way we need, so we compose the pin ourselves.
-FROM python:3.14.7-slim-bookworm@sha256:9ab8d9c8514b44f90cf0029dd42fdd7e9e211e639c8b995304cc04568dee900f AS backend
-COPY --from=ghcr.io/astral-sh/uv:0.12.11@sha256:79c6f4776b851471cc73b7d21d0cc834bb94383c292e83640d27eff512864df7 /uv /usr/local/bin/uv
-
-# Deterministic install: bytecode-compile ahead of time, copy (not symlink) into
-# .venv so the venv is self-contained when copied to the runtime stage.
-ENV UV_COMPILE_BYTECODE=1 \
-    UV_LINK_MODE=copy \
-    UV_NO_INSTALLER_METADATA=1
-
-WORKDIR /app
-
-# Copy the workspace skeleton needed for `uv sync --frozen` to resolve. The root
-# pyproject + uv.lock define the workspace; every member listed in
-# [tool.uv.workspace].members must have its pyproject present for the locked
-# resolution to validate. Full source trees only for the members this stage
-# actually installs (reg-webapp's dep closure); reg_meta_build and its native
-# dependency reg-core-py stay pyproject-only so their churn doesn't bust the sync
-# layer (#290), and no Rust toolchain is needed.
-COPY pyproject.toml uv.lock ./
-COPY reg_meta/ ./reg_meta/
-COPY reg_meta_build/pyproject.toml reg_meta_build/README.md ./reg_meta_build/
-COPY crates/reg-core-py/pyproject.toml ./crates/reg-core-py/
-COPY reg_schema/ ./reg_schema/
-COPY reg_webapp/backend/ ./reg_webapp/backend/
-
-# Install ONLY the reg-webapp package + its runtime dep closure (reg-meta /
-# reg-schema), no dev deps. --frozen asserts the lockfile is up to date (CI
-# parity). --package scopes the sync so reg-meta-build (another workspace member,
-# not a reg-webapp dep) is NOT installed. This pulls the `reg-meta` console script
-# into /app/.venv/bin.
-#
-# uv installs the workspace members as EDITABLE (.pth links into /app/<member>/src),
-# so the runtime stage copies those member src trees alongside the venv (below) —
-# the venv is not self-contained on its own.
-RUN uv sync --frozen --no-dev --package reg-webapp
+# Same Debian release as the runtime base, so the binary's glibc matches. The
+# workspace manifest names every crate under crates/ as a member, so all of them
+# are copied; only `reg-meta` and its dependencies are built (`reg-core-py`'s PyO3
+# extension is not). `--locked` asserts Cargo.lock is current (CI parity).
+FROM rust:1.99.0-slim-trixie@sha256:24e632c09342c20abf8312cf4f61430a911c01ed3a5e4c02b87292b1c39c5273 AS server
+WORKDIR /build
+COPY Cargo.toml Cargo.lock ./
+COPY crates/ ./crates/
+RUN cargo build --release --locked -p reg-meta
 
 # ---------------------------------------------------------------------------
-# Stage 4 — runtime: lean image serving the API with uvicorn.
+# Stage 3 — runtime: `reg-meta serve` behind the entrypoint smoke gate.
 # ---------------------------------------------------------------------------
-# python:slim (no uv) — runtime needs only the interpreter + the baked .venv.
-# Pinned to the same 3.14 minor the backend stage built against so the venv's
-# absolute interpreter path resolves.
-FROM python:3.14.7-slim-bookworm@sha256:9ab8d9c8514b44f90cf0029dd42fdd7e9e211e639c8b995304cc04568dee900f AS runtime
+# Debian slim plus curl, which the entrypoint's smoke gate probes with.
+FROM debian:trixie-20261005-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS runtime
 
-# Non-root runtime user (the API needs no write access to anything it ships).
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Non-root runtime user (the server needs no write access to anything it ships).
 RUN groupadd --system app && useradd --system --gid app --home /app app
 
-WORKDIR /app
-
-ARG REG_WEBAPP_STEWARD=global
-
-# The venv + the editable member src trees its .pth files point at (uv installs
-# workspace members editable; the .pth entries reference /app/<member>/src). The
-# frozen --package sync installed exactly reg-webapp's dep closure — reg_meta,
-# reg_schema, and reg_webapp itself — so all three src trees are copied and no
-# .pth entry dangles. Plus the baked DB pair, the SPA bundle, and the steward
-# configs. UV_LINK_MODE=copy made the venv relocatable; both stages are
-# python3.14 slim-bookworm so the venv's interpreter path matches.
-COPY --from=backend /app/.venv /app/.venv
-COPY --from=backend /app/reg_meta/src /app/reg_meta/src
-COPY --from=backend /app/reg_schema/src /app/reg_schema/src
-COPY --from=backend /app/reg_webapp/backend/src /app/reg_webapp/backend/src
+COPY --from=server /build/target/release/reg-meta /usr/local/bin/reg-meta
 COPY --from=regmeta-db /opt/reg_meta /opt/reg_meta
-COPY --from=frontend /build/frontend/dist /opt/reg_webapp/spa
 COPY reg_webapp/stewards/ /opt/reg_webapp/stewards/
 # chmod explicitly: don't rely on the source file's executable bit surviving the
 # CI checkout / build-context transfer.
@@ -241,22 +155,15 @@ RUN if find / -name 'reg_meta.provenance.db*' -print -quit 2>/dev/null | grep -q
         exit 1; \
     fi
 
-ENV PATH="/app/.venv/bin:$PATH" \
-    # reg_meta read-only DB path (lifespan resolves REG_META_DB first).
-    REG_META_DB=/opt/reg_meta \
-    # The packaged image has no stewards/ sibling next to the backend module, so
-    # point the loader at the copied configs (DESIGN.md → Steward layering).
-    REG_WEBAPP_STEWARDS_DIR=/opt/reg_webapp/stewards \
-    # Which steward this process serves (default `global` = full universe).
-    REG_WEBAPP_STEWARD=$REG_WEBAPP_STEWARD \
-    REG_WEBAPP_HOST=0.0.0.0 \
-    REG_WEBAPP_PORT=8000
+# The catalog the image serves: the baked flavor (`global` or a steward slug),
+# admitted as `--catalog` and branded from /opt/reg_webapp/stewards/<catalog>/.
+ARG REG_META_FLAVOR=global
+ENV REG_META_CATALOG=$REG_META_FLAVOR
 
 USER app
 EXPOSE 8000
 
-# The entrypoint runs the per-deploy smoke gate (a shallow /api/catalog walk)
-# IN-PROCESS before exec'ing uvicorn — a smoke failure exits
-# non-zero and the container never serves traffic (reg_webapp/DESIGN.md →
-# Deployment).
+# The entrypoint probes `context`, `search` and `/mcp` before handing the
+# foreground to the server; a failed probe exits non-zero and the container never
+# serves traffic (reg_webapp/DESIGN.md → Deployment).
 ENTRYPOINT ["docker-entrypoint.sh"]

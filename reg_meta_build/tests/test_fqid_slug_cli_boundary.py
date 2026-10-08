@@ -9,8 +9,14 @@ import sqlite3
 import tomllib
 from typing import TYPE_CHECKING
 
+from _csv_fixtures import var_row, write_scb_input
 from _fqid_slug_support import write_register_file
-from _pipeline_catalog_support import built_db_dir
+from _pipeline_catalog_support import (
+    CatalogFixture,
+    built_db_dir,
+    prepare_accepted,
+    write_curation_tree,
+)
 from _slugged_db import add_register, add_variant, build_slugged_db
 from reg_meta_build.cli import run
 from reg_meta_build.db import SCHEMA_VERSION
@@ -19,7 +25,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     import pytest
-    from _pipeline_catalog_support import CatalogFixture
 
 _AUTO = ("registers", "scb", "lisa.auto.toml")
 
@@ -130,6 +135,52 @@ def test_pipeline_catalog_pins_key_on_native_register_id(
     assert tomllib.loads(pins) == {
         "variable": [{"native_id": "1.101", "slug": "value"}]
     }
+
+
+def test_pipeline_catalog_partition_owners_key_on_their_split_ids(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A partition owner's provider_key carries its split id (`5.first`), so its
+    pin key is its authored native id `1.5.first`: both owners are already pinned
+    and seed-slugs generates nothing. Fails if the shared source-id derivation
+    refuses a dotted provider_key (as it did before #1222) or re-derives a split
+    discriminator, which would emit pins under ids no register entry carries."""
+    source = tmp_path / "source"
+    columns = ("FIRST", "SECOND")
+    write_scb_input(
+        source,
+        registerinformation_rows=[
+            var_row(cvid=cvid, var_id=5, colname=column, register=("TEST", 1, 2))
+            for cvid, column in enumerate(columns, 10)
+        ],
+        unika_rows=[
+            f"TEST|Testregistret|Individer|Individer|GenericVar|{column}|2020|2020|0|0|0"
+            for column in columns
+        ],
+        include=("registerinformation", "unika"),
+    )
+    curation = write_curation_tree(
+        tmp_path / "curation",
+        {
+            "registers/scb/sample.toml": (
+                '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+                '[[variant]]\nnative_id = "1.2"\nslug = "people"\n'
+                '[[variable]]\nnative_id = "1.5.first"\nslug = "first"\n'
+                '[[variable]]\nnative_id = "1.5.second"\nslug = "second"\n'
+                '[[identity.partition]]\nvariable = "1.5"\n'
+                'columns = { FIRST = "1.5.first", SECOND = "1.5.second" }\n'
+                'columns_ref = "fixture"\n'
+            )
+        },
+    )
+    fixture = CatalogFixture(*prepare_accepted(tmp_path, source), curation)
+    db_dir = built_db_dir(fixture, tmp_path)
+
+    code = run(["--db", str(db_dir), "seed-slugs", "--out-dir", str(curation)])
+
+    assert code == 0, capsys.readouterr().out
+    pins = curation / "registers" / "scb" / "sample.auto.toml"
+    assert tomllib.loads(pins.read_text(encoding="utf-8")) == {}
 
 
 def test_pipeline_catalog_register_without_file_refused(
