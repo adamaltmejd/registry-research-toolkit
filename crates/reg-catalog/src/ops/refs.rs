@@ -2,8 +2,6 @@
 //! [`resolve`] takes any kind (`show`); [`register`] takes a register only
 //! (`search`'s `register`, `docs_related`).
 
-use std::collections::BTreeSet;
-
 use reg_core::Fqid;
 use rusqlite::{Connection, OptionalExtension, params_from_iter};
 use serde_json::json;
@@ -230,54 +228,56 @@ fn live_or_terminal(
 }
 
 /// The terminal successor of a retired register or variable at the policy year
-/// ([`policy_year`]): follow the one active successor to the chain's end. An edge
-/// dated after the policy year is not active, so it is not followed; a split
-/// (several active successors) is `ambiguous_ref` with the successors as
-/// candidates. None when `start` has no active successor.
+/// ([`policy_year`]), from the compiled `succession_terminal`: the walk follows the
+/// one active successor to the chain's end (an edge dated after the policy year is
+/// not active, so it is not followed) and stops at a split. A split (several active
+/// successors, at `start` or at its terminal) is `ambiguous_ref` with the
+/// successors as candidates. None when `start` has no active successor.
 fn successor(
     conn: &Connection,
     value: &str,
     start: &[String],
     grain: &Grain,
 ) -> Result<Option<Vec<String>>, Error> {
+    let terminal: Option<String> = conn
+        .query_row(
+            "SELECT terminal_fqid FROM succession_terminal WHERE fqid = ?",
+            [start.join("/")],
+            |row| row.get(0),
+        )
+        .optional()?;
+    let end: Vec<String> = terminal.map_or_else(
+        || start.to_vec(),
+        |t| t.split('/').map(str::to_owned).collect(),
+    );
     let sql = grain
         .successors
         .replace("{policy}", &policy_year(conn)?.to_string());
-    let mut stmt = conn.prepare(&sql)?;
-    let mut seen = BTreeSet::from([start.to_vec()]);
-    let mut current = start.to_vec();
-    loop {
-        let next: Vec<Vec<String>> = stmt
-            .query_map(params_from_iter(&current), |row| {
-                (0..current.len())
-                    .map(|i| row.get(i))
-                    .collect::<rusqlite::Result<Vec<String>>>()
-            })?
-            .collect::<rusqlite::Result<_>>()?;
-        match next.as_slice() {
-            [] => break,
-            // A cycle (a malformed artifact) stops the walk.
-            [one] if !seen.insert(one.clone()) => break,
-            [one] => current.clone_from(one),
-            split => {
-                let candidates = split
-                    .iter()
-                    .map(|slugs| {
-                        let name: Option<String> = conn
-                            .query_row(grain.name, params_from_iter(slugs), |row| row.get(0))
-                            .optional()?;
-                        Ok(json!({"fqid": slugs.join("/"), "kind": grain.kind, "name": name}))
-                    })
-                    .collect::<Result<Vec<_>, Error>>()?;
-                return Err(Error::new(
-                    Code::AmbiguousRef,
-                    format!("{value:?} was split into {} successors.", split.len()),
-                    vec![value.into(), candidates.into()],
-                ));
-            }
-        }
+    let next: Vec<Vec<String>> = conn
+        .prepare(&sql)?
+        .query_map(params_from_iter(&end), |row| {
+            (0..end.len())
+                .map(|i| row.get(i))
+                .collect::<rusqlite::Result<Vec<String>>>()
+        })?
+        .collect::<rusqlite::Result<_>>()?;
+    if next.len() > 1 {
+        let candidates = next
+            .iter()
+            .map(|slugs| {
+                let name: Option<String> = conn
+                    .query_row(grain.name, params_from_iter(slugs), |row| row.get(0))
+                    .optional()?;
+                Ok(json!({"fqid": slugs.join("/"), "kind": grain.kind, "name": name}))
+            })
+            .collect::<Result<Vec<_>, Error>>()?;
+        return Err(Error::new(
+            Code::AmbiguousRef,
+            format!("{value:?} was split into {} successors.", next.len()),
+            vec![value.into(), candidates.into()],
+        ));
     }
-    Ok((current != start).then_some(current))
+    Ok((end != start).then_some(end))
 }
 
 /// The manifest's succession policy year, `classification_succession_as_of_year`
