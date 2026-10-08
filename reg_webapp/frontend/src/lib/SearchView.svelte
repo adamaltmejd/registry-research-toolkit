@@ -1,13 +1,14 @@
 <script lang="ts">
 import type {
-  ClassificationSearchResult,
-  ClassificationSuccessionSearchResult,
-  CodeSearchResult,
-  ConceptGroupSearchResult,
-  RegisterSearchResult,
-  SearchResponse,
+  ClassificationHit,
+  ClassificationSuccessionHit,
+  CodeHit,
+  ConceptGroupHit,
+  RegisterHit,
+  SearchHit,
+  SearchPage,
   SearchType,
-  VariableSearchResult,
+  VariableHit,
 } from "./api";
 import { SEARCH_MIN_QUERY_LENGTH, search } from "./api";
 import { asyncResource } from "./async.svelte";
@@ -22,10 +23,11 @@ import { router } from "./router.svelte";
 import { Button, Panel } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
-// GET /api/search's top-results group plus the ordered typed groups
-// (registers / variables / classifications / classification codes /
-// register-local value sets). Every leaf navigates via a plain internal <a> the
-// shell's `use:link` intercepts — never `router.navigate` from here.
+// the Rust server's `search` (decision 17: one ranked list per call): one untyped
+// page for the top-results strip, then one page per arm, in the fixed order
+// registers / variables / classifications / classification codes / register-local
+// value sets, each continued by its own cursor. Every leaf navigates via a plain
+// internal <a> the shell's `use:link` intercepts — never `router.navigate` here.
 //
 // #808 (round 3): the registers / variables / classifications groups render as a
 // SINGLE CSS-grid "table" (CatalogNodeView's `.children.table` pattern) iterating
@@ -55,23 +57,25 @@ const q = $derived((router.getQueryParam("q") ?? "").trim());
 
 // The scoped-search toggle (#393 item 1). `?type=` lives in the URL (deep-linkable
 // / shareable / back-forward-correct, like `?q=`/`?period`). An unknown value
-// degrades to "all" (don't 422 the SPA over a hand-edited URL — the toggle just
+// degrades to "all" (don't fail the SPA over a hand-edited URL — the toggle just
 // renders nothing active). Read inside the `results` fetcher below so the resource
-// refetches when `?type=` changes.
-const SEARCH_TYPES: readonly SearchType[] = [
+// refetches when `?type=` changes. `value` is the SPA's own name for the two code
+// arms together; the server's `type` names one arm.
+type Scope = "all" | "register" | "variable" | "classification" | "value";
+const SCOPES: readonly Scope[] = [
   "all",
   "register",
   "variable",
   "classification",
   "value",
 ];
-const searchType = $derived.by<SearchType>(() => {
+const searchType = $derived.by<Scope>(() => {
   const raw = router.getQueryParam("type");
-  return SEARCH_TYPES.includes(raw as SearchType) ? (raw as SearchType) : "all";
+  return SCOPES.includes(raw as Scope) ? (raw as Scope) : "all";
 });
 
 // The toggle's button set: label + the `?type=` value it routes to.
-const TYPE_TOGGLE: ReadonlyArray<{ value: SearchType; label: string }> = [
+const TYPE_TOGGLE: ReadonlyArray<{ value: Scope; label: string }> = [
   { value: "all", label: "All" },
   { value: "register", label: "Registers" },
   { value: "variable", label: "Variables" },
@@ -80,25 +84,66 @@ const TYPE_TOGGLE: ReadonlyArray<{ value: SearchType; label: string }> = [
 ];
 
 /** Route to the current query scoped to `type` (in-place replace — scope is a
- * refinement, not a new history entry). OMIT `?type=` for `all` (the server
- * default) so the canonical/shareable URL stays clean and the ETag is stable. */
-function selectType(type: SearchType): void {
+ * refinement, not a new history entry). OMIT `?type=` for `all` so the
+ * canonical/shareable URL stays clean. */
+function selectType(type: Scope): void {
   const base = `/search?q=${encodeURIComponent(q)}`;
   router.replace(type === "all" ? base : `${base}&type=${type}`);
 }
 
+// One result section per call: `type` is the arm, `null` the untyped top results.
+// A section's key is its continuation slot.
+type Section = { type: SearchType | null; page: SearchPage };
+const TOP_LIMIT = 5;
+const ARM_LIMIT = 3;
+const ARMS: readonly SearchType[] = [
+  "register",
+  "variable",
+  "classification",
+  "classification_code",
+  "register_value",
+];
+
+function armsFor(scope: Scope): readonly SearchType[] {
+  if (scope === "all") return ARMS;
+  if (scope === "value") return ["classification_code", "register_value"];
+  return [scope];
+}
+
+function sectionKey(type: SearchType | null): string {
+  return type ?? "top";
+}
+
+function pageLimit(type: SearchType | null): number {
+  return type == null ? TOP_LIMIT : ARM_LIMIT;
+}
+
 // asyncResource registers an $effect, so it can't be created conditionally; the
-// fetch fn short-circuits a too-short `q` to an EMPTY response WITHOUT a network
-// call (and reads `q` so it refetches when the query changes). It also threads the
-// teardown `signal` into `search` so a superseded query aborts the in-flight HTTP
-// request (and the ~12s timeout `search` layers on can abort it too).
-const results = asyncResource<SearchResponse>((signal) =>
-  // Read `searchType` HERE so the resource refetches when `?type=` changes (the
-  // scoped-search toggle, #393 item 1).
-  q.length >= SEARCH_MIN_QUERY_LENGTH
-    ? search(q, { signal, type: searchType })
-    : Promise.resolve({ kind: "search", query: q, groups: [] }),
-);
+// fetch fn short-circuits a too-short `q` to NO sections WITHOUT a network call
+// (and reads `q` so it refetches when the query changes). It also threads the
+// teardown `signal` into every `search` so a superseded query aborts its
+// in-flight HTTP requests (and the ~12s timeout `search` layers on can abort
+// them too). Any failed call fails the search as a whole.
+const results = asyncResource<Section[]>((signal) => {
+  if (q.length < SEARCH_MIN_QUERY_LENGTH) {
+    return Promise.resolve([]);
+  }
+  // Read `searchType` HERE so the resource refetches when `?type=` changes.
+  const types: (SearchType | null)[] = [
+    ...(searchType === "all" ? [null] : []),
+    ...armsFor(searchType),
+  ];
+  return Promise.all(
+    types.map(async (type) => ({
+      type,
+      page: await search(q, {
+        signal,
+        type: type ?? undefined,
+        limit: pageLimit(type),
+      }),
+    })),
+  );
+});
 
 function syncDetailSeparators(node: HTMLElement): {
   update: () => void;
@@ -162,7 +207,7 @@ function syncDetailSeparators(node: HTMLElement): {
 // this maps to the friendly copy — other errors keep the generic "Search failed".
 const timedOut = $derived(results.error?.startsWith("TimeoutError") ?? false);
 
-let continuedGroups = $state<Record<string, SearchGroup>>({});
+let continuedPages = $state<Record<string, SearchPage>>({});
 let continuationLoading = $state<Record<string, boolean>>({});
 let continuationErrors = $state<Record<string, string>>({});
 let continuationContext = "";
@@ -170,49 +215,45 @@ $effect(() => {
   const context = `${q}\u0000${searchType}`;
   if (context !== continuationContext) {
     continuationContext = context;
-    continuedGroups = {};
+    continuedPages = {};
     continuationLoading = {};
     continuationErrors = {};
   }
 });
-const groups = $derived(
-  (results.data?.groups ?? []).map(
-    (group) => continuedGroups[group.group] ?? group,
-  ),
+const sections = $derived(
+  (results.data ?? []).map((section) => ({
+    ...section,
+    page: continuedPages[sectionKey(section.type)] ?? section.page,
+  })),
 );
-// A searched query (≥ min length) with zero results across every group (distinct
+// The top-results strip only earns its place when it ranks more than one hit:
+// a lone hit is already its arm's only row below.
+function shown(section: Section): boolean {
+  return section.page.items.length > (section.type == null ? 1 : 0);
+}
+// A searched query (≥ min length) with zero results in every section (distinct
 // from the empty / keep-typing hints and from loading). Gate on the min length so
 // a 1-char query shows the keep-typing hint, not a spurious "no matches".
-// A group the render loop SKIPS (an unknown/future `group` value with no
-// GROUP_HEADINGS entry — see the render guard below) must NOT count as a match:
-// its non-empty `results` render nothing, so without this a response carrying ONLY
-// an unknown group would blank the body (neither a group NOR "No matches"). Every
-// group the loop actually renders is a GROUP_HEADINGS key, and successions ride
-// INSIDE the classifications group's
-// results (a `classification_succession` row, not a top-level group), so this
-// exclusion can never suppress "No matches" above rendered content.
 const noMatches = $derived(
   q.length >= SEARCH_MIN_QUERY_LENGTH &&
     !results.loading &&
     !results.error &&
-    groups.every(
-      (g) => displayResults(g).length === 0 || !(g.group in GROUP_HEADINGS),
-    ),
+    sections.every((section) => section.page.items.length === 0),
 );
 
-// Per-group heading labels. Keep these as normal text headings; result type and
+// Per-section heading labels. Keep these as normal text headings; result type and
 // context live inside rows, not in heading badges.
-const GROUP_HEADINGS = {
-  top_results: { label: "Top results" },
-  registers: { label: "Registers" },
-  variables: { label: "Variables" },
-  classifications: { label: "Classifications" },
-  classification_codes: { label: "Classification codes" },
-  register_value_sets: { label: "Register-local value sets" },
-} as const;
+const HEADINGS: Record<string, string> = {
+  top: "Top results",
+  register: "Registers",
+  variable: "Variables",
+  classification: "Classifications",
+  classification_code: "Classification codes",
+  register_value: "Register-local value sets",
+};
 
 // Discriminate a variable/classification group's mixed results on `type`.
-function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
+function isConceptGroup(r: { type: string }): r is ConceptGroupHit {
   return r.type === "group";
 }
 
@@ -220,38 +261,36 @@ function isConceptGroup(r: { type: string }): r is ConceptGroupSearchResult {
 // query hit ≥2 editions of one chain, collapsed onto the terminal edition.
 function isClassificationSuccession(r: {
   type: string;
-}): r is ClassificationSuccessionSearchResult {
+}): r is ClassificationSuccessionHit {
   return r.type === "classification_succession";
 }
 
 // The keyed-each key for a variables / classifications grid row. Folds the row's
-// CONTENT identity (a concept group's `group_key`, else the leaf/succession `fqid`)
-// into the key. The index stays in the key for UNIQUENESS: a concept_group's
-// `group_key` is only register-scoped-unique (the same key recurs across
+// CONTENT identity (a concept group's `key`, else the leaf/succession `fqid`)
+// into the key. The index stays in the key for UNIQUENESS: a concept group's
+// `key` is only register-scoped-unique (the same key recurs across
 // registers, #322) and a null/duplicate `fqid` recurs too, so identity alone could
 // collide and crash the render (the #379/#391 each_key_duplicate lesson).
 function resultKey(
   r:
-    | VariableSearchResult
-    | ClassificationSearchResult
-    | ClassificationSuccessionSearchResult
-    | ConceptGroupSearchResult,
+    | VariableHit
+    | ClassificationHit
+    | ClassificationSuccessionHit
+    | ConceptGroupHit,
   i: number,
 ): string {
-  const identity = isConceptGroup(r) ? r.group_key : r.fqid;
+  const identity = isConceptGroup(r) ? r.key : r.fqid;
   return `${identity}|${i}`;
 }
 
 function memberRegisterFqid(
-  member: ConceptGroupSearchResult["members"][number],
+  member: ConceptGroupHit["members"][number],
 ): string | null {
   const [provider, register] = fqidSegments(member.fqid);
   return provider && register ? `${provider}/${register}` : null;
 }
 
-function sharedMemberRegisterFqid(
-  result: ConceptGroupSearchResult,
-): string | null {
+function sharedMemberRegisterFqid(result: ConceptGroupHit): string | null {
   const scopes = new Set(
     result.members
       .map((member) => memberRegisterFqid(member))
@@ -261,21 +300,19 @@ function sharedMemberRegisterFqid(
 }
 
 function normalizedVariableGroupKey(
-  result: ConceptGroupSearchResult,
+  result: ConceptGroupHit,
   registerFqid: string,
 ): string {
-  const [provider, register, key] = fqidSegments(result.group_key);
-  return key && `${provider}/${register}` === registerFqid
-    ? key
-    : result.group_key;
+  const [provider, register, key] = fqidSegments(result.key);
+  return key && `${provider}/${register}` === registerFqid ? key : result.key;
 }
 
-function normalizedClassGroupKey(result: ConceptGroupSearchResult): string {
-  const [head, key] = fqidSegments(result.group_key);
-  return head === "class" && key ? key : result.group_key;
+function normalizedClassGroupKey(result: ConceptGroupHit): string {
+  const [head, key] = fqidSegments(result.key);
+  return head === "class" && key ? key : result.key;
 }
 
-function conceptGroupHref(result: ConceptGroupSearchResult): string | null {
+function conceptGroupHref(result: ConceptGroupHit): string | null {
   if (result.kind === "classification") {
     return classGroupHref(normalizedClassGroupKey(result));
   }
@@ -285,159 +322,66 @@ function conceptGroupHref(result: ConceptGroupSearchResult): string | null {
     : null;
 }
 
-type SearchGroup = SearchResponse["groups"][number];
-type SearchResult = SearchGroup["results"][number];
-type VariableDisplayResult = VariableSearchResult | ConceptGroupSearchResult;
+type VariableDisplayResult = VariableHit | ConceptGroupHit;
 type ClassificationDisplayResult =
-  | ClassificationSearchResult
-  | ClassificationSuccessionSearchResult
-  | ConceptGroupSearchResult;
-type CodeOwnerClassification = CodeSearchResult["classifications"][number];
-type CodeOwnerVariable = CodeSearchResult["variables"][number];
+  | ClassificationHit
+  | ClassificationSuccessionHit
+  | ConceptGroupHit;
+type CodeOwnerClassification = CodeHit["classifications"][number];
+type CodeOwnerVariable = CodeHit["variables"][number];
 
-function continuationType(group: SearchGroup): SearchType | null {
-  if (group.group === "registers") return "register";
-  if (group.group === "variables") return "variable";
-  if (group.group === "classifications") return "classification";
-  if (group.group === "classification_codes") return "classification_code";
-  if (group.group === "register_value_sets") return "register_value";
-  return null;
-}
-
-async function loadMore(group: SearchGroup): Promise<void> {
-  const type = continuationType(group);
-  if (
-    type == null ||
-    group.next_cursor == null ||
-    continuationLoading[group.group]
-  ) {
+async function loadMore(section: Section): Promise<void> {
+  const key = sectionKey(section.type);
+  const cursor = section.page.next_cursor;
+  if (cursor == null || continuationLoading[key]) {
     return;
   }
   const requestQuery = q;
   const requestType = searchType;
-  continuationLoading[group.group] = true;
-  continuationErrors[group.group] = "";
+  continuationLoading[key] = true;
+  continuationErrors[key] = "";
   try {
-    const page = await search(requestQuery, {
-      type,
-      cursor: group.next_cursor,
+    const next = await search(requestQuery, {
+      type: section.type ?? undefined,
+      limit: pageLimit(section.type),
+      cursor,
     });
     if (q !== requestQuery || searchType !== requestType) return;
-    const next = page.groups.find(
-      (candidate) => candidate.group === group.group,
-    );
-    if (next == null) {
-      throw new Error("Search continuation returned the wrong result group.");
-    }
-    continuedGroups[group.group] = {
-      ...next,
-      results: [...group.results, ...next.results],
-    } as SearchGroup;
+    continuedPages[key] = {
+      items: [...section.page.items, ...next.items],
+      next_cursor: next.next_cursor,
+    };
   } catch (error) {
     if (q !== requestQuery || searchType !== requestType) return;
-    continuationErrors[group.group] = String(error);
+    continuationErrors[key] = String(error);
   } finally {
     if (q === requestQuery && searchType === requestType) {
-      continuationLoading[group.group] = false;
+      continuationLoading[key] = false;
     }
   }
 }
 
-function isVariableResult(r: { type: string }): r is VariableSearchResult {
-  return r.type === "variable";
+function registerDisplayResults(results: SearchHit[]): RegisterHit[] {
+  return results as RegisterHit[];
 }
 
-function groupMemberFqids(results: readonly SearchResult[]): Set<string> {
-  const fqids = new Set<string>();
-  for (const result of results) {
-    if (isConceptGroup(result) && result.kind === "variable") {
-      for (const member of result.members) {
-        fqids.add(member.fqid);
-      }
-    }
-  }
-  return fqids;
-}
-
-function uniqueDeliveryColumns(columns: readonly string[]): string[] {
-  return [...new Set(columns)];
-}
-
-function foldVariableColumnHits(
-  results: readonly SearchResult[],
-): SearchResult[] {
-  const folded: SearchResult[] = [];
-  const variableIndexByFqid = new Map<string, number>();
-  for (const result of results) {
-    if (!isVariableResult(result) || result.fqid == null) {
-      folded.push(result);
-      continue;
-    }
-    const existingIndex = variableIndexByFqid.get(result.fqid);
-    if (existingIndex == null) {
-      variableIndexByFqid.set(result.fqid, folded.length);
-      folded.push(result);
-      continue;
-    }
-    const existing = folded[existingIndex] as VariableSearchResult;
-    folded[existingIndex] = {
-      ...existing,
-      delivery_column_names: uniqueDeliveryColumns([
-        ...deliveryColumnNames(existing),
-        ...deliveryColumnNames(result),
-      ]),
-    };
-  }
-  return folded;
-}
-
-function displayResults(group: SearchGroup): SearchResult[] {
-  const results =
-    group.group === "variables" || group.group === "top_results"
-      ? foldVariableColumnHits(group.results)
-      : [...group.results];
-  if (group.group !== "variables" && group.group !== "top_results") {
-    return results;
-  }
-  const groupedMembers = groupMemberFqids(results);
-  if (groupedMembers.size === 0) {
-    return results;
-  }
-  return results.filter(
-    (result) =>
-      !(
-        isVariableResult(result) &&
-        result.fqid != null &&
-        groupedMembers.has(result.fqid)
-      ),
-  );
-}
-
-function registerDisplayResults(
-  results: SearchResult[],
-): RegisterSearchResult[] {
-  return results as RegisterSearchResult[];
-}
-
-function variableDisplayResults(
-  results: SearchResult[],
-): VariableDisplayResult[] {
+function variableDisplayResults(results: SearchHit[]): VariableDisplayResult[] {
   return results as VariableDisplayResult[];
 }
 
 function classificationDisplayResults(
-  results: SearchResult[],
+  results: SearchHit[],
 ): ClassificationDisplayResult[] {
   return results as ClassificationDisplayResult[];
 }
 
-function codeDisplayResults(results: SearchResult[]): CodeSearchResult[] {
-  return results as CodeSearchResult[];
+function codeDisplayResults(results: SearchHit[]): CodeHit[] {
+  return results as CodeHit[];
 }
 
-function topResultKey(result: SearchResult, i: number): string {
+function topResultKey(result: SearchHit, i: number): string {
   if (isConceptGroup(result)) {
-    return `group|${result.kind}|${result.group_key}|${i}`;
+    return `group|${result.kind}|${result.key}|${i}`;
   }
   if (result.type === "code") {
     return `code|${result.code}|${result.label}|${result.code_system ?? ""}|${i}`;
@@ -514,27 +458,25 @@ function providerRegisterPill(
   return { label, href: registerHrefFromFqid(fqid) };
 }
 
-function variableRegisterPill(v: VariableSearchResult): LinkedPill | null {
-  return providerRegisterPill(v.fqid, v.register);
+function variableRegisterPill(v: VariableHit): LinkedPill | null {
+  return providerRegisterPill(v.fqid, v.register_name);
 }
 
-function groupRegisterPill(
-  result: ConceptGroupSearchResult,
-): LinkedPill | null {
+function groupRegisterPill(result: ConceptGroupHit): LinkedPill | null {
   if (result.kind !== "variable") {
     return null;
   }
   return providerRegisterPill(
     sharedMemberRegisterFqid(result),
-    result.register,
+    result.register_name,
   );
 }
 
 function ownerRegisterContext(owner: CodeOwnerVariable): string | null {
-  return providerRegisterContext(owner.fqid, owner.register);
+  return providerRegisterContext(owner.fqid, owner.register_name);
 }
 
-function variableDetailParts(v: VariableSearchResult): string[] {
+function variableDetailParts(v: VariableHit): string[] {
   const definition = isRepeatedDefinition(v.name, v.definition)
     ? null
     : v.definition;
@@ -546,7 +488,7 @@ function variableDetailParts(v: VariableSearchResult): string[] {
 // The registers / variables / classifications groups render the `.children.table`
 // CSS grid directly over their raw results (see template), so they need no
 // row-shape mapping. The keyed each folds the array INDEX into the key (alongside
-// `fqid` / `group_key`) so a null/duplicate `fqid` can't collide and crash the
+// `fqid` / `key`) so a null/duplicate `fqid` can't collide and crash the
 // render (the #379/#391 each_key_duplicate lesson).
 
 // Classification codes are bucketed by code system (#393 item 3). STABLE group-by
@@ -558,17 +500,15 @@ type CodeSystemBucket = {
   key: string | null;
   label: string;
   href: string | null;
-  codes: CodeSearchResult[];
+  codes: CodeHit[];
 };
 
-function codeSystemHref(result: CodeSearchResult): string | null {
+function codeSystemHref(result: CodeHit): string | null {
   const owner = codeSystemOwner(result);
   return owner?.fqid ? catalogHref(owner.fqid) : null;
 }
 
-function codeSystemOwner(
-  result: CodeSearchResult,
-): CodeOwnerClassification | null {
+function codeSystemOwner(result: CodeHit): CodeOwnerClassification | null {
   const owner =
     result.classifications.find(
       (classification) =>
@@ -582,7 +522,7 @@ function codeSystemOwner(
   return owner ?? null;
 }
 
-function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
+function groupCodesBySystem(results: CodeHit[]): CodeSystemBucket[] {
   const buckets = new Map<string | null, CodeSystemBucket>();
   for (const code of results) {
     const key = code.code_system || null;
@@ -606,7 +546,7 @@ function groupCodesBySystem(results: CodeSearchResult[]): CodeSystemBucket[] {
 // The collapsed code row's MUTED owner summary. The common single-classification
 // case is represented by the bucket heading/link; only reused codes with multiple
 // classification owners repeat that count at row level.
-function usageSummary(result: CodeSearchResult): string {
+function usageSummary(result: CodeHit): string {
   const parts: string[] = [];
   if (result.variable_count > 1) {
     parts.push(`${result.variable_count} variables`);
@@ -617,14 +557,12 @@ function usageSummary(result: CodeSearchResult): string {
   return parts.join(" | ");
 }
 
-function singleVariableOwner(
-  result: CodeSearchResult,
-): CodeOwnerVariable | null {
+function singleVariableOwner(result: CodeHit): CodeOwnerVariable | null {
   return result.variable_count === 1 ? (result.variables[0] ?? null) : null;
 }
 
 function secondaryClassificationOwners(
-  result: CodeSearchResult,
+  result: CodeHit,
 ): CodeOwnerClassification[] {
   if (result.classification_count <= 1) {
     return [];
@@ -638,9 +576,7 @@ function secondaryClassificationOwners(
   });
 }
 
-function topClassificationOwners(
-  result: CodeSearchResult,
-): CodeOwnerClassification[] {
+function topClassificationOwners(result: CodeHit): CodeOwnerClassification[] {
   const systemOwner = codeSystemOwner(result);
   if (systemOwner == null) {
     return secondaryClassificationOwners(result);
@@ -653,7 +589,7 @@ function topClassificationOwners(
   ];
 }
 
-function hasExpandableOwners(result: CodeSearchResult): boolean {
+function hasExpandableOwners(result: CodeHit): boolean {
   return (
     result.variable_count > 1 ||
     secondaryClassificationOwners(result).length > 0
@@ -662,7 +598,7 @@ function hasExpandableOwners(result: CodeSearchResult): boolean {
 
 const DELIVERY_COLUMN_LIMIT = 3;
 
-function deliveryColumnNames(result: VariableSearchResult): string[] {
+function deliveryColumnNames(result: VariableHit): string[] {
   return result.delivery_column_names ?? [];
 }
 
@@ -678,7 +614,7 @@ function deliveryColumnMatchesQuery(column: string): boolean {
   return deliveryColumnQueryTerms().some((term) => haystack.includes(term));
 }
 
-function visibleDeliveryColumns(result: VariableSearchResult): string[] {
+function visibleDeliveryColumns(result: VariableHit): string[] {
   return [...deliveryColumnNames(result)]
     .sort((a, b) => {
       const aMatched = deliveryColumnMatchesQuery(a);
@@ -691,7 +627,7 @@ function visibleDeliveryColumns(result: VariableSearchResult): string[] {
     .slice(0, DELIVERY_COLUMN_LIMIT);
 }
 
-function hiddenDeliveryColumnCount(result: VariableSearchResult): number {
+function hiddenDeliveryColumnCount(result: VariableHit): number {
   return Math.max(
     0,
     deliveryColumnNames(result).length - DELIVERY_COLUMN_LIMIT,
@@ -747,57 +683,48 @@ function closeSearch(): void {
   {:else if noMatches}
     <p class="muted">No matches for “{q}”.</p>
   {:else}
-    {#each groups as group (group.group)}
-      <!-- Look the heading up ABOVE the render guard so an unknown / future `group`
-           value (the backend documents `group` as an extension point) is SKIPPED,
-           not crashed: `heading` is undefined for it, the `&& heading` guard fails,
-           and we render nothing for that group instead of dereferencing
-           `heading.tone` on undefined and crashing the whole search page. -->
-      {@const heading = GROUP_HEADINGS[group.group]}
-      {@const renderedResults = displayResults(group)}
-      {#if renderedResults.length > 0 && heading}
+    {#each sections as section (sectionKey(section.type))}
+      {@const key = sectionKey(section.type)}
+      {@const items = section.page.items}
+      {#if shown(section)}
         {@const caption =
-          group.group === "top_results"
+          section.type == null
             ? null
-            : group.has_more
-              ? `${renderedResults.length}+ results`
-              : `${renderedResults.length} ${renderedResults.length === 1 ? "result" : "results"}`}
-        <div
-          class={group.group === "top_results"
-            ? "group top-results-group"
-            : "group"}
-        >
-          <Panel title={heading.label} flush>
+            : section.page.next_cursor != null
+              ? `${items.length}+ results`
+              : `${items.length} ${items.length === 1 ? "result" : "results"}`}
+        <div class={section.type == null ? "group top-results-group" : "group"}>
+          <Panel title={HEADINGS[key]} flush>
             {#snippet meta()}
               {#if caption}<span class="count">{caption}</span>{/if}
             {/snippet}
 
-          {#if group.group === "top_results"}
-            <!-- Cross-group best bets (#393 items 6/7). Rows reuse the same typed
-                 snippets as the normal groups, so this remains a ranking/presentation
-                 layer over the canonical typed results rather than a second row model. -->
+          {#if section.type == null}
+            <!-- Cross-arm best bets (#393 items 6/7, decision 17): the untyped
+                 ranked list. Rows reuse the same typed snippets as the arms below,
+                 so this is a ranking layer, not a second row model. -->
             <div class="children table top-results" role="presentation">
-              {#each renderedResults as result, i (topResultKey(result, i))}
+              {#each items as result, i (topResultKey(result, i))}
                 {@render topResult(result)}
               {/each}
             </div>
-          {:else if group.group === "registers"}
+          {:else if section.type === "register"}
             <!-- Registers share the variables' one-column result shape: primary
                  line is the register name, secondary line is the muted
                  description. No split name/description columns. -->
             <div class="children table cols-1" role="presentation">
-              {#each registerDisplayResults(renderedResults) as result, i (`${result.fqid}|${i}`)}
+              {#each registerDisplayResults(items) as result, i (`${result.fqid}|${i}`)}
                 {@render registerLeafRow(result)}
               {/each}
             </div>
-          {:else if group.group === "variables"}
-            <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
+          {:else if section.type === "variable"}
+            <!-- #808 round 3: ONE CSS-grid table over the arm's hits IN RANK
                  ORDER (CatalogNodeView's `.children.table`). Variable leaves and
                  concept groups are whole-row subgrid links; no inline grouped
                  disclosures. Delivery-column chips ride in the result heading;
                  register context stays in the muted detail line. -->
             <div class="children table cols-1" role="presentation">
-              {#each variableDisplayResults(renderedResults) as result, i (resultKey(result, i))}
+              {#each variableDisplayResults(items) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
                 {:else}
@@ -805,12 +732,12 @@ function closeSearch(): void {
                 {/if}
               {/each}
             </div>
-          {:else if group.group === "classifications"}
-            <!-- #808 round 3: ONE CSS-grid table over the group's results IN RANK
+          {:else if section.type === "classification"}
+            <!-- #808 round 3: ONE CSS-grid table over the arm's hits IN RANK
                  ORDER. A leaf classification or concept group is a whole-row link;
                  classification-succession families emit direct linked rows. -->
             <div class="children table cols-1" role="presentation">
-              {#each classificationDisplayResults(renderedResults) as result, i (resultKey(result, i))}
+              {#each classificationDisplayResults(items) as result, i (resultKey(result, i))}
                 {#if isConceptGroup(result)}
                   {@render conceptGroup(result)}
                 {:else if isClassificationSuccession(result)}
@@ -820,12 +747,12 @@ function closeSearch(): void {
                 {/if}
               {/each}
             </div>
-          {:else if group.group === "classification_codes"}
+          {:else if section.type === "classification_code"}
             <!-- Per-code-system buckets (#393 item 3, #808 round 5). The bucket
                  heading NAMES the classification / value-set the codes come from
                  so each code row need NOT repeat its owner classification.
                  Classification-backed headings link to their classification page. -->
-            {#each groupCodesBySystem(codeDisplayResults(renderedResults)) as system (system.key)}
+            {#each groupCodesBySystem(codeDisplayResults(items)) as system (system.key)}
               <div class="code-system">
                 <h4 class="code-system-heading">
                   {@render codeSystemPill(system.label, system.href)}
@@ -848,31 +775,31 @@ function closeSearch(): void {
                 </div>
               </div>
             {/each}
-          {:else if group.group === "register_value_sets"}
+          {:else if section.type === "register_value"}
             <!-- Register-local value-set codes have no owning classification, so
-                 the top-level group label is enough. Rows keep the same compact
+                 the section label is enough. Rows keep the same compact
                  code-FIRST rendering and disclosure behavior as classification
                  code buckets. -->
             <div class="children table codes" role="presentation">
-              {#each codeDisplayResults(renderedResults) as result, i (`${result.code}|${i}`)}
+              {#each codeDisplayResults(items) as result, i (`${result.code}|${i}`)}
                 {@render codeRow(result)}
               {/each}
             </div>
           {/if}
-          {#if group.group !== "top_results" && group.has_more && group.next_cursor}
+          {#if section.page.next_cursor != null}
             <div class="continuation">
               <Button
                 variant="default"
                 size="sm"
-                disabled={continuationLoading[group.group]}
-                aria-busy={continuationLoading[group.group]}
-                onclick={() => void loadMore(group)}
+                disabled={continuationLoading[key]}
+                aria-busy={continuationLoading[key]}
+                onclick={() => void loadMore(section)}
               >
-                {continuationLoading[group.group] ? "Loading…" : "Load more"}
+                {continuationLoading[key] ? "Loading…" : "Load more"}
               </Button>
             </div>
           {/if}
-          {#if continuationErrors[group.group]}
+          {#if continuationErrors[key]}
             <p class="continuation-error error" role="alert">
               Could not load more results. Try again.
             </p>
@@ -886,7 +813,7 @@ function closeSearch(): void {
 </article>
 
 <!-- A LEAF register row: same one-column visual shape as variable rows. -->
-{#snippet registerLeafRow(r: RegisterSearchResult)}
+{#snippet registerLeafRow(r: RegisterHit)}
   {@const detailParts = r.purpose ? [r.purpose] : []}
   {@const context = providerLabelFromFqid(r.fqid)}
   {#if r.fqid}
@@ -915,7 +842,7 @@ function closeSearch(): void {
   {/if}
 {/snippet}
 
-{#snippet topResult(result: SearchResult)}
+{#snippet topResult(result: SearchHit)}
   {#if result.type === "register"}
     {@render registerLeafRow(result)}
   {:else if result.type === "variable"}
@@ -940,7 +867,7 @@ function closeSearch(): void {
      non-link <div> row (no focus ring). The raw FQID is never shown; delivery
      columns are compact chips in the heading, while register/definition context
      stays in the muted detail line. -->
-{#snippet variableMetaPills(v: VariableSearchResult)}
+{#snippet variableMetaPills(v: VariableHit)}
   {@const columns = visibleDeliveryColumns(v)}
   {@const hidden = hiddenDeliveryColumnCount(v)}
   {#if columns.length > 0 || hidden > 0}
@@ -953,7 +880,7 @@ function closeSearch(): void {
   {/if}
 {/snippet}
 
-{#snippet variableLeafRow(v: VariableSearchResult)}
+{#snippet variableLeafRow(v: VariableHit)}
   {@const detailParts = variableDetailParts(v)}
   {@const context = variableRegisterPill(v)}
   {#if v.fqid}
@@ -1025,7 +952,7 @@ function closeSearch(): void {
      resolvability: a malformed vintage (fqid: null) that still carries a
      terminal_fqid must keep its "→ current edition" target — the only navigable
      hit for the row. -->
-{#snippet classificationLeafRow(c: ClassificationSearchResult)}
+{#snippet classificationLeafRow(c: ClassificationHit)}
   {@const short = c.short_name ?? c.name}
   {@const showName = c.name && c.name !== short}
   {#if c.terminal_fqid}
@@ -1078,7 +1005,7 @@ function closeSearch(): void {
      matched variable context inline; zero owners render as a plain
      Code · Label row. -->
 {#snippet ownerSubRows(
-  result: CodeSearchResult,
+  result: CodeHit,
   includeCodeSystemOwner: boolean = false,
 )}
   {@const classificationOwners = includeCodeSystemOwner
@@ -1152,7 +1079,7 @@ function closeSearch(): void {
 {/snippet}
 
 {#snippet codeCells(
-  result: CodeSearchResult,
+  result: CodeHit,
   showCodeSystemPill: boolean = false,
 )}
   {@const usage = usageSummary(result)}
@@ -1171,7 +1098,7 @@ function closeSearch(): void {
     {#if usage}<span class="usage-count muted">{usage}</span>{/if}
   </span>
 {/snippet}
-{#snippet codeRow(result: CodeSearchResult)}
+{#snippet codeRow(result: CodeHit)}
   {@const singleOwner = singleVariableOwner(result)}
   {#if hasExpandableOwners(result)}
     <details class="code-row code-disclosure">
@@ -1199,7 +1126,7 @@ function closeSearch(): void {
   {/if}
 {/snippet}
 
-{#snippet topCodeRow(result: CodeSearchResult)}
+{#snippet topCodeRow(result: CodeHit)}
   {@const singleOwner = singleVariableOwner(result)}
   {@const systemHref = codeSystemHref(result)}
   {#if hasExpandableOwners(result)}
@@ -1242,14 +1169,14 @@ function closeSearch(): void {
 <!-- A concept-group family (#322): search stays flat. Prefer the first-class group
      subject page when its route is derivable; if not, emit the member leaf links
      directly rather than putting a disclosure inside the results list. -->
-{#snippet conceptGroup(result: ConceptGroupSearchResult)}
+{#snippet conceptGroup(result: ConceptGroupHit)}
   {@const href = conceptGroupHref(result)}
   {@const context = groupRegisterPill(result)}
   {#if href}
     <div class="leaf-row integrated-list-row group-result-row">
       <span class="name-cell">
         <span class="result-title">
-          <a class="row-link" {href}>{result.group_label}</a>
+          <a class="row-link" {href}>{result.label}</a>
           <span class="group-chip">Group</span>
           {#if context}{@render registerContextPill(context.label, context.href)}{/if}
         </span>
@@ -1257,7 +1184,10 @@ function closeSearch(): void {
     </div>
   {:else}
     {#each result.members as member, i (`${member.fqid}|${i}`)}
-      {@const memberContext = providerRegisterPill(member.fqid, result.register)}
+      {@const memberContext = providerRegisterPill(
+        member.fqid,
+        result.register_name,
+      )}
       <div
         class="leaf-row integrated-list-row group-member-row"
       >
@@ -1274,7 +1204,7 @@ function closeSearch(): void {
               )}
             {/if}
           </span>
-          {@render detailLine(null, [result.group_label])}
+          {@render detailLine(null, [result.label])}
         </span>
       </div>
     {/each}
@@ -1284,7 +1214,7 @@ function closeSearch(): void {
 <!-- A classification-succession family (#571): keep search flat like variable
      concept groups. The current edition is the primary linked row; older
      editions are normal linked rows underneath, not an in-list disclosure. -->
-{#snippet classificationSuccession(result: ClassificationSuccessionSearchResult)}
+{#snippet classificationSuccession(result: ClassificationSuccessionHit)}
   {@const editions = result.editions ?? []}
   {@const primaryLabel = result.short_name ?? result.name ?? "—"}
   {#if result.fqid}

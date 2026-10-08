@@ -1,11 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { SearchResponse } from "./api";
 import { search } from "./api";
 import { router } from "./router.svelte";
 import SearchView from "./SearchView.svelte";
-import { setQuery } from "./search-view-test-helpers";
+import { mockSearch, setQuery } from "./search-view-test-helpers";
 
 // Stub the search GET the view drives; keep the rest of api.ts real (the type
 // exports). SearchView reads `?q=` off the `router` singleton, so each case sets
@@ -28,68 +27,44 @@ afterEach(() => {
 
 describe("SearchView — typed result groups (#379)", () => {
   it("renders the four groups in order, each with its hits", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "kon",
-      groups: [
+    mockSearch({
+      register: [
+        { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+      ],
+      variable: [
         {
-          group: "registers",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
-          ],
-        },
-        {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "variable",
-              fqid: "scb/lisa/kon",
-              name: "Kön",
-              register: "LISA",
-              definition: null,
-              delivery_column_names: ["kon"],
-            },
-          ],
-        },
-        {
-          group: "classifications",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "classification",
-              fqid: "class/sun2020",
-              short_name: "SUN",
-              name: "Svensk utbildningsnomenklatur",
-            },
-          ],
-        },
-        {
-          group: "register_value_sets",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "code",
-              code: "1",
-              label: "Man",
-              // A DISTINCT owner name from the variable leaf above so the
-              // link-by-name assertions below stay unambiguous.
-              variables: [
-                { fqid: "scb/saga/sex", name: "Sex", register: "SAGA" },
-              ],
-              variable_count: 1,
-              classifications: [],
-              classification_count: 0,
-            },
-          ],
+          type: "variable",
+          fqid: "scb/lisa/kon",
+          name: "Kön",
+          register_name: "LISA",
+          definition: null,
+          delivery_column_names: ["kon"],
         },
       ],
-    } as unknown as SearchResponse);
+      classification: [
+        {
+          type: "classification",
+          fqid: "class/sun2020",
+          short_name: "SUN",
+          name: "Svensk utbildningsnomenklatur",
+        },
+      ],
+      register_value: [
+        {
+          type: "code",
+          code: "1",
+          label: "Man",
+          // A DISTINCT owner name from the variable leaf above so the
+          // link-by-name assertions below stay unambiguous.
+          variables: [
+            { fqid: "scb/saga/sex", name: "Sex", register_name: "SAGA" },
+          ],
+          variable_count: 1,
+          classifications: [],
+          classification_count: 0,
+        },
+      ],
+    });
     setQuery("kon");
     await render(SearchView);
 
@@ -115,41 +90,27 @@ describe("SearchView — typed result groups (#379)", () => {
   });
 
   it("renders the top-results group before the typed groups", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "kon",
-      groups: [
+    mockSearch({
+      top: [
         {
-          group: "top_results",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "variable",
-              fqid: "scb/lisa/kon",
-              name: "Kön",
-              register: "LISA",
-              definition: null,
-              delivery_column_names: ["Kon"],
-            },
-            {
-              type: "register",
-              fqid: "scb/lisa",
-              name: "LISA",
-              purpose: null,
-            },
-          ],
+          type: "variable",
+          fqid: "scb/lisa/kon",
+          name: "Kön",
+          register_name: "LISA",
+          definition: null,
+          delivery_column_names: ["Kon"],
         },
         {
-          group: "registers",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
-          ],
+          type: "register",
+          fqid: "scb/lisa",
+          name: "LISA",
+          purpose: null,
         },
       ],
-    } as unknown as SearchResponse);
+      register: [
+        { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+      ],
+    });
     setQuery("kon");
     await render(SearchView);
 
@@ -173,46 +134,39 @@ describe("SearchView — typed result groups (#379)", () => {
   });
 
   it("shows code-system context on code hits in top results", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "C12",
-      groups: [
+    mockSearch({
+      top: [
+        // A second hit: the strip renders only when it ranks more than one.
+        { type: "register", fqid: "scb/other", name: "Other", purpose: null },
         {
-          group: "top_results",
-          has_more: false,
-          next_cursor: null,
-          results: [
+          type: "code",
+          code: "C12",
+          label: "Malign tumör i tungbas",
+          variables: [
             {
-              type: "code",
-              code: "C12",
-              label: "Malign tumör i tungbas",
-              variables: [
-                {
-                  fqid: "scb/ulf/ha0611m",
-                  name: "Sjukdomsdiagnos 1, ICD-10",
-                  register: "ULF",
-                },
-                {
-                  fqid: "scb/ulf/ha0612m",
-                  name: "Sjukdomsdiagnos 2, ICD-10",
-                  register: "ULF",
-                },
-              ],
-              variable_count: 2,
-              classifications: [
-                {
-                  fqid: "class/icd-10-se",
-                  short_name: "ICD-10-SE",
-                  name: "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem, svensk version",
-                },
-              ],
-              classification_count: 1,
-              code_system: "ICD-10-SE",
+              fqid: "scb/ulf/ha0611m",
+              name: "Sjukdomsdiagnos 1, ICD-10",
+              register_name: "ULF",
+            },
+            {
+              fqid: "scb/ulf/ha0612m",
+              name: "Sjukdomsdiagnos 2, ICD-10",
+              register_name: "ULF",
             },
           ],
+          variable_count: 2,
+          classifications: [
+            {
+              fqid: "class/icd-10-se",
+              short_name: "ICD-10-SE",
+              name: "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem, svensk version",
+            },
+          ],
+          classification_count: 1,
+          code_system: "ICD-10-SE",
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("C12");
     await render(SearchView);
 
@@ -239,33 +193,26 @@ describe("SearchView — typed result groups (#379)", () => {
   });
 
   it("links single-owner code hits in top results", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "man",
-      groups: [
+    mockSearch({
+      top: [
+        // A second hit: the strip renders only when it ranks more than one.
+        { type: "register", fqid: "scb/other", name: "Other", purpose: null },
         {
-          group: "top_results",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "code",
-              code: "1",
-              label: "Man",
-              variables: [
-                { fqid: "scb/lisa/kon", name: "Kön", register: "LISA" },
-              ],
-              variable_count: 1,
-              classifications: [
-                { fqid: "class/sun2020", short_name: "SUN2020", name: null },
-              ],
-              classification_count: 1,
-              code_system: "SUN2020",
-            },
+          type: "code",
+          code: "1",
+          label: "Man",
+          variables: [
+            { fqid: "scb/lisa/kon", name: "Kön", register_name: "LISA" },
           ],
+          variable_count: 1,
+          classifications: [
+            { fqid: "class/sun2020", short_name: "SUN2020", name: null },
+          ],
+          classification_count: 1,
+          code_system: "SUN2020",
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("man");
     await render(SearchView);
 
@@ -292,28 +239,19 @@ describe("SearchView — typed result groups (#379)", () => {
   });
 
   it("shows delivery column names and operational definitions on variable hits", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "fedunsatreason",
-      groups: [
+    mockSearch({
+      variable: [
         {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "variable",
-              fqid: "scb/aes/formal-utbildning",
-              name: "Orsak till missnöje, formell utbildning",
-              register: "AES",
-              definition: "Orsak till missnöje",
-              operational_definition: "Formal education dissatisfaction reason",
-              delivery_column_names: ["fedunsatreason_1", "fedunsatreason_2"],
-            },
-          ],
+          type: "variable",
+          fqid: "scb/aes/formal-utbildning",
+          name: "Orsak till missnöje, formell utbildning",
+          register_name: "AES",
+          definition: "Orsak till missnöje",
+          operational_definition: "Formal education dissatisfaction reason",
+          delivery_column_names: ["fedunsatreason_1", "fedunsatreason_2"],
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("fedunsatreason");
     await render(SearchView);
 
@@ -325,82 +263,24 @@ describe("SearchView — typed result groups (#379)", () => {
       .toBeVisible();
   });
 
-  it("folds duplicate variable hits into one row with merged delivery column chips", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "fedunsatreason",
-      groups: [
-        {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "variable",
-              fqid: "scb/aes/formal-utbildning",
-              name: "Orsak till missnöje, formell utbildning",
-              register: "AES",
-              definition: null,
-              operational_definition: null,
-              delivery_column_names: ["fedunsatreason_1"],
-            },
-            {
-              type: "variable",
-              fqid: "scb/aes/formal-utbildning",
-              name: "Orsak till missnöje, formell utbildning",
-              register: "AES",
-              definition: null,
-              operational_definition: null,
-              delivery_column_names: ["fedunsatreason_2"],
-            },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
-    setQuery("fedunsatreason");
-    await render(SearchView);
-
-    // Poll until the async search results have rendered before the sync queries.
-    await expect
-      .element(page.getByRole("heading", { name: "Variables" }))
-      .toBeVisible();
-    const links = document.querySelectorAll<HTMLAnchorElement>(
-      ".search-view a.row-link[href='/catalog/scb/aes/formal-utbildning']",
-    );
-    expect(links).toHaveLength(1);
-    const columnPills = Array.from(
-      document.querySelectorAll<HTMLElement>(".search-view .col-chip"),
-    ).map((pill) => pill.textContent?.trim());
-    expect(columnPills).toEqual(["fedunsatreason_1", "fedunsatreason_2"]);
-  });
-
   it("keeps the matched delivery column visible before the +N overflow", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "target variable",
-      groups: [
+    mockSearch({
+      variable: [
         {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "variable",
-              fqid: "scb/aes/formal-utbildning",
-              name: "Orsak till missnöje, formell utbildning",
-              register: "AES",
-              definition: null,
-              delivery_column_names: [
-                "alpha_1",
-                "bravo_1",
-                "charlie_1",
-                "target_1",
-              ],
-            },
+          type: "variable",
+          fqid: "scb/aes/formal-utbildning",
+          name: "Orsak till missnöje, formell utbildning",
+          register_name: "AES",
+          definition: null,
+          delivery_column_names: [
+            "alpha_1",
+            "bravo_1",
+            "charlie_1",
+            "target_1",
           ],
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("target variable");
     await render(SearchView);
 
@@ -410,11 +290,7 @@ describe("SearchView — typed result groups (#379)", () => {
   });
 
   it("closes back to the route that entered search using replaceState", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "kon",
-      groups: [],
-    } as unknown as SearchResponse);
+    mockSearch({});
     window.history.pushState({}, "", "/__reset__");
     router.navigate("/catalog/scb/lisa");
     router.navigate("/search?q=kon");
@@ -429,39 +305,15 @@ describe("SearchView — typed result groups (#379)", () => {
   });
 
   it("omits a group whose results are empty (no empty header)", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "kon",
-      groups: [
-        {
-          group: "registers",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
-          ],
-        },
-        { group: "variables", has_more: false, next_cursor: null, results: [] },
-        {
-          group: "classifications",
-          has_more: false,
-          next_cursor: null,
-          results: [],
-        },
-        {
-          group: "classification_codes",
-          has_more: false,
-          next_cursor: null,
-          results: [],
-        },
-        {
-          group: "register_value_sets",
-          has_more: false,
-          next_cursor: null,
-          results: [],
-        },
+    mockSearch({
+      register: [
+        { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
       ],
-    } as unknown as SearchResponse);
+      variable: [],
+      classification: [],
+      classification_code: [],
+      register_value: [],
+    });
     setQuery("kon");
     await render(SearchView);
 
@@ -474,20 +326,11 @@ describe("SearchView — typed result groups (#379)", () => {
   });
 
   it("uses an exact rendered count when the bounded page is complete", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "lisa",
-      groups: [
-        {
-          group: "registers",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
-          ],
-        },
+    mockSearch({
+      register: [
+        { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("lisa");
     await render(SearchView);
 
@@ -496,67 +339,5 @@ describe("SearchView — typed result groups (#379)", () => {
       .element(page.getByRole("heading", { name: "Registers" }))
       .toBeVisible();
     await expect.element(page.getByText("1 result")).toBeVisible();
-  });
-
-  it("deduplicates variable leaf hits that are already represented by a group-page result", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "disp",
-      groups: [
-        {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "group",
-              group_key: "dispink",
-              group_label: "Disponibel inkomst",
-              kind: "variable",
-              label_matched: false,
-              matched_count: 1,
-              member_count: 1,
-              register: "LISA",
-              source: "token",
-              members: [
-                {
-                  fqid: "scb/lisa/dispink-2019",
-                  name: "Disp 2019",
-                  facets: [],
-                },
-              ],
-            },
-            {
-              type: "variable",
-              fqid: "scb/lisa/dispink-2019",
-              name: "Disp 2019",
-              register: "LISA",
-              definition: null,
-              delivery_column_names: ["dispink"],
-            },
-          ],
-        },
-      ],
-    } as unknown as SearchResponse);
-    setQuery("disp");
-    await render(SearchView);
-
-    // Poll until the async search results have rendered before the sync queries.
-    await expect
-      .element(page.getByRole("heading", { name: "Variables" }))
-      .toBeVisible();
-    expect(
-      document.querySelector(
-        ".search-view .group-result-row a.row-link[href='/catalog/group/scb/lisa/dispink']",
-      ),
-    ).not.toBeNull();
-    await expect
-      .element(page.getByRole("link", { name: /Disp 2019/ }))
-      .not.toBeInTheDocument();
-    expect(
-      document.querySelector(
-        ".search-view a.leaf-row[href='/catalog/scb/lisa/dispink-2019']",
-      ),
-    ).toBeNull();
   });
 });

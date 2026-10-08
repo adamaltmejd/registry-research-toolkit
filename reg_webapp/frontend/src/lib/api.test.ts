@@ -239,7 +239,10 @@ describe("search", () => {
         return Promise.resolve({
           ok: true,
           status: 200,
-          json: async () => ({ kind: "search", query: q, groups: [] }),
+          json: async () => ({
+            data: { items: [], next_cursor: null },
+            meta: {},
+          }),
         });
       }),
     );
@@ -252,14 +255,33 @@ describe("search", () => {
     expect(url).toBe("/api/search?q=k%C3%B6+n");
   });
 
-  it("appends an explicit non-'all' type (#393 item 1)", async () => {
-    const { url } = await callFor("kon", { type: "value" });
-    expect(url).toBe("/api/search?q=kon&type=value");
+  it("sends the page's type, limit and cursor", async () => {
+    // Fails if a continuation drops `limit` (the Rust default is 50, not the
+    // SPA's page size) or the arm it continues.
+    const { url } = await callFor("kon", {
+      type: "register_value",
+      limit: 3,
+      cursor: "ab",
+    });
+    expect(url).toBe("/api/search?q=kon&limit=3&type=register_value&cursor=ab");
   });
 
-  it("OMITS type=all (the server default → clean canonical URL)", async () => {
-    const { url } = await callFor("kon", { type: "all" });
-    expect(url).toBe("/api/search?q=kon");
+  it("returns the page inside the Rust server's {data, meta}", async () => {
+    // Fails if `search` hands callers the envelope instead of `data`.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            data: { items: [], next_cursor: "c1" },
+            meta: { scope: "reference" },
+          }),
+        }),
+      ),
+    );
+    expect(await search("kon")).toEqual({ items: [], next_cursor: "c1" });
   });
 
   it("always passes an AbortSignal to fetch (the ~12s timeout floor)", async () => {
