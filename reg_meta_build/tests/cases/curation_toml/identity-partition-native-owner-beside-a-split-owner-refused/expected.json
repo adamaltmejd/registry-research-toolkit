@@ -1,7 +1,12 @@
 {
   "loader": "register_files",
-  "replaces": "test_curation_compile_native_partitions.py::test_authored_native_partition_rejects_foreign_or_partial_owners[columns1-unassigned1]",
+  "replaces": [
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_rejects_foreign_or_partial_owners[columns1-unassigned1]",
+    "test_curation_compile_field_corrections.py::test_parallel_representation_selects_checked_owner_without_literal_changes[False-True]",
+    "test_curation_compile_field_corrections.py::test_parallel_representation_selects_checked_owner_without_literal_changes[True-True]"
+  ],
   "fails_if": "the `[[identity.partition]]` loader accepts a map that gives one literal to the native key 1.5 and another to the split key 1.5.new",
+  "note": "The replaced parallel params handed the compiler an ownership where two literals stay on the native base and a third moves to a split owner. No committed curation can state that ownership: the loader refuses it here, so the compile-level claim has no boundary.",
   "error": {
     "code": "register_entry_invalid",
     "locator": "curation/registers/scb/sample.toml [[identity.partition]] entry 1",
