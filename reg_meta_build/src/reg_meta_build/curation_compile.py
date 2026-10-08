@@ -6046,7 +6046,9 @@ def compile_errata(
         for variant_id, members in by_variant.items():
             if members:
                 bound_editions[variant_id] = edition_bindings(
-                    members, tuple(versions.get(variant_id, ()))
+                    members,
+                    tuple(versions.get(variant_id, ())),
+                    source_file=register.source_file,
                 )
         moved_editions = {}
         for split in register.identity.edition_split:
