@@ -1,0 +1,15 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_compile_owner_alternatives.py::test_column_owner_alternatives_require_complete_exclusive_guards"
+  ],
+  "fails_if": "the register loader accepts `expected_records` whose alternatives do not capture every source field, the subject, scopes, parents and code-set references",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.column_owner]] entry 1",
+    "message_contains": [
+      "owner alternatives require finite editions, complete original projections and no expected_fields"
+    ]
+  },
+  "note": "The alternative selects one fact (column_name), so it passes the projection shape check and reaches the completeness check. The replaced test's leg used `fields = []`, which the projection shape check already refuses for another reason."
+}

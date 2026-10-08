@@ -1,0 +1,14 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "ANSWER"
+owner = "1.5.amount"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_fields = [{ name = "column_name", status = "value", value = "ANSWER" }]

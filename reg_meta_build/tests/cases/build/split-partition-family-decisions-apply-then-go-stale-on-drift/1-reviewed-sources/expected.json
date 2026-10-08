@@ -1,0 +1,410 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/identity.partition/2"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/identity.column_owner/1"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/identity.column_owner/4"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/coding.uncoded/3/period/1"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unresolved_catalog_identity"
+      },
+      "fields": [
+        "subject"
+      ],
+      "rows": [
+        [
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)"
+        ],
+        [
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 6)"
+        ],
+        [
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 7)"
+        ],
+        [
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 8)"
+        ],
+        [
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 9)"
+        ],
+        [
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 10)"
+        ],
+        [
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 14)"
+        ]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {
+        "column_name": [
+          "UA_ONE",
+          "UA_TWO",
+          "PA_OWNED",
+          "PA_LEFT",
+          "KEPT",
+          "IM_LEFT",
+          "MAP_ONE",
+          "MAP_LEFT",
+          "ED_A",
+          "ED_B"
+        ]
+      },
+      "fields": [
+        "key",
+        "column_name",
+        "variable"
+      ],
+      "rows": [
+        [
+          "member:51",
+          "UA_ONE",
+          null
+        ],
+        [
+          "member:52",
+          "UA_TWO",
+          null
+        ],
+        [
+          "member:61",
+          "PA_OWNED",
+          "scb/sample/owned"
+        ],
+        [
+          "member:62",
+          "PA_LEFT",
+          null
+        ],
+        [
+          "member:71",
+          "KEPT",
+          "scb/sample/kept"
+        ],
+        [
+          "member:72",
+          "IM_LEFT",
+          null
+        ],
+        [
+          "member:81",
+          "MAP_ONE",
+          null
+        ],
+        [
+          "member:82",
+          "MAP_LEFT",
+          null
+        ],
+        [
+          "member:91",
+          "ED_A",
+          null
+        ],
+        [
+          "member:92",
+          "ED_A",
+          null
+        ],
+        [
+          "member:101",
+          "ED_B",
+          null
+        ],
+        [
+          "member:102",
+          "ED_B",
+          null
+        ]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {
+        "variable": [
+          "quantity",
+          "one",
+          "old",
+          "new",
+          "former",
+          "latter",
+          "unknown"
+        ]
+      },
+      "fields": [
+        "variable"
+      ],
+      "rows": []
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "unassigned_original_columns"
+      },
+      "fields": [
+        "subject",
+        "key"
+      ],
+      "rows": [
+        [
+          "1.6",
+          [
+            "register:1",
+            "variant:10",
+            "edition:2020",
+            "variable:6",
+            "member:62"
+          ]
+        ],
+        [
+          "1.14",
+          [
+            "register:1",
+            "variant:10",
+            "edition:2020",
+            "variable:14",
+            "member:143"
+          ]
+        ],
+        [
+          "1.14",
+          [
+            "register:1",
+            "variant:12",
+            "edition:2020",
+            "variable:14",
+            "member:144"
+          ]
+        ]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {
+        "column_name": [
+          "PP_OTHER",
+          "PP_ID"
+        ]
+      },
+      "fields": [
+        "key",
+        "column_name",
+        "variable"
+      ],
+      "rows": [
+        [
+          "member:141",
+          "PP_OTHER",
+          "scb/sample/other"
+        ],
+        [
+          "member:142",
+          "PP_ID",
+          "scb/sample/supported"
+        ],
+        [
+          "member:143",
+          "PP_ID",
+          null
+        ],
+        [
+          "member:144",
+          "PP_ID",
+          null
+        ]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {
+        "column": [
+          "EN_A",
+          "EN_B",
+          "SB_A",
+          "SB_B"
+        ]
+      },
+      "fields": [
+        "variable",
+        "column",
+        "description"
+      ],
+      "rows": [
+        [
+          "a",
+          "EN_A",
+          "Accepted prose"
+        ],
+        [
+          "b",
+          "EN_B",
+          "Other prose"
+        ],
+        [
+          "c",
+          "SB_A",
+          "Accepted prose"
+        ],
+        [
+          "d",
+          "SB_B",
+          "Sibling description"
+        ]
+      ]
+    },
+    {
+      "table": "aliases",
+      "where": {
+        "column": "FormerA"
+      },
+      "fields": [
+        "variable",
+        "variant"
+      ],
+      "rows": [
+        [
+          "a",
+          "people"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "conflicting_curation_effects",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code",
+        "locator"
+      ],
+      "rows": []
+    },
+    {
+      "table": "uses",
+      "where": {
+        "column_name": [
+          "OA_REMOVE",
+          "OB_ADD",
+          "OC_PARENT"
+        ]
+      },
+      "fields": [
+        "key",
+        "column_name",
+        "variable"
+      ],
+      "rows": [
+        [
+          "member:111",
+          "OA_REMOVE",
+          "scb/sample/removed"
+        ],
+        [
+          "member:112",
+          "OA_REMOVE",
+          "scb/sample/removed"
+        ],
+        [
+          "member:121",
+          "OB_ADD",
+          "scb/sample/added"
+        ],
+        [
+          "member:122",
+          "OB_ADD",
+          "scb/sample/added"
+        ],
+        [
+          "member:131",
+          "OC_PARENT",
+          "scb/sample/parent"
+        ],
+        [
+          "member:132",
+          "OC_PARENT",
+          "scb/sample/parent"
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "column": [
+          "TXT_A",
+          "TXT_B",
+          "TXT_C"
+        ]
+      },
+      "fields": [
+        "column",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "TXT_A",
+          null,
+          null
+        ],
+        [
+          "TXT_B",
+          null,
+          null
+        ],
+        [
+          "TXT_C",
+          "1",
+          "Description"
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "column": [
+          "TXT_A",
+          "TXT_B",
+          "TXT_C"
+        ]
+      },
+      "fields": [
+        "variable",
+        "summary"
+      ],
+      "rows": [
+        [
+          "text-a",
+          "The attached numeric book is reference evidence, not the text response domain."
+        ],
+        [
+          "text-b",
+          "The attached numeric book is reference evidence, not the text response domain."
+        ]
+      ]
+    }
+  ]
+}

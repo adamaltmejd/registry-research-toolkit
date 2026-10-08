@@ -1,0 +1,14 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_compile_owner_alternatives.py::test_column_owner_alternatives_require_complete_exclusive_guards"
+  ],
+  "fails_if": "the register loader accepts an `[[identity.column_owner]]` with `expected_records` but no `expected_evidence_sha256`",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.column_owner]] entry 1",
+    "message_contains": [
+      "guarded owner alternatives require original records and evidence hash"
+    ]
+  }
+}
