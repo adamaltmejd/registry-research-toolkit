@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_guarded_corrections.py::test_measurement_unit_correction_guards_shared_ref_physical_assertions",
+  "fails_if": "the `[[errata.field]]` expected_fields rule accepts a classification group without its `representation` guard, so a unit correction that guards the unit but not the original representation loads",
+  "note": "The replaced test also dropped the coverage_from guard; that hits the same expected_fields group rule, so one case carries both.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.field.expected_fields]] entry 1",
+    "message_contains": [
+      "expected_fields must guard all four supplied prose fields, optionally both coverage fields and the complete classification/type/representation group with the original measurement unit"
+    ]
+  }
+}

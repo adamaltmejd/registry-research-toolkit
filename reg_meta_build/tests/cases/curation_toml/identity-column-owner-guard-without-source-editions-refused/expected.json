@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_guarded_corrections.py::test_guarded_column_owner_requires_finite_unique_fields[[{ name = \"measurement_unit\", status = \"value\", value = \"SEK\" }]-[]]",
+  "fails_if": "the `[[identity.column_owner]]` validator accepts `expected_fields` guards on an owner with no `source_editions`, so a guarded owner that claims every edition loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.column_owner]] entry 1",
+    "message_contains": [
+      "guarded column owners require exact editions and unique field guards"
+    ]
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "register": "sample",
+        "variable": "answer"
+      },
+      "fields": ["valid_from", "valid_to", "name", "provenance"],
+      "rows": [
+        ["2008-01-01", "2008-12-31", "Reviewed label", null],
+        [
+          "2009-01-01",
+          "2009-12-31",
+          "Reviewed label",
+          "curation/registers/scb/sample.toml#/errata.field/1: Exact supplied definition establishes the reviewed correction."
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": ["scb/sample/answer", "scb/twin/answer"]
+      },
+      "fields": ["subject", "code"],
+      "match": "includes",
+      "rows": [
+        ["scb/twin/answer", "conflicting_variable_fact"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/sample/answer"
+      },
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/unitfix/answer"
+      },
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "unitfix"
+      },
+      "fields": ["valid_from", "provenance"],
+      "rows": [
+        [
+          "2009-01-01",
+          "curation/registers/scb/unitfix.toml#/errata.field/1: Exact supplied unit establishes the reviewed correction."
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/unitkeep/answer"
+      },
+      "fields": ["code"],
+      "match": "includes",
+      "rows": [
+        ["delivery_units_vary"],
+        ["conflicting_occurrence_facts"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "syd",
+        "variable": "distrikt"
+      },
+      "fields": ["valid_from", "valid_to"],
+      "rows": [
+        ["2009-01-01", "2009-12-31"],
+        ["2017-01-01", "2017-12-31"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "syd",
+        "provenance": {
+          "contains": "curation/registers/sos/syd.toml#/errata.field/"
+        }
+      },
+      "fields": ["variable", "valid_from"],
+      "rows": [
+        ["distrikt", "2009-01-01"]
+      ]
+    },
+    {
+      "table": "state_classifications",
+      "where": {
+        "column": ["DISTRIKT", "DISTRIKT2"]
+      },
+      "fields": ["column", "classification"],
+      "rows": [
+        ["DISTRIKT", "d"],
+        ["DISTRIKT", "d"],
+        ["DISTRIKT2", "d"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unassigned_original_columns"
+      },
+      "fields": ["subject"],
+      "rows": [
+        ["3.5"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "unassigned_original_columns"
+      },
+      "fields": ["key"],
+      "rows": [
+        [
+          ["register:3", "variant:2", "edition:2022", "variable:5", "member:322"]
+        ]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {
+        "source": "scb-registerinformation",
+        "variable": ["scb/owned/answer", "scb/partly/answer"]
+      },
+      "fields": ["variable", "column_name", "key"],
+      "rows": [
+        ["scb/owned/answer", "ANSWER", "member:220"],
+        ["scb/owned/answer", "ANSWER", "member:221"],
+        ["scb/owned/answer", "KNOWN", "member:219"],
+        ["scb/partly/answer", "ANSWER", "member:320"],
+        ["scb/partly/answer", "ANSWER", "member:321"],
+        ["scb/partly/answer", "KNOWN", "member:319"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": ["case_id", "valid_from", "valid_to"],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/coding.documented/1/period/1",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/coding.documented/2/period/1",
+          "2020-01-01",
+          "9999-12-31"
+        ],
+        ["curation/registers/scb/unitdrift.toml#/errata.field/1", null, null],
+        ["curation/registers/sos/syd.toml#/errata.field/2", null, null]
+      ]
+    }
+  ]
+}

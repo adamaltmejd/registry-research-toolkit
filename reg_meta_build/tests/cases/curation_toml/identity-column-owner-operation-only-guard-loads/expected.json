@@ -1,0 +1,32 @@
+{
+  "loader": "register_files",
+  "match": "includes",
+  "replaces": "test_curation_compile_guarded_corrections.py::test_guarded_column_owner_allows_operation_only_guard",
+  "fails_if": "the `[[identity.column_owner]]` validator requires a `measurement_unit` or `source_attribution` guard beside `operational_definition`, so an owner with one exact edition and a single operational-definition guard is refused",
+  "note": "The allowed twin of the two guarded-owner refusals: one exact edition and one unique guard.",
+  "loads": [
+    {
+      "identity": {
+        "column_owner": [
+          {
+            "owner": "1.5.amount",
+            "source_editions": {
+              "$exact": [
+                "2020"
+              ]
+            },
+            "expected_fields": {
+              "$exact": [
+                {
+                  "name": "operational_definition",
+                  "status": "value",
+                  "value": "Amount"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
