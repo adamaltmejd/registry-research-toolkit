@@ -203,9 +203,7 @@ class PreparedSet:
         ]
 
     def opened(self):
-        return open_prepared_catalog_sources(
-            self.prepared, expected_sha256=self.digest, input_commit=self.commit
-        )
+        return _opened(self.prepared, self.commit, self.digest)
 
     def revision(self, record: SourceRecord) -> dict:
         return next(
@@ -230,12 +228,19 @@ class PreparedSet:
         return canonical_sha256(found.model_dump(mode="json"))
 
 
+# Authoring reads open a cache entry's accepted sources once per process: an entry
+# is immutable once renamed into place, and the build under test still opens and
+# checks it itself.
 @functools.cache
-def _records(prepared: Path, commit: str, digest: str) -> tuple[SourceRecord, ...]:
-    opened = open_prepared_catalog_sources(
+def _opened(prepared: Path, commit: str, digest: str):
+    return open_prepared_catalog_sources(
         prepared, expected_sha256=digest, input_commit=commit
     )
-    return tuple(opened.records.records)
+
+
+@functools.cache
+def _records(prepared: Path, commit: str, digest: str) -> tuple[SourceRecord, ...]:
+    return tuple(_opened(prepared, commit, digest).records.records)
 
 
 class PreparedCache:
