@@ -1,0 +1,47 @@
+[register]
+provider = "sos"
+slug = "cod"
+name = "Kodregistret"
+native_id = {{naming_id kind=register provider=sos register_key=cod}}
+[[variant]]
+slug = "cod-a"
+native_id = {{naming_id kind=register_variant provider=sos register_key=cod member_key=COD_A}}
+[[variable]]
+slug = "butsatt"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=BUTSATT}}
+[[variable]]
+slug = "adj"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=ADJ}}
+[[variable]]
+slug = "yind"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=YIND}}
+[[variable]]
+slug = "ydate"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=YDATE}}
+[[variable]]
+slug = "ydup"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=YDUP}}
+[[variable]]
+slug = "nolabel"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=NOLABEL}}
+[[variable]]
+slug = "split"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=SPLIT}}
+[[variable]]
+slug = "empty"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=EMPTY}}
+[[variable]]
+slug = "unk"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=UNK}}
+[[variable]]
+slug = "eq"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=EQ}}
+[[variable]]
+slug = "rivboth"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=RIVBOTH}}
+[[variable]]
+slug = "rivcode"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=RIVCODE}}
+[[variable]]
+slug = "rivlabel"
+native_id = {{naming_id kind=variable provider=sos register_key=cod member_key=RIVLABEL}}

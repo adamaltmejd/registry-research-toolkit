@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "rowskeep"
+native_id = "17"
+[[variant]]
+native_id = "17.2"
+slug = "people"
+[[variable]]
+native_id = "17.5"
+slug = "value"
+
+[[coding.documented]]
+variable = "17.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["1", "Included"]]
+version_label = "Supplied row"
+source_authority = { revision = {{revision key=member:1700}}, locators = {{locators key=member:1700}}, records = {{expected_records key=member:1700}}, codings = {{source_codings key=member:1700}} }
+reason = "Reviewed coding"
+source = "fixture"

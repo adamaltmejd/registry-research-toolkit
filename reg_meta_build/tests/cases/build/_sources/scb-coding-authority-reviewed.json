@@ -1,0 +1,716 @@
+{
+  "description": "One SCB register per coding claim, VALUE (var 5) in each. Competing lists narrow/keeper (CHOICE 11, REPEAT 12; ALTERNATIVES 28 delivers its member by two physical rows, data_length blank and 10); 2021 lists copied to an unlisted 2020 (EXTEND 13 'keeper', UNLABELLED 14 with no list name); blank-labelled token 1 (ROWS 15, ROWSADDED 16, ROWSKEEP 17); 99 Unknown beside 01 Category for books FIX/FIX2 (SENTINEL 18; SUBSTANTIVE 19 with 2019's 99 'Substantive industry'); unlisted 2020 beside a 2021 list or with its own list (PDF 20, PDFCOMPLETE 21, PDFNOWINDOW 22, PDFCONFLICT 23); a numbered definition with a Tal marker (MARKER 25, MARKERPARTIAL 26, MARKERLATER 27 with a 2021 list); 2019 'Sector' with 14 Landsting/Region and 1968 'Old sector' (LABELS 29); 2016/2017 'Status' lists with 30 Matrix/Model imputation (WITNESS 30-33) or a 2020 list agreeing or not (CONTRARY 34-36); bare LEG/SPEC named by 'Kategori LEG = legitimation eller SPEC = specialitet' (ALPHA 37); 16310 Pachygyria, 16320 Microgyria, 16310 Erroneous (SUPPORT 38).",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "VALUE",
+        "cvid": 1100,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 112020,
+        "register": [
+          "CHOICE",
+          11,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1200,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 122020,
+        "register": [
+          "REPEAT",
+          12,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1300,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 132020,
+        "register": [
+          "EXTEND",
+          13,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1301,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 132021,
+        "register": [
+          "EXTEND",
+          13,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1400,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 142020,
+        "register": [
+          "UNLABELLED",
+          14,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1401,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 142021,
+        "register": [
+          "UNLABELLED",
+          14,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1500,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 152020,
+        "register": [
+          "ROWS",
+          15,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1600,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 162020,
+        "register": [
+          "ROWSADDED",
+          16,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1700,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 172020,
+        "register": [
+          "ROWSKEEP",
+          17,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1800,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 182020,
+        "register": [
+          "SENTINEL",
+          18,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1900,
+        "var_id": 5,
+        "year": "2019",
+        "regver_id": 192019,
+        "register": [
+          "SUBSTANTIVE",
+          19,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1901,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 192020,
+        "register": [
+          "SUBSTANTIVE",
+          19,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2000,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 202020,
+        "register": [
+          "PDF",
+          20,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2001,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 202021,
+        "register": [
+          "PDF",
+          20,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2100,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 212020,
+        "register": [
+          "PDFCOMPLETE",
+          21,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2200,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 222020,
+        "register": [
+          "PDFNOWINDOW",
+          22,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2300,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 232020,
+        "register": [
+          "PDFCONFLICT",
+          23,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2500,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 252020,
+        "register": [
+          "MARKER",
+          25,
+          2
+        ],
+        "vardef": "\"Which amount?\n1. Less than 500\n2. At least 500\n8. Unknown\""
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2600,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 262020,
+        "register": [
+          "MARKERPARTIAL",
+          26,
+          2
+        ],
+        "vardef": "\"Which amount?\n1. Less than 500\n2. At least 500\n8. Unknown\""
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2700,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 272020,
+        "register": [
+          "MARKERLATER",
+          27,
+          2
+        ],
+        "vardef": "\"Which amount?\n1. Less than 500\n2. At least 500\n8. Unknown\""
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2701,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 272021,
+        "register": [
+          "MARKERLATER",
+          27,
+          2
+        ],
+        "vardef": "\"Which amount?\n1. Less than 500\n2. At least 500\n8. Unknown\""
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2800,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 282020,
+        "register": [
+          "ALTERNATIVES",
+          28,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2800,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 282020,
+        "register": [
+          "ALTERNATIVES",
+          28,
+          2
+        ],
+        "data_length": "10"
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2900,
+        "var_id": 5,
+        "year": "2019",
+        "regver_id": 292019,
+        "register": [
+          "LABELS",
+          29,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2901,
+        "var_id": 5,
+        "year": "1968",
+        "regver_id": 291968,
+        "register": [
+          "LABELS",
+          29,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2902,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 292020,
+        "register": [
+          "LABELS",
+          29,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3000,
+        "var_id": 5,
+        "year": "2016",
+        "regver_id": 302016,
+        "register": [
+          "WITNESS",
+          30,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3001,
+        "var_id": 5,
+        "year": "2017",
+        "regver_id": 302017,
+        "register": [
+          "WITNESS",
+          30,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3002,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 302020,
+        "register": [
+          "WITNESS",
+          30,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3100,
+        "var_id": 5,
+        "year": "2016",
+        "regver_id": 312016,
+        "register": [
+          "WITNESSLATER",
+          31,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3101,
+        "var_id": 5,
+        "year": "2017",
+        "regver_id": 312017,
+        "register": [
+          "WITNESSLATER",
+          31,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3102,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 312020,
+        "register": [
+          "WITNESSLATER",
+          31,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3200,
+        "var_id": 5,
+        "year": "2016",
+        "regver_id": 322016,
+        "register": [
+          "WITNESSWRONG",
+          32,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3201,
+        "var_id": 5,
+        "year": "2017",
+        "regver_id": 322017,
+        "register": [
+          "WITNESSWRONG",
+          32,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3202,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 322020,
+        "register": [
+          "WITNESSWRONG",
+          32,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3300,
+        "var_id": 5,
+        "year": "2016",
+        "regver_id": 332016,
+        "register": [
+          "WITNESSOUTSIDE",
+          33,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3301,
+        "var_id": 5,
+        "year": "2017",
+        "regver_id": 332017,
+        "register": [
+          "WITNESSOUTSIDE",
+          33,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3302,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 332020,
+        "register": [
+          "WITNESSOUTSIDE",
+          33,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3400,
+        "var_id": 5,
+        "year": "2016",
+        "regver_id": 342016,
+        "register": [
+          "CONTRARY",
+          34,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3401,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 342020,
+        "register": [
+          "CONTRARY",
+          34,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3500,
+        "var_id": 5,
+        "year": "2016",
+        "regver_id": 352016,
+        "register": [
+          "CONTRARYLABEL",
+          35,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3501,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 352020,
+        "register": [
+          "CONTRARYLABEL",
+          35,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3600,
+        "var_id": 5,
+        "year": "2016",
+        "regver_id": 362016,
+        "register": [
+          "CONTRARYPLAIN",
+          36,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3601,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 362020,
+        "register": [
+          "CONTRARYPLAIN",
+          36,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3700,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 372020,
+        "register": [
+          "ALPHA",
+          37,
+          2
+        ],
+        "varname": "Kategori LEG = legitimation eller SPEC = specialitet"
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3800,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 382020,
+        "register": [
+          "SUPPORT",
+          38,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2400,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 242020,
+        "register": [
+          "PART",
+          24,
+          2
+        ]
+      },
+      {
+        "colname": "",
+        "cvid": 3900,
+        "var_id": 5,
+        "year": "2010",
+        "regver_id": 392010,
+        "register": [
+          "POOLED",
+          39,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3901,
+        "var_id": 5,
+        "year": "2013",
+        "regver_id": 392013,
+        "register": [
+          "POOLED",
+          39,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 4000,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 402021,
+        "register": [
+          "HELD",
+          40,
+          2
+        ]
+      },
+      {
+        "colname": "ANCHOR",
+        "cvid": 4001,
+        "var_id": 6,
+        "year": "2020",
+        "regver_id": 402020,
+        "register": [
+          "HELD",
+          40,
+          2
+        ]
+      }
+    ],
+    "vardemangder": [
+      "narrow|1|1|Label|1100|1101",
+      "keeper|1|1|Label|1100|1102",
+      "keeper|1|.|Skip|1100|1103",
+      "narrow|1|1|Label|1200|1201",
+      "keeper|1|1|Label|1200|1202",
+      "keeper|1|.|Skip|1200|1203",
+      "keeper|1|1|Label|1301|1311",
+      "keeper|1|.|Skip|1301|1312",
+      "|1|1|Label|1401|1411",
+      "source|1|1||1500|1511",
+      "source|1|1||1600|1611",
+      "source|1|1||1700|1711",
+      "list|1|01|Category|1800|1801",
+      "list|1|99|Unknown|1800|1802",
+      "list|1|01|Category|1900|1901",
+      "list|1|99|Substantive industry|1900|1902",
+      "list|1|01|Category|1901|1903",
+      "list|1|99|Unknown|1901|1904",
+      "later|1|2|Label|2001|2011",
+      "existing|1|1|Label|2100|2111",
+      "Tal|Tal|Tal|Some descriptionSCB\\SCBLEOT|2600|2690",
+      "Tal|Tal|Tal|Some descriptionSCB\\SCBLEOT|2700|2790",
+      "later|1|1|Label|2701|2711",
+      "Tal|Tal|Tal|Some descriptionSCB\\SCBLEOT|2500|2590",
+      "keep|1|1|Label|2800|2801",
+      "other|1|2|Label|2800|2802",
+      "Sector|1|14|Landsting|2900|2911",
+      "Sector|1|14|Region|2900|2912",
+      "Sector|1|15|Other|2900|2913",
+      "Old sector|1|29|Label|2901|2914",
+      "Status|1|30|Matrix imputation|3000|3010",
+      "Status|1|30|Model imputation|3000|3011",
+      "Status|1|6|Missing|3000|3012",
+      "Status|1|30|Matrix imputation|3001|3020",
+      "Status|1|30|Model imputation|3001|3021",
+      "Status|1|6|Missing|3001|3022",
+      "Status|1|NULL|Missing|3001|3023",
+      "Status|1|30|Matrix imputation|3100|3110",
+      "Status|1|30|Model imputation|3100|3111",
+      "Status|1|6|Missing|3100|3112",
+      "Status|1|30|Matrix imputation|3101|3120",
+      "Status|1|30|Model imputation|3101|3121",
+      "Status|1|6|Missing|3101|3122",
+      "Status|1|NULL|Missing|3101|3123",
+      "Status|1|30|Matrix imputation|3200|3210",
+      "Status|1|30|Model imputation|3200|3211",
+      "Status|1|6|Missing|3200|3212",
+      "Status|1|30|Matrix imputation|3201|3220",
+      "Status|1|30|Model imputation|3201|3221",
+      "Status|1|6|Missing|3201|3222",
+      "Status|1|NULL|Missing|3201|3223",
+      "Status|1|30|Matrix imputation|3300|3310",
+      "Status|1|30|Model imputation|3300|3311",
+      "Status|1|6|Missing|3300|3312",
+      "Status|1|30|Matrix imputation|3301|3320",
+      "Status|1|30|Model imputation|3301|3321",
+      "Status|1|6|Missing|3301|3322",
+      "Status|1|NULL|Missing|3301|3323",
+      "Status|1|30|Matrix|3400|3410",
+      "Status|1|30|Model|3400|3411",
+      "Status|1|6|Missing|3400|3412",
+      "Status|1|30|Model|3401|3420",
+      "Status|1|6|Missing|3401|3421",
+      "Status|1|30|Matrix|3500|3510",
+      "Status|1|30|Model|3500|3511",
+      "Status|1|6|Missing|3500|3512",
+      "Status|1|30|Directly observed|3501|3520",
+      "Status|1|6|Missing|3501|3521",
+      "Status|1|30|Matrix|3600|3610",
+      "Status|1|30|Model|3600|3611",
+      "Status|1|6|Missing|3600|3612",
+      "Status|1|30|Model|3601|3620",
+      "Status|1|6|Missing|3601|3621",
+      "bare|1|LEG||3700|3711",
+      "bare|1|SPEC||3700|3712",
+      "complete|1|16310|Pachygyria|3800|3811",
+      "complete|1|16320|Microgyria|3800|3812",
+      "complete|1|16310|Erroneous|3800|3813",
+      "binary|1|1|Label|4000|4011"
+    ]
+  },
+  "files": {
+    "classifications/fixture.csv": [
+      "code,label",
+      "01,Canonical"
+    ],
+    "classifications/fixture2.csv": [
+      "code,label",
+      "01,Canonical"
+    ]
+  }
+}

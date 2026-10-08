@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_source_authority.py::test_unlabelled_extension_requires_complete_literal_source_authority[authority]",
+  "fails_if": "`CodingExtendEntry._unlabelled_source` stops requiring `source_authority` for `list = \"\"`, so an extension names an unlabelled list without pinning its rows",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.extend]] entry 1",
+    "message_contains": [
+      "an unlabelled source list requires exact members and prepared source authority"
+    ]
+  }
+}

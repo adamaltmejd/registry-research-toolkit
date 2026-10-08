@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "undateduncoded"
+native_id = "64"
+[[variant]]
+native_id = "64.642"
+slug = "people"
+[[variable]]
+native_id = "64.5"
+slug = "value"
+
+[[coding.uncoded]]
+variable = "64.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+reason = "Reviewed coding"
+source = "fixture"

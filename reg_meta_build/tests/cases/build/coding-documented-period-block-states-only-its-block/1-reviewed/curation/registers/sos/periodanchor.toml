@@ -1,0 +1,23 @@
+[register]
+provider = "sos"
+slug = "periodanchor"
+name = "Anchor"
+native_id = {{naming_id kind=register provider=sos register_key=pbb}}
+[[variant]]
+slug = "periodanchor-a"
+native_id = {{naming_id kind=register_variant provider=sos register_key=pbb member_key=PBB_A}}
+[[variable]]
+slug = "value"
+native_id = {{naming_id kind=variable provider=sos register_key=pbb member_key=VB}}
+
+[[coding.documented]]
+variable = {{naming_id kind=variable provider=sos register_key=pbb member_key=VB}}
+variant = "periodanchor-a"
+column = "VB"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["00", "Original"], ["2-3", "Range token"], ["blank", "No type"]]
+version_label = "Reviewed2019-2020block"
+data_warning = "The source tokens' stored encoding is unverified."
+source_authority = { revision = {{revision key=variable:VB}}, locators = {{locators key=variable:VB}}, records = {{expected_records key=variable:VB}}, codings = {{source_codings key=variable:VB}}, raw_codings = {{raw_codings key=variable:VB}}, period_block = {{association key=variable:VB code=00 label=Original}} }
+reason = "Reviewed 2019-2020 block"
+source = "fixture"

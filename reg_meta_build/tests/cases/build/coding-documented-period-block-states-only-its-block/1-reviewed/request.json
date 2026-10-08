@@ -1,0 +1,10 @@
+{
+  "replaces": [
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[None]",
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[outside]",
+    "test_source_coding_certificates.py::test_documented_period_block_intersects_known_delivery_scope[None]"
+  ],
+  "note": "Each workbook's documented entry names its own variable's 2019-2020 block: the dated 00 'Original' row (the `period_block` anchor) and the undated rows up to the next dated row, so 2-3 'Range token' and blank 'No type' are the members and the later block's rows are not. periodoutside names 2021 for the same block, which the block does not cover. The members, data warning and refusal come from the replaced test's `pairs[:3]`, `data_warning` and `outside` branch; periodopen documents 2020 from the open 2019- block over VJ's open 2020 delivery: the block is the intersection (2020 onward), so the open state carries 00 Original and blank Missing (the unit test's [None] edge). The workbooks PBB..PBI are identical to PBA here and drift in step 2.",
+  "fails_if": "`documented_period_block` stops at the anchor row, or runs past the next dated row, so a 2020 state is not exactly 00 Original, 2-3 Range token and blank No type; or `documented_period_block_matches` accepts a window outside the anchor's supplied 2019-2020 period, so periodoutside's 2021 entry applies",
+  "sources": "sos-coding-period-blocks"
+}

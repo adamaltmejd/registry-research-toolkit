@@ -1,0 +1,653 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/contrarylabel.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/contraryplain.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/markerpartial.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/part.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/pdfcomplete.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/pdfnowindow.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/rowsadded.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/witnessoutside.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/witnesswrong.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "Only the curation-side refusals are stale; every guarded entry over unchanged rows applies."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "conflicting_coding_choices"
+      },
+      "fields": [
+        "subject",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "scb/pdfconflict/value",
+          "2020-06-01",
+          "2020-12-31"
+        ]
+      ],
+      "note": "test_conflicting_documented_lists_withhold_only_overlap: the conflict covers only the overlap."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "valid_from": [
+          "2020-01-01",
+          "2020-06-01",
+          "2020-07-01"
+        ]
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "alpha",
+          "2020-01-01",
+          "2020-12-31",
+          "LEG",
+          "legitimation"
+        ],
+        [
+          "alpha",
+          "2020-01-01",
+          "2020-12-31",
+          "SPEC",
+          "specialitet"
+        ],
+        [
+          "alternatives",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Label"
+        ],
+        [
+          "choice",
+          "2020-01-01",
+          "2020-12-31",
+          ".",
+          "Skip"
+        ],
+        [
+          "choice",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Label"
+        ],
+        [
+          "contrary",
+          "2020-01-01",
+          "2020-12-31",
+          "30",
+          "Model"
+        ],
+        [
+          "contrary",
+          "2020-01-01",
+          "2020-12-31",
+          "6",
+          "Missing"
+        ],
+        [
+          "contrarylabel",
+          "2020-01-01",
+          "2020-12-31",
+          "30",
+          "Directly observed"
+        ],
+        [
+          "contrarylabel",
+          "2020-01-01",
+          "2020-12-31",
+          "6",
+          "Missing"
+        ],
+        [
+          "contraryplain",
+          "2020-01-01",
+          "2020-12-31",
+          "30",
+          "Model"
+        ],
+        [
+          "contraryplain",
+          "2020-01-01",
+          "2020-12-31",
+          "6",
+          "Missing"
+        ],
+        [
+          "extend",
+          "2020-01-01",
+          "2020-12-31",
+          ".",
+          "Skip"
+        ],
+        [
+          "extend",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Label"
+        ],
+        [
+          "labels",
+          "2020-01-01",
+          "2020-12-31",
+          "14",
+          "Landsting"
+        ],
+        [
+          "labels",
+          "2020-01-01",
+          "2020-12-31",
+          "15",
+          "Other"
+        ],
+        [
+          "marker",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Less than 500"
+        ],
+        [
+          "marker",
+          "2020-01-01",
+          "2020-12-31",
+          "2",
+          "At least 500"
+        ],
+        [
+          "marker",
+          "2020-01-01",
+          "2020-12-31",
+          "8",
+          "Unknown"
+        ],
+        [
+          "markerlater",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Less than 500"
+        ],
+        [
+          "markerlater",
+          "2020-01-01",
+          "2020-12-31",
+          "2",
+          "At least 500"
+        ],
+        [
+          "markerlater",
+          "2020-01-01",
+          "2020-12-31",
+          "8",
+          "Unknown"
+        ],
+        [
+          "markerpartial",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "part",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "ja"
+        ],
+        [
+          "held",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Label"
+        ],
+        [
+          "held",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "pdf",
+          "2020-01-01",
+          "2020-12-31",
+          "",
+          "inte tillfrågad"
+        ],
+        [
+          "pdf",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "ja"
+        ],
+        [
+          "pdfcomplete",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Label"
+        ],
+        [
+          "pdfconflict",
+          "2020-01-01",
+          "2020-05-31",
+          "1",
+          "ja"
+        ],
+        [
+          "pdfconflict",
+          "2020-06-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "pdfnowindow",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "repeat",
+          "2020-01-01",
+          "2020-12-31",
+          ".",
+          "Skip"
+        ],
+        [
+          "repeat",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Label"
+        ],
+        [
+          "rows",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Included"
+        ],
+        [
+          "rowsadded",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "rowskeep",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Included"
+        ],
+        [
+          "sentinel",
+          "2020-01-01",
+          "2020-06-30",
+          "01",
+          "Category"
+        ],
+        [
+          "sentinel",
+          "2020-01-01",
+          "2020-06-30",
+          "99",
+          "Unknown"
+        ],
+        [
+          "sentinel",
+          "2020-07-01",
+          "2020-12-31",
+          "01",
+          "Category"
+        ],
+        [
+          "sentinel",
+          "2020-07-01",
+          "2020-12-31",
+          "99",
+          "Unknown"
+        ],
+        [
+          "substantive",
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Category"
+        ],
+        [
+          "substantive",
+          "2020-01-01",
+          "2020-12-31",
+          "99",
+          "Unknown"
+        ],
+        [
+          "support",
+          "2020-01-01",
+          "2020-12-31",
+          "16310",
+          "Pachygyria"
+        ],
+        [
+          "support",
+          "2020-01-01",
+          "2020-12-31",
+          "16320",
+          "Microgyria"
+        ],
+        [
+          "unlabelled",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Label"
+        ],
+        [
+          "witness",
+          "2020-01-01",
+          "2020-12-31",
+          "30",
+          "Model imputation"
+        ],
+        [
+          "witness",
+          "2020-01-01",
+          "2020-12-31",
+          "6",
+          "Missing"
+        ],
+        [
+          "witnesslater",
+          "2020-01-01",
+          "2020-12-31",
+          "30",
+          "Model imputation"
+        ],
+        [
+          "witnesslater",
+          "2020-01-01",
+          "2020-12-31",
+          "6",
+          "Missing"
+        ],
+        [
+          "witnesslater",
+          "2020-01-01",
+          "2020-12-31",
+          "NULL",
+          "Missing"
+        ],
+        [
+          "witnessoutside",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "witnesswrong",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "Each 2020 state carries the replaced test's selected members, or the null row where its entry is stale. A sentinel keeps the source list on both halves of its split."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": [
+          "extend",
+          "pdf",
+          "labels",
+          "support"
+        ],
+        "valid_from": [
+          "2021-01-01",
+          "2019-01-01"
+        ]
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "extend",
+          "2021-01-01",
+          ".",
+          "Skip"
+        ],
+        [
+          "extend",
+          "2021-01-01",
+          "1",
+          "Label"
+        ],
+        [
+          "labels",
+          "2019-01-01",
+          "14",
+          "Landsting"
+        ],
+        [
+          "labels",
+          "2019-01-01",
+          "14",
+          "Region"
+        ],
+        [
+          "labels",
+          "2019-01-01",
+          "15",
+          "Other"
+        ],
+        [
+          "pdf",
+          "2021-01-01",
+          "2",
+          "Label"
+        ]
+      ],
+      "note": "The raw source lists stay unchanged in the periods no entry curates (the `claims == ...` asserts)."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": [
+          "pooled",
+          "held"
+        ],
+        "variable": "value"
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "held",
+          "2020-01-01",
+          "1",
+          "Label"
+        ],
+        [
+          "held",
+          "2021-01-01",
+          "1",
+          "Label"
+        ],
+        [
+          "pooled",
+          "2010-01-01",
+          "1",
+          "ja"
+        ],
+        [
+          "pooled",
+          "2013-01-01",
+          null,
+          null
+        ]
+      ],
+      "note": "Coding follows the effective delivery: pooled's documented 2010 list codes the blank-named row delivered as VALUE, not the 2013 row; held's guarded extension codes the 2020 holding, which has no row and no coding of its own."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "scb/pooled/value",
+          "scb/held/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Neither effective occurrence raises a coding issue (the old `not diagnostics`)."
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "code": [
+          "sentinel_classification_codes",
+          "supported_erroneous_coding_association"
+        ]
+      },
+      "fields": [
+        "register",
+        "code",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "sentinel",
+          "sentinel_classification_codes",
+          "2020-07-01",
+          "2020-12-31"
+        ],
+        [
+          "substantive",
+          "sentinel_classification_codes",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "support",
+          "supported_erroneous_coding_association",
+          "2020-01-01",
+          "2020-12-31"
+        ]
+      ],
+      "note": "The sentinel certificate covers only its window; the support disposition is published as a warning."
+    },
+    {
+      "table": "state_classifications",
+      "fields": [
+        "column",
+        "classification"
+      ],
+      "rows": [
+        [
+          "VALUE",
+          "fixture"
+        ],
+        [
+          "VALUE",
+          "fixture2"
+        ]
+      ],
+      "note": "One bound state per sentinel register: sentinel's 2020-01-01..06-30 half and substantive's 2019 state stay unbound."
+    },
+    {
+      "table": "states",
+      "where": {
+        "provenance": {
+          "contains": [
+            "https://example.org/official.pdf",
+            "SHA256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "Pages: 12"
+          ]
+        }
+      },
+      "fields": [
+        "register",
+        "valid_from"
+      ],
+      "rows": [
+        [
+          "part",
+          "2020-01-01"
+        ],
+        [
+          "pdf",
+          "2020-01-01"
+        ],
+        [
+          "pdfconflict",
+          "2020-01-01"
+        ],
+        [
+          "pooled",
+          "2010-01-01"
+        ]
+      ],
+      "note": "A documented state's provenance names the PDF, its digest and page; pdfconflict's non-overlapping first half keeps its first entry's. The filter matches the entries' own authored URL, digest and page, not generated prose."
+    }
+  ]
+}

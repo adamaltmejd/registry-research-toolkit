@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_source_authority.py::test_unlabelled_extension_requires_complete_literal_source_authority[raw_codings]",
+  "fails_if": "`_CheckedCodingEntry._checked_authority` stops requiring `raw_codings` on a choice/extend authority, so an extension pins its rows but not the raw list it copies",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.extend]] entry 1",
+    "message_contains": [
+      "coding authority requires finite original rows and complete source coding fingerprints"
+    ]
+  },
+  "note": "The source authority is a structurally complete literal (one SCB Registerinformation member's captured record, revision and locators, with placeholder 64-hex fingerprints): the loader checks its shape, never its values, so only the named field is wrong."
+}

@@ -1,0 +1,15 @@
+{
+  "replaces": [
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[new_anchor]",
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[changed_period]",
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[missing_row]",
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[foreign_sheet]",
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[multiplicity]",
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[out_of_block]",
+    "test_source_coding_certificates.py::test_documented_period_block_retains_literal_codes_and_all_raw_claims[multiple_claims]"
+  ],
+  "note": "The step-1 curation, authored from the reviewed workbooks, built against one drift per workbook (see the drifted spec's description): a new anchor inside the block, a changed anchor period, a missing block row, the list moved to another sheet, a repeated block row, a relabelled row of the later block and a second list for the variable. Each entry is stale at its own locator and publishes no data warning; periodblock (unchanged) still applies and periodoutside stays stale.",
+  "fails_if": "`compile_coding_register`'s period-block check (`documented_period_block_matches` with the authority's `raw_codings`) stops comparing the delivered block, its anchor's period and sheet, and the variable's complete raw lists with the reviewed ones, so a drifted block still applies; or a change in one workbook stales another workbook's entry",
+  "sources": "sos-coding-period-blocks-drifted",
+  "authored_from": "sos-coding-period-blocks"
+}

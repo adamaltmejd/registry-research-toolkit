@@ -1,0 +1,229 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "case_id": [
+          "curation/registers/scb/choice.toml#/coding.choice/1/period/1",
+          "curation/registers/scb/extend.toml#/coding.extend/1/period/1",
+          "curation/registers/scb/rows.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/alternatives.toml#/coding.choice/1/period/1",
+          "curation/registers/scb/alpha.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/pdf.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/sentinel.toml#/coding.sentinel/1/period/1",
+          "curation/registers/scb/substantive.toml#/coding.sentinel/1/period/1",
+          "curation/registers/scb/support.toml#/coding.support/1/period/1"
+        ]
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/choice.toml#/coding.choice/1/period/1"
+        ],
+        [
+          "curation/registers/scb/extend.toml#/coding.extend/1/period/1"
+        ],
+        [
+          "curation/registers/scb/rows.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/alternatives.toml#/coding.choice/1/period/1"
+        ],
+        [
+          "curation/registers/scb/alpha.toml#/coding.documented/1/period/1"
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": [
+          "choice",
+          "extend",
+          "rows",
+          "alternatives",
+          "alpha",
+          "pdf",
+          "sentinel",
+          "substantive",
+          "support"
+        ],
+        "valid_from": [
+          "2020-01-01",
+          "2020-06-01",
+          "2020-07-01"
+        ]
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "alpha",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "alternatives",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "choice",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "extend",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "pdf",
+          "2020-01-01",
+          "2020-12-31",
+          "",
+          "inte tillfrågad"
+        ],
+        [
+          "pdf",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "ja"
+        ],
+        [
+          "rows",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "sentinel",
+          "2020-01-01",
+          "2020-06-30",
+          "01",
+          "Category"
+        ],
+        [
+          "sentinel",
+          "2020-01-01",
+          "2020-06-30",
+          "99",
+          "Unknown"
+        ],
+        [
+          "sentinel",
+          "2020-07-01",
+          "2020-12-31",
+          "01",
+          "Category"
+        ],
+        [
+          "sentinel",
+          "2020-07-01",
+          "2020-12-31",
+          "99",
+          "Unknown"
+        ],
+        [
+          "substantive",
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Category"
+        ],
+        [
+          "substantive",
+          "2020-01-01",
+          "2020-12-31",
+          "99",
+          "Unknown"
+        ],
+        [
+          "support",
+          "2020-01-01",
+          "2020-12-31",
+          "16310",
+          "Pachygyria"
+        ],
+        [
+          "support",
+          "2020-01-01",
+          "2020-12-31",
+          "16320",
+          "Microgyria"
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "code": [
+          "sentinel_classification_codes",
+          "supported_erroneous_coding_association"
+        ]
+      },
+      "fields": [
+        "register",
+        "code",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "sentinel",
+          "sentinel_classification_codes",
+          "2020-07-01",
+          "2020-12-31"
+        ],
+        [
+          "substantive",
+          "sentinel_classification_codes",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "support",
+          "supported_erroneous_coding_association",
+          "2020-01-01",
+          "2020-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "state_classifications",
+      "fields": [
+        "column",
+        "classification"
+      ],
+      "rows": [
+        [
+          "VALUE",
+          "fixture"
+        ],
+        [
+          "VALUE",
+          "fixture2"
+        ]
+      ]
+    }
+  ]
+}
