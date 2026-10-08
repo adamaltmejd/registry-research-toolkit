@@ -175,7 +175,9 @@ def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) ->
     if "json" in claim:
         assert json.loads(text) == claim["json"], (path, text)
     if claim.get("unchanged"):
-        assert found.read_bytes() == before[path], path
+        # A glob claim names its pattern; the snapshot is keyed by the matched file.
+        relative = found.relative_to(work).as_posix()
+        assert found.read_bytes() == before.get(relative), (path, relative)
     for snippet in claim.get("contains", ()):
         assert snippet in text, (path, snippet, text)
     for snippet in claim.get("excludes", ()):
@@ -232,6 +234,9 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
     )
     for path, claim in expected.get("files", {}).items():
         assert claim and claim.keys() <= _FILE_CLAIMS, (case.name, path, claim)
+        # An absent file has nothing else to check; a second claim beside it would
+        # be skipped silently.
+        assert not claim.get("absent") or claim.keys() == {"absent"}, (case.name, path)
     stderr = expected.get("stderr", {})
     assert stderr.keys() <= {"empty", "contains", "excludes"}, (case.name, stderr)
     if "reloads_with" in expected:
