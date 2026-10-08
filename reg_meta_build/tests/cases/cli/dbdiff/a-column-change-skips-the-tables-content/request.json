@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestSchemaDiffs::test_column_diff_skips_content"
+  ],
+  "fails_if": "content is fingerprinted over the columns both databases share, so `widget`, whose rows agree on every shared column, reads as identical although B added the column `note`",
+  "note": "The skip reason is the report's text for a table whose columns differ, read from dbdiff's module (the replaced test asserted only that one is present).",
+  "argv": [
+    "--json",
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

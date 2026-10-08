@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestFtsAndStorageClass::test_fts_tables_excluded_from_content"
+  ],
+  "fails_if": "the content compare reads FTS virtual or shadow tables (doc_fts, doc_fts_data, ...), whose bytes differ between a rebuilt and an unbuilt index over the same `doc` rows",
+  "note": "`tables` lists every table whose content is compared: `doc` alone.",
+  "argv": [
+    "--json",
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

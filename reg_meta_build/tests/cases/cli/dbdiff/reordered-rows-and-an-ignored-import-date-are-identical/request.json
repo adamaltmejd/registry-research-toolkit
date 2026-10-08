@@ -1,0 +1,30 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestIdentical::test_content_is_order_independent",
+    "test_dbdiff.py::TestIdentical::test_byte_copy_identical_including_import_date",
+    "test_dbdiff.py::TestCli::test_exit_zero_when_identical",
+    "test_dbdiff.py::TestCli::test_no_default_ignore_flag"
+  ],
+  "fails_if": "dbdiff fingerprints rows in the order it reads them (a hash chain instead of an order-free sum), so b.db's reordered `tag` and `import_manifest` inserts read as different; or the default ignore stops skipping import_manifest's import_date row, so c.db's later build timestamp reads as a content change",
+  "note": "Run 1 compares everything (`--no-default-ignore`) across the same rows inserted in another order: the replaced order test reversed a palindromic tag list and an INTEGER PRIMARY KEY table, so its read order never changed. It also carries the byte-copy test: identical content stays identical with the ignore list off. Run 2 is the default ignore's allowed twin of `schema-version-and-an-unignored-import-date-differ`: c.db differs from a.db only in import_date. The verdict names two compared tables, so two empty databases cannot pass.",
+  "runs": [
+    {
+      "argv": [
+        "--no-default-ignore",
+        "{work}/a.db",
+        "{work}/b.db"
+      ]
+    },
+    {
+      "argv": [
+        "{work}/a.db",
+        "{work}/c.db"
+      ]
+    }
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql",
+    "c.db": "c.sql"
+  }
+}

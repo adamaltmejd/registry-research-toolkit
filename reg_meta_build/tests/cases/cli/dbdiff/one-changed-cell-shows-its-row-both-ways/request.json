@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestContentDiffs::test_single_cell_diff",
+    "test_dbdiff.py::TestCli::test_json_output_is_valid",
+    "test_dbdiff.py::TestCli::test_exit_one_when_different"
+  ],
+  "fails_if": "the row dump matches rows by a key column or case-insensitively, so widget row 1 (name 'alpha' in A, 'ALPHA' in B) is not listed once in each direction; or one differing table marks its untouched neighbour `tag` as differing",
+  "note": "Sample cells print as text (`id` 1 as \"1\"). The text half of the exit-1 test is in `schema-objects-in-one-database-only`.",
+  "argv": [
+    "--json",
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

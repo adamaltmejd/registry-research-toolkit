@@ -1,0 +1,17 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestContentDiffs::test_blob_diff",
+    "test_dbdiff.py::TestContentDiffs::test_bytes_cannot_move_across_a_column_boundary"
+  ],
+  "fails_if": "the row hash drops its per-value length prefix, so `pair`'s ('a', 'b' || char(3)) and ('a' || char(3) || 'b', '') hash alike and the table reads as identical; or a BLOB is compared or printed other than by its bytes, so widget row 1's one-byte payload change goes unlisted",
+  "note": "A BLOB cell prints as its length and the hex of its first 16 bytes; the bytes are the fixture's.",
+  "argv": [
+    "--json",
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

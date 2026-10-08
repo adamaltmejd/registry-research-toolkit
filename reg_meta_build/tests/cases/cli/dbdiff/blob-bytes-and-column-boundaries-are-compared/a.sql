@@ -1,0 +1,12 @@
+CREATE TABLE widget (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  payload BLOB,
+  source_id INTEGER
+);
+INSERT INTO widget VALUES
+  (1, 'alpha', X'000102', 100),
+  (2, 'beta', X'FFFE', NULL),
+  (3, 'gamma', NULL, 300);
+CREATE TABLE pair (x TEXT, y TEXT);
+INSERT INTO pair VALUES ('a', 'b' || char(3));

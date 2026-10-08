@@ -1,0 +1,10 @@
+{
+  "exit_code": 1,
+  "stdout_contains": [
+    "[DIFFERENCES FOUND]",
+    "table only in B: extra",
+    "index only in A: idx_widget_name",
+    "view only in B: names_and_ids",
+    "view widget_names: SQL differs"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "identical": false,
+  "tables": [
+    {
+      "table": "blob_null",
+      "identical": false
+    },
+    {
+      "table": "int_blob",
+      "identical": false
+    },
+    {
+      "table": "int_null",
+      "identical": false
+    },
+    {
+      "table": "int_real",
+      "identical": false,
+      "note": "fingerprint differs but value-level diff is empty; likely a storage-class/type difference",
+      "sample_a_not_b": [],
+      "sample_b_not_a": []
+    },
+    {
+      "table": "int_text",
+      "identical": false
+    },
+    {
+      "table": "text_blob",
+      "identical": false
+    },
+    {
+      "table": "text_null",
+      "identical": false
+    }
+  ]
+}

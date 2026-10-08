@@ -1,0 +1,22 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestContentDiffs::test_storage_class_alone_is_a_content_diff[int-text]",
+    "test_dbdiff.py::TestContentDiffs::test_storage_class_alone_is_a_content_diff[int-blob]",
+    "test_dbdiff.py::TestContentDiffs::test_storage_class_alone_is_a_content_diff[int-null]",
+    "test_dbdiff.py::TestContentDiffs::test_storage_class_alone_is_a_content_diff[text-blob]",
+    "test_dbdiff.py::TestContentDiffs::test_storage_class_alone_is_a_content_diff[text-null]",
+    "test_dbdiff.py::TestContentDiffs::test_storage_class_alone_is_a_content_diff[blob-null]",
+    "test_dbdiff.py::TestFtsAndStorageClass::test_storage_class_note"
+  ],
+  "fails_if": "the row hash stops tagging each value with its storage class (say it hashes the value's text), so 1, '1', X'31' and 1.0 collide and their tables read as identical; or the report drops its note on `int_real`, whose integer 1 and real 1.0 SQLite groups as one value, leaving a difference with no differing rows unexplained",
+  "note": "The note text is the report's explanation for a fingerprint difference with an empty row diff, read from dbdiff's module (the replaced test asserted only that a note is present).",
+  "argv": [
+    "--json",
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}
