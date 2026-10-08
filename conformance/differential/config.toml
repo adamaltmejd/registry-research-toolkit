@@ -100,8 +100,14 @@ paths = ["/registers/*/3/*"]
 [[exception]]
 name = "docs-fold-search"
 reason = "Docs folding (decision 16, 3b.6): doc_fts now holds fold_search text, so fold_search's full case folding and NFKD apply where unicode61 did not. The edge terms `ß` (folds to `ss`) and `ﬁlm` (NFKD `film`) find documents the baseline's unicode61 index never matched; both readers, the checkout's Python docs search and Rust docs_search, now find them."
-case = "global/*/docs*-*/3[47]"
-paths = ["/results", "/total", "/total_count"]
+case = "global/-/docs-search/3[47]"
+paths = ["/results", "/total_count"]
+
+[[exception]]
+name = "docs-fold-search-served"
+reason = "As docs-fold-search, for docs_search against the same CLI baseline cases."
+case = "global/reference/docs_search-cli/3[47]"
+paths = ["/results", "/total"]
 
 [[exception]]
 name = "docs-fold-search-hint"
