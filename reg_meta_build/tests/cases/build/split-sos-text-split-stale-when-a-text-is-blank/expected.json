@@ -19,10 +19,7 @@
     },
     {
       "table": "uses",
-      "where": {
-        "source": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
-        "native_variable": "ATC"
-      },
+      "where": {"source": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx", "native_variable": "ATC"},
       "fields": ["variable"],
       "match": "set",
       "rows": [

@@ -16,13 +16,7 @@
         "title": "Syntetiskt register",
         "description": "Ett syntetiskt SOS-register för testbygget.",
         "subsets": [
-          {
-            "name": "SYN_A",
-            "label": "Vy A",
-            "description": "Första vyn",
-            "data_from": 2005,
-            "data_to": 2015
-          },
+          {"name": "SYN_A", "label": "Vy A", "description": "Första vyn", "data_from": 2005, "data_to": 2015},
           {"name": "SYN_B", "label": "Vy B", "description": "Andra vyn", "data_from": 2010}
         ],
         "variables": [

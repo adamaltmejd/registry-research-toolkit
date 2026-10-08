@@ -8,10 +8,7 @@
     },
     {
       "table": "uses",
-      "where": {
-        "source": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
-        "native_variable": "ATC"
-      },
+      "where": {"source": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx", "native_variable": "ATC"},
       "fields": ["name", "key", "use", "variable"],
       "rows": [
         ["First", "variable:ATC", "catalog", null],

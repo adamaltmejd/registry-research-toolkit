@@ -1,6 +1,4 @@
 {
-  "replaces": [
-    "test_curation_support_errata_boundary.py::test_nonphysical_support_requires_a_negative_column"
-  ],
+  "replaces": ["test_curation_support_errata_boundary.py::test_nonphysical_support_requires_a_negative_column"],
   "sources": "scb-support-nonphysical"
 }

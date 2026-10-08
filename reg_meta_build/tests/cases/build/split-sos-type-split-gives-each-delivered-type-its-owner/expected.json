@@ -17,10 +17,7 @@
     },
     {
       "table": "uses",
-      "where": {
-        "source": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
-        "native_variable": "ATC"
-      },
+      "where": {"source": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx", "native_variable": "ATC"},
       "fields": ["data_type", "key", "use", "variable"],
       "rows": [
         ["integer", "variable:ATC", "catalog", "sos/par/atc"],
