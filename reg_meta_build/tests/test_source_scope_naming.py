@@ -76,6 +76,15 @@ def ambiguity(records, *, columns=None):
 
 
 def test_partial_name_keeps_supported_facts_and_only_names_observed_omissions():
+    """Kept as a unit test by maintainer decision (#1267): no build reaches it,
+    because a build never makes an ambiguity's names available. Input: an
+    ambiguous family with only variant 2's row converted to the named partition.
+    Expected: the variable keeps its one supported state; exactly the observed
+    variant 3 states, its Code representation and succession representation are
+    withheld with variant 3's ref; an unobserved variant 4 is missing, not
+    withheld. Fails if the partial-name branch withholds the whole variable, or
+    names omissions for variants it never observed.
+    """
     first, second = record(column="CODE"), record(2, variant=3, column="Code")
     unrelated = record(3, variant=4, column="OTHER")
     records = (first, second, unrelated)
@@ -135,6 +144,14 @@ def test_partial_name_keeps_supported_facts_and_only_names_observed_omissions():
 
 @pytest.mark.parametrize("change", ["column", "new_peer", "wrong_family"])
 def test_ambiguous_naming_bridge_requires_its_whole_original_family(change):
+    """Kept as a unit test by maintainer decision (#1267): no build reaches it,
+    because the compiler builds each ambiguity from the same build's records, so
+    its bridge always matches its family. Input: the family's column renamed, a
+    new peer spelling, or the bridge pointing at another native variable.
+    Refusal: "ambiguous naming bridge is stale or belongs to another family".
+    Fails if resolve_source_scope applies a bridge without comparing it to the
+    family's current records.
+    """
     original = record(column="CODE")
     pending = ambiguity((original,))
     records = (original,)
@@ -170,6 +187,13 @@ def test_ambiguous_naming_bridge_requires_its_whole_original_family(change):
 
 
 def test_ambiguous_naming_cannot_hide_missing_conversion_or_known_identity():
+    """Kept as a unit test by maintainer decision (#1267): no build reaches it,
+    because the compile always gives an ambiguous family an explicit unresolved
+    provider key. Input: an ambiguity with no provider key, or with a known one.
+    Refusal: "missing explicit provider key" and "lacks an unresolved native
+    identity". Fails if an ambiguity can stand in for a missing conversion or
+    override a resolved identity.
+    """
     item = record()
     pending = ambiguity((item,))
     with pytest.raises(ValueError, match="missing explicit provider key"):

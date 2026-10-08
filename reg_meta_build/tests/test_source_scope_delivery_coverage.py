@@ -1,4 +1,12 @@
-"""Complete-scope composition: lost delivery coverage is refused and supported window facts reach the written state."""
+"""Complete-scope composition: lost delivery coverage is refused with its exact window.
+
+The lost-coverage refusal arms stay as unit tests by maintainer decision (#1267).
+No boundary reaches them: the obligations ``resolve_source_scope`` returns are
+minted from the states it forms, so only a product defect that damages a written
+state can lose coverage. Each test forms a variable from a real record, damages
+its states the way such a defect would, and expects the refusal. The allowed
+side is ``cases/build/coverage-supported-claims-are-delivered-or-explicitly-withdrawn``.
+"""
 
 from __future__ import annotations
 
@@ -60,6 +68,12 @@ def _states(variable, shape):
     ],
 )
 def test_lost_delivery_coverage_is_refused_with_its_exact_window(shape, missing):
+    """Input: one whole-2020 state truncated, holed for one day, or with its
+    second half moved to another column or variant. Refusal: "delivery coverage
+    was lost" naming exactly the missing window, the coordinate and the source.
+    Fails if the guard widens periods, accepts another column or variant as
+    delivery, or reports the hull instead of the exact gap.
+    """
     item = record()
     result = resolve((item,))
     variable = result.variables[native_variable_key(item)]
@@ -91,6 +105,10 @@ def test_lost_delivery_coverage_is_refused_with_its_exact_window(shape, missing)
 
 
 def test_a_search_only_alias_establishes_no_delivery_for_the_lost_window():
+    """Input: a windowless search alias on the lost column and a state truncated to
+    2020-06-30. Refusal: the lost 2020-07-01..2020-12-31 window. Fails if a search
+    alias without windows counts as delivery.
+    """
     item = record()
     variable_key, variant_key = native_variable_key(item), native_variant_key(item)
     assert variable_key is not None and variant_key is not None
@@ -124,73 +142,6 @@ def test_a_search_only_alias_establishes_no_delivery_for_the_lost_window():
         check_delivery_coverage(
             (damaged,), result.coverage, withheld=result.withheld_dependencies
         )
-
-
-def test_supported_window_facts_reach_the_written_state():
-    item = record()
-    result = resolve((item,))
-    variable = result.variables[native_variable_key(item)]
-    assert variable is not None
-    (obligation,) = result.coverage
-    assert (obligation.data_type_claim, obligation.data_length_claim) == (
-        ("value", "integer"),
-        ("value", "1"),
-    )
-    assert obligation.attributions == ()
-    state = variable.states[0]
-    assert (state.data_type, state.data_length) == ("integer", "1")
-    check_delivery_coverage(
-        (variable,), result.coverage, withheld=result.withheld_dependencies
-    )
-    for field, written in (("data_type", "text"), ("data_length", "0")):
-        damaged = variable.model_copy(
-            update={"states": (state.model_copy(update={field: written}),)}
-        )
-        with pytest.raises(
-            ValueError,
-            match="supported delivery facts changed without an explicit source outcome",
-        ) as failure:
-            check_delivery_coverage(
-                (damaged,), result.coverage, withheld=result.withheld_dependencies
-            )
-        assert f"claimed {field}=" in str(failure.value)
-        assert "scb/example/value-5 people-2/VALUE 2020-01-01..2020-12-31" in str(
-            failure.value
-        )
-
-
-def test_copied_window_length_is_refused_as_a_changed_fact():
-    first = record(year="2019")
-    second = record(2, year="2021")
-    second = second.model_copy(
-        update={
-            "fields": second.fields.model_copy(update={"data_length": value_field("2")})
-        }
-    )
-    result = resolve((first, second))
-    variable = result.variables[native_variable_key(first)]
-    assert variable is not None
-    assert [(o.valid_from, o.data_length_claim) for o in result.coverage] == [
-        ("2019-01-01", ("value", "1")),
-        ("2021-01-01", ("value", "2")),
-    ]
-    check_delivery_coverage(
-        (variable,), result.coverage, withheld=result.withheld_dependencies
-    )
-    copied = tuple(
-        s.model_copy(update={"data_length": "1"}) if s.valid_from >= "2021" else s
-        for s in variable.states
-    )
-    damaged = variable.model_copy(update={"states": copied})
-    with pytest.raises(
-        ValueError, match="claimed data_length='2' written '1'"
-    ) as failure:
-        check_delivery_coverage(
-            (damaged,), result.coverage, withheld=result.withheld_dependencies
-        )
-    assert "supported delivery facts changed without an explicit source outcome" in str(
-        failure.value
-    )
 
 
 @pytest.mark.parametrize("change", ["type", "coding"])
