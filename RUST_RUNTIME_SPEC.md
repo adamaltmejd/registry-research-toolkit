@@ -113,7 +113,7 @@ About 70% of the hotspots are A or B. The main ones:
   | Classification/variable chains, terminal successors, editions, families                                                  | A     | `succession_terminal`, `classification_chain`, `classification_family`  |
   | `same_as` BFS                                                                                                            | A     | none: unreachable, not ported (3d.1)                                    |
   | Concept-group tag N+1, group member assembly                                                                             | A     | `concept_group_tag`, pre-ordered member rows                            |
-  | `get coded-variables` (72 s)                                                                                             | A     | `coded_variable_stats` per scope; reader applies only filters and limit |
+  | `get coded-variables` (72 s; 5.5 s unfiltered since #1175)                                                               | A     | `coded_variable_stats` per scope; reader only orders and pages the rows |
   | `variable_search_text` view (correlated `group_concat` for 43k variables)                                                | A     | Materialized FTS content table                                          |
   | Search arm merge, scoring, cursor, fold decisions; period intersection with a request; `get diff`; order materialization | C     | Stays in the reader                                                     |
 
@@ -1415,10 +1415,10 @@ checkpoint-2 decision 3 (`doc_fts` folding).
 
 **3c.1 Schema, coverage and coded-variable tables.** Implements the 3c rows of section 3.
 
-- Changes: `coded_variable_stats` per scope (the 72 s `get coded-variables`), and the
-  per-scope delivery windows `schema`, `diff` and `coverage` read (`delivery_window`),
-  from `expanded_state` and `browse_delivery`; derive family module `schema.py`; next
-  free schema minor.
+- Changes: `coded_variable_stats` per scope (`get coded-variables`, 5.5 s unfiltered),
+  and the per-scope delivery windows `schema`, `diff` and `coverage` read
+  (`delivery_window`), from `expanded_state` and `browse_delivery`; derive family module
+  `schema.py`; next free schema minor.
 - `validate_built_db`: each table equals a recomputation; windows disjoint per scope.
 - Paths: `reg_meta_build/src/reg_meta_build/{derive/,db,validate}.py`,
   `reg_meta/src/reg_meta/db.py` (version), the fixture scripts as in 3b.1, tests and
