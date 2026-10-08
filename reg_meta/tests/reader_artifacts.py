@@ -17,8 +17,10 @@ from typing import TYPE_CHECKING
 
 from reg_meta.catalog import DataWarning
 from reg_meta.db import SCHEMA_VERSION, open_db
+from reg_meta.doc_db import DOC_DB_FILENAME
 from reg_meta.source_evidence import canonical_json, canonical_sha256
 from reg_meta_build.artifact_identity import generation_id
+from reg_meta_build.doc_db import build_doc_db, load_related_documents
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.pipeline import load_search_pins  # tests skip private _curation
 from reg_meta_build.resolved_catalog import (
@@ -228,13 +230,14 @@ def artifact_key(
     *,
     identity_overrides: Mapping[str, str] | None = None,
     search_pins: Path | None = None,
+    docs: Path | None = None,
     build_inputs: str | None = None,
 ) -> str:
     """Cache key of one synthetic artifact: its sources, options and build inputs.
 
     Every build also reads the shared `reader/fixture` identity and steward policy
     fallbacks, so that directory is keyed alongside the named source, and a case's
-    `search_pins` file alongside both.
+    `search_pins` file and `docs` source alongside both.
     """
     return canonical_sha256(
         {
@@ -244,6 +247,8 @@ def artifact_key(
             "kind": kind,
             "identity_overrides": dict(identity_overrides or {}),
             "search_pins": _tree_digest(search_pins) if search_pins else None,
+            # Keyed only when present, so artifacts without docs keep their keys.
+            **({"docs": _tree_digest(docs)} if docs else {}),
         }
     )
 
@@ -280,16 +285,22 @@ def cached_reader_artifact(
     *,
     identity_overrides: Mapping[str, str] | None = None,
     search_pins: Path | None = None,
+    docs: Path | None = None,
 ) -> Path:
     """Return the cached, read-only `reg_meta.db`, building it on first use.
 
-    Entries are immutable: callers that mutate an artifact use
-    `build_reader_artifact`, which copies one. A miss builds into a private
-    staging directory and renames it into place, so concurrent builders of the
-    same key never expose a partial entry; the loser discards its copy.
+    `docs` names a readable docs source (`build_docs`); its `reg_meta_docs.db` is
+    built beside the catalog. Entries are immutable: callers that mutate an
+    artifact use `build_reader_artifact`, which copies one. A miss builds into a
+    private staging directory and renames it into place, so concurrent builders of
+    the same key never expose a partial entry; the loser discards its copy.
     """
     entry = _generation_dir() / artifact_key(
-        fixture, kind, identity_overrides=identity_overrides, search_pins=search_pins
+        fixture,
+        kind,
+        identity_overrides=identity_overrides,
+        search_pins=search_pins,
+        docs=docs,
     )
     path = entry / "reg_meta.db"
     if path.exists():
@@ -299,6 +310,8 @@ def cached_reader_artifact(
         _build_artifact(
             staging, fixture_source(fixture), kind, identity_overrides, search_pins
         )
+        if docs is not None:
+            build_docs(docs, staging).chmod(0o444)
         (staging / "reg_meta.db").chmod(0o444)
         try:
             staging.rename(entry)
@@ -316,15 +329,31 @@ def build_reader_artifact(
     kind: str,
     *,
     identity_overrides: Mapping[str, str] | None = None,
+    docs: Path | None = None,
 ) -> Path:
-    """Copy the cached artifact into `directory` as a private, writable file."""
+    """Copy the cached artifact (and its docs database, with `docs`) into
+    `directory` as private, writable files."""
     cached = cached_reader_artifact(
-        fixture, kind, identity_overrides=identity_overrides
+        fixture, kind, identity_overrides=identity_overrides, docs=docs
     )
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / "reg_meta.db"
     shutil.copyfile(cached, path)
+    if docs is not None:
+        shutil.copyfile(cached.parent / DOC_DB_FILENAME, directory / DOC_DB_FILENAME)
     return path
+
+
+def build_docs(source: Path, directory: Path) -> Path:
+    """Build `directory/reg_meta_docs.db` from a readable docs source: markdown
+    under `markdown/<register>/`, `related_documents.toml` and its binaries under
+    `related/<register>/`."""
+    return build_doc_db(
+        source / "markdown",
+        directory,
+        related_documents=load_related_documents(source / "related_documents.toml"),
+        related_docs_dir=source / "related",
+    )
 
 
 def _build_artifact(

@@ -1,0 +1,16 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/excerpt": "Kort beskrivning av variabeln."}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/excerpt": "Inkomst av anställning omfattar kontant bruttolön, sjuklön och andra skattepliktiga\nersättningar som arbetsgivaren betalar ut under året. Variabeln redovisas i hela kronor\nper individ och år. Uppgifterna hämtas från arbetsgivarnas kontrolluppgifter och avser\nden som var folkbokförd i Sverige den 31 december. Ersättningar från flera arbetsgivare\nsummeras till ett belopp. Negativa belopp förekommer inte. Belopp som understiger\nfyrahundra kronor redovisas som noll i den publicerade statistiken två…"
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/excerpt": null}
+  }
+]
