@@ -728,9 +728,10 @@ def search(
     # The FTS path (register/variable/classification indexes) takes a SAFE FTS5
     # MATCH expression built from the folded query, as the indexes hold
     # `fold_search` text — quoted prefix terms that neutralize FTS operators and
-    # won't error on stray syntax (see `_fts_match_query`). LIKE paths use an escaped substring pattern so user
-    # `%` / `_` input stays literal; the arms over authored text additionally
-    # fold BOTH sides through `py_lower` (see DESIGN.md → FTS5 configuration).
+    # won't error on stray syntax (see `_fts_match_query`). LIKE paths use an
+    # escaped substring pattern so user `%` / `_` input stays literal; the arms
+    # over authored text additionally fold BOTH sides through `py_lower` (see
+    # DESIGN.md → FTS5 configuration).
     # None = the query had no usable token, so the FTS indexes contribute nothing.
     fts_query = _fts_match_query(fold_search(query))
 
@@ -1109,8 +1110,9 @@ def _fill_exact_variables(
 
     Admission is narrower than the scorer, which also treats an FQID or slug leaf
     as exact and, for a variable with no `variable.name`, reads the state and
-    alias-window names `variable_search_text.name` falls back to. Rows exact only by those
-    texts are promoted when the bound already holds them, not admitted.
+    alias-window names `variable_search_text.name` falls back to. Rows exact
+    only by those texts are promoted when the bound already holds them, not
+    admitted.
     """
     conn.execute("DROP TABLE IF EXISTS _search_exact_variables")
     conn.execute(
@@ -1921,9 +1923,9 @@ def _code_owner_annotations_batch(
         # Classifications: catalog-scoped, so a register scope leaves them empty.
         # This owner definition (variables ∪ classifications, with NO is_valid/validity
         # filter on classification_code) is MIRRORED at build time by the value_code_fts
-        # owner filter in reg_meta_build/derive.py `_VALUE_CODE_OWNED` (#478). Any change to what
-        # counts as a classification owner here (e.g. adding an is_valid predicate) MUST
-        # be mirrored there, or the search index and the owner annotation desync —
+        # owner filter in reg_meta_build/derive.py `_VALUE_CODE_OWNED` (#478). Any
+        # change to what counts as a classification owner here (e.g. adding an
+        # is_valid predicate) MUST be mirrored there, or the search index and the owner annotation desync —
         # context-less hits leak into search, or valid classification codes vanish.
         if not reg_ids:
             for row in conn.execute(
