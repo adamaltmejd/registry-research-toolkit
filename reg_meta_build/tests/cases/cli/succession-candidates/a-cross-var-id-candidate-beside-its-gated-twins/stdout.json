@@ -5,11 +5,5 @@
       "scb/foretag": 1
     }
   },
-  "per_kind_counts": {
-    "$exact": {
-      "cross_var_id": 1,
-      "split_rename": 0
-    }
-  },
   "output_toml": "{work}/succession.toml"
 }

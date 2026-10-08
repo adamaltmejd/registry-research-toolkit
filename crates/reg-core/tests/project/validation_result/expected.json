@@ -1,0 +1,26 @@
+{
+  "issues": [
+    {
+      "code": "unexpected_field",
+      "level": "error",
+      "message": "unexpected key 'år' on project root",
+      "path": "/år",
+      "successor_fqid": null
+    },
+    {
+      "code": "invalid_period",
+      "level": "error",
+      "message": "period string '2020\\n' must match a period grammar form (YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, LA<YYYY>, YYYY-Q[1-4], YYYY-H[12])",
+      "path": "/sources/0/period",
+      "successor_fqid": null
+    },
+    {
+      "code": "invalid_fqid",
+      "level": "error",
+      "message": "binding 'variable' must be a 3-segment binding FQID <provider>/<register>/<slug>; got 'scb/lisa/kön'",
+      "path": "/sources/0/bindings/0/variable",
+      "successor_fqid": null
+    }
+  ],
+  "ok": false
+}

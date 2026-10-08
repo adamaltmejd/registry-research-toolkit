@@ -1,0 +1,12 @@
+{
+  "replaces": "test_concept_group_candidates_worklist.py::test_cli_curation_dir_names_the_accepted_families",
+  "fails_if": "concept-group-candidates accepts a `--curation-dir` that exists but holds no `registers/` directory (the check tests only `is_dir()` on the root), so `load_register_files` reads it as a tree with no accepted families",
+  "note": "`{work}` exists and holds the artifact's curation tree under `curation/`, so it is the mistyped parent of a curation root. The old test refused only a path that does not exist; this one also exists. `curation-dir-reads-a-curation-root` is its allowed twin.",
+  "argv": [
+    "--db",
+    "{db}",
+    "concept-group-candidates",
+    "--curation-dir",
+    "{work}"
+  ]
+}

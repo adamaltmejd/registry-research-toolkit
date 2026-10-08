@@ -321,8 +321,10 @@ def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
         )
         == EXIT_CONFIG
     )
+    # Fails if the command re-codes the located curated-source refusal (also a
+    # ValueError) as its generic catalog_input_bundle_invalid.
     error = json.loads(capsys.readouterr().out)["error"]
-    assert error["code"] == "catalog_input_bundle_invalid"
+    assert error["code"] == "curated_source_invalid"
     assert "invalid global curated TOML" in error["message"]
     assert not (snapshot.path.parent / "bundle").exists()
 

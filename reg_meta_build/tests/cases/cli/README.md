@@ -24,14 +24,16 @@ cases/cli/
     request.json                  the argument list and the replaced test
     *.sql                         optional: the case's own databases (`databases`)
     files/**                      laid into the working directory before the run
+    artifact_curation/**          optional: laid over the artifact's curation (below)
     expected.json                 the exit code, stderr and file claims
     stdout.json                   optional: a projection of the printed JSON
 ```
 
-`<command>` is the subcommand the case runs (`seed-slugs`, `precheck-slugs`), run
-through `reg_meta_build.cli.run`; the runner checks that the argument list names it. A
-command directory named in the runner's `_PROGRAMS` table is a program of its own and
-runs through that entry point instead, with the argument list after its program name:
+`<command>` is the subcommand the case runs (`seed-slugs`, `precheck-slugs`,
+`concept-group-candidates`), run through `reg_meta_build.cli.run`; the runner checks
+that the argument list names it. A command directory named in the runner's `_PROGRAMS`
+table is a program of its own and runs through that entry point instead, with the
+argument list after its program name:
 
   | `<command>` | Entry point                  | Program                           |
   | ----------- | ---------------------------- | --------------------------------- |
@@ -39,14 +41,14 @@ runs through that entry point instead, with the argument list after its program 
 
 ## The artifact
 
-Every case reads one catalog, built once from `_artifact/`. The source spec has the
-format of `cases/build/README.md` → "Source spec", and the build runs every register in
-diagnostic mode (a publishable build stamps the builder commit and so refuses a working
-tree with uncommitted changes). The runner refuses an artifact whose build reports an
-error. The build sits beside the build cases' prepared inputs, keyed by the content hash
-of `_artifact/` and the runner, and is published by an atomic rename, so xdist workers
-share it. Cases read it in place and never write it; the runner fails a case that
-changes the artifact's directory.
+Every case reads one catalog, built once from `_artifact/` (or a variant of it, below).
+The source spec has the format of `cases/build/README.md` → "Source spec", and the build
+runs every register in diagnostic mode (a publishable build stamps the builder commit
+and so refuses a working tree with uncommitted changes). The runner refuses an artifact
+whose build reports an error. The build sits beside the build cases' prepared inputs,
+keyed by the content hash of `_artifact/` and the runner, and is published by an atomic
+rename, so xdist workers share it. Cases read it in place and never write it; the runner
+fails a case that changes the artifact's directory.
 
 The artifact delivers:
 
@@ -84,6 +86,13 @@ A change to `_artifact/` changes what every case reads. Add a register or variab
 for a claim no existing row can carry, and check the cases that enumerate the catalog
 (pins files, snapshots, file lists).
 
+A claim about one catalog row that the shared artifact cannot carry without changing
+what the other cases read gets its own artifact instead: the case names a directory in
+`artifact_curation`, and the runner builds an artifact from `_artifact/` with that
+directory laid over its curation tree, replacing files of the same path. It is keyed and
+published like the shared one, so cases with the same overlay share it, and the case's
+working directory gets that artifact's curation tree.
+
 ## The working directory
 
 Each case runs in its own empty directory, `{work}`:
@@ -108,16 +117,17 @@ as text.
 
 ## `request.json`
 
-  | Key             | Meaning                                                                                                                                               |
-  | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `replaces`      | Required. The Python test (`file::function[param]`), or a list of them, whose assertions the expected values were read from.                          |
-  | `fails_if`      | Required. The product change that would make this case fail. The runner refuses a request without one.                                                |
-  | `note`          | Optional prose: why this case exists, and where an expected value comes from.                                                                         |
-  | `argv`          | The argument list after the program name.                                                                                                             |
-  | `env`           | Optional environment variables set for the run, such as `{"REG_META_QUIET": "1"}`. The runner unsets `REG_META_QUIET` otherwise.                      |
-  | `runs`          | Instead of `argv` and `env`: a list of `{argv, env}` run in order in one working directory. The runner refuses a top-level `argv` or `env` beside it. |
-  | `curation_dirs` | Optional. Where the artifact's curation tree is copied; defaults to `["curation"]`.                                                                   |
-  | `databases`     | Optional. `{path under {work}: SQL file in the case directory}`: the databases built before the run (above).                                          |
+  | Key                 | Meaning                                                                                                                                               |
+  | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `replaces`          | Required. The Python test (`file::function[param]`), or a list of them, whose assertions the expected values were read from.                          |
+  | `fails_if`          | Required. The product change that would make this case fail. The runner refuses a request without one.                                                |
+  | `note`              | Optional prose: why this case exists, and where an expected value comes from.                                                                         |
+  | `argv`              | The argument list after the program name.                                                                                                             |
+  | `env`               | Optional environment variables set for the run, such as `{"REG_META_QUIET": "1"}`. The runner unsets `REG_META_QUIET` otherwise.                      |
+  | `runs`              | Instead of `argv` and `env`: a list of `{argv, env}` run in order in one working directory. The runner refuses a top-level `argv` or `env` beside it. |
+  | `curation_dirs`     | Optional. Where the artifact's curation tree is copied; defaults to `["curation"]`.                                                                   |
+  | `artifact_curation` | Optional. A directory in the case laid over the artifact's curation tree before the build, for a case that reads its own artifact.                    |
+  | `databases`         | Optional. `{path under {work}: SQL file in the case directory}`: the databases built before the run (above).                                          |
 
 `fails_if` has the meaning it has in the build cases (`cases/build/README.md`): name a
 change to the product, not the behavior restated. It sits in `request.json` there and

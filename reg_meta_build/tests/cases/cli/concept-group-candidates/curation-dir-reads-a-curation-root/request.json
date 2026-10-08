@@ -1,0 +1,12 @@
+{
+  "replaces": "test_concept_group_candidates_worklist.py::test_cli_curation_dir_names_the_accepted_families",
+  "fails_if": "concept-group-candidates refuses a `--curation-dir` that holds `registers/`, for example by checking for a file the curation tree does not need",
+  "note": "The allowed twin of `curation-dir-without-registers-refused`: the same command on `{work}/curation`, the artifact's curation root, runs. The artifact declares no `[[group]]`, so no claim is made on the candidates; `test_cli_curation_dir_names_the_accepted_families` keeps the claim that the named tree's groups are the accepted ones.",
+  "argv": [
+    "--db",
+    "{db}",
+    "concept-group-candidates",
+    "--curation-dir",
+    "{work}/curation"
+  ]
+}

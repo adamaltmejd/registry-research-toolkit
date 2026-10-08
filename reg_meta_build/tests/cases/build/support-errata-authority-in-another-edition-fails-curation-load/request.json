@@ -3,6 +3,6 @@
     "test_curation_support_errata_boundary.py::test_checked_support_authority_must_ask_the_same_physical_question"
   ],
   "note": "The load validator compares register, variant, column and edition in one condition; the edition (same column and variant, another year) stands for the other three.",
-  "fails_if": "`ErrataSupportEntry._same_physical_question` stops comparing `authority.edition` with the entry's edition, so an authority in edition 2021 for a 2020 target loads instead of being refused with `classification_curation_invalid`",
+  "fails_if": "`ErrataSupportEntry._same_physical_question` stops comparing `authority.edition` with the entry's edition, so an authority in edition 2021 for a 2020 target loads instead of being refused with `register_entry_invalid`",
   "sources": "scb-support-question"
 }

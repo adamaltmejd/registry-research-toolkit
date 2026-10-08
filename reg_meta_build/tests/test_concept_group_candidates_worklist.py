@@ -1,13 +1,14 @@
 """Concept-group candidate regeneration under accepted scopes (#496).
 
 The candidate catalog itself (families, the label gate, collisions, ranking and the
-round-trip through the worklist loader) is pinned at the CLI boundary
-(`cases/cli/concept-group-candidates/`). Accepted scopes stay here: the
-`concept-group-candidates` command reads them from the checkout's curation tree, not
-from a directory a case can supply, so a case cannot reach them.
+round-trip through the worklist loader) and the re-emit of an accepted family whose
+key is its stem are pinned at the CLI boundary
+(`cases/cli/concept-group-candidates/`). The accepted-scope edge cases below (trim
+collisions, a degraded peer, a scope that names another group) stay here until a case
+carries them; `--curation-dir` now lets a case supply the accepted tree.
 
-Fully synthetic: in-memory `_slugged_db` helpers, never the shipped
-`concept_groups.toml` or a real built DB."""
+Fully synthetic: `_slugged_db` helpers, never the shipped `concept_groups.toml`,
+the checkout's curation tree or a real built DB."""
 
 from __future__ import annotations
 
@@ -48,57 +49,6 @@ def _add_family(
 
 
 class TestGenerator:
-    def test_accepted_family_reemitted_when_scope_passed(self) -> None:
-        # Idempotent regeneration: simulate an accepted auto family by materializing
-        # it as a `curated` concept group keyed on its own stem ('morsak') and claiming
-        # all three members. Every member is grouped AND the (register, key) names a
-        # group, so a naive rescan would drop the family twice over.
-        #
-        # WITHOUT accepted_scopes the family is excluded (grouped members) — the bug.
-        # WITH the family's (provider, register, key) in accepted_scopes it re-emits
-        # as a candidate (members re-included, own key exempt from the collision
-        # guard), so the literal group can be regenerated without changing membership.
-        conn = _base_db()
-        _add_family(
-            conn,
-            register_id=1,
-            stem="morsak",
-            suffixes=[1, 2, 3],
-            name="ICD-kod underliggande dödsorsak",
-            var_id_base=1600,
-        )
-        cur = conn.execute(
-            "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
-            "VALUES ('variable', 1, 'morsak', 'ICD-kod', 'curated')"
-        )
-        group_id = cur.lastrowid
-        for slug in ("morsak1", "morsak2", "morsak3"):
-            vid = conn.execute(
-                "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
-                (slug,),
-            ).fetchone()[0]
-            conn.execute(
-                "INSERT INTO concept_group_variable (variable_id, group_id) "
-                "VALUES (?, ?)",
-                (vid, group_id),
-            )
-        conn.commit()
-
-        # Default (empty accepted_scopes): the materialized group hides the family.
-        bare = infer_concept_group_candidates(conn)
-        assert bare.candidates == []
-        assert bare.skipped_existing_key == 0  # no ungrouped members → no family seen
-
-        # With its group scope: the family re-emits, and its key is exempted.
-        scope = frozenset({("scb", "lisa", "morsak")})
-        aware = infer_concept_group_candidates(conn, accepted_scopes=scope)
-        assert [c.key for c in aware.candidates] == ["morsak"]
-        assert aware.skipped_existing_key == 0
-        assert aware.excluded_batteries == 0
-        c = aware.candidates[0]
-        assert c.register_fqid == "scb/lisa"
-        assert [m.suffix for m in c.members] == [1, 2, 3]
-
     def test_accepted_family_preserved_under_trim_collision(self) -> None:
         # Idempotent-regen + trim-collision interaction (Codex P2 #646): an
         # Materialized `[[group]]` family `artal-person-1/2/3` (raw stem `artal-person-`,

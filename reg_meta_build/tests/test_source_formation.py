@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import SCB_REVISION
-from _curation_fixtures import write_fdb_partition_curation
 from _prepared_fixtures import accept_prepared
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.curation_compile import convert_column_partitions
@@ -45,8 +44,6 @@ from reg_meta_build.source_records import (
     value_field,
 )
 from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
-
-from reg_meta_build.fqid_slugs import declared_column_ownership, load_provider_toml
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -384,7 +381,7 @@ def _fdb_record(year: int, *, column: str, variant: int) -> SourceRecord:
     return _record(year, column=column, native_id=830, variant=variant)
 
 
-def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> None:
+def test_fdb_two_spelling_ownership_forms_both_partitions() -> None:
     """Y-167: the tracked 1.830 ownership lets both partitions form.
 
     Without a declaration stable source-native quantity metadata preserves both
@@ -425,15 +422,6 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
     ]
     assert warning.severity == "warning"
     assert not any(d.severity == "error" for d in folded.diagnostics)
-    # The register-scoped declaration feeds the production entry point.
-    declaration = tmp_path / "scb.toml"
-    declaration.write_text(
-        '[register."1"]\nslug = "fdb"\n'
-        '[variable."1.830.gaturest"]\nslug = "gaturest"\n'
-        '[variable."1.830.pgaturest"]\nslug = "pgaturest"\n',
-        encoding="utf-8",
-    )
-    curation_dir = write_fdb_partition_curation(tmp_path / "curation")
     records = (
         *pair,
         _fdb_record(2010, column="GatuRest", variant=427),
@@ -441,18 +429,17 @@ def test_fdb_two_spelling_ownership_forms_both_partitions(tmp_path: Path) -> Non
         _fdb_record(2020, column="PGaturest", variant=424),
         _fdb_record(2025, column="PGaturest", variant=427),
     )
-    ownership = declared_column_ownership(
-        load_provider_toml(declaration),
-        provider="scb",
-        source_id="1.830",
-        curation_dir=curation_dir,
-    )
+    # Y-167's ownership map, as `write_fdb_partition_curation` declares it.
     converted = convert_column_partitions(
         records,
         source_id="1.830",
         split_ids=("1.830.gaturest", "1.830.pgaturest"),
-        declared_columns=dict(ownership.declared_columns),
-        declaration_reference=ownership.declaration_reference,
+        declared_columns={
+            "GatuRest": "1.830.gaturest",
+            "Gaturest": "1.830.gaturest",
+            "PGaturest": "1.830.pgaturest",
+        },
+        declaration_reference="Y-167 fixture reference",
     )
     assert converted.case is not None and converted.diagnostics == ()
     assert converted.case.decision.provenance.endswith(

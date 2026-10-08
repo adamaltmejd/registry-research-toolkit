@@ -11,6 +11,7 @@ checks, so a curated column matches the same spelling variants as its source.
 
 from __future__ import annotations
 
+import contextlib
 import functools
 import tomllib
 import unicodedata
@@ -33,7 +34,7 @@ from reg_meta_build._resolved_common import _require_trimmed
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Iterator
 
 
 class SentinelCode(BaseModel):
@@ -121,6 +122,18 @@ def repo_worklist_path(file_name: str) -> Path | None:
     return candidate if candidate.is_file() else None
 
 
+def display_path(path: Path) -> str:
+    """``path`` relative to the repository root, for an error message.
+
+    A checkout path prints as ``reg_meta_build/curation/…``, so a refusal reads
+    the same on every machine; a path outside the checkout prints as given.
+    """
+    if repo_curation_dir() is not None:
+        with contextlib.suppress(ValueError):
+            return path.resolve().relative_to(_REPO_CURATION.parent.parent).as_posix()
+    return str(path)
+
+
 @functools.cache
 def fold_column(s: str) -> str:
     """Shared column key: NFKD-decompose, strip non-ASCII, lowercase.
@@ -190,12 +203,10 @@ def widen_data_type_classes(classes: Iterable[str]) -> str | None:
 # `text`); SOS-style Swedish labels (`Heltal`, `Sträng (text)`, `Datum`) reach
 # the same column. Substring match is safe — the field only ever holds a type
 # name — and the two marker sets are disjoint across known types, so order
-# doesn't matter. Hoisted here (with `_data_type_class` below) so source sibling checks
-# (`source_siblings.py`) and the read-only split-sibling diagnostic
-# (`split_sibling_suspects.py`) share ONE numeric/text/other classifier — the
-# import-bug shape signal must not diverge between the build-time split and the
-# diagnostic that re-derives it. `fold_column` (above) is the only dependency, so
-# this leaf lives with it rather than in a provider-specific adapter.
+# doesn't matter. Source sibling checks (`source_siblings.py`, through
+# `sibling_shape_conflict` below) classify a sibling's shape with
+# `_data_type_class`. `fold_column` (above) is the only dependency, so this leaf
+# lives with it rather than in a provider-specific adapter.
 _NUMERIC_TYPE_MARKERS = ("int", "tal", "num", "dec", "float", "real", "double")
 _TEXT_TYPE_MARKERS = ("text", "char", "strang", "string", "varchar")
 
@@ -212,13 +223,10 @@ def _data_type_class(dt: str | None) -> str:
     return "other"
 
 
-# Code/label column-pair detection. Hoisted here (alongside `_data_type_class`)
-# so source sibling checks (`source_siblings.py`) and the read-only diagnostic
-# (`split_sibling_suspects.py`) apply ONE code-vs-label name heuristic — the build
-# checks it BEFORE the import-bug shape heuristic (a `<stem>` code + its
-# `<stem>namn` label is a representation pair, NOT a mis-typed delivery), so the
-# diagnostic must apply the same precedence or it mislabels code/label pairs as
-# `type_flip`. A label column carries the Swedish `namn` (name) suffix; its
+# Code/label column-pair detection for source sibling checks
+# (`source_siblings.py`). The build checks it BEFORE the shape-conflict heuristic:
+# a `<stem>` code + its `<stem>namn` label is a representation pair, NOT a
+# mis-typed delivery. A label column carries the Swedish `namn` (name) suffix; its
 # partner code column is either the bare stem (`Kommun`/`Kommunnamn`) or carries a
 # `kod`/`id` code suffix (`Lid`/`LNamn`, `Sun2000Kod`/`Sun2000Namn`). `fold_column`
 # (above) is the only dependency, so these leaves live with it.
@@ -317,6 +325,22 @@ def printable_error[E: RegMetaError](error: E) -> E:
     return error
 
 
+@contextlib.contextmanager
+def located(where: str) -> Iterator[None]:
+    """Prefix a ``RegMetaError`` raised in the block with ``where`` it points.
+
+    Leaf validators check one value and do not know its file or entry; the
+    loader loop does. Wrapping each entry there names the file and entry in
+    every refusal without threading an index through each leaf helper.
+    """
+    try:
+        yield
+    except RegMetaError as exc:
+        exc.message = f"{where}: {exc.message}"
+        printable_error(exc)
+        raise
+
+
 def load_curation_entries(
     path: Path | None,
     *,
@@ -348,14 +372,15 @@ def load_curation_entries(
     except (OSError, tomllib.TOMLDecodeError) as exc:
         raise curation_error(
             f"{code_base}_toml_unreadable",
-            f"Could not parse {label} curation TOML {path}: {exc}",
+            f"Could not parse {label} curation TOML {display_path(path)}: {exc}",
             f"Fix the TOML syntax in reg_meta_build/{file_name}.",
         ) from exc
     unknown_top = set(data) - {entry_key} - sibling_keys
     if unknown_top:
         raise curation_error(
             f"{code_base}_invalid",
-            f"{prefix} TOML has unknown top-level key(s): {sorted(unknown_top)}.",
+            f"{file_name}: {prefix} TOML has unknown top-level key(s): "
+            f"{sorted(unknown_top)}.",
             f"The only legal table is `[[{entry_key}]]` — check for a typo like "
             f"`[[{entry_key}s]]` in reg_meta_build/{file_name}.",
         )
@@ -363,16 +388,17 @@ def load_curation_entries(
     if not isinstance(entries, list):
         raise curation_error(
             f"{code_base}_invalid",
-            f"{prefix} `{entry_key}` must be an array of tables "
+            f"{file_name}: {prefix} `{entry_key}` must be an array of tables "
             f"(`[[{entry_key}]]`), got {type(entries).__name__}.",
             f"Use `[[{entry_key}]]` table entries in reg_meta_build/{file_name}, "
             f"not `{entry_key} = …` or a single `[{entry_key}]` table.",
         )
-    for entry in entries:
+    for index, entry in enumerate(entries, start=1):
         if not isinstance(entry, dict):
             raise curation_error(
                 f"{code_base}_invalid",
-                f"{prefix} entry {entry!r} must be a `[[{entry_key}]]` table.",
+                f"{file_name} [[{entry_key}]] entry {index}: {prefix} entry "
+                f"{entry!r} must be a `[[{entry_key}]]` table.",
                 f"Each entry is a `[[{entry_key}]]` table with {entry_fields}.",
             )
     return entries

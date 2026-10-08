@@ -6,7 +6,7 @@
   ],
   "fails_if": "the register loader accepts an [[acknowledge]] with only one period bound",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/test.toml [[acknowledge]] entry 1",
     "message_contains": [
       "both be set or both omitted"

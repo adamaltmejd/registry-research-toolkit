@@ -6,7 +6,7 @@
   "fails_if": "the register loader checks only the first [[identity.split]] part's owner against the register's native_id",
   "note": "The first part's owner belongs to this register; only the second part's does not.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_misplaced",
     "locator": "curation/registers/scb/test.toml [[identity.split]] entry 1",
     "message_contains": [
       "split owner '2.NAME.integer' does not belong"

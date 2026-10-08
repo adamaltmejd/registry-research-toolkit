@@ -12,7 +12,7 @@
   "fails_if": "the register loader accepts an [[errata.column]] entry without one of its required keys, here the `noted` date",
   "note": "The register file's strict [[errata.column]] model requires every one of these keys; `noted` stands for all seven.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/lisa.toml [[errata.column.noted]] entry 1",
     "message_contains": [
       "Field required"

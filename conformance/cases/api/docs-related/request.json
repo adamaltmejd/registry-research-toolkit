@@ -1,0 +1,21 @@
+{
+  "fixture": "reader",
+  "docs": "docs",
+  "requests": [
+    {"operation": "docs_related", "path": "/api/docs/related/scb/example"},
+    {"operation": "docs_related", "path": "/api/docs/related/example"},
+    {"operation": "docs_related", "path": "/api/docs/related/sos/unheld"},
+    {
+      "operation": "docs_related",
+      "path": "/api/docs/related/sos/unheld",
+      "query": {"scope": "reference"}
+    },
+    {"operation": "docs_related", "path": "/api/docs/related/scb/Example"},
+    {"operation": "docs_related", "path": "/api/docs/related/scb/example/value"},
+    {
+      "operation": "docs_related",
+      "path": "/api/docs/related/scb/example",
+      "query": {"scope": "everything"}
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "exit_code": 0,
+  "files": {
+    "curation/registers/scb/sample.toml": {
+      "unchanged": true
+    },
+    "curation/registers/scb/sample.auto.toml": {
+      "toml": {
+        "variable": [
+          {
+            "native_id": "1.LopNr",
+            "slug": "lopnr"
+          }
+        ]
+      },
+      "excludes": [
+        "panel_entity_key",
+        "panel_time_key",
+        "panel_time_grain"
+      ]
+    }
+  }
+}

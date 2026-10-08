@@ -4,7 +4,7 @@
   "fails_if": "the register loader keeps two [[errata.data_type]] corrections for one Deldatamängd, variable and column",
   "note": "The entries differ in evidence, so only the one-correction-per-target rule can refuse the second.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_duplicate_entry",
     "locator": "curation/registers/sos/sample.toml [[errata.data_type]] entry 2",
     "message_contains": [
       "duplicate data type target"

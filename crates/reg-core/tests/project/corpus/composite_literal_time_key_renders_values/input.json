@@ -1,0 +1,58 @@
+{
+  "schema_version": "3.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "rust_difference",
+  "sources": [
+    {
+      "name": "a",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/kon",
+          "type": "categorical"
+        }
+      ]
+    },
+    {
+      "name": "b",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/kon",
+          "type": "categorical"
+        }
+      ]
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "p",
+      "members": [
+        {
+          "source": "a",
+          "time_key": [
+            2018,
+            {
+              "period": "2019-H1"
+            }
+          ]
+        },
+        {
+          "source": "b",
+          "time_key": [
+            {
+              "range": {
+                "from": 2018,
+                "to": "LA2019"
+              }
+            },
+            2019
+          ]
+        }
+      ]
+    }
+  ]
+}

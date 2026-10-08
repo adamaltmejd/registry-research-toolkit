@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree.py::test_edition_period_entry_is_strict[valid_from = \"2018-02-30\"-valid_from must be an ISO date]",
   "fails_if": "the register loader accepts an [[errata.edition_period]] bound that is not a real ISO date",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/sample.toml [[errata.edition_period]] entry 1",
     "message_contains": [
       "valid_from must be an ISO date"

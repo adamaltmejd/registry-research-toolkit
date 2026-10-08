@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_duplicate_partition_fails",
+  "fails_if": "the register loader keeps two [[identity.partition]] maps for one native family, so the build silently picks one",
+  "note": "The two maps differ in their columns and reference, so only the family repeats.",
+  "error": {
+    "code": "register_duplicate_entry",
+    "locator": "curation/registers/scb/lisa.toml [[identity.partition]] entry 2",
+    "message_contains": [
+      "duplicate partition map for family '34.4'"
+    ]
+  }
+}

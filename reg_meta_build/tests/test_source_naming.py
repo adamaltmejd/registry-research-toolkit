@@ -47,7 +47,7 @@ from reg_meta_build.source_records import (
 )
 from reg_meta_build.sources.scb_records import clean_scb_row
 
-from reg_meta_build.fqid_slugs import SlugEntry, declared_column_ownership
+from reg_meta_build.fqid_slugs import SlugEntry
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -296,16 +296,10 @@ def test_missing_split_bridge_remains_engineering_conversion_gap() -> None:
     assert converted.declarations[0].naming.source_id == "1.101.sibling"
 
 
-_Y167_REF = "Y-167 fixture reference"
-_Y167_COLUMNS = {
-    "GatuRest": "1.830.gaturest",
-    "Gaturest": "1.830.gaturest",
-    "PGaturest": "1.830.pgaturest",
-}
 _Y167_SPLITS = ("1.830.gaturest", "1.830.pgaturest")
 
 
-def _declaration_selection(tmp_path: Path) -> tuple[NamingSelection, Path]:
+def _declaration_selection(tmp_path: Path) -> NamingSelection:
     """Read tracked split names beside their register ownership declaration."""
     curation_dir = write_fdb_partition_curation(tmp_path / "curation")
     (curation_dir / "classifications").mkdir()
@@ -324,14 +318,14 @@ def _declaration_selection(tmp_path: Path) -> tuple[NamingSelection, Path]:
         '[[variable]]\nnative_id = "1.830.pgaturest"\nslug = "pgaturest"\n',
         encoding="utf-8",
     )
-    return read_naming_selection(load_curation_tree(curation_dir)), curation_dir
+    return read_naming_selection(load_curation_tree(curation_dir))
 
 
 def test_tracked_column_ownership_survives_naming_conversion(
     tmp_path: Path,
 ) -> None:
     # Ownership lives on the register file; the slug selection remains naming-only.
-    selection, curation_dir = _declaration_selection(tmp_path)
+    selection = _declaration_selection(tmp_path)
     authored = next(
         entry
         for entry in selection.entries
@@ -341,14 +335,6 @@ def test_tracked_column_ownership_survives_naming_conversion(
     assert authored.content_sha256 == canonical_sha256({})
     assert not hasattr(authored.entry, "columns")
     assert not hasattr(authored.entry, "columns_ref")
-    ownership = declared_column_ownership(
-        [entry.entry for entry in selection.entries],
-        provider="scb",
-        source_id="1.830",
-        curation_dir=curation_dir,
-    )
-    assert ownership.declaration_reference == _Y167_REF
-    assert dict(ownership.declared_columns) == _Y167_COLUMNS
     register_entry = next(
         entry for entry in selection.entries if entry.entry.kind == "register"
     )
@@ -391,42 +377,6 @@ def test_tracked_column_ownership_survives_naming_conversion(
         "generated",
     }
     assert not hasattr(by_id["1.830.pgaturest"].naming, "columns")
-
-
-def test_naming_selection_entries_feed_declared_partition_conversion(
-    tmp_path: Path,
-) -> None:
-    # The same selection entries are the complete entry set the declared
-    # partition converter consumes: the operator's scope transcription needs
-    # no hand-plumbed map.
-    selection, curation_dir = _declaration_selection(tmp_path)
-    header = REGISTERINFORMATION_HEADER.split("|")
-
-    def record(column: str, cvid: int) -> SourceRecord:
-        row = var_row(colname=column, cvid=cvid, var_id=830).split("|")
-        cells: dict[str, tuple[bool, str | None, str]] = {
-            name: (True, value, value) for name, value in zip(header, row, strict=True)
-        }
-        return clean_scb_row(header, cvid, cells, _revision()).record
-
-    records = (record("GatuRest", 20), record("Gaturest", 21), record("PGaturest", 22))
-    ownership = declared_column_ownership(
-        [entry.entry for entry in selection.entries],
-        provider="scb",
-        source_id="1.830",
-        curation_dir=curation_dir,
-    )
-    converted = convert_column_partitions(
-        records,
-        source_id="1.830",
-        split_ids=_Y167_SPLITS,
-        declared_columns=dict(ownership.declared_columns),
-        declaration_reference=ownership.declaration_reference,
-    )
-    assert converted.case is not None and converted.diagnostics == ()
-    assert [binding.source_id for binding in converted.bindings] == list(_Y167_SPLITS)
-    assert converted.case.decision.kind == "correct_occurrences"
-    assert converted.case.decision.provenance.endswith(f"column ownership: {_Y167_REF}")
 
 
 def _native_with_annual_override(records, overrides):

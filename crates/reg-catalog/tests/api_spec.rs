@@ -69,8 +69,11 @@ fn param_schema(ty: &str) -> Value {
 }
 
 /// Every served operation is a row of `operations.toml` with the same route and
-/// parameters, and `meta.contract_version` is the table's. Fails when a route,
-/// parameter or optionality drifts on either side. (Completeness per slice joins
+/// parameters, every served download a `[[download]]` row with the same route and
+/// media type, taking its operation's parameters plus its route's other
+/// placeholders, and `meta.contract_version` is the table's. A parameter the route
+/// names is a path parameter. Fails when a route, parameter, its location or
+/// optionality, or a media type drifts on either side. (Completeness per slice joins
 /// when slice 3a's last operation ships.)
 #[test]
 fn openapi_matches_operations_toml() {
@@ -85,35 +88,63 @@ fn openapi_matches_operations_toml() {
             (op["name"].as_str().unwrap(), op)
         })
         .collect();
+    let downloads: BTreeMap<&str, &toml::Table> = table["download"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|row| {
+            let row = row.as_table().unwrap();
+            (row["route"].as_str().unwrap(), row)
+        })
+        .collect();
     let openapi = serde_json::to_value(ops::openapi("0")).unwrap();
     let mut served = BTreeSet::new();
     for (path, item) in openapi["paths"].as_object().unwrap() {
         for (method, operation) in item.as_object().unwrap() {
-            let name = operation["operationId"].as_str().unwrap();
-            let row = rows
-                .get(name)
-                .unwrap_or_else(|| panic!("{name} is not in the table"));
             let route = format!("{} {path}", method.to_uppercase());
-            assert!(
-                row["http"]
-                    .as_array()
-                    .unwrap()
-                    .iter()
-                    .any(|r| r.as_str() == Some(&route)),
-                "{route}"
-            );
-            let expected: BTreeMap<String, Value> = row["params"]
-                .as_table()
-                .unwrap()
-                .iter()
-                .map(|(param, ty)| {
-                    let ty = ty.as_str().unwrap();
-                    let optional = ty.ends_with('?');
-                    let schema = param_schema(ty.trim_end_matches('?'));
-                    (
-                        param.clone(),
-                        json!({"required": !optional, "schema": schema}),
-                    )
+            let (name, mut params) = if let Some(name) = operation["operationId"].as_str() {
+                let row = rows
+                    .get(name)
+                    .unwrap_or_else(|| panic!("{name} is not in the table"));
+                assert!(
+                    row["http"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .any(|r| r.as_str() == Some(&route)),
+                    "{route}"
+                );
+                (name, expected_params(row))
+            } else {
+                let download = downloads
+                    .get(route.as_str())
+                    .unwrap_or_else(|| panic!("{route} is not a download"));
+                let media_type = download["media_type"].as_str().unwrap();
+                assert!(
+                    operation["responses"]["200"]["content"]
+                        .get(media_type)
+                        .is_some(),
+                    "{route}"
+                );
+                let name = download["operation"].as_str().unwrap();
+                (name, expected_params(rows[name]))
+            };
+            for placeholder in path.split('/').filter_map(|s| s.strip_prefix('{')) {
+                let placeholder = placeholder.trim_end_matches('}');
+                params
+                    .entry(placeholder.to_owned())
+                    .or_insert_with(|| json!({"required": true, "schema": param_schema("string")}));
+            }
+            let expected: BTreeMap<String, Value> = params
+                .into_iter()
+                .map(|(param, mut value)| {
+                    let located = if path.contains(&format!("{{{param}}}")) {
+                        "path"
+                    } else {
+                        "query"
+                    };
+                    value["in"] = located.into();
+                    (param, value)
                 })
                 .collect();
             let actual: BTreeMap<String, Value> = operation["parameters"]
@@ -121,17 +152,33 @@ fn openapi_matches_operations_toml() {
                 .unwrap()
                 .iter()
                 .map(|p| {
-                    assert_eq!(p["in"], "query");
-                    let schema = p["schema"].clone();
                     (
                         p["name"].as_str().unwrap().to_owned(),
-                        json!({"required": p["required"], "schema": schema}),
+                        json!({"in": p["in"], "required": p["required"], "schema": p["schema"]}),
                     )
                 })
                 .collect();
-            assert_eq!(actual, expected, "{name}");
+            assert_eq!(actual, expected, "{route}");
             served.insert(name.to_owned());
         }
     }
     assert!(served.contains("context") && served.contains("search"));
+}
+
+/// An operation row's `params` as `{required, schema}` by name.
+fn expected_params(row: &toml::Table) -> BTreeMap<String, Value> {
+    row["params"]
+        .as_table()
+        .unwrap()
+        .iter()
+        .map(|(param, ty)| {
+            let ty = ty.as_str().unwrap();
+            let optional = ty.ends_with('?');
+            let schema = param_schema(ty.trim_end_matches('?'));
+            (
+                param.clone(),
+                json!({"required": !optional, "schema": schema}),
+            )
+        })
+        .collect()
 }

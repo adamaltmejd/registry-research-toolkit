@@ -21,6 +21,93 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/docs/doc/{identifier}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description One documentation entry by variable name or filename (with or without `.md`): its register, tags and source, a 500-character `excerpt` and the full markdown `body`. */
+        get: operations["docs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/docs/file/{ref}/{filename}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description A related document's bytes, served inline. */
+        get: {
+            parameters: {
+                query?: {
+                    scope?: components["schemas"]["Scope"];
+                };
+                header?: never;
+                path: {
+                    ref: string;
+                    filename: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The raw bytes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/pdf": unknown;
+                    };
+                };
+                /** @description An error in `api/errors.toml` */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: components["schemas"]["Error"];
+                            meta: components["schemas"]["Meta"];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/docs/related/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID or a bare name. */
+        get: operations["docs_related"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/search": {
         parameters: {
             query?: never;
@@ -61,6 +148,21 @@ export interface components {
             sizes: components["schemas"]["Sizes"];
             steward: components["schemas"]["Steward"];
         };
+        /** @description A documentation entry: its metadata, a preview and the full markdown. */
+        DocDetail: {
+            /** @description The full markdown, for agents. */
+            body: string;
+            display_name: string;
+            /** @description The plain text's first 500 characters, for the SPA. */
+            excerpt?: string | null;
+            filename: string;
+            register: string;
+            source?: string | null;
+            source_title?: string | null;
+            source_url?: string | null;
+            tags: string[];
+            variable?: string | null;
+        };
         Edition: {
             /** Format: int64 */
             effective_year?: number | null;
@@ -93,6 +195,17 @@ export interface components {
             from: number;
             /** Format: int64 */
             to: number;
+        };
+        /** @description A related document's metadata; the download route serves its bytes. */
+        RelatedDocument: {
+            /** Format: int64 */
+            byte_size: number;
+            fetched: string;
+            filename: string;
+            license: string;
+            sha256: string;
+            source_url: string;
+            title: string;
         };
         /**
          * @description The read scope (section 7); every read takes it.
@@ -200,6 +313,84 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Context"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    docs_get: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path: {
+                identifier: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocDetail"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    docs_related: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["RelatedDocument"][];
                         meta: components["schemas"]["Meta"];
                     };
                 };

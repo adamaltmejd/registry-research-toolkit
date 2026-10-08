@@ -122,7 +122,10 @@ live under `generations/<build-inputs digest>/`, are read-only, and
 `build_reader_artifact` hands a mutating case its own copy. A miss builds into a staging
 directory and renames it into place. Creating a generation prunes generations idle for 6
 hours, and only those, so a returned path stays valid for 6 hours after its last lookup.
-Deleting the directory between runs is safe.
+Deleting the directory between runs is safe. The `reg_meta_build` build cases keep their
+accepted prepared inputs in generations of the same cache, under the same rule
+(`reg_meta_build/tests/cases/build/README.md`). CI sets no `REG_FIXTURE_CACHE`, so a
+fresh runner starts both caches cold in its temp directory.
 `uv run python conformance/fixture_cache.py reader catalog` builds one entry and prints
 its path for consumers outside pytest.
 
@@ -166,6 +169,15 @@ additions:
   name, prints the error document as the last line of stderr and exits with the code's
   `exit` status in `api/errors.toml`, without listening.
 - A step with `etag_from: N` sends step N's `ETag` as `If-None-Match`.
+- `docs` names a readable docs source under `cases/fixtures` (markdown under
+  `markdown/<register>/`, `related_documents.toml`, binaries under
+  `related/<register>/`); its `reg_meta_docs.db` is built beside the catalog. A case
+  without it has no docs database. A startup case's `doc_meta` overrides are written to
+  the docs database's `doc_meta`.
+- A download step names the operation whose metadata it downloads (`[[download]]`).
+  `test_mcp.py` replays each operation's listed cases as tool calls, the path's
+  parameters (by the operation's route) as arguments; download steps and a parameter
+  sent in both the path and the query have no tool-call spelling and are skipped.
 
 ## Artifact checks
 

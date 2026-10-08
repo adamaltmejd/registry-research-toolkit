@@ -1,0 +1,12 @@
+{
+  "loader": "slug_dir",
+  "fails_if": "the register slug tree accepts an unknown zone state, or names the provider-tree freeze.toml when the file it read is slug_state.toml",
+  "note": "A register-owned tree keeps its zone states in slug_state.toml; the provider-file layout keeps them in freeze.toml.",
+  "error": {
+    "code": "slug_freeze_state_invalid",
+    "locator": "slug_state.toml: zone 'scb'",
+    "message_contains": [
+      "unknown state 'thawing'"
+    ]
+  }
+}

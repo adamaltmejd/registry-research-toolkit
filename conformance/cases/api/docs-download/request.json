@@ -1,0 +1,20 @@
+{
+  "fixture": "reader",
+  "docs": "docs",
+  "requests": [
+    {"operation": "docs_related", "path": "/api/docs/related/scb/example"},
+    {
+      "operation": "docs_related",
+      "path": "/api/docs/file/scb/example/Bilaga%20f%C3%B6r%20register.pdf"
+    },
+    {
+      "operation": "docs_related",
+      "path": "/api/docs/file/scb/example/Bilaga%20f%C3%B6r%20register.pdf",
+      "etag_from": 1
+    },
+    {
+      "operation": "docs_related",
+      "path": "/api/docs/file/scb/example/missing.pdf"
+    }
+  ]
+}

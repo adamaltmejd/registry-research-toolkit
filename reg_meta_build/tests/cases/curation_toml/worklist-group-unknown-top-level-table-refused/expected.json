@@ -8,6 +8,9 @@
   "note": "The unknown table follows a valid group, the hardest form of the top-level guard; a misspelled [[variable_groups]] fails the same guard.",
   "error": {
     "code": "concept_groups_invalid",
-    "locator": "unknown top-level key(s): ['accept']"
+    "locator": "worklists/concept_groups.auto.toml",
+    "message_contains": [
+      "unknown top-level key(s): ['accept']"
+    ]
   }
 }

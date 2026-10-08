@@ -21,6 +21,8 @@ from reg_meta.db import (
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
+from ._curation import printable_error
+
 # Produced catalog schema; readers gate their independently supported version.
 SCHEMA_VERSION = "9.3.0"
 
@@ -230,22 +232,26 @@ def open_built_db(db_path: Path, *, older_minor: bool = False) -> sqlite3.Connec
         try:
             version = get_manifest(conn).get("schema_version")
         except sqlite3.OperationalError as exc:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="schema_incompatible",
-                error_class="configuration",
-                message=f"Catalog manifest is missing or unreadable: {db_path}.",
-                remediation=f"Rebuild with reg-meta-build to produce schema {SCHEMA_VERSION}.",
+            raise printable_error(
+                RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="schema_incompatible",
+                    error_class="configuration",
+                    message=f"Catalog manifest is missing or unreadable: {db_path}.",
+                    remediation=f"Rebuild with reg-meta-build to produce schema {SCHEMA_VERSION}.",
+                )
             ) from exc
         if version != SCHEMA_VERSION and not (
             older_minor and _admits_older_minor(version)
         ):
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="schema_incompatible",
-                error_class="configuration",
-                message=f"Catalog schema {version!r} is incompatible with builder schema {SCHEMA_VERSION}: {db_path}.",
-                remediation="Use the matching builder or rebuild from pinned prepared sources.",
+            raise printable_error(
+                RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="schema_incompatible",
+                    error_class="configuration",
+                    message=f"Catalog schema {version!r} is incompatible with builder schema {SCHEMA_VERSION}: {db_path}.",
+                    remediation="Use the matching builder or rebuild from pinned prepared sources.",
+                )
             )
     except BaseException:
         conn.close()
@@ -1663,12 +1669,14 @@ def _require_publishable_catalog(conn: sqlite3.Connection, db_path: Path) -> Non
         or manifest.get("catalog_publishable", "true") != "true"
         or manifest.get("catalog_completeness", "complete") != "complete"
     ):
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="catalog_not_publishable",
-            error_class="configuration",
-            message=f"Diagnostic or incomplete catalog cannot be installed: {db_path}",
-            remediation="Use an explicit local inspection path; resolve its blockers and run a strict build before publication.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="catalog_not_publishable",
+                error_class="configuration",
+                message=f"Diagnostic or incomplete catalog cannot be installed: {db_path}",
+                remediation="Use an explicit local inspection path; resolve its blockers and run a strict build before publication.",
+            )
         )
 
 
@@ -1724,23 +1732,27 @@ def _scb_snapshot_error(exc: Exception) -> RegMetaError:
     from .input_snapshot import SnapshotMaterializationError
 
     if isinstance(exc, SnapshotMaterializationError):
-        return RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="scb_snapshot_materialization_required",
-            error_class="configuration",
-            message=str(exc),
-            remediation=exc.hydration_action,
+        return printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="scb_snapshot_materialization_required",
+                error_class="configuration",
+                message=str(exc),
+                remediation=exc.hydration_action,
+            )
         )
-    return RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code="scb_snapshot_invalid",
-        error_class="configuration",
-        message=f"Selected SCB input snapshot is invalid: {exc}",
-        remediation=(
-            "Run the explicit snapshot verifier. If the selected identity changed "
-            "or is unsupported, prepare, verify, and accept a new snapshot, then "
-            "pass its exact Git commit and manifest SHA-256."
-        ),
+    return printable_error(
+        RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="scb_snapshot_invalid",
+            error_class="configuration",
+            message=f"Selected SCB input snapshot is invalid: {exc}",
+            remediation=(
+                "Run the explicit snapshot verifier. If the selected identity changed "
+                "or is unsupported, prepare, verify, and accept a new snapshot, then "
+                "pass its exact Git commit and manifest SHA-256."
+            ),
+        )
     )
 
 
@@ -1796,12 +1808,14 @@ def _open_scb_csv_rows(
         def rows() -> Iterator[tuple[int, list[str | None]]]:
             for row_number, fields in enumerate(reader, start=2):
                 if len(fields) != ncols:
-                    raise RegMetaError(
-                        exit_code=EXIT_CONFIG,
-                        code="csv_bad_row",
-                        error_class="configuration",
-                        message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {ncols}.",
-                        remediation="Re-export the file from mikrometadata.scb.se.",
+                    raise printable_error(
+                        RegMetaError(
+                            exit_code=EXIT_CONFIG,
+                            code="csv_bad_row",
+                            error_class="configuration",
+                            message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {ncols}.",
+                            remediation="Re-export the file from mikrometadata.scb.se.",
+                        )
                     )
                 yield row_number, fields
 
@@ -1813,12 +1827,14 @@ def _validated_scb_header(filename: str, raw_header: Sequence[str]) -> list[str]
     header = [_decode_cp1252(value) for value in raw_header]
     expected = EXPECTED_HEADERS.get(filename)
     if expected and header != expected:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="csv_bad_header",
-            error_class="configuration",
-            message=f"Unexpected header in {filename}.",
-            remediation="Ensure the file is an unmodified SCB metadata export.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="csv_bad_header",
+                error_class="configuration",
+                message=f"Unexpected header in {filename}.",
+                remediation="Ensure the file is an unmodified SCB metadata export.",
+            )
         )
     return header
 
@@ -1966,12 +1982,14 @@ def _insert_core_graph_from_ir(
         try:
             return provider_ids[provider]
         except KeyError as exc:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="unknown_provider",
-                error_class="configuration",
-                message=f"No provider_id for provider {provider!r}.",
-                remediation="Declare the provider before inserting its register IR.",
+            raise printable_error(
+                RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="unknown_provider",
+                    error_class="configuration",
+                    message=f"No provider_id for provider {provider!r}.",
+                    remediation="Declare the provider before inserting its register IR.",
+                )
             ) from exc
 
     conn.executemany(
@@ -2118,12 +2136,14 @@ def _provider_id_for(provider: str) -> int:
     for pid, slug, _name in _PROVIDER_SEED:
         if slug == provider:
             return pid
-    raise RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code="unknown_provider",
-        error_class="configuration",
-        message=f"No provider_id seed for provider {provider!r}.",
-        remediation="Add the provider to _PROVIDER_SEED.",
+    raise printable_error(
+        RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="unknown_provider",
+            error_class="configuration",
+            message=f"No provider_id seed for provider {provider!r}.",
+            remediation="Add the provider to _PROVIDER_SEED.",
+        )
     )
 
 
@@ -2137,12 +2157,14 @@ def _reject_input_repository_destination(
 ) -> None:
     """Reject a build output that would dirty the accepted input checkout."""
     if path == repository or path.is_relative_to(repository):
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="catalog_input_output_conflict",
-            error_class="configuration",
-            message=f"{label} must stay outside the accepted input repository: {path}",
-            remediation=(
-                "Choose a scratch/output path outside the catalog-inputs Git checkout."
-            ),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="catalog_input_output_conflict",
+                error_class="configuration",
+                message=f"{label} must stay outside the accepted input repository: {path}",
+                remediation=(
+                    "Choose a scratch/output path outside the catalog-inputs Git checkout."
+                ),
+            )
         )

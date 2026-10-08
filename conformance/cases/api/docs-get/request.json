@@ -1,0 +1,20 @@
+{
+  "fixture": "reader",
+  "docs": "docs",
+  "requests": [
+    {"operation": "docs_get", "path": "/api/docs/doc/kon"},
+    {"operation": "docs_get", "path": "/api/docs/doc/Sysselsattning"},
+    {"operation": "docs_get", "path": "/api/docs/doc/tabell.md"},
+    {"operation": "docs_get", "path": "/api/docs/doc/DoesNotExist"},
+    {
+      "operation": "docs_get",
+      "path": "/api/docs/doc/Kon",
+      "query": {"identifier": "Kort"}
+    },
+    {
+      "operation": "docs_get",
+      "path": "/api/docs/doc/Kon",
+      "query": {"ref": "scb/example"}
+    }
+  ]
+}

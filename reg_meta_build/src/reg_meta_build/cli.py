@@ -40,7 +40,7 @@ from reg_meta.errors import (
     RegMetaError,
 )
 
-from ._curation import repo_curation_dir
+from ._curation import printable_error, repo_curation_dir
 from .classifications import (
     dump_classification_residue,
     render_residue_toml,
@@ -104,10 +104,6 @@ from .source_inspection import (
     write_scb_observation_census,
 )
 from .sources.sos import SosParseError, parse_directory, parse_register_file
-from .split_sibling_suspects import (
-    infer_split_sibling_suspects,
-    render_suspects_toml,
-)
 from .succession_candidates import (
     infer_succession_candidates,
     render_succession_toml,
@@ -698,6 +694,14 @@ def _build_parser() -> argparse.ArgumentParser:
             "(lower = a battery). Default 0.5."
         ),
     )
+    concept_group_p.add_argument(
+        "--curation-dir",
+        default=None,
+        help=(
+            "Curation tree whose literal [[group]] entries name the accepted "
+            "families (defaults to this checkout's tree)."
+        ),
+    )
 
     residue_p = sub.add_parser(
         "classification-residue",
@@ -740,48 +744,6 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
-    suspects_p = sub.add_parser(
-        "split-sibling-suspects",
-        help="Emit the #918 split-sibling curation worklist (maintainer review).",
-        description=(
-            "Emit the #918 split-sibling SUSPECT worklist from a BUILT DB: the A2.2\n"
-            "triage siblings (variables sharing one (register, provider_key)) that\n"
-            "were CO-DELIVERED (overlap in some register_variant era) and whose\n"
-            "representative shapes signal a curation question. The reason follows the\n"
-            "build-time fold-gate precedence: code_vs_label (a code column + its\n"
-            "<stem>namn label — a representation/fold candidate, not a mis-import),\n"
-            "type_flip (numeric-vs-text), or length_disagree (an unclassifiable type\n"
-            "with differing widths). A non-co-delivered pair (a temporal rename/split\n"
-            "that never overlapped) is NOT a suspect. #800 retired the `related` edge\n"
-            "and its import_bug_suspect kind; this re-derives the signal READ-ONLY\n"
-            "from variable_state for the deferred fold-or-sever curation. Reads a\n"
-            "built DB; NEVER mutates it and NOTHING is materialized.\n\n"
-            "For each suspect PAIR it reports both siblings' FQID + name + delivery\n"
-            "column, each side's data_type / data_length / value-set presence, the\n"
-            "reason, and whether the pair is already co-grouped (shares a\n"
-            "concept_group — the resolved fold; a SEPARATE axis from co-delivery). The\n"
-            "classifier reuses the SAME code-vs-label + numeric/text/other helpers the\n"
-            "build-time fold gate uses.\n\n"
-            "-o/--output-toml writes a comment-rich worklist (one `[[pair]]` per\n"
-            "suspect, grouped by family, high-value-first) with a `disposition`\n"
-            'placeholder for the maintainer to set to "fold" or "distinct". NOTHING\n'
-            "loads it — the fold lands via curation/registers/<provider>/<slug>.toml; a sever is a no-op.\n\n"
-            "Examples:\n"
-            "  reg-meta-build --db <built-db> split-sibling-suspects -o /tmp/split.toml\n"
-            "  reg-meta-build --db <built-db> split-sibling-suspects  # counts only"
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    suspects_p.add_argument(
-        "-o",
-        "--output-toml",
-        default=None,
-        help=(
-            "Write the suspect worklist TOML to this path. Without it the JSON counts "
-            "summary still prints; the TOML is included in the payload."
-        ),
-    )
-
     succession_p = sub.add_parser(
         "succession-candidates",
         help="Emit the succession-candidate curation worklist (maintainer review).",
@@ -790,29 +752,23 @@ def _build_parser() -> argparse.ArgumentParser:
             "catalog variables that look like consecutive ERAS of one delivered\n"
             "column. A candidate pair is two variable_state rows in ONE register\n"
             "whose windows are disjoint and ADJACENT (the later valid_from is the\n"
-            "day, or the year, after the earlier valid_to) and either the SAME\n"
-            "delivery column under two SCB var_ids, in any variant coordinate\n"
-            "(cross_var_id — a re-minted variable), or two split-container siblings\n"
-            "of one var_id whose columns DIFFER, both eras INSIDE one\n"
-            "register_variant (split_rename — a never-co-delivered rename, scoped\n"
-            "to that variant and emitted once per variant it is evidenced in; an\n"
-            "era pair meeting ACROSS variants is DROPPED).\n"
+            "day, or the year, after the earlier valid_to) carrying the SAME\n"
+            "delivery column under two SCB var_ids, in any variant coordinate (a\n"
+            "re-minted variable).\n"
             "A pair already joined by a variable/representation replaced_by edge in\n"
-            "either direction is skipped, and so is a CO-DELIVERED pair — that is\n"
-            "split-sibling-suspects' territory (#918 gates ON co-delivery; this\n"
-            "gates it out). Reads a built DB; NEVER mutates it and NOTHING is\n"
-            "materialized.\n\n"
+            "either direction is skipped, and so is a CO-DELIVERED pair (the two\n"
+            "shipped together, so neither succeeds the other). Reads a built DB;\n"
+            "NEVER mutates it and NOTHING is materialized.\n\n"
             "SCB variable identity is (register_id, var_id) and there is no automatic\n"
             "pooling across var_ids, so a never-co-delivered rename becomes two\n"
             "unrelated browse rows for one column. The designed fix is a curated\n"
             "replaced_by edge; this is the diagnostic that finds the candidates.\n\n"
-            "The JSON summary reports the total plus per-register and per-kind counts.\n"
-            "-o/--output-toml writes the candidates as `[[edge]]` tables in the EXACT\n"
-            "curation/relations.toml grammar (variable grain for cross_var_id;\n"
-            "representation grain — from_column / to_column plus the delivering\n"
-            "variant — for split_rename), preceded by evidence comments, so a\n"
-            "CONFIRMED candidate copies across verbatim. NOTHING loads the emitted\n"
-            "file: the maintainer curates relations.toml by hand.\n\n"
+            "The JSON summary reports the total plus per-register counts.\n"
+            "-o/--output-toml writes the candidates as variable-grain `[[edge]]`\n"
+            "tables in the EXACT curation/relations.toml grammar, preceded by\n"
+            "evidence comments, so a CONFIRMED candidate copies across verbatim.\n"
+            "NOTHING loads the emitted file: the maintainer curates relations.toml\n"
+            "by hand.\n\n"
             "Examples:\n"
             "  reg-meta-build --db <built-db> succession-candidates -o /tmp/succ.toml\n"
             "  reg-meta-build --db <built-db> succession-candidates  # counts only"
@@ -843,8 +799,9 @@ def _build_parser() -> argparse.ArgumentParser:
             "colocated doc DB (both from the `--db` dir); NEVER mutates either and\n"
             "NOTHING is materialized. Minting the missing columns (via scb_canonical/)\n"
             "is the separate, deferred curation step (#400 PR2).\n\n"
-            "The register join is `lower(register.name) == doc.register` (the SCB\n"
-            "literal name, not the churning slug). Columns match CASE-INSENSITIVELY\n"
+            "The register join is `register.slug == doc.register` (the doc library\n"
+            "names each register subdir by its catalog slug; the descriptive\n"
+            "register.name never matches). Columns match CASE-INSENSITIVELY\n"
             "(SCB columns are case-variant). A doc register that maps to no catalog\n"
             "register is reported, never silently dropped.\n\n"
             "The JSON summary reports the total missing columns and per-register\n"
@@ -912,21 +869,25 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.diagnostic != bool(args.diagnostic_db_path) or (
         args.diagnostic and args.db is not None
     ):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="pipeline_options_invalid",
-            error_class="usage",
-            message="Diagnostic mode requires a separate explicit --diagnostic-db-path and excludes --db.",
-            remediation="Use both --diagnostic and --diagnostic-db-path, or omit both for a strict build.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="pipeline_options_invalid",
+                error_class="usage",
+                message="Diagnostic mode requires a separate explicit --diagnostic-db-path and excludes --db.",
+                remediation="Use both --diagnostic and --diagnostic-db-path, or omit both for a strict build.",
+            )
         )
     registers = () if args.registers is None else tuple(args.registers.split(","))
     if not all(registers) or (registers and not args.diagnostic and args.db is None):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="pipeline_options_invalid",
-            error_class="usage",
-            message="--registers needs nonempty comma-separated scope names and never writes the active catalog.",
-            remediation="Name each scope once between commas; give a strict register subset its own new --db DIR.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="pipeline_options_invalid",
+                error_class="usage",
+                message="--registers needs nonempty comma-separated scope names and never writes the active catalog.",
+                remediation="Name each scope once between commas; give a strict register subset its own new --db DIR.",
+            )
         )
     output = (
         Path(args.diagnostic_db_path)
@@ -952,13 +913,19 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             EXIT_CONFIG if args.diagnostic else 0,
             exc,
         ), EXIT_OUTPUT
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError, KeyError) as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="pipeline_build_failed",
-            error_class="configuration",
-            message=str(exc),
-            remediation="Repair the selected declarations or implementation; inspect the report directory if source resolution started.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="pipeline_build_failed",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Repair the selected declarations or implementation; inspect the report directory if source resolution started.",
+            )
         ) from exc
     return result, EXIT_CONFIG if result[
         "status"
@@ -971,21 +938,25 @@ def _cmd_check_curation(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.timing:
         os.environ["REG_META_BUILD_TIMING"] = "1"
     if args.db is not None:
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="pipeline_options_invalid",
-            error_class="usage",
-            message="check-curation accepts no database destination, including --db.",
-            remediation="Omit --db; use --report-dir for the local check report.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="pipeline_options_invalid",
+                error_class="usage",
+                message="check-curation accepts no database destination, including --db.",
+                remediation="Omit --db; use --report-dir for the local check report.",
+            )
         )
     registers = tuple(args.registers.split(","))
     if not all(registers):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="pipeline_options_invalid",
-            error_class="usage",
-            message="--registers needs nonempty comma-separated scope names.",
-            remediation="Name each complete register scope once between commas.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="pipeline_options_invalid",
+                error_class="usage",
+                message="--registers needs nonempty comma-separated scope names.",
+                remediation="Name each complete register scope once between commas.",
+            )
         )
     try:
         result = check_curation(
@@ -997,13 +968,19 @@ def _cmd_check_curation(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             curation_dir=Path(args.curation_dir) if args.curation_dir else None,
             dump_decisions=Path(args.dump_decisions) if args.dump_decisions else None,
         )
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError, KeyError) as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="pipeline_build_failed",
-            error_class="configuration",
-            message=str(exc),
-            remediation="Repair the selected declarations or implementation; inspect the report directory if source resolution started.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="pipeline_build_failed",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Repair the selected declarations or implementation; inspect the report directory if source resolution started.",
+            )
         ) from exc
     return result, 0 if result["passed"] else EXIT_CONFIG
 
@@ -1019,13 +996,19 @@ def _cmd_prepare_sources(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     output = Path(args.output_dir).expanduser().resolve()
     try:
         manifest = prepare_catalog_sources(selection, output)
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError) as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="source_preparation_failed",
-            error_class="configuration",
-            message=str(exc),
-            remediation="Repair the selected input or actual-format adapter, then prepare a new candidate; accepted inputs are unchanged.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="source_preparation_failed",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Repair the selected input or actual-format adapter, then prepare a new candidate; accepted inputs are unchanged.",
+            )
         ) from exc
     return {
         "status": "prepared",
@@ -1050,17 +1033,19 @@ def _cmd_prepare_input_bundle(
     )
     lisa_present = tuple(value is not None for value in lisa_values)
     if any(lisa_present) and (not all(lisa_present) or not all(lisa_values)):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="lisa_source_selection_incomplete",
-            error_class="usage",
-            message=(
-                "--lisa-workbook, --lisa-revision, and "
-                "--lisa-workbook-sha256 must be supplied together."
-            ),
-            remediation=(
-                "Supply all three LISA source-selection flags or omit all three."
-            ),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="lisa_source_selection_incomplete",
+                error_class="usage",
+                message=(
+                    "--lisa-workbook, --lisa-revision, and "
+                    "--lisa-workbook-sha256 must be supplied together."
+                ),
+                remediation=(
+                    "Supply all three LISA source-selection flags or omit all three."
+                ),
+            )
         )
     try:
         stats = prepare_input_bundle(
@@ -1081,13 +1066,19 @@ def _cmd_prepare_input_bundle(
                 else None
             ),
         )
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError) as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="catalog_input_bundle_invalid",
-            error_class="configuration",
-            message=str(exc),
-            remediation="Fix the candidate inputs; accepted data was not overwritten.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="catalog_input_bundle_invalid",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Fix the candidate inputs; accepted data was not overwritten.",
+            )
         ) from exc
     data = dataclasses.asdict(stats)
     data["output_dir"] = str(Path(args.output_dir).expanduser().resolve())
@@ -1115,30 +1106,36 @@ def _cmd_inspect_source_records(
     try:
         bundle = open_input_bundle(selection)
     except SnapshotError as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="catalog_input_bundle_invalid",
-            error_class="configuration",
-            message=str(exc),
-            remediation="Select an accepted catalog input bundle with exact pins.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="catalog_input_bundle_invalid",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Select an accepted catalog input bundle with exact pins.",
+            )
         ) from exc
     if args.all_scb:
         if args.column is not None or args.evidence is None:
-            raise RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="source_record_inspection_selection_invalid",
-                error_class="usage",
-                message="--all-scb requires --evidence and cannot be combined with --column.",
-                remediation="Choose focused LISA inspection or an all-SCB evidence census.",
+            raise printable_error(
+                RegMetaError(
+                    exit_code=EXIT_USAGE,
+                    code="source_record_inspection_selection_invalid",
+                    error_class="usage",
+                    message="--all-scb requires --evidence and cannot be combined with --column.",
+                    remediation="Choose focused LISA inspection or an all-SCB evidence census.",
+                )
             )
         destination = Path(args.evidence).expanduser().resolve()
         if destination.suffixes[-2:] != [".jsonl", ".gz"]:
-            raise RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="source_record_evidence_suffix_invalid",
-                error_class="usage",
-                message="--evidence must end in .jsonl.gz.",
-                remediation="Choose a dedicated deterministic gzip JSONL destination.",
+            raise printable_error(
+                RegMetaError(
+                    exit_code=EXIT_USAGE,
+                    code="source_record_evidence_suffix_invalid",
+                    error_class="usage",
+                    message="--evidence must end in .jsonl.gz.",
+                    remediation="Choose a dedicated deterministic gzip JSONL destination.",
+                )
             )
         _reject_input_repository_destination(
             destination,
@@ -1150,12 +1147,14 @@ def _cmd_inspect_source_records(
                 bundle, destination, code_commit=source_interpreter_commit()
             )
         except SnapshotError as exc:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="source_record_inspection_invalid",
-                error_class="configuration",
-                message=str(exc),
-                remediation="Select exact accepted inputs and a new guarded destination.",
+            raise printable_error(
+                RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="source_record_inspection_invalid",
+                    error_class="configuration",
+                    message=str(exc),
+                    remediation="Select exact accepted inputs and a new guarded destination.",
+                )
             ) from exc
         data["evidence"] = str(destination)
         return success_envelope(
@@ -1172,12 +1171,14 @@ def _cmd_inspect_source_records(
             duration_ms=int((time.perf_counter() - start) * 1000),
         ), 0
     if args.evidence is not None:
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="source_record_inspection_selection_invalid",
-            error_class="usage",
-            message="--evidence is only valid with --all-scb.",
-            remediation="Add --all-scb or omit --evidence.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="source_record_inspection_selection_invalid",
+                error_class="usage",
+                message="--evidence is only valid with --all-scb.",
+                remediation="Add --all-scb or omit --evidence.",
+            )
         )
     try:
         report = inspect_bundle_source_records(
@@ -1186,15 +1187,17 @@ def _cmd_inspect_source_records(
             exact_column=args.column,
         )
     except SnapshotError as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="source_record_inspection_invalid",
-            error_class="configuration",
-            message=str(exc),
-            remediation=(
-                "Select an accepted bundle that explicitly captures the supported "
-                "LISA dataset, or prepare and accept a corrected bundle."
-            ),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="source_record_inspection_invalid",
+                error_class="configuration",
+                message=str(exc),
+                remediation=(
+                    "Select an accepted bundle that explicitly captures the supported "
+                    "LISA dataset, or prepare and accept a corrected bundle."
+                ),
+            )
         ) from exc
     data = report.model_dump(mode="json", exclude_none=True)
     data["semantic_sha256"] = report_semantic_sha256(report)
@@ -1225,13 +1228,19 @@ def _cmd_verify_input_bundle(
         manifest = verify_input_bundle(selection)
     except SnapshotMaterializationError as exc:
         raise _scb_snapshot_error(exc) from exc
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError) as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="catalog_input_bundle_invalid",
-            error_class="configuration",
-            message=str(exc),
-            remediation="Restore the accepted checkout or prepare and explicitly accept a new candidate.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="catalog_input_bundle_invalid",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Restore the accepted checkout or prepare and explicitly accept a new candidate.",
+            )
         ) from exc
     return success_envelope(
         command="verify-input-bundle",
@@ -1254,12 +1263,14 @@ def _cmd_verify_input_bundle(
 def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     if not (args.holdings_input and args.input_commit and args.input_manifest_sha256):
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="private_holdings_pins_required",
-            error_class="configuration",
-            message="extend-db requires --holdings-input and both exact input pins.",
-            remediation="Select the clean accepted private input candidate and its full pins.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="private_holdings_pins_required",
+                error_class="configuration",
+                message="extend-db requires --holdings-input and both exact input pins.",
+                remediation="Select the clean accepted private input candidate and its full pins.",
+            )
         )
     candidate = Path(args.holdings_input).expanduser().resolve()
     providers_dir = candidate / "providers"
@@ -1275,12 +1286,14 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             input_manifest_sha256=args.input_manifest_sha256,
         )
     except ValueError as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="private_holdings_invalid",
-            error_class="configuration",
-            message=str(exc),
-            remediation="Review the located accepted-input or compiler failure; do not change accepted bytes in place.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="private_holdings_invalid",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Review the located accepted-input or compiler failure; do not change accepted bytes in place.",
+            )
         ) from exc
     return success_envelope(
         command="extend-db",
@@ -1305,12 +1318,14 @@ def _cmd_derive(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     try:
         derive_artifact(Path(args.base), Path(args.out))
     except ValueError as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="derive_failed",
-            error_class="configuration",
-            message=str(exc),
-            remediation="Derive from a complete published artifact with committed builder sources.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="derive_failed",
+                error_class="configuration",
+                message=str(exc),
+                remediation="Derive from a complete published artifact with committed builder sources.",
+            )
         ) from exc
     return success_envelope(
         command="derive",
@@ -1328,18 +1343,20 @@ def _cmd_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     else:
         docs_dir = repo_docs_dir()
         if docs_dir is None:
-            raise RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="no_docs_dir",
-                error_class="configuration",
-                message=(
-                    "No --docs-dir specified and no in-repo docs found. "
-                    "This command is for maintainers rebuilding the doc DB from a repo checkout."
-                ),
-                remediation=(
-                    "Run from a reg_meta_build checkout with `reg_meta_build/docs/` present, "
-                    "or pass --docs-dir pointing to a directory with register doc subdirectories."
-                ),
+            raise printable_error(
+                RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="no_docs_dir",
+                    error_class="configuration",
+                    message=(
+                        "No --docs-dir specified and no in-repo docs found. "
+                        "This command is for maintainers rebuilding the doc DB from a repo checkout."
+                    ),
+                    remediation=(
+                        "Run from a reg_meta_build checkout with `reg_meta_build/docs/` present, "
+                        "or pass --docs-dir pointing to a directory with register doc subdirectories."
+                    ),
+                )
             )
     db_dir = Path(args.db).resolve() if args.db else default_db_dir().resolve()
     db_path = build_doc_db(
@@ -1363,15 +1380,17 @@ def _resolve_slug_dir(slug_arg: str | None) -> Path:
         return Path(slug_arg).expanduser().resolve()
     resolved = repo_slug_dir()
     if resolved is None:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="slug_dir_not_found",
-            error_class="configuration",
-            message=(
-                "Slug TOMLs not found. Pass --slug-dir or run from a reg_meta "
-                "checkout containing reg_meta_build/curation/."
-            ),
-            remediation=("Run from a repo checkout, or pass --slug-dir."),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="slug_dir_not_found",
+                error_class="configuration",
+                message=(
+                    "Slug TOMLs not found. Pass --slug-dir or run from a reg_meta "
+                    "checkout containing reg_meta_build/curation/."
+                ),
+                remediation=("Run from a repo checkout, or pass --slug-dir."),
+            )
         )
     return resolved
 
@@ -1384,15 +1403,17 @@ def _cmd_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     else:
         out_dir = repo_slug_dir() or (Path.cwd() / "curation").resolve()
     if out_dir.exists() and any(out_dir.rglob("*.auto.toml")) and not args.force:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="slug_seed_would_overwrite",
-            error_class="configuration",
-            message=f"{out_dir} already contains TOMLs; refusing to overwrite.",
-            remediation=(
-                "Pass --force to overwrite, or point --out-dir at an empty "
-                "directory for hand-review."
-            ),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="slug_seed_would_overwrite",
+                error_class="configuration",
+                message=f"{out_dir} already contains TOMLs; refusing to overwrite.",
+                remediation=(
+                    "Pass --force to overwrite, or point --out-dir at an empty "
+                    "directory for hand-review."
+                ),
+            )
         )
     # Schema-compat (open_db) rejects a stale DB up front, so seed reads run
     # against the current shape and give the user the right remediation rather
@@ -1587,20 +1608,24 @@ def _cmd_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         elif path.is_file():
             results = [parse_register_file(path)]
         else:
-            raise RegMetaError(
-                exit_code=EXIT_NOT_FOUND,
-                code="path_not_found",
-                error_class="input",
-                message=f"{path} is neither a file nor a directory",
-                remediation="Pass a .xlsx file or a directory containing them.",
+            raise printable_error(
+                RegMetaError(
+                    exit_code=EXIT_NOT_FOUND,
+                    code="path_not_found",
+                    error_class="input",
+                    message=f"{path} is neither a file nor a directory",
+                    remediation="Pass a .xlsx file or a directory containing them.",
+                )
             )
     except SosParseError as exc:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="sos_parse_error",
-            error_class="input",
-            message=str(exc),
-            remediation="Verify the file is a valid Socialstyrelsen metadata workbook.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="sos_parse_error",
+                error_class="input",
+                message=str(exc),
+                remediation="Verify the file is a valid Socialstyrelsen metadata workbook.",
+            )
         ) from exc
 
     def _to_plain(obj: Any) -> Any:
@@ -1717,43 +1742,49 @@ def _cmd_entity_key_pins(
     # (single combined inspection file) are two output targets for the same
     # pins; picking both is a usage error rather than a silent precedence.
     if args.out_dir and args.output_toml:
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="entity_key_pins_output_conflict",
-            error_class="usage",
-            message="--out-dir and --output-toml are mutually exclusive.",
-            remediation=(
-                "Pass --out-dir for per-provider files, or --output-toml for a "
-                "single combined file — not both."
-            ),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="entity_key_pins_output_conflict",
+                error_class="usage",
+                message="--out-dir and --output-toml are mutually exclusive.",
+                remediation=(
+                    "Pass --out-dir for per-provider files, or --output-toml for a "
+                    "single combined file — not both."
+                ),
+            )
         )
     # The steward dir scopes the generator and names the already-pinned
     # variables. There is no default: the repo's curation/ is the global tree,
     # which would scope the generator to global registers and emit wrong pins.
     if not args.slug_dir:
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="entity_key_pins_flavored_needs_slug_dir",
-            error_class="usage",
-            message="entity-key-pins requires --slug-dir (the steward dir).",
-            remediation=(
-                "Pass --slug-dir <steward dir, e.g. reg_meta_build/fqid_slugs/<steward>/>."
-            ),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="entity_key_pins_flavored_needs_slug_dir",
+                error_class="usage",
+                message="entity-key-pins requires --slug-dir (the steward dir).",
+                remediation=(
+                    "Pass --slug-dir <steward dir, e.g. reg_meta_build/fqid_slugs/<steward>/>."
+                ),
+            )
         )
     slug_dir = Path(args.slug_dir).expanduser().resolve()
     # A --slug-dir that doesn't resolve to a directory (a typo, or a file path)
     # globs zero curated entries and silently yields an empty register scope and
     # `count: 0`. Fail fast rather than reading an unreadable dir as empty.
     if not slug_dir.is_dir():
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="slug_dir_not_a_directory",
-            error_class="usage",
-            message=f"--slug-dir is not a directory: {slug_dir}",
-            remediation=(
-                "Pass --slug-dir pointing at an existing steward slug dir "
-                "(e.g. reg_meta_build/fqid_slugs/<steward>/)."
-            ),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="slug_dir_not_a_directory",
+                error_class="usage",
+                message=f"--slug-dir is not a directory: {slug_dir}",
+                remediation=(
+                    "Pass --slug-dir pointing at an existing steward slug dir "
+                    "(e.g. reg_meta_build/fqid_slugs/<steward>/)."
+                ),
+            )
         )
     # The --slug-dir must be a STEWARD curation dir (fqid_slugs/<steward>/), not
     # the global root and not a non-curation dir. Both wrong shapes silently scope
@@ -1774,36 +1805,40 @@ def _cmd_entity_key_pins(
         child.is_dir() for child in slug_dir.iterdir()
     )
     if is_global_root:
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="entity_key_pins_flavored_global_slug_dir",
-            error_class="usage",
-            message=(
-                "--slug-dir must be a steward dir (fqid_slugs/<steward>/), not the "
-                "global root (it equals the repo's curation/ or has "
-                "subdirectories, the global-root marker)."
-            ),
-            remediation=(
-                "Pass --slug-dir pointing at the nested steward dir "
-                "(reg_meta_build/fqid_slugs/<steward>/), not the global "
-                "curation/ root."
-            ),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="entity_key_pins_flavored_global_slug_dir",
+                error_class="usage",
+                message=(
+                    "--slug-dir must be a steward dir (fqid_slugs/<steward>/), not the "
+                    "global root (it equals the repo's curation/ or has "
+                    "subdirectories, the global-root marker)."
+                ),
+                remediation=(
+                    "Pass --slug-dir pointing at the nested steward dir "
+                    "(reg_meta_build/fqid_slugs/<steward>/), not the global "
+                    "curation/ root."
+                ),
+            )
         )
     if not any(e.kind == "register" for e in iter_curated_provider_entries(slug_dir)):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="entity_key_pins_flavored_empty_scope",
-            error_class="usage",
-            message=(
-                f"--slug-dir {slug_dir} has no [register] entries — it is not a "
-                "steward curation dir (the register scope would be empty, emitting "
-                "zero pins)."
-            ),
-            remediation=(
-                "Pass --slug-dir pointing at the steward dir that curates the "
-                "overlay's registers (its <provider>.toml files carry the "
-                "[register] slug entries)."
-            ),
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="entity_key_pins_flavored_empty_scope",
+                error_class="usage",
+                message=(
+                    f"--slug-dir {slug_dir} has no [register] entries — it is not a "
+                    "steward curation dir (the register scope would be empty, emitting "
+                    "zero pins)."
+                ),
+                remediation=(
+                    "Pass --slug-dir pointing at the steward dir that curates the "
+                    "overlay's registers (its <provider>.toml files carry the "
+                    "[register] slug entries)."
+                ),
+            )
         )
     # Schema-checked open: the generator reads current-schema tables
     # (register_variant.panel_entity_key, variable.slug/provider_key), so a stale
@@ -1856,14 +1891,31 @@ def _cmd_concept_group_candidates(
 ) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
+    # Literal register groups are the record of accepted families. Their scopes
+    # tell the candidate scan to preserve matching materialized members.
+    curation_dir = (
+        Path(args.curation_dir).expanduser().resolve()
+        if args.curation_dir
+        else repo_curation_dir()
+    )
+    # A mistyped tree would otherwise read as one with no accepted families:
+    # `load_register_files` reads a root without `registers/` as empty.
+    if curation_dir is not None and not (curation_dir / "registers").is_dir():
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_NOT_FOUND,
+                code="path_not_found",
+                error_class="input",
+                message=f"curation directory {curation_dir} has no registers/ directory",
+                remediation="Pass the curation tree that holds registers/.",
+            )
+        )
+    groups = load_concept_groups(curation_dir)
+    accepted_scopes = frozenset((g.provider, g.register, g.key) for g in groups)
     # Schema-checked open: the generator reads current-schema tables
     # (variable.slug, concept_group_variable), so a stale DB should fail fast with
     # the standard actionable schema-mismatch error, not crash deep in a query.
     conn = open_built_db(db)
-    # Literal register groups are the record of accepted families. Their scopes
-    # tell the candidate scan to preserve matching materialized members.
-    groups = load_concept_groups(repo_curation_dir())
-    accepted_scopes = frozenset((g.provider, g.register, g.key) for g in groups)
     try:
         result = infer_concept_group_candidates(
             conn,
@@ -1900,6 +1952,7 @@ def _cmd_concept_group_candidates(
             "min_siblings": args.min_siblings,
             "min_label_prefix": args.min_label_prefix,
             "min_agreement": args.min_agreement,
+            "curation_dir": None if curation_dir is None else str(curation_dir),
             "output_toml": args.output_toml,
         },
         db_info=None,
@@ -1941,40 +1994,6 @@ def _cmd_classification_residue(
     ), 0
 
 
-def _cmd_split_sibling_suspects(
-    args: argparse.Namespace,
-) -> tuple[dict[str, Any], int]:
-    start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    # Schema-checked open: the diagnostic reads current-schema tables (variable,
-    # variable_state, concept_group_variable), so a stale DB should fail fast with
-    # the standard actionable schema-mismatch error — same as the residue command.
-    conn = open_built_db(db)
-    try:
-        result = infer_split_sibling_suspects(conn)
-    finally:
-        conn.close()
-
-    toml = render_suspects_toml(result)
-
-    data: dict[str, Any] = {
-        "total_pairs": result.total_pairs,
-        "family_count": result.family_count,
-        "family_variable_count": result.family_variable_count,
-        "co_grouped_count": result.co_grouped_count,
-    }
-    _emit_toml(args.output_toml, toml, data)
-
-    duration_ms = int((time.perf_counter() - start) * 1000)
-    return success_envelope(
-        command="split-sibling-suspects",
-        args_payload={"output_toml": args.output_toml},
-        db_info=None,
-        data=data,
-        duration_ms=duration_ms,
-    ), 0
-
-
 def _cmd_succession_candidates(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
@@ -1982,8 +2001,7 @@ def _cmd_succession_candidates(
     db = db_path_from_args(args.db)
     # Schema-checked open: the diagnostic reads current-schema tables (variable,
     # variable_state, variable_replaced_by, representation_replaced_by), so a stale
-    # DB should fail fast with the standard actionable schema-mismatch error — same
-    # as the split-sibling-suspects command.
+    # DB should fail fast with the standard actionable schema-mismatch error.
     conn = open_built_db(db)
     try:
         result = infer_succession_candidates(conn)
@@ -1995,7 +2013,6 @@ def _cmd_succession_candidates(
     data: dict[str, Any] = {
         "total": result.total,
         "per_register_counts": result.per_register_counts,
-        "per_kind_counts": result.per_kind_counts,
     }
     _emit_toml(args.output_toml, toml, data)
 
@@ -2072,7 +2089,6 @@ COMMAND_DISPATCH: dict[
     "entity-key-pins": _cmd_entity_key_pins,
     "concept-group-candidates": _cmd_concept_group_candidates,
     "classification-residue": _cmd_classification_residue,
-    "split-sibling-suspects": _cmd_split_sibling_suspects,
     "succession-candidates": _cmd_succession_candidates,
     "doc-coverage": _cmd_doc_coverage,
 }
@@ -2144,16 +2160,12 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     ),
     (
         "concept-group-candidates [-o TOML] [--min-siblings N] "
-        "[--min-label-prefix N] [--min-agreement F]",
+        "[--min-label-prefix N] [--min-agreement F] [--curation-dir DIR]",
         "Infer concept-group fold candidates (maintainer review worklist).",
     ),
     (
         "classification-residue [-o TOML]",
         "Emit the #416 classification-linkage residue worklist (maintainer review).",
-    ),
-    (
-        "split-sibling-suspects [-o TOML]",
-        "Emit the #918 split-sibling curation worklist (maintainer review).",
     ),
     (
         "succession-candidates [-o TOML]",
@@ -2210,12 +2222,14 @@ def _confined_bundle_output_path(
             resolved_output.with_suffix(resolved_output.suffix + ".tmp").resolve(),
         )
     ):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="source_preparation_report_conflict",
-            error_class="usage",
-            message="CLI JSON --output must be outside the prepared source artifact.",
-            remediation="Choose a separate summary path or use stdout.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="source_preparation_report_conflict",
+                error_class="usage",
+                message="CLI JSON --output must be outside the prepared source artifact.",
+                remediation="Choose a separate summary path or use stdout.",
+            )
         )
     if args.command in {"build-db", "check-curation"} and args.prepared:
         from .prepared_catalog import prepared_catalog_paths
@@ -2264,12 +2278,14 @@ def _confined_bundle_output_path(
             )
             or _paths_overlap(report_paths, protected | database_paths)
         ):
-            raise RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="pipeline_report_output_conflict",
-                error_class="usage",
-                message="CLI JSON --output must be separate from selected inputs, event reports and catalog files.",
-                remediation="Choose a separate summary path or use stdout.",
+            raise printable_error(
+                RegMetaError(
+                    exit_code=EXIT_USAGE,
+                    code="pipeline_report_output_conflict",
+                    error_class="usage",
+                    message="CLI JSON --output must be separate from selected inputs, event reports and catalog files.",
+                    remediation="Choose a separate summary path or use stdout.",
+                )
             )
         return output_path
     if (
@@ -2277,27 +2293,31 @@ def _confined_bundle_output_path(
         and (evidence := getattr(args, "evidence", None)) is not None
         and resolved_output == Path(evidence).expanduser().resolve()
     ):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="source_record_evidence_output_conflict",
-            error_class="usage",
-            message="--evidence must be distinct from the CLI JSON --output path.",
-            remediation="Choose separate paths for the census and its compact summary.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="source_record_evidence_output_conflict",
+                error_class="usage",
+                message="--evidence must be distinct from the CLI JSON --output path.",
+                remediation="Choose separate paths for the census and its compact summary.",
+            )
         )
     if (
         args.command == "prepare-input-bundle"
         and (lisa_workbook := getattr(args, "lisa_workbook", None))
         and resolved_output == Path(lisa_workbook).expanduser().resolve()
     ):
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="catalog_input_output_conflict",
-            error_class="configuration",
-            message=(
-                "CLI output must not overwrite the selected LISA workbook: "
-                f"{resolved_output}"
-            ),
-            remediation="Choose an output path distinct from every selected input.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="catalog_input_output_conflict",
+                error_class="configuration",
+                message=(
+                    "CLI output must not overwrite the selected LISA workbook: "
+                    f"{resolved_output}"
+                ),
+                remediation="Choose an output path distinct from every selected input.",
+            )
         )
     selection_path = (
         getattr(args, "scb_snapshot", None)

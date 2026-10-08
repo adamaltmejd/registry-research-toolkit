@@ -1,14 +1,13 @@
-"""The shared G1 cache: pinned release artifacts, their reference and candidate
-copies, and the baseline environment.
+"""The shared G1 cache: pinned release artifacts, their candidate copies, and the
+baseline environment.
 
 Layout under the cache root (``$REG_META_G1_CACHE``, else
 ``$XDG_CACHE_HOME/reg-meta-g1``, else ``~/.cache/reg-meta-g1``)::
 
     artifacts/<tag>/global/reg_meta.db       + reg_meta_docs.db
-    artifacts/<tag>/global/reference/        reg_meta.db + reg_meta_docs.db -> ..
     artifacts/<tag>/global/derived/          reg_meta.db + reg_meta_docs.db -> ..
     artifacts/<tag>/swecov/reg_meta.db       + reg_meta_docs.db -> ../global/...
-    artifacts/<tag>/swecov/{reference,derived}/
+    artifacts/<tag>/swecov/derived/
     baseline/<commit>/src/                   detached worktree of the commit + .venv
 
 Each asset is streamed once: hashed against its pinned SHA-256 while it is
@@ -16,17 +15,14 @@ decompressed, so no ``.zst`` is kept. A stamp beside the database records the
 verified asset digest and the file's size and mtime; a later run refetches when they
 no longer match (readers open the files immutable, so they never change).
 
-The baseline commit is both the baseline reader and the reference builder: one
-detached worktree with its own locked environment (``uv sync``, where maturin builds
-``reg-core-py``), since derive records ``builder_commit`` and needs a clean source
-checkout. A reference copy is that builder's ``reg-meta-build derive`` of its catalog,
-stamped with a key over the base's asset digest and the commit plus its output
-SHA-256; the baseline reads it. A derived (candidate) copy is the checkout's derive,
-keyed over the base's asset digest and the builder source tree; the checkout reads
-it. Each is remade when its key changes. Anything not pinned is deleted, so the cache
-never holds more than the pinned set. Callers hold ``locked`` for a whole run, which
-serializes runs from concurrent worktrees (they share the report directory and the
-CPU budget).
+The baseline commit is the pinned release's reader: one detached worktree with its own
+locked environment (``uv sync``, where maturin builds ``reg-core-py``). It reads the
+release originals. A derived (candidate) copy is the checkout's ``reg-meta-build
+derive`` of an original, stamped with a key over the original's asset digest and the
+builder source tree plus its output SHA-256; the checkout reads it. It is remade when
+its key changes. Anything not pinned is deleted, so the cache never holds more than
+the pinned set. Callers hold ``locked`` for a whole run, which serializes runs from
+concurrent worktrees (they share the report directory and the CPU budget).
 """
 
 from __future__ import annotations
@@ -235,34 +231,38 @@ def _file_sha256(path: Path) -> str:
         return hashlib.file_digest(handle, "sha256").hexdigest()
 
 
-def _derive_copies(
-    dirs: dict[str, Path],
-    name: str,
-    keys: dict[str, Asset],
-    python: str,
-    env: dict[str, str],
-) -> dict[str, Path]:
-    """Return ``{catalog: <directory>/<name>}``, each holding ``python``'s builder's
-    derived copy of the catalog, stamped with its key and provenance: the copy's
-    ``builder_commit`` and SHA-256.
+def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
+    """Return ``{catalog: <directory>/derived}``, each holding the checkout's derived
+    copy of the catalog, stamped with its key (the original's asset digest and the
+    builder sources) and provenance: the copy's ``builder_commit`` and SHA-256.
 
-    Stale copies derive at once: derive parallelizes only its resolver phase, so
-    deriving the catalogs together overlaps their serial index and validation phases
-    (the G1 budget).
+    Derive stamps the builder commit into each copy and refuses a tree with tracked
+    changes, so G1 runs on a committed tree. Stale copies derive at once: derive
+    parallelizes only its resolver phase, so deriving the catalogs together overlaps
+    their serial index and validation phases (the G1 budget).
     """
+    if _repo("status", "--porcelain", "--untracked-files=no"):
+        raise RuntimeError("G1 derives with the committed builder; commit first")
+    source = _repo("rev-parse", *(f"HEAD:{path}" for path in DERIVE_SOURCES))
+    keys = {
+        catalog: Asset(
+            "derive", hashlib.sha256(f"{asset.sha256}\n{source}".encode()).hexdigest()
+        )
+        for catalog, asset in pins.catalogs.items()
+    }
     started = time.monotonic()
     procs: dict[str, tuple[Path, subprocess.Popen]] = {}
     for catalog, directory in sorted(dirs.items()):
-        out = directory / name / DB_FILENAME
+        out = directory / "derived" / DB_FILENAME
         if _stamp_ok(out, keys[catalog]):
             continue
-        sys.stderr.write(f"g1: deriving the {name} copy of {catalog}\n")
+        sys.stderr.write(f"g1: deriving the candidate copy of {catalog}\n")
         _stamp_path(out).unlink(missing_ok=True)
         procs[catalog] = (
             out,
             subprocess.Popen(
                 [
-                    python,
+                    sys.executable,
                     "-m",
                     "reg_meta_build.cli",
                     "derive",
@@ -273,7 +273,9 @@ def _derive_copies(
                 ],
                 stdout=subprocess.PIPE,
                 text=True,
-                env=env,
+                # A perturbation run's PYTHONPATH would derive from the perturbed tree
+                # and cache it under the committed tree's key.
+                env=isolated_env(),
             ),
         )
     failures = []
@@ -283,7 +285,7 @@ def _derive_copies(
         # The atomic publish keeps the replaced copy aside; disk is tight.
         out.with_name(out.name + ".prev").unlink(missing_ok=True)
         if proc.returncode:
-            failures.append(f"derive {name} {catalog} failed: {stdout}")
+            failures.append(f"derive {catalog} failed: {stdout}")
             continue
         conn = sqlite3.connect(f"file:{out}?mode=ro&immutable=1", uri=True)
         try:
@@ -299,56 +301,12 @@ def _derive_copies(
         raise RuntimeError("\n".join(failures))
     if procs:
         seconds = time.monotonic() - started
-        sys.stderr.write(f"g1: derived the {name} copies in {seconds:.1f} s\n")
+        sys.stderr.write(f"g1: derived the candidate copies in {seconds:.1f} s\n")
     for directory in dirs.values():
-        docs = directory / name / DOC_DB_FILENAME
+        docs = directory / "derived" / DOC_DB_FILENAME
         if not docs.is_symlink():
             docs.symlink_to(Path("..") / DOC_DB_FILENAME)
-    return {catalog: directory / name for catalog, directory in dirs.items()}
-
-
-def _keys(pins: Pins, source: str) -> dict[str, Asset]:
-    return {
-        catalog: Asset(
-            "derive", hashlib.sha256(f"{asset.sha256}\n{source}".encode()).hexdigest()
-        )
-        for catalog, asset in pins.catalogs.items()
-    }
-
-
-def ensure_reference(pins: Pins, dirs: dict[str, Path], tree: Path) -> dict[str, Path]:
-    """Return ``{catalog: directory}`` of the reference copies: the baseline commit's
-    derive (from its worktree ``tree``) of each original, keyed by the original's
-    asset digest and the commit, never by the checkout's code.
-    """
-    return _derive_copies(
-        dirs,
-        "reference",
-        _keys(pins, pins.baseline_commit),
-        str(baseline_python(tree)),
-        isolated_env(),
-    )
-
-
-def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
-    """Return ``{catalog: directory}`` of the candidate copies: the checkout's derive
-    of each original, keyed by the original's asset digest and the builder sources.
-
-    Derive stamps the builder commit into each copy and refuses a tree with tracked
-    changes, so G1 runs on a committed tree.
-    """
-    if _repo("status", "--porcelain", "--untracked-files=no"):
-        raise RuntimeError("G1 derives with the committed builder; commit first")
-    source = _repo("rev-parse", *(f"HEAD:{path}" for path in DERIVE_SOURCES))
-    return _derive_copies(
-        dirs,
-        "derived",
-        _keys(pins, source),
-        sys.executable,
-        # A perturbation run's PYTHONPATH would derive from the perturbed tree and
-        # cache it under the committed tree's key.
-        isolated_env(),
-    )
+    return {catalog: directory / "derived" for catalog, directory in dirs.items()}
 
 
 def ensure_server() -> Path:
@@ -385,7 +343,7 @@ def ensure_baseline(pins: Pins) -> Path:
     """Return the baseline tree: a detached worktree of the pinned commit with the
     commit's locked environment in ``.venv`` (``uv sync --frozen --no-dev``; maturin
     builds ``reg-core-py`` from the commit's crates). It holds the baseline reader and
-    webapp, the webapp's steward branding and the reference builder.
+    webapp and the webapp's steward branding.
     """
     root = cache_root()
     commit = pins.baseline_commit

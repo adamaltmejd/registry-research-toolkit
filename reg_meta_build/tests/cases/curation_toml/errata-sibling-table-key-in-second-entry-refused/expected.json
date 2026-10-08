@@ -26,7 +26,7 @@
   "fails_if": "the register loader accepts a key outside a register table's closed field set, or locates it at the wrong entry",
   "note": "One case for the closed-table rule every register table shares: the unknown key sits in entry 2 behind a valid entry 1, and is a key the sibling [[errata.column]] table accepts. The replaced classification-reference test contributes only its extra-key parameter (`replacement`).",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_unknown_key",
     "locator": "curation/registers/scb/test.toml [[errata.delivered.definition]] entry 2",
     "message_contains": [
       "Extra inputs are not permitted"

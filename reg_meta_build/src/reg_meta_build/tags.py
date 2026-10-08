@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING
 from ._curation import (
     curation_error,
     load_curation_entries,
+    located,
     require_str,
 )
 
@@ -93,35 +94,38 @@ def load_tags(path: Path | None) -> tuple[CuratedTag, ...]:
     )
     out: list[CuratedTag] = []
     seen_slugs: set[str] = set()
-    for entry in entries:
-        slug = _require_str(entry, "slug", "[[tag]]")
-        label = _require_str(entry, "label", "[[tag]]")
-        description = _optional_str(entry, "description", f"tag {slug!r}")
-        if slug in seen_slugs:
-            raise curation_error(
-                "tags_invalid",
-                f"tags duplicate slug {slug!r}.",
-                "Tag slugs are a GLOBAL vocabulary — each must be unique in "
-                "reg_meta_build/curation/tags.toml.",
-            )
-        seen_slugs.add(slug)
-        raw_members = entry.get("member", [])
-        if not isinstance(raw_members, list) or not raw_members:
-            raise curation_error(
-                "tags_invalid",
-                f"tags tag {slug!r} needs a non-empty `[[tag.member]]` array.",
-                "List the tag's members as `[[tag.member]]` tables.",
-            )
-        members: list[TagMember] = []
-        seen_refs: set[tuple[str, str, str | None]] = set()
-        for raw in raw_members:
-            if not isinstance(raw, dict):
+    for index, entry in enumerate(entries, start=1):
+        where = f"curation/tags.toml [[tag]] entry {index}"
+        with located(where):
+            slug = _require_str(entry, "slug", "[[tag]]")
+            label = _require_str(entry, "label", "[[tag]]")
+            description = _optional_str(entry, "description", f"tag {slug!r}")
+            if slug in seen_slugs:
                 raise curation_error(
                     "tags_invalid",
-                    f"tags tag {slug!r} member {raw!r} must be a table.",
-                    "Each member is a `[[tag.member]]` table.",
+                    f"tags duplicate slug {slug!r}.",
+                    "Tag slugs are a GLOBAL vocabulary — each must be unique in "
+                    "reg_meta_build/curation/tags.toml.",
                 )
-            members.append(_parse_member(raw, slug, seen_refs))
+            seen_slugs.add(slug)
+            raw_members = entry.get("member", [])
+            if not isinstance(raw_members, list) or not raw_members:
+                raise curation_error(
+                    "tags_invalid",
+                    f"tags tag {slug!r} needs a non-empty `[[tag.member]]` array.",
+                    "List the tag's members as `[[tag.member]]` tables.",
+                )
+        members: list[TagMember] = []
+        seen_refs: set[tuple[str, str, str | None]] = set()
+        for position, raw in enumerate(raw_members, start=1):
+            with located(f"{where} [[tag.member]] entry {position}"):
+                if not isinstance(raw, dict):
+                    raise curation_error(
+                        "tags_invalid",
+                        f"tags tag {slug!r} member {raw!r} must be a table.",
+                        "Each member is a `[[tag.member]]` table.",
+                    )
+                members.append(_parse_member(raw, slug, seen_refs))
         out.append(
             CuratedTag(
                 slug=slug,

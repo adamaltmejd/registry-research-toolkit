@@ -1,6 +1,6 @@
 {
   "replaces": [
-    "test_succession_candidates.py::TestInfer::test_only_the_two_real_successions",
+    "test_succession_candidates.py::TestInfer::test_only_the_real_succession",
     "test_succession_candidates.py::TestInfer::test_cross_var_id_evidence",
     "test_succession_candidates.py::TestInfer::test_the_curated_edge_is_what_suppresses_the_anninkf_pair",
     "test_succession_candidates.py::TestInfer::test_the_overlapping_era_is_what_suppresses_the_kod_pair",

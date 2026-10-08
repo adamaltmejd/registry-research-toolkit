@@ -4,6 +4,9 @@
   "fails_if": "load_tags silently ignores an unknown top-level table such as a misspelled [[tags]]",
   "error": {
     "code": "tags_invalid",
-    "locator": "tags"
+    "locator": "curation/tags.toml",
+    "message_contains": [
+      "tags"
+    ]
   }
 }

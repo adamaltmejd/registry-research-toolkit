@@ -25,24 +25,23 @@ import tomllib
 import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from functools import lru_cache
 from itertools import combinations, groupby
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast, get_args
 
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.errors import RegMetaError
 from reg_meta.fqid import (
     FqidKind,
     derive_variable_slug,
     validate_slug,
 )
 
-from ._curation import repo_curation_dir
+from ._curation import curation_error, display_path, repo_curation_dir
 from .id import is_canonical_scb
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+    from collections.abc import Callable, Iterator, Mapping, Sequence
+    from pathlib import Path
 
     from .curation_tree import RegisterCuration
 
@@ -167,16 +166,6 @@ def slug_dir_curates_canonical_scb(slug_dir: Path) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def _err(code: str, message: str, remediation: str) -> RegMetaError:
-    return RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code=code,
-        error_class="configuration",
-        message=message,
-        remediation=remediation,
-    )
-
-
 def _toml_str(value: str) -> str:
     """Quote ``value`` as a TOML basic string with the required escapes.
 
@@ -209,9 +198,9 @@ def _parse_toml(path: Path) -> dict[str, Any]:
     try:
         return tomllib.loads(path.read_text(encoding="utf-8"))
     except (OSError, tomllib.TOMLDecodeError) as exc:
-        raise _err(
+        raise curation_error(
             "slug_toml_unreadable",
-            f"Could not parse slug TOML {path}: {exc}",
+            f"Could not parse slug TOML {display_path(path)}: {exc}",
             "Ensure the file is valid TOML.",
         ) from exc
 
@@ -276,14 +265,14 @@ def _validate_entry_slug(
 ) -> None:
     if slug is None:
         if required:
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
                 f"{kind}.{source_id!r}: missing required `slug` field.",
                 'Add `slug = "..."` to the entry.',
             )
         return
     if not isinstance(slug, str):
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: `slug` must be a string, got {type(slug).__name__}.",
             "Quote the value as a TOML string.",
@@ -296,7 +285,7 @@ def _validate_entry_slug(
     try:
         validate_slug(slug, kind, allow_default=(kind == "register_variant"))
     except ValueError as exc:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: {exc}",
             "Adjust the slug to satisfy the slug rules (grammar and reserved tokens).",
@@ -313,7 +302,7 @@ def _validate_entry(
     allowed = _allowed_fields(kind)
     unknown = set(entry) - allowed
     if unknown:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: unknown field(s): {sorted(unknown)}.",
             f"Allowed fields for {kind}: {sorted(allowed)}.",
@@ -337,7 +326,7 @@ def _validate_entry(
     # missing-row check in populate_slugs).
     deprecated_raw = entry.get("deprecated", False)
     if not isinstance(deprecated_raw, bool):
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: `deprecated` must be a TOML boolean "
             f"(true/false), got {type(deprecated_raw).__name__}.",
@@ -347,14 +336,14 @@ def _validate_entry(
     if replaced_by is not None and (
         not isinstance(replaced_by, str) or not replaced_by
     ):
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: `replaced_by` must be a non-empty string.",
             "Point it at the TOML key of the replacement row.",
         )
     display_group = entry.get("display_group")
     if display_group is not None and not isinstance(display_group, str):
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: `display_group` must be a string.",
             "Quote the value or remove it.",
@@ -406,7 +395,7 @@ def _validate_panel_slug_ref(
     try:
         validate_slug(value, "variable")
     except ValueError as exc:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: `{field}` {value!r} is not a valid variable "
             f"slug: {exc}",
@@ -424,7 +413,7 @@ def _validate_panel_entity_key(
         return None
     if isinstance(raw, str):
         if not raw:
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
                 f"{kind}.{source_id!r}: `panel_entity_key` must be non-empty.",
                 "Give a variable slug or remove the field.",
@@ -433,7 +422,7 @@ def _validate_panel_entity_key(
         return raw
     if isinstance(raw, list):
         if not raw or not all(isinstance(r, str) and r for r in raw):
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
                 f"{kind}.{source_id!r}: `panel_entity_key` array must be a "
                 "non-empty list of non-empty strings.",
@@ -442,7 +431,7 @@ def _validate_panel_entity_key(
         for r in raw:
             _validate_panel_slug_ref(kind, source_id, "panel_entity_key", r)
         return tuple(raw)
-    raise _err(
+    raise curation_error(
         "slug_toml_invalid",
         f"{kind}.{source_id!r}: `panel_entity_key` must be a string or an "
         f"array of strings, got {type(raw).__name__}.",
@@ -463,7 +452,7 @@ def _validate_panel_time_key(
         return None
     if isinstance(raw, str):
         if not raw:
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
                 f"{kind}.{source_id!r}: `panel_time_key` must be non-empty.",
                 'Use "period" (delivery-aligned) or a variable slug.',
@@ -473,7 +462,7 @@ def _validate_panel_time_key(
         return raw
     if isinstance(raw, list):
         if not raw or not all(isinstance(r, str) and r for r in raw):
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
                 f"{kind}.{source_id!r}: `panel_time_key` array must be a "
                 "non-empty list of non-empty strings.",
@@ -481,7 +470,7 @@ def _validate_panel_time_key(
             )
         for r in raw:
             if r == "period":
-                raise _err(
+                raise curation_error(
                     "slug_toml_invalid",
                     f"{kind}.{source_id!r}: `panel_time_key` array may not "
                     'contain the "period" sentinel — it is delivery-aligned and '
@@ -490,7 +479,7 @@ def _validate_panel_time_key(
                 )
             _validate_panel_slug_ref(kind, source_id, "panel_time_key", r)
         return tuple(raw)
-    raise _err(
+    raise curation_error(
         "slug_toml_invalid",
         f"{kind}.{source_id!r}: `panel_time_key` must be a string or an "
         f"array of strings, got {type(raw).__name__}.",
@@ -504,7 +493,7 @@ def _validate_panel_time_grain(
     if raw is None:
         return None
     if raw not in ("delivery", "row"):
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: `panel_time_grain` must be 'delivery' or "
             f"'row', got {raw!r}.",
@@ -531,7 +520,7 @@ def _validate_panel_time_consistency(
     if panel_time_grain is None:
         return
     if panel_time_key is None:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: `panel_time_grain` is set "
             f"({panel_time_grain!r}) without a `panel_time_key`.",
@@ -545,7 +534,7 @@ def _validate_panel_time_consistency(
             if is_period
             else f"the slug/composite key {panel_time_key!r}"
         )
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{kind}.{source_id!r}: `panel_time_key` is {kind_desc} but "
             f"`panel_time_grain` is {panel_time_grain!r}; expected {expected!r}.",
@@ -565,14 +554,14 @@ def _resolve_replaced_by(entries: list[SlugEntry], *, scope: str) -> None:
         while cur.replaced_by is not None:
             nxt_key = (cur.kind, cur.replaced_by)
             if nxt_key not in by_key:
-                raise _err(
+                raise curation_error(
                     "slug_toml_invalid",
                     f"{scope}: {cur.kind}.{cur.source_id!r} replaced_by "
                     f"{cur.replaced_by!r} which is not declared.",
                     "Add the replacement row, or remove the replaced_by link.",
                 )
             if nxt_key in seen:
-                raise _err(
+                raise curation_error(
                     "slug_toml_invalid",
                     f"{scope}: replaced_by cycle through {entry.kind}.{entry.source_id!r}.",
                     "Break the cycle so resolution terminates.",
@@ -622,14 +611,6 @@ def _register_allows_split_base_pair(
     )
 
 
-@lru_cache(maxsize=8)
-def _register_files_for_curation_dir(path: str) -> tuple[RegisterCuration, ...]:
-    """Read the immutable register tree once per resolved curation directory."""
-    from .curation_tree import load_register_files
-
-    return load_register_files(Path(path))
-
-
 def load_provider_toml(path: Path) -> list[SlugEntry]:
     """Parse a per-provider slug TOML (``scb.toml``, ``sos.toml``, …).
 
@@ -641,7 +622,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
     try:
         validate_slug(provider, FqidKind.PROVIDER)
     except ValueError as exc:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{path.name}: provider slug {provider!r} fails the FQID grammar ({exc}).",
             "Rename the file to a lowercase-kebab provider slug (e.g. `scb.toml`).",
@@ -649,7 +630,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
     data = _parse_toml(path)
     unknown_top = set(data) - _PROVIDER_TOPLEVEL_KEYS
     if unknown_top:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"{path.name}: unknown top-level table(s): {sorted(unknown_top)}.",
             f"Allowed: {sorted(_PROVIDER_TOPLEVEL_KEYS)}. Check for typos "
@@ -667,14 +648,14 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
             continue
         table = data[kind]
         if not isinstance(table, dict):
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
                 f"{path.name}: `{kind}` must be a table-of-tables.",
                 f'Use [{kind}."<id>"] entries, not a flat array.',
             )
         for source_id, raw in table.items():
             if not isinstance(raw, dict):
-                raise _err(
+                raise curation_error(
                     "slug_toml_invalid",
                     f"{path.name}: {kind}.{source_id!r} must be a TOML table.",
                     f'Use the dotted-key form: [{kind}."<id>"].',
@@ -703,7 +684,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                 if holders and len(holders) == 1:
                     split_base_pair = _is_split_base_pair(holders[0], entry)
                 if holders and (len(holders) > 1 or not split_base_pair):
-                    raise _err(
+                    raise curation_error(
                         "slug_toml_invalid",
                         f"{path.name}: slug {entry.slug!r} reused by "
                         f"{kind}.{holders[0].source_id!r} and {kind}.{source_id!r} "
@@ -760,7 +741,8 @@ def _known_provider_stems(slug_dir: Path) -> frozenset[str]:
 
 
 def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
-    """Parse ``<slug_dir>/freeze.toml`` into ``{zone: state}``.
+    """Parse the zone-state file into ``{zone: state}``: ``slug_state.toml`` in
+    a register-owned tree, else ``<slug_dir>/freeze.toml``.
 
     An absent file → ``{}`` (every zone defaults to "churning"). Fails fast
     (``EXIT_CONFIG``) on an unknown state value, a non-string value, or an
@@ -780,22 +762,22 @@ def load_freeze_states(slug_dir: Path) -> dict[str, SlugFreezeState]:
     states: dict[str, SlugFreezeState] = {}
     for zone, state in data.items():
         if not isinstance(state, str):
-            raise _err(
+            raise curation_error(
                 "slug_freeze_state_invalid",
-                f"{FREEZE_STATE_FILE}: zone {zone!r} state must be a string, "
+                f"{path.name}: zone {zone!r} state must be a string, "
                 f"got {type(state).__name__}.",
                 f"Set it to one of {sorted(_FREEZE_STATES)}.",
             )
         if state not in _FREEZE_STATES:
-            raise _err(
+            raise curation_error(
                 "slug_freeze_state_invalid",
-                f"{FREEZE_STATE_FILE}: zone {zone!r} has unknown state {state!r}.",
+                f"{path.name}: zone {zone!r} has unknown state {state!r}.",
                 f"Use one of {sorted(_FREEZE_STATES)}.",
             )
         if zone not in known_zones:
-            raise _err(
+            raise curation_error(
                 "slug_freeze_zone_unknown",
-                f"{FREEZE_STATE_FILE}: unknown zone {zone!r}.",
+                f"{path.name}: unknown zone {zone!r}.",
                 f"A zone is a provider stem ({sorted(known_zones)}).",
             )
         states[zone] = cast("SlugFreezeState", state)  # membership-checked above
@@ -849,7 +831,7 @@ def _git_env() -> dict[str, str]:
 
 
 def _git_unreadable(directory: Path, detail: str) -> RegMetaError:
-    return _err(
+    return curation_error(
         "slug_dir_git_unreadable",
         f"{directory}: a .git is present but git cannot read the committed HEAD "
         f"tree, so uncommitted slug pins cannot be checked: {detail.strip()}",
@@ -983,7 +965,7 @@ def _uncommitted_pin_errors(
         rel = path.relative_to(slug_dir).as_posix()
         if rel not in committed:
             errors.append(
-                _err(
+                curation_error(
                     "slug_pin_uncommitted",
                     f"{path}: pinned auto file is not in the committed HEAD tree, "
                     "so a clean checkout would lose its slugs.",
@@ -992,7 +974,7 @@ def _uncommitted_pin_errors(
             )
         elif rel in changed:
             errors.append(
-                _err(
+                curation_error(
                     "slug_pin_uncommitted",
                     f"{path}: pinned auto file differs from the committed HEAD "
                     "tree, so a clean checkout would restore its old slugs.",
@@ -1024,9 +1006,9 @@ def load_slug_dir(
     always load.
     """
     if not slug_dir.is_dir():
-        raise _err(
+        raise curation_error(
             "slug_dir_not_found",
-            f"Slug directory not found: {slug_dir}",
+            f"Slug directory not found: {display_path(slug_dir)}",
             "Create the directory or pass --slug-dir.",
         )
     states = load_freeze_states(slug_dir)
@@ -1065,7 +1047,7 @@ def _load_register_slug_tree(
         identity = register.register_info
         file = register.source_file
         if identity.native_id is None:
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
                 f"{file} [register]: missing native_id.",
                 "Set the source register id.",
@@ -1095,7 +1077,7 @@ def _load_register_slug_tree(
         local: list[SlugEntry] = []
         for kind, source_id, raw, location in authored:
             if source_id.partition(".")[0] != reg_id:
-                raise _err(
+                raise curation_error(
                     "slug_toml_invalid",
                     f"{file} {location}: native_id {source_id!r} does not belong to register {reg_id!r}.",
                     "Use this register's native id prefix.",
@@ -1103,12 +1085,12 @@ def _load_register_slug_tree(
             try:
                 entry = _validate_entry(kind, source_id, raw, provider=provider)
             except RegMetaError as exc:
-                raise _err(
+                raise curation_error(
                     exc.code, f"{file} {location}: {exc.message}", exc.remediation
                 ) from exc
             key = (provider, kind, source_id)
             if key in source_owners:
-                raise _err(
+                raise curation_error(
                     "slug_toml_invalid",
                     f"{file} {location}: duplicate native_id {source_id!r}; first in {source_owners[key]}.",
                     "Keep one authored entry per native id.",
@@ -1126,7 +1108,7 @@ def _load_register_slug_tree(
                     if kind != "variable" or not _register_allows_split_base_pair(
                         register, other, entry
                     ):
-                        raise _err(
+                        raise curation_error(
                             "slug_toml_invalid",
                             f"{file} {location}: slug {entry.slug!r} reused by {other_file} ({other.source_id!r}).",
                             "Use a unique slug within the register/provider.",
@@ -1142,8 +1124,11 @@ def _load_register_slug_tree(
             entries.extend(local)
             continue
         auto_entries = _load_register_auto_file(auto_path, provider, reg_id)
+        # Named like the authored file (`curation/registers/...`), so the pair
+        # reads the same wherever the tree lives.
+        auto_file = f"curation/{auto_path.relative_to(root).as_posix()}"
         effective: dict[str, tuple[SlugEntry, str]] = {
-            entry.source_id: (entry, f"{auto_path} [[variable]] entry {index}")
+            entry.source_id: (entry, f"{auto_file} [[variable]] entry {index}")
             for index, entry in enumerate(auto_entries, 1)
         }
         for entry in local:
@@ -1160,7 +1145,7 @@ def _load_register_slug_tree(
             if previous is not None:
                 other, other_location = previous
                 if not _register_allows_split_base_pair(register, other, entry):
-                    raise _err(
+                    raise curation_error(
                         "slug_toml_invalid",
                         f"{location}: variable slug {entry.slug!r} reused by {other_location} ({other.source_id!r}).",
                         "Give variables distinct slugs within this register.",
@@ -1177,10 +1162,11 @@ def _load_register_auto_file(path: Path, provider: str, reg_id: str) -> list[Slu
     from .curation_tree import RegisterVariableSlug
 
     data = _parse_toml(path)
+    file = display_path(path)
     if set(data) - {"variable"} or not isinstance(data.get("variable", []), list):
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
-            f"{path}: expected only [[variable]] entries.",
+            f"{file}: expected only [[variable]] entries.",
             "Regenerate the machine-owned pin file.",
         )
     entries: list[SlugEntry] = []
@@ -1195,21 +1181,21 @@ def _load_register_auto_file(path: Path, provider: str, reg_id: str) -> list[Slu
                 provider=provider,
             )
         except (ValidationError, RegMetaError) as exc:
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
-                f"{path} [[variable]] entry {i}: {exc}",
+                f"{file} [[variable]] entry {i}: {exc}",
                 "Regenerate the pin file.",
             ) from exc
         if entry.source_id.partition(".")[0] != reg_id or entry.slug is None:
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
-                f"{path} [[variable]] entry {i}: invalid native_id or missing slug.",
+                f"{file} [[variable]] entry {i}: invalid native_id or missing slug.",
                 "Keep pins with their owning register.",
             )
         if entry.source_id in seen:
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
-                f"{path} [[variable]] entry {i}: duplicate native_id {entry.source_id!r}.",
+                f"{file} [[variable]] entry {i}: duplicate native_id {entry.source_id!r}.",
                 "Keep one generated pin per native id.",
             )
         seen.add(entry.source_id)
@@ -1235,7 +1221,7 @@ def _parse_canonical_int(value: str) -> int | None:
 def _parse_register_id(source_id: str) -> int:
     parsed = _parse_canonical_int(source_id)
     if parsed is None:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"register.{source_id!r}: TOML key must be the numeric RegisterId "
             f"in canonical form (no leading zeros).",
@@ -1247,7 +1233,7 @@ def _parse_register_id(source_id: str) -> int:
 def _parse_variant_id(source_id: str) -> tuple[int, int] | tuple[int, int, str]:
     parts = source_id.split(".")
     if len(parts) not in (2, 3):
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"register_variant.{source_id!r}: expected `<RegisterId>.<RegVarID>` "
             "or `<RegisterId>.<RegVarID>.<slug>`.",
@@ -1256,7 +1242,7 @@ def _parse_variant_id(source_id: str) -> tuple[int, int] | tuple[int, int, str]:
     reg = _parse_canonical_int(parts[0])
     var = _parse_canonical_int(parts[1])
     if reg is None or var is None:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"register_variant.{source_id!r}: both halves must be integers "
             f"in canonical form (no leading zeros).",
@@ -1266,7 +1252,7 @@ def _parse_variant_id(source_id: str) -> tuple[int, int] | tuple[int, int, str]:
         try:
             validate_slug(parts[2], "variant")
         except ValueError as exc:
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
                 f"register_variant.{source_id!r}: invalid split slug: {exc}",
                 "Use a canonical variant slug as the third part.",
@@ -1290,7 +1276,7 @@ def _parse_variable_id(source_id: str) -> tuple[int, str]:
     two SCB keys can't alias one DB row."""
     parts = source_id.split(".")
     if len(parts) not in (2, 3):
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"variable.{source_id!r}: expected `<RegisterId>.<VarId>` or "
             f"`<RegisterId>.<VarId>.<discriminator>` (split sibling).",
@@ -1299,7 +1285,7 @@ def _parse_variable_id(source_id: str) -> tuple[int, str]:
         )
     reg = _parse_canonical_int(parts[0])
     if reg is None:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"variable.{source_id!r}: RegisterId must be an integer in canonical "
             f"form (no leading zeros).",
@@ -1307,7 +1293,7 @@ def _parse_variable_id(source_id: str) -> tuple[int, str]:
         )
     var_key = parts[1]
     if not var_key:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"variable.{source_id!r}: the VarId segment is empty.",
             "Use the SCB VarId or the non-SCB provider_key.",
@@ -1316,14 +1302,14 @@ def _parse_variable_id(source_id: str) -> tuple[int, str]:
     # `1.010` can't alias one DB row. A non-numeric VarId is a non-SCB
     # provider_key (e.g. a SOS variable name `ALDER`), accepted as text.
     if var_key.isdigit() and _parse_canonical_int(var_key) is None:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"variable.{source_id!r}: a numeric VarId must be in canonical form "
             f"(no leading zeros).",
             "Use the literal SCB VarId.",
         )
     if len(parts) == 3 and not parts[2]:
-        raise _err(
+        raise curation_error(
             "slug_toml_invalid",
             f"variable.{source_id!r}: split-sibling discriminator is empty.",
             "Provide a non-empty delivery-column discriminator.",
@@ -1405,7 +1391,7 @@ def populate_slugs(
                 if register_id not in live_regs:
                     if entry.deprecated:
                         continue
-                    raise _err(
+                    raise curation_error(
                         "slug_unknown_source_id",
                         f"{provider_slug}.toml: register.{entry.source_id!r} "
                         f"has no live row in this build.",
@@ -1423,7 +1409,7 @@ def populate_slugs(
                 if key not in live_variants:
                     if entry.deprecated:
                         continue
-                    raise _err(
+                    raise curation_error(
                         "slug_unknown_source_id",
                         f"{provider_slug}.toml: register_variant.{entry.source_id!r} "
                         f"has no live row in this build.",
@@ -1544,137 +1530,6 @@ def iter_curated_provider_entries(
         if path.name != FREEZE_STATE_FILE and not path.name.endswith(AUTO_FILE_SUFFIX)
         for e in load_provider_toml(path)
     ]
-
-
-@dataclass(frozen=True)
-class DeclaredColumnOwnership:
-    """Literal ownership for one native family, read from its register TOML."""
-
-    provider: str
-    source_id: str
-    split_ids: tuple[str, ...]
-    declared_columns: tuple[tuple[str, str | None], ...]
-    declaration_reference: str
-
-
-def declared_column_ownership(
-    entries: Iterable[SlugEntry],
-    *,
-    provider: str,
-    source_id: str,
-    curation_dir: Path | None = None,
-    register_files: Iterable[RegisterCuration] | None = None,
-) -> DeclaredColumnOwnership:
-    """Read one family partition from ``curation/registers`` and validate its keys.
-
-    Slug entries still define the named split siblings; only their register-file
-    partition maps define which delivered spelling belongs to each sibling.
-    ``unassigned_columns`` remain explicit None owners so unresolved identity is
-    preserved instead of silently absorbed.
-    """
-    _parse_variable_id(source_id)
-    if len(source_id.split(".")) != 2:
-        raise ValueError(
-            f"column ownership is declared per native family, got split key {source_id!r}"
-        )
-    slug_entries = tuple(entries)
-    family = [
-        entry
-        for entry in slug_entries
-        if entry.kind == "variable"
-        and entry.provider == provider
-        and (
-            entry.source_id == source_id or entry.source_id.startswith(source_id + ".")
-        )
-    ]
-    if not family:
-        raise ValueError(f"no tracked slug entries for family {provider}:{source_id!r}")
-    native_register = source_id.split(".", 1)[0]
-    register_slugs = {
-        entry.slug
-        for entry in slug_entries
-        if entry.kind == "register"
-        and entry.provider == provider
-        and entry.source_id == native_register
-        and entry.slug is not None
-    }
-    if len(register_slugs) != 1:
-        raise ValueError(
-            f"expected one register slug for {provider}:{native_register}, "
-            f"found {sorted(register_slugs)}"
-        )
-    register_slug = next(iter(register_slugs))
-    root = curation_dir or repo_curation_dir()
-    if register_files is None:
-        if root is None:
-            raise ValueError(
-                "register curation is unavailable outside the repo checkout"
-            )
-        loaded = _register_files_for_curation_dir(str(root.resolve()))
-    else:
-        loaded = tuple(register_files)
-    register_entry = next(
-        (
-            entry
-            for entry in loaded
-            if entry.register_info.provider == provider
-            and entry.register_info.slug == register_slug
-        ),
-        None,
-    )
-    if register_entry is None:
-        raise ValueError(
-            f"no register curation file for {provider}/{register_slug} ({source_id})"
-        )
-    file = register_entry.source_file
-    partitions = [
-        (index, partition)
-        for index, partition in enumerate(register_entry.identity.partition, start=1)
-        if partition.variable == source_id
-    ]
-    if not partitions:
-        raise ValueError(
-            f"no declared literal column ownership in {file} for {source_id!r}"
-        )
-    if len(partitions) != 1:
-        raise _err(
-            "slug_toml_invalid",
-            f"{file}: duplicate [[identity.partition]] for {source_id!r}.",
-            "Keep one ownership map per native family.",
-        )
-    index, partition = partitions[0]
-    merged: dict[str, str | None] = dict(partition.columns)
-    for literal in partition.unassigned_columns:
-        if literal in merged:
-            raise _err(
-                "slug_toml_invalid",
-                f"{file} [[identity.partition]] entry {index}: literal {literal!r} "
-                "is both assigned and unassigned.",
-                "List each exact delivery spelling in one ownership field.",
-            )
-        merged[literal] = None
-    known = {
-        entry.source_id for entry in family if len(entry.source_id.split(".")) == 3
-    }
-    owners = {owner for owner in merged.values() if owner is not None}
-    if owners != known:
-        unknown = sorted(owners - known)
-        missing = sorted(known - owners)
-        raise _err(
-            "slug_toml_invalid",
-            f"{file} [[identity.partition]] entry {index}: ownership is not "
-            "family-complete. "
-            + (f"Owners without slug entries: {unknown}. " if unknown else "")
-            + (f"Slug splits without owners: {missing}." if missing else ""),
-            "Cover every tracked split sibling and no other split.",
-        )
-    return DeclaredColumnOwnership(
-        provider=provider,
-        source_id=source_id,
-        split_ids=tuple(sorted(owners)),
-        declared_columns=tuple(sorted(merged.items())),
-        declaration_reference=partition.columns_ref,
-    )
 
 
 def _entity_key_curation_basis(
@@ -1895,7 +1750,7 @@ def _variable_source_ids(
             out[vids[0]] = f"{register_native_id}.{pk}"
             continue
         if "." in pk:
-            raise _err(
+            raise curation_error(
                 "slug_toml_invalid",
                 f"variable provider_key {pk!r} (register {register_id}) contains "
                 "'.', which collides with the source-ID segment separator.",
@@ -2087,7 +1942,7 @@ def write_entity_key_pins(
     (``EXIT_CONFIG``) rather than clobbering — pointing `--out-dir` at a curated
     steward slug dir is the footgun this guards."""
     if out_dir.exists() and any(out_dir.rglob("*.toml")) and not force:
-        raise _err(
+        raise curation_error(
             "entity_key_pins_would_overwrite",
             f"{out_dir} already contains TOMLs; refusing to overwrite.",
             "Pass --force to overwrite, or point --out-dir at an empty "
@@ -2644,7 +2499,7 @@ def populate_variable_slugs(
                 )
             )
             if missing_auto:
-                raise _err(
+                raise curation_error(
                     "slug_freeze_auto_missing",
                     f"Provider {provider_slug!r} is {state!r} but its committed "
                     f"{missing_auto[0]} is missing. A pinned provider reads its slugs "
@@ -2755,7 +2610,7 @@ def populate_variable_slugs(
             # (dot-free); a non-SCB provider_key (a SOS variable name, A4.4b) must
             # be too. Fail fast rather than corrupt the key.
             if "." in pk:
-                raise _err(
+                raise curation_error(
                     "slug_toml_invalid",
                     f"variable provider_key {pk!r} (register {rid}) contains '.', "
                     "which collides with the source-ID segment separator.",
@@ -2831,7 +2686,7 @@ def populate_variable_slugs(
                     # UNIQUE(register_id, slug) failure (live other source) or
                     # silently duplicates a retired published FQID (pruned one).
                     if fixed in used and fixed != auto.get(source_id):
-                        raise _err(
+                        raise curation_error(
                             "slug_variable_override_conflict",
                             f'{provider_slug}.toml: [variable."{source_id}"] slug '
                             f"{fixed!r} is already reserved by another variable "
@@ -3026,7 +2881,7 @@ def populate_variable_slugs(
     )
     if stale_overrides:
         sample = ", ".join(f"{prov}/{sid}" for prov, sid in stale_overrides[:10])
-        raise _err(
+        raise curation_error(
             "slug_variable_override_stale",
             f"{len(stale_overrides)} hand-curated [variable] slug override(s) "
             f"reference a (register, var) with no live variable — likely a typo: "
@@ -3045,7 +2900,7 @@ def populate_variable_slugs(
             f"{prov}/{sid} = {slug} ({kind})"
             for prov, sid, slug, kind in frozen_new_fallback[:10]
         )
-        raise _err(
+        raise curation_error(
             "slug_freeze_new_fallback",
             f"{len(frozen_new_fallback)} NEW variable(s) on a frozen provider would "
             "take a slug derived from a fragile (name-fallback/last-resort/"
@@ -3095,7 +2950,7 @@ def _assert_no_unslugged(
     if not missing:
         return
     sample = ", ".join(sample_fmt(r) for r in missing[:5])
-    raise _err(
+    raise curation_error(
         "slug_missing_for_source_id",
         f"{len(missing)} {label}(s) under provider {provider_slug!r} have no "
         f"slug in {provider_slug}.toml. First: {sample}.",
@@ -3117,49 +2972,58 @@ class LineageConfig:
     providers can reuse a register slug, so an `scb/rtb` default must not bleed
     onto an `sos/rtb` source (Codex P2 on #145). `defaults` maps
     `(provider_slug, source_register_slug)` → the heuristic default source
-    variant slug (the `[lineage_defaults]` block). `overrides` maps
-    `(provider_slug, consumer_register_slug, variable_slug)` →
-    `(source_register_slug, source_variant_slug)` (the
-    `[lineage."<provider>/<consumer>/<slug>"]` blocks).
+    variant slug (the `[lineage_defaults]` block).
 
-    Both carry pure shape (string-typed values); existence of the named
-    registers / variants is validated by `link_variable_state_lineage` against
-    the DB — this loader stays DB-free so it's testable in isolation.
+    Values carry pure shape (string-typed); existence of the named registers /
+    variants is validated by `link_variable_state_lineage` against the DB — this
+    loader stays DB-free so it's testable in isolation.
     """
 
     defaults: dict[tuple[str, str], str]
-    overrides: dict[tuple[str, str, str], tuple[str, str]]
 
 
 def load_lineage_config(path: Path | None) -> LineageConfig:
     """Parse the single navigation-lineage overlay.
 
-    ``[lineage_defaults]`` keys are two-segment source-register FQIDs and
-    ``[lineage."…"]`` keys are three-segment consumer-variable FQIDs. Provider
-    association is therefore explicit rather than inferred from an identity
-    filename. Missing curation yields an empty config; malformed shape still
+    ``[lineage_defaults]`` keys are two-segment source-register FQIDs, so
+    provider association is explicit rather than inferred from an identity
+    filename. Per-variable ``[lineage."…"]`` overrides have no consumer and are
+    refused. Missing curation yields an empty config; malformed shape still
     fails before any provider-specific resolution.
     """
     defaults: dict[tuple[str, str], str] = {}
-    overrides: dict[tuple[str, str, str], tuple[str, str]] = {}
 
     if path is None or not path.is_file():
-        return LineageConfig(defaults=defaults, overrides=overrides)
-    data = _parse_toml(path)
-    unknown_top = set(data) - {"lineage_defaults", "lineage"}
+        return LineageConfig(defaults=defaults)
+    file = display_path(path)
+    try:
+        data = tomllib.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
+        raise curation_error(
+            "lineage_toml_unreadable",
+            f"Could not parse lineage TOML {file}: {exc}",
+            "Fix the TOML syntax in reg_meta_build/curation/lineage.toml.",
+        ) from exc
+    if "lineage" in data:
+        raise curation_error(
+            "lineage_override_unconsumed",
+            f'{file}: per-variable [lineage."…"] overrides have no consumer.',
+            'Remove the [lineage."…"] tables; keep [lineage_defaults] only.',
+        )
+    unknown_top = set(data) - {"lineage_defaults"}
     if unknown_top:
-        raise _err(
+        raise curation_error(
             "lineage_invalid",
-            f"{path.name}: unknown top-level key(s): {sorted(unknown_top)}.",
-            'Use only [lineage_defaults] and [lineage."<consumer FQID>"] '
-            "tables in reg_meta_build/curation/lineage.toml.",
+            f"{file}: unknown top-level key(s): {sorted(unknown_top)}.",
+            "Use only the [lineage_defaults] table in "
+            "reg_meta_build/curation/lineage.toml.",
         )
 
     raw_defaults = data.get("lineage_defaults", {})
     if not isinstance(raw_defaults, dict):
-        raise _err(
+        raise curation_error(
             "lineage_defaults_malformed",
-            f"{path.name}: [lineage_defaults] must be a table of "
+            f"{file}: [lineage_defaults] must be a table of "
             f'"provider/source-register" = "variant_slug" entries.',
             "Use a [lineage_defaults] table with two-segment FQID keys and "
             "string values.",
@@ -3167,62 +3031,23 @@ def load_lineage_config(path: Path | None) -> LineageConfig:
     for source_fqid, variant in raw_defaults.items():
         source_parts = source_fqid.split("/")
         if len(source_parts) != 2 or not all(source_parts):
-            raise _err(
+            raise curation_error(
                 "lineage_default_key_malformed",
-                f"{path.name}: [lineage_defaults] key {source_fqid!r} must be a "
+                f"{file}: [lineage_defaults] key {source_fqid!r} must be a "
                 "two-segment provider/register FQID.",
                 'Use a key such as "scb/rtb".',
             )
         if not isinstance(variant, str):
-            raise _err(
+            raise curation_error(
                 "lineage_default_not_string",
-                f"{path.name}: [lineage_defaults] {source_fqid!r} must be a "
+                f"{file}: [lineage_defaults] {source_fqid!r} must be a "
                 f"string variant slug, got {type(variant).__name__}.",
                 "Set the value to the source variant slug, e.g. "
                 '"scb/rtb" = "folkbokforda-personer".',
             )
         defaults[(source_parts[0], source_parts[1])] = variant
 
-    raw_overrides = data.get("lineage", {})
-    if not isinstance(raw_overrides, dict):
-        raise _err(
-            "lineage_override_malformed",
-            f"{path.name}: [lineage] must contain "
-            '[lineage."<provider>/<consumer>/<variable>"] tables.',
-            "Use quoted three-segment FQID keys under [lineage].",
-        )
-    for consumer_fqid, block in raw_overrides.items():
-        if not isinstance(block, dict):
-            raise _err(
-                "lineage_override_malformed",
-                f"{path.name}: [lineage.{consumer_fqid!r}] must be a table with "
-                "source_register and source_variant keys.",
-                "Use a table under a quoted consumer-variable FQID.",
-            )
-        consumer_parts = consumer_fqid.split("/")
-        if len(consumer_parts) != 3 or not all(consumer_parts):
-            raise _err(
-                "lineage_override_key_malformed",
-                f"{path.name}: [lineage.{consumer_fqid!r}] key must be a "
-                "three-segment provider/register/variable FQID.",
-                'Use a key such as [lineage."scb/lisa/kon"].',
-            )
-        source_register = block.get("source_register")
-        source_variant = block.get("source_variant")
-        if not isinstance(source_register, str) or not isinstance(source_variant, str):
-            raise _err(
-                "lineage_override_incomplete",
-                f"{path.name}: [lineage.{consumer_fqid!r}] requires string "
-                "source_register and source_variant keys.",
-                'Set both keys, e.g. source_register = "rams" and '
-                'source_variant = "individregister".',
-            )
-        overrides[(consumer_parts[0], consumer_parts[1], consumer_parts[2])] = (
-            source_register,
-            source_variant,
-        )
-
-    return LineageConfig(defaults=defaults, overrides=overrides)
+    return LineageConfig(defaults=defaults)
 
 
 # ---------------------------------------------------------------------------
@@ -3307,7 +3132,9 @@ class DefaultSlugCandidate:
     """One single-variant register that's a candidate for ``slug = "_default"``."""
 
     provider: str
-    source_id: str  # `<RegisterId>.<RegVarID>`
+    # The register's slug: a built catalog keys registers by a surrogate id and
+    # keeps no native id (#1215), and the slug names the register file to edit.
+    register_slug: str | None
     register_name: str
     variant_name: str
     classification: DefaultCandidateClass
@@ -3325,8 +3152,7 @@ def iter_default_slug_candidates(
     exact + near; the bootstrap script shows all three classes.
     """
     rows = conn.execute(
-        "SELECT p.slug, r.register_id, r.name, "
-        "rv.register_variant_id, rv.name, rv.slug "
+        "SELECT p.slug, r.slug, r.name, rv.name, rv.slug "
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
@@ -3336,11 +3162,11 @@ def iter_default_slug_candidates(
         ") "
         "ORDER BY p.slug, r.register_id, rv.register_variant_id"
     ).fetchall()
-    for provider, rid, rname, vid, vname, current_slug in rows:
+    for provider, register_slug, rname, vname, current_slug in rows:
         cls, reason = classify_default_candidate(rname or "", vname or "")
         yield DefaultSlugCandidate(
             provider=provider,
-            source_id=f"{rid}.{vid}",
+            register_slug=register_slug,
             register_name=rname or "",
             variant_name=vname or "",
             classification=cls,
@@ -3376,181 +3202,16 @@ def format_default_slug_hints(
         f'consider `slug = "_default"`.',
     ]
     for cand in shown:
-        lines.append(f"  {cand.provider}/{cand.source_id}   {cand.register_name!r}")
+        lines.append(
+            f"  {cand.provider}/{cand.register_slug or '(unslugged)'}   "
+            f"{cand.register_name!r}"
+        )
     if not all_hints and total > len(shown):
         remaining = total - len(shown)
         lines.append(
             f"  ... ({remaining} more — pass --all-hints to see the full list)"
         )
     return "\n".join(lines) + "\n"
-
-
-# A4.4c-ii panel proposer defaults: the LISA-style delivery-aligned majority
-# (see reg_meta/DESIGN.md → Project semantic validation (semantic.py)). The rare row-level case (PAR-style `indatum`) is left to A4.4d hand
-# curation — auto-detecting it inline is brittle, so the proposer never emits it.
-_PANEL_DEFAULT_TIME_KEY = "period"
-_PANEL_DEFAULT_TIME_GRAIN = "delivery"
-
-
-def propose_panel_entity_key(
-    conn: sqlite3.Connection, register_id: int, register_variant_id: int
-) -> str | tuple[str, ...] | None:
-    """Propose a starter ``panel_entity_key`` for one register_variant (A4.4c-ii).
-
-    The entity key is the variant's panel entity-identifier variable slug(s)
-    proposed from the persisted ``variable.is_identifier`` flag (the
-    entity-key driver): the slugs of identifier variables that actually
-    deliver on THIS variant (joined through ``variable_state.register_variant_id``
-    so a register's identifier set doesn't fan onto sibling variants that don't
-    carry it).
-
-    A single identifier → a bare slug; several → a sorted tuple (the composite
-    case, persisted as a JSON array by ``populate_slugs``). No identifier →
-    ``None``, so the field is left off for A4.4d curation. This covers SOS
-    (``is_join_variable`` is adapter-time-only, not on the universal ``variable``)
-    and any SCB variant with no flagged identifier.
-
-    Two signals are deliberately NOT used: (a) ``source_join_key`` — its
-    ``table_name`` does not map to a ``register_id``, so a column-name match
-    cannot be register-scoped and would over-propose a non-identifier (e.g. a geo
-    join column) as the entity grain; ``is_identifier`` is the precise signal.
-    (b) Tabelldefinitioner PRIMARY KEY — the SQL parser captures only column
-    type/nullability, never the table-level PK clause (``scb.py`` ``_SQL_COL_RE``).
-
-    Proposals are starter hints — the curator reviews them in A4.4d; this need
-    not be exhaustive or perfect.
-    """
-    # Primary: is_identifier variables delivering on this variant. Restricting to
-    # the variant (via variable_state) keeps a register's identifier set from
-    # fanning onto sibling variants that don't carry it.
-    id_slugs = [
-        r[0]
-        for r in conn.execute(
-            "SELECT DISTINCT v.slug FROM variable v "
-            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
-            "WHERE v.register_id = ? AND vs.register_variant_id = ? "
-            "AND v.is_identifier = 1 AND v.slug IS NOT NULL "
-            "ORDER BY v.slug",
-            (register_id, register_variant_id),
-        ).fetchall()
-    ]
-    if id_slugs:
-        return id_slugs[0] if len(id_slugs) == 1 else tuple(id_slugs)
-    return None
-
-
-def _emit_panel_proposal(
-    lines: list[str], entity_key: str | tuple[str, ...] | None
-) -> None:
-    """Append the proposed panel lines to a register_variant's seed block.
-
-    ``panel_time_key`` / ``panel_time_grain`` always default to the
-    delivery-aligned majority. ``panel_entity_key`` is emitted only when a signal
-    proposed one — otherwise a comment marks it for A4.4d curation (the SOS arm
-    and any signal-less SCB variant). Emitted live (not commented) so the seed
-    round-trips through ``load_provider_toml`` / ``_validate_entry`` and a curator
-    edits real values; the file header already flags every line as hand-review.
-    """
-    if entity_key is None:
-        lines.append(
-            "# panel_entity_key: no is_identifier / join-key signal — "
-            "set in A4.4d if this variant is a panel."
-        )
-    elif isinstance(entity_key, tuple):
-        inner = ", ".join(_toml_str(s) for s in entity_key)
-        lines.append(f"panel_entity_key = [{inner}]")
-    else:
-        lines.append(f"panel_entity_key = {_toml_str(entity_key)}")
-    lines.append(f"panel_time_key = {_toml_str(_PANEL_DEFAULT_TIME_KEY)}")
-    lines.append(f"panel_time_grain = {_toml_str(_PANEL_DEFAULT_TIME_GRAIN)}")
-
-
-def seed_provider_toml(
-    conn: sqlite3.Connection,
-    provider_slug: str,
-    *,
-    propose_panel: bool = False,
-) -> str:
-    """Emit a starter TOML for ``provider_slug`` from the live build.
-
-    Auto-derives a slug for each register/register_variant from
-    ``registernamn`` / ``registervariantnamn``; the maintainer edits the
-    result by hand before committing. Variables are auto-slugged from
-    kolumnnamn at build time, so they're omitted from the seed.
-
-    ``propose_panel`` (A4.4c-ii) additionally emits proposed
-    ``panel_entity_key`` / ``panel_time_key`` / ``panel_time_grain`` lines on
-    each register_variant — starter hints for the A4.4d panel-shape curation
-    seam (see ``propose_panel_entity_key``).
-    """
-    lines: list[str] = [
-        f"# Starter slug TOML for provider {provider_slug!r}.",
-        "# Generated by `reg-meta-build seed-slugs`. Hand-review every slug,",
-        "# then commit to reg_meta_build/fqid_slugs/.",
-        "",
-    ]
-    regs = conn.execute(
-        "SELECT r.register_id, r.name, r.slug FROM register r "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? ORDER BY r.register_id",
-        (provider_slug,),
-    ).fetchall()
-    if not regs:
-        lines.append(f"# (no registers found for provider {provider_slug!r})\n")
-        return "\n".join(lines)
-    # Pre-fetch variants and versions, grouped by register_id for hierarchical
-    # emission (register → its variants → its version overrides).
-    variants_by_reg: dict[int, list[tuple[int, str | None, str | None]]] = {}
-    for row in conn.execute(
-        "SELECT rv.register_id, rv.register_variant_id, rv.name, rv.slug "
-        "FROM register_variant rv "
-        "JOIN register r ON rv.register_id = r.register_id "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? "
-        "ORDER BY rv.register_id, rv.register_variant_id",
-        (provider_slug,),
-    ).fetchall():
-        register_id, register_variant_id, name, existing_slug = row
-        variants_by_reg.setdefault(register_id, []).append(
-            (register_variant_id, name, existing_slug)
-        )
-
-    # A2.6: register_version is not seeded — version is not an FQID segment and
-    # has no slug column anymore. Only register + register_variant emit.
-    for register_id, name, existing_slug in regs:
-        candidate = existing_slug or derive_variable_slug(name) or "TODO"
-        # Register-level audit comment: the `registernamn` is the
-        # authoritative source of what this register is. Makes the file
-        # scannable when the slug is an opaque acronym (e.g. `fou`, `kkv`).
-        if name:
-            lines.append(f"# {_toml_comment(name)}")
-        lines.append(f"[register.{_toml_str(str(register_id))}]")
-        lines.append(f"slug = {_toml_str(candidate)}")
-        lines.append("")
-
-        for register_variant_id, vname, existing_slug in variants_by_reg.get(
-            register_id, []
-        ):
-            v_candidate = existing_slug or (
-                derive_variable_slug(vname) if vname else None
-            )
-            v_candidate = v_candidate or "TODO"
-            lines.append(
-                f"[register_variant.{_toml_str(f'{register_id}.{register_variant_id}')}]"
-            )
-            lines.append(f"slug = {_toml_str(v_candidate)}")
-            # Strip at the origin: SCB names carry stray whitespace; trim so the
-            # seeded label is clean (load_provider_toml also trims defensively).
-            v_display = vname.strip() if vname else ""
-            if v_display:
-                lines.append(f"display_group = {_toml_str(v_display)}")
-            if propose_panel:
-                _emit_panel_proposal(
-                    lines,
-                    propose_panel_entity_key(conn, register_id, register_variant_id),
-                )
-            lines.append("")
-    return "\n".join(lines)
 
 
 def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
@@ -3577,7 +3238,7 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
         register = registers.get((provider, register_slug))
         native_id = register.register_info.native_id if register else None
         if register is None or native_id is None:
-            raise _err(
+            raise curation_error(
                 "slug_seed_register_unknown",
                 f"{provider}/{register_slug}: no register file under "
                 f"{out_dir / 'registers' / provider} names its native id.",
@@ -4013,7 +3674,7 @@ def read_snapshot(snapshot_path: Path) -> dict[str, dict[str, str]]:
     try:
         data = json.loads(snapshot_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
-        raise _err(
+        raise curation_error(
             "slug_snapshot_unreadable",
             f"Could not parse slug snapshot {snapshot_path}: {exc}",
             "Regenerate it with `reg-meta-build precheck-slugs --update-snapshot`.",
@@ -4084,7 +3745,6 @@ __all__ = (
     "ENTITY_KINDS",
     "FREEZE_STATE_FILE",
     "SNAPSHOT_FILENAME",
-    "DeclaredColumnOwnership",
     "DefaultCandidateClass",
     "DefaultSlugCandidate",
     "EntityKeyPin",
@@ -4094,7 +3754,6 @@ __all__ = (
     "SlugEntry",
     "SlugFreezeState",
     "classify_default_candidate",
-    "declared_column_ownership",
     "diff_snapshot",
     "format_default_slug_hints",
     "freeze_state",
@@ -4115,7 +3774,6 @@ __all__ = (
     "render_entity_key_pins_toml",
     "repo_slug_dir",
     "seed_all",
-    "seed_provider_toml",
     "snapshot_payload",
     "write_auto_toml",
     "write_entity_key_pins",

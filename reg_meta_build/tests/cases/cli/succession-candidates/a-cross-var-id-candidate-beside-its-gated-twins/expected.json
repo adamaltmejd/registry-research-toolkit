@@ -14,7 +14,6 @@
       },
       "contains": [
         "# === register scb/foretag — 1 candidate(s) ===",
-        "# cross_var_id",
         "#   from: scb/foretag/forvink-ers-aktiv (Förvärvsinkomst, aktiv) var_id 31395, column FORVERS, variant foretag, 2019-01-01..2019-12-31",
         "#   to  : scb/foretag/forvink-ers (Förvärvsinkomst) var_id 47670, column FORVERS, variant foretag, 2020-01-01..2020-12-31"
       ]

@@ -2,6 +2,7 @@
 //! admits one catalog artifact and defines the operation set ([`ops`]), which the
 //! `reg-meta` binary serves.
 
+mod docs;
 mod error;
 mod held;
 pub mod ops;
@@ -15,6 +16,7 @@ use rusqlite::{Connection, OpenFlags};
 use serde::Serialize;
 use utoipa::ToSchema;
 
+pub use docs::Docs;
 pub use error::{Code, Error, Spec};
 
 /// `contract_version` in `conformance/api/operations.toml`.
@@ -63,7 +65,7 @@ impl Catalog {
                     "Database manifest is unreadable in {}: {err}",
                     path.display()
                 ),
-                vec![serde_json::Value::Null, supported().into()],
+                vec![serde_json::Value::Null, supported(SCHEMA).into()],
             )
         })?;
         let catalog = Self { path, manifest };
@@ -87,12 +89,7 @@ impl Catalog {
 
     fn gate_schema(&self) -> Result<(), Error> {
         let version = self.manifest("schema_version");
-        let mut parts = version.split('.').map(str::parse::<u32>);
-        let (major, minor) = (parts.next(), parts.next());
-        if let (Some(Ok(major)), Some(Ok(minor))) = (major, minor)
-            && major == SCHEMA.0
-            && minor >= SCHEMA.1
-        {
+        if admits(SCHEMA, version) {
             return Ok(());
         }
         Err(Error::new(
@@ -100,9 +97,9 @@ impl Catalog {
             format!(
                 "Database schema {version:?} ({}) is not supported (supported: {}).",
                 self.path.display(),
-                supported()
+                supported(SCHEMA)
             ),
-            vec![version.into(), supported().into()],
+            vec![version.into(), supported(SCHEMA).into()],
         ))
     }
 
@@ -195,14 +192,19 @@ impl Catalog {
     ///
     /// `catalog_unavailable` when the admitted file cannot be opened.
     pub fn connect(&self) -> Result<Connection, Error> {
-        connect(&self.path).and_then(with_folds).map_err(|err| {
-            Error::new(
-                Code::CatalogUnavailable,
-                format!("Catalog {} cannot be read: {err}", self.path.display()),
-                vec![],
-            )
-        })
+        connect(&self.path)
+            .and_then(with_folds)
+            .map_err(|err| unavailable(&self.path, &err))
     }
+}
+
+/// `catalog_unavailable` for a file the server admitted but cannot open now.
+fn unavailable(path: &Path, err: &rusqlite::Error) -> Error {
+    Error::new(
+        Code::CatalogUnavailable,
+        format!("{} cannot be read: {err}", path.display()),
+        vec![],
+    )
 }
 
 /// Lowercase hex of `bytes`: cursors and `ETag` digests.
@@ -215,8 +217,18 @@ pub fn hex(bytes: &[u8]) -> String {
     out
 }
 
-fn supported() -> String {
-    format!("{}.{} or a later {}.x", SCHEMA.0, SCHEMA.1, SCHEMA.0)
+/// A schema gate: `version`'s major equals the gate's and its minor is at least the
+/// gate's.
+fn admits(gate: (u32, u32), version: &str) -> bool {
+    let mut parts = version.split('.').map(str::parse::<u32>);
+    matches!(
+        (parts.next(), parts.next()),
+        (Some(Ok(major)), Some(Ok(minor))) if major == gate.0 && minor >= gate.1
+    )
+}
+
+fn supported(gate: (u32, u32)) -> String {
+    format!("{}.{} or a later {}.x", gate.0, gate.1, gate.0)
 }
 
 /// `immutable=1`: the published files never change in place (they are replaced by
