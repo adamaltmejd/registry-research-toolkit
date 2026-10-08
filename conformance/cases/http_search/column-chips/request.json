@@ -16,6 +16,14 @@
         "type": "variable",
         "scope": "reference"
       }
+    },
+    {
+      "path": "/api/search",
+      "query": {
+        "q": "Valø",
+        "type": "variable",
+        "scope": "reference"
+      }
     }
   ]
 }
