@@ -22,19 +22,25 @@ seed = 0
 
 [[exception]]
 name = "derived-generation-cursor"
-reason = "The arms read copies derived by different builder commits (the baseline the reference copies, the checkout the candidate copies), so their generations differ (section 4); a search cursor binds the generation, so none outlives it. `has_more` still compares, and page 2 of `search-limit-5` exercises the shared cursor encoder."
+reason = "The baseline reads the release originals and the checkout its derived copies, so their generations differ (section 4); a search cursor binds the generation, so none outlives it. `has_more` still compares, and page 2 of `search-limit-5` exercises the shared cursor encoder."
 case = "*/*/search*"
 paths = ["/next_cursor"]
 
 [[exception]]
 name = "derived-generation-order"
-reason = "An order manifest records the catalog's generation, which differs between copies derived by different builder commits (section 4)."
+reason = "An order manifest records the catalog's generation, which differs between the release original and the checkout's derived copy (section 4)."
 case = "*/*/order/*"
 paths = ["/provenance/catalog_generation_id"]
 
 [[exception]]
+name = "reader-version"
+reason = "The reader's release version is build identity, not behavior; it differs whenever main bumps a version between re-pins."
+case = "*/*/context"
+paths = ["/data/reg_meta_version"]
+
+[[exception]]
 name = "register-scope-code-classifications"
-reason = "#1240: under --register a code hit keeps its owning classifications (code_system, classifications, classification_count), as it does unscoped; the 553ea622 baseline blanked them. Here three SUN codes. Provisional: deleted by 3a.13's re-pin."
+reason = "#1240: under --register a code hit keeps its owning classifications (code_system, classifications, classification_count), as it does unscoped; the 553ea622 baseline predates the fix and blanks them. Here three SUN codes."
 case = "global/reference/search-register/19"
 paths = [
   "/results/10/classification_count",
@@ -48,27 +54,29 @@ paths = [
   "/results/12/code_system",
 ]
 
-# The baseline: one commit, run from a detached worktree with its own locked
-# environment. It is both the baseline reader (CLI and webapp) and the reference
-# builder, whose `reg-meta-build derive` makes the reference copies the baseline reads,
-# so code under change never derives what it is compared against. A re-pin moves both.
+# The baseline reader (CLI and webapp), run from a detached worktree with its own
+# locked environment. It reads the release originals, so code under change never
+# derives what it is compared against. 553ea622 (main after 3a.2) is the last commit
+# whose webapp serves every route the served arm compares against (3a.10 and 3a.11
+# deleted /api/context, /api/stats and /api/search), so it cannot move to the release
+# commit; Python fixes after it are named exceptions (section 4, "Current pin").
 [baseline]
 commit = "553ea622fdb3a5fd42a04c46920b6f7b9a5fe8d2"
 
 # The pinned release artifacts. `sha256` is the GitHub release asset digest (of the
 # `.zst`), checked while the asset streams into the cache.
 [release]
-tag = "reg_meta/v0.42.0"
+tag = "reg_meta/v0.43.0"
 
 [[release.asset]]
 catalog = "global"
 name = "reg_meta.db.zst"
-sha256 = "39c68222545b61cb690b7861f20deb8196c8035f7b0ed932fc5847e8c68d07a3"
+sha256 = "60acf6c8ee37ff5566f536af4337b876b4413899dc4d9a01c685499f513bd3c5"
 
 [[release.asset]]
 catalog = "swecov"
 name = "reg_meta_swecov.db.zst"
-sha256 = "32e8d425a2ba5b039d4fa60c494762d9970515ee994871660097fe3d49711c68"
+sha256 = "67bc9cd8d07d897dc969d89b4fef4b012a128c6144fa2c65b6ff3742c71ee652"
 
 # The docs database is optional enrichment for `search` and required by `docs`; it is
 # placed beside both catalogs so the two read the same documentation.

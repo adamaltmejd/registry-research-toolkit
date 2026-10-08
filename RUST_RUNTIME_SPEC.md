@@ -226,19 +226,26 @@ it when the new release needs a newer reader: it runs G1 on the old pin (with it
 baseline) and the new pin (with its baseline) and records any difference. Re-pin at
 least at every maintainer checkpoint.
 
-**Current pin** (package 1.5; the data lives in `conformance/differential/config.toml`):
+**Current pin** (package 3a.13; the data lives in
+`conformance/differential/config.toml`):
 
-- Release `reg_meta/v0.42.0`. Asset SHA-256s: global `reg_meta.db.zst`
-  `39c68222545b61cb690b7861f20deb8196c8035f7b0ed932fc5847e8c68d07a3`; SWECOV
+- Release `reg_meta/v0.43.0` (schema 9.3.0). Asset SHA-256s: global `reg_meta.db.zst`
+  `60acf6c8ee37ff5566f536af4337b876b4413899dc4d9a01c685499f513bd3c5`; SWECOV
   `reg_meta_swecov.db.zst`
-  `32e8d425a2ba5b039d4fa60c494762d9970515ee994871660097fe3d49711c68`; docs
+  `67bc9cd8d07d897dc969d89b4fef4b012a128c6144fa2c65b6ff3742c71ee652`; docs
   `reg_meta_docs.db.zst`
   `b110210901daa4e2a13e33a8574a6e2b52b43258f05bbbc6378255ddf7e75afe` (read by `search`
   and `docs`).
-- Baseline reader and reference builder (package 3a.2a):
-  `553ea622fdb3a5fd42a04c46920b6f7b9a5fe8d2` (main after 3a.2), run from a detached
-  worktree with its own locked environment. Its `reg-meta-build derive` makes the
-  reference copies of the originals that the baseline reads.
+- Baseline reader: `553ea622fdb3a5fd42a04c46920b6f7b9a5fe8d2` (main after 3a.2), run
+  from a detached worktree with its own locked environment. It reads the release
+  originals directly; the reference derive of package 3a.2a is retired (3a.13). It stays
+  behind the release commit (`4727589`, whose assets record `builder_commit` `c934f80b`)
+  because each SPA cutover deletes the webapp routes it replaces (3a.10: `/api/context`,
+  `/api/stats`; 3a.11: `/api/search`), and the served arm compares against the baseline
+  webapp. Later cutovers delete more, so the baseline cannot move past 553ea622 while
+  that holds; Python fixes after it are named exceptions (#1240's
+  `register-scope-code-classifications`), and `reader-version` covers the release
+  versions. Package R resolves this.
 
 **Three verification gates, with budgets.** They are named G0–G2 so they are not
 confused with the test tiers 1–3 in `ARCHITECTURE.md`.
@@ -251,15 +258,15 @@ confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
 The G1 baseline is the Python reader **at a pinned commit, installed in its own
 environment**, never the checkout under change, so a regression moved into derive cannot
-validate itself. It reads reference copies of the pinned artifacts, derived by a pinned
-builder commit (package 3a.2a), never by the code under change; the implementations
-under test read derived copies of them. It runs on both artifact kinds (the global
-catalog and the SWECOV steward artifact) and both scopes, over generated queries (every
-register, seeded variable samples, holdings-specific strata, the search-eval corpus
-terms). Each accepted difference is recorded as a named semantic exception in the
-harness. The Python runtime is frozen from stage 3b (decision 6 of the stage 3b–3e
-decisions): a Rust-only fix that diverges from the baseline gets a narrow exception
-linked to the `api` regression case that pins it, and keeps it until stage 4.
+validate itself. It reads the pinned release originals, never a copy derived by the code
+under change; the implementations under test read derived copies of them. It runs on
+both artifact kinds (the global catalog and the SWECOV steward artifact) and both
+scopes, over generated queries (every register, seeded variable samples,
+holdings-specific strata, the search-eval corpus terms). Each accepted difference is
+recorded as a named semantic exception in the harness. The Python runtime is frozen from
+stage 3b (decision 6 of the stage 3b–3e decisions): a Rust-only fix that diverges from
+the baseline gets a narrow exception linked to the `api` regression case that pins it,
+and keeps it until stage 4.
 
 A slow gate is a defect to fix, not a reason to skip the gate. If derive exceeds its
 budget, make the slow table set-based before adding more tables.
@@ -1244,13 +1251,14 @@ in-flight list.
   | Image DB bake through the Python `reg-meta update` (Dockerfile `regmeta-db` stage)                                                                            | stage 4 (curl, SHA-256, zstd)                                                 |
   | G1's two arms: Python-vs-Python CLI cases and the `served` arm                                                                                                | stage 4                                                                       |
   | `derived-generation-*` G1 exceptions                                                                                                                          | while the two arms read copies of different builder identity (all of stage 3) |
+  | `reader-version` G1 exception (the arms' release versions)                                                                                                    | stage 4                                                                       |
   | `rust-only fix:` G1 exceptions                                                                                                                                | stage 4 (D1)                                                                  |
   | Derive calling the reader in place (`from reg_meta.catalog import Catalog` in derive)                                                                         | stage 4 (moved into `reg_meta_build`)                                         |
   | Two project validators and project-schema versions (`reg_schema`, `reg-core`)                                                                                 | stage 4                                                                       |
   | Request-time terminal walks (search's `terminal()` reading the `classification_succession_as_of_year` manifest key; 3b.3's refs) beside `succession_terminal` | 3d.2                                                                          |
   | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                                   | stage 4 (proven twins earlier)                                                |
   | `scripts/check_versions.sh` keeping the `reg-meta` crate and `reg_meta` versions equal                                                                        | stage 4                                                                       |
-  | Docs DB symlinked unfolded into G1's reference and candidate directories                                                                                      | 3b.6 (candidate copy refolded)                                                |
+  | Docs DB symlinked unfolded into G1's candidate directories                                                                                                    | 3b.6 (candidate copy refolded)                                                |
 
 #### Packages
 
@@ -1581,9 +1589,12 @@ the transitional rows they end. Keeps what stage 4 still needs: the Dockerfile's
 Acceptance: full gate. Depends on: C, 3b.6, 3e.4.
 
 **R Re-pin at checkpoint 3.** Implements section 4 (re-pin): the artifact pin moves to
-the latest release and the baseline commit with it; G1 runs on both pins and records
-each difference. `rust-only fix:` exceptions carry over (D1). Depends on: 3c.3, C, F and
-the release.
+the latest release; G1 runs on both pins and records each difference. `rust-only fix:`
+exceptions carry over (D1). The baseline commit cannot simply follow the pin: cutovers
+delete the webapp routes the served arm compares against (section 4, "Current pin"). R
+either moves the served comparisons onto the CLI baseline (the CLI-baseline pattern
+above) or keeps the webapp baseline commit separate from the artifact pin. Depends on:
+3c.3, C, F and the release.
 
 #### Surface coverage (3b–3e rows)
 
