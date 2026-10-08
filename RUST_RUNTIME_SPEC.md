@@ -823,10 +823,11 @@ the `context` operation.
 - Cases: `column-chips`, `pagination`, `group-members` and `cursor-scope` already have
   twins (`api/search-scope`, `search-paging`, `search-group-hit`, `cursor-invalid`).
   New, red first: register resolution (FQID, unique bare name, ambiguous, unknown,
-  malformed); period (variable overlap, register-wide, group by members,
-  `invalid_period`); a 9.1 manifest refused. The PR names which cases cover
-  `cli_scope/search-holdings-1` and `search-reference-2`. A G1 mapping compares typed
-  pages with the baseline webapp's variable group at the same limit and cursor depth.
+  malformed); period (variable overlap, group by members, `invalid_period`;
+  register-wide is 3a.6's, with the register arm); a 9.1 manifest refused. The PR names
+  which cases cover `cli_scope/search-holdings-1` and `search-reference-2`. A G1 mapping
+  compares typed pages with the baseline webapp's variable group at the same limit and
+  cursor depth.
 - Paths: `crates/reg-catalog/`, `crates/reg-meta/`, `conformance/http_cases.py`
   (`artifacts`), `conformance/cases/api/`, `conformance/differential/`.
 - Acceptance: G0 with a selection joining `[api/meta]`, `[api/cursor-`,
@@ -852,9 +853,10 @@ and the single ranking of section 6.
   (`top-results-exact-leaf`) and `invalid-parameters` (`limit-clamp`). New, red first:
   twins of `golden-*`, the other `top-results-*`, `codes-reference` and
   `code-owner-ranking`; an untyped search followed across three pages; period and
-  register filters on the classification and code arms; a 9.2 manifest refused. G1 maps
-  each typed page to the baseline webapp's group and an untyped first page at `limit=5`
-  to its `top_results`.
+  register filters on the classification and code arms; a register-wide period; a 9.2
+  manifest refused. G1 maps each typed page to the baseline webapp's group; untyped
+  pages have no baseline equivalent (decision 17 ranks one list across arms), so the
+  `api` corpus alone pins them.
 - Paths: `crates/reg-catalog/`, `conformance/cases/api/`, `conformance/differential/`.
 - Acceptance: G0 with all of `[api/`; G1 differences only as named exceptions.
 
