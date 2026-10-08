@@ -73,9 +73,9 @@ class CuratedSourceError(RegMetaError, ValueError):
             error_class="configuration",
             message=message,
             remediation=(
-                "Fix the authored provider TOML (Forsakringskassan/, scb_canonical/) "
-                "to its documented [[register]] layout, then re-declare its "
-                "source revision if the reviewed bytes changed."
+                "Fix the authored provider TOML named in the message to its "
+                "documented [[register]] layout, then re-declare its source "
+                "revision if the reviewed bytes changed."
             ),
         )
         printable_error(self)
