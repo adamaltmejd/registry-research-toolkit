@@ -4,7 +4,7 @@
   ],
   "fails_if": "`compile_occurrence_corrections` stops comparing the entry's `expected_fields` with the original's current prose, so the `[[errata.field]]` entry still applies",
   "sources": {
-    "description": "CVID 20's description changed after review.",
+    "description": "CVID 20's operational definition changed after review.",
     "scb": {
       "registerinformation": [
         {
@@ -18,7 +18,7 @@
             1,
             2
           ],
-          "vardesc": "Changed source meaning"
+          "varopdef": "Changed source meaning"
         },
         {
           "colname": "ANSWER",
@@ -35,5 +35,6 @@
       ]
     }
   },
-  "authored_from": "scb-answer-2009-and-2017"
+  "authored_from": "scb-answer-2009-and-2017",
+  "note": "The replaced test changed the description. Description is a register-level fact, so a changed description would stop ANSWER forming states at all; the operational definition is a delivery-level text the same prose guard covers."
 }

@@ -15,19 +15,20 @@
       ]
     },
     {
-      "table": "issues",
+      "table": "states",
       "where": {
-        "code": "stale_curation_entry",
-        "detail": {
-          "contains": "listed names without exactly one native edition ['2007']"
-        }
+        "variable": "shared"
       },
       "fields": [
-        "code"
+        "variant",
+        "valid_from",
+        "valid_to"
       ],
       "rows": [
         [
-          "stale_curation_entry"
+          "flow",
+          "2007-12-31",
+          "2007-12-31"
         ]
       ]
     }

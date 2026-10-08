@@ -15,21 +15,14 @@
       ]
     },
     {
-      "table": "issues",
+      "table": "states",
       "where": {
-        "code": "stale_curation_entry",
-        "detail": {
-          "contains": "unlisted native editions ['2008']"
-        }
+        "variant": "stock"
       },
       "fields": [
-        "code"
+        "column"
       ],
-      "rows": [
-        [
-          "stale_curation_entry"
-        ]
-      ]
+      "rows": []
     }
   ]
 }

@@ -9,8 +9,9 @@ slug = "people"
 native_id = "1.101"
 slug = "value"
 [[acknowledge]]
-code = "unresolved_source_event_endpoint"
+code = "unresolved_lineage_ambiguous_source_variant"
 subject = "exact"
 reason = "Source endpoint is absent"
 evidence = "Complete accepted evidence reviewed"
 refs = ["{\"source\": \"scb-timeseries\", \"semantic_record_key\": [\"event\", \"exact\"]}"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
