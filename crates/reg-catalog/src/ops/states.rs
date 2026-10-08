@@ -361,7 +361,7 @@ pub struct StatesPage {
 pub fn states(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
     let catalog = &server.catalog;
     let limit = super::limit(params)?;
-    let period = super::period(params)?;
+    let period = super::period(params, "period")?;
     let variant = super::variant(params)?;
     let version = super::value_set_version(params)?;
     let conn = catalog.connect()?;

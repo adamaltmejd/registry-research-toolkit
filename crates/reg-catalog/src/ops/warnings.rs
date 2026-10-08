@@ -67,7 +67,7 @@ const CANONICAL: &str = "COALESCE(\
     w.delivery_column_name)";
 
 pub fn warnings(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
-    let period = super::period(params)?;
+    let period = super::period(params, "period")?;
     let unassigned_only = super::flag(params, "unassigned_only")?;
     let variant = super::variant(params)?;
     let representation = params.get("representation").copied();

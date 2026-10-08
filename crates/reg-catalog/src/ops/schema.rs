@@ -24,8 +24,6 @@ use super::{Params, Server, cursor};
 use crate::held;
 use crate::{Code, Error, Scope, hex};
 
-const DEFAULT_LIMIT: usize = 50;
-const MAX_LIMIT: usize = 200;
 /// The open end of a still-delivered state; it has no next day.
 const OPEN_ENDED_TO: &str = "9999-12-31";
 
@@ -169,18 +167,8 @@ impl Rep {
 
 pub fn schema(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
     let catalog = &server.catalog;
-    let limit = match params.get("limit") {
-        None => DEFAULT_LIMIT,
-        Some(v) => v
-            .parse()
-            .ok()
-            .filter(|n| (1..=MAX_LIMIT).contains(n))
-            .ok_or_else(|| Error::invalid_parameter("limit"))?,
-    };
-    let period = params
-        .get("period")
-        .map(|p| period(p, "period"))
-        .transpose()?;
+    let limit = super::limit(params)?;
+    let period = super::period(params, "period")?;
     let conn = catalog.connect()?;
     let value = params.get("ref").copied().unwrap_or_default();
     let (register_id, variable_id) = match refs::resolve(&conn, scope, Some(value))? {
@@ -222,8 +210,10 @@ pub fn schema(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
 }
 
 pub fn diff(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
-    let from = period(params.get("from").copied().unwrap_or_default(), "from")?;
-    let to = period(params.get("to").copied().unwrap_or_default(), "to")?;
+    // The transport refuses a request without a required parameter.
+    let [from, to] = ["from", "to"]
+        .map(|name| super::period(params, name)?.ok_or_else(|| Error::invalid_parameter(name)));
+    let (from, to) = (from?, to?);
     let conn = server.catalog.connect()?;
     let value = params.get("ref").copied().unwrap_or_default();
     let Target::Register { id, provider, slug } = refs::resolve(&conn, scope, Some(value))? else {
@@ -313,16 +303,6 @@ pub fn diff(server: &Server, scope: Scope, params: &Params) -> Result<Value, Err
         variants,
     };
     Ok(serde_json::to_value(diff).expect("Diff serializes"))
-}
-
-fn period(value: &str, parameter: &str) -> Result<Period, Error> {
-    value.parse().map_err(|err| {
-        Error::new(
-            Code::InvalidPeriod,
-            format!("Invalid {parameter} {value:?}: {err}."),
-            vec![parameter.into()],
-        )
-    })
 }
 
 fn invalid_kind(value: &str) -> Error {

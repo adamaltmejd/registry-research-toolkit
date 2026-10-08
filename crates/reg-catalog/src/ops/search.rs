@@ -236,7 +236,7 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
         return Err(Error::invalid_parameter("type"));
     }
     let limit = super::limit(params)?;
-    let period = super::period(params)?;
+    let period = super::period(params, "period")?;
     let conn = catalog.connect()?;
     let register = params
         .get("register")

@@ -14,10 +14,10 @@ mod search;
 mod show;
 pub mod slice_3a;
 pub mod slice_3b;
+pub mod slice_3c;
 pub mod slice_3d;
 mod states;
 mod warnings;
-pub mod slice_3c;
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -211,8 +211,8 @@ pub fn all() -> impl Iterator<Item = &'static Operation> {
     slice_3a::OPERATIONS
         .iter()
         .chain(slice_3b::OPERATIONS)
-        .chain(slice_3d::OPERATIONS)
         .chain(slice_3c::OPERATIONS)
+        .chain(slice_3d::OPERATIONS)
 }
 
 /// Every registered download.
@@ -268,26 +268,31 @@ pub fn call<T>(
     (scope, result)
 }
 
-/// `limit` (`operations.toml`): 1 to 200, default 50.
+/// A page's `limit` when unset, and its largest accepted value (`Type::Limit`).
+const DEFAULT_LIMIT: usize = 50;
+const MAX_LIMIT: usize = 200;
+
+/// `limit` (`operations.toml`): 1 to [`MAX_LIMIT`], default [`DEFAULT_LIMIT`].
 pub(crate) fn limit(params: &Params) -> Result<usize, Error> {
-    params.get("limit").map_or(Ok(50), |v| {
+    params.get("limit").map_or(Ok(DEFAULT_LIMIT), |v| {
         v.parse()
             .ok()
-            .filter(|n| (1..=200).contains(n))
+            .filter(|n| (1..=MAX_LIMIT).contains(n))
             .ok_or_else(|| Error::invalid_parameter("limit"))
     })
 }
 
-/// `period`, in the FQID/project period grammar.
-pub(crate) fn period(params: &Params) -> Result<Option<reg_core::Period>, Error> {
+/// The period parameter `name`, in the FQID/project period grammar; a refusal
+/// names `name`.
+pub(crate) fn period(params: &Params, name: &str) -> Result<Option<reg_core::Period>, Error> {
     params
-        .get("period")
+        .get(name)
         .map(|p| {
             p.parse().map_err(|err| {
                 Error::new(
                     Code::InvalidPeriod,
-                    format!("Invalid period {p:?}: {err}."),
-                    vec!["period".into()],
+                    format!("Invalid {name} {p:?}: {err}."),
+                    vec![name.into()],
                 )
             })
         })
@@ -368,7 +373,7 @@ fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
         Type::Limit => ObjectBuilder::new()
             .schema_type(Json::Integer)
             .minimum(Some(1))
-            .maximum(Some(200))
+            .maximum(Some(MAX_LIMIT))
             .into(),
     }
 }
