@@ -1218,9 +1218,12 @@ Author (one per package, in its own worktree):
   `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`. Never bypass hooks. Push
   with `GIT_WORK_TREE=$PWD git push -u origin HEAD` (a repo hook hijacks `GIT_DIR`).
   Prefix scratch files with the package id.
-- Run the full gate (and `scripts/gate.py g1` when the package requires it). Open the PR
-  with `gh pr create`: package id, what changed, each acceptance item with its result,
-  decisions made, anything deferred; end with
+- Run the full gate, and `scripts/gate.py g1` only when the package's own G1 line says
+  G1 runs in this package (a line reading "G1 (run in X)" means X runs it). Run other
+  heavy commands (a parallel pytest, cargo, a derive or a probe over the pinned
+  artifacts) through `scripts/gate.py heavy -- CMD`, so they share the heavy-job lock.
+  Open the PR with `gh pr create`: package id, what changed, each acceptance item with
+  its result, decisions made, anything deferred; end with
   `🤖 Generated with [Claude Code](https://claude.com/claude-code)`. Do not merge.
 - When the review arrives, the author applies the reviewer's report directly and re-runs
   what the fix touches. The orchestrator settles only scope questions and disagreements
@@ -1237,7 +1240,10 @@ Reviewer (a fresh agent that did not write the PR):
   implementation, import private names, use non-data oracles, twin another test or
   cannot fail; dead code, speculative options and duplicated leaf helpers (CLAUDE.md
   "Reuse first").
-- Re-run the full gate and every acceptance item; list each with its result.
+- Re-run the full gate and every acceptance item except G1; list each with its result.
+  When the author reports a G1 run at the reviewed head, or at a head whose derive,
+  differential and pin are unchanged since, read the G1 mapping, sampling and exceptions
+  instead of rerunning it; rerun G1 only when one of those changed after that run.
 - Report only defects in the stated behavior, rule violations and simplifications. An
   idea that adds scope goes in one line under "Not requested (YAGNI)", unranked.
 - Report: verdict (approve / changes needed), findings ranked blocker / major / minor
@@ -1712,8 +1718,9 @@ so the deleting package removes the row mechanically (checkpoint 2):
    Python CLI comparisons stay; served cases reuse baseline results only.
 8. **Gate tooling.** `scripts/gate.py` holds the full gate (`all`: `g0`, `rust`,
    `release`, `flows`, `frontend`), `crates`, `regen` (every rebase-sensitive generated
-   file) and `g1`. Heavy steps take a machine-wide lock so one heavy job runs at a time;
-   sccache shares compiled crates across worktrees.
+   file), `g1` and `heavy -- CMD` (any other heavy command under the same lock). Heavy
+   steps take a machine-wide lock so one heavy job runs at a time; sccache shares
+   compiled crates across worktrees.
 9. **Sessions.** At most three concurrent slice sessions, each deleting its finished
    worktrees; the orchestrator is the only one who merges to main.
 10. **Reviews.** The author applies the reviewer's report directly; the orchestrator
