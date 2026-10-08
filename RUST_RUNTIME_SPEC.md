@@ -1503,7 +1503,10 @@ operations.
   `resolve_terminal_successor` does. Search's terminal-centric `editions()` may be read
   from `classification_chain` (the anchor's rows up to its own position) only while no
   edition has two predecessors and a split's outbound edges share one year; 3d.2
-  verifies this against the reader rather than assuming it.
+  verifies this against the reader rather than assuming it. `show` reads
+  `classification_family`: its `editions` join the `classification_family` kind, the
+  classification root's `families` and a classification's `family` (3b.3 serves their
+  key and label), and its membership replaces 3b.3's slug-prefix family lookup.
 - Cases: twins of `http_catalog/{reference-edges,whole-variable-group-graph}`,
   `cli_scope/lineage-unheld-reference` and
   `logical/{edges-unheld-owner,unheld-terminal-*}`; a split successor; a retired ref
