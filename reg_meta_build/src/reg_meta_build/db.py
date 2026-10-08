@@ -24,7 +24,7 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from ._curation import printable_error
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "9.4.0"
+SCHEMA_VERSION = "9.5.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -366,6 +366,49 @@ CREATE TABLE IF NOT EXISTS resolver_column (
     -- Representative spelling; never applicability to one holding edition.
     delivery_column_name TEXT NOT NULL CHECK (length(delivery_column_name) > 0),
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_lower)
+) WITHOUT ROWID;
+
+-- Derived (derive/chains.py): the active terminal successor of a register, variable
+-- or classification at the manifest's classification_succession_as_of_year. The walk
+-- follows the sole active successor; a split (several active successors) is its own
+-- terminal. A node whose terminal is itself has no row.
+CREATE TABLE IF NOT EXISTS succession_terminal (
+    -- Register, binding or class/ FQID of a node with an active outbound edge;
+    -- may be retired (no live row).
+    fqid TEXT PRIMARY KEY,
+    -- FQID of the same kind where the walk stops; never equal to fqid.
+    terminal_fqid TEXT NOT NULL CHECK (terminal_fqid <> fqid)
+) WITHOUT ROWID;
+
+-- Derived (derive/chains.py): each classification edition's succession chain,
+-- oldest first, anchored on that edition (backward along its predecessor, forward
+-- through every branch of its successors). Names and vintages join from
+-- classification; is_self is slug = anchor_slug.
+CREATE TABLE IF NOT EXISTS classification_chain (
+    -- The edition the chain is read for.
+    anchor_slug TEXT NOT NULL,
+    -- Chain order, from 0; the walk order, never a sort by year.
+    position INTEGER NOT NULL CHECK (position >= 0),
+    slug TEXT NOT NULL,
+    -- Year of the edge by which this edition is superseded on the chain.
+    effective_year INTEGER,
+    -- Started and without an active successor at the policy year.
+    is_current INTEGER NOT NULL CHECK (is_current IN (0, 1)),
+    PRIMARY KEY (anchor_slug, position)
+) WITHOUT ROWID;
+
+-- Derived (derive/chains.py): one-dimensional classification succession families
+-- (ICD, LKF, SNI, SSYK), each edition in family order.
+CREATE TABLE IF NOT EXISTS classification_family (
+    family_key TEXT NOT NULL,
+    family_label TEXT NOT NULL,
+    position INTEGER NOT NULL CHECK (position >= 0),
+    slug TEXT NOT NULL,
+    effective_year INTEGER,
+    is_current INTEGER NOT NULL CHECK (is_current IN (0, 1)),
+    -- The edition the family's chain was read from.
+    is_self INTEGER NOT NULL CHECK (is_self IN (0, 1)),
+    PRIMARY KEY (family_key, position)
 ) WITHOUT ROWID;
 """
 

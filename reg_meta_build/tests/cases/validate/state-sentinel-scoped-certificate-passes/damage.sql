@@ -18,3 +18,5 @@ INSERT INTO classification_conformance_code (
 -- Derive indexes the classification and its owned code label as fold_search text.
 INSERT INTO classification_fts(rowid, short_name, name) VALUES (1, 'testklass', 'testklassning');
 INSERT INTO value_code_fts(rowid, label) VALUES (10, 'kanonisk');
+-- A classification without succession is its own one-edition chain (derive).
+INSERT INTO classification_chain VALUES ('testklass', 0, 'testklass', NULL, 1);

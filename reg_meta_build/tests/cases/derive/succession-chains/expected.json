@@ -1,0 +1,44 @@
+{
+  "note": "Rows of each chain table in key order, read from the fixture and RUST_RUNTIME_SPEC.md 3d.1 at the policy year 2026: v2 -> v3 and a2020 -> a2030 (2030) are not yet active; the split scb/reg/split and root1996 are their own terminals, so neither has a row.",
+  "succession_terminal": [
+    ["class/a2000", "class/a2020"],
+    ["class/a2010", "class/a2020"],
+    ["class/sni2002", "class/sni2007"],
+    ["scb/old", "scb/reg"],
+    ["scb/reg/v0", "scb/reg/v2"],
+    ["scb/reg/v1", "scb/reg/v2"]
+  ],
+  "classification_chain": [
+    ["a2000", 0, "a2000", 2010, 0],
+    ["a2000", 1, "a2010", 2020, 0],
+    ["a2000", 2, "a2020", 2030, 1],
+    ["a2000", 3, "a2030", null, 0],
+    ["a2010", 0, "a2000", 2010, 0],
+    ["a2010", 1, "a2010", 2020, 0],
+    ["a2010", 2, "a2020", 2030, 1],
+    ["a2010", 3, "a2030", null, 0],
+    ["a2020", 0, "a2000", 2010, 0],
+    ["a2020", 1, "a2010", 2020, 0],
+    ["a2020", 2, "a2020", 2030, 1],
+    ["a2020", 3, "a2030", null, 0],
+    ["a2030", 0, "a2000", 2010, 0],
+    ["a2030", 1, "a2010", 2020, 0],
+    ["a2030", 2, "a2020", 2030, 1],
+    ["a2030", 3, "a2030", null, 0],
+    ["b-x", 0, "root1996", 2000, 0],
+    ["b-x", 1, "b-x", null, 1],
+    ["b-y", 0, "root1996", 2000, 0],
+    ["b-y", 1, "b-y", null, 1],
+    ["root1996", 0, "root1996", 2000, 0],
+    ["root1996", 1, "b-x", null, 1],
+    ["root1996", 2, "b-y", null, 1],
+    ["sni2002", 0, "sni2002", 2008, 0],
+    ["sni2002", 1, "sni2007", null, 1],
+    ["sni2007", 0, "sni2002", 2008, 0],
+    ["sni2007", 1, "sni2007", null, 1]
+  ],
+  "classification_family": [
+    ["sni", "SNI", 0, "sni2002", 2008, 0, 1],
+    ["sni", "SNI", 1, "sni2007", null, 1, 0]
+  ]
+}

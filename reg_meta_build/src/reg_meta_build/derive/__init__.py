@@ -31,6 +31,7 @@ from reg_meta_build.db import (
     publish_db,
 )
 from reg_meta_build.derive.browse import browse_scopes, derive_browse
+from reg_meta_build.derive.chains import CHAIN_TABLES, derive_chains
 from reg_meta_build.derive.search_index import derive_search_indexes
 from reg_meta_build.derive.states import derive_states
 
@@ -43,6 +44,7 @@ DERIVED_TABLES = (
     "browse_delivery",
     "delivery_window",
     "resolver_column",
+    *CHAIN_TABLES,
 )
 
 
@@ -54,6 +56,7 @@ def derive(conn: sqlite3.Connection) -> None:
     """
     derive_states(conn)
     derive_browse(conn, browse_scopes(conn))
+    derive_chains(conn)
     derive_search_indexes(conn)
 
 

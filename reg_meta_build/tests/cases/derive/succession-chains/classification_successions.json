@@ -1,0 +1,32 @@
+[
+  {
+    "predecessor": "a2000",
+    "successor": "a2010",
+    "effective_year": 2010
+  },
+  {
+    "predecessor": "a2010",
+    "successor": "a2020",
+    "effective_year": 2020
+  },
+  {
+    "predecessor": "a2020",
+    "successor": "a2030",
+    "effective_year": 2030
+  },
+  {
+    "predecessor": "root1996",
+    "successor": "b-x",
+    "effective_year": 2000
+  },
+  {
+    "predecessor": "root1996",
+    "successor": "b-y",
+    "effective_year": 2000
+  },
+  {
+    "predecessor": "sni2002",
+    "successor": "sni2007",
+    "effective_year": 2008
+  }
+]
