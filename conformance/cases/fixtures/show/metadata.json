@@ -1,6 +1,16 @@
 {
   "variable_groups": [
     {
+      "register": "scb/beta",
+      "key": "origin",
+      "label": "Origin",
+      "source": "curated",
+      "members": [
+        {"variable": "scb/beta/fodland", "delivery_column_name": "FodLand"},
+        {"variable": "scb/beta/fodland", "delivery_column_name": "FodLandKod"}
+      ]
+    },
+    {
       "register": "scb/alpha",
       "key": "person",
       "label": "Person",

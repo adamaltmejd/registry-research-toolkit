@@ -218,7 +218,8 @@ fn column_coverage(
         }
         return Ok(out);
     }
-    let mut spans: BTreeMap<(i64, String), (String, String, i64)> = BTreeMap::new();
+    // A state's bounds may be null; a merge keeps SQL's MIN and MAX, which skip nulls.
+    let mut spans: BTreeMap<(i64, String), Span> = BTreeMap::new();
     for (id, column, from, to, count) in rows(
         conn,
         "SELECT v.variable_id, vs.delivery_column_name, MIN(vs.valid_from), MAX(vs.valid_to), \
@@ -230,28 +231,29 @@ fn column_coverage(
             Ok((
                 row.get::<_, i64>(0)?,
                 row.get::<_, String>(1)?,
-                row.get::<_, String>(2)?,
-                row.get::<_, String>(3)?,
+                row.get::<_, Option<String>>(2)?,
+                row.get::<_, Option<String>>(3)?,
                 row.get::<_, i64>(4)?,
             ))
         },
     )? {
-        spans
+        let span = spans
             .entry((id, reg_core::fold_identity(&column)))
-            .and_modify(|span| {
-                span.0 = span.0.clone().min(from.clone());
-                span.1 = span.1.clone().max(to.clone());
-                span.2 += count;
-            })
-            .or_insert((from, to, count));
+            .or_insert((None, None, 0));
+        span.0 = [span.0.take(), from].into_iter().flatten().min();
+        span.1 = [span.1.take(), to].into_iter().flatten().max();
+        span.2 += count;
     }
     out.extend(
         spans
             .into_iter()
-            .map(|(key, (from, to, count))| (key, Coverage::new(Some(from), Some(to), count))),
+            .map(|(key, (from, to, count))| (key, Coverage::new(from, to, count))),
     );
     Ok(out)
 }
+
+/// A merged `(MIN(valid_from), MAX(valid_to), COUNT(*))`.
+type Span = (Option<String>, Option<String>, i64);
 
 /// The coverage of a register's group members, as today's group node zips it.
 pub(super) struct MemberCoverage {

@@ -108,5 +108,47 @@
         "classification_links": [{"classification": "icd-10"}]
       }
     ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "beta",
+      "name": "Beta"
+    },
+    "slug": "fodland",
+    "provider_key": "4",
+    "name": "Födelseland",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "period_scope": "year_independent",
+        "valid_from": null,
+        "valid_to": null,
+        "delivery_column_name": "FodLand",
+        "data_type": "text",
+        "data_length": "40",
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {"slug": "older", "name": "Older"},
+        "valid_from": "2010-01-01",
+        "valid_to": "2010-12-31",
+        "delivery_column_name": "FodLandKod",
+        "data_type": "text",
+        "data_length": "3",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
   }
 ]
