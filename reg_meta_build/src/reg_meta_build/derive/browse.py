@@ -8,13 +8,13 @@ projection, clipped to physical periods) only in a steward artifact.
 
 from __future__ import annotations
 
-import sqlite3
 from typing import TYPE_CHECKING, Literal
 
-from reg_meta.catalog import Catalog
-from reg_meta.db import register_py_lower
+from reg_meta_build.derive.states import reader_catalog
 
 if TYPE_CHECKING:
+    import sqlite3
+
     from reg_meta_build.validate import ValidationResult
 
 type Scope = Literal["reference", "holdings"]
@@ -41,9 +41,7 @@ def browse_deliveries(conn: sqlite3.Connection, scope: Scope) -> list[BrowseRow]
     """
     factory = conn.row_factory
     try:
-        conn.row_factory = sqlite3.Row
-        register_py_lower(conn)
-        catalog = Catalog(conn, scope=scope)
+        catalog = reader_catalog(conn, scope)
         registers = conn.execute(
             "SELECT p.slug, r.slug, r.register_id FROM register r "
             "JOIN provider p USING(provider_id) "
@@ -144,7 +142,7 @@ def check_browse(
                 (row for scope in scopes for row in browse_deliveries(conn, scope)), 1
             )
         }
-    except (ValueError, TypeError) as exc:
+    except (ValueError, TypeError, KeyError) as exc:
         result.fail(f"browse_delivery cannot be recomputed: {exc}")
         return
     missing, surplus = expected - stored, stored - expected

@@ -314,7 +314,8 @@ CREATE TABLE IF NOT EXISTS expanded_state (
     -- A window's variable_alias_window key start (variable, variant, column, this);
     -- NULL on a base row.
     window_valid_from TEXT,
-    -- Own bounds: a coded window is clipped to its state. NULL when year-independent.
+    -- Own bounds: a per-column (metadata or coding) window is clipped to its state.
+    -- NULL when year-independent.
     valid_from TEXT,
     valid_to TEXT,
     -- One spelling per (variable, variant, py_lower fold); NULL with the column.

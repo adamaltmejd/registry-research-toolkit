@@ -847,12 +847,13 @@ tables; the Rust reader does, and applies only the request-dependent rules below
 - `expanded_state`: every representation the resolver can emit over a base state's whole
   history, one row per base state plus one per participating alias window. Its `kind` is
   `base` (always emitted), `base_fallback` (a base that some source window spelled like
-  it replaces), `source_window`, `coded_window` (a per-column coded window, clipped to
-  its state) or `curated_window` (additive). Each row carries its own bounds, the
-  emitted `delivery_column_name`, the window's `variable_alias_window` key start and
-  `canonical_column`, the one spelling of its column fold for the (variable, variant).
-  Content stays on the state and the window row. `resolver_column` is its projection:
-  the canonical columns of every row that is not `base_fallback`.
+  it replaces), `source_window`, `coded_window` (a per-column coded window) or
+  `curated_window` (additive); a per-column (metadata or coding) window is clipped to
+  its state. Each row carries its own bounds, the emitted `delivery_column_name`, the
+  window's `variable_alias_window` key start and `canonical_column`, the one spelling of
+  its column fold for the (variable, variant). Content stays on the state and the window
+  row. `resolver_column` is its projection: the canonical columns of every row that is
+  not `base_fallback`.
 - `browse_delivery` and `delivery_window`: `register_variable_deliveries` per scope,
   with the disjoint windows of each delivery. `holdings` rows exist only in a steward
   artifact.

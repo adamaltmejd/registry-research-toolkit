@@ -12,7 +12,7 @@ from __future__ import annotations
 import os
 import sqlite3
 from concurrent.futures import ProcessPoolExecutor
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 # Bootstrap by calling the reader (RUST_RUNTIME_SPEC.md section 4): the resolver
 # rules are read from it, so the derived rows equal what it emits by construction.
@@ -57,10 +57,13 @@ RESOLVER_COLUMN_SOURCE = (
 _worker_catalog: Catalog | None = None
 
 
-def _catalog(conn: sqlite3.Connection) -> Catalog:
+def reader_catalog(
+    conn: sqlite3.Connection, scope: Literal["reference", "holdings"] = "reference"
+) -> Catalog:
+    """The reader over `conn` as derive calls it; sets the row factory it needs."""
     conn.row_factory = sqlite3.Row
     register_py_lower(conn)
-    return Catalog(conn)
+    return Catalog(conn, scope=scope)
 
 
 def _window_kind(window: tuple) -> str:
@@ -88,8 +91,8 @@ def _expanded(catalog: Catalog, pairs: list[tuple[int, int]]) -> list[ExpandedRo
                     catalog.canonical_delivery_column(variable_id, variant_id, column),
                 )
             )
-            # A coded window is clipped to the state; index 16 keeps its own start,
-            # the key of its `variable_alias_window` row.
+            # A per-column (metadata or coding) window is clipped to the state;
+            # index 16 keeps its own start, the key of its `variable_alias_window` row.
             out.extend(
                 (
                     *state,
@@ -110,7 +113,7 @@ def _expanded(catalog: Catalog, pairs: list[tuple[int, int]]) -> list[ExpandedRo
 def _open_worker(path: str) -> None:
     global _worker_catalog
     # A plain connection, never immutable: an extend-db overlay lives in the WAL.
-    _worker_catalog = _catalog(sqlite3.connect(path))
+    _worker_catalog = reader_catalog(sqlite3.connect(path))
 
 
 def _worker_expanded(pairs: list[tuple[int, int]]) -> list[ExpandedRow]:
@@ -141,7 +144,7 @@ def expanded_states(conn: sqlite3.Connection) -> list[ExpandedRow]:
     if len(pairs) < _PARALLEL_MIN_PAIRS or not path:
         factory = conn.row_factory
         try:
-            return _expanded(_catalog(conn), pairs)
+            return _expanded(reader_catalog(conn), pairs)
         finally:
             conn.row_factory = factory
     if conn.in_transaction:
@@ -195,7 +198,7 @@ def check_states(
     )
     try:
         expected = {(n, *row) for n, row in enumerate(expanded_states(conn), 1)}
-    except (ValueError, TypeError) as exc:
+    except (ValueError, TypeError, KeyError) as exc:
         result.fail(f"expanded_state cannot be recomputed: {exc}")
         return
     missing, surplus = expected - stored, stored - expected

@@ -713,7 +713,7 @@ used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/test_logical.py"]
-note = "Private-name import: derive's `expanded_state` reads the resolver's window participation rule in place (section 4 bootstrap, package 3b.1). It moves into reg_meta_build with the rest of the resolver in stage 4."
+note = "Private-name import: derive's `expanded_state` reads the resolver's window participation rule in place (section 4 bootstrap, package 3b.1). The seam also calls `Catalog._variable_windows` and `Catalog._states_in_bounds` and reads the `_StoredAliasWindow` tuple layout (index 3 provenance, 4 column_metadata, 11 coding_metadata, 16 the window's own start). Stage 4 moves all of it into reg_meta_build with the rest of the resolver."
 
 [[row]]
 kind = "import"
