@@ -194,7 +194,7 @@ description, operational definition), or a comma-separated list.
 ```json
 {
   "status": "diagnostic_complete",
-  "error": {"code": "classification_curation_invalid", "message_contains": ["curation/registers/scb/sample.toml"]},
+  "error": {"code": "register_entry_invalid", "message_contains": ["curation/registers/scb/sample.toml"]},
   "projections": [
     {"table": "state_codes", "where": {"column": "VALUE"}, "fields": ["code"], "match": "exact", "rows": [["01"]]}
   ]

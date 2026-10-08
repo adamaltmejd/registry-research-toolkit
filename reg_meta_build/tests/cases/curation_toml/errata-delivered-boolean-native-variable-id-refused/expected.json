@@ -4,7 +4,7 @@
   "fails_if": "ErrataDeliveredEntry.native_variable_id stops being a strict integer and coerces a boolean or numeric string",
   "note": "The test refused both \"39310\" and true; a boolean is the harder form, since lax integer parsing accepts it as 1.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/test.toml [[errata.delivered.native_variable_id]] entry 1",
     "message_contains": [
       "valid integer"

@@ -4,6 +4,9 @@
   "fails_if": "load_tags lets one tag reference the same member twice",
   "error": {
     "code": "tags_invalid",
-    "locator": "tag 'income' references 'scb/lisa' twice"
+    "locator": "curation/tags.toml [[tag]] entry 1 [[tag.member]] entry 2",
+    "message_contains": [
+      "tag 'income' references 'scb/lisa' twice"
+    ]
   }
 }

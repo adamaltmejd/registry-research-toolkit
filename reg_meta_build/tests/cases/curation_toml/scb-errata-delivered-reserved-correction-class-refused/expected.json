@@ -7,8 +7,9 @@
   "fails_if": "resolve_scb_errata lets a curator claim a correction class the builder reserves for its scoped provenance",
   "error": {
     "code": "scb_errata_invalid",
-    "locator": "correction class 'overlapping-attributions'",
+    "locator": "curation/registers/scb/lisa.toml [[errata.delivered]] entry 1 (scb/lisa)/individer-15plus/Kon",
     "message_contains": [
+      "correction class 'overlapping-attributions'",
       "reserved"
     ]
   }

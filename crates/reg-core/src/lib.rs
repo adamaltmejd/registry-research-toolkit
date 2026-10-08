@@ -1,7 +1,8 @@
 //! `reg-core`: contracts shared by the Rust runtime and, through bindings, the build.
 //!
-//! This crate holds the FQID and period grammars ([`Fqid`], [`Period`]) and the text
-//! folds of `RUST_RUNTIME_SPEC.md` section 5. Each fold matches today's Python reader
+//! This crate holds the FQID and period grammars ([`Fqid`], [`Period`]), the text
+//! folds, and the `project_data.json` types ([`project`]) with their structural
+//! validator ([`validate_structural`]), all of `RUST_RUNTIME_SPEC.md` section 5. Each fold matches today's Python reader
 //! (`reg_meta`) byte for byte, except on characters whose Unicode data changed after
 //! Python's UCD version.
 //!
@@ -10,17 +11,23 @@
 //! combining class), `unicode-properties` 0.1.4 (general category) and the generated
 //! case-folding table.
 //!
-//! The oracles are `conformance/cases/folds/` and `conformance/cases/grammar/`.
+//! The oracles are `conformance/cases/folds/`, `conformance/cases/grammar/` and
+//! `reg_schema/test_corpus/`.
 
 mod case_folding;
 mod grammar;
+pub mod project;
+mod structural;
+mod validation;
 
 use case_folding::CASE_FOLDING;
 pub use case_folding::UNICODE_VERSION;
 pub use grammar::{Fqid, GrammarError, Period, PeriodToken, Term};
+pub use structural::validate_structural;
 use unicode_normalization::UnicodeNormalization;
 use unicode_normalization::char::canonical_combining_class;
 use unicode_properties::{GeneralCategory, GeneralCategoryGroup, UnicodeGeneralCategory};
+pub use validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 /// Python `str.isspace()`: `White_Space` plus the four information separators
 /// U+001C..U+001F, which Python treats as whitespace and Unicode does not.

@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree_registers.py::test_edition_split_requires_declared_native_split_and_unique_names",
   "fails_if": "the register loader accepts an [[identity.edition_split]] whose split key is not a three-part key under its variant",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/test.toml [[identity.edition_split]] entry 1",
     "message_contains": [
       "three-part key under variant"

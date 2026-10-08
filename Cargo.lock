@@ -747,7 +747,9 @@ dependencies = [
 name = "reg-core"
 version = "0.0.0"
 dependencies = [
+ "serde",
  "serde_json",
+ "sha2",
  "unicode-normalization",
  "unicode-properties",
 ]
@@ -762,7 +764,7 @@ dependencies = [
 
 [[package]]
 name = "reg-meta"
-version = "0.42.0"
+version = "0.43.0"
 dependencies = [
  "axum",
  "reg-catalog",

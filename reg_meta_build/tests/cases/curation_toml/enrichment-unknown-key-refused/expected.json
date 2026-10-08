@@ -3,7 +3,7 @@
   "replaces": "test_delivery_enrichment.py::test_unknown_key_is_rejected_with_file_and_entry",
   "fails_if": "the register loader accepts a misspelled key in an [[enrichment.description]] entry",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_unknown_key",
     "locator": "curation/registers/scb/agi.toml [[enrichment.description.descripton]] entry 1",
     "message_contains": [
       "Extra inputs are not permitted"

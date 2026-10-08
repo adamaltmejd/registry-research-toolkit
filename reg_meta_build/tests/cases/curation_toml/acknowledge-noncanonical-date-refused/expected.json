@@ -7,7 +7,7 @@
   "fails_if": "the register loader accepts an [[acknowledge]] period bound that is not a canonical YYYY-MM-DD date",
   "note": "2020-1-01 names a real day in a non-canonical form, the harder of the two refused dates (the other, 2020-02-30, does not exist).",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/test.toml [[acknowledge]] entry 1",
     "message_contains": [
       "valid_from must be a canonical ISO date"

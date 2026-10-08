@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "composite_key_inconsistent",
+      "path": "/panels/0/members/1/time_key",
+      "message": "composite time_key [2018..'LA2019', 2019] differs from [2018, '2019-H1'] at /panels/0/members/0/time_key"
+    }
+  ]
+}

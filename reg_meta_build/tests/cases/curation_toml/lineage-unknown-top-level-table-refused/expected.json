@@ -1,7 +1,7 @@
 {
   "loader": "lineage",
   "replaces": "test_lineage.py::TestLoadLineageConfig::test_unknown_top_level_table_fails",
-  "fails_if": "load_lineage_config ignores a top-level table other than [lineage_defaults] and [lineage]",
+  "fails_if": "load_lineage_config ignores a top-level table other than [lineage_defaults]",
   "error": {
     "code": "lineage_invalid",
     "locator": "classification"

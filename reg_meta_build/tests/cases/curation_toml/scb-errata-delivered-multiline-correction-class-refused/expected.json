@@ -4,8 +4,9 @@
   "fails_if": "resolve_scb_errata accepts an `upstream` correction class with a line break, which would split the provenance header",
   "error": {
     "code": "scb_errata_invalid",
-    "locator": "scb_errata `upstream` correction class",
+    "locator": "curation/registers/scb/lisa.toml [[errata.delivered]] entry 1 (scb/lisa)/individer-15plus/Kon",
     "message_contains": [
+      "scb_errata `upstream` correction class",
       "line breaks"
     ]
   }

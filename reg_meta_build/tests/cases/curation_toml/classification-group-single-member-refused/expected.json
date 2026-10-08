@@ -7,9 +7,10 @@
   "fails_if": "load_classification_groups accepts a classification umbrella with fewer than two members",
   "note": "A group needs at least two members. One member is the hardest form; a group with no members array fails the same claim.",
   "error": {
-    "code": "concept_groups_invalid",
-    "locator": "classification_group 'sun'",
+    "code": "classification_group_invalid",
+    "locator": "curation/classification_groups.toml [[classification_group]] entry 1",
     "message_contains": [
+      "classification_group 'sun'",
       ">= 2"
     ]
   }

@@ -170,7 +170,7 @@ pub enum Period {
     Range { from: PeriodToken, to: PeriodToken },
 }
 
-type Date = (u16, u8, u8);
+pub(crate) type Date = (u16, u8, u8);
 
 fn last_day(year: u16, month: u8) -> u8 {
     match month {
@@ -202,7 +202,7 @@ fn ordinal(s: &str, n: usize, max: u8) -> Option<u8> {
 }
 
 impl PeriodToken {
-    fn parse(s: &str) -> Option<Self> {
+    pub(crate) fn parse(s: &str) -> Option<Self> {
         if let Some(y) = s.strip_prefix("LA") {
             return year(y).map(Self::SchoolYear);
         }
@@ -238,7 +238,7 @@ impl PeriodToken {
     }
 
     /// The first and last day the token covers.
-    fn bounds(self) -> (Date, Date) {
+    pub(crate) fn bounds(self) -> (Date, Date) {
         let months = |y: u16, lo: u8, hi: u8| ((y, lo, 1), (y, hi, last_day(y, hi)));
         match self {
             Self::Year(y) => months(y, 1, 12),

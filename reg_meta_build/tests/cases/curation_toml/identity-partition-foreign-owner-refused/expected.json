@@ -4,7 +4,7 @@
   "fails_if": "the register loader accepts an [[identity.partition]] owner outside the partitioned family",
   "note": "1.3.c is a canonical split key, of a sibling family in the same register.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/test.toml [[identity.partition]] entry 1",
     "message_contains": [
       "canonical split key in family"

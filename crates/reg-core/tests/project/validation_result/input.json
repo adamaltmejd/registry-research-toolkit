@@ -1,0 +1,20 @@
+{
+  "schema_version": "3.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "Ålder",
+  "år": 1,
+  "sources": [
+    {
+      "name": "lisa",
+      "register_variant": "scb/lisa/individer-15plus",
+      "period": "2020\n",
+      "bindings": [
+        {
+          "variable": "scb/lisa/kön",
+          "type": "categorical"
+        }
+      ]
+    }
+  ]
+}

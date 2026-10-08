@@ -1,9 +1,0 @@
-{
-  "loader": "lineage",
-  "replaces": "test_lineage.py::TestLoadLineageConfig::test_missing_source_variant_in_override_fails",
-  "fails_if": "load_lineage_config accepts a [lineage.\"...\"] override naming a source register without its source variant",
-  "error": {
-    "code": "lineage_override_incomplete",
-    "locator": "scb/lisa/kon"
-  }
-}
