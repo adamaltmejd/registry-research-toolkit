@@ -1,0 +1,96 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": [
+          "unknown_code_validity",
+          "unknown_code_membership",
+          "conflicting_code_validity",
+          "conflicting_code_memberships",
+          "empty_active_coding",
+          "item_validity_set_aside",
+          "unsupported_coding_scope",
+          "declared_value_list_not_found",
+          "unknown_record_member",
+          "unknown_native_member_token"
+        ]
+      },
+      "fields": ["code", "ref", "valid_from", "valid_to"],
+      "rows": [
+        ["unsupported_coding_scope", "scb-registerinformation#register:35/variant:350/edition:110/variable:3501/member:35001", null, null],
+        ["unsupported_coding_scope", "scb-registerinformation#register:48/variant:480/edition:110/variable:4801/member:48001", null, null],
+        ["item_validity_set_aside", "scb-registerinformation#register:31/variant:310/edition:110/variable:3101/member:31001", null, null],
+        ["item_validity_set_aside", "scb-registerinformation#register:32/variant:320/edition:110/variable:3201/member:32001", null, null],
+        ["item_validity_set_aside", "scb-registerinformation#register:33/variant:330/edition:110/variable:3301/member:33001", null, null],
+        ["item_validity_set_aside", "scb-registerinformation#register:39/variant:390/edition:110/variable:3901/member:39001", null, null],
+        ["item_validity_set_aside", "scb-registerinformation#register:45/variant:450/edition:110/variable:4501/member:45001", null, null],
+        ["item_validity_set_aside", "scb-registerinformation#register:45/variant:450/edition:110/variable:4501/member:45001", null, null],
+        ["unknown_code_validity", "scb-registerinformation#register:38/variant:380/edition:110/variable:3801/member:38001", null, null],
+        ["unknown_code_membership", "scb-registerinformation#register:38/variant:380/edition:110/variable:3801/member:38001", "2020-01-01", "2020-12-31"],
+        ["unknown_code_validity", "scb-registerinformation#register:39/variant:390/edition:110/variable:3901/member:39001", null, null],
+        ["unknown_code_membership", "scb-registerinformation#register:39/variant:390/edition:110/variable:3901/member:39001", "1990-01-01", "1990-12-31"],
+        ["unknown_code_membership", "scb-registerinformation#register:44/variant:440/edition:110/variable:4401/member:44001", "2020-01-01", "2020-12-31"],
+        ["conflicting_code_memberships", "scb-registerinformation#register:45/variant:450/edition:110/variable:4501/member:45001", "2020-01-01", "2020-12-31"],
+        ["unknown_code_validity", "scb-registerinformation#register:46/variant:460/edition:110/variable:4601/member:46001", null, null],
+        ["unknown_code_validity", "scb-registerinformation#register:46/variant:460/edition:110/variable:4601/member:46001", null, null],
+        ["unknown_code_membership", "scb-registerinformation#register:46/variant:460/edition:110/variable:4601/member:46001", "2020-01-01", "2020-12-31"],
+        ["empty_active_coding", "scb_canonical/scb_canonical.toml#register:rowvalid/variable:ROWVALID", "1990-01-01", "1990-12-31"],
+        ["declared_value_list_not_found", "Forsakringskassan/fk.toml#register:fkreg/variable:FKVAR", null, null]
+      ],
+      "note": "Every coding issue of the build, by the source record it cites (register N's CVID N*1000+1 in edition 110). Registers absent here bind cleanly: setaside, partial and pooledaside report only the set-aside warning; pooled, marker, markermix, unlisted, checked, named and every identifier register report nothing. SET-ASIDE: one warning per bound list, so collide's two lists warn twice. GROUPED: two unknown_code_validity issues for three associations, one per descriptor (`first` with its duplicated row, then `second`); which descriptor and its occurrence count are in `detail` only."
+    },
+    {
+      "table": "state_codes",
+      "fields": ["register", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["setaside", "1990-01-01", "1990-12-31", "01", "One"],
+        ["setaside", "1990-01-01", "1990-12-31", "02", "Two"],
+        ["partial", "2008-01-01", "2008-12-31", "01", "One"],
+        ["partial", "2008-01-01", "2008-12-31", "02", "Two"],
+        ["pooledaside", "2010-01-01", "2014-12-31", "01", "One"],
+        ["pooledaside", "2010-01-01", "2014-12-31", "02", "Two"],
+        ["pooled", "2020-01-01", "2022-12-31", "01", "One"],
+        ["marker", "2020-01-01", "2020-12-31", null, null],
+        ["markermix", "2020-01-01", "2020-12-31", "02", "Two"],
+        ["unkvalid", "2020-01-01", "2020-12-31", null, null],
+        ["asideunk", "1990-01-01", "1990-12-31", null, null],
+        ["unlisted", "2020-01-01", "2020-12-31", "01", "One"],
+        ["idclean", "2020-01-01", "2020-12-31", "01", "One"],
+        ["idunk", "2020-01-01", "2020-12-31", null, null],
+        ["idnolabel", "2020-01-01", "2020-12-31", null, null],
+        ["idjoin", "2020-01-01", "2020-12-31", null, null],
+        ["nolabel", "2020-01-01", "2020-12-31", null, null],
+        ["collide", "2020-01-01", "2020-12-31", null, null],
+        ["grouped", "2020-01-01", "2020-12-31", null, null],
+        ["checked", "2021-01-01", "9999-12-31", "01", "One"],
+        ["rowvalid", "1990-01-01", "1990-12-31", null, null],
+        ["named", "2020-01-01", "2020-12-31", "01", "First"],
+        ["fkreg", "2020-01-01", "2020-12-31", null, null]
+      ],
+      "note": "Every built value set. A null row is a state with no value set. unkscope and rangeless form no state (next projection)."
+    },
+    {
+      "table": "states",
+      "where": {"register": ["unkscope", "rangeless"]},
+      "fields": ["register", "valid_from", "valid_to"],
+      "rows": [],
+      "note": "test_rangeless_pooled_and_unknown_scopes_stay_unsupported: an unknown edition (`okänd`) and a pooled one with no range (`Höstterminen 2018, Höstterminen 2019`) bind no membership (unsupported_coding_scope above) and publish no state to carry one."
+    },
+    {
+      "table": "variables",
+      "where": {"register": ["idclean", "idunk", "idnolabel", "idjoin", "unkvalid", "nolabel"]},
+      "fields": ["register", "is_identifier"],
+      "rows": [
+        ["idclean", 1],
+        ["idunk", 1],
+        ["idnolabel", 1],
+        ["idjoin", 1],
+        ["unkvalid", 0],
+        ["nolabel", 0]
+      ],
+      "note": "What makes the drop apply: Unika's Identitetsvariabel 1 (idclean, idunk, idnolabel) or an Identifierare.csv row for the VarID (idjoin, whose Unika flag is blank). unkvalid and nolabel are the same lists on non-identifier columns."
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "rangeless"
+native_id = "48"
+[[variant]]
+native_id = "48.480"
+slug = "people"
+[[variable]]
+native_id = "48.4801"
+slug = "value"

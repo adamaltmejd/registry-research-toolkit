@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "pooledaside"
+native_id = "33"
+[[variant]]
+native_id = "33.330"
+slug = "people"
+[[variable]]
+native_id = "33.3301"
+slug = "value"

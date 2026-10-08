@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "test_source_value_bindings.py::test_finite_copy_pins_changed_validity_even_when_both_intersections_are_unknown",
+    "test_source_value_binding_references.py::test_unresolved_member_list_is_reported_instead_of_a_partial_claim",
+    "test_source_value_binding_references.py::test_named_and_inline_references_do_not_cross_sources_or_record_occurrences",
+    "test_source_value_binding_references.py::test_shared_explicit_pointers_bind_only_their_exact_record_occurrences",
+    "test_source_value_binding_references.py::test_incomplete_or_competing_shared_pointer_evidence_stays_ambiguous[header]",
+    "test_source_value_binding_references.py::test_conflicting_named_references_withhold_and_outside_codes_stay_accounted",
+    "test_source_value_binding_references.py::test_value_bounds_keep_day_precision_and_invalid_bounds_unknown",
+    "test_source_value_binding_references.py::test_identifier_inline_enumeration_retains_incomplete_membership",
+    "test_source_value_binding_references.py::test_explicit_workbook_pointer_preserves_named_header_case[None]",
+    "test_source_value_binding_references.py::test_explicit_workbook_pointer_preserves_named_header_case[anchor]",
+    "test_source_value_binding_identifiers.py::test_declared_identifier_drops_only_bad_membership_period"
+  ],
+  "note": "The member-name join (an SOS workbook's Kodlista sheets and inline Värdemängd enumerations bound to Variabelnivå rows) seen at the built value sets, one variable per replaced claim. Expected values are the replaced tests' asserted outcomes read through the workbook rows: a bound variable's codes are its list's rows, and a withheld one has no value set. The old tests cut membership at days inside one occurrence; Kodlista_SJUKHUS's Från/Till row validity reaches that grain, so DAY and MONTH keep the replaced test's exact bounds. IDPERIOD restates the drops-only-the-bad-period claim at year grain: a Kodlista member period is a year, while the replaced test's bad member covered July 2020. CVALID: a row period (2010) outside its section period (2001-2002) has no common period, the replaced test's conflicting_code_validity; the copy fingerprints that test also compared are not observable.",
+  "fails_if": "any one of: `_explicit_sheet_member` accepts a case-differing header without an exact unanchored pointer (civilnp or anchored gain Ogift) or stops accepting it with one (civil loses it); the shared-pointer shape binds a list to every name it lists rather than only to the rows that point at it (outsider gains Delad) or is treated as ambiguous (first and second lose it); a list naming two variables binds instead of reporting ambiguous_list_member_references (ambiga, ambigb); a row naming another variable than its header binds (conflict gains 1); inline enumerations bind by member name instead of record id (the VAL_B inline row gains 1 Ett and 2 Två); member names bind across workbooks (oth's explicit gains Ett); an unresolved enumeration publishes a partial list (unresolved); `value_window` loses day precision, reads yyyymm as a year or accepts an impossible or reversed bound (day, month, baddate, reversed); row and section periods with no overlap bind instead of conflicting (cvalid); or the declared-identifier drop is lifted (idperiod reports 2020) or extended to the identifier's own inline enumeration (idinline loses its issue)",
+  "sources": "sos-value-references"
+}
