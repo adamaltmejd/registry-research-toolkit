@@ -68,15 +68,15 @@ The copy is cheap, so every case gets one, whether or not its command writes.
 
 ## `request.json`
 
-  | Key             | Meaning                                                                                                                          |
-  | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-  | `replaces`      | Required. The Python test (`file::function[param]`), or a list of them, whose assertions the expected values were read from.     |
-  | `fails_if`      | Required. The product change that would make this case fail. The runner refuses a request without one.                           |
-  | `note`          | Optional prose: why this case exists, and where an expected value comes from.                                                    |
-  | `argv`          | The argument list after the program name.                                                                                        |
-  | `env`           | Optional environment variables set for the run, such as `{"REG_META_QUIET": "1"}`. The runner unsets `REG_META_QUIET` otherwise. |
-  | `runs`          | Instead of `argv` and `env`: a list of `{argv, env}` run in order in one working directory.                                      |
-  | `curation_dirs` | Optional. Where the artifact's curation tree is copied; defaults to `["curation"]`.                                              |
+  | Key             | Meaning                                                                                                                                               |
+  | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `replaces`      | Required. The Python test (`file::function[param]`), or a list of them, whose assertions the expected values were read from.                          |
+  | `fails_if`      | Required. The product change that would make this case fail. The runner refuses a request without one.                                                |
+  | `note`          | Optional prose: why this case exists, and where an expected value comes from.                                                                         |
+  | `argv`          | The argument list after the program name.                                                                                                             |
+  | `env`           | Optional environment variables set for the run, such as `{"REG_META_QUIET": "1"}`. The runner unsets `REG_META_QUIET` otherwise.                      |
+  | `runs`          | Instead of `argv` and `env`: a list of `{argv, env}` run in order in one working directory. The runner refuses a top-level `argv` or `env` beside it. |
+  | `curation_dirs` | Optional. Where the artifact's curation tree is copied; defaults to `["curation"]`.                                                                   |
 
 `fails_if` has the meaning it has in the build cases (`cases/build/README.md`): name a
 change to the product, not the behavior restated. It sits in `request.json` there and

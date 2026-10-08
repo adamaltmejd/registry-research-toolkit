@@ -169,7 +169,14 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
     otherwise drop its claim silently."""
     assert request.get("fails_if", "").strip(), f"{case.name}: fails_if is required"
     assert request.get("replaces"), f"{case.name}: replaces is required"
-    assert ("argv" in request) != ("runs" in request), f"{case.name}: argv or runs"
+    if "runs" in request:
+        # Each step carries its own argv and env; one beside `runs` would be
+        # ignored silently, so the case would run without it.
+        assert not request.keys() & {"argv", "env"}, (
+            f"{case.name}: argv and env go inside each run step, not beside runs"
+        )
+    else:
+        assert "argv" in request, f"{case.name}: argv or runs is required"
     assert request.keys() <= _REQUEST_KEYS, (case.name, request.keys() - _REQUEST_KEYS)
     for step in request.get("runs", []):
         # A misspelled step key (say "evn") would otherwise be ignored silently.
