@@ -6,11 +6,14 @@
 
 mod cursor;
 mod docs;
+mod graph;
+mod lineage;
 mod refs;
 mod search;
 mod show;
 pub mod slice_3a;
 pub mod slice_3b;
+pub mod slice_3d;
 mod states;
 mod warnings;
 
@@ -203,7 +206,10 @@ impl Operation {
 
 /// Every registered operation.
 pub fn all() -> impl Iterator<Item = &'static Operation> {
-    slice_3a::OPERATIONS.iter().chain(slice_3b::OPERATIONS)
+    slice_3a::OPERATIONS
+        .iter()
+        .chain(slice_3b::OPERATIONS)
+        .chain(slice_3d::OPERATIONS)
 }
 
 /// Every registered download.

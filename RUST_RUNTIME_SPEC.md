@@ -1272,7 +1272,6 @@ in-flight list.
   | `rust-only fix:` G1 exceptions                                                                                                                            | stage 4 (D1)                                                                                        |
   | Derive calling the reader in place (`from reg_meta.catalog import Catalog` in derive; `reg_meta.queries.get_coded_variables` in `derive/schema.py`)       | stage 4 (moved into `reg_meta_build`)                                                               |
   | Two project validators and project-schema versions (`reg_schema`, `reg-core`)                                                                             | stage 4                                                                                             |
-  | Request-time terminal walk (search's `terminal()` reading the `classification_succession_as_of_year` manifest key) beside `succession_terminal`           | 3d.2                                                                                                |
   | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                               | stage 4 (proven twins earlier)                                                                      |
   | Frozen Python `same_as` BFS (`_resolve_*_via_same_as` in `catalog.py`), unreachable since the writer requires live `same_as` endpoints (3d.1); not ported | stage 4 (deleted with the Python runtime)                                                           |
   | `scripts/check_versions.sh` keeping the `reg-meta` crate and `reg_meta` versions equal                                                                    | stage 4                                                                                             |
@@ -1512,10 +1511,13 @@ operations.
   held, as the frozen `resolve_terminal_successor` does. Search's terminal-centric
   `editions()` may be read from `classification_chain` (the anchor's rows up to its own
   position) only while no edition has two predecessors and a split's outbound edges
-  share one year; 3d.2 verifies this against the reader rather than assuming it. `show`
-  reads `classification_family`: its `editions` join the `classification_family` kind,
-  the classification root's `families` and a classification's `family` (3b.3 serves
-  their key and label), and its membership replaces 3b.3's slug-prefix family lookup.
+  share one year; 3d.2 verifies this against the reader rather than assuming it (result:
+  both pins satisfy it, but the builder admits a merge and
+  `api/search-classification-succession` has one, so `editions()` keeps its read-time
+  walk). `show` reads `classification_family`: its `editions` join the
+  `classification_family` kind, the classification root's `families` and a
+  classification's `family` (3b.3 serves their key and label), and its membership
+  replaces 3b.3's slug-prefix family lookup.
 - Cases: twins of `http_catalog/{reference-edges,whole-variable-group-graph}`,
   `cli_scope/lineage-unheld-reference` and
   `logical/{edges-unheld-owner,unheld-terminal-*}`; a split successor; a retired ref
@@ -1524,10 +1526,12 @@ operations.
 - G1 (run in C): webapp baseline for the three graph routes and `/lineage_warnings`; CLI
   baseline `get lineage`.
 - Paths:
-  `crates/reg-catalog/src/ops/{slice_3d.rs,graph.rs,lineage.rs,refs.rs,search/classification.rs}`,
+  `crates/reg-catalog/src/ops/{slice_3d.rs,graph.rs,lineage.rs,refs.rs,search/classification.rs,show.rs}`,
   `crates/reg-catalog/src/lib.rs` (`SCHEMA`), `conformance/cases/api/`,
-  `conformance/test_mcp.py`, `conformance/differential/`, the generated files.
-- Acceptance: full gate; 3a's search cases unchanged. Depends on: 3b.3, 3d.1.
+  `conformance/cases/fixtures/show/`, `conformance/test_mcp.py`,
+  `conformance/differential/`, the generated files.
+- Acceptance: full gate; 3a's search cases unchanged. Depends on: 3b.3, 3b.4 (graph's
+  variable nodes read its states leaf), 3d.1.
 
 **C Catalog-page cutover (3b and 3d).** Implements §13 decision 15 for every
 `/api/catalog*` and `/api/value-sets` route at once (D3).

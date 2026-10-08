@@ -1,0 +1,20 @@
+{
+  "note": "Succession through graph on the show fixture. A retired variable draws its terminal's graph; a retired ref at a split is ambiguous_ref with the split's successors; a live variable that splits draws both branches (today's variable_chain follows the first successor only, a rust-only fix) and its representation edge; one classification chain (icd-9 to icd-10) reads alike through show, graph, the family graph and search's succession fold. The last request is a diamond (d-start splits, both branches rejoin at d-end): it fails if graph adds only edges into an edition from editions placed before it, dropping d-right to d-end. Fails if graph follows one branch of a split, drops a representation edge's columns, focuses the retired ref, or reads the classification chain from another anchor.",
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "graph", "path": "/api/graph/scb/alpha/sex"},
+    {"operation": "graph", "path": "/api/graph/scb/alpha/split"},
+    {"operation": "graph", "path": "/api/graph/scb/beta/fodland"},
+    {"operation": "show", "path": "/api/catalog/class/icd-9"},
+    {"operation": "graph", "path": "/api/graph/class/icd-9"},
+    {"operation": "graph", "path": "/api/graph/group/class/icd"},
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {"q": "Diagnoses edition", "type": "classification"}
+    },
+    {"operation": "graph", "path": "/api/graph/scb/alpha"},
+    {"operation": "graph", "path": "/api/graph/scb/beta/d-start"}
+  ]
+}

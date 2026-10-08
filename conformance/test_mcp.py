@@ -56,6 +56,8 @@ EQUIVALENCE = {
     ),
     "show": ("show-provider", "show-bare-names"),
     "states": ("states-paging", "states-errors", "states-stale-cursor"),
+    "graph": ("graph-succession", "graph-unheld", "graph-errors"),
+    "lineage": ("lineage", "lineage-unheld-reference", "graph-errors"),
 }
 READER = {"fixture": "reader"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.

@@ -1,0 +1,24 @@
+[
+  {"status": 200, "json": {"/data": {"nodes": [], "edges": [], "focus_id": null}}},
+  {
+    "status": 200,
+    "json": {
+      "/data/nodes/*/id": ["class/sunx-b", "class/sunx-a"],
+      "/data/nodes/*/group_key": ["class/sunx", "class/sunx"],
+      "/data/nodes/*/group_label": ["Sunx", "Sunx"],
+      "/data/focus_id": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/focus_id": "class/sunx-a",
+      "/data/nodes/*/id": ["class/sunx-a", "class/sunx-b"],
+      "/data/nodes/*/group_key": ["class/sunx", "class/sunx"]
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "group/class/nope"}
+  }
+]

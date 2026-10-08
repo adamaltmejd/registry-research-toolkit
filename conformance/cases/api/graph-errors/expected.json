@@ -1,0 +1,13 @@
+[
+  {"status": 422, "json": {"/error/code": "scope_unavailable", "/error/fields/scope": "holdings"}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "period"}},
+  {"status": 422, "json": {"/error/code": "scope_unavailable", "/error/fields/scope": "holdings"}},
+  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "period"}},
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/candidates/*/fqid": ["scb/alpha/alder", "scb/alpha/kon"]
+    }
+  }
+]

@@ -1,0 +1,15 @@
+[
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "sos/unheld/unheld"}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/registers/*/variable": ["sos/unheld/unheld"],
+      "/data/registers/*/register_name": ["Unheld"],
+      "/data/registers/*/instance_count": [1],
+      "/meta/scope": "reference"
+    }
+  }
+]

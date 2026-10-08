@@ -53,7 +53,11 @@
     {"predecessor": "scb/alpha/split", "successor": "scb/alpha/kon"},
     {"predecessor": "scb/alpha/split", "successor": "scb/alpha/alder"},
     {"predecessor": "scb/alpha/later", "successor": "scb/alpha/kon", "effective_year": 2099},
-    {"predecessor": "scb/beta/kon", "successor": "scb/alpha/kon", "effective_year": 2099}
+    {"predecessor": "scb/beta/kon", "successor": "scb/alpha/kon", "effective_year": 2099},
+    {"predecessor": "scb/beta/d-start", "successor": "scb/beta/d-left"},
+    {"predecessor": "scb/beta/d-start", "successor": "scb/beta/d-right"},
+    {"predecessor": "scb/beta/d-left", "successor": "scb/beta/d-end"},
+    {"predecessor": "scb/beta/d-right", "successor": "scb/beta/d-end"}
   ],
   "historical_predecessors": [
     {
@@ -95,5 +99,46 @@
   ],
   "classification_derivations": [
     {"derived": "ks87-p", "source": "icd-9", "note": "Primary-care setting"}
+  ],
+  "representation_successions": [
+    {
+      "predecessor": {"variable": "scb/beta/fodland", "delivery_column_name": "FodLandKod"},
+      "successor": {"variable": "scb/beta/fodland", "delivery_column_name": "FodLand"},
+      "effective_year": 2011,
+      "description": "Code column renamed"
+    }
+  ],
+  "state_lineage": [
+    {
+      "consumer": {
+        "variable": "scb/beta/kon",
+        "variant": "annual",
+        "delivery_column_name": "Kon",
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31"
+      },
+      "source": {
+        "variable": "scb/alpha/kon",
+        "variant": "annual",
+        "delivery_column_name": "Kon",
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31"
+      },
+      "valid_from": "2018-07-01",
+      "valid_to": "2018-12-31"
+    }
+  ],
+  "lineage_warnings": [
+    {
+      "consumer": {
+        "variable": "scb/alpha/kon",
+        "variant": "older",
+        "delivery_column_name": "Kon",
+        "valid_from": "2010-01-01",
+        "valid_to": "2010-12-31"
+      },
+      "kind": "no_source_state",
+      "message": "No source state covers 2010."
+    }
   ]
 }
