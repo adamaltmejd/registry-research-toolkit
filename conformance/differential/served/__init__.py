@@ -13,13 +13,16 @@ cases' result form (``exit``, ``stdout``, ``stderr``).
 - ``show``: every catalog node kind per named scope, retired refs, and owning
   variables against the CLI baseline.
 - ``states``: ``states`` and ``warnings`` for sampled variables and their registers.
+- ``values``: sampled variables' coded states and their books' partitions, and each
+  classification's codes against the CLI baseline's ``get classification --codes``.
 - ``graph``: ``graph`` per sampled variable, group and every classification,
   ``lineage``'s warnings per sampled variable, and its provenance rows against the
   CLI baseline's ``get lineage``.
 - ``schema``: ``schema`` and ``diff`` against the CLI baseline's ``get schema``,
   ``get datacolumns`` and ``get diff``.
 
-``show``'s, ``graph``'s and ``schema``'s ``cases`` also take ``baseline_cli``, a
+``show``'s, ``values``', ``graph``'s and ``schema``'s ``cases`` also take
+``baseline_cli``, a
 future of the CLI arm's baseline results by case id, set once the CLI arms finish, so
 they compare with a CLI baseline case instead of running it again.
 """
@@ -40,6 +43,7 @@ from conformance.differential.served import (
     search,
     show,
     states,
+    values,
 )
 from conformance.http_cases import ServerPool
 
@@ -47,7 +51,7 @@ if TYPE_CHECKING:
     from concurrent.futures import Future
     from pathlib import Path
 
-FAMILIES = (context, search, docs, show, states, graph, schema)
+FAMILIES = (context, search, docs, show, states, values, graph, schema)
 # The production rate limit (30 writes per minute) does not bind GETs. Eight worker
 # processes, since one Python process serves one search at a time (G1 budget).
 BASELINE_APP = (
@@ -117,7 +121,7 @@ def served_cases(
                 args = (base, cand, catalog, scopes, originals[catalog])
                 found = (
                     family.cases(*args, baseline_cli)
-                    if family in {show, graph, schema}
+                    if family in {show, values, graph, schema}
                     else family.cases(*args)
                 )
                 cases += [

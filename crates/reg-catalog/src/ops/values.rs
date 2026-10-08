@@ -157,6 +157,10 @@ pub fn values(server: &Server, scope: Scope, params: &Params) -> Result<serde_js
         }
     };
     let needle = fold_search(q);
+    // simplify: folds every row per request (pinned v0.43.0: 74 ms over the 44k-member
+    // set, 128 ms over icd-10-se, against 167 and 351 ms for today's read and filter);
+    // store folded code and label in derive if code filtering is reported slow or a
+    // set passes about 100k members.
     if !needle.is_empty() {
         rows.retain(|row| {
             let (code, label) = row.code_label();
