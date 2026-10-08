@@ -1,0 +1,36 @@
+{
+  "exit_code": 0,
+  "files": {
+    "partial.toml": {
+      "contains": [
+        "# foldable families: 10",
+        "# excluded batteries (weak label agreement): 1",
+        "# skipped (key collides with an existing group): 3",
+        "# skipped (trailing-hyphen trim collapsed two distinct stems): 0",
+        "variable = \"dodsorsak2\""
+      ],
+      "excludes": [
+        "variable = \"dodsorsak1\"",
+        "key = \"artal-person\"",
+        "variable = \"artal-person-1\"",
+        "variable = \"artal-person4\"",
+        "key = \"foo\"",
+        "variable = \"foo-1\"",
+        "variable = \"foo4\""
+      ]
+    },
+    "accepts.toml": {
+      "contains": [
+        "[[variable_group]]\nregister = \"scb/foretag\"\nkey = \"artal-person\"\nlabel = \"Antal år som person\"\naxis = \"ordinal\"\n[[variable_group.members]]\nvariable = \"artal-person-1\"\nvalue = \"1\"\nlabel = \"1\"\n[[variable_group.members]]\nvariable = \"artal-person-2\"\nvalue = \"2\"\nlabel = \"2\"\n[[variable_group.members]]\nvariable = \"artal-person-3\"\nvalue = \"3\"\nlabel = \"3\"\n\n"
+      ],
+      "excludes": [
+        "variable = \"artal-person4\"",
+        "variable = \"artal-person5\"",
+        "variable = \"artal-person6\"",
+        "key = \"foo\"",
+        "variable = \"foo-1\"",
+        "variable = \"foo4\""
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+[classification]
+short_name = "FAM_A"
+slug = "fam-a"
+name = "Familj A"
+codes_file = "fam-a.csv"
+
+[[binding.variable]]
+variable = "scb/ulf/famvar2"
+
+[[binding.variable]]
+variable = "scb/ulf/boundvar"

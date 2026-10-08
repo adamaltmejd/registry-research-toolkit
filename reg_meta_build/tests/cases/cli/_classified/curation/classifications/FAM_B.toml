@@ -1,0 +1,5 @@
+[classification]
+short_name = "FAM_B"
+slug = "fam-b"
+name = "Familj B"
+codes_file = "fam-b.csv"

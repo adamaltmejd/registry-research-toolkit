@@ -23,6 +23,7 @@
     "loader": "relations",
     "path": "succession.toml",
     "result": {
+      "same_as": [],
       "replaced_by": [
         {
           "from": "scb/foretag/forvink-ers-aktiv",

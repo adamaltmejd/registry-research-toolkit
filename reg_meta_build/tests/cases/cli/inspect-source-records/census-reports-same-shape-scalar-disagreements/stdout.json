@@ -1,0 +1,14 @@
+{
+  "type": "completion",
+  "schema_version": 3,
+  "pins": {"interpretation_id": "scb-registerinformation-observation-census-v7"},
+  "counts": {
+    "unique_observations": 2,
+    "duplicate_occurrences": 1,
+    "same_complete_context_groups": 0,
+    "context_separated_groups": 0,
+    "non_shape_scalar_groups": 1,
+    "non_shape_scalar_cvids": 1
+  },
+  "affected_memberships": {"non_shape_scalar_cvids": [4242]}
+}
