@@ -1,0 +1,10 @@
+[[tag]]
+slug = "outside"
+label = "Outside"
+[[tag.member]]
+variable = "scb/other/value"
+[[tag]]
+slug = "inside"
+label = "Inside"
+[[tag.member]]
+variable = "scb/sample/value"

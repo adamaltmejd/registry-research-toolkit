@@ -700,8 +700,21 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     ),
     "variables": _variables,
     "variants": lambda o: o._sql(
-        "SELECT r.slug AS register, rv.slug AS variant, rv.name "
+        "SELECT r.slug AS register, rv.slug AS variant, rv.name, "
+        "rv.panel_entity_key, rv.panel_time_key "
         "FROM register_variant rv JOIN register r USING (register_id)"
+    ),
+    # One row per tag member as its FQID; a tag without members is one null row.
+    "tags": lambda o: o._sql(
+        "SELECT t.slug, CASE WHEN m.variable_id IS NOT NULL THEN "
+        "vp.slug || '/' || vr.slug || '/' || v.slug "
+        "WHEN m.register_id IS NOT NULL THEN mp.slug || '/' || mr.slug END "
+        "AS member FROM tag t LEFT JOIN tag_member m USING (tag_id) "
+        "LEFT JOIN variable v ON v.variable_id = m.variable_id "
+        "LEFT JOIN register vr ON vr.register_id = v.register_id "
+        "LEFT JOIN provider vp ON vp.provider_id = vr.provider_id "
+        "LEFT JOIN register mr ON mr.register_id = m.register_id "
+        "LEFT JOIN provider mp ON mp.provider_id = mr.provider_id"
     ),
     "aliases": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
@@ -768,7 +781,8 @@ FIELDS: dict[str, frozenset[str]] = {
         "state_codes": "register variable variant column valid_from valid_to code label",
         "variables": "register variable column provider_key description "
         "is_identifier is_sensitive",
-        "variants": "register variant name",
+        "variants": "register variant name panel_entity_key panel_time_key",
+        "tags": "slug member",
         "aliases": "register variable variant column",
         "concept_groups": "variables",
         "warnings": "register variable column valid_from valid_to code variant detail "

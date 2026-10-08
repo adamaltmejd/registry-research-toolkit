@@ -1,0 +1,20 @@
+{
+  "status": "complete",
+  "result": {
+    "counts": {"skipped_curation": 1}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "tags",
+      "fields": ["slug", "member"],
+      "rows": [
+        ["inside", "scb/sample/value"]
+      ]
+    }
+  ]
+}

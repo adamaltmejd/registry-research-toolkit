@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_catalog_dependency_withholding.py::test_cycle_remains_fatal_when_all_its_endpoints_are_withheld"],
+  "note": "key and gone are both withheld; their replaced_by cycle still refuses the build (old: error code replaced_by_cycle). The build refuses in SourceEventBindings.resolve, before dependency pruning.",
+  "fails_if": "`SourceEventBindings.resolve` (source_event_resolution.py) and `resolve_metadata_dependencies` (catalog_dependencies.py) validate the pruned metadata instead of the declared one, so dropping both withheld endpoints removes the cycle and the build completes",
+  "sources": "scb-withheld-key-and-gone"
+}

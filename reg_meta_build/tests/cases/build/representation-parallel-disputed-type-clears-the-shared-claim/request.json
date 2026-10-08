@@ -1,0 +1,40 @@
+{
+  "replaces": ["test_delivery_coverage_obligations.py::test_delivery_facts_unknown_claim_is_never_compared"],
+  "note": "The allowed side of the delivery-coverage guard. A representation-disputed fact clears the claim to none (reg_meta_build/DESIGN.md, Delivery coverage accounting), and a cleared claim is never compared (old: an unknown claim passes any written fact), so the build reports no issue.",
+  "fails_if": "`_null_conflicting_facts` (source_formation.py) stops clearing a data_type claim the parallel window disputes, so `check_delivery_coverage` compares the 2022 First/Second claims against the shared state and the build ends with unexplained_delivery_fact_change",
+  "sources": {
+    "description": "Variable 1: First (int) is pooled 2020-2022 (CVID 100) and again nested 2021-2022 (CVID 103); Second (varchar) is 2022-2024 (CVID 101). The two columns disagree on their type inside the 2022 parallel window.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "First",
+          "cvid": 100,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020-2022",
+          "regver_id": 110
+        },
+        {
+          "colname": "Second",
+          "cvid": 101,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2022-2024",
+          "regver_id": 111,
+          "data_type": "varchar"
+        },
+        {
+          "colname": "First",
+          "cvid": 103,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2021",
+          "versionname": "2021-2022",
+          "regver_id": 113
+        }
+      ]
+    }
+  }
+}

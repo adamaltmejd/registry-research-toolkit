@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_catalog_dependency_withholding.py::test_dependency_failure_reports_every_missing_endpoint[relation]"],
+  "note": "Neither endpoint is declared; both are reported (old: error.missing names both endpoints, so 2).",
+  "fails_if": "the same_as check in `resolve_metadata_dependencies` (catalog_dependencies.py) short-circuits after its first unresolved endpoint, so only scb/sample/nokey is reported",
+  "sources": "scb-withheld-key-and-gone"
+}

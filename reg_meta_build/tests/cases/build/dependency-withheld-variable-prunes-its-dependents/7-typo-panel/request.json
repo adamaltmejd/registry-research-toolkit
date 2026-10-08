@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_catalog_dependency_withholding.py::test_panel_checks_every_composite_member_before_withholding"],
+  "note": "Composite panel key (key, typo) with key withheld: the build refuses naming the typo (old: CatalogDependencyError matching 'typo'); the withheld key is not missing, so 1.",
+  "fails_if": "`resolve_panel_dependencies` (catalog_dependencies.py) withholds the whole composite key as soon as one member is withheld, without requiring the rest, so the typo is dropped and the build completes",
+  "sources": "scb-withheld-key-and-gone"
+}

@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_catalog_dependency_withholding.py::test_missing_relation_endpoint_does_not_hide_unconverted_other_endpoint"],
+  "note": "One endpoint is withheld, the other undeclared: the build still refuses naming the typo (old: CatalogDependencyError matching 'typo'); the withheld key is not counted as missing, so 1.",
+  "fails_if": "`resolve_metadata_dependencies` (catalog_dependencies.py) drops a binary relation as soon as one endpoint is withheld, before requiring the other, so the typo is pruned with it and the build completes",
+  "sources": "scb-withheld-key-and-gone"
+}

@@ -1,0 +1,32 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+panel_entity_key = ["value", "key"]
+panel_time_key = "period"
+[[variant]]
+native_id = "1.11"
+slug = "other"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+[[variable]]
+native_id = "1.102"
+slug = "key"
+[[variable]]
+native_id = "1.103"
+slug = "two"
+[[variable]]
+native_id = "1.104"
+slug = "gone"
+[[variable]]
+native_id = "1.105"
+slug = "else"
+[[group]]
+register = "scb/sample"
+key = "family"
+label = "Family"
+members = [{ variable = "value" }, { variable = "two" }, { variable = "key" }]
