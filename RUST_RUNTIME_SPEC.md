@@ -1491,15 +1491,19 @@ operations.
   edges, warnings and per-register provenance. The refs module and search's
   classification arm read `succession_terminal`; their request-time walks go. The reader
   does not port the `same_as` fallback (unreachable, 3d.1). `succession_terminal` stops
-  at a split and applies the policy year to every kind (search's rule); the baseline's
-  `resolve_terminal_successor` takes the first branch of a split and ignores the year
-  for registers and variables, so a retired ref at a split or behind a future-dated edge
-  differs from the baseline's 301 target under a narrow `rust-only fix:` exception.
+  at a split and applies the policy year to every kind (search's rule; ratified
+  2026-10-08). A retired ref whose walk stops at a split answers `ambiguous_ref` with
+  the split's successors as `candidates`, never a bare `not_found`; a ref behind a
+  future-dated edge is still live at the policy year and resolves to itself. 3b.3's refs
+  follow the same rule. The baseline's `resolve_terminal_successor` takes the first
+  branch of a split and ignores the year for registers and variables, so both cases
+  differ from the baseline's 301 target under a narrow `rust-only fix:` exception naming
+  their `api` case.
 - Cases: twins of `http_catalog/{reference-edges,whole-variable-group-graph}`,
   `cli_scope/lineage-unheld-reference` and
   `logical/{edges-unheld-owner,unheld-terminal-*}`; a split successor; a retired ref
-  through `show`, `graph` and `search` on one chain; a retired ref at a split; MCP
-  equivalence for both operations.
+  through `show`, `graph` and `search` on one chain; a retired ref at a split
+  (`ambiguous_ref` with its successors); MCP equivalence for both operations.
 - G1 (run in C): webapp baseline for the three graph routes and `/lineage_warnings`; CLI
   baseline `get lineage`.
 - Paths:
