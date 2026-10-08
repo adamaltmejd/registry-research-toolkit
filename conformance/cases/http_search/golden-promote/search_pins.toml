@@ -1,4 +1,0 @@
-[[pin]]
-query = "deeptopic"
-type = "register"
-fqids = ["scb/gamma"]

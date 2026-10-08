@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from http_cases import CASES, assert_http_case
 
-SURFACES = ("http_catalog", "http_scope", "http_search", "validate")
+SURFACES = ("http_catalog", "http_scope", "validate")
 
 
 def pytest_generate_tests(metafunc):
@@ -23,4 +23,7 @@ def pytest_generate_tests(metafunc):
 
 
 def test_http_contract(case, tmp_path, monkeypatch, http_servers):
-    assert_http_case(case, tmp_path, monkeypatch, http_servers)
+    # Only the `api` corpus targets the Rust server; the other surfaces' routes
+    # are still FastAPI's, answered in process.
+    servers = http_servers if case.parent.name == "api" else None
+    assert_http_case(case, tmp_path, monkeypatch, servers)

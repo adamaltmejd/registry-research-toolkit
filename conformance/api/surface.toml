@@ -226,14 +226,6 @@ covered_by = ["conformance/cases/validate", "reg_webapp/backend/tests/test_proje
 
 [[row]]
 kind = "route"
-id = "GET /api/search"
-disposition = "replaced"
-operation = "search"
-owner = "3a"
-covered_by = ["conformance/cases/http_search", "reg_webapp/backend/tests/test_search_results.py"]
-
-[[row]]
-kind = "route"
 id = "GET /api/value-sets/{value_set_id}/codes"
 disposition = "replaced"
 operation = "values"
@@ -841,11 +833,11 @@ note = "The artifact schema and its gate have one home, reg_meta_build (section 
 [[row]]
 kind = "import"
 id = "reg_meta.db.db_path_from_args"
-used_by = ["reg_meta_build", "reg_webapp", "scripts"]
+used_by = ["reg_meta_build", "scripts"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/cases/selection"]
-note = "Default artifact directory for build output; the webapp's search-eval script also uses it."
+note = "Default artifact directory for build output."
 
 [[row]]
 kind = "import"
@@ -868,7 +860,7 @@ note = "Build-side artifact IO (extend-db, validate_built_db, derive); conforman
 [[row]]
 kind = "import"
 id = "reg_meta.db.open_db"
-used_by = ["conformance", "reg_meta_build", "reg_webapp", "scripts"]
+used_by = ["conformance", "reg_meta_build", "scripts"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_artifact.py"]
@@ -1418,14 +1410,6 @@ note = "`source_interpreter_commit` hashes queries.py for `extract_year`; confor
 
 [[row]]
 kind = "import"
-id = "reg_meta.queries.SEARCH_TYPES"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3a"
-covered_by = ["conformance/cases/http_search"]
-
-[[row]]
-kind = "import"
 id = "reg_meta.queries._fts_match_query"
 used_by = ["crates"]
 disposition = "removed"
@@ -1439,7 +1423,7 @@ id = "reg_meta.queries._normalized_search_query"
 used_by = ["crates"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/cases/http_search/golden-normalization"]
+covered_by = ["conformance/cases/api/search-pin-normalization"]
 note = "Private-name import, which the repo rules forbid, by the fold corpus generator (crates/reg-core/tools/gen_fold_corpus.py), a tool, not a test. The corpus is frozen data and the generator is only rerun deliberately, so the row goes when stage 4 deletes reg_meta."
 
 [[row]]
@@ -1457,7 +1441,7 @@ id = "reg_meta.queries.fold_search"
 used_by = ["conformance", "crates", "reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/cases/http_search/top-results-exact-spacing-accent", "conformance/cases/http_search/golden-normalization"]
+covered_by = ["conformance/cases/api/search-untyped-ranking", "conformance/cases/api/search-pin-normalization"]
 note = "The webapp search route's import goes in 3a with that route, unless checkpoint 1 decides the index is pre-folded, in which case reg-core-py provides `fold_search` to the build. The fold corpus generator and conformance/test_folds.py import it until stage 4, so the row is owned by stage 4."
 
 [[row]]
@@ -1471,75 +1455,11 @@ covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
 [[row]]
 kind = "import"
 id = "reg_meta.queries.search"
-used_by = ["conformance", "reg_webapp"]
+used_by = ["conformance"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/cases/http_search", "reg_meta/tests/test_search_ranking.py"]
-note = "The search core: the webapp's search route and conformance's reader cases switch to the 3a search operation. The build's only importer is a test (test_build_catalog_classification_boundary asserts search hits on a built catalog), which becomes a 3a search api case or goes."
-
-[[row]]
-kind = "import"
-id = "reg_meta.search.ClassificationSearchResult"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.search.ClassificationSuccessionSearchResult"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.search.CodeSearchResult"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.search.ConceptGroupSearchResult"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.search.RegisterSearchResult"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.search.SearchResult"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3a"
-covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.search.SearchResults"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3a"
-covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.search.VariableSearchResult"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_search_ranking.py", "conformance/cases/http_search"]
+covered_by = ["conformance/cases/api", "reg_meta/tests/test_search_ranking.py"]
+note = "The search core, which the Rust `search` operation replaced for the webapp. Conformance's reader and logical cases still call it. The build no longer imports it: English-name search coverage is the `api/search-english-name` case."
 
 [[row]]
 kind = "import"

@@ -129,8 +129,8 @@ skill applies them to a change and to a sweep.
 - **Expected values come from outside the code under test**: a golden, the source
   fixture, the spec, or agreement between two adapters. Never its own output or a copy
   of its logic.
-- **Every test can fail.** A new or changed test's comment names the product change
-  that makes it fail. A refusal asserts the located error code, not only that something
+- **Every test can fail.** A new or changed test's comment names the product change that
+  makes it fail. A refusal asserts the located error code, not only that something
   failed. A contract is asserted once, at the outermost boundary that reaches it; a twin
   is deleted.
 - **Delete with the code.** A test that pinned deleted behavior is deleted, not
@@ -233,9 +233,11 @@ refactor.
 - `uvx --from panache-cli==3.9.0 panache lint .` — markdown lint
 - `uv run python -m pytest conformance -q` — source-built conformance corpus and
   session-built catalog/steward artifact checks
-- `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog -q`
-  — conformance checks on an admitted real artifact; both flags required, bad artifacts
-  fail admission (fixture-bound goldens still use synthetic sources)
+- `cargo build --workspace`, then
+  `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q`
+  — conformance checks on an admitted real artifact; all three flags required (search
+  runs against the Rust server, and a missing `--server-cmd` fails), bad artifacts fail
+  admission (fixture-bound goldens still use synthetic sources)
 - `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject
   `testpaths`)
 - `uv run python -m pytest reg_meta/` — narrow to a single package

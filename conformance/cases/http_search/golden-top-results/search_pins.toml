@@ -1,9 +1,0 @@
-[[pin]]
-query = "kon"
-type = "register"
-fqids = ["scb/alderdom"]
-
-[[pin]]
-query = "Q90"
-type = "classification"
-fqids = ["class/qset"]

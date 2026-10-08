@@ -73,7 +73,7 @@ jobs:
       - run: cargo build --workspace --locked
       - run: >-
           uv run python -m pytest conformance -q -n auto
-          -k '[api/ or test_mcp'
+          -k '[api/ or test_mcp or test_artifact_sample or test_acceptance_agreement'
           --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}'
           --mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'
 

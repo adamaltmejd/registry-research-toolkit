@@ -1,10 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { SearchResponse } from "./api";
 import { search } from "./api";
 import SearchView from "./SearchView.svelte";
-import { pillLabel, setQuery } from "./search-view-test-helpers";
+import {
+  mockSearch,
+  type Pages,
+  pillLabel,
+  setQuery,
+} from "./search-view-test-helpers";
 
 // Split from SearchView.browser.test.ts by contract surface:
 // compact per-type tables. Siblings: SearchView.*.browser.test.ts.
@@ -34,69 +38,45 @@ describe("SearchView — compact per-type tables (#808)", () => {
   // concept groups are whole-row subgrid <a>s, while classification succession is
   // the only inline disclosure. Headings stay plain text; the raw FQID is hidden.
   // Codes render a compact, code-FIRST grid table per code-system bucket.
-  const FOUR_GROUPS = {
-    kind: "search",
-    query: "kon",
-    groups: [
+  const FOUR_GROUPS: Pages = {
+    register: [
+      { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+    ],
+    variable: [
       {
-        group: "registers",
-        has_more: false,
-        next_cursor: null,
-        results: [
-          { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
-        ],
-      },
-      {
-        group: "variables",
-        has_more: false,
-        next_cursor: null,
-        results: [
-          {
-            type: "variable",
-            fqid: "scb/lisa/kon",
-            name: "Kön",
-            register: "LISA",
-            definition: null,
-            delivery_column_names: ["kon"],
-          },
-        ],
-      },
-      {
-        group: "classifications",
-        has_more: false,
-        next_cursor: null,
-        results: [
-          {
-            type: "classification",
-            fqid: "class/sun2020",
-            short_name: "SUN",
-            name: "Svensk utbildningsnomenklatur",
-          },
-        ],
-      },
-      {
-        group: "register_value_sets",
-        has_more: false,
-        next_cursor: null,
-        results: [
-          {
-            type: "code",
-            code: "1",
-            label: "Man",
-            variables: [
-              { fqid: "scb/saga/sex", name: "Sex", register: "SAGA" },
-            ],
-            variable_count: 1,
-            classifications: [],
-            classification_count: 0,
-          },
-        ],
+        type: "variable",
+        fqid: "scb/lisa/kon",
+        name: "Kön",
+        register_name: "LISA",
+        definition: null,
+        delivery_column_names: ["kon"],
       },
     ],
-  } as unknown as SearchResponse;
+    classification: [
+      {
+        type: "classification",
+        fqid: "class/sun2020",
+        short_name: "SUN",
+        name: "Svensk utbildningsnomenklatur",
+      },
+    ],
+    register_value: [
+      {
+        type: "code",
+        code: "1",
+        label: "Man",
+        variables: [
+          { fqid: "scb/saga/sex", name: "Sex", register_name: "SAGA" },
+        ],
+        variable_count: 1,
+        classifications: [],
+        classification_count: 0,
+      },
+    ],
+  };
 
   it("renders Variables as a normal heading with column chips and muted register context", async () => {
-    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    mockSearch(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
 
@@ -122,29 +102,20 @@ describe("SearchView — compact per-type tables (#808)", () => {
   });
 
   it("omits the variable definition when it exactly repeats the variable name", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "raks",
-      groups: [
+    mockSearch({
+      variable: [
         {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "variable",
-              fqid: "scb/lisa/raks-andelutbbidrink",
-              name: "Andel av den totala inkomsten som är föranledd av arbetsmarknadspolitiska åtgärder",
-              register: "LISA",
-              definition:
-                "Andel av den totala inkomsten som är föranledd av arbetsmarknadspolitiska åtgärder",
-              operational_definition: null,
-              delivery_column_names: ["Raks_AndelUtbBidrInk"],
-            },
-          ],
+          type: "variable",
+          fqid: "scb/lisa/raks-andelutbbidrink",
+          name: "Andel av den totala inkomsten som är föranledd av arbetsmarknadspolitiska åtgärder",
+          register_name: "LISA",
+          definition:
+            "Andel av den totala inkomsten som är föranledd av arbetsmarknadspolitiska åtgärder",
+          operational_definition: null,
+          delivery_column_names: ["Raks_AndelUtbBidrInk"],
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("raks");
     await render(SearchView);
 
@@ -165,7 +136,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // Linked metadata pills mean the row can no longer be one nested anchor. Assert
     // the primary variable name is still a real keyboard-focusable catalog link and
     // the register context is its own link.
-    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    mockSearch(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
 
@@ -187,7 +158,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // made a null-fqid row an interactive dead row). They render the SAME subgrid
     // whole-row-link pattern as variables/classifications — a real, keyboard-
     // focusable <a> per FQID-addressable register.
-    vi.mocked(search).mockResolvedValue(FOUR_GROUPS);
+    mockSearch(FOUR_GROUPS);
     setQuery("kon");
     await render(SearchView);
 
@@ -204,26 +175,18 @@ describe("SearchView — compact per-type tables (#808)", () => {
   it("renders a null-fqid variable leaf as a non-link row (plain text, no navigation target)", async () => {
     // A null-fqid leaf can't navigate: it renders as a non-link <div.leaf-row>
     // (no <a>), its name is plain text. The row still renders (no crash).
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "orphan",
-      groups: [
+    mockSearch({
+      variable: [
         {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "variable",
-              fqid: null,
-              name: "Orphan",
-              register: "LISA",
-              definition: null,
-            },
-          ],
+          type: "variable",
+          fqid: null,
+          name: "Orphan",
+          register_name: "LISA",
+          definition: null,
+          delivery_column_names: [],
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("orphan");
     await render(SearchView);
 
@@ -245,29 +208,20 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // canvas. Variable metadata now rides inside the full-width heading, so a long
     // unbroken delivery-column chip must wrap within the single row instead of
     // claiming a separate max-content grid track.
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "for",
-      groups: [
+    mockSearch({
+      variable: [
         {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "variable",
-              // A long unbroken delivery column — the shape that formerly drove
-              // the separate column track to its full intrinsic width.
-              fqid: "scb/lisa/foervaervsarbetandebefolkningstatus",
-              name: "Förvärvsarbetande befolkningsstatus",
-              register: "LISA",
-              definition: null,
-              delivery_column_names: ["foervaervsarbetandebefolkningstatus"],
-            },
-          ],
+          type: "variable",
+          // A long unbroken delivery column — the shape that formerly drove
+          // the separate column track to its full intrinsic width.
+          fqid: "scb/lisa/foervaervsarbetandebefolkningstatus",
+          name: "Förvärvsarbetande befolkningsstatus",
+          register_name: "LISA",
+          definition: null,
+          delivery_column_names: ["foervaervsarbetandebefolkningstatus"],
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("for");
     const view = await render(SearchView);
     // Poll until the async search results have rendered before the sync queries.
@@ -308,51 +262,40 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // rows — it is NOT pulled out into a separate "Grouped families" sub-block and
     // it is NOT a disclosure. Assert a leaf row, a group link, and another leaf row
     // all render in the SAME grid table, and that the old label is gone.
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "ink",
-      groups: [
+    mockSearch({
+      variable: [
         {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
+          type: "variable",
+          fqid: "scb/lisa/before",
+          name: "Before fold",
+          register_name: "LISA",
+          definition: null,
+          delivery_column_names: [],
+        },
+        {
+          type: "group",
+          key: "dispink",
+          label: "Disponibel inkomst",
+          kind: "variable",
+          matched_count: 2,
+          register_name: "LISA",
+          members: [
             {
-              type: "variable",
-              fqid: "scb/lisa/before",
-              name: "Before fold",
-              register: "LISA",
-              definition: null,
-            },
-            {
-              type: "group",
-              group_key: "dispink",
-              group_label: "Disponibel inkomst",
-              kind: "variable",
-              label_matched: false,
-              matched_count: 2,
-              member_count: 3,
-              register: "LISA",
-              source: "token",
-              members: [
-                {
-                  fqid: "scb/lisa/dispink-2019",
-                  name: "Disp 2019",
-                  facets: [],
-                },
-              ],
-            },
-            {
-              type: "variable",
-              fqid: "scb/lisa/after",
-              name: "After fold",
-              register: "LISA",
-              definition: null,
+              fqid: "scb/lisa/dispink-2019",
+              name: "Disp 2019",
             },
           ],
         },
+        {
+          type: "variable",
+          fqid: "scb/lisa/after",
+          name: "After fold",
+          register_name: "LISA",
+          definition: null,
+          delivery_column_names: [],
+        },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("ink");
     await render(SearchView);
 
@@ -391,42 +334,28 @@ describe("SearchView — compact per-type tables (#808)", () => {
   });
 
   it("falls back to direct member links when a group page is not derivable", async () => {
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "ink",
-      groups: [
+    mockSearch({
+      variable: [
         {
-          group: "variables",
-          has_more: false,
-          next_cursor: null,
-          results: [
+          type: "group",
+          key: "mixed-income",
+          label: "Disponibel inkomst",
+          kind: "variable",
+          matched_count: 2,
+          register_name: "LISA",
+          members: [
             {
-              type: "group",
-              group_key: "mixed-income",
-              group_label: "Disponibel inkomst",
-              kind: "variable",
-              label_matched: false,
-              matched_count: 2,
-              member_count: 3,
-              register: "LISA",
-              source: "token",
-              members: [
-                {
-                  fqid: "scb/lisa/dispink-2019",
-                  name: "Disp LISA",
-                  facets: [],
-                },
-                {
-                  fqid: "scb/iot/dispink-2019",
-                  name: "Disp IoT",
-                  facets: [],
-                },
-              ],
+              fqid: "scb/lisa/dispink-2019",
+              name: "Disp LISA",
+            },
+            {
+              fqid: "scb/iot/dispink-2019",
+              name: "Disp IoT",
             },
           ],
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("ink");
     await render(SearchView);
 
@@ -449,33 +378,24 @@ describe("SearchView — compact per-type tables (#808)", () => {
     // owner makes the whole code row link to that variable and renders the owner as
     // muted inline context, not as an expandable row. The classification owner is
     // represented by the linked bucket heading.
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "man",
-      groups: [
+    mockSearch({
+      classification_code: [
         {
-          group: "classification_codes",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "code",
-              code: "A10",
-              label: "Diabetes drugs",
-              variables: [
-                { fqid: "scb/lmed/atc", name: "ATC-kod", register: "LMED" },
-              ],
-              variable_count: 1,
-              classifications: [
-                { fqid: "class/atc", short_name: "ATC code list", name: null },
-              ],
-              classification_count: 1,
-              code_system: "ATC",
-            },
+          type: "code",
+          code: "A10",
+          label: "Diabetes drugs",
+          variables: [
+            { fqid: "scb/lmed/atc", name: "ATC-kod", register_name: "LMED" },
           ],
+          variable_count: 1,
+          classifications: [
+            { fqid: "class/atc", short_name: "ATC code list", name: null },
+          ],
+          classification_count: 1,
+          code_system: "ATC",
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("man");
     await render(SearchView);
 
@@ -513,7 +433,7 @@ describe("SearchView — compact per-type tables (#808)", () => {
   });
 
   // Fix A keys the disclosure each-blocks by CONTENT identity + index (`code|i` for
-  // codes; `group_key|i` / `fqid|i` for the variables-/classifications-grid folds),
+  // codes; `key|i` / `fqid|i` for the variables-/classifications-grid folds),
   // not the bare index. A bare-index key makes Svelte REUSE a <details> element for
   // whatever NEW row lands at that position on a reactive list update, carrying its
   // `open` state over (a freshly-fetched row renders expanded though the user never
@@ -523,47 +443,38 @@ describe("SearchView — compact per-type tables (#808)", () => {
   // rebuilt between queries (fresh closed <details> regardless of key) — verified by
   // a negative-control probe. So these guard the OBSERVABLE half of the fix: the
   // index component keeps the key UNIQUE under content collisions (duplicate `code`
-  // in a bucket; the same register-scoped `group_key` recurring across registers),
-  // which a content-ONLY key (`code` / `group_key` alone) would crash on with
+  // in a bucket; the same register-scoped `key` recurring across registers),
+  // which a content-ONLY key (`code` / `key` alone) would crash on with
   // Svelte's each_key_duplicate — the same lesson the leaf groups already encode.
 
   it("renders DUPLICATE codes in one bucket without an each_key_duplicate crash (Fix A keeps the index in the key)", async () => {
     // The same `code` value recurs within one code-system bucket (distinct labels /
     // owners), so a `code`-ONLY key would collide and crash the whole render. The
     // `code|index` key tolerates it — both disclosure rows must render.
-    vi.mocked(search).mockResolvedValue({
-      kind: "search",
-      query: "dup",
-      groups: [
+    mockSearch({
+      classification_code: [
         {
-          group: "classification_codes",
-          has_more: false,
-          next_cursor: null,
-          results: [
-            {
-              type: "code",
-              code: "1",
-              label: "First meaning",
-              variables: [{ fqid: "scb/a/x", name: "X", register: "A" }],
-              variable_count: 1,
-              classifications: [],
-              classification_count: 0,
-              code_system: "SUN2020",
-            },
-            {
-              type: "code",
-              code: "1",
-              label: "Second meaning",
-              variables: [{ fqid: "scb/b/y", name: "Y", register: "B" }],
-              variable_count: 1,
-              classifications: [],
-              classification_count: 0,
-              code_system: "SUN2020",
-            },
-          ],
+          type: "code",
+          code: "1",
+          label: "First meaning",
+          variables: [{ fqid: "scb/a/x", name: "X", register_name: "A" }],
+          variable_count: 1,
+          classifications: [],
+          classification_count: 0,
+          code_system: "SUN2020",
+        },
+        {
+          type: "code",
+          code: "1",
+          label: "Second meaning",
+          variables: [{ fqid: "scb/b/y", name: "Y", register_name: "B" }],
+          variable_count: 1,
+          classifications: [],
+          classification_count: 0,
+          code_system: "SUN2020",
         },
       ],
-    } as unknown as SearchResponse);
+    });
     setQuery("dup");
     await render(SearchView);
 

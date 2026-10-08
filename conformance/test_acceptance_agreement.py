@@ -22,6 +22,7 @@ from artifact_requests import (
     require,
     require_search_reaches,
     sample_project,
+    search_client,
 )
 from fastapi.testclient import TestClient
 from reader_artifacts import (
@@ -87,7 +88,7 @@ def test_complete_admitted_set_agrees_with_http(artifact_dir, artifact_client):
 
 
 def check_generation_seeded_stratified_binding_agreement(
-    artifact_dir, artifact_client, tmp_path, capsys
+    artifact_dir, artifact_client, search, tmp_path, capsys
 ):
     with open_db(artifact_dir / "reg_meta.db") as conn:
         manifest = get_manifest(conn)
@@ -151,7 +152,7 @@ def check_generation_seeded_stratified_binding_agreement(
                 "Sample missing from CLI logical browse",
             )
             ceiling_refined += require_search_reaches(
-                artifact_dir, artifact_client, capsys, query, scope, candidate.variable
+                artifact_dir, search, capsys, query, scope, candidate.variable
             )
         project = candidate.project(manifest.get("steward", "global"))
         validated = artifact_client.post("/api/project/validate", json=project)
@@ -182,7 +183,13 @@ def check_generation_seeded_stratified_binding_agreement(
         if candidate is sample[0]:
             # Repeat and materializer bytes on one candidate keep tier 3 bounded.
             require_repeatable(
-                artifact_dir, artifact_client, capsys, project_path, ordered, query
+                artifact_dir,
+                artifact_client,
+                search,
+                capsys,
+                project_path,
+                ordered,
+                query,
             )
     receipt = {
         "sample_count": len(sample),
@@ -199,7 +206,9 @@ def check_generation_seeded_stratified_binding_agreement(
     return receipt
 
 
-def require_repeatable(artifact_dir, client, capsys, project_path, ordered, query):
+def require_repeatable(
+    artifact_dir, client, search, capsys, project_path, ordered, query
+):
     """Materializer, CLI and HTTP order bytes agree and repeat; search first
     pages repeat byte for byte."""
     project = json.loads(project_path.read_text())
@@ -222,8 +231,8 @@ def require_repeatable(artifact_dir, client, capsys, project_path, ordered, quer
     scope = "holdings" if steward else "reference"
     params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
     require(
-        client.get("/api/search", params=params).content
-        == client.get("/api/search", params=params).content,
+        search.get("/api/search", params=params).content
+        == search.get("/api/search", params=params).content,
         "Repeated HTTP first page differs",
     )
     argv = [
@@ -249,21 +258,26 @@ def require_repeatable(artifact_dir, client, capsys, project_path, ordered, quer
 
 
 def test_generation_seeded_stratified_binding_agreement(
-    artifact_dir, artifact_client, tmp_path, capsys
+    artifact_dir, artifact_client, tmp_path, capsys, request
 ):
     check_generation_seeded_stratified_binding_agreement(
-        artifact_dir, artifact_client, tmp_path, capsys
+        artifact_dir,
+        artifact_client,
+        search_client(request, artifact_dir),
+        tmp_path,
+        capsys,
     )
 
 
 def test_unheld_deep_link_and_reference_search_do_not_admit_order(
-    artifact_dir, artifact_client, tmp_path, capsys
+    artifact_dir, artifact_client, tmp_path, capsys, request
 ):
     with open_db(artifact_dir / "reg_meta.db") as conn:
         if get_manifest(conn)["catalog_artifact_kind"] != "steward":
             pytest.skip("catalog refusals are pinned in test_artifact")
         project = sample_project(conn, unheld=True)
         refused = materialize_order(project_from_raw(project), conn)
+    search = search_client(request, artifact_dir)
     binding = project["sources"][0]["bindings"][0]["variable"]
     reference = artifact_client.get(
         "/api/catalog/" + binding, params={"scope": "reference"}
@@ -271,16 +285,14 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
     require(reference.status_code == 200, "Unheld reference deep link is missing")
     require_search_reaches(
         artifact_dir,
-        artifact_client,
+        search,
         capsys,
         reference.json()["name"],
         "reference",
         binding,
     )
     require(
-        not http_search_contains(
-            artifact_client, reference.json()["name"], "holdings", binding
-        ),
+        not http_search_contains(search, reference.json()["name"], "holdings", binding),
         "Unheld binding entered holdings search",
     )
     require(
@@ -339,7 +351,7 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
     ],
 )
 def test_source_built_stratified_boundary_agreement(
-    fixture, tmp_path, monkeypatch, capsys
+    fixture, tmp_path, monkeypatch, capsys, request
 ):
     path = build_reader_artifact(
         tmp_path / "artifact",
@@ -353,14 +365,15 @@ def test_source_built_stratified_boundary_agreement(
         "REG_WEBAPP_STEWARDS_DIR",
         str(Path(__file__).resolve().parents[1] / "reg_webapp/stewards"),
     )
+    search = search_client(request, path.parent)
     with TestClient(create_app(rate_limit_per_minute=1000)) as client:
         check_generation_seeded_stratified_binding_agreement(
-            path.parent, client, tmp_path, capsys
+            path.parent, client, search, tmp_path, capsys
         )
 
 
 def test_binding_past_search_depth_ceiling_is_reached_by_refinement(
-    tmp_path, monkeypatch, capsys
+    tmp_path, monkeypatch, capsys, request
 ):
     # Unheld fillers sharing the sampled "Year"'s exact name, as many as the depth
     # ceiling, outrank it in reference scope: exact-name matches alone fill it.
@@ -377,9 +390,10 @@ def test_binding_past_search_depth_ceiling_is_reached_by_refinement(
         "REG_WEBAPP_STEWARDS_DIR",
         str(Path(__file__).resolve().parents[1] / "reg_webapp/stewards"),
     )
+    search = search_client(request, path.parent)
     with TestClient(create_app(rate_limit_per_minute=1000)) as client:
         receipt = check_generation_seeded_stratified_binding_agreement(
-            path.parent, client, tmp_path, capsys
+            path.parent, client, search, tmp_path, capsys
         )
     # Holdings scope sees no fillers; only the reference traversal hits the ceiling.
     assert receipt["search_ceiling_refined"] == 1

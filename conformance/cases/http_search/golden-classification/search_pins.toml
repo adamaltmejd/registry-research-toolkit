@@ -1,4 +1,0 @@
-[[pin]]
-query = "choicebook"
-type = "classification"
-fqids = ["class/example-codes"]
