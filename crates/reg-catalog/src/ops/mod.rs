@@ -2,8 +2,10 @@
 //! (`slice_3a.rs`, ...), and both transports are generated from the registrations: the
 //! HTTP routes and `/openapi.json` here and in `reg-meta`, and the MCP tools in
 //! `reg-meta`. Shared request pieces live in their own modules: refs (`refs.rs`) and
-//! cursors (`cursor.rs`).
+//! cursors (`cursor.rs`). An operation with a [`Type::Project`] parameter is a POST
+//! that takes it as the JSON body; every other is a GET.
 
+pub mod body;
 mod coded;
 mod coverage;
 mod cursor;
@@ -19,7 +21,9 @@ pub mod slice_3a;
 pub mod slice_3b;
 pub mod slice_3c;
 pub mod slice_3d;
+pub mod slice_3e;
 mod states;
+mod validate;
 mod values;
 mod warnings;
 
@@ -30,6 +34,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use utoipa::ToSchema;
 use utoipa::openapi::path::{OperationBuilder, ParameterBuilder, ParameterIn};
+use utoipa::openapi::request_body::RequestBodyBuilder;
 use utoipa::openapi::response::ResponseBuilder;
 use utoipa::openapi::{
     ArrayBuilder, ComponentsBuilder, ContentBuilder, HttpMethod, InfoBuilder, ObjectBuilder,
@@ -137,6 +142,9 @@ pub enum Type {
     /// `string[]`: up to [`MAX_ITEMS`] strings, repeated keys over HTTP and a JSON
     /// array over MCP.
     Strings,
+    /// A `project_data.json` document: a POST's JSON body, handed to the operation as
+    /// its JSON text.
+    Project,
 }
 
 /// The `Cache-Control` tier of a 200 (today's three): identity reads revalidate every
@@ -227,6 +235,12 @@ pub struct Download {
 }
 
 impl Operation {
+    /// The parameter sent as the JSON body, which makes the operation a POST.
+    #[must_use]
+    pub fn body(&self) -> Option<&'static Param> {
+        self.params.iter().find(|p| matches!(p.ty, Type::Project))
+    }
+
     /// The parameters `route` takes: a parameter another of the operation's routes
     /// names in its path is a path parameter only, so a route without it omits it
     /// (`GET /api/catalog` takes no `ref`).
@@ -250,6 +264,7 @@ pub fn all() -> impl Iterator<Item = &'static Operation> {
         .chain(slice_3b::OPERATIONS)
         .chain(slice_3c::OPERATIONS)
         .chain(slice_3d::OPERATIONS)
+        .chain(slice_3e::OPERATIONS)
 }
 
 /// Every registered download.
@@ -458,11 +473,15 @@ fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
             .minimum(Some(1))
             .maximum(Some(MAX_LIMIT))
             .into(),
+        Type::Project => ObjectBuilder::new()
+            .schema_type(Json::Object)
+            .description(Some("A project_data.json document"))
+            .into(),
     }
 }
 
 /// `route`'s parameters as `OpenAPI` parameters: in the path when the route names
-/// them, else in the query.
+/// them, else in the query; a body parameter as the request body.
 fn parameters(
     mut operation: OperationBuilder,
     route: &str,
@@ -470,6 +489,18 @@ fn parameters(
     components: &mut Components,
 ) -> OperationBuilder {
     for param in params {
+        if matches!(param.ty, Type::Project) {
+            let body = ContentBuilder::new()
+                .schema(Some(param_schema(param.ty, components)))
+                .build();
+            operation = operation.request_body(Some(
+                RequestBodyBuilder::new()
+                    .content("application/json", body)
+                    .required(Some(Required::True))
+                    .build(),
+            ));
+            continue;
+        }
         let located = if route.contains(&format!("{{{}}}", param.name)) {
             ParameterIn::Path
         } else {
@@ -543,7 +574,12 @@ pub fn openapi(version: &str) -> OpenApi {
             let operation = operation
                 .response("200", envelope("data", data).description("Success"))
                 .response("default", error_response());
-            paths = paths.path(*route, PathItem::new(HttpMethod::Get, operation));
+            let method = if op.body().is_some() {
+                HttpMethod::Post
+            } else {
+                HttpMethod::Get
+            };
+            paths = paths.path(*route, PathItem::new(method, operation));
         }
     }
     // A download has no operation id of its own: it serves its operation's bytes.

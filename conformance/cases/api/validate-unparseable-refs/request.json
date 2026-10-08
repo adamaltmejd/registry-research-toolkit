@@ -1,0 +1,37 @@
+{
+  "note": "Fails if a binding or value_set the structural layer accepts but the FQID grammar refuses (uppercase, underscore) stops being reported as not parseable, or the binding's value_set is checked after its unparseable variable.",
+  "fixture": "semantic",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "source0",
+            "register_variant": "scb/example/annual",
+            "period": 2018,
+            "bindings": [
+              {
+                "variable": "scb/example/Kon_X",
+                "type": "categorical",
+                "value_set": "class/nosuchclass"
+              },
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical",
+                "value_set": "class/Kon_X"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

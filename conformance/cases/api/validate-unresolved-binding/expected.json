@@ -1,0 +1,11 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": false,
+      "/data/issues/*/code": [
+        "fqid_unresolved"
+      ]
+    }
+  }
+]

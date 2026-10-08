@@ -1,0 +1,24 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": false,
+      "/data/issues": [
+        {
+          "code": "period_not_orderable",
+          "level": "error",
+          "message": "source 'source0' has no orderable period: edition range 'from' is after 'to': '2019'..'2018-03'",
+          "path": "/sources/0/period",
+          "successor_fqid": null
+        },
+        {
+          "code": "value_set_missing",
+          "level": "error",
+          "message": "value_set 'class/nosuchclass' resolves to no classification in reg_meta",
+          "path": "/sources/1/bindings/0/value_set",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]
