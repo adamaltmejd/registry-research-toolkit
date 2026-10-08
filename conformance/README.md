@@ -122,11 +122,12 @@ live under `generations/<build-inputs digest>/`, are read-only, and
 `build_reader_artifact` hands a mutating case its own copy. A miss builds into a staging
 directory and renames it into place. Creating a generation prunes generations idle for 6
 hours, and only those, so a returned path stays valid for 6 hours after its last lookup.
-Deleting the directory between runs is safe. When `REG_FIXTURE_CACHE` is set, the
-`reg_meta_build` build cases also keep their accepted prepared inputs in generations of
-this cache (`reg_meta_build/tests/cases/build/README.md`); unset, those last one
-session. `uv run python conformance/fixture_cache.py reader catalog` builds one entry
-and prints its path for consumers outside pytest.
+Deleting the directory between runs is safe. The `reg_meta_build` build cases keep their
+accepted prepared inputs in generations of the same cache, under the same rule
+(`reg_meta_build/tests/cases/build/README.md`). CI sets no `REG_FIXTURE_CACHE`, so a
+fresh runner starts both caches cold in its temp directory.
+`uv run python conformance/fixture_cache.py reader catalog` builds one entry and prints
+its path for consumers outside pytest.
 
 Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`; other named
 sources live under `reg_meta_build/tests/cases/holdings`. HTTP fixture names resolve

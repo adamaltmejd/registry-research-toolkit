@@ -11,9 +11,9 @@ built artifact through a fixed set of named projections.
 Prepared inputs are cached by the content hash of their source spec, so cases that
 share a source set prepare it once per session. An entry is written to a private
 staging directory and renamed into place: concurrent xdist workers never write the
-same path, and a failed preparation never leaves a partial entry. With
-`REG_FIXTURE_CACHE` set, entries persist across sessions and worktrees in a
-generation of that cache keyed by everything that shapes a prepared input.
+same path, and a failed preparation never leaves a partial entry. Entries
+persist across sessions and worktrees in a generation of the shared fixture cache
+(the reader cache's location), keyed by everything that shapes a prepared input.
 """
 
 from __future__ import annotations
@@ -21,7 +21,6 @@ from __future__ import annotations
 import functools
 import hashlib
 import json
-import os
 import re
 import shutil
 import sqlite3
@@ -48,7 +47,7 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from openpyxl import load_workbook
-from reader_artifacts import FIXTURE_CACHE_ENV, build_inputs_digest, generation_dir
+from reader_artifacts import build_inputs_digest, generation_dir
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import canonical_sha256
 from reg_meta_build.pipeline import build_catalog, check_curation
@@ -284,23 +283,17 @@ class PreparedCache:
 
 
 @pytest.fixture(scope="session")
-def prepared_cache(tmp_path_factory: pytest.TempPathFactory) -> PreparedCache:
-    """The session's prepared inputs, shared by the build cases and `catalog`."""
-    return PreparedCache(cache_root(tmp_path_factory.getbasetemp()))
+def prepared_cache() -> PreparedCache:
+    """The prepared inputs shared by the build cases and `catalog`.
 
-
-def cache_root(basetemp: Path) -> Path:
-    """The prepared-input cache: the session's, or a persistent one when opted in.
-
-    Without `REG_FIXTURE_CACHE` (CI) the cache lives for one session, shared by its
-    xdist workers: a worker's basetemp is `<session>/popen-gwN`, so it sits beside
-    the workers under the session directory; a serial run keeps it in its own
-    basetemp. With it set, the cache is a generation of the shared fixture cache.
+    They live in a generation of the shared fixture cache, under the reader
+    cache's one location policy (`reader_artifacts.fixture_cache_dir`):
+    `$REG_FIXTURE_CACHE`, else the system temp directory. Entries are reused across
+    sessions, worktrees and xdist workers; a fresh CI runner starts cold.
     """
-    if os.environ.get(FIXTURE_CACHE_ENV):
-        return generation_dir(_prepared_inputs_digest()) / "build-case-prepared"
-    session = basetemp.parent if os.environ.get("PYTEST_XDIST_WORKER") else basetemp
-    return session / "build-case-prepared"
+    return PreparedCache(
+        generation_dir(_prepared_inputs_digest()) / "build-case-prepared"
+    )
 
 
 # The test modules that write and accept a source spec's provider deliveries; an
@@ -315,7 +308,7 @@ _PREPARING_MODULES = (
 
 
 def _prepared_inputs_digest() -> str:
-    """Everything a persistent prepared entry depends on besides its source spec.
+    """Everything a prepared entry depends on besides its source spec.
 
     The reader cache's build inputs (the `reg_meta_build`, `reg_meta` and
     `reg_schema` sources, the native extension sources, the installed

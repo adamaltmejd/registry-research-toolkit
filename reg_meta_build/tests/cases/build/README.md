@@ -135,11 +135,12 @@ case cannot fail and does not belong here.
   `classifications/<slug>.csv` code list. The text is a string, or a list of lines
   joined with newlines.
 
-The runner prepares each distinct spec once per test session and caches it by the spec's
-content hash. With `REG_FIXTURE_CACHE` set, the prepared inputs persist across sessions
-and worktrees in that cache (see `conformance/README.md`, "Fixture cache"), keyed also
-by the builder sources, the installed distributions, the test modules that prepare a
-spec and the Git version. CI leaves it unset.
+The runner prepares each distinct spec once and caches it by the spec's content hash.
+The cache is the reader fixture cache (see `conformance/README.md`, "Fixture cache"):
+`$REG_FIXTURE_CACHE`, else the system temp directory, shared by sessions, worktrees and
+xdist workers. Its generation is keyed by the builder sources, the installed
+distributions, the test modules that prepare a spec and the Git version. CI sets no
+`REG_FIXTURE_CACHE`, so each fresh runner starts cold.
 
 ## `curation/`
 
