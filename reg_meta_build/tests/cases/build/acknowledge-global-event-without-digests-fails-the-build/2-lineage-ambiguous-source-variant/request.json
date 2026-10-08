@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_compile_owner_alternatives.py::test_global_event_acknowledgement_is_routed_out_of_local_scope[unresolved_lineage_ambiguous_source_variant-False]"
+  ],
+  "fails_if": "the curation compiler routes an unguarded `unresolved_lineage_ambiguous_source_variant` acknowledgement to the global matcher instead of refusing it with `acknowledge_global_guards_missing` at its entry, so a global acknowledgement could match without its evidence and diagnostic digests",
+  "sources": "scb-value"
+}
