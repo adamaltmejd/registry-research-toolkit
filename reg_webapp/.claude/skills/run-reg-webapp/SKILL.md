@@ -41,11 +41,9 @@ uv sync --frozen
 (cd reg_webapp/frontend && bun install --frozen-lockfile)
 ```
 
-No SPA build needed for dev — Vite serves source. Regenerate API types only after a
-contract change (`(cd reg_webapp/frontend && bun run gen:types)`; CI pins drift). The
-types come from two snapshots: refresh FastAPI's with
-`uv run python reg_webapp/backend/scripts/gen_openapi.py` and the Rust server's with
-`REG_META_BLESS=1 cargo test -p reg-meta --test openapi_snapshot` first.
+No SPA build needed for dev — Vite serves source. After a contract change,
+`uv run --no-project scripts/gate.py regen` refreshes both OpenAPI snapshots and then
+the API types generated from them (CI pins drift).
 
 ## Run
 
@@ -134,7 +132,9 @@ Naming scenarios after the output directory runs just those —
 `dev.sh flows <dir> blocked-order order-retry validation-retry`,
 `dev.sh flows <dir> catalog-draft catalog-period-required project-source-period catalog-period-focus`,
 or `dev.sh flows <dir> replace-confirm`. The bare form above runs all eight and is the
-local verification invocation; the names allow focused verification.
+local verification invocation; the names allow focused verification. The repo gate's
+`flows` step (`uv run --no-project scripts/gate.py flows`) runs all eight with
+`--fixture-db` into a temporary directory, kept only on failure.
 
 **Deterministic UI verification (`--fixture-db`) — the default.** Pass `--fixture-db`
 before the mode and `dev.sh` serves a *synthetic* catalog: it runs
