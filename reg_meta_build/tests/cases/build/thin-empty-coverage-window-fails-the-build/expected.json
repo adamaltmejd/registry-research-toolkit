@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "thin_coverage_window_invalid",
+    "exit_code": 10,
+    "message_contains": [
+      "accepted-authored:scb_canonical/scb_canonical.toml:r:COL: empty or inverted thin coverage window"
+    ]
+  }
+}

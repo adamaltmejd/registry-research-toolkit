@@ -1,0 +1,94 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/drifted.toml#/errata.field/1"
+        ],
+        [
+          "curation/registers/scb/drifted.toml#/representation.parallel/1"
+        ],
+        [
+          "curation/registers/scb/uncorrected.toml#/representation.parallel/1"
+        ]
+      ]
+    },
+    {
+      "table": "cases",
+      "where": {
+        "case_id": {
+          "contains": "/applied.toml#"
+        }
+      },
+      "fields": [
+        "case_id",
+        "status"
+      ],
+      "match": "set",
+      "rows": [
+        [
+          "curation/registers/scb/applied.toml#/errata.field/1",
+          "applicable"
+        ],
+        [
+          "curation/registers/scb/applied.toml#/representation.parallel/1",
+          "applicable"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "applied"
+      },
+      "fields": [
+        "column"
+      ],
+      "match": "set",
+      "rows": [
+        [
+          "First"
+        ],
+        [
+          "Second"
+        ]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {
+        "key": [
+          "member:401",
+          "member:402"
+        ]
+      },
+      "fields": [
+        "column_name",
+        "key",
+        "use",
+        "variable"
+      ],
+      "rows": [
+        [
+          "First",
+          "member:401",
+          "catalog",
+          "scb/applied/income"
+        ],
+        [
+          "OldSecond",
+          "member:402",
+          "catalog",
+          "scb/applied/income"
+        ]
+      ]
+    }
+  ]
+}

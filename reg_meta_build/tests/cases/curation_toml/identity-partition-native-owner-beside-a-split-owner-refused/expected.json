@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_native_partitions.py::test_authored_native_partition_rejects_foreign_or_partial_owners[columns1-unassigned1]",
+  "fails_if": "the `[[identity.partition]]` loader accepts a map that gives one literal to the native key 1.5 and another to the split key 1.5.new",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.partition]] entry 1",
+    "message_contains": [
+      "native ownership must cover all literals without split owners"
+    ]
+  }
+}

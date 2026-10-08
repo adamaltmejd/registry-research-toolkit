@@ -1,0 +1,30 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/base.toml#/identity.partition/1"
+        ]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {
+        "register": "base"
+      },
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "match": "set",
+      "rows": []
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "r"
+native_id = "2551880528178387958"
+[[variant]]
+slug = "default"
+native_id = "2551880528178387958.3516338883078974362"
+[[variable]]
+slug = "col"
+native_id = "2551880528178387958.COL"

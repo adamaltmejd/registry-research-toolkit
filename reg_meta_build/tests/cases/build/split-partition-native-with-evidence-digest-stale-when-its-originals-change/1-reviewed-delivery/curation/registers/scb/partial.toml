@@ -1,0 +1,15 @@
+[register]
+provider = "scb"
+slug = "partial"
+native_id = "2"
+[[variant]]
+native_id = "2.20"
+slug = "people"
+[[variable]]
+native_id = "2.5"
+slug = "quantity"
+[[identity.partition]]
+variable = "2.5"
+columns = { OLD = "2.5", NEW = "2.5" }
+columns_ref = "complete source-native quantity review"
+expected_evidence_sha256 = {{evidence_sha256 key=member:201}}
