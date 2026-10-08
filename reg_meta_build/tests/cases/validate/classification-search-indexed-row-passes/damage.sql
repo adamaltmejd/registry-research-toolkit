@@ -5,3 +5,5 @@ VALUES ('ALPHA', 'Straße Ålder nomenclature', 'alpha');
 INSERT INTO classification_fts(rowid, short_name, name, name_en, description)
 SELECT id, 'alpha', 'strasse alder nomenclature', NULL, NULL
 FROM classification WHERE short_name = 'ALPHA';
+-- A classification without succession is its own one-edition chain (derive).
+INSERT INTO classification_chain VALUES ('alpha', 0, 'alpha', NULL, 1);

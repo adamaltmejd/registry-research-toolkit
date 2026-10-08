@@ -329,7 +329,9 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   older base has the table empty.
 # 9.4.0: derived `expanded_state` (resolver_column becomes its projection),
 #   `browse_delivery` and `delivery_window`; only the Rust reader reads them.
-SCHEMA_VERSION = "9.4.0"
+# 9.5.0: derived succession tables `succession_terminal`, `classification_chain` and
+#   `classification_family` (read by the Rust server only).
+SCHEMA_VERSION = "9.5.0"
 DB_FILENAME = "reg_meta.db"
 
 

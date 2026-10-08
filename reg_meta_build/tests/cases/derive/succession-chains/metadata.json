@@ -1,0 +1,50 @@
+{
+  "successions": [
+    {
+      "predecessor": "scb/old",
+      "successor": "scb/reg"
+    },
+    {
+      "predecessor": "scb/reg/v0",
+      "successor": "scb/reg/v1"
+    },
+    {
+      "predecessor": "scb/reg/v1",
+      "successor": "scb/reg/v2",
+      "effective_year": 2019
+    },
+    {
+      "predecessor": "scb/reg/v2",
+      "successor": "scb/reg/v3",
+      "effective_year": 2030
+    },
+    {
+      "predecessor": "scb/reg/split",
+      "successor": "scb/reg/s1"
+    },
+    {
+      "predecessor": "scb/reg/split",
+      "successor": "scb/reg/s2"
+    }
+  ],
+  "historical_predecessors": [
+    {
+      "target": "scb/old",
+      "kind": "register",
+      "reason": "Renamed synthetic register",
+      "decision_reference": "fixture"
+    },
+    {
+      "target": "scb/reg/v0",
+      "kind": "variable",
+      "reason": "Renamed synthetic variable",
+      "decision_reference": "fixture"
+    },
+    {
+      "target": "scb/reg/split",
+      "kind": "variable",
+      "reason": "Split synthetic variable",
+      "decision_reference": "fixture"
+    }
+  ]
+}
