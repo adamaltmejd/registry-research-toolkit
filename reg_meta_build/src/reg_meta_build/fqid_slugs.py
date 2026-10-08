@@ -1007,7 +1007,7 @@ def load_slug_dir(
     if not slug_dir.is_dir():
         raise curation_error(
             "slug_dir_not_found",
-            f"Slug directory not found: {slug_dir}",
+            f"Slug directory not found: {display_path(slug_dir)}",
             "Create the directory or pass --slug-dir.",
         )
     states = load_freeze_states(slug_dir)
