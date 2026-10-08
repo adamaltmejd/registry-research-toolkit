@@ -32,6 +32,22 @@ reason = "An order manifest records the catalog's generation, which differs betw
 case = "*/*/order/*"
 paths = ["/provenance/catalog_generation_id"]
 
+[[exception]]
+name = "register-scope-code-classifications"
+reason = "#1240: under --register a code hit keeps its owning classifications (code_system, classifications, classification_count), as it does unscoped; the 553ea622 baseline blanked them. Here three SUN codes. Provisional: deleted by 3a.13's re-pin."
+case = "global/reference/search-register/19"
+paths = [
+  "/results/10/classification_count",
+  "/results/10/classifications",
+  "/results/10/code_system",
+  "/results/11/classification_count",
+  "/results/11/classifications",
+  "/results/11/code_system",
+  "/results/12/classification_count",
+  "/results/12/classifications",
+  "/results/12/code_system",
+]
+
 # The baseline: one commit, run from a detached worktree with its own locked
 # environment. It is both the baseline reader (CLI and webapp) and the reference
 # builder, whose `reg-meta-build derive` makes the reference copies the baseline reads,
