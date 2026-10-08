@@ -852,9 +852,10 @@ and the single ranking of section 6.
   (`top-results-exact-leaf`) and `invalid-parameters` (`limit-clamp`). New, red first:
   twins of `golden-*`, the other `top-results-*`, `codes-reference` and
   `code-owner-ranking`; an untyped search followed across three pages; period and
-  register filters on the classification and code arms; a 9.2 manifest refused. G1 maps
-  each typed page to the baseline webapp's group and an untyped first page at `limit=5`
-  to its `top_results`.
+  register filters on the classification and code arms; a register-wide period; a 9.2
+  manifest refused. G1 maps each typed page to the baseline webapp's group; untyped
+  pages have no baseline equivalent (decision 17 ranks one list across arms), so the
+  `api` corpus alone pins them.
 - Paths: `crates/reg-catalog/`, `conformance/cases/api/`, `conformance/differential/`.
 - Acceptance: G0 with all of `[api/`; G1 differences only as named exceptions.
 
