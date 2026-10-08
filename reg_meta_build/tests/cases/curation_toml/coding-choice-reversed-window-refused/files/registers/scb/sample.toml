@@ -1,0 +1,14 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[coding.choice]]
+variable = "1.5"
+variant = "people"
+column = "VALUE"
+keep = "kept"
+over = ["other"]
+reason = "Reviewed"
+source = "fixture"
+periods = [["2020-12-31", "2020-01-01"]]
