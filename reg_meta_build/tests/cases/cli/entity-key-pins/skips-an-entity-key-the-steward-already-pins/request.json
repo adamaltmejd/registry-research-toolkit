@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "test_entity_key_pins.py::TestGenerator::test_skips_already_curated",
+    "test_entity_key_pins.py::TestGenerator::test_idempotent_after_pinning",
+    "test_entity_key_pins.py::TestCli::test_counts_in_no_target_and_output_toml_modes"
+  ],
+  "fails_if": "entity-key-pins re-emits a pin the steward dir already curates, so a rerun after committing the pins is not a no-op",
+  "note": "From the artifact curation: variant 1.10 carries the composite key [value, kon] (variables 1.101 and 1.102); variant 4.40 carries `lopnr`, the slug of partition member 4.7.lopnrny (its native id names its column, not its slug); variant 3.30 carries `komvux`, but the steward dir names only registers 1 and 4. The steward dir already pins 1.102 and 4.7.lopnrny, so only 1.101 remains.",
+  "argv": [
+    "--db",
+    "{db}",
+    "entity-key-pins",
+    "--slug-dir",
+    "{work}/slugs",
+    "--output-toml",
+    "{work}/pins.toml"
+  ]
+}

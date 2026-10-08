@@ -1,0 +1,12 @@
+{
+  "replaces": "test_entity_key_pins.py::TestCli::test_slug_dir_that_is_not_a_directory_is_usage_error",
+  "fails_if": "entity-key-pins reads a missing --slug-dir as an empty steward dir and reports zero pins",
+  "argv": [
+    "--db",
+    "{work}/no-db",
+    "entity-key-pins",
+    "--slug-dir",
+    "{work}/missing"
+  ],
+  "note": "The guard fires before the database opens, so `--db` names no database: a missing guard surfaces a different error."
+}
