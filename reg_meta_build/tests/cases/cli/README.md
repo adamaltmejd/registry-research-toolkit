@@ -26,8 +26,8 @@ cases/cli/
     stdout.json                   optional: a projection of the printed JSON
 ```
 
-`<command>` is the subcommand the case runs (`seed-slugs`, `precheck-slugs`). The runner
-checks that the argument list names it.
+`<command>` is the subcommand the case runs (`seed-slugs`, `precheck-slugs`,
+`concept-group-candidates`). The runner checks that the argument list names it.
 
 ## The artifact
 

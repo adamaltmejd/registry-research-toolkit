@@ -1,0 +1,4 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "1"
