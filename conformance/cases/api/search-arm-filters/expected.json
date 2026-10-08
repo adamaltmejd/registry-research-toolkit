@@ -58,8 +58,7 @@
     "json": {
       "/data/items/*/code": [
         "R6"
-      ],
-      "/data/items/0/code_system": null
+      ]
     }
   }
 ]

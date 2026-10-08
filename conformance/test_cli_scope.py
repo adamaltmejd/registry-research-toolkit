@@ -6,6 +6,7 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
+from http_cases import select_json
 from reader_artifacts import CASES, build_reader_artifact
 from reg_meta.cli import run
 
@@ -111,18 +112,6 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                 "names": [row["name"] for row in output["results"]],
                 "has_more": output["has_more"],
             }
-        elif observe == "search-code-owners":
-            actual = {
-                "codes": [
-                    {
-                        "code": row["code"],
-                        "code_system": row["code_system"],
-                        "classification_count": row["classification_count"],
-                        "classifications": [c["fqid"] for c in row["classifications"]],
-                    }
-                    for row in output["results"]
-                ]
-            }
         elif observe == "search-groups":
             actual = {
                 "groups": [
@@ -135,5 +124,6 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                 ]
             }
         else:
-            actual = {field: output[field] for field in observe}
+            # Each entry is a JSON pointer; a bare top-level field name is one too.
+            actual = {pointer: select_json(output, pointer) for pointer in observe}
     assert actual == expected

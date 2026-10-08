@@ -12,5 +12,10 @@
     "--register",
     "scb/example"
   ],
-  "observe": "search-code-owners"
+  "observe": [
+    "/results/*/code",
+    "/results/*/code_system",
+    "/results/*/classification_count",
+    "/results/*/classifications/*/fqid"
+  ]
 }
