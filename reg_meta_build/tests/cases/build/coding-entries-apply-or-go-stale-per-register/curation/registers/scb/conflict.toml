@@ -1,0 +1,30 @@
+[register]
+provider = "scb"
+slug = "conflict"
+native_id = "52"
+[[variant]]
+native_id = "52.522"
+slug = "people"
+[[variable]]
+native_id = "52.5"
+slug = "value"
+
+[[coding.choice]]
+variable = "52.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-08-31"]]
+keep = "first"
+over = ["second"]
+reason = "Reviewed coding"
+source = "fixture"
+
+[[coding.choice]]
+variable = "52.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-05-01", "2020-12-31"]]
+keep = "second"
+over = ["first"]
+reason = "Reviewed coding"
+source = "fixture"

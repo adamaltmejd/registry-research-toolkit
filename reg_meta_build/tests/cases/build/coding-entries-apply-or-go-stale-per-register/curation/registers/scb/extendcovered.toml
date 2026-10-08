@@ -1,0 +1,20 @@
+[register]
+provider = "scb"
+slug = "extendcovered"
+native_id = "44"
+[[variant]]
+native_id = "44.442"
+slug = "people"
+[[variable]]
+native_id = "44.5"
+slug = "value"
+
+[[coding.extend]]
+variable = "44.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+list = "list"
+witness = ["2020-05-01", "2020-06-30"]
+reason = "Reviewed coding"
+source = "fixture"

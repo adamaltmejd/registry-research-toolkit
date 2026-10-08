@@ -1,0 +1,25 @@
+{
+  "replaces": [
+    "test_source_coding_choices.py::test_pin_free_choice_compiles_and_applies_from_literal_labels",
+    "test_source_coding_choices.py::test_pin_free_uncoded_and_omit_compile_without_nonempty_lists",
+    "test_source_coding_choices.py::test_pin_free_extend_compiles_from_finite_witness",
+    "test_source_coding_choices.py::test_pin_free_coding_staleness",
+    "test_source_coding_choices.py::test_pin_free_choice_member_disambiguation_and_split_key",
+    "test_source_coding_choices.py::test_pin_free_coding_period_and_column_cardinality_are_checked",
+    "test_source_coding_compact_choices.py::test_choice_member_digest_matches_verbose_exact_domain",
+    "test_source_coding_compact_choices.py::test_choice_member_digest_rejects_verbose_selector_and_retains_duplicate_claims",
+    "test_source_coding_compact_choices.py::test_guarded_coding_warning_retains_facts_and_rejects_changed_evidence",
+    "test_source_coding_choice_application.py::test_choice_changes_only_checked_window_and_feeds_ordinary_formation",
+    "test_source_coding_choice_application.py::test_physical_duplicates_and_irrelevant_future_coding_do_not_expand_choice",
+    "test_source_coding_choice_application.py::test_conflicting_choices_withhold_only_overlap_and_agreeing_choices_compose",
+    "test_source_coding_choice_application.py::test_incomplete_and_pooled_claims_remain_unresolved_without_annual_inference",
+    "test_source_coding_choice_application.py::test_selected_list_must_cover_whole_reviewed_period",
+    "test_source_coding_choice_application.py::test_extension_checks_separate_witness_and_changes_only_exact_target",
+    "test_source_coding_choice_application.py::test_omission_retains_evidence_and_withholds_conflicting_overlap",
+    "test_source_coding_choice_application.py::test_omission_is_not_a_negative_availability_fact_or_a_new_formation_error",
+    "test_source_coding_choice_application.py::test_undated_coding_is_not_consumed_by_finite_uncoded_acceptance"
+  ],
+  "note": "One build over the shared `scb-coding-registers` source: each register carries one replaced claim, and each projection is scoped to its register (state rows by `register`, entry issues by the entry's subject `<register>.5`, output issues by `scb/<register>/value`) and names the claim in its `note`. Expected values come from the replaced assertions (statuses, issue codes, case ids, segment windows and members) and from the fixture lists; where the replaced test asserted a compiled case or a resolution segment, the projection is that segment's published state or value-set row. A pin-free entry (no `expected_evidence_sha256`) is recompiled from each build's lists, so the old tests' stored-case drift legs have no build form; the compile-time staleness each one would meet is a register here.",
+  "fails_if": "any one of, per register: `compile_coding_selection` stops matching a choice's kept label and competing `over` labels exactly (keepgone, overgone), stops comparing `keep_members` or `keep_members_sha256` with the kept list's members (keepmembers, digestdrift, split), stops refusing a kept label shared by two distinct complete lists (keeptwice) or stops deduplicating identical lists by content (dup, digestdup), stops requiring a complete list to cover the whole window (partial), stops refusing uncoded or omit over a complete list (uncodedcoded, omitcoded), or stops checking an extension's label, members, witness and uncovered target (extendgone, extendwitness, extendmembers, extendtwice, extendcovered); `compile_coding_register` stops resolving an entry on a base variable to its partition child (split), or stops staling a period without a column occurrence or a column that resolves to no key (cardinality); `apply_coding_choices` applies a choice beyond its own window (window), lets overlapping disagreeing choices or omit and uncoded each win their overlap instead of withholding it (conflict, omitclash), or reports agreeing overlapping choices as a conflict (agree); an uncoded, omit or extend entry stops publishing its decision (uncoded, omit, extend); a `[[coding.warning]]` changes the coding it annotates (warning); or a range-less pooled list blocks a finite choice or is consumed by a finite uncoded acceptance instead of staying `unsupported_coding_scope` (undated, undateduncoded)",
+  "sources": "scb-coding-registers"
+}
