@@ -199,6 +199,100 @@
         }
       }
     },
+    "/api/diff/{ref}": {
+      "get": {
+        "description": "A register's columns between two periods, per variant: the variables added at `to`, removed since `from`, and changed in type, width or column (a variable compares by its first column in each period). Variants without changes are left out.",
+        "operationId": "diff",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Diff"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/docs/doc/{identifier}": {
       "get": {
         "description": "One documentation entry by variable name or filename (with or without `.md`): its register, tags and source, a 500-character `excerpt` and the full markdown `body`.",
@@ -509,6 +603,110 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/Lineage"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/schema/{ref}": {
+      "get": {
+        "description": "The delivered columns of a register, or of one variable (a FQID or a bare name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page.",
+        "operationId": "schema",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SchemaPage"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -894,6 +1092,63 @@
           },
           "name": {
             "type": "string"
+          }
+        }
+      },
+      "Change": {
+        "type": "object",
+        "description": "One differing field: `data_type`, `data_length` or `column`.",
+        "required": [
+          "field"
+        ],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "from": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "Changed": {
+        "type": "object",
+        "required": [
+          "changes"
+        ],
+        "properties": {
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Change"
+            }
+          },
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "var_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "variable_name": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
@@ -1497,6 +1752,80 @@
             ]
           },
           "short_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "Diff": {
+        "type": "object",
+        "description": "`diff`'s result: the variants whose columns differ between `from` and `to`.",
+        "required": [
+          "register",
+          "register_name",
+          "from",
+          "to",
+          "variants"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "register": {
+            "type": "string"
+          },
+          "register_name": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VariantDiff"
+            }
+          }
+        }
+      },
+      "DiffColumn": {
+        "type": "object",
+        "description": "A variable's column in one period: its first representation there.",
+        "properties": {
+          "column": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "data_length": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "data_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "var_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "variable_name": {
             "type": [
               "string",
               "null"
@@ -2588,6 +2917,155 @@
           }
         }
       },
+      "SchemaColumn": {
+        "type": "object",
+        "description": "One delivered column of a register variant over one window: the CLI's `get schema`\ncolumn row with its variant and window. `column` is null for a state SCB named no\ncolumn for; `valid_from` and `valid_to` are null when year-independent.",
+        "required": [
+          "period_scope",
+          "value_set_version_label"
+        ],
+        "properties": {
+          "column": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "data_length": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "data_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "definition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "group": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The variable's concept group, as a group ref."
+          },
+          "group_label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "measurement_unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "operational_definition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "period_scope": {
+            "type": "string",
+            "description": "`intervals` or `year_independent`."
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_register_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "valid_from": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "valid_to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value_set_version_label": {
+            "type": "string"
+          },
+          "var_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "SCB's numeric variable id; null for other providers."
+          },
+          "variable_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variant": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variant_description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variant_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "SchemaPage": {
+        "type": "object",
+        "description": "`Page<SchemaColumn>`.",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SchemaColumn"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "Scope": {
         "type": "string",
         "description": "The read scope (section 7); every read takes it.",
@@ -3376,6 +3854,33 @@
           }
         }
       },
+      "Summary": {
+        "type": "object",
+        "required": [
+          "added",
+          "removed",
+          "changed",
+          "unchanged"
+        ],
+        "properties": {
+          "added": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "changed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "removed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unchanged": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
       "Tag": {
         "type": "object",
         "description": "A tag membership: the tag and this member's rank, star and note.",
@@ -3695,6 +4200,51 @@
             "items": {
               "$ref": "#/components/schemas/Version"
             }
+          }
+        }
+      },
+      "VariantDiff": {
+        "type": "object",
+        "description": "A variant's columns added at `to`, removed since `from` and changed, by `fqid`.",
+        "required": [
+          "summary",
+          "added",
+          "removed",
+          "changed"
+        ],
+        "properties": {
+          "added": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiffColumn"
+            }
+          },
+          "changed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Changed"
+            }
+          },
+          "removed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiffColumn"
+            }
+          },
+          "summary": {
+            "$ref": "#/components/schemas/Summary"
+          },
+          "variant": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variant_name": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },

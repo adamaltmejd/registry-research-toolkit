@@ -1,0 +1,26 @@
+{
+  "note": "Twin of cli_scope/schema-reference and cli_scope/schema-holdings: a register's columns per scope, one row per delivered representation. Holdings keeps the held variables only and clips each to its held periods, merging the day-adjacent 2018 and 2019 tables into one window. Holdings with a period clips the merged window to the requested year. Fails if holdings stops clipping or merging, stops clipping to the request, a period stops filtering by overlap, or a row loses a field of the CLI's column row.",
+  "fixture": "reader",
+  "requests": [
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example",
+      "query": {"scope": "reference"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example",
+      "query": {"scope": "holdings"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example",
+      "query": {"scope": "holdings", "period": "2019"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example",
+      "query": {"scope": "reference", "period": "2026..2030"}
+    }
+  ]
+}

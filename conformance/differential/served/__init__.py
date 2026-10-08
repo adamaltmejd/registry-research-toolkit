@@ -16,10 +16,12 @@ cases' result form (``exit``, ``stdout``, ``stderr``).
 - ``graph``: ``graph`` per sampled variable, group and every classification,
   ``lineage``'s warnings per sampled variable, and its provenance rows against the
   CLI baseline's ``get lineage``.
+- ``schema``: ``schema`` and ``diff`` against the CLI baseline's ``get schema``,
+  ``get datacolumns`` and ``get diff``.
 
-``show``'s and ``graph``'s ``cases`` also take ``baseline_cli``, a future of the CLI
-arm's baseline results by case id, set once the CLI arms finish, so they compare
-with a CLI baseline case instead of running it again.
+``show``'s, ``graph``'s and ``schema``'s ``cases`` also take ``baseline_cli``, a
+future of the CLI arm's baseline results by case id, set once the CLI arms finish, so
+they compare with a CLI baseline case instead of running it again.
 """
 
 from __future__ import annotations
@@ -34,6 +36,7 @@ from conformance.differential.served import (
     context,
     docs,
     graph,
+    schema,
     search,
     show,
     states,
@@ -44,7 +47,7 @@ if TYPE_CHECKING:
     from concurrent.futures import Future
     from pathlib import Path
 
-FAMILIES = (context, search, docs, show, states, graph)
+FAMILIES = (context, search, docs, show, states, graph, schema)
 # The production rate limit (30 writes per minute) does not bind GETs. Eight worker
 # processes, since one Python process serves one search at a time (G1 budget).
 BASELINE_APP = (
@@ -114,7 +117,7 @@ def served_cases(
                 args = (base, cand, catalog, scopes, originals[catalog])
                 found = (
                     family.cases(*args, baseline_cli)
-                    if family in {show, graph}
+                    if family in {show, graph, schema}
                     else family.cases(*args)
                 )
                 cases += [

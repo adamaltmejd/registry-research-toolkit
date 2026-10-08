@@ -2651,6 +2651,521 @@
     }
   },
   {
+    "name": "schema",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `schema` (ref, period?, variant?, scope?, limit?, cursor?): The delivered columns of a register, or of one variable (a FQID or a bare name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page.\n- `diff` (ref, from, to, variant?, scope?): A register's columns between two periods, per variant: the variables added at `to`, removed since `from`, and changed in type, width or column (a variable compares by its first column in each period). Variants without changes are left out.",
+    "inputSchema": {
+      "$defs": {
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        }
+      },
+      "properties": {
+        "cursor": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "limit": {
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "operation": {
+          "enum": [
+            "schema",
+            "diff"
+          ],
+          "type": "string"
+        },
+        "period": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        },
+        "to": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Change": {
+          "description": "One differing field: `data_type`, `data_length` or `column`.",
+          "properties": {
+            "field": {
+              "type": "string"
+            },
+            "from": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "to": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "field"
+          ],
+          "type": "object"
+        },
+        "Changed": {
+          "properties": {
+            "changes": {
+              "items": {
+                "$ref": "#/$defs/Change"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "var_id": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "variable_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "changes"
+          ],
+          "type": "object"
+        },
+        "Diff": {
+          "description": "`diff`'s result: the variants whose columns differ between `from` and `to`.",
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "register": {
+              "type": "string"
+            },
+            "register_name": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            },
+            "variants": {
+              "items": {
+                "$ref": "#/$defs/VariantDiff"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "register",
+            "register_name",
+            "from",
+            "to",
+            "variants"
+          ],
+          "type": "object"
+        },
+        "DiffColumn": {
+          "description": "A variable's column in one period: its first representation there.",
+          "properties": {
+            "column": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "data_length": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "data_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "fqid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "var_id": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "variable_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            },
+            "scope": {
+              "$ref": "#/$defs/Scope"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "scope"
+          ],
+          "type": "object"
+        },
+        "SchemaColumn": {
+          "description": "One delivered column of a register variant over one window: the CLI's `get schema`\ncolumn row with its variant and window. `column` is null for a state SCB named no\ncolumn for; `valid_from` and `valid_to` are null when year-independent.",
+          "properties": {
+            "column": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "data_length": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "data_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "fqid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "group": {
+              "description": "The variable's concept group, as a group ref.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "group_label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "measurement_unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "operational_definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "period_scope": {
+              "description": "`intervals` or `year_independent`.",
+              "type": "string"
+            },
+            "source": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_register_text": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "valid_from": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "valid_to": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "value_set_version_label": {
+              "type": "string"
+            },
+            "var_id": {
+              "description": "SCB's numeric variable id; null for other providers.",
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "variable_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant_description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "period_scope",
+            "value_set_version_label"
+          ],
+          "type": "object"
+        },
+        "SchemaPage": {
+          "description": "`Page<SchemaColumn>`.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/SchemaColumn"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "type": "object"
+        },
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        },
+        "Summary": {
+          "properties": {
+            "added": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "changed": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "removed": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "unchanged": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "added",
+            "removed",
+            "changed",
+            "unchanged"
+          ],
+          "type": "object"
+        },
+        "VariantDiff": {
+          "description": "A variant's columns added at `to`, removed since `from` and changed, by `fqid`.",
+          "properties": {
+            "added": {
+              "items": {
+                "$ref": "#/$defs/DiffColumn"
+              },
+              "type": "array"
+            },
+            "changed": {
+              "items": {
+                "$ref": "#/$defs/Changed"
+              },
+              "type": "array"
+            },
+            "removed": {
+              "items": {
+                "$ref": "#/$defs/DiffColumn"
+              },
+              "type": "array"
+            },
+            "summary": {
+              "$ref": "#/$defs/Summary"
+            },
+            "variant": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "summary",
+            "added",
+            "removed",
+            "changed"
+          ],
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/SchemaPage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Diff"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "graph",
     "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `graph` (ref, scope?): The succession graph of a variable, a classification or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`): variable nodes with their states folded into representation runs, classification edition nodes, and directed succession edges. A variable draws its concept group's members, a classification its classification groups; `focus_id` is the requested node. No nodes means nothing to draw.\n- `lineage` (ref, scope?): A variable's lineage: the source states feeding each of its states (`edges`), the build's lineage `warnings`, and, for every variable in scope with its name, its register's provenance role (`registers`).",
     "inputSchema": {

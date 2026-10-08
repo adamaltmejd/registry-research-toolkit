@@ -1461,6 +1461,14 @@ operations.
 - G1 (this package runs the slice's): CLI baseline `get availability` (without
   `target`/`target_type`), `get coded-variables` (excluded where the baseline orders
   differently) and `resolve`.
+- Owes 3c.2's deferred `rust-only fix:` exception for `schema-alias-windows`. The frozen
+  reference `get schema` expands only variables with a per-column window, so G1 reports
+  `*/reference/get-schema-*` for registers whose variables have only shared alias
+  windows. On the v0.43.0 pin these are
+  `scb/{innovation-foretag,it-anvandning,ekonomiskt-bistand,rams,lisa,hreg,bas}`, and in
+  SWECOV also `swedbank/konsumtion`, `inera/{bestallda-prover,samtal}`,
+  `tillvaxtverket/korttidsarbete` and `swecov/population`. Its `case` globs come from
+  the cases G1 actually reports.
 - Closes the slice: `covered_by` of the 3c command rows points at the `api` twins;
   proven twins among the CLI-era cases go (preamble).
 - Paths: as 3c.2 with `coverage.rs`, `coded.rs`, `resolve.rs`;

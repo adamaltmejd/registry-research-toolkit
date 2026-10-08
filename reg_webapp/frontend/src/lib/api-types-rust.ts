@@ -55,6 +55,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/diff/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description A register's columns between two periods, per variant: the variables added at `to`, removed since `from`, and changed in type, width or column (a variable compares by its first column in each period). Variants without changes are left out. */
+        get: operations["diff"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/docs/doc/{identifier}": {
         parameters: {
             query?: never;
@@ -176,6 +193,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/schema/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The delivered columns of a register, or of one variable (a FQID or a bare name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page. */
+        get: operations["schema"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/search": {
         parameters: {
             query?: never;
@@ -234,6 +268,19 @@ export interface components {
         Axis: {
             label: string;
             name: string;
+        };
+        /** @description One differing field: `data_type`, `data_length` or `column`. */
+        Change: {
+            field: string;
+            from?: string | null;
+            to?: string | null;
+        };
+        Changed: {
+            changes: components["schemas"]["Change"][];
+            fqid?: string | null;
+            /** Format: int64 */
+            var_id?: number | null;
+            variable_name?: string | null;
         };
         /** @description A classification edition. Its codes are `values`, its edition chain `graph`. */
         Classification: {
@@ -402,6 +449,24 @@ export interface components {
             name?: string | null;
             note?: string | null;
             short_name?: string | null;
+        };
+        /** @description `diff`'s result: the variants whose columns differ between `from` and `to`. */
+        Diff: {
+            from: string;
+            register: string;
+            register_name: string;
+            to: string;
+            variants: components["schemas"]["VariantDiff"][];
+        };
+        /** @description A variable's column in one period: its first representation there. */
+        DiffColumn: {
+            column?: string | null;
+            data_length?: string | null;
+            data_type?: string | null;
+            fqid?: string | null;
+            /** Format: int64 */
+            var_id?: number | null;
+            variable_name?: string | null;
         };
         /** @description A documentation entry: its metadata, a preview and the full markdown. */
         DocDetail: {
@@ -696,6 +761,44 @@ export interface components {
             register: string;
         };
         /**
+         * @description One delivered column of a register variant over one window: the CLI's `get schema`
+         *     column row with its variant and window. `column` is null for a state SCB named no
+         *     column for; `valid_from` and `valid_to` are null when year-independent.
+         */
+        SchemaColumn: {
+            column?: string | null;
+            data_length?: string | null;
+            data_type?: string | null;
+            definition?: string | null;
+            fqid?: string | null;
+            /** @description The variable's concept group, as a group ref. */
+            group?: string | null;
+            group_label?: string | null;
+            measurement_unit?: string | null;
+            operational_definition?: string | null;
+            /** @description `intervals` or `year_independent`. */
+            period_scope: string;
+            source?: string | null;
+            source_register_text?: string | null;
+            valid_from?: string | null;
+            valid_to?: string | null;
+            value_set_version_label: string;
+            /**
+             * Format: int64
+             * @description SCB's numeric variable id; null for other providers.
+             */
+            var_id?: number | null;
+            variable_name?: string | null;
+            variant?: string | null;
+            variant_description?: string | null;
+            variant_name?: string | null;
+        };
+        /** @description `Page<SchemaColumn>`. */
+        SchemaPage: {
+            items: components["schemas"]["SchemaColumn"][];
+            next_cursor?: string | null;
+        };
+        /**
          * @description The read scope (section 7); every read takes it.
          * @enum {string}
          */
@@ -862,6 +965,12 @@ export interface components {
             long_name: string;
             name: string;
         };
+        Summary: {
+            added: number;
+            changed: number;
+            removed: number;
+            unchanged: number;
+        };
         /** @description A tag membership: the tag and this member's rank, star and note. */
         Tag: {
             label: string;
@@ -940,6 +1049,15 @@ export interface components {
             variant_family?: string | null;
             variant_family_label?: string | null;
             versions: components["schemas"]["Version"][];
+        };
+        /** @description A variant's columns added at `to`, removed since `from` and changed, by `fqid`. */
+        VariantDiff: {
+            added: components["schemas"]["DiffColumn"][];
+            changed: components["schemas"]["Changed"][];
+            removed: components["schemas"]["DiffColumn"][];
+            summary: components["schemas"]["Summary"];
+            variant?: string | null;
+            variant_name?: string | null;
         };
         Version: {
             description?: string | null;
@@ -1056,6 +1174,48 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Context"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    diff: {
+        parameters: {
+            query: {
+                from: string;
+                to: string;
+                variant?: string;
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Diff"];
                         meta: components["schemas"]["Meta"];
                     };
                 };
@@ -1212,6 +1372,49 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Lineage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    schema: {
+        parameters: {
+            query?: {
+                period?: string;
+                variant?: string;
+                scope?: components["schemas"]["Scope"];
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SchemaPage"];
                         meta: components["schemas"]["Meta"];
                     };
                 };
