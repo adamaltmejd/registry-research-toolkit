@@ -541,7 +541,7 @@ reg_meta wheel cannot be withdrawn, only superseded.
 
 ### 9. Publish the draft release
 
-This is what fires the publish workflow.
+This is what fires the publish workflow (none for reg_meta_build).
 
 ```sh
 gh release edit <package>/vX.Y.Z --draft=false
