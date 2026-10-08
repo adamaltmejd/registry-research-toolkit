@@ -42,7 +42,10 @@ uv sync --frozen
 ```
 
 No SPA build needed for dev — Vite serves source. Regenerate API types only after a
-contract change (`(cd reg_webapp/frontend && bun run gen:types)`; CI pins drift).
+contract change (`(cd reg_webapp/frontend && bun run gen:types)`; CI pins drift). The
+types come from two snapshots: refresh FastAPI's with
+`uv run python reg_webapp/backend/scripts/gen_openapi.py` and the Rust server's with
+`REG_META_BLESS=1 cargo test -p reg-meta --test openapi_snapshot` first.
 
 ## Run
 
