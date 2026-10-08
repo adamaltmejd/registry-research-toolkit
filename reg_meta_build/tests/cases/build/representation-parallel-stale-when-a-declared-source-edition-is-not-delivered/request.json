@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_authored_source_mismatch_withholds_case[source_editions = [\"2020-2022\"]-source_editions = [\"2020-2023\"]]"
+  ],
+  "note": "Harder than replacing the delivered edition label: First keeps its delivered 2020-2022 edition and additionally declares 2020-2023, which is not delivered, so the column still has members and only the declared edition set differs.",
+  "fails_if": "`compile_parallel_representations` drops the check that a column's member edition labels equal its declared `source_editions`, so an undelivered declared edition is ignored",
+  "sources": "scb-income-pooled-first-and-second"
+}

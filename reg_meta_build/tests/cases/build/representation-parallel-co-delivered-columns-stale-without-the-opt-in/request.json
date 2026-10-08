@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_co_delivered_parallel_requires_explicit_per_column_opt_in"
+  ],
+  "note": "Allowed twin: representation-parallel-co-delivered-columns-keep-their-own-facts. Only `co_delivered` differs.",
+  "fails_if": "`compile_parallel_representations` drops the check that two literals in one edition need `co_delivered` or `case_aliases`, so the entry applies without the opt-in",
+  "sources": "scb-income-co-delivered-first-and-second"
+}

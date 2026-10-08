@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_authored_source_mismatch_withholds_case[variant = \"1.10\"-variant = \"1.11\"]"
+  ],
+  "note": "The allowed twin is representation-parallel-pooled-columns-keep-their-outer-windows; only the entry's variant differs.",
+  "fails_if": "`compile_parallel_representations` drops its check that the entry's variant resolves to exactly one declared naming, so an entry naming the undeclared variant 1.11 binds silently or crashes",
+  "sources": "scb-income-pooled-first-and-second"
+}

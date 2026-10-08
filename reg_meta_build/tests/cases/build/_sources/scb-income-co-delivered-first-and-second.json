@@ -1,0 +1,26 @@
+{
+  "description": "Variable 1 (Income), edition 2022: one member (CVID 100) delivers two literal columns, First (int) and Second (text).",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "First",
+        "cvid": 100,
+        "var_id": 1,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022",
+        "regver_id": 110
+      },
+      {
+        "colname": "Second",
+        "cvid": 100,
+        "var_id": 1,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022",
+        "regver_id": 110,
+        "data_type": "text"
+      }
+    ]
+  }
+}

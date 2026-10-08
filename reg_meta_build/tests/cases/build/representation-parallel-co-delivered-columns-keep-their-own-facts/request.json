@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_co_delivered_parallel_requires_explicit_per_column_opt_in"
+  ],
+  "note": "The applied half: one member delivers First (int) and Second (text) in one edition; `co_delivered` with per-column metadata accepts the differing data types. acknowledge-missing-coding-of-physical-alternatives-once applies co_delivered on identical facts. The refusal without the opt-in is representation-parallel-co-delivered-columns-stale-without-the-opt-in.",
+  "fails_if": "`compile_parallel_representations` treats a per-column data-type difference between co-delivered literals as a common-quantity conflict, so the entry goes stale",
+  "sources": "scb-income-co-delivered-first-and-second"
+}

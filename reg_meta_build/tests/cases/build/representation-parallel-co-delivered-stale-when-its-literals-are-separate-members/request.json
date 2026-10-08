@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_case_aliases_keep_distinct_members_and_refuse_source_drift[None]",
+    "test_curation_compile_pooled_parallel.py::test_co_delivered_parallel_refuses_unsupported_common_quantity[foreign_member]"
+  ],
+  "note": "Allowed twin: representation-parallel-case-aliases-keep-distinct-members, the same source under `case_aliases`. `co_delivered` needs every member to carry both declared literals.",
+  "fails_if": "`compile_parallel_representations` drops the co_delivered check that each selected member carries every declared literal, so two separate members pass as one co-delivered pair",
+  "sources": "scb-income-case-alias-members"
+}

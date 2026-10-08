@@ -1,0 +1,35 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "detail": {
+          "contains": "owner/variant is not unique"
+        }
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/representation.parallel/1"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": [
+        "code",
+        "subject"
+      ],
+      "match": "includes",
+      "rows": [
+        [
+          "unresolved_column_representation",
+          "scb/sample/income"
+        ]
+      ]
+    }
+  ]
+}
