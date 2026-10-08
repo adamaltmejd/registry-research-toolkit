@@ -162,7 +162,7 @@ fn etag_matches(if_none_match: &str, etag: &str) -> bool {
     if_none_match
         .split(',')
         .map(str::trim)
-        .any(|tag| tag == "*" || tag.trim_start_matches("W/") == etag)
+        .any(|tag| tag == "*" || tag.strip_prefix("W/").unwrap_or(tag) == etag)
 }
 
 /// Today's three tiers: identity reads revalidate every request, fold-bearing reads

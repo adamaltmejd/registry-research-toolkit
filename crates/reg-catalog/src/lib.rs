@@ -66,8 +66,9 @@ impl Catalog {
         let catalog = Self { path, manifest };
         catalog.gate_schema()?;
         catalog.admit_identity()?;
+        // `global` names the catalog artifact, never a steward that calls itself so.
         if let Some(name) = selected
-            && name != catalog.name()
+            && (name != catalog.name() || (name == "global" && catalog.is_steward()))
         {
             return Err(Error::new(
                 Code::CatalogMismatch,

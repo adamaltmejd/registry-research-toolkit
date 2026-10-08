@@ -5,7 +5,7 @@ edition.workspace = true
 publish.workspace = true
 
 [dependencies]
-axum = "0.8.9"
+axum = { version = "0.8.9", default-features = false, features = ["http1", "query", "tokio"] }
 reg-catalog = { path = "../reg-catalog" }
 serde_json = "1.0.151"
 sha2 = "0.11.0"

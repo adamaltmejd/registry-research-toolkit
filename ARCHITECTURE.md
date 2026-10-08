@@ -104,7 +104,6 @@ registry-research-toolkit/
     frontend/       # Svelte 5 + Vite (bun)
     stewards/
       global/       # steward.json only (full universe)
-      ifau/         # steward.json (holdings artifact planned)
       swecov/       # steward.json (compiled holdings artifact)
 ```
 

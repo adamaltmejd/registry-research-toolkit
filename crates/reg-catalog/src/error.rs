@@ -1,5 +1,5 @@
 //! The error catalog (`conformance/api/errors.toml`): one enum, one row per code.
-//! `tests/errors.rs` keeps it equal to the TOML.
+//! `tests/api_spec.rs` keeps it equal to the TOML.
 
 use serde::Serialize;
 use serde_json::{Map, Value};
