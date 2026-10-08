@@ -107,15 +107,11 @@ pub(super) fn arm(
              WHERE cvm.code_id = vc.code_id AND v_scope.register_id = ?)";
         owner_args.push(register.into());
     }
-    // The first owning classification's short name, by short name; a register
-    // scope shows no classification owners, so none.
-    let code_system = if request.register.is_some() {
-        "NULL"
-    } else {
-        "(SELECT COALESCE(NULLIF(c.short_name, ''), c.name) FROM classification_code cc \
-         JOIN classification c ON c.id = cc.classification_id \
-         WHERE cc.code_id = vc.code_id ORDER BY c.short_name LIMIT 1)"
-    };
+    // The first owning classification's short name, by short name. A fact about the
+    // code, so a register scope keeps it.
+    let code_system = "(SELECT COALESCE(NULLIF(c.short_name, ''), c.name) \
+         FROM classification_code cc JOIN classification c ON c.id = cc.classification_id \
+         WHERE cc.code_id = vc.code_id ORDER BY c.short_name LIMIT 1)";
     let read = |row: &Row, rank: f64| -> rusqlite::Result<CodeHit> {
         Ok(CodeHit {
             id: row.get(0)?,
@@ -179,8 +175,8 @@ pub(super) fn arm(
 
 /// Fill the owners of the shown codes: the variable owners (in `register` only, when
 /// given) by their own code count ascending, the classification owners by short
-/// name, at most five of each, with full counts. A register scope shows no
-/// classification owners, as today.
+/// name, at most five of each, with full counts. A register scope narrows only the
+/// variable owners: which classifications own a code is a fact about the code.
 pub(super) fn annotate(
     conn: &Connection,
     register: Option<i64>,
@@ -253,9 +249,6 @@ pub(super) fn annotate(
             .owners
             .variables
             .push(owner);
-    }
-    if register.is_some() {
-        return Ok(());
     }
     let mut stmt = conn.prepare(&format!(
         "WITH owners AS (SELECT cc.code_id, c.short_name, c.name, c.slug, \

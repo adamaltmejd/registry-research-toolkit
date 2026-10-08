@@ -1,7 +1,7 @@
 """G1 for the operations ``reg-meta serve`` implements.
 
-The Rust server serves each derived copy; the baseline commit's ``reg_webapp``, from
-the baseline environment, serves the original artifact and is the oracle. Each case
+The Rust server serves each candidate copy; the baseline commit's ``reg_webapp``, from
+the baseline environment, serves the reference copy and is the oracle. Each case
 maps the baseline's responses onto the operation's shape, so the two arms compare as
 JSON in the CLI cases' result form (``exit``, ``stdout``, ``stderr``).
 
@@ -166,7 +166,7 @@ def served_cases(
     baseline_python: Path,
     baseline_stewards: Path,
     server: Path,
-    dirs: dict[str, Path],
+    reference: dict[str, Path],
     derived: dict[str, Path],
     log_dir: Path,
 ) -> list[tuple[str, dict, dict]]:
@@ -197,10 +197,10 @@ def served_cases(
     terms = list(dict.fromkeys([*eval_terms(), *EDGE_TERMS]))
     cases = []
     try:
-        for catalog in sorted(dirs):
+        for catalog in sorted(reference):
             base = baseline.client(
                 {
-                    "REG_META_DB": str(dirs[catalog]),
+                    "REG_META_DB": str(reference[catalog]),
                     "REG_WEBAPP_STEWARD": catalog,
                     "REG_WEBAPP_STEWARDS_DIR": str(baseline_stewards),
                 }
