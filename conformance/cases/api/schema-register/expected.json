@@ -1,0 +1,48 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": ["scb/example/reference", "scb/example/second", "scb/example/value"],
+      "/data/items/2": {
+        "variant": "annual",
+        "variant_name": "Annual",
+        "variant_description": null,
+        "period_scope": "intervals",
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "fqid": "scb/example/value",
+        "variable_name": "Value",
+        "var_id": 44,
+        "source": null,
+        "column": "Value",
+        "data_type": "integer",
+        "data_length": "8",
+        "value_set_version_label": "",
+        "operational_definition": null,
+        "source_register_text": null,
+        "definition": null,
+        "measurement_unit": null,
+        "group": null,
+        "group_label": null
+      },
+      "/data/next_cursor": null,
+      "/meta/scope": "reference"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": ["scb/example/second", "scb/example/value"],
+      "/data/items/*/valid_from": ["2018-01-01", "2018-01-01"],
+      "/data/items/*/valid_to": ["2019-12-31", "2019-12-31"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/fqid": ["scb/example/second", "scb/example/value"]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items": [], "/data/next_cursor": null}
+  }
+]

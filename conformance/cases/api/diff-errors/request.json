@@ -1,0 +1,12 @@
+{
+  "note": "`diff`'s refusals: an ambiguous bare name lists its candidates, a variable ref is invalid (diff takes a register), a malformed period is refused, holdings needs a steward artifact, and an unknown register is not found. Fails if any of them answers a diff or another code.",
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "diff", "path": "/api/diff/K%C3%B6n", "query": {"from": "2018", "to": "2019"}},
+    {"operation": "diff", "path": "/api/diff/scb/alpha/kon", "query": {"from": "2018", "to": "2019"}},
+    {"operation": "diff", "path": "/api/diff/scb/alpha", "query": {"from": "2018", "to": "19"}},
+    {"operation": "diff", "path": "/api/diff/scb/alpha", "query": {"from": "2018", "to": "2019", "scope": "holdings"}},
+    {"operation": "diff", "path": "/api/diff/scb/missing", "query": {"from": "2018", "to": "2019"}}
+  ]
+}

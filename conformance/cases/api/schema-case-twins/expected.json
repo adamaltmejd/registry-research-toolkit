@@ -1,0 +1,9 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/column": ["value"],
+      "/data/items/*/valid_from": ["2019-01-01"]
+    }
+  }
+]

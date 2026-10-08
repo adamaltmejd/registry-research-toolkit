@@ -1,0 +1,36 @@
+{
+  "note": "A variable's schema absorbs `get datacolumns`: twins of cli_scope/datacolumns-explicit-reference, cli_scope/datacolumns-unheld-explicit-reference, logical/datacolumns-holdings and logical/get_datacolumns-unheld-holdings. Reference lists every delivered column over both variants; holdings only the held 2018 and 2019 representations (in their delivered spellings); an unheld variable is not found in holdings; `variant` keeps one variant's rows and names an existing one. Fails if holdings leaks a reference-only column (Secret, Valørarkiv), an unheld variable resolves in holdings, or `variant` stops filtering.",
+  "fixture": "reader/logical",
+  "requests": [
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example/value",
+      "query": {"scope": "reference"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example/value",
+      "query": {"scope": "holdings"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/Value%20reference",
+      "query": {"scope": "reference"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/Value%20reference",
+      "query": {"scope": "holdings"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example/value",
+      "query": {"scope": "reference", "variant": "archive"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example/value",
+      "query": {"scope": "reference", "variant": "monthly"}
+    }
+  ]
+}

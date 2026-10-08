@@ -1,0 +1,22 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/variants/*/variant": ["annual"],
+      "/data/variants/0/summary": {"added": 0, "removed": 0, "changed": 1, "unchanged": 1},
+      "/data/variants/0/changed/*/changes": [
+        [{"field": "column", "from": "Value", "to": "value"}]
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/variants/*/variant": ["annual"],
+      "/data/variants/0/summary": {"added": 0, "removed": 0, "changed": 1, "unchanged": 0},
+      "/data/variants/0/changed/*/changes": [
+        [{"field": "column", "from": "Value", "to": "value"}]
+      ]
+    }
+  }
+]

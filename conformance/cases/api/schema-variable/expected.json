@@ -1,0 +1,29 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/column": ["Value", "value", "Secret", "Valørarkiv"],
+      "/data/items/*/variant": ["annual", "annual", "annual", "archive"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/column": ["Value", "value"]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/column": ["Valuereference"]}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "Value reference"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/column": ["Valørarkiv"]}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "monthly"}
+  }
+]

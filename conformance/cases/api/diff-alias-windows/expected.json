@@ -1,0 +1,19 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/variants/0/changed/*/fqid": ["scb/example/value"],
+      "/data/variants/0/changed/*/changes": [
+        [{"field": "column", "from": "Value", "to": "Different"}]
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/variants/0/changed/*/changes": [
+        [{"field": "column", "from": "Value", "to": "Different"}]
+      ]
+    }
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "note": "Twins of cli_scope/diff-explicit-reference and logical/diff-holdings: a column respelled between 2018 and 2019 (Value -> value) is a change in both scopes; holdings counts only held variables as unchanged. Fails if holdings compares the held spelling instead of the delivered one, or counts an unheld variable.",
+  "fixture": "reader/logical",
+  "requests": [
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2018", "to": "2019", "scope": "reference"}
+    },
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2018", "to": "2019", "scope": "holdings"}
+    }
+  ]
+}

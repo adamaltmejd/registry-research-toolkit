@@ -1,0 +1,16 @@
+{
+  "note": "Twin of logical/alias-diff-holdings: an alias window that replaces its state's column in 2019 (Value -> Different) is a change, in holdings as in reference. Fails if diff compares raw states instead of the expanded representations.",
+  "fixture": "reader/logical-alias-diff",
+  "requests": [
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2018", "to": "2019", "scope": "holdings"}
+    },
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2018", "to": "2019", "scope": "reference"}
+    }
+  ]
+}

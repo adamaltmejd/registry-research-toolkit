@@ -1,0 +1,11 @@
+{
+  "note": "Twin of logical/alias-case-twin-datacolumn: a 2019 state delivered as `value`, held under the case twin `Value`, is held, so the variable's 2019 holdings schema has its one row. The row shows the delivered spelling, as `get schema` and `get diff` do in holdings (logical/diff-holdings pins Value -> value as a change); the CLI's datacolumn search showed the held spelling. Fails if holdings matching stops folding case twins (the 2019 row disappears) or a twin adds a second row.",
+  "fixture": "reader/case-twins",
+  "requests": [
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example/value",
+      "query": {"scope": "holdings", "period": "2019"}
+    }
+  ]
+}
