@@ -2805,7 +2805,7 @@ export interface components {
         };
         /**
          * StewardInfo
-         * @description Deployment identity + branding, from ``steward.toml``.
+         * @description Deployment identity + branding, from ``steward.json``.
          */
         StewardInfo: {
             /** @description Compiled physical-period year span for UI slider bounds; null for catalog artifacts or holdings with no dated periods. */

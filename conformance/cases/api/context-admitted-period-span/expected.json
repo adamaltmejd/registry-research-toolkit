@@ -1,0 +1,9 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/period_span": {"from": 2018, "to": 2019},
+      "/meta/scope": "holdings"
+    }
+  }
+]

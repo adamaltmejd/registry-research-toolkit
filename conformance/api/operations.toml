@@ -58,6 +58,7 @@ slice = "3a"
 http = ["GET /api/context"]
 params = { scope = "scope?" }
 result = "Context"
+errors = ["scope_unavailable"]
 note = """Merges today's /api/context and /api/stats (the counts take `scope`). No MCP \
 tool: an agent's catalog identity is in every response's `meta`, and the branding and \
 counts serve the SPA shell."""

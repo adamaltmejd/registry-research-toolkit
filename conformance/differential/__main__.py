@@ -21,6 +21,10 @@ prints only the payload's ``data``; the envelope fields the CLI contract marks a
 volatile (``generated_at``, ``run.duration_ms``, ``database``) are never printed.
 ``order`` and ``validate`` print their canonical bytes. Outputs are compared byte for
 byte.
+
+The operations the Rust server implements also run over HTTP (``served.py``): the
+checkout's ``reg-meta serve`` on the derived copies against the baseline webapp on the
+originals, compared the same way after mapping the baseline's responses.
 """
 
 from __future__ import annotations
@@ -39,7 +43,7 @@ import tomllib
 from collections import Counter
 from pathlib import Path
 
-from conformance.differential import cache, cases, folds
+from conformance.differential import cache, cases, folds, served
 
 HERE = Path(__file__).resolve().parent
 DRIVER = HERE / "driver.py"
@@ -163,10 +167,19 @@ def run(config: dict) -> int:
     baseline_python = cache.ensure_baseline(pins)
     dirs = cache.ensure_artifacts(pins)
     derived = cache.ensure_derived(pins, dirs)
+    server = cache.ensure_server()
     setup_seconds = time.monotonic() - started
     report_dir = cache.cache_root() / "report"
     shutil.rmtree(report_dir, ignore_errors=True)
     all_cases = cases.generate(dirs, config, report_dir / "projects")
+    served_cases = served.context_cases(
+        baseline_python,
+        baseline_python.parents[2] / "stewards",
+        server,
+        dirs,
+        derived,
+        report_dir / "servers",
+    )
 
     # Half the cores per arm; both arms run at once.
     workers = max(1, (os.cpu_count() or 2) // 2)
@@ -221,6 +234,10 @@ def run(config: dict) -> int:
     for t in threads:
         t.join()
     fold_sweep = folds.sweep(baseline_python, dirs)
+    for case_id, base, cand in served_cases:
+        compared[case_id.split("/")[2]] += 1
+        if (diff := compare(case_id, base, cand)) is not None:
+            differences.append(diff)
 
     exceptions = config["exception"]
     for diff in differences:

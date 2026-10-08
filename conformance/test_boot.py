@@ -36,8 +36,8 @@ def test_artifact_boot(case, tmp_path, monkeypatch):
         stewards = tmp_path / "stewards"
         directory = stewards / "swecov"
         directory.mkdir(parents=True)
-        source = Path(__file__).parents[1] / "reg_webapp/stewards/swecov/steward.toml"
-        (directory / "steward.toml").write_bytes(source.read_bytes())
+        source = Path(__file__).parents[1] / "reg_webapp/stewards/swecov/steward.json"
+        (directory / "steward.json").write_bytes(source.read_bytes())
         (directory / "inventory.toml").write_text(
             "this is deliberately invalid TOML [[[\n"
         )

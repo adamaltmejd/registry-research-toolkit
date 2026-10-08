@@ -1,4 +1,4 @@
-"""Load steward identity and branding from ``steward.toml``.
+"""Load steward identity and branding from ``steward.json``.
 
 Compiled catalog manifests own deployment identity and holdings. This loader reads
 only presentation configuration; artifact admission happens in the app lifespan.
@@ -6,8 +6,8 @@ only presentation configuration; artifact admission happens in the app lifespan.
 
 from __future__ import annotations
 
+import json
 import os
-import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -29,7 +29,7 @@ def _stewards_dir() -> Path:
     return _DEFAULT_STEWARDS_DIR
 
 
-STEWARD_TOML = "steward.toml"
+STEWARD_JSON = "steward.json"
 
 DEFAULT_STEWARD_ID = "global"
 
@@ -58,13 +58,13 @@ class Steward:
 
 
 def load_steward(steward_id: str | None = None, *, root: Path | None = None) -> Steward:
-    """Load ``steward.toml`` for ``steward_id``.
+    """Load ``steward.json`` for ``steward_id``.
 
     ``steward_id`` defaults to ``_selected_steward_id()`` (the
     ``REG_WEBAPP_STEWARD`` env or ``global``) so the lifespan picks up the
     deployment's steward; callers may pass an explicit id.
 
-    Raises ``FileNotFoundError`` if the steward directory or ``steward.toml``
+    Raises ``FileNotFoundError`` if the steward directory or ``steward.json``
     is missing, and ``ValueError`` (naming the file + the absent fields) if a
     required identity field is missing — fail fast (CLAUDE.md), the deployment
     is misconfigured.
@@ -72,22 +72,20 @@ def load_steward(steward_id: str | None = None, *, root: Path | None = None) -> 
     if steward_id is None:
         steward_id = _selected_steward_id()
     base = (root or _stewards_dir()) / steward_id
-    toml_path = base / STEWARD_TOML
-    if not toml_path.is_file():
-        raise FileNotFoundError(f"steward config not found: {toml_path}")
+    path = base / STEWARD_JSON
+    if not path.is_file():
+        raise FileNotFoundError(f"steward config not found: {path}")
 
-    data = tomllib.loads(toml_path.read_text(encoding="utf-8"))
+    data = json.loads(path.read_text(encoding="utf-8"))
     if missing := [
         key for key in ("id", "name", "long_name", "hostname") if key not in data
     ]:
-        raise ValueError(
-            f"{toml_path}: missing required field(s): {', '.join(missing)}"
-        )
+        raise ValueError(f"{path}: missing required field(s): {', '.join(missing)}")
     # The declared id must match the directory name — keeps the identity contract
     # explicit before steward selection becomes dynamic (A5.1b/A5.2).
     if data["id"] != steward_id:
         raise ValueError(
-            f"{toml_path}: id {data['id']!r} does not match directory name {steward_id!r}"
+            f"{path}: id {data['id']!r} does not match directory name {steward_id!r}"
         )
     return Steward(
         id=data["id"],

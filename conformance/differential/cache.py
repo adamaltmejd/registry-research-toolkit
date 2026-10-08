@@ -8,7 +8,8 @@ Layout under the cache root (``$REG_META_G1_CACHE``, else
     artifacts/<tag>/global/derived/          reg_meta.db + reg_meta_docs.db -> ..
     artifacts/<tag>/swecov/reg_meta.db       + reg_meta_docs.db -> ../global/...
     artifacts/<tag>/swecov/derived/          reg_meta.db + reg_meta_docs.db -> ..
-    baseline/<commit>/venv/                  the baseline reader's own environment
+    baseline/<commit>/venv/                  the baseline reader and webapp's environment
+    baseline/<commit>/stewards/              the baseline webapp's steward branding
 
 Each asset is streamed once: hashed against its pinned SHA-256 while it is
 decompressed, so no ``.zst`` is kept. A stamp beside the database records the
@@ -46,15 +47,18 @@ DOWNLOAD_URL = f"https://github.com/{REPO}/releases/download/{{tag}}/{{asset}}"
 DB_FILENAME = "reg_meta.db"
 DOC_DB_FILENAME = "reg_meta_docs.db"
 STAMP_SUFFIX = ".pin.json"
-# What uv export needs to read the commit's workspace lock, plus the two packages.
+# What uv export needs to read the commit's workspace lock, plus the three packages
+# and the webapp's steward branding.
 BASELINE_PATHS = (
     "pyproject.toml",
     "uv.lock",
     "reg_meta",
     "reg_schema",
     "reg_meta_build/pyproject.toml",
-    "reg_webapp/backend/pyproject.toml",
+    "reg_webapp/backend",
+    "reg_webapp/stewards",
 )
+BASELINE_PACKAGES = ("reg_schema", "reg_meta", "reg_webapp/backend")
 CHUNK = 1 << 20
 REPO_ROOT = Path(__file__).resolve().parents[2]
 # What a derived copy depends on: the builder, the reader code derive moved, the
@@ -281,6 +285,17 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
     return derived
 
 
+def ensure_server() -> Path:
+    """Build the checkout's ``reg-meta`` and return the binary."""
+    subprocess.run(
+        ["cargo", "build", "--quiet", "--locked", "-p", "reg-meta"],
+        cwd=REPO_ROOT,
+        check=True,
+    )
+    target = REPO_ROOT / os.environ.get("CARGO_TARGET_DIR", "target")
+    return target / "debug" / "reg-meta"
+
+
 def isolated_env() -> dict[str, str]:
     """The baseline arm's environment: no path or venv leaks from the caller."""
     env = {
@@ -294,18 +309,21 @@ def isolated_env() -> dict[str, str]:
 
 
 def ensure_baseline(pins: Pins) -> Path:
-    """Return the baseline interpreter: the pinned commit's reader in its own venv.
+    """Return the baseline interpreter: the pinned commit's reader and webapp in their
+    own venv, with the commit's steward branding in ``stewards/`` beside it.
 
     The venv gets the commit's locked third-party dependencies (``uv export`` from the
-    commit's ``uv.lock``) and non-editable ``reg_schema`` + ``reg_meta`` built from a
-    ``git archive`` of the commit, which is deleted after the install.
+    commit's ``uv.lock``) and non-editable ``reg_schema``, ``reg_meta`` and
+    ``reg_webapp`` built from a ``git archive`` of the commit, which is deleted after
+    the install.
     """
     root = cache_root()
     commit = pins.baseline_commit
     _prune(root / "baseline", {commit})
     home = root / "baseline" / commit
     python = home / "venv" / "bin" / "python"
-    if (home / "installed").is_file():
+    marker = f"{commit} {' '.join(BASELINE_PACKAGES)}\n"
+    if (home / "installed").is_file() and (home / "installed").read_text() == marker:
         return python
     shutil.rmtree(home, ignore_errors=True)
     home.mkdir(parents=True)
@@ -332,7 +350,7 @@ def ensure_baseline(pins: Pins) -> Path:
                 "--frozen",
                 "--no-dev",
                 "--package",
-                "reg-meta",
+                "reg-webapp",
                 "--no-emit-workspace",
                 "--no-header",
                 "--output-file",
@@ -340,8 +358,9 @@ def ensure_baseline(pins: Pins) -> Path:
             ],
             ["uv", "venv", "--quiet", "--python", "3.14", str(home / "venv")],
             [*uv_pip, "--require-hashes", "-r", str(requirements)],
-            [*uv_pip, "--no-deps", str(src / "reg_schema"), str(src / "reg_meta")],
+            [*uv_pip, "--no-deps", *(str(src / p) for p in BASELINE_PACKAGES)],
         ):
             subprocess.run(cmd, cwd=src, env=env, check=True)
-    (home / "installed").write_text(commit + "\n")
+        (src / "reg_webapp/stewards").rename(home / "stewards")
+    (home / "installed").write_text(marker)
     return python

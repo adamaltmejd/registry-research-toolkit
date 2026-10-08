@@ -57,15 +57,16 @@ byte), as `validate/gap-clipped` does for its order download.
 ## Out-of-process runner
 
 `--server-cmd` runs the HTTP surfaces above over a real socket instead of in-process. It
-is a command template: `{db}` (the artifact directory) and `{port}` are substituted in
-each word. The runner starts one server per cached artifact from the repository root,
-with `REG_META_DB`, `REG_WEBAPP_STEWARD` and `REG_WEBAPP_STEWARDS_DIR` in its
-environment, waits until `GET /openapi.json` answers (120 s at most), reuses it for
-every case on that artifact and stops it at session end. A server that exits before
-answering is retried on a fresh port, and a start that fails is not retried for later
-cases on that artifact. Its output goes to `servers*/server-N.log` under the pytest base
-temp. The FastAPI app under uvicorn, without the `api` cases (they target the new API,
-which FastAPI does not serve):
+is a command template: `{db}` (the artifact directory), `{catalog}` (`global` or the
+artifact's steward) and `{port}` are substituted in each word. The runner starts one
+server per cached artifact from the repository root, with `REG_META_DB`,
+`REG_WEBAPP_STEWARD` and `REG_WEBAPP_STEWARDS_DIR` in its environment, waits until
+`GET /openapi.json` answers (120 s at most), reuses it for every case on that artifact
+and stops it at session end. A server that exits before answering is retried on a fresh
+port, and a start that fails is not retried for later cases on that artifact. Its output
+goes to `servers*/server-N.log` under the pytest base temp. The FastAPI app under
+uvicorn, without the `api` cases (they target the new API, which FastAPI does not
+serve):
 
 ```sh
 uv run python -m pytest conformance -q -k 'not [api/' --server-cmd='uv run python -c "import sys, uvicorn; from reg_webapp.app import create_app; uvicorn.run(create_app(rate_limit_per_minute=1000), port=int(sys.argv[1]))" {port}'
@@ -75,9 +76,17 @@ The app reads its artifact from the environment, so this template needs no `{db}
 not `uvicorn reg_webapp.app:create_app --factory` because the production write limit (30
 per minute per IP) would refuse the validate cases, all sent from loopback; the
 in-process runner uses the same raised limit. The `api` corpus (`cases/api/`) is
-collected only with `--server-cmd`, except its `startup_error` cases, which are
-process-level. Cases with `golden_config` swap a pins file the app reads at import, and
-stay in-process. Every other suite, boot and startup cases included, is unchanged.
+collected only with `--server-cmd`. Cases with `golden_config` swap a pins file the app
+reads at import, and stay in-process. Every other suite, boot cases included, is
+unchanged.
+
+The Rust server (`reg-meta serve`), on the cases of the operations it implements (the
+Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part of G0 and CI):
+
+```sh
+cargo build -p reg-meta
+uv run python -m pytest conformance -q -n auto -k '[api/admission or [api/context' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}'
+```
 
 ## Fixture cache
 
@@ -129,12 +138,13 @@ additions:
   same fixture and kind with those `identity.json` overrides (a new generation); a step
   with `artifact: <name>` is sent to it. The stale-cursor case uses this.
 - A startup case sets `serve: {"catalog": <name>}` and optional `manifest` overrides,
-  which are written to `import_manifest` after the build, and expects
-  `{"startup_error": {"code": ...}}`: the server refuses to start and never answers the
-  probe step.
+  which are written to `import_manifest` of a private copy after the build, and expects
+  `{"startup_error": {"code": ...}}`: the template, run with `{catalog}` set to that
+  name, prints the error document as the last line of stderr and exits with the code's
+  `exit` status in `api/errors.toml`, without listening.
+- A step with `etag_from: N` sends step N's `ETag` as `If-None-Match`.
 
-The out-of-process runner (package 1.4) does not yet run `artifacts` or startup cases;
-both are slice 3a runner extensions.
+The out-of-process runner does not yet run `artifacts` (package 3a.5).
 
 ## Artifact checks
 

@@ -14,10 +14,12 @@ import shlex
 import shutil
 import signal
 import socket
+import sqlite3
 import subprocess
 import sys
 import time
-from contextlib import suppress
+import tomllib
+from contextlib import closing, suppress
 from pathlib import Path
 
 import httpx2
@@ -29,6 +31,10 @@ import reg_webapp
 CASES = Path(__file__).parent / "cases"
 READY_PATH = "/openapi.json"
 SERVER_READY_SECONDS = 120
+EXIT_STATUS = {
+    code["code"]: code.get("exit")
+    for code in tomllib.loads((CASES.parent / "api/errors.toml").read_text())["code"]
+}
 
 
 def select_json(value, path):
@@ -57,15 +63,18 @@ def artifact_env(path, kind):
     }
 
 
+def fixture_source(request):
+    fixture = request.get("fixture", "compiled")
+    return fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
+
+
 def case_artifact(request, monkeypatch):
     """Point the app at a case's cached, read-only artifact; return its path."""
     from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
 
     kind = request.get("kind", "steward")
-    fixture = request.get("fixture", "compiled")
-    source = fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
     path = cached_reader_artifact(
-        source,
+        fixture_source(request),
         kind,
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
@@ -78,6 +87,10 @@ def assert_http_case(case, tmp_path, monkeypatch, servers=None):
     """Run a case in-process, or against `servers` (a `ServerPool`) when given."""
     request = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
+    if "startup_error" in expected:
+        assert servers is not None, "startup cases need --server-cmd"
+        assert_startup_refusal(request, expected["startup_error"], servers, tmp_path)
+        return
     kind = request.get("kind", "steward")
     path = case_artifact(request, monkeypatch)
     if "golden_config" in request:
@@ -133,6 +146,36 @@ def assert_http_case(case, tmp_path, monkeypatch, servers=None):
         )
 
 
+def assert_startup_refusal(request, refusal, servers, tmp_path):
+    """The server refuses the case's artifact: it prints the error document on
+    stderr and exits with the code's `exit` status in `api/errors.toml`."""
+    from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
+
+    path = build_reader_artifact(
+        tmp_path / "catalog",
+        fixture_source(request),
+        request.get("kind", "steward"),
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+    )
+    with closing(sqlite3.connect(path)) as conn, conn:
+        conn.executemany(
+            "INSERT OR REPLACE INTO import_manifest VALUES (?, ?)",
+            request.get("manifest", {}).items(),
+        )
+    completed = subprocess.run(
+        servers.argv(path.parent, request["serve"]["catalog"], _free_port()),
+        cwd=CASES.parents[1],
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    document = json.loads(completed.stderr.strip().splitlines()[-1])
+    assert document["code"] == refusal["code"], completed.stderr
+    assert completed.returncode == EXIT_STATUS[refusal["code"]]
+
+
 def raw_body(step):
     """A step's raw request bytes, or None when it sends `body` as JSON.
 
@@ -171,11 +214,17 @@ def run_http_requests(steps, client=None):
             idx, pointer = step["cursor_from"]
             params["cursor"] = select_json(responses[idx]["body"], pointer)
             assert params["cursor"] is not None
+        body = request_body(step)
+        if "etag_from" in step:
+            # A conditional read that revalidates an earlier step's response.
+            body["headers"] = body.get("headers", {}) | {
+                "if-none-match": responses[step["etag_from"]]["headers"]["etag"]
+            }
         response = client.request(
             step.get("method", "GET"),
             step["path"],
             params=params,
-            **request_body(step),
+            **body,
             follow_redirects=False,
         )
         content_type = response.headers.get("content-type", "")
@@ -203,7 +252,8 @@ class ServerPool:
     """One server process per artifact, started from a `--server-cmd` template.
 
     The template is split like a shell command line, and `{db}` (the artifact
-    directory) and `{port}` are substituted in each word. The process also gets
+    directory), `{catalog}` (`global` or the artifact's steward) and `{port}` are
+    substituted in each word. The process also gets
     `artifact_env`, runs in its own process group (so stopping it also stops
     what `uv run` launched) and logs to `log_dir`."""
 
@@ -211,6 +261,14 @@ class ServerPool:
         self.template = shlex.split(template)
         self.log_dir = log_dir
         self.servers = {}
+
+    def argv(self, db, catalog, port):
+        return [
+            word.replace("{db}", str(db))
+            .replace("{catalog}", catalog)
+            .replace("{port}", str(port))
+            for word in self.template
+        ]
 
     def client(self, env):
         db = env["REG_META_DB"]
@@ -238,11 +296,8 @@ class ServerPool:
         # A server that exits before answering may have lost its port to another
         # process between `_free_port` and its bind: retry on a fresh port.
         for _attempt in range(3):
-            port = str(_free_port())
-            argv = [
-                word.replace("{db}", env["REG_META_DB"]).replace("{port}", port)
-                for word in self.template
-            ]
+            port = _free_port()
+            argv = self.argv(env["REG_META_DB"], env["REG_WEBAPP_STEWARD"], port)
             with log.open("ab") as output:
                 process = subprocess.Popen(
                     argv,

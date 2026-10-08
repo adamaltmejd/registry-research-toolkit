@@ -1,0 +1,8 @@
+{
+  "fixture": "reader",
+  "kind": "steward",
+  "requests": [
+    {"operation": "context", "path": "/api/context"},
+    {"operation": "context", "path": "/api/context", "query": {"scope": "reference"}}
+  ]
+}

@@ -103,9 +103,8 @@ registry-research-toolkit/
     backend/        # FastAPI; depends on reg_meta + reg_schema
     frontend/       # Svelte 5 + Vite (bun)
     stewards/
-      global/       # steward.toml only (full universe)
-      ifau/         # steward.toml (holdings artifact planned)
-      swecov/       # steward.toml (compiled holdings artifact)
+      global/       # steward.json only (full universe)
+      swecov/       # steward.json (compiled holdings artifact)
 ```
 
 > The `reg_monabundle` and `mock_data_wizard` packages have been archived to
@@ -345,9 +344,10 @@ for the `test-audit` skill, not a reason to raise the number.
 
 G0 of `RUST_RUNTIME_SPEC.md` §4 runs conformance, the touched packages and
 `cargo test --workspace`. The reader-side rows, conformance and `crates/` sum to 59 s,
-so any change touching reader-side packages fits G0's 60 s. G1 (under 5 min) and G2 run
-on real artifacts in tier 3 and are not package budgets. `reg_meta_build` stays Python
-and is outside G0.
+so any change touching reader-side packages fits G0's 60 s. From slice 3a G0 also runs
+the Rust HTTP run (§10: `cargo build -p reg-meta`, then the `api` cases the Rust server
+implements, out of process), 8 s warm. G1 (under 5 min) and G2 run on real artifacts in
+tier 3 and are not package budgets. `reg_meta_build` stays Python and is outside G0.
 
 ### Conformance suite
 

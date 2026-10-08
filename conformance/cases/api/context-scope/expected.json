@@ -1,0 +1,21 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/steward/id": "swecov",
+      "/data/sizes": {"providers": 1, "registers": 1, "variables": 2},
+      "/meta": {
+        "contract_version": "4.0.0",
+        "generation": "9be4e9fd132e32aeca450c1b304b6a54ee1ddd1dc5399ba75a7cff869fc4eeb0",
+        "scope": "holdings"
+      }
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/sizes": {"providers": 8, "registers": 2, "variables": 4},
+      "/meta/scope": "reference"
+    }
+  }
+]

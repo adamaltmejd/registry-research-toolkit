@@ -1,0 +1,8 @@
+{
+  "fixture": "reader",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "context", "path": "/api/context"},
+    {"operation": "context", "path": "/api/context", "etag_from": 0}
+  ]
+}

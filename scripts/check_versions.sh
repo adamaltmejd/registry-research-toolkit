@@ -2,7 +2,8 @@
 # Verify version consistency across the monorepo.
 #
 # 1. For each package, pyproject.toml version must match __init__.py __version__.
-# 2. If GITHUB_REF_NAME is a release tag (<pkg>/v<ver>), the tagged version
+# 2. crates/reg-meta/Cargo.toml version must match reg_meta's.
+# 3. If GITHUB_REF_NAME is a release tag (<pkg>/v<ver>), the tagged version
 #    must match the package version and the tag must use <pkg>/vX.Y.Z syntax.
 set -euo pipefail
 
@@ -62,7 +63,16 @@ for entry in "${packages[@]}"; do
     fi
 done
 
-# 2. On release: validate tag format and version match
+# 2. The reg-meta binary reports reg_meta's version (`context`'s reg_meta_version).
+v_crate=$(extract_pyproject_version crates/reg-meta/Cargo.toml)
+v_reg_meta=$(extract_pyproject_version reg_meta/pyproject.toml)
+if [[ "$v_crate" != "$v_reg_meta" ]]; then
+    err "crates/reg-meta/Cargo.toml ($v_crate) != reg_meta/pyproject.toml ($v_reg_meta)"
+else
+    echo "OK: crates/reg-meta v$v_crate"
+fi
+
+# 3. On release: validate tag format and version match
 tag="${GITHUB_REF_NAME:-}"
 if [[ -n "$tag" && "$tag" == *"/v"* ]]; then
     # Expected format: <package>/vX.Y.Z (with optional pre-release)

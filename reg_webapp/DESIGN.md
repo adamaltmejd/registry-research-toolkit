@@ -34,7 +34,7 @@ reg_webapp/
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
     src/lib/api-types.ts   # codegen'd from ../backend/openapi.json
   stewards/               # per-steward config (sibling of backend/frontend)
-    global/steward.toml    # identity only; no catalog → full universe
+    global/steward.json    # identity only; no catalog → full universe
   DESIGN.md
 ```
 
@@ -1049,7 +1049,7 @@ Boot opens the admitted reg_meta artifact and checks its manifest: schema compat
 publishability, completeness, artifact kind, and generation identity. A catalog artifact
 requires the `global` deployment; a steward artifact requires its exact manifest
 steward. A mismatch fails with the DB path and `REG_WEBAPP_STEWARD` locator. Only
-`stewards/<id>/steward.toml` is loaded for branding. Runtime inventory loading,
+`stewards/<id>/steward.json` is loaded for branding. Runtime inventory loading,
 reconciliation, drift warnings, the in-memory index, and the runtime release gate are
 removed; builder publication validation owns those invariants.
 
