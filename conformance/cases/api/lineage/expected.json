@@ -1,0 +1,45 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/edges/*/source_fqid": ["scb/alpha/kon"],
+      "/data/edges/*/valid_from": ["2018-07-01"],
+      "/data/edges/*/valid_to": ["2018-12-31"],
+      "/data/warnings": [],
+      "/data/registers": [
+        {
+          "register": "scb/alpha",
+          "register_name": "Alpha",
+          "variable": "scb/alpha/kon",
+          "role": "unknown",
+          "source_register_text": "",
+          "source_register": null,
+          "instance_count": 2,
+          "year_range": [2010, 2018]
+        },
+        {
+          "register": "scb/beta",
+          "register_name": "Beta",
+          "variable": "scb/beta/kon",
+          "role": "consumer",
+          "source_register_text": "Alpha",
+          "source_register": "scb/alpha",
+          "instance_count": 1,
+          "year_range": [2018, 2018]
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/edges": [],
+      "/data/warnings/*/warning_kind": ["no_source_state"],
+      "/data/warnings/*/message": ["No source state covers 2010."]
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "scb/alpha"}
+  }
+]

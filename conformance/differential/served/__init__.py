@@ -13,10 +13,13 @@ cases' result form (``exit``, ``stdout``, ``stderr``).
 - ``show``: every catalog node kind per named scope, retired refs, and owning
   variables against the CLI baseline.
 - ``states``: ``states`` and ``warnings`` for sampled variables and their registers.
+- ``graph``: ``graph`` per sampled variable, group and every classification,
+  ``lineage``'s warnings per sampled variable, and its provenance rows against the
+  CLI baseline's ``get lineage``.
 
-``show``'s ``cases`` also takes ``baseline_cli``, a future of the CLI arm's baseline
-results by case id, set once the CLI arms finish, so it compares with a CLI baseline
-case instead of running it again.
+``show``'s and ``graph``'s ``cases`` also take ``baseline_cli``, a future of the CLI
+arm's baseline results by case id, set once the CLI arms finish, so they compare
+with a CLI baseline case instead of running it again.
 """
 
 from __future__ import annotations
@@ -27,14 +30,21 @@ import time
 from typing import TYPE_CHECKING
 
 from conformance.differential.cache import REPO_ROOT
-from conformance.differential.served import context, docs, search, show, states
+from conformance.differential.served import (
+    context,
+    docs,
+    graph,
+    search,
+    show,
+    states,
+)
 from conformance.http_cases import ServerPool
 
 if TYPE_CHECKING:
     from concurrent.futures import Future
     from pathlib import Path
 
-FAMILIES = (context, search, docs, show, states)
+FAMILIES = (context, search, docs, show, states, graph)
 # The production rate limit (30 writes per minute) does not bind GETs. Eight worker
 # processes, since one Python process serves one search at a time (G1 budget).
 BASELINE_APP = (
@@ -103,8 +113,8 @@ def served_cases(
                 started = time.monotonic()
                 args = (base, cand, catalog, scopes, originals[catalog])
                 found = (
-                    show.cases(*args, baseline_cli)
-                    if family is show
+                    family.cases(*args, baseline_cli)
+                    if family in {show, graph}
                     else family.cases(*args)
                 )
                 cases += [

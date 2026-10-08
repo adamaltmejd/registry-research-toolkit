@@ -1,0 +1,94 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/focus_id": "scb/alpha/kon",
+      "/data/nodes/*/fqid": ["scb/alpha/kon", "scb/alpha/later", "scb/alpha/alder", "scb/alpha/split"],
+      "/data/nodes/*/states/*/variant": [["annual", "older"], [], ["annual"], []],
+      "/data/nodes/*/states/*/representation_run_id": [[0, 1], [], [0], []],
+      "/data/edges/*/id": [
+        "succession:scb/alpha/later->scb/alpha/kon",
+        "succession:scb/alpha/split->scb/alpha/alder"
+      ],
+      "/data/edges/*/effective_year": [2099, null]
+    }
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "scb/alpha/split",
+      "/error/fields/candidates": [
+        {"fqid": "scb/alpha/alder", "kind": "variable", "name": "Ålder"},
+        {"fqid": "scb/alpha/kon", "kind": "variable", "name": "Kön"}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/focus_id": "scb/beta/fodland",
+      "/data/nodes/*/fqid": ["scb/beta/fodland", "scb/alpha/pre-split", "scb/alpha/alder", "scb/alpha/kon"],
+      "/data/edges/*/id": [
+        "succession:scb/alpha/pre-split->scb/beta/fodland",
+        "succession:scb/beta/fodland->scb/alpha/alder",
+        "succession:scb/beta/fodland->scb/alpha/kon",
+        "succession:representation:scb/beta/fodland:FodLandKod:->scb/beta/fodland:FodLand:"
+      ],
+      "/data/edges/3/source_column": "FodLandKod",
+      "/data/edges/3/target_column": "FodLand",
+      "/data/edges/3/label": "Code column renamed",
+      "/data/edges/3/effective_year": 2011
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/family/editions/*/slug": ["icd-9", "icd-10"],
+      "/data/family/editions/*/is_current": [false, true]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/focus_id": "class/icd-9",
+      "/data/nodes/*/id": ["class/icd-9", "class/icd-10"],
+      "/data/nodes/*/is_current": [false, true],
+      "/data/nodes/*/group_key": [null, null],
+      "/data/edges": [
+        {
+          "id": "succession:class/icd-9->class/icd-10",
+          "kind": "succession",
+          "source": "class/icd-9",
+          "target": "class/icd-10",
+          "label": null,
+          "effective_year": 1997,
+          "source_column": null,
+          "target_column": null,
+          "variant": null
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/focus_id": null,
+      "/data/nodes/*/id": ["class/icd-9", "class/icd-10"],
+      "/data/nodes/*/group_key": ["class/icd", "class/icd"],
+      "/data/nodes/*/group_label": ["ICD", "ICD"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": ["class/icd-10"],
+      "/data/items/0/editions/*/slug": ["icd-10", "icd-9"],
+      "/data/items/0/editions/*/effective_year": [null, 1997]
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "scb/alpha"}
+  }
+]

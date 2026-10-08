@@ -94,6 +94,13 @@
     "measurement_unit": null,
     "is_sensitive": false,
     "is_identifier": false,
+    "source_register": {
+      "provider": "scb",
+      "slug": "alpha",
+      "name": "Alpha",
+      "purpose": "Synthetic register for show"
+    },
+    "source_register_text": "Alpha",
     "states": [
       {
         "variant": {"slug": "annual", "name": "Annual"},

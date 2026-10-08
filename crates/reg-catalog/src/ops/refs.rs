@@ -305,7 +305,11 @@ fn register_id(conn: &Connection, scope: Scope, slugs: &[String]) -> Result<Opti
         .optional()?)
 }
 
-fn variable_id(conn: &Connection, scope: Scope, slugs: &[String]) -> Result<Option<i64>, Error> {
+pub(crate) fn variable_id(
+    conn: &Connection,
+    scope: Scope,
+    slugs: &[String],
+) -> Result<Option<i64>, Error> {
     // The register subquery keys idx_variable_slug(register_id, slug).
     let sql = format!(
         "SELECT v.variable_id FROM variable v WHERE v.register_id IN (SELECT r.register_id \

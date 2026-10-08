@@ -185,30 +185,30 @@ pub struct ClassificationGroup {
 /// A group as listed by its register, classification root or member classification.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Group {
-    fqid: String,
-    key: String,
-    label: String,
+    pub(super) fqid: String,
+    pub(super) key: String,
+    pub(super) label: String,
     source: String,
     axes: Vec<Axis>,
-    members: Vec<Member>,
+    pub(super) members: Vec<Member>,
     tags: Vec<Tag>,
 }
 
 /// A one-dimensional classification succession family (ICD, LKF, SNI, SSYK).
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Family {
-    fqid: String,
-    key: String,
-    label: String,
+    pub(super) fqid: String,
+    pub(super) key: String,
+    pub(super) label: String,
     /// Its editions in chain order.
-    editions: Vec<FamilyEdition>,
+    pub(super) editions: Vec<FamilyEdition>,
 }
 
 /// An edition of a succession family.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct FamilyEdition {
-    slug: String,
-    fqid: String,
+    pub(super) slug: String,
+    pub(super) fqid: String,
     name: Option<String>,
     short_name: Option<String>,
     /// The year of the edge by which the edition is superseded on the chain.
@@ -224,15 +224,15 @@ pub struct FamilyEdition {
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Axis {
     name: String,
-    label: String,
+    pub(super) label: String,
 }
 
 /// A group member; two members of one variable differ by `delivery_column`.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Member {
-    fqid: String,
+    pub(super) fqid: String,
     name: Option<String>,
-    facets: Vec<Facet>,
+    pub(super) facets: Vec<Facet>,
     delivery_column: Option<String>,
     /// Present on a group's own page only: the member's coverage, its column's
     /// for a representation member (empty when no state delivers the column).
@@ -367,7 +367,7 @@ pub fn show(server: &Server, scope: Scope, params: &Params) -> Result<Value, Err
     Ok(serde_json::to_value(show).expect("Show serializes"))
 }
 
-fn rows<T>(
+pub(super) fn rows<T>(
     conn: &Connection,
     sql: &str,
     params: impl rusqlite::Params,
@@ -571,7 +571,7 @@ fn register(
 /// scope, by key. Members order by their first facet value, FQID and column; a
 /// group's tags aggregate its members' tags. With `coverage_of` (the register's id,
 /// for a group's own page) each member carries its coverage, as today's group node.
-fn concept_groups(
+pub(super) fn concept_groups(
     conn: &Connection,
     scope: Scope,
     provider: &str,
@@ -1062,7 +1062,7 @@ pub(super) fn families(conn: &Connection) -> Result<Vec<Family>, Error> {
 
 /// Today's `list_classification_groups`: the curated classification groups, by key,
 /// members by facet value then slug.
-fn classification_groups(conn: &Connection) -> Result<Vec<Group>, Error> {
+pub(super) fn classification_groups(conn: &Connection) -> Result<Vec<Group>, Error> {
     let found = rows(
         conn,
         "SELECT g.group_key, g.label, g.source, a.axis, a.label, c.slug, c.name, \
