@@ -9,10 +9,10 @@ description: Run, screenshot, and drive the reg_webapp dev setup (FastAPI backen
 
 Three dev servers — a FastAPI backend, the Rust server (`reg-meta serve`), and Vite
 serving the SPA with an `/api` proxy that sends the routes ported to Rust (today
-`/api/context`) to the Rust server and the rest to the backend — plus a Playwright
-driver that loads the SPA, drills through the catalog, exercises the period slider, and
-screenshots each step. `dev.sh` picks a FREE port for each server on every run, so
-nothing here is pinned to a port. The proxy split lives in
+`/api/context` and `/api/search`) to the Rust server and the rest to the backend — plus
+a Playwright driver that loads the SPA, drills through the catalog, exercises the period
+slider, and screenshots each step. `dev.sh` picks a FREE port for each server on every
+run, so nothing here is pinned to a port. The proxy split lives in
 `reg_webapp/frontend/vite.config.ts`; each later slice adds its routes there.
 
 This skill is a helper you invoke by its explicit repo path, not a skill the root loader
@@ -244,8 +244,8 @@ includes the Playwright browser project).
   `REG_WEBAPP_BACKEND_URL` and `REG_META_SERVER_URL`
   (`reg_webapp/frontend/vite.config.ts`) — `dev.sh` sets both automatically; they only
   matter if you start Vite by hand against other ports.
-- **`/api/context` comes from the Rust server.** Its body is `{data, meta}` and it takes
-  only `scope`; the FastAPI backend no longer serves it, so probe the backend with
+- **`/api/context` and `/api/search` come from the Rust server.** Their bodies are
+  `{data, meta}`; the FastAPI backend no longer serves them, so probe the backend with
   `/api/catalog`.
 - **Git worktrees are auto-provisioned.** A `SessionStart` hook
   (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable

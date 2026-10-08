@@ -84,9 +84,9 @@ function commit(raw: string): void {
     return;
   }
   // Preserve an active `?type=` scope (#393 item 1) so typing more into the box
-  // doesn't silently reset the SearchView toggle back to "all". `all` is the
-  // server default (the SearchView omits it from the URL), so a present `?type=`
-  // is always a non-`all` scope worth carrying.
+  // doesn't silently reset the SearchView toggle back to "all". The SearchView
+  // omits `all` from the URL, so a present `?type=` is always a non-`all` scope
+  // worth carrying.
   const type = router.getQueryParam("type");
   const url = `/search?q=${encodeURIComponent(q)}${type ? `&type=${type}` : ""}`;
   if (router.route.name !== "search") {

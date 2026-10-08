@@ -1,0 +1,15 @@
+{
+  "note": "`education` occurs only in sun2020's English name (`name_en`), so the hit fails if derive stops indexing `name_en` in `classification_fts` or the classification arm stops matching it.",
+  "kind": "catalog",
+  "fixture": "reader/classification-editions",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "education",
+        "type": "classification"
+      }
+    }
+  ]
+}

@@ -61,9 +61,7 @@ def test_304_drops_content_type_and_length(catalog_db):
     [
         # Fold- or steward-dependent reads get the short window (#499, #506, #726).
         ("/api/catalog/scb/lisa/kon/states", _SHORT),
-        ("/api/search?q=lisa", _SHORT),
-        # Rebuild-stable doc reads keep 24h; `/api/docs/search` must not collide
-        # with the `/api/search` prefix.
+        # Rebuild-stable doc reads keep 24h.
         ("/api/docs/search?q=kon", "public, max-age=86400, must-revalidate"),
     ],
 )
@@ -152,12 +150,11 @@ def test_different_bodies_under_identical_metadata_do_not_share_a_validator(
 ):
     # Fails if compute_etag drops the body digest: version, steward, generation
     # and scope are identical here, so only the body can tell the two apart, and
-    # an ETag cached for `?q=lisa` would otherwise turn `?q=rams` into a stale 304.
+    # an ETag cached for one register would otherwise turn the next into a stale 304.
     with TestClient(create_app()) as client:
-        lisa = client.get("/api/search", params={"q": "lisa"})
+        lisa = client.get("/api/catalog/scb/lisa")
         rams = client.get(
-            "/api/search",
-            params={"q": "rams"},
+            "/api/catalog/scb/rams",
             headers={"If-None-Match": lisa.headers["etag"]},
         )
     assert lisa.status_code == rams.status_code == 200

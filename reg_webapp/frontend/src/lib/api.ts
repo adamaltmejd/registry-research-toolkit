@@ -10,15 +10,18 @@
  * with no hand-maintained mirror.
  */
 import type { components } from "./api-types";
-import type { components as RustComponents } from "./api-types-rust";
+import type {
+  components as RustComponents,
+  operations as RustOperations,
+} from "./api-types-rust";
 import { queryFromParams, type ResolutionParams } from "./period";
 
 type Schemas = components["schemas"];
 type RustSchemas = RustComponents["schemas"];
 
 /** The `/api` base. Same-origin in production (Cloudflare fronts both the SPA
- * and the API); the Vite dev server proxies `/api/context` to the Rust server
- * and the rest of `/api` to the FastAPI backend. */
+ * and the API); the Vite dev server proxies `/api/context` and `/api/search` to
+ * the Rust server and the rest of `/api` to the FastAPI backend. */
 const API_BASE = "/api";
 
 /**
@@ -647,40 +650,34 @@ export function orderFindingsFromError(e: unknown): OrderFinding[] {
 }
 
 // ── Search surface (#379) ───────────────────────────────────────────────────
-// `GET /api/search?q=` returns an optional cross-group best-bets group followed by
-// the typed result groups over the shipped FTS indexes (registers / variables /
-// classifications / classification codes / register-local value sets). Each
-// Each group is a bounded `limit + 1` page with `has_more` and an opaque
-// continuation cursor. A
-// concept-group row (`type:"group"`) is not an FQID, but it can be linked to its
-// fixed group route when the scope is derivable from members; its `members` carry
-// the real leaf FQIDs for fallback links. A `fqid` can be `null` on any leaf (a hit
-// with no resolvable catalog node).
+// The Rust server's `search` (`GET /api/search?q=`, decision 17): one ranked list
+// per call, `{items, next_cursor}` inside `{data, meta}`. With `type` the list is
+// one arm's hits (its pins first); without it, every arm's hits ranked together
+// (grouped variable members hidden). A concept-group hit (`type:"group"`) is not
+// an FQID, but it can be linked to its fixed group route when the scope is
+// derivable from members; its `members` carry the real leaf FQIDs for fallback
+// links. A `fqid` can be `null` on any leaf (a hit with no resolvable catalog
+// node).
 
-export type SearchResponse = Schemas["SearchResponse"];
-export type TopSearchGroup = Schemas["TopSearchGroup"];
-export type RegisterSearchGroup = Schemas["RegisterSearchGroup"];
-export type VariableSearchGroup = Schemas["VariableSearchGroup"];
-export type ClassificationSearchGroup = Schemas["ClassificationSearchGroup"];
-export type ClassificationCodeSearchGroup =
-  Schemas["ClassificationCodeSearchGroup"];
-export type RegisterValueSetSearchGroup =
-  Schemas["RegisterValueSetSearchGroup"];
-export type RegisterSearchResult = Schemas["RegisterSearchResult"];
-export type VariableSearchResult = Schemas["VariableSearchResult"];
-export type ClassificationSearchResult = Schemas["ClassificationSearchResult"];
+export type SearchPage = RustSchemas["SearchPage"];
+export type SearchHit = RustSchemas["SearchHit"];
+export type RegisterHit = Extract<SearchHit, { type: "register" }>;
+export type VariableHit = Extract<SearchHit, { type: "variable" }>;
+export type ClassificationHit = Extract<SearchHit, { type: "classification" }>;
 /** A folded classification-succession row (#571): a query hit ≥2 editions of one
  * chain, collapsed onto the TERMINAL (current) edition. `editions` is the full
  * chain (terminal-first, descending year); the terminal `fqid` is the navigable
  * target (NOT a concept group). */
-export type ClassificationSuccessionSearchResult =
-  Schemas["ClassificationSuccessionSearchResult"];
-export type SearchClassificationEdition =
-  Schemas["SearchClassificationEdition"];
-export type ConceptGroupSearchResult = Schemas["ConceptGroupSearchResult"];
-export type CodeSearchResult = Schemas["CodeSearchResult"];
-export type CodeOwnerVariable = Schemas["CodeOwnerVariable"];
-export type CodeOwnerClassification = Schemas["CodeOwnerClassification"];
+export type ClassificationSuccessionHit = Extract<
+  SearchHit,
+  { type: "classification_succession" }
+>;
+export type ConceptGroupHit = Extract<SearchHit, { type: "group" }>;
+export type CodeHit = Extract<SearchHit, { type: "code" }>;
+/** The arm a search keeps (`?type=`); omitted, the search ranks every arm. */
+export type SearchType = NonNullable<
+  RustOperations["search"]["parameters"]["query"]["type"]
+>;
 
 /** The omnibox's client-side timeout. The codes/value sub-query can be slow
  * server-side (a separate backend index fix is in flight); past this the SPA
@@ -689,27 +686,12 @@ export type CodeOwnerClassification = Schemas["CodeOwnerClassification"];
  * the supersede-abort's `AbortError`), which SearchView maps to the timeout copy. */
 const SEARCH_TIMEOUT_MS = 12_000;
 
-/** The scoped-search toggle values (#393 item 1). `all` (the default) returns the
- * typed groups; `value` scopes the search to classification codes plus
- * register-local value sets. Mirrors reg_meta's `SEARCH_TYPES` (the backend 422s
- * an unknown value). */
-export type SearchType =
-  | "all"
-  | "register"
-  | "variable"
-  | "classification"
-  | "value"
-  | "classification_code"
-  | "register_value";
-
 /** GET a search endpoint (`path` relative to `/api`) with the shared query +
  * abort plumbing every search surface uses: `q` is encoded, an explicit `limit`
- * appended (server default otherwise), an explicit non-`all` `type` appended
- * (#393 item 1 — `all` is the server default, so it's OMITTED to keep the URL +
- * ETag stable), an optional `register` filter appended (the for-variable hook
- * scopes by register; `search` passes none), and the request aborts on
- * EITHER the caller's `signal` (a supersede/unmount teardown, which stays silent)
- * OR a ~12s timeout (surfaced as a `TimeoutError`) — `AbortSignal.any` fires on
+ * appended (server default otherwise), an optional `type` and `register` filter
+ * appended (the for-variable hook scopes by register; `search` passes none), and
+ * the request aborts on EITHER the caller's `signal` (a supersede/unmount
+ * teardown, which stays silent) OR a ~12s timeout (surfaced as a `TimeoutError`) — `AbortSignal.any` fires on
  * whichever wins. */
 function searchGet<T>(
   path: string,
@@ -726,7 +708,7 @@ function searchGet<T>(
   if (options?.limit !== undefined) {
     params.set("limit", String(options.limit));
   }
-  if (options?.type !== undefined && options.type !== "all") {
+  if (options?.type !== undefined) {
     params.set("type", options.type);
   }
   if (options?.register !== undefined) {
@@ -750,12 +732,11 @@ function searchGet<T>(
  * (the results page) gates its fetch on it. */
 export const SEARCH_MIN_QUERY_LENGTH = 2;
 
-/** Search the catalog. `q` is the raw user query (encoded); `limit` is the
- * per-group result cap — omit it to use the server default (20, clamped ≤50);
- * `type` scopes the search to one group (#393 item 1) — omit it (or pass `all`)
- * for the four-group default. A blank/punctuation-only query returns the selected
- * group(s) empty, not an error. */
-export function search(
+/** Search the catalog: one page of the ranked list. `q` is the raw user query
+ * (encoded); `limit` is the page size (the server's default is 50); `type` keeps
+ * one arm (omit it for the ranked list across arms); `cursor` is a previous page's
+ * `next_cursor`. A query with no letter or digit returns no items, not an error. */
+export async function search(
   q: string,
   options?: {
     signal?: AbortSignal;
@@ -763,8 +744,8 @@ export function search(
     type?: SearchType;
     cursor?: string;
   },
-): Promise<SearchResponse> {
-  return searchGet<SearchResponse>("/search", q, options);
+): Promise<SearchPage> {
+  return (await searchGet<{ data: SearchPage }>("/search", q, options)).data;
 }
 
 // ── Docs surface (#354/#394/#402/#742) ─────────────────────────────────────

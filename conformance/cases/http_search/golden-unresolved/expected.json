@@ -1,6 +1,0 @@
-{
-  "build_error": {
-    "code": "search_pin_unresolved",
-    "message": "search_pins.toml [[pin]] entry 2: sos/par does not resolve to a register in this catalog."
-  }
-}

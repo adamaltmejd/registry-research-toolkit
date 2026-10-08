@@ -44,6 +44,10 @@ export default defineConfig({
         target: rustServerUrl,
         changeOrigin: true,
       },
+      "/api/search": {
+        target: rustServerUrl,
+        changeOrigin: true,
+      },
       "/api": {
         target: backendUrl,
         changeOrigin: true,

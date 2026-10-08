@@ -8,8 +8,8 @@
 #
 #     uv run python reg_webapp/backend/scripts/run_search_eval.py
 #
-# against a real reg_meta.db — it reports, per case, whether `intended` appears in its
-# group and at what rank.
+# against a `reg-meta serve` over a real catalog — it reports, per case, whether
+# `intended` appears in its group and at what rank.
 #
 # STEWARD-CONFIRMED 2026-06-17. The `intended` answers below are the steward's ground
 # truth (`confirmed = true`). An `expect = gap` case has a confirmed-correct intended
