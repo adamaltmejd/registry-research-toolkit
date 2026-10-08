@@ -9,6 +9,7 @@ mod docs;
 mod graph;
 mod lineage;
 mod refs;
+mod schema;
 mod search;
 mod show;
 pub mod slice_3a;
@@ -16,6 +17,7 @@ pub mod slice_3b;
 pub mod slice_3d;
 mod states;
 mod warnings;
+pub mod slice_3c;
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -210,6 +212,7 @@ pub fn all() -> impl Iterator<Item = &'static Operation> {
         .iter()
         .chain(slice_3b::OPERATIONS)
         .chain(slice_3d::OPERATIONS)
+        .chain(slice_3c::OPERATIONS)
 }
 
 /// Every registered download.
