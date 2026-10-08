@@ -69,14 +69,23 @@ def _candidate(cand, ref: str, params: dict) -> object:
 
 
 def _jobs(base, catalog: str, scope: str, fqid: str) -> list[tuple]:
-    """``(key, value set id, baseline params, candidate params)`` per comparison."""
+    """``(key, value set id, baseline params, candidate params)`` per comparison.
+
+    A variable's states mostly share a few codings (one has 94 states over 44k-member
+    sets), so each coding (value set, window or state, book) is compared at its first
+    state only."""
     answer = get(base, f"/api/catalog/{_route(fqid)}", {"scope": scope})
     if answer["status"] != 200:
         return []
-    jobs = []
+    jobs, seen = [], set()
     for state in answer["body"].get("states", []):
-        if state["value_set_id"] is None:
+        books = tuple(
+            b["slug"] for b in state["classifications"] if b["conformance"] is not None
+        )
+        coding = (state["value_set_id"], bool(state["coding_window_from"]), books)
+        if state["value_set_id"] is None or coding in seen:
             continue
+        seen.add(coding)
         window = (
             {
                 "column": state["delivery_column_name"],
@@ -147,14 +156,16 @@ def cases(
         )
         out = list(pool.map(run, [job for jobs in listed for job in jobs]))
     # A book's codes against the CLI arm's baseline results, reused by case id.
+    books = []
     for case_id, base_cli in sorted(baseline_cli.result().items()):
         name, scope, command, *rest = case_id.split("/")
-        if name != catalog or command != "get-classification-codes":
-            continue
         short_name = "/".join(rest)
         slug = short_names.get(short_name)
-        if slug is None:
-            continue
+        if name == catalog and command == "get-classification-codes" and slug:
+            books.append((scope, short_name, slug, base_cli))
+
+    def compare(book):
+        scope, short_name, slug, base_cli = book
         expected = (
             _code_rows(json.loads(base_cli["stdout"])["codes"])
             if base_cli["exit"] == 0
@@ -164,7 +175,7 @@ def cases(
         actual = _candidate(cand, f"class/{slug}", params)
         if isinstance(actual, list):
             actual = _code_rows(actual)
-        out.append(
-            (f"{scope}/values-classification-codes/{short_name}", expected, actual)
-        )
-    return out
+        return f"{scope}/values-classification-codes/{short_name}", expected, actual
+
+    with ThreadPoolExecutor(PARALLEL) as pool:
+        return out + list(pool.map(compare, books))
