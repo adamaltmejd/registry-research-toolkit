@@ -1,0 +1,85 @@
+{
+  "replaces": [
+    "test_curation_compile_guarded_corrections.py::test_checked_name_correction_keeps_same_ref_other_source_scope",
+    "test_curation_compile_guarded_corrections.py::test_measurement_unit_correction_guards_shared_ref_physical_assertions",
+    "test_curation_compile_guarded_corrections.py::test_documented_source_scope_has_reportable_window_when_source_missing[2020-12-31]",
+    "test_curation_compile_guarded_corrections.py::test_documented_source_scope_has_reportable_window_when_source_missing[None]",
+    "test_curation_compile_guarded_corrections.py::test_finite_scoped_owner_closes_only_fully_covered_unassigned_literal[False]",
+    "test_curation_compile_guarded_corrections.py::test_finite_scoped_owner_closes_only_fully_covered_unassigned_literal[True]",
+    "test_curation_compile_guarded_corrections.py::test_classification_reference_corrections_preserve_shared_ref_other_windows"
+  ],
+  "note": "Independent claims share one build, one register each; each register's entries are authored from its reviewed row alone. Name, scb/sample: CVID 20 in edition 99 is delivered under Registerversionnamn 2009 and 2008, so both rows share one ref and the edition filter cannot tell them apart; the entry renames only the 2009 row, the 2008 row already delivers 'Reviewed label', so the names agree and only the 2009 state carries the correction's provenance. scb/twin: the 2008 row keeps the reviewed prose, so only the pinned scope keeps the correction off it and the names disagree. Unit, scb/unitfix: one ref delivers two physical alternatives, units 'Antal' and 'Kronor (SEK)'; correcting 'Antal' to 'Kronor (SEK)' makes them agree. (The replaced test corrected to 'Antal personer'; a unit is not projected, so agreement is the observable.) scb/unitkeep: the replaced test's 'Antal personer' must not reach the 'Kronor (SEK)' alternative, so the units still conflict. scb/unitdrift: the reviewed 'Antal' alternative now delivers 'Styck', so the entry is stale. Documented, scb/sample: two certificates without `periods` name a MISSING column of undelivered variables 1.999 and 1.998; each is stale and its issue reports its source scope (closed, then open) as the window. Owners, scb/owned: a finite `[[identity.column_owner]]` covers both delivered editions of the unassigned ANSWER column, so no finding is raised and every row lands on `answer`. scb/partly: ANSWER 2022 (CVID 322) has no owner; the finding cites only that row, while 2020, 2021 and KNOWN still land on `answer`. Classification, sos/syd: SOS delivers DISTRIKT in SYD_A twice, 2009 declaring 'Incorrect municipal list' and 2017 'District reference' (book d's alias), so both windows share one ref; the entry corrects only the 2009 window, which keeps its 2009 window and now binds d. DISTRIKT2's reviewed 2009 row has since changed its representation, so its entry is stale and its 2009 window stays unbound.",
+  "fails_if": "any one of: `_select_occurrence_correction` stops requiring a name or unit correction's original to match the pinned scope (scb/sample's entry then also guards the 2008 row and goes stale); the name effect drops its `when_scope` (scb/twin's 2008 row is renamed too, so its names agree); the unit effect drops its `expected_fields` guard (scb/unitkeep's 'Kronor (SEK)' alternative is corrected too, so its units agree); `_select_occurrence_correction` stops picking the alternative by its guarded unit (scb/unitfix's entry then also guards the 'Kronor (SEK)' alternative and goes stale); selection and `_occurrence_correction_matches` both ignore the unit guard (scb/unitdrift is no longer stale; a later effect contract then fails the build); `coding_entry_windows` drops a certificate's source scope (its stale issue reports no window, or closes the open one); `_column_partition_plan` treats an unassigned literal as unassigned although finite owners cover every row (scb/owned raises a finding), or closes it once any row is owned (scb/partly raises none); `_select_occurrence_correction` stops requiring a `classification_declared` correction's original to match the pinned scope (both DISTRIKT windows are selected, the entry goes stale and 2009 stays unbound); or `_occurrence_correction_matches` stops comparing the representation guard (DISTRIKT2 is no longer stale; a later effect contract then fails the build)",
+  "sources": {
+    "description": "scb/sample: CVID 20 (variable 5, edition 99) as ANSWER under Registerversionnamn 2009 named 'GenericVar' and under 2008 named 'Reviewed label'. scb/twin: CVID 420 the same, both rows named 'GenericVar'. scb/unitfix, scb/unitkeep: CVIDs 520, 620 (edition 99, 2009) each delivered twice, units 'Antal' and 'Kronor (SEK)'. scb/unitdrift: CVID 720 the same, its 'Antal' alternative now 'Styck'. scb/owned: ANSWER 2020/2021 (CVIDs 220, 221) and KNOWN 1999 (CVID 219). scb/partly: ANSWER 2020/2021/2022 (CVIDs 320, 321, 322) and KNOWN 1999 (CVID 319). sos/syd: DISTRIKT and DISTRIKT2 in SYD_A, each delivered for 2009 ('Incorrect municipal list') and 2017 ('District reference'); DISTRIKT2's 2009 value set changed. Book d's codes.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "ANSWER", "cvid": 20, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTREG", 1, 2]},
+        {"colname": "ANSWER", "cvid": 20, "var_id": 5, "year": "2008", "regver_id": 99, "register": ["TESTREG", 1, 2], "varname": "Reviewed label"},
+        {"colname": "ANSWER", "cvid": 420, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTTWIN", 4, 2]},
+        {"colname": "ANSWER", "cvid": 420, "var_id": 5, "year": "2008", "regver_id": 99, "register": ["TESTTWIN", 4, 2]},
+        {"colname": "ANSWER", "cvid": 520, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTU5", 5, 2], "unit": "Antal"},
+        {"colname": "ANSWER", "cvid": 520, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTU5", 5, 2], "unit": "Kronor (SEK)"},
+        {"colname": "ANSWER", "cvid": 620, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTU6", 6, 2], "unit": "Antal"},
+        {"colname": "ANSWER", "cvid": 620, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTU6", 6, 2], "unit": "Kronor (SEK)"},
+        {"colname": "ANSWER", "cvid": 720, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTU7", 7, 2], "unit": "Styck"},
+        {"colname": "ANSWER", "cvid": 720, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTU7", 7, 2], "unit": "Kronor (SEK)"},
+        {"colname": "ANSWER", "cvid": 220, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["TEST2", 2, 2]},
+        {"colname": "ANSWER", "cvid": 221, "var_id": 5, "year": "2021", "regver_id": 2021, "register": ["TEST2", 2, 2]},
+        {"colname": "KNOWN", "cvid": 219, "var_id": 5, "year": "1999", "regver_id": 1999, "register": ["TEST2", 2, 2]},
+        {"colname": "ANSWER", "cvid": 320, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["TEST3", 3, 2]},
+        {"colname": "ANSWER", "cvid": 321, "var_id": 5, "year": "2021", "regver_id": 2021, "register": ["TEST3", 3, 2]},
+        {"colname": "ANSWER", "cvid": 322, "var_id": 5, "year": "2022", "regver_id": 2022, "register": ["TEST3", 3, 2]},
+        {"colname": "KNOWN", "cvid": 319, "var_id": 5, "year": "1999", "regver_id": 1999, "register": ["TEST3", 3, 2]}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "SYD",
+        "title": "Syntetiskt distriktsregister",
+        "subsets": [
+          {"name": "SYD_A", "label": "SYD_A", "data_from": 2009, "data_to": 2017, "aggregation_level": null}
+        ],
+        "variables": [
+          {"name": "DISTRIKT", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Six-digit district code", "external_classification": "Incorrect municipal list"},
+          {"name": "DISTRIKT", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2017, "data_to": 2017, "value_set": "Six-digit district code", "external_classification": "District reference"},
+          {"name": "DISTRIKT2", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Seven-digit district code", "external_classification": "Incorrect municipal list"},
+          {"name": "DISTRIKT2", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2017, "data_to": 2017, "value_set": "Six-digit district code", "external_classification": "District reference"}
+        ],
+        "code_lists": {}
+      }
+    ],
+    "files": {
+      "classifications/d.csv": ["code,label", "010101,One", "020202,Two"]
+    }
+  },
+  "authored_from": {
+    "description": "The reviewed rows the entries were authored from: CVID 20 and 420 (2009, 'GenericVar'), the 'Antal' alternatives of CVIDs 520, 620 and 720, and the 2009 SOS rows of DISTRIKT and DISTRIKT2.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "ANSWER", "cvid": 20, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTREG", 1, 2]},
+        {"colname": "ANSWER", "cvid": 420, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTTWIN", 4, 2]},
+        {"colname": "ANSWER", "cvid": 520, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTU5", 5, 2], "unit": "Antal"},
+        {"colname": "ANSWER", "cvid": 620, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTU6", 6, 2], "unit": "Antal"},
+        {"colname": "ANSWER", "cvid": 720, "var_id": 5, "year": "2009", "regver_id": 99, "register": ["TESTU7", 7, 2], "unit": "Antal"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "SYD",
+        "title": "Syntetiskt distriktsregister",
+        "subsets": [
+          {"name": "SYD_A", "label": "SYD_A", "data_from": 2009, "data_to": 2017, "aggregation_level": null}
+        ],
+        "variables": [
+          {"name": "DISTRIKT", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Six-digit district code", "external_classification": "Incorrect municipal list"},
+          {"name": "DISTRIKT2", "deldatamangd": "SYD_A", "label": "Distrikt", "description": null, "data_type": "Sträng (text)", "data_from": 2009, "data_to": 2009, "value_set": "Six-digit district code", "external_classification": "Incorrect municipal list"}
+        ],
+        "code_lists": {}
+      }
+    ],
+    "files": {
+      "classifications/d.csv": ["code,label", "010101,One", "020202,Two"]
+    }
+  }
+}

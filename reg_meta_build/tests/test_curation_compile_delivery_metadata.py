@@ -1,4 +1,8 @@
-"""Delivery metadata, disjoint edition splits and occurrence-period authority compile with complete source guards."""
+"""Occurrence-period authority compiles with complete source guards.
+
+Kept until the build-case runner can select one SOS Deldatamängder (variant-level
+parent) record as an `authority` placeholder.
+"""
 
 from __future__ import annotations
 
@@ -9,20 +13,14 @@ from typing import Any, cast
 import pytest
 from _curation_compile_support import (
     checked_correction_fixture as _checked_correction_fixture,
-    pooled_parallel_fixture as _pooled_parallel_fixture,
 )
 from reg_meta_build.curation_compile import (
     compile_occurrence_corrections,
 )
-from reg_meta_build.curation_tree import (
-    load_register_files,
-)
 from reg_meta_build.source_coordinates import (
     native_variable_key,
-    native_variant_key,
 )
 from reg_meta_build.source_curation import (
-    CheckedIdentityChange,
     capture_expectations,
     evaluate_cases,
 )
@@ -30,177 +28,10 @@ from reg_meta_build.source_effects import (
     record_ref,
 )
 from reg_meta_build.source_records import (
-    NativeCoordinates,
     SourceCoordinate,
     SourceFields,
     value_field,
 )
-
-
-@pytest.mark.parametrize("drift", [None, "unit", "missing", "new", "partial", "window"])
-def test_delivery_metadata_compiler_keeps_complete_literal_source_guards(
-    tmp_path, drift
-):
-    from reg_meta_build.curation_compile import compile_delivery_metadata
-    from reg_meta_build.curation_tree import DeliveryMetadataEntry
-    from reg_meta_build.source_curation import (
-        DeliveryMetadataColumn,
-        capture_expectations,
-    )
-    from reg_meta_build.source_records import SourceFields, value_field
-
-    path, raw, naming = _pooled_parallel_fixture(tmp_path)
-    records = tuple(
-        record.model_copy(
-            update={
-                "fields": record.fields.model_copy(
-                    update={
-                        "measurement_unit": value_field(unit),
-                        "definition": value_field("Source income definition"),
-                    }
-                )
-            }
-        )
-        for record, unit in zip(raw, ("100-tal kronor", "Kronor (SEK)"), strict=True)
-    )
-    entry = DeliveryMetadataEntry(
-        fields=["name"],
-        variable="1.1.income",
-        records=list(
-            capture_expectations(
-                records,
-                fields=tuple(SourceFields.model_fields),
-                parents=True,
-                coding=True,
-            )
-        ),
-        columns=[
-            DeliveryMetadataColumn(
-                variant_key=native_variant_key(record),
-                column=record.fields.column_name.value,
-                valid_from=start,
-                valid_to=end,
-                expected_codings=(),
-            )
-            for record, start, end in zip(
-                records,
-                ("2020-01-01", "2022-01-01"),
-                ("2022-12-31", "2024-12-31"),
-                strict=True,
-            )
-        ],
-        evidence="Retain source encoding without value conversion",
-        noted="2026-09-30",
-    )
-    (register,) = load_register_files(path.parents[2])
-    register = register.model_copy(
-        update={
-            "representation": register.representation.model_copy(
-                update={"parallel": [], "delivery_metadata": [entry]}
-            )
-        }
-    )
-    if drift == "unit":
-        records = (
-            records[0],
-            records[1].model_copy(
-                update={
-                    "fields": records[1].fields.model_copy(
-                        update={"measurement_unit": value_field("changed")}
-                    )
-                }
-            ),
-        )
-    elif drift == "missing":
-        records = records[:-1]
-    elif drift == "new":
-        new = records[0].model_copy(
-            update={
-                "locators": (
-                    records[0]
-                    .locators[0]
-                    .model_copy(
-                        update={
-                            "semantic_record_key": (
-                                *records[0].locators[0].semantic_record_key,
-                                "new-peer",
-                            )
-                        }
-                    ),
-                )
-            }
-        )
-        records = (*records, new)
-    elif drift == "partial":
-        register = register.model_copy(
-            update={
-                "representation": register.representation.model_copy(
-                    update={
-                        "delivery_metadata": [
-                            entry.model_copy(update={"records": entry.records[:-1]})
-                        ]
-                    }
-                )
-            }
-        )
-    elif drift == "window":
-        register = register.model_copy(
-            update={
-                "representation": register.representation.model_copy(
-                    update={
-                        "delivery_metadata": [
-                            entry.model_copy(
-                                update={
-                                    "columns": [
-                                        entry.columns[0].model_copy(
-                                            update={"valid_to": "2021-12-31"}
-                                        ),
-                                        entry.columns[1],
-                                    ]
-                                }
-                            )
-                        ]
-                    }
-                )
-            }
-        )
-    from reg_meta_build.source_curation import (
-        CurationCase,
-        OccurrenceCorrectionDecision,
-        PeerGuard,
-    )
-
-    original_targets = tuple(entry.records)
-    identity = CurationCase(
-        case_id="unit-owner",
-        targets=original_targets,
-        peer_guards=(
-            PeerGuard(
-                guard_id="unit-identity-peers",
-                source=original_targets[0].ref.source,
-                native=NativeCoordinates(
-                    register_id=1, register_variant_id=10, variable_id=1
-                ),
-                expected_members=tuple(target.ref for target in original_targets),
-            ),
-        ),
-        decision=OccurrenceCorrectionDecision(
-            reviewed=True,
-            effects=tuple(
-                CheckedIdentityChange(
-                    ref=target.ref, variable_key=naming[-1].target.source_key
-                )
-                for target in original_targets
-            ),
-            reason="Checked owner",
-            provenance="Exact family",
-        ),
-    )
-    cases, diagnostics = compile_delivery_metadata(
-        register, records, naming, ownership_cases=(identity,)
-    )
-    assert bool(cases) == (drift is None)
-    assert bool(diagnostics) == (drift is not None)
 
 
 @pytest.mark.parametrize(

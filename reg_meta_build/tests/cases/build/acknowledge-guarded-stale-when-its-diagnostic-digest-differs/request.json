@@ -1,0 +1,6 @@
+{
+  "replaces": "test_curation_compile_tree.py::test_acknowledgement_compiler_preserves_optional_evidence_guard",
+  "fails_if": "`compile_curation` drops an `[[acknowledge]]` entry's `expected_diagnostic_sha256` when it forms the acknowledge decision, so an entry pinning a digest that matches no issue still acknowledges the issue",
+  "note": "The curation of `acknowledge-guarded-by-its-unchanged-original-rows` (which acknowledges member 1003's unresolved catalog identity) plus an `expected_diagnostic_sha256` of 64 `b`s, which is no issue's digest. The replaced test asserted that the compiled decision keeps both optional digests; the evidence digest's carry-through is shown by the twin case, this one shows the diagnostic digest's.",
+  "sources": "scb-unnamed-variable"
+}

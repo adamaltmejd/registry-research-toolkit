@@ -485,7 +485,7 @@ id = "reg_meta"
 used_by = ["reg_meta_build", "reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_etag_middleware.py", "reg_meta_build/tests/test_source_inspection.py"]
+covered_by = ["reg_webapp/backend/tests/test_etag_middleware.py", "reg_meta_build/tests/test_source_inspection_cli.py"]
 note = "The source-inspection test fixture copies the whole package because `source_interpreter_commit` hashes `reg_meta.fqid` and `reg_meta.queries`; it goes when those modules move. The webapp imports it for `__version__`."
 
 [[row]]
@@ -1414,7 +1414,7 @@ id = "reg_meta.queries"
 used_by = ["conformance", "reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["conformance/test_logical.py", "reg_meta_build/tests/test_source_inspection.py"]
+covered_by = ["conformance/test_logical.py", "reg_meta_build/tests/test_source_inspection_cli.py"]
 note = "`source_interpreter_commit` hashes queries.py for `extract_year`; conformance's test_logical calls queries directly and becomes api cases."
 
 [[row]]

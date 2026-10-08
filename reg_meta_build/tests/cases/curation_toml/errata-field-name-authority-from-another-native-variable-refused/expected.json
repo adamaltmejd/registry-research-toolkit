@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_field_corrections.py::test_name_correction_uses_only_complete_same_family_witnesses",
+  "fails_if": "`ErrataFieldEntry` accepts name authority records from another native variable of the same register (it compares register and provider but not the native variable id)",
+  "note": "The target is variable 5 (CVID 20); the authority is variable 6 (CVID 22), which supplies the replacement name. Everything else is complete, so only the native-family rule refuses it.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "name authority must be disjoint peers in the same native family"
+    ]
+  }
+}

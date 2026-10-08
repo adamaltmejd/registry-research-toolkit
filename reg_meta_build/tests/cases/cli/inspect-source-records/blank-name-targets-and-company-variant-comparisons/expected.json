@@ -1,0 +1,121 @@
+{
+  "exit_code": 0,
+  "files": {
+    "full.json": {
+      "includes": {
+        "comparison_outcomes": {
+          "$contains": [
+            {"status": "unknown_spelling", "scb_record_ids": ["scb:12"]},
+            {"status": "unknown_applicability", "scb_record_ids": ["scb:22"]},
+            {"status": "ambiguous_match", "workbook_record_ids": ["Företag!row:112"], "member_ids": [52, 53]},
+            {
+              "status": "agreement",
+              "workbook_record_ids": ["Företag!row:53"],
+              "scb_record_ids": ["scb:21"],
+              "scb_edition_present": true,
+              "assumption_ids": ["lisa-company-1990-2024-to-scb-variant-152"]
+            },
+            {
+              "status": "missing_edition",
+              "workbook_record_ids": ["Företag!row:10"],
+              "scb_edition_present": false,
+              "scb_record_ids": [],
+              "register_variant_ids": [],
+              "assumption_ids": ["lisa-company-1990-2024-to-scb-variant-152"]
+            },
+            {"status": "source_only_observation", "scb_record_ids": ["scb:61"]},
+            {
+              "status": "unobserved_counterpart",
+              "workbook_record_ids": ["Företag!row:54"],
+              "scb_edition_present": true,
+              "scb_record_ids": [],
+              "register_variant_ids": [],
+              "assumption_ids": ["lisa-company-1990-2024-to-scb-variant-152"]
+            },
+            {
+              "status": "unknown_applicability",
+              "workbook_record_ids": ["Företag!row:11"],
+              "scb_edition_present": {"$absent": true},
+              "scb_record_ids": {"$contains": ["scb:81"]},
+              "register_variant_ids": [152],
+              "assumption_ids": ["lisa-company-1990-2024-to-scb-variant-152", "unestablished-workbook-to-scb-variant-scope"]
+            },
+            {
+              "status": "unknown_applicability",
+              "workbook_record_ids": ["Företag!row:55"],
+              "scb_edition_present": true,
+              "scb_record_ids": {"$contains": ["scb:91"]},
+              "register_variant_ids": [152],
+              "assumption_ids": ["lisa-company-1990-2024-to-scb-variant-152", "unestablished-workbook-to-scb-variant-scope"]
+            },
+            {
+              "status": "unknown_applicability",
+              "scb_record_ids": ["scb:63"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope", "same-native-variable-spelling-continuity"]
+            },
+            {
+              "status": "unknown_applicability",
+              "scb_record_ids": ["scb:73"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope", "same-native-variable-spelling-continuity"]
+            },
+            {
+              "status": "unknown_applicability",
+              "scb_record_ids": ["scb:83"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope", "same-native-variable-spelling-continuity"]
+            },
+            {
+              "status": "unknown_applicability",
+              "scb_record_ids": ["scb:93"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope", "same-native-variable-spelling-continuity"]
+            }
+          ],
+          "$lacks": [{"status": "unknown_spelling", "scb_record_ids": {"$contains": ["scb:53"]}}]
+        }
+      }
+    },
+    "x.json": {
+      "includes": {
+        "target_preview": {
+          "exact_column": "X",
+          "expected_source_target_count": 1,
+          "target_record_ids": ["scb:12"],
+          "existing_named_record_ids": {"$contains": ["scb:11", "scb:21", "scb:31", "scb:41", "scb:51"]},
+          "candidate_variable_ids": [9, 19, 29, 39, 49],
+          "candidate_variant_ids": [152]
+        },
+        "summary": {"scb_retained_occurrences": 12},
+        "source_records": {
+          "$contains": [
+            {"record_id": "scb:11"},
+            {"record_id": "scb:12"},
+            {"record_id": "scb:21"},
+            {"record_id": "scb:22"},
+            {"record_id": "scb:31"},
+            {"record_id": "scb:32"},
+            {"record_id": "scb:41"},
+            {"record_id": "scb:42"},
+            {"record_id": "scb:43"},
+            {"record_id": "scb:51"},
+            {"record_id": "scb:52"},
+            {"record_id": "scb:53"}
+          ]
+        },
+        "comparison_outcomes": {
+          "$contains": [
+            {"status": "unknown_spelling", "workbook_record_ids": ["Företag!row:9"], "scb_record_ids": ["scb:12"]},
+            {
+              "status": "unknown_applicability",
+              "edition_scope": {"intervals": [{"start": "2017", "end": "2017"}]},
+              "scb_record_ids": ["scb:22"]
+            },
+            {"status": "agreement", "workbook_record_ids": ["Företag!row:92"], "scb_record_ids": ["scb:31"]},
+            {"status": "ambiguous_match", "scb_record_ids": ["scb:32"]},
+            {"status": "ambiguous_match", "workbook_record_ids": ["Företag!row:94"], "member_ids": [42, 43]},
+            {"status": "ambiguous_match", "workbook_record_ids": ["Företag!row:112"], "member_ids": [52, 53]}
+          ],
+          "$lacks": [{"status": "unknown_spelling", "scb_record_ids": {"$contains": ["scb:53"]}}]
+        }
+      }
+    }
+  }
+}

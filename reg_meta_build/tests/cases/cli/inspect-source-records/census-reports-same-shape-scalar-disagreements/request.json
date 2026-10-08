@@ -1,0 +1,53 @@
+{
+  "replaces": ["test_source_census_scalar.py::test_census_reports_same_shape_non_shape_scalar_disagreements"],
+  "fails_if": "write_scb_observation_census stops grouping same-edition, same-column observations whose non-shape cells differ (Variabeldefinition here), counts the duplicate row as a second observation, or drops the group's member locators.",
+  "note": "Three Registerinformation rows for cvid 4242 in one native edition and column, Datatyp and Datalängd equal: rows 2 and 3 identical with Variabeldefinition 'Definition A', row 4 with 'Definition B', as the old test. The group's two alternatives hold the members at rows 2 and 3 and the member at row 4 (the old member counts [1, 2]); the evidence ties each row to its definition. Record ids are minted, so the old 'grouped record ids equal the observed ones' is claimed through the members' locators, and the old 'every member carries its alternative's context fingerprint' (two minted hashes) is not claimed. The completion counts are the old assertions; the interpretation id is the CENSUS_INTERPRETATION_ID the old test compared against.",
+  "input_bundle": {
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 4242,
+          "var_id": 77,
+          "colname": "Scalar",
+          "year": "2004",
+          "regver_id": 9,
+          "data_type": "char",
+          "data_length": "10",
+          "vardef": "Definition A"
+        },
+        {
+          "cvid": 4242,
+          "var_id": 77,
+          "colname": "Scalar",
+          "year": "2004",
+          "regver_id": 9,
+          "data_type": "char",
+          "data_length": "10",
+          "vardef": "Definition A"
+        },
+        {
+          "cvid": 4242,
+          "var_id": 77,
+          "colname": "Scalar",
+          "year": "2004",
+          "regver_id": 9,
+          "data_type": "char",
+          "data_length": "10",
+          "vardef": "Definition B"
+        }
+      ]
+    }
+  },
+  "argv": [
+    "inspect-source-records",
+    "--input-bundle",
+    "{bundle}",
+    "--input-commit",
+    "{bundle_commit}",
+    "--input-manifest-sha256",
+    "{bundle_manifest}",
+    "--all-scb",
+    "--evidence",
+    "{work}/census.jsonl.gz"
+  ]
+}

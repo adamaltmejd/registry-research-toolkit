@@ -1,0 +1,13 @@
+{
+  "replaces": [
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_pins_complete_originals_on_fresh_compile[None]",
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_pins_complete_originals_on_fresh_compile[partial_digest]"
+  ],
+  "note": "base's digest covers all three delivered rows, including the second physical OLD row, so it applies (split-partition-native-keeps-the-base-slug-for-every-reviewed-column is the unguarded twin). partial's digest covers only the OLD rows of the same unchanged delivery, so it is stale and its family withheld.",
+  "fails_if": "`compile_partitions` stops comparing an `[[identity.partition]]` `expected_evidence_sha256` with `acknowledgement_evidence_sha256` of the family's complete current originals, so partial's digest over only the OLD rows still applies",
+  "sources": "scb-native-partitions-reviewed",
+  "registers": [
+    "1",
+    "2"
+  ]
+}

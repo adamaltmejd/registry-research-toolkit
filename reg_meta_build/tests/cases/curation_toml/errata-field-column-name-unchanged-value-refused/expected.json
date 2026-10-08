@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_native_partitions.py::test_column_correction_requires_complete_fields_and_preserves_original",
+  "note": "The replacement ANSWER equals the guarded original column_name ANSWER.",
+  "fails_if": "the `[[errata.field]]` loader stops comparing the replacement with the guarded original value, so a no-op column rename loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "the replacement must differ from the original text"
+    ]
+  }
+}

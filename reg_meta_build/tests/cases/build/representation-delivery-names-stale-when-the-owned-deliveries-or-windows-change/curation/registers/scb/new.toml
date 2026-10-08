@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "new"
+native_id = "3"
+[[variant]]
+native_id = "3.10"
+slug = "people"
+[[variable]]
+native_id = "3.5.ku"
+slug = "ku"
+[[variable]]
+native_id = "3.5.agi"
+slug = "agi"
+[[identity.partition]]
+variable = "3.5"
+columns = { KU = "3.5.ku", AGI = "3.5.agi" }
+columns_ref = "fixture"
+[[representation.delivery_metadata]]
+variable = "3.5.ku"
+fields = ["name"]
+records = {{expected_records column=KU edition=311,2321}}
+support = {{expected_records key=member:332,member:330}}
+columns = [{ variant_key = {{variant_key key=member:331}}, column = "KU", valid_from = "2020-01-01", valid_to = "2021-12-31", expected_codings = [] }]
+evidence = "Exact supplied KU names; AGI remains separate"
+noted = "2026-09-30"

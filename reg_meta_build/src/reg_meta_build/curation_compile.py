@@ -2261,6 +2261,15 @@ def _partition_family_relevant(
     )
 
 
+_UNASSIGNED_COMPETING = "unassigned_identity_competing_ownership"
+_UNASSIGNED_COMPETING_FIX = (
+    "Keep one [[identity.unassigned]] entry per native family and remove that "
+    "family's split naming ([[variable]] native_id = '<family>.<split>'), "
+    "[[identity.partition]], [[identity.column_owner]], [[identity.split]] and "
+    "[[identity.rename]]: an unassigned family has no owner."
+)
+
+
 def compile_partitions(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -2380,9 +2389,12 @@ def compile_partitions(
                 if len(unassigned) != 1 or any(
                     (partitions, scoped_entries, sos_splits, sos_renames, entries)
                 ):
-                    raise ValueError(
-                        f"{register.source_file}: unassigned identity {source_id} "
-                        "must not have competing ownership or split naming"
+                    raise curation_error(
+                        _UNASSIGNED_COMPETING,
+                        f"{register.source_file}#/identity.unassigned/"
+                        f"{unassigned[0][0]}: unassigned identity {source_id} "
+                        "must not have competing ownership or split naming",
+                        _UNASSIGNED_COMPETING_FIX,
                     )
                 index, declaration = unassigned[0]
                 seen.add((source, native[:5], source_id))
@@ -6046,7 +6058,9 @@ def compile_errata(
         for variant_id, members in by_variant.items():
             if members:
                 bound_editions[variant_id] = edition_bindings(
-                    members, tuple(versions.get(variant_id, ()))
+                    members,
+                    tuple(versions.get(variant_id, ())),
+                    source_file=register.source_file,
                 )
         moved_editions = {}
         for split in register.identity.edition_split:

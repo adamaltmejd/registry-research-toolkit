@@ -1,0 +1,42 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[coding.choice]]
+variable = "1.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-06-30"], ["2020-07-01", "2020-12-31"]]
+keep = "kept"
+keep_members = [["01", "Label"]]
+over = ["other"]
+reason = "Reviewed"
+source = "fixture"
+
+[[coding.uncoded]]
+variable = "1.5"
+variant = "people"
+column = "VALUE"
+periods = [["2019-01-01", "2019-12-31"]]
+reason = "Reviewed"
+source = "fixture"
+
+[[coding.omit]]
+variable = "1.5"
+variant = "people"
+column = "VALUE"
+periods = [["2018-01-01", "2018-12-31"]]
+reason = "Reviewed"
+source = "fixture"
+
+[[coding.extend]]
+variable = "1.5"
+variant = "people"
+column = "VALUE"
+periods = [["2017-01-01", "2017-12-31"]]
+list = "kept"
+list_members = [["01", "Label"]]
+witness = ["2020-01-01", "2020-06-30"]
+reason = "Reviewed"
+source = "fixture"

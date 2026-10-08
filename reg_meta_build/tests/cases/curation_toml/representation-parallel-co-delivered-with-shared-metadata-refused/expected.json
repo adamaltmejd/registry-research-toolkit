@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_pooled_parallel.py::test_co_delivered_parallel_requires_explicit_per_column_opt_in",
+  "fails_if": "the `[[representation.parallel]]` entry model accepts `co_delivered = true` with shared column metadata",
+  "note": "Only `column_metadata` differs from the build case representation-parallel-co-delivered-columns-keep-their-own-facts.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[representation.parallel]] entry 1",
+    "message_contains": [
+      "per-column metadata"
+    ]
+  }
+}

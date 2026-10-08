@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[errata.field]]
+variable = "1.5"
+variant = "1.2"
+column = "ANSWER"
+edition = "99"
+expected_fields = [
+  { name = "name", status = "value", value = "GenericVar" },
+  { name = "definition", status = "value", value = "A generic family label" },
+  { name = "description", status = "absent" },
+  { name = "operational_definition", status = "absent" },
+]
+expected_scope = { kind = "unknown", label = "Original" }
+expected_period = { kind = "not_applicable" }
+evidence = "Exact supplied literal correction"
+noted = "2026-09-30"
+field = "column_name"
+value = "PHYSICAL"

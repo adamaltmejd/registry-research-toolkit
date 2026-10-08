@@ -1,0 +1,14 @@
+{
+  "replaces": [
+    "test_curation_compile_partitions.py::test_unassigned_family_withholds_naming_and_checks_complete_source[definition]",
+    "test_curation_compile_owner_alternatives.py::test_column_owner_alternatives_refuse_original_drift[True-remove]",
+    "test_curation_compile_owner_alternatives.py::test_column_owner_alternatives_refuse_original_drift[False-remove]",
+    "test_curation_compile_owner_alternatives.py::test_column_owner_alternatives_refuse_original_drift[True-add]",
+    "test_curation_compile_owner_alternatives.py::test_column_owner_alternatives_refuse_original_drift[False-add]",
+    "test_curation_compile_owner_alternatives.py::test_guarded_uncoded_text_role_preserves_attached_book_and_refuses_drift[label]"
+  ],
+  "note": "One source, one curation tree: each native family carries one independent claim, separable by column, native subject and entry locator, so the claims share one prepare per step. Expected values are the replaced tests' assertions restated at the build boundary; a null provider key surfaces as unresolved_catalog_identity on the native family. Authored from the reviewed sources, built from the drifted ones. Families 11 and 12 use a digest-only owner, the harder form: an owner with `expected_records` must also carry the same digest (the loader refuses one without it), and the compiler compares both. The step-1 outcomes of the undrifted families must hold unchanged.",
+  "fails_if": "any one of: `compile_partitions` stops comparing an `[[identity.unassigned]]` digest with the complete originals (5); `_scoped_column_owners` stops comparing a digest-only owner's `expected_evidence_sha256` with every matched original, so a removed (11) or added (12) original leaves the owner applied; the `[[coding.uncoded]]` coding evidence digest stops covering the original's fields (15) or its bound list (16)",
+  "sources": "scb-partition-families-drifted",
+  "authored_from": "scb-partition-families"
+}

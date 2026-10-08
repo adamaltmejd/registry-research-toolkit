@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "present"
+native_id = "15"
+[[variant]]
+native_id = "15.152"
+slug = "people"
+[[variable]]
+native_id = "15.5"
+slug = "v5"
+
+[[errata.delivered]]
+variant = "people"
+column = "A"
+versions = ["2021"]
+evidence = "accepted delivery"
+noted = "2026-09-25"

@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_occurrence_corrections.py::test_sos_period_correction_without_native_edition_preserves_disjoint_years[missing-coverage-guard]",
+  "fails_if": "the `expected_fields` validator accepts the four prose guards plus a single coverage guard",
+  "note": "The replaced param dropped only `coverage_from` (bypassing the loader with `model_copy`). `errata-occurrence-period-sos-without-coverage-refused` drops both; this half-guarded form is refused earlier, by the guard-set rule every occurrence correction shares.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/sos/sample.toml [[errata.occurrence_period.expected_fields]] entry 1",
+    "message_contains": [
+      "expected_fields must guard all four supplied prose fields"
+    ]
+  }
+}

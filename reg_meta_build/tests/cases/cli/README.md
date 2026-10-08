@@ -1,8 +1,9 @@
 # CLI cases
 
 Each directory here is one boundary claim about a `reg-meta-build` command run on a
-built catalog, or about a maintainer program that compares databases of its own
-(`dbdiff`). The claim is stated as data:
+built catalog, about a maintainer program that compares databases of its own (`dbdiff`),
+or about a command that reads an input bundle of its own (`inspect-source-records`). The
+claim is stated as data:
 
 - the argument list a maintainer types,
 - the files in the working directory before the run,
@@ -40,16 +41,29 @@ argument list after its program name:
   | ----------- | ---------------------------- | --------------------------------- |
   | `dbdiff`    | `reg_meta_build.dbdiff.main` | `python -m reg_meta_build.dbdiff` |
 
+A command directory named in `_CHECKOUT_COMMANDS` (`inspect-source-records`) runs
+`python -m reg_meta_build` with its argument list in a subprocess, from a committed copy
+of the imported `reg_meta` and `reg_meta_build` packages
+(`_source_inspection_fixtures.InterpreterCheckout`). The command pins the commit of the
+code that interprets its sources and refuses a working tree with uncommitted changes, so
+it cannot run in-process from a developer's checkout. The copy is made once per xdist
+worker, under that worker's temporary root. The case reads the subprocess's stdout,
+stderr and exit code as it reads an in-process run's. A run costs about a second of CPU,
+almost all of it the interpreter importing the CLI, so a case states its claims with as
+few runs as it can: one report per column filter, and a full report only where the
+replaced test claimed the full one too.
+
 ## The artifact
 
-Every case reads one catalog, built once from `_artifact/` (or a variant of it, below).
-The source spec has the format of `cases/build/README.md` → "Source spec", and the build
-runs every register in diagnostic mode (a publishable build stamps the builder commit
-and so refuses a working tree with uncommitted changes). The runner refuses an artifact
-whose build reports an error. The build sits beside the build cases' prepared inputs,
-keyed by the content hash of `_artifact/` and the runner, and is published by an atomic
-rename, so xdist workers share it. Cases read it in place and never write it; the runner
-fails a case that changes the artifact's directory.
+Every case reads one catalog, built once from `_artifact/` (or a variant of it, below);
+a command that reads databases or an input bundle of its own ignores it. The source spec
+has the format of `cases/build/README.md` → "Source spec", and the build runs every
+register in diagnostic mode (a publishable build stamps the builder commit and so
+refuses a working tree with uncommitted changes). The runner refuses an artifact whose
+build reports an error. The build sits beside the build cases' prepared inputs, keyed by
+the content hash of `_artifact/` and the runner, and is published by an atomic rename,
+so xdist workers share it. Cases read it in place and never write it; the runner fails a
+case that changes the artifact's directory.
 
 The artifact delivers:
 
@@ -130,6 +144,29 @@ Two paths may name the same file, for two databases with the same content. Write
 as an `X'..'` literal and a control character as `char(n)`, so the file stays readable
 as text.
 
+## Input bundles
+
+A command that reads an accepted catalog-input bundle (`inspect-source-records`) reads
+one of its own, written from readable source before the first run: `input_bundle` is a
+source spec in the format of `cases/build/README.md` → "Source spec" (only its `scb`
+key; the bundle captures nothing else) and an optional `lisa` key that selects the
+synthetic LISA workbook (`_lisa_fixtures.write_lisa_workbook`, revision `2024-2025`):
+`true` as written, or `{"cells": {"Företag!A9": "X", "Företag!C9": 2020}}` with each
+`Sheet!A1` cell set first (`null` clears one). Without `lisa` the bundle selects no
+workbook. The runner commits the bundle in a repository outside `{work}`, since the
+command refuses to write into its input repository, and fills three placeholders that
+pin it: `{bundle}`, `{bundle_commit}` and `{bundle_manifest}`.
+
+An `inspect-source-records` report names its records by minted hashes. Before comparing,
+the runner replaces each record id in a printed report, and in a report file claimed by
+`includes` (below), with an alias read from the report's own `source_records`: an SCB
+record is `scb:<native member id>` (the source spec's `cvid`), a workbook record
+`<sheet>!row:<n>` (`Företag!row:9`). A claim then reads `"scb_record_ids": ["scb:12"]`.
+Two records with one alias fail the case. A report lists records and outcomes in the
+order of their hashes, so a case claims a list of them by membership (`$contains`,
+`$lacks`, below) and its length through the report's own counts (`summary`,
+`expected_source_target_count`, an outcome's sorted `member_ids`).
+
 ## `request.json`
 
   | Key                 | Meaning                                                                                                                                               |
@@ -144,13 +181,15 @@ as text.
   | `artifact`          | Optional. The artifact directory beside `_artifact/` (for example `_classified`) that the case reads instead (above).                                 |
   | `artifact_curation` | Optional. A directory in the case laid over the artifact's curation tree before the build, for a case that reads its own artifact.                    |
   | `databases`         | Optional. `{path under {work}: SQL file in the case directory}`: the databases built before the run (above).                                          |
+  | `input_bundle`      | Optional. The input bundle written and committed before the run (above).                                                                              |
 
 `fails_if` has the meaning it has in the build cases (`cases/build/README.md`): name a
 change to the product, not the behavior restated. It sits in `request.json` there and
 here, so a reviewer reads it beside the arguments.
 
 Strings in `argv` take two placeholders: `{db}` is the artifact's `--db` directory and
-`{work}` the working directory, resolved, so it matches a path a command prints.
+`{work}` the working directory, resolved, so it matches a path a command prints. A case
+with an `input_bundle` also takes `{bundle}`, `{bundle_commit}` and `{bundle_manifest}`.
 
 ## `expected.json`
 
@@ -170,6 +209,12 @@ A `files` path may be a glob. Each claim is an object:
 - `json`: the file parses as JSON to exactly this value.
 - `unchanged: true`: the file has the bytes it had before the run.
 - `contains`, `excludes`: texts that must (not) appear in the file.
+- `includes`: the file parses as strict JSON, with record ids aliased as above, and
+  matches this projection the way `stdout.json` does (below). A run that writes its
+  report with the global `--output` is claimed this way, so one case can claim several
+  runs.
+- `jsonl_gz`: the file is gzip-compressed JSON Lines; the list of its values matches
+  this projection. Record ids are not aliased. It is the file's only claim.
 
 A claim other than `absent` needs exactly one file to match.
 
@@ -193,12 +238,17 @@ way an `includes` projection is in `cases/curation_toml/README.md` → "`loads`
 projection": an object compares only the keys it names, a list compares element by
 element and must have the same length, a scalar compares by value and JSON type,
 `{"$exact": value}` compares a value whole, and `{"$any": true}` is a value that must be
-present but is not claimed. A bare `{}` is refused. Strings take the `{work}`
-placeholder.
+present but is not claimed. `{"$contains": [...]}` claims a list by membership, each
+listed projection matching some element in any order; `{"$lacks": [...]}` claims that no
+element matches any listed projection; and `{"$absent": true}` claims that an object has
+no such key (a report leaves out a field that is None). A bare `{}` is refused. Strings
+take the `{work}` placeholder. A printed `inspect-source-records` report has its record
+ids aliased first (above).
 
 Do not project values the catalog mints, such as a built register id: they are
 surrogates, not claims.
 
-Expected values are read from the test a case replaces, or from the artifact's source
-and curation. Never copy them from a run of the code under test. A new key, loader or
-placeholder goes in `test_cli_cases.py` and in this README in the same change.
+Expected values are read from the test a case replaces, or from the artifact's or the
+input bundle's source and curation. Never copy them from a run of the code under test. A
+new key, loader or placeholder goes in `test_cli_cases.py` and in this README in the
+same change.

@@ -16,10 +16,13 @@ values are read from the test each case replaces.
 
 from __future__ import annotations
 
+import functools
+import gzip
 import hashlib
 import json
 import shutil
 import sqlite3
+import sys
 import tempfile
 import tomllib
 from dataclasses import dataclass
@@ -27,14 +30,19 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import pytest
-from _build_case_runner import fixture_generation
+from _build_case_runner import fixture_generation, write_sources
 from _case_projection import mismatch, unclaimed
+from _csv_fixtures import write_input_bundle
+from _lisa_fixtures import write_lisa_workbook
 from _pipeline_catalog_support import CatalogFixture
+from _source_inspection_fixtures import InterpreterCheckout
+from openpyxl import load_workbook
 from reg_meta_build.cli import run
 from reg_meta_build.concept_groups import load_worklist_concept_groups
 from reg_meta_build.curation_tree import ClassificationBinding
 from reg_meta_build.dbdiff import main as dbdiff_main
 from reg_meta_build.doc_db import build_doc_db
+from reg_meta_build.input_snapshot import LisaWorkbookSelection
 from reg_meta_build.relations import load_relations
 
 from reg_meta_build.fqid_slugs import load_slug_dir, snapshot_payload
@@ -162,6 +170,69 @@ def cli_artifacts(prepared_cache: PreparedCache) -> Artifacts:
     return Artifacts(prepared_cache)
 
 
+@pytest.fixture(scope="session")
+def interpreter_checkout(
+    tmp_path_factory: pytest.TempPathFactory,
+) -> Callable[[], InterpreterCheckout]:
+    """The committed interpreter copy a `_CHECKOUT_COMMANDS` case runs from, made
+    on first use: one per xdist worker, under that worker's temporary root."""
+    return functools.cache(
+        lambda: InterpreterCheckout(tmp_path_factory.mktemp("interpreter") / "repo")
+    )
+
+
+# The command directories that run from a committed copy of the interpreter in a
+# subprocess. `inspect-source-records` pins the commit of the code that interprets
+# its sources and refuses a working tree with uncommitted changes, so it cannot run
+# in-process from a developer's checkout.
+_CHECKOUT_COMMANDS = {"inspect-source-records"}
+
+
+def _in_checkout(checkout: InterpreterCheckout, argv: list[str]) -> int:
+    """Run `reg-meta-build argv` from ``checkout`` and echo its streams, so the case
+    reads them as it reads an in-process run's."""
+    result = checkout.run(argv)
+    sys.stdout.write(result.stdout)
+    sys.stderr.write(result.stderr)
+    return result.returncode
+
+
+_BUNDLE_KEYS = {"description", "scb", "lisa"}
+
+
+def _write_input_bundle(spec: dict, root: Path) -> dict[str, str]:
+    """Commit ``spec`` as an accepted input bundle under ``root``; the placeholders
+    that pin it.
+
+    The SCB deliveries come from the source spec (`cases/build/README.md`). `lisa`
+    selects the synthetic LISA workbook, `true` as written or `{"cells": {...}}`
+    with each `Sheet!A1` cell set to its value first (`null` clears it).
+    """
+    source = root / "source"
+    write_sources({"scb": spec["scb"]}, source)
+    lisa = None
+    if (edits := spec.get("lisa")) is not None:
+        workbook = write_lisa_workbook(source / "docs" / "lisa.xlsx")
+        if edits is not True:
+            book = load_workbook(workbook)
+            for cell, value in edits["cells"].items():
+                sheet, coordinate = cell.rsplit("!", 1)
+                book[sheet][coordinate] = value
+            book.save(workbook)
+            book.close()
+        lisa = LisaWorkbookSelection(
+            path=workbook,
+            upstream_revision="2024-2025",
+            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
+        )
+    selection = write_input_bundle(root / "accepted", source, lisa_workbook=lisa)
+    return {
+        "bundle": str(selection.path),
+        "bundle_commit": selection.input_commit,
+        "bundle_manifest": selection.manifest_sha256,
+    }
+
+
 def case_dirs() -> list[Path]:
     return sorted(
         path.parent
@@ -193,6 +264,42 @@ def _strict_json(text: str) -> Any:
     return json.loads(text, parse_constant=_refuse_constant)
 
 
+def _record_aliases(payload: Any) -> Any:
+    """``payload`` with each source record id replaced by a readable alias.
+
+    A record id is a minted hash, so a case cannot claim it; it can claim which
+    record an outcome cites. A payload that carries `source_records` (an
+    `inspect-source-records` report) names each record by its own fields: an SCB
+    record by its native member id (`scb:<cvid>`), a workbook record by its sheet
+    and row (`Företag!row:9`). Two records with one alias fail the case. Any other
+    payload is returned as it is.
+    """
+    if not isinstance(payload, dict) or "source_records" not in payload:
+        return payload
+    aliases: dict[str, str] = {}
+    for record in payload["source_records"]:
+        member = record["subject"]["native"].get("member_id")
+        locator = record["locators"][0]
+        alias = (
+            f"scb:{member}"
+            if member is not None
+            else f"{locator['physical_table']}!{locator['physical_record']}"
+        )
+        assert alias not in aliases.values(), f"two source records are {alias}"
+        aliases[record["record_id"]] = alias
+
+    def replace(value: Any) -> Any:
+        if isinstance(value, str):
+            return aliases.get(value, value)
+        if isinstance(value, list):
+            return [replace(item) for item in value]
+        if isinstance(value, dict):
+            return {key: replace(item) for key, item in value.items()}
+        return value
+
+    return replace(payload)
+
+
 def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) -> None:
     matches = sorted(work.glob(path))
     if claim.get("absent"):
@@ -200,11 +307,21 @@ def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) ->
         return
     assert len(matches) == 1, (path, matches)
     (found,) = matches
+    if "jsonl_gz" in claim:
+        with gzip.open(found, "rt", encoding="utf-8") as lines:
+            values = [_strict_json(line) for line in lines]
+        departure = mismatch(values, claim["jsonl_gz"], path, exact=False)
+        assert departure is None, departure
+        return
     text = found.read_text(encoding="utf-8")
     if "toml" in claim:
         assert tomllib.loads(text) == claim["toml"], (path, text)
     if "json" in claim:
         assert json.loads(text) == claim["json"], (path, text)
+    if "includes" in claim:
+        actual = _record_aliases(_strict_json(text))
+        departure = mismatch(actual, claim["includes"], path, exact=False)
+        assert departure is None, departure
     if claim.get("unchanged"):
         # A glob claim names its pattern; the snapshot is keyed by the matched file.
         relative = found.relative_to(work).as_posix()
@@ -230,6 +347,7 @@ _REQUEST_KEYS = {
     "artifact",
     "artifact_curation",
     "databases",
+    "input_bundle",
 }
 _STEP_KEYS = {"argv", "env"}
 _EXPECTED_KEYS = {
@@ -240,7 +358,16 @@ _EXPECTED_KEYS = {
     "same_bytes",
     "reloads_with",
 }
-_FILE_CLAIMS = {"absent", "toml", "json", "unchanged", "contains", "excludes"}
+_FILE_CLAIMS = {
+    "absent",
+    "toml",
+    "json",
+    "unchanged",
+    "contains",
+    "excludes",
+    "includes",
+    "jsonl_gz",
+}
 
 
 def _check_keys(case: Path, request: dict, expected: dict) -> None:
@@ -288,6 +415,21 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
         # An absent file has nothing else to check; a second claim beside it would
         # be skipped silently.
         assert not claim.get("absent") or claim.keys() == {"absent"}, (case.name, path)
+        # A gzip file is not text, so the text claims cannot read it.
+        assert "jsonl_gz" not in claim or claim.keys() == {"jsonl_gz"}, (
+            case.name,
+            path,
+        )
+        for key in ("includes", "jsonl_gz"):
+            if key in claim:
+                found = unclaimed(claim[key], f"{path}.{key}", exact=False)
+                assert found is None, (case.name, found)
+    if "input_bundle" in request:
+        bundle = request["input_bundle"]
+        # A key the bundle does not capture (say SOS workbooks) would be dropped.
+        assert "scb" in bundle and bundle.keys() <= _BUNDLE_KEYS, (case.name, bundle)
+        lisa = bundle.get("lisa")
+        assert lisa in (None, True) or lisa.keys() == {"cells"}, (case.name, lisa)
     stderr = expected.get("stderr", {})
     assert stderr.keys() <= {"empty", "contains", "excludes"}, (case.name, stderr)
     if "reloads_with" in expected:
@@ -365,6 +507,7 @@ _RELOADERS = {
 def test_cli_case(
     case: Path,
     cli_artifacts: Artifacts,
+    interpreter_checkout: Callable[[], InterpreterCheckout],
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
@@ -396,13 +539,18 @@ def test_cli_case(
             conn.close()
     before = _tree_bytes(work)
     places = {"db": str(cli_artifact.db_dir), "work": str(work)}
+    if "input_bundle" in request:
+        # Outside `{work}`: commands refuse to write into their input repository.
+        places |= _write_input_bundle(request["input_bundle"], tmp_path / "input")
     fingerprint = cli_artifact.fingerprint()
 
     program = _PROGRAMS.get(case.parent.name, run)
+    if case.parent.name in _CHECKOUT_COMMANDS:
+        program = functools.partial(_in_checkout, interpreter_checkout())
     monkeypatch.delenv("REG_META_QUIET", raising=False)
     for step in runs:
         argv = _fill(step["argv"], places)
-        if program is run:
+        if program is run or case.parent.name in _CHECKOUT_COMMANDS:
             assert case.parent.name in argv, f"{case.name}: argv names another command"
         with monkeypatch.context() as env:
             for name, value in step.get("env", {}).items():
@@ -417,7 +565,8 @@ def test_cli_case(
     if stdout.is_file():
         claim = _fill(json.loads(stdout.read_text(encoding="utf-8")), places)
         assert unclaimed(claim, "$stdout", exact=False) is None
-        departure = mismatch(_strict_json(captured.out), claim, "$stdout", exact=False)
+        printed = _record_aliases(_strict_json(captured.out))
+        departure = mismatch(printed, claim, "$stdout", exact=False)
         assert departure is None, departure
     for snippet in _fill(expected.get("stdout_contains", []), places):
         assert snippet in captured.out, (snippet, captured.out)
