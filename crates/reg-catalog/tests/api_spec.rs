@@ -115,7 +115,9 @@ fn openapi_matches_operations_toml() {
                     "{route}"
                 );
                 // A parameter another of the row's routes names in its path is a
-                // path parameter only (`show`'s `ref` on `GET /api/catalog`).
+                // path parameter only (`show`'s `ref` on `GET /api/catalog`), and
+                // required on the route that names it, as OpenAPI requires of any
+                // path parameter.
                 let mut params = expected_params(row);
                 params.retain(|param, _| {
                     let placeholder = format!("{{{param}}}");
@@ -156,6 +158,9 @@ fn openapi_matches_operations_toml() {
                         "query"
                     };
                     value["in"] = located.into();
+                    if located == "path" {
+                        value["required"] = true.into();
+                    }
                     (param, value)
                 })
                 .collect();
