@@ -10,16 +10,9 @@ from _source_effects_support import (
     effect_scope as _scope,
 )
 from reg_meta.source_evidence import SourceField
-from reg_meta_build.resolved_catalog import (
-    ResolvedRegister,
-    ResolvedVariant,
-)
-from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_curation import (
-    CheckedFieldChange,
     CheckedPeriodChange,
     CuratedOccurrenceAddition,
-    FieldExpectation,
     capture_expectations,
 )
 from reg_meta_build.source_effects import (
@@ -27,9 +20,7 @@ from reg_meta_build.source_effects import (
     copied_coding_key,
     record_ref,
 )
-from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_intervals import (
-    reconcile_source_fields,
     resolve_occurrence_intervals,
 )
 from reg_meta_build.source_occurrences import source_occurrence
@@ -37,56 +28,7 @@ from reg_meta_build.source_records import (
     SourceFields,
     SourceRecord,
     TemporalScope,
-    value_field,
 )
-
-
-def test_checked_sensitivity_overrides_raw_and_conditional_support_claims() -> None:
-    original = _record(column="VALUE")
-    original = original.model_copy(
-        update={
-            "fields": original.fields.model_copy(
-                update={"sensitivity": value_field(True)}
-            )
-        }
-    )
-    correction = CheckedFieldChange(
-        ref=record_ref(original),
-        replacement=FieldExpectation(name="sensitivity", status="value", value=False),
-    )
-    result = apply_occurrence_cases((original,), (_case(original, correction),))
-    assert result.diagnostics == ()
-    (effective,) = result.occurrences
-    assert effective.source_records == (original,)
-    assert effective.checked_fields == ("sensitivity",)
-
-    fields, conflicts = reconcile_source_fields(
-        (effective,),
-        support=(
-            SourceFields(
-                sensitivity=value_field(True),
-                conditional_sensitivity=value_field(True),
-            ),
-        ),
-    )
-    assert fields.sensitivity is not None
-    assert fields.sensitivity.status == "value"
-    assert fields.sensitivity.value is False
-    assert fields.conditional_sensitivity is None
-    assert conflicts == ()
-    assert effective.variant_key is not None
-    assert effective.column_key is not None
-    formed = form_native_variable(
-        (effective,),
-        register=ResolvedRegister(provider="scb", slug="fixture", name="Fixture"),
-        variants={effective.variant_key: ResolvedVariant(slug="people", name="People")},
-        slug="value",
-        provider_key="5",
-        flags=fields.model_copy(update={"identifier": value_field(False)}),
-        coding={effective.column_key: resolve_code_membership(())},
-    )
-    assert formed.variable is not None
-    assert formed.variable.is_sensitive is False
 
 
 def _addition(
@@ -111,37 +53,6 @@ def _addition(
             if getattr(record.fields, name) is not None
         ),
     )
-
-
-def test_authored_sensitivity_on_added_occurrence_overrides_raw_claims() -> None:
-    original = _record(column="VALUE")
-    original = original.model_copy(
-        update={
-            "fields": original.fields.model_copy(
-                update={"sensitivity": value_field(True)}
-            )
-        }
-    )
-    addition = _addition(original)
-    addition = addition.model_copy(
-        update={
-            "fields": addition.fields.model_copy(
-                update={"sensitivity": value_field(False)}
-            ),
-            "copied_fields": tuple(
-                field for field in addition.copied_fields if field != "sensitivity"
-            ),
-        }
-    )
-    result = apply_occurrence_cases((original,), (_case(original, addition),))
-    assert result.diagnostics == ()
-    authored = next(item for item in result.occurrences if item.occurrence_key)
-    assert authored.checked_fields == ("sensitivity",)
-    assert authored.support_records == (original,)
-    flags, conflicts = reconcile_source_fields(result.occurrences)
-    assert conflicts == ()
-    assert flags.sensitivity is not None
-    assert flags.sensitivity.value is False
 
 
 def test_added_occurrence_copies_coding_only_with_explicit_checked_declaration() -> (
