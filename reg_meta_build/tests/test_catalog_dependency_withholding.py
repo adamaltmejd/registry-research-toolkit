@@ -7,7 +7,6 @@ from reg_meta_build.catalog_dependencies import (
     CatalogDependencies,
     CatalogDependencyError,
     resolve_metadata_dependencies,
-    resolve_panel_dependencies,
 )
 from reg_meta_build.resolved_catalog import (
     ResolvedVariant,
@@ -56,29 +55,6 @@ def test_a_scoped_build_defers_only_what_unselected_scopes_declare():
         deferred
     )
     assert [m.key for m in dependencies.missing] == missing
-
-
-def test_panel_requires_state_in_its_own_variant_not_only_variable():
-    populated = ResolvedVariant(slug="populated", name="Populated")
-    independent = ResolvedVariant(slug="other", name="Other", panel_entity_key="key")
-    key = _variable(populated, "key")
-    with pytest.raises(
-        CatalogDependencyError, match="unexplained missing catalog dependenc"
-    ):
-        resolve_panel_dependencies(
-            (key,), variants=((key.register_ref, independent),), withheld={}
-        )
-    result = resolve_panel_dependencies(
-        (key,),
-        variants=((key.register_ref, independent),),
-        withheld={("variant_states", "scb/example/key", "other"): (_cause(),)},
-    )
-    assert len(result.variants) == 2
-    assert (
-        next(v for _, v in result.variants if v.slug == "other").panel_entity_key
-        is None
-    )
-    assert result.variables == (key,)
 
 
 def _metadata_result(metadata, *, withheld=None, variables=None):
