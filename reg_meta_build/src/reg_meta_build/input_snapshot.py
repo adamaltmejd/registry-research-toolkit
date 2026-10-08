@@ -3372,6 +3372,8 @@ def measure_git_history(initial: Path, update: Path) -> dict[str, Any]:
         _git(repo, "init", "-q")
         _git(repo, "config", "user.email", "snapshot@example.invalid")
         _git(repo, "config", "user.name", "Snapshot measurement")
+        # A developer's global signing would add a signature to the measured objects.
+        _git(repo, "config", "commit.gpgsign", "false")
         for name, value in _GIT_PACK_SETTINGS:
             _git(repo, "config", "--local", name, value)
 
