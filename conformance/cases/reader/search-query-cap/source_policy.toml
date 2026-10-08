@@ -1,0 +1,6 @@
+non_catalog_categories = {}
+flavor_registers = []
+route = []
+flavor = []
+provider_scope = []
+register_scope = []
