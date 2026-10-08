@@ -121,8 +121,10 @@ reg_webapp     → reg_meta, reg_schema
 reg_schema     → (none)
 ```
 
-Each Python package releases to PyPI on its own tag (`reg_meta/v*`, `reg_meta_build/v*`,
-…); the webapp ships as a container image on `reg_webapp/v*`.
+`reg_meta` and `reg_schema` release to PyPI on their own tags (`reg_meta/v*`,
+`reg_schema/v*`). `reg_meta_build` is tagged (`reg_meta_build/v*`) but not published: it
+depends on the workspace-only `reg-core-py` and runs from a maintainer checkout. The
+webapp ships as a container image on `reg_webapp/v*`.
 
 ### Why this split
 

@@ -1967,12 +1967,11 @@ The monorepo uses **per-package release tags**: `reg_meta/v0.5.0`,
 `reg_meta_build/v0.1.0`, etc. Each tag corresponds to a GitHub release scoped to that
 package.
 
-  | Channel              | Trigger                                                     | What it distributes                       |
-  | -------------------- | ----------------------------------------------------------- | ----------------------------------------- |
-  | PyPI                 | `publish_reg_meta.yml` on `reg_meta/v*` release             | Python package (wheel + sdist)            |
-  | PyPI                 | `publish_reg_meta_build.yml` on `reg_meta_build/v*` release | Builder package (wheel + sdist)           |
-  | GitHub Release asset | Manual upload to the `reg_meta/v*` release                  | Pre-built main DB (`reg_meta.db.zst`)     |
-  | GitHub Release asset | Manual upload to the `reg_meta/v*` release                  | Pre-built doc DB (`reg_meta_docs.db.zst`) |
+  | Channel              | Trigger                                         | What it distributes                       |
+  | -------------------- | ----------------------------------------------- | ----------------------------------------- |
+  | PyPI                 | `publish_reg_meta.yml` on `reg_meta/v*` release | Python package (wheel + sdist)            |
+  | GitHub Release asset | Manual upload to the `reg_meta/v*` release      | Pre-built main DB (`reg_meta.db.zst`)     |
+  | GitHub Release asset | Manual upload to the `reg_meta/v*` release      | Pre-built doc DB (`reg_meta_docs.db.zst`) |
 
 Every published release carries **both** assets (self-contained releases). A release
 only needs a **freshly built** main DB when `SCHEMA_VERSION` changes, and a fresh doc DB

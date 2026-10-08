@@ -433,9 +433,9 @@ covered_by = ["conformance/cases/cli_scope/search-holdings-1", "conformance/case
 kind = "command"
 id = "update"
 disposition = "removed"
-owner = "3a"
+owner = "4"
 covered_by = ["conformance/cases/selection/empty-explicit-update", "conformance/cases/update", "reg_meta/tests/test_update.py"]
-note = "No operation: replaced by the `reg-meta fetch` run mode (section 6), owned by 3a because local `reg-meta mcp` needs a catalog from 3a on; the Docker bake moves to curl, SHA-256 and zstd (section 7). The Dockerfile, publish workflow and agent plugin keep using `update` until stage 4 drops the CLI."
+note = "No operation: replaced by the `reg-meta fetch` run mode (section 6), owned by stage 4 with local binary distribution (checkpoint 2, 2026-10-08), since nothing in 3a consumes it; the Docker bake moves to curl, SHA-256 and zstd (section 8). The Dockerfile, publish workflow and agent plugin keep using `update` until stage 4 drops the CLI."
 
 [[row]]
 kind = "command"
