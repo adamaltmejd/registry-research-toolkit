@@ -11,3 +11,8 @@ VALUES (4611686018427387907, 4611686018427387906, 'X');
 -- The derived resolver universe a build would write for that state.
 INSERT INTO resolver_column (variable_id, register_variant_id, delivery_column_lower, delivery_column_name)
 VALUES (4611686018427387907, 4611686018427387906, 'x', 'X');
+-- The search rows derive would write for them.
+INSERT INTO register_fts (rowid, register_id, name, purpose)
+VALUES (4611686018427387905, 4611686018427387905, 'tandhalsoregistret', NULL);
+INSERT INTO variable_fts (rowid, register_id, provider_key, name, delivery_column_names)
+VALUES (4611686018427387907, 4611686018427387905, 'x', 'x', '["x"]');

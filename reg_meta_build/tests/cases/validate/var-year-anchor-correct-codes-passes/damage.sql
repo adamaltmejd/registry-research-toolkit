@@ -18,3 +18,8 @@ INSERT INTO value_set_member (value_set_id, code_id) VALUES
     (99, 103);
 UPDATE variable_state SET valid_from = '2010-01-01', valid_to = '2010-12-31',
     value_set_id = 99 WHERE variable_id = 1;
+-- The search rows derive would write for the new register and the moved
+-- variable (the unowned codes stay unindexed).
+INSERT INTO register_fts (rowid, register_id, name, purpose)
+VALUES (34, 34, 'anchor register', NULL);
+UPDATE variable_fts SET register_id = 34, provider_key = '24193' WHERE rowid = 1;

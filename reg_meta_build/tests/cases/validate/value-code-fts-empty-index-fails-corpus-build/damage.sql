@@ -1,3 +1,3 @@
--- The FTS table stays but its index is cleared (the _docsize shadow count drops
--- to 0), which a corpus build must reject.
-INSERT INTO value_code_fts(value_code_fts) VALUES ('delete-all');
+-- The value-code search index stays but holds no rows, which a corpus build must
+-- reject.
+DELETE FROM value_code_fts;

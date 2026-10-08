@@ -4,7 +4,7 @@ prefix and ranked exact-before-prefix; classification hits fold into concept
 groups and succession chains; and classifications stay out of register- and
 year-scoped searches.
 
-The fixtures that seed explicit rows rebuild the external-content FTS indexes by
+The fixtures that seed explicit rows fill the search indexes from those rows by
 hand (`rebuild_fts`); the readable sources go through the real writer.
 """
 

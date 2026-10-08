@@ -271,12 +271,11 @@ def extend_db(
     """Build strict accepted holdings or an explicit metadata-only diagnostic."""
     from .db import (
         _insert_core_graph_from_ir,
-        _populate_fts,
         _progress,
         _unlink_wal_sidecars,
         publish_db,
     )
-    from .derive import derive
+    from .derive import derive, derive_search_indexes
     from .fqid_slugs import populate_slugs, populate_variable_slugs
 
     data_warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
@@ -448,9 +447,11 @@ def extend_db(
             write_data_warnings(conn, data_warnings)
             # Holdings must see the steward's own metadata, so derive runs over
             # base plus overlay. An unslugged diagnostic never compiles holdings;
-            # it clears the inherited universe instead of deriving a stale one.
+            # it clears the inherited universe instead of deriving a stale one,
+            # and still indexes the overlay for search.
             if skip_slugs:
                 conn.execute("DELETE FROM resolver_column")
+                derive_search_indexes(conn)
             else:
                 conn.commit()
                 derive(conn)
@@ -515,9 +516,6 @@ def extend_db(
                     holding_mappings=compiled.mappings,
                 )
 
-            for fts in ("register_fts", "variable_fts", "classification_fts"):
-                conn.execute(f"INSERT INTO {fts}({fts}) VALUES('delete-all')")
-            _populate_fts(conn, include_value_code=False)
             # The base artifact's statistics predate the overlay rows.
             conn.execute("ANALYZE")
 

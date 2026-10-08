@@ -1,4 +1,7 @@
--- The same classification row, indexed the way the writer indexes it.
+-- The same classification row, indexed the way derive indexes it: fold_search
+-- text (case fold, NFKD, marks dropped; ß folds to ss) under the row's id.
 INSERT INTO classification (short_name, name, slug)
-VALUES ('ALPHA', 'Alpha nomenclature', 'alpha');
-INSERT INTO classification_fts(classification_fts) VALUES ('rebuild');
+VALUES ('ALPHA', 'Straße Ålder nomenclature', 'alpha');
+INSERT INTO classification_fts(rowid, short_name, name, name_en, description)
+SELECT id, 'alpha', 'strasse alder nomenclature', NULL, NULL
+FROM classification WHERE short_name = 'ALPHA';

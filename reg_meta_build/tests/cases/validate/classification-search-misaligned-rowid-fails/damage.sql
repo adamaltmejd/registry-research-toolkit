@@ -3,4 +3,4 @@
 INSERT INTO classification (id, short_name, name, slug)
 VALUES (1, 'ALPHA', 'Alpha nomenclature', 'alpha');
 INSERT INTO classification_fts(rowid, short_name, name, name_en, description)
-VALUES (99, 'ALPHA', 'Alpha nomenclature', NULL, NULL);
+VALUES (99, 'alpha', 'alpha nomenclature', NULL, NULL);

@@ -22,7 +22,7 @@ from reg_meta.db import (
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "9.1.0"
+SCHEMA_VERSION = "9.2.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -301,6 +301,93 @@ CREATE TABLE IF NOT EXISTS resolver_column (
     delivery_column_name TEXT NOT NULL CHECK (length(delivery_column_name) > 0),
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_lower)
 ) WITHOUT ROWID;
+"""
+
+# Derived search indexes (derive.py `derive_search_indexes`). Regular FTS5 tables
+# holding `fold_search` text, so one fold serves the build and the reader
+# (RUST_RUNTIME_SPEC.md decision 16): the tokenizer only splits. Key columns are
+# stored verbatim and UNINDEXED, so joins hold and they never match as tokens.
+# Display text comes from the base tables, never from these.
+SEARCH_INDEX_DDL = """\
+-- The source `variable_fts` folds, and the reader's display text for variable
+-- hits. `variable_alias` stays the normalized source of truth; this view
+-- contributes a search-only, deterministic aggregate of historical delivery column
+-- names so the index covers the aliases without denormalizing `variable`.
+CREATE VIEW variable_search_text AS
+SELECT
+    v.variable_id,
+    v.register_id,
+    v.provider_key,
+    COALESCE(v.name, (
+        SELECT group_concat(name, char(10)) FROM (
+            SELECT name FROM variable_state WHERE variable_id = v.variable_id AND name IS NOT NULL
+            UNION
+            SELECT name FROM variable_alias_window WHERE variable_id = v.variable_id AND name IS NOT NULL
+            ORDER BY name
+        )
+    )) AS name,
+    COALESCE(v.definition, (
+        SELECT group_concat(definition, char(10)) FROM (
+            SELECT definition FROM variable_state WHERE variable_id = v.variable_id AND definition IS NOT NULL
+            UNION
+            SELECT definition FROM variable_alias_window WHERE variable_id = v.variable_id AND definition IS NOT NULL
+            ORDER BY definition
+        )
+    )) AS definition,
+    COALESCE(v.description, (
+        SELECT group_concat(description, char(10)) FROM (
+            SELECT description FROM variable_state WHERE variable_id = v.variable_id AND description IS NOT NULL
+            UNION
+            SELECT description FROM variable_alias_window WHERE variable_id = v.variable_id AND description IS NOT NULL
+            ORDER BY description
+        )
+    )) AS description,
+    v.operational_definition,
+    (
+        SELECT json_group_array(delivery_column_name)
+        FROM (
+            SELECT DISTINCT va.delivery_column_name
+            FROM variable_alias va
+            WHERE va.variable_id = v.variable_id
+            ORDER BY va.delivery_column_name
+        )
+    ) AS delivery_column_names
+FROM variable v;
+
+CREATE VIRTUAL TABLE register_fts USING fts5(
+    register_id UNINDEXED,
+    name,
+    purpose,
+    tokenize='unicode61 remove_diacritics 0'
+);
+
+CREATE VIRTUAL TABLE variable_fts USING fts5(
+    register_id UNINDEXED,
+    provider_key,
+    name,
+    definition,
+    description,
+    operational_definition,
+    delivery_column_names,
+    tokenize='unicode61 remove_diacritics 0'
+);
+
+CREATE VIRTUAL TABLE classification_fts USING fts5(
+    short_name,
+    name,
+    name_en,
+    description,
+    tokenize='unicode61 remove_diacritics 0'
+);
+
+-- value_code label search (#352): only `label`; `code` is matched through
+-- idx_value_code_code (exact/prefix), since ~55% of codes are purely numeric.
+-- Stoplisted and ownerless labels are left out, so this index has fewer rows than
+-- value_code; the leaf tables keep every row (search-only hiding).
+CREATE VIRTUAL TABLE value_code_fts USING fts5(
+    label,
+    tokenize='unicode61 remove_diacritics 0'
+);
 """
 
 
@@ -772,51 +859,6 @@ CREATE TABLE alias_window_classification (
         REFERENCES variable_alias_window(variable_id, register_variant_id, delivery_column_name, valid_from)
 );
 
--- External-content projection for `variable_fts`. `variable_alias` stays the
--- normalized source of truth; this view contributes a search-only, deterministic
--- aggregate of historical delivery column names so FTS rebuilds can index the
--- aliases without denormalizing `variable`.
-CREATE VIEW variable_fts_content AS
-SELECT
-    v.variable_id,
-    v.register_id,
-    v.provider_key,
-    COALESCE(v.name, (
-        SELECT group_concat(name, char(10)) FROM (
-            SELECT name FROM variable_state WHERE variable_id = v.variable_id AND name IS NOT NULL
-            UNION
-            SELECT name FROM variable_alias_window WHERE variable_id = v.variable_id AND name IS NOT NULL
-            ORDER BY name
-        )
-    )) AS name,
-    COALESCE(v.definition, (
-        SELECT group_concat(definition, char(10)) FROM (
-            SELECT definition FROM variable_state WHERE variable_id = v.variable_id AND definition IS NOT NULL
-            UNION
-            SELECT definition FROM variable_alias_window WHERE variable_id = v.variable_id AND definition IS NOT NULL
-            ORDER BY definition
-        )
-    )) AS definition,
-    COALESCE(v.description, (
-        SELECT group_concat(description, char(10)) FROM (
-            SELECT description FROM variable_state WHERE variable_id = v.variable_id AND description IS NOT NULL
-            UNION
-            SELECT description FROM variable_alias_window WHERE variable_id = v.variable_id AND description IS NOT NULL
-            ORDER BY description
-        )
-    )) AS description,
-    v.operational_definition,
-    (
-        SELECT json_group_array(delivery_column_name)
-        FROM (
-            SELECT DISTINCT va.delivery_column_name
-            FROM variable_alias va
-            WHERE va.variable_id = v.variable_id
-            ORDER BY va.delivery_column_name
-        )
-    ) AS delivery_column_names
-FROM variable v;
-
 -- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
 -- Populated at build time from maintainer-curated TOML (curation/classifications/)
 -- that maps raw variable_instance.vardemangdsversion labels to normalized
@@ -968,53 +1010,6 @@ CREATE TABLE timeseries_event (
     id1 TEXT,
     id2 TEXT,
     fil_id TEXT
-);
-
--- Search indexes (both content-synced to avoid storing text twice).
--- Columns mirror the renamed `register` table. `registerrubrik` was dropped,
--- so the index no longer references it.
-CREATE VIRTUAL TABLE register_fts USING fts5(
-    register_id,
-    name,
-    purpose,
-    content='register',
-    content_rowid='rowid'
-);
-
-CREATE VIRTUAL TABLE variable_fts USING fts5(
-    register_id,
-    provider_key,
-    name,
-    definition,
-    description,
-    operational_definition,
-    delivery_column_names,
-    content='variable_fts_content',
-    content_rowid='variable_id',
-    tokenize='unicode61'
-);
-
-CREATE VIRTUAL TABLE classification_fts USING fts5(
-    short_name,
-    name,
-    name_en,
-    description,
-    content='classification',
-    content_rowid='id',
-    tokenize='unicode61'
-);
-
--- value_code label search (#352). External-content over value_code, indexing
--- ONLY `label` — the `code` column is matched separately via idx_value_code_code
--- (exact/prefix), since ~55% of codes are purely numeric and useless under FTS.
--- Stoplisted junk labels (see _VALUE_CODE_STOPLIST_EXACT / _PREFIXES) are
--- excluded at population time, so this index has fewer rows than value_code; the
--- leaf value_code / value_set tables keep every row (search-only hiding).
-CREATE VIRTUAL TABLE value_code_fts USING fts5(
-    label,
-    content='value_code',
-    content_rowid='code_id',
-    tokenize='unicode61'
 );
 
 -- Performance indexes
@@ -1606,6 +1601,7 @@ CREATE INDEX idx_holding_mapping_variable_variant
 
 """
     + DERIVED_DDL
+    + SEARCH_INDEX_DDL
     + """
 CREATE TABLE import_manifest (
     key TEXT PRIMARY KEY,
@@ -1883,109 +1879,6 @@ def _emit_timing(label: str, t0: float) -> None:
     """Emit a greppable ``[timing] <label>: <s>`` stderr line if timing is on."""
     if _timing_enabled():
         _progress(f"[timing] {label}: {time.perf_counter() - t0:.1f}s")
-
-
-def _populate_fts(conn: sqlite3.Connection, *, include_value_code: bool = True) -> None:
-    """Populate FTS5 search indexes.
-
-    ``include_value_code=False`` skips ONLY the ``value_code_fts`` INSERT — the
-    register_fts, variable_fts and classification_fts inserts always run. The
-    extend-db overlay (#365 PR2) uses this: it never inserts ``value_code`` rows, so the
-    value_code_fts index copied from the base DB is already in sync and
-    re-populating its ~4M rows would be pure build-time waste. The full build
-    keeps the default ``True``, so its ``_populate_fts(conn)`` call is unchanged.
-    """
-    _progress("Building search indexes...")
-
-    # register_fts: content-synced — rowid must match register.rowid
-    # (register_id is INTEGER PRIMARY KEY, so rowid = register_id)
-    conn.execute(
-        "INSERT INTO register_fts(rowid, register_id, name, purpose) "
-        "SELECT rowid, register_id, name, purpose FROM register"
-    )
-
-    # variable_fts: content-synced with `variable_fts_content`, which derives a
-    # delivery-column aggregate from `variable_alias` without storing it on
-    # `variable`.
-    conn.execute("""
-        INSERT INTO variable_fts(rowid, register_id, provider_key, name, definition, description, operational_definition, delivery_column_names)
-        SELECT
-            variable_id,
-            register_id,
-            provider_key,
-            name,
-            definition,
-            description,
-            operational_definition,
-            delivery_column_names
-        FROM variable_fts_content
-    """)
-
-    # classification_fts: content-synced — rowid must match classification.id.
-    conn.execute(
-        "INSERT INTO classification_fts(rowid, short_name, name, name_en, description) "
-        "SELECT id, short_name, name, name_en, description FROM classification"
-    )
-
-    if include_value_code:
-        # value_code_fts (#352): content-synced — rowid must match
-        # value_code.code_id. Indexes only `label`; stoplisted junk labels are
-        # excluded HERE so they never surface in search, while value_code keeps
-        # every row. The exclusion is a whole-label match (exact set OR sentinel
-        # prefix family); built from the two stoplist constants so the curated
-        # list lives in one place.
-        exact_placeholders = ",".join("?" * len(_VALUE_CODE_STOPLIST_EXACT))
-        prefix_clauses = " OR ".join(
-            "label LIKE ?" for _ in _VALUE_CODE_STOPLIST_PREFIXES
-        )
-        # Owner filter (#478): a code is indexed only if it has an owner —
-        # `mapping_count = 0` ⟺ no variable owner (mapping_count is the
-        # code_variable_map count, UPDATEd above this call), and the
-        # `OR classification_code` arm keeps classification-owned codes
-        # searchable (they have no value_set_member after the year-projection,
-        # yet are findable ONLY via value_code_fts because classification search
-        # is name-only). This MIRRORS the query-side owner definition in
-        # reg_meta/queries.py `_code_owner_annotations_batch` (variables via
-        # code_variable_map ∪ classifications via classification_code), which the
-        # register-scoped drop at queries.py:944 already applies — the unscoped
-        # path defers owner annotation to the shown page and so cannot drop the
-        # ~2,562 ownerless year-projection orphans there. Mirroring at index
-        # build is source-agnostic: every orphaning pass converges here. The
-        # correlated reference is qualified `value_code.code_id` (NOT bare
-        # `code_id`, which would bind to classification_code.code_id inside the
-        # subquery); `idx_classification_code_code` makes the EXISTS fast.
-        owner_clause = (
-            "(mapping_count > 0 "
-            "OR EXISTS (SELECT 1 FROM classification_code cc "
-            "WHERE cc.code_id = value_code.code_id))"
-        )
-        stoplist_where = (
-            f"label NOT IN ({exact_placeholders}) AND NOT ({prefix_clauses})"
-        )
-        stoplist_params = (
-            *sorted(_VALUE_CODE_STOPLIST_EXACT),
-            *(f"{p}%" for p in _VALUE_CODE_STOPLIST_PREFIXES),
-        )
-        conn.execute(
-            "INSERT INTO value_code_fts(rowid, label) "
-            "SELECT code_id, label FROM value_code "
-            f"WHERE {stoplist_where} AND {owner_clause}",
-            stoplist_params,
-        )
-        # Drift visibility (#478): report how many codes the owner filter
-        # EXCLUDED that would otherwise have passed the stoplist. Reuses the SAME
-        # stoplist construction; only the NEGATION of the owner clause is added.
-        (n_excluded,) = conn.execute(
-            "SELECT COUNT(*) FROM value_code "
-            f"WHERE {stoplist_where} AND NOT {owner_clause}",
-            stoplist_params,
-        ).fetchone()
-        if n_excluded > 0:
-            _progress(
-                f"  {n_excluded:,} context-less value_codes excluded "
-                "from value search (#478)"
-            )
-    _progress("  FTS indexes built")
 
 
 def seed_providers(conn: sqlite3.Connection) -> None:

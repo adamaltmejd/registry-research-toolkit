@@ -76,16 +76,24 @@ above; the provider-specific parsing that feeds it lives in
 
 ## FTS5 configuration
 
-Four content-synced FTS5 indexes power search:
+Four FTS5 indexes power search. They are derived tables (`reg_meta_build` derive, schema
+9.2.0): regular FTS5 tables that store the `fold_search` text of their source (case
+fold, NFKD, combining marks dropped; RUST_RUNTIME_SPEC.md decision 16) under the source
+row's id. The tokenizer is `unicode61 remove_diacritics 0`, so it only splits:
+`fold_search` is the one fold, shared by the build (through `reg-core-py`) and the
+reader, which folds the query the same way. It matches what `unicode61` alone did not
+fold: `straße`/`strasse`, `ﬁlm`/`film`, `ＡＢＣ`/`abc`, and `ø` stays `ø` on both sides.
+Key columns (`register_id`) are stored verbatim and `UNINDEXED`, so they join but never
+match as tokens. Display text always comes from the base tables, never from an index:
 
 - **`register_fts`** — indexes register `name`, `purpose`.
 - **`variable_fts`** — indexes variable `name`, `definition`, `description`,
   `operational_definition`, and a `delivery_column_names` aggregate derived from
-  `variable_alias.delivery_column_name` (#735/#936). Uses `unicode61` tokenizer for
-  correct Swedish character handling and for SCB column-code tokens such as
-  `fedunsatreason_1` matching `fedunsatreason`. The FTS table's external content is the
-  `variable_fts_content` view, not `variable` directly, so delivery-column search stays
-  derived from the normalized alias table. Variable search rows surface the matched
+  `variable_alias.delivery_column_name` (#735/#936). The `unicode61` token rules split
+  SCB column codes, so `fedunsatreason_1` matches `fedunsatreason`. Its source, and the
+  display text of a variable hit, is the `variable_search_text` view, not `variable`
+  directly, so delivery-column search stays derived from the normalized alias table and
+  a nameless variable shows its state names. Variable search rows surface the matched
   delivery aliases for alias hits, falling back to display aliases for non-alias hits.
   FQID slugs are **not** indexed here.
 - **`classification_fts`** — indexes classification `short_name`, `name`, `name_en`,
@@ -134,28 +142,27 @@ Four content-synced FTS5 indexes power search:
     intentionally precede other result types for a code-shaped query (the user typed a
     code); the webapp calls `search()` per type, so its typed groups are unaffected. The
     value arm applies owner scope inside SQL and returns only a bounded ranked prefix;
-    owner annotation is set-based and limited to the displayed page. NB:
-    `value_code_fts` is external-content, so `COUNT(*)`/`SELECT col` read the CONTENT
-    table (value_code) — the honest indexed-row count is the `_docsize` shadow table.
+    owner annotation is set-based and limited to the displayed page.
 
 `search` takes a RAW user query and builds the FTS5 MATCH expression internally
 (`_fts_match_query`): each whitespace token becomes a quoted prefix term (`"tok"*`),
 which (1) neutralizes FTS5 operators so stray syntax can't raise, and (2) prefix-matches
-("ink" → "inkomst"). `unicode61` folds diacritics on BOTH the index and the query side
-(å→a), so callers pass the query through unfolded. The LIKE-based fields
-(datacolumn/varname/value, and concept-group label folding) bind escaped LIKE patterns
-so `%` and `_` in the user query match literally rather than as wildcards. The arms
-matching authored text (`varname` on `variable.name`, `datacolumn` on
-`variable_alias.delivery_column_name`, and the concept-group `label`) compare through
-`py_lower` on BOTH sides: SQLite's own LIKE case-insensitivity is ASCII-only, so `KÖN`
-would otherwise miss the `Kön` that `kön` matches. That folds CASE only, not diacritics
-— unlike the FTS side, `kon` still does not match `Kön` on those arms. Arms over ASCII
-identifiers (the group's `group_key`, `value_code.code`) stay on SQLite's own LIKE. Each
-register/variable/classification result row carries its navigable `fqid`.
+("ink" → "inkomst"). The catalog arms pass `fold_search(query)` to it, since the indexes
+hold folded text. The LIKE-based fields (datacolumn/varname/value, and concept-group
+label folding) bind escaped LIKE patterns so `%` and `_` in the user query match
+literally rather than as wildcards. The arms matching authored text (`varname` on
+`variable.name`, `datacolumn` on `variable_alias.delivery_column_name`, and the
+concept-group `label`) compare through `py_lower` on BOTH sides: SQLite's own LIKE
+case-insensitivity is ASCII-only, so `KÖN` would otherwise miss the `Kön` that `kön`
+matches. That folds CASE only, not diacritics — unlike the FTS side, `kon` still does
+not match `Kön` on those arms. Arms over ASCII identifiers (the group's `group_key`,
+`value_code.code`) stay on SQLite's own LIKE. Each register/variable/classification
+result row carries its navigable `fqid`.
 
 The docs index (`doc_queries.doc_search`, a separate `reg_meta_docs.db` FTS index) uses
 the same `_fts_match_query` builder, so a raw doc query is operator-safe and
-prefix-matched too.
+prefix-matched too. It is not pre-folded: it passes the raw query, and `unicode61` folds
+both sides there (`snippet()` positions would shift under folding).
 
 ## Register lookup strategy
 

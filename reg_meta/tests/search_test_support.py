@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING
 
 from reader_artifacts import CASES, build_reader_artifact, replicate_filler
 from reg_meta.db import open_db
+from reg_meta_build.derive import derive_search_indexes
 
 sys.path.insert(
     0, str(Path(__file__).resolve().parents[2] / "reg_meta_build" / "tests")
@@ -66,6 +67,5 @@ def reader_search_conn(
 
 
 def rebuild_fts(conn: sqlite3.Connection) -> None:
-    """Repopulate the external-content FTS5 indexes from their content tables."""
-    for index in ("register_fts", "variable_fts", "classification_fts"):
-        conn.execute(f"INSERT INTO {index}({index}) VALUES('rebuild')")
+    """Refill the search indexes from the seeded rows, as derive does."""
+    derive_search_indexes(conn)
