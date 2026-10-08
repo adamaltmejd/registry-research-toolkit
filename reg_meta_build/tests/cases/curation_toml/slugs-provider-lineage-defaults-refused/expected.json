@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestUnknownTopLevelTables::test_provider_lineage_blocks_are_not_identity_input",
+  "fails_if": "the slug loader reads lineage blocks (which belong in `lineage.toml`) as identity input",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "scb.toml: unknown top-level table(s)",
+    "message_contains": [
+      "lineage_defaults"
+    ]
+  }
+}

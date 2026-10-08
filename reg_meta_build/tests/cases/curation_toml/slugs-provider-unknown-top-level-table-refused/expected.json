@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestUnknownTopLevelTables::test_provider_unknown_top_level",
+  "fails_if": "the slug loader lets a typo'd `[registers.\"34\"]` table no-op",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "scb.toml: unknown top-level table(s)",
+    "message_contains": [
+      "registers"
+    ]
+  }
+}

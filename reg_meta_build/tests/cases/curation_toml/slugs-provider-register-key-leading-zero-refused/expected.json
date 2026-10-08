@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestCanonicalIntegerKeys::test_leading_zero_register_key_rejected",
+  "fails_if": "the slug loader accepts `01` beside `1`, so two keys alias one register",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register.'01'",
+    "message_contains": [
+      "canonical"
+    ]
+  }
+}

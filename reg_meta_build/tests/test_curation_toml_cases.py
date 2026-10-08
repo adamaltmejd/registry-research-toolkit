@@ -48,6 +48,7 @@ from reg_meta_build.tags import load_tags
 
 from reg_meta_build.fqid_slugs import (
     declared_column_ownership,
+    load_freeze_states,
     load_lineage_config,
     load_provider_toml,
     load_slug_dir,
@@ -133,6 +134,7 @@ LOADERS: dict[str, Callable[[Path, dict[str, Any]], Any]] = {
     ),
     "slug_dir": lambda files, args: load_slug_dir(files),
     "provider_slugs": lambda files, args: load_provider_toml(_sole(files, "*.toml")),
+    "freeze_states": lambda files, args: load_freeze_states(files),
     "column_ownership": _column_ownership,
     "matrix_evidence": lambda files, args: load_matrix(
         files / "matrix.json",

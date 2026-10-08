@@ -1,6 +1,7 @@
-"""Slug boundary cases: variable source-ID keys at TOML load and name-derived
-`variable.slug` values in the populated artifact. Seed output read back through the
-slug loader is `cases/cli/seed-slugs/`."""
+"""Name-derived `variable.slug` values written by `populate_variable_slugs`, the
+extend-db steward overlay's slug engine. Variable source-ID keys at TOML load are
+`cases/curation_toml/slugs-provider-variable-key-*`; seed output read back through
+the slug loader is `cases/cli/seed-slugs/`."""
 
 from __future__ import annotations
 
@@ -8,59 +9,14 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _slugged_db import add_state, add_variable, build_slugged_db
-from reg_meta.errors import RegMetaError
 from reg_meta.fqid import validate_slug
 
 from reg_meta_build.fqid_slugs import (
-    load_provider_toml,
     populate_variable_slugs,
 )
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-
-# ---------------------------------------------------------------------------
-# Variable source-ID keys (`<RegisterId>.<VarId>[.<discriminator>]`)
-# ---------------------------------------------------------------------------
-
-
-@pytest.mark.parametrize(
-    "source_id",
-    [
-        "34.10",  # SCB integer VarId
-        "34.10.kon",  # split sibling
-        "5028920659479690770.ALDER",  # SOS: minted register id, text VarId
-        "123.FOD_DATUMN.heltal",  # text VarId in a split-sibling key
-    ],
-)
-def test_variable_key_shapes_load(tmp_path: Path, source_id: str) -> None:
-    path = tmp_path / "scb.toml"
-    path.write_text(f'[variable."{source_id}"]\nslug = "kon"\n', encoding="utf-8")
-    [entry] = load_provider_toml(path)
-    assert (entry.kind, entry.source_id, entry.slug) == ("variable", source_id, "kon")
-
-
-@pytest.mark.parametrize(
-    ("source_id", "message"),
-    [
-        ("034.10", "RegisterId must be an integer"),
-        ("1.010", "numeric VarId must be in canonical"),  # `1.10` / `1.010` alias
-        ("1.", "VarId segment is empty"),
-        ("1.10.", "split-sibling discriminator is empty"),
-        ("1", "expected"),
-        ("1.10.kon.extra", "expected"),
-    ],
-)
-def test_malformed_variable_key_rejected_at_load(
-    tmp_path: Path, source_id: str, message: str
-) -> None:
-    path = tmp_path / "scb.toml"
-    path.write_text(f'[variable."{source_id}"]\nslug = "kon"\n', encoding="utf-8")
-    with pytest.raises(RegMetaError) as exc:
-        load_provider_toml(path)
-    assert exc.value.code == "slug_toml_invalid"
-    assert message in exc.value.message
 
 
 # ---------------------------------------------------------------------------
