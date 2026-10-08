@@ -844,14 +844,10 @@ def clean_sos_source(
                 continue
             code = _cell(evidence, "kod")
             label = _cell(evidence, "beskrivning")
-            label_text = _declaration_text(label) if label is not None else None
-            # A blank code the row labels is the empty code; an unlabelled blank is
-            # a missing code, which coding reports as unknown membership.
-            code_text = (
-                normalize_token(code.display_value)
-                if code is not None and code.display_value
-                else None
-            ) or ("" if label_text else None)
+            if code is None or not code.display_value:
+                raise ValueError(
+                    f"{sheet.sheet_name} row {evidence.row_number}: structured code lacks source code cell"
+                )
             selected = tuple(
                 cell
                 for cell in evidence.cells
@@ -870,8 +866,8 @@ def clean_sos_source(
             else:
                 values[key] = SourceValue(
                     payload_key=key,
-                    code=code_text,
-                    label=label_text,
+                    code=normalize_token(code.display_value),
+                    label=(_declaration_text(label) if label is not None else None),
                     locators=(occurrence_locator,),
                     delivered_cells=delivered,
                 )
