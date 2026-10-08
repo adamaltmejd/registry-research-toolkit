@@ -97,7 +97,9 @@ def _pages(client, job: tuple, baseline: bool) -> list:
     return pages
 
 
-def cases(base, cand, catalog, scopes, originals) -> list[tuple[str, dict, dict]]:
+def cases(
+    base, cand, catalog, scopes, originals, baseline_cli
+) -> list[tuple[str, dict, dict]]:
     terms = list(dict.fromkeys([*eval_terms(), *EDGE_TERMS]))
     # The default scope is one of the named ones, so pages run per name. Untyped
     # pages are not compared: the baseline has no single ranked list (decision 17);

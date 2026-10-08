@@ -54,7 +54,9 @@ def _download(client, path: str, params: dict) -> dict:
     }
 
 
-def cases(base, cand, catalog, scopes, originals) -> list[tuple[str, dict, dict]]:
+def cases(
+    base, cand, catalog, scopes, originals, baseline_cli
+) -> list[tuple[str, dict, dict]]:
     with closing(_connect(originals, "reg_meta_docs.db")) as conn:
         documents = conn.execute(
             "SELECT filename, variable FROM doc ORDER BY doc_id"

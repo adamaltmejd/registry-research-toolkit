@@ -33,7 +33,9 @@ def _context(base, cand, scope: str | None) -> tuple[dict, dict]:
     return expected, actual
 
 
-def cases(base, cand, catalog, scopes, originals) -> list[tuple[str, dict, dict]]:
+def cases(
+    base, cand, catalog, scopes, originals, baseline_cli
+) -> list[tuple[str, dict, dict]]:
     return [
         (f"{scope or 'default'}/context", *_context(base, cand, scope))
         for scope in scopes
