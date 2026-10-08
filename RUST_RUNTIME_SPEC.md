@@ -974,7 +974,7 @@ Implements section 4 (G1 independence).
 - Acceptance: G1 reports 0 differences with neither folding exception; a deliberately
   broken candidate index (for example the `value_code_fts` owner filter dropped, not
   committed) shows differences; G1 under 5 min with a candidate re-derive; the PR
-  records the reference derive time. Depends on: 3a.2.
+  records the reference derive time. Depends on: 3a.2, 3a.6 (merge order).
 
 **3a.13 Re-pin at checkpoint 2.** Implements section 4 (re-pin).
 
