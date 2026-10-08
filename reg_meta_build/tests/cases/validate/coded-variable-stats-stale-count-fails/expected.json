@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "coded_variable_stats disagrees with get_coded_variables: 1 missing, 1 surplus row(s) at (scope, variable_name) [('reference', 'Kön')]"
+  ]
+}
