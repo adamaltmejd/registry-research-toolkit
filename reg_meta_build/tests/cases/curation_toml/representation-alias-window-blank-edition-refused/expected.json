@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_alias_windows.py::test_alias_window_requires_distinct_nonempty_source_editions[[\" \"]]",
+  "fails_if": "the register loader accepts a blank source edition in an alias window",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/testreg.toml [[representation.alias_window.source_editions]] entry 1",
+    "message_contains": [
+      "nonempty and trimmed"
+    ]
+  }
+}
