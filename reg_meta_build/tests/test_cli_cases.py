@@ -405,6 +405,17 @@ _FILE_CLAIMS = {
 }
 
 
+# The request keys that read a catalog artifact.
+_ARTIFACT_KEYS = {"artifact", "artifact_curation", "curation_dirs"}
+
+
+def _reads_artifact(request: dict) -> bool:
+    """Whether the case reads a catalog artifact. A case whose command reads only
+    its own input bundle (`input_bundle`, and none of `_ARTIFACT_KEYS`) gets none:
+    no build, no curation copy and no `{db}` placeholder."""
+    return "input_bundle" not in request or bool(request.keys() & _ARTIFACT_KEYS)
+
+
 def _check_keys(case: Path, request: dict, expected: dict) -> None:
     """Refuse a case the runner would read only in part: a misspelled key would
     otherwise drop its claim silently."""
@@ -459,6 +470,17 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
             if key in claim:
                 found = unclaimed(claim[key], f"{path}.{key}", exact=False)
                 assert found is None, (case.name, found)
+    if not _reads_artifact(request):
+        # Without an artifact `{db}` would stay unfilled and the command would read
+        # its default catalog instead; refuse rather than run it.
+        stdout = case / "stdout.json"
+        claimed = json.dumps([request, expected]) + (
+            stdout.read_text(encoding="utf-8") if stdout.is_file() else ""
+        )
+        names_db = "{db}" in claimed
+        assert not names_db, (
+            f"{case.name}: names {{db}} but reads no artifact; add `artifact`"
+        )
     if "input_bundle" in request:
         bundle = request["input_bundle"]
         # A key the bundle does not capture (say SOS workbooks) would be dropped.
@@ -551,16 +573,20 @@ def test_cli_case(
     expected = json.loads((case / "expected.json").read_text(encoding="utf-8"))
     _check_keys(case, request, expected)
     runs = request.get("runs", [request])
-    overlay = request.get("artifact_curation")
-    cli_artifact = cli_artifacts.get(
-        CASES / request.get("artifact", ARTIFACT.name),
-        None if overlay is None else case / overlay,
-    )
+    cli_artifact = None
+    if _reads_artifact(request):
+        overlay = request.get("artifact_curation")
+        cli_artifact = cli_artifacts.get(
+            CASES / request.get("artifact", ARTIFACT.name),
+            None if overlay is None else case / overlay,
+        )
 
     # Resolved, so `{work}` matches the resolved paths a command prints.
     work = tmp_path.resolve() / "work"
-    for name in request.get("curation_dirs", ["curation"]):
-        shutil.copytree(cli_artifact.curation, work / name)
+    work.mkdir()
+    if cli_artifact is not None:
+        for name in request.get("curation_dirs", ["curation"]):
+            shutil.copytree(cli_artifact.curation, work / name)
     if (case / "files").is_dir():
         shutil.copytree(case / "files", work, dirs_exist_ok=True)
     for path, source in request.get("databases", {}).items():
@@ -573,11 +599,13 @@ def test_cli_case(
         finally:
             conn.close()
     before = _tree_bytes(work)
-    places = {"db": str(cli_artifact.db_dir), "work": str(work)}
+    places = {"work": str(work)}
+    if cli_artifact is not None:
+        places["db"] = str(cli_artifact.db_dir)
     if "input_bundle" in request:
         # Outside `{work}`: commands refuse to write into their input repository.
         places |= _write_input_bundle(request["input_bundle"], tmp_path / "input")
-    fingerprint = cli_artifact.fingerprint()
+    fingerprint = None if cli_artifact is None else cli_artifact.fingerprint()
 
     program = _PROGRAMS.get(case.parent.name, run)
     if case.parent.name in _CHECKOUT_COMMANDS:
@@ -595,7 +623,10 @@ def test_cli_case(
             captured = capsys.readouterr()
         assert code == expected["exit_code"], (argv, captured.out, captured.err)
 
-    assert cli_artifact.fingerprint() == fingerprint, "a case wrote the shared artifact"
+    if cli_artifact is not None:
+        assert cli_artifact.fingerprint() == fingerprint, (
+            "a case wrote the shared artifact"
+        )
     stdout = case / "stdout.json"
     if stdout.is_file():
         claim = _fill(json.loads(stdout.read_text(encoding="utf-8")), places)

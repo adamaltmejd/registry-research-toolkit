@@ -127,7 +127,8 @@ its claims.
 Each case runs in its own empty directory, `{work}`:
 
 1. The artifact's curation tree is copied to `{work}/curation`, or to each directory
-   named in `curation_dirs`.
+   named in `curation_dirs` (not for a case that reads no artifact, see "Input
+   bundles").
 2. The case's `files/` tree is copied over `{work}`, replacing files of the same path. A
    case changes one register file by shipping its own copy under
    `files/curation/registers/...`.
@@ -156,6 +157,12 @@ synthetic LISA workbook (`_lisa_fixtures.write_lisa_workbook`, revision `2024-20
 workbook. The runner commits the bundle in a repository outside `{work}`, since the
 command refuses to write into its input repository, and fills three placeholders that
 pin it: `{bundle}`, `{bundle_commit}` and `{bundle_manifest}`.
+
+A case with `input_bundle` and none of `artifact`, `artifact_curation` or
+`curation_dirs` reads no catalog artifact: the runner builds none, copies no curation
+tree into `{work}` and fills no `{db}`. It refuses such a case if its request,
+`expected.json` or `stdout.json` names `{db}`, so a case that needs a catalog cannot
+silently run without one; it names `artifact` instead.
 
 An `inspect-source-records` report names its records by minted hashes. Before comparing,
 the runner replaces each record id in a printed report, and in a report file claimed by
