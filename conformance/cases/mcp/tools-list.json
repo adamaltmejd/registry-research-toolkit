@@ -531,6 +531,1194 @@
     }
   },
   {
+    "name": "show",
+    "description": "The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`.",
+    "inputSchema": {
+      "$defs": {
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        }
+      },
+      "properties": {
+        "ref": {
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Axis": {
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "label"
+          ],
+          "type": "object"
+        },
+        "Classification": {
+          "description": "A classification edition. Its codes are `values`, its edition chain `graph`.",
+          "properties": {
+            "derivatives": {
+              "items": {
+                "$ref": "#/$defs/Derivation"
+              },
+              "type": "array"
+            },
+            "derived_from": {
+              "items": {
+                "$ref": "#/$defs/Derivation"
+              },
+              "type": "array"
+            },
+            "dimensions": {
+              "description": "The classification groups it belongs to.",
+              "items": {
+                "$ref": "#/$defs/Group"
+              },
+              "type": "array"
+            },
+            "family": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Family",
+                  "description": "The succession family it belongs to."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "short_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variables": {
+              "description": "The variables in scope with a state coded by it (today's `get classification\n--variables`), unpaged.",
+              "items": {
+                "$ref": "#/$defs/OwningVariable"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "dimensions",
+            "derived_from",
+            "derivatives",
+            "variables"
+          ],
+          "type": "object"
+        },
+        "ClassificationChild": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "short_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "fqid"
+          ],
+          "type": "object"
+        },
+        "ClassificationGroup": {
+          "description": "A curated group of classifications.",
+          "properties": {
+            "axes": {
+              "items": {
+                "$ref": "#/$defs/Axis"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "members": {
+              "items": {
+                "$ref": "#/$defs/Member"
+              },
+              "type": "array"
+            },
+            "source": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "key",
+            "label",
+            "source",
+            "axes",
+            "members"
+          ],
+          "type": "object"
+        },
+        "ClassificationRoot": {
+          "description": "Every current classification, with the classification groups and families.\nEditions a family stands for are reached through it.",
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/$defs/ClassificationChild"
+              },
+              "type": "array"
+            },
+            "families": {
+              "items": {
+                "$ref": "#/$defs/Family"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "groups": {
+              "items": {
+                "$ref": "#/$defs/Group"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "children",
+            "groups",
+            "families"
+          ],
+          "type": "object"
+        },
+        "ConceptGroup": {
+          "description": "A register's concept group: its members in scope.",
+          "properties": {
+            "axes": {
+              "items": {
+                "$ref": "#/$defs/Axis"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "members": {
+              "items": {
+                "$ref": "#/$defs/Member"
+              },
+              "type": "array"
+            },
+            "register": {
+              "description": "The register's FQID.",
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "tags": {
+              "items": {
+                "$ref": "#/$defs/Tag"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "register",
+            "key",
+            "label",
+            "source",
+            "axes",
+            "members",
+            "tags"
+          ],
+          "type": "object"
+        },
+        "Derivation": {
+          "description": "A non-temporal derivation link between classifications.",
+          "properties": {
+            "fqid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "short_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Facet": {
+          "properties": {
+            "axis": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "label": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value",
+            "label"
+          ],
+          "type": "object"
+        },
+        "Family": {
+          "description": "A one-dimensional classification succession family (ICD, LKF, SNI, SSYK).",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "key",
+            "label"
+          ],
+          "type": "object"
+        },
+        "Group": {
+          "description": "A group as listed by its register, classification root or member classification.",
+          "properties": {
+            "axes": {
+              "items": {
+                "$ref": "#/$defs/Axis"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "members": {
+              "items": {
+                "$ref": "#/$defs/Member"
+              },
+              "type": "array"
+            },
+            "source": {
+              "type": "string"
+            },
+            "tags": {
+              "items": {
+                "$ref": "#/$defs/Tag"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "key",
+            "label",
+            "source",
+            "axes",
+            "members",
+            "tags"
+          ],
+          "type": "object"
+        },
+        "Member": {
+          "description": "A group member; two members of one variable differ by `delivery_column`.",
+          "properties": {
+            "delivery_column": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "facets": {
+              "items": {
+                "$ref": "#/$defs/Facet"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "fqid",
+            "facets"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            },
+            "scope": {
+              "$ref": "#/$defs/Scope"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "scope"
+          ],
+          "type": "object"
+        },
+        "ObjectType": {
+          "properties": {
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "OwningVariable": {
+          "properties": {
+            "fqid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "register_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "PanelKey": {
+          "description": "A panel key: a variable slug (or `period`), or several (a composite key).",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ]
+        },
+        "Population": {
+          "properties": {
+            "comment": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "date_range": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "type": "object"
+        },
+        "Provider": {
+          "description": "A provider and its registers in scope.",
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/$defs/RegisterChild"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "fqid",
+            "children"
+          ],
+          "type": "object"
+        },
+        "Register": {
+          "description": "A register: its variables, concept groups and variants in scope.",
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/$defs/VariableChild"
+              },
+              "type": "array"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "groups": {
+              "items": {
+                "$ref": "#/$defs/Group"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "purpose": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tags": {
+              "items": {
+                "$ref": "#/$defs/Tag"
+              },
+              "type": "array"
+            },
+            "variants": {
+              "items": {
+                "$ref": "#/$defs/Variant"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "tags",
+            "children",
+            "groups",
+            "variants"
+          ],
+          "type": "object"
+        },
+        "RegisterChild": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "purpose": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tags": {
+              "items": {
+                "$ref": "#/$defs/Tag"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "tags"
+          ],
+          "type": "object"
+        },
+        "Root": {
+          "description": "The catalog root: the providers in scope and the classification root.",
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/$defs/RootChild"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "children"
+          ],
+          "type": "object"
+        },
+        "RootChild": {
+          "oneOf": [
+            {
+              "properties": {
+                "fqid": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "provider"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "fqid",
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "fqid": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "classification_root"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "kind"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        },
+        "Show": {
+          "description": "A `kind`-tagged summary of a ref.",
+          "oneOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Root"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "root"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Provider"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "provider"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Register"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "register"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Variable"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "variable"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/ClassificationRoot"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "classification_root"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Classification"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "classification"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/ConceptGroup"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "concept_group"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/ClassificationGroup"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "classification_group"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/Family"
+                },
+                {
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "classification_family"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ],
+                  "type": "object"
+                }
+              ]
+            }
+          ]
+        },
+        "Tag": {
+          "description": "A tag membership: the tag and this member's rank, star and note.",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rank": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "slug": {
+              "type": "string"
+            },
+            "starred": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "slug",
+            "label",
+            "rank",
+            "starred"
+          ],
+          "type": "object"
+        },
+        "Variable": {
+          "description": "A variable's shared metadata. Its states, lineage and succession chain are the\n`states`, `lineage` and `graph` operations.",
+          "properties": {
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "deprecated": {
+              "type": "boolean"
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "group": {
+              "description": "The ref of the concept group the variable belongs to.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "is_identifier": {
+              "type": "boolean"
+            },
+            "is_sensitive": {
+              "type": "boolean"
+            },
+            "measurement_unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "operational_definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "same_as": {
+              "description": "The FQIDs of the variables curated as the same variable.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "source_register_text": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tags": {
+              "items": {
+                "$ref": "#/$defs/Tag"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "fqid",
+            "is_sensitive",
+            "is_identifier",
+            "deprecated",
+            "same_as",
+            "tags"
+          ],
+          "type": "object"
+        },
+        "VariableChild": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "fqid"
+          ],
+          "type": "object"
+        },
+        "Variant": {
+          "description": "A register variant (the `variant` filter of `states`), with its versions' prose.",
+          "properties": {
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "display_group": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "panel_entity_key": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/PanelKey"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "panel_time_grain": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "panel_time_key": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/PanelKey"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "slug": {
+              "type": "string"
+            },
+            "variant_family": {
+              "description": "The key of the variant's succession family: its first head.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant_family_label": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "versions": {
+              "items": {
+                "$ref": "#/$defs/Version"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "slug",
+            "versions"
+          ],
+          "type": "object"
+        },
+        "Version": {
+          "properties": {
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "measurement_information": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "object_types": {
+              "items": {
+                "$ref": "#/$defs/ObjectType"
+              },
+              "type": "array"
+            },
+            "populations": {
+              "items": {
+                "$ref": "#/$defs/Population"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "populations",
+            "object_types"
+          ],
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Show"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "docs",
     "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `docs_get` (identifier, scope?): One documentation entry by variable name or filename (with or without `.md`): its register, tags and source, a 500-character `excerpt` and the full markdown `body`.\n- `docs_related` (ref, scope?): A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID or a bare name.",
     "inputSchema": {
