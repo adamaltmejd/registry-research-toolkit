@@ -21,6 +21,7 @@ from artifact_requests import (
     cli_json,
     http_search_contains,
     require,
+    require_query_refused,
     require_search_reaches,
     sample_project,
     search_client,
@@ -296,11 +297,13 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
         binding,
     )
     name = reference.json()["name"]
-    require(
-        len(name) > MAX_QUERY_CHARS
-        or not http_search_contains(search, name, "holdings", binding),
-        "Unheld binding entered holdings search",
-    )
+    if len(name) > MAX_QUERY_CHARS:
+        require_query_refused(search, name, "holdings")
+    else:
+        require(
+            not http_search_contains(search, name, "holdings", binding),
+            "Unheld binding entered holdings search",
+        )
     require(
         artifact_client.get(
             "/api/catalog/" + binding, params={"scope": "holdings"}
