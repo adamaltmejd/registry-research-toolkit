@@ -20,6 +20,7 @@ from reg_meta.db import SCHEMA_VERSION, open_db
 from reg_meta.doc_db import DOC_DB_FILENAME
 from reg_meta.source_evidence import canonical_json, canonical_sha256
 from reg_meta_build.artifact_identity import generation_id
+from reg_meta_build.derive import derive_holdings
 from reg_meta_build.doc_db import build_doc_db, load_related_documents
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.pipeline import load_search_pins  # tests skip private _curation
@@ -455,6 +456,8 @@ def _build_artifact(
                 "INSERT OR REPLACE INTO import_manifest VALUES (?, ?)",
                 sorted(manifest.items()),
             )
+            # As extend-db does once the manifest names the steward.
+            derive_holdings(conn)
         shutil.rmtree(candidate)
     validation = validate_built_db(path)
     assert validation.passed, validation.format_report()

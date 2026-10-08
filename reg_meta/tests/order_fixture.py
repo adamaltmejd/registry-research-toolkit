@@ -283,7 +283,7 @@ def install_test_holdings(conn, inventory):
     import tomlkit
     from reader_artifacts import CASES
     from reg_meta_build.artifact_identity import generation_id
-    from reg_meta_build.derive import derive
+    from reg_meta_build.derive import derive, derive_holdings
     from reg_meta_build.holdings_compile import compile_holdings
 
     stamp_test_catalog(conn)
@@ -347,5 +347,6 @@ def install_test_holdings(conn, inventory):
     conn.executemany(
         "INSERT OR REPLACE INTO import_manifest VALUES (?, ?)", sorted(manifest.items())
     )
+    derive_holdings(conn)
     conn.commit()
     return conn

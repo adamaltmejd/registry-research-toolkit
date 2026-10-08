@@ -17,7 +17,7 @@ import pytest
 from reg_meta.db import register_py_lower
 from reg_meta.errors import RegMetaError
 from reg_meta.queries import search
-from reg_meta_build.derive import derive_search_indexes
+from reg_meta_build.derive.search_index import derive_search_indexes
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
