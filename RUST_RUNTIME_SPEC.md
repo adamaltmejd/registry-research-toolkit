@@ -823,10 +823,11 @@ the `context` operation.
 - Cases: `column-chips`, `pagination`, `group-members` and `cursor-scope` already have
   twins (`api/search-scope`, `search-paging`, `search-group-hit`, `cursor-invalid`).
   New, red first: register resolution (FQID, unique bare name, ambiguous, unknown,
-  malformed); period (variable overlap, register-wide, group by members,
-  `invalid_period`); a 9.1 manifest refused. The PR names which cases cover
-  `cli_scope/search-holdings-1` and `search-reference-2`. A G1 mapping compares typed
-  pages with the baseline webapp's variable group at the same limit and cursor depth.
+  malformed); period (variable overlap, group by members, `invalid_period`;
+  register-wide is 3a.6's, with the register arm); a 9.1 manifest refused. The PR names
+  which cases cover `cli_scope/search-holdings-1` and `search-reference-2`. A G1 mapping
+  compares typed pages with the baseline webapp's variable group at the same limit and
+  cursor depth.
 - Paths: `crates/reg-catalog/`, `crates/reg-meta/`, `conformance/http_cases.py`
   (`artifacts`), `conformance/cases/api/`, `conformance/differential/`.
 - Acceptance: G0 with a selection joining `[api/meta]`, `[api/cursor-`,
