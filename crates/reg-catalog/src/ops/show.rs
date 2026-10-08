@@ -947,7 +947,7 @@ fn variable(conn: &Connection, scope: Scope, id: i64) -> Result<Variable, Error>
         .query_row(
             "SELECT DISTINCT g.group_key FROM concept_group_variable m \
              JOIN concept_group g ON g.group_id = m.group_id \
-             WHERE m.variable_id = ? AND g.kind = 'variable'",
+             WHERE m.variable_id = ? AND g.kind = 'variable' ORDER BY g.group_key",
             [id],
             |row| row.get::<_, String>(0),
         )
@@ -1019,7 +1019,7 @@ fn family_key(slug: &str) -> Option<&'static str> {
 ///
 /// simplify: keys each edition by its own slug, where today's union-find keys a
 /// succession component by its least key; they differ only for a component mixing
-/// two families' slugs. 3d.1's `classification_family` table replaces this.
+/// two families' slugs. 3d.2 replaces this with 3d.1's `classification_family`.
 fn families(conn: &Connection) -> Result<(BTreeSet<String>, Vec<Family>), Error> {
     let editions: BTreeSet<String> = rows(
         conn,

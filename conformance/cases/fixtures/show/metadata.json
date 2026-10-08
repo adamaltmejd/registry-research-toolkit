@@ -47,6 +47,9 @@
   "successions": [
     {"predecessor": "scb/old-alpha", "successor": "scb/alpha"},
     {"predecessor": "scb/alpha/sex", "successor": "scb/alpha/kon"},
+    {"predecessor": "scb/alpha/pre-split", "successor": "scb/beta/fodland"},
+    {"predecessor": "scb/beta/fodland", "successor": "scb/alpha/kon"},
+    {"predecessor": "scb/beta/fodland", "successor": "scb/alpha/alder"},
     {"predecessor": "scb/alpha/split", "successor": "scb/alpha/kon"},
     {"predecessor": "scb/alpha/split", "successor": "scb/alpha/alder"},
     {"predecessor": "scb/alpha/later", "successor": "scb/alpha/kon", "effective_year": 2099},
@@ -63,6 +66,12 @@
       "target": "scb/alpha/sex",
       "kind": "variable",
       "reason": "Renamed synthetic variable",
+      "decision_reference": "fixture"
+    },
+    {
+      "target": "scb/alpha/pre-split",
+      "kind": "variable",
+      "reason": "Synthetic variable replaced by a live variable that splits",
       "decision_reference": "fixture"
     },
     {
