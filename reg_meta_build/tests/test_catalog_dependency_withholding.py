@@ -493,3 +493,6 @@ def test_dependency_failure_reports_every_missing_endpoint(surface):
         "scb/example/absent",
     )
     assert all(m.output for m in error.value.missing)
+    # Fails if build-side RegMetaErrors bypass `printable_error`: reg_meta's dataclass
+    # never sets `args`, so str() and logging would not print the message.
+    assert str(error.value) == error.value.message

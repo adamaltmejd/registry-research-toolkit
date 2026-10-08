@@ -17,7 +17,11 @@ from pydantic import BaseModel, ConfigDict
 from reg_meta.errors import EXIT_USAGE, RegMetaError
 from reg_meta.source_evidence import canonical_sha256
 
-from reg_meta_build._curation import SEARCH_PINS_FILE, load_search_pins
+from reg_meta_build._curation import (
+    SEARCH_PINS_FILE,
+    load_search_pins,
+    printable_error,
+)
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
     CoverageObligation,
@@ -239,23 +243,28 @@ def _selected_scopes(
             names[str(register[-1])].add((source, register))
             names[f"{source}:{register[-1]}"].add((source, register))
     if unknown := set(specs) - names.keys():
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="pipeline_registers_unknown",
-            error_class="usage",
-            message=f"--registers names no selected scope: {sorted(unknown)}",
-            remediation="Name each scope by its native register id, SOURCE:ID, or a "
-            "whole source, as the prepared input declares it.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="pipeline_registers_unknown",
+                error_class="usage",
+                message=f"--registers names no selected scope: {sorted(unknown)}",
+                remediation="Name each scope by its native register id, SOURCE:ID, "
+                "or a whole source, as the prepared input declares it.",
+            )
         )
     if ambiguous := sorted(
         spec for spec in set(specs) if len({source for source, _ in names[spec]}) > 1
     ):
-        raise RegMetaError(
-            exit_code=EXIT_USAGE,
-            code="pipeline_registers_ambiguous",
-            error_class="usage",
-            message=f"--registers names scopes in several sources, qualify as SOURCE:ID: {ambiguous}",
-            remediation="Qualify each named scope as SOURCE:ID.",
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="pipeline_registers_ambiguous",
+                error_class="usage",
+                message="--registers names scopes in several sources, qualify as "
+                f"SOURCE:ID: {ambiguous}",
+                remediation="Qualify each named scope as SOURCE:ID.",
+            )
         )
     return {key for spec in specs for key in names[spec]}
 

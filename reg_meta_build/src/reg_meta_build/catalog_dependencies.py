@@ -19,6 +19,7 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 from reg_meta_build._components import DisjointSet
+from reg_meta_build._curation import printable_error
 from reg_meta_build._resolved_common import _ResolvedWindow, remaining_windows
 from reg_meta_build.concept_groups import (
     _MONTH_LABELS,
@@ -739,8 +740,7 @@ class CatalogDependencyError(RegMetaError):
             "mints (a curated slug that exists), or remove the curation entry that "
             "names it.",
         )
-        # RegMetaError's dataclass init leaves `args` empty; keep str() readable.
-        self.args = (self.message,)
+        printable_error(self)
 
 
 # Shared inputs: keys of these kinds lie in no register.

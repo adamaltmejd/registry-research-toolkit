@@ -15,7 +15,7 @@ from _pipeline_catalog_support import (
     report_issues as _issues,
 )
 from reg_meta.db import DB_FILENAME
-from reg_meta.errors import EXIT_USAGE, RegMetaError
+from reg_meta.errors import EXIT_USAGE
 from reg_meta_build.cli import run
 from reg_meta_build.pipeline import (
     build_catalog,
@@ -442,22 +442,34 @@ def test_strict_corpus_failure_preserves_previous_catalog(
 
 
 @pytest.mark.parametrize("catalog", [True], indirect=True)
-@pytest.mark.parametrize("command", ["build", "check"])
+@pytest.mark.parametrize("command", ["build-db", "check-curation"])
 def test_unknown_register_scope_is_refused(
-    catalog: CatalogFixture, tmp_path: Path, command: str
+    catalog: CatalogFixture, tmp_path: Path, capsys, command: str
 ) -> None:
-    output = tmp_path / "bad.db"
-    with pytest.raises(RegMetaError) as refused:
-        if command == "build":
-            catalog.build(output, tmp_path / "report", registers=("1", "3"))
-        else:
-            catalog.check(tmp_path / "report", registers=("1", "3"))
-    assert (refused.value.code, refused.value.exit_code) == (
-        "pipeline_registers_unknown",
-        EXIT_USAGE,
-    )
-    assert "names no selected scope: ['3']" in refused.value.message
-    assert not output.exists()
+    # Fails if an unknown --registers spec stops being a usage refusal with its own
+    # code (e.g. the CLI rewraps it as pipeline_build_failed) or writes any output.
+    prefix = ["--db", str(tmp_path / "db-dir")] if command == "build-db" else []
+    args = [
+        command,
+        *prefix,
+        "--prepared",
+        str(catalog.prepared),
+        "--input-commit",
+        catalog.commit,
+        "--input-manifest-sha256",
+        catalog.digest,
+        "--curation-dir",
+        str(catalog.curation),
+        "--report-dir",
+        str(tmp_path / "report"),
+        "--registers",
+        "1,3",
+    ]
+    assert run(args) == EXIT_USAGE
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert error["code"] == "pipeline_registers_unknown"
+    assert "names no selected scope: ['3']" in error["message"]
+    assert not (tmp_path / "db-dir").exists()
     assert not (tmp_path / "report").exists()
 
 

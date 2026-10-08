@@ -287,12 +287,13 @@ def test_maintained_provider_coverage_uses_input_role_not_provider_name(
         records=SimpleNamespace(iter_records=lambda *, source: iter(records)),
     )
     if source_role == "thin_provider" and declared_start is None:
-        with pytest.raises(RegMetaError) as refused:
+        # The refusal's code is pinned by the thin-inverted-coverage-window-fails-
+        # the-build case; this leg owns only that the input role, not the provider
+        # name, refuses, and that the refused record is left unchanged.
+        with pytest.raises(RegMetaError):
             compile_provider_declarations(
                 SimpleNamespace(registers=(register,)), prepared, (scope,), subset=False
             )
-        assert refused.value.code == "thin_coverage_window_invalid"
-        assert "empty or inverted thin coverage window" in refused.value.message
         assert parent.parent_facts[0].fields.coverage_from is None
         return
     cases, diagnostics, _ = compile_provider_declarations(
