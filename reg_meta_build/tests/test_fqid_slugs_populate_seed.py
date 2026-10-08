@@ -1,9 +1,8 @@
-"""populate_slugs (register/variant slugs and panel columns), seed-slugs auto.toml output and panel proposals, and the freeze-state auto.toml regeneration gate."""
+"""populate_slugs (register/variant slugs and panel columns), seed-slugs auto.toml output, and the freeze-state auto.toml regeneration gate."""
 
 from __future__ import annotations
 
 import json
-import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
@@ -23,12 +22,11 @@ from reg_meta_build.fqid_slugs import (
     load_provider_toml,
     populate_slugs,
     populate_variable_slugs,
-    propose_panel_entity_key,
     seed_all,
-    seed_provider_toml,
 )
 
 if TYPE_CHECKING:
+    import sqlite3
     from pathlib import Path
 
 
@@ -223,15 +221,6 @@ class TestSeedSlugs:
         assert "never recomputed. Curator overrides" in body
         assert "\n\n\n" not in body
 
-    def test_omits_register_version_from_seed(self):
-        # A2.6: register_version is not seeded at all (version left the FQID
-        # grammar; no slug column). The former version-seed tests (unperiodized
-        # stub, periodized omission, curated override, rule-5 collision
-        # annotation, rule-6 residual stub) were removed with the mechanism.
-        conn = build_slugged_db(version=("Strandlinje, 2019", None, 200))
-        body = seed_provider_toml(conn, "scb")
-        assert "[register_version." not in body
-
 
 def _flag_identifier(conn: sqlite3.Connection, register_id: int, var_id: int) -> None:
     conn.execute(
@@ -242,58 +231,7 @@ def _flag_identifier(conn: sqlite3.Connection, register_id: int, var_id: int) ->
     conn.commit()
 
 
-class TestProposePanel:
-    """The A4.4c-ii proposer emits starter panel lines that a curator edits in
-    A4.4d. It does not have to be exhaustive — only round-trip-valid and driven
-    by the persisted is_identifier signal (see propose_panel_entity_key)."""
-
-    def test_is_identifier_drives_entity_key(self):
-        # default LISA fixture: var_id=44 ("Kön"), delivery column "Kon",
-        # slug folded from the column → "kon". Flag it as the variant identifier.
-        conn = build_slugged_db()
-        _flag_identifier(conn, register_id=1, var_id=44)
-        assert propose_panel_entity_key(conn, 1, 10) == "kon"
-
-    def test_no_identifier_proposes_none(self):
-        # No is_identifier, no source_join_key → SOS-shaped arm: nothing proposed,
-        # left for A4.4d curation.
-        conn = build_slugged_db()
-        assert propose_panel_entity_key(conn, 1, 10) is None
-
-    def test_join_key_alone_proposes_none(self):
-        # A delivery column matching an ID-kolumner join key is NOT used as a
-        # signal: source_join_key.table_name doesn't map to register_id, so a
-        # column-name match can't be register-scoped and would over-propose a
-        # non-identifier as the entity grain (review P2). Only is_identifier
-        # drives the proposal — no flagged identifier → None (curation in A4.4d).
-        conn = build_slugged_db()
-        conn.execute(
-            "INSERT INTO source_join_key (table_name, column_name, description) "
-            "VALUES ('LISA_T', 'Kon', 'join key')"
-        )
-        conn.commit()
-        assert propose_panel_entity_key(conn, 1, 10) is None
-
-    def test_composite_entity_key_is_tuple(self):
-        # Two is_identifier variables on one variant → a sorted tuple (the
-        # composite case, persisted as a JSON array by populate_slugs).
-        conn = build_slugged_db()
-        _flag_identifier(conn, register_id=1, var_id=44)
-        add_variable(conn, register_id=1, var_id=45, name="Lopnr", slug="lopnr")
-        add_state(
-            conn,
-            register_id=1,
-            var_id=45,
-            register_variant_id=10,
-            delivery_column_name="Lopnr",
-        )
-        conn.execute(
-            "UPDATE variable SET is_identifier = 1 "
-            "WHERE register_id = 1 AND provider_key = '45'"
-        )
-        conn.commit()
-        assert propose_panel_entity_key(conn, 1, 10) == ("kon", "lopnr")
-
+class TestSeedPanelMetadata:
     def test_seed_never_writes_authored_panel_metadata(self, tmp_path: Path):
         conn = build_slugged_db()
         _flag_identifier(conn, register_id=1, var_id=44)
@@ -350,83 +288,6 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
         assert counts == {"register": 1, "register_variant": 1}
-
-
-class TestSeedEmitsValidToml:
-    """seed_*_toml must produce TOML that round-trips through tomllib even
-    when DB strings contain quote, backslash, or Unicode oddities."""
-
-    def test_round_trip_with_quote_and_backslash(self, tmp_path: Path):
-        conn = build_slugged_db(
-            register=('Foo "Bar" \\Baz', "foo-bar", 1, 1),
-            variant=('name with "quotes"', "v", 10),
-        )
-        body = seed_provider_toml(conn, "scb")
-        # tomllib.loads will raise on malformed escapes.
-        import tomllib
-
-        parsed = tomllib.loads(body)
-        assert "register" in parsed
-        assert "1" in parsed["register"]
-
-
-class TestCuratedDefaultVariantRoundTrip:
-    """A curated `slug = "_default"` on a real register_variant row must
-    survive TOML → populate_slugs → seed_provider_toml → TOML cycles.
-
-    Before synthesis moved to FQID-resolve time, the seed emitter
-    treated every `_default` row as build-synthesized and silently dropped
-    it from the regenerated TOML, so a curator who committed the new TOML
-    would discard their own entry."""
-
-    def test_populate_then_seed_preserves_default(self, tmp_path: Path):
-        # 1) Curate `_default` in TOML, populate into a fresh DB.
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "sos.toml",
-            '[register."5"]\nslug = "lss"\n'
-            '[register_variant."5.50"]\nslug = "_default"\n',
-        )
-        conn = build_slugged_db(
-            register=("LSS", None, 5, 2),
-            variant=("LSS", None, 50),
-            version=None,
-            variable=None,
-            classification=None,
-        )
-        counts = populate_slugs(conn, d, strict=True)
-        assert counts["register_variant"] == 1
-        slug = conn.execute(
-            "SELECT slug FROM register_variant WHERE register_variant_id = 50"
-        ).fetchone()[0]
-        assert slug == "_default"
-
-        # 2) Re-seed from the now-populated DB. The curated `_default` must
-        # appear in the regenerated TOML (regression guard for the trapdoor
-        # that silently dropped it before).
-        body = seed_provider_toml(conn, "sos")
-        assert 'slug = "_default"' in body
-        assert '[register_variant."5.50"]' in body
-
-
-class TestSeedEmptyDb:
-    """Empty seed output is well-formed and self-explanatory."""
-
-    def test_provider_with_no_registers(self, tmp_path: Path):
-        # Build a DB whose `scb` provider has no register rows.
-        from reg_meta_build.db import DDL, seed_providers
-
-        conn = sqlite3.connect(":memory:")
-        conn.row_factory = sqlite3.Row
-        conn.executescript(DDL)
-        seed_providers(conn)
-        # Only sos has a register; scb is empty.
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name) VALUES (1, 2, 'PAR')"
-        )
-        body = seed_provider_toml(conn, "scb")
-        assert "no registers found" in body
 
 
 class TestFreezeStateAutoRegenerate:
