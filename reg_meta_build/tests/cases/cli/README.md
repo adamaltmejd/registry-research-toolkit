@@ -214,7 +214,14 @@ A `files` path may be a glob. Each claim is an object:
   report with the global `--output` is claimed this way, so one case can claim several
   runs.
 - `jsonl_gz`: the file is gzip-compressed JSON Lines; the list of its values matches
-  this projection. Record ids are not aliased. It is the file's only claim.
+  this projection. It is the file's only claim. A census's minted values are aliased
+  first: a record id becomes `record@<rows>`, the sorted physical rows of the
+  `observation` lines that emit it (identical rows are one record:
+  `record@row:2,row:3`), and an alternative's `context_fingerprint` becomes
+  `context@<rows>`, the sorted rows of its members. A member's `record_id` and
+  `context_fingerprint` go through the same maps, so a member that cites a record no
+  observation emits, or a fingerprint other than its alternative's, keeps a hash no
+  claim matches. Two records or two alternatives with one alias fail the case.
 
 A claim other than `absent` needs exactly one file to match.
 

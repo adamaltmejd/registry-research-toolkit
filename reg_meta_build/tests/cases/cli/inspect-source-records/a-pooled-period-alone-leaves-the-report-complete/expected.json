@@ -1,0 +1,30 @@
+{
+  "exit_code": 0,
+  "files": {
+    "full.json": {
+      "includes": {
+        "complete": true,
+        "interpretation_issues": {
+          "$contains": [
+            {"kind": "pooled_period", "incomplete": false, "source_record_ids": ["scb:2"]},
+            {"kind": "pooled_period", "incomplete": false, "source_record_ids": ["scb:12"]}
+          ],
+          "$lacks": [{"incomplete": true}]
+        }
+      }
+    },
+    "ampoltyp.json": {
+      "includes": {
+        "complete": true,
+        "target_preview": {"expected_source_target_count": 0, "target_record_ids": []},
+        "source_records": {"$contains": [{"record_id": "scb:2", "edition_scope": {"kind": "pooled"}}]},
+        "interpretation_issues": [{"kind": "pooled_period", "incomplete": false, "source_record_ids": ["scb:2"]}],
+        "comparison_outcomes": {
+          "$contains": [
+            {"status": "unknown_applicability", "edition_scope": {"kind": "pooled"}, "scb_record_ids": ["scb:2"]}
+          ]
+        }
+      }
+    }
+  }
+}

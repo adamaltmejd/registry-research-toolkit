@@ -5,25 +5,29 @@
       "toml": {
         "binding": {
           "variable": [
-            {"variable": "scb/ulf/dualvar", "note": "residue:safe"},
-            {"variable": "scb/ulf/safevar", "note": "residue:safe"},
-            {"variable": "scb/ulf/samevar", "note": "residue:safe"}
+            {
+              "variable": "scb/ulf/dualvar",
+              "note": "residue:safe"
+            },
+            {
+              "variable": "scb/ulf/safevar",
+              "note": "residue:safe"
+            },
+            {
+              "variable": "scb/ulf/samevar",
+              "note": "residue:safe"
+            }
           ]
         }
       },
       "contains": [
         "# 5 residual value set(s); 3 safe-subset (single label-unambiguous standalone).",
-        "n_codes=9, 2 unclassified state(s)",
-        "n_codes=8, 6 unclassified state(s)",
-        "#   candidate FAM_A: containment=1.00, label_agree=1.00, standalone=yes",
-        "#   candidate FAM_B: containment=1.00, label_agree=1.00, standalone=yes",
-        "#   candidate FAM_R: containment=1.00, label_agree=0.00, standalone=yes",
-        "#   candidate FAM_S: containment=1.00, label_agree=1.00, standalone=yes",
-        "#   candidate FAM_T: containment=1.00, label_agree=1.00, standalone=yes",
-        "#   candidate SNI2002: containment=1.00, label_agree=1.00, standalone=no",
-        "#   candidate SNI2007: containment=1.00, label_agree=1.00, standalone=no",
+        "n_codes=9, 2 unclassified state(s)\n#   candidate FAM_A: containment=1.00, label_agree=1.00, standalone=yes\n#   candidate FAM_B: containment=1.00, label_agree=1.00, standalone=yes\n",
+        "n_codes=8, 6 unclassified state(s)\n#   candidate FAM_R: containment=1.00, label_agree=0.00, standalone=yes\n#   candidate FAM_S: containment=1.00, label_agree=1.00, standalone=yes\n",
+        "n_codes=8, 1 unclassified state(s)\n#   candidate FAM_R: containment=1.00, label_agree=0.00, standalone=yes\n#   candidate FAM_S: containment=1.00, label_agree=1.00, standalone=yes\n#   state: variable = scb/ulf/dualvar (Dubbel variabel)",
+        "n_codes=8, 1 unclassified state(s)\n#   candidate FAM_R: containment=1.00, label_agree=0.00, standalone=yes\n#   candidate FAM_T: containment=1.00, label_agree=1.00, standalone=yes\n#   state: variable = scb/ulf/conflvar (Konfliktvariabel)",
+        "n_codes=8, 1 unclassified state(s)\n#   candidate SNI2002: containment=1.00, label_agree=1.00, standalone=no\n#   candidate SNI2007: containment=1.00, label_agree=1.00, standalone=no\n#   state: variable = scb/ulf/snivar (Näringsgren)",
         "#   state: variable = scb/ulf/famvar (Familjevariabel)",
-        "#   state: variable = scb/ulf/snivar (Näringsgren)",
         "# -> curation/classifications/FAM_S.toml\n[[binding.variable]]\nvariable = \"scb/ulf/dualvar\"",
         "# -> curation/classifications/FAM_S.toml\n[[binding.variable]]\nvariable = \"scb/ulf/safevar\"",
         "# -> curation/classifications/FAM_S.toml\n[[binding.variable]]\nvariable = \"scb/ulf/samevar\"",
@@ -45,9 +49,18 @@
     "path": "residue.toml",
     "result": {
       "variable": [
-        {"variable": "scb/ulf/dualvar", "note": "residue:safe"},
-        {"variable": "scb/ulf/safevar", "note": "residue:safe"},
-        {"variable": "scb/ulf/samevar", "note": "residue:safe"}
+        {
+          "variable": "scb/ulf/dualvar",
+          "note": "residue:safe"
+        },
+        {
+          "variable": "scb/ulf/safevar",
+          "note": "residue:safe"
+        },
+        {
+          "variable": "scb/ulf/samevar",
+          "note": "residue:safe"
+        }
       ]
     }
   }

@@ -287,17 +287,52 @@ def _record_aliases(payload: Any) -> Any:
         )
         assert alias not in aliases.values(), f"two source records are {alias}"
         aliases[record["record_id"]] = alias
+    return _replace_strings(payload, aliases)
 
-    def replace(value: Any) -> Any:
-        if isinstance(value, str):
-            return aliases.get(value, value)
-        if isinstance(value, list):
-            return [replace(item) for item in value]
-        if isinstance(value, dict):
-            return {key: replace(item) for key, item in value.items()}
-        return value
 
-    return replace(payload)
+def _replace_strings(value: Any, aliases: dict[str, str]) -> Any:
+    if isinstance(value, str):
+        return aliases.get(value, value)
+    if isinstance(value, list):
+        return [_replace_strings(item, aliases) for item in value]
+    if isinstance(value, dict):
+        return {key: _replace_strings(item, aliases) for key, item in value.items()}
+    return value
+
+
+def _census_aliases(lines: list[Any]) -> list[Any]:
+    """Census evidence lines with each minted record id and context fingerprint
+    replaced by a readable alias, so a case can claim what they point at.
+
+    A record id becomes `record@<rows>`: the physical rows of the observation
+    lines that emit it (identical rows coalesce into one record). An alternative's
+    context fingerprint becomes `context@<rows>`: the rows of its members. A
+    member's own `record_id` and `context_fingerprint` are rewritten through the
+    same maps, so a member that cites a record no observation emits, or a
+    fingerprint other than its alternative's, keeps a hash a claim cannot match.
+    """
+    rows: dict[str, list[str]] = {}
+    contexts: dict[str, str] = {}
+    for line in lines:
+        if line.get("type") == "observation":
+            record = line["record"]
+            rows.setdefault(record["record_id"], []).extend(
+                locator["physical_record"] for locator in record["locators"]
+            )
+        for alternative in line.get("alternatives", ()):
+            members = sorted(
+                member["locator"]["physical_record"]
+                for member in alternative["members"]
+            )
+            alias = "context@" + ",".join(members)
+            assert alias not in contexts.values(), f"two contexts are {alias}"
+            contexts[alternative["context_fingerprint"]] = alias
+    aliases = {
+        record_id: "record@" + ",".join(sorted(found))
+        for record_id, found in rows.items()
+    }
+    assert len(set(aliases.values())) == len(aliases), "two records share their rows"
+    return _replace_strings(lines, aliases | contexts)
 
 
 def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) -> None:
@@ -309,7 +344,7 @@ def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) ->
     (found,) = matches
     if "jsonl_gz" in claim:
         with gzip.open(found, "rt", encoding="utf-8") as lines:
-            values = [_strict_json(line) for line in lines]
+            values = _census_aliases([_strict_json(line) for line in lines])
         departure = mismatch(values, claim["jsonl_gz"], path, exact=False)
         assert departure is None, departure
         return

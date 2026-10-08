@@ -11,20 +11,42 @@
             "alternatives": {
               "$contains": [
                 {
+                  "context_fingerprint": "context@row:2,row:3",
                   "members": {
                     "$contains": [
-                      {"locator": {"physical_record": "row:2"}, "native": {"member_id": 4242}},
-                      {"locator": {"physical_record": "row:3"}, "native": {"member_id": 4242}}
+                      {
+                        "locator": {"physical_record": "row:2"},
+                        "native": {"member_id": 4242},
+                        "record_id": "record@row:2,row:3",
+                        "context_fingerprint": "context@row:2,row:3"
+                      },
+                      {
+                        "locator": {"physical_record": "row:3"},
+                        "native": {"member_id": 4242},
+                        "record_id": "record@row:2,row:3",
+                        "context_fingerprint": "context@row:2,row:3"
+                      }
                     ]
                   }
                 },
-                {"members": [{"locator": {"physical_record": "row:4"}, "native": {"member_id": 4242}}]}
+                {
+                  "context_fingerprint": "context@row:4",
+                  "members": [
+                    {
+                      "locator": {"physical_record": "row:4"},
+                      "native": {"member_id": 4242},
+                      "record_id": "record@row:4",
+                      "context_fingerprint": "context@row:4"
+                    }
+                  ]
+                }
               ]
             }
           },
           {
             "type": "observation",
             "record": {
+              "record_id": "record@row:2,row:3",
               "locators": [{"physical_record": "row:2"}],
               "delivered_cells": {"$contains": [{"name": "Variabeldefinition", "interpreted_value": "Definition A"}]}
             }
@@ -32,6 +54,7 @@
           {
             "type": "observation",
             "record": {
+              "record_id": "record@row:2,row:3",
               "locators": [{"physical_record": "row:3"}],
               "delivered_cells": {"$contains": [{"name": "Variabeldefinition", "interpreted_value": "Definition A"}]}
             }
@@ -39,6 +62,7 @@
           {
             "type": "observation",
             "record": {
+              "record_id": "record@row:4",
               "locators": [{"physical_record": "row:4"}],
               "delivered_cells": {"$contains": [{"name": "Variabeldefinition", "interpreted_value": "Definition B"}]}
             }
