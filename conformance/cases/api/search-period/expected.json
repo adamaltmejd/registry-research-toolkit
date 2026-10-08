@@ -1,0 +1,38 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/terms/grade"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/terms/grade"
+      ]
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_period",
+      "/error/fields/parameter": "period"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_period",
+      "/error/fields/parameter": "period"
+    }
+  }
+]

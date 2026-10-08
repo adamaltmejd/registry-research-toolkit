@@ -1,0 +1,26 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/example/value",
+        "scb/example/second"
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields/ref": "Unheld"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "sos/unheld/unheld"
+      ]
+    }
+  }
+]

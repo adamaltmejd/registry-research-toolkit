@@ -2,6 +2,7 @@
 //! (`slice_3a.rs`, ...), and both transports are generated from the registrations: the
 //! HTTP routes and `/openapi.json` here and in `reg-meta`, the MCP tools later.
 
+mod search;
 pub mod slice_3a;
 
 use std::collections::BTreeMap;
@@ -14,7 +15,7 @@ use utoipa::openapi::path::{OperationBuilder, ParameterBuilder, ParameterIn};
 use utoipa::openapi::response::ResponseBuilder;
 use utoipa::openapi::{
     ComponentsBuilder, ContentBuilder, HttpMethod, InfoBuilder, ObjectBuilder, OpenApi,
-    OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema,
+    OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema, Type,
 };
 
 use crate::{CONTRACT_VERSION, Catalog, Code, Error, Scope};
@@ -154,8 +155,20 @@ fn component<T: ToSchema>(components: &mut Components) -> RefOr<Schema> {
 }
 
 fn param_schema(name: &str, components: &mut Components) -> RefOr<Schema> {
+    let string = || ObjectBuilder::new().schema_type(Type::String);
     match name {
         "scope" => component::<Scope>(components),
+        // A ref is a FQID or a bare name; a period and a cursor are strings in
+        // their grammars.
+        "q" | "register" | "period" | "cursor" => string().into(),
+        "type" => string()
+            .enum_values(Some(search::TYPES.iter().copied()))
+            .into(),
+        "limit" => ObjectBuilder::new()
+            .schema_type(Type::Integer)
+            .minimum(Some(1))
+            .maximum(Some(200))
+            .into(),
         _ => panic!("no schema for parameter {name:?}"),
     }
 }

@@ -1,30 +1,31 @@
 {
-  "fixture": "reader/logical",
+  "fixture": "reader",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Secret",
+        "q": "Value",
         "type": "variable",
-        "scope": "holdings"
+        "register": "example"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Secret",
+        "q": "Value",
         "type": "variable",
-        "scope": "reference"
+        "register": "Unheld"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Valø",
+        "q": "Value",
         "type": "variable",
+        "register": "Unheld",
         "scope": "reference"
       }
     }

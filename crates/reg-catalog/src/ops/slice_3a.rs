@@ -1,23 +1,49 @@
-//! Slice 3a's operations: `context` (and, from 3a.5, `search`).
+//! Slice 3a's operations: `search` and `context`.
 
 use rusqlite::Connection;
 use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
 
+use super::search::{SearchPage, search};
 use super::{Operation, Param, Params, Server, Steward, component};
+use crate::held::{self, Narrow};
 use crate::{Code, Error, Scope};
 
-pub const OPERATIONS: &[Operation] = &[Operation {
-    name: "context",
-    path: "/api/context",
-    params: &[Param {
-        name: "scope",
+const fn optional(name: &'static str) -> Param {
+    Param {
+        name,
         required: false,
-    }],
-    run: context,
-    result: component::<Context>,
-}];
+    }
+}
+
+pub const OPERATIONS: &[Operation] = &[
+    Operation {
+        name: "search",
+        path: "/api/search",
+        params: &[
+            Param {
+                name: "q",
+                required: true,
+            },
+            optional("type"),
+            optional("register"),
+            optional("period"),
+            optional("scope"),
+            optional("limit"),
+            optional("cursor"),
+        ],
+        run: search,
+        result: component::<SearchPage>,
+    },
+    Operation {
+        name: "context",
+        path: "/api/context",
+        params: &[optional("scope")],
+        run: context,
+        result: component::<Context>,
+    },
+];
 
 /// `shape.Context`: branding, artifact identity and headline counts for the SPA.
 #[derive(Serialize, ToSchema)]
@@ -57,16 +83,16 @@ fn context(server: &Server, scope: Scope, _: &Params) -> Result<Value, Error> {
     let sizes = Sizes {
         providers: count(format!(
             "SELECT COUNT(*) FROM provider p WHERE {}",
-            in_scope(scope, Held::Provider)
+            held::provider(scope, "p.provider_id")
         ))?,
         registers: count(format!(
             "SELECT COUNT(*) FROM register r WHERE slug IS NOT NULL AND {}",
-            in_scope(scope, Held::Register)
+            held::register(scope, "r.register_id")
         ))?,
         variables: count(format!(
             "SELECT COUNT(*) FROM variable v JOIN register r ON v.register_id = r.register_id \
              WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL AND {}",
-            in_scope(scope, Held::Variable)
+            held::variable(scope, "v.variable_id", Narrow::default())
         ))?,
     };
     let context = Context {
@@ -107,39 +133,4 @@ fn period_span(conn: &Connection, import_date: &str) -> Result<Option<PeriodSpan
     };
     let (from, to) = (year(&lo)?, year(&hi)?.min(year(import_date)?));
     Ok((from <= to).then_some(PeriodSpan { from, to }))
-}
-
-enum Held {
-    Provider,
-    Register,
-    Variable,
-}
-
-/// Today's `scope_predicate` for providers (`p`), registers (`r`) and variables
-/// (`v`): reference admits everything; holdings admits what an authored mapping of
-/// a known-scope table holds.
-fn in_scope(scope: Scope, kind: Held) -> String {
-    let held = |join: &str, anchor: &str| {
-        format!(
-            "EXISTS (SELECT 1 FROM {join} JOIN holding_column hc USING(column_id) \
-             JOIN holding_table ht USING(table_id) WHERE {anchor} AND ht.scope != 'unknown')"
-        )
-    };
-    let register = |id: &str| {
-        held(
-            "variable hv JOIN holding_mapping hm ON hm.variable_id = hv.variable_id",
-            &format!("hv.register_id = {id}"),
-        )
-    };
-    match (scope, kind) {
-        (Scope::Reference, _) => "1".to_owned(),
-        (Scope::Holdings, Held::Variable) => {
-            held("holding_mapping hm", "hm.variable_id = v.variable_id")
-        }
-        (Scope::Holdings, Held::Register) => register("r.register_id"),
-        (Scope::Holdings, Held::Provider) => format!(
-            "EXISTS (SELECT 1 FROM register hr WHERE hr.provider_id = p.provider_id AND {})",
-            register("hr.register_id")
-        ),
-    }
 }

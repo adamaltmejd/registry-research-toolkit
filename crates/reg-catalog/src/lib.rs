@@ -3,11 +3,13 @@
 //! `reg-meta` binary serves.
 
 mod error;
+mod held;
 pub mod ops;
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
+use rusqlite::functions::FunctionFlags;
 use rusqlite::{Connection, OpenFlags};
 use serde::Serialize;
 use utoipa::ToSchema;
@@ -18,7 +20,7 @@ pub use error::{Code, Error, Spec};
 pub const CONTRACT_VERSION: &str = "4.0.0";
 /// The schema gate: the artifact's major must equal this major and its minor be at
 /// least this minor.
-pub const SCHEMA: (u32, u32) = (9, 1);
+pub const SCHEMA: (u32, u32) = (9, 2);
 const DB_FILENAME: &str = "reg_meta.db";
 
 /// The read scope (section 7); every read takes it.
@@ -184,13 +186,14 @@ impl Catalog {
         }
     }
 
-    /// A fresh read-only connection; the server opens one per request.
+    /// A fresh read-only connection with the `reg-core` folds as SQL functions
+    /// (`fold_search`, `fold_identity`, `fts_term`); the server opens one per request.
     ///
     /// # Errors
     ///
     /// `catalog_unavailable` when the admitted file cannot be opened.
     pub fn connect(&self) -> Result<Connection, Error> {
-        connect(&self.path).map_err(|err| {
+        connect(&self.path).and_then(with_folds).map_err(|err| {
             Error::new(
                 Code::CatalogUnavailable,
                 format!("Catalog {} cannot be read: {err}", self.path.display()),
@@ -224,6 +227,28 @@ fn connect(path: &Path) -> rusqlite::Result<Connection> {
             | OpenFlags::SQLITE_OPEN_URI
             | OpenFlags::SQLITE_OPEN_NO_MUTEX,
     )
+}
+
+/// Register the folds. Each maps SQL NULL to NULL; `fts_term(text, term)` is
+/// today's `py_fts_term`: some search term of `text` starts with `term`.
+fn with_folds(conn: Connection) -> rusqlite::Result<Connection> {
+    let flags = FunctionFlags::SQLITE_UTF8 | FunctionFlags::SQLITE_DETERMINISTIC;
+    let unary = |name: &str, fold: fn(&str) -> String| {
+        conn.create_scalar_function(name, 1, flags, move |ctx| {
+            Ok(ctx.get::<Option<String>>(0)?.map(|s| fold(&s)))
+        })
+    };
+    unary("fold_search", reg_core::fold_search)?;
+    unary("fold_identity", reg_core::fold_identity)?;
+    conn.create_scalar_function("fts_term", 2, flags, |ctx| {
+        let (text, term) = (ctx.get::<Option<String>>(0)?, ctx.get::<String>(1)?);
+        Ok(text.is_some_and(|text| {
+            reg_core::fts_terms(&text)
+                .iter()
+                .any(|token| token.starts_with(&term))
+        }))
+    })?;
+    Ok(conn)
 }
 
 fn read_manifest(path: &Path) -> rusqlite::Result<BTreeMap<String, String>> {

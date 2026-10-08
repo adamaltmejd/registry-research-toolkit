@@ -1,0 +1,51 @@
+{
+  "fixture": "reader/var-id-bands",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "value",
+        "type": "variable",
+        "register": "scb/bands"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "value",
+        "type": "variable",
+        "register": "band fixture"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "value",
+        "type": "variable",
+        "register": "nonesuch"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "value",
+        "type": "variable",
+        "register": "scb/Bands"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "value",
+        "type": "variable",
+        "register": "scb/bands/scb-value"
+      }
+    }
+  ]
+}

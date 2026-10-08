@@ -57,8 +57,13 @@ fn error_enum_equals_errors_toml() {
 /// The type of a parameter in `operations.toml` (`scope?`) as the `OpenAPI` schema
 /// the server must generate for it.
 fn param_schema(ty: &str) -> Value {
+    if let Some(members) = ty.strip_prefix("enum(").and_then(|t| t.strip_suffix(')')) {
+        return json!({"type": "string", "enum": members.split('|').collect::<Vec<_>>()});
+    }
     match ty {
         "scope" => json!({"$ref": "#/components/schemas/Scope"}),
+        "string" | "ref" | "period" | "cursor" => json!({"type": "string"}),
+        "limit" => json!({"type": "integer", "minimum": 1, "maximum": 200}),
         _ => panic!("map parameter type {ty:?}"),
     }
 }
@@ -128,5 +133,5 @@ fn openapi_matches_operations_toml() {
             served.insert(name.to_owned());
         }
     }
-    assert!(served.contains("context"));
+    assert!(served.contains("context") && served.contains("search"));
 }

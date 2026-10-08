@@ -1,0 +1,51 @@
+{
+  "fixture": "reader/cli-periods",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Grade",
+        "type": "variable",
+        "period": "2016"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Grade",
+        "type": "variable",
+        "period": "2018-12"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Grade",
+        "type": "variable",
+        "period": "2030"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Grade",
+        "type": "variable",
+        "period": "2019-13"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Grade",
+        "type": "variable",
+        "period": "2020..2019"
+      }
+    }
+  ]
+}
