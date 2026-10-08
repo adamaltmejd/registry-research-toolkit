@@ -1,0 +1,30 @@
+{
+  "replaces": [
+    "test_build_catalog_classification_boundary.py::test_declared_family_alias_binds_state_to_the_covering_edition"
+  ],
+  "fails_if": "the covering-edition test for a family alias in `_source_bindings` (source_classification_bindings.py) ignores a book's `valid_to`, so OLD (to 2019) also covers the 2020 delivery and 'Source pair' resolves to no single edition",
+  "sources": {
+    "description": "FK AMOUNT (2020) declares the family alias 'Source pair'; books old and new.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": [
+        "[[register]]",
+        "key = \"remote\"",
+        "name = \"Remote\"",
+        "valid_from = \"2020-01-01\"",
+        "valid_to = \"2020-12-31\"",
+        "[[register.variable]]",
+        "name = \"Amount\"",
+        "column = \"AMOUNT\"",
+        "data_type = \"int\"",
+        "classification = \"Source pair\""
+      ],
+      "classifications/old.csv": ["code,label", "1,One", "2,Two"],
+      "classifications/new.csv": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

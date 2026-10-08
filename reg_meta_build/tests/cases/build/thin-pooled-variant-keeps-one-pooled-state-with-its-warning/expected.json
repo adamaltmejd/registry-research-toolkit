@@ -17,10 +17,11 @@
     {
       "table": "warnings",
       "where": {"column": "HEADER"},
-      "fields": ["variable_fqid", "variant", "summary", "fields", "valid_from", "valid_to"],
+      "fields": ["register", "variable", "variant", "summary", "fields", "valid_from", "valid_to"],
       "rows": [
         [
-          "fk/r/header",
+          "r",
+          "header",
           "table",
           "Header-only metadata; response codes unavailable.",
           ["name", "definition", "coding"],

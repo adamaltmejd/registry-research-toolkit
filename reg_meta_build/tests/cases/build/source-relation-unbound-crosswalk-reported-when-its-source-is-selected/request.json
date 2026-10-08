@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_build_catalog_source_relationship_boundary.py::test_unbound_crosswalk_defers_only_when_its_occurrence_source_is_unselected[sos-selected]"
+  ],
+  "fails_if": "`selected_occurrence_sources` counts only whole-source selections (`(source, None) in visit`), so selecting the SOS register `Syntetiskt register` reads its own workbook as unselected and defers the crosswalk instead of reporting it unbound",
+  "sources": "scb-sos-crosswalk",
+  "registers": ["Syntetiskt register"]
+}

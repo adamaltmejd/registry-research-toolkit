@@ -3,5 +3,6 @@
     "test_curation_split_sos_boundary.py::test_text_split_assigns_rows_of_one_source_record_by_text[name-reversed]"
   ],
   "note": "Parts declared in reverse order. Two texts under one owner in one subset conflict, so only the shared owner carries resolution errors; a name split withholds it, so its rows' ledger variable is empty.",
+  "fails_if": "the SOS split's `CheckedIdentityChange` in `curation_compile` drops its `when` condition on `name`, so the First, Second and Other rows of the one ATC source record are no longer routed to their owners by their name",
   "sources": "sos-par-atc-three-labels"
 }

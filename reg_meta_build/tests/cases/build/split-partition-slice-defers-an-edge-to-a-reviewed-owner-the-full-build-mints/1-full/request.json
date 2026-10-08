@@ -3,5 +3,6 @@
     "test_curation_partition_deferred_boundary.py::test_slice_defers_edge_to_a_name_the_full_build_mints[reviewed-owner-reviewed]"
   ],
   "note": "The full build mints the edge's target; step 2 checks the slice defers to it.",
+  "fails_if": "the full build stops minting the reviewed column owner `scb/sample/reviewed` (for example `_scoped_column_owners` no longer matches the owner's `variant`), so the same_as edge to it is missing and a stale entry is reported",
   "sources": "scb-anchor-and-reviewed-owner"
 }

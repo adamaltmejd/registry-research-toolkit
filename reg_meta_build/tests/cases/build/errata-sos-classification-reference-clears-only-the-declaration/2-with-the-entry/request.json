@@ -1,4 +1,5 @@
 {
   "note": "The matching SYX_A original no longer binds its link (an unspecified declaration instead of an unresolved one) and keeps its inline value set; the SYX_B peer and the other register still report their link as unresolved.",
+  "fails_if": "`_compile_sos_register` replaces the matched record's classification declaration with an explicit negative instead of an unknown one, so SYX_A MARK reports no `unknown_classification_declaration`",
   "sources": "sos-syx-errata"
 }

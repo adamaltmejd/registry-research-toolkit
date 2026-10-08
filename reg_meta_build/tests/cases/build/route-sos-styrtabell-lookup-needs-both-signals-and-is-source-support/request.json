@@ -4,5 +4,6 @@
     "test_curation_sos_route_boundary.py::test_lookup_subset_and_its_routed_variables_are_source_support"
   ],
   "note": "A subset is a styrtabell lookup only when its label starts with 'Styrtabell' and its aggregation level is 'Ej relevant'; one signal alone is an error. The lookup subset row, its own variable and the variable routed only to it are support records, so SYL publishes no variable state.",
+  "fails_if": "`_compile_sos_register` stops reporting `invalid_sos_lookup_signals` for a subset with only one styrtabell signal, or stops marking SYL's lookup subset row and the variables routed only to it as source support, so SYL publishes states",
   "sources": "sos-routes"
 }

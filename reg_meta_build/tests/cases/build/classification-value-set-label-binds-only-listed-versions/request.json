@@ -1,0 +1,37 @@
+{
+  "replaces": [
+    "test_build_catalog_classification_boundary.py::test_value_set_label_binds_only_the_versions_its_book_lists"
+  ],
+  "note": "A grouped reporting version whose codes all sit in the detailed book stays unbound, without an issue: a label rule binds by the source's version label, never by code coincidence.",
+  "fails_if": "`_label_rule_bindings` (source_classification_bindings.py) binds a book to a segment whose value-set version label is not in its `value_set_labels` (for example by code containment), so GROUPED ('Grouped report') is also bound to a",
+  "sources": {
+    "description": "SCB DETAILED and GROUPED each carry codes 1/2 under the value-set versions 'Detailed book' and 'Grouped report'; book a.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {"cvid": 1002, "var_id": 102, "colname": "DETAILED", "varname": "DETAILED"},
+        {"cvid": 1003, "var_id": 103, "colname": "GROUPED", "varname": "GROUPED"}
+      ],
+      "vardemangder": [
+        "Detailed book|1|1|One|1002|10021",
+        "Detailed book|1|2|Two|1002|10022",
+        "Grouped report|1|1|One|1003|10031",
+        "Grouped report|1|2|Two|1003|10032"
+      ]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": [
+        "[[register]]",
+        "key = \"remote\"",
+        "name = \"Remote\"",
+        "valid_from = \"2020-01-01\"",
+        "valid_to = \"2020-12-31\"",
+        "[[register.variable]]",
+        "name = \"Amount\"",
+        "column = \"AMOUNT\"",
+        "data_type = \"int\""
+      ],
+      "classifications/a.csv": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

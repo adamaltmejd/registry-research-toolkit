@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_unresolved_decimal_comma_cell_publishes_no_members_without_review[comma-semicolon]"
   ],
+  "fails_if": "`_hides_another_assignment` in `sources/sos.py` stops treating `, ` as a run-together separator, so `_classify_value_set_text` accepts the mixed cell as members `0=(ogitligt), 1=enbart trygghetslarm` and `9` and publishes them for KON",
   "sources": "sos-kon-decimal-comma-semicolon"
 }

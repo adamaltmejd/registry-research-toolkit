@@ -1,0 +1,25 @@
+{
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {
+        "subject": "('sheet:Kodlista_CROSSWALK',)",
+        "source": "Socialstyrelsen/Metadata Syntetiskt register (SYN)_webb.xlsx"
+      },
+      "fields": ["code", "severity"],
+      "rows": [
+        ["unbound_source_relationship", "error"]
+      ]
+    },
+    {
+      "table": "evidence",
+      "where": {
+        "disposition": ["out_of_slice_relationship", "unbound_relationship", "retained_unattached"]
+      },
+      "fields": ["disposition"],
+      "rows": [
+        ["unbound_relationship"]
+      ]
+    }
+  ]
+}

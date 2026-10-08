@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_source_acknowledgement_boundary.py::test_a_dated_issue_is_acknowledged_only_by_its_exact_period[contained-window]"
+  ],
+  "fails_if": "the acknowledgement matcher in source_scope.py accepts an entry whose period window (2020-01-01..2020-06-30) lies inside, rather than equals, the dated issue's 2020 period",
+  "sources": "scb-value-unit-conflict"
+}

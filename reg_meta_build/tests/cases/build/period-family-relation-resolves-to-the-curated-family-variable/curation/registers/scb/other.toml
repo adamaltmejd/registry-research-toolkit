@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "other"
+native_id = "2"
+[[variant]]
+native_id = "2.20"
+slug = "people"
+[[representation.period_family]]
+register = "scb/other"
+family_stem = "calendar"
+label = "Calendar per month"
+slug = "calendar"

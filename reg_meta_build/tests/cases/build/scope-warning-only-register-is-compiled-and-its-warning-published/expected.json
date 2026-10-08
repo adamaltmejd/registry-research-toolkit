@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "warnings",
+      "fields": ["code", "variant", "column", "valid_from", "valid_to", "refs"],
+      "rows": [
+        [
+          "source_metadata_conflict",
+          "people",
+          "VALUE",
+          "2020-01-01",
+          "2020-12-31",
+          ["scb-registerinformation#register:1/variant:10/edition:110/variable:101/member:1001"]
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["column", "data_type"],
+      "rows": [
+        ["VALUE", "integer"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "result": {
+    "counts": {"deferred_references": null}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "edges",
+      "fields": ["type", "a", "b"],
+      "rows": [
+        ["same_as", "scb/sample/value", "scb/other/value"],
+        ["same_as", "scb/other/value", "scb/sample/value"],
+        ["replaced_by", "scb/sample/value", "scb/other/value"]
+      ]
+    }
+  ]
+}

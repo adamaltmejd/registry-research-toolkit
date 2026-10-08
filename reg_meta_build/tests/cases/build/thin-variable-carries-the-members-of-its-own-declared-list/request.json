@@ -3,6 +3,7 @@
     "test_curation_thin_coverage_boundary.py::test_thin_variable_carries_the_members_of_its_own_declared_list"
   ],
   "note": "The open register window from 2010 bounds the state; its value set is the declared list's two members.",
+  "fails_if": "`_compile_thin_register` stops copying the coding of an authored variable that names its own list, so COL's state has no value set instead of own-list.csv's members 01 First and 02 Second",
   "sources": {
     "description": "Authored canonical-SCB register r (open from 2010) whose variable COL names its own list own-list.csv (01 First, 02 Second). Plus the SCB sample.",
     "scb": {

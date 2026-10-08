@@ -3,6 +3,7 @@
     "test_curation_partition_deferred_boundary.py::test_slice_refuses_edge_to_a_name_the_full_build_does_not_mint[reviewed-owner-answer]"
   ],
   "note": "`answer` is the generated name a complete reviewed owner replaces.",
+  "fails_if": "the out-of-slice compile keeps the generated `1.5.answer` entry after a reviewed owner covers every row (`_scoped_partition_entries` no longer drops it), so the unselected scope declares `scb/sample/answer` and the slice defers the edge instead of refusing it",
   "sources": "scb-anchor-and-reviewed-owner",
   "registers": ["9"]
 }

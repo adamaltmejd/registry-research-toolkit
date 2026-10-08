@@ -43,8 +43,9 @@ def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
     items.sort(key=lambda item: not item.nodeid.endswith(_FIRST))
 
 
-# The build-pipeline `catalog` fixture (an accepted synthetic SCB source plus curation)
-# is shared by the build-db test modules.
+# The prepared-input cache of the `cases/build` corpus, and the build-pipeline
+# `catalog` fixture (a cached accepted synthetic SCB source plus curation) on it.
+from _build_case_runner import prepared_cache  # noqa: F401
 from _pipeline_catalog_support import catalog  # noqa: F401
 
 # The committed curation tree, loaded once per session (test_committed_curation).

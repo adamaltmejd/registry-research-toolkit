@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_source_acknowledgement_boundary.py::test_a_dated_issue_is_acknowledged_only_by_its_exact_period[no-dates]"
+  ],
+  "fails_if": "the acknowledgement matcher in source_scope.py treats an entry without `valid_from`/`valid_to` as a wildcard over periods, so an undated entry acknowledges the dated 2020 unit conflict",
+  "sources": "scb-value-unit-conflict"
+}

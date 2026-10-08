@@ -3,5 +3,6 @@
     "test_curation_sos_errata_boundary.py::test_data_type_entry_over_several_subset_peers_is_over_broad"
   ],
   "note": "Two SYX_A rows for one variable make the entry over-broad, citing both.",
+  "fails_if": "`_compile_sos_register` reports a data-type entry with several Deldatamängd/variable peers as stale instead of over-broad",
   "sources": "sos-syx-errata"
 }

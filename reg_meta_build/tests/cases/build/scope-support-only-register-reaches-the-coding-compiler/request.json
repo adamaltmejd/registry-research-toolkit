@@ -1,0 +1,7 @@
+{
+  "replaces": ["test_build_db_scope_selection.py::test_support_only_register_reaches_coding_compiler_and_report"],
+  "note": "The register's only coding entry is a support decision for an undelivered variable; it is compiled and reported stale.",
+  "fails_if": "`coding_registers` (pipeline.py build_catalog) stops counting `[[coding.support]]` entries, so a register whose only coding entry is a support decision is never compiled or accounted, and its stale entry for undelivered variable 1.999 disappears",
+  "sources": "scb-value",
+  "registers": ["1"]
+}

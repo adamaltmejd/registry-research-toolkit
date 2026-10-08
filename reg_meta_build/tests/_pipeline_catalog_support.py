@@ -4,16 +4,14 @@ from __future__ import annotations
 
 import gzip
 import json
+import shutil
 import sqlite3
-from contextlib import closing
-from dataclasses import dataclass
-from functools import cached_property
+from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import var_row, write_input_bundle, write_scb_input
+from _csv_fixtures import write_input_bundle
 from _prepared_fixtures import accept_prepared
-from _sos_fixtures import DEFAULT_REGISTERS, write_sos_input
 from reg_meta_build.pipeline import (
     build_catalog,
     check_curation,
@@ -21,7 +19,6 @@ from reg_meta_build.pipeline import (
 from reg_meta_build.prepared_catalog import (
     prepare_catalog_sources,
 )
-from reg_meta_build.source_naming import authored_naming_id
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -45,6 +42,16 @@ class CatalogFixture:
             **kwargs,
         )
 
+    def private(self, root: Path) -> CatalogFixture:
+        """This catalog over its own copy of the shared prepared repository.
+
+        For a test that checks a guard against writing into the prepared input: a
+        regressed guard then writes the copy, never the session's shared cache.
+        """
+        copy = root / "private-prepared"
+        shutil.copytree(self.prepared.parent, copy, symlinks=True)
+        return replace(self, prepared=copy / self.prepared.name)
+
     def check(self, report: Path, **kwargs):
         registers = kwargs.pop("registers", ("1",))
         return check_curation(
@@ -58,75 +65,40 @@ class CatalogFixture:
         )
 
 
-@pytest.fixture
-def catalog(tmp_path: Path, request) -> CatalogFixture:
-    mode = getattr(request, "param", False)
-    second = mode in {True, "unknown_support", "shared_var"}
-    # "shared_var": the second register's variable reuses the first's native
-    # variable id, so the two differ only by their register's native id.
-    other_var = 101 if mode == "shared_var" else 201
-    thin = mode in {"thin", "thin_two"}
-    source = tmp_path / "source"
-    records = [var_row(cvid=1001, var_id=101, colname="VALUE", data_type="int")]
-    summaries = [
-        "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
-    ]
-    if second:
-        records.append(
-            var_row(
-                cvid=2001,
-                var_id=other_var,
-                colname="OTHER",
-                varname="OtherVar",
-                data_type="int",
-                register=("OTHERREG", 2, 20),
-            )
-        )
-        summaries.append(
-            "OTHERREG|Testregistret|Individer|Individer|OtherVar|OTHER|2020|2020|0|0|0"
-        )
-    if mode == "unknown_support":
-        summaries = [
-            "|".join((*row.split("|")[:5], "", *row.split("|")[6:]))
-            for row in summaries
-        ]
-    write_scb_input(
-        source,
-        registerinformation_rows=records,
-        unika_rows=summaries,
-        include=("registerinformation", "unika"),
-    )
-    if thin:
-        thin_source = source / "Forsakringskassan"
-        thin_source.mkdir()
-        (thin_source / "fk.toml").write_text(
-            '[[register]]\nkey = "remote"\nname = "Remote"\n'
-            'valid_from = "2020-01-01"\nvalid_to = "2020-12-31"\n'
-            '[[register.variable]]\nname = "Amount"\ncolumn = "AMOUNT"\n'
-            'data_type = "int"\n'
-            + (
-                '[[register]]\nkey = "aktivitetsstod"\nname = "Aktivitetsstöd"\n'
-                'valid_from = "2020-01-01"\nvalid_to = "2020-12-31"\n'
-                '[[register.variable]]\nname = "Benefit"\ncolumn = "BENEFIT"\n'
-                'data_type = "int"\n'
-                if mode == "thin_two"
-                else ""
-            ),
-            encoding="utf-8",
-        )
-    if mode == "sos_whole":
-        from openpyxl import load_workbook
+# The `catalog` fixture's source rows (`_csv_fixtures.var_row` keyword arguments).
+_VALUE = {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_type": "int"}
 
-        sos_dir = write_sos_input(source, registers=DEFAULT_REGISTERS[1:2])
-        workbook_path = next(sos_dir.glob("*.xlsx"))
-        workbook = load_workbook(workbook_path)
-        workbook["Generell information"]["C4"] = None
-        workbook.save(workbook_path)
-        workbook.close()
-    bundle = write_input_bundle(tmp_path / "inputs", source)
-    prepared = tmp_path / "prepared" / "catalog"
-    manifest = prepare_catalog_sources(bundle, prepared)
-    commit = accept_prepared(prepared)
+
+def _other(var_id: int) -> dict:
+    return {
+        "cvid": 2001,
+        "var_id": var_id,
+        "colname": "OTHER",
+        "varname": "OtherVar",
+        "data_type": "int",
+        "register": ["OTHERREG", 2, 20],
+    }
+
+
+@pytest.fixture
+def catalog(tmp_path: Path, request, prepared_cache) -> CatalogFixture:
+    """An accepted synthetic SCB source plus a per-test curation tree.
+
+    The prepared input comes from the session's `cases/build` cache, shared
+    read-only across tests; each test writes its own curation under ``tmp_path``.
+    ``True`` adds a second register; ``"shared_var"`` makes its variable reuse the
+    first's native variable id, so the two differ only by their register's native id.
+    """
+    mode = getattr(request, "param", False)
+    other_var = 101 if mode == "shared_var" else 201
+    rows = [_VALUE] + ([_other(other_var)] if mode else [])
+    prepared = prepared_cache.get(
+        {
+            "description": "The build-db `catalog` fixture: register 1 delivers VALUE"
+            + ("; register 2 delivers OTHER." if mode else "."),
+            "scb": {"registerinformation": rows},
+        }
+    )
     curation = tmp_path / "curation"
     registers = curation / "registers" / "scb"
     registers.mkdir(parents=True)
@@ -137,63 +109,14 @@ def catalog(tmp_path: Path, request) -> CatalogFixture:
         '[[variable]]\nnative_id = "1.101"\nslug = "value"\n',
         encoding="utf-8",
     )
-    if second:
+    if mode:
         (registers / "other.toml").write_text(
             '[register]\nprovider = "scb"\nslug = "other"\nnative_id = "2"\n'
             '[[variant]]\nnative_id = "2.20"\nslug = "people"\n'
             f'[[variable]]\nnative_id = "2.{other_var}"\nslug = "value"\n',
             encoding="utf-8",
         )
-    if thin:
-        thin_curation = curation / "registers" / "fk"
-        thin_curation.mkdir()
-        register_id = authored_naming_id(
-            "register", provider="fk", register_key="remote"
-        )
-        variant_id = authored_naming_id(
-            "register_variant",
-            provider="fk",
-            register_key="remote",
-            member_key="_default",
-        )
-        variable_id = authored_naming_id(
-            "variable", provider="fk", register_key="remote", member_key="AMOUNT"
-        )
-        (thin_curation / "remote.toml").write_text(
-            '[register]\nprovider = "fk"\nslug = "remote"\n'
-            f'native_id = "{register_id}"\n'
-            '[[variant]]\nslug = "default"\n'
-            f'native_id = "{variant_id}"\n'
-            '[[variable]]\nslug = "amount"\n'
-            f'native_id = "{variable_id}"\n',
-            encoding="utf-8",
-        )
-        if mode == "thin_two":
-            register_id = authored_naming_id(
-                "register", provider="fk", register_key="aktivitetsstod"
-            )
-            variant_id = authored_naming_id(
-                "register_variant",
-                provider="fk",
-                register_key="aktivitetsstod",
-                member_key="_default",
-            )
-            variable_id = authored_naming_id(
-                "variable",
-                provider="fk",
-                register_key="aktivitetsstod",
-                member_key="BENEFIT",
-            )
-            (thin_curation / "aktivitetsstod.toml").write_text(
-                '[register]\nprovider = "fk"\nslug = "aktivitetsstod"\n'
-                f'native_id = "{register_id}"\n'
-                '[[variant]]\nslug = "default"\n'
-                f'native_id = "{variant_id}"\n'
-                '[[variable]]\nslug = "benefit"\n'
-                f'native_id = "{variable_id}"\n',
-                encoding="utf-8",
-            )
-    return CatalogFixture(prepared, commit, manifest.sha256, curation)
+    return CatalogFixture(prepared.prepared, prepared.commit, prepared.digest, curation)
 
 
 def built_db_dir(
@@ -223,38 +146,6 @@ def write_curation_tree(root: Path, files: dict[str, str]) -> Path:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
     return root
-
-
-@dataclass(frozen=True)
-class BuiltCatalog:
-    """A finished build: its result dict, report ledger and SQLite artifact.
-
-    The one reader of a build's boundary outputs for the curation boundary cases.
-    """
-
-    result: dict
-    report: Path
-    db: Path
-
-    @cached_property
-    def events(self) -> list[dict]:
-        return report_events(self.report)
-
-    def issues(self, code: str | None = None) -> list[dict]:
-        """Every ledger issue, or those with ``code``, in ledger order."""
-        return [
-            e
-            for e in self.events
-            if e["kind"] == "issue" and (code is None or e["code"] == code)
-        ]
-
-    def errors(self) -> list[dict]:
-        """The error-severity ledger issues, in ledger order."""
-        return [issue for issue in self.issues() if issue["severity"] == "error"]
-
-    def rows(self, sql: str, *params) -> list[tuple]:
-        with closing(sqlite3.connect(self.db)) as conn:
-            return conn.execute(sql, params).fetchall()
 
 
 def report_events(report: Path) -> list[dict]:

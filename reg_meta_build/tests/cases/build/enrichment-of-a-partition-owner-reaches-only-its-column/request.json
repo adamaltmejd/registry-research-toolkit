@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_enrichment_target_boundary.py::test_enrichment_of_a_partition_owner_reaches_only_its_column"
   ],
+  "fails_if": "`compile_enrichment` resolves an entry on a partition owner to every record of the split native family instead of the owner's checked literal pairs, so the description for `b` also lands on column A's variable `a`",
   "sources": {
     "description": "Variable 5 delivers A (CVID 21) and B (CVID 22) in 2020.",
     "scb": {

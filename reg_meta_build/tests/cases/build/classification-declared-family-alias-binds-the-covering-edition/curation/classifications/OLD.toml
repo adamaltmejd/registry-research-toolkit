@@ -1,0 +1,8 @@
+[classification]
+short_name = "OLD"
+slug = "old"
+name = "OLD"
+codes_file = "old.csv"
+family = "pair"
+family_aliases = ["Source pair"]
+valid_to = 2019

@@ -1,5 +1,6 @@
 {
   "note": "Register 9 only: scb/sample is out of the slice, so the edge defers.",
+  "fails_if": "`compile_deferred_naming` stops adding the partition owners' bindings to the out-of-slice naming, so the unselected `scb/sample` no longer declares `scb/sample/a` and the slice refuses the edge instead of deferring it",
   "sources": "scb-anchor-and-partition",
   "registers": ["9"]
 }

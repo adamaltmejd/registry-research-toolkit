@@ -2,6 +2,7 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_changed_competing_list_makes_the_reviewed_choice_stale"
   ],
+  "fails_if": "`compile_coding_register` skips the compact `expected_evidence_sha256` comparison, so a choice reviewed before list `other` changed its code 02 to 03 still applies `keep` to both 2020 periods",
   "sources": "scb-value-changed-competing-list",
   "authored_from": "scb-value-competing-lists"
 }

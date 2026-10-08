@@ -3,5 +3,6 @@
     "test_curation_partition_deferred_boundary.py::test_slice_defers_edge_to_a_name_the_full_build_mints[edition-owners-new]"
   ],
   "note": "The full build mints the edge's target; step 2 checks the slice defers to it.",
+  "fails_if": "`_scoped_column_owners` stops filtering by `source_editions`, so the edition owners `old` and `new` go stale and the full build neither mints `scb/sample/new` nor stores the same_as edge to it",
   "sources": "scb-anchor-and-edition-owners"
 }

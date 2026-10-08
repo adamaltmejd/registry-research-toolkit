@@ -1,5 +1,6 @@
 {
   "replaces": ["test_curation_toml_load_boundary.py::test_same_as_component_above_the_cap_fails_the_build"],
+  "fails_if": "`relations._reject_oversized_components` lets a same_as component one FQID over `_SAME_AS_MAX_COMPONENT` through, so the 33-variable chain builds",
   "sources": {
     "description": "Register 1 delivers 33 variables V0..V32 (var_ids 100..132).",
     "scb": {

@@ -3,6 +3,7 @@
     "test_curation_topology_sos_boundary.py::test_named_subsets_without_a_subset_sheet_keep_their_variants"
   ],
   "note": "Subset names on the variable rows alone form the curated variants and tables.",
+  "fails_if": "native naming stops binding a SOS register's variants from the subset names on its variable rows when the workbook has no Deldatamängder sheet, so the curated variants A and B go stale and COL has no date/text states in them",
   "sources": {
     "description": "SOS BU without a Deldatamängder sheet: the variable rows name their subsets. Plus the SCB sample VALUE column.",
     "scb": {

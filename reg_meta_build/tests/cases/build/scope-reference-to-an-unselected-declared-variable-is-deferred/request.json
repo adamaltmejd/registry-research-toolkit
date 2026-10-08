@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_build_db_scope_selection.py::test_unselected_declared_variable_name_is_deferred"],
+  "fails_if": "`declared_dependency_keys` keys an unselected scope's variables by their source name or default slug instead of the curated `declaration.naming.slug`, so scb/other/curated is not declared and the slice raises CatalogDependencyError instead of deferring it",
+  "sources": "scb-two-registers",
+  "registers": ["1"]
+}

@@ -1,0 +1,8 @@
+{
+  "status": "curation_check_complete",
+  "result": {
+    "passed": true,
+    "checks_not_run": ["variable_edge_groups", "delivery_coverage"],
+    "counts": {"deferred_references": null}
+  }
+}

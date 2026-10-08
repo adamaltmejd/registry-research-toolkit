@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_build_db_scope_selection.py::test_undeclared_reference_is_fatal_even_when_register_is_unselected[scb/nosuch/value]"
+  ],
+  "fails_if": "`CatalogDependencies.require` defers any missing key whose register lies outside `slice_registers`, instead of only keys an unselected scope declares, so the undeclared scb/nosuch/value becomes a deferred_out_of_slice_reference warning in the slice of register 1",
+  "sources": "scb-two-registers",
+  "registers": ["1"]
+}

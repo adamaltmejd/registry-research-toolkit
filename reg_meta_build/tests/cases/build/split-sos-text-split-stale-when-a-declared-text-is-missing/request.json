@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_split_sos_boundary.py::test_text_split_is_stale_unless_the_delivered_texts_match[description-declared-text-missing]"
   ],
+  "fails_if": "the SOS split check in `curation_compile` accepts delivered descriptions that are a subset of the declared parts, so the First and Other rows are routed to owners although the declared Second is missing",
   "sources": {
     "description": "PAR_OV ATC rows of one source record key whose descriptions are First, Other.",
     "scb": {

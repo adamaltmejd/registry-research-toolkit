@@ -1,0 +1,49 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": ["retained_unattached_source_relationship", "unbound_source_relationship"]
+      },
+      "fields": ["code", "severity", "detail"],
+      "rows": [
+        [
+          "retained_unattached_source_relationship",
+          "warning",
+          "No supplied variable or encoding endpoint; retain literal codes unattached."
+        ]
+      ]
+    },
+    {
+      "table": "evidence",
+      "where": {
+        "disposition": ["out_of_slice_relationship", "unbound_relationship", "retained_unattached"]
+      },
+      "fields": ["disposition"],
+      "rows": [
+        ["retained_unattached"]
+      ]
+    },
+    {
+      "table": "relationships",
+      "fields": ["kind", "binding_status", "source_dataset", "owner", "endpoints"],
+      "rows": [
+        [
+          "code_crosswalk",
+          "retained_unattached",
+          "Socialstyrelsen/Metadata Syntetiskt register (SYN)_webb.xlsx",
+          null,
+          0
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "where": {"code": "retained_unattached_source_relationship"},
+      "fields": ["register", "variable", "detail"],
+      "rows": [
+        ["syn", null, "No supplied variable or encoding endpoint; retain literal codes unattached."]
+      ]
+    }
+  ]
+}

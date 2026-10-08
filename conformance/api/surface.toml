@@ -809,7 +809,7 @@ id = "reg_meta.db.DB_FILENAME"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_catalog_cli_output_boundary.py"]
+covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
 note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
 
 [[row]]
@@ -1455,11 +1455,11 @@ covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
 [[row]]
 kind = "import"
 id = "reg_meta.queries.search"
-used_by = ["conformance", "reg_meta_build"]
+used_by = ["conformance"]
 disposition = "removed"
 owner = "4"
 covered_by = ["conformance/cases/api", "reg_meta/tests/test_search_ranking.py"]
-note = "The search core, which the Rust `search` operation replaced for the webapp. Conformance's reader and logical cases still call it. The build's only importer is a test (test_build_catalog_classification_boundary); `api/search-english-name` pins the English-name hit it asserted."
+note = "The search core, which the Rust `search` operation replaced for the webapp. Conformance's reader and logical cases still call it. The build no longer imports it: English-name search coverage is the `api/search-english-name` case."
 
 [[row]]
 kind = "import"

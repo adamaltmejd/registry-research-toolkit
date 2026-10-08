@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "classification_curation_invalid",
+    "message_contains": [
+      "classifications/B.toml: classification reference 'B' is also declared in classifications/A.toml."
+    ]
+  }
+}

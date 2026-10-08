@@ -1,0 +1,17 @@
+{
+  "projections": [
+    {
+      "table": "state_classifications",
+      "where": {"column": "AMOUNT"},
+      "fields": ["classification"],
+      "rows": [
+        ["new"]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    }
+  ]
+}

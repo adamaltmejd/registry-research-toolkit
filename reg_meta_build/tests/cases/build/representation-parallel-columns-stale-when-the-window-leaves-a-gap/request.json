@@ -3,6 +3,7 @@
     "test_curation_support_delivery_boundary.py::test_parallel_columns_are_stale_unless_nested_editions_cover_exactly[window-gap]"
   ],
   "note": "A parallel window must match its originals' coverage and agreeing metadata.",
+  "fails_if": "`compile_parallel_representations` stops refusing a column window its members do not fully cover (the `remaining_windows` check), so First declared from 2019 with members from 2020 is accepted",
   "sources": {
     "description": "Variable 1: First is pooled 2020-2022 (CVID 100) and again nested 2021-2022 (CVID 103); Second is 2022-2024 (CVID 101).",
     "scb": {

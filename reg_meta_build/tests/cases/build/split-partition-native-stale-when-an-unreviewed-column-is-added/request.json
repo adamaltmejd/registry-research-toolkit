@@ -3,6 +3,7 @@
     "test_curation_split_partition_boundary.py::test_native_partition_is_stale_when_its_reviewed_columns_change[unreviewed-column-added]"
   ],
   "note": "A native partition guards its complete column set; drift withholds the family.",
+  "fails_if": "`_column_partition_plan` tolerates delivered columns the declared map does not name, so the OLD/NEW partition still applies after variable 1.5 also delivers an unreviewed OTHER column",
   "sources": {
     "description": "Variable 1.5 delivered as OLD (2020), NEW (2021) and an unreviewed OTHER (2020, CVID 24).",
     "scb": {
