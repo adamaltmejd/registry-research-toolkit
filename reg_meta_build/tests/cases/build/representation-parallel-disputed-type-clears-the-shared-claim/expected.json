@@ -1,9 +1,0 @@
-{
-  "projections": [
-    {
-      "table": "issues",
-      "fields": ["code"],
-      "rows": []
-    }
-  ]
-}
