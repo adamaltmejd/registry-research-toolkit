@@ -5,7 +5,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::{fold_identity, next_iso_day, period_token_for_bounds};
+use reg_core::{fold_identity, period_token_for_bounds};
 use rusqlite::{Connection, OptionalExtension, Row, params};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
@@ -137,8 +137,6 @@ fn sort_key(e: &Emitted) -> (&str, &str, &str, &str) {
     )
 }
 
-/// A held representation's periods (none on a year-independent table).
-type Held = Vec<(Option<String>, Option<String>)>;
 /// A coded window's classification: slug, short name, name, provenance, evidence.
 type Link = (String, String, String, Option<String>, Option<String>);
 
@@ -158,7 +156,7 @@ fn held(
          WHERE hm.variable_id = ? AND hm.variant_id = ? AND hm.representation_canonical = ? \
          AND ht.scope = ? ORDER BY hp.lo, hp.hi",
     )?;
-    let mut periods: BTreeMap<(i64, String, String), Held> = BTreeMap::new();
+    let mut periods: BTreeMap<(i64, String, String), crate::held::Periods> = BTreeMap::new();
     let mut out = Vec::new();
     for e in emitted {
         let Some(column) = e.canonical_column.clone() else {
@@ -180,35 +178,15 @@ fn held(
             }
             continue;
         };
-        let mut clipped: Vec<(String, String)> = held
-            .iter()
-            .filter_map(|(lo, hi)| {
-                let mut lo = lo.clone()?.max(from.clone());
-                let mut hi = hi.clone()?.min(to.clone());
-                if let Some((request_lo, request_hi)) = bounds {
-                    lo = lo.max(request_lo.to_owned());
-                    hi = hi.min(request_hi.to_owned());
-                }
-                (lo <= hi).then_some((lo, hi))
-            })
-            .collect();
-        clipped.sort();
-        let mut merged: Vec<(String, String)> = Vec::new();
-        for (lo, hi) in clipped {
-            match merged.last_mut() {
-                Some(last) if lo <= next_iso_day(&last.1) => {
-                    if hi > last.1 {
-                        last.1 = hi;
-                    }
-                }
-                _ => merged.push((lo, hi)),
-            }
-        }
-        out.extend(merged.into_iter().map(|(lo, hi)| Emitted {
-            valid_from: Some(lo),
-            valid_to: Some(hi),
-            ..e.clone()
-        }));
+        out.extend(
+            crate::held::clip(held, (&from, &to), bounds)
+                .into_iter()
+                .map(|(lo, hi)| Emitted {
+                    valid_from: Some(lo),
+                    valid_to: Some(hi),
+                    ..e.clone()
+                }),
+        );
     }
     Ok(out)
 }

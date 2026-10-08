@@ -13,7 +13,7 @@
 use std::collections::BTreeMap;
 
 use reg_core::Period;
-use rusqlite::{Connection, OptionalExtension};
+use rusqlite::Connection;
 use serde::Serialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
@@ -23,9 +23,6 @@ use super::refs::{self, Target, fqid};
 use super::{Params, Server, cursor};
 use crate::held;
 use crate::{Code, Error, Scope, hex};
-
-/// The open end of a still-delivered state; it has no next day.
-const OPEN_ENDED_TO: &str = "9999-12-31";
 
 /// `Page<SchemaColumn>`.
 #[derive(Serialize, ToSchema)]
@@ -183,9 +180,13 @@ pub fn schema(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
         ),
         _ => return Err(invalid_kind(value)),
     };
-    let variant = params.get("variant").copied();
-    let mut reps = representations(&conn, scope, register_id, variable_id, variant)?;
-    if let Some(years) = period.map(Period::years) {
+    let variant = super::variant(params)?;
+    let years = period.map(Period::years);
+    // simplify: loads and sorts the register's whole history per page (frida 47k
+    // rows, ~0.3 s of SQL); move `period` and the order into SQL with keyset paging
+    // if a page passes ~1 s or G1's served schema walk exceeds its share of 5 min.
+    let mut reps = representations(&conn, scope, register_id, variable_id, variant, years)?;
+    if let Some(years) = years {
         reps.retain(|rep| overlaps(&rep.row, years));
     }
     reps.sort_by(|a, b| a.page_order().cmp(&b.page_order()));
@@ -225,7 +226,8 @@ pub fn diff(server: &Server, scope: Scope, params: &Params) -> Result<Value, Err
         |row| row.get(0),
     )?;
     let mut by_variant: BTreeMap<(bool, Option<String>), Vec<Rep>> = BTreeMap::new();
-    for rep in representations(&conn, scope, id, None, params.get("variant").copied())? {
+    let variant = super::variant(params)?;
+    for rep in representations(&conn, scope, id, None, variant, None)? {
         by_variant
             .entry((rep.row.variant.is_none(), rep.row.variant.clone()))
             .or_default()
@@ -288,7 +290,9 @@ pub fn diff(server: &Server, scope: Scope, params: &Params) -> Result<Value, Err
             variants.push(diff);
         }
     }
-    if !compared {
+    // A variant filter that keeps nothing answers no variants (as `schema` answers
+    // no rows), not a missing register.
+    if !compared && variant.is_none() {
         return Err(Error::new(
             Code::NotFound,
             format!("{value:?} delivers no columns in both {from} and {to} in this scope."),
@@ -352,34 +356,17 @@ fn by_fqid<'a>(columns: impl Iterator<Item = (&'a i64, &'a DiffColumn)>) -> Vec<
     out
 }
 
-/// `slug` names a variant of the register in scope.
-fn require_variant(
-    conn: &Connection,
-    scope: Scope,
-    register_id: i64,
-    slug: &str,
-) -> Result<(), Error> {
-    let sql = format!(
-        "SELECT 1 FROM register_variant rv WHERE rv.register_id = ? AND rv.slug = ? AND {}",
-        held::variant(scope, "rv.register_variant_id")
-    );
-    conn.query_row(&sql, (register_id, slug), |_| Ok(()))
-        .optional()?
-        .ok_or_else(|| refs::not_found(slug))
-}
-
 /// The register's representations in scope, or one variable's, of the variant
-/// `variant` (a slug) when given.
+/// `variant` when given (a slug, or `_default` for the unslugged one). Holdings
+/// clips them to the calendar `years` as well as to their held periods.
 fn representations(
     conn: &Connection,
     scope: Scope,
     register_id: i64,
     variable_id: Option<i64>,
     variant: Option<&str>,
+    years: Option<(u16, u16)>,
 ) -> Result<Vec<Rep>, Error> {
-    if let Some(slug) = variant {
-        require_variant(conn, scope, register_id, slug)?;
-    }
     // A window's own content replaces its state's only where the window is per
     // column, and a window never inherits its state's operational definition
     // (today's `_expand_state_windows`). SCB's `var_id` is today's `_VAR_ID_EXPR`.
@@ -413,7 +400,7 @@ fn representations(
          AND w.delivery_column_name = es.delivery_column_name \
          AND w.valid_from = es.window_valid_from \
          WHERE v.register_id = ?1 AND (?2 IS NULL OR v.variable_id = ?2) \
-         AND (?3 IS NULL OR rv.slug = ?3) AND es.kind != 'base_fallback' \
+         AND (?3 IS NULL OR rv.slug = ?3 OR (?3 = '_default' AND rv.slug IS NULL)) AND es.kind != 'base_fallback' \
          ORDER BY es.expanded_state_id",
         per_column("data_type"),
         per_column("data_length"),
@@ -472,15 +459,21 @@ fn representations(
         .collect::<rusqlite::Result<Vec<Rep>>>()?;
     match scope {
         Scope::Reference => Ok(reps),
-        Scope::Holdings => held_clip(conn, register_id, reps),
+        Scope::Holdings => held_clip(conn, register_id, reps, years),
     }
 }
 
 /// Today's `_scope_states`: a representation the steward holds, clipped to its held
-/// periods (merged, day-adjacent ones joined); one per merged interval.
-fn held_clip(conn: &Connection, register_id: i64, reps: Vec<Rep>) -> Result<Vec<Rep>, Error> {
+/// periods and the request's `years` (merged, day-adjacent ones joined); one per
+/// merged interval.
+fn held_clip(
+    conn: &Connection,
+    register_id: i64,
+    reps: Vec<Rep>,
+    years: Option<(u16, u16)>,
+) -> Result<Vec<Rep>, Error> {
     type Key = (i64, i64, String, String);
-    let mut held: BTreeMap<Key, Vec<(String, String)>> = BTreeMap::new();
+    let mut held: BTreeMap<Key, held::Periods> = BTreeMap::new();
     let mut stmt = conn.prepare(
         "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, ht.scope, \
          hp.lo, hp.hi FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
@@ -490,13 +483,12 @@ fn held_clip(conn: &Connection, register_id: i64, reps: Vec<Rep>) -> Result<Vec<
     )?;
     let mut rows = stmt.query([register_id])?;
     while let Some(row) = rows.next()? {
-        let periods = held
-            .entry((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
-            .or_default();
-        if let (Some(lo), Some(hi)) = (row.get(4)?, row.get(5)?) {
-            periods.push((lo, hi));
-        }
+        held.entry((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
+            .or_default()
+            .push((row.get(4)?, row.get(5)?));
     }
+    let request = years.map(|(lo, hi)| (format!("{lo:04}-01-01"), format!("{hi:04}-12-31")));
+    let request = request.as_ref().map(|(lo, hi)| (lo.as_str(), hi.as_str()));
     let mut out = Vec::new();
     for rep in reps {
         let Some(canonical) = rep.canonical.clone() else {
@@ -511,16 +503,13 @@ fn held_clip(conn: &Connection, register_id: i64, reps: Vec<Rep>) -> Result<Vec<
         let Some(periods) = held.get(&key) else {
             continue;
         };
-        let (Some(from), Some(to)) = (rep.row.valid_from.clone(), rep.row.valid_to.clone()) else {
+        let (Some(from), Some(to)) = (rep.row.valid_from.as_deref(), rep.row.valid_to.as_deref())
+        else {
             // Year-independent: held when any table of its scope maps it.
             out.push(rep);
             continue;
         };
-        let clipped = periods.iter().filter_map(|(lo, hi)| {
-            let (lo, hi) = (lo.max(&from).clone(), hi.min(&to).clone());
-            (lo <= hi).then_some((lo, hi))
-        });
-        for (lo, hi) in merge(clipped.collect()) {
+        for (lo, hi) in held::clip(periods, (from, to), request) {
             let mut piece = rep.clone();
             piece.row.valid_from = Some(lo);
             piece.row.valid_to = Some(hi);
@@ -528,45 +517,4 @@ fn held_clip(conn: &Connection, register_id: i64, reps: Vec<Rep>) -> Result<Vec<
         }
     }
     Ok(out)
-}
-
-/// Today's `inventory._merge`: sorted, overlapping and day-adjacent intervals joined.
-fn merge(mut intervals: Vec<(String, String)>) -> Vec<(String, String)> {
-    intervals.sort();
-    let mut merged: Vec<(String, String)> = Vec::new();
-    for (lo, hi) in intervals {
-        match merged.last_mut() {
-            Some(last) if lo <= next_day(&last.1) => {
-                if hi > last.1 {
-                    last.1 = hi;
-                }
-            }
-            _ => merged.push((lo, hi)),
-        }
-    }
-    merged
-}
-
-/// The ISO day after `day`; the open end has none and stays.
-fn next_day(day: &str) -> String {
-    let parse = |range: std::ops::Range<usize>| day.get(range)?.parse::<u16>().ok();
-    let (Some(y), Some(m), Some(d)) = (parse(0..4), parse(5..7), parse(8..10)) else {
-        return day.to_owned();
-    };
-    if day >= OPEN_ENDED_TO {
-        return day.to_owned();
-    }
-    let leap = y % 4 == 0 && (y % 100 != 0 || y % 400 == 0);
-    let last = match m {
-        2 if leap => 29,
-        2 => 28,
-        4 | 6 | 9 | 11 => 30,
-        _ => 31,
-    };
-    let (y, m, d) = match (m, d) {
-        (12, d) if d >= last => (y + 1, 1, 1),
-        (m, d) if d >= last => (y, m + 1, 1),
-        (m, d) => (y, m, d + 1),
-    };
-    format!("{y:04}-{m:02}-{d:02}")
 }
