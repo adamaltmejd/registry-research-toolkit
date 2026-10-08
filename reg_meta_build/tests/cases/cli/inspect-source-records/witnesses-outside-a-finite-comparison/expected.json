@@ -1,0 +1,175 @@
+{
+  "exit_code": 0,
+  "files": {
+    "full.json": {
+      "includes": {
+        "complete": false,
+        "interpretation_issues": {
+          "$contains": [
+            {"kind": "unparseable_period", "source_record_ids": ["scb:12"]},
+            {"kind": "pooled_period", "source_record_ids": ["scb:13"]}
+          ]
+        },
+        "comparison_outcomes": {
+          "$contains": [
+            {
+              "status": "unknown_applicability",
+              "workbook_record_ids": [],
+              "scb_record_ids": ["scb:12"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope", "same-native-variable-spelling-continuity"]
+            },
+            {
+              "status": "unknown_applicability",
+              "workbook_record_ids": [],
+              "scb_record_ids": ["scb:13"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope", "same-native-variable-spelling-continuity"]
+            },
+            {
+              "status": "unknown_applicability",
+              "column_name": "Inv_UtvGrEg5",
+              "workbook_record_ids": ["Individ!row:42"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope"]
+            },
+            {
+              "status": "unknown_applicability",
+              "column_name": "Inv_UtvGrEg5",
+              "workbook_record_ids": ["Individ årsoberoende!row:43"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope"]
+            }
+          ]
+        }
+      }
+    },
+    "ampoltyp.json": {
+      "includes": {
+        "complete": false,
+        "summary": {
+          "scb_total_occurrences": 9,
+          "scb_retained_occurrences": 6,
+          "interpretation_issue_counts": {"pooled_period": 1, "unparseable_period": 2}
+        },
+        "target_preview": {"expected_source_target_count": 0, "target_record_ids": []},
+        "source_records": {
+          "$contains": [
+            {"record_id": "scb:1", "locators": [{"physical_record": "row:2"}, {"physical_record": "row:3"}]},
+            {"record_id": "scb:2", "edition_scope": {"kind": "unknown"}},
+            {"record_id": "scb:3", "edition_scope": {"kind": "pooled"}},
+            {"record_id": "scb:5"}
+          ]
+        },
+        "interpretation_issues": {
+          "$length": 3,
+          "$contains": [
+            {"kind": "unparseable_period", "incomplete": true, "source_record_ids": ["scb:2"]},
+            {"kind": "pooled_period", "incomplete": false, "source_record_ids": ["scb:3"]},
+            {"kind": "unparseable_period", "incomplete": true, "source_record_ids": ["scb:4"]}
+          ]
+        },
+        "comparison_outcomes": {
+          "$contains": [
+            {"status": "unknown_applicability", "edition_scope": {"kind": "unknown"}, "scb_record_ids": ["scb:2"]},
+            {"status": "unknown_applicability", "edition_scope": {"kind": "pooled"}, "scb_record_ids": ["scb:3"]},
+            {
+              "status": "unknown_applicability",
+              "workbook_record_ids": ["Individ!row:600"],
+              "scb_edition_present": {"$absent": true},
+              "scb_record_ids": {"$contains": ["scb:4"]}
+            },
+            {
+              "status": "source_only_observation",
+              "edition_scope": {"intervals": [{"start": "2025", "end": "2025"}]},
+              "workbook_record_ids": [],
+              "scb_record_ids": ["scb:5"]
+            }
+          ]
+        }
+      }
+    },
+    "onlyscb.json": {
+      "includes": {
+        "summary": {
+          "workbook_selected_occurrences": 0,
+          "scb_retained_occurrences": 3,
+          "comparison_outcomes": 3,
+          "outcome_counts": {"source_only_observation": 1, "unknown_applicability": 2},
+          "interpretation_issue_counts": {"pooled_period": 1, "unparseable_period": 1}
+        },
+        "workbook_context": {
+          "$once": [
+            "worksheet-context Företag!A48: Ekonomiska nyckeltal och ekonomisk grunddata finns för företag som ingår i Företagens ekonomi (FEK).",
+            "worksheet-context Företag!A49: FEK täcker näringslivet (exklusive de finansiella och offentliga sektorerna samt hushållens icke-vinstdrivande",
+            "worksheet-context Företag!A50:  organisationer).",
+            "worksheet-context Företag!A91: Från 2024 inkluderas godkända resultaträkningar även om balansräkning är underkänd och tvärtom.",
+            "worksheet-context Individ!A139: Befolkningens arbetsmarknadsstatus (BAS) är källa från 2022 om inget annat år anges"
+          ]
+        },
+        "target_preview": {
+          "expected_source_target_count": 0,
+          "target_record_ids": [],
+          "existing_named_record_ids": ["scb:11"],
+          "assumption_ids": ["unestablished-workbook-to-scb-variant-scope"]
+        },
+        "source_records": {
+          "$length": 3,
+          "$contains": [{"record_id": "scb:11"}, {"record_id": "scb:12"}, {"record_id": "scb:13"}],
+          "$lacks": [
+            {
+              "context": {
+                "$contains": [
+                  "worksheet-context Företag!A48: Ekonomiska nyckeltal och ekonomisk grunddata finns för företag som ingår i Företagens ekonomi (FEK)."
+                ]
+              }
+            },
+            {
+              "context": {
+                "$contains": [
+                  "worksheet-context Företag!A49: FEK täcker näringslivet (exklusive de finansiella och offentliga sektorerna samt hushållens icke-vinstdrivande"
+                ]
+              }
+            },
+            {"context": {"$contains": ["worksheet-context Företag!A50:  organisationer)."]}},
+            {
+              "context": {
+                "$contains": [
+                  "worksheet-context Företag!A91: Från 2024 inkluderas godkända resultaträkningar även om balansräkning är underkänd och tvärtom."
+                ]
+              }
+            },
+            {
+              "context": {
+                "$contains": [
+                  "worksheet-context Individ!A139: Befolkningens arbetsmarknadsstatus (BAS) är källa från 2022 om inget annat år anges"
+                ]
+              }
+            }
+          ]
+        },
+        "interpretation_issues": {
+          "$length": 2,
+          "$contains": [
+            {"kind": "unparseable_period", "incomplete": true, "source_record_ids": ["scb:12"]},
+            {"kind": "pooled_period", "incomplete": false, "source_record_ids": ["scb:13"]}
+          ]
+        },
+        "comparison_outcomes": {
+          "$length": 3,
+          "$contains": [
+            {"status": "source_only_observation", "workbook_record_ids": [], "scb_record_ids": ["scb:11"]},
+            {
+              "status": "unknown_applicability",
+              "workbook_record_ids": [],
+              "scb_record_ids": ["scb:12"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope", "same-native-variable-spelling-continuity"]
+            },
+            {
+              "status": "unknown_applicability",
+              "workbook_record_ids": [],
+              "scb_record_ids": ["scb:13"],
+              "assumption_ids": ["unestablished-workbook-to-scb-variant-scope", "same-native-variable-spelling-continuity"]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

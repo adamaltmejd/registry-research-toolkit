@@ -1,0 +1,19 @@
+{
+  "complete": true,
+  "target_preview": {
+    "expected_source_target_count": 0,
+    "target_record_ids": [],
+    "existing_named_record_ids": ["scb:11"]
+  },
+  "interpretation_issues": [{"kind": "pooled_period", "incomplete": false, "source_record_ids": ["scb:12"]}],
+  "comparison_outcomes": {
+    "$contains": [
+      {
+        "status": "unknown_applicability",
+        "workbook_record_ids": [],
+        "scb_record_ids": ["scb:12"],
+        "assumption_ids": ["unestablished-workbook-to-scb-variant-scope", "same-native-variable-spelling-continuity"]
+      }
+    ]
+  }
+}

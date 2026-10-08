@@ -1,0 +1,80 @@
+[register]
+provider = "scb"
+slug = "ulf"
+native_id = "11"
+
+[[variant]]
+native_id = "11.110"
+slug = "people"
+
+[[variable]]
+native_id = "11.1101"
+slug = "diag"
+
+[[variable]]
+native_id = "11.1102"
+slug = "bidiag"
+
+[[variable]]
+native_id = "11.1103"
+slug = "alder"
+
+[[variable]]
+native_id = "11.1104"
+slug = "civ"
+
+[[variable]]
+native_id = "11.1105"
+slug = "munic"
+
+[[variable]]
+native_id = "11.1106"
+slug = "ha"
+
+[[variable]]
+native_id = "11.1107"
+slug = "hb"
+
+[[variable]]
+native_id = "11.1111"
+slug = "famvar"
+
+[[variable]]
+native_id = "11.1112"
+slug = "famvar2"
+
+[[variable]]
+native_id = "11.1113"
+slug = "boundvar"
+
+[[variable]]
+native_id = "11.1114"
+slug = "safevar"
+
+[[variable]]
+native_id = "11.1115"
+slug = "dualvar"
+
+[[variable]]
+native_id = "11.1116"
+slug = "conflvar"
+
+[[variable]]
+native_id = "11.1117"
+slug = "mixedvar"
+
+[[variable]]
+native_id = "11.1118"
+slug = "diffvar"
+
+[[variable]]
+native_id = "11.1121"
+slug = "samevar"
+
+[[variable]]
+native_id = "11.1119"
+slug = "onevar"
+
+[[variable]]
+native_id = "11.1120"
+slug = "snivar"

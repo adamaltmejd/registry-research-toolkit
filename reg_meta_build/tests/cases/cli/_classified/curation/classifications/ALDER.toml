@@ -1,0 +1,11 @@
+[classification]
+short_name = "ALDER"
+slug = "alder"
+name = "Åldrar"
+codes_file = "alder.csv"
+
+[[binding.variable]]
+variable = "scb/ulf/alder"
+
+[[binding.variable]]
+variable = "scb/par/alder"

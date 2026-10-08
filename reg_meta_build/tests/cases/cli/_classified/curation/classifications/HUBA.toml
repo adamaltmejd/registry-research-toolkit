@@ -1,0 +1,14 @@
+[classification]
+short_name = "HUBA"
+slug = "huba"
+name = "Hubb A"
+codes_file = "huba.csv"
+
+[[binding.variable]]
+variable = "scb/ulf/ha"
+
+[[binding.variable]]
+variable = "scb/par/ha"
+
+[[binding.variable]]
+variable = "scb/hub/ha"

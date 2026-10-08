@@ -1,0 +1,35 @@
+{
+  "replaces": [
+    "test_variable_same_as.py::TestGenerator::test_tier1_and_tier4_pairs_emitted",
+    "test_variable_same_as.py::TestGenerator::test_small_value_set_does_not_lift_tier",
+    "test_variable_same_as.py::TestGenerator::test_within_register_pair_not_emitted",
+    "test_variable_same_as.py::TestGenerator::test_already_edged_pair_excluded",
+    "test_variable_same_as.py::TestGenerator::test_max_tier_caps_emission",
+    "test_variable_same_as.py::TestGenerator::test_min_value_set_codes_excludes_small_tier4",
+    "test_variable_same_as.py::TestGenerator::test_hub_pair_without_name_agreement_suppressed",
+    "test_variable_same_as.py::TestGenerator::test_hub_pair_with_name_agreement_kept",
+    "test_variable_same_as.py::TestGenerator::test_disabled_cap_reincludes_hub_pairs",
+    "test_variable_same_as.py::TestGenerator::test_non_hub_signal_below_cap_not_suppressed",
+    "test_variable_same_as.py::TestGenerator::test_render_roundtrips_through_loader"
+  ],
+  "fails_if": "infer_same_as_candidates pairs two variables of one register, keeps a pair that relations.toml already declares, lets a value set below --min-value-set-codes corroborate a tier, scores a pair below its strongest tier, treats a signal spanning exactly --max-signal-fanout registers as a hub, drops a name-agreeing hub pair, or miscounts the hub-suppressed pairs; or render_candidates_toml writes an edge the relations loader cannot read",
+  "note": "Read from `_classified` (source.json, curation/). Code lists: D, AL, HA and HB have 4 codes, K has 3, C has 2. Bound books: DIAG on ulf/diag, ulf/bidiag and par/pdiag (all D); ALDER on ulf/alder and par/alder (AL); CIV on ulf/civ and par/pciv (C); HUBA on ha and HUBB on hb in all three registers (HA, HB). ulf/munic and par/region share K unbound. Names: diag/pdiag `Diagnos`, alder `Ålder`, civ/pciv `Civilstånd`, every hb `Kön`, each ha its own. relations.toml declares par/alder same_as ulf/alder. The old tests' 15-code floor and 6-register hub are scaled down by flag: the floor is 3 (4 in the floor run), so C (2 codes) never corroborates and K (3) is the tier-4 set; the cap is 2, so HUBA and HUBB (3 registers each) are hubs and DIAG (2) is not, and the below-cap run sets 3. Expected, by the tier rules in variable_same_as.py: tier 1 diag/pdiag and the three hb pairs (book + list + name; hb is a hub but its names agree); tier 2 civ/pciv (C is below the floor, so it cannot lift the pair); tier 3 bidiag/pdiag (book + list, names differ); tier 4 munic/region (unbound shared K). Never: diag/bidiag (one register), alder (already declared). Hub-suppressed: the three ha pairs (C(3,2) = 3); uncapped (0) or under a cap of 3 they return at tier 3 and nothing is suppressed. Pairs are sorted by tier, then a, then b.",
+  "artifact": "_classified",
+  "runs": [
+    {
+      "argv": ["--db", "{db}", "same-as-candidates", "--min-value-set-codes", "3", "--max-signal-fanout", "2", "-o", "{work}/candidates.toml"]
+    },
+    {
+      "argv": ["--db", "{db}", "same-as-candidates", "--min-value-set-codes", "3", "--max-tier", "1", "-o", "{work}/tier1.toml"]
+    },
+    {
+      "argv": ["--db", "{db}", "same-as-candidates", "--min-value-set-codes", "4", "--max-signal-fanout", "2", "-o", "{work}/floor4.toml"]
+    },
+    {
+      "argv": ["--db", "{db}", "same-as-candidates", "--min-value-set-codes", "3", "--max-signal-fanout", "0", "-o", "{work}/uncapped.toml"]
+    },
+    {
+      "argv": ["--db", "{db}", "same-as-candidates", "--min-value-set-codes", "3", "--max-signal-fanout", "3", "-o", "{work}/cap3.toml"]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+[classification]
+short_name = "SNI2007"
+slug = "sni2007"
+name = "SNI 2007"
+codes_file = "sni2007.csv"
+valid_from = 2008

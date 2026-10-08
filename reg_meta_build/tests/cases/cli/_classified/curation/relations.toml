@@ -1,0 +1,5 @@
+[[edge]]
+type = "same_as"
+a = "scb/par/alder"
+b = "scb/ulf/alder"
+note = "Both registers deliver the same age coding."

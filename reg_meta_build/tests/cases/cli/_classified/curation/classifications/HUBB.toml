@@ -1,0 +1,14 @@
+[classification]
+short_name = "HUBB"
+slug = "hubb"
+name = "Hubb B"
+codes_file = "hubb.csv"
+
+[[binding.variable]]
+variable = "scb/ulf/hb"
+
+[[binding.variable]]
+variable = "scb/par/hb"
+
+[[binding.variable]]
+variable = "scb/hub/hb"
