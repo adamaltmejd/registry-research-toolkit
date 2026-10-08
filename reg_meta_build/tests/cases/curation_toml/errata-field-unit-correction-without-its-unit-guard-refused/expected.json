@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_guarded_corrections.py::test_measurement_unit_correction_guards_shared_ref_physical_assertions",
+  "fails_if": "the `[[errata.field]]` validator stops requiring the original `measurement_unit` guard for a unit correction, so an entry that guards the complete classification group and both coverage fields but not the unit loads",
+  "note": "The guards are otherwise complete (prose, classification group, both coverage fields), so only the unit-guard rule refuses it.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "unit corrections require the original measurement unit guard"
+    ]
+  }
+}
