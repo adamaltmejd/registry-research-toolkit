@@ -151,10 +151,13 @@ Run the following steps for each resolved package.
 
 ### 3. Bump version
 
-Update the version string in both files:
+Update the version string in these files:
 
 - `<package>/pyproject.toml` — the `version = "X.Y.Z"` line
 - `<package>/src/<package>/__init__.py` — the `__version__ = "X.Y.Z"` line
+- reg_meta only: `crates/reg-meta/Cargo.toml` — the `version` line, then
+  `cargo update -p reg-meta --offline` to refresh `Cargo.lock`. The Rust server ships
+  reg_meta's version, and `scripts/check_versions.sh` fails until they match.
 
 **reg_meta only — main-DB schema version check:** run
 `git diff <tag>..HEAD -- reg_meta_build/src/reg_meta_build/db.py reg_meta/src/reg_meta/db.py`
@@ -215,6 +218,15 @@ step 10.
 and reg_meta wheels install together, so a schema bump can land on main before its
 release. Reaching PyPI is a separate gate — step 8e for reg_meta.
 
+Run it on a **committed** bump: commit the bump locally (step 6's message), run the
+suite, and push only once it is green. On an uncommitted bump the builder's
+clean-tracked-tree guard fails `test_build_db_cli_outputs`' strict-build cases.
+
+If Rust compiles fail with `Operation not permitted` writing `deps/*.d` files, a shared
+`sccache` wrapper (`~/.cargo/config.toml`) is running under another session's sandbox.
+Bypass it for this run with `RUSTC_WRAPPER= CARGO_BUILD_RUSTC_WRAPPER=` rather than
+editing the config.
+
 If anything fails, stop and fix. Do not release broken code.
 
 ### 6. Commit and push
@@ -224,7 +236,8 @@ coordination through subsequent package pushes.
 
 Before committing, verify that all non-bump changes are already committed in their own
 commits. The bump commit must contain **only** version-bump files — `pyproject.toml`,
-`__init__.py`, `uv.lock`, and (if a schema version was bumped) `db.py` or `doc_db.py`:
+`__init__.py`, `uv.lock`, for reg_meta `crates/reg-meta/Cargo.toml` and `Cargo.lock`,
+and (if a schema version was bumped) `db.py` or `doc_db.py`:
 
 ```text
 Bump <package> version to X.Y.Z
