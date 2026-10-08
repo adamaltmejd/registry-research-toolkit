@@ -81,6 +81,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sqlite3
 import struct
 import sys
@@ -106,14 +107,11 @@ _FTS_SHADOW_SUFFIXES = ("data", "idx", "docsize", "config", "content", "row")
 class TableIgnore:
     """Per-table exclusions for the content comparison.
 
-    ``drop_columns`` are removed from the fingerprint and the row dump (the
-    column still exists; its *values* are not compared). ``skip_where`` is a
-    SQL boolean predicate identifying rows to exclude from BOTH DBs (applied
-    as ``WHERE NOT (<skip_where>)``); it also lowers the compared row count,
-    so an ignored row never shows up as a count delta.
+    ``skip_where`` is a SQL boolean predicate identifying rows to exclude from
+    BOTH DBs (applied as ``WHERE NOT (<skip_where>)``); it also lowers the
+    compared row count, so an ignored row never shows up as a count delta.
     """
 
-    drop_columns: frozenset[str] = frozenset()
     skip_where: str | None = None
 
 
@@ -177,7 +175,7 @@ class TableContentResult:
     count_b: int
     fingerprint_a: str  # hex, "" when skipped
     fingerprint_b: str
-    columns: tuple[str, ...]  # columns actually compared (post drop_columns)
+    columns: tuple[str, ...]  # columns compared; () when skipped
     sample_a_not_b: tuple[SampleRow, ...] = ()
     sample_b_not_a: tuple[SampleRow, ...] = ()
     skipped_reason: str | None = None
@@ -379,10 +377,7 @@ def _row_hash(values: Sequence[object]) -> int:
 
 
 def _select_sql(table: str, columns: Sequence[str], skip_where: str | None) -> str:
-    # ``columns`` can be empty if an ignore rule dropped every column; fall back
-    # to a constant projection so the fingerprint degrades to a count-only
-    # comparison (every row hashes identically) instead of emitting invalid SQL.
-    cols = ", ".join(f'"{c}"' for c in columns) if columns else "1"
+    cols = ", ".join(f'"{c}"' for c in columns)
     sql = f'SELECT {cols} FROM "{table}"'
     if skip_where:
         sql += f" WHERE NOT ({skip_where})"
@@ -438,13 +433,7 @@ def _diff_samples(
     to an on-disk temp file rather than RAM, keeping Python memory flat even for
     multi-million-row tables. NULLs group together and BLOBs compare by bytes,
     both of which match the fingerprint's NULL-aware/byte semantics.
-
-    Returns empty samples when ``columns`` is empty (every column ignored): the
-    rows are then indistinguishable, so only the count delta is meaningful and
-    it is already reported by the fingerprint pass.
     """
-    if not columns:
-        return (), ()
     conn = sqlite3.connect("file::memory:?cache=private", uri=True)
     try:
         conn.row_factory = sqlite3.Row
@@ -623,10 +612,8 @@ def _compare_content(
             )
             continue
 
-        columns = [c for c in cols_a if c not in spec.drop_columns]
-        report.table_columns[table] = tuple(columns)
-        count_a, fp_a = _fingerprint(conn_a, table, columns, spec.skip_where)
-        count_b, fp_b = _fingerprint(conn_b, table, columns, spec.skip_where)
+        count_a, fp_a = _fingerprint(conn_a, table, cols_a, spec.skip_where)
+        count_b, fp_b = _fingerprint(conn_b, table, cols_a, spec.skip_where)
 
         result = TableContentResult(
             table=table,
@@ -634,11 +621,11 @@ def _compare_content(
             count_b=count_b,
             fingerprint_a=fp_a,
             fingerprint_b=fp_b,
-            columns=tuple(columns),
+            columns=tuple(cols_a),
         )
         if not result.identical:
             a_not_b, b_not_a = _diff_samples(
-                db_a, db_b, table, columns, spec.skip_where, sample_rows
+                db_a, db_b, table, cols_a, spec.skip_where, sample_rows
             )
             note = None
             if not a_not_b and not b_not_a:
@@ -657,7 +644,7 @@ def _compare_content(
                 count_b=count_b,
                 fingerprint_a=fp_a,
                 fingerprint_b=fp_b,
-                columns=tuple(columns),
+                columns=tuple(cols_a),
                 sample_a_not_b=a_not_b,
                 sample_b_not_a=b_not_a,
                 note=note,
@@ -772,9 +759,25 @@ def format_report(report: DiffReport) -> str:
     return "\n".join(out)
 
 
+def _json_cell(value: object) -> object:
+    """A sample cell as JSON that keeps its SQLite storage class: NULL is null,
+    INTEGER and REAL stay numbers, TEXT is a string (long text truncated) and a
+    BLOB is a ``{"blob": preview}`` object. Integer 1, text '1', blob b'1' and NULL
+    are different rows to the diff, so they must not print alike. A non-finite
+    REAL has no JSON number, so it is a ``{"real": "inf" | "-inf" | "nan"}``
+    object rather than the invalid ``Infinity``/``NaN`` or the string 'inf'."""
+    if isinstance(value, (bytes, bytearray, memoryview)):
+        return {"blob": _fmt_cell(value)}
+    if isinstance(value, float) and not math.isfinite(value):
+        return {"real": str(value)}
+    if isinstance(value, str):
+        return _fmt_cell(value, width=200)
+    return value
+
+
 def _report_to_dict(report: DiffReport) -> dict[str, object]:
-    """JSON-serializable view (sample row values are rendered to strings so
-    BLOBs/long text stay printable)."""
+    """JSON-serializable view; sample cells keep their storage class
+    (``_json_cell``)."""
 
     def cells(
         rows: Iterable[SampleRow], cols: Sequence[str]
@@ -782,7 +785,7 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
         return [
             {
                 "net": row.net,
-                "row": {c: _fmt_cell(v, width=200) for c, v in zip(cols, row.values)},
+                "row": {c: _json_cell(v) for c, v in zip(cols, row.values)},
             }
             for row in rows
         ]
@@ -876,7 +879,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"dbdiff: error: {exc}", file=sys.stderr)
         return 2
     if args.json:
-        print(json.dumps(_report_to_dict(report), indent=2, ensure_ascii=False))
+        print(
+            json.dumps(
+                _report_to_dict(report), indent=2, ensure_ascii=False, allow_nan=False
+            )
+        )
     else:
         print(format_report(report))
     return 0 if report.identical else 1

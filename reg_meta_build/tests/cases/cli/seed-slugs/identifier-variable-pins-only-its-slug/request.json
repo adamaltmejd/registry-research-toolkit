@@ -1,6 +1,6 @@
 {
   "replaces": "test_fqid_slugs_populate_seed.py::TestProposePanel::test_seed_never_writes_authored_panel_metadata",
-  "fails_if": "seed-slugs writes panel metadata into a generated pin file: a `panel_entity_key`, `panel_time_key` or `panel_time_grain` line, or the `# panel_entity_key` placeholder comment, for a variant whose catalog variable is flagged `is_identifier` (the `_emit_panel_proposal` proposer wired into `seed_all`), or touches the authored register file",
+  "fails_if": "seed-slugs writes `panel_entity_key`, `panel_time_key` or `panel_time_grain` lines, live or commented, into the generated pin file of a register with a variable flagged `is_identifier`, or touches the authored register file",
   "note": "The old test flagged one delivered variable as the variant's identifier and asserted that the seeded file names neither panel key and that the authored file keeps its bytes. The shared artifact flags no variable as an identifier, so this case reads its own: the overlay adds the column LopNr to variant 1.10 through `[[errata.column]]` with `is_identifier = true`. The working copy leaves LopNr unpinned, so the generated file holds exactly its pin and nothing else; the slug `lopnr` is the overlay's pin.",
   "artifact_curation": "artifact_curation",
   "argv": [
