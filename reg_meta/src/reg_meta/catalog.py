@@ -246,15 +246,6 @@ class BindingSummary(_CatalogModel):
     name: str | None
 
 
-class CatalogSizes(_CatalogModel):
-    """Headline catalog-size counts — browse-addressable (slugged)
-    providers/registers/variables; the grain the catalog listings render."""
-
-    providers: int
-    registers: int
-    variables: int
-
-
 # The open-ended `variable_state.valid_to` sentinel (the reg_meta_build DDL
 # default). A window ending here is "ongoing" — it has no finite upper bound.
 OPEN_ENDED_VALID_TO = "9999-12-31"
@@ -1739,29 +1730,6 @@ class Catalog:
                 raise
             return True
         return self._conn.execute(sql + predicate, params).fetchone() is not None
-
-    def catalog_sizes(self) -> CatalogSizes:
-        """Browse-addressable counts in this artifact and read scope.
-
-        The shared SQL predicate applies before each count, matching list methods.
-        Reference retains the artifact's complete semantic universe.
-        """
-        return CatalogSizes(
-            providers=self._conn.execute(
-                "SELECT COUNT(*) FROM provider p WHERE "
-                + scope_predicate(self.scope, "provider", "p")
-            ).fetchone()[0],
-            registers=self._conn.execute(
-                "SELECT COUNT(*) FROM register r WHERE slug IS NOT NULL AND "
-                + scope_predicate(self.scope, "register", "r")
-            ).fetchone()[0],
-            variables=self._conn.execute(
-                "SELECT COUNT(*) FROM variable v "
-                "JOIN register r ON v.register_id = r.register_id "
-                "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL AND "
-                + scope_predicate(self.scope, "variable", "v")
-            ).fetchone()[0],
-        )
 
     def list_providers(self) -> list[ProviderSummary]:
         """Every provider in the catalog (e.g. scb, sos), ordered by slug."""

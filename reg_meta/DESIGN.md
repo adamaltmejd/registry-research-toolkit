@@ -1012,7 +1012,8 @@ Exceptions are explicit:
   `get datacolumns`, `get diff`, `get coded-variables`, `get groups` and the variable
   enumeration of `get classification`. Defaults still follow the artifact; inherently
   reference code/docs/classification metadata reads remain reference. API catalog/search
-  routes and `/api/stats` accept explicit scope; context reports identity/default scope.
+  routes accept explicit scope; the Rust server's `context` takes `scope` too, with the
+  scoped catalog sizes in `data` and the effective scope in `meta`.
 
 ### Inventory TOML authoring contract (`inventory.py`)
 
