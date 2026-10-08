@@ -15,6 +15,6 @@ slug = "shared"
 variant = "1.2"
 split = "1.2.stock"
 editions = ["2008-12-31"]
-source_editions = ["2007"]
+source_editions = ["2007", "2007-12-31"]
 evidence = "SCB population text distinguishes stock"
 noted = "2026-09-27"

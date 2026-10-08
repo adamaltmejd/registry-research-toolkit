@@ -3,7 +3,7 @@
     "test_curation_compile_pooled_parallel.py::test_pooled_parallel_compile_keeps_original_bounds_and_exact_intersection[shared]"
   ],
   "note": "Shared column metadata (the default); representation-parallel-columns-keep-every-nested-edition-original is the per-column twin. The parallel window is the exact intersection of the two pooled originals.",
-  "fails_if": "`compile_parallel_representations` stops accepting a shared window that equals the exact intersection of its columns' pooled originals, or rewrites the originals' own windows, so First and Second lose their catalog use",
+  "fails_if": "the `[[representation.parallel]]` loader or `compile_parallel_representations` stops accepting a shared window equal to the exact intersection of its columns' pooled originals, so First and Second lose their catalog use",
   "sources": {
     "description": "Variable 1 (Income): First is pooled over edition 2020-2022 (CVID 100), Second over edition 2022-2024 (CVID 101); 2022 is their only common year.",
     "scb": {

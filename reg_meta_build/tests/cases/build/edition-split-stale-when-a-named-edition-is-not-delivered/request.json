@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_compile_editions.py::test_named_edition_split_rebinds_parents_and_is_order_independent[None]"
   ],
+  "note": "Both delivered editions are listed as source editions, so only the named edition that is not delivered can make the entry stale.",
   "fails_if": "`compile_edition_splits` accepts a split whose named edition the native variant does not deliver, instead of reporting it stale",
   "sources": {
     "description": "Variant 2 of register 1 delivers SHARED (variable 5) twice for 2007: edition '2007' (CVID 20, integer) and edition '2007-12-31' (CVID 21, string).",

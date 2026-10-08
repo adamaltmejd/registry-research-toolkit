@@ -4,7 +4,7 @@
     "test_curation_compile_editions.py::test_compiled_edition_period_stale_when_missing_or_parseable[Renamed]"
   ],
   "note": "Beside edition-period-places-every-column-of-the-named-unparseable-edition: without the entry, nothing guesses the topic edition's period.",
-  "fails_if": "the build infers a period for an edition whose name does not parse (for example from the delivery year 2020) instead of leaving the occurrence's period unresolved",
+  "fails_if": "`resolve_occurrence_intervals` falls back to the row's delivery year (2020) when its edition name does not parse, so A gets a 2020 state without a reviewed `[[errata.edition_period]]`",
   "sources": {
     "description": "Variant 2 delivers A (variable 5, CVID 20) only in the unparseable edition 'Födelseland'.",
     "scb": {
