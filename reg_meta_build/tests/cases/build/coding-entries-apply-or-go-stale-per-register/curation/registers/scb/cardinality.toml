@@ -1,0 +1,26 @@
+[register]
+provider = "scb"
+slug = "cardinality"
+native_id = "50"
+[[variant]]
+native_id = "50.502"
+slug = "people"
+[[variable]]
+native_id = "50.5"
+slug = "value"
+
+[[coding.uncoded]]
+variable = "50.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"], ["2021-01-01", "2021-12-31"]]
+reason = "Reviewed coding"
+source = "fixture"
+
+[[coding.uncoded]]
+variable = "50.5"
+variant = "people"
+column = "MISSING"
+periods = [["2020-01-01", "2020-12-31"]]
+reason = "Reviewed coding"
+source = "fixture"

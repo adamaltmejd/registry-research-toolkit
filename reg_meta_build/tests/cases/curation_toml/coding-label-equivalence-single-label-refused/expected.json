@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_certificates.py::test_label_equivalence_requires_exact_positive_source_alternatives[labels1-Region]",
+  "fails_if": "`CodeLabelEquivalence.labels` loses `min_length=2`, so one label loads as an equivalence of nothing",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.documented.source_authority.label_equivalences.labels]] entry 1",
+    "message_contains": [
+      "at least 2 items"
+    ]
+  },
+  "note": "The source authority is a structurally complete literal (one SCB Registerinformation member's captured record, revision and locators, with placeholder 64-hex fingerprints): the loader checks its shape, never its values, so only the named field is wrong."
+}

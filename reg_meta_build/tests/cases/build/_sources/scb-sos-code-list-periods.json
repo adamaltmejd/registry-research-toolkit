@@ -1,0 +1,155 @@
+{
+  "description": "One register per code-list shape. SCB: DUPS repeats 001 'Original label' on two items beside 001 'Another label'; NOCODE adds a blank-code item to its list; VERSIONS delivers one CVID under two list versions with equal members. SOS (Kodregistret, COD): each variable's Kodlista_<NAME> sheet (and, for EQ and the RIV* variables, a second sheet Kodlista_<NAME>_B naming the same variable) states dated [period, code, label] rows. A blank period is a year-independent row.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 13001, "var_id": 1301, "colname": "DUPS", "varname": "Dups", "register": ["DUPS", 13, 130]},
+      {"cvid": 15001, "var_id": 1501, "colname": "NOCODE", "varname": "Nocode", "register": ["NOCODE", 15, 150]},
+      {"cvid": 19001, "var_id": 1901, "colname": "VERSIONS", "varname": "Versions", "register": ["VERSIONS", 19, 190]}
+    ],
+    "vardemangder": [
+      "d|1|001|Original label|13001|1301",
+      "d|1|001|Original label|13001|1302",
+      "d|1|001|Another label|13001|1303",
+      "m|1|0|Label|15001|1501",
+      "m|1||Label|15001|1502",
+      "First edition|1|001|Label|19001|1901",
+      "Second edition|1|001|Label|19001|1902"
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "COD",
+      "title": "Kodregistret",
+      "description": "Ett syntetiskt SOS-register med dagerade kodlistor.",
+      "subsets": [
+        {"name": "COD_A", "label": "Vy A", "description": "Vy", "data_from": 1973}
+      ],
+      "variables": [
+        {"name": "BUTSATT", "deldatamangd": "COD_A", "label": "Butsatt", "description": "Kod", "value_set": "Se kodlista", "data_from": 1973, "data_to": 2000},
+        {"name": "ADJ", "deldatamangd": "COD_A", "label": "Adj", "description": "Kod", "value_set": "Se kodlista", "data_from": 1982, "data_to": 1998},
+        {"name": "YIND", "deldatamangd": "COD_A", "label": "Yind", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "YDATE", "deldatamangd": "COD_A", "label": "Ydate", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "YDUP", "deldatamangd": "COD_A", "label": "Ydup", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "NOLABEL", "deldatamangd": "COD_A", "label": "Nolabel", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "SPLIT", "deldatamangd": "COD_A", "label": "Split", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "EMPTY", "deldatamangd": "COD_A", "label": "Empty", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "UNK", "deldatamangd": "COD_A", "label": "Unk", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "EQ", "deldatamangd": "COD_A", "label": "Eq", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "RIVBOTH", "deldatamangd": "COD_A", "label": "Rivboth", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "RIVCODE", "deldatamangd": "COD_A", "label": "Rivcode", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021},
+        {"name": "RIVLABEL", "deldatamangd": "COD_A", "label": "Rivlabel", "description": "Kod", "value_set": "Se kodlista", "data_from": 2019, "data_to": 2021}
+      ],
+      "sheets": {
+        "Kodlista_BUTSATT": [
+          ["Variabelnamn", "BUTSATT"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["1973-1988", "1", "Till hemmet"],
+          ["1973-1988", "2", "Till barnklinik"],
+          ["1973-1988", "3", "Annan klinik"],
+          ["1973-1988", "4", "Annan adress"],
+          ["1982/1983-1989/1990", "1", "Till hemmet"],
+          ["1982/1983-1989/1990", "2", "Till annan adress"],
+          ["1990/1991-1998", "1", "Till hemmet"],
+          ["1990/1991-1998", "2", "Till annan adress"],
+          ["1990/1991-1998", "3", "Ej utskriven vid 28 dygn"],
+          ["1999-", "1", "Ej hemskriven vid 28 dagar"]
+        ],
+        "Kodlista_ADJ": [
+          ["Variabelnamn", "ADJ"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["1982-1989", "2", "Till barnklinik"],
+          ["1990-1998", "2", "Till annan adress"]
+        ],
+        "Kodlista_YIND": [
+          ["Variabelnamn", "YIND"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "16310", "pakygyri i cerebrala cortex"],
+          ["", "16310", "micropolygyri"]
+        ],
+        "Kodlista_YDATE": [
+          ["Variabelnamn", "YDATE"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "16310", "pakygyri i cerebrala cortex"],
+          ["2020", "16310", "micropolygyri"]
+        ],
+        "Kodlista_YDUP": [
+          ["Variabelnamn", "YDUP"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "01", "Same"],
+          ["", "01", "Same"]
+        ],
+        "Kodlista_NOLABEL": [
+          ["Variabelnamn", "NOLABEL"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2019-2021", "0", "Label"],
+          ["2020", "001", ""]
+        ],
+        "Kodlista_SPLIT": [
+          ["Variabelnamn", "SPLIT"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "0", "Label"],
+          ["2020", "1", "Label"]
+        ],
+        "Kodlista_EMPTY": [
+          ["Variabelnamn", "EMPTY"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2020-2021", "1", "Label"]
+        ],
+        "Kodlista_UNK": [
+          ["Variabelnamn", "UNK"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "0", "Label"],
+          ["okänt", "1", "Label"]
+        ],
+        "Kodlista_EQ": [
+          ["Variabelnamn", "EQ"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "1", "Label"],
+          ["", "2", "Label"]
+        ],
+        "Kodlista_EQ_B": [
+          ["Variabelnamn", "EQ"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "2", "Label"],
+          ["", "1", "Label"],
+          ["", "1", "Label"]
+        ],
+        "Kodlista_RIVBOTH": [
+          ["Variabelnamn", "RIVBOTH"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "1", "Label"]
+        ],
+        "Kodlista_RIVBOTH_B": [
+          ["Variabelnamn", "RIVBOTH"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "1", "Label"],
+          ["2020", "2", "Label"]
+        ],
+        "Kodlista_RIVCODE": [
+          ["Variabelnamn", "RIVCODE"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "1", "Label"]
+        ],
+        "Kodlista_RIVCODE_B": [
+          ["Variabelnamn", "RIVCODE"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2019", "1", "Label"],
+          ["2020", "2", "Label"],
+          ["2021", "1", "Label"]
+        ],
+        "Kodlista_RIVLABEL": [
+          ["Variabelnamn", "RIVLABEL"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["", "1", "Label"]
+        ],
+        "Kodlista_RIVLABEL_B": [
+          ["Variabelnamn", "RIVLABEL"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2019", "1", "Label"],
+          ["2020", "1", "Other label"],
+          ["2021", "1", "Label"]
+        ]
+      }
+    }
+  ]
+}

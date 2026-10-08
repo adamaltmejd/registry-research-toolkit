@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_compact_choices.py::test_choice_member_digest_rejects_verbose_selector_and_retains_duplicate_claims",
+  "fails_if": "`CodingChoiceEntry._exclusive_members` stops refusing a choice that names its kept members both literally (`keep_members`) and by `keep_members_sha256`",
+  "note": "The digest is canonical_sha256([[\"01\", \"Label\"]]), the replaced test's value for the same literal members. Each selector alone is allowed: registers `keepmembers` and `digest` of the build case coding-entries-apply-or-go-stale-per-register.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.choice]] entry 1",
+    "message_contains": [
+      "kept coding members and member digest are exclusive"
+    ]
+  }
+}

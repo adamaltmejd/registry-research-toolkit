@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "alpha"
+native_id = "37"
+[[variant]]
+native_id = "37.2"
+slug = "people"
+[[variable]]
+native_id = "37.5"
+slug = "value"
+
+[[coding.documented]]
+variable = "37.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["LEG", "legitimation"], ["SPEC", "specialitet"]]
+version_label = "Own literal meanings"
+source_authority = { revision = {{revision key=member:3700}}, locators = {{locators key=member:3700}}, records = {{expected_records key=member:3700}}, codings = {{source_codings key=member:3700}}, raw_codings = {{raw_codings key=member:3700}}, enumeration = { field = "name", syntax = "kategori-alpha-equals", lines = ["LEG = legitimation", "SPEC = specialitet"] } }
+reason = "Reviewed coding"
+source = "fixture"

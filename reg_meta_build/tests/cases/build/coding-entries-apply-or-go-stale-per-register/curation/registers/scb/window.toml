@@ -1,0 +1,20 @@
+[register]
+provider = "scb"
+slug = "window"
+native_id = "51"
+[[variant]]
+native_id = "51.512"
+slug = "people"
+[[variable]]
+native_id = "51.5"
+slug = "value"
+
+[[coding.choice]]
+variable = "51.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-04-01", "2020-06-30"]]
+keep = "first"
+over = ["second"]
+reason = "Reviewed coding"
+source = "fixture"

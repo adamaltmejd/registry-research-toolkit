@@ -1,0 +1,27 @@
+[register]
+provider = "scb"
+slug = "support"
+native_id = "38"
+[[variant]]
+native_id = "38.2"
+slug = "people"
+[[variable]]
+native_id = "38.5"
+slug = "value"
+
+[[coding.support]]
+variable = "38.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+code = "16310"
+label = "Erroneous"
+association = {{association key=member:3800 code=16310 label=Erroneous}}
+expected_association = {{association_sha256 key=member:3800 code=16310 label=Erroneous}}
+authority_code = "16320"
+authority_label = "Microgyria"
+authority_association = {{association key=member:3800 code=16320 label=Microgyria}}
+expected_authority_association = {{association_sha256 key=member:3800 code=16320 label=Microgyria}}
+expected_source_codings = {{raw_codings key=member:3800}}
+reason = "Reviewed coding"
+source = "fixture"

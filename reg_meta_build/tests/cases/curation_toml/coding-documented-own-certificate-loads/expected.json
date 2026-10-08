@@ -1,0 +1,26 @@
+{
+  "loader": "register_files",
+  "match": "includes",
+  "replaces": "test_source_coding_compact_choices.py::test_complete_own_source_certificate_rejects_mixed_authority",
+  "fails_if": "the register loader refuses a `[[coding.documented]]` own-source certificate (finite periods, exact rows, non-empty `raw_codings`, no enumeration or PDF), or drops its raw coding fingerprints",
+  "note": "The allowed twin of the two mixed-authority refusals beside it: the same file without `document_url` or `enumeration`. The replaced test built this entry as its base before adding the mixed authority; the raw fingerprint is read from the TOML.",
+  "loads": [
+    {
+      "register_info": {
+        "slug": "sample"
+      },
+      "coding": {
+        "documented": [
+          {
+            "periods": [["2020-01-01", "2020-12-31"]],
+            "members": [["01", "Label"]],
+            "version_label": "Own list",
+            "source_authority": {
+              "raw_codings": ["2222222222222222222222222222222222222222222222222222222222222222"]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

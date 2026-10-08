@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_compact_choices.py::test_complete_own_source_certificate_rejects_mixed_authority[pdf]",
+  "fails_if": "`CodingDocumentedEntry._finite_documented_periods` stops refusing a `document_url` beside a `source_authority`, so one documented entry carries both a PDF and an own-source authority",
+  "note": "The same entry without `document_url` loads: coding-documented-own-certificate-loads. The authority was rendered once from the shared `scb-value` spec; its fingerprints are dummy hex because load checks shape, not source agreement.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.documented]] entry 1",
+    "message_contains": [
+      "documented coding must select one authority form"
+    ]
+  }
+}

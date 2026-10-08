@@ -1,0 +1,20 @@
+[register]
+provider = "scb"
+slug = "dup"
+native_id = "54"
+[[variant]]
+native_id = "54.542"
+slug = "people"
+[[variable]]
+native_id = "54.5"
+slug = "value"
+
+[[coding.choice]]
+variable = "54.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "keep"
+over = ["other"]
+reason = "Reviewed coding"
+source = "fixture"

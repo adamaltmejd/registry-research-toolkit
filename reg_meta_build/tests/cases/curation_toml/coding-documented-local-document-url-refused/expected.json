@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_documented.py::test_documented_coding_requires_exact_document_attribution[invalid1]",
+  "fails_if": "`CodingDocumentedEntry.document_url` loses its https pattern, so a local file name loads as the document's attribution",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.documented.document_url]] entry 1",
+    "message_contains": [
+      "String should match pattern"
+    ]
+  }
+}

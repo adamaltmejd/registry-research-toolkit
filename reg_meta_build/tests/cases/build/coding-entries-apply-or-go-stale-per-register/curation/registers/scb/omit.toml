@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "omit"
+native_id = "33"
+[[variant]]
+native_id = "33.332"
+slug = "people"
+[[variable]]
+native_id = "33.5"
+slug = "value"
+
+[[coding.omit]]
+variable = "33.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+reason = "Reviewed coding"
+source = "fixture"

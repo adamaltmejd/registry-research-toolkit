@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "digestdrift"
+native_id = "57"
+[[variant]]
+native_id = "57.572"
+slug = "people"
+[[variable]]
+native_id = "57.5"
+slug = "value"
+
+[[coding.choice]]
+variable = "57.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "list"
+keep_members_sha256 = "8fa2a4fd3efe691add51a157c83264a64cfa1ab02166f34a03d7d6f7364eb870"
+over = ["list"]
+reason = "Reviewed coding"
+source = "fixture"

@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "owncertperiod"
+native_id = "69"
+[[variant]]
+native_id = "69.692"
+slug = "people"
+[[variable]]
+native_id = "69.5"
+slug = "value"
+
+[[coding.documented]]
+variable = "69.5"
+variant = "people"
+column = "VALUE"
+periods = [["2019-01-01", "2020-12-31"]]
+members = [["01", "Label"]]
+version_label = "Own list"
+source_authority = { revision = {{revision key=member:6901}}, locators = {{locators key=member:6901}}, records = {{expected_records key=member:6901}}, codings = {{source_codings key=member:6901}}, raw_codings = {{raw_codings key=member:6901}} }
+reason = "Exact own source certificate"
+source = "Prepared source"

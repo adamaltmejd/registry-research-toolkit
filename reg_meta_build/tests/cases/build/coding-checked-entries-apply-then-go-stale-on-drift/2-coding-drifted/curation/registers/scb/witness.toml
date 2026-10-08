@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "witness"
+native_id = "30"
+[[variant]]
+native_id = "30.2"
+slug = "people"
+[[variable]]
+native_id = "30.5"
+slug = "value"
+
+[[coding.documented]]
+variable = "30.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["30", "Model imputation"], ["6", "Missing"]]
+version_label = "Status"
+source_authority = { revision = {{revision key=member:3000}}, locators = {{locators key=member:3000,member:3001,member:3002}}, records = {{expected_records key=member:3000,member:3001,member:3002}}, codings = {{source_codings key=member:3000,member:3001,member:3002}}, raw_codings = {{raw_codings key=member:3000,member:3001,member:3002}}, label_equivalences = [{ code = "30", labels = ["Matrix imputation", "Model imputation"], selected_label = "Model imputation" }], witness = ["2016-01-01", "2016-12-31"] }
+reason = "Reviewed coding"
+source = "fixture"

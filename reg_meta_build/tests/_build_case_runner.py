@@ -21,13 +21,17 @@ from __future__ import annotations
 import functools
 import hashlib
 import json
+import os
 import re
 import shutil
 import sqlite3
 import subprocess
+import sys
 import tempfile
+import zipfile
 from contextlib import closing
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -40,7 +44,6 @@ from _csv_fixtures import (
 )
 from _pipeline_catalog_support import prepare_accepted, report_events
 from _sos_fixtures import (
-    SosCodeList,
     SosRegister,
     SosSubset,
     SosVariable,
@@ -55,7 +58,10 @@ from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
 )
-from reg_meta_build.source_coding import coding_source_sha256
+from reg_meta_build.source_coding import (
+    coding_source_sha256,
+    copied_coding_fingerprints,
+)
 from reg_meta_build.source_coordinates import native_variant_key
 from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
@@ -156,10 +162,6 @@ def write_sources(spec: dict, source: Path) -> None:
             deldatamangder=tuple(
                 SosSubset(**row) for row in register.get("subsets", ())
             ),
-            kodlistor=tuple(
-                SosCodeList(hint, tuple(tuple(row) for row in rows))
-                for hint, rows in register.get("code_lists", {}).items()
-            ),
         )
         sos_dir = write_sos_input(source, registers=(workbook_spec,))
         path = (
@@ -170,15 +172,50 @@ def write_sources(spec: dict, source: Path) -> None:
         workbook = load_workbook(path)
         sheet = workbook["Metadata - Variabelnivå"]
         sheet.cell(row=1, column=sheet.max_column + 1, value="Kopplingsvariabel")
-        for name, sheet_rows in register.get("sheets", {}).items():
+        # A delivered Kodlista names its variable in a `Variabelnamn` preamble row;
+        # without it the build cannot bind the list (`unresolved_list_reference`).
+        code_lists = {
+            f"Kodlista_{name}": [
+                ["Variabelnamn", name],
+                ["Tidsperiod", "Kod", "Beskrivning"],
+                *rows,
+            ]
+            for name, rows in register.get("code_lists", {}).items()
+        }
+        for name, sheet_rows in {**code_lists, **register.get("sheets", {})}.items():
             extra = workbook.create_sheet(name)
             for row in sheet_rows:
                 extra.append(row)
         if register.get("blank_dataset"):
             # The `Datamängd` cell names the register; blank, the workbook has none.
             workbook["Generell information"]["C4"] = None
+        workbook.properties.created = workbook.properties.modified = _XLSX_EPOCH
         workbook.save(path)
         workbook.close()
+        _fix_zip_times(path)
+
+
+# openpyxl stamps the save time into docProps/core.xml and every zip entry, so two
+# prepares of one spec would deliver different workbook bytes (and revisions), and a
+# drift case could go stale on the timestamp alone.
+_XLSX_EPOCH = datetime(2000, 1, 1)  # noqa: DTZ001 - openpyxl writes naive times as UTC
+
+
+def _fix_zip_times(path: Path) -> None:
+    with zipfile.ZipFile(path) as archive:
+        entries = [(info, archive.read(info)) for info in archive.infolist()]
+    with zipfile.ZipFile(path, "w") as archive:
+        for info, data in entries:
+            if info.filename == "docProps/core.xml":
+                # `save` restamps `modified` with the current time.
+                data = re.sub(
+                    rb"(<dcterms:modified[^>]*>)[^<]*",
+                    rb"\g<1>2000-01-01T00:00:00Z",
+                    data,
+                )
+            fixed = zipfile.ZipInfo(info.filename, date_time=(1980, 1, 1, 0, 0, 0))
+            fixed.compress_type = info.compress_type
+            archive.writestr(fixed, data)
 
 
 @dataclass(frozen=True)
@@ -197,13 +234,13 @@ class PreparedSet:
         with open_value_bindings(self.opened().value_sources) as sessions:
             return bind_code_lists(record, sessions)
 
+    def claims(self, records: tuple[SourceRecord, ...]) -> list:
+        """The code-list claims the prepared value store binds to ``records``."""
+        return [claim for record in records for claim in self.bindings(record).claims]
+
     def coding_sha256(self, records: tuple[SourceRecord, ...]) -> list[str]:
         """The bound physical code-list evidence of ``records``, as curators pin it."""
-        return [
-            coding_source_sha256(claim)
-            for record in records
-            for claim in self.bindings(record).claims
-        ]
+        return [coding_source_sha256(claim) for claim in self.claims(records)]
 
     def opened(self):
         return _opened(self.prepared, self.commit, self.digest)
@@ -425,6 +462,20 @@ def _marker_bindings(s: PreparedSet, record: SourceRecord, args: dict[str, str])
     return list(markers)
 
 
+def _association(s: PreparedSet, args: dict[str, str]):
+    """The one source-list association behind member ``code=``/``label=`` (blank if
+    omitted) of the claims bound to the selected records."""
+    found = [
+        association
+        for claim in s.claims(_select(s.records(), args))
+        for member in claim.members
+        if member.code == args["code"] and (member.label or "") == args.get("label", "")
+        for association in member.associations
+    ]
+    assert len(found) == 1, f"placeholder needs exactly one association: {args}"
+    return found[0]
+
+
 def _scope(record: SourceRecord, args: dict[str, str], attribute: str) -> dict:
     scope = getattr(record, attribute).model_dump(mode="json")
     if "end" in args:
@@ -463,6 +514,12 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
         for locator in record.locators
     ],
     "marker_bindings": lambda s, a: _marker_bindings(s, _one(s.records(), a), a),
+    "raw_codings": lambda s, a: sorted(set(s.coding_sha256(_select(s.records(), a)))),
+    "source_codings": lambda s, a: list(
+        copied_coding_fingerprints(s.claims(_select(s.records(), a)))
+    ),
+    "association": lambda s, a: _association(s, a).locator,
+    "association_sha256": lambda s, a: coding_source_sha256(_association(s, a)),
     "relationship_row": lambda s, a: s.relationship(a["table"]).locator.physical_record,
     "relationship_sha256": lambda s, a: canonical_sha256(
         s.relationship(a["table"]).model_dump(mode="json")
@@ -936,6 +993,55 @@ def _refusal(error: Exception, expected: dict) -> dict:
     return {key: refusal[key] for key in expected if key in refusal}
 
 
+_REBUILD = """
+import json, sys
+from pathlib import Path
+from reg_meta_build.pipeline import build_catalog
+a = json.loads(sys.argv[1])
+build_catalog(
+    Path(a["prepared"]), a["commit"], a["digest"], Path(a["output"]),
+    Path(a["report"]), curation_dir=Path(a["curation_dir"]),
+    diagnostic=a["diagnostic"], registers=tuple(a["registers"]),
+    dump_decisions=Path(a["dump_decisions"]),
+)
+"""
+
+
+def _rebuild_in_fresh_process(args: dict) -> None:
+    """Build again in a new interpreter under a different string-hash seed.
+
+    The first build ran under this process's seed: random unless `PYTHONHASHSEED`
+    fixes it. The rebuild takes seed 0, or 1 when this process already runs under 0,
+    so the two builds never share a fixed seed and an output that depends on set or
+    dict iteration order over strings shows up as a byte difference.
+    """
+    seed = "1" if os.environ.get("PYTHONHASHSEED") == "0" else "0"
+    subprocess.run(
+        [sys.executable, "-c", _REBUILD, json.dumps(args)],
+        env={**os.environ, "PYTHONHASHSEED": seed},
+        check=True,
+        capture_output=True,
+    )
+
+
+def _tree_bytes(path: Path) -> dict[str, bytes]:
+    """Every file under ``path`` (or ``path`` itself), by relative name.
+
+    A missing or empty output is refused: two builds that both skip an output would
+    otherwise compare equal and pass the rebuild check.
+    """
+    if path.is_file():
+        return {"": path.read_bytes()}
+    files = {
+        str(file.relative_to(path)): file.read_bytes()
+        for file in sorted(path.rglob("*"))
+        if file.is_file()
+    }
+    if not files:
+        raise AssertionError(f"rebuilt_identical: {path} holds no output to compare")
+    return files
+
+
 def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dict]:
     """Run one case step; return ``(actual, expected)`` in the same shape."""
     request = json.loads((step / "request.json").read_text(encoding="utf-8"))
@@ -950,6 +1056,21 @@ def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dic
     curation = render_curation(step / "curation", scratch / "curation", authored)
     output, report = scratch / "reg_meta.db", scratch / "report"
     registers = tuple(request.get("registers", ()))
+    rebuild = bool(expected.get("rebuilt_identical"))
+
+    def build(output: Path, report: Path, decisions: Path | None) -> dict:
+        return build_catalog(
+            built.prepared,
+            built.commit,
+            built.digest,
+            output,
+            report,
+            curation_dir=curation,
+            diagnostic=request.get("diagnostic", True),
+            registers=registers,
+            dump_decisions=decisions,
+        )
+
     try:
         if request.get("mode", "build") == "check":
             result = check_curation(
@@ -961,21 +1082,32 @@ def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dic
                 registers=registers,
             )
         else:
-            result = build_catalog(
-                built.prepared,
-                built.commit,
-                built.digest,
-                output,
-                report,
-                curation_dir=curation,
-                diagnostic=request.get("diagnostic", True),
-                registers=registers,
-            )
+            result = build(output, report, scratch / "decisions" if rebuild else None)
     except (RegMetaError, ValueError, OSError, KeyError) as error:
         if "error" not in expected:
             raise
         return {"error": _refusal(error, expected["error"])}, expected
     actual: dict = {}
+    if rebuild:
+        again = scratch / "rebuild"
+        again.mkdir()
+        _rebuild_in_fresh_process(
+            {
+                "prepared": str(built.prepared),
+                "commit": built.commit,
+                "digest": built.digest,
+                "output": str(again / "reg_meta.db"),
+                "report": str(again / "report"),
+                "curation_dir": str(curation),
+                "diagnostic": request.get("diagnostic", True),
+                "registers": list(registers),
+                "dump_decisions": str(again / "decisions"),
+            }
+        )
+        actual["rebuilt_identical"] = all(
+            _tree_bytes(scratch / name) == _tree_bytes(again / name)
+            for name in ("reg_meta.db", "report/events.jsonl.gz", "decisions")
+        )
     if "error" in expected:
         actual["error"] = None
     if "status" in expected:

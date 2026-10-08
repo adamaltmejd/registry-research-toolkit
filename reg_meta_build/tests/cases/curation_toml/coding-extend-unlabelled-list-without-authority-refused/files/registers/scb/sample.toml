@@ -1,0 +1,15 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[coding.extend]]
+variable = "1.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+list = ""
+list_members = [["1", "Label"]]
+witness = ["2021-01-01", "2021-12-31"]
+reason = "Reviewed coding"
+source = "fixture"

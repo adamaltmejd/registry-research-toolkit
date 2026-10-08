@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[coding.choice]]
+variable = "1.101"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "keep"
+keep_members = [["01", "Label"]]
+keep_members_sha256 = "8fa2a4fd3efe691add51a157c83264a64cfa1ab02166f34a03d7d6f7364eb870"
+over = ["other"]
+reason = "Reviewed competing lists"
+source = "fixture"

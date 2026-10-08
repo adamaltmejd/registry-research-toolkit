@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "contrarylabel"
+native_id = "35"
+[[variant]]
+native_id = "35.2"
+slug = "people"
+[[variable]]
+native_id = "35.5"
+slug = "value"
+
+[[coding.documented]]
+variable = "35.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["30", "Model"], ["6", "Missing"]]
+version_label = "Status"
+source_authority = { revision = {{revision key=member:3500}}, locators = {{locators key=member:3500,member:3501}}, records = {{expected_records key=member:3500,member:3501}}, codings = {{source_codings key=member:3500,member:3501}}, raw_codings = {{raw_codings key=member:3500,member:3501}}, label_equivalences = [{ code = "30", labels = ["Matrix", "Model"], selected_label = "Model" }], witness = ["2016-01-01", "2016-12-31"] }
+reason = "Reviewed coding"
+source = "fixture"

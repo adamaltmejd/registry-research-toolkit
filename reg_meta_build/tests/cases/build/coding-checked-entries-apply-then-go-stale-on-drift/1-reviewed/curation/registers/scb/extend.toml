@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "extend"
+native_id = "13"
+[[variant]]
+native_id = "13.2"
+slug = "people"
+[[variable]]
+native_id = "13.5"
+slug = "value"
+
+[[coding.extend]]
+variable = "13.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+list = "keeper"
+list_members = [["1", "Label"], [".", "Skip"]]
+witness = ["2021-01-01", "2021-12-31"]
+source_authority = { revision = {{revision key=member:1300}}, locators = {{locators key=member:1300,member:1301}}, records = {{expected_records key=member:1300,member:1301}}, codings = {{source_codings key=member:1300,member:1301}}, raw_codings = {{raw_codings key=member:1300,member:1301}} }
+reason = "Reviewed coding"
+source = "fixture"

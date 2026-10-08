@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_compact_choices.py::test_compact_choice_rejects_digest_with_verbose_authority",
+  "fails_if": "`_CheckedCodingEntry._checked_authority` stops refusing a `[[coding.choice]]` that carries both a compact `expected_evidence_sha256` and a row-level `source_authority`, so the entry loads with two guard forms",
+  "note": "The authority is otherwise complete (its records were rendered once from the shared `scb-value` spec through the build-case `expected_records` placeholder); its fingerprints are dummy hex because the exclusivity check runs before any comparison with the source. The allowed twin of each guard form loads alone: the digest-only choices of the build cases (coding-choice-applies-kept-list-to-every-period) and the authority-only `coding-documented-own-certificate-loads`.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.choice]] entry 1",
+    "message_contains": [
+      "coding evidence digest and source authority are exclusive"
+    ]
+  }
+}

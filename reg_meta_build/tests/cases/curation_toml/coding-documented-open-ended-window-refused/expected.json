@@ -1,0 +1,15 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_source_coding_documented.py::test_documented_coding_rejects_an_open_ended_window",
+    "test_source_coding_row_authority.py::test_documented_source_rows_guard_fresh_compile_and_replay[pdf_open]"
+  ],
+  "fails_if": "`CodingDocumentedEntry._finite_documented_periods` stops checking each period with `FiniteCurationWindow`, so a 9999-12-31 open end loads as a finite window",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.documented]] entry 1",
+    "message_contains": [
+      "curation windows require finite ISO date bounds"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+[register]
+provider = "scb"
+slug = "held"
+native_id = "40"
+[[variant]]
+native_id = "40.2"
+slug = "people"
+[[variable]]
+native_id = "40.5"
+slug = "value"
+
+[[variable]]
+native_id = "40.6"
+slug = "anchor"
+
+[[errata.delivered]]
+variant = "people"
+column = "VALUE"
+versions = ["2020"]
+evidence = "accepted holding"
+noted = "2026-09-28"
+
+[[coding.extend]]
+variable = "40.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+list = "binary"
+witness = ["2021-01-01", "2021-12-31"]
+source_authority = { revision = {{revision key=member:4000}}, locators = {{locators key=member:4000}}, records = {{expected_records key=member:4000}}, codings = {{source_codings key=member:4000}}, raw_codings = {{raw_codings key=member:4000}} }
+reason = "Reviewed coding"
+source = "fixture"
