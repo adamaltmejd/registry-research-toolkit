@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_field_corrections.py::test_source_attribution_correction_requires_complete_originals_and_preserves_raw",
+  "fails_if": "`ErrataFieldEntry` accepts a `source_attribution` correction with complete source fields and `expected_records` over both originals but no exact `edition`",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "source attribution corrections require complete original records and an exact edition"
+    ]
+  }
+}

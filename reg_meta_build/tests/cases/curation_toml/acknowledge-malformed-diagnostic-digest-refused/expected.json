@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_tree.py::test_acknowledgement_compiler_preserves_optional_evidence_guard",
+  "fails_if": "`AcknowledgeEntry.expected_diagnostic_sha256` loses its 64-hex pattern, so a malformed diagnostic digest loads and can never match",
+  "note": "The evidence digest beside it is well formed, so only the diagnostic digest can refuse the entry.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[acknowledge.expected_diagnostic_sha256]] entry 1",
+    "message_contains": [
+      "String should match pattern"
+    ]
+  }
+}

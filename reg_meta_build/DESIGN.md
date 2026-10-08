@@ -1521,13 +1521,19 @@ evidence, but never supply build naming. Variable slugging is incremental and pr
 every existing global slug. The retained `ir/` models serve this extension graph, not
 the global source-cleaning boundary.
 
-The extension rebuilds register/variable search indexes; it retains the copied
-value-code index because no values were added. Structural, mapping and accounting gates
-run before atomic publication of one steward artifact. Strict steward publication
-requires accepted provider overlays, inventory and policy plus committed steward slug
-pins; no skip flag bypasses compilation or accounting. Provider regeneration and input
-acceptance remain separate maintainer operations. Diagnostic output remains explicitly
-nonpublishable and cannot replace the active artifact.
+The extension derives over base plus overlay before compiling holdings, because holdings
+canonicalize against `resolver_column`, the projection of `expanded_state`. Once the
+manifest names the steward, `derive_holdings` adds the `holdings`-scope browse rows,
+which read the compiled holdings. Derive keeps one module per table family in the
+`derive/` package (`states.py`, `browse.py`, `search_index.py`), each with the
+`validate_built_db` check that recomputes its tables. The derived states and browse
+tables call the reader's resolver in place until stage 4 moves it into this package. The
+extension refolds the search indexes over base plus overlay. Structural, mapping and
+accounting gates run before atomic publication of one steward artifact. Strict steward
+publication requires accepted provider overlays, inventory and policy plus committed
+steward slug pins; no skip flag bypasses compilation or accounting. Provider
+regeneration and input acceptance remain separate maintainer operations. Diagnostic
+output remains explicitly nonpublishable and cannot replace the active artifact.
 
 Panel entity keys must not drift with a reslug (#546). On the global build, compile
 enforces this: every variable needs an authored `[[variable]]` pin, and a variable

@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_guarded_corrections.py::test_guarded_column_owner_requires_finite_unique_fields[[{ name = \"measurement_unit\", status = \"value\", value = \"SEK\" }, { name = \"measurement_unit\", status = \"value\", value = \"SEK\" }]-[\"2020\"]]",
+  "fails_if": "the `[[identity.column_owner]]` validator stops checking that each `expected_fields` name appears once, so an owner guarding `measurement_unit` twice loads",
+  "note": "The owner has an exact edition, so only the unique-guard half of the rule refuses it.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.column_owner]] entry 1",
+    "message_contains": [
+      "guarded column owners require exact editions and unique field guards"
+    ]
+  }
+}

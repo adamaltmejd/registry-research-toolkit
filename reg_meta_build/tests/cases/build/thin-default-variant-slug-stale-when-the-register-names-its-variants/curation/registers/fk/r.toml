@@ -1,0 +1,13 @@
+[register]
+provider = "fk"
+slug = "r"
+native_id = {{naming_id kind=register provider=fk register_key=r}}
+[[variant]]
+slug = "table"
+native_id = {{naming_id kind=register_variant provider=fk register_key=r member_key=table}}
+[[variant]]
+slug = "default"
+native_id = {{naming_id kind=register_variant provider=fk register_key=r member_key=_default}}
+[[variable]]
+slug = "header"
+native_id = {{naming_id kind=variable provider=fk register_key=r member_key=HEADER}}

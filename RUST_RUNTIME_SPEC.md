@@ -107,7 +107,7 @@ About 70% of the hotspots are A or B. The main ones:
   | `_expand_state_windows`, alias-window participation rules                                                                | A + C | `expanded_state` relation (see below); request fallback stays           |
   | `register_variable_deliveries`, `_fuse_windows`, coverage                                                                | A     | `browse_delivery`, `delivery_window` and `resolver_column` (see below)  |
   | `_fuse_provider_held_deliveries`, `scope_predicate` string splicing                                                      | A     | Per-scope rows (`scope = 'holdings'`) in steward artifacts              |
-  | `_state_warning_ids` (one `data_warnings` call per state)                                                                | A     | `state_warning` link table                                              |
+  | `_state_warning_ids` (one `data_warnings` call per state)                                                                | C     | One indexed `data_warning` read per variable over `canonical_column`    |
   | Classification/variable chains, terminal successors, editions, families                                                  | A     | `succession_terminal`, `classification_chain`, `classification_family`  |
   | `same_as` BFS                                                                                                            | A     | `same_as_resolution` table                                              |
   | Concept-group tag N+1, group member assembly                                                                             | A     | `concept_group_tag`, pre-ordered member rows                            |
@@ -137,12 +137,18 @@ Consequences:
   states cannot be rows of `variable_state` without changing its grain under the Python
   reader. `expanded_state` has its own identity and references the source state; lineage
   keeps the source state's identity.
-- **Warning attribution is A + C.** Warning ids are computed per expanded window today,
-  then again after clipping to held and requested periods (`_state_warning_ids` calls in
-  `catalog.py`; oracle `conformance/cases/logical/narrowed-state-warnings`). So warning
-  candidates belong to each expanded state (base fallback included), with column, scope
-  and bounds; the reader filters them after request-dependent clipping. A join through
-  the source state alone would leak or drop warnings.
+- **Warning attribution is C over compiled `canonical_column`** (corrected by 3b.1,
+  stage 3b–3e decision 2). Warning ids are computed per expanded window today, then
+  again after clipping to held and requested periods (`_state_warning_ids` calls in
+  `catalog.py`; oracle `conformance/cases/logical/narrowed-state-warnings`). The
+  attribution reduces to a plain predicate over `data_warning` and each emitted
+  representation's clipped bounds and `canonical_column` (written out in
+  `reg_meta/DESIGN.md`, "Compiled states and browse deliveries"; it matched the reader
+  on all 2.28M links of the pinned global artifact). A compiled `state_warning` link
+  table measured 2.28M rows keyed by 64-character ids (about 160 MB), while one
+  variable's warnings read in about 1 ms at worst (420 warnings over 405 states), so the
+  reader evaluates the predicate per request. A join through the source state alone
+  would leak or drop warnings.
 - **Browse and resolver eligibility are different contracts.** Browse deliberately keeps
   alias windows that no state contains (`register_variable_deliveries`); holdings
   accepts only resolver-emitted columns (`holdings_compile.py`). `browse_delivery`
@@ -157,16 +163,18 @@ Consequences:
 - **Reader size.** Of ~10.9k lines in `catalog.py` + `queries.py`, an estimated 35–40%
   of lines and 10–15% of the algorithmic logic remain. The remainder is mostly SQL plus
   sort/merge.
-- **Artifact size.** Roughly +70–100 MB (6–8%) before `expanded_state`, which slice 3b
-  re-estimates. Keep it a narrow relation referencing base states, not a copy of their
-  content (+200 MB). Do not precompute code owners (up to 3.9M rows).
+- **Artifact size.** Roughly +70–100 MB (6–8%) before `expanded_state`. Measured by 3b.1
+  on the pinned v0.42.0 copies: `expanded_state` (481k rows, 53 MB with its index),
+  `browse_delivery` and `delivery_window` (82k and 157k rows, 12 MB) add 65.5 MB (5.1%)
+  to the global copy and 66.9 MB to SWECOV; derive takes 51 s and 54 s including
+  validation. Keep `expanded_state` a narrow relation referencing base states, not a
+  copy of their content (+200 MB). Do not precompute code owners (up to 3.9M rows).
 - **New invariants `validate_built_db` must own** (one validator, extended; not a second
   one): browse delivery windows disjoint; `resolver_column` equal to the resolver's
   emitted columns; one canonical spelling per (variable, variant, fold); chain/terminal
-  tables acyclic and consistent with `*_replaced_by` at the manifest year;
-  `state_warning` equal to the attribution predicate; held-\* tables equal to holdings
-  facts; aggregate tables equal to a recomputation; fixed insertion order for
-  byte-identical output.
+  tables acyclic and consistent with `*_replaced_by` at the manifest year; held-\*
+  tables equal to holdings facts; aggregate tables equal to a recomputation; fixed
+  insertion order for byte-identical output.
 - **Lost test seam.** The `classification_as_of_year` override goes away. Tests build
   artifacts with a different manifest year instead. The build's own validator also uses
   it (`classification_succession_as_of_year` in `reg_meta_build/validate.py`), so its
@@ -250,11 +258,11 @@ least at every maintainer checkpoint.
 **Three verification gates, with budgets.** They are named G0–G2 so they are not
 confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
-  | Gate | What runs                                                                                                                                                                                                                                                     | Budget                                      | When                                                                                                                                                        |
-  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q`, `cargo test --workspace` and, from slice 3a, the Rust HTTP run (section 10), all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).              | under 60 s, plus 30 s for the Rust HTTP run | every change                                                                                                                                                |
-  | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min                                 | every PR touching derive or the docs build, and once per slice before its cutover (stage 3b–3e decision 7; earlier: every PR touching derive or the reader) |
-  | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today                                  | checkpoints and releases, never per PR                                                                                                                      |
+  | Gate | What runs                                                                                                                                                                                                                                                     | Budget                                                 | When                                                                                                                                                        |
+  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q`, `cargo test --workspace` and, from slice 3a, the Rust HTTP run (section 10), all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).              | under 60 s, plus 30 s for the Rust HTTP run            | every change                                                                                                                                                |
+  | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min warm; a cold run is reported, not budgeted | every PR touching derive or the docs build, and once per slice before its cutover (stage 3b–3e decision 7; earlier: every PR touching derive or the reader) |
+  | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today                                             | checkpoints and releases, never per PR                                                                                                                      |
 
 The G1 baseline is the Python reader **at a pinned commit, installed in its own
 environment**, never the checkout under change, so a regression moved into derive cannot
@@ -632,10 +640,9 @@ that ports it ships *(decision 15, checkpoint 2)*.
      public-host MCP smoke test). The exhaustive Python-against-Rust fold sweep joins G1
      here. Hosted MCP goes live when (a) passes. Ends at checkpoint 2.
    - **(b) show / states / values** starts with one PR for the `expanded_state`,
-     `browse_delivery` and `state_warning` schema, derivation and validator checks
-     (`state_warning` added 2026-10-08: its grain is `expanded_state`). That PR merges
-     before anything in (c) consumes expanded states (schema, diff and held coverage all
-     do).
+     `browse_delivery` schema, derivation and validator checks (`state_warning` was
+     added 2026-10-08 and dropped by 3b.1 under decision 2). That PR merges before
+     anything in (c) consumes expanded states (schema, diff and held coverage all do).
    - Then the rest of (b), **(c) schema / diff / coverage / coded** and **(d) chains and
      graph** run in parallel. **(e) order and project validation** follows (b). It
      starts by porting the project types and structural validator from `reg_schema` into
@@ -1090,10 +1097,12 @@ Shared definitions:
   before its cutover** (3b and 3d in C, 3b's docs in 3b.6, 3c in 3c.3, 3e in 3e.4).
   Other PRs rely on the `api` corpus. An operation package still writes its `served`
   mapping; differences the slice run finds are fixed in the package that owns the
-  operation, before the cutover merges. Budget: under 5 min on the re-derive path; each
-  derive PR records derive time, G1 time and the artifact size delta. G1 on a table-only
-  PR protects existing behavior only; a new table's semantics rest on
-  `validate_built_db` and the `api` corpus until the slice's served comparison reads it.
+  operation, before the cutover merges. Budget: under 5 min on a warm run; a cold run
+  (re-deriving after a derive-source change) is reported in the PR but does not fail the
+  budget (maintainer, 2026-10-08); each derive PR records derive time, G1 time and the
+  artifact size delta. G1 on a table-only PR protects existing behavior only; a new
+  table's semantics rest on `validate_built_db` and the `api` corpus until the slice's
+  served comparison reads it.
 - **Frozen Python runtime** (D6). The Python runtime (the `reg_meta` reader and CLI,
   `reg_schema`) is frozen: defect fixes go in Rust only. The build stays Python (section
   11), so a derived table gets the correct logic in derive, even where the frozen reader
@@ -1262,25 +1271,24 @@ in-flight list.
 
 #### Packages
 
-**3b.1 Expanded states, browse deliveries and state warnings.** Implements section 3
-(`expanded_state`, `browse_delivery`, `state_warning`, `canonical_column`, scope as
-data) and §13 decision 1.
+**3b.1 Expanded states and browse deliveries.** Implements section 3 (`expanded_state`,
+`browse_delivery`, `canonical_column`, scope as data) and §13 decision 1.
 
 - Changes: derive emits `expanded_state` from the pass `resolver_columns` already makes:
-  one whole-history `_expand_state_windows` call per (variable, variant) on the same
-  worker pool, so derive runs the resolver once. Each row references its source state
-  and carries its own id, kind (base fallback, source window, curated window, coded
-  window), bounds, `canonical_column` and the representation fields the reader needs for
-  the window fallback (section 3). `resolver_column` becomes a SQL projection of
-  `expanded_state`. `browse_delivery` holds `register_variable_deliveries` per scope
-  (`scope = 'holdings'` rows in steward artifacts). `state_warning` rides along (its
-  grain is `expanded_state`; a separate minor would reopen the same pass): warning
-  candidates per expanded state with column, scope and bounds. Builder and `reg_meta`
+  one whole-history call per (variable, variant) on the same worker pool of the
+  participation rule inside `_expand_state_windows` (`_applicable_alias_windows`, since
+  `_expand_state_windows` drops a replaced base), so derive runs the resolver once. Each
+  row references its source state and carries its own id, kind (base fallback, source
+  window, curated window, coded window), bounds, `canonical_column` and the
+  representation fields the reader needs for the window fallback (section 3).
+  `resolver_column` becomes a SQL projection of `expanded_state`. `browse_delivery`
+  holds `register_variable_deliveries` per scope (`scope = 'holdings'` rows in steward
+  artifacts). Warning attribution is not compiled (decision 2; section 3):
+  `reg_meta/DESIGN.md` records its exact predicate. Builder and `reg_meta`
   `SCHEMA_VERSION` 9.4.0; `derive.py` becomes the `derive/` package.
 - `validate_built_db`: `expanded_state` equals one recomputation and `resolver_column`
   equals its projection (replacing today's second resolver pass); browse windows
-  disjoint; one canonical spelling per (variable, variant, fold); `state_warning` equals
-  the attribution predicate; fixed insertion order.
+  disjoint; one canonical spelling per (variable, variant, fold); fixed insertion order.
 - `reg_meta/DESIGN.md` drops "No state/window resolution is compiled"; section 3's size
   estimate becomes the measured delta.
 - Paths: `reg_meta_build/src/reg_meta_build/{derive/,db,validate,extend_db}.py`,
@@ -1349,8 +1357,9 @@ fallback, warning clipping).
 - Changes: `states` reads `expanded_state` and applies the request-dependent fallback
   (windows replace the base only when a source window is spelled like the base column
   and a source window overlaps the request; curated windows are additive; with no
-  overlapping source window the base state stands). `warnings` reads `state_warning` and
-  clips to held and requested periods; it has no MCP tool (operation table).
+  overlapping source window the base state stands). `warnings` applies the attribution
+  predicate (`reg_meta/DESIGN.md`) over `data_warning` and clips to held and requested
+  periods; it has no MCP tool (operation table).
 - Cases, red first: gap, partial-overlap and spanning periods; twins of
   `logical/{narrowed-state-token,narrowed-state-warnings,canonical-case-twin-state-warnings,warnings-*}`
   and `http_catalog/{states-and-deliveries,warnings}`; `variant` and `value_set_version`

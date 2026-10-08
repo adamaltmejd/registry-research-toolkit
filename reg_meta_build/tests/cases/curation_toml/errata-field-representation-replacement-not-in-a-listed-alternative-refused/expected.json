@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_field_corrections.py::test_field_correction_accepts_guarded_source_alternatives_without_losing_originals",
+  "fails_if": "`ErrataFieldEntry` stops requiring that a guarded `representation` correction's replacement literal is supplied by one of its `expected_records` alternatives",
+  "note": "The listed record carries only the 'Source reference' alternative; the replacement is the literal of a peer alternative the entry does not list. This is the replaced test's missing-alternative leg (its `expected_records[:-1]` was an empty list, refused by `min_length` instead) and its unsupplied-value leg: both are one rule.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/sos/par.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "alternative field corrections require complete original guards and an existing source replacement literal"
+    ]
+  }
+}

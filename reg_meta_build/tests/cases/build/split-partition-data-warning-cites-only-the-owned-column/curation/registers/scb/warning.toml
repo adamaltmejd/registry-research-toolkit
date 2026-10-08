@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "warning"
+native_id = "3"
+[[variant]]
+native_id = "3.30"
+slug = "people"
+[[variable]]
+native_id = "3.5.answer"
+slug = "answer"
+[[identity.partition]]
+variable = "3.5"
+columns = { ANSWER = "3.5.answer" }
+unassigned_columns = ["LEFT"]
+columns_ref = "fixture map"
+data_warning = "Identity follows the exported source question"

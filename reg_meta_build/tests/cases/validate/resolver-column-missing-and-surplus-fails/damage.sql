@@ -1,7 +1,7 @@
--- resolver_column must equal a recomputation of the resolver's emitted columns. One
--- authorized column goes missing and one unemitted column is authorized at a real
--- (variable, variant). Fails if the check compares row counts instead of rows, or
--- stops recomputing the universe.
+-- resolver_column must equal the projection of expanded_state: the columns some
+-- request emits. One authorized column goes missing and one unemitted column is
+-- authorized at a real (variable, variant). Fails if the check compares row counts
+-- instead of rows, or stops reading the projection.
 DELETE FROM resolver_column
 WHERE (variable_id, register_variant_id, delivery_column_lower) = (
     SELECT variable_id, register_variant_id, delivery_column_lower

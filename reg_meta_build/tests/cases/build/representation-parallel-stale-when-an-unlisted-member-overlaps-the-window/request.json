@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_original_membership_and_facts_remain_guarded[new]"
+  ],
+  "note": "First's nested 2021-2022 edition (CVID 103) overlaps the shared 2022 window but the entry does not list it. The listed columns are otherwise exact (First 2020-2022, Second 2022-2024), so only the unlisted overlapping member fails. The old test's unlisted member was a third literal under the same variable; an undeclared edition of a listed literal reaches the same complete-peers check without also needing a partition change.",
+  "fails_if": "`compile_parallel_representations` drops the check that every delivered member overlapping the shared window is selected by the entry (`overlapping_refs` equal to the selected refs)",
+  "sources": "scb-income-pooled-and-nested-first"
+}
