@@ -1,0 +1,4 @@
+[[edge]]
+type = "same_as"
+a = "sos/par/other"
+b = "scb/sample/value"

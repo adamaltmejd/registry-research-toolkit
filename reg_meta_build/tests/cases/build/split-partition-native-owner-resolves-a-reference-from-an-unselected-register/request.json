@@ -1,0 +1,22 @@
+{
+  "replaces": [
+    "test_curation_split_partition_boundary.py::test_partition_owner_resolves_a_reference_from_an_unselected_register[native-partition]"
+  ],
+  "note": "A scoped build of register 2 defers a reference to a partition owner of the unselected register 1, whose partition naming is compiled outside the slice.",
+  "sources": {
+    "description": "Variable 1.5 delivered as OLD (2020) and NEW (2021), plus register OTHERREG (native 2) delivering OTHER.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "OLD", "cvid": 21, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {"colname": "NEW", "cvid": 22, "var_id": 5, "year": "2021", "regver_id": 2021},
+        {
+          "cvid": 90,
+          "var_id": 201,
+          "colname": "OTHER",
+          "register": ["OTHERREG", 2, 20]
+        }
+      ]
+    }
+  },
+  "registers": ["2"]
+}

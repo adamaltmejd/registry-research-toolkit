@@ -1,0 +1,14 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "quantity"
+[[identity.partition]]
+variable = "1.5"
+columns = { OLD = "1.5", NEW = "1.5" }
+columns_ref = "reviewed same source-native quantity"

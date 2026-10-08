@@ -1,0 +1,18 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "warnings",
+      "fields": ["valid_from", "valid_to"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/coding.warning/1/period/1"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_curation_split_partition_boundary.py::test_native_partition_is_stale_when_its_reviewed_columns_change[unreviewed-column-added]"
+  ],
+  "note": "A native partition guards its complete column set; drift withholds the family.",
+  "sources": {
+    "description": "Variable 1.5 delivered as OLD (2020), NEW (2021) and an unreviewed OTHER (2020, CVID 24).",
+    "scb": {
+      "registerinformation": [
+        {"colname": "OLD", "cvid": 21, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {"colname": "NEW", "cvid": 22, "var_id": 5, "year": "2021", "regver_id": 2021},
+        {"colname": "OTHER", "cvid": 24, "var_id": 5, "year": "2020", "regver_id": 2020}
+      ]
+    }
+  }
+}

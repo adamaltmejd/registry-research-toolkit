@@ -1,0 +1,27 @@
+[register]
+provider = "sos"
+slug = "par"
+name = "Patientregistret"
+native_id = "5891427617861710725"
+[[variant]]
+native_id = "5891427617861710725.5623677195158740599"
+slug = "par-ov"
+[[variant]]
+native_id = "5891427617861710725.6299896919770839454"
+slug = "par-sv"
+[[variant]]
+native_id = "5891427617861710725.6508659120530331974"
+slug = "par-tv"
+[[variant]]
+native_id = "5891427617861710725.4964592341774814767"
+slug = "undeclared"
+[[identity.split]]
+variable = "ATC"
+by = "deldatamangd"
+parts = [{ deldatamangd = "PAR_OV", owner = "5891427617861710725.ATC.shared" }, { deldatamangd = "PAR_SV", owner = "5891427617861710725.ATC.shared" }, { deldatamangd = "PAR_TV", owner = "5891427617861710725.ATC.other" }]
+[[variable]]
+native_id = "5891427617861710725.ATC.shared"
+slug = "shared"
+[[variable]]
+native_id = "5891427617861710725.ATC.other"
+slug = "other"

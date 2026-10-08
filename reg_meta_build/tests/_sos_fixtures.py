@@ -53,7 +53,7 @@ BU_SPEC_MEMBERS = [
 
 
 @dataclass(frozen=True)
-class _Deldat:
+class SosSubset:
     name: str
     label: str | None = None
     description: str | None = None
@@ -65,7 +65,7 @@ class _Deldat:
 
 
 @dataclass(frozen=True)
-class _Var:
+class SosVariable:
     name: str
     deldatamangd: str | None = None
     label: str | None = None
@@ -82,7 +82,7 @@ class _Var:
 
 
 @dataclass(frozen=True)
-class _Kodlista:
+class SosCodeList:
     """A Kodlista_<variable_hint> sheet. ``rows`` are (tidsperiod, kod, desc)."""
 
     variable_hint: str
@@ -90,34 +90,34 @@ class _Kodlista:
 
 
 @dataclass(frozen=True)
-class _Register:
+class SosRegister:
     abbrev: str  # parenthesized filename code, e.g. "SYN"
     title_sv: str
     description_sv: str | None
-    variables: tuple[_Var, ...]
-    deldatamangder: tuple[_Deldat, ...] = ()
-    kodlistor: tuple[_Kodlista, ...] = ()
+    variables: tuple[SosVariable, ...]
+    deldatamangder: tuple[SosSubset, ...] = ()
+    kodlistor: tuple[SosCodeList, ...] = ()
     dataset_version: str | None = "2024:1"
 
 
 # Default fixture set. Two registers spanning the adapter's structural branches.
-DEFAULT_REGISTERS: tuple[_Register, ...] = (
-    _Register(
+DEFAULT_REGISTERS: tuple[SosRegister, ...] = (
+    SosRegister(
         abbrev="SYN",
         title_sv="Syntetiskt register",
         description_sv="Ett syntetiskt SOS-register för testbygget.",
         deldatamangder=(
-            _Deldat(
+            SosSubset(
                 "SYN_A",
                 label="Vy A",
                 description="Första vyn",
                 data_from=2005,
                 data_to=2015,
             ),
-            _Deldat("SYN_B", label="Vy B", description="Andra vyn", data_from=2010),
+            SosSubset("SYN_B", label="Vy B", description="Andra vyn", data_from=2010),
         ),
         variables=(
-            _Var(
+            SosVariable(
                 "DIAGNOS",
                 deldatamangd="SYN_A",
                 label="Diagnoskod",
@@ -126,7 +126,7 @@ DEFAULT_REGISTERS: tuple[_Register, ...] = (
                 data_from=2005,
                 data_to=2015,
             ),
-            _Var(
+            SosVariable(
                 "DIAGNOS",
                 deldatamangd="SYN_B",
                 label="Diagnoskod",
@@ -134,7 +134,7 @@ DEFAULT_REGISTERS: tuple[_Register, ...] = (
                 data_type="Sträng (text)",
                 data_from=2010,
             ),
-            _Var(
+            SosVariable(
                 "KON",
                 deldatamangd="SYN_A",
                 label="Kön",
@@ -145,7 +145,7 @@ DEFAULT_REGISTERS: tuple[_Register, ...] = (
             ),
         ),
         kodlistor=(
-            _Kodlista(
+            SosCodeList(
                 "DIAGNOS",
                 rows=(
                     ("2005-2015", "A01", "Diagnos A"),
@@ -154,13 +154,13 @@ DEFAULT_REGISTERS: tuple[_Register, ...] = (
             ),
         ),
     ),
-    _Register(
+    SosRegister(
         abbrev="SYT",
         title_sv="Syntetiskt variantlöst register",
         description_sv="Saknar Deldatamängder-blad; adaptern syntetiserar _default.",
         # No deldatamangder sheet -> variant-less -> _default synthesis.
         variables=(
-            _Var(
+            SosVariable(
                 "LOPNR",
                 label="Löpnummer",
                 description="Radens löpnummer",
@@ -173,7 +173,7 @@ DEFAULT_REGISTERS: tuple[_Register, ...] = (
 )
 
 
-def _write_register(path: Path, reg: _Register) -> None:
+def _write_register(path: Path, reg: SosRegister) -> None:
     import openpyxl
 
     wb = openpyxl.Workbook()
@@ -261,7 +261,7 @@ def _write_register(path: Path, reg: _Register) -> None:
 
 
 def write_sos_input(
-    input_dir: Path, *, registers: tuple[_Register, ...] = DEFAULT_REGISTERS
+    input_dir: Path, *, registers: tuple[SosRegister, ...] = DEFAULT_REGISTERS
 ) -> Path:
     """Materialize the synthetic SOS workbook set under ``<input_dir>/Socialstyrelsen/``.
 

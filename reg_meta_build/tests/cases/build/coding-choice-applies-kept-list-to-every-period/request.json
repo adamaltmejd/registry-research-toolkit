@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_compact_choice_applies_the_kept_list_to_every_reviewed_period"
+  ],
+  "sources": "scb-value-competing-lists"
+}

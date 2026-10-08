@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_each_build_checks_a_choice_against_its_own_source_lists"
+  ],
+  "note": "One process builds two inputs whose competing list changed between them; each build's choice is reviewed for its own input.",
+  "sources": "scb-value-competing-lists"
+}

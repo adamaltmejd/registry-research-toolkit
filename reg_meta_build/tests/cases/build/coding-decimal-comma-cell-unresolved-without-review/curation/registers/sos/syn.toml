@@ -1,0 +1,17 @@
+[register]
+provider = "sos"
+slug = "syn"
+name = "Syntetiskt register"
+native_id = "8646299464352216667"
+[[variant]]
+slug = "syn-a"
+native_id = "8646299464352216667.8787440101791605432"
+[[variant]]
+slug = "syn-b"
+native_id = "8646299464352216667.4735845016717668974"
+[[variable]]
+slug = "diagnos"
+native_id = "8646299464352216667.DIAGNOS"
+[[variable]]
+slug = "kon"
+native_id = "8646299464352216667.KON"

@@ -1,0 +1,22 @@
+{
+  "description": "VALUE 2020 delivered twice in one variant: a preliminary edition (CVID 1020) and its final edition (CVID 1021).",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 1020,
+        "var_id": 101,
+        "colname": "VALUE",
+        "versionname": "2020, preliminär version",
+        "regver_id": 120
+      },
+      {
+        "cvid": 1021,
+        "var_id": 101,
+        "colname": "VALUE",
+        "versionname": "2020, slutlig version",
+        "regver_id": 121
+      }
+    ],
+    "unika": ["TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2010|2020|0|0|0"]
+  }
+}

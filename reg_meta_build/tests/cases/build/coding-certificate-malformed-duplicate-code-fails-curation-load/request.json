@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_malformed_certificate_fails_curation_load_at_its_entry[duplicate-code]"
+  ],
+  "sources": "sos-kon-decimal-comma-open"
+}

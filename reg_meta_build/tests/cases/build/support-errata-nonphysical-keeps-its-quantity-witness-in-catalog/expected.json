@@ -1,0 +1,26 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation"},
+      "fields": ["column_name", "key", "use", "variable"],
+      "rows": [
+        ["FIRST", "member:20", "catalog", "scb/sample/quantity"],
+        [null, "member:21", "support", "scb/sample/quantity"]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {"register": "sample"},
+      "fields": ["variable", "column"],
+      "rows": [
+        ["quantity", "FIRST"]
+      ]
+    }
+  ]
+}

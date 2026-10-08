@@ -1,0 +1,20 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "state_codes",
+      "where": {"column": "VALUE"},
+      "fields": ["code"],
+      "rows": [
+        ["01"],
+        ["01"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["case_id"],
+      "rows": []
+    }
+  ]
+}

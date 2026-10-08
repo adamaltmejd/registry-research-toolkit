@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5.code"
+slug = "code"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "CODE"
+owner = "1.5.code"
+ref = "exact supplied physical code"
+source_editions = ["2020"]
+expected_fields = [{ name = "column_name", status = "value", value = "CODE" }]

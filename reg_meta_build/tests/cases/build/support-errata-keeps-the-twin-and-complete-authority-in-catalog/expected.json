@@ -1,0 +1,29 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation"},
+      "fields": ["column_name", "key", "use", "variable"],
+      "rows": [
+        ["FIRST", "member:20", "support", null],
+        ["FIRST", "member:21", "catalog", "scb/sample/authority"],
+        ["FIRST", "member:22", "catalog", "scb/sample/authority"],
+        ["SECOND", "member:20", "catalog", "scb/sample/second"]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {"register": "sample"},
+      "fields": ["variable", "column"],
+      "rows": [
+        ["authority", "FIRST"],
+        ["second", "SECOND"]
+      ]
+    }
+  ]
+}

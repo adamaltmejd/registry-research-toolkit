@@ -1,0 +1,4 @@
+{
+  "replaces": ["test_curation_split_sos_boundary.py::test_rename_moves_the_delivered_column_to_its_named_owner"],
+  "sources": "sos-par-invarn8"
+}

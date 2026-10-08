@@ -1,0 +1,18 @@
+[register]
+provider = "sos"
+slug = "par"
+name = "Patientregistret"
+native_id = "5891427617861710725"
+[[variant]]
+native_id = "5891427617861710725.5623677195158740599"
+slug = "par-ov"
+[[identity.split]]
+variable = "ATC"
+by = "description"
+parts = [{ description = "First", owner = "5891427617861710725.ATC.shared" }, { description = "Second", owner = "5891427617861710725.ATC.shared" }, { description = "Other", owner = "5891427617861710725.ATC.other" }]
+[[variable]]
+native_id = "5891427617861710725.ATC.shared"
+slug = "shared"
+[[variable]]
+native_id = "5891427617861710725.ATC.other"
+slug = "other"

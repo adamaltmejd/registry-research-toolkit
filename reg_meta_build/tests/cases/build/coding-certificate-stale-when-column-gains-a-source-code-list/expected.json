@@ -1,0 +1,26 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "state_codes",
+      "where": {
+        "column": "KON",
+        "code": "8",
+        "label": "Ogiltigt pnr",
+        "valid_from": "2005-01-01",
+        "valid_to": "2015-12-31"
+      },
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["case_id"],
+      "match": "includes",
+      "rows": [
+        ["curation/registers/sos/syn.toml#/coding.documented/1/period/1"]
+      ]
+    }
+  ]
+}

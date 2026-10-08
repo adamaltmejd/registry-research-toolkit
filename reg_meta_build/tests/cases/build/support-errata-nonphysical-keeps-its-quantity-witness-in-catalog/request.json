@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_curation_support_errata_boundary.py::test_nonphysical_support_keeps_its_quantity_witness_in_catalog"
+  ],
+  "sources": "scb-support-nonphysical"
+}

@@ -1,0 +1,56 @@
+{
+  "replaces": [
+    "test_curation_split_sos_boundary.py::test_subset_split_is_stale_unless_the_delivered_subsets_match[undeclared-subset]"
+  ],
+  "sources": {
+    "description": "ATC delivered in subsets PAR_OV, PAR_SV, PAR_TV, UNDECLARED.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "PAR",
+        "title": "Patientregistret",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {
+            "name": "PAR_OV",
+            "label": "PAR_OV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_SV",
+            "label": "PAR_SV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_TV",
+            "label": "PAR_TV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "UNDECLARED",
+            "label": "UNDECLARED",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ],
+        "variables": [
+          {"name": "ATC", "deldatamangd": "PAR_OV", "label": "ATC", "data_from": 2001, "data_to": 2020},
+          {"name": "ATC", "deldatamangd": "PAR_SV", "label": "ATC", "data_from": 2001, "data_to": 2020},
+          {"name": "ATC", "deldatamangd": "PAR_TV", "label": "ATC", "data_from": 2001, "data_to": 2020},
+          {"name": "ATC", "deldatamangd": "UNDECLARED", "label": "ATC", "data_from": 2001, "data_to": 2020}
+        ]
+      }
+    ]
+  }
+}

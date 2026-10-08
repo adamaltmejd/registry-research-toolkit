@@ -1,0 +1,50 @@
+{
+  "description": "Three PAR_OV ATC rows of one source record key, labelled First, Second and Other.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "PAR",
+      "title": "Patientregistret",
+      "description": "Ett syntetiskt SOS-register för testbygget.",
+      "subsets": [
+        {
+          "name": "PAR_OV",
+          "label": "PAR_OV",
+          "description": "Första vyn",
+          "data_from": 2001,
+          "data_to": 2020
+        }
+      ],
+      "variables": [
+        {
+          "name": "ATC",
+          "deldatamangd": "PAR_OV",
+          "label": "First",
+          "description": "ATC",
+          "data_from": 2001,
+          "data_to": 2020
+        },
+        {
+          "name": "ATC",
+          "deldatamangd": "PAR_OV",
+          "label": "Second",
+          "description": "ATC",
+          "data_from": 2001,
+          "data_to": 2020
+        },
+        {
+          "name": "ATC",
+          "deldatamangd": "PAR_OV",
+          "label": "Other",
+          "description": "ATC",
+          "data_from": 2001,
+          "data_to": 2020
+        }
+      ]
+    }
+  ]
+}
