@@ -187,7 +187,6 @@ refactor.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
     constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
     is read-mostly, single-backend; an ORM would add overhead with no benefit.
-  - Analytical queries: DuckDB where needed.
   - CLI: argparse. No click/typer.
 - **`reg_schema`** (authoring/validation surface): Pydantic v2. Reasons: (1) it's the
   canonical structural validator for `project_data.json` — Pydantic's declarative
