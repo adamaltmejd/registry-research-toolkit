@@ -51,6 +51,12 @@ reason = "For the other 115 of 118 G1 terms, each catalog index's full MATCH row
 case = "*/*/search*"
 paths = ["/results", "/next_cursor"]
 
+# 3a.5's typed variable pages (`served.py`) read the same pre-folded indexes.
+[[exception]]
+name = "variable-page-folded-index"
+reason = "The baseline webapp reads the unfolded originals; the Rust server reads derived copies whose indexes hold fold_search text (decision 16). On the same derived copy, the checkout's FastAPI and the Rust server agree on all 114 cases (two pages of 10), so every difference comes from the index. Of the 114, 33 differ: 14 swap a row at the page limit, 10 reorder within a page and 2 across the page boundary (identical row sets: bm25 near-ties), and 7 are the three terms `ß`, `ＡＢＣ` and `ﬁlm`, which return 0 rows on the baseline and 3 to 20 now. Provisional: deleted by the reference-baseline package, or at the latest by 3a.13."
+case = "*/*/variable-page/*"
+
 # The baseline reader: `reg_meta` (with `reg_schema`) at this commit, installed from
 # `git archive` into its own virtualenv with the commit's locked dependencies.
 [baseline]
