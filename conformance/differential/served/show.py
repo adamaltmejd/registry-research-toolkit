@@ -11,7 +11,8 @@ routes, mapped onto ``shape.Show``:
 - ``show-classification-variables/<name>``: a classification's owning variables
   against the CLI baseline's ``get classification --variables`` case of that id
   (reused, not run again), as ``(register, variable)`` names in its order. The CLI
-  caps a listing at 100 rows, so the comparison is the first 100.
+  collapses same-named variables of a register and caps a listing at 100 rows, so
+  the comparison is the first 100 distinct names.
 
 Fields ``shape.Show`` moves to facets (states, lineage, chains, codes, warnings) are
 not compared; a classification's family carries ``editions`` from 3d.2.
@@ -259,8 +260,15 @@ def _owning(base_cli: dict | None, cand_answer: dict) -> tuple[object, object]:
         expected = [[r["register_name"], r["variable_name"]] for r in rows]
     if cand_answer["status"] != 200:
         return expected, {"status": cand_answer["status"]}
-    variables = cand_answer["body"]["data"]["variables"][:CLI_LIMIT]
-    return expected, [[v["register_name"], v["name"]] for v in variables]
+    # The CLI's `SELECT DISTINCT` keys a row on `var_id`, null for an id outside the
+    # numeric band, so it collapses same-named variables of one
+    # register into one row; `show` lists each variable. Compared at the CLI's grain.
+    names = [
+        [v["register_name"], v["name"]]
+        for v in cand_answer["body"]["data"]["variables"]
+    ]
+    distinct = [n for i, n in enumerate(names) if i == 0 or n != names[i - 1]]
+    return expected, distinct[:CLI_LIMIT]
 
 
 def cases(
