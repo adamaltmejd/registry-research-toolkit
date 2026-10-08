@@ -25,7 +25,8 @@
   {
     "status": 200,
     "json": {
-      "/data/family": {"fqid": "group/class/icd", "key": "icd", "label": "ICD"},
+      "/data/family/fqid": "group/class/icd",
+      "/data/family/editions/*/slug": ["icd-9", "icd-10"],
       "/data/variables": [
         {"fqid": "scb/alpha/kon", "name": "Kön", "register_name": "Alpha"},
         {"fqid": "scb/beta/kon", "name": "Kön", "register_name": "Beta"}
@@ -52,7 +53,8 @@
         {"fqid": "class/sunx-b", "short_name": "SUNX-B", "name": "Education, field"}
       ],
       "/data/groups/*/fqid": ["group/class/sunx"],
-      "/data/families": [{"fqid": "group/class/icd", "key": "icd", "label": "ICD"}]
+      "/data/families/*/fqid": ["group/class/icd"],
+      "/data/families/*/editions/*/slug": [["icd-9", "icd-10"]]
     }
   }
 ]

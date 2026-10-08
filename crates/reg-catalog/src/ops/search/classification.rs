@@ -8,7 +8,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::{fold_search, py_strip};
-use rusqlite::{Connection, Row, params_from_iter};
+use rusqlite::{Connection, OptionalExtension, Row, params_from_iter};
 use serde::Serialize;
 use serde_json::json;
 use utoipa::ToSchema;
@@ -166,15 +166,9 @@ fn members(conn: &Connection, group: i64) -> Result<Vec<Member>, Error> {
 /// chain are hits, they become one row for the chain's terminal edition, at its
 /// first hit's place. A lone old edition stays a hit that names its terminal.
 fn fold_succession(conn: &Connection, hits: Vec<ClassificationHit>) -> Result<Vec<Hit>, Error> {
-    let policy = super::super::refs::policy_year(conn)?;
     let terminals: Vec<Option<String>> = hits
         .iter()
-        .map(|hit| {
-            hit.slug
-                .as_deref()
-                .map(|s| terminal(conn, s, policy))
-                .transpose()
-        })
+        .map(|hit| hit.slug.as_deref().map(|s| terminal(conn, s)).transpose())
         .collect::<Result<_, _>>()?;
     let mut chains: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
     for (hit, terminal) in hits.iter().zip(&terminals) {
@@ -222,24 +216,20 @@ fn fold_succession(conn: &Connection, hits: Vec<ClassificationHit>) -> Result<Ve
     Ok(out)
 }
 
-/// Today's `_terminal_classification_slug`: follow the one active successor
-/// (`effective_year` unset or at most the policy year) until none, or a split.
-fn terminal(conn: &Connection, slug: &str, policy: i64) -> Result<String, Error> {
-    let mut stmt = conn.prepare(
-        "SELECT successor_slug FROM classification_replaced_by WHERE predecessor_slug = ? \
-         AND (effective_year IS NULL OR effective_year <= ?)",
-    )?;
-    let mut seen = BTreeSet::from([slug.to_owned()]);
-    let mut current = slug.to_owned();
-    loop {
-        let next: Vec<String> = stmt
-            .query_map((&current, policy), |row| row.get(0))?
-            .collect::<rusqlite::Result<_>>()?;
-        match next.as_slice() {
-            [successor] if seen.insert(successor.clone()) => current.clone_from(successor),
-            _ => return Ok(current),
-        }
-    }
+/// Today's `_terminal_classification_slug`, compiled: the terminal at the policy
+/// year (an edition at a split is its own), from `succession_terminal`.
+fn terminal(conn: &Connection, slug: &str) -> Result<String, Error> {
+    let terminal: Option<String> = conn
+        .query_row(
+            "SELECT terminal_fqid FROM succession_terminal WHERE fqid = 'class/' || ?",
+            [slug],
+            |row| row.get(0),
+        )
+        .optional()?;
+    Ok(terminal.map_or_else(
+        || slug.to_owned(),
+        |t| t.trim_start_matches("class/").to_owned(),
+    ))
 }
 
 /// The succession row of the chain ending at `terminal`.
@@ -277,7 +267,9 @@ fn succession(
 
 /// Today's `_classification_editions`: the terminal and every predecessor, ordered
 /// by distance from the terminal, then slug. An edition's year is that of the edge
-/// that first reaches it.
+/// that first reaches it. A read-time walk, not `classification_chain`: an
+/// anchored chain walks back through one predecessor, so it drops a merge's other
+/// branch (`api/search-classification-succession` has one).
 fn editions(conn: &Connection, terminal: &str) -> Result<Vec<Edition>, Error> {
     let mut found: BTreeMap<String, (usize, Option<i64>)> =
         BTreeMap::from([(terminal.to_owned(), (0, None))]);
