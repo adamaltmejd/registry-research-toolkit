@@ -1524,8 +1524,10 @@ operations.
   a change to a golden's meaning is an escalation.
 - Paths: `crates/reg-core/`, `Cargo.lock`.
 - Acceptance: full gate; every corpus case matches outside listed exceptions;
-  byte-identical serialization of the committed `order/*` and `validate/*` bytes.
-  Depends on: none.
+  byte-identical re-encoding of every committed manifest under
+  `conformance/cases/validate/*` (today only `gap-clipped/order.json`), with
+  `provenance.project_hash` equal to the Rust hash of the requesting body; the `order/*`
+  manifests are committed by 3e.3, whose acceptance covers them. Depends on: none.
 
 **3e.2 Interval algebra and `validate`.** Implements `validate` (POST, `order` tool).
 

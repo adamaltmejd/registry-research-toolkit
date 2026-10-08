@@ -7,8 +7,8 @@
 //! than stopping at the first. Issues come out in the Python validator's order.
 //!
 //! Each message is a fixed template filled with the offending values; a quoted value
-//! is a string in single quotes with Rust's `escape_debug` escaping (not Python
-//! `repr`). The oracles are `reg_schema/test_corpus/` and
+//! is a string in single quotes, each character but `"` escaped with Rust's
+//! `char::escape_debug` (not Python `repr`). The oracles are `reg_schema/test_corpus/` and
 //! `crates/reg-core/tests/project/corpus/`, whose cases pin the quoting and these
 //! other intentional differences from the Python validator:
 //!
@@ -109,7 +109,16 @@ fn get<'a>(map: &'a Map<String, Value>, key: &str) -> Option<&'a Value> {
 
 /// A string quoted for a message.
 fn q(s: &str) -> String {
-    format!("'{}'", s.escape_debug())
+    let mut quoted = String::from("'");
+    for c in s.chars() {
+        if c == '"' {
+            quoted.push(c);
+        } else {
+            quoted.extend(c.escape_debug());
+        }
+    }
+    quoted.push('\'');
+    quoted
 }
 
 fn quoted_list<'a>(items: impl IntoIterator<Item = &'a str>) -> String {
@@ -223,6 +232,9 @@ fn optional_string(
 }
 
 // --- FQIDs --------------------------------------------------------------
+
+// Not `grammar::Fqid`: its slugs are lowercase kebab-case, while the frozen corpus
+// accepts underscores and the reserved `_default` (`hush_type`, `.../_default`).
 
 fn fqid_segment(s: &str) -> bool {
     !s.is_empty()

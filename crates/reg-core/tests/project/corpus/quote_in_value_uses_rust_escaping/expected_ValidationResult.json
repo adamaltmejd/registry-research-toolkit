@@ -3,8 +3,8 @@
     {
       "level": "error",
       "code": "unexpected_field",
-      "path": "/it's",
-      "message": "unexpected key 'it\\'s' on project root"
+      "path": "/it's \"x\"",
+      "message": "unexpected key 'it\\'s \"x\"' on project root"
     }
   ]
 }

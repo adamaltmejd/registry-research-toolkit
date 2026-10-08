@@ -7,15 +7,19 @@
 //! as `null`, `panels` as `[]`, a bare-string panel member as `{"source": ...}`. That
 //! shape is what [`project_hash`] hashes.
 //!
-//! Deserialize one only after [`crate::validate_structural`] has accepted the
-//! document: the validator reports every problem, while deserialization stops at the
-//! first. A document the validator accepts always deserializes.
+//! [`ProjectData::from_value`] is the only way to build a project from JSON: it runs
+//! [`crate::validate_structural`] first, which reports every problem and rejects
+//! every shape the types would misread (serde reads a struct from a JSON array by
+//! position), and deserializes only an accepted document.
 
 use std::fmt::Write as _;
 
 use serde::de::{Deserializer, Error as _};
 use serde::{Deserialize, Serialize, Serializer};
+use serde_json::Value;
 use sha2::{Digest, Sha256};
+
+use crate::{ValidationResult, validate_structural};
 
 /// A closed string enum: one list of `(variant, wire name)` pairs gives the serde
 /// encoding and the allowed values the validator reports.
@@ -27,7 +31,7 @@ macro_rules! str_enum {
 
         impl $name {
             /// Every value, in declaration order.
-            pub const ALL: &[Self] = &[$(Self::$variant),+];
+            pub(crate) const ALL: &[Self] = &[$(Self::$variant),+];
 
             /// The wire spelling.
             #[must_use]
@@ -37,7 +41,7 @@ macro_rules! str_enum {
 
             /// The value spelled `s`, if any.
             #[must_use]
-            pub fn parse(s: &str) -> Option<Self> {
+            pub(crate) fn parse(s: &str) -> Option<Self> {
                 Self::ALL.iter().copied().find(|v| v.as_str() == s)
             }
         }
@@ -82,8 +86,7 @@ str_enum!(
 );
 
 /// The top-level `project_data.json` document.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct ProjectData {
     pub schema_version: String,
     pub steward: Steward,
@@ -94,6 +97,51 @@ pub struct ProjectData {
     pub panels: Vec<Panel>,
     #[serde(default)]
     pub window: Option<StudyWindow>,
+}
+
+/// [`ProjectData`]'s fields as deserialized, so that `ProjectData` has no public
+/// `Deserialize` that skips validation.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Fields {
+    schema_version: String,
+    steward: Steward,
+    reg_meta_version: String,
+    name: String,
+    sources: Vec<Source>,
+    #[serde(default)]
+    panels: Vec<Panel>,
+    #[serde(default)]
+    window: Option<StudyWindow>,
+}
+
+impl ProjectData {
+    /// The project in `value`, or every structural issue that rejects it.
+    ///
+    /// # Errors
+    ///
+    /// The structural validation result, when it has an error.
+    ///
+    /// # Panics
+    ///
+    /// If an accepted document does not deserialize: a validator bug, which the
+    /// corpora rule out for every accepted case.
+    pub fn from_value(value: &Value) -> Result<Self, ValidationResult> {
+        let result = validate_structural(value);
+        if !result.ok() {
+            return Err(result);
+        }
+        let f = Fields::deserialize(value).expect("an accepted project deserializes");
+        Ok(Self {
+            schema_version: f.schema_version,
+            steward: f.steward,
+            reg_meta_version: f.reg_meta_version,
+            name: f.name,
+            sources: f.sources,
+            panels: f.panels,
+            window: f.window,
+        })
+    }
 }
 
 /// One logical extraction: a register variant, a requested period and its bindings.
@@ -264,11 +312,12 @@ pub struct StudyWindow {
     pub to: i64,
 }
 
-/// `value` as a JSON tree. Its objects are `serde_json::Map`, a `BTreeMap` (the
-/// workspace never enables `preserve_order`), so keys come out sorted by code point
-/// as Python's `sort_keys=True` sorts them; struct field order never leaks.
-fn tree<T: Serialize>(value: &T) -> serde_json::Value {
-    serde_json::to_value(value).expect("project and result types serialize to JSON")
+/// `value` as a JSON tree with every object's keys sorted by code point, as Python's
+/// `sort_keys=True` sorts them; struct field order never leaks.
+fn tree<T: Serialize>(value: &T) -> Value {
+    let mut tree = serde_json::to_value(value).expect("project and result types serialize to JSON");
+    tree.sort_all_objects();
+    tree
 }
 
 /// The manifest and validation-result encoding: sorted keys, two-space indent,

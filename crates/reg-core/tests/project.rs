@@ -48,7 +48,7 @@ fn result_keys(result: &ValidationResult) -> Vec<IssueKey> {
 
 fn expected_keys(result: &Value) -> Vec<IssueKey> {
     let field = |issue: &Value, key: &str| issue[key].as_str().unwrap().to_owned();
-    let mut keys: Vec<IssueKey> = result["issues"]
+    result["issues"]
         .as_array()
         .unwrap()
         .iter()
@@ -60,13 +60,11 @@ fn expected_keys(result: &Value) -> Vec<IssueKey> {
                 field(i, "message"),
             )
         })
-        .collect();
-    keys.sort();
-    keys
+        .collect()
 }
 
-/// Every corpus case gives exactly its expected issues (level, code, path, message;
-/// unordered, duplicates kept). Fails when a rule's code, path or message template
+/// Every corpus case gives exactly its expected issues (level, code, path, message),
+/// in emission order. Fails when a rule's code, path or message template
 /// changes, or a rule is lost or added.
 #[test]
 fn structural_corpora() {
@@ -133,6 +131,8 @@ fn name(case: &Path) -> &str {
 /// `uv run python -c 'import json, sys; from reg_meta.order import _project_hash;
 /// from reg_schema import ProjectData;
 /// print(_project_hash(ProjectData.model_validate(json.load(sys.stdin))))' < project.json`.
+///
+/// Revisit: regenerate from Rust once the pinned-Rust baseline lands (stage 4, D1).
 #[test]
 fn project_hashes() {
     let golden = json(&PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/project/hashes.json"));
@@ -144,8 +144,7 @@ fn project_hashes() {
         "accepted projects and hashes.json differ"
     );
     for (key, project) in projects {
-        let typed: ProjectData =
-            serde_json::from_value(project).unwrap_or_else(|e| panic!("{key}: {e}"));
+        let typed = ProjectData::from_value(&project).unwrap_or_else(|e| panic!("{key}: {e:?}"));
         assert_eq!(project_hash(&typed), golden[&key], "{key}");
     }
 }
@@ -173,8 +172,7 @@ fn committed_manifest_bytes() {
                 let bytes = read(&case.join(file));
                 let manifest: Value = serde_json::from_str(&bytes).unwrap();
                 assert_eq!(to_json_pretty(&manifest), bytes, "{}", case.display());
-                let project: ProjectData =
-                    serde_json::from_value(request["requests"][i]["body"].clone()).unwrap();
+                let project = ProjectData::from_value(&request["requests"][i]["body"]).unwrap();
                 assert_eq!(
                     manifest["provenance"]["project_hash"],
                     project_hash(&project),
