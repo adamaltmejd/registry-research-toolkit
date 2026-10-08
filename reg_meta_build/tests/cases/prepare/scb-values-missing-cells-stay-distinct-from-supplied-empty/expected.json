@@ -1,7 +1,8 @@
 {
   "reader": "scb_values",
   "replaces": "test_scb_value_records.py::test_normalized_payloads_keep_missing_distinct_from_supplied_empty",
-  "fails_if": "the SCB value reader reads an undelivered code, label, version, level or validity date as a delivered empty one (or the reverse)",
+  "fails_if": "the SCB value reader reads an undelivered label, version, level, validity date or raw cell as a delivered empty one (or the reverse), or keeps an unlabelled blank code as a real empty code",
+  "note": "A delivered empty code is still a blank code: with no label it is a missing code (maintainer decision 2026-10-08, an unlabelled blank is missing), so both rows read code null and the delivered/undelivered distinction stays in raw_cells and the label. The replaced test claimed the delivered-empty code as \"\"; that claim changed with the decision. The labelled blank is scb-values-labelled-blank-code-is-the-empty-code.",
   "projections": [
     {
       "of": "associations",
@@ -9,7 +10,8 @@
         {
           "value": {
             "code": null,
-            "label": null
+            "label": null,
+            "raw_cells": [null, null]
           },
           "descriptor": {
             "version": null
@@ -17,8 +19,9 @@
         },
         {
           "value": {
-            "code": "",
-            "label": ""
+            "code": null,
+            "label": "",
+            "raw_cells": ["", ""]
           },
           "descriptor": {
             "version": ""

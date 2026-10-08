@@ -1,0 +1,19 @@
+{
+  "description": "sos-source with Kodlista_HDIA replaced by a per-row Variabelnamn list. Rows: 2 HDIA 2020 code 1 'Ett'; 3 HDIA 2020 blank code 'Uppgift saknas'; 4 a blank code labelled 'Okänd' under no period; 5 HDIA with no period, code or label; 6 HDIA 2021 with no code or label (a period section); 7 a note in an unheaded column.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_HDIA": [
+        ["Variabelnamn", "Tidsperiod", "Kod", "Beskrivning"],
+        ["HDIA", "2020", "1", "Ett"],
+        ["HDIA", "2020", null, "Uppgift saknas"],
+        [null, null, null, "Okänd"],
+        ["HDIA", null, null, null],
+        ["HDIA", "2021", null, null],
+        [null, null, null, null, "Anmärkning"]
+      ]
+    }
+  }
+}

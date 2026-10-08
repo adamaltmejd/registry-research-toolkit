@@ -1180,6 +1180,7 @@ def _code_sheet_evidence(
     fields_by_index: dict[int, str] = {}
     col_tp: int | None = None
     col_kod: int | None = None
+    col_label: int | None = None
     data_role: SosEvidenceRole = "code"
     for cells in all_cell_rows:
         row = tuple(cell.value for cell in cells)
@@ -1192,6 +1193,7 @@ def _code_sheet_evidence(
                 positions = {field: index for index, field in fields_by_index.items()}
                 col_tp = positions.get("tidsperiod")
                 col_kod = positions.get("kod")
+                col_label = positions.get("beskrivning")
                 evidence_rows.append(
                     SosEvidenceRow(
                         role="header",
@@ -1260,10 +1262,14 @@ def _code_sheet_evidence(
             )
         elif heading:
             role: SosEvidenceRole = "section"
-        elif tp_value and not code_value:
-            role = "period_section"
-        elif code_value:
+        elif code_value or _blank_code_member(
+            row, fields_by_index, col_tp, col_kod, col_label
+        ):
+            # A blank code is still a list member: a labelled one is the empty
+            # code, an unlabelled one a missing code the build reports.
             role = "code"
+        elif tp_value:
+            role = "period_section"
         else:
             role = "raw"
         evidence_rows.append(
@@ -1283,6 +1289,33 @@ def _code_sheet_evidence(
         kind="codelist",
         sheet_name=ws.title,
         rows=tuple(evidence_rows),
+    )
+
+
+def _blank_code_member(
+    row: tuple[Any, ...],
+    fields_by_index: dict[int, str],
+    col_tp: int | None,
+    col_kod: int | None,
+    col_label: int | None,
+) -> bool:
+    """Whether a row with a blank code still delivers a list member.
+
+    It does when it carries a label, a validity bound, or a per-row variable name
+    without a period. A period, alone or with the variable it applies to, opens a
+    period section; cells under no header are not member fields.
+    """
+    if col_kod is None or _clean(_at(row, col_kod)) is not None:
+        return False
+    if col_label is not None and _clean(_at(row, col_label)) is not None:
+        return True
+    fields = {"valid_from", "valid_to"}
+    if col_tp is None or _clean(_at(row, col_tp)) is None:
+        fields.add("variable_name")
+    return any(
+        _clean(_at(row, index)) is not None
+        for index, field in fields_by_index.items()
+        if field in fields
     )
 
 
@@ -1351,12 +1384,11 @@ def _parse_kodlista(
         elif evidence_row.role == "code":
             source_tidsperiod = evidence_text(evidence_row, "tidsperiod", display=True)
             code = evidence_text(evidence_row, "kod", display=True)
-            if code is None:
-                continue
             data_rows.append(
                 SosKodlistaRow(
                     tidsperiod=source_tidsperiod or last_tidsperiod,
-                    kod=code,
+                    # A blank code row is a member too (see `_blank_code_member`).
+                    kod=code or "",
                     beskrivning=evidence_text(evidence_row, "beskrivning"),
                     variable_name=evidence_text(evidence_row, "variable_name"),
                     source_tidsperiod=source_tidsperiod,
