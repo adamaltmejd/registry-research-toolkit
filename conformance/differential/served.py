@@ -12,9 +12,6 @@ JSON in the CLI cases' result form (``exit``, ``stdout``, ``stderr``).
   type, for the search-eval corpus terms and the edge terms, page by page to the same
   depth, each arm following its own cursor. Items map to ``shape.SearchHit``;
   ``more`` is whether the page continues.
-- ``top``: ``search`` without ``type`` at ``limit=5``, first page, against the
-  baseline's ``top_results`` (sent only when two or more results compete; otherwise
-  its typed groups hold the one result or none).
 """
 
 from __future__ import annotations
@@ -48,8 +45,6 @@ TYPES = (
     "classification_code",
     "register_value",
 )
-# The baseline's top-results strip.
-TOP_LIMIT = 5
 # The `shape.SearchHit` fields a baseline row of these types keeps as they are.
 SHAPES = {
     "register": ("fqid", "name", "purpose"),
@@ -141,23 +136,8 @@ def _pages(client, job: tuple, *, baseline: bool) -> list:
     return pages
 
 
-def _top(client, job: tuple, *, baseline: bool) -> dict:
-    scope, _, term = job
-    params = {"q": term, "limit": TOP_LIMIT, "scope": scope}
-    answer = _get(client, "/api/search", params)
-    if answer["status"] != 200:
-        return {"status": answer["status"]}
-    if not baseline:
-        return {"items": answer["body"]["data"]["items"]}
-    groups = answer["body"]["groups"]
-    top = [g["results"] for g in groups if g["group"] == "top_results"]
-    rows = top[0] if top else [r for g in groups for r in g["results"]]
-    return {"items": [_hit(r) for r in rows]}
-
-
 def _pair(base, cand, job: tuple) -> tuple:
-    run = _pages if job[1] else _top
-    return job, run(base, job, baseline=True), run(cand, job, baseline=False)
+    return job, _pages(base, job, baseline=True), _pages(cand, job, baseline=False)
 
 
 def _context(base, cand, scope: str | None) -> tuple[dict, dict]:
@@ -240,20 +220,20 @@ def served_cases(
                 cases.append((f"{prefix}/context", _result(expected), _result(actual)))
             # The default scope is one of the named ones, so pages run per name.
             named = [s for s in scopes if s is not None]
-            # A typed page per type, then the untyped first page (no type).
+            # Untyped pages are not compared: the baseline has no single ranked list
+            # (decision 17); the `api` corpus pins them.
             work = [
                 (scope, kind, term)
                 for scope in named
-                for kind in (*TYPES, None)
+                for kind in TYPES
                 for term in terms
             ]
             with ThreadPoolExecutor(PARALLEL) as pool:
                 pairs = pool.map(partial(_pair, base, cand), work)
                 for (scope, kind, term), expected, actual in pairs:
-                    mapping = f"{kind}-page" if kind else "top"
                     cases.append(
                         (
-                            f"{catalog}/{scope}/{mapping}/{terms.index(term)}",
+                            f"{catalog}/{scope}/{kind}-page/{terms.index(term)}",
                             _result(expected),
                             _result(actual),
                         )

@@ -59,7 +59,7 @@ case = "*/*/variable-page/*"
 # A failed page (`/0/status`, `/1/status`) stays a difference.
 paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
 
-# 3a.6's other typed pages and its untyped first page (`served.py`). Before
+# 3a.6's other typed pages (`served.py`). Before
 # `typed-page-folded-index`, which also matches terms 4 and 5.
 [[exception]]
 name = "register-page-baseline-pins"
@@ -72,12 +72,6 @@ name = "typed-page-folded-index"
 reason = "As `variable-page-folded-index`, for the register, classification, classification_code and register_value pages: on the same derived copy the checkout's FastAPI and the Rust server agree on all 456 cases, so every difference comes from the index. Of the 456 on the originals, 27 differ outside the two pinned terms: 23 are the three terms `ß`, `ＡＢＣ` and `ﬁlm`, which return 0 rows on the baseline (2 register, 3 classification, 9 classification_code and 9 register_value pages), and 4 register pages reorder rows within the first page (bm25 near-ties, terms 3 and 21). Provisional: deleted by 3a.2a, or at the latest by 3a.13."
 case = "*/*/[rc]*-page/*"
 paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
-
-[[exception]]
-name = "untyped-arm-depth"
-reason = "Not provisional (decision 17): an untyped search ranks each arm's first 1000 rows, where the baseline's `top_results` ranks the first 5 of each typed group. On the same derived copy the checkout's FastAPI and the Rust server differ on 45 of 114 first pages, all from that window: in 39 a row ranked below 5 in its own group scores higher (a label-matched group with its authority bonus, an exact or prefix code), and in 6 two register-local codes keep the arm's order where the baseline's page applied `_rank_codes` (`0115`, `ＡＢＣ`). On the originals 51 differ: those 45, 4 from the baseline's pins (terms 4 and 5) and 2 from the index. A failed request (`/status`) stays a difference."
-case = "*/*/top/*"
-paths = ["/items"]
 
 # The baseline reader: `reg_meta` (with `reg_schema`) at this commit, installed from
 # `git archive` into its own virtualenv with the commit's locked dependencies.
