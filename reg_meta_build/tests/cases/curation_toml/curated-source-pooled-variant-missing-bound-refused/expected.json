@@ -12,7 +12,7 @@
   "fails_if": "read_curated_source accepts a pooled variant with only one date bound, inferring the other",
   "note": "One bound present is the hardest missing-bound form.",
   "error": {
-    "code": "source_preparation_failed",
+    "type": "CuratedSourceError",
     "locator": "register.0.variant.1",
     "message_contains": [
       "pooled variant requires both explicit date bounds"

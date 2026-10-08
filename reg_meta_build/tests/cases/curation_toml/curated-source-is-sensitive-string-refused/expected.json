@@ -11,7 +11,7 @@
   "fails_if": "read_curated_source coerces a quoted is_sensitive value to a Boolean instead of refusing it",
   "note": "The string \"false\" reads like a Boolean, so it is the hardest non-Boolean sensitivity flag; a blank string runs the same strict check.",
   "error": {
-    "code": "source_preparation_failed",
+    "type": "CuratedSourceError",
     "locator": "register.0.variable.0.is_sensitive",
     "message_contains": [
       "invalid global curated TOML",

@@ -8,7 +8,7 @@
   "fails_if": "read_curated_source checks only the shape of a pooled variant's bounds and accepts an impossible calendar date",
   "note": "2020-02-30 has the ISO shape, so only the calendar check refuses it.",
   "error": {
-    "code": "source_preparation_failed",
+    "type": "CuratedSourceError",
     "locator": "register.0.variant.1",
     "message_contains": [
       "Value error, day",

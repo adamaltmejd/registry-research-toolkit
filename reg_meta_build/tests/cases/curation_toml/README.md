@@ -90,16 +90,19 @@ for the case, so it must be a change someone could plausibly make.
 
   | Key                    | Meaning                                                                                                                                                        |
   | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `code`                 | Required. The located error code.                                                                                                                              |
+  | `code`                 | The located error code. Exactly one of `code` and `type` is present.                                                                                           |
+  | `type`                 | The exception class, for a loader that still refuses with a plain exception (below).                                                                           |
   | `exit_code`            | The exit code. Defaults to 10 (`EXIT_CONFIG`): every curation refusal is a configuration error.                                                                |
   | `locator`              | Required. Text that must appear in the message and names where the refusal points: `curation/<file> [[<table>]] entry <n>` for register files, else the entry. |
   | `message_contains`     | Further texts that must appear in the message.                                                                                                                 |
   | `remediation_contains` | Texts that must appear in the remediation.                                                                                                                     |
 
-Two loaders raise a plain `ValueError` for some refusals. The runner reports it the way
-the CLI command that reaches the loader does, with exit code 10 and an empty
-remediation: `curated_source` as `source_preparation_failed` (`prepare`) and
-`column_ownership` as `pipeline_build_failed` (`build`).
+Two loaders still refuse some files with a plain exception instead of a located
+`RegMetaError`: `curated_source` with `CuratedSourceError` and `column_ownership` with
+`ValueError`. Such a case asserts the raw loader failure only: `type` is the exception's
+class name, and `locator` and `message_contains` are read from its message. It names no
+`code`, `exit_code` or `remediation_contains`, since the exception carries none; the
+runner refuses a case that does.
 
 ### `loads` projection
 

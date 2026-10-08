@@ -13,7 +13,7 @@
   "fails_if": "read_curated_source accepts a data_warning that is blank, whitespace-only or not text",
   "note": "Whitespace-only text passes the non-empty length check, so only the non-blank rule refuses it; empty text and non-string values run the same field's checks.",
   "error": {
-    "code": "source_preparation_failed",
+    "type": "CuratedSourceError",
     "locator": "register.0.variable.0.data_warning",
     "message_contains": [
       "invalid global curated TOML"

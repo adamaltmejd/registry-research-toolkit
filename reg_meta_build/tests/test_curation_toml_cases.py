@@ -4,7 +4,8 @@ Each case directory is one boundary claim (`cases/curation_toml/README.md`): a t
 of files as a curator commits them, the public loader that reads them, and the
 oracle in `expected.json`. The oracle is either the loaded result, projected
 through the loader's public return model, or the located configuration error the
-loader refuses with. Expected values are read from the test each case replaces.
+loader refuses with (for a loader that still refuses with a plain exception, its
+class and message). Expected values are read from the test each case replaces.
 
 Every loader reads the case's `files/` directory in place, so the corpus costs no
 fixture IO and no subprocess.
@@ -107,47 +108,32 @@ def _column_ownership(files: Path, args: dict[str, Any]) -> Any:
     )
 
 
-# name -> (loader, the error code a plain ValueError is reported under by the CLI
-# command that reaches the loader; None lets it escape as a defect).
-LOADERS: dict[str, tuple[Callable[[Path, dict[str, Any]], Any], str | None]] = {
-    "curation_tree": (lambda files, args: load_curation_tree(files), None),
-    "register_files": (lambda files, args: load_register_files(files), None),
-    "classifications": (_classifications, None),
-    "relations": (lambda files, args: load_relations(files / "relations.toml"), None),
-    "tags": (lambda files, args: load_tags(files / "tags.toml"), None),
-    "lineage": (lambda files, args: load_lineage_config(files / "lineage.toml"), None),
-    "scb_errata": (_scb_errata, None),
-    "concept_groups": (lambda files, args: load_concept_groups(files), None),
-    "classification_groups": (
-        lambda files, args: load_classification_groups(files),
-        None,
+LOADERS: dict[str, Callable[[Path, dict[str, Any]], Any]] = {
+    "curation_tree": lambda files, args: load_curation_tree(files),
+    "register_files": lambda files, args: load_register_files(files),
+    "classifications": _classifications,
+    "relations": lambda files, args: load_relations(files / "relations.toml"),
+    "tags": lambda files, args: load_tags(files / "tags.toml"),
+    "lineage": lambda files, args: load_lineage_config(files / "lineage.toml"),
+    "scb_errata": _scb_errata,
+    "concept_groups": lambda files, args: load_concept_groups(files),
+    "classification_groups": lambda files, args: load_classification_groups(files),
+    "worklist_concept_groups": lambda files, args: load_worklist_concept_groups(
+        files / "concept_groups.auto.toml"
     ),
-    "worklist_concept_groups": (
-        lambda files, args: load_worklist_concept_groups(
-            files / "concept_groups.auto.toml"
-        ),
-        None,
+    "slug_dir": lambda files, args: load_slug_dir(files),
+    "provider_slugs": lambda files, args: load_provider_toml(_sole(files, "*.toml")),
+    "column_ownership": _column_ownership,
+    "matrix_evidence": lambda files, args: load_matrix(
+        files / "matrix.json",
+        source_mode=args["source_mode"],
+        expected_selector=MatrixSelector.model_validate(args["expected_selector"]),
     ),
-    "slug_dir": (lambda files, args: load_slug_dir(files), None),
-    "provider_slugs": (
-        lambda files, args: load_provider_toml(_sole(files, "*.toml")),
-        None,
+    "valid_codes": lambda files, args: load_valid_codes(files / "codes.csv"),
+    "related_documents": lambda files, args: load_related_documents(
+        files / "related_documents.toml"
     ),
-    "column_ownership": (_column_ownership, "pipeline_build_failed"),
-    "matrix_evidence": (
-        lambda files, args: load_matrix(
-            files / "matrix.json",
-            source_mode=args["source_mode"],
-            expected_selector=MatrixSelector.model_validate(args["expected_selector"]),
-        ),
-        None,
-    ),
-    "valid_codes": (lambda files, args: load_valid_codes(files / "codes.csv"), None),
-    "related_documents": (
-        lambda files, args: load_related_documents(files / "related_documents.toml"),
-        None,
-    ),
-    "curated_source": (_curated_source, "source_preparation_failed"),
+    "curated_source": _curated_source,
 }
 
 
@@ -215,52 +201,61 @@ def read_case(case: Path) -> dict[str, Any]:
         raise ValueError(f"{case.name}: unknown loader {expected.get('loader')!r}")
     if ("loads" in expected) == ("error" in expected):
         raise ValueError(f"{case.name}: expected.json needs `loads` or `error`")
+    error = expected.get("error", {})
+    if error and ("code" in error) == ("type" in error):
+        raise ValueError(f"{case.name}: error needs a located `code` or a `type`")
+    if "type" in error and {"exit_code", "remediation_contains"} & error.keys():
+        raise ValueError(
+            f"{case.name}: a plain `type` refusal has no exit code or remediation"
+        )
     return expected
 
 
-def check_error(exc: RegMetaError, error: dict[str, Any]) -> str | None:
-    exit_code = error.get("exit_code", EXIT_CONFIG)
-    if exc.code != error["code"]:
-        return f"code {exc.code!r} != {error['code']!r}: {exc.message}"
-    if exc.exit_code != exit_code:
-        return f"exit code {exc.exit_code} != {exit_code}"
+def check_error(exc: Exception, error: dict[str, Any]) -> str | None:
+    if "type" in error:
+        # A loader that raises a plain exception has no located code yet: the
+        # case asserts the exception class and its message as raised.
+        if type(exc).__name__ != error["type"]:
+            return f"raised {type(exc).__name__} != {error['type']}: {exc}"
+        message, remediation = str(exc), ""
+    else:
+        if not isinstance(exc, RegMetaError):
+            return f"raised {type(exc).__name__}, expected {error['code']}: {exc}"
+        if exc.code != error["code"]:
+            return f"code {exc.code!r} != {error['code']!r}: {exc.message}"
+        exit_code = error.get("exit_code", EXIT_CONFIG)
+        if exc.exit_code != exit_code:
+            return f"exit code {exc.exit_code} != {exit_code}"
+        message, remediation = exc.message, exc.remediation
     locator = error.get("locator")
     if not isinstance(locator, str) or not locator:
         return "error.locator must name where the refusal points"
     for part in (locator, *error.get("message_contains", ())):
-        if part not in exc.message:
-            return f"{part!r} not in message {exc.message!r}"
+        if part not in message:
+            return f"{part!r} not in message {message!r}"
     for part in error.get("remediation_contains", ()):
-        if part not in exc.remediation:
-            return f"{part!r} not in remediation {exc.remediation!r}"
+        if part not in remediation:
+            return f"{part!r} not in remediation {remediation!r}"
     return None
 
 
 def run_case(case: Path) -> str | None:
     """Load one case and return how it departs from its oracle, or None."""
     expected = read_case(case)
-    loader, value_error_code = LOADERS[expected["loader"]]
+    error = expected.get("error")
     try:
-        result = loader(case / "files", expected.get("args", {}))
+        result = LOADERS[expected["loader"]](case / "files", expected.get("args", {}))
     except RegMetaError as exc:
-        if "error" not in expected:
+        if error is None:
             return f"refused {exc.code}: {exc.message}"
-        return check_error(exc, expected["error"])
-    except ValueError as exc:
-        if value_error_code is None or "error" not in expected:
+        return check_error(exc, error)
+    except Exception as exc:
+        # A plain exception is a defect unless the case claims it by `type`.
+        if error is None or "type" not in error:
             raise
-        # The CLI command that reaches this loader reports a plain ValueError as
-        # this configuration error.
-        wrapped = RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code=value_error_code,
-            error_class="configuration",
-            message=str(exc),
-            remediation="",
-        )
-        return check_error(wrapped, expected["error"])
-    if "error" in expected:
-        return f"loaded, expected {expected['error']['code']}"
+        return check_error(exc, error)
+    if error is not None:
+        return f"loaded, expected {error.get('code') or error['type']}"
     if expected["loads"] is not True:
         return mismatch(to_json(result), expected["loads"], "$result")
     return None
