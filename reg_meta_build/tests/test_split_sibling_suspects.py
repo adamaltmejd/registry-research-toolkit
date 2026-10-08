@@ -1,10 +1,8 @@
 """Tests for the read-only split-sibling SUSPECT diagnostic (#918;
 `split_sibling_suspects.py`).
 
-Mirrors the other read-only diagnostics' test shape (`test_doc_coverage.py`,
-`test_concept_group_candidates.py`): `infer_split_sibling_suspects` over a
-hand-built synthetic DB exercises the co-delivery gate plus the code_vs_label /
-type_flip / length_disagree / same-shape / co-grouped classification, and
+`infer_split_sibling_suspects` over a hand-built synthetic DB exercises the
+co-delivery gate plus the code_vs_label / type_flip / length_disagree / same-shape / co-grouped classification, and
 `render_suspects_toml` round-trips through a TOML parse. A separate test proves
 the diagnostic never mutates the DB.
 
