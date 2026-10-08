@@ -19,6 +19,7 @@ cases/cli/
   _artifact/
     source.json                   the source spec the artifact is built from
     curation/                     the curation tree that builds it
+    docs/                         the doc library built beside it (`reg_meta_docs.db`)
   <command>/<case>/
     request.json                  the argument list and the replaced test
     *.sql                         optional: the case's own databases (`databases`)
@@ -49,14 +50,35 @@ changes the artifact's directory.
 
 The artifact delivers:
 
-  | Register (native id)                                    | Slug      | Variants                                                           | Variables                                            |
-  | ------------------------------------------------------- | --------- | ------------------------------------------------------------------ | ---------------------------------------------------- |
-  | TESTREG (1)                                             | `sample`  | `1.10` `people`                                                    | `1.101` `value` (VALUE in 2019, VALUE_NY in 2020)    |
-  |                                                         |           |                                                                    | `1.102` `kon` (Kön in 2019, Kon in 2020)             |
-  | Konjunkturstatistik, löner för statlig sektor (KLS) (2) | `other`   | `2.20` `people` (named like the register less its `(KLS)`)         | `2.201` `value`                                      |
-  | Nybörjare i Komvux (3)                                  | `komvux`  | `3.30` `nyborjare` (named like the register)                       | `3.301` `komvux`                                     |
-  | PART (4)                                                | `part`    | `4.40` `people`                                                    | `4.5.first`, `4.5.second`: a partition of variable 5 |
-  | Företag (6)                                             | `foretag` | `6.60` `foretag` (named like the register), `6.61` `arbetsstallen` | `6.601` `f1`, `6.602` `f2`                           |
+  | Register (native id)                                    | Slug      | Variants                                                           | Variables                                                          |
+  | ------------------------------------------------------- | --------- | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+  | TESTREG (1)                                             | `sample`  | `1.10` `people`, entity key `[value, kon]`                         | `1.101` `value` (VALUE in 2019, VALUE_NY in 2020)                  |
+  |                                                         |           |                                                                    | `1.102` `kon` (Kön in 2019, Kon in 2020)                           |
+  | Konjunkturstatistik, löner för statlig sektor (KLS) (2) | `other`   | `2.20` `people` (named like the register less its `(KLS)`)         | `2.201` `value`                                                    |
+  | Nybörjare i Komvux (3)                                  | `komvux`  | `3.30` `nyborjare` (named like the register), entity key `komvux`  | `3.301` `komvux`                                                   |
+  | PART (4)                                                | `part`    | `4.40` `people`, entity key `lopnr`                                | `4.5.first`, `4.5.second`: a partition of variable 5               |
+  |                                                         |           |                                                                    | `4.7.lopnrny` `lopnr`, `4.7.konx` `kon`: a partition of variable 7 |
+  |                                                         |           |                                                                    | `4.41` `first1`, `4.42` `first2` (names Ålder, Kön)                |
+  | Företag (6)                                             | `foretag` | `6.60` `foretag` (named like the register), `6.61` `arbetsstallen` | `6.601` `f1`, `6.602` `f2`                                         |
+  |                                                         |           |                                                                    | the worklist rows below, all in `6.60`                             |
+
+Register 6's worklist rows carry the worklist commands' hard cases:
+
+- Succession: the column FORVERS under var 31395 (2019) and var 47670 (2020); ANNINK
+  under 41660 and 37046, joined by the curated edge in `curation/relations.toml`; KOD
+  under 700 (2019, then KODX in 2020) and 701 (2020); ORT under 800 (2018) and 801
+  (2020).
+- Concept-group families, one var_id per member: `morsak1-3`, `flop1-3`,
+  `tillsyn-1-skolbarn-1-3`, `artal-person-1-3` and `artal-person4-6`, `foo-1-3` and
+  `foo4-6`, `q1-3`, `sun-niva2000/2010`, `inkomst1-2000/2010`, `kod3/7/11`,
+  `dodsorsak1-3` (with `dodsorsak-text`, the curated group `dodsorsak-forsta` claims
+  `dodsorsak1`), `ink1-2`, `solo1`, `agi1lonfink`/`agi2lonfink` and `diag1-2`. Each
+  case's `note` says which claim a row carries.
+
+The build groups each same-definition partition (`first`, `kon`) into an `edge` concept
+group. The runner builds the doc library from `docs/<register slug>/*.md` into the
+artifact's `--db` directory. It documents columns of `sample` and `komvux` and one
+directory, `nowhere`, that names no register.
 
 A change to `_artifact/` changes what every case reads. Add a register or variable only
 for a claim no existing row can carry, and check the cases that enumerate the catalog
@@ -102,7 +124,7 @@ change to the product, not the behavior restated. It sits in `request.json` ther
 here, so a reviewer reads it beside the arguments.
 
 Strings in `argv` take two placeholders: `{db}` is the artifact's `--db` directory and
-`{work}` the working directory.
+`{work}` the working directory, resolved, so it matches a path a command prints.
 
 ## `expected.json`
 
@@ -125,12 +147,14 @@ A `files` path may be a glob. Each claim is an object:
 
 A claim other than `absent` needs exactly one file to match.
 
-`reloads_with` names a loader, the directory under `{work}` it reads, and the expected
-result:
+`reloads_with` names a `loader`, the `path` under `{work}` it reads, and the `result` it
+must return exactly:
 
-  | Loader     | Returns                                                                             |
-  | ---------- | ----------------------------------------------------------------------------------- |
-  | `slug_dir` | `snapshot_payload(load_slug_dir(path))`: `{kind: {"<provider>/<native id>": slug}}` |
+  | Loader                   | Reads                                                       | Returns                                                                                                                    |
+  | ------------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+  | `slug_dir`               | a slug directory, through `load_slug_dir`                   | `snapshot_payload(...)`: `{kind: {"<provider>/<native id>": slug}}`                                                        |
+  | `relations`              | a relations file, through `load_relations`                  | `{"replaced_by": [{from, to, from_column, to_column, variant, effective_year}]}`, in file order                            |
+  | `concept_group_worklist` | a candidate catalog, through `load_worklist_concept_groups` | `{"<provider>/<register>/<key>": {label, axes, members: [{variable, delivery_column, coords}]}}`, axes and coords as lists |
 
 ## `stdout.json`
 

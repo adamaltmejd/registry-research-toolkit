@@ -28,7 +28,10 @@ import pytest
 from _case_projection import mismatch, unclaimed
 from _pipeline_catalog_support import CatalogFixture
 from reg_meta_build.cli import run
+from reg_meta_build.concept_groups import load_worklist_concept_groups
 from reg_meta_build.dbdiff import main as dbdiff_main
+from reg_meta_build.doc_db import build_doc_db
+from reg_meta_build.relations import load_relations
 
 from reg_meta_build.fqid_slugs import load_slug_dir, snapshot_payload
 
@@ -68,12 +71,13 @@ def cli_artifact(prepared_cache: PreparedCache) -> Artifact:
     """The artifact built once from `cases/cli/_artifact/`.
 
     It sits beside the prepared inputs, keyed by the content hash of its source,
-    its curation and this runner (which sets the build options), and is published
-    by an atomic rename, so xdist workers share one build and never write a path
-    another worker reads.
+    its curation, its docs and this runner (which sets the build options), and is
+    published by an atomic rename, so xdist workers share one build and never
+    write a path another worker reads.
     """
     spec = json.loads((ARTIFACT / "source.json").read_text(encoding="utf-8"))
-    inputs = _tree_bytes(ARTIFACT / "curation")
+    inputs = _tree_bytes(ARTIFACT)
+    inputs.pop("source.json")
     inputs["runner"] = Path(__file__).read_bytes()
     key = hashlib.sha256(
         json.dumps(
@@ -106,6 +110,7 @@ def cli_artifact(prepared_cache: PreparedCache) -> Artifact:
             ):
                 raise RuntimeError(f"the CLI artifact did not build: {result}")
             shutil.rmtree(staging / "report")
+            build_doc_db(ARTIFACT / "docs", output.parent)
             try:
                 staging.rename(entry)
             except OSError:
@@ -215,10 +220,52 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
     stderr = expected.get("stderr", {})
     assert stderr.keys() <= {"empty", "contains", "excludes"}, (case.name, stderr)
     if "reloads_with" in expected:
-        assert expected["reloads_with"].keys() == {"loader", "path", "slugs"}, case.name
+        reload = expected["reloads_with"]
+        assert reload.keys() == {"loader", "path", "result"}, case.name
+        assert reload["loader"] in _RELOADERS, (case.name, reload["loader"])
 
 
-_RELOADERS = {"slug_dir": lambda root: snapshot_payload(load_slug_dir(root))}
+def _relations(path: Path) -> dict[str, Any]:
+    """The `replaced_by` edges `load_relations` reads, in file order."""
+    return {
+        "replaced_by": [
+            {
+                "from": str(edge.predecessor),
+                "to": str(edge.successor),
+                "from_column": edge.predecessor_column,
+                "to_column": edge.successor_column,
+                "variant": edge.variant,
+                "effective_year": edge.effective_year,
+            }
+            for edge in load_relations(path).replaced_by
+        ]
+    }
+
+
+def _concept_group_worklist(path: Path) -> dict[str, Any]:
+    """The groups `load_worklist_concept_groups` reads, by `provider/register/key`."""
+    return {
+        f"{group.provider}/{group.register}/{group.key}": {
+            "label": group.label,
+            "axes": [list(axis) for axis in group.axes],
+            "members": [
+                {
+                    "variable": member.variable,
+                    "delivery_column": member.delivery_column,
+                    "coords": [list(coord) for coord in member.coords],
+                }
+                for member in group.members
+            ],
+        }
+        for group in load_worklist_concept_groups(path)
+    }
+
+
+_RELOADERS = {
+    "slug_dir": lambda root: snapshot_payload(load_slug_dir(root)),
+    "relations": _relations,
+    "concept_group_worklist": _concept_group_worklist,
+}
 
 
 @pytest.mark.parametrize(
@@ -236,7 +283,8 @@ def test_cli_case(
     _check_keys(case, request, expected)
     runs = request.get("runs", [request])
 
-    work = tmp_path / "work"
+    # Resolved, so `{work}` matches the resolved paths a command prints.
+    work = tmp_path.resolve() / "work"
     for name in request.get("curation_dirs", ["curation"]):
         shutil.copytree(cli_artifact.curation, work / name)
     if (case / "files").is_dir():
@@ -294,4 +342,4 @@ def test_cli_case(
     if "reloads_with" in expected:
         reload = expected["reloads_with"]
         loaded = _RELOADERS[reload["loader"]](work / reload["path"])
-        assert loaded == reload["slugs"], loaded
+        assert loaded == reload["result"], loaded
