@@ -1,0 +1,38 @@
+{
+  "exit_code": 0,
+  "files": {
+    "partial.toml": {
+      "contains": [
+        "# foldable families: 10",
+        "# excluded batteries (weak label agreement): 1",
+        "# skipped (key collides with an existing group): 3",
+        "# skipped (trailing-hyphen trim collapsed two distinct stems): 0",
+        "variable = \"dodsorsak1\""
+      ],
+      "excludes": [
+        "key = \"artal-person\"",
+        "variable = \"artal-person-1\"",
+        "variable = \"artal-person4\"",
+        "key = \"foo\"",
+        "variable = \"foo-1\"",
+        "variable = \"foo4\""
+      ]
+    },
+    "accepts.toml": {
+      "contains": [
+        "key = \"artal-person\"",
+        "variable = \"artal-person-1\"",
+        "variable = \"artal-person-2\"",
+        "variable = \"artal-person-3\""
+      ],
+      "excludes": [
+        "variable = \"artal-person4\"",
+        "variable = \"artal-person5\"",
+        "variable = \"artal-person6\"",
+        "key = \"foo\"",
+        "variable = \"foo-1\"",
+        "variable = \"foo4\""
+      ]
+    }
+  }
+}
