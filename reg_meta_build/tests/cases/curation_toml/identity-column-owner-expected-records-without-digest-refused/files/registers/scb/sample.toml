@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "ANSWER"
+owner = "1.5.amount"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_records = [{ ref = { source = "scb-registerinformation", semantic_record_key = ["register:1", "variant:10", "edition:2020", "variable:5", "member:20"] }, alternatives = [{ fields = [{ name = "column_name", status = "value", value = "ANSWER" }] }] }]

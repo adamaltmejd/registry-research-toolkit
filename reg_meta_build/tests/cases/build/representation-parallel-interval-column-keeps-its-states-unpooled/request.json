@@ -1,0 +1,32 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_reconciliation_preserves_outer_windows_and_conflicts[explicit_annual]"
+  ],
+  "note": "SCB has no year-range label that stays a plain interval: a month range ('2022-01 - 2024-12') is the one multi-year Registerversionnamn that `source_scopes` reads as an interval rather than a pooled range, so it stands in for the old test's explicit 2022-2024 interval scope.",
+  "fails_if": "`form_representations` marks the shared parallel state pooled when any member is pooled, rather than only when all are (or copies First's pooled flag onto Second's states), so the 2022 or 2023-2024 state reads pooled",
+  "sources": {
+    "description": "Variable 1 (Income): First is pooled 2020-2022 (CVID 100); Second is the month-range interval 2022-01 - 2024-12 (CVID 101).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "First",
+          "cvid": 100,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020-2022",
+          "regver_id": 110
+        },
+        {
+          "colname": "Second",
+          "cvid": 101,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2022-01 - 2024-12",
+          "regver_id": 111
+        }
+      ]
+    }
+  }
+}

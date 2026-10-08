@@ -1,0 +1,11 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_authored_source_mismatch_withholds_case[column = \"First\"-column = \"Absent\"]",
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_original_membership_and_facts_remain_guarded[missing]",
+    "test_curation_compile_pooled_parallel.py::test_case_aliases_keep_distinct_members_and_refuse_source_drift[missing]",
+    "test_curation_compile_pooled_parallel.py::test_co_delivered_parallel_refuses_unsupported_common_quantity[missing]"
+  ],
+  "note": "First and Second are declared and delivered exactly as in representation-parallel-pooled-columns-keep-their-outer-windows; the extra declared column Absent (window 2022, inside the shared window) is not delivered. Every other check passes, so only the missing column fails. The membership check runs before the co_delivered and case_aliases checks, so it covers their missing-column refusals too.",
+  "fails_if": "`compile_parallel_representations` skips a declared column that matches no delivered member instead of marking the entry stale",
+  "sources": "scb-income-pooled-first-and-second"
+}

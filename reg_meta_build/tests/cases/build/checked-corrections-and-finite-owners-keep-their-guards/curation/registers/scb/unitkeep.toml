@@ -1,0 +1,23 @@
+[register]
+provider = "scb"
+slug = "unitkeep"
+native_id = "6"
+[[variant]]
+native_id = "6.2"
+slug = "people"
+[[variable]]
+native_id = "6.5"
+slug = "answer"
+[[errata.field]]
+variable = "6.5"
+variant = "6.2"
+column = "ANSWER"
+edition = "99"
+expected_fields = {{expected_fields key=member:620 fields=name,definition,description,operational_definition,classification_declared,representation,data_type,coverage_from,coverage_to,measurement_unit}}
+expected_period_text = {{period_text key=member:620}}
+expected_scope = {{edition_scope key=member:620}}
+expected_period = {{period_scope key=member:620}}
+evidence = "Exact supplied unit establishes the reviewed correction."
+noted = "2026-09-30"
+field = "measurement_unit"
+value = "Antal personer"

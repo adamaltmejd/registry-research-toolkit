@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_native_partitions.py::test_column_correction_requires_complete_fields_and_preserves_original",
+  "note": "Every source field is guarded; only the exact edition is missing.",
+  "fails_if": "the `[[errata.field]]` loader stops requiring an exact edition for a `column_name` correction, so an edition-less column rename loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "column corrections require complete source fields and an exact edition"
+    ]
+  }
+}

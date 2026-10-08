@@ -1,0 +1,25 @@
+{
+  "description": "Variable 1 (Income): First is pooled over edition 2020-2022 (CVID 100), Second over edition 2022-2024 (CVID 101); 2022 is their only common year.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "First",
+        "cvid": 100,
+        "var_id": 1,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 110
+      },
+      {
+        "colname": "Second",
+        "cvid": 101,
+        "var_id": 1,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2022-2024",
+        "regver_id": 111
+      }
+    ]
+  }
+}

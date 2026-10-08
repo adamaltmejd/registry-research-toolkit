@@ -39,6 +39,7 @@ is the harder claim.
   | `enrichment-`           | `[[enrichment.description]]` and `[[enrichment.alias]]`                      |
   | `identity-`             | `[[identity.*]]` register tables                                             |
   | `representation-`       | `[[representation.*]]` register tables                                       |
+  | `coding-`               | `[[coding.*]]` register tables                                               |
   | `acknowledge-`          | `[[acknowledge]]`                                                            |
   | `group-`                | register `[[group]]` concept groups                                          |
   | `classification-`       | `classifications/<short_name>.toml` books and families                       |

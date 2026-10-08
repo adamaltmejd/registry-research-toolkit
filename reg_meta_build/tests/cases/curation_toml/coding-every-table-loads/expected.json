@@ -1,0 +1,45 @@
+{
+  "loader": "register_files",
+  "match": "includes",
+  "replaces": "test_curation_compile_tree.py::test_coding_register_tables_load_with_finite_periods",
+  "fails_if": "the register loader drops or refuses a `[[coding.uncoded]]`, `[[coding.omit]]` or `[[coding.extend]]` entry, or keeps only the first finite window of a `[[coding.choice]]` with two periods",
+  "note": "One finite-period entry of each of the four coding tables the replaced test loaded. It asserted two windows on the choice and one entry in each other table; the window, kept-list and witness values are read from the TOML.",
+  "loads": [
+    {
+      "register_info": {
+        "slug": "sample"
+      },
+      "coding": {
+        "choice": [
+          {
+            "periods": [
+              ["2020-01-01", "2020-06-30"],
+              ["2020-07-01", "2020-12-31"]
+            ],
+            "keep": "kept",
+            "keep_members": [["01", "Label"]],
+            "over": ["other"]
+          }
+        ],
+        "uncoded": [
+          {
+            "periods": [["2019-01-01", "2019-12-31"]]
+          }
+        ],
+        "omit": [
+          {
+            "periods": [["2018-01-01", "2018-12-31"]]
+          }
+        ],
+        "extend": [
+          {
+            "periods": [["2017-01-01", "2017-12-31"]],
+            "list": "kept",
+            "list_members": [["01", "Label"]],
+            "witness": ["2020-01-01", "2020-06-30"]
+          }
+        ]
+      }
+    }
+  ]
+}

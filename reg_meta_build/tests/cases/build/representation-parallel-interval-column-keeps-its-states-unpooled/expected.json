@@ -1,0 +1,81 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": [
+        "code"
+      ],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "pooled"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2021-12-31",
+          1
+        ],
+        [
+          "2022-01-01",
+          "2022-12-31",
+          0
+        ],
+        [
+          "2023-01-01",
+          "2024-12-31",
+          0
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "match": "includes",
+      "rows": [
+        [
+          "First",
+          "2020-01-01",
+          "2021-12-31"
+        ],
+        [
+          "Second",
+          "2023-01-01",
+          "2024-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income",
+        "valid_from": "2022-01-01",
+        "provenance": {
+          "contains": "#/representation.parallel/1"
+        }
+      },
+      "fields": [
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "2022-12-31"
+        ]
+      ]
+    }
+  ]
+}

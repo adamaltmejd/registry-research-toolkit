@@ -1,0 +1,19 @@
+[register]
+provider = "scb"
+slug = "substantive"
+native_id = "8"
+[[variant]]
+native_id = "8.2"
+slug = "people"
+[[variable]]
+native_id = "8.5"
+slug = "value"
+[[coding.sentinel]]
+variable = "8.5"
+variant = "people"
+column = "VALUE"
+classification = "fixture"
+periods = [["2021-01-01", "2021-12-31"]]
+members = [["99", "Unknown"]]
+reason = "Exact supplied unknown marker"
+source = "Reviewed complete source list"

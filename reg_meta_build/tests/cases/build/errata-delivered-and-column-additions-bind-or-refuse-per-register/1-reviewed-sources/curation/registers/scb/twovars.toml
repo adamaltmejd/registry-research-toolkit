@@ -1,0 +1,23 @@
+[register]
+provider = "scb"
+slug = "twovars"
+native_id = "14"
+[[variant]]
+native_id = "14.142"
+slug = "people"
+[[variable]]
+native_id = "14.5"
+slug = "v5"
+[[variable]]
+native_id = "14.6"
+slug = "v6"
+[[variable]]
+native_id = "14.7"
+slug = "v7"
+
+[[errata.delivered]]
+variant = "people"
+column = "A"
+versions = ["2021"]
+evidence = "accepted delivery"
+noted = "2026-09-25"

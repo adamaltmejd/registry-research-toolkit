@@ -1,0 +1,27 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "fields": ["variable", "column", "provider_key"],
+      "rows": [
+        ["curated", "VALUE", "101"],
+        ["other", "OTHER", "102"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["subject"],
+      "rows": [
+        ["1.103"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unresolved_catalog_identity"},
+      "fields": ["subject"],
+      "rows": []
+    }
+  ]
+}

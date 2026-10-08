@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[errata.field]]
+variable = "1.5"
+variant = "1.2"
+column = "ANSWER"
+edition = "99"
+expected_fields = [{ "name" = "access_rights", "status" = "absent" }, { "name" = "access_url", "status" = "absent" }, { "name" = "aggregation_level", "status" = "absent" }, { "name" = "availability", "status" = "value", "value" = true }, { "name" = "base_register", "status" = "absent" }, { "name" = "classification_declared", "status" = "absent" }, { "name" = "column_name", "status" = "value", "value" = "ANSWER" }, { "name" = "conditional_sensitivity", "status" = "absent" }, { "name" = "coverage", "status" = "absent" }, { "name" = "coverage_from", "status" = "absent" }, { "name" = "coverage_to", "status" = "absent" }, { "name" = "data_length", "status" = "value", "value" = "1" }, { "name" = "data_type", "status" = "value", "value" = "integer" }, { "name" = "dataset_label", "status" = "absent" }, { "name" = "definition", "status" = "value", "value" = "A generic family label" }, { "name" = "description", "status" = "absent" }, { "name" = "documentation_status", "status" = "absent" }, { "name" = "documentation_url", "status" = "absent" }, { "name" = "first_approved_at", "status" = "absent" }, { "name" = "geographic_coverage", "status" = "absent" }, { "name" = "identifier", "status" = "absent" }, { "name" = "landing_page", "status" = "absent" }, { "name" = "last_approved_at", "status" = "absent" }, { "name" = "legislation", "status" = "absent" }, { "name" = "measurement_information", "status" = "absent" }, { "name" = "measurement_unit", "status" = "absent" }, { "name" = "name", "status" = "value", "value" = "GenericVar" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "population_comment", "status" = "absent" }, { "name" = "population_date", "status" = "absent" }, { "name" = "population_definition", "status" = "absent" }, { "name" = "purpose", "status" = "absent" }, { "name" = "reference_period", "status" = "unknown" }, { "name" = "representation", "status" = "absent" }, { "name" = "sensitivity", "status" = "absent" }, { "name" = "source_attribution", "status" = "value", "value" = "Register : Variant (FE)" }, { "name" = "source_date", "status" = "absent" }, { "name" = "source_version", "status" = "absent" }, { "name" = "update_frequency", "status" = "absent" }, { "name" = "value_set_declared", "status" = "absent" }]
+expected_period_text = "2009"
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2009", "end" = "2009" }] }
+expected_period = { "kind" = "intervals", "intervals" = [{ "start" = "2009-01-01", "end" = "2009-12-31" }] }
+evidence = "Both originals name the same unit by its abbreviation."
+noted = "2026-09-30"
+field = "source_attribution"
+value = "Register : Variant (företagsenhet)"

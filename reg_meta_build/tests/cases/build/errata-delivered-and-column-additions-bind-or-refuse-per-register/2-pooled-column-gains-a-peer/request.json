@@ -1,0 +1,473 @@
+{
+  "replaces": [
+    "test_curation_compile_errata.py::test_coding_choice_on_errata_delivered_pooled_columns_keeps_exact_peers"
+  ],
+  "fails_if": "`compile_coding_register` stops comparing a `[[coding.choice]]` entry's expected_evidence_sha256 with the evidence of the delivery it builds, so the VALUE choice reviewed over the two pooled blank rows and the 2013 donor still applies after the column gains a 2014 peer",
+  "note": "The replaced test's drift leg: VALUE gains a later physical peer (CVID 2104) after the choice was reviewed over the errata-pooled blanks (CVIDs 2101, 2102) and the donor (2103), so the choice goes stale and the 2010 conflict comes back. The compiled guard reported peer_membership_changed; at the boundary the build reports a stale_curation_entry for the choice's period. The choice's evidence digest covers the whole delivery's source revision (the same rows built from a delivery without the other registers also go stale), so this step shows the digest path, not peer membership on its own; it is the fresh-build form of the drift the deleted test asserted on a stored case. Only pooled.toml is committed, so no other register's entry can mask the claim. The replaced twocols leg (adding an A peer stales only the A choice while B still applies) is not boundary-reachable: any delivery change stales every digested choice.",
+  "sources": {
+    "description": "scb-errata-registers, plus a later VALUE row in the pooled register: variable 5 delivers VALUE in 2014 (RegVerID 2014, CVID 2104), after the choice was reviewed.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 1101,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "SPLIT",
+            11,
+            112
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 1102,
+          "var_id": 6,
+          "year": "2021",
+          "regver_id": 2021,
+          "versionname": "2021",
+          "register": [
+            "SPLIT",
+            11,
+            112
+          ]
+        },
+        {
+          "colname": "C",
+          "cvid": 1103,
+          "var_id": 7,
+          "year": "2021",
+          "regver_id": 2,
+          "versionname": "2021-12-31",
+          "register": [
+            "SPLIT",
+            11,
+            112
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1201,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "MOVED",
+            12,
+            122
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 1202,
+          "var_id": 6,
+          "year": "2021",
+          "regver_id": 2021,
+          "versionname": "2021-12-31",
+          "register": [
+            "MOVED",
+            12,
+            122
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 1301,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "NODOC",
+            13,
+            132
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 1302,
+          "var_id": 6,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "NODOC",
+            13,
+            132
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1401,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "TWOVARS",
+            14,
+            142
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1402,
+          "var_id": 6,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "TWOVARS",
+            14,
+            142
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 1403,
+          "var_id": 7,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "TWOVARS",
+            14,
+            142
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1501,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "PRESENT",
+            15,
+            152
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1502,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "PRESENT",
+            15,
+            152
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1601,
+          "var_id": 5,
+          "year": "2019",
+          "regver_id": 2019,
+          "register": [
+            "OWNERS",
+            16,
+            162
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1602,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "OWNERS",
+            16,
+            162
+          ]
+        },
+        {
+          "colname": "",
+          "cvid": 1603,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "OWNERS",
+            16,
+            162
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1701,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "UNOWNED",
+            17,
+            172
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 1702,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "UNOWNED",
+            17,
+            172
+          ]
+        },
+        {
+          "colname": "",
+          "cvid": 1703,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "UNOWNED",
+            17,
+            172
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1801,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "BLANKS",
+            18,
+            182
+          ]
+        },
+        {
+          "colname": "",
+          "cvid": 1802,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "BLANKS",
+            18,
+            182
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 1803,
+          "var_id": 6,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": [
+            "BLANKS",
+            18,
+            182
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 1901,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "COLUMNS",
+            19,
+            192
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 2001,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "DECLARED",
+            20,
+            202
+          ]
+        },
+        {
+          "colname": "",
+          "cvid": 2101,
+          "var_id": 5,
+          "year": "2008",
+          "regver_id": 2008,
+          "versionname": "2008 - 2010",
+          "register": [
+            "POOLED",
+            21,
+            212
+          ]
+        },
+        {
+          "colname": "",
+          "cvid": 2102,
+          "var_id": 5,
+          "year": "2010",
+          "regver_id": 2010,
+          "versionname": "2010 - 2012",
+          "register": [
+            "POOLED",
+            21,
+            212
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 2103,
+          "var_id": 5,
+          "year": "2013",
+          "regver_id": 2013,
+          "register": [
+            "POOLED",
+            21,
+            212
+          ]
+        },
+        {
+          "colname": "",
+          "cvid": 2201,
+          "var_id": 5,
+          "year": "2008",
+          "regver_id": 2008,
+          "versionname": "2008 - 2010",
+          "register": [
+            "POOLEDBARE",
+            22,
+            222
+          ]
+        },
+        {
+          "colname": "",
+          "cvid": 2202,
+          "var_id": 5,
+          "year": "2010",
+          "regver_id": 2010,
+          "versionname": "2010 - 2012",
+          "register": [
+            "POOLEDBARE",
+            22,
+            222
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 2203,
+          "var_id": 5,
+          "year": "2013",
+          "regver_id": 2013,
+          "register": [
+            "POOLEDBARE",
+            22,
+            222
+          ]
+        },
+        {
+          "colname": "\"\"",
+          "cvid": 2301,
+          "var_id": 5,
+          "year": "2008",
+          "regver_id": 2008,
+          "versionname": "2008 - 2010",
+          "register": [
+            "TWOCOLS",
+            23,
+            232
+          ]
+        },
+        {
+          "colname": "\"\"",
+          "cvid": 2302,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 2009,
+          "versionname": "2009 - 2010",
+          "register": [
+            "TWOCOLS",
+            23,
+            232
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 2303,
+          "var_id": 5,
+          "year": "2010",
+          "regver_id": 2010,
+          "versionname": "2010 - 2012",
+          "register": [
+            "TWOCOLS",
+            23,
+            232
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 2304,
+          "var_id": 5,
+          "year": "2010",
+          "regver_id": 2010,
+          "versionname": "2010 - 2012",
+          "register": [
+            "TWOCOLS",
+            23,
+            232
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 2401,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "CONFLICT",
+            24,
+            242
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 2402,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "versionname": "2020 revised",
+          "register": [
+            "CONFLICT",
+            24,
+            242
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 2104,
+          "var_id": 5,
+          "year": "2014",
+          "regver_id": 2014,
+          "register": [
+            "POOLED",
+            21,
+            212
+          ]
+        }
+      ],
+      "vardemangder": [
+        "donor|1|1|Ja|1801|7181",
+        "earlier|1|0|Nej|2101|7211",
+        "later|1|1|Ja|2102|7212",
+        "earlier|1|0|Nej|2201|7221",
+        "later|1|1|Ja|2202|7222",
+        "A earlier|1|0|Nej|2301|7231",
+        "B earlier|1|0|Nej|2302|7232",
+        "A later|1|1|Ja|2303|7233",
+        "B later|1|1|Ja|2304|7234"
+      ]
+    }
+  },
+  "authored_from": "scb-errata-registers",
+  "registers": [
+    "21"
+  ]
+}

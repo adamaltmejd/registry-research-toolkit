@@ -1,0 +1,37 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "severity",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "error",
+          "curation/registers/fk/r.toml [[variant]] entry 2"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "column": "HEADER"
+      },
+      "fields": [
+        "variable",
+        "variant"
+      ],
+      "rows": [
+        [
+          "header",
+          "table"
+        ]
+      ]
+    }
+  ]
+}

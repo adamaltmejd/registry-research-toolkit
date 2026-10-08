@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "pooledbare"
+native_id = "22"
+[[variant]]
+native_id = "22.222"
+slug = "people"
+[[variable]]
+native_id = "22.5"
+slug = "value"
+
+[[errata.delivered]]
+variant = "people"
+column = "VALUE"
+versions = ["2008 - 2010", "2010 - 2012"]
+evidence = "accepted delivery"
+noted = "2026-09-28"

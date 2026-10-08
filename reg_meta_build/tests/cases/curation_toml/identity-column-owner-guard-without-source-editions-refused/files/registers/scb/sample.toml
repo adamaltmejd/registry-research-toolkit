@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.2"
+column = "ANSWER"
+owner = "1.5.amount"
+ref = "role"
+source_editions = []
+expected_fields = [{ name = "measurement_unit", status = "value", value = "SEK" }]

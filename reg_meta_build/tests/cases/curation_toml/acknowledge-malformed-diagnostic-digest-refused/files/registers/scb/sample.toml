@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[acknowledge]]
+code = "unresolved_native_identity"
+subject = "scb/sample/one"
+refs = ["{\"source\": \"fixture\", \"semantic_record_key\": [\"one\"]}"]
+reason = "The source omits the physical matrix coordinates."
+evidence = "Complete original source family."
+expected_evidence_sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+expected_diagnostic_sha256 = "not-a-sha256"

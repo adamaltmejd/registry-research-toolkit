@@ -1,0 +1,24 @@
+{
+  "replaces": "test_curation_compile_tree.py::test_thin_default_variant_carries_panel_fields",
+  "fails_if": "the native naming compiler accepts a tracked `_default` variant entry that binds no native variant, so a thin register whose variables all sit in named variants keeps a stale default slug silently",
+  "note": "The source is `thin-pooled-variant-keeps-one-pooled-state-with-its-warning`'s: FK register r delivers HEADER only in its named variant `table`, so r has no not-applicable `_default` variant. r.toml still declares the `_default` variant entry (entry 2), which goes stale; the named variant (entry 1) binds.",
+  "sources": {
+    "description": "Authored FK register r with no dates, one pooled variant `table` (2020-01-01..2021-12-31) and one variable HEADER (2020-06-01..2021-06-30) with a data warning. Plus the SCB sample.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "data_type": "int"
+        }
+      ],
+      "unika": [
+        "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
+      ]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": "\n[[register]]\nkey = \"r\"\nname = \"Register with unknown inception\"\n[[register.variant]]\nkey = \"table\"\nname = \"Pooled table\"\nvalid_from = \"2020-01-01\"\nvalid_to = \"2021-12-31\"\nperiod_scope = \"pooled\"\n[[register.variable]]\nname = \"Literal header\"\ncolumn = \"HEADER\"\ndata_type = \"text\"\ndata_warning = \"Header-only metadata; response codes unavailable.\"\nvariants = [\"table\"]\nvalid_from = \"2020-06-01\"\nvalid_to = \"2021-06-30\"\n"
+    }
+  }
+}

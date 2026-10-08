@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[identity.partition]]
+variable = "1.5"
+columns = { OLD = "1.5", NEW = "1.5" }
+columns_ref = "reviewed complete family"
+expected_evidence_sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"

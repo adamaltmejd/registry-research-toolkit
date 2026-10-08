@@ -1,0 +1,52 @@
+[register]
+provider = "scb"
+slug = "columns"
+native_id = "19"
+[[variant]]
+native_id = "19.192"
+slug = "people"
+[[variable]]
+native_id = "19.5"
+slug = "v5"
+[[variable]]
+native_id = "19.Dated"
+slug = "dated"
+[[variable]]
+native_id = "19.Undated"
+slug = "undated"
+[[variable]]
+native_id = "19.Pooled"
+slug = "pooled"
+
+[[errata.column]]
+variant = "people"
+column = "Dated"
+name = "New column"
+definition = "Documented"
+data_type = "integer"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-09-25"
+versions = ["2020"]
+
+[[errata.column]]
+variant = "people"
+column = "Undated"
+name = "New column"
+definition = "Documented"
+data_type = "integer"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-09-25"
+all_versions = true
+
+[[errata.column]]
+variant = "people"
+column = "Pooled"
+name = "New column"
+definition = "Documented"
+data_type = "integer"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-09-25"
+holdings_period = "2019-2021"

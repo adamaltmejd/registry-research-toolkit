@@ -1,0 +1,15 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_compile_owner_alternatives.py::test_digest_column_owner_requires_finite_exclusive_guards[update1]"
+  ],
+  "fails_if": "the register loader drops the 64-lowercase-hex pattern on an `[[identity.column_owner]]` `expected_evidence_sha256`",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.column_owner.expected_evidence_sha256]] entry 1",
+    "message_contains": [
+      "String should match pattern"
+    ]
+  },
+  "note": "The hardest form: 64 characters of uppercase hex, which a length-only check accepts. The replaced test used the text `invalid`."
+}

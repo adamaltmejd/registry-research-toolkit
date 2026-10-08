@@ -1,0 +1,191 @@
+{
+  "description": "Registers 1-2 (BASE, PARTIAL) each deliver variable 5 as OLD in 2020 (CVID r01, two physical rows that differ only in the dropped VariabelExtern_kommentar cell) and NEW in 2021 (CVID r02). Register 3 (WARNING) delivers variable 5 as ANSWER (CVID 301) and LEFT (CVID 302) in 2020. Registers 4-6 (APPLIED, DRIFTED, UNCORRECTED) deliver variable 1 (Income) as First over edition 2020-2022 (CVID r01) and the raw literal OldSecond over edition 2022-2024 (CVID r02).",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "OLD",
+        "cvid": 101,
+        "var_id": 5,
+        "register": [
+          "BASE",
+          1,
+          10
+        ],
+        "year": "2020",
+        "regver_id": 120
+      },
+      {
+        "colname": "OLD",
+        "cvid": 101,
+        "var_id": 5,
+        "register": [
+          "BASE",
+          1,
+          10
+        ],
+        "year": "2020",
+        "regver_id": 120,
+        "cells": {
+          "VariabelExtern_kommentar": "Second physical copy"
+        }
+      },
+      {
+        "colname": "NEW",
+        "cvid": 102,
+        "var_id": 5,
+        "register": [
+          "BASE",
+          1,
+          10
+        ],
+        "year": "2021",
+        "regver_id": 121
+      },
+      {
+        "colname": "OLD",
+        "cvid": 201,
+        "var_id": 5,
+        "register": [
+          "PARTIAL",
+          2,
+          20
+        ],
+        "year": "2020",
+        "regver_id": 220
+      },
+      {
+        "colname": "OLD",
+        "cvid": 201,
+        "var_id": 5,
+        "register": [
+          "PARTIAL",
+          2,
+          20
+        ],
+        "year": "2020",
+        "regver_id": 220,
+        "cells": {
+          "VariabelExtern_kommentar": "Second physical copy"
+        }
+      },
+      {
+        "colname": "NEW",
+        "cvid": 202,
+        "var_id": 5,
+        "register": [
+          "PARTIAL",
+          2,
+          20
+        ],
+        "year": "2021",
+        "regver_id": 221
+      },
+      {
+        "colname": "ANSWER",
+        "cvid": 301,
+        "var_id": 5,
+        "register": [
+          "WARNING",
+          3,
+          30
+        ],
+        "regver_id": 320
+      },
+      {
+        "colname": "LEFT",
+        "cvid": 302,
+        "var_id": 5,
+        "register": [
+          "WARNING",
+          3,
+          30
+        ],
+        "regver_id": 320
+      },
+      {
+        "colname": "First",
+        "cvid": 401,
+        "var_id": 1,
+        "register": [
+          "APPLIED",
+          4,
+          40
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 410
+      },
+      {
+        "colname": "OldSecond",
+        "cvid": 402,
+        "var_id": 1,
+        "register": [
+          "APPLIED",
+          4,
+          40
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2022-2024",
+        "regver_id": 411
+      },
+      {
+        "colname": "First",
+        "cvid": 501,
+        "var_id": 1,
+        "register": [
+          "DRIFTED",
+          5,
+          50
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 510
+      },
+      {
+        "colname": "OldSecond",
+        "cvid": 502,
+        "var_id": 1,
+        "register": [
+          "DRIFTED",
+          5,
+          50
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2022-2024",
+        "regver_id": 511
+      },
+      {
+        "colname": "First",
+        "cvid": 601,
+        "var_id": 1,
+        "register": [
+          "UNCORRECTED",
+          6,
+          60
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 610
+      },
+      {
+        "colname": "OldSecond",
+        "cvid": 602,
+        "var_id": 1,
+        "register": [
+          "UNCORRECTED",
+          6,
+          60
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2022-2024",
+        "regver_id": 611
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_tree.py::test_coding_register_invalid_entry_names_file_and_index[periods = [[\"2020-12-31\", \"2020-01-01\"]]\\n]",
+  "fails_if": "`_coding_window` drops its from <= to check, so a reversed coding window loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.choice.periods]] entry 1",
+    "message_contains": [
+      "coding window bounds are reversed"
+    ]
+  }
+}

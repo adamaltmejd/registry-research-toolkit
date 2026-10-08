@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_tree.py::test_coding_register_rejects_duplicate_entry",
+  "fails_if": "`coding.uncoded` is removed from the register loader's duplicate-checked tables, so a second identical `[[coding.uncoded]]` entry loads",
+  "note": "The generic duplicate refusal is `register-duplicate-table-entry-refused` on `[[identity.partition]]`; this case pins that the nested coding table is in the checked list too.",
+  "error": {
+    "code": "register_duplicate_entry",
+    "locator": "curation/registers/scb/sample.toml [[coding.uncoded]] entry 2",
+    "message_contains": [
+      "duplicate entry"
+    ]
+  }
+}

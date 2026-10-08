@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_tree.py::test_coding_register_invalid_entry_names_file_and_index[unexpected = true\\n]",
+  "fails_if": "`CodingChoiceEntry` stops forbidding extra keys, so a misspelled `[[coding.choice]]` field is silently ignored",
+  "error": {
+    "code": "register_unknown_key",
+    "locator": "curation/registers/scb/sample.toml [[coding.choice.unexpected]] entry 1",
+    "message_contains": [
+      "Extra inputs are not permitted"
+    ]
+  }
+}
