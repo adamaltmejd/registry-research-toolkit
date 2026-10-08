@@ -172,7 +172,7 @@ def run(config: dict) -> int:
     report_dir = cache.cache_root() / "report"
     shutil.rmtree(report_dir, ignore_errors=True)
     all_cases = cases.generate(dirs, config, report_dir / "projects")
-    served_cases = served.context_cases(
+    served_cases = served.served_cases(
         baseline_python,
         baseline_python.parents[2] / "stewards",
         server,
