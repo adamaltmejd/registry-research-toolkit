@@ -443,8 +443,8 @@ def read_case(case: Path) -> dict[str, Any]:
             raise ValueError(f"{name}: unknown error keys {unknown}")
         if not {"code", "type", "locator"} <= error.keys():
             raise ValueError(f"{name}: error needs `code`, `type` and `locator`")
-    if "agree" in expected and not source_spec(case).get("variants"):
-        raise ValueError(f"{name}: `agree` needs source.json `variants`")
+    if ("agree" in expected) != bool(source_spec(case).get("variants")):
+        raise ValueError(f"{name}: `agree` and source.json `variants` go together")
     return expected
 
 
@@ -485,7 +485,10 @@ def run_case(case: Path, work: Path) -> str | None:
             return departure
     for name, layer in spec.get("variants", {}).items():
         variant = write_delivery(spec, work / name, layer=layer)
-        other = result_json(reader.read(variant, args))
+        try:
+            other = result_json(reader.read(variant, args))
+        except Exception as exc:  # noqa: BLE001 - a refused variant is a departure
+            return f"variant {name!r} refused: {type(exc).__name__}: {exc}"
         for path in expected["agree"]:
             if without_revision(at(data, path)) != without_revision(at(other, path)):
                 return f"variant {name!r}: {path!r} differs from the delivery's"

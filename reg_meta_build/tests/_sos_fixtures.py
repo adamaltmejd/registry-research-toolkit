@@ -29,25 +29,6 @@ from pathlib import Path
 
 from _workbook_spec import write_workbook
 from reg_meta.source_evidence import SourceRevision
-from reg_meta_build.sources.sos import parse_register_file
-from reg_meta_build.sources.sos_records import clean_sos_source
-
-# The three `SPEC` `Värdemängd` cells of `Metadata - Variabelnivå` in
-# `Metadata_Insatser till barn och unga (BU)_webb.xlsx` (G71/G83/G99), byte for byte.
-# Only BU_SPEC_LINED delimits every assignment with a newline. The other two
-# separate assignments with long runs of spaces.
-_SPEC_MILJO = "2 = brister i hemmilljön 2 § LVU"
-_SPEC_BETEENDE = "3 = barnets/den ungas beteende (3 § LVU)"
-_SPEC_BADA = "4 = både miljö och beteende 2-3 §§ LVU."
-BU_SPEC_LINED = f"\n {_SPEC_MILJO}\n{_SPEC_BETEENDE}\n{_SPEC_BADA}"
-BU_SPEC_WRAPPED = f"{_SPEC_MILJO}\n{_SPEC_BETEENDE}{' ' * 95}{_SPEC_BADA} "
-BU_SPEC_ONE_LINE = f"{_SPEC_MILJO}{' ' * 193}{_SPEC_BETEENDE}{' ' * 190}{_SPEC_BADA}"
-# The members a complete parse of those three assignments states.
-BU_SPEC_MEMBERS = [
-    ("2", "brister i hemmilljön 2 § LVU"),
-    ("3", "barnets/den ungas beteende (3 § LVU)"),
-    ("4", "både miljö och beteende 2-3 §§ LVU."),
-]
 
 
 @dataclass(frozen=True)
@@ -276,7 +257,6 @@ def write_sos_input(
 
 
 # Source-record workbook fixtures shared by the SOS source-record test modules.
-CLASSIFICATION_URL = "https://example.test/classifications/ssyk"
 _PREPARE_SOURCES = Path(__file__).parent / "cases" / "prepare" / "_sources"
 
 
@@ -299,49 +279,3 @@ def source_revision(path: Path) -> SourceRevision:
         artifact_size=len(payload),
         artifact_sha256=hashlib.sha256(payload).hexdigest(),
     )
-
-
-def write_complete_workbook(path: Path) -> None:
-    import openpyxl
-
-    write_source_workbook(path)
-    workbook = openpyxl.load_workbook(path)
-    dcat = workbook.create_sheet("Metadata-Datamängd (DCAT-AP)")
-    dcat.append(["Attribut", "Definition", "Svenska", "Engelska"])
-    dcat.append(["Titel", None, "Första titeln", "First title"])
-    dcat.append(["Titel", None, "Andra titeln", "Second title"])
-    dcat.append(["Beskrivning", None, "  indragen rad\n    tabell  kolumn", None])
-    dcat.append(["Okänt attribut", None, "Obehandlad uppgift", "Unmapped fact"])
-    subsets = workbook.create_sheet("Deldatamängder")
-    subsets.append(
-        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"]
-    )
-    subsets.append(["PAR_OV", "Öppenvård", 1900, 2025])
-    codes = workbook["Kodlista_HDIA"]
-    codes.delete_rows(1, codes.max_row)
-    codes.append(["Variabelnamn", "HDIA"])
-    codes.append(["Variabelnamn", "ANNAN_VAR"])
-    codes.append(["Tidsperiod", "Kod", "Beskrivning (kliniknamn)"])
-    codes.append(["2010-2012", None, None])
-    for description in ["Klinik ett", "Klinik ett", "Annan klinik"]:
-        codes.append([None, 1, description])
-        codes.cell(codes.max_row, 2).number_format = "000"
-    raw = workbook.create_sheet("Kodlista_RAW")
-    raw.append(["Sjukhus", "Adress"])
-    raw.append(["Klinik", "Gatan 1"])
-    workbook.save(path)
-    workbook.close()
-
-
-def clean_code_rows(tmp_path: Path, rows: list[list[object]]):
-    import openpyxl
-
-    path = tmp_path / "Metadata Test.xlsx"
-    write_source_workbook(path)
-    workbook = openpyxl.load_workbook(path)
-    del workbook["Kodlista_HDIA"]
-    sheet = workbook.create_sheet("Kodlista_Arbitrary")
-    for row in rows:
-        sheet.append(row)
-    workbook.save(path)
-    return clean_sos_source(parse_register_file(path), source_revision(path))
