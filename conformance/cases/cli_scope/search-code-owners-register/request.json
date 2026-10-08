@@ -1,0 +1,21 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "catalog",
+  "argv": [
+    "search",
+    "--query",
+    "Choice",
+    "--field",
+    "value",
+    "--type",
+    "value",
+    "--register",
+    "scb/example"
+  ],
+  "observe": [
+    "/results/*/code",
+    "/results/*/code_system",
+    "/results/*/classification_count",
+    "/results/*/classifications/*/fqid"
+  ]
+}
