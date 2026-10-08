@@ -1,0 +1,12 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestDerivedFromLoad::test_self_link_rejected",
+  "fails_if": "load_relations accepts a derived_from edge from a classification to itself",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='derived_from'",
+    "message_contains": [
+      "self-link on 'class/ks87-p'"
+    ]
+  }
+}

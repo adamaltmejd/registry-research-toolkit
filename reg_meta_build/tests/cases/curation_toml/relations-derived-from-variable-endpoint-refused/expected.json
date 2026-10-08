@@ -1,0 +1,12 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestDerivedFromLoad::test_rejects_non_classification_endpoint",
+  "fails_if": "load_relations accepts a derived_from endpoint that is not a classification",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='derived_from' `derived` 'scb/lisa/kon'",
+    "message_contains": [
+      "only classification endpoints"
+    ]
+  }
+}

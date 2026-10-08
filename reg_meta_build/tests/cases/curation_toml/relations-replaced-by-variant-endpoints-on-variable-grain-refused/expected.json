@@ -1,0 +1,12 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestReplacedByLoad::test_variant_endpoints_require_register_grain",
+  "fails_if": "load_relations accepts `from_variant` / `to_variant` on a variable-grain replaced_by edge",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by'",
+    "message_contains": [
+      "the endpoints are not register-grain"
+    ]
+  }
+}

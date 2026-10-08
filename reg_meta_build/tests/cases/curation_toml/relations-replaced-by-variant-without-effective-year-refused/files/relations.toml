@@ -1,0 +1,7 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/firmkey"
+to = "scb/frida/firmkey"
+from_column = "borgnr"
+to_column = "persorgnr"
+variant = "punktskatter-for-energi"

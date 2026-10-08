@@ -1,0 +1,68 @@
+{
+  "loader": "relations",
+  "replaces": [
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_parses_variable_grain_edge",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_parses_register_grain_edge",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_parses_classification_grain_edge"
+  ],
+  "fails_if": "load_relations misreads a replaced_by edge's grain or endpoints, or drops or invents its effective_year or note",
+  "note": "The variable, register and class/<slug> classification grains of succession.",
+  "loads": {
+    "replaced_by": [
+      {
+        "predecessor": {
+          "kind": "variable_binding",
+          "provider": "scb",
+          "register": "lisa",
+          "variable": "old",
+          "classification": null
+        },
+        "successor": {
+          "kind": "variable_binding",
+          "provider": "scb",
+          "register": "lisa",
+          "variable": "new",
+          "classification": null
+        },
+        "effective_year": 2019,
+        "note": "recut"
+      },
+      {
+        "predecessor": {
+          "kind": "register",
+          "provider": "sos",
+          "register": "old",
+          "variable": null,
+          "classification": null
+        },
+        "successor": {
+          "kind": "register",
+          "provider": "scb",
+          "register": "new",
+          "variable": null,
+          "classification": null
+        },
+        "effective_year": null,
+        "note": null
+      },
+      {
+        "predecessor": {
+          "kind": "classification",
+          "provider": null,
+          "register": null,
+          "variable": null,
+          "classification": "sun1996"
+        },
+        "successor": {
+          "kind": "classification",
+          "provider": null,
+          "register": null,
+          "variable": null,
+          "classification": "sun-niva2000"
+        },
+        "effective_year": 2000,
+        "note": null
+      }
+    ]
+  }
+}

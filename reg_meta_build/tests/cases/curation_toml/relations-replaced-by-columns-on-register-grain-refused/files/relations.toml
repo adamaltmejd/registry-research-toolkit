@@ -1,0 +1,6 @@
+[[edge]]
+type = "replaced_by"
+from = "sos/old"
+to = "scb/new"
+from_column = "A"
+to_column = "B"

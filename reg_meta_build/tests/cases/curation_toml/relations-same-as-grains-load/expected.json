@@ -1,0 +1,32 @@
+{
+  "loader": "relations",
+  "replaces": [
+    "test_relation_declaration_loading.py::TestSameAsLoad::test_parses_variable_grain_edge",
+    "test_relation_declaration_loading.py::TestSameAsLoad::test_note_is_optional",
+    "test_relation_declaration_loading.py::TestSameAsLoad::test_parses_classification_grain_edge"
+  ],
+  "fails_if": "load_relations misreads a 3-segment same_as edge as another grain, drops or invents its note, or misreads a 2-segment classification same_as edge",
+  "loads": {
+    "same_as": [
+      {
+        "grain": "variable_binding",
+        "a_provider": "scb",
+        "a_register": "lisa",
+        "a_variable": "inkomst",
+        "b_provider": "scb",
+        "b_register": "rams",
+        "b_variable": "inkomst",
+        "note": "candidate:tier1"
+      },
+      {
+        "note": null
+      },
+      {
+        "grain": "classification",
+        "a_provider": "scb",
+        "a_register": "sun2000",
+        "a_variable": null
+      }
+    ]
+  }
+}

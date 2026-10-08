@@ -1,0 +1,4 @@
+[[edge]]
+type = "derived_from"
+derived = "scb/lisa/kon"
+source = "class/icd-9-ks87"

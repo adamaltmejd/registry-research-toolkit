@@ -1,0 +1,6 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/old"
+to = "scb/lisa/new"
+effective_year = 2019
+variant = "individer"

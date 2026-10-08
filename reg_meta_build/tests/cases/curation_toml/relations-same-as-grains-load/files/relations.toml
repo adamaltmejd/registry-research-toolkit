@@ -1,0 +1,15 @@
+[[edge]]
+type = "same_as"
+a = "scb/lisa/inkomst"
+b = "scb/rams/inkomst"
+note = "candidate:tier1"
+
+[[edge]]
+type = "same_as"
+a = "scb/lisa/x"
+b = "scb/rams/y"
+
+[[edge]]
+type = "same_as"
+a = "scb/sun2000"
+b = "scb/sun2020"
