@@ -22,7 +22,9 @@ mod validation;
 
 use case_folding::CASE_FOLDING;
 pub use case_folding::UNICODE_VERSION;
-pub use grammar::{Fqid, GrammarError, Period, PeriodToken, Term};
+pub use grammar::{
+    Fqid, GrammarError, Period, PeriodToken, Term, next_iso_day, period_token_for_bounds,
+};
 pub use structural::validate_structural;
 use unicode_normalization::UnicodeNormalization;
 use unicode_normalization::char::canonical_combining_class;
