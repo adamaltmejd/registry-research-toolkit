@@ -76,6 +76,19 @@ _require_evidence = functools.partial(
 # the same rows either way — but it is the first thing whoever retires an entry
 # needs, so it is a closed vocabulary rather than free text.
 _SOURCES = frozenset({"scb-docs", "steward-holdings"})
+
+_EDITION_CONFLICT = "scb_errata_edition_conflict"
+_EDITION_CONFLICT_FIX = (
+    "The delivery names one SCB RegVerID with two different Registerversionnamn "
+    "texts (or periods), so this register's errata cannot bind that edition. "
+    "Report the inconsistent delivery, and remove the variant's errata entries "
+    "until one interpretation is delivered."
+)
+_VERSION_NATIVE = "scb_errata_version_already_native"
+_VERSION_NATIVE_FIX = (
+    "The delivery already carries this edition. Delete the [[errata.version]] "
+    "entry; errata entries name the native edition directly."
+)
 _DEFAULT_DELIVERED_CLASS = "omitted-column-in-version"
 _RESERVED_CORRECTION_CLASSES = frozenset(
     {"scoped-attributions", "overlapping-attributions"}
@@ -107,6 +120,8 @@ class ErrataVersion:
 
     register_variant_id: int
     name: str
+    # Where the entry is declared (file, table and entry), for located refusals.
+    context: str
 
 
 @dataclass(frozen=True)
@@ -371,7 +386,7 @@ def resolve_scb_errata(
                 "Each (register, variant, name) may appear once.",
             )
         seen_versions.add((variant_id, name))
-        versions.append(ErrataVersion(variant_id, name))
+        versions.append(ErrataVersion(variant_id, name, context))
 
     delivered: list[ErrataDelivered] = []
     seen_columns: set[tuple[int, str]] = set()
@@ -665,9 +680,16 @@ class ErrataConversion:
 
 
 def edition_bindings(
-    records: tuple[SourceRecord, ...], versions: tuple[ErrataVersion, ...]
+    records: tuple[SourceRecord, ...],
+    versions: tuple[ErrataVersion, ...],
+    *,
+    source_file: str,
 ) -> tuple[ErrataEditionBinding, ...]:
-    """Bind native and accepted missing editions once for a complete variant."""
+    """Bind native and accepted missing editions once for a complete variant.
+
+    ``source_file`` is the register file whose errata need the bindings; a
+    refusal names it.
+    """
     if not records:
         raise ValueError("errata edition bindings require a native variant slice")
     variant_key = native_variant_key(records[0])
@@ -701,15 +723,22 @@ def edition_bindings(
             binding.edition_scope,
             binding.edition_period_scope,
         ):
-            raise ValueError(
-                f"native edition {native_id} has conflicting interpretations"
+            raise curation_error(
+                _EDITION_CONFLICT,
+                f"{source_file}: native edition {native_id} of register variant "
+                f"{record.subject.native.register_variant_id} has conflicting "
+                f"interpretations ({previous.name!r} and {binding.name!r})",
+                _EDITION_CONFLICT_FIX,
             )
     names = {item.name for item in by_id.values()}
     bindings = list(by_id.values())
     for version in versions:
         if version.name in names:
-            raise ValueError(
-                f"declared missing edition {version.name!r} is already native"
+            raise curation_error(
+                _VERSION_NATIVE,
+                f"{version.context}: declared missing edition {version.name!r} "
+                "is already native",
+                _VERSION_NATIVE_FIX,
             )
         names.add(version.name)
         edition_scope, period_scope, _ = source_scopes(version.name)

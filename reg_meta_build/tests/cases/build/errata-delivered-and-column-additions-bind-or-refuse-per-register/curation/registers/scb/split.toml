@@ -1,0 +1,34 @@
+[register]
+provider = "scb"
+slug = "split"
+native_id = "11"
+[[variant]]
+native_id = "11.112"
+slug = "people"
+[[variant]]
+native_id = "11.112.stock"
+slug = "stock"
+[[variable]]
+native_id = "11.5"
+slug = "v5"
+[[variable]]
+native_id = "11.6"
+slug = "v6"
+[[variable]]
+native_id = "11.7"
+slug = "v7"
+
+[[identity.edition_split]]
+variant = "11.112"
+split = "11.112.stock"
+editions = ["2021-12-31"]
+evidence = "SCB stock population"
+source_editions = ["2020", "2021"]
+noted = "2026-09-27"
+
+[[errata.delivered]]
+variant = "people"
+column = "A"
+versions = ["2021"]
+evidence = "accepted delivery"
+noted = "2026-09-25"

@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_curation_compile_errata.py::test_errata_edition_bindings_refuse_conflicting_native_interpretation"],
+  "note": "[[errata.version]] declares a missing edition '2020' that the variant already delivers (CVID 1901).",
+  "fails_if": "`scb_errata.edition_bindings` stops refusing a declared missing edition whose name a native edition already has, so a second 2020 edition is bound and the build completes",
+  "sources": "scb-errata-registers"
+}

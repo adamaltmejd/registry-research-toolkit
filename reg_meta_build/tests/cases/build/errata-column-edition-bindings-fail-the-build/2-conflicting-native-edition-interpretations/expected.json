@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "scb_errata_edition_conflict",
+    "exit_code": 10,
+    "message_contains": ["curation/registers/scb/conflict.toml", "native edition 2020 of register variant 242 has conflicting interpretations"]
+  }
+}
