@@ -48,7 +48,8 @@ jobs:
   rust:
     runs-on: ubuntu-latest
     # The crates/ CI budget (ARCHITECTURE.md "Tiers"). The job also builds
-    # reg-meta and runs the Rust HTTP cases; all of it fits on a rust-cache miss.
+    # reg-meta and runs the Rust HTTP cases: 38-72 s warm, 98 s with dependencies
+    # recompiled after a Cargo.lock change. A fully cold cache is unmeasured.
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v7.0.1
