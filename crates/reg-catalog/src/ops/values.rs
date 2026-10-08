@@ -288,7 +288,9 @@ impl Coding<'_> {
                 "{:?} has no state {}{window} with {what} in this scope.",
                 self.reference, self.state_id
             ),
-            vec![self.reference.into()],
+            // The identifier not found is the state (errors.toml: "the requested ref
+            // or identifier"); the message names the variable and the window.
+            vec![self.state_id.to_string().into()],
         )
     }
 
@@ -304,7 +306,9 @@ impl Coding<'_> {
         partition: &str,
     ) -> Result<Vec<Value>, Error> {
         // simplify: the variable's whole emitted history per request, as `states`
-        // reads it; select the one state's rows if a variable's request time grows.
+        // reads it (pinned v0.43.0, warm: about 2 ms for skolkod's 94 rows, 3 ms for
+        // scb/rtb/kon's 521, the most of any variable); select the one state's rows if
+        // a variable passes a few thousand `expanded_state` rows.
         let visible = emitted(conn, scope, self.variable_id, None, None)?
             .iter()
             .any(|e| {
