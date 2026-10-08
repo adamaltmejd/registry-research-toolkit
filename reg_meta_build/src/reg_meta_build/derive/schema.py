@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING
 from reg_meta.queries import get_coded_variables
 
 from reg_meta_build.derive.browse import browse_scopes
+from reg_meta_build.derive.states import reader_catalog
 
 if TYPE_CHECKING:
     from reg_meta_build.derive.browse import Scope
@@ -32,12 +33,8 @@ def coded_variables(conn: sqlite3.Connection, scope: Scope) -> list[CodedRow]:
     The reader's default `min_codes` and `min_registers` of 1 drop nothing, so
     the table holds every ranked name; the Rust operation applies no filter.
     """
-    factory = conn.row_factory
-    try:
-        conn.row_factory = sqlite3.Row
+    with reader_catalog(conn, scope):
         rows = get_coded_variables(conn, limit=-1, scope=scope)
-    finally:
-        conn.row_factory = factory
     return sorted(
         (
             scope,
@@ -69,7 +66,7 @@ def check_coded(
 ) -> None:
     """`coded_variable_stats` equals one recomputation per served scope."""
     result.section("[coded_variable_stats]")
-    if not {"coded_variable_stats", "value_set", "value_set_member"} <= tables:
+    if "coded_variable_stats" not in tables:
         return  # _check_schema_shape already failed.
     stored = set(
         map(
@@ -83,7 +80,7 @@ def check_coded(
     try:
         scopes = browse_scopes(conn)
         expected = {row for scope in scopes for row in coded_variables(conn, scope)}
-    except (ValueError, TypeError, KeyError) as exc:
+    except (sqlite3.Error, ValueError, TypeError, KeyError) as exc:
         result.fail(f"coded_variable_stats cannot be recomputed: {exc}")
         return
     missing, surplus = expected - stored, stored - expected
