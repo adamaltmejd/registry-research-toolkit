@@ -19,7 +19,6 @@ from __future__ import annotations
 import json
 import shlex
 from concurrent.futures import ThreadPoolExecutor
-from functools import partial
 from typing import TYPE_CHECKING
 
 from conformance.differential.cache import REPO_ROOT
@@ -114,7 +113,7 @@ def _hit(item: dict) -> dict:
     }
 
 
-def _pages(client, job: tuple, *, baseline: bool) -> list:
+def _pages(client, job: tuple, baseline: bool) -> list:
     scope, kind, term = job
     params = {"q": term, "type": kind, "limit": PAGE_LIMIT, "scope": scope}
     pages = []
@@ -225,10 +224,11 @@ def served_cases(
                 for term in terms
             ]
             with ThreadPoolExecutor(PARALLEL) as pool:
-                expected = pool.map(partial(_pages, base, baseline=True), work)
-                actual = pool.map(partial(_pages, cand, baseline=False), work)
+                # Each job's two arms side by side, so both servers stay busy.
+                runs = [(c, job, c is base) for job in work for c in (base, cand)]
+                pages = list(pool.map(_pages, *zip(*runs, strict=True)))
                 for (scope, kind, term), base_pages, cand_pages in zip(
-                    work, expected, actual, strict=True
+                    work, pages[::2], pages[1::2], strict=True
                 ):
                     cases.append(
                         (
