@@ -342,24 +342,26 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
 `ci.yml` on `ubuntu-latest`, including setup. A suite over budget is a finding for the
 `test-audit` skill, not a reason to raise the number.
 
-  | Suite                                | Local | CI job | Rationale                                                                                                                            |
-  | ------------------------------------ | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-  | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
-  | `conformance`                        | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                              |
-  | `reg_meta/tests`                     | 15 s  | 3 min  | Stateless reader: CLI JSON and grammar cases over one session-built synthetic artifact.                                              |
-  | `reg_webapp/backend/tests`           | 10 s  | 3 min  | Only what conformance cannot reach: boot, middleware, docs routes and the `openapi.json` snapshot, over a TestClient.                |
-  | `reg_schema/tests`                   | 4 s   | 2 min  | One validator over `reg_schema/test_corpus/`, pure and in-process.                                                                   |
-  | `scripts/tests`                      | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints, the opt-in marker gate); a few nested pytest runs dominate.                    |
-  | `.claude/hooks/tests`                | 5 s   | 2 min  | Exit-code and message contracts of the Claude Code hooks (deny payloads, bootstrap idempotence); plain bash with stubbed `uv`/`bun`. |
-  | `crates/` (`cargo test --workspace`) | 10 s  | 3 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
-  | frontend (`bun run test`)            | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
+  | Suite                                         | Local | CI job | Rationale                                                                                                                                                     |
+  | --------------------------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `reg_meta_build/tests`                        | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.                           |
+  | `conformance`                                 | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                                                       |
+  | `reg_meta/tests`                              | 15 s  | 3 min  | Stateless reader: CLI JSON and grammar cases over one session-built synthetic artifact.                                                                       |
+  | `reg_webapp/backend/tests`                    | 10 s  | 3 min  | Only what conformance cannot reach: boot, middleware, docs routes and the `openapi.json` snapshot, over a TestClient.                                         |
+  | `reg_schema/tests`                            | 4 s   | 2 min  | One validator over `reg_schema/test_corpus/`, pure and in-process.                                                                                            |
+  | `scripts/tests`                               | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints, the opt-in marker gate); a few nested pytest runs dominate.                                             |
+  | `.claude/hooks/tests`                         | 5 s   | 2 min  | Exit-code and message contracts of the Claude Code hooks (deny payloads, bootstrap idempotence); plain bash with stubbed `uv`/`bun`.                          |
+  | `crates/` (`cargo test --workspace`)          | 10 s  | 3 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                                              |
+  | Rust conformance run (`scripts/gate.py rust`) | 30 s  | 3 min  | The whole conformance suite against the Rust server; it grows as slices port operations while the Python suites shrink. Shares the `rust` job with `crates/`. |
+  | frontend (`bun run test`)                     | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds.                          |
 
 G0 of `RUST_RUNTIME_SPEC.md` §4 runs conformance, the touched packages and
 `cargo test --workspace`. The reader-side rows, conformance and `crates/` sum to 59 s,
 so any change touching reader-side packages fits G0's 60 s. From slice 3a G0 also runs
 the Rust HTTP run (§10: `scripts/gate.py rust`, the whole suite against the Rust server,
-out of process). G1 (under 5 min) and G2 run on real artifacts in tier 3 and are not
-package budgets. `reg_meta_build` stays Python and is outside G0.
+out of process) within its own 30 s row above. G1 (under 5 min) and G2 run on real
+artifacts in tier 3 and are not package budgets. `reg_meta_build` stays Python and is
+outside G0.
 
 ### Conformance suite
 
