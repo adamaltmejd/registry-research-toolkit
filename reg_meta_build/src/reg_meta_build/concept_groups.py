@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 
 from ._curation import (
     curation_error,
+    display_path,
     load_curation_entries,
     require_str,
 )
@@ -147,37 +148,6 @@ class CuratedGroup:
     label: str
     axes: tuple[tuple[str, str], ...]
     members: tuple[CuratedMember, ...]
-
-
-@dataclass(frozen=True)
-class ClassificationGroupMember:
-    """One member of a curated CLASSIFICATION umbrella group: the `classification`
-    slug (catalog-global, e.g. `sun2020-niva`) and its curated short `value`/
-    `label` (the picker label, e.g. 'niva'/'Utbildningsnivå'). These stay
-    populated even though the umbrella is axis-less — they are the member's own
-    label, not a point on a shared group axis."""
-
-    classification: str
-    value: str
-    label: str
-
-
-@dataclass(frozen=True)
-class ClassificationGroup:
-    """One curated `[[classification_group]]` umbrella (#516): a fold over
-    genuinely-DISTINCT classifications (NOT vintage editions — those are #571
-    succession edges). AXIS-LESS — the members are distinct classifications, not
-    points on a shared scale, so `axis` is optional and normally None (zero
-    `concept_group_axis` rows, #819; the webapp renders the member-noun as
-    "members"). A provided `axis` is still accepted (the loader does not require
-    it) and becomes one `concept_group_axis` row. Each member keeps its own short
-    `value`/`label` inline regardless. Catalog-scoped (classifications are global),
-    so unlike `CuratedGroup` it carries no provider/register."""
-
-    key: str
-    label: str
-    axis: str | None
-    members: tuple[ClassificationGroupMember, ...]
 
 
 @dataclass(frozen=True)
@@ -497,7 +467,7 @@ def load_worklist_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
     out: list[CuratedGroup] = []
     seen_keys: set[tuple[str, str, str]] = set()
     for index, entry in enumerate(entries, start=1):
-        context = f"{path or 'worklists/concept_groups.auto.toml'} [[variable_group]] entry {index}"
+        context = f"{display_path(path) if path else 'worklists/concept_groups.auto.toml'} [[variable_group]] entry {index}"
         register_fqid = _require_str(entry, "register", context)
         parts = register_fqid.split("/")
         if len(parts) != 2 or not all(parts):
@@ -565,68 +535,6 @@ def load_concept_groups(path: Path | None) -> tuple[CuratedGroup, ...]:
                     members=members,
                 )
             )
-    return tuple(out)
-
-
-def load_classification_groups(path: Path | None) -> tuple[ClassificationGroup, ...]:
-    """Load global classification umbrellas from ``classification_groups.toml``."""
-    if path is None:
-        return ()
-    from .curation_tree import (
-        load_classification_groups as load_register_classification_groups,
-    )
-
-    declarations = load_register_classification_groups(path).classification_group
-    out: list[ClassificationGroup] = []
-    seen_keys: set[str] = set()
-    for entry in declarations:
-        key = entry.key
-        label = entry.label
-        axis = entry.axis
-        if key in seen_keys:
-            raise curation_error(
-                "concept_groups_invalid",
-                f"concept_groups duplicate classification_group key {key!r}.",
-                "Classification-group keys must be unique.",
-            )
-        seen_keys.add(key)
-        if not entry.members:
-            raise curation_error(
-                "concept_groups_invalid",
-                f"concept_groups classification_group {key!r} needs a non-empty "
-                "`[[classification_group.members]]` array.",
-                "List the umbrella's members as "
-                "`[[classification_group.members]]` tables.",
-            )
-        members: list[ClassificationGroupMember] = []
-        seen_slugs: set[str] = set()
-        for raw in entry.members:
-            classification = raw.classification
-            if classification in seen_slugs:
-                raise curation_error(
-                    "concept_groups_invalid",
-                    f"concept_groups classification_group {key!r} references "
-                    f"classification {classification!r} twice.",
-                    "List each member classification once.",
-                )
-            seen_slugs.add(classification)
-            members.append(
-                ClassificationGroupMember(
-                    classification=classification,
-                    value=raw.value,
-                    label=raw.label,
-                )
-            )
-        if len(members) < 2:
-            raise curation_error(
-                "concept_groups_invalid",
-                f"concept_groups classification_group {key!r} has {len(members)} "
-                "member(s); a group needs >= 2.",
-                "A single-member umbrella is not a group — add members or remove it.",
-            )
-        out.append(
-            ClassificationGroup(key=key, label=label, axis=axis, members=tuple(members))
-        )
     return tuple(out)
 
 

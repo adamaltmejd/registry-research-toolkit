@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree_registers.py::test_acknowledge_rejects_invalid_fields_and_period[override5-fields must be unique]",
   "fails_if": "the register loader accepts an [[acknowledge]] that lists one field twice",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/test.toml [[acknowledge.fields]] entry 1",
     "message_contains": [
       "fields must be unique"

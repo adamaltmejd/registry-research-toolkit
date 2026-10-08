@@ -4,7 +4,7 @@
   "fails_if": "load_lineage_config lets a repeated default key (a TOML syntax error) through instead of refusing the file",
   "note": "The refusal's code names slug TOML: lineage.toml is read by the slug module's TOML reader.",
   "error": {
-    "code": "slug_toml_unreadable",
+    "code": "lineage_toml_unreadable",
     "locator": "lineage.toml",
     "message_contains": [
       "Cannot overwrite a value"

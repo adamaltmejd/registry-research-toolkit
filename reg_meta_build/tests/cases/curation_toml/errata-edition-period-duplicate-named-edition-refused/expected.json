@@ -4,7 +4,7 @@
   "fails_if": "the register loader keeps two periods for one variant and edition name",
   "note": "The two entries differ in period and evidence, so only the one-period-per-edition rule can refuse them.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_duplicate_entry",
     "locator": "curation/registers/scb/sample.toml [[errata.edition_period]] entry 2",
     "message_contains": [
       "duplicate edition period"

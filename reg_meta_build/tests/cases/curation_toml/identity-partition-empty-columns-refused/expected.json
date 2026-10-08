@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree_registers.py::test_identity_partition_requires_literal_map_and_reference[0]",
   "fails_if": "the register loader accepts an [[identity.partition]] that owns no column literal",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/test.toml [[identity.partition.columns]] entry 1",
     "message_contains": [
       "at least one owned literal"

@@ -1,0 +1,26 @@
+{
+  "loader": "register_files",
+  "match": "includes",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_register_file_partition_loads_as_naming_ownership",
+  "fails_if": "the register loader stops reading a family's [[identity.partition]] literal column map and its reference",
+  "loads": [
+    {
+      "identity": {
+        "partition": [
+          {
+            "variable": "34.4",
+            "columns": {
+              "$exact": {
+                "Kon": "34.4.kon"
+              }
+            },
+            "unassigned_columns": {
+              "$exact": []
+            },
+            "columns_ref": "curation evidence"
+          }
+        ]
+      }
+    }
+  ]
+}

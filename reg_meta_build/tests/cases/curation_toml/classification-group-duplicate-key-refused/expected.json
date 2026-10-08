@@ -3,7 +3,7 @@
   "replaces": "test_concept_groups.py::TestClassificationGroupLoader::test_duplicate_keys_fail",
   "fails_if": "load_classification_groups keeps two umbrellas with one key",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "classification_group_invalid",
     "locator": "curation/classification_groups.toml [[classification_group]] entry 2",
     "message_contains": [
       "duplicate key 'sun'"

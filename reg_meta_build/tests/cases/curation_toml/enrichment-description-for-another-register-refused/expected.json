@@ -3,7 +3,7 @@
   "replaces": "test_delivery_enrichment.py::test_wrong_register_is_rejected",
   "fails_if": "the register loader accepts an enrichment entry whose `register` names another register than its file",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_misplaced",
     "locator": "curation/registers/scb/agi.toml [[enrichment.description]] entry 1",
     "message_contains": [
       "does not match"

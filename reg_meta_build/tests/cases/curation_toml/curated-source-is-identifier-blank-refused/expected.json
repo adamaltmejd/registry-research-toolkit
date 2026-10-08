@@ -7,7 +7,7 @@
   "replaces": "test_curated_source_records.py::test_broken_actual_format_contracts_fail_without_silent_fallback[is_identifier = \"\"]",
   "fails_if": "read_curated_source reads a blank is_identifier as the omitted (false) default instead of refusing it",
   "error": {
-    "type": "CuratedSourceError",
+    "code": "curated_source_invalid",
     "locator": "register.0.variable.0.is_identifier",
     "message_contains": [
       "invalid global curated TOML",

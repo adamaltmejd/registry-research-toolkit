@@ -4,7 +4,7 @@
   "fails_if": "the register loader accepts an [[errata.edition_period]] naming a declared split variant instead of a native variant",
   "note": "`stock` is a declared [[variant]] slug, but of a three-part split variant, not a native one.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_misplaced",
     "locator": "curation/registers/scb/test.toml [[errata.edition_period]] entry 1",
     "message_contains": [
       "must name a native variant"

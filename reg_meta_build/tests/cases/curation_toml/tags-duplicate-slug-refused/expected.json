@@ -4,6 +4,9 @@
   "fails_if": "load_tags lets two [[tag]] entries share a slug in the global tag vocabulary",
   "error": {
     "code": "tags_invalid",
-    "locator": "duplicate slug 'income'"
+    "locator": "curation/tags.toml [[tag]] entry 2",
+    "message_contains": [
+      "duplicate slug 'income'"
+    ]
   }
 }

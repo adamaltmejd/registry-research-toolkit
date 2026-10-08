@@ -1,0 +1,15 @@
+{
+  "note": "The variable names variant w; the register declares only v. The windows overlap, so only the undeclared reference can refuse.",
+  "fails_if": "`_compile_thin_register` stops refusing a variable whose `variants` names a key with no [[register.variant]], or refuses it with a plain ValueError instead of the located `thin_declaration_invalid`",
+  "sources": {
+    "description": "Authored FK register r (2000-2020) with variant v (2000-2020) and variable COL (2005-2019) that names variants v and w. Plus the SCB sample.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": "[[register]]\nkey = \"r\"\nname = \"R\"\nvalid_from = \"2000-01-01\"\nvalid_to = \"2020-12-31\"\n[[register.variant]]\nkey = \"v\"\nname = \"V\"\nvalid_from = \"2000-01-01\"\n[[register.variable]]\nname = \"Col\"\ncolumn = \"COL\"\ndata_type = \"int\"\nvariants = [\"v\", \"w\"]\nvalid_from = \"2005-01-01\"\nvalid_to = \"2019-12-31\"\n"
+    }
+  }
+}

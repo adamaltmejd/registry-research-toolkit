@@ -20,6 +20,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import (
     DeliveredCell,
     RecordLocator,
@@ -27,6 +28,7 @@ from reg_meta.source_evidence import (
     SourceRevision,
 )
 
+from reg_meta_build._curation import printable_error
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_records import (
     NativeCoordinates,
@@ -55,8 +57,28 @@ if TYPE_CHECKING:
     )
 
 
-class CuratedSourceError(ValueError):
-    """A selected authored input violates its actual file-format contract."""
+class CuratedSourceError(RegMetaError, ValueError):
+    """A selected authored input violates its actual file-format contract.
+
+    A located configuration error (``curated_source_invalid``) that stays a
+    ``ValueError``: the bundle and pipeline readers catch source-format failures
+    as ``ValueError`` beside the other source adapters' errors. Raised with the
+    message alone, like those siblings, so ``read_selected_bytes`` can build it.
+    """
+
+    def __init__(self, message: str) -> None:
+        super().__init__(
+            exit_code=EXIT_CONFIG,
+            code="curated_source_invalid",
+            error_class="configuration",
+            message=message,
+            remediation=(
+                "Fix the authored provider TOML named in the message to its "
+                "documented [[register]] layout, then re-declare its source "
+                "revision if the reviewed bytes changed."
+            ),
+        )
+        printable_error(self)
 
 
 class _Declaration(BaseModel):

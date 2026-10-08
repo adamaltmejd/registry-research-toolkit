@@ -7,7 +7,7 @@
   "fails_if": "the register loader accepts SOS identity routing or renaming in an SCB register file",
   "note": "[[identity.route]] and [[identity.rename]] share one SOS-only guard.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_misplaced",
     "locator": "curation/registers/scb/test.toml [[identity.route]] entry 1",
     "message_contains": [
       "SOS registers"
