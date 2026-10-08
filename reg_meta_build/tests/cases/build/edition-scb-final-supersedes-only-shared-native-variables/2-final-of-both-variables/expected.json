@@ -1,0 +1,37 @@
+{
+  "projections": [
+    {
+      "table": "uses",
+      "where": {
+        "source": "scb-registerinformation"
+      },
+      "fields": [
+        "column_name",
+        "key",
+        "use"
+      ],
+      "rows": [
+        [
+          "VALUE",
+          "member:1",
+          "support"
+        ],
+        [
+          "OTHER",
+          "member:2",
+          "support"
+        ],
+        [
+          "VALUE",
+          "member:3",
+          "catalog"
+        ],
+        [
+          "OTHER",
+          "member:4",
+          "catalog"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_scb_final_supersedes_only_shared_native_variables"
+  ],
+  "fails_if": "`compile_scb_preliminary` pairs editions by delivery order, so reversed rows change which rows are retained as support",
+  "sources": {
+    "description": "Step 1's rows delivered in reverse order.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 3,
+          "var_id": 5,
+          "versionname": "2020, slutlig version",
+          "regver_id": 11
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 2,
+          "var_id": 6,
+          "versionname": " 2020, preliminär version ",
+          "regver_id": 10
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 1,
+          "var_id": 5,
+          "versionname": " 2020, preliminär version ",
+          "regver_id": 10
+        }
+      ]
+    }
+  }
+}

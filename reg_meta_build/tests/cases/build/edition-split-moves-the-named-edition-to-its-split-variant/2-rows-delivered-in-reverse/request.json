@@ -1,0 +1,42 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_named_edition_split_rebinds_parents_and_is_order_independent[None]",
+    "test_curation_compile_editions.py::test_split_variant_naming_accepts_source_parent_and_keeps_states"
+  ],
+  "fails_if": "`compile_edition_splits` resolves the split's source edition by delivery order (for example the first 2007 row it meets), so reversed rows move the wrong edition",
+  "sources": {
+    "description": "Variant 2 of register 1 delivers SHARED (variable 5) twice for 2007: edition '2007' (CVID 20, integer) and edition '2007-12-31' (CVID 21, string). Rows reversed.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "SHARED",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2007",
+          "versionname": "2007-12-31",
+          "regver_id": 2,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "data_type": "str"
+        },
+        {
+          "colname": "SHARED",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2007",
+          "versionname": "2007",
+          "regver_id": 1,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "data_type": "int"
+        }
+      ]
+    }
+  }
+}

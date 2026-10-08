@@ -1,0 +1,26 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_compiled_edition_period_stale_when_missing_or_parseable[Renamed]"
+  ],
+  "fails_if": "`compile_errata` accepts an `[[errata.edition_period]]` whose named edition the variant no longer delivers instead of reporting it stale",
+  "sources": {
+    "description": "Variant 2 delivers A (variable 5, CVID 20) only in the unparseable edition 'Renamed'.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "versionname": "Renamed",
+          "regver_id": 2020,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  }
+}

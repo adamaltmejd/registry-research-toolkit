@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_delivery_metadata.py::test_disjoint_edition_splits_share_native_variant_but_not_target_edition",
+  "fails_if": "the register loader keys its one-owner-per-edition check by split target instead of by native variant, so two splits of variant 1.2 into different variants may both take edition '2007'",
+  "note": "Harder than identity-edition-split-edition-assigned-twice-refused: the two entries split into different variants. The allowed twin, the same two splits with disjoint editions, is the build case edition-split-disjoint-splits-share-one-native-variant.",
+  "error": {
+    "code": "register_duplicate_entry",
+    "locator": "curation/registers/scb/test.toml [[identity.edition_split]] entry 2",
+    "message_contains": [
+      "editions assigned twice"
+    ]
+  }
+}

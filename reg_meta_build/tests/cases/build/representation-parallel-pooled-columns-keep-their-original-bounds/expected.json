@@ -1,0 +1,37 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": [
+        "code"
+      ],
+      "rows": []
+    },
+    {
+      "table": "uses",
+      "where": {
+        "source": "scb-registerinformation"
+      },
+      "fields": [
+        "column_name",
+        "key",
+        "use",
+        "variable"
+      ],
+      "rows": [
+        [
+          "First",
+          "member:100",
+          "catalog",
+          "scb/sample/income"
+        ],
+        [
+          "Second",
+          "member:101",
+          "catalog",
+          "scb/sample/income"
+        ]
+      ]
+    }
+  ]
+}

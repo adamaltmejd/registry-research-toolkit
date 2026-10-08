@@ -1,0 +1,18 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/errata.edition_period/1"
+        ]
+      ]
+    }
+  ]
+}

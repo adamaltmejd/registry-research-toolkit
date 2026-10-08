@@ -1,0 +1,34 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": [
+        "code"
+      ],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "shared"
+      },
+      "fields": [
+        "variant",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "marriage",
+          "2007-01-01",
+          "2007-12-31"
+        ],
+        [
+          "divorce",
+          "2007-12-31",
+          "2007-12-31"
+        ]
+      ]
+    }
+  ]
+}

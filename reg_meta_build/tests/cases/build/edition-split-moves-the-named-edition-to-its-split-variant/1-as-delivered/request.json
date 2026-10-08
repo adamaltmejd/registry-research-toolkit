@@ -1,0 +1,43 @@
+{
+  "replaces": [
+    "test_curation_compile_editions.py::test_named_edition_split_rebinds_parents_and_is_order_independent[None]",
+    "test_curation_compile_editions.py::test_split_variant_naming_accepts_source_parent_and_keeps_states"
+  ],
+  "fails_if": "`compile_edition_splits` stops rebinding the '2007-12-31' edition's rows to the declared split variant, so both 2007 editions stay in the flow variant and conflict",
+  "sources": {
+    "description": "Variant 2 of register 1 delivers SHARED (variable 5) twice for 2007: edition '2007' (CVID 20, integer) and edition '2007-12-31' (CVID 21, string).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "SHARED",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2007",
+          "versionname": "2007",
+          "regver_id": 1,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "data_type": "int"
+        },
+        {
+          "colname": "SHARED",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2007",
+          "versionname": "2007-12-31",
+          "regver_id": 2,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "data_type": "str"
+        }
+      ]
+    }
+  },
+  "note": "Without the split, the two 2007 editions of one native variant conflict (`conflicting_occurrence_facts`); the split's own variant takes the named edition, and SHARED keeps one state in each variant with its own type."
+}

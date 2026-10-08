@@ -1,0 +1,43 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": [
+        "code"
+      ],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "sample"
+      },
+      "fields": [
+        "variable",
+        "variant",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "a",
+          "people",
+          "2018-02-01",
+          "2018-11-30"
+        ],
+        [
+          "c",
+          "people",
+          "2018-02-01",
+          "2018-11-30"
+        ],
+        [
+          "b",
+          "other",
+          "2021-01-01",
+          "2021-12-31"
+        ]
+      ]
+    }
+  ]
+}
