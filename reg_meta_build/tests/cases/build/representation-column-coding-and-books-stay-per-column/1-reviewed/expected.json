@@ -1,0 +1,178 @@
+{
+  "projections": [
+    {
+      "table": "alias_windows",
+      "where": {
+        "register": "percolumn"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to",
+        "coding_metadata",
+        "codes",
+        "classifications"
+      ],
+      "rows": [
+        [
+          "First",
+          "2020-01-01",
+          "2020-12-31",
+          "per_column",
+          [
+            [
+              "01",
+              "Label"
+            ]
+          ],
+          [
+            "codes-first"
+          ]
+        ],
+        [
+          "first",
+          "2020-01-01",
+          "2020-12-31",
+          "per_column",
+          [
+            [
+              "02",
+              "Label"
+            ]
+          ],
+          [
+            "codes-second"
+          ]
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "percolumn"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "First",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "The backing state carries no value set."
+    },
+    {
+      "table": "state_classifications",
+      "where": {
+        "register": "percolumn"
+      },
+      "fields": [
+        "column"
+      ],
+      "rows": [],
+      "note": "No book is inherited by the backing state."
+    },
+    {
+      "table": "alias_windows",
+      "where": {
+        "register": "facts"
+      },
+      "fields": [
+        "column",
+        "column_metadata",
+        "operational_definition",
+        "source_register_text"
+      ],
+      "rows": [
+        [
+          "First",
+          "per_column",
+          "First operation",
+          "Question 1"
+        ],
+        [
+          "first",
+          "per_column",
+          "Second operation",
+          null
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "facts"
+      },
+      "fields": [
+        "column",
+        "operational_definition"
+      ],
+      "rows": [
+        [
+          "First",
+          null
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "contested"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "First",
+          "2021-01-01",
+          "2021-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "alias_windows",
+      "where": {
+        "register": "contested"
+      },
+      "fields": [
+        "column"
+      ],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "fields": [
+        "code",
+        "subject",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "conflicting_code_memberships",
+          "scb/contested/income",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "unsupported_representation_coding",
+          "scb/contested/income",
+          "2020-01-01",
+          "2020-12-31"
+        ]
+      ],
+      "note": "PERCOLUMN and FACTS build clean; CONTESTED reports its withheld list and the unsupported per-column domain."
+    }
+  ]
+}

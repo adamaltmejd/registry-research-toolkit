@@ -25,50 +25,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def test_parallel_resolved_columns_keep_distinct_coding_states(
-    tmp_path: Path,
-) -> None:
-    variable = _variable()
-    state = variable.states[0]
-    states = tuple(
-        state.model_copy(
-            update={
-                "value_set_version_label": version,
-                "delivery_column_name": f"Column_{index}",
-                "value_set": ResolvedCodeSet(members=(("01", version),)),
-            }
-        )
-        for index, version in enumerate(("Edition A", "Edition B"))
-    )
-    variable = variable.model_copy(update={"states": states})
-    output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
-    with closing(open_built_db(output)) as conn:
-        rows = conn.execute(
-            "SELECT value_set_version_label FROM variable_state ORDER BY value_set_version_label"
-        ).fetchall()
-        assert [row[0] for row in rows] == ["Edition A", "Edition B"]
-        assert (
-            conn.execute(
-                "SELECT COUNT(DISTINCT state_id) FROM variable_state"
-            ).fetchone()[0]
-            == 2
-        )
-
-    conflicting = variable.model_copy(
-        update={
-            "states": tuple(
-                s.model_copy(update={"delivery_column_name": "SameColumn"})
-                for s in states
-            )
-        }
-    )
-    previous = output.read_bytes()
-    with pytest.raises(ValueError, match="overlapping distinct-value_set"):
-        write_resolved_catalog((conflicting,), output, manifest=synthetic_manifest())
-    assert output.read_bytes() == previous
-
-
 def _coded(label: str, code: str) -> dict[str, object]:
     return {
         "value_set_version_label": label,
@@ -110,55 +66,6 @@ def test_formation_attributes_exactly_the_column_overlaps_the_writer_refuses(
     with pytest.raises(ValueError) as failure:
         write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     assert message.split(": ")[0] in str(failure.value)
-
-
-def test_documented_codes_do_not_require_known_physical_type(tmp_path: Path) -> None:
-    members = (
-        ("01", "Participation"),
-        ("1", "Another code"),
-        ("", "Undocumented value"),
-        ("01", "Another label"),
-        ("01", "Participation"),
-        (" 01", "Participation"),
-    )
-    code_set = ResolvedCodeSet(members=members)
-    state = _state(2000).model_copy(
-        update={"value_set": code_set, "data_type": None, "data_length": None}
-    )
-    variable = _variable().model_copy(update={"states": (state, _state(2002))})
-    output = tmp_path / "reg_meta.db"
-    write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
-    with closing(open_built_db(output)) as conn:
-        state = conn.execute(
-            "SELECT * FROM variable_state WHERE valid_from='2000-01-01'"
-        ).fetchone()
-        assert (state["data_type"], state["data_length"]) == (None, None)
-        assert state["value_set_id"] is not None
-        assert tuple(
-            tuple(row)
-            for row in conn.execute(
-                "SELECT code, label FROM value_set_member JOIN value_code USING (code_id) WHERE value_set_id=? ORDER BY code, label",
-                (state["value_set_id"],),
-            )
-        ) == tuple(sorted(set(members)))
-        assert (
-            conn.execute(
-                "SELECT COUNT(*) FROM variable_state WHERE valid_from='2001-01-01'"
-            ).fetchone()[0]
-            == 0
-        )
-        assert (
-            conn.execute(
-                "SELECT value_set_id FROM variable_state WHERE valid_from='2002-01-01'"
-            ).fetchone()[0]
-            is None
-        )
-        hits = conn.execute(
-            "SELECT c.code, c.mapping_count FROM value_code_fts f JOIN value_code c ON c.code_id=f.rowid WHERE value_code_fts MATCH 'Participation'"
-        ).fetchall()
-        assert len(hits) == 2
-        assert {row["code"] for row in hits} == {"01", " 01"}
-        assert all(row["mapping_count"] == 1 for row in hits)
 
 
 def test_shared_memberships_have_stable_ids_and_deterministic_replay(

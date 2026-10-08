@@ -1,0 +1,84 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_representation_coding"
+      },
+      "fields": [
+        "code",
+        "case_id",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "stale_representation_coding",
+          "curation/registers/scb/percolumn.toml#/representation.parallel/1",
+          "2020-01-01",
+          "2020-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "percolumn"
+      },
+      "fields": [
+        "column"
+      ],
+      "rows": [],
+      "note": "With the entry stale, the two literals overlap as distinct value sets and nothing is published."
+    },
+    {
+      "table": "alias_windows",
+      "where": {
+        "register": "percolumn"
+      },
+      "fields": [
+        "column"
+      ],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "overlapping_distinct_value_sets"
+      },
+      "fields": [
+        "code",
+        "subject"
+      ],
+      "rows": [
+        [
+          "overlapping_distinct_value_sets",
+          "scb/percolumn/income"
+        ]
+      ]
+    },
+    {
+      "table": "alias_windows",
+      "where": {
+        "register": "facts"
+      },
+      "fields": [
+        "column",
+        "operational_definition",
+        "source_register_text"
+      ],
+      "rows": [
+        [
+          "First",
+          "First operation",
+          "Question 1"
+        ],
+        [
+          "first",
+          "Second operation",
+          null
+        ]
+      ]
+    }
+  ]
+}

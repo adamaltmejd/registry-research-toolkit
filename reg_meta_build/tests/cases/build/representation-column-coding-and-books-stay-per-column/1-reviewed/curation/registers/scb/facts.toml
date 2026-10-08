@@ -1,0 +1,33 @@
+[register]
+provider = "scb"
+slug = "facts"
+native_id = "3"
+[[variant]]
+native_id = "3.30"
+slug = "people"
+[[variable]]
+native_id = "3.5"
+slug = "income"
+[[identity.partition]]
+variable = "3.5"
+columns = { First = "3.5", first = "3.5" }
+columns_ref = "reviewed parallel source-native quantity"
+[[representation.parallel]]
+variable = "3.5"
+variant = "3.30"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+evidence = "Reviewed parallel columns"
+noted = "2026-10-08"
+case_aliases = true
+column_metadata = "per_column"
+[[representation.parallel.columns]]
+column = "First"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2020"]
+[[representation.parallel.columns]]
+column = "first"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2020"]

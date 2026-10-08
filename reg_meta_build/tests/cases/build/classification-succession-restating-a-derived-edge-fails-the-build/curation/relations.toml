@@ -1,0 +1,5 @@
+[[edge]]
+type = "replaced_by"
+from = "class/sni2000"
+to = "class/sni2020"
+effective_year = 2020

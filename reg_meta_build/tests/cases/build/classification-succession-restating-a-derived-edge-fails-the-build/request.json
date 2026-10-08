@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_classification_succession_resolution.py::test_classification_succession_checks_combined_graph[sni2000-sni2020-duplicate classification succession]"
+  ],
+  "note": "relations.toml declares sni2000 -> sni2020, the edge the vintage chain already derives. The allowed twin is the SUN chain in classification-book-written-with-conformance-sentinels-and-successions.",
+  "fails_if": "`resolve_classification_successions` (catalog_dependencies.py) deduplicates a declared edge against the derived one (or lets one silently win) instead of refusing the pair",
+  "sources": "scb-classification-books"
+}

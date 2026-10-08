@@ -1,0 +1,28 @@
+[[edge]]
+type = "replaced_by"
+from = "class/older-codes"
+to = "class/example-codes"
+effective_year = 2000
+
+[[edge]]
+type = "replaced_by"
+from = "class/sun1996"
+to = "class/sun2000-niva"
+effective_year = 2000
+
+[[edge]]
+type = "replaced_by"
+from = "class/b"
+to = "class/current"
+
+[[edge]]
+type = "replaced_by"
+from = "class/a"
+to = "class/current"
+effective_year = 2026
+
+[[edge]]
+type = "replaced_by"
+from = "class/current"
+to = "class/future"
+effective_year = 2100

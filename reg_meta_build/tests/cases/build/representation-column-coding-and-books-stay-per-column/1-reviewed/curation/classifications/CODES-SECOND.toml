@@ -1,0 +1,7 @@
+[classification]
+short_name = "CODES-SECOND"
+slug = "codes-second"
+name = "CODES-SECOND"
+codes_file = "codes-second.csv"
+[binding]
+value_set_labels = ["Second list"]

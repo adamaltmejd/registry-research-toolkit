@@ -1,0 +1,5 @@
+[classification]
+short_name = "SNI2020"
+slug = "sni2020"
+name = "Another classification 2020"
+codes_file = "sni2020.csv"
