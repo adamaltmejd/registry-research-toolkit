@@ -1261,12 +1261,19 @@ def commit_fixture(repo: Path, message: str, *paths: str) -> str:
     _git(repo, "add", *(("--", *paths) if paths else ("-A",)))
     _git(repo, "commit", "-q", "-m", message)
     # The commit just wrote HEAD's loose ref; reading it skips a `git rev-parse`.
+    # A reftable repository (`init.defaultRefFormat`) has no loose ref to read.
     head = (repo / ".git" / "HEAD").read_text(encoding="utf-8").strip()
     if not head.startswith("ref: "):
         return head
-    return (
-        (repo / ".git" / head.removeprefix("ref: ")).read_text(encoding="utf-8").strip()
-    )
+    ref = repo / ".git" / head.removeprefix("ref: ")
+    if ref.is_file():
+        return ref.read_text(encoding="utf-8").strip()
+    return subprocess.run(
+        ["git", "-C", str(repo), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
 
 
 def write_scb_snapshot(root: Path, scb_dir: Path) -> ScbSnapshotSelection:
