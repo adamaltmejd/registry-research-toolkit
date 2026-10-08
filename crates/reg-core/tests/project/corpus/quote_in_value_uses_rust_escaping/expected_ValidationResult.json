@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/it's",
+      "message": "unexpected key 'it\\'s' on project root"
+    }
+  ]
+}

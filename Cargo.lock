@@ -747,7 +747,9 @@ dependencies = [
 name = "reg-core"
 version = "0.0.0"
 dependencies = [
+ "serde",
  "serde_json",
+ "sha2",
  "unicode-normalization",
  "unicode-properties",
 ]
