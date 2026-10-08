@@ -4,7 +4,7 @@
     "test_fqid_slugs_populate_seed.py::TestSeedSlugs::test_writes_only_register_auto_files",
     "test_fqid_slug_naming_boundary.py::test_seeded_pins_load_as_register_variables"
   ],
-  "fails_if": "seed-slugs keys a generated pin by the catalog's surrogate `register_id` (#1215), writes a `[register]` table or any other field into the generated file, or touches the authored register file",
+  "fails_if": "seed-slugs keys a generated pin by the catalog's surrogate `register_id` (#1215), writes a `[register]` table or any field other than `native_id` and `slug` into a generated variable pin, or touches the authored register file",
   "note": "The authored pin of 1.101 is removed, so its slug is left to the generated file. The generated pins reload, with the zone pinned, as exactly the slugs that built the artifact.",
   "argv": [
     "--db",
