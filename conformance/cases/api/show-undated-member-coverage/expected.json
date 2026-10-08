@@ -1,0 +1,13 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/members/*/fqid": ["scb/beta/fodland", "scb/beta/fodland"],
+      "/data/members/*/delivery_column": ["FodLand", "FodLandKod"],
+      "/data/members/*/coverage": [
+        {"coverage_from": null, "coverage_to": null, "open_ended": false, "state_count": 1},
+        {"coverage_from": "2010-01-01", "coverage_to": "2010-12-31", "open_ended": false, "state_count": 1}
+      ]
+    }
+  }
+]

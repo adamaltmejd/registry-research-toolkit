@@ -1,0 +1,8 @@
+[classification]
+short_name = "FAM_S"
+slug = "fam-s"
+name = "Familj S"
+codes_file = "fam-s.csv"
+
+[binding]
+value_set_labels = ["S-lista bunden"]

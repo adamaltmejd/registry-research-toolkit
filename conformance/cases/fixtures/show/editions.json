@@ -1,0 +1,22 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "alpha",
+      "name": "Alpha",
+      "purpose": "Synthetic register for show"
+    },
+    "variant": {
+      "slug": "annual",
+      "name": "Individer, 16 år och äldre",
+      "panel_entity_key": ["kon", "alder"],
+      "panel_time_key": "period",
+      "panel_time_grain": "delivery"
+    },
+    "name": "Alpha 2018",
+    "description": "The 2018 edition",
+    "measurement_information": "December 31",
+    "populations": [{"name": "Residents", "definition": "Registered on 31 December"}],
+    "object_types": [{"name": "Person", "definition": "A registered person"}]
+  }
+]

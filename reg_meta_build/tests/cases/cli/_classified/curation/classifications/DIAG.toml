@@ -1,0 +1,14 @@
+[classification]
+short_name = "DIAG"
+slug = "diag"
+name = "Diagnoser"
+codes_file = "diag.csv"
+
+[[binding.variable]]
+variable = "scb/ulf/diag"
+
+[[binding.variable]]
+variable = "scb/ulf/bidiag"
+
+[[binding.variable]]
+variable = "scb/par/pdiag"

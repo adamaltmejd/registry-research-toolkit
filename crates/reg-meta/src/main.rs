@@ -148,10 +148,14 @@ async fn serve(server: Arc<Server>, addr: SocketAddr, public_host: Option<String
     let openapi = ops::openapi(VERSION).to_json().expect("OpenAPI serializes");
     let mut app = Router::new().route("/openapi.json", get(|| async move { json(openapi) }));
     for op in ops::all() {
-        app = app.route(
-            &axum_route(op.path),
-            get(move |state, path, query, headers| answer(op, state, path, query, headers)),
-        );
+        for &route in op.paths {
+            app = app.route(
+                &axum_route(route),
+                get(move |state, path, query, headers| {
+                    answer(op, route, state, path, query, headers)
+                }),
+            );
+        }
     }
     for download in ops::downloads() {
         app = app.route(
@@ -204,19 +208,24 @@ impl Answer {
 /// Answer a route's parameters with `run` on the blocking pool.
 async fn call<T: Send + 'static>(
     server: &Arc<Server>,
-    params: &'static [Param],
+    params: Vec<&'static Param>,
     run: Run<T>,
     query: Vec<(String, String)>,
 ) -> (Scope, Result<T, Error>) {
     let task = Arc::clone(server);
-    tokio::task::spawn_blocking(move || ops::call(&task, params, run, &query))
+    tokio::task::spawn_blocking(move || ops::call(&task, &params, run, &query))
         .await
         .expect("operation task")
 }
 
-/// Answer `op` for the request's parameters.
-async fn run(server: &Arc<Server>, op: &'static Operation, query: Vec<(String, String)>) -> Answer {
-    let (scope, result) = call(server, op.params, op.run, query).await;
+/// Answer `op` for the request's parameters, declared by `params`.
+async fn run(
+    server: &Arc<Server>,
+    op: &'static Operation,
+    params: Vec<&'static Param>,
+    query: Vec<(String, String)>,
+) -> Answer {
+    let (scope, result) = call(server, params, op.run, query).await;
     Answer::new(server, scope, result)
 }
 
@@ -271,12 +280,14 @@ fn request_params(
 /// code's status.
 async fn answer(
     op: &'static Operation,
+    route: &'static str,
     State(server): State<Arc<Server>>,
     Path(path): Path<Vec<(String, String)>>,
     Query(query): Query<Vec<(String, String)>>,
     headers: HeaderMap,
 ) -> Response {
-    let answer = run(&server, op, request_params(op.path, path, query)).await;
+    let params = request_params(route, path, query);
+    let answer = run(&server, op, op.route_params(route), params).await;
     let body = answer.body.to_string();
     if answer.status != StatusCode::OK {
         return (answer.status, json(body)).into_response();
@@ -305,7 +316,14 @@ async fn fetch(
     headers: HeaderMap,
 ) -> Response {
     let params = request_params(download.path, path, query);
-    match call(&server, download.params, download.run, params).await {
+    match call(
+        &server,
+        download.params.iter().collect(),
+        download.run,
+        params,
+    )
+    .await
+    {
         (scope, Ok(raw)) => cached(
             &server,
             scope,

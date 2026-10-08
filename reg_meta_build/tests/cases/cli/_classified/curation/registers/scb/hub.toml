@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "hub"
+native_id = "13"
+
+[[variant]]
+native_id = "13.130"
+slug = "people"
+
+[[variable]]
+native_id = "13.1306"
+slug = "ha"
+
+[[variable]]
+native_id = "13.1307"
+slug = "hb"

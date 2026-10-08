@@ -1,0 +1,10 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/kind": "classification", "/data/variables/*/name": ["Value"]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/variables/*/name": ["Value", "Value reference"]}
+  }
+]

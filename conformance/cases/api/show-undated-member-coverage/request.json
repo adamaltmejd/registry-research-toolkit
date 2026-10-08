@@ -1,0 +1,12 @@
+{
+  "note": "A representation member whose column only year-independent (undated) states deliver: its coverage has null bounds and counts the state, beside a dated sibling column. Fails if reference column coverage reads a state's bounds as non-null (the 500 G1 found on LISA's groups).",
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "show",
+      "path": "/api/catalog/group/scb/beta/origin",
+      "query": {"scope": "reference"}
+    }
+  ]
+}

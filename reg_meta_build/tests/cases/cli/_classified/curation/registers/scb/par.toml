@@ -1,0 +1,32 @@
+[register]
+provider = "scb"
+slug = "par"
+native_id = "12"
+
+[[variant]]
+native_id = "12.120"
+slug = "people"
+
+[[variable]]
+native_id = "12.1201"
+slug = "pdiag"
+
+[[variable]]
+native_id = "12.1203"
+slug = "alder"
+
+[[variable]]
+native_id = "12.1204"
+slug = "pciv"
+
+[[variable]]
+native_id = "12.1205"
+slug = "region"
+
+[[variable]]
+native_id = "12.1206"
+slug = "ha"
+
+[[variable]]
+native_id = "12.1207"
+slug = "hb"

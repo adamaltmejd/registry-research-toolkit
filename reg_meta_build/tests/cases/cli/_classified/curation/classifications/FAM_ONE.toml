@@ -1,0 +1,8 @@
+[classification]
+short_name = "FAM_ONE"
+slug = "fam-one"
+name = "Familj Ett"
+codes_file = "fam-one.csv"
+
+[binding]
+value_set_labels = ["Ett 2015"]
