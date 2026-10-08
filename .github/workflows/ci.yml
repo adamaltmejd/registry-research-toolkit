@@ -67,7 +67,9 @@ jobs:
         with:
           version: "0.12.11"
       - run: uv sync --frozen
-      - run: cargo build -p reg-meta --locked
+      # The whole workspace, as `cargo test` builds it: `-p reg-meta` alone unifies
+      # features differently and recompiles about 90 dependencies.
+      - run: cargo build --workspace --locked
       - run: >-
           uv run python -m pytest conformance -q -n auto
           -k '[api/admission or [api/context or [api/meta] or [api/cursor- or [api/invalid-parameters] or [api/scope-unavailable] or [api/search-paging] or [api/search-scope] or [api/search-group-hit] or [api/search-register or [api/search-period or [api/search-reference-paging] or test_mcp'

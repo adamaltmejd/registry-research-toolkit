@@ -4,12 +4,14 @@ the HTTP operations answer.
 Raw JSON-RPC over `httpx2` against `/mcp` on the `--server-cmd` server (stateless
 streamable HTTP, JSON responses), and one stdio session against `--mcp-cmd`. Both run
 only out of process, like the `api` cases; the oracles are the HTTP responses, which
-`test_http.py` pins, and the operation table.
+`test_http.py` pins, the operation table and the `tools/list` golden
+(`cases/mcp/tools-list.json`).
 """
 
 from __future__ import annotations
 
 import json
+import shlex
 import subprocess
 import tomllib
 
@@ -19,6 +21,7 @@ from http_cases import (
     ServerPool,
     artifact_env,
     cached_case_artifact,
+    case_clients,
     run_http_requests,
     select_json,
 )
@@ -42,6 +45,8 @@ SEARCH_CASES = (
     "cursor-stale",
 )
 READER = {"fixture": "reader"}
+# The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.
+TOOLS = json.loads((CASES / "mcp/tools-list.json").read_text())
 OPERATIONS = tomllib.loads((CASES.parent / "api/operations.toml").read_text())
 
 
@@ -68,27 +73,14 @@ def call(client, arguments):
     return result["isError"], result["structuredContent"]
 
 
-def case_clients(case, servers):
-    request = json.loads((case / "request.json").read_text())
-    kind = request.get("kind", "steward")
-    clients = {
-        name: servers.client(
-            artifact_env(cached_case_artifact(request, case, spec["identity"]), kind)
-        )
-        for name, spec in request.get("artifacts", {}).items()
-    }
-    clients[None] = servers.client(
-        artifact_env(cached_case_artifact(request, case), kind)
-    )
-    return request["requests"], clients
-
-
 def test_search_tool_matches_http(servers):
     # Fails when a tool call's document drifts from the HTTP body (envelope, meta,
     # error fields, argument conversion), or when the cases stop covering an error.
     codes = set()
     for name in SEARCH_CASES:
-        steps, clients = case_clients(CASES / "api" / name, servers)
+        case = CASES / "api" / name
+        request = json.loads((case / "request.json").read_text())
+        steps, clients = request["requests"], case_clients(request, case, servers)
         http = run_http_requests(steps, clients)
         documents = []
         for index, step in enumerate(steps):
@@ -108,55 +100,22 @@ def test_search_tool_matches_http(servers):
     assert codes == {"invalid_parameter", *search["errors"]}
 
 
-def inline(schema, defs, prefix):
-    """`schema` with every `$ref` under `prefix` replaced by its definition."""
-    if isinstance(schema, list):
-        return [inline(item, defs, prefix) for item in schema]
-    if not isinstance(schema, dict):
-        return schema
-    if "$ref" in schema:
-        return inline(defs[schema["$ref"].removeprefix(prefix)], defs, prefix)
-    return {key: inline(value, defs, prefix) for key, value in schema.items()}
-
-
-def test_tools_list_matches_operations_and_openapi(servers):
-    # Fails when a tool is missing, extra or renamed against `operations.toml`, or
-    # its input or output schema disagrees with the operation's OpenAPI entry.
+def test_tools_list_matches_golden(servers):
+    # Fails when a tool, its description or a schema changes without updating
+    # `cases/mcp/tools-list.json`, or a tool name drifts from `operations.toml`.
     client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
-    openapi = client.get("/openapi.json").json()
-    components = openapi["components"]["schemas"]
     served = {
-        operation["operationId"]: operation
-        for item in openapi["paths"].values()
+        operation["operationId"]
+        for item in client.get("/openapi.json").json()["paths"].values()
         for operation in item.values()
     }
-    expected = {
-        op["tool"]: served[op["name"]]
+    tools = rpc(client, "tools/list", {}).json()["result"]["tools"]
+    assert tools == TOOLS
+    assert sorted(tool["name"] for tool in tools) == sorted(
+        op["tool"]
         for op in OPERATIONS["operation"]
         if op["name"] in served and "tool" in op
-    }
-    tools = rpc(client, "tools/list", {}).json()["result"]["tools"]
-    assert sorted(tool["name"] for tool in tools) == sorted(expected)
-    for tool in tools:
-        operation = expected[tool["name"]]
-        defs = tool["inputSchema"].get("$defs", {})
-        params = {
-            p["name"]: inline(p["schema"], components, "#/components/schemas/")
-            for p in operation["parameters"]
-        }
-        properties = inline(tool["inputSchema"]["properties"], defs, "#/$defs/")
-        assert properties == params, tool["name"]
-        assert sorted(tool["inputSchema"]["required"]) == sorted(
-            p["name"] for p in operation["parameters"] if p["required"]
-        )
-        responses = [
-            operation["responses"][status]["content"]["application/json"]["schema"]
-            for status in ("200", "default")
-        ]
-        output = tool["outputSchema"]
-        assert inline(output["oneOf"], output.get("$defs", {}), "#/$defs/") == inline(
-            responses, components, "#/components/schemas/"
-        ), tool["name"]
+    )
 
 
 def test_body_over_the_cap_is_payload_too_large(servers):
@@ -191,16 +150,14 @@ def test_burst_is_rate_limited(request, tmp_path):
 
 
 def test_stdio_session(request, servers):
-    # Fails when `reg-meta mcp` cannot initialize, list its tools or answer a call
-    # with the document `/api/search` returns.
+    # Fails when `reg-meta mcp` cannot initialize, list the golden's tools or answer
+    # a call with the document `/api/search` returns.
     template = request.config.getoption("--mcp-cmd")
     if template is None:
         pytest.skip("the stdio session runs against --mcp-cmd")
-    path = cached_case_artifact(READER)
+    env = artifact_env(cached_case_artifact(READER), "steward")
     arguments = {"q": "Value", "type": "variable", "limit": 1}
-    expected = servers.client(artifact_env(path, "steward")).get(
-        "/api/search", params=arguments
-    )
+    expected = servers.client(env).get("/api/search", params=arguments)
     messages = [
         {
             "method": "initialize",
@@ -214,8 +171,12 @@ def test_stdio_session(request, servers):
         {"method": "tools/list"},
         {"method": "tools/call", "params": {"name": "search", "arguments": arguments}},
     ]
-    # `ServerPool.argv` substitutes `{db}` and `{catalog}`; stdio takes no port.
-    argv = ServerPool(template, None).argv(path.parent, "swecov", 0)
+    argv = [
+        word.replace("{db}", env["REG_META_DB"]).replace(
+            "{catalog}", env["REG_WEBAPP_STEWARD"]
+        )
+        for word in shlex.split(template)
+    ]
     with subprocess.Popen(
         argv,
         cwd=CASES.parents[1],
@@ -235,6 +196,6 @@ def test_stdio_session(request, servers):
         assert process.wait(timeout=10) == 0
     initialize, tools, result = (reply["result"] for reply in replies)
     assert initialize["serverInfo"]["name"] == "reg-meta"
-    assert [tool["name"] for tool in tools["tools"]] == ["search"]
+    assert tools["tools"] == TOOLS
     assert result["isError"] is False
     assert result["structuredContent"] == expected.json()

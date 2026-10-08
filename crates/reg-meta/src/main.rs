@@ -86,22 +86,25 @@ async fn main() {
     let args = parse_args(std::env::args().skip(1)).unwrap_or_else(|err| refuse(&err));
     let catalog =
         Catalog::open(&args.db, args.catalog.as_deref()).unwrap_or_else(|err| refuse(&err));
-    let (steward, port) = match args.mode {
+    match args.mode {
         Mode::Serve { stewards, port } => {
             let steward =
                 Steward::load(&stewards, catalog.name()).unwrap_or_else(|err| refuse(&err));
-            (Some(steward), Some(port))
+            let server = Server {
+                catalog,
+                steward: Some(steward),
+                version: VERSION,
+            };
+            serve(Arc::new(server), port).await;
         }
-        Mode::Mcp => (None, None),
-    };
-    let server = Arc::new(Server {
-        catalog,
-        steward,
-        version: VERSION,
-    });
-    match port {
-        Some(port) => serve(server, port).await,
-        None => mcp::stdio(server).await,
+        Mode::Mcp => {
+            let server = Server {
+                catalog,
+                steward: None,
+                version: VERSION,
+            };
+            mcp::stdio(Arc::new(server)).await;
+        }
     }
 }
 

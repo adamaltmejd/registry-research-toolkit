@@ -34,7 +34,8 @@ const RATE_PER_MINUTE: u64 = 60;
 /// The `/mcp` body cap, today's `limits.py` cap on write bodies.
 const MAX_BODY_BYTES: usize = 1024 * 1024;
 /// simplify: buckets that have refilled are dropped only once this many addresses are
-/// tracked; make it a time-ordered sweep if a hosted burst of addresses shows in RSS.
+/// tracked; make it a time-ordered sweep if a hosted burst of addresses shows in RSS
+/// or in `/mcp` latency.
 const MAX_TRACKED: usize = 10_000;
 
 /// The tool handler: one per stdio process, and per request over stateless HTTP.
@@ -231,7 +232,9 @@ impl Limits {
         let now = Instant::now();
         let mut buckets = self.buckets.lock().expect("rate buckets");
         if buckets.len() >= MAX_TRACKED {
-            // A full bucket is the same as none.
+            // A full bucket is the same as none. simplify: while this many addresses
+            // are active, every request sweeps them all under the lock; replace the
+            // sweep (see MAX_TRACKED) if it shows in `/mcp` latency.
             buckets.retain(|_, bucket| bucket.refill(now).tokens < RATE_PER_MINUTE);
         }
         let bucket = buckets
