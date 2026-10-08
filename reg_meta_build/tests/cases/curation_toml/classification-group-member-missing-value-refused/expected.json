@@ -1,0 +1,12 @@
+{
+  "loader": "classification_groups",
+  "replaces": "test_concept_groups.py::TestClassificationGroupLoader::test_invalid_shapes_fail[4]",
+  "fails_if": "load_classification_groups accepts a [[classification_group.members]] entry without its `value`",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/classification_groups.toml [[classification_group.members.value]] entry 1",
+    "message_contains": [
+      "Field required"
+    ]
+  }
+}

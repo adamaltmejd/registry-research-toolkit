@@ -1,0 +1,12 @@
+{
+  "loader": "classification_groups",
+  "replaces": "test_concept_groups.py::TestClassificationGroupLoader::test_unrelated_tables_are_rejected",
+  "fails_if": "load_classification_groups ignores a top-level table other than [[classification_group]], such as an [[accept]] from another file",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/classification_groups.toml [[accept]]",
+    "message_contains": [
+      "Extra inputs are not permitted"
+    ]
+  }
+}

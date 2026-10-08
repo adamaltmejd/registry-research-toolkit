@@ -1,0 +1,6 @@
+{
+  "loader": "worklist_concept_groups",
+  "replaces": "test_concept_groups.py::TestLoader::test_missing_file_is_empty",
+  "fails_if": "load_worklist_concept_groups starts requiring the candidate worklist file",
+  "loads": []
+}

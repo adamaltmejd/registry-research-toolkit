@@ -1,0 +1,32 @@
+{
+  "loader": "classification_groups",
+  "replaces": [
+    "test_concept_groups.py::TestClassificationGroupLoader::test_parses_valid_umbrella",
+    "test_concept_groups.py::TestClassificationGroupLoader::test_axis_is_optional"
+  ],
+  "fails_if": "load_classification_groups requires `axis`, drops a provided one, or reorders or drops an umbrella's members or their value",
+  "loads": [
+    {
+      "key": "sun",
+      "axis": "dimension",
+      "members": [
+        {
+          "classification": "sun-niva2020"
+        },
+        {
+          "classification": "sun-grupp2020"
+        }
+      ]
+    },
+    {
+      "key": "sun-axisless",
+      "axis": null,
+      "members": [
+        {
+          "value": "niva"
+        },
+        {}
+      ]
+    }
+  ]
+}

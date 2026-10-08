@@ -1,0 +1,16 @@
+{
+  "loader": "worklist_concept_groups",
+  "replaces": [
+    "test_concept_groups.py::TestLoader::test_axisless_variable_umbrella_rejects_facet_fields[value = \"1\"\\nlabel = \"x\"]",
+    "test_concept_groups.py::TestLoader::test_axisless_variable_umbrella_rejects_facet_fields[coords = [{ axis = \"rank\", value = \"1\", label = \"x\" }]]"
+  ],
+  "fails_if": "load_worklist_concept_groups lets a member of an axis-less umbrella carry facet coords, `value` or `label`",
+  "note": "Flat value/label are legal on a single-axis member, so they are the hardest facet fields to refuse on an axis-less one; `coords` fails the same guard.",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "concept_groups.auto.toml [[variable_group]] entry 1",
+    "message_contains": [
+      "because the group is axis-less"
+    ]
+  }
+}
