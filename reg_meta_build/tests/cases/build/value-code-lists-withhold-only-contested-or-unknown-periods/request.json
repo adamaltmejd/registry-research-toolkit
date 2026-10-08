@@ -1,0 +1,20 @@
+{
+  "replaces": [
+    "test_source_coding.py::test_exact_codes_labels_duplicates_and_occurrence_evidence_survive",
+    "test_source_coding.py::test_code_validity_splits_real_calendar_periods_without_annual_widening",
+    "test_source_coding.py::test_equivalent_independent_lists_agree_without_losing_their_references",
+    "test_source_coding.py::test_conflicting_lists_withhold_only_the_contested_coding_period",
+    "test_source_coding.py::test_butsatt_source_blocks_withhold_the_1982_to_1988_overlap",
+    "test_source_coding.py::test_adjacent_dated_labels_for_one_code_keep_both_periods",
+    "test_source_coding.py::test_same_sheet_year_independent_conflicting_labels_withhold_coding",
+    "test_source_coding.py::test_same_sheet_identical_year_independent_duplicates_are_harmless",
+    "test_source_coding.py::test_non_sheet_annual_label_boundary_keeps_both_labels",
+    "test_source_coding.py::test_missing_code_or_label_withholds_complete_list_only_where_member_applies",
+    "test_source_coding.py::test_unknown_or_pooled_code_scope_cannot_be_filled_from_occurrence_year[unknown]",
+    "test_source_coding.py::test_no_active_members_reports_missing_coding_and_keeps_occurrence_coverage",
+    "test_source_coding.py::test_conflicting_labels_preserve_agreed_codes_without_selecting_a_label"
+  ],
+  "note": "The code-membership fold (`resolve_code_membership`) seen at the built value sets, one register or SOS variable per replaced test. The replaced tests cut at days (a leap-day member, a 15 March to 2 April rival, a 1-2 May blank label); no delivery cuts a member inside a year (SOS Kodlista periods are years, and an SCB item listed for its CVID's edition has its ValidDates set aside, `item_validity_set_aside`), so each relational claim is restated at year grain over a 2019-2021 occurrence: the contested or unknown year is withheld with its issue window, and the years beside it keep their list. BUTSATT and ADJ keep the old rows and years. Rows the old tests did not assert (BUTSATT outside 1982-1990) are read off the Kodlista rows: a transition period 1982/1983-1989/1990 widens to 1982-1990 and the open 1999- row is clipped to the 2000 occurrence end. SCB names every list's version, so two agreeing SCB lists always differ in version label (VERSIONS); the agreeing-lists claim (EQ) is two SOS sheets naming one variable. Warnings the build also reports here (`unknown_classification_declaration`, SOS `unknown_code_validity` for UNK's malformed period) are not part of the claim.",
+  "fails_if": "`_membership_segment` (source_coding.py) publishes the union or the first of two disagreeing complete lists (RIVBOTH/RIVCODE/RIVLABEL 2020 and YIND gain a value set), drops the same-sheet relabel check (BUTSATT 1982-1988 and YDATE 2020 publish a list), silently drops a member with a blank label instead of withholding its period as unknown membership (NOLABEL 2020 publishes `0`), stops reporting `empty_active_coding` for a period with no active member, deduplicates members by code alone (DUPS loses a label), or reports `conflicting_coding_labels` by withholding the agreed codes (VERSIONS loses 001)",
+  "sources": "scb-sos-code-list-periods"
+}
