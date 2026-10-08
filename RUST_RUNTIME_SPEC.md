@@ -635,8 +635,9 @@ that ports it ships *(decision 15, checkpoint 2)*.
      `reg-core`, keeping its raw-input, accumulated diagnostics, and pins `serde_json`
      output to the two encodings its three consumers use: the order manifest
      (`order.py`) and the validation result (`semantic.validation_json`) write sorted
-     keys, `indent=2`, non-ASCII as is and a trailing newline; `canonical_json` writes
-     sorted keys, compact separators and non-ASCII as is (corrected 2026-10-08).
+     keys, `indent=2`, non-ASCII as is and a trailing newline; the project hash
+     (`order._project_hash`) writes sorted keys, compact separators and non-ASCII as is
+     (corrected 2026-10-08).
    - Docs, context, stats and `fetch` go to the slices the surface inventory assigns.
      The build switches to `reg-core-py` for folds in slice 3a; FQID and hashing move
      with the build's other `reg_meta` imports in stage 4. Gated by G0 and G1.
@@ -1046,8 +1047,9 @@ a new table or a new transport feature waits for it to merge.
 
 - **Wave 0:** **3b.1** (Python: the 3b derived tables) and **3b.2** (Rust: transport
   prerequisites, exercised by the docs metadata operations) have no dependency on each
-  other and run in two session slots. **3e.1** (project types in `reg-core`) has no
-  catalog dependency and may take the third.
+  other and run as two sessions (the wave-0 exception to one package per slice session).
+  **3e.1** (project types in `reg-core`) has no catalog dependency and may take the
+  third.
 - **Wave 1 (three slice sessions):**
   - 3b session: **3b.3** (`show` and refs), then **3b.4**, **3b.5** and **3b.6**.
   - 3c session: **3c.1**, then **3c.2** and **3c.3**. The slice has no SPA step (its
@@ -1076,23 +1078,22 @@ Shared definitions:
   `tools/list` golden, `api-types-rust.ts`, the backend `openapi.json` and
   `api-types.ts`. A PR that changes a Rust route, parameter, result type or tool
   description runs it, and again after every rebase over another such change.
-- **G1** (`scripts/gate.py g1`, on a committed tree; decision 2 of 2026-10-08) is
-  **required** on every PR that touches derive or the docs build (3b.1, 3b.6, 3c.1,
-  3d.1) and **once per slice before its cutover** (3b and 3d in C, 3b's docs in 3b.6, 3c
-  in 3c.3, 3e in 3e.4). Other PRs rely on the `api` corpus. An operation package still
-  writes its `served` mapping; differences the slice run finds are fixed in the package
-  that owns the operation, before the cutover merges. Budget: under 5 min on the
-  re-derive path; each derive PR records derive time, G1 time and the artifact size
-  delta. G1 on a table-only PR protects existing behavior only; a new table's semantics
-  rest on `validate_built_db` and the `api` corpus until the slice's served comparison
-  reads it.
-- **Frozen Python runtime** (decision 1 of 2026-10-08). The Python runtime (the
-  `reg_meta` reader and CLI, `reg_schema`) is frozen: defect fixes go in Rust only. The
-  build stays Python (section 11), so a derived table gets the correct logic in derive,
-  even where the frozen reader computes the same fact wrongly. Every such divergence is
-  pinned by an `api` case once a Rust operation serves it, and gets a narrow named G1
-  exception (`case` glob and `paths` as tight as the diff allows) whose `reason` starts
-  `rust-only fix:` and names that `api` case. It lives until stage 4 (D1).
+- **G1** (`scripts/gate.py g1`, on a committed tree; D7) is **required** on every PR
+  that touches derive or the docs build (3b.1, 3b.6, 3c.1, 3d.1) and **once per slice
+  before its cutover** (3b and 3d in C, 3b's docs in 3b.6, 3c in 3c.3, 3e in 3e.4).
+  Other PRs rely on the `api` corpus. An operation package still writes its `served`
+  mapping; differences the slice run finds are fixed in the package that owns the
+  operation, before the cutover merges. Budget: under 5 min on the re-derive path; each
+  derive PR records derive time, G1 time and the artifact size delta. G1 on a table-only
+  PR protects existing behavior only; a new table's semantics rest on
+  `validate_built_db` and the `api` corpus until the slice's served comparison reads it.
+- **Frozen Python runtime** (D6). The Python runtime (the `reg_meta` reader and CLI,
+  `reg_schema`) is frozen: defect fixes go in Rust only. The build stays Python (section
+  11), so a derived table gets the correct logic in derive, even where the frozen reader
+  computes the same fact wrongly. Every such divergence is pinned by an `api` case once
+  a Rust operation serves it, and gets a narrow named G1 exception (`case` glob and
+  `paths` as tight as the diff allows) whose `reason` starts `rust-only fix:` and names
+  that `api` case. It lives until stage 4 (D1).
 - **G1 entry of an operation.** A module under `conformance/differential/served/` (3b.2
   splits `served.py`) maps the Rust result onto the baseline's shape. Two baseline
   kinds:
@@ -1131,8 +1132,8 @@ Shared definitions:
 - **Compiling §3 rows** (D2). A class-A row of section 3 is compiled when the Rust read
   would otherwise repeat resolver, closure or aggregate work per request (the resolver,
   `same_as` closure, chains, `coded_variable_stats`). A row the PR reads directly
-  instead (`concept_group_tag`, pre-ordered member rows) needs a measured request time
-  from its `api` case and from G1's served run, recorded in the PR.
+  instead needs a measured request time, from its `api` case or a timing on the pinned
+  artifact, recorded in the PR.
 - **Cross-slice data.** Where a `show` field would need another slice's table, the field
   belongs to that slice's facet (operation table, `shape.Show` note), not to a
   cross-slice dependency.
@@ -1140,7 +1141,8 @@ Shared definitions:
   case only when the PR shows that a named `api` case pins the same behavior. Every
   other such case stays until stage 4.
 
-Shared files (rebase conflicts expected; keep both sides, then regenerate):
+Shared files (rebase conflicts expected; keep both sides, then regenerate). Every
+package's paths implicitly include these files; a package lists only its other paths.
 
 - `reg_meta_build/src/reg_meta_build/db.py` (`SCHEMA_VERSION`, `DERIVED_DDL`),
   `reg_meta/src/reg_meta/db.py` (`SCHEMA_VERSION`, bump history),
@@ -1223,10 +1225,12 @@ Reviewer (a fresh agent that did not write the PR):
 - Report: verdict (approve / changes needed), findings ranked blocker / major / minor
   with `file:line` evidence and a concrete fix, commands run with results.
 
-Sessions and merging: at most three concurrent slice sessions, each in its own
-worktrees, with at most one package of its slice in flight. A session deletes each
-worktree when its package merges or is withdrawn. The orchestrator is the only one who
-merges to main (merge rule above) and keeps the in-flight list.
+Sessions and merging: at most three concurrent sessions, counted as sessions, not
+packages; each session runs one package at a time in its own worktree. The one exception
+is wave 0, where 3b.1 and 3b.2 run as two sessions because 3e.1 is the only other wave-0
+work. A session deletes each worktree when its package merges or is withdrawn. The
+orchestrator is the only one who merges to main (merge rule above) and keeps the
+in-flight list.
 
 #### Transitional inventory
 
@@ -1252,7 +1256,7 @@ merges to main (merge rule above) and keeps the in-flight list.
 
 **3b.1 Expanded states, browse deliveries and state warnings.** Implements section 3
 (`expanded_state`, `browse_delivery`, `state_warning`, `canonical_column`, scope as
-data) and decision 1.
+data) and §13 decision 1.
 
 - Changes: derive emits `expanded_state` from the pass `resolver_columns` already makes:
   one whole-history `_expand_state_windows` call per (variable, variant) on the same
@@ -1362,7 +1366,8 @@ set).
   `get classification --codes`; a page boundary inside a `q` match; MCP equivalence.
 - G1 (run in C): webapp baseline `/api/value-sets/{id}/codes` (offset pages concatenated
   against cursor pages) and CLI baseline `get classification --codes`.
-- Paths: as 3b.4 with `values.rs`. Acceptance: full gate. Depends on: 3b.3.
+- Paths: as 3b.4 with `values.rs`; `reg_meta_build/src/reg_meta_build/derive/` and its
+  tests if the folded column is needed. Acceptance: full gate. Depends on: 3b.3.
 
 **3b.6 `docs_search`, docs folding and the docs cutover.** Implements `docs_search` and
 checkpoint-2 decision 3 (`doc_fts` folding).
@@ -1476,8 +1481,8 @@ operations.
   `conformance/test_mcp.py`, `conformance/differential/`, the generated files.
 - Acceptance: full gate; 3a's search cases unchanged. Depends on: 3b.3, 3d.1.
 
-**C Catalog-page cutover (3b and 3d).** Implements decision 15 for every `/api/catalog*`
-and `/api/value-sets` route at once (D3).
+**C Catalog-page cutover (3b and 3d).** Implements §13 decision 15 for every
+`/api/catalog*` and `/api/value-sets` route at once (D3).
 
 - Changes: the vite proxy sends `/api/catalog`, `/api/states`, `/api/warnings`,
   `/api/values`, `/api/graph` and `/api/lineage` to Rust. `catalog.ts`, `CatalogRoot`,
@@ -1490,7 +1495,8 @@ and `/api/value-sets` route at once (D3).
   `catalog_fqid.py`, `period_param.py` and `query_input.py` once their last user goes,
   their backend tests, `http_catalog/*` and the catalog steps of `http_scope/*`; the 3b
   and 3d route rows of `surface.toml`, and the stage-4 import rows whose last importer
-  goes (appendix, a plan revision).
+  goes (appendix, a plan revision). The 3b and 3d command rows' `covered_by` points at
+  the `api` twins.
 - Paths: `reg_webapp/frontend/`, `reg_webapp/backend/`,
   `reg_webapp/.claude/skills/run-reg-webapp/`,
   `conformance/{test_http,artifact_requests,test_acceptance_agreement}.py`,
@@ -1501,7 +1507,7 @@ and `/api/value-sets` route at once (D3).
   step: after the next release, the deployed root, a register, a binding, a concept
   group and a classification page render. Depends on: 3b.4, 3b.5, 3d.2.
 
-**3e.1 Project types and structural validator in `reg-core`.** Implements decision 3
+**3e.1 Project types and structural validator in `reg-core`.** Implements §13 decision 3
 (first half) and section 5 (project schema).
 
 - Changes: `reg-core` gains the `project_data.json` types and the structural validator
@@ -1509,7 +1515,8 @@ and `/api/value-sets` route at once (D3).
   periods through 3a.3's grammar, messages from templates with codes and fields (section
   5). `serde_json` output is pinned to the two encodings its three consumers use: the
   order manifest and the validation result (sorted keys, `indent=2`, non-ASCII as is,
-  trailing newline) and `canonical_json` (sorted keys, compact, non-ASCII as is).
+  trailing newline) and the project hash `order._project_hash` (sorted keys, compact,
+  non-ASCII as is).
 - Oracle: `reg_schema/test_corpus/` and the structural cases of
   `conformance/cases/validate/`, read as data by a Rust test. Those expected files stay
   frozen (frozen Python runs against them). An intentional Rust difference is pinned in
@@ -1547,7 +1554,7 @@ and `/api/value-sets` route at once (D3).
 - Paths: as 3e.2 with `conformance/{test_order,test_artifact}.py` and
   `conformance/cases/order/`. Acceptance: full gate. Depends on: 3e.2.
 
-**3e.4 Project cutover, closing 3e.** Implements decision 15 for `/api/project/*`.
+**3e.4 Project cutover, closing 3e.** Implements §13 decision 15 for `/api/project/*`.
 
 - Changes: the vite proxy sends `/api/project` to Rust; `api.ts`, `project_data.ts`,
   `ProjectEditor` and `ValidationPanel` read `{data, meta}`; `driver.mjs` `flows`
@@ -1555,9 +1562,10 @@ and `/api/value-sets` route at once (D3).
   uses). Adds project validate and order to the post-deploy smoke.
 - Deletes: `routes/project.py`, `request_body.py`, `project_validation.py`, `limits.py`,
   the project models and tests, the `validate` surface of `test_http.py` and its proven
-  twins, the 3e rows of `surface.toml` and `reg_meta.order.OrderFinding`.
-- Paths: `reg_webapp/`, `conformance/`, `.github/workflows/container-build.yml`, the
-  generated files, `reg_webapp/DESIGN.md`.
+  twins, the 3e rows of `surface.toml` and the `reg_meta.order.OrderFinding` import row
+  in `surface.toml`. The 3e command rows' `covered_by` points at the `api` twins.
+- Paths: `reg_webapp/`, `conformance/`, `crates/reg-meta/` (the write rate limit),
+  `.github/workflows/container-build.yml`, the generated files, `reg_webapp/DESIGN.md`.
 - Acceptance: full gate; G1 for 3e, 0 differences outside named exceptions. Maintainer
   step: after the next release, a deployed project validates and orders. Depends on:
   3e.3.
@@ -1572,8 +1580,8 @@ Acceptance: full gate. Depends on: C, 3b.6, 3e.4.
 
 **R Re-pin at checkpoint 3.** Implements section 4 (re-pin): the artifact pin moves to
 the latest release and the baseline commit with it; G1 runs on both pins and records
-each difference. `rust-only fix:` exceptions carry over (D1). Depends on: 3c.3, C, F (or
-3e.4) and the release.
+each difference. `rust-only fix:` exceptions carry over (D1). Depends on: 3c.3, C, F and
+the release.
 
 #### Surface coverage (3b–3e rows)
 
@@ -1649,12 +1657,14 @@ so the deleting package removes the row mechanically (checkpoint 2):
 4. **Package F** deletes the empty FastAPI app once C, 3b.6 and 3e.4 have merged,
    keeping what stage 4 still needs (decisions 2 and 15 amended).
 5. **Batched releases**, one after C and one after 3e.4, each carrying every merged
-   schema minor and the docs asset.
+   schema minor and the docs asset, followed by deployed smoke checks of the catalog,
+   docs and project pages each cutover package lists.
 6. **Rust-only fixes.** The Python runtime (the `reg_meta` reader and CLI, `reg_schema`)
    is frozen; defect fixes go in Rust only. The builder is not frozen: a derived table
    gets the correct logic in derive.
 7. **G1 cadence.** G1 runs once per slice before its cutover, and on every PR that
-   touches derive or the docs build; other PRs rely on the `api` corpus.
+   touches derive or the docs build; other PRs rely on the `api` corpus. The candidate
+   Python CLI comparisons stay; served cases reuse baseline results only.
 8. **Gate tooling.** `scripts/gate.py` holds the full gate (`all`: `g0`, `rust`,
    `release`, `flows`, `frontend`), `crates`, `regen` (every committed generated file)
    and `g1`. Heavy steps take a machine-wide lock so one heavy job runs at a time;
