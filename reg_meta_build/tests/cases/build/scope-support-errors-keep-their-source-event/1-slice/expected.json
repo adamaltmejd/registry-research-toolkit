@@ -5,35 +5,34 @@
       "where": {
         "code": ["unknown_support_key", "deferred_out_of_slice_reference"]
       },
-      "fields": ["code", "severity", "source", "key"],
+      "fields": ["code", "severity", "source"],
       "rows": [
         [
           "deferred_out_of_slice_reference",
           "warning",
-          "scb-unikaregisterochvariabler",
-          ["summary", "5f9be13ce07f1113aca5b5afe8c4de1ae0b17f1325c883a34250f9697b7a94b6"]
+          "scb-unikaregisterochvariabler"
         ],
-        [
-          "unknown_support_key",
-          "error",
-          "scb-unikaregisterochvariabler",
-          ["summary", "b4657752ebc1068fdc97a0d983e29c3d465ebb0471834f7262119337fb66fd4e"]
-        ]
+        ["unknown_support_key", "error", "scb-unikaregisterochvariabler"]
       ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": ["unknown_support_key", "deferred_out_of_slice_reference"]
+      },
+      "fields": ["ref"],
+      "rows": {
+        "refs_of": {
+          "table": "source_issues",
+          "where": {"kind": "support_source_issue"}
+        }
+      }
     },
     {
       "table": "source_issues",
       "where": {"kind": "support_source_issue"},
-      "fields": ["severity", "refs"],
-      "rows": [
-        [
-          "error",
-          [
-            "scb-unikaregisterochvariabler#summary/b4657752ebc1068fdc97a0d983e29c3d465ebb0471834f7262119337fb66fd4e",
-            "scb-unikaregisterochvariabler#summary/5f9be13ce07f1113aca5b5afe8c4de1ae0b17f1325c883a34250f9697b7a94b6"
-          ]
-        ]
-      ]
+      "fields": ["severity"],
+      "rows": [["error"]]
     }
   ]
 }

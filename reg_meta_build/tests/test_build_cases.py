@@ -90,6 +90,8 @@ def test_committed_lova_routes_choose_distinct_labelled_rows(
     )
     window = {"data_from": 2005, "data_to": 2015}
     request = {
+        "fails_if": "a committed sos/lova.toml route edit sends A_LOVA and "
+        "A_LOVA_LISA to one subset row, or names a row the register does not declare",
         "sources": {
             "description": "Two LOVA subset rows named by the committed routes "
             "(labelled without their 'LOVA / ' prefix), one variable under each "
@@ -121,7 +123,7 @@ def test_committed_lova_routes_choose_distinct_labelled_rows(
                     ],
                 }
             ],
-        }
+        },
     }
     expected = {
         "projections": [

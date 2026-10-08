@@ -506,12 +506,14 @@ def _issues(outcome: Outcome) -> list[dict]:
 
 
 def _issue_refs(outcome: Outcome) -> list[dict]:
-    """One row per source record an issue cites: the issue's fields, then the ref."""
+    """One row per source record an issue cites: the issue's fields, then the ref,
+    as its parts and in the `_refs` string form other tables' `refs` use."""
     return [
         {
             **_issue_row(event),
             "source": ref["source"],
             "key": ref["semantic_record_key"],
+            "ref": _refs([ref])[0],
         }
         for event in outcome.events
         if event["kind"] == "issue"
@@ -716,7 +718,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "issues": "code severity subject case_id locator detail acknowledged_by "
         "valid_from valid_to",
         "issue_refs": "code severity subject case_id locator detail acknowledged_by "
-        "valid_from valid_to source key",
+        "valid_from valid_to source key ref",
         "cases": "case_id status",
         "uses": "source native_variable key column_name data_type name description "
         "use variable",
@@ -765,6 +767,37 @@ def _matches(row: dict, where: dict) -> bool:
 
 def _sorted(rows: list[list]) -> list[list]:
     return sorted(rows, key=lambda row: json.dumps(row, ensure_ascii=False))
+
+
+def _cited_refs(outcome: Outcome, selector: dict) -> list[str]:
+    """Every source ref the rows of ``selector`` cite, in the `_refs` string form."""
+    known = FIELDS[selector["table"]]
+    where = selector.get("where", {})
+    if selector.keys() - {"table", "where"} or not set(where) <= known:
+        raise ValueError(f"unknown field in refs_of {selector}")
+    if not known & {"ref", "refs"}:
+        raise ValueError(f"refs_of names a table without refs: {selector}")
+    return [
+        ref
+        for row in outcome.table(selector["table"])
+        if _matches(row, where)
+        for ref in (row["refs"] if "refs" in known else [row["ref"]])
+    ]
+
+
+def expected_rows(outcome: Outcome, spec: dict) -> list[list]:
+    """A projection's expected rows: literal, or the refs another projection cites.
+
+    `{"refs_of": {"table": ..., "where": ...}}` states a relation instead of values:
+    the projection's one `ref` field must list exactly the refs those rows cite. Both
+    sides are read from the same build, so no source ref is written as a literal.
+    """
+    rows = spec["rows"]
+    if isinstance(rows, list):
+        return rows
+    if rows.keys() != {"refs_of"} or spec["fields"] != ["ref"]:
+        raise ValueError(f"unknown expected rows in projection {spec}")
+    return [[ref] for ref in _cited_refs(outcome, rows["refs_of"])]
 
 
 def project(outcome: Outcome, spec: dict) -> dict:
@@ -845,6 +878,11 @@ def _refusal(error: Exception, expected: dict) -> dict:
 def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dict]:
     """Run one case step; return ``(actual, expected)`` in the same shape."""
     request = json.loads((step / "request.json").read_text(encoding="utf-8"))
+    # A case states the product change that makes it fail, so a reviewer can check
+    # that its oracle can fail at all (cases/build/README.md).
+    fails_if = request.get("fails_if")
+    if not isinstance(fails_if, str) or not fails_if.strip():
+        raise ValueError(f"{step}/request.json: fails_if must be a non-empty string")
     expected = json.loads((step / "expected.json").read_text(encoding="utf-8"))
     built = cache.get(source_spec(request["sources"]))
     authored = cache.get(source_spec(request.get("authored_from", request["sources"])))
@@ -885,14 +923,13 @@ def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dic
         actual["result"] = _subset(result, expected["result"])
     if "projections" in expected:
         outcome = Outcome(result, report_events(report), output, built)
-        actual["projections"] = [
-            project(outcome, spec) for spec in expected["projections"]
+        specs = [
+            {**spec, "rows": expected_rows(outcome, spec)}
+            for spec in expected["projections"]
         ]
+        actual["projections"] = [project(outcome, spec) for spec in specs]
         expected = {
             **expected,
-            "projections": [
-                {**spec, "rows": _sorted(spec["rows"])}
-                for spec in expected["projections"]
-            ],
+            "projections": [{**spec, "rows": _sorted(spec["rows"])} for spec in specs],
         }
     return actual, expected

@@ -2,7 +2,7 @@
   "replaces": [
     "test_build_db_scope_selection.py::test_sos_workbook_without_register_coordinate_stays_whole_source"
   ],
-  "note": "The workbook's Datamängd cell is blank, so it names no register and its only scope is the whole source. Its 6 physical occurrences are the prepared reader's count for the workbook (register_coordinates), the oracle of the replaced test.",
+  "note": "The workbook's Datamängd cell is blank, so it names no register and its only scope is the whole source. Its 6 physical occurrences are counted from the workbook the spec writes (_sos_fixtures._write_register): 1 Generell information record (the dataset-version block), 4 DCAT-AP records (the Titel and Beskrivning rows, each in its Svenska and Engelska column; a blank Engelska cell is still delivered, as an unknown value), and 1 Variabelnivå row (LOPNR). There is no Deldatamängder or Kodlista sheet. The SCB rows belong to register 1, outside this slice.",
   "sources": {
     "description": "SCB register 1 delivers VALUE; one SOS workbook without a Deldatamängder sheet and with a blank Datamängd cell delivers LOPNR.",
     "scb": {

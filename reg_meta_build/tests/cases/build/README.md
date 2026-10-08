@@ -70,12 +70,20 @@ guard sits beside its refusal twin.
   | Key             | Meaning                                                                                                                                                    |
   | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `replaces`      | The Python test (`file::function[param]`) whose assertions the expected values were read from.                                                             |
+  | `fails_if`      | Required: the product change that would make this case (or step) fail. The runner refuses a request without one.                                          |
   | `note`          | Optional prose: why this case exists.                                                                                                                      |
   | `sources`       | A source spec, inline or the name of `_sources/<name>.json`. The build reads it.                                                                           |
   | `authored_from` | Optional source spec that the curation placeholders read. Defaults to `sources`. A stale case authors from the reviewed source and builds the changed one. |
   | `registers`     | Optional register slice (scope names: a native register id, a register name or `<source>:<name>`). Defaults to every register.                             |
   | `diagnostic`    | Optional; defaults to `true`, so curation errors land in the ledger instead of aborting.                                                                   |
   | `mode`          | Optional: `build` (the default) runs `build_catalog`; `check` runs `check_curation`, which needs `registers` and writes no catalog.                        |
+
+`fails_if` names a change to the product, not the behavior restated. It is the claim a
+reviewer checks by applying that change and watching the case fail. For example:
+`"the acknowledgement matcher accepts an entry whose period window contains, rather than
+equals, the dated issue's period"`. A case that shows the allowed outcome beside a
+refusal names the opposite change, such as a guard that refuses unchanged rows. If no
+product change can make a case fail, the case cannot fail and does not belong here.
 
 ### Source spec
 
@@ -216,7 +224,7 @@ Every key is optional, and only the keys that are present get checked.
   | Table                   | One row per                                                             | Fields                                                                                                                                                                  |
   | ----------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `issues`                | report-ledger issue                                                     | `code`, `severity`, `subject`, `case_id`, `locator` (the `curation/...` entry its detail names), `detail`, `acknowledged_by`, `valid_from`, `valid_to`                  |
-  | `issue_refs`            | source record a report-ledger issue cites                               | every `issues` field, then `source` and `key` (the full semantic record key, a list)                                                                                    |
+  | `issue_refs`            | source record a report-ledger issue cites                               | every `issues` field, then `source`, `key` (the full semantic record key, a list) and `ref` (the two joined, in the `refs` string form)                                 |
   | `cases`                 | report-ledger curation case                                             | `case_id`, `status`                                                                                                                                                     |
   | `uses`                  | ledger disposition of a prepared source record                          | `source`, `native_variable`, `key`, `column_name`, `data_type`, `name`, `description`, `use`, `variable`                                                                |
   | `case_uses`             | curation case a ledger disposition names                                | `case_id`, `source`, `key`, `use`, `variable`                                                                                                                           |
@@ -239,6 +247,13 @@ Every key is optional, and only the keys that are present get checked.
 A `refs` value (on `warnings` and `source_issues`) lists source record refs as
 `<source>#<semantic key parts joined by />`. An issue's refs are the `issue_refs` rows,
 so a case can filter and project them one ref at a time.
+
+A projection's `rows` may state a relation instead of literal values. With
+`"fields": ["ref"]` and `"rows": {"refs_of": {"table": ..., "where": ...}}`, the
+projected refs must equal the refs that the selected rows of another table cite
+(`ref` on `issue_refs`, `refs` on `warnings` and `source_issues`), duplicates included.
+Both sides are read from the same build. Use it when the claim is that two outputs agree
+on their source records, so the case never has to write a semantic-record hash.
 
 Expected values are read from the test a case replaces, or from the source fixture or
 the spec. Never copy them from a run of the code under test. A new table or placeholder

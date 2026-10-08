@@ -3,11 +3,9 @@
     {
       "table": "issues",
       "where": {"code": "stale_curation_entry"},
-      "fields": ["detail"],
+      "fields": ["locator"],
       "rows": [
-        [
-          "curation/registers/scb/sample.toml#/enrichment.description/1: target has no original records or already has a description"
-        ]
+        ["curation/registers/scb/sample.toml#/enrichment.description/1"]
       ]
     },
     {
