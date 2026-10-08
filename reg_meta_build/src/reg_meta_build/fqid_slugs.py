@@ -2074,11 +2074,12 @@ def render_entity_key_pins_toml(
     pins: list[EntityKeyPin], *, flavored: bool = False
 ) -> str:
     """Render entity-key pins (#546/#554) as a self-contained `[variable]` block
-    to append to a provider's ``fqid_slugs/<provider>.toml`` — same style as the
-    #539 block already in ``scb.toml``.
+    to fold into a global register file
+    (``curation/registers/<provider>/<register>.toml``) or a steward slug dir's
+    ``<provider>.toml``.
 
-    The caller groups pins per provider (the `--out-dir` path writes one
-    `<provider>.toml` block per provider; `--output-toml` writes all providers'
+    The caller groups pins (the `--out-dir` path writes one block per global
+    register, or per provider for steward pins; `--output-toml` writes all
     pins in one inspection file). Built by hand (not `tomli_w`) so the trailing
     `# <reg>: panel_entity_key` comments survive. `source_id` segments are
     integers / kebab discriminators and slugs are kebab identifiers, so no TOML
@@ -2155,14 +2156,15 @@ def write_entity_key_pins(
     flavored: bool = False,
     force: bool = False,
 ) -> dict[str, str]:
-    """Write one ``<out-dir>/<provider>.toml`` pin block per provider, returning
-    ``{provider: written_path}``.
+    """Write one ``<out-dir>/registers/<provider>/<register>.toml`` pin block per
+    global register, or one ``<out-dir>/<provider>.toml`` per provider for
+    steward pins, returning the written paths.
 
     Groups by `provider_slug` via dict accumulation (order-independent — does NOT
     rely on `pins` being provider-sorted). Mirrors `seed-slugs`'s overwrite guard:
     if `out_dir` already holds any `*.toml` and `force` is False, refuses
     (``EXIT_CONFIG``) rather than clobbering — pointing `--out-dir` at the curated
-    `fqid_slugs/` is the footgun this guards.
+    `curation/` or a steward slug dir is the footgun this guards.
 
     ``flavored`` (#559) is threaded into the per-provider
     `render_entity_key_pins_toml` so each written block carries the steward-flow

@@ -1285,7 +1285,9 @@ def _check_entity_key_vars_curated(
     MANDATORY, so a newly-onboarded entity-key variable can't ship un-pinned.
 
     Generate the missing pins with ``reg-meta-build entity-key-pins --out-dir``
-    and commit each ``<provider>.toml`` block into ``fqid_slugs/<provider>.toml``.
+    and fold each emitted block into its
+    ``curation/registers/<provider>/<register>.toml`` (global build), or into
+    the steward slug dir's ``<provider>.toml`` (flavored build).
 
     GLOBAL build (``flavored=False``): scope = ALL global providers (#554). Every
     provider's entity-key slug can churn and dangle a panel ref, so every provider
@@ -1359,10 +1361,10 @@ def _check_entity_key_vars_curated(
                 f"... and {len(failures) - 10} more un-pinned entity-key var(s)"
             )
         # The remediation scope differs by build: the global gate curates into the
-        # repo-root fqid_slugs/<provider>.toml; the flavored (steward) gate curates
-        # into the nested fqid_slugs/<steward>/<provider>.toml and MUST regenerate
-        # via `--flavored --slug-dir <steward dir>` (the global `--out-dir` path
-        # would emit the wrong, global-scoped pins).
+        # register files under curation/registers/<provider>/; the flavored
+        # (steward) gate curates into fqid_slugs/<steward>/<provider>.toml and
+        # MUST regenerate via `--flavored --slug-dir <steward dir>` (the global
+        # `--out-dir` path would emit the wrong, global-scoped pins).
         if flavored:
             result.info(
                 "run `reg-meta-build --db <flavored-db> entity-key-pins --flavored "

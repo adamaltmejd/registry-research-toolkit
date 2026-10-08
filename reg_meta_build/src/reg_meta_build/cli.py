@@ -570,8 +570,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "--flavored (#559): generate STEWARD pins from a flavored (extend-db) DB.\n"
             "REQUIRES an explicit --slug-dir pointing at the steward dir\n"
             "(fqid_slugs/<steward>/) that curates the overlay's registers — NOT the\n"
-            "global fqid_slugs/ root (rejected when --slug-dir equals the repo's\n"
-            "fqid_slugs/ OR nests steward dirs, the global-root marker that\n"
+            "global curation/ root (rejected when --slug-dir equals the repo's\n"
+            "curation/ OR has subdirectories, the global-root marker that\n"
             "also catches an installed-package / cross-checkout root), and not a dir\n"
             "without [register] entries. Each would scope the generator to the\n"
             "wrong/empty register set and emit zero steward pins (all usage errors).\n"
@@ -590,10 +590,9 @@ def _build_parser() -> argparse.ArgumentParser:
             "mutually exclusive. With neither, the JSON payload carries the combined\n"
             "TOML and per-provider counts.\n\n"
             "Curation flow: fold each NON-duplicate global block into its matching\n"
-            "reg_meta_build/curation/registers/<provider>/<register>.toml.\n"
-            "(Chicken-and-egg: the first gated build of a new entity-key var fails —\n"
-            "generate via a --no-validate build, commit the pins, then rebuild with\n"
-            "validation.)\n\n"
+            "reg_meta_build/curation/registers/<provider>/<register>.toml; fold\n"
+            "steward (--flavored) blocks into the steward dir's\n"
+            "fqid_slugs/<steward>/<provider>.toml.\n\n"
             "The curated slug dir (--slug-dir; default: the repo's curation/) is\n"
             "read to skip already-pinned variables.\n\n"
             "Examples:\n"
@@ -641,9 +640,9 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Generate STEWARD pins from a flavored (extend-db) DB. REQUIRES an "
             "explicit --slug-dir = the steward dir (fqid_slugs/<steward>/) that "
-            "curates the overlay's registers — NOT the global fqid_slugs/ root "
-            "(rejected by path-equality with the repo's fqid_slugs/ OR by the "
-            "nested-steward-dir global-root marker, which also catches an "
+            "curates the overlay's registers — NOT the global curation/ root "
+            "(rejected by path-equality with the repo's curation/ OR by the "
+            "subdirectory global-root marker, which also catches an "
             "installed-package / cross-checkout root) and not a dir without "
             "[register] entries (each scopes to the wrong/empty register set and "
             "emits zero pins, all usage errors). Scopes to the steward registers it "
@@ -1755,11 +1754,11 @@ def _cmd_entity_key_pins(
             ),
         )
     # The curation dir to skip already-pinned variables. Mirrors the build's
-    # resolution (`--slug-dir` override, else the repo's fqid_slugs/). Missing
+    # resolution (`--slug-dir` override, else the repo's curation/). Missing
     # (wheel install, no checkout) is a usage error here — the generator MUST
     # read the curated pins to stay idempotent.
     # --flavored MUST get an explicit --slug-dir: without it the resolver falls
-    # back to the global repo fqid_slugs/, scoping the flavored generator to
+    # back to the global repo curation/, scoping the flavored generator to
     # GLOBAL providers — it then emits zero/wrong steward pins (an unfixable
     # validation failure). Guard before the repo_slug_dir() fallback so a
     # flavored run can't silently degrade to the global dir.
@@ -1772,7 +1771,7 @@ def _cmd_entity_key_pins(
             remediation=(
                 "Pass --slug-dir <steward dir, e.g. "
                 "reg_meta_build/fqid_slugs/<steward>/>. Without it the generator "
-                "falls back to the global fqid_slugs/ and emits no steward pins."
+                "falls back to the global curation/ and emits no steward pins."
             ),
         )
     slug_dir = (
@@ -1784,7 +1783,7 @@ def _cmd_entity_key_pins(
             code="slug_dir_not_found",
             error_class="usage",
             message="No slug directory: not in a repo checkout and --slug-dir unset.",
-            remediation="Run from the repo (ships fqid_slugs/) or pass --slug-dir.",
+            remediation="Run from the repo (ships curation/) or pass --slug-dir.",
         )
     # An explicit --slug-dir that doesn't resolve to a directory (a typo, or a
     # file path) globs zero curated entries — in --flavored mode that silently
@@ -1801,7 +1800,7 @@ def _cmd_entity_key_pins(
             message=f"--slug-dir is not a directory: {slug_dir}",
             remediation=(
                 "Pass --slug-dir pointing at an existing curated slug dir "
-                "(e.g. reg_meta_build/fqid_slugs/ or reg_meta_build/fqid_slugs/<steward>/)."
+                "(e.g. reg_meta_build/curation/ or reg_meta_build/fqid_slugs/<steward>/)."
             ),
         )
     # --flavored: the --slug-dir must be a STEWARD curation dir
@@ -1837,13 +1836,13 @@ def _cmd_entity_key_pins(
                 message=(
                     "--flavored --slug-dir must be a steward dir "
                     "(fqid_slugs/<steward>/), not the global root (it equals the "
-                    "repo's fqid_slugs/ or nests steward dirs, the global-root "
+                    "repo's curation/ or has subdirectories, the global-root "
                     "marker)."
                 ),
                 remediation=(
                     "Pass --slug-dir pointing at the nested steward dir "
                     "(reg_meta_build/fqid_slugs/<steward>/), not the global "
-                    "fqid_slugs/ root."
+                    "curation/ root."
                 ),
             )
         if not any(
