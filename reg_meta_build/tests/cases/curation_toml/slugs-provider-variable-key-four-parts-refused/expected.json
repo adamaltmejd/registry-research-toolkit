@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slug_naming_boundary.py::test_malformed_variable_key_rejected_at_load[1.10.kon.extra-expected]",
+  "fails_if": "the slug loader accepts the malformed variable key `1.10.kon.extra`",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "variable.'1.10.kon.extra'",
+    "message_contains": [
+      "expected"
+    ]
+  }
+}

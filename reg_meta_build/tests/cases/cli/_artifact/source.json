@@ -1,0 +1,42 @@
+{
+  "description": "The CLI cases' artifact. Register 1 (TESTREG) delivers variable 101 as VALUE in 2019 and VALUE_NY in 2020, and variable 102 as Kön in 2019 and Kon in 2020. Register 2 delivers OTHER; it is single-variant, and its variant name mirrors the register name once the register's parenthetical abbreviation (KLS) is stripped. Register 3 is a single-variant register whose variant name mirrors the register name. Register 4 (PART) delivers variable 5 as FIRST and SECOND. Register 6 (Företag) has two variants, one of which mirrors the register name.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "year": "2019", "regver_id": 2019},
+      {"cvid": 1002, "var_id": 101, "colname": "VALUE_NY", "year": "2020", "regver_id": 2020},
+      {"cvid": 1003, "var_id": 102, "colname": "Kön", "year": "2019", "regver_id": 2019},
+      {"cvid": 1004, "var_id": 102, "colname": "Kon", "year": "2020", "regver_id": 2020},
+      {
+        "cvid": 2001,
+        "var_id": 201,
+        "colname": "OTHER",
+        "register": ["Konjunkturstatistik, löner för statlig sektor (KLS)", 2, 20],
+        "cells": {"Registervariantnamn": "Konjunkturstatistik, löner för statlig sektor"}
+      },
+      {
+        "cvid": 3001,
+        "var_id": 301,
+        "colname": "KOMVUX",
+        "register": ["Nybörjare i Komvux", 3, 30],
+        "cells": {"Registervariantnamn": "Nybörjare i Komvux"}
+      },
+      {"cvid": 4001, "var_id": 5, "colname": "FIRST", "register": ["PART", 4, 40]},
+      {"cvid": 4002, "var_id": 5, "colname": "SECOND", "register": ["PART", 4, 40]},
+      {
+        "cvid": 6001,
+        "var_id": 601,
+        "colname": "F1",
+        "register": ["Företag", 6, 60],
+        "cells": {"Registervariantnamn": "Företag"}
+      },
+      {
+        "cvid": 6002,
+        "var_id": 602,
+        "colname": "F2",
+        "register": ["Företag", 6, 61],
+        "regver_id": 111,
+        "cells": {"Registervariantnamn": "Arbetsställen"}
+      }
+    ]
+  }
+}

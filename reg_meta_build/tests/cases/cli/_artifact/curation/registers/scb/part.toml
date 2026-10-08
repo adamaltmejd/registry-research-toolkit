@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "part"
+native_id = "4"
+
+[[variant]]
+native_id = "4.40"
+slug = "people"
+
+[[variable]]
+native_id = "4.5.first"
+slug = "first"
+
+[[variable]]
+native_id = "4.5.second"
+slug = "second"
+
+[[identity.partition]]
+variable = "4.5"
+columns = { FIRST = "4.5.first", SECOND = "4.5.second" }
+columns_ref = "fixture"

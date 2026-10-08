@@ -1,0 +1,9 @@
+{
+  "loader": "freeze_states",
+  "replaces": "test_fqid_slugs_load.py::TestLoadFreezeStates::test_unknown_zone_rejected",
+  "fails_if": "the freeze loader treats a zone with no provider slug file as a silent no-op",
+  "error": {
+    "code": "slug_freeze_zone_unknown",
+    "locator": "unknown zone 'ghost'"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "rows": [
+        [
+          "value",
+          "VALUE"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unresolved_catalog_identity"
+      },
+      "fields": [
+        "severity"
+      ],
+      "rows": []
+    }
+  ]
+}
