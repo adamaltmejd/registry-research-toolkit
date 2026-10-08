@@ -141,8 +141,8 @@ skill applies them to a change and to a sweep.
 - **Structural validation has one authority.** `validate_built_db` owns artifact
   invariants; tests run it on the synthetic artifact, they do not re-derive its checks.
 - **A bug fix adds a regression case to the owning corpus only when no existing case
-  reaches the bug**, extending that behavior's case rather than a helper test. The case
-  must fail on the pre-fix code.
+  fails on the pre-fix code**: extend or strengthen that behavior's case rather than a
+  helper test. The new or strengthened case must fail on the pre-fix code.
 - **Within budget.** Each package's suite stays inside its time budget in
   `ARCHITECTURE.md` → "Tiers". A check that costs more than its behavior is worth moves
   to a slower tier (real-seed or release gate) or goes.
