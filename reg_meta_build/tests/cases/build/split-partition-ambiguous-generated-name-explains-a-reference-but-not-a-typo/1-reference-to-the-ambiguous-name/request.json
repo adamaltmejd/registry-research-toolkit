@@ -1,0 +1,29 @@
+{
+  "replaces": ["test_source_scope_naming.py::test_ambiguous_names_attribute_only_actual_unresolved_identity"],
+  "note": "The fixture and curation are split-partition-reviewed-owner-keeps-the-generated-name-ambiguous-when-a-row-is-uncovered's, plus a same_as edge into the ambiguous generated name. The reviewed owner takes only the 2020 edition, so the 2021 row (CVID 21) is the one unresolved identity; the old test asserted the cause's refs are exactly the unresolved records, here that one row (derived from the fixture). The old test's other claims: the ambiguous name's withholding explains a reference to it (`require` False, `check` passes), so the build completes, builds no edge, and the pruned edge cites the cause's own refs.",
+  "fails_if": "`_attribute_unresolved_names` (source_scope.py) attributes the ambiguity to every original of the family instead of the unresolved occurrences, so the ambiguous_named_identity issue also cites the reviewed 2020 row (CVID 20); or `resolve_source_scope` stops returning the ('variable', 'scb/sample/answer') withholding, so the same_as edge into answer becomes an unexplained missing dependency and the build refuses with catalog_dependency_missing",
+  "sources": {
+    "description": "Variable 5 delivers ANSWER in 2020 and 2021.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": ["TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2021|2021|0|0|0"]
+    }
+  }
+}

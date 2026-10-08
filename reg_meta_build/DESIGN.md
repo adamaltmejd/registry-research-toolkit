@@ -1264,8 +1264,10 @@ false. Sensitivity follows a disclosure-control ratchet across declarations: any
 sensitive or sometimes-sensitive claim makes `is_sensitive` true, even when another
 range says false. It is false only when the supplied claims say false and none says
 sometimes sensitive; without a claim it stays unknown except for source-specific
-defaults. A checked sensitivity correction takes precedence over source claims. The
-original records remain attached so a curator can audit every contributing declaration.
+defaults. Sensitivity comes only from source data or an authored `is_sensitive`
+(`[[errata.column]]`, a documented-blank matrix answer), and no curation or code path
+can lower a sensitive claim. The original records remain attached so a curator can audit
+every contributing declaration.
 
 A curation `[[acknowledge]]` entry names one exact issue code, its subject, refs, fields
 and period as the diagnostic carries them, plus a reason and evidence. Once its scope is
@@ -1352,6 +1354,16 @@ The writer validates resolved references before writing, assigns deterministic s
 IDs, and writes each final row once. It preserves separately resolved parent metadata
 even when variables are withheld. Search indexes derive from those rows. No
 SQL-to-IR-to-SQL round trip or provider semantic pass follows materialization.
+
+Succession is compiled the same way (`derive/chains.py`). `succession_terminal` holds
+the active terminal of every register, variable or classification with an active
+outbound edge at the manifest's `classification_succession_as_of_year`: the walk follows
+the sole active successor, and a split is its own terminal, so no citation is sent down
+one arbitrary branch. `classification_chain` holds each edition's anchored chain and
+`classification_family` the one-dimensional families. `validate_built_db` refuses a
+cycle in any `*_replaced_by` table, naming a node on it, and requires each table to
+equal its recomputation. The `same_as` closure is not compiled: the writer requires live
+endpoints on every `same_as` edge, so a lookup never needs to follow one.
 
 Structural validation is required for a diagnostic DB. Corpus volume guards remain
 unchanged and are separately reported against incomplete output; their failures require
@@ -1519,13 +1531,23 @@ evidence, but never supply build naming. Variable slugging is incremental and pr
 every existing global slug. The retained `ir/` models serve this extension graph, not
 the global source-cleaning boundary.
 
-The extension rebuilds register/variable search indexes; it retains the copied
-value-code index because no values were added. Structural, mapping and accounting gates
-run before atomic publication of one steward artifact. Strict steward publication
-requires accepted provider overlays, inventory and policy plus committed steward slug
-pins; no skip flag bypasses compilation or accounting. Provider regeneration and input
-acceptance remain separate maintainer operations. Diagnostic output remains explicitly
-nonpublishable and cannot replace the active artifact.
+The extension derives over base plus overlay before compiling holdings, because holdings
+canonicalize against `resolver_column`, the projection of `expanded_state`. Once the
+manifest names the steward, `derive_holdings` adds the `holdings`-scope browse and
+coded-variable rows, which read the compiled holdings. Derive keeps one module per table
+family in the `derive/` package (`states.py`, `browse.py`, `chains.py`, `schema.py`,
+`search_index.py`), each with the `validate_built_db` check that recomputes its tables.
+The derived states, browse and coded-variable tables call the reader in place until
+stage 4 moves it into this package. Derive compiles only work a request would repeat:
+`coded_variable_stats` is an aggregate over every coded state, while `schema`, `diff`
+and `coverage` read one register's `expanded_state`, `variable_state` and
+`browse_delivery` rows directly. The extension refolds the search indexes over base plus
+overlay. Structural, mapping and accounting gates run before atomic publication of one
+steward artifact. Strict steward publication requires accepted provider overlays,
+inventory and policy plus committed steward slug pins; no skip flag bypasses compilation
+or accounting. Provider regeneration and input acceptance remain separate maintainer
+operations. Diagnostic output remains explicitly nonpublishable and cannot replace the
+active artifact.
 
 Panel entity keys must not drift with a reslug (#546). On the global build, compile
 enforces this: every variable needs an authored `[[variable]]` pin, and a variable

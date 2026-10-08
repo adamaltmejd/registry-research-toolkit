@@ -1,0 +1,29 @@
+{
+  "replaces": ["test_source_effect_identity.py::test_declared_ownership_cannot_leave_or_invent_columns_or_split_keys[ownership1]"],
+  "note": "A literal map whose owner is not a declared split key of the family does not apply. The old test refused {'ANSWER': '1.5.answer', 'Answer': '1.5.unknown'} with 'complete columns and split keys'; here OTHER maps to the undeclared 1.5.unknown. The locator is this file's first [[identity.partition]], the only stale entry; the old pytest.raises match ('complete columns and split keys') is not asserted, since the locator and the absent states already fail when the map is accepted (mutation-checked). No owner forms a state. Allowed twin: split-partition-exact-literal-map-moves-each-column-to-its-owner, whose map names only declared owners and applies.",
+  "fails_if": "`curation_compile.convert_column_partitions` drops the `owners != set(split_ids)` half of its explicit-ownership check, so a map naming an undeclared split key is accepted",
+  "sources": {
+    "description": "Variable 5 delivers ANSWER (CVID 21) and OTHER (CVID 22) in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": ["TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|OTHER|2020|2020|0|0|0"]
+    }
+  }
+}

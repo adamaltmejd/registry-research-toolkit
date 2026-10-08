@@ -1,0 +1,14 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_compile_native_partitions.py::test_authored_partition_requires_a_complete_digest[not-a-sha]",
+    "test_curation_compile_native_partitions.py::test_authored_partition_requires_a_complete_digest[AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+    "test_curation_compile_native_partitions.py::test_authored_partition_requires_a_complete_digest[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]"
+  ],
+  "note": "Sixty-four uppercase hex digits is the hardest of the three malformed digests: right length and alphabet, wrong case. The short and non-hex digits fail the same pattern.",
+  "fails_if": "the `[[identity.partition]]` `expected_evidence_sha256` pattern accepts uppercase hex, so a digest that can never equal a lowercase `acknowledgement_evidence_sha256` loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.partition.expected_evidence_sha256]] entry 1"
+  }
+}

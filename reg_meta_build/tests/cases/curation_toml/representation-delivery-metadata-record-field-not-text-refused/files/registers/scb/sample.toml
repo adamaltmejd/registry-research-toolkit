@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[representation.delivery_metadata]]
+variable = "1.5.ku"
+fields = ["name"]
+records = [{ ref = { source = "scb-registerinformation", semantic_record_key = ["member:1"] }, alternatives = [{ fields = [{ name = "name", status = "value", value = 1 }] }] }]
+columns = [{ variant_key = ["native-int", 10], column = "KU", valid_from = "2020-01-01", valid_to = "2020-12-31", expected_codings = [] }]
+evidence = "Reviewed delivery names"
+noted = "2026-09-30"

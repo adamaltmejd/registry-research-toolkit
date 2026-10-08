@@ -1,0 +1,57 @@
+{
+  "projections": [
+    {
+      "note": "The choice is stale for its reviewed period.",
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/pooled.toml#/coding.choice/1/period/1"
+        ]
+      ]
+    },
+    {
+      "note": "The 2010 conflict between the earlier and later pooled lists comes back, as in pooledbare (step 1), which has no choice.",
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "scb/pooled/"
+        },
+        "code": "conflicting_code_memberships"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "2010-01-01",
+          "2010-12-31"
+        ]
+      ]
+    },
+    {
+      "note": "The choice is not applied: the 2010 state publishes no value set instead of the kept '1 Ja' list (step 1).",
+      "table": "state_codes",
+      "where": {
+        "register": "pooled",
+        "valid_from": "2010-01-01"
+      },
+      "fields": [
+        "valid_to",
+        "code"
+      ],
+      "rows": [
+        [
+          "2010-12-31",
+          null
+        ]
+      ]
+    }
+  ]
+}

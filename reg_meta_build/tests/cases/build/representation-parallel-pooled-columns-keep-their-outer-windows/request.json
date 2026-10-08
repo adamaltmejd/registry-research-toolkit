@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_reconciliation_preserves_outer_windows_and_conflicts[None]"
+  ],
+  "note": "Only the shared 2022 window is reconciled; each pooled original keeps its own outer years as a pooled state. The alias windows the old test also pinned have no projection; the aliases table shows both literals.",
+  "fails_if": "`form_representations` drops (or clips to the shared window) the slices no parallel window covers, so First 2020-2021 and Second 2023-2024 lose their own pooled states",
+  "sources": "scb-income-pooled-first-and-second"
+}

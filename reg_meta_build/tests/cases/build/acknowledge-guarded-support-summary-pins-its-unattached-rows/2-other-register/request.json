@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_source_scope_acknowledgements.py::test_explicit_source_diagnostic_uses_exact_register_acknowledgment"],
+  "note": "Step 1's entry, unchanged, filed in register 2's other.toml. From the old test's wrong-register arm: an acknowledgement under another register leaves the source diagnostic an error and reports itself (stale), and nothing is acknowledged. Register 1's issue never reaches register 2's scope, so the entry matches nothing there.",
+  "fails_if": "the [[acknowledge]] compile in curation_compile.py routes an entry to the register its subject names instead of the register of the file it is filed in (`owners.get(name)` for the file's register), so the entry in other.toml lands in register 1's scope and acknowledges its summary issue",
+  "sources": "scb-two-registers-unknown-support"
+}

@@ -1,0 +1,5 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/sample/key"
+to = "scb/sample/gone"
+effective_year = 2021

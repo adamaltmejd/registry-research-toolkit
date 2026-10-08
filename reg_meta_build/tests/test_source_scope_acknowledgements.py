@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-from _source_effects_support import effect_case, effect_field
 from _source_scope_support import acknowledge, names, record, resolve
 from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build.source_coordinates import (
@@ -79,47 +78,6 @@ def test_a_stale_acknowledgement_is_an_error():
     ]
 
 
-def test_an_issue_naming_a_ref_outside_the_scope_cannot_be_acknowledged():
-    """A stale correction names its authored target, absent from this scope. The
-    resulting `target_missing` error names a ref no original carries, so an exact
-    acknowledgement of it stays stale and the error stays an error."""
-    item, absent = record(), record(2, year="2021")
-    correction = effect_case(absent, effect_field(absent, "name", "Renamed"))
-    (missing,) = (
-        issue
-        for issue in resolve((item,), cases=(correction,)).diagnostics
-        if issue.code == "target_missing"
-    )
-    assert missing.refs == (record_ref(absent),)
-    result = resolve((item,), cases=(correction, acknowledge(missing, item)))
-    assert [
-        (d.code, d.severity, d.case_id)
-        for d in result.diagnostics
-        if d.code in {"target_missing", "stale_curation_entry"}
-    ] == [
-        ("target_missing", "error", "accepted"),
-        ("stale_curation_entry", "error", "acknowledged"),
-    ]
-    assert result.acknowledged == {}
-
-
-def test_acknowledged_warning_persists_reviewed_reason_and_diagnostic_hash():
-    from hashlib import sha256
-
-    from reg_meta_build.data_warnings import scope_data_warnings
-
-    item = record()
-    key = native_variable_key(item)
-    (issue,) = resolve((item,), provider_keys={key: None}).diagnostics
-    case = acknowledge(issue, item)
-    result = resolve((item,), cases=(case,), provider_keys={key: None})
-    (warning,) = scope_data_warnings(result)
-    assert warning.detail == case.decision.reason
-    assert warning.diagnostic_detail_sha256 == sha256(issue.detail.encode()).hexdigest()
-    assert warning.variable_fqid is None
-    assert str(warning.register_fqid) == "scb/example"
-
-
 def test_distinct_field_issues_can_each_be_acknowledged():
     items = tuple(
         item.model_copy(
@@ -168,63 +126,7 @@ def test_distinct_field_issues_can_each_be_acknowledged():
     assert stale.acknowledged == {}
 
 
-def test_explicit_source_diagnostic_uses_exact_register_acknowledgment():
-    item = record()
-    key = source_register_key(item)
-    problem = ResolutionDiagnostic(
-        code="unresolved_list_reference",
-        severity="error",
-        subject="('source','revision','descriptor','digest',0)",
-        detail="No bound source members.",
-        fields=("coding",),
-        withheld_output=("unbound_value_membership",),
-    )
-    case = acknowledge(problem, item)
-    result = resolve((item,), cases=(case,), source_diagnostics=((key, problem),))
-    warning = next(d for d in result.diagnostics if d.code == problem.code)
-    assert warning == problem.model_copy(
-        update={"severity": "warning", "acknowledged_by": case.case_id}
-    )
-    assert result.acknowledged == {"unresolved_list_reference": 1}
-    for problems in (
-        (
-            (
-                key,
-                problem.model_copy(
-                    update={"subject": problem.subject + "changed revision"}
-                ),
-            ),
-        ),
-    ):
-        stale = resolve((item,), cases=(case,), source_diagnostics=problems)
-        assert not stale.acknowledged
-        assert any(
-            d.code in {"stale_curation_entry", "overbroad_curation_entry"}
-            for d in stale.diagnostics
-        )
-    duplicates = resolve(
-        (item,), cases=(case,), source_diagnostics=((key, problem), (key, problem))
-    )
-    assert duplicates.acknowledged == {problem.code: 1}
-    assert [d for d in duplicates.diagnostics if d.code == problem.code] == [
-        warning
-    ] * 2
-    wrong = case.model_copy(
-        update={
-            "decision": case.decision.model_copy(
-                update={"register_key": (*key[:-1], 999)}
-            )
-        }
-    )
-    stale = resolve((item,), cases=(wrong,), source_diagnostics=((key, problem),))
-    assert not stale.acknowledged and any(
-        d.severity == "error" for d in stale.diagnostics
-    )
-    with pytest.raises(ValueError, match="positively observed"):
-        resolve((item,), source_diagnostics=(((*key[:-1], 999), problem),))
-
-
-@pytest.mark.parametrize("change", ["flag", "column", "physical_duplicate"])
+@pytest.mark.parametrize("change", ["physical_duplicate"])
 def test_guarded_support_acknowledgement_pins_unattached_originals(change):
     from reg_meta_build.source_curation import acknowledgement_evidence_sha256
     from reg_meta_build.source_support import SourceSupportJoin

@@ -1,0 +1,21 @@
+{
+  "replaces": ["test_source_siblings.py::test_equal_recency_conflicting_shapes_withhold_the_group"],
+  "note": "FORNAMN/EFTERNAMN are the same-shape pair that groups in siblings-only-same-shape-non-code-label-siblings-form-a-group. Here EFTERNAMN is delivered twice in the same 2020 edition, once as int and once as text, so its latest shape is disputed: one reading groups the pair, the other does not. Values from the replaced test: A int (member 1), B int (member 2), B text (member 3) -> no pairs and an unresolved_shape decision. The decision is reported as the ambiguous_sibling_shape issue; that code is the one the replaced file's withheld-shape test asserts for the same emission. The conflicting_occurrence_facts and unknown_data_type errors on EFTERNAMN are the delivery's own and are not claimed.",
+  "fails_if": "`resolve_sibling_pairs` (reg_meta_build/src/reg_meta_build/source_siblings.py) only marks a pair unresolved when a shape field is withheld, not when equally recent shapes disagree, so FORNAMN/EFTERNAMN group",
+  "sources": {
+    "description": "Register 1, variable 300, all 2020: FORNAMN (CVID 1004, int), EFTERNAMN (CVID 1005, int) and EFTERNAMN again (CVID 1006, Sträng (text)).",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1004, "var_id": 300, "colname": "FORNAMN", "varname": "Var300"},
+        {"cvid": 1005, "var_id": 300, "colname": "EFTERNAMN", "varname": "Var300"},
+        {
+          "cvid": 1006,
+          "var_id": 300,
+          "colname": "EFTERNAMN",
+          "varname": "Var300",
+          "data_type": "Sträng (text)"
+        }
+      ]
+    }
+  }
+}

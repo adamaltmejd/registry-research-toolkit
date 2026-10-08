@@ -299,27 +299,14 @@ def reconcile_source_fields(
     widened_classes: frozenset[str] | None = None
     storage_capped = False
     field_sources = (*(record.fields for record in records), *support)
-    checked_sensitivity = tuple(
-        record.fields.sensitivity
-        for record in records
-        if isinstance(record, EffectiveOccurrence)
-        and "sensitivity" in record.checked_fields
-    )
     for name in SourceFields.model_fields:
-        # A checked sensitivity choice outranks raw and support declarations;
-        # those records remain attached to the effective occurrence as evidence.
-        if name == "sensitivity" and checked_sensitivity:
-            observations = tuple(
-                value for value in checked_sensitivity if value is not None
-            )
-        elif name == "conditional_sensitivity" and checked_sensitivity:
-            observations = ()
-        else:
-            observations = tuple(
-                value
-                for fields in field_sources
-                if (value := getattr(fields, name)) is not None
-            )
+        # Sensitivity only ratchets up: a sensitive or conditional claim from any
+        # record or its support makes the field sensitive. No claim lowers it.
+        observations = tuple(
+            value
+            for fields in field_sources
+            if (value := getattr(fields, name)) is not None
+        )
         values = {
             (value.status, value.value)
             for value in observations

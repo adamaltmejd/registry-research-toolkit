@@ -1,0 +1,34 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_case_aliases_keep_distinct_members_and_refuse_source_drift[definition]",
+    "test_curation_compile_pooled_parallel.py::test_co_delivered_parallel_refuses_unsupported_common_quantity[definition]"
+  ],
+  "note": "Allowed twin: representation-parallel-case-aliases-keep-distinct-members; only first's definition differs. The common-quantity check is shared by `case_aliases` and `co_delivered`.",
+  "fails_if": "the common-quantity check in `compile_parallel_representations` stops requiring one definition across the selected members, so First and first with different definitions apply",
+  "sources": {
+    "description": "Variable 1 (Income), edition 2022: First (CVID 100) and first (CVID 101), whose definition differs.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "First",
+          "cvid": 100,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2022",
+          "versionname": "2022",
+          "regver_id": 110
+        },
+        {
+          "colname": "first",
+          "cvid": 101,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2022",
+          "versionname": "2022",
+          "regver_id": 110,
+          "vardef": "different quantity"
+        }
+      ]
+    }
+  }
+}

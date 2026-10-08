@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[representation.delivery_metadata]]
+variable = "1.5"
+fields = ["measurement_unit"]
+records = [{ ref = { source = "scb-registerinformation", semantic_record_key = ["register:1", "variant:2", "edition:99", "variable:5", "member:20"] }, alternatives = [{ fields = [{ name = "measurement_unit", status = "value", value = "kr" }] }] }]
+columns = [{ variant_key = ["scb-registerinformation", "scb", "register", "native-int", 1, "variant", "native-int", 2], column = "ANSWER", valid_from = "2009-01-01", valid_to = "2009-12-31", expected_codings = [] }]
+evidence = "source"
+noted = "2026-10-01"

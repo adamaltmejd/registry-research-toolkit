@@ -1,0 +1,10 @@
+{
+  "loader": "register_files",
+  "replaces": ["test_source_curation_json_guards.py::test_record_expectation_json_keeps_nested_and_multiple_alternative_guards[shape-False]"],
+  "fails_if": "`RecordExpectation._finite_consistent_alternatives` (reg_meta_build/src/reg_meta_build/source_curation.py) stops requiring one projection shape across alternatives, so the record reaches the entry-level completeness rule instead",
+  "note": "Every alternative list here also fails the delivery-metadata rule that records be complete original projections, which refuses at the entry itself (locator \"[[representation.delivery_metadata]] entry 1\"). The asserted locator names the nested pydantic path inside `records`, so the case passes only while the nested check refuses first. The replaced test asserted only a ValidationError; the locator is derived from the fixture's key path and outer entry index. The two alternatives (one naming `name`, one naming `definition`) are the replaced param's. The allowed twin is cases/build/representation-delivery-names-checked-against-original-records step 1, whose complete original records load and apply.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[representation.delivery_metadata.records]] entry 1"
+  }
+}

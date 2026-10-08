@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "ANSWER"
+owner = "1.5.amount"
+ref = "Same physical amount, retain both source operations"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"

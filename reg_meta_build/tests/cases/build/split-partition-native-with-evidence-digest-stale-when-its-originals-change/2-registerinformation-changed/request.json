@@ -1,0 +1,9 @@
+{
+  "note": "Each original's digest includes its delivery's source revision, so any edit to the Registerinformation file, here another register's data length, stales base although its own rows are unchanged. This step replaces no deleted block: the field, parent and duplicate-row variants it once cited cannot be told apart from any other delivery edit while digests hash the whole delivery revision. Their component-level drift cases are a required item of the digest-narrowing PR (maintainer decision 2026-10-08), which will also revisit this step.",
+  "fails_if": "the native partition's digest stops covering the complete original record (its source revision and every field, parent fact and physical row), so base's partition still applies on a changed Registerinformation delivery",
+  "sources": "scb-native-partitions-data-length-changed",
+  "authored_from": "scb-native-partitions-reviewed",
+  "registers": [
+    "1"
+  ]
+}

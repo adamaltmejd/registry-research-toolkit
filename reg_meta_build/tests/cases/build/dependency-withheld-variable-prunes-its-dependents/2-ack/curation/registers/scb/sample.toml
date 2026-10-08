@@ -1,0 +1,39 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variant]]
+native_id = "1.11"
+slug = "other"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+[[variable]]
+native_id = "1.102"
+slug = "key"
+[[variable]]
+native_id = "1.103"
+slug = "two"
+[[variable]]
+native_id = "1.104"
+slug = "gone"
+[[variable]]
+native_id = "1.105"
+slug = "else"
+[[group]]
+register = "scb/sample"
+key = "pair"
+label = "Pair"
+members = [{ variable = "value" }, { variable = "key" }]
+
+[[acknowledge]]
+code = "unresolved_flag"
+subject = "scb/sample/key"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:102\", \"member:1002\"]}"]
+fields = ["is_sensitive", "is_identifier"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation key=member:1002}}
+reason = "Accepted while the source stays unresolved."
+evidence = "Synthetic fixture issue."

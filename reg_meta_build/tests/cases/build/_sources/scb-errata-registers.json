@@ -1,0 +1,300 @@
+{
+  "description": "One SCB delivery of 14 registers (variant id register id * 10 + 2), one per errata claim: split (register 11): variable 5 delivers A in 2020 (CVID 1101); variable 6 delivers B in edition '2021' (RegVerID 2021, CVID 1102); variable 7 delivers C in edition '2021-12-31' (RegVerID 2, CVID 1103). moved (register 12): variable 5 delivers A in 2020 (CVID 1201); variable 6 delivers B in edition '2021-12-31' (RegVerID 2021, CVID 1202). nodoc (register 13): variable 5 delivers B in 2020 (CVID 1301), variable 6 B in 2021 (CVID 1302); no row documents column A. twovars (register 14): column A is delivered in 2020 under variable 5 (CVID 1401) and variable 6 (CVID 1402); variable 7 delivers B in 2021 (CVID 1403). present (register 15): variable 5 delivers A in 2020 (CVID 1501) and in 2021 (CVID 1502). owners (register 16): variable 5 delivers A in 2019 (CVID 1601) and 2020 (CVID 1602), and a blank column in 2021 (CVID 1603). unowned (register 17): variable 5 delivers A and B in 2020 (CVIDs 1701, 1702) and a blank column in 2021 (CVID 1703). blanks (register 18): variable 5 delivers A in 2020 (CVID 1801, list 'donor': 1 Ja) and a blank column in 2021 (CVID 1802); variable 6 delivers B in 2022 (CVID 1803). columns (register 19): variable 5 delivers A in 2020 (CVID 1901). declared (register 20): variable 5 delivers A in 2020 (CVID 2001). pooled (register 21): variable 5 delivers blank columns in editions '2008 - 2010' (CVID 2101, list 'earlier': 0 Nej) and '2010 - 2012' (CVID 2102, list 'later': 1 Ja), and VALUE in 2013 (CVID 2103). pooledbare (register 22): variable 5 delivers blank columns in editions '2008 - 2010' (CVID 2201, list 'earlier': 0 Nej) and '2010 - 2012' (CVID 2202, list 'later': 1 Ja), and VALUE in 2013 (CVID 2203). twocols (register 23): variable 5 delivers literal blank columns in editions '2008 - 2010' (CVID 2301) and '2009 - 2010' (CVID 2302), and A (CVID 2303) and B (CVID 2304) in '2010 - 2012'. Each blank row has an 'earlier' list (0 Nej), each donor a 'later' list (1 Ja). conflict (register 24): variable 5 delivers A (CVID 2401, edition '2020') and B (CVID 2402, edition '2020 revised'), both RegVerID 2020.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "A",
+        "cvid": 1101,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["SPLIT", 11, 112]
+      },
+      {
+        "colname": "B",
+        "cvid": 1102,
+        "var_id": 6,
+        "year": "2021",
+        "regver_id": 2021,
+        "versionname": "2021",
+        "register": ["SPLIT", 11, 112]
+      },
+      {
+        "colname": "C",
+        "cvid": 1103,
+        "var_id": 7,
+        "year": "2021",
+        "regver_id": 2,
+        "versionname": "2021-12-31",
+        "register": ["SPLIT", 11, 112]
+      },
+      {
+        "colname": "A",
+        "cvid": 1201,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["MOVED", 12, 122]
+      },
+      {
+        "colname": "B",
+        "cvid": 1202,
+        "var_id": 6,
+        "year": "2021",
+        "regver_id": 2021,
+        "versionname": "2021-12-31",
+        "register": ["MOVED", 12, 122]
+      },
+      {
+        "colname": "B",
+        "cvid": 1301,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["NODOC", 13, 132]
+      },
+      {
+        "colname": "B",
+        "cvid": 1302,
+        "var_id": 6,
+        "year": "2021",
+        "regver_id": 2021,
+        "register": ["NODOC", 13, 132]
+      },
+      {
+        "colname": "A",
+        "cvid": 1401,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TWOVARS", 14, 142]
+      },
+      {
+        "colname": "A",
+        "cvid": 1402,
+        "var_id": 6,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TWOVARS", 14, 142]
+      },
+      {
+        "colname": "B",
+        "cvid": 1403,
+        "var_id": 7,
+        "year": "2021",
+        "regver_id": 2021,
+        "register": ["TWOVARS", 14, 142]
+      },
+      {
+        "colname": "A",
+        "cvid": 1501,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["PRESENT", 15, 152]
+      },
+      {
+        "colname": "A",
+        "cvid": 1502,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 2021,
+        "register": ["PRESENT", 15, 152]
+      },
+      {
+        "colname": "A",
+        "cvid": 1601,
+        "var_id": 5,
+        "year": "2019",
+        "regver_id": 2019,
+        "register": ["OWNERS", 16, 162]
+      },
+      {
+        "colname": "A",
+        "cvid": 1602,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["OWNERS", 16, 162]
+      },
+      {
+        "colname": "",
+        "cvid": 1603,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 2021,
+        "register": ["OWNERS", 16, 162]
+      },
+      {
+        "colname": "A",
+        "cvid": 1701,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["UNOWNED", 17, 172]
+      },
+      {
+        "colname": "B",
+        "cvid": 1702,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["UNOWNED", 17, 172]
+      },
+      {
+        "colname": "",
+        "cvid": 1703,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 2021,
+        "register": ["UNOWNED", 17, 172]
+      },
+      {
+        "colname": "A",
+        "cvid": 1801,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["BLANKS", 18, 182]
+      },
+      {
+        "colname": "",
+        "cvid": 1802,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 2021,
+        "register": ["BLANKS", 18, 182]
+      },
+      {
+        "colname": "B",
+        "cvid": 1803,
+        "var_id": 6,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["BLANKS", 18, 182]
+      },
+      {
+        "colname": "A",
+        "cvid": 1901,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["COLUMNS", 19, 192]
+      },
+      {
+        "colname": "A",
+        "cvid": 2001,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["DECLARED", 20, 202]
+      },
+      {
+        "colname": "",
+        "cvid": 2101,
+        "var_id": 5,
+        "year": "2008",
+        "regver_id": 2008,
+        "versionname": "2008 - 2010",
+        "register": ["POOLED", 21, 212]
+      },
+      {
+        "colname": "",
+        "cvid": 2102,
+        "var_id": 5,
+        "year": "2010",
+        "regver_id": 2010,
+        "versionname": "2010 - 2012",
+        "register": ["POOLED", 21, 212]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2103,
+        "var_id": 5,
+        "year": "2013",
+        "regver_id": 2013,
+        "register": ["POOLED", 21, 212]
+      },
+      {
+        "colname": "",
+        "cvid": 2201,
+        "var_id": 5,
+        "year": "2008",
+        "regver_id": 2008,
+        "versionname": "2008 - 2010",
+        "register": ["POOLEDBARE", 22, 222]
+      },
+      {
+        "colname": "",
+        "cvid": 2202,
+        "var_id": 5,
+        "year": "2010",
+        "regver_id": 2010,
+        "versionname": "2010 - 2012",
+        "register": ["POOLEDBARE", 22, 222]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2203,
+        "var_id": 5,
+        "year": "2013",
+        "regver_id": 2013,
+        "register": ["POOLEDBARE", 22, 222]
+      },
+      {
+        "colname": "\"\"",
+        "cvid": 2301,
+        "var_id": 5,
+        "year": "2008",
+        "regver_id": 2008,
+        "versionname": "2008 - 2010",
+        "register": ["TWOCOLS", 23, 232]
+      },
+      {
+        "colname": "\"\"",
+        "cvid": 2302,
+        "var_id": 5,
+        "year": "2009",
+        "regver_id": 2009,
+        "versionname": "2009 - 2010",
+        "register": ["TWOCOLS", 23, 232]
+      },
+      {
+        "colname": "A",
+        "cvid": 2303,
+        "var_id": 5,
+        "year": "2010",
+        "regver_id": 2010,
+        "versionname": "2010 - 2012",
+        "register": ["TWOCOLS", 23, 232]
+      },
+      {
+        "colname": "B",
+        "cvid": 2304,
+        "var_id": 5,
+        "year": "2010",
+        "regver_id": 2010,
+        "versionname": "2010 - 2012",
+        "register": ["TWOCOLS", 23, 232]
+      },
+      {
+        "colname": "A",
+        "cvid": 2401,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["CONFLICT", 24, 242]
+      },
+      {
+        "colname": "B",
+        "cvid": 2402,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020,
+        "versionname": "2020 revised",
+        "register": ["CONFLICT", 24, 242]
+      }
+    ],
+    "vardemangder": ["donor|1|1|Ja|1801|7181", "earlier|1|0|Nej|2101|7211", "later|1|1|Ja|2102|7212", "earlier|1|0|Nej|2201|7221", "later|1|1|Ja|2202|7222", "A earlier|1|0|Nej|2301|7231", "B earlier|1|0|Nej|2302|7232", "A later|1|1|Ja|2303|7233", "B later|1|1|Ja|2304|7234"]
+  }
+}

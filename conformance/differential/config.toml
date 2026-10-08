@@ -34,9 +34,9 @@ paths = ["/provenance/catalog_generation_id"]
 
 [[exception]]
 name = "reader-version"
-reason = "The reader's release version is build identity, not behavior: the frozen baseline commit reports its own version, and main bumps versions between re-pins, so the two differ."
+reason = "The reader's release version and the catalog's schema version are build identity, not behavior: the frozen baseline commit reports its own version, main bumps versions between re-pins, and a stage-3 schema PR bumps the derived copies' minor past the release originals' (section 10, schema minors), so both differ until the next re-pin."
 case = "*/*/context"
-paths = ["/data/reg_meta_version"]
+paths = ["/data/reg_meta_version", "/data/schema_version"]
 
 [[exception]]
 name = "register-scope-code-classifications"
@@ -53,6 +53,12 @@ paths = [
   "/results/12/classifications",
   "/results/12/code_system",
 ]
+
+[[exception]]
+name = "derived-schema-minor-order"
+reason = "A stage-3 schema PR bumps the builder's minor (section 10, schema minors): the checkout's derived copies carry it, while the release originals keep theirs until the next release and re-pin. The order manifest records that schema version beside the generation, which differs as in derived-generation-order."
+case = "*/*/order/*"
+paths = ["/provenance/catalog_generation_id", "/provenance/catalog_schema_version"]
 
 # The baseline reader (CLI and webapp), run from a detached worktree with its own
 # locked environment. It reads the release originals, so code under change never

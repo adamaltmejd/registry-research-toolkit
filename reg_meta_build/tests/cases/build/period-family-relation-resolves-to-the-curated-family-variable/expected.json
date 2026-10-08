@@ -7,6 +7,14 @@
       "rows": []
     },
     {
+      "table": "variables",
+      "where": {"register": "sample"},
+      "fields": ["variable", "provider_key"],
+      "rows": [
+        ["value", "101"]
+      ]
+    },
+    {
       "table": "edges",
       "fields": ["type", "a", "b"],
       "rows": [

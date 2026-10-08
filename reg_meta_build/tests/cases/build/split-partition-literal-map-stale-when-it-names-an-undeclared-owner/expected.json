@@ -1,0 +1,18 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/identity.partition/1"]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable"],
+      "rows": []
+    }
+  ]
+}

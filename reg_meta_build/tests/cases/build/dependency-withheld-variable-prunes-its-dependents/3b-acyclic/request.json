@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_catalog_dependency_withholding.py::test_metadata_retains_supported_group_members_tags_and_relations", "test_catalog_dependency_withholding.py::test_cycle_remains_fatal_when_all_its_endpoints_are_withheld"],
+  "note": "The allowed twin of step 3: step 3's first edge alone (key replaced_by gone, 2021), so the same two withheld endpoints form no cycle. A relation whose endpoints are withheld is pruned, not refused (step 1, from the old metadata test: the same_as edge into the withheld key is dropped), so the build completes and writes no edge. Step 3 refuses only because its two edges close a cycle.",
+  "fails_if": "`resolve_metadata_dependencies` (catalog_dependencies.py) keeps a succession whose endpoints are withheld (for example `selected` appends an item whose checks fail), so the edge into the withheld variables is written or the build refuses; or the replaced_by cycle check refuses any succession between withheld endpoints, not only a cycle",
+  "sources": "scb-withheld-key-and-gone"
+}

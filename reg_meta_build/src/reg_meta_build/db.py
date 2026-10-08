@@ -24,7 +24,7 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from ._curation import printable_error
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "9.3.0"
+SCHEMA_VERSION = "9.6.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -289,13 +289,73 @@ def catalog_coordinate_ids(
     return maps[0], maps[1]
 
 
-# Derived tables (derive.py). `IF NOT EXISTS` lets a standalone derive add them to
-# an older-minor base; SQLite stores the statement without it, so the table reads
-# the same as in a fresh build.
+# Derived tables (the derive/ package). `IF NOT EXISTS` lets a standalone derive add
+# them to an older-minor base; SQLite stores the statement without it, so the table
+# reads the same as in a fresh build.
 DERIVED_DDL = """\
--- Derived (derive.py): the whole-history universe of resolver-emitted delivery
--- columns, the only relation that authorizes a holdings mapping. Browse eligibility
--- is a different contract and never reads it.
+-- Derived (derive/states.py): every representation the resolver can emit over a
+-- base state's whole history. A narrow relation: content stays on the state and,
+-- for a window, on its variable_alias_window row. The reader applies the window
+-- fallback, held and requested clipping and warning attribution over these rows.
+CREATE TABLE IF NOT EXISTS expanded_state (
+    -- Fixed order: (variable, variant), the state's chronological order, base first.
+    expanded_state_id INTEGER PRIMARY KEY,
+    -- The base state; lineage keeps its identity, never this row's.
+    state_id INTEGER NOT NULL REFERENCES variable_state(state_id),
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
+    -- base: always emitted. base_fallback: emitted only for a request no
+    -- source_window of its state overlaps. source_window and coded_window replace
+    -- a base_fallback; curated_window is additive.
+    kind TEXT NOT NULL CHECK (kind IN
+        ('base', 'base_fallback', 'source_window', 'curated_window', 'coded_window')),
+    -- The emitted spelling; NULL only on a base state SCB named no column for.
+    delivery_column_name TEXT,
+    -- A window's variable_alias_window key start (variable, variant, column, this);
+    -- NULL on a base row.
+    window_valid_from TEXT,
+    -- Own bounds: a per-column (metadata or coding) window is clipped to its state.
+    -- NULL when year-independent.
+    valid_from TEXT,
+    valid_to TEXT,
+    -- One spelling per (variable, variant, py_lower fold); NULL with the column.
+    canonical_column TEXT,
+    CHECK ((kind IN ('base', 'base_fallback')) = (window_valid_from IS NULL)),
+    CHECK (kind IN ('base', 'base_fallback') OR delivery_column_name IS NOT NULL),
+    CHECK ((delivery_column_name IS NULL) = (canonical_column IS NULL))
+);
+CREATE INDEX IF NOT EXISTS idx_expanded_state_variable
+    ON expanded_state(variable_id, register_variant_id);
+
+-- Derived (derive/browse.py): `register_variable_deliveries` per scope. Browse keeps
+-- alias windows no state contains, so it is not the resolver's universe.
+CREATE TABLE IF NOT EXISTS browse_delivery (
+    -- Fixed order: scope, (provider, register) slug, variable slug, reader order.
+    browse_delivery_id INTEGER PRIMARY KEY,
+    -- holdings rows only in a steward artifact.
+    scope TEXT NOT NULL CHECK (scope IN ('reference', 'holdings')),
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
+    -- Representative spelling; NULL for states SCB named no column for.
+    delivery_column_name TEXT,
+    period_scope TEXT NOT NULL CHECK (period_scope IN ('intervals', 'year_independent')),
+    -- State (or held period) rows fused into the windows; the reader's state_count.
+    state_count INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_browse_delivery_variable
+    ON browse_delivery(scope, variable_id);
+
+-- A browse delivery's disjoint windows, ordered by start; none when year-independent.
+CREATE TABLE IF NOT EXISTS delivery_window (
+    browse_delivery_id INTEGER NOT NULL REFERENCES browse_delivery(browse_delivery_id),
+    valid_from TEXT NOT NULL,
+    valid_to TEXT NOT NULL CHECK (valid_to >= valid_from),
+    PRIMARY KEY (browse_delivery_id, valid_from)
+) WITHOUT ROWID;
+
+-- Derived (derive/states.py): the projection of expanded_state onto the columns some
+-- request emits, the whole-history universe of resolver-emitted delivery columns. The
+-- only relation that authorizes a holdings mapping; browse never reads it.
 CREATE TABLE IF NOT EXISTS resolver_column (
     -- Owning variable; never a same_as donor.
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
@@ -307,9 +367,66 @@ CREATE TABLE IF NOT EXISTS resolver_column (
     delivery_column_name TEXT NOT NULL CHECK (length(delivery_column_name) > 0),
     PRIMARY KEY (variable_id, register_variant_id, delivery_column_lower)
 ) WITHOUT ROWID;
+
+-- Derived (derive/chains.py): the active terminal successor of a register, variable
+-- or classification at the manifest's classification_succession_as_of_year. The walk
+-- follows the sole active successor; a split (several active successors) is its own
+-- terminal. A node whose terminal is itself has no row.
+CREATE TABLE IF NOT EXISTS succession_terminal (
+    -- Register, binding or class/ FQID of a node with an active outbound edge;
+    -- may be retired (no live row).
+    fqid TEXT PRIMARY KEY,
+    -- FQID of the same kind where the walk stops; never equal to fqid.
+    terminal_fqid TEXT NOT NULL CHECK (terminal_fqid <> fqid)
+) WITHOUT ROWID;
+
+-- Derived (derive/chains.py): each classification edition's succession chain,
+-- oldest first, anchored on that edition (backward along its predecessor, forward
+-- through every branch of its successors). Names and vintages join from
+-- classification; is_self is slug = anchor_slug.
+CREATE TABLE IF NOT EXISTS classification_chain (
+    -- The edition the chain is read for.
+    anchor_slug TEXT NOT NULL,
+    -- Chain order, from 0; the walk order, never a sort by year.
+    position INTEGER NOT NULL CHECK (position >= 0),
+    slug TEXT NOT NULL,
+    -- Year of the edge by which this edition is superseded on the chain.
+    effective_year INTEGER,
+    -- Started and without an active successor at the policy year.
+    is_current INTEGER NOT NULL CHECK (is_current IN (0, 1)),
+    PRIMARY KEY (anchor_slug, position)
+) WITHOUT ROWID;
+
+-- Derived (derive/chains.py): one-dimensional classification succession families
+-- (ICD, LKF, SNI, SSYK), each edition in family order.
+CREATE TABLE IF NOT EXISTS classification_family (
+    family_key TEXT NOT NULL,
+    family_label TEXT NOT NULL,
+    position INTEGER NOT NULL CHECK (position >= 0),
+    slug TEXT NOT NULL,
+    effective_year INTEGER,
+    is_current INTEGER NOT NULL CHECK (is_current IN (0, 1)),
+    -- The edition the family's chain was read from.
+    is_self INTEGER NOT NULL CHECK (is_self IN (0, 1)),
+    PRIMARY KEY (family_key, position)
+) WITHOUT ROWID;
+
+-- Derived (derive/schema.py): `get coded-variables` per scope, unfiltered. The reader
+-- orders and pages the rows; holdings rows only in a steward artifact.
+CREATE TABLE IF NOT EXISTS coded_variable_stats (
+    scope TEXT NOT NULL CHECK (scope IN ('reference', 'holdings')),
+    -- The ranking key: a variable's common name; unnamed variables are not ranked.
+    variable_name TEXT NOT NULL,
+    -- Distinct code text over every coded state's value sets under the name.
+    n_distinct_codes INTEGER NOT NULL CHECK (n_distinct_codes > 0),
+    n_registers INTEGER NOT NULL CHECK (n_registers > 0),
+    -- Distinct coded states.
+    n_instances INTEGER NOT NULL CHECK (n_instances > 0),
+    PRIMARY KEY (scope, variable_name)
+) WITHOUT ROWID;
 """
 
-# Derived search indexes (derive.py `derive_search_indexes`). Regular FTS5 tables
+# Derived search indexes (derive/search_index.py `derive_search_indexes`). Regular FTS5 tables
 # holding `fold_search` text, so one fold serves the build and the reader
 # (RUST_RUNTIME_SPEC.md decision 16): the tokenizer only splits. Key columns are
 # stored verbatim and UNINDEXED, so joins hold and they never match as tokens.

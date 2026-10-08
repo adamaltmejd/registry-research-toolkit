@@ -1,0 +1,17 @@
+{
+  "projections": [
+    {
+      "table": "concept_groups",
+      "fields": ["variables"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "ambiguous_sibling_shape"},
+      "fields": ["code"],
+      "rows": [
+        ["ambiguous_sibling_shape"]
+      ]
+    }
+  ]
+}

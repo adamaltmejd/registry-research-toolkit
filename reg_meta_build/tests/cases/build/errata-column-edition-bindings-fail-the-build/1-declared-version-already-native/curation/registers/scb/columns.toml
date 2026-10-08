@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "columns"
+native_id = "19"
+[[variant]]
+native_id = "19.192"
+slug = "people"
+[[variable]]
+native_id = "19.5"
+slug = "v5"
+
+[[errata.version]]
+variant = "people"
+name = "2020"
+evidence = "omitted edition"
+noted = "2026-09-25"

@@ -1,21 +1,17 @@
-"""Tracked curation tree, global families, coding registers, events and native naming compile for a selected scope."""
+"""Curation compile event-source pairing, thin default-variant naming and the tree hash."""
 
 from __future__ import annotations
 
-from dataclasses import replace
 from types import SimpleNamespace
 from typing import Any, cast
 
-import pytest
 from _curation_compile_support import (
-    compiled_bytes as _bytes,
     make_naming_reader as _naming_reader,
     make_prepared as _prepared,
     make_revision as _revision,
     make_scope as _scope,
     make_tree as _tree,
 )
-from reg_meta.errors import RegMetaError
 from reg_meta_build.curation_compile import (
     compile_curation,
     compile_native_naming,
@@ -28,7 +24,6 @@ from reg_meta_build.id import mint
 from reg_meta_build.pipeline import CompiledScope
 from reg_meta_build.resolved_catalog import ResolvedVariant
 from reg_meta_build.source_coordinates import (
-    native_variable_key,
     source_register_key,
 )
 from reg_meta_build.source_naming import (
@@ -40,147 +35,6 @@ from reg_meta_build.source_records import (
 )
 
 from reg_meta_build.fqid_slugs import SlugEntry
-
-
-def test_acknowledgement_compiler_preserves_optional_evidence_guard(tmp_path):
-    from reg_meta.source_evidence import SourceRecordRef
-    from reg_meta_build.curation_tree import AcknowledgeEntry
-
-    tree = _tree(tmp_path / "curation")
-    register = next(r for r in tree.registers if r.register_info.slug == "sample")
-    entry = AcknowledgeEntry(
-        code="unresolved_native_identity",
-        subject="scb/sample/one",
-        refs=[
-            SourceRecordRef(
-                source="fixture", semantic_record_key=("one",)
-            ).model_dump_json()
-        ],
-        reason="The source omits the physical matrix coordinates.",
-        evidence="Complete original source family.",
-        expected_evidence_sha256="a" * 64,
-        expected_diagnostic_sha256="b" * 64,
-    )
-    tree = replace(
-        tree,
-        registers=tuple(
-            r.model_copy(update={"acknowledge": [entry]}) if r is register else r
-            for r in tree.registers
-        ),
-    )
-    compiled = compile_curation(tree, _prepared(), (_scope(),), subset=True)
-    (case,) = (
-        case
-        for cases in compiled.cases.values()
-        for case in cases
-        if case.decision.kind == "acknowledge"
-    )
-    assert case.decision.expected_evidence_sha256 == entry.expected_evidence_sha256
-    assert case.decision.expected_diagnostic_sha256 == entry.expected_diagnostic_sha256
-    with pytest.raises(ValueError):
-        AcknowledgeEntry.model_validate(
-            {**entry.model_dump(), "expected_evidence_sha256": "not-a-sha256"}
-        )
-    with pytest.raises(ValueError):
-        AcknowledgeEntry.model_validate(
-            {**entry.model_dump(), "expected_diagnostic_sha256": "not-a-sha256"}
-        )
-
-
-def test_compilation_is_byte_identical_with_shuffled_register_order(tmp_path):
-    tree = _tree(tmp_path / "curation")
-    first = compile_curation(tree, _prepared(), (_scope(),))
-    second = compile_curation(tree, _prepared(), (_scope(),))
-    shuffled = compile_curation(
-        replace(tree, registers=tuple(reversed(tree.registers))),
-        _prepared(),
-        (_scope(),),
-    )
-    assert _bytes(first) == _bytes(second) == _bytes(shuffled)
-
-
-def test_coding_register_tables_load_with_finite_periods(tmp_path):
-    root = tmp_path / "curation"
-    _tree(root)
-    path = root / "registers" / "scb" / "sample.toml"
-    path.write_text(
-        path.read_text()
-        + '\n[[coding.choice]]\nvariable = "1.5"\nvariant = "people"\n'
-        + 'column = "VALUE"\nperiods = [["2020-01-01", "2020-06-30"], '
-        + '["2020-07-01", "2020-12-31"]]\n'
-        + 'keep = "kept"\nkeep_members = [["01", "Label"]]\n'
-        + 'over = ["other"]\nreason = "Reviewed"\nsource = "fixture"\n'
-        + '\n[[coding.uncoded]]\nvariable = "1.5"\nvariant = "people"\n'
-        + 'column = "VALUE"\nperiods = [["2019-01-01", "2019-12-31"]]\n'
-        + 'reason = "Reviewed"\nsource = "fixture"\n'
-        + '\n[[coding.omit]]\nvariable = "1.5"\nvariant = "people"\n'
-        + 'column = "VALUE"\nperiods = [["2018-01-01", "2018-12-31"]]\n'
-        + 'reason = "Reviewed"\nsource = "fixture"\n'
-        + '\n[[coding.extend]]\nvariable = "1.5"\nvariant = "people"\n'
-        + 'column = "VALUE"\nperiods = [["2017-01-01", "2017-12-31"]]\n'
-        + 'list = "kept"\nlist_members = [["01", "Label"]]\n'
-        + 'witness = ["2020-01-01", "2020-06-30"]\n'
-        + 'reason = "Reviewed"\nsource = "fixture"\n',
-        encoding="utf-8",
-    )
-    register = next(
-        entry
-        for entry in load_curation_tree(root).registers
-        if entry.register_info.slug == "sample"
-    )
-    assert len(register.coding.choice[0].periods) == 2
-    assert (
-        len(register.coding.uncoded)
-        == len(register.coding.omit)
-        == len(register.coding.extend)
-        == 1
-    )
-
-
-@pytest.mark.parametrize(
-    "extra",
-    [
-        "unexpected = true\n",
-        'periods = [["2020-13-01", "2020-12-31"]]\n',
-        'periods = [["2020-12-31", "2020-01-01"]]\n',
-    ],
-)
-def test_coding_register_invalid_entry_names_file_and_index(tmp_path, extra):
-    root = tmp_path / "curation"
-    _tree(root)
-    path = root / "registers" / "scb" / "sample.toml"
-    path.write_text(
-        path.read_text()
-        + '\n[[coding.choice]]\nvariable = "1.5"\nvariant = "people"\n'
-        + 'column = "VALUE"\nkeep = "kept"\nover = ["other"]\n'
-        + 'reason = "Reviewed"\nsource = "fixture"\n'
-        + (
-            'periods = [["2020-01-01", "2020-12-31"]]\n'
-            if "periods" not in extra
-            else ""
-        )
-        + extra,
-        encoding="utf-8",
-    )
-    with pytest.raises(RegMetaError) as exc:
-        load_curation_tree(root)
-    assert "curation/registers/scb/sample.toml [[coding.choice." in exc.value.message
-    assert "entry 1" in exc.value.message
-
-
-def test_coding_register_rejects_duplicate_entry(tmp_path):
-    root = tmp_path / "curation"
-    _tree(root)
-    path = root / "registers" / "scb" / "sample.toml"
-    block = (
-        '\n[[coding.uncoded]]\nvariable = "1.5"\nvariant = "people"\n'
-        'column = "VALUE"\nperiods = [["2020-01-01", "2020-12-31"]]\n'
-        'reason = "Reviewed"\nsource = "fixture"\n'
-    )
-    path.write_text(path.read_text() + block + block, encoding="utf-8")
-    with pytest.raises(RegMetaError) as exc:
-        load_curation_tree(root)
-    assert "[[coding.uncoded]] entry 2: duplicate entry" in exc.value.message
 
 
 def test_event_sources_pair_within_same_snapshot_revision(tmp_path):
@@ -218,70 +72,6 @@ def test_event_sources_pair_within_same_snapshot_revision(tmp_path):
         ("timeseries-a", "register-a"),
         ("timeseries-b", "register-b"),
     )
-
-
-def test_native_names_overlay_and_unnamed_provider_keys_compile(tmp_path):
-    root = tmp_path / "curation"
-    _tree(root)
-    register_file = root / "registers" / "scb" / "sample.toml"
-    register_file.write_text(
-        register_file.read_text()
-        + '\n[[variable]]\nnative_id = "1.5"\nslug = "curated"\n'
-        + '\n[[variable]]\nnative_id = "1.6"\nslug = "stale"\n'
-    )
-    register_file.with_name("sample.auto.toml").write_text(
-        '[[variable]]\nnative_id = "1.5"\nslug = "generated"\n'
-    )
-    coordinate = SourceCoordinate(status="value", native_id=1)
-
-    def record(variable_id):
-        return SimpleNamespace(
-            source="scb-registerinformation",
-            subject=SimpleNamespace(
-                provider="scb",
-                register_name=coordinate,
-                variable=SourceCoordinate(status="value", native_id=variable_id),
-                variant=SourceCoordinate(status="unknown"),
-            ),
-            parent_facts=(
-                SimpleNamespace(
-                    kind="register", register_name=coordinate, variant=None
-                ),
-            ),
-        )
-
-    records = (record(5), record(7))
-
-    class Reader:
-        def iter_native_families(self, source, registers=None):
-            return ((native_variable_key(item), (item,)) for item in records)
-
-        def iter_records(self, *, source):
-            return iter(records)
-
-        def iter_register_slices(self, source, registers):
-            return iter(((None, records),))
-
-    key = ("scb-registerinformation", None)
-    naming, variants, provider_keys, diagnostics, _ = compile_native_naming(
-        load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
-        (_scope(),),
-        subset=True,
-    )
-    assert variants[key] == ()
-    assert [(name.target.kind, name.naming.slug) for name in naming[key]] == [
-        ("register", "sample"),
-        ("variable", "curated"),
-    ]
-    assert all(not name.target.expectations for name in naming[key])
-    assert dict(provider_keys[key]) == {
-        native_variable_key(records[0]): "5",
-        native_variable_key(records[1]): None,
-    }
-    assert [(issue.code, issue.subject) for issue in diagnostics] == [
-        ("stale_curation_entry", "1.6")
-    ]
 
 
 def test_thin_default_variant_carries_panel_fields(tmp_path):
@@ -362,54 +152,10 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
         panel_time_key="period",
         panel_time_grain="delivery",
     )
-    record = SimpleNamespace(
-        source=record.source,
-        subject=SimpleNamespace(
-            provider="fk",
-            register_name=coordinate,
-            variant=SourceCoordinate(status="value", native_id="subset"),
-        ),
-        parent_facts=(
-            *record.parent_facts,
-            SimpleNamespace(
-                kind="variant",
-                register_name=coordinate,
-                variant=SourceCoordinate(status="value", native_id="subset"),
-            ),
-        ),
-    )
-    _, _, _, stale, _ = compile_native_naming(
-        load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
-        (scope,),
-        subset=True,
-    )
-    assert any(
-        issue.code == "stale_curation_entry"
-        and issue.subject == f"{register_id}.{variant_id}"
-        for issue in stale
-    )
-    path.write_text(path.read_text().split("[[variant]]")[0])
-    record = SimpleNamespace(
-        source=record.source,
-        subject=SimpleNamespace(
-            provider="fk",
-            register_name=coordinate,
-            variant=SourceCoordinate(status="not_applicable"),
-        ),
-        parent_facts=record.parent_facts[:1],
-    )
-    _, _, _, missing, _ = compile_native_naming(
-        load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
-        (scope,),
-        subset=True,
-    )
-    assert any(
-        issue.code == "stale_curation_entry"
-        and "no tracked default slug" in issue.detail
-        for issue in missing
-    )
+    # The build cases cannot reach the panel fields yet: they need a `variants`
+    # projection field (cases/build `variants` has register/variant/name only). The
+    # untracked-default stale diagnostic is pinned in the ledger by
+    # cases/build/thin-default-variant-without-a-tracked-slug-withholds-the-register.
 
 
 def test_tree_hash_covers_curation_and_source_slug_files(tmp_path):

@@ -1,0 +1,23 @@
+[register]
+provider = "scb"
+slug = "unitdrift"
+native_id = "7"
+[[variant]]
+native_id = "7.2"
+slug = "people"
+[[variable]]
+native_id = "7.5"
+slug = "answer"
+[[errata.field]]
+variable = "7.5"
+variant = "7.2"
+column = "ANSWER"
+edition = "99"
+expected_fields = {{expected_fields key=member:720 fields=name,definition,description,operational_definition,classification_declared,representation,data_type,coverage_from,coverage_to,measurement_unit}}
+expected_period_text = {{period_text key=member:720}}
+expected_scope = {{edition_scope key=member:720}}
+expected_period = {{period_scope key=member:720}}
+evidence = "Exact supplied unit establishes the reviewed correction."
+noted = "2026-09-30"
+field = "measurement_unit"
+value = "Antal personer"

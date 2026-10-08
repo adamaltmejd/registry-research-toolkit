@@ -284,7 +284,8 @@ def extend_db(
         _unlink_wal_sidecars,
         publish_db,
     )
-    from .derive import derive, derive_search_indexes
+    from .derive import DERIVED_TABLES, derive, derive_holdings
+    from .derive.search_index import derive_search_indexes
     from .fqid_slugs import populate_slugs, populate_variable_slugs
 
     data_warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
@@ -460,10 +461,11 @@ def extend_db(
             write_data_warnings(conn, data_warnings)
             # Holdings must see the steward's own metadata, so derive runs over
             # base plus overlay. An unslugged diagnostic never compiles holdings;
-            # it clears the inherited universe instead of deriving a stale one,
-            # and still indexes the overlay for search.
+            # it clears the inherited derived tables instead of deriving stale
+            # ones, and still indexes the overlay for search.
             if skip_slugs:
-                conn.execute("DELETE FROM resolver_column")
+                for table in reversed(DERIVED_TABLES):
+                    conn.execute(f"DELETE FROM {table}")
                 derive_search_indexes(conn)
             else:
                 conn.commit()
@@ -523,6 +525,7 @@ def extend_db(
                     "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
                     sorted(manifest.items()),
                 )
+                derive_holdings(conn)
                 counts.update(
                     holding_tables=compiled.tables,
                     holding_columns=compiled.columns,

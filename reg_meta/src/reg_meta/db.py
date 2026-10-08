@@ -327,7 +327,12 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 #   display text from the base tables.
 # 9.3.0: curated `search_pin` rows the webapp reads; a 9.3 artifact derived from an
 #   older base has the table empty.
-SCHEMA_VERSION = "9.3.0"
+# 9.4.0: derived `expanded_state` (resolver_column becomes its projection),
+#   `browse_delivery` and `delivery_window`; only the Rust reader reads them.
+# 9.5.0: derived succession tables `succession_terminal`, `classification_chain` and
+#   `classification_family` (read by the Rust server only).
+# 9.6.0: derived `coded_variable_stats` per scope; only the Rust reader reads it.
+SCHEMA_VERSION = "9.6.0"
 DB_FILENAME = "reg_meta.db"
 
 

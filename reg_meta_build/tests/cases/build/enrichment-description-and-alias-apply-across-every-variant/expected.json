@@ -22,6 +22,14 @@
         ["a", "people", "A"],
         ["a", "people", "FormerA"]
       ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "column", "valid_from"],
+      "rows": [
+        ["a", "others", "A", "2021-01-01"],
+        ["a", "people", "A", "2020-01-01"]
+      ]
     }
   ]
 }

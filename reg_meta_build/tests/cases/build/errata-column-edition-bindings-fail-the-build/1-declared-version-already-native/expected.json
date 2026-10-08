@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "scb_errata_version_already_native",
+    "exit_code": 10,
+    "message_contains": ["curation/registers/scb/columns.toml [[errata.version]] entry 1", "declared missing edition '2020' is already native"]
+  }
+}

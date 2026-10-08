@@ -1,0 +1,32 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {"code": "ambiguous_named_identity"},
+      "fields": ["subject", "key"],
+      "rows": [
+        [
+          "scb/sample/answer",
+          ["register:1", "variant:2", "edition:2021", "variable:5", "member:21"]
+        ]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "withheld_catalog_dependency"},
+      "fields": ["ref"],
+      "rows": {
+        "refs_of": {
+          "table": "issue_refs",
+          "where": {"code": "ambiguous_named_identity"}
+        }
+      }
+    },
+    {
+      "table": "edges",
+      "fields": ["type", "a", "b"],
+      "rows": []
+    }
+  ]
+}

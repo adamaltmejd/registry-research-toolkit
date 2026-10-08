@@ -708,6 +708,15 @@ covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_webap
 
 [[row]]
 kind = "import"
+id = "reg_meta.catalog._applicable_alias_windows"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/test_logical.py"]
+note = "Private-name import: derive's `expanded_state` reads the resolver's window participation rule in place (section 4 bootstrap, package 3b.1). The seam also calls `Catalog._variable_windows` and `Catalog._states_in_bounds` and reads the `_StoredAliasWindow` tuple layout (index 3 provenance, 4 column_metadata, 11 coding_metadata, 16 the window's own start). Stage 4 moves all of it into reg_meta_build with the rest of the resolver."
+
+[[row]]
+kind = "import"
 id = "reg_meta.catalog._decode_panel_entity_key"
 used_by = ["reg_meta_build"]
 disposition = "retained"
@@ -1434,6 +1443,15 @@ disposition = "retained"
 owner = "4"
 covered_by = ["reg_meta_build/tests/test_build_db.py"]
 note = "Judgment: a version-name year heuristic, not the period grammar, so it moves rather than going to reg-core-py."
+
+[[row]]
+kind = "import"
+id = "reg_meta.queries.get_coded_variables"
+used_by = ["reg_meta_build"]
+disposition = "retained"
+owner = "4"
+covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/cases/cli_scope/coded-variables-explicit-reference"]
+note = "Derive's `coded_variable_stats` calls the reader's aggregate in place (section 4 bootstrap, package 3c.1); stage 4 moves it into reg_meta_build."
 
 [[row]]
 kind = "import"

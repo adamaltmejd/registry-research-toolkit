@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[identity.partition]]
+variable = "1.5"
+columns = { OLD = "1.5" }
+unassigned_columns = ["NEW"]
+columns_ref = "reviewed quantity"

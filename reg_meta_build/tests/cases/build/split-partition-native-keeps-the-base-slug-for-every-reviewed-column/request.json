@@ -1,9 +1,10 @@
 {
   "replaces": [
-    "test_curation_split_partition_boundary.py::test_native_partition_keeps_the_base_slug_for_every_reviewed_column[with-blank-column]"
+    "test_curation_split_partition_boundary.py::test_native_partition_keeps_the_base_slug_for_every_reviewed_column[with-blank-column]",
+    "test_source_effect_identity.py::test_explicit_identity_decision_keeps_exact_columns_and_periods"
   ],
-  "note": "A partition mapping every column back to the base ID keeps one base variable; a literal blank column of a later edition does not disturb it.",
-  "fails_if": "`_column_partition_plan` counts the 2022 row's literal-blank (`negative`) Kolumnnamn as a delivered column, so the OLD/NEW map no longer covers the complete column set and the partition goes stale",
+  "note": "A partition mapping every column back to the base ID keeps one base variable; a literal blank column of a later edition does not disturb it. The states rows are the fixture's OLD (2020, CVID 21) and NEW (2021, CVID 22) rows, each kept to its own year (test_explicit_identity_decision_keeps_exact_columns_and_periods). The build raises no error, so the partition is not stale (that test: `variable.diagnostics == ()`); the 2022 blank row's omitted-column warning is not claimed here.",
+  "fails_if": "`_column_partition_plan` counts the 2022 row's literal-blank (`negative`) Kolumnnamn as a delivered column, so the OLD/NEW map no longer covers the complete column set and the partition goes stale; or the partition conversion merges the two reviewed columns' periods, so OLD or NEW no longer keeps exactly its own edition's year",
   "sources": {
     "description": "Variable 1.5 delivered as OLD (2020, CVID 21), NEW (2021, CVID 22) and with a quoted empty column name (2022, CVID 23).",
     "scb": {

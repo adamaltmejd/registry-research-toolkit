@@ -1,0 +1,29 @@
+{
+  "replaces": ["test_source_scope_naming.py::test_ambiguous_names_attribute_only_actual_unresolved_identity"],
+  "note": "The refusal twin of step 1: the same build with the edge pointing at a name nothing declares. The old test's last assertion: a 'typo' reference beside the withheld ambiguous name still raises CatalogDependencyError.",
+  "fails_if": "`CatalogDependencies.check` (catalog_dependencies.py) treats any key in a register that has an ambiguous name as explained (for example by matching withheld keys on their register prefix), so the edge to scb/sample/unrelated is pruned instead of refused",
+  "sources": {
+    "description": "Variable 5 delivers ANSWER in 2020 and 2021.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": ["TEST", 1, 2]
+        }
+      ],
+      "unika": ["TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ANSWER|2021|2021|0|0|0"]
+    }
+  }
+}

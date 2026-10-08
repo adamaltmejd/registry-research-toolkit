@@ -1,0 +1,11 @@
+{
+  "replaces": [
+    "test_curation_compile_native_partitions.py::test_partition_data_warning_is_explicit_and_scoped_to_annotated_members"
+  ],
+  "note": "ANSWER is owned by 3.5.answer; LEFT stays unassigned and forms no state, so the partition's warning cites only ANSWER's record. The ref is spelled from the spec: register 3, variant 30, edition 320, variable 5, CVID 301.",
+  "fails_if": "`compile_partitions` stops carrying the `[[identity.partition]]` `data_warning` (its text and the identity field) onto the owned column, so answer's state has no warning",
+  "sources": "scb-native-partitions-reviewed",
+  "registers": [
+    "3"
+  ]
+}

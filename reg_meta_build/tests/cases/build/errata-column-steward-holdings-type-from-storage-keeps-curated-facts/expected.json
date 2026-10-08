@@ -1,0 +1,61 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "where": {"variable": ["c-stew", "c-cur", "c-mix", "c-nopfx"]},
+      "fields": ["variable", "column", "valid_from", "data_type"],
+      "rows": [
+        ["c-stew", "STEW", "2020-01-01", "decimal"],
+        ["c-cur", "CUR", "2020-01-01", "integer"],
+        ["c-mix", "MIX", "2020-01-01", null],
+        ["c-nopfx", "NOPFX", "2020-01-01", null]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "c-stew",
+        "provenance": {"contains": "CIS2004=smallint, CIS2012=float"}
+      },
+      "fields": ["variable"],
+      "rows": [
+        ["c-stew"]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {"variable": "c-stew"},
+      "fields": ["variable", "is_identifier", "is_sensitive"],
+      "rows": [
+        ["c-stew", 1, 0]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unknown_data_type",
+        "subject": "scb/sample/c-mix",
+        "detail": {"contains": "CIS2004=date, CIS2012=int"}
+      },
+      "fields": ["subject"],
+      "rows": [
+        ["scb/sample/c-mix"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": ["scb/sample/c-stew", "scb/sample/c-cur"]},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["detail"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/errata.column/5: column_now_documented"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry", "locator": {"contains": ["#/errata.", "registers/"]}},
+      "fields": ["locator"],
+      "rows": [
+        ["curation/registers/scb/authority.toml#/errata.field/1"],
+        ["curation/registers/scb/witness.toml#/errata.field/1"],
+        ["curation/registers/sos/par.toml#/errata.occurrence_period/1"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry", "locator": {"contains": "#/identity.split/"}},
+      "fields": ["locator"],
+      "rows": [
+        ["curation/registers/sos/par.toml#/identity.split/1"],
+        ["curation/registers/sos/par.toml#/identity.split/2"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": ["authority", "witness"], "state_name": "Canonical source label", "valid_from": "2009-01-01"},
+      "fields": ["register"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "par", "variable": ["atc-outpatient", "atc-inpatient", "kva-outpatient", "kva-inpatient"]},
+      "fields": ["variable", "variant", "valid_from"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "par", "variable": "dia", "variant": "par-ov"},
+      "fields": ["valid_from", "valid_to"],
+      "rows": []
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+[register]
+provider = "sos"
+slug = "par"
+name = "Patientregistret"
+native_id = "5891427617861710725"
+
+[[errata.field]]
+variable = "5891427617861710725.ATC"
+variant = "PAR_OV"
+column = "ATC"
+expected_fields = [{ "name" = "classification_declared", "status" = "unknown" }, { "name" = "coverage_from", "status" = "value", "value" = "2001" }, { "name" = "data_type", "status" = "value", "value" = "text" }, { "name" = "definition", "status" = "absent" }, { "name" = "description", "status" = "value", "value" = "Läkemedel" }, { "name" = "name", "status" = "value", "value" = "ATC" }, { "name" = "operational_definition", "status" = "absent" }, { "name" = "representation", "status" = "value", "value" = "Source reference" }]
+expected_scope = { "kind" = "intervals", "intervals" = [{ "start" = "2001", "end" = "2020" }] }
+expected_period = { "kind" = "not_applicable", "intervals" = [] }
+evidence = "The peer alternative supplies the reviewed reference."
+noted = "2026-09-30"
+field = "representation"
+value = "Source reference https://example.org"

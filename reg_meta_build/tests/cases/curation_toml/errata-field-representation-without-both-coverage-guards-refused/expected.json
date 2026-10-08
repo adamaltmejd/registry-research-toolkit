@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_field_corrections.py::test_field_correction_accepts_guarded_source_alternatives_without_losing_originals",
+  "fails_if": "the `[[errata.field]]` `expected_fields` validator accepts a classification/type/representation guard group with only one coverage guard",
+  "note": "The replaced test dropped the last captured guard (`coverage_to`). The field validator refuses the guard set before the representation-specific rule is reached.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/sos/par.toml [[errata.field.expected_fields]] entry 1",
+    "message_contains": [
+      "expected_fields must guard all four supplied prose fields"
+    ]
+  }
+}

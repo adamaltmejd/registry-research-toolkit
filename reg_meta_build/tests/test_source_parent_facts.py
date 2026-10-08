@@ -2,31 +2,18 @@
 
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from _source_curation_support import curation_decision as _decision
 from reg_meta.source_evidence import SourceField, SourceRevision
-from reg_meta_build.prepared_sources import (
-    prepare_source_records,
-)
 from reg_meta_build.source_curation import (
-    CurationCase,
-    FieldExpectation,
-    RecordExpectation,
-    RecordProjection,
-    SourceRecordRef,
-    evaluate_case,
     parent_fact_projection,
 )
-from reg_meta_build.source_records import SourceRecord
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
+    from reg_meta_build.source_records import SourceRecord
 
 _REVISION = SourceRevision.create(
     dataset="scb-parent-fixture",
@@ -103,91 +90,3 @@ def test_blank_parent_facts_preserve_unknown_and_raw_representation() -> None:
     assert parent_fact_projection(null.parent_facts[0]) == parent_fact_projection(
         blank.parent_facts[0]
     )
-
-
-@pytest.mark.parametrize(
-    "fault", ["out_of_bounds", "missing_field", "duplicate_field", "wrong_scope"]
-)
-def test_malformed_parent_contracts_fail_before_preparation(
-    tmp_path: Path, fault: str
-) -> None:
-    record = _record()
-    document = record.model_dump(mode="json")
-    parent = document["parent_facts"][0]
-    if fault == "out_of_bounds":
-        parent["field_cells"][0]["positions"] = [len(record.delivered_cells)]
-    elif fault == "missing_field":
-        parent["field_cells"].pop()
-    elif fault == "duplicate_field":
-        parent["field_cells"].append(parent["field_cells"][0])
-    else:
-        parent["variant"] = document["subject"]["variant"]
-    with pytest.raises(ValueError):
-        SourceRecord.model_validate_json(json.dumps(document))
-    # The preparation boundary must revalidate even a forged model instance.
-    forged = record.model_copy(
-        update={
-            "parent_facts": (
-                record.parent_facts[0].model_copy(update={"field_cells": ()}),
-            )
-        }
-    )
-    destination = tmp_path / "records"
-    with pytest.raises(ValueError, match="parent facts"):
-        prepare_source_records(
-            destination,
-            records=(forged,),
-            revisions=(_REVISION,),
-            scope="invalid fixture",
-        )
-    assert not destination.exists()
-
-
-def test_parent_guards_track_semantics_without_changing_variable_guards() -> None:
-    first, whitespace, changed = (
-        _record(),
-        _record(row=12, Registersyfte="Testning "),
-        _record(Registersyfte="Changed"),
-    )
-    reference = SourceRecordRef(
-        source=first.source, semantic_record_key=first.locators[0].semantic_record_key
-    )
-    decision = _decision()
-    parents = CurationCase(
-        case_id="parent-facts",
-        targets=(
-            RecordExpectation(
-                ref=reference,
-                alternatives=(
-                    RecordProjection(
-                        parent_facts=tuple(
-                            parent_fact_projection(parent)
-                            for parent in first.parent_facts
-                        )
-                    ),
-                ),
-            ),
-        ),
-        decision=decision,
-    )
-    variable = CurationCase(
-        case_id="variable-facts",
-        targets=(
-            RecordExpectation(
-                ref=reference,
-                alternatives=(
-                    RecordProjection(
-                        fields=(
-                            FieldExpectation(
-                                name="column_name", status="value", value="Example"
-                            ),
-                        )
-                    ),
-                ),
-            ),
-        ),
-        decision=decision,
-    )
-    assert evaluate_case(parents, (whitespace,)).status == "applicable"
-    assert evaluate_case(parents, (changed,)).status == "stale"
-    assert evaluate_case(variable, (changed,)).status == "applicable"

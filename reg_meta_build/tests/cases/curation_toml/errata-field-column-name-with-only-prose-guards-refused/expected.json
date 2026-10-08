@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_native_partitions.py::test_column_correction_requires_complete_fields_and_preserves_original",
+  "note": "The replaced test dropped one of the forty field guards. Guarding only the four prose fields is the harder form: that guard set is valid for a name, definition or description correction, so only the column rule refuses it.",
+  "fails_if": "the `[[errata.field]]` loader stops requiring every source-field guard for a `column_name` correction, so a prose-only guard set loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "column corrections require complete source fields and an exact edition"
+    ]
+  }
+}

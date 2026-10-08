@@ -1,0 +1,112 @@
+[
+  {
+    "slug": "a2000",
+    "short_name": "A2000",
+    "name": "Klassifikation a2000",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  },
+  {
+    "slug": "a2010",
+    "short_name": "A2010",
+    "name": "Klassifikation a2010",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  },
+  {
+    "slug": "a2020",
+    "short_name": "A2020",
+    "name": "Klassifikation a2020",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  },
+  {
+    "slug": "a2030",
+    "short_name": "A2030",
+    "name": "Klassifikation a2030",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  },
+  {
+    "slug": "pre1990",
+    "short_name": "PRE1990",
+    "name": "Klassifikation pre1990",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  },
+  {
+    "slug": "root1996",
+    "short_name": "ROOT1996",
+    "name": "Klassifikation root1996",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  },
+  {
+    "slug": "b-x",
+    "short_name": "B-X",
+    "name": "Klassifikation b-x",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  },
+  {
+    "slug": "b-y",
+    "short_name": "B-Y",
+    "name": "Klassifikation b-y",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  },
+  {
+    "slug": "sni2002",
+    "short_name": "SNI2002",
+    "name": "Klassifikation sni2002",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  },
+  {
+    "slug": "sni2007",
+    "short_name": "SNI2007",
+    "name": "Klassifikation sni2007",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  }
+]

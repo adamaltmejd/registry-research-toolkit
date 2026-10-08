@@ -1,0 +1,44 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "withheld_catalog_dependency"},
+      "fields": ["severity"],
+      "rows": [
+        ["warning"],
+        ["warning"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "withheld_catalog_dependency",
+        "subject": {"contains": "member:scb/sample/key"}
+      },
+      "fields": ["acknowledged_by"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/acknowledge/1"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "withheld_catalog_dependency",
+        "subject": "variable_group:scb/sample/pair"
+      },
+      "fields": ["ref"],
+      "rows": {
+        "refs_of": {
+          "table": "issue_refs",
+          "where": {"code": "unresolved_flag", "subject": "scb/sample/key"}
+        }
+      }
+    },
+    {
+      "table": "concept_groups",
+      "fields": ["variables"],
+      "rows": []
+    }
+  ]
+}

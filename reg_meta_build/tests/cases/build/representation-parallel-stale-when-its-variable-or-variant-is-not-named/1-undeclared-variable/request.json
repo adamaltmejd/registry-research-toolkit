@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_authored_source_mismatch_withholds_case[variable = \"1.1.income\"-variable = \"1.2.income\"]"
+  ],
+  "note": "The allowed twin is representation-parallel-pooled-columns-keep-their-outer-windows; only the entry's variable differs.",
+  "fails_if": "`compile_parallel_representations` drops its check that the entry's variable resolves to exactly one declared naming, so an entry naming the undeclared variable 1.2 binds silently or crashes",
+  "sources": "scb-income-pooled-first-and-second"
+}

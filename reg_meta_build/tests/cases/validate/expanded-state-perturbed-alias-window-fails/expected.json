@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "expanded_state disagrees with the resolver: 1 missing, 1 surplus row(s) at variable_id [2]",
+    "(scope, variable_id) [('reference', 2)]"
+  ]
+}
