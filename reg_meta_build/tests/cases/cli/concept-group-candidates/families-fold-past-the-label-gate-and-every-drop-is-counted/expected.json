@@ -1,0 +1,664 @@
+{
+  "exit_code": 0,
+  "files": {
+    "candidates.toml": {
+      "toml": {
+        "variable_group": [
+          {
+            "register": "scb/foretag",
+            "key": "flop",
+            "label": "Åtgärdskod",
+            "axis": "ordinal",
+            "members": [
+              {
+                "variable": "flop1",
+                "value": "1",
+                "label": "1"
+              },
+              {
+                "variable": "flop2",
+                "value": "2",
+                "label": "2"
+              },
+              {
+                "variable": "flop3",
+                "value": "3",
+                "label": "3"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "foo",
+            "label": "Förvärvsinkomst total",
+            "axis": "ordinal",
+            "members": [
+              {
+                "variable": "foo-1",
+                "value": "1",
+                "label": "1"
+              },
+              {
+                "variable": "foo-2",
+                "value": "2",
+                "label": "2"
+              },
+              {
+                "variable": "foo-3",
+                "value": "3",
+                "label": "3"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "kod",
+            "label": "Standardkod för bransch",
+            "axis": "numeric",
+            "members": [
+              {
+                "variable": "kod3",
+                "value": "03",
+                "label": "3"
+              },
+              {
+                "variable": "kod7",
+                "value": "07",
+                "label": "7"
+              },
+              {
+                "variable": "kod11",
+                "value": "11",
+                "label": "11"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "morsak",
+            "label": "ICD-kod underliggande dödsorsak",
+            "axis": "ordinal",
+            "members": [
+              {
+                "variable": "morsak1",
+                "value": "1",
+                "label": "1"
+              },
+              {
+                "variable": "morsak2",
+                "value": "2",
+                "label": "2"
+              },
+              {
+                "variable": "morsak3",
+                "value": "3",
+                "label": "3"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "tillsyn-1-skolbarn",
+            "label": "Tillsyn 1 skolbarn",
+            "axis": "ordinal",
+            "members": [
+              {
+                "variable": "tillsyn-1-skolbarn-1",
+                "value": "1",
+                "label": "1"
+              },
+              {
+                "variable": "tillsyn-1-skolbarn-2",
+                "value": "2",
+                "label": "2"
+              },
+              {
+                "variable": "tillsyn-1-skolbarn-3",
+                "value": "3",
+                "label": "3"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "diag",
+            "label": "Diagnos \"kod\" \\rad",
+            "axis": "ordinal",
+            "members": [
+              {
+                "variable": "diag1",
+                "value": "1",
+                "label": "1"
+              },
+              {
+                "variable": "diag2",
+                "value": "2",
+                "label": "2"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "dodsorsak",
+            "label": "Underliggande dödsorsak enligt ICD",
+            "axis": "numeric",
+            "members": [
+              {
+                "variable": "dodsorsak2",
+                "value": "2",
+                "label": "2"
+              },
+              {
+                "variable": "dodsorsak3",
+                "value": "3",
+                "label": "3"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "f",
+            "label": "GenericVar",
+            "axis": "ordinal",
+            "members": [
+              {
+                "variable": "f1",
+                "value": "1",
+                "label": "1"
+              },
+              {
+                "variable": "f2",
+                "value": "2",
+                "label": "2"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "inkomst1",
+            "label": "Inkomst per år",
+            "axis": "vintage",
+            "members": [
+              {
+                "variable": "inkomst1-2000",
+                "value": "2000",
+                "label": "2000"
+              },
+              {
+                "variable": "inkomst1-2010",
+                "value": "2010",
+                "label": "2010"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "sun-niva",
+            "label": "Utbildningsnivå enligt SUN",
+            "axis": "vintage",
+            "members": [
+              {
+                "variable": "sun-niva2000",
+                "value": "2000",
+                "label": "2000"
+              },
+              {
+                "variable": "sun-niva2010",
+                "value": "2010",
+                "label": "2010"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "ink",
+            "label": "Förvärvsinkomst",
+            "axis": "ordinal",
+            "members": [
+              {
+                "variable": "ink1",
+                "value": "1",
+                "label": "1"
+              },
+              {
+                "variable": "ink2",
+                "value": "2",
+                "label": "2"
+              }
+            ]
+          }
+        ]
+      },
+      "contains": [
+        "# foldable families: 11",
+        "# excluded batteries (weak label agreement): 1",
+        "# skipped (key collides with an existing group): 1",
+        "# skipped (trailing-hyphen trim collapsed two distinct stems): 1"
+      ]
+    }
+  },
+  "reloads_with": {
+    "loader": "concept_group_worklist",
+    "path": "candidates.toml",
+    "result": {
+      "scb/foretag/flop": {
+        "label": "Åtgärdskod",
+        "axes": [
+          [
+            "ordinal",
+            "ordinal"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "flop1",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "1",
+                "1"
+              ]
+            ]
+          },
+          {
+            "variable": "flop2",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "2",
+                "2"
+              ]
+            ]
+          },
+          {
+            "variable": "flop3",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "3",
+                "3"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/foo": {
+        "label": "Förvärvsinkomst total",
+        "axes": [
+          [
+            "ordinal",
+            "ordinal"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "foo-1",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "1",
+                "1"
+              ]
+            ]
+          },
+          {
+            "variable": "foo-2",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "2",
+                "2"
+              ]
+            ]
+          },
+          {
+            "variable": "foo-3",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "3",
+                "3"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/kod": {
+        "label": "Standardkod för bransch",
+        "axes": [
+          [
+            "numeric",
+            "numeric"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "kod3",
+            "delivery_column": null,
+            "coords": [
+              [
+                "numeric",
+                "03",
+                "3"
+              ]
+            ]
+          },
+          {
+            "variable": "kod7",
+            "delivery_column": null,
+            "coords": [
+              [
+                "numeric",
+                "07",
+                "7"
+              ]
+            ]
+          },
+          {
+            "variable": "kod11",
+            "delivery_column": null,
+            "coords": [
+              [
+                "numeric",
+                "11",
+                "11"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/morsak": {
+        "label": "ICD-kod underliggande dödsorsak",
+        "axes": [
+          [
+            "ordinal",
+            "ordinal"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "morsak1",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "1",
+                "1"
+              ]
+            ]
+          },
+          {
+            "variable": "morsak2",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "2",
+                "2"
+              ]
+            ]
+          },
+          {
+            "variable": "morsak3",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "3",
+                "3"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/tillsyn-1-skolbarn": {
+        "label": "Tillsyn 1 skolbarn",
+        "axes": [
+          [
+            "ordinal",
+            "ordinal"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "tillsyn-1-skolbarn-1",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "1",
+                "1"
+              ]
+            ]
+          },
+          {
+            "variable": "tillsyn-1-skolbarn-2",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "2",
+                "2"
+              ]
+            ]
+          },
+          {
+            "variable": "tillsyn-1-skolbarn-3",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "3",
+                "3"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/diag": {
+        "label": "Diagnos \"kod\" \\rad",
+        "axes": [
+          [
+            "ordinal",
+            "ordinal"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "diag1",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "1",
+                "1"
+              ]
+            ]
+          },
+          {
+            "variable": "diag2",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "2",
+                "2"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/dodsorsak": {
+        "label": "Underliggande dödsorsak enligt ICD",
+        "axes": [
+          [
+            "numeric",
+            "numeric"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "dodsorsak2",
+            "delivery_column": null,
+            "coords": [
+              [
+                "numeric",
+                "2",
+                "2"
+              ]
+            ]
+          },
+          {
+            "variable": "dodsorsak3",
+            "delivery_column": null,
+            "coords": [
+              [
+                "numeric",
+                "3",
+                "3"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/f": {
+        "label": "GenericVar",
+        "axes": [
+          [
+            "ordinal",
+            "ordinal"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "f1",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "1",
+                "1"
+              ]
+            ]
+          },
+          {
+            "variable": "f2",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "2",
+                "2"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/inkomst1": {
+        "label": "Inkomst per år",
+        "axes": [
+          [
+            "vintage",
+            "vintage"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "inkomst1-2000",
+            "delivery_column": null,
+            "coords": [
+              [
+                "vintage",
+                "2000",
+                "2000"
+              ]
+            ]
+          },
+          {
+            "variable": "inkomst1-2010",
+            "delivery_column": null,
+            "coords": [
+              [
+                "vintage",
+                "2010",
+                "2010"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/sun-niva": {
+        "label": "Utbildningsnivå enligt SUN",
+        "axes": [
+          [
+            "vintage",
+            "vintage"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "sun-niva2000",
+            "delivery_column": null,
+            "coords": [
+              [
+                "vintage",
+                "2000",
+                "2000"
+              ]
+            ]
+          },
+          {
+            "variable": "sun-niva2010",
+            "delivery_column": null,
+            "coords": [
+              [
+                "vintage",
+                "2010",
+                "2010"
+              ]
+            ]
+          }
+        ]
+      },
+      "scb/foretag/ink": {
+        "label": "Förvärvsinkomst",
+        "axes": [
+          [
+            "ordinal",
+            "ordinal"
+          ]
+        ],
+        "members": [
+          {
+            "variable": "ink1",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "1",
+                "1"
+              ]
+            ]
+          },
+          {
+            "variable": "ink2",
+            "delivery_column": null,
+            "coords": [
+              [
+                "ordinal",
+                "2",
+                "2"
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

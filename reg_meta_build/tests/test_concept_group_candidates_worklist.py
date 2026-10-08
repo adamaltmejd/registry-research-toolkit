@@ -1,5 +1,10 @@
-"""Concept-group candidate worklists: regeneration under accepted scopes and the
-rendered TOML round-trip through the worklist loader (#496).
+"""Concept-group candidate regeneration under accepted scopes (#496).
+
+The candidate catalog itself (families, the label gate, collisions, ranking and the
+round-trip through the worklist loader) is pinned at the CLI boundary
+(`cases/cli/concept-group-candidates/`). Accepted scopes stay here: the
+`concept-group-candidates` command reads them from the checkout's curation tree, not
+from a directory a case can supply, so a case cannot reach them.
 
 Fully synthetic: in-memory `_slugged_db` helpers, never the shipped
 `concept_groups.toml` or a real built DB."""
@@ -8,52 +13,41 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from _concept_group_families import add_family as _add_family, base_db as _base_db
-from _slugged_db import add_register, add_variable
-from reg_meta_build.concept_group_candidates import (
-    infer_concept_group_candidates,
-    render_candidates_toml,
-)
-from reg_meta_build.concept_groups import load_worklist_concept_groups
+from _slugged_db import add_variable, build_slugged_db
+from reg_meta_build.concept_group_candidates import infer_concept_group_candidates
 
 if TYPE_CHECKING:
-    from pathlib import Path
+    import sqlite3
+
+
+def _base_db() -> sqlite3.Connection:
+    """An scb/lisa register with no variables and no curated classification — the
+    blank canvas each test seeds with `add_variable`."""
+    return build_slugged_db(variable=None, version=None, classification=None)
+
+
+def _add_family(
+    conn: sqlite3.Connection,
+    *,
+    register_id: int,
+    stem: str,
+    suffixes: list[int],
+    name: str,
+    var_id_base: int,
+) -> None:
+    """Add a digit-suffixed slug family (`<stem><suffix>`) all sharing one `name`
+    (a strong, foldable family). `var_id` is unique per member."""
+    for i, suffix in enumerate(suffixes):
+        add_variable(
+            conn,
+            register_id=register_id,
+            var_id=var_id_base + i,
+            name=name,
+            slug=f"{stem}{suffix}",
+        )
 
 
 class TestGenerator:
-    def test_render_escapes_control_chars_and_roundtrips(self, tmp_path: Path) -> None:
-        # A family name carrying an embedded newline (and quotes/backslash) must not
-        # break the generated `label = "..."` line or the provenance comment: the
-        # shared _toml_str escapes control chars and _toml_comment collapses newlines,
-        # so the worklist still re-parses through load_worklist_concept_groups.
-        conn = _base_db()
-        _add_family(
-            conn,
-            register_id=1,
-            stem="diag",
-            suffixes=[1, 2],
-            name='Diagnos\n"kod"\\rad',  # newline + quotes + backslash
-            var_id_base=1500,
-        )
-        conn.commit()
-        result = infer_concept_group_candidates(conn)
-        assert len(result.candidates) == 1
-        toml = render_candidates_toml(
-            result, min_siblings=2, min_label_prefix=8, min_agreement=0.5
-        )
-        # The newline in the label must have been collapsed into the single
-        # provenance comment line, not split it into a second (would-be-TOML) line:
-        # exactly one `# axis=` line, and the fragment after it ("kod"...) must NOT
-        # have leaked onto its own bare line.
-        comment_lines = [ln for ln in toml.splitlines() if ln.startswith("# axis=")]
-        assert len(comment_lines) == 1
-        assert not any(ln.startswith('"kod"') for ln in toml.splitlines())
-
-        path = tmp_path / "candidates.toml"
-        path.write_text(toml, encoding="utf-8")
-        groups = load_worklist_concept_groups(path)
-        assert {g.key for g in groups} == {"diag"}
-
     def test_accepted_family_reemitted_when_scope_passed(self) -> None:
         # Idempotent regeneration: simulate an accepted auto family by materializing
         # it as a `curated` concept group keyed on its own stem ('morsak') and claiming
@@ -299,46 +293,3 @@ class TestGenerator:
         scope = frozenset({("scb", "lisa", "morsak")})
         result = infer_concept_group_candidates(conn, accepted_scopes=scope)
         assert result.candidates == []
-
-    def test_render_roundtrips_through_loader(self, tmp_path: Path) -> None:
-        conn = _base_db()
-        add_register(conn, register_id=2, slug="par", name="PAR")
-        _add_family(
-            conn,
-            register_id=1,
-            stem="morsak",
-            suffixes=[1, 2, 3],
-            name='ICD-kod "underliggande" dödsorsak',  # embedded quotes → escaping
-            var_id_base=1000,
-        )
-        _add_family(
-            conn,
-            register_id=2,
-            stem="sun-niva",
-            suffixes=[2000, 2010],
-            name="Utbildningsnivå enligt SUN",
-            var_id_base=1100,
-        )
-        conn.commit()
-        result = infer_concept_group_candidates(conn)
-        toml = render_candidates_toml(
-            result, min_siblings=2, min_label_prefix=8, min_agreement=0.5
-        )
-        path = tmp_path / "candidates.toml"
-        path.write_text(toml, encoding="utf-8")
-
-        groups = load_worklist_concept_groups(path)
-        # Every emitted candidate re-parses as a curated group, same key/register.
-        emitted = {(c.register_fqid, c.key) for c in result.candidates}
-        parsed = {(f"{g.provider}/{g.register}", g.key) for g in groups}
-        assert emitted == parsed
-        assert len(groups) == len(result.candidates)
-        # Members carry the variable-leaf reference + facet.
-        by_key = {g.key: g for g in groups}
-        morsak = by_key["morsak"]
-        assert all(m.variable is not None for m in morsak.members)
-        # The generator emits the legacy single-axis shape; the loader maps it to
-        # whole-variable members (delivery_column None) with one coord each (#819).
-        assert morsak.axes == (("ordinal", "ordinal"),)
-        assert all(m.delivery_column is None for m in morsak.members)
-        assert [m.coords[0][1] for m in morsak.members] == ["1", "2", "3"]
