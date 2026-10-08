@@ -90,6 +90,26 @@ jobs:
       - run: uv sync --frozen
       - run: bash scripts/check_versions.sh
 
+  # Exit-code and message tests for the repo's Claude Code hooks
+  # (.claude/hooks/tests). Plain bash, python3 and git, all preinstalled on the
+  # runner; the bootstrap test stubs uv and bun, so no `uv sync`. Budget:
+  # ARCHITECTURE.md "Tiers".
+  hook-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v7.0.1
+      # Run every script so one failure does not hide another, then fail if any did.
+      - name: Run hook tests
+        run: |
+          status=0
+          for t in .claude/hooks/tests/test_*.sh; do
+            echo "::group::$t"
+            bash "$t" || status=1
+            echo "::endgroup::"
+          done
+          exit "$status"
+
   # One leg per root `testpaths` entry (pyproject.toml); keep the two lists in
   # step. `budget` is the suite's CI-job budget in ARCHITECTURE.md "Tiers",
   # setup included: a leg over it is a test-audit finding, not a reason to
