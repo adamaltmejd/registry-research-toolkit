@@ -1,0 +1,8 @@
+{
+  "description": "sos-source with the Variabelnivå header cell B1 renamed from Variabelnamn to Namn, as an upstream rename would leave it.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "cells": {"Metadata - Variabelnivå!B1": "Namn"}
+  }
+}
