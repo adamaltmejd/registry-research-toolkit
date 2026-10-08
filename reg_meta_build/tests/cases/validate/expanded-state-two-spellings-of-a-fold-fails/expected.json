@@ -1,0 +1,9 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "expanded_state spells a column fold more than one way at (variable_id, register_variant_id, fold) [(2, 10, 'testcol')]"
+  ],
+  "failures_absent": [
+    "resolver_column is not the projection"
+  ]
+}

@@ -30,23 +30,36 @@ from reg_meta_build.db import (
     open_built_db,
     publish_db,
 )
+from reg_meta_build.derive.browse import browse_scopes, derive_browse
 from reg_meta_build.derive.search_index import derive_search_indexes
-from reg_meta_build.derive.states import resolver_columns
+from reg_meta_build.derive.states import derive_states
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+# Every table DERIVED_DDL creates; the search indexes are analyzed with the base.
+DERIVED_TABLES = (
+    "expanded_state",
+    "browse_delivery",
+    "delivery_window",
+    "resolver_column",
+)
+
 
 def derive(conn: sqlite3.Connection) -> None:
-    """Recompute every derived table from the committed core graph on `conn`."""
-    rows = resolver_columns(conn)
-    conn.execute("DELETE FROM resolver_column")
-    conn.executemany(
-        "INSERT INTO resolver_column (variable_id, register_variant_id, "
-        "delivery_column_lower, delivery_column_name) VALUES (?, ?, ?, ?)",
-        rows,
-    )
+    """Recompute every derived table from the committed core graph on `conn`.
+
+    Holdings-scope rows need a steward manifest and compiled holdings; extend-db
+    compiles them after deriving, then adds those rows with `derive_holdings`.
+    """
+    derive_states(conn)
+    derive_browse(conn, browse_scopes(conn))
     derive_search_indexes(conn)
+
+
+def derive_holdings(conn: sqlite3.Connection) -> None:
+    """Recompute the holdings-scope rows from a steward's compiled holdings."""
+    derive_browse(conn, ("holdings",))
 
 
 def derive_artifact(base: Path, out: Path) -> None:
@@ -102,7 +115,8 @@ def derive_artifact(base: Path, out: Path) -> None:
                 sorted(manifest.items()),
             )
             # The base's statistics stay valid; only the derived tables are new.
-            conn.execute("ANALYZE resolver_column")
+            for table in DERIVED_TABLES:
+                conn.execute(f"ANALYZE {table}")
             conn.commit()
         validation = validate_built_db(tmp, flavored=kind == "steward")
         if not validation.passed:
