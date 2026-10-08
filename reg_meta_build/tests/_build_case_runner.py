@@ -11,7 +11,9 @@ built artifact through a fixed set of named projections.
 Prepared inputs are cached by the content hash of their source spec, so cases that
 share a source set prepare it once per session. An entry is written to a private
 staging directory and renamed into place: concurrent xdist workers never write the
-same path, and a failed preparation never leaves a partial entry.
+same path, and a failed preparation never leaves a partial entry. With
+`REG_FIXTURE_CACHE` set, entries persist across sessions and worktrees in a
+generation of that cache keyed by everything that shapes a prepared input.
 """
 
 from __future__ import annotations
@@ -23,6 +25,7 @@ import os
 import re
 import shutil
 import sqlite3
+import subprocess
 import tempfile
 from contextlib import closing
 from dataclasses import dataclass
@@ -45,6 +48,7 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from openpyxl import load_workbook
+from reader_artifacts import FIXTURE_CACHE_ENV, build_inputs_digest, generation_dir
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import canonical_sha256
 from reg_meta_build.pipeline import build_catalog, check_curation
@@ -286,13 +290,51 @@ def prepared_cache(tmp_path_factory: pytest.TempPathFactory) -> PreparedCache:
 
 
 def cache_root(basetemp: Path) -> Path:
-    """The session's prepared-input cache, shared by its xdist workers.
+    """The prepared-input cache: the session's, or a persistent one when opted in.
 
-    A worker's basetemp is `<session>/popen-gwN`, so the cache sits beside the
-    workers under the session directory; a serial run keeps it in its own basetemp.
+    Without `REG_FIXTURE_CACHE` (CI) the cache lives for one session, shared by its
+    xdist workers: a worker's basetemp is `<session>/popen-gwN`, so it sits beside
+    the workers under the session directory; a serial run keeps it in its own
+    basetemp. With it set, the cache is a generation of the shared fixture cache.
     """
+    if os.environ.get(FIXTURE_CACHE_ENV):
+        return generation_dir(_prepared_inputs_digest()) / "build-case-prepared"
     session = basetemp.parent if os.environ.get("PYTEST_XDIST_WORKER") else basetemp
     return session / "build-case-prepared"
+
+
+# The test modules that write and accept a source spec's provider deliveries; an
+# edit to any of them changes what a prepared entry holds.
+_PREPARING_MODULES = (
+    "_build_case_runner.py",
+    "_csv_fixtures.py",
+    "_sos_fixtures.py",
+    "_prepared_fixtures.py",
+    "_pipeline_catalog_support.py",
+)
+
+
+def _prepared_inputs_digest() -> str:
+    """Everything a persistent prepared entry depends on besides its source spec.
+
+    The reader cache's build inputs (the `reg_meta_build`, `reg_meta` and
+    `reg_schema` sources, the native extension sources, the installed
+    distributions, Python and SQLite), the modules that prepare a spec, and the Git
+    that commits and checks the accepted repository.
+    """
+    here = Path(__file__).parent
+    return canonical_sha256(
+        {
+            "build_inputs": build_inputs_digest(),
+            "modules": {
+                name: hashlib.sha256((here / name).read_bytes()).hexdigest()
+                for name in _PREPARING_MODULES
+            },
+            "git": subprocess.run(
+                ["git", "--version"], capture_output=True, text=True, check=True
+            ).stdout.strip(),
+        }
+    )
 
 
 # -- Curation authoring placeholders --------------------------------------------
