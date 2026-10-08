@@ -9,7 +9,9 @@
 - ``lineage-registers/<stratum>/<id>``: the CLI baseline's ``get lineage <name>
   --register <register>`` case of that id (reused, not run again) against
   ``lineage``'s ``registers`` in reference scope, the CLI's, kept to that register.
-  Both compare as sorted ``(register_name, role, source_register_text,
+  A variable without a name is not compared: the CLI then matches its
+  ``provider_key``, which other variables of the register may share, while
+  ``lineage`` matches a nameless variable only itself. Both compare as sorted ``(register_name, role, source_register_text,
   instance_count, year_range)`` rows: the CLI lists in table order and names
   registers by storage id.
 
@@ -110,7 +112,8 @@ def cases(
             str(variable_id): (f"{p}/{r}/{v}" if v else None, f"{p}/{r}")
             for variable_id, p, r, v in conn.execute(
                 "SELECT v.variable_id, p.slug, r.slug, v.slug FROM variable v "
-                "JOIN register r USING(register_id) JOIN provider p USING(provider_id)"
+                "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
+                "WHERE v.name IS NOT NULL"
             )
         }
     named = [s for s in scopes if s is not None]

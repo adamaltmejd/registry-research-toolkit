@@ -462,7 +462,9 @@ impl<'c> Builder<'c> {
             if !seen.insert((emitted.state_id, emitted.delivery_column_name.clone())) {
                 continue;
             }
-            let row = &rows[&emitted.expanded_state_id];
+            let row = rows
+                .get(&emitted.expanded_state_id)
+                .expect("an emitted row is an expanded_state row");
             let classification_slugs = match &row.coded_from {
                 Some(from) => show::rows(
                     self.conn,
