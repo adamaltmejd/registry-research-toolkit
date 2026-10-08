@@ -136,7 +136,7 @@
         ["nocode", "2020-01-01", "2020-12-31", null, null],
         ["versions", "2020-01-01", "2020-12-31", "001", "Label"]
       ],
-      "note": "test_exact_codes_labels_duplicates_and_occurrence_evidence_survive and test_non_sheet_annual_label_boundary_keeps_both_labels (DUPS: a Vardemangder list is not a sheet, so two labels of 001 are both kept and the repeated row is one member); test_missing_code_or_label_withholds_complete_list_only_where_member_applies[None-Label] (NOCODE: a blank Värdekod is unknown membership and withholds the list for the CVID's year); test_conflicting_labels_preserve_agreed_codes_without_selecting_a_label (VERSIONS: two version names with equal members keep 001 and report only the label conflict; the withheld version label itself has no projection)."
+      "note": "test_exact_codes_labels_duplicates_and_occurrence_evidence_survive and test_non_sheet_annual_label_boundary_keeps_both_labels (DUPS: a Vardemangder list is not a sheet, so two labels of 001 are both kept and the repeated row is one member); test_missing_code_or_label_withholds_complete_list_only_where_member_applies[None-Label] (NOCODE: an unlabelled blank Värdekod is a missing code, unknown membership, and withholds the list for the CVID's year; the replaced parameter's labelled blank is no longer missing under the 2026-10-08 blank-code decision, which reads it as the empty code, see cases/prepare/scb-values-labelled-blank-code-is-the-empty-code); test_conflicting_labels_preserve_agreed_codes_without_selecting_a_label (VERSIONS: two version names with equal members keep 001 and report only the label conflict; the withheld version label itself has no projection)."
     }
   ]
 }

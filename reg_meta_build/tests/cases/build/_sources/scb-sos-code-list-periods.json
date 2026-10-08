@@ -1,5 +1,5 @@
 {
-  "description": "One register per code-list shape. SCB: DUPS repeats 001 'Original label' on two items beside 001 'Another label'; NOCODE adds a blank-code item to its list; VERSIONS delivers one CVID under two list versions with equal members. SOS (Kodregistret, COD): each variable's Kodlista_<NAME> sheet (and, for EQ and the RIV* variables, a second sheet Kodlista_<NAME>_B naming the same variable) states dated [period, code, label] rows. A blank period is a year-independent row.",
+  "description": "One register per code-list shape. SCB: DUPS repeats 001 'Original label' on two items beside 001 'Another label'; NOCODE adds an unlabelled blank-code item to its list; VERSIONS delivers one CVID under two list versions with equal members. SOS (Kodregistret, COD): each variable's Kodlista_<NAME> sheet (and, for EQ and the RIV* variables, a second sheet Kodlista_<NAME>_B naming the same variable) states dated [period, code, label] rows. A blank period is a year-independent row.",
   "scb": {
     "registerinformation": [
       {"cvid": 13001, "var_id": 1301, "colname": "DUPS", "varname": "Dups", "register": ["DUPS", 13, 130]},
@@ -11,7 +11,7 @@
       "d|1|001|Original label|13001|1302",
       "d|1|001|Another label|13001|1303",
       "m|1|0|Label|15001|1501",
-      "m|1||Label|15001|1502",
+      "m|1|||15001|1502",
       "First edition|1|001|Label|19001|1901",
       "Second edition|1|001|Label|19001|1902"
     ]
