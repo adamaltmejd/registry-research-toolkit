@@ -2,15 +2,16 @@
 
     uv run python -m conformance.differential
 
-Fetches (once) the pinned artifacts and the baseline reader environment into the
-shared cache, derives a copy of each artifact with the checkout's builder (once per
-base and builder source, so on a committed tree), generates the seeded cases, runs
-each case through both readers' ``reg-meta`` CLI JSON in parallel worker processes
-(the baseline on the originals, the checkout on the derived copies), and compares
-exit code, stdout bytes and stderr per case. Then runs the fold sweep (``folds.py``):
-the baseline's ``fold_search`` against ``reg-core-py``. Writes ``report.json`` into
-``<cache>/report/`` and prints a plain-text summary. Exit 0 when no case and no fold
-input differs (outside a named exception), 1 when any does.
+Fetches (once) the pinned artifacts and the baseline environment into the shared
+cache, derives a reference copy of each artifact with the baseline commit's builder
+(once per base and commit) and a candidate copy with the checkout's builder (once per
+base and builder source, so on a committed tree), generates the seeded cases from the
+originals, runs each case through both readers' ``reg-meta`` CLI JSON in parallel
+worker processes (the baseline on the reference copies, the checkout on the candidate
+copies), and compares exit code, stdout bytes and stderr per case. Then runs the
+fold sweep (``folds.py``): the baseline's ``fold_search`` against ``reg-core-py``.
+Writes ``report.json`` into ``<cache>/report/`` and prints a plain-text summary. Exit 0
+when no case and no fold input differs (outside a named exception), 1 when any does.
 
 The arm under test is this interpreter's ``reg_meta`` with the caller's environment,
 so a perturbed copy is tested with ``PYTHONPATH=<copy>/src uv run python -m
@@ -23,8 +24,8 @@ volatile (``generated_at``, ``run.duration_ms``, ``database``) are never printed
 byte.
 
 The operations the Rust server implements also run over HTTP (``served.py``): the
-checkout's ``reg-meta serve`` on the derived copies against the baseline webapp on the
-originals, compared the same way after mapping the baseline's responses.
+checkout's ``reg-meta serve`` on the candidate copies against the baseline webapp on
+the reference copies, compared the same way after mapping the baseline's responses.
 """
 
 from __future__ import annotations
@@ -165,8 +166,10 @@ def _worker(
 def run(config: dict) -> int:
     started = time.monotonic()
     pins = cache.Pins.from_config(config)
-    baseline_python = cache.ensure_baseline(pins)
+    baseline_tree = cache.ensure_baseline(pins)
+    baseline_python = cache.baseline_python(baseline_tree)
     dirs = cache.ensure_artifacts(pins)
+    reference = cache.ensure_reference(pins, dirs, baseline_tree)
     derived = cache.ensure_derived(pins, dirs)
     server = cache.ensure_server()
     setup_seconds = time.monotonic() - started
@@ -178,9 +181,9 @@ def run(config: dict) -> int:
         served_future = served_pool.submit(
             served.served_cases,
             baseline_python,
-            baseline_python.parents[2] / "stewards",
+            baseline_tree / "reg_webapp" / "stewards",
             server,
-            dirs,
+            reference,
             derived,
             report_dir / "servers",
         )
@@ -188,7 +191,11 @@ def run(config: dict) -> int:
         # Half the cores per arm; both arms run at once.
         workers = max(1, (os.cpu_count() or 2) // 2)
         arms = {
-            "baseline": ([str(baseline_python), "-I"], cache.isolated_env(), {}),
+            "baseline": (
+                [str(baseline_python), "-I"],
+                cache.isolated_env(),
+                {str(dirs[c]): str(reference[c]) for c in dirs},
+            ),
             "checkout": (
                 [sys.executable, "-P"],
                 dict(os.environ),
