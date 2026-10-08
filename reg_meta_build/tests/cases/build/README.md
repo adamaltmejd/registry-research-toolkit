@@ -60,7 +60,7 @@ the behavior in plain words. For example,
   | `scope-`               | register-scoped builds and checks, and references out of the slice                                                                                                               |
   | `period-family-`       | relations into a curated `[[representation.period_family]]`                                                                                                                      |
   | `source-relation-`     | literal source relationships, unbound code lists and source findings                                                                                                             |
-  | `value-`               | source code lists bound to native members                                                                                                                                        |
+  | `value-`               | source code lists bound by native member, member name or declared list name: item and row validity, list references, declared-identifier drops                                   |
   | `naming-`              | generated and authored slug pins under the zone freeze states                                                                                                                    |
   | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                                                                                     |
   | `dependency-`          | curated groups, tags, panel keys and relations whose catalog dependency is withheld                                                                                              |
