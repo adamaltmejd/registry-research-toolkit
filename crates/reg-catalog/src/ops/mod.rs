@@ -168,11 +168,10 @@ pub struct Raw {
     pub headers: Vec<(&'static str, String)>,
 }
 
-/// A download route (`operations.toml`'s `[[download]]`): the raw bytes whose
-/// metadata `operation` answers as JSON.
+/// A download route (`operations.toml`'s `[[download]]`): raw bytes whose metadata
+/// its operation answers as JSON.
 pub struct Download {
     pub path: &'static str,
-    pub operation: &'static str,
     pub description: &'static str,
     pub media_type: &'static str,
     pub params: &'static [Param],

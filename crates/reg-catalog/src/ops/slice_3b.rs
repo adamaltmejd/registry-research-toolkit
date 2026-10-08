@@ -40,7 +40,6 @@ pub const OPERATIONS: &[Operation] = &[
 
 pub const DOWNLOADS: &[Download] = &[Download {
     path: "/api/docs/file/{ref}/{filename}",
-    operation: "docs_related",
     description: "A related document's bytes, served inline.",
     media_type: "application/pdf",
     params: &[
