@@ -45,7 +45,6 @@ from reg_meta_build.sources.curated_records import read_curated_source
 from reg_meta_build.tags import load_tags
 
 from reg_meta_build.fqid_slugs import (
-    declared_column_ownership,
     load_lineage_config,
     load_provider_toml,
     load_slug_dir,
@@ -108,15 +107,6 @@ def _classifications(files: Path, args: dict[str, Any]) -> Any:
     return {"classifications": books, "families": load_classification_families(books)}
 
 
-def _column_ownership(files: Path, args: dict[str, Any]) -> Any:
-    return declared_column_ownership(
-        load_slug_dir(files),
-        provider=args["provider"],
-        source_id=args["source_id"],
-        curation_dir=files,
-    )
-
-
 LOADERS: dict[str, Callable[[Path, dict[str, Any]], Any]] = {
     "curation_tree": lambda files, args: load_curation_tree(files),
     "register_files": lambda files, args: load_register_files(files),
@@ -132,7 +122,6 @@ LOADERS: dict[str, Callable[[Path, dict[str, Any]], Any]] = {
     ),
     "slug_dir": lambda files, args: load_slug_dir(files),
     "provider_slugs": lambda files, args: load_provider_toml(_sole(files, "*.toml")),
-    "column_ownership": _column_ownership,
     "matrix_evidence": lambda files, args: load_matrix(
         files / "matrix.json",
         source_mode=args["source_mode"],

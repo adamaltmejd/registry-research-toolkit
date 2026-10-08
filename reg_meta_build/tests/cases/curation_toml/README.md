@@ -49,7 +49,6 @@ is the harder claim.
   | `lineage-`              | `lineage.toml`                                                               |
   | `curation-tree-`        | rules that span files of one curation tree                                   |
   | `slugs-`                | register-owned and provider slug files, panel keys and reserved slugs        |
-  | `column-ownership-`     | declared column ownership of a split variable family                         |
   | `matrix-`               | CIS answer-matrix evidence JSON                                              |
   | `codes-`                | classification code-list CSVs                                                |
   | `related-documents-`    | `related_documents.toml`                                                     |
@@ -152,7 +151,6 @@ Each loader reads `files/` as the curation root, or the named file inside it.
   | `lineage`                 | `load_lineage_config(files/lineage.toml)`                                                                                                                              |
   | `slug_dir`                | `load_slug_dir(files)`: register-owned slugs, or the provider slug files when there is no `registers/`                                                                 |
   | `provider_slugs`          | `load_provider_toml` of the one `*.toml` file                                                                                                                          |
-  | `column_ownership`        | `declared_column_ownership` of `args.provider` / `args.source_id` over `load_slug_dir(files)`                                                                          |
   | `matrix_evidence`         | `load_matrix(files/matrix.json)` with `args.source_mode` and `args.expected_selector`                                                                                  |
   | `valid_codes`             | `load_valid_codes(files/codes.csv)`                                                                                                                                    |
   | `related_documents`       | `load_related_documents(files/related_documents.toml)`                                                                                                                 |

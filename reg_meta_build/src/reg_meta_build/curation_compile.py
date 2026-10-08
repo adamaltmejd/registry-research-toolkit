@@ -2487,10 +2487,6 @@ def compile_partitions(
                     continue
                 entries = _scoped_partition_entries(entries, records, scoped)
                 split_ids = tuple(sorted({item.entry.source_id for item in entries}))
-                if len(partitions) > 1:
-                    raise ValueError(
-                        f"{register.source_file}: duplicate partition map for {source_id}"
-                    )
                 declared = None
                 reference = None
                 if partitions:

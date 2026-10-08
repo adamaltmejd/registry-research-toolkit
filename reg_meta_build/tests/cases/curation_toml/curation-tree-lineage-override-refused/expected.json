@@ -2,10 +2,10 @@
   "loader": "curation_tree",
   "replaces": "test_curation_tree.py::test_lineage_override_fails",
   "fails_if": "load_curation_tree accepts a per-variable [lineage.\"...\"] override that no build stage consumes",
-  "note": "load_lineage_config parses per-variable overrides; the curation tree refuses them because nothing consumes them.",
+  "note": "load_lineage_config refuses a per-variable override outright: nothing consumes one. The whole tree is the outermost boundary that reaches it.",
   "error": {
     "code": "lineage_override_unconsumed",
-    "locator": "curation/lineage.toml",
+    "locator": "lineage.toml",
     "message_contains": [
       "overrides have no consumer"
     ]

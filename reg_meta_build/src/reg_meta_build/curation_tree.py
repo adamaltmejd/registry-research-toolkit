@@ -2446,6 +2446,12 @@ _UNIQUE_TARGETS: tuple[tuple[type, Callable[[Any], object], str, str], ...] = (
         "matrix edition",
         "Select each edition in one matrix declaration.",
     ),
+    (
+        IdentityPartitionEntry,
+        lambda row: row.variable,
+        "partition map for family",
+        "Keep one ownership map per native family.",
+    ),
 )
 
 
@@ -2495,6 +2501,17 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
         seen: set[str] = set()
         targets: set[object] = set()
         for index, row in enumerate(rows, start=1):
+            # An exact repeat is the plainer report, so it is checked first.
+            key = json.dumps(
+                row.model_dump(mode="json"), ensure_ascii=False, sort_keys=True
+            )
+            if key in seen:
+                raise curation_error(
+                    _REGISTER_DUPLICATE_ENTRY,
+                    f"{file} [[{table}]] entry {index}: duplicate entry.",
+                    "Keep one declaration for each entry.",
+                )
+            seen.add(key)
             unique = next(
                 (rule for rule in _UNIQUE_TARGETS if isinstance(row, rule[0])), None
             )
@@ -2509,16 +2526,6 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
                         remediation,
                     )
                 targets.add(target)
-            key = json.dumps(
-                row.model_dump(mode="json"), ensure_ascii=False, sort_keys=True
-            )
-            if key in seen:
-                raise curation_error(
-                    _REGISTER_DUPLICATE_ENTRY,
-                    f"{file} [[{table}]] entry {index}: duplicate entry.",
-                    "Keep one declaration for each entry.",
-                )
-            seen.add(key)
     return entry
 
 
@@ -2638,13 +2645,6 @@ def load_classification_groups(root: Path) -> ClassificationGroups:
 def load_curation_tree(root: Path) -> CurationTree:
     """Read the classification files and the global files under ``root``."""
     lineage = load_lineage_config(root / "lineage.toml")
-    if lineage.overrides:
-        raise curation_error(
-            "lineage_override_unconsumed",
-            'curation/lineage.toml: per-variable [lineage."…"] overrides have no '
-            "consumer.",
-            'Remove the [lineage."…"] tables; keep [lineage_defaults] only.',
-        )
     classifications = load_classifications(root)
     return CurationTree(
         classifications=classifications,

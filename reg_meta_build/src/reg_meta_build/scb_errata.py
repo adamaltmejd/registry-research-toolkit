@@ -238,10 +238,10 @@ def _state_provenance(class_name: str, evidence: str) -> str:
     The first newline separates the class from free-text evidence; subsequent
     newlines remain part of that evidence. This keeps the catalog value useful
     as-is for CLI/JSON consumers while letting the SPA present the correction
-    class and supporting evidence separately. When corrections overlap a
-    provider-documented claim, the coalescer replaces this base form with a
-    scoped-attributions value that retains every edition/evidence pair;
-    correction-only overlaps use the same records under overlapping-attributions.
+    class and supporting evidence separately. The catalog contract also defines
+    `scoped-attributions` and `overlapping-attributions` provenance forms, which
+    readers still parse; the build emits neither today, and a curator may not
+    claim either name as a correction class.
     """
     if class_name in _RESERVED_CORRECTION_CLASSES:
         raise curation_error(

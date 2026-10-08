@@ -25,9 +25,7 @@ import tomllib
 import unicodedata
 from collections import Counter, defaultdict
 from dataclasses import dataclass
-from functools import lru_cache
 from itertools import combinations, groupby
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast, get_args
 
 from reg_meta.errors import RegMetaError
@@ -42,7 +40,8 @@ from .id import is_canonical_scb
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+    from collections.abc import Callable, Iterator, Mapping, Sequence
+    from pathlib import Path
 
     from .curation_tree import RegisterCuration
 
@@ -610,14 +609,6 @@ def _register_allows_split_base_pair(
         and any(part.owner == split.source_id for part in declaration.parts)
         for declaration in register.identity.split
     )
-
-
-@lru_cache(maxsize=8)
-def _register_files_for_curation_dir(path: str) -> tuple[RegisterCuration, ...]:
-    """Read the immutable register tree once per resolved curation directory."""
-    from .curation_tree import load_register_files
-
-    return load_register_files(Path(path))
 
 
 def load_provider_toml(path: Path) -> list[SlugEntry]:
@@ -1538,141 +1529,6 @@ def iter_curated_provider_entries(
         if path.name != FREEZE_STATE_FILE and not path.name.endswith(AUTO_FILE_SUFFIX)
         for e in load_provider_toml(path)
     ]
-
-
-@dataclass(frozen=True)
-class DeclaredColumnOwnership:
-    """Literal ownership for one native family, read from its register TOML."""
-
-    provider: str
-    source_id: str
-    split_ids: tuple[str, ...]
-    declared_columns: tuple[tuple[str, str | None], ...]
-    declaration_reference: str
-
-
-def declared_column_ownership(
-    entries: Iterable[SlugEntry],
-    *,
-    provider: str,
-    source_id: str,
-    curation_dir: Path | None = None,
-    register_files: Iterable[RegisterCuration] | None = None,
-) -> DeclaredColumnOwnership:
-    """Read one family partition from ``curation/registers`` and validate its keys.
-
-    Slug entries still define the named split siblings; only their register-file
-    partition maps define which delivered spelling belongs to each sibling.
-    ``unassigned_columns`` remain explicit None owners so unresolved identity is
-    preserved instead of silently absorbed.
-    """
-    _parse_variable_id(source_id)
-    if len(source_id.split(".")) != 2:
-        raise ValueError(
-            f"column ownership is declared per native family, got split key {source_id!r}"
-        )
-    slug_entries = tuple(entries)
-    family = [
-        entry
-        for entry in slug_entries
-        if entry.kind == "variable"
-        and entry.provider == provider
-        and (
-            entry.source_id == source_id or entry.source_id.startswith(source_id + ".")
-        )
-    ]
-    if not family:
-        raise ValueError(f"no tracked slug entries for family {provider}:{source_id!r}")
-    native_register = source_id.split(".", 1)[0]
-    register_slugs = {
-        entry.slug
-        for entry in slug_entries
-        if entry.kind == "register"
-        and entry.provider == provider
-        and entry.source_id == native_register
-        and entry.slug is not None
-    }
-    if len(register_slugs) != 1:
-        raise ValueError(
-            f"expected one register slug for {provider}:{native_register}, "
-            f"found {sorted(register_slugs)}"
-        )
-    register_slug = next(iter(register_slugs))
-    root = curation_dir or repo_curation_dir()
-    if register_files is None:
-        if root is None:
-            raise ValueError(
-                "register curation is unavailable outside the repo checkout"
-            )
-        loaded = _register_files_for_curation_dir(str(root.resolve()))
-    else:
-        loaded = tuple(register_files)
-    register_entry = next(
-        (
-            entry
-            for entry in loaded
-            if entry.register_info.provider == provider
-            and entry.register_info.slug == register_slug
-        ),
-        None,
-    )
-    if register_entry is None:
-        raise ValueError(
-            f"no register curation file for {provider}/{register_slug} ({source_id})"
-        )
-    file = register_entry.source_file
-    partitions = [
-        (index, partition)
-        for index, partition in enumerate(register_entry.identity.partition, start=1)
-        if partition.variable == source_id
-    ]
-    if not partitions:
-        raise curation_error(
-            "column_ownership_invalid",
-            f"{file}: no declared literal column ownership for {source_id!r}.",
-            "Add one [[identity.partition]] for the family to its register file, "
-            "mapping each delivered spelling to its split sibling.",
-        )
-    if len(partitions) != 1:
-        raise curation_error(
-            "column_ownership_invalid",
-            f"{file} [[identity.partition]] entry {partitions[1][0]}: duplicate "
-            f"[[identity.partition]] for {source_id!r}.",
-            "Keep one ownership map per native family.",
-        )
-    index, partition = partitions[0]
-    merged: dict[str, str | None] = dict(partition.columns)
-    for literal in partition.unassigned_columns:
-        if literal in merged:
-            raise curation_error(
-                "column_ownership_invalid",
-                f"{file} [[identity.partition]] entry {index}: literal {literal!r} "
-                "is both assigned and unassigned.",
-                "List each exact delivery spelling in one ownership field.",
-            )
-        merged[literal] = None
-    known = {
-        entry.source_id for entry in family if len(entry.source_id.split(".")) == 3
-    }
-    owners = {owner for owner in merged.values() if owner is not None}
-    if owners != known:
-        unknown = sorted(owners - known)
-        missing = sorted(known - owners)
-        raise curation_error(
-            "column_ownership_invalid",
-            f"{file} [[identity.partition]] entry {index}: ownership is not "
-            "family-complete. "
-            + (f"Owners without slug entries: {unknown}. " if unknown else "")
-            + (f"Slug splits without owners: {missing}." if missing else ""),
-            "Cover every tracked split sibling and no other split.",
-        )
-    return DeclaredColumnOwnership(
-        provider=provider,
-        source_id=source_id,
-        split_ids=tuple(sorted(owners)),
-        declared_columns=tuple(sorted(merged.items())),
-        declaration_reference=partition.columns_ref,
-    )
 
 
 def _entity_key_curation_basis(
@@ -3115,34 +2971,29 @@ class LineageConfig:
     providers can reuse a register slug, so an `scb/rtb` default must not bleed
     onto an `sos/rtb` source (Codex P2 on #145). `defaults` maps
     `(provider_slug, source_register_slug)` → the heuristic default source
-    variant slug (the `[lineage_defaults]` block). `overrides` maps
-    `(provider_slug, consumer_register_slug, variable_slug)` →
-    `(source_register_slug, source_variant_slug)` (the
-    `[lineage."<provider>/<consumer>/<slug>"]` blocks).
+    variant slug (the `[lineage_defaults]` block).
 
-    Both carry pure shape (string-typed values); existence of the named
-    registers / variants is validated by `link_variable_state_lineage` against
-    the DB — this loader stays DB-free so it's testable in isolation.
+    Values carry pure shape (string-typed); existence of the named registers /
+    variants is validated by `link_variable_state_lineage` against the DB — this
+    loader stays DB-free so it's testable in isolation.
     """
 
     defaults: dict[tuple[str, str], str]
-    overrides: dict[tuple[str, str, str], tuple[str, str]]
 
 
 def load_lineage_config(path: Path | None) -> LineageConfig:
     """Parse the single navigation-lineage overlay.
 
-    ``[lineage_defaults]`` keys are two-segment source-register FQIDs and
-    ``[lineage."…"]`` keys are three-segment consumer-variable FQIDs. Provider
-    association is therefore explicit rather than inferred from an identity
-    filename. Missing curation yields an empty config; malformed shape still
+    ``[lineage_defaults]`` keys are two-segment source-register FQIDs, so
+    provider association is explicit rather than inferred from an identity
+    filename. Per-variable ``[lineage."…"]`` overrides have no consumer and are
+    refused. Missing curation yields an empty config; malformed shape still
     fails before any provider-specific resolution.
     """
     defaults: dict[tuple[str, str], str] = {}
-    overrides: dict[tuple[str, str, str], tuple[str, str]] = {}
 
     if path is None or not path.is_file():
-        return LineageConfig(defaults=defaults, overrides=overrides)
+        return LineageConfig(defaults=defaults)
     file = display_path(path)
     try:
         data = tomllib.loads(path.read_text(encoding="utf-8"))
@@ -3152,13 +3003,19 @@ def load_lineage_config(path: Path | None) -> LineageConfig:
             f"Could not parse lineage TOML {file}: {exc}",
             "Fix the TOML syntax in reg_meta_build/curation/lineage.toml.",
         ) from exc
-    unknown_top = set(data) - {"lineage_defaults", "lineage"}
+    if "lineage" in data:
+        raise curation_error(
+            "lineage_override_unconsumed",
+            f'{file}: per-variable [lineage."…"] overrides have no consumer.',
+            'Remove the [lineage."…"] tables; keep [lineage_defaults] only.',
+        )
+    unknown_top = set(data) - {"lineage_defaults"}
     if unknown_top:
         raise curation_error(
             "lineage_invalid",
             f"{file}: unknown top-level key(s): {sorted(unknown_top)}.",
-            'Use only [lineage_defaults] and [lineage."<consumer FQID>"] '
-            "tables in reg_meta_build/curation/lineage.toml.",
+            "Use only the [lineage_defaults] table in "
+            "reg_meta_build/curation/lineage.toml.",
         )
 
     raw_defaults = data.get("lineage_defaults", {})
@@ -3189,46 +3046,7 @@ def load_lineage_config(path: Path | None) -> LineageConfig:
             )
         defaults[(source_parts[0], source_parts[1])] = variant
 
-    raw_overrides = data.get("lineage", {})
-    if not isinstance(raw_overrides, dict):
-        raise curation_error(
-            "lineage_override_malformed",
-            f"{file}: [lineage] must contain "
-            '[lineage."<provider>/<consumer>/<variable>"] tables.',
-            "Use quoted three-segment FQID keys under [lineage].",
-        )
-    for consumer_fqid, block in raw_overrides.items():
-        if not isinstance(block, dict):
-            raise curation_error(
-                "lineage_override_malformed",
-                f"{file}: [lineage.{consumer_fqid!r}] must be a table with "
-                "source_register and source_variant keys.",
-                "Use a table under a quoted consumer-variable FQID.",
-            )
-        consumer_parts = consumer_fqid.split("/")
-        if len(consumer_parts) != 3 or not all(consumer_parts):
-            raise curation_error(
-                "lineage_override_key_malformed",
-                f"{file}: [lineage.{consumer_fqid!r}] key must be a "
-                "three-segment provider/register/variable FQID.",
-                'Use a key such as [lineage."scb/lisa/kon"].',
-            )
-        source_register = block.get("source_register")
-        source_variant = block.get("source_variant")
-        if not isinstance(source_register, str) or not isinstance(source_variant, str):
-            raise curation_error(
-                "lineage_override_incomplete",
-                f"{file}: [lineage.{consumer_fqid!r}] requires string "
-                "source_register and source_variant keys.",
-                'Set both keys, e.g. source_register = "rams" and '
-                'source_variant = "individregister".',
-            )
-        overrides[(consumer_parts[0], consumer_parts[1], consumer_parts[2])] = (
-            source_register,
-            source_variant,
-        )
-
-    return LineageConfig(defaults=defaults, overrides=overrides)
+    return LineageConfig(defaults=defaults)
 
 
 # ---------------------------------------------------------------------------
@@ -4090,7 +3908,6 @@ __all__ = (
     "ENTITY_KINDS",
     "FREEZE_STATE_FILE",
     "SNAPSHOT_FILENAME",
-    "DeclaredColumnOwnership",
     "DefaultCandidateClass",
     "DefaultSlugCandidate",
     "EntityKeyPin",
@@ -4100,7 +3917,6 @@ __all__ = (
     "SlugEntry",
     "SlugFreezeState",
     "classify_default_candidate",
-    "declared_column_ownership",
     "diff_snapshot",
     "format_default_slug_hints",
     "freeze_state",

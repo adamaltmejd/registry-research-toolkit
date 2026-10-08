@@ -956,6 +956,10 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             EXIT_CONFIG if args.diagnostic else 0,
             exc,
         ), EXIT_OUTPUT
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError, KeyError) as exc:
         raise printable_error(
             RegMetaError(
@@ -1007,6 +1011,10 @@ def _cmd_check_curation(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             curation_dir=Path(args.curation_dir) if args.curation_dir else None,
             dump_decisions=Path(args.dump_decisions) if args.dump_decisions else None,
         )
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError, KeyError) as exc:
         raise printable_error(
             RegMetaError(
@@ -1031,6 +1039,10 @@ def _cmd_prepare_sources(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     output = Path(args.output_dir).expanduser().resolve()
     try:
         manifest = prepare_catalog_sources(selection, output)
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError) as exc:
         raise printable_error(
             RegMetaError(
@@ -1097,6 +1109,10 @@ def _cmd_prepare_input_bundle(
                 else None
             ),
         )
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError) as exc:
         raise printable_error(
             RegMetaError(
@@ -1255,6 +1271,10 @@ def _cmd_verify_input_bundle(
         manifest = verify_input_bundle(selection)
     except SnapshotMaterializationError as exc:
         raise _scb_snapshot_error(exc) from exc
+    except RegMetaError:
+        # A located refusal (e.g. CuratedSourceError, also a ValueError)
+        # keeps its own code instead of the command's wrapper code.
+        raise
     except (ValueError, OSError) as exc:
         raise printable_error(
             RegMetaError(
