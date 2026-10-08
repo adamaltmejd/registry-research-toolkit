@@ -5,8 +5,7 @@ from __future__ import annotations
 from dataclasses import replace
 
 import pytest
-from _source_coding_choices_support import list_claim as _claim
-from reg_meta_build.source_coding import CodeMembershipClaim
+from reg_meta_build.source_coding import CodeListClaim, CodeMembershipClaim
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
 
 
@@ -16,12 +15,12 @@ def test_documented_period_block_intersects_known_delivery_scope(end):
     known from 2020-01-01 (to 2020-12-31, or open) yields the delivery-scoped block, which
     covers 2020 and not 2019.
 
-    The build case `coding-documented-period-block-states-only-its-block` reaches the
-    closed form only: no build-case source delivers an open-ended anchor period beside an
-    open delivery (the SOS fixture writes closed Kodlista periods). Fails if
-    `documented_period_block` stops intersecting the anchor's supplied window with the
-    claim's delivery scope, or `documented_period_block_matches` accepts a window outside
-    that intersection.
+    The build case `coding-documented-period-block-states-only-its-block` (periodopen)
+    shows the allowed side only: a build refuses a 2019 entry first because VJ has no
+    2019 delivery ("period has no column occurrence"), so the intersection's lower bound
+    is never observable there. Fails if `documented_period_block` stops intersecting the
+    anchor's supplied window with the claim's delivery scope, or
+    `documented_period_block_matches` accepts a window outside that intersection.
     """
     from reg_meta_build.source_coding_choices import (
         documented_period_block,
@@ -41,10 +40,10 @@ def test_documented_period_block_intersects_known_delivery_scope(end):
         supplied_period="2019-2020" if end else "2019-",
         supplied_window=SourceValueWindow("known", "2019-01-01", end),
     )
-    claim = replace(
-        _claim("Source", "00", "2020-01-01", "2021-12-31"),
-        scope=effective,
-        members=(
+    claim = CodeListClaim(
+        "Source",
+        effective,
+        (
             CodeMembershipClaim(
                 "00", "Original", effective, associations=(association,)
             ),
@@ -63,6 +62,7 @@ def test_documented_period_block_intersects_known_delivery_scope(end):
                 ),
             ),
         ),
+        version_label="Source",
     )
     pairs = (("00", "Original"), ("blank", "Missing"))
     assert documented_period_block((claim,), association.locator) == (effective, pairs)

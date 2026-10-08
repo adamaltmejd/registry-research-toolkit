@@ -1,5 +1,5 @@
 {
-  "description": "Ten SOS workbooks (PBA..PBJ), one per claim, each delivering one variable (VA..VJ). PBJ delivers VJ open-ended from 2020 with an open 2019- block (00 Original, undated blank Missing). The others deliver theirs over 2019-2021, and each Kodlista states a dated 2019-2020 block (00 Original, then the undated 2-3 Range token and blank No type) followed by a dated 2021 block (00 Later meaning, undated blank Later missing meaning). A blank period is a year-independent row.",
+  "description": "sos-coding-period-blocks after review, one drift per workbook (PBA and PBE unchanged): PBB's 2-3 row gains its own period 2018-2020 (a new anchor inside the block); PBC's anchor period becomes 2018-2020; PBD loses its 'blank No type' row; PBF's list moves to sheet Kodlista_VF_B; PBG repeats its 2-3 row; PBH's later 'blank' row is relabelled 'Contrary later source meaning'; PBI gains a second sheet naming VI with one dated row.",
   "scb": {
     "registerinformation": [
       {
@@ -177,7 +177,7 @@
             "Original"
           ],
           [
-            "",
+            "2018-2020",
             "2-3",
             "Range token"
           ],
@@ -235,7 +235,7 @@
             "Beskrivning"
           ],
           [
-            "2019-2020",
+            "2018-2020",
             "00",
             "Original"
           ],
@@ -308,11 +308,6 @@
             "Range token"
           ],
           [
-            "",
-            "blank",
-            "No type"
-          ],
-          [
             "2021",
             "00",
             "Later meaning"
@@ -350,7 +345,7 @@
         }
       ],
       "sheets": {
-        "Kodlista_VF": [
+        "Kodlista_VF_B": [
           [
             "Variabelnamn",
             "VF"
@@ -435,6 +430,11 @@
           ],
           [
             "",
+            "2-3",
+            "Range token"
+          ],
+          [
+            "",
             "blank",
             "No type"
           ],
@@ -509,7 +509,7 @@
           [
             "",
             "blank",
-            "Later missing meaning"
+            "Contrary later source meaning"
           ]
         ]
       }
@@ -573,6 +573,22 @@
             "",
             "blank",
             "Later missing meaning"
+          ]
+        ],
+        "Kodlista_VI_B": [
+          [
+            "Variabelnamn",
+            "VI"
+          ],
+          [
+            "Tidsperiod",
+            "Kod",
+            "Beskrivning"
+          ],
+          [
+            "2019-2020",
+            "00",
+            "Original"
           ]
         ]
       }

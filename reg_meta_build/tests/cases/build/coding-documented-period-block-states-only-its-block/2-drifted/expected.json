@@ -1,0 +1,140 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": [
+        [
+          "curation/registers/sos/periodoutside.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/sos/periodanchor.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/sos/periodchanged.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/sos/periodrow.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/sos/periodsheet.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/sos/periodrepeat.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/sos/periodlater.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/sos/periodsecond.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "periodblock is absent: it is unchanged and still applies."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "periodblock"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": [
+          "periodanchor",
+          "periodchanged",
+          "periodrow",
+          "periodsheet",
+          "periodrepeat",
+          "periodlater",
+          "periodsecond"
+        ],
+        "label": "No type"
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "code"
+      ],
+      "rows": [],
+      "note": "No drifted workbook publishes the reviewed member blank 'No type': its source never delivers that member outside the reviewed block."
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "register": [
+          "periodblock",
+          "periodoutside",
+          "periodanchor",
+          "periodchanged",
+          "periodrow",
+          "periodsheet",
+          "periodrepeat",
+          "periodlater",
+          "periodsecond",
+          "periodopen"
+        ],
+        "code": "response_domain_assumption"
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "valid_to",
+        "summary"
+      ],
+      "rows": [
+        [
+          "periodblock",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ],
+        [
+          "periodopen",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ]
+      ],
+      "note": "No stale entry publishes its data warning."
+    }
+  ]
+}

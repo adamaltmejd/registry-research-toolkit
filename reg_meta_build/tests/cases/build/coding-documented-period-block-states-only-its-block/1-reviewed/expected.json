@@ -1,0 +1,383 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "case_id",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "curation/registers/sos/periodoutside.toml#/coding.documented/1/period/1",
+          "2021-01-01",
+          "2021-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": [
+          "periodblock",
+          "periodoutside",
+          "periodanchor",
+          "periodchanged",
+          "periodrow",
+          "periodsheet",
+          "periodrepeat",
+          "periodlater",
+          "periodsecond",
+          "periodopen"
+        ]
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "periodblock",
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodblock",
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "periodblock",
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "periodanchor",
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodanchor",
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "periodanchor",
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "periodchanged",
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodchanged",
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "periodchanged",
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "periodrow",
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodrow",
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "periodrow",
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "periodsheet",
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodsheet",
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "periodsheet",
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "periodrepeat",
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodrepeat",
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "periodrepeat",
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "periodlater",
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodlater",
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "periodlater",
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "periodsecond",
+          "2019-01-01",
+          "2020-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodsecond",
+          "2019-01-01",
+          "2020-12-31",
+          "2-3",
+          "Range token"
+        ],
+        [
+          "periodsecond",
+          "2019-01-01",
+          "2020-12-31",
+          "blank",
+          "No type"
+        ],
+        [
+          "periodblock",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodoutside",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodanchor",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodchanged",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodrow",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodsheet",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodrepeat",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodlater",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodsecond",
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ],
+        [
+          "periodoutside",
+          "2019-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "periodopen",
+          "2020-01-01",
+          "9999-12-31",
+          "00",
+          "Original"
+        ],
+        [
+          "periodopen",
+          "2020-01-01",
+          "9999-12-31",
+          "blank",
+          "Missing"
+        ]
+      ],
+      "note": "The documented block states its three literal members on the 2019-2020 state; without an applied entry the two disagreeing blocks publish no members."
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "register": [
+          "periodblock",
+          "periodoutside",
+          "periodanchor",
+          "periodchanged",
+          "periodrow",
+          "periodsheet",
+          "periodrepeat",
+          "periodlater",
+          "periodsecond",
+          "periodopen"
+        ],
+        "code": "response_domain_assumption"
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "valid_to",
+        "summary"
+      ],
+      "rows": [
+        [
+          "periodblock",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ],
+        [
+          "periodanchor",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ],
+        [
+          "periodchanged",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ],
+        [
+          "periodrow",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ],
+        [
+          "periodsheet",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ],
+        [
+          "periodrepeat",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ],
+        [
+          "periodlater",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ],
+        [
+          "periodsecond",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ],
+        [
+          "periodopen",
+          "2020-01-01",
+          "2020-12-31",
+          "The source tokens' stored encoding is unverified."
+        ]
+      ],
+      "note": "Each applied entry's `data_warning` is published on its window."
+    }
+  ]
+}

@@ -1,6 +1,5 @@
 {
   "status": "diagnostic_complete",
-  "rebuilt_identical": true,
   "projections": [
     {
       "table": "issues",
@@ -19,6 +18,9 @@
         ],
         [
           "curation/registers/scb/markerpartial.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/part.toml#/coding.documented/1/period/1"
         ],
         [
           "curation/registers/scb/pdfcomplete.toml#/coding.documented/1/period/1"
@@ -223,6 +225,27 @@
         ],
         [
           "markerpartial",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "part",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "ja"
+        ],
+        [
+          "held",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "Label"
+        ],
+        [
+          "held",
           "2020-01-01",
           "2020-12-31",
           null,
@@ -481,6 +504,63 @@
       "note": "The raw source lists stay unchanged in the periods no entry curates (the `claims == ...` asserts)."
     },
     {
+      "table": "state_codes",
+      "where": {
+        "register": [
+          "pooled",
+          "held"
+        ],
+        "variable": "value"
+      },
+      "fields": [
+        "register",
+        "valid_from",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "held",
+          "2020-01-01",
+          "1",
+          "Label"
+        ],
+        [
+          "held",
+          "2021-01-01",
+          "1",
+          "Label"
+        ],
+        [
+          "pooled",
+          "2010-01-01",
+          "1",
+          "ja"
+        ],
+        [
+          "pooled",
+          "2013-01-01",
+          null,
+          null
+        ]
+      ],
+      "note": "Coding follows the effective delivery: pooled's documented 2010 list codes the blank-named row delivered as VALUE, not the 2013 row; held's guarded extension codes the 2020 holding, which has no row and no coding of its own."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "scb/pooled/value",
+          "scb/held/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Neither effective occurrence raises a coding issue (the old `not diagnostics`)."
+    },
+    {
       "table": "warnings",
       "where": {
         "code": [
@@ -551,12 +631,20 @@
       ],
       "rows": [
         [
+          "part",
+          "2020-01-01"
+        ],
+        [
           "pdf",
           "2020-01-01"
         ],
         [
           "pdfconflict",
           "2020-01-01"
+        ],
+        [
+          "pooled",
+          "2010-01-01"
         ]
       ],
       "note": "A documented state's provenance names the PDF, its digest and page; pdfconflict's non-overlapping first half keeps its first entry's. The filter matches the entries' own authored URL, digest and page, not generated prose."

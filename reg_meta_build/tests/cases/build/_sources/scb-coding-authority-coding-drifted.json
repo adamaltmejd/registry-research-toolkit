@@ -559,6 +559,66 @@
           38,
           2
         ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 2400,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 242020,
+        "register": [
+          "PART",
+          24,
+          2
+        ]
+      },
+      {
+        "colname": "",
+        "cvid": 3900,
+        "var_id": 5,
+        "year": "2010",
+        "regver_id": 392010,
+        "register": [
+          "POOLED",
+          39,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 3901,
+        "var_id": 5,
+        "year": "2013",
+        "regver_id": 392013,
+        "register": [
+          "POOLED",
+          39,
+          2
+        ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 4000,
+        "var_id": 5,
+        "year": "2021",
+        "regver_id": 402021,
+        "register": [
+          "HELD",
+          40,
+          2
+        ]
+      },
+      {
+        "colname": "ANCHOR",
+        "cvid": 4001,
+        "var_id": 6,
+        "year": "2020",
+        "regver_id": 402020,
+        "register": [
+          "HELD",
+          40,
+          2
+        ]
       }
     ],
     "vardemangder": [
@@ -640,6 +700,7 @@
       "complete|1|16310|Changed|3800|3811",
       "complete|1|16320|Microgyria|3800|3812",
       "complete|1|16310|Erroneous|3800|3813",
+      "binary|1|1|Label|4000|4011",
       "keeper|1|1|Label|1200|9001",
       "source|1|2||1500|9002"
     ],
@@ -722,6 +783,7 @@
       "3811|2000-01-01|2030-12-31",
       "3812|2000-01-01|2030-12-31",
       "3813|2000-01-01|2030-12-31",
+      "4011|2000-01-01|2030-12-31",
       "9001|2000-01-01|2030-12-31",
       "9002|2000-01-01|2030-12-31"
     ]
