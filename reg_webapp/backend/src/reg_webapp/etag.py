@@ -1,9 +1,9 @@
 """Response-body validators bound to package, steward, generation and read scope.
 
 Catalog and search reads have a 60-second window and document reads a 24-hour
-window. The full
-compiled generation invalidates the keyspace even when a route body is unchanged.
-Conditional reads still execute the route before hashing its serialized bytes.
+window. The full compiled generation invalidates the keyspace even when a route body
+is unchanged. Conditional reads still execute the route before hashing its serialized
+bytes.
 """
 
 from __future__ import annotations
@@ -12,8 +12,9 @@ import hashlib
 
 CACHE_CONTROL = "public, max-age=86400, must-revalidate"
 
-# Short window for fold-bearing reads (catalog + search). A fresh fold or steward catalog edit must surface promptly for a
-# returning user whose browser holds the unversioned cached copy. The body-hash
+# Short window for fold-bearing reads (catalog + search). A fresh fold or steward
+# catalog edit must surface promptly for a returning user whose browser holds the
+# unversioned cached copy. The body-hash
 # ETag already changes when the body changes, but the 24h `CACHE_CONTROL` window
 # lets the browser serve its stale copy for a day WITHOUT revalidating. 60s
 # forces revalidation soon (the ETag avoids retransmitting an unchanged body, but

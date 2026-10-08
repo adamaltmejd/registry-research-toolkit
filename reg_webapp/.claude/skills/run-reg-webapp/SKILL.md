@@ -240,9 +240,10 @@ includes the Playwright browser project).
 - **HEAD requests 405** by design (routes register GET only; see DESIGN.md → ETag).
   Probe with `curl` GETs, not `-I`.
 - The Vite proxy defaults to `http://localhost:8000` (backend) and
-  `http://localhost:8001` (Rust server) but honors `REG_WEBAPP_BACKEND_URL` and
-  `REG_META_SERVER_URL` (`reg_webapp/frontend/vite.config.ts`) — `dev.sh` sets both
-  automatically; they only matter if you start Vite by hand against other ports.
+  `http://127.0.0.1:8001` (Rust server, which binds IPv4 loopback only) but honors
+  `REG_WEBAPP_BACKEND_URL` and `REG_META_SERVER_URL`
+  (`reg_webapp/frontend/vite.config.ts`) — `dev.sh` sets both automatically; they only
+  matter if you start Vite by hand against other ports.
 - **`/api/context` comes from the Rust server.** Its body is `{data, meta}` and it takes
   only `scope`; the FastAPI backend no longer serves it, so probe the backend with
   `/api/catalog`.

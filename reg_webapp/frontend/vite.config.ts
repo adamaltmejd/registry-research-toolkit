@@ -19,7 +19,7 @@ const runtimeProcess = (
 const backendUrl =
   runtimeProcess?.env?.REG_WEBAPP_BACKEND_URL ?? "http://localhost:8000";
 const rustServerUrl =
-  runtimeProcess?.env?.REG_META_SERVER_URL ?? "http://localhost:8001";
+  runtimeProcess?.env?.REG_META_SERVER_URL ?? "http://127.0.0.1:8001";
 const isCodexSeatbeltSandbox =
   runtimeProcess?.env?.CODEX_SANDBOX === "seatbelt";
 const isMacOS = runtimeProcess?.platform === "darwin";

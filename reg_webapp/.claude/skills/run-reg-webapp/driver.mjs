@@ -541,7 +541,6 @@ async function orderRetryCase(page, counts, shoot, project, expected) {
   check(
     manifest.provenance.mode === expected.mode &&
       manifest.provenance.steward === expected.steward &&
-      manifest.provenance.artifact_kind === expected.artifactKind &&
       manifest.provenance.catalog_generation_id === expected.generationId &&
       manifest.provenance.catalog_schema_version === expected.schemaVersion,
     `manifest provenance ${JSON.stringify(manifest.provenance)}`,
@@ -1122,11 +1121,12 @@ try {
       contextResp.ok(),
       `GET /api/context answered ${contextResp.status()}: ${contextBody.slice(0, 300)}`,
     );
-    const deployment = JSON.parse(contextBody);
+    // The Rust server's `context`: `{data, meta}`, the generation in `meta`.
+    const { data: deployment, meta } = JSON.parse(contextBody);
     const project = {
       schema_version: "3.0.0",
       steward: deployment.steward.id,
-      reg_meta_version: `reg_meta/v${deployment.webapp.reg_meta_version}`,
+      reg_meta_version: `reg_meta/v${deployment.reg_meta_version}`,
       name: "Synthetic order flow",
       sources: [
         {
@@ -1181,18 +1181,19 @@ try {
     };
     // The manifest names the catalog it was materialized against by the SAME
     // identity `/api/context` reports for the served artifact (reg_meta
-    // `OrderProvenance`): its kind, generation and schema — not its import date.
+    // `OrderProvenance`): its steward, generation and schema — not its import
+    // date. The steward also fixes the artifact kind (`global` is the catalog
+    // artifact, an admission invariant), so the kind needs no check of its own.
     const expected = {
       mode: "global_fallback",
       steward: deployment.steward.id,
-      artifactKind: deployment.reg_meta.catalog_artifact_kind,
-      generationId: deployment.reg_meta.generation_id,
-      schemaVersion: deployment.reg_meta.schema_version,
+      generationId: meta.generation,
+      schemaVersion: deployment.schema_version,
     };
     console.log(
       `flows: ${BASE} steward=${deployment.steward.id} ` +
-        `reg_meta=${deployment.webapp.reg_meta_version} ` +
-        `catalog=${deployment.reg_meta.schema_version}@${deployment.reg_meta.import_date}`,
+        `reg_meta=${deployment.reg_meta_version} ` +
+        `catalog=${deployment.schema_version}@${deployment.import_date}`,
     );
     // The scenarios by name, with the `route` each starts on (default /project)
     // and the number of PNGs it writes per viewport. `blockedOrderCase` already
