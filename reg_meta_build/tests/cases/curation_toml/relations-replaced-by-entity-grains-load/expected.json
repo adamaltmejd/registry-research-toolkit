@@ -1,5 +1,6 @@
 {
   "loader": "relations",
+  "match": "includes",
   "replaces": [
     "test_relation_declaration_loading.py::TestReplacedByLoad::test_parses_variable_grain_edge",
     "test_relation_declaration_loading.py::TestReplacedByLoad::test_parses_register_grain_edge",

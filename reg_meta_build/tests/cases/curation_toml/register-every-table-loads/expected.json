@@ -1,5 +1,6 @@
 {
   "loader": "register_files",
+  "match": "includes",
   "replaces": [
     "test_curation_tree_registers.py::test_each_register_table_loads[0]",
     "test_curation_tree_registers.py::test_each_register_table_loads[1]",

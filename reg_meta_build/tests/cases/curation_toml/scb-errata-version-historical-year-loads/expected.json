@@ -1,5 +1,6 @@
 {
   "loader": "scb_errata",
+  "match": "includes",
   "replaces": "test_scb_errata.py::TestVersionEntry::test_historical_year_parses",
   "fails_if": "resolve_scb_errata drops an [[errata.version]] entry or rewrites its SCB version name",
   "loads": {

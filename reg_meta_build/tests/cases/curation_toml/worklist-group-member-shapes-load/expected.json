@@ -1,5 +1,6 @@
 {
   "loader": "worklist_concept_groups",
+  "match": "includes",
   "replaces": [
     "test_concept_groups.py::TestLoader::test_parses_valid_family",
     "test_concept_groups.py::TestLoader::test_parses_axisless_variable_umbrella",

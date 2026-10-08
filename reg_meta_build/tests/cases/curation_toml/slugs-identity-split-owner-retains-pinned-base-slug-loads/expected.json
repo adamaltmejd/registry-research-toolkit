@@ -1,5 +1,6 @@
 {
   "loader": "slug_dir",
+  "match": "includes",
   "replaces": [
     "test_fqid_slugs_provider_toml.py::TestProviderToml::test_sos_split_retains_only_declared_owner_base_slug[current-True]",
     "test_fqid_slugs_provider_toml.py::TestProviderToml::test_sos_split_retains_only_declared_owner_base_slug[current-False]"

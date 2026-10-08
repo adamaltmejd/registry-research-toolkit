@@ -1,5 +1,6 @@
 {
   "loader": "classifications",
+  "match": "includes",
   "replaces": [
     "test_curation_tree.py::test_reads_files_in_sorted_order",
     "test_curation_tree.py::test_aliases_and_family_members_are_strict_curated_data"

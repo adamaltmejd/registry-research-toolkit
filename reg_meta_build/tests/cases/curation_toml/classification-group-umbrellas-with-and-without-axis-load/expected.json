@@ -1,5 +1,6 @@
 {
   "loader": "classification_groups",
+  "match": "includes",
   "replaces": [
     "test_concept_groups.py::TestClassificationGroupLoader::test_parses_valid_umbrella",
     "test_concept_groups.py::TestClassificationGroupLoader::test_axis_is_optional"

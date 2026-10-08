@@ -1,5 +1,6 @@
 {
   "loader": "slug_dir",
+  "match": "includes",
   "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_split_with_partition_reuses_own_base_slug",
   "fails_if": "the register slug tree refuses a split sibling that keeps its family's base slug although an [[identity.partition]] declares the family",
   "loads": [

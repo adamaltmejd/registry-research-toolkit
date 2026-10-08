@@ -1,5 +1,6 @@
 {
   "loader": "scb_errata",
+  "match": "includes",
   "replaces": [
     "test_scb_errata.py::TestDeliveredEntry::test_delivered_subsets_require_disjoint_versions[2011]",
     "test_scb_errata.py::TestDeliveredEntry::test_native_variable_anchor_resolves_from_tracked_entry",

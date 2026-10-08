@@ -1,5 +1,6 @@
 {
   "loader": "curated_source",
+  "match": "includes",
   "args": {
     "file": "agency.toml",
     "provider": "agency"

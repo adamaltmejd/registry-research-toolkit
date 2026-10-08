@@ -1,5 +1,6 @@
 {
   "loader": "matrix_evidence",
+  "match": "includes",
   "args": {
     "source_mode": "named",
     "expected_selector": {

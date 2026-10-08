@@ -1,5 +1,6 @@
 {
   "loader": "slug_dir",
+  "match": "includes",
   "replaces": [
     "test_fqid_slugs_provider_toml.py::TestProviderToml::test_reserved_http_suffix_slug_allowed_for_register_variant",
     "test_fqid_slugs_provider_toml.py::TestProviderToml::test_default_slug_allowed_for_variant"

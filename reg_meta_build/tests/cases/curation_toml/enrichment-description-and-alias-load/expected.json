@@ -1,5 +1,6 @@
 {
   "loader": "register_files",
+  "match": "includes",
   "replaces": "test_delivery_enrichment.py::test_valid_description_and_alias_parse",
   "fails_if": "the register loader drops or misreads an [[enrichment.description]] or [[enrichment.alias]] entry",
   "loads": [

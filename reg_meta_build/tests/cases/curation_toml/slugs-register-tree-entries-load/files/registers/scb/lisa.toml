@@ -25,6 +25,22 @@ slug = "utrikeshandel-tjanster"
 panel_entity_key = "kon"
 panel_time_key = ["ar", "kvartal"]
 
+[[variant]]
+native_id = "34.154"
+slug = "period-ungrained"
+panel_time_key = "period"
+
+[[variant]]
+native_id = "34.155"
+slug = "manad-ungrained"
+panel_time_key = "manad"
+
+[[variant]]
+native_id = "34.156"
+slug = "composite-row"
+panel_time_key = ["ar", "kvartal"]
+panel_time_grain = "row"
+
 [[variable]]
 native_id = "34.4"
 slug = "kon"

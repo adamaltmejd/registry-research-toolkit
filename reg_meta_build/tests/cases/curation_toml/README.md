@@ -77,7 +77,8 @@ is the harder claim.
   | `replaces` | The Python test (`file::function[param]`), or a list of them, whose assertions the expected values were read from. |
   | `fails_if` | Required. The concrete product change that makes this case fail. The runner refuses a case without one.            |
   | `note`     | Optional prose: why this case exists, or why it is the hardest form of its rule.                                   |
-  | `loads`    | The loader returns. `true` claims only that; an object or list is a partial projection of the result (below).      |
+  | `loads`    | The loader returns. `true` claims only that; an object or list is a projection of the result (below).              |
+  | `match`    | How `loads` is compared: `exact` (the default) or `includes` (below).                                              |
   | `error`    | The loader refuses. Exactly one of `loads` and `error` is present.                                                 |
 
 ### `fails_if`
@@ -111,12 +112,20 @@ The loaded value is turned into JSON data: a model by its field names as written
 as sorted lists, and a tuple mapping key joined with `/` (`("scb", "rtb")` is
 `"scb/rtb"`).
 
-The expected value is a partial structure:
+`match` decides how the expected value is compared, mirroring the build cases' `match`
+(`cases/build/README.md`):
 
-- An object compares only the keys it names.
-- A list compares element by element and must have the same length. `{}` stands for an
-  element whose content is not claimed.
-- A scalar compares by value and JSON type, so `true` never matches `1`.
+- `exact` (the default): the result equals the expected value. An object names every
+  key, so an extra key fails and `{}` claims an empty mapping.
+- `includes`: an object compares only the keys it names, and `{}` stands for an element
+  whose content is not claimed. Use it for a result model too large to state whole.
+  Inside an `includes` projection, `{"$exact": value}` compares that value exactly: for
+  example `"descriptors": {"$exact": {}}` claims an empty mapping.
+
+In both modes a list compares element by element, in order, and must have the same
+length; a scalar compares by value and JSON type, so `true` never matches `1`. There is
+no `set` mode: a loader returns ordered lists, and a Python set already projects as a
+sorted list.
 
 Do not project content-derived identifiers (record or revision hashes); they restate the
 code under test.
@@ -125,25 +134,25 @@ code under test.
 
 Each loader reads `files/` as the curation root, or the named file inside it.
 
-  | Loader                    | Reads                                                                                                  |
-  | ------------------------- | ------------------------------------------------------------------------------------------------------ |
-  | `curation_tree`           | `load_curation_tree(files)`: the whole tree. Needs a `classifications/` file.                          |
-  | `register_files`          | `load_register_files(files)`: `registers/**/*.toml`                                                    |
-  | `classifications`         | `load_classifications(files)` and its families: `{"classifications": [...], "families": {...}}`        |
-  | `scb_errata`              | `resolve_scb_errata` over the loaded registers and declared classification short names, as the build   |
-  | `concept_groups`          | `load_concept_groups(files)`: register `[[group]]` entries                                             |
-  | `classification_groups`   | `concept_groups.load_classification_groups(files)`: `classification_groups.toml`                       |
-  | `worklist_concept_groups` | `load_worklist_concept_groups(files/concept_groups.auto.toml)`                                         |
-  | `relations`               | `load_relations(files/relations.toml)`                                                                 |
-  | `tags`                    | `load_tags(files/tags.toml)`                                                                           |
-  | `lineage`                 | `load_lineage_config(files/lineage.toml)`                                                              |
-  | `slug_dir`                | `load_slug_dir(files)`: register-owned slugs, or the provider slug files when there is no `registers/` |
-  | `provider_slugs`          | `load_provider_toml` of the one `*.toml` file                                                          |
-  | `column_ownership`        | `declared_column_ownership` of `args.provider` / `args.source_id` over `load_slug_dir(files)`          |
-  | `matrix_evidence`         | `load_matrix(files/matrix.json)` with `args.source_mode` and `args.expected_selector`                  |
-  | `valid_codes`             | `load_valid_codes(files/codes.csv)`                                                                    |
-  | `related_documents`       | `load_related_documents(files/related_documents.toml)`                                                 |
-  | `curated_source`          | `read_curated_source(files/<args.file>)` as `args.provider`, its revision from `args.revision_from`    |
+  | Loader                    | Reads                                                                                                                                                                  |
+  | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `curation_tree`           | `load_curation_tree(files)`: the whole tree. Needs a `classifications/` file.                                                                                          |
+  | `register_files`          | `load_register_files(files)`: `registers/**/*.toml`                                                                                                                    |
+  | `classifications`         | `load_classifications(files)` and its families: `{"classifications": [...], "families": {...}}`                                                                        |
+  | `scb_errata`              | `resolve_scb_errata` over the loaded registers and declared classification short names, as the build; each column also projects its `key` (register id, folded column) |
+  | `concept_groups`          | `load_concept_groups(files)`: register `[[group]]` entries                                                                                                             |
+  | `classification_groups`   | `concept_groups.load_classification_groups(files)`: `classification_groups.toml`                                                                                       |
+  | `worklist_concept_groups` | `load_worklist_concept_groups(files/concept_groups.auto.toml)`                                                                                                         |
+  | `relations`               | `load_relations(files/relations.toml)`                                                                                                                                 |
+  | `tags`                    | `load_tags(files/tags.toml)`                                                                                                                                           |
+  | `lineage`                 | `load_lineage_config(files/lineage.toml)`                                                                                                                              |
+  | `slug_dir`                | `load_slug_dir(files)`: register-owned slugs, or the provider slug files when there is no `registers/`                                                                 |
+  | `provider_slugs`          | `load_provider_toml` of the one `*.toml` file                                                                                                                          |
+  | `column_ownership`        | `declared_column_ownership` of `args.provider` / `args.source_id` over `load_slug_dir(files)`                                                                          |
+  | `matrix_evidence`         | `load_matrix(files/matrix.json)` with `args.source_mode` and `args.expected_selector`                                                                                  |
+  | `valid_codes`             | `load_valid_codes(files/codes.csv)`                                                                                                                                    |
+  | `related_documents`       | `load_related_documents(files/related_documents.toml)`                                                                                                                 |
+  | `curated_source`          | `read_curated_source(files/<args.file>)` as `args.provider`, its revision from `args.revision_from`                                                                    |
 
 `curated_source` declares the file's source revision from its own bytes, or from the
 bytes of `args.revision_from` to claim a file that no longer matches its reviewed

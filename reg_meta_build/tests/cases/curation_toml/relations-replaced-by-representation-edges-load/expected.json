@@ -1,5 +1,6 @@
 {
   "loader": "relations",
+  "match": "includes",
   "replaces": [
     "test_relation_declaration_loading.py::TestReplacedByLoad::test_parses_representation_edge",
     "test_relation_declaration_loading.py::TestReplacedByLoad::test_representation_same_variable_different_column_allowed",

@@ -1,5 +1,6 @@
 {
   "loader": "relations",
+  "match": "includes",
   "replaces": "test_relation_declaration_loading.py::TestDerivedFromLoad::test_parses_classification_edge",
   "fails_if": "load_relations misreads a derived_from edge's class/<slug> endpoints, swaps derived and source, or drops its note",
   "loads": {

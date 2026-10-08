@@ -1,11 +1,12 @@
 {
   "loader": "curated_source",
+  "match": "includes",
   "args": {
     "file": "agency.toml",
     "provider": "agency"
   },
   "replaces": "test_curated_source_records.py::test_parent_dates_flags_and_variant_memberships_remain_separate_claims",
-  "fails_if": "read_curated_source copies parent dates or purpose onto the records' own fields, synthesizes variant membership, resolves a declared classification to a code set, or reads a declared is_sensitive / is_identifier flag as anything but its literal Boolean",
+  "fails_if": "read_curated_source copies parent dates or purpose onto the records' own fields, synthesizes variant membership, resolves a declared classification to a code set, or reads a declared is_sensitive / is_identifier flag as anything but its literal Boolean, or invents a value descriptor or association the file does not declare",
   "note": "Register and variant dates and purpose stay parent facts at their own cells, never the record's own fields; a variable's declared variants stay unresolved references; the declared disclosure flags read exactly as written (is_identifier false, is_sensitive true).",
   "loads": {
     "records": [
@@ -155,6 +156,9 @@
         "code_set_references": []
       }
     ],
+    "descriptors": {
+      "$exact": {}
+    },
     "associations": []
   }
 }

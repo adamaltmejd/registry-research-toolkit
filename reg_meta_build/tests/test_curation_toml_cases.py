@@ -86,12 +86,21 @@ def _curated_source(files: Path, args: dict[str, Any]) -> Any:
 
 def _scb_errata(files: Path, args: dict[str, Any]) -> Any:
     # The build's own call (`curation_compile`): loaded registers, declared books.
-    return resolve_scb_errata(
+    errata = resolve_scb_errata(
         load_register_files(files),
         classifications=frozenset(
             book.classification.short_name for book in load_classifications(files)
         ),
     )
+    # A column's `key` (the minted variable's identity) is a property, so it is
+    # projected beside the column's fields.
+    return {
+        "versions": errata.versions,
+        "delivered": errata.delivered,
+        "columns": [
+            {**to_json(column), "key": column.key} for column in errata.columns
+        ],
+    }
 
 
 def _classifications(files: Path, args: dict[str, Any]) -> Any:
@@ -164,27 +173,38 @@ def to_json(value: Any) -> Any:
     return value
 
 
-def mismatch(actual: Any, expected: Any, path: str = "$") -> str | None:
-    """Where `actual` departs from the partial structure `expected`, or None.
+MATCH_MODES = frozenset({"exact", "includes"})
 
-    An object compares only the keys it names. A list compares element by element
-    and must have the same length. A scalar compares by value and JSON type, so
-    `true` never matches `1`.
+
+def mismatch(
+    actual: Any, expected: Any, path: str = "$", *, exact: bool = True
+) -> str | None:
+    """Where `actual` departs from `expected`, or None.
+
+    An exact object names every key, so an extra key fails and `{}` means empty;
+    an `includes` object compares only the keys it names, and `{"$exact": value}`
+    inside it compares that value exactly. A list compares element by element and
+    must have the same length. A scalar compares by value and JSON type, so `true`
+    never matches `1`.
     """
+    if isinstance(expected, dict) and expected.keys() == {"$exact"}:
+        return mismatch(actual, expected["$exact"], path, exact=True)
     if isinstance(expected, dict):
         if not isinstance(actual, dict):
             return f"{path}: expected an object, got {actual!r}"
+        if exact and (extra := sorted(actual.keys() - expected.keys())):
+            return f"{path}: unexpected keys {extra}"
         for key, item in expected.items():
             if key not in actual:
                 return f"{path}: no key {key!r} in {sorted(actual)}"
-            if found := mismatch(actual[key], item, f"{path}.{key}"):
+            if found := mismatch(actual[key], item, f"{path}.{key}", exact=exact):
                 return found
         return None
     if isinstance(expected, list):
         if not isinstance(actual, list) or len(actual) != len(expected):
             return f"{path}: expected {len(expected)} items, got {actual!r}"
         for index, (got, want) in enumerate(zip(actual, expected, strict=True)):
-            if found := mismatch(got, want, f"{path}[{index}]"):
+            if found := mismatch(got, want, f"{path}[{index}]", exact=exact):
                 return found
         return None
     if type(actual) is not type(expected) or actual != expected:
@@ -201,6 +221,8 @@ def read_case(case: Path) -> dict[str, Any]:
         raise ValueError(f"{case.name}: unknown loader {expected.get('loader')!r}")
     if ("loads" in expected) == ("error" in expected):
         raise ValueError(f"{case.name}: expected.json needs `loads` or `error`")
+    if expected.get("match", "exact") not in MATCH_MODES:
+        raise ValueError(f"{case.name}: unknown match {expected['match']!r}")
     error = expected.get("error", {})
     if error and ("code" in error) == ("type" in error):
         raise ValueError(f"{case.name}: error needs a located `code` or a `type`")
@@ -257,7 +279,12 @@ def run_case(case: Path) -> str | None:
     if error is not None:
         return f"loaded, expected {error.get('code') or error['type']}"
     if expected["loads"] is not True:
-        return mismatch(to_json(result), expected["loads"], "$result")
+        return mismatch(
+            to_json(result),
+            expected["loads"],
+            "$result",
+            exact=expected.get("match", "exact") == "exact",
+        )
     return None
 
 

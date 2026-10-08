@@ -1,5 +1,6 @@
 {
   "loader": "scb_errata",
+  "match": "includes",
   "replaces": [
     "test_scb_errata.py::TestColumnEntry::test_all_versions_parses_as_none",
     "test_scb_errata.py::TestColumnEntry::test_holdings_period_parses_as_raw_range",

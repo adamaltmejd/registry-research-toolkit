@@ -1,5 +1,6 @@
 {
   "loader": "provider_slugs",
+  "match": "includes",
   "replaces": [
     "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_slug_repeats_across_registers",
     "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variable_slug_repeats_across_registers",

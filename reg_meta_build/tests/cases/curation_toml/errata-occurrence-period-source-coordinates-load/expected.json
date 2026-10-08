@@ -1,5 +1,6 @@
 {
   "loader": "register_files",
+  "match": "includes",
   "replaces": [
     "test_curation_tree.py::test_period_correction_requires_provider_source_coordinates[sos-True-False-None]",
     "test_curation_tree.py::test_period_correction_requires_provider_source_coordinates[scb-False-True-None]"

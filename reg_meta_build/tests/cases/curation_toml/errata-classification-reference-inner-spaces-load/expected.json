@@ -1,5 +1,6 @@
 {
   "loader": "register_files",
+  "match": "includes",
   "replaces": "test_curation_tree.py::test_sos_classification_reference_entry_is_bounded_and_keeps_inner_spaces",
   "fails_if": "the register loader collapses or truncates inner whitespace in an [[errata.classification_reference]] expected_representation",
   "note": "The source representation keeps its 538 inner spaces: trimming applies to the ends only.",

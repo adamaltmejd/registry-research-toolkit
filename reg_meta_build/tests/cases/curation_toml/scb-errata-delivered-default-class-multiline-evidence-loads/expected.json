@@ -1,5 +1,6 @@
 {
   "loader": "scb_errata",
+  "match": "includes",
   "replaces": [
     "test_scb_errata.py::TestDeliveredEntry::test_evidence_and_default_class_form_provenance",
     "test_scb_errata.py::TestDeliveredEntry::test_multiline_evidence_round_trips_loader_and_scoped_formatter"
