@@ -20,7 +20,7 @@
     },
     "accepts.toml": {
       "contains": [
-        "key = \"artal-person\"",
+        "register = \"scb/foretag\"\nkey = \"artal-person\"",
         "variable = \"artal-person-1\"",
         "variable = \"artal-person-2\"",
         "variable = \"artal-person-3\""
