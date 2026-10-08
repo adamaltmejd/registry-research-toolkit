@@ -65,10 +65,16 @@ def fixture_source(request):
     return fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
 
 
+def docs_source(request):
+    """The readable docs source a case's `docs` key names, or None (no docs DB)."""
+    return CASES / "fixtures" / request["docs"] if "docs" in request else None
+
+
 def cached_case_artifact(request, case=None, identity=None):
     """A case's cached, read-only artifact. A `search_pins` key names a pins file
     in the `case` directory that the build stores; fixtures have no pins
-    otherwise. `identity` overrides apply over the fixed import date (an
+    otherwise. A `docs` key names a docs source whose database is built beside
+    the catalog. `identity` overrides apply over the fixed import date (an
     `artifacts` entry's other generation)."""
     from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
 
@@ -77,6 +83,7 @@ def cached_case_artifact(request, case=None, identity=None):
         request.get("kind", "steward"),
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE, **(identity or {})},
         search_pins=case / request["search_pins"] if "search_pins" in request else None,
+        docs=docs_source(request),
     )
 
 
@@ -152,7 +159,8 @@ def case_clients(request, case, servers):
 
 def assert_startup_refusal(request, refusal, servers, tmp_path):
     """The server refuses the case's artifact: it prints the error document on
-    stderr and exits with the code's `exit` status in `api/errors.toml`."""
+    stderr and exits with the code's `exit` status in `api/errors.toml`. The
+    `manifest` and `doc_meta` overrides are written to the private copies."""
     from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 
     path = build_reader_artifact(
@@ -160,12 +168,16 @@ def assert_startup_refusal(request, refusal, servers, tmp_path):
         fixture_source(request),
         request.get("kind", "steward"),
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+        docs=docs_source(request),
     )
-    with closing(sqlite3.connect(path)) as conn, conn:
-        conn.executemany(
-            "INSERT OR REPLACE INTO import_manifest VALUES (?, ?)",
-            request.get("manifest", {}).items(),
-        )
+    overrides = [("reg_meta.db", "import_manifest", request.get("manifest", {}))]
+    if "doc_meta" in request:
+        overrides.append(("reg_meta_docs.db", "doc_meta", request["doc_meta"]))
+    for filename, table, values in overrides:
+        with closing(sqlite3.connect(path.parent / filename)) as conn, conn:
+            conn.executemany(
+                f"INSERT OR REPLACE INTO {table} VALUES (?, ?)", values.items()
+            )
     completed = subprocess.run(
         servers.argv(path.parent, request["serve"]["catalog"], _free_port()),
         cwd=CASES.parents[1],

@@ -4,7 +4,7 @@
   "fails_if": "the register loader coerces a non-boolean `is_identifier` value in an [[errata.column]] entry instead of refusing it",
   "note": "Disclosure guard: a PII flag must be a real boolean, never a truthy string.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/lisa.toml [[errata.column.is_identifier]] entry 1",
     "message_contains": [
       "Input should be a valid boolean"

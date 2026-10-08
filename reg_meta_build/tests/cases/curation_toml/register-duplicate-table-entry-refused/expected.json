@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree_registers.py::test_duplicate_table_entry_fails_with_file_and_index",
   "fails_if": "the register loader keeps a second identical entry of a register table instead of refusing it",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_duplicate_entry",
     "locator": "curation/registers/scb/test.toml [[identity.partition]] entry 2",
     "message_contains": [
       "duplicate entry"

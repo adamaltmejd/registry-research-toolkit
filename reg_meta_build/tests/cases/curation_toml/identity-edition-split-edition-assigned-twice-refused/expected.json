@@ -4,7 +4,7 @@
   "fails_if": "the register loader lets two [[identity.edition_split]] entries assign the same variant edition",
   "note": "The entries differ in evidence, so only the one-owner-per-edition rule can refuse the second.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_duplicate_entry",
     "locator": "curation/registers/scb/test.toml [[identity.edition_split]] entry 2",
     "message_contains": [
       "editions assigned twice"

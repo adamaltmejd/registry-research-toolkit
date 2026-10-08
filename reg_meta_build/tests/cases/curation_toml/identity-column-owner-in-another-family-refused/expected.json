@@ -7,7 +7,7 @@
   "fails_if": "the register loader accepts an identity entry whose native variable belongs to another register's native_id",
   "note": "Entry 1 belongs to this register; entry 2 names native family 2.2 of another one. [[identity.partition]] shares the guard.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_misplaced",
     "locator": "curation/registers/scb/test.toml [[identity.column_owner]] entry 2",
     "message_contains": [
       "variable '2.2' does not belong to native_id '1'"

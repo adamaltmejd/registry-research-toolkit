@@ -71,7 +71,7 @@ guard sits beside its refusal twin.
   | Key             | Meaning                                                                                                                                                    |
   | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `replaces`      | The Python test (`file::function[param]`) whose assertions the expected values were read from.                                                             |
-  | `fails_if`      | Required: the product change that would make this case (or step) fail. The runner refuses a request without one.                                          |
+  | `fails_if`      | Required: the product change that would make this case (or step) fail. The runner refuses a request without one.                                           |
   | `note`          | Optional prose: why this case exists.                                                                                                                      |
   | `sources`       | A source spec, inline or the name of `_sources/<name>.json`. The build reads it.                                                                           |
   | `authored_from` | Optional source spec that the curation placeholders read. Defaults to `sources`. A stale case authors from the reviewed source and builds the changed one. |
@@ -81,10 +81,10 @@ guard sits beside its refusal twin.
 
 `fails_if` names a change to the product, not the behavior restated. It is the claim a
 reviewer checks by applying that change and watching the case fail. For example:
-`"the acknowledgement matcher accepts an entry whose period window contains, rather than
-equals, the dated issue's period"`. A case that shows the allowed outcome beside a
-refusal names the opposite change, such as a guard that refuses unchanged rows. If no
-product change can make a case fail, the case cannot fail and does not belong here.
+`"the acknowledgement matcher accepts an entry whose period window contains, rather than equals, the dated issue's period"`.
+A case that shows the allowed outcome beside a refusal names the opposite change, such
+as a guard that refuses unchanged rows. If no product change can make a case fail, the
+case cannot fail and does not belong here.
 
 ### Source spec
 
@@ -136,8 +136,12 @@ product change can make a case fail, the case cannot fail and does not belong he
   `classifications/<slug>.csv` code list. The text is a string, or a list of lines
   joined with newlines.
 
-The runner prepares each distinct spec once per test session and caches it by the spec's
-content hash.
+The runner prepares each distinct spec once and caches it by the spec's content hash.
+The cache is the reader fixture cache (see `conformance/README.md`, "Fixture cache"):
+`$REG_FIXTURE_CACHE`, else the system temp directory, shared by sessions, worktrees and
+xdist workers. Its generation is keyed by the builder sources, the installed
+distributions, the test modules that prepare a spec and the Git version. CI sets no
+`REG_FIXTURE_CACHE`, so each fresh runner starts cold.
 
 ## `curation/`
 
@@ -191,7 +195,7 @@ description, operational definition), or a comma-separated list.
 ```json
 {
   "status": "diagnostic_complete",
-  "error": {"code": "classification_curation_invalid", "message_contains": ["curation/registers/scb/sample.toml"]},
+  "error": {"code": "register_entry_invalid", "message_contains": ["curation/registers/scb/sample.toml"]},
   "projections": [
     {"table": "state_codes", "where": {"column": "VALUE"}, "fields": ["code"], "match": "exact", "rows": [["01"]]}
   ]
@@ -248,10 +252,10 @@ so a case can filter and project them one ref at a time.
 
 A projection's `rows` may state a relation instead of literal values. With
 `"fields": ["ref"]` and `"rows": {"refs_of": {"table": ..., "where": ...}}`, the
-projected refs must equal the refs that the selected rows of another table cite
-(`ref` on `issue_refs`, `refs` on `warnings` and `source_issues`), duplicates included.
-Both sides are read from the same build. Use it when the claim is that two outputs agree
-on their source records, so the case never has to write a semantic-record hash.
+projected refs must equal the refs that the selected rows of another table cite (`ref`
+on `issue_refs`, `refs` on `warnings` and `source_issues`), duplicates included. Both
+sides are read from the same build. Use it when the claim is that two outputs agree on
+their source records, so the case never has to write a semantic-record hash.
 
 Expected values are read from the test a case replaces, or from the source fixture or
 the spec. Never copy them from a run of the code under test. A new table or placeholder

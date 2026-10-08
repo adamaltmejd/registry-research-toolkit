@@ -8,7 +8,13 @@ import shutil
 import sqlite3
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import sparsify_scb_values, write_scb_input, write_scb_snapshot
+from _csv_fixtures import (
+    commit_fixture,
+    init_fixture_repo,
+    sparsify_scb_values,
+    write_scb_input,
+    write_scb_snapshot,
+)
 from _prepared_fixtures import accept_prepared
 from _snapshot_fixtures import (
     copied_builder_checkout,
@@ -184,11 +190,8 @@ def test_build_lock_pins_clean_repositories_auxiliary_inputs_and_result(
     prepare_snapshot(
         scb_inventory(tmp_path, source_dir), snapshot, converter_commit="e" * 40
     )
-    git(input_repo, "init", "-q")
-    git(input_repo, "config", "user.email", "test@example.invalid")
-    git(input_repo, "config", "user.name", "Test")
-    git(input_repo, "add", ".")
-    git(input_repo, "commit", "-q", "-m", "snapshot")
+    init_fixture_repo(input_repo, name="Test", email="test@example.invalid")
+    commit_fixture(input_repo, "snapshot")
 
     builder_repo = copied_builder_checkout(tmp_path)
 

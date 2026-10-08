@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree_registers.py::test_duplicate_native_id_fails",
   "fails_if": "the register loader lets two register files of one provider declare the same native_id",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_duplicate",
     "locator": "curation/registers/scb/second.toml [register]",
     "message_contains": [
       "duplicate native_id '1'"

@@ -7,7 +7,7 @@
   ],
   "fails_if": "the register loader accepts an [[identity.split]] whose parts are discriminated by another field than its `by`",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/sos/par.toml [[identity.split]] entry 1",
     "message_contains": [
       "split parts must use deldatamangd when by = 'deldatamangd'"

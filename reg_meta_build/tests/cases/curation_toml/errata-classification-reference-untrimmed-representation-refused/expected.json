@@ -4,7 +4,7 @@
   "fails_if": "the register loader accepts an [[errata.classification_reference]] text field with leading or trailing whitespace",
   "note": "Collapses the test's trimmed-text parameters (deldatamangd, variable, column, expected_reference, expected_representation, evidence) into their hardest form: a leading space on the one field that keeps inner spaces.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/sos/sample.toml [[errata.classification_reference.expected_representation]] entry 1",
     "message_contains": [
       "nonempty and trimmed"

@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree.py::test_period_correction_requires_provider_source_coordinates[scb-False-False-require an exact native edition]",
   "fails_if": "the register loader accepts an SCB [[errata.occurrence_period]] without its exact native edition",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_entry_invalid",
     "locator": "curation/registers/scb/sample.toml [[errata.occurrence_period]] entry 1",
     "message_contains": [
       "require an exact native edition"

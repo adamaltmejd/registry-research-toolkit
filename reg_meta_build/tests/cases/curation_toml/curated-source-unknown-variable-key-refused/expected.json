@@ -11,7 +11,7 @@
   "fails_if": "read_curated_source ignores an unknown key in a [[register.variable]] entry",
   "note": "A misspelled disclosure flag is the hardest unknown key: ignoring it would read the variable as is_identifier = false. An unsupported `state` table runs the same unknown-key check.",
   "error": {
-    "type": "CuratedSourceError",
+    "code": "curated_source_invalid",
     "locator": "register.0.variable.0.is_identifer",
     "message_contains": [
       "Extra inputs are not permitted"

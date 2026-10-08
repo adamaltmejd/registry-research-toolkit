@@ -4,8 +4,8 @@
   "fails_if": "the register loader compares alias columns case-sensitively and keeps KON and kon as two aliases",
   "note": "The two columns differ only in case, so they are one delivered column once folded.",
   "error": {
-    "code": "classification_curation_invalid",
-    "locator": "curation/registers/scb/agi.toml enrichment",
+    "code": "register_duplicate_entry",
+    "locator": "curation/registers/scb/agi.toml [[enrichment.alias]] entry 2",
     "message_contains": [
       "duplicate alias target"
     ]

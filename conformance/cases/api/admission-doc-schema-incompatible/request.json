@@ -1,0 +1,16 @@
+{
+  "fixture": "reader",
+  "docs": "docs",
+  "serve": {
+    "catalog": "swecov"
+  },
+  "doc_meta": {
+    "schema_version": "1.1.0"
+  },
+  "requests": [
+    {
+      "operation": "docs_get",
+      "path": "/api/docs/doc/Kon"
+    }
+  ]
+}

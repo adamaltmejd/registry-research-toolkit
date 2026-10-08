@@ -5,17 +5,10 @@ use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
 
-use super::search::{SearchPage, search};
-use super::{Operation, Param, Params, Server, Steward, component};
+use super::search::{SearchPage, TYPES, search};
+use super::{Cache, Operation, Param, Params, Server, Steward, Type, component};
 use crate::held::{self, Narrow};
 use crate::{Code, Error, Scope};
-
-const fn optional(name: &'static str) -> Param {
-    Param {
-        name,
-        required: false,
-    }
-}
 
 pub const OPERATIONS: &[Operation] = &[
     Operation {
@@ -27,17 +20,15 @@ pub const OPERATIONS: &[Operation] = &[
             (a FQID or a bare name) and `period` (2019, 2015..2019, LA2019, 2019-03) \
             filter; pass `next_cursor` back as `cursor` for the next page.",
         params: &[
-            Param {
-                name: "q",
-                required: true,
-            },
-            optional("type"),
-            optional("register"),
-            optional("period"),
-            optional("scope"),
-            optional("limit"),
-            optional("cursor"),
+            Param::required("q", Type::String),
+            Param::optional("type", Type::Enum(TYPES)),
+            Param::optional("register", Type::Ref),
+            Param::optional("period", Type::Period),
+            Param::optional("scope", Type::Scope),
+            Param::optional("limit", Type::Limit),
+            Param::optional("cursor", Type::Cursor),
         ],
+        cache: Cache::Minute,
         run: search,
         result: component::<SearchPage>,
     },
@@ -46,7 +37,8 @@ pub const OPERATIONS: &[Operation] = &[
         path: "/api/context",
         tool: None,
         description: "The catalog's branding, identity and headline counts, for the SPA.",
-        params: &[optional("scope")],
+        params: &[Param::optional("scope", Type::Scope)],
+        cache: Cache::Revalidate,
         run: context,
         result: component::<Context>,
     },

@@ -11,7 +11,9 @@ built artifact through a fixed set of named projections.
 Prepared inputs are cached by the content hash of their source spec, so cases that
 share a source set prepare it once per session. An entry is written to a private
 staging directory and renamed into place: concurrent xdist workers never write the
-same path, and a failed preparation never leaves a partial entry.
+same path, and a failed preparation never leaves a partial entry. Entries
+persist across sessions and worktrees in a generation of the shared fixture cache
+(the reader cache's location), keyed by everything that shapes a prepared input.
 """
 
 from __future__ import annotations
@@ -19,10 +21,10 @@ from __future__ import annotations
 import functools
 import hashlib
 import json
-import os
 import re
 import shutil
 import sqlite3
+import subprocess
 import tempfile
 from contextlib import closing
 from dataclasses import dataclass
@@ -45,6 +47,7 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from openpyxl import load_workbook
+from reader_artifacts import build_inputs_digest, generation_dir
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import canonical_sha256
 from reg_meta_build.pipeline import build_catalog, check_curation
@@ -203,9 +206,7 @@ class PreparedSet:
         ]
 
     def opened(self):
-        return open_prepared_catalog_sources(
-            self.prepared, expected_sha256=self.digest, input_commit=self.commit
-        )
+        return _opened(self.prepared, self.commit, self.digest)
 
     def revision(self, record: SourceRecord) -> dict:
         return next(
@@ -230,12 +231,19 @@ class PreparedSet:
         return canonical_sha256(found.model_dump(mode="json"))
 
 
+# Authoring reads open a cache entry's accepted sources once per process: an entry
+# is immutable once renamed into place, and the build under test still opens and
+# checks it itself.
 @functools.cache
-def _records(prepared: Path, commit: str, digest: str) -> tuple[SourceRecord, ...]:
-    opened = open_prepared_catalog_sources(
+def _opened(prepared: Path, commit: str, digest: str):
+    return open_prepared_catalog_sources(
         prepared, expected_sha256=digest, input_commit=commit
     )
-    return tuple(opened.records.records)
+
+
+@functools.cache
+def _records(prepared: Path, commit: str, digest: str) -> tuple[SourceRecord, ...]:
+    return tuple(_opened(prepared, commit, digest).records.records)
 
 
 class PreparedCache:
@@ -275,19 +283,51 @@ class PreparedCache:
 
 
 @pytest.fixture(scope="session")
-def prepared_cache(tmp_path_factory: pytest.TempPathFactory) -> PreparedCache:
-    """The session's prepared inputs, shared by the build cases and `catalog`."""
-    return PreparedCache(cache_root(tmp_path_factory.getbasetemp()))
+def prepared_cache() -> PreparedCache:
+    """The prepared inputs shared by the build cases and `catalog`.
 
-
-def cache_root(basetemp: Path) -> Path:
-    """The session's prepared-input cache, shared by its xdist workers.
-
-    A worker's basetemp is `<session>/popen-gwN`, so the cache sits beside the
-    workers under the session directory; a serial run keeps it in its own basetemp.
+    They live in a generation of the shared fixture cache, under the reader
+    cache's one location policy (`reader_artifacts.fixture_cache_dir`):
+    `$REG_FIXTURE_CACHE`, else the system temp directory. Entries are reused across
+    sessions, worktrees and xdist workers; a fresh CI runner starts cold.
     """
-    session = basetemp.parent if os.environ.get("PYTEST_XDIST_WORKER") else basetemp
-    return session / "build-case-prepared"
+    return PreparedCache(
+        generation_dir(_prepared_inputs_digest()) / "build-case-prepared"
+    )
+
+
+# The test modules that write and accept a source spec's provider deliveries; an
+# edit to any of them changes what a prepared entry holds.
+_PREPARING_MODULES = (
+    "_build_case_runner.py",
+    "_csv_fixtures.py",
+    "_sos_fixtures.py",
+    "_prepared_fixtures.py",
+    "_pipeline_catalog_support.py",
+)
+
+
+def _prepared_inputs_digest() -> str:
+    """Everything a prepared entry depends on besides its source spec.
+
+    The reader cache's build inputs (the `reg_meta_build`, `reg_meta` and
+    `reg_schema` sources, the native extension sources, the installed
+    distributions, Python and SQLite), the modules that prepare a spec, and the Git
+    that commits and checks the accepted repository.
+    """
+    here = Path(__file__).parent
+    return canonical_sha256(
+        {
+            "build_inputs": build_inputs_digest(),
+            "modules": {
+                name: hashlib.sha256((here / name).read_bytes()).hexdigest()
+                for name in _PREPARING_MODULES
+            },
+            "git": subprocess.run(
+                ["git", "--version"], capture_output=True, text=True, check=True
+            ).stdout.strip(),
+        }
+    )
 
 
 # -- Curation authoring placeholders --------------------------------------------

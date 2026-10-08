@@ -5,8 +5,9 @@
   "note": "The second edge lists the pair reversed, so only an unordered comparison finds the duplicate.",
   "error": {
     "code": "relations_invalid",
-    "locator": "relations has a duplicate same_as pair",
+    "locator": "curation/relations.toml [[edge]] entry 2",
     "message_contains": [
+      "relations has a duplicate same_as pair",
       "scb/lisa/x",
       "scb/rams/y"
     ]

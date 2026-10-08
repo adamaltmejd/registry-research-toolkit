@@ -1,0 +1,17 @@
+[
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "band fixture",
+      "/error/fields/candidates": [
+        {"fqid": "scb/bands", "kind": "register", "name": "Band fixture"},
+        {"fqid": "sos/bands", "kind": "register", "name": "Band fixture"}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/*/filename": ["Bands.pdf"]}
+  }
+]

@@ -4,8 +4,9 @@
   "fails_if": "resolve_scb_errata accepts a `holdings_period` that is not a YYYY-YYYY or dated range",
   "error": {
     "code": "scb_errata_invalid",
-    "locator": "holdings_period '2002'",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 1 (scb/lisa)/individer-15plus/Ssyk4_J16",
     "message_contains": [
+      "holdings_period '2002'",
       "YYYY-YYYY"
     ]
   }

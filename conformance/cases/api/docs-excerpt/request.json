@@ -1,0 +1,9 @@
+{
+  "fixture": "reader",
+  "docs": "docs",
+  "requests": [
+    {"operation": "docs_get", "path": "/api/docs/doc/Kort"},
+    {"operation": "docs_get", "path": "/api/docs/doc/LoneInk"},
+    {"operation": "docs_get", "path": "/api/docs/doc/Tabell"}
+  ]
+}

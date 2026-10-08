@@ -2062,11 +2062,15 @@ def measure_codec_sample(
 def _git_bytes(repo: Path, *args: str, input_bytes: bytes | None = None) -> bytes:
     try:
         # Git read commands may otherwise refresh accepted index evidence on disk.
+        # An absolute executable and `close_fds=False` let CPython use posix_spawn
+        # instead of forking this process; Python's own descriptors are
+        # non-inheritable (PEP 446), so the child still receives only its pipes.
         process = subprocess.run(
-            ["git", "-C", str(repo), *args],
+            [shutil.which("git") or "git", "-C", str(repo), *args],
             input=input_bytes,
             check=True,
             capture_output=True,
+            close_fds=False,
             env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
         )
     except (OSError, subprocess.CalledProcessError) as exc:
@@ -2207,22 +2211,40 @@ def _committed_inventory_sizes(
     *,
     context: str,
 ) -> dict[str, int]:
+    return {
+        path: size
+        for path, (size, _blob) in _committed_inventory(
+            repo, commit, base_path, roots, context=context
+        ).items()
+    }
+
+
+def _committed_inventory(
+    repo: Path,
+    commit: str,
+    base_path: str,
+    roots: Sequence[str],
+    *,
+    context: str,
+) -> dict[str, tuple[int, str]]:
+    """Each committed blob under ``roots`` as ``{path: (size, blob id)}``."""
     tree = _git_bytes(repo, "ls-tree", "-r", "-l", "-z", commit, "--", *roots)
-    actual: dict[str, int] = {}
+    actual: dict[str, tuple[int, str]] = {}
     prefix = f"{base_path}/" if base_path != "." else ""
     for entry in tree.split(b"\0"):
         if not entry:
             continue
         try:
             metadata, raw_path = entry.split(b"\t", 1)
-            _mode, object_type, _object_id, raw_size = metadata.split(b" ", 3)
+            _mode, object_type, object_id, raw_size = metadata.split(b" ", 3)
             path = raw_path.decode("utf-8")
             size = int(raw_size)
+            blob = object_id.decode("ascii")
         except (UnicodeDecodeError, ValueError) as exc:
             raise SnapshotError(f"invalid Git tree entry in {context}") from exc
         if object_type != b"blob" or not path.startswith(prefix):
             raise SnapshotError(f"invalid Git object in {context}: {path}")
-        actual[path.removeprefix(prefix)] = size
+        actual[path.removeprefix(prefix)] = (size, blob)
     return actual
 
 
@@ -3350,6 +3372,8 @@ def measure_git_history(initial: Path, update: Path) -> dict[str, Any]:
         _git(repo, "init", "-q")
         _git(repo, "config", "user.email", "snapshot@example.invalid")
         _git(repo, "config", "user.name", "Snapshot measurement")
+        # A developer's global signing would add a signature to the measured objects.
+        _git(repo, "config", "commit.gpgsign", "false")
         for name, value in _GIT_PACK_SETTINGS:
             _git(repo, "config", "--local", name, value)
 

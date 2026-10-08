@@ -49,7 +49,6 @@ is the harder claim.
   | `lineage-`              | `lineage.toml`                                                               |
   | `curation-tree-`        | rules that span files of one curation tree                                   |
   | `slugs-`                | register-owned and provider slug files, panel keys and reserved slugs        |
-  | `column-ownership-`     | declared column ownership of a split variable family                         |
   | `matrix-`               | CIS answer-matrix evidence JSON                                              |
   | `codes-`                | classification code-list CSVs                                                |
   | `related-documents-`    | `related_documents.toml`                                                     |
@@ -63,7 +62,7 @@ is the harder claim.
   "replaces": "test_delivery_enrichment.py::test_unknown_key_is_rejected_with_file_and_entry",
   "fails_if": "the register loader accepts a misspelled key in an [[enrichment.description]] entry",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "register_unknown_key",
     "locator": "curation/registers/scb/agi.toml [[enrichment.description.descripton]] entry 1",
     "message_contains": ["Extra inputs are not permitted"]
   }
@@ -91,19 +90,15 @@ for the case, so it must be a change someone could plausibly make.
 
   | Key                    | Meaning                                                                                                                                                        |
   | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `code`                 | The located error code. Exactly one of `code` and `type` is present.                                                                                           |
-  | `type`                 | The exception class, for a loader that still refuses with a plain exception (below).                                                                           |
+  | `code`                 | Required. The located error code.                                                                                                                              |
   | `exit_code`            | The exit code. Defaults to 10 (`EXIT_CONFIG`): every curation refusal is a configuration error.                                                                |
   | `locator`              | Required. Text that must appear in the message and names where the refusal points: `curation/<file> [[<table>]] entry <n>` for register files, else the entry. |
   | `message_contains`     | Further texts that must appear in the message.                                                                                                                 |
   | `remediation_contains` | Texts that must appear in the remediation.                                                                                                                     |
 
-Two loaders still refuse some files with a plain exception instead of a located
-`RegMetaError`: `curated_source` with `CuratedSourceError` and `column_ownership` with
-`ValueError`. Such a case asserts the raw loader failure only: `type` is the exception's
-class name, and `locator` and `message_contains` are read from its message. It names no
-`code`, `exit_code` or `remediation_contains`, since the exception carries none; the
-runner refuses a case that does.
+Every curation loader refuses with a located `RegMetaError`. Beyond the case's own
+claims, the runner checks two properties of every refusal: `str()` of the error is its
+message, and the message names checkout paths repo-relative, never absolute.
 
 ### `loads` projection
 
@@ -149,7 +144,7 @@ Each loader reads `files/` as the curation root, or the named file inside it.
   | `classifications`         | `load_classifications(files)` and its families: `{"classifications": [...], "families": {...}}`                                                                        |
   | `scb_errata`              | `resolve_scb_errata` over the loaded registers and declared classification short names, as the build; each column also projects its `key` (register id, folded column) |
   | `concept_groups`          | `load_concept_groups(files)`: register `[[group]]` entries                                                                                                             |
-  | `classification_groups`   | `concept_groups.load_classification_groups(files)`: `classification_groups.toml`                                                                                       |
+  | `classification_groups`   | `load_classification_groups(files)`: `classification_groups.toml`, as the build reads it                                                                               |
   | `worklist_concept_groups` | `load_worklist_concept_groups(files/concept_groups.auto.toml)`                                                                                                         |
   | `relations`               | `load_relations(files/relations.toml)`                                                                                                                                 |
   | `tags`                    | `load_tags(files/tags.toml)`                                                                                                                                           |
@@ -157,7 +152,6 @@ Each loader reads `files/` as the curation root, or the named file inside it.
   | `slug_dir`                | `load_slug_dir(files)`: register-owned slugs, or the provider slug files when there is no `registers/`                                                                 |
   | `provider_slugs`          | `load_provider_toml` of the one `*.toml` file                                                                                                                          |
   | `freeze_states`           | `load_freeze_states(files)`: the zone states in `freeze.toml`, or `slug_state.toml` beside a `registers/` tree                                                         |
-  | `column_ownership`        | `declared_column_ownership` of `args.provider` / `args.source_id` over `load_slug_dir(files)`                                                                          |
   | `matrix_evidence`         | `load_matrix(files/matrix.json)` with `args.source_mode` and `args.expected_selector`                                                                                  |
   | `valid_codes`             | `load_valid_codes(files/codes.csv)`                                                                                                                                    |
   | `related_documents`       | `load_related_documents(files/related_documents.toml)`                                                                                                                 |
