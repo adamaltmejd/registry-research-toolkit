@@ -111,6 +111,18 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                 "names": [row["name"] for row in output["results"]],
                 "has_more": output["has_more"],
             }
+        elif observe == "search-code-owners":
+            actual = {
+                "codes": [
+                    {
+                        "code": row["code"],
+                        "code_system": row["code_system"],
+                        "classification_count": row["classification_count"],
+                        "classifications": [c["fqid"] for c in row["classifications"]],
+                    }
+                    for row in output["results"]
+                ]
+            }
         elif observe == "search-groups":
             actual = {
                 "groups": [

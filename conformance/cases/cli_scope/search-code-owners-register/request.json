@@ -1,0 +1,16 @@
+{
+  "fixture": "reader/logical",
+  "artifact": "catalog",
+  "argv": [
+    "search",
+    "--query",
+    "Choice",
+    "--field",
+    "value",
+    "--type",
+    "value",
+    "--register",
+    "scb/example"
+  ],
+  "observe": "search-code-owners"
+}

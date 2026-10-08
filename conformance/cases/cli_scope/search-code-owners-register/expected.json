@@ -1,0 +1,28 @@
+{
+  "codes": [
+    {
+      "code": "1",
+      "code_system": "Example codes",
+      "classification_count": 1,
+      "classifications": [
+        "class/example-codes"
+      ]
+    },
+    {
+      "code": "2",
+      "code_system": "Example codes",
+      "classification_count": 1,
+      "classifications": [
+        "class/example-codes"
+      ]
+    },
+    {
+      "code": "0",
+      "code_system": "Example codes",
+      "classification_count": 1,
+      "classifications": [
+        "class/example-codes"
+      ]
+    }
+  ]
+}
