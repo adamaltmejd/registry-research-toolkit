@@ -124,6 +124,8 @@ jobs:
         include:
           - suite: reg_meta_build
             budget: 6
+            # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
+            hypothesis_profile: thorough
           # The full suite against the in-process Python adapters. The `rust`
           # job reruns the admission/context cases against the Rust server:
           # the same cases, a different implementation under test.
@@ -147,6 +149,8 @@ jobs:
       - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
       - run: uv run python -m pytest "${{ matrix.suite }}" -m "not integration"
+        env:
+          HYPOTHESIS_PROFILE: ${{ matrix.hypothesis_profile }}
 
   package-integration:
     runs-on: ubuntu-latest
