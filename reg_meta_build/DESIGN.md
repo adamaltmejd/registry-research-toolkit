@@ -1486,9 +1486,8 @@ name (`Patientregistret`, `aktivitetsstod`). A name or id naming scopes in more 
 source is refused; `SOURCE:ID` (`scb-registerinformation:258`) picks one. It also
 combines with `--diagnostic --diagnostic-db-path NEW.db`. A strict subset needs an
 explicit new `--db` directory: it never replaces the active catalog. Naming,
-classification, group, succession, same-as, split-sibling and document-coverage worklist
-commands produce review material; they do not approve or apply new curation during a
-build.
+classification, group, succession, same-as and document-coverage worklist commands
+produce review material; they do not approve or apply new curation during a build.
 
 ## Steward extension
 

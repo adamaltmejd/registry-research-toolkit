@@ -1,0 +1,6 @@
+{
+  "replaces": "test_build_db_scope_selection.py::test_native_compiler_respects_tracked_slug_freeze_state",
+  "fails_if": "the native naming compiler ignores a curating zone's generated `sample.auto.toml`, so a pinned variable loses its slug",
+  "note": "The curation of `naming-generated-pin-ignored-while-churning` plus `slug_state.toml` setting the scb zone to `curating`: the generated pin names variable 101 `value`, delivered as VALUE.",
+  "sources": "scb-value"
+}

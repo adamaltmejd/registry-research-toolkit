@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_curation_compile_partitions.py::test_unassigned_family_rejects_competing_identity[\\n[[identity.partition]]\\nvariable = \"1.5\"\\ncolumns = { ANSWER = \"1.5\" }\\ncolumns_ref = \"competing owner\"\\n]"
+  ],
+  "fails_if": "`compile_partitions` checks an `[[identity.unassigned]]` family only against split naming and lets a competing `[[identity.partition]]` map stand beside it",
+  "sources": "scb-partition-families"
+}

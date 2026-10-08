@@ -1,0 +1,13 @@
+{
+  "replaces": "test_fqid_slugs_precheck_cli.py::test_unpinned_rows_and_dead_pins_fail_under_update",
+  "fails_if": "precheck matches a variant on its bare slug (so `other/people` counts as pinned by `sample`'s `people`), or the stale check drops the deprecated exemption",
+  "note": "Variant 2.20 is unpinned although `people` is pinned under register 1. Register 999 and variant 1.999 name no catalog row; variant 5.50 is `people` under a register no pin names (the old test's 3.30). Deprecated register 998 may outlive its row.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

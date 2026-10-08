@@ -1,0 +1,14 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[coding.uncoded]]
+variable = "1.5"
+variant = "people"
+column = "ANSWER"
+periods = [["2020-01-01", "2020-12-31"]]
+stored_role = "label"
+reason = "The reviewed source documents a stored text component."
+source = "Exact original source and reference-book review"
+data_warning = "The attached numeric book is reference evidence, not the text response domain."

@@ -1,0 +1,12 @@
+{
+  "replaces": "test_fqid_slugs_precheck_cli.py::test_update_snapshot_refuses_on_parse_error",
+  "fails_if": "`--update-snapshot` writes the truncated entry set despite a parse error, wiping the baseline",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

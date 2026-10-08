@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_fqid_slugs_precheck_cli.py::test_frozen_zone_refuses_non_additive_update[rename]",
+    "test_fqid_slugs_precheck.py::TestDiffSnapshotFrozenZones::test_only_frozen_zone_violations_block"
+  ],
+  "fails_if": "a frozen zone writes a renamed published slug through (#470), or the grow-only seal blocks a removal in a zone that is not frozen",
+  "note": "The baseline names register 1 `lisa` (now `sample`) and a `sos/9` register no pin names. Only `scb` is frozen: its rename is blocked, the `sos` removal is reported but not blocked. The tree is clean, so the refusal is the only failure.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

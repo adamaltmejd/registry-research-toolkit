@@ -1,0 +1,14 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestDeprecatedStrictType::test_bare_true_accepted",
+  "fails_if": "the strict `deprecated` check also refuses a bare TOML `true`",
+  "match": "includes",
+  "loads": [
+    {
+      "kind": "register",
+      "source_id": "34",
+      "slug": "lisa",
+      "deprecated": true
+    }
+  ]
+}

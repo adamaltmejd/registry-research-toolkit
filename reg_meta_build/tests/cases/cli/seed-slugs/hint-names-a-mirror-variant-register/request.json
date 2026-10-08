@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_fqid_slug_cli_boundary.py::test_hint_names_default_candidate_on_stderr",
+    "test_fqid_slugs_default_hints.py::TestIterDefaultSlugCandidates::test_skips_multi_variant_register",
+    "test_fqid_slugs_default_hints.py::TestIterDefaultSlugCandidates::test_yields_three_classes"
+  ],
+  "fails_if": "the `_default` hint drops a single-variant register whose variant name mirrors the register name exactly, or once the register's parenthetical abbreviation is stripped (a near candidate); flags a multi-variant register or a kept variant name; names a register by the catalog's surrogate `register_id` instead of its slug (#1258); or leaks into the generated pins",
+  "note": "From the artifact source: register 3 is single-variant with the variant name `Nybörjare i Komvux` (exact); register 2 carries the near pair of `test_yields_three_classes`, register `Konjunkturstatistik, löner för statlig sektor (KLS)` with that name less `(KLS)` as its variant; register 6 has two variants, one named like the register; registers 1 and 4 name their variant `Individer` (kept). The count of 2 is the exact and the near candidate. The old test asserted the surrogate `scb/42.124`; #1258 names the register by its slug instead, so the case requires `scb/komvux` and `scb/other`, the slugs of registers 3 and 2 in the artifact's curation.",
+  "argv": [
+    "--db",
+    "{db}",
+    "seed-slugs",
+    "--out-dir",
+    "{work}/curation"
+  ]
+}

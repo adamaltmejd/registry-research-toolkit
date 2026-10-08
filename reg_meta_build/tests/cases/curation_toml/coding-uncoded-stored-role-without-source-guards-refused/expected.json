@@ -1,0 +1,15 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_compile_owner_alternatives.py::test_guarded_uncoded_text_role_preserves_attached_book_and_refuses_drift[label]",
+    "test_curation_compile_owner_alternatives.py::test_guarded_uncoded_text_role_preserves_attached_book_and_refuses_drift[free_text]"
+  ],
+  "fails_if": "the register loader accepts a `[[coding.uncoded]]` `stored_role` without an `expected_evidence_sha256` or `source_authority`",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.uncoded]] entry 1",
+    "message_contains": [
+      "stored text role requires complete source coding guards and a data warning"
+    ]
+  }
+}

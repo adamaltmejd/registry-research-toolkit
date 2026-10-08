@@ -1,0 +1,6 @@
+{
+  "exit_code": 16,
+  "stdout_contains": [
+    "has no registers/ directory"
+  ]
+}

@@ -1,0 +1,29 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[variant]]
+native_id = "1.10"
+slug = "people"
+
+[[variable]]
+native_id = "1.101"
+slug = "value"
+
+[[variable]]
+native_id = "1.102"
+slug = "kon"
+
+[[errata.column]]
+variant = "people"
+column = "LopNr"
+name = "Löpnummer"
+definition = "Pseudonymised person number"
+data_type = "integer"
+is_identifier = true
+is_sensitive = false
+source = "scb-docs"
+evidence = "held"
+noted = "2026-10-08"
+versions = ["2020"]

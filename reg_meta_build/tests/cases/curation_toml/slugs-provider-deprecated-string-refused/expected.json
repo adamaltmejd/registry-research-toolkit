@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestDeprecatedStrictType::test_string_false_rejected",
+  "fails_if": "the slug loader coerces `deprecated = \"false\"` with `bool()`, deprecating the entry",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register.'34'",
+    "message_contains": [
+      "deprecated"
+    ]
+  }
+}

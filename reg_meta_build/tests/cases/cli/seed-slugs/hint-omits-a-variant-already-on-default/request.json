@@ -1,0 +1,13 @@
+{
+  "replaces": "test_fqid_slugs_default_hints.py::TestIterDefaultSlugCandidates::test_yields_three_classes",
+  "fails_if": "the `_default` hint stops reading a variant's current slug from the catalog (`iter_default_slug_candidates` drops `rv.slug`) or stops skipping a candidate already on `_default`, so a variant whose suggestion was applied is listed again",
+  "note": "The old test asserted that each candidate carries its variant's current slug, so the hint can drop already-applied rows. This case reads an artifact whose curation pins the exact mirror variant 3.30 (`Nybörjare i Komvux`) to `_default` and leaves the near mirror 2.20 on `people`. Of the two candidates `hint-names-a-mirror-variant-register` lists, only the near one is still actionable: the count 1 and the omitted name follow from that overlay and the artifact source.",
+  "artifact_curation": "artifact_curation",
+  "argv": [
+    "--db",
+    "{db}",
+    "seed-slugs",
+    "--out-dir",
+    "{work}/curation"
+  ]
+}

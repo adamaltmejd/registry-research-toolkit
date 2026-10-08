@@ -1,0 +1,10 @@
+{
+  "loader": "freeze_states",
+  "replaces": "test_fqid_slugs_load.py::TestLoadFreezeStates::test_valid_map",
+  "fails_if": "the freeze loader drops or rewrites a valid zone state",
+  "note": "The replaced test also called the `freeze_state`, `frozen_zones` and `pinned_zones` accessors; what each zone state does is the precheck and build cases' claim.",
+  "loads": {
+    "scb": "frozen",
+    "sos": "curating"
+  }
+}

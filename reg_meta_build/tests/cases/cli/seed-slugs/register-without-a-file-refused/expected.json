@@ -1,0 +1,11 @@
+{
+  "exit_code": 10,
+  "stdout_contains": [
+    "scb/foretag"
+  ],
+  "files": {
+    "empty/**/*.auto.toml": {
+      "absent": true
+    }
+  }
+}

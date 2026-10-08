@@ -203,12 +203,10 @@ def widen_data_type_classes(classes: Iterable[str]) -> str | None:
 # `text`); SOS-style Swedish labels (`Heltal`, `Sträng (text)`, `Datum`) reach
 # the same column. Substring match is safe — the field only ever holds a type
 # name — and the two marker sets are disjoint across known types, so order
-# doesn't matter. Hoisted here (with `_data_type_class` below) so source sibling checks
-# (`source_siblings.py`) and the read-only split-sibling diagnostic
-# (`split_sibling_suspects.py`) share ONE numeric/text/other classifier — the
-# import-bug shape signal must not diverge between the build-time split and the
-# diagnostic that re-derives it. `fold_column` (above) is the only dependency, so
-# this leaf lives with it rather than in a provider-specific adapter.
+# doesn't matter. Source sibling checks (`source_siblings.py`, through
+# `sibling_shape_conflict` below) classify a sibling's shape with
+# `_data_type_class`. `fold_column` (above) is the only dependency, so this leaf
+# lives with it rather than in a provider-specific adapter.
 _NUMERIC_TYPE_MARKERS = ("int", "tal", "num", "dec", "float", "real", "double")
 _TEXT_TYPE_MARKERS = ("text", "char", "strang", "string", "varchar")
 
@@ -225,13 +223,10 @@ def _data_type_class(dt: str | None) -> str:
     return "other"
 
 
-# Code/label column-pair detection. Hoisted here (alongside `_data_type_class`)
-# so source sibling checks (`source_siblings.py`) and the read-only diagnostic
-# (`split_sibling_suspects.py`) apply ONE code-vs-label name heuristic — the build
-# checks it BEFORE the import-bug shape heuristic (a `<stem>` code + its
-# `<stem>namn` label is a representation pair, NOT a mis-typed delivery), so the
-# diagnostic must apply the same precedence or it mislabels code/label pairs as
-# `type_flip`. A label column carries the Swedish `namn` (name) suffix; its
+# Code/label column-pair detection for source sibling checks
+# (`source_siblings.py`). The build checks it BEFORE the shape-conflict heuristic:
+# a `<stem>` code + its `<stem>namn` label is a representation pair, NOT a
+# mis-typed delivery. A label column carries the Swedish `namn` (name) suffix; its
 # partner code column is either the bare stem (`Kommun`/`Kommunnamn`) or carries a
 # `kod`/`id` code suffix (`Lid`/`LNamn`, `Sun2000Kod`/`Sun2000Namn`). `fold_column`
 # (above) is the only dependency, so these leaves live with it.
