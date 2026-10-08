@@ -1,0 +1,9 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_period_shaped_slug_rejected",
+  "fails_if": "the slug loader accepts a period-shaped slug that the FQID grammar would read as a period",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register.'34'"
+  }
+}

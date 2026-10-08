@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[variant]]
+native_id = "34.150"
+slug = "first"
+
+[[variant]]
+native_id = "34.153"
+slug = "x"
+panel_entity_key = "[personnummer"

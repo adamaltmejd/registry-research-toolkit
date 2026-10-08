@@ -1,0 +1,10 @@
+[register_variant."34.151"]
+slug = "individer"
+[register_variant."26.157"]
+slug = "individer"
+[variable."34.4"]
+slug = "kon"
+[variable."26.4"]
+slug = "kon"
+[variable."34.4.kon"]
+slug = "kon"

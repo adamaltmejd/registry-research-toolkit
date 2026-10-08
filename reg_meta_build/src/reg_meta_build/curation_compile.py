@@ -243,6 +243,16 @@ def source_event_id(ref: SourceRecordRef) -> str:
 
 
 _SENTINELS = TypeAdapter(list[SentinelCode])
+_CODE_LABEL_PAIR = "code_label_pair_invalid"
+_CODE_LABEL_PAIR_FIX = (
+    "Give each [[code_label_pair]] two distinct variable FQIDs "
+    "(provider/register/variable)."
+)
+_THIN_WINDOW = "thin_coverage_window_invalid"
+_THIN_WINDOW_FIX = (
+    "Fix valid_from/valid_to in the authored provider TOML so the register, "
+    "variant and variable windows overlap; a pooled variant needs an end."
+)
 
 
 def validate_sentinels(raw: object, *, subject: str) -> tuple[SentinelCode, ...]:
@@ -4707,12 +4717,18 @@ def _compile_thin_register(
             start = max(starts) if starts else None
             end = min(ends) if ends else None
             if start is None or (end is not None and end < start):
-                raise ValueError(
-                    f"{case_id}: empty or inverted thin coverage window for {name!r}"
+                raise curation_error(
+                    _THIN_WINDOW,
+                    f"{case_id}: empty or inverted thin coverage window for {name!r}",
+                    _THIN_WINDOW_FIX,
                 )
             if name in variant_periods and variant_periods[name].kind == "pooled":
                 if end is None:
-                    raise ValueError(f"{case_id}: pooled thin coverage needs an end")
+                    raise curation_error(
+                        _THIN_WINDOW,
+                        f"{case_id}: pooled thin coverage needs an end",
+                        _THIN_WINDOW_FIX,
+                    )
                 period = TemporalScope(
                     kind="pooled",
                     label=variant_periods[name].label,
@@ -6970,8 +6986,9 @@ def compile_curation(
         )
         for entry in tree.classifications
     )
+    # Repeated pairs are refused at load: the loader confines both endpoints to the
+    # file's own register and rejects an exact repeated row.
     pairs = []
-    seen_pairs: set[tuple[str, str]] = set()
     event_acknowledgements: list[CurationCase] = []
     lineage_acknowledgements: list[CurationCase] = []
     for register in sorted(tree.registers, key=lambda item: item.source_file):
@@ -6982,17 +6999,20 @@ def compile_curation(
                     if parse_fqid(ref).kind != FqidKind.VARIABLE_BINDING:
                         raise ValueError("wrong FQID grain")
                 except ValueError as exc:
-                    raise ValueError(
-                        f"{case_id}: invalid variable FQID {ref!r}"
+                    raise curation_error(
+                        _CODE_LABEL_PAIR,
+                        f"{case_id}: invalid variable FQID {ref!r}",
+                        _CODE_LABEL_PAIR_FIX,
                     ) from exc
-            if (pair.code, pair.label) in seen_pairs:
-                raise ValueError(f"{case_id}: duplicate code/label pair")
-            seen_pairs.add((pair.code, pair.label))
             if not _edge_registers((pair.code, pair.label), selected):
                 unmatched.append(case_id)
             code, label = pair.code.split("/"), pair.label.split("/")
             if code == label:
-                raise ValueError(f"{case_id}: identical endpoints")
+                raise curation_error(
+                    _CODE_LABEL_PAIR,
+                    f"{case_id}: identical endpoints",
+                    _CODE_LABEL_PAIR_FIX,
+                )
             pairs.append(
                 CodeLabelPair(
                     code_provider=code[0],

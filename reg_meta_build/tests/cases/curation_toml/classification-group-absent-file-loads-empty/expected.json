@@ -1,0 +1,6 @@
+{
+  "loader": "classification_groups",
+  "replaces": "test_concept_groups.py::TestClassificationGroupLoader::test_missing_file_is_empty",
+  "fails_if": "load_classification_groups starts requiring curation/classification_groups.toml",
+  "loads": []
+}

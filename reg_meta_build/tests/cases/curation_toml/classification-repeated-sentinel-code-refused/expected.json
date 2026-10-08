@@ -1,0 +1,13 @@
+{
+  "loader": "classifications",
+  "replaces": "test_curation_tree.py::test_duplicate_sentinel_code_fails",
+  "fails_if": "load_classifications accepts a book listing one sentinel code twice",
+  "note": "The two sentinels differ in meaning, so only the one-entry-per-code rule can refuse them.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "classifications/A.toml",
+    "message_contains": [
+      "more than once"
+    ]
+  }
+}

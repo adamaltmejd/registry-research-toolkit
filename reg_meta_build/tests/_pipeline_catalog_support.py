@@ -80,6 +80,20 @@ def _other(var_id: int) -> dict:
     }
 
 
+# An FK thin register keyed like SCB register 1 (`_csv_fixtures.var_row`'s default).
+_THIN_TWIN = [
+    "[[register]]",
+    'key = "1"',
+    'name = "Remote"',
+    'valid_from = "2020-01-01"',
+    'valid_to = "2020-12-31"',
+    "[[register.variable]]",
+    'name = "Amount"',
+    'column = "AMOUNT"',
+    'data_type = "int"',
+]
+
+
 @pytest.fixture
 def catalog(tmp_path: Path, request, prepared_cache) -> CatalogFixture:
     """An accepted synthetic SCB source plus a per-test curation tree.
@@ -88,17 +102,22 @@ def catalog(tmp_path: Path, request, prepared_cache) -> CatalogFixture:
     read-only across tests; each test writes its own curation under ``tmp_path``.
     ``True`` adds a second register; ``"shared_var"`` makes its variable reuse the
     first's native variable id, so the two differ only by their register's native id.
+    ``"thin_twin"`` adds an uncurated FK thin register keyed ``1``, so two sources
+    expose the bare register id ``1``.
     """
     mode = getattr(request, "param", False)
+    second = mode in (True, "shared_var")
     other_var = 101 if mode == "shared_var" else 201
-    rows = [_VALUE] + ([_other(other_var)] if mode else [])
-    prepared = prepared_cache.get(
-        {
-            "description": "The build-db `catalog` fixture: register 1 delivers VALUE"
-            + ("; register 2 delivers OTHER." if mode else "."),
-            "scb": {"registerinformation": rows},
-        }
-    )
+    rows = [_VALUE] + ([_other(other_var)] if second else [])
+    spec: dict = {
+        "description": "The build-db `catalog` fixture: register 1 delivers VALUE"
+        + ("; register 2 delivers OTHER." if second else ".")
+        + ("; FK thin register 1 delivers AMOUNT." if mode == "thin_twin" else ""),
+        "scb": {"registerinformation": rows},
+    }
+    if mode == "thin_twin":
+        spec["files"] = {"Forsakringskassan/fk.toml": _THIN_TWIN}
+    prepared = prepared_cache.get(spec)
     curation = tmp_path / "curation"
     registers = curation / "registers" / "scb"
     registers.mkdir(parents=True)
@@ -109,7 +128,7 @@ def catalog(tmp_path: Path, request, prepared_cache) -> CatalogFixture:
         '[[variable]]\nnative_id = "1.101"\nslug = "value"\n',
         encoding="utf-8",
     )
-    if mode:
+    if second:
         (registers / "other.toml").write_text(
             '[register]\nprovider = "scb"\nslug = "other"\nnative_id = "2"\n'
             '[[variant]]\nnative_id = "2.20"\nslug = "people"\n'

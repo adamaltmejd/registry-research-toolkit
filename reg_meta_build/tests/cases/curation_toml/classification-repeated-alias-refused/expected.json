@@ -1,0 +1,12 @@
+{
+  "loader": "classifications",
+  "replaces": "test_curation_tree.py::test_duplicate_alias_in_one_classification_fails",
+  "fails_if": "load_classifications accepts one alias listed twice in a book",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "classifications/A.toml: `classification.aliases`",
+    "message_contains": [
+      "classification aliases must be unique"
+    ]
+  }
+}

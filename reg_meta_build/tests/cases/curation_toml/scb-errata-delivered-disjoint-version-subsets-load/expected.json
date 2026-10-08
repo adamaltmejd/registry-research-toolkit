@@ -1,0 +1,33 @@
+{
+  "loader": "scb_errata",
+  "match": "includes",
+  "replaces": [
+    "test_scb_errata.py::TestDeliveredEntry::test_delivered_subsets_require_disjoint_versions[2011]",
+    "test_scb_errata.py::TestDeliveredEntry::test_native_variable_anchor_resolves_from_tracked_entry",
+    "test_scb_errata.py::TestDeliveredEntry::test_upstream_value_is_the_correction_class"
+  ],
+  "fails_if": "resolve_scb_errata refuses disjoint [[errata.delivered]] subsets of one column, drops `native_variable_id`, or ignores `upstream` as the correction class",
+  "note": "Two entries for one column (Kon / KON fold together) are allowed when their versions are disjoint. The first names its correction class in `upstream`; the second takes the default class. Both keep the native variable anchor.",
+  "loads": {
+    "delivered": [
+      {
+        "register_id": 34,
+        "register_variant_id": 153,
+        "column": "Kon",
+        "versions": [
+          "2010"
+        ],
+        "native_variable_id": 39310,
+        "provenance": "errata:blank-column-name-in-version\nExact blank source row."
+      },
+      {
+        "column": "KON",
+        "versions": [
+          "2011"
+        ],
+        "native_variable_id": 39310,
+        "provenance": "errata:omitted-column-in-version\nExisting holdings assertion."
+      }
+    ]
+  }
+}

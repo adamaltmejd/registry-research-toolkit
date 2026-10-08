@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree_registers.py::test_register_path_mismatch_fails",
+  "fails_if": "the register loader stops checking that [register] provider/slug match the file's path",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [register]",
+    "message_contains": [
+      "does not match its path"
+    ]
+  }
+}

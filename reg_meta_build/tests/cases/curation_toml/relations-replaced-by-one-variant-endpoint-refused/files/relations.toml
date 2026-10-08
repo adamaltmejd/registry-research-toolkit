@@ -1,0 +1,5 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa"
+from_variant = "individer-16plus"
+to = "scb/lisa"

@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "testreg"
+native_id = "1"
+
+[[representation.alias_window]]
+variable = "scb/other/test-variable"
+variant = "test-variant"
+column = "AEBUY"
+source_editions = ["2018"]
+evidence = "held"
+noted = "2026-09-13"

@@ -1,0 +1,13 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestReplacedByLoad::test_classification_note_rejected",
+  "fails_if": "load_relations accepts and drops a `note` on a classification replaced_by edge",
+  "note": "A classification edge's note has nowhere to go (the build stamps curated:slug_toml), so it is refused rather than silently dropped.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by'",
+    "message_contains": [
+      "does not accept `note`"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/old"
+to = "scb/lisa/new"
+effective_year = 2019
+note = "recut"
+
+[[edge]]
+type = "replaced_by"
+from = "sos/old"
+to = "scb/new"
+
+[[edge]]
+type = "replaced_by"
+from = "class/sun1996"
+to = "class/sun-niva2000"
+effective_year = 2000

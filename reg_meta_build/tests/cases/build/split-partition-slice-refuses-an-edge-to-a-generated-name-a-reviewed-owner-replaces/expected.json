@@ -1,6 +1,7 @@
 {
   "error": {
-    "code": "pipeline_build_failed",
+    "code": "catalog_dependency_missing",
+    "exit_code": 10,
     "message_contains": ["unexplained missing catalog dependencies", "scb/sample/answer"]
   }
 }

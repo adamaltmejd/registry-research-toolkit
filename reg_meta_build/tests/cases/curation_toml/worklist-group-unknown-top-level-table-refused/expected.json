@@ -1,0 +1,13 @@
+{
+  "loader": "worklist_concept_groups",
+  "replaces": [
+    "test_concept_groups.py::TestLoader::test_accept_table_is_not_part_of_candidate_worklist",
+    "test_concept_groups.py::TestLoader::test_invalid_shapes_fail[[[variable_groups]]\\n]"
+  ],
+  "fails_if": "load_worklist_concept_groups ignores a top-level table other than [[variable_group]], such as [[accept]] or a misspelled [[variable_groups]]",
+  "note": "The unknown table follows a valid group, the hardest form of the top-level guard; a misspelled [[variable_groups]] fails the same guard.",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "unknown top-level key(s): ['accept']"
+  }
+}

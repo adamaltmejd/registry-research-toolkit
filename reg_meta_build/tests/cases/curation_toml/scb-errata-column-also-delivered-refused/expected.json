@@ -1,0 +1,19 @@
+{
+  "loader": "scb_errata",
+  "replaces": [
+    "test_scb_errata.py::TestColumnEntry::test_a_column_is_delivered_or_minted_never_both",
+    "test_scb_errata.py::TestColumnEntry::test_duplicate_column_on_one_variant_fails"
+  ],
+  "fails_if": "resolve_scb_errata lets one (variant, column) be declared twice, here once as an [[errata.delivered]] and once as an [[errata.column]] omission",
+  "note": "One (variant, column) key is shared by [[errata.delivered]] and [[errata.column]]. The entry in the other table is the hardest duplicate: no generic duplicate-entry check sees it.",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 1 (scb/lisa)/individer-15plus",
+    "message_contains": [
+      "duplicate column entry"
+    ],
+    "remediation_contains": [
+      "[[errata.delivered]]"
+    ]
+  }
+}

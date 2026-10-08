@@ -226,6 +226,16 @@ refactor.
 
 # Lint and test
 
+- `uv run --no-project scripts/gate.py all` — the full gate before a PR: steps `g0`,
+  `rust`, `release`, `flows`, `frontend` (each runnable by name; CI calls them)
+- `uv run --no-project scripts/gate.py g0 rust --packages <pkg>...` — G0 on touched
+  packages (the `rust` step is G0's Rust HTTP run)
+- `cargo machete` (in `crates` and `g0`) is a local prerequisite:
+  `cargo install cargo-machete --locked`
+- `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
+  files; after a rebase, commit the diff separately
+- `uv run --no-project scripts/gate.py g1` — G1, under the heavy-job lock the Rust steps
+  hold
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
 - `uvx --from panache-cli==3.9.0 panache format --check .` — markdown format check

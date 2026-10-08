@@ -1,0 +1,57 @@
+{
+  "loader": "classifications",
+  "match": "includes",
+  "replaces": [
+    "test_curation_tree.py::test_reads_files_in_sorted_order",
+    "test_curation_tree.py::test_aliases_and_family_members_are_strict_curated_data"
+  ],
+  "fails_if": "load_classifications stops returning books in sorted file order, or drops a book's aliases, sentinels, bound variables or value-set labels, or a family loses a member or alias",
+  "note": "Books come back in file-name order; a family collects its members' slugs and family aliases.",
+  "loads": {
+    "classifications": [
+      {
+        "classification": {
+          "short_name": "A",
+          "aliases": [
+            "Source A"
+          ],
+          "sentinel_codes": [
+            {
+              "code": "99"
+            }
+          ]
+        },
+        "binding": {
+          "variable": [
+            {
+              "variable": "scb/ulf/kod"
+            }
+          ]
+        }
+      },
+      {
+        "classification": {
+          "short_name": "B"
+        },
+        "binding": {
+          "value_set_labels": [
+            "Bee"
+          ]
+        }
+      }
+    ],
+    "families": {
+      "family": [
+        {
+          "members": [
+            "a",
+            "b"
+          ],
+          "aliases": [
+            "Source family"
+          ]
+        }
+      ]
+    }
+  }
+}

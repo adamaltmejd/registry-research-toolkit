@@ -1,0 +1,15 @@
+[[classification_group]]
+key = "sun"
+label = "SUN"
+[[classification_group.members]]
+classification = "a"
+value = "1"
+label = "x"
+[[classification_group.members]]
+classification = "b"
+value = "2"
+label = "y"
+
+[[accept]]
+register = "sos/dors"
+key = "morsak"

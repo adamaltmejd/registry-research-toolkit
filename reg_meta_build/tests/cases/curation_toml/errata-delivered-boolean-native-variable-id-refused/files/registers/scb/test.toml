@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[errata.delivered]]
+variant = "v"
+column = "VALUE"
+versions = ["2020"]
+evidence = "source"
+noted = "2026-09-24"
+native_variable_id = true

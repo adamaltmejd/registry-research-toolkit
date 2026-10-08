@@ -1,0 +1,10 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestLoaderDispatch::test_misspelled_toplevel_key_rejected",
+  "fails_if": "load_relations ignores a top-level table other than [[edge]], such as a misspelled [[edges]]",
+  "note": "A misspelled [[edges]] would silently disable every curated edge.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations TOML has unknown top-level key(s): ['edges']"
+  }
+}

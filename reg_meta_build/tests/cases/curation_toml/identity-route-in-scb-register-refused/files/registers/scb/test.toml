@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[identity.route]]
+deldatamangd = "TOKEN"
+variants = ["Variant"]

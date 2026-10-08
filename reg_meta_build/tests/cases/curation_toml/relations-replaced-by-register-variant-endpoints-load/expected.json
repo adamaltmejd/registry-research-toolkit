@@ -1,0 +1,22 @@
+{
+  "loader": "relations",
+  "match": "includes",
+  "replaces": "test_relation_declaration_loading.py::TestReplacedByLoad::test_parses_register_variant_endpoint_edge",
+  "fails_if": "load_relations drops or swaps the `from_variant` / `to_variant` endpoints of a register-grain replaced_by edge",
+  "loads": {
+    "replaced_by": [
+      {
+        "predecessor": {
+          "kind": "register",
+          "provider": "scb",
+          "register": "lisa",
+          "variable": null,
+          "classification": null
+        },
+        "predecessor_variant": "individer-16plus",
+        "successor_variant": "individer-15plus",
+        "effective_year": 2010
+      }
+    ]
+  }
+}

@@ -207,9 +207,6 @@ Every key is optional, and only the keys that are present get checked.
   - `code` and `exit_code` are the located error the `build-db` and `check-curation`
     commands report. A `RegMetaError` keeps its own; a `ValueError`, `OSError` or
     `KeyError` from the pipeline is wrapped as `pipeline_build_failed`, exit code 10.
-  - `type` is the Python class the pipeline raised, for example
-    `CatalogDependencyError`. It tells apart refusals that the commands all wrap as
-    `pipeline_build_failed`.
   - Each string in `message_contains` must appear in the error message.
 - `projections`: the rows of one named table.
   - `where` filters rows before projecting. A scalar means equality. A list means

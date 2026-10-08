@@ -1,0 +1,31 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/dispink"
+to = "scb/lisa/dispink"
+from_column = "DispInk04"
+to_column = "DispInk10"
+effective_year = 2010
+note = "recut"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/x"
+to = "scb/lisa/x"
+from_column = "Old"
+to_column = "New"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/a"
+to = "scb/lisa/b"
+from_column = "A"
+to_column = "B"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/frida/firmkey"
+to = "scb/frida/firmkey"
+from_column = "borgnr"
+to_column = "persorgnr"
+effective_year = 2014
+variant = "punktskatter-for-energi"

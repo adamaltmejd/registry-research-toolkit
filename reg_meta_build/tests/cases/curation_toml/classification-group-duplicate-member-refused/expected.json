@@ -1,0 +1,13 @@
+{
+  "loader": "classification_groups",
+  "replaces": "test_concept_groups.py::TestClassificationGroupLoader::test_invalid_shapes_fail[5]",
+  "fails_if": "load_classification_groups lets one umbrella reference the same classification twice",
+  "note": "The two members differ in value and label, so only the classification slug repeats.",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "classification_group 'sun'",
+    "message_contains": [
+      "references classification 'a' twice"
+    ]
+  }
+}

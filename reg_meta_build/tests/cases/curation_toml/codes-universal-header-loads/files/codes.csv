@@ -1,0 +1,3 @@
+code,label,label_en,parent_code
+A,Alpha,Alpha-en,
+B,Bravo,,A

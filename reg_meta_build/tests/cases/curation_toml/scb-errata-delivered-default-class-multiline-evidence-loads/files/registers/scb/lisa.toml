@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[variant]]
+native_id = "34.153"
+slug = "individer-15plus"
+
+[[variant]]
+native_id = "34.1335"
+slug = "individer-16plus"
+
+[[errata.delivered]]
+variant = "individer-15plus"
+column = "Kon"
+versions = ["2010"]
+evidence = """First paragraph.
+
+Second paragraph."""
+noted = "2026-09-12"

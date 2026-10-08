@@ -1,0 +1,15 @@
+{
+  "loader": "tags",
+  "replaces": [
+    "test_tags.py::test_load_tags_member_needs_exactly_one_grain[both]",
+    "test_tags.py::test_load_tags_member_needs_exactly_one_grain[neither]"
+  ],
+  "fails_if": "load_tags accepts a member that sets both `variable` and `register` (or neither) instead of exactly one grain",
+  "error": {
+    "code": "tags_invalid",
+    "locator": "tag 'x' member",
+    "message_contains": [
+      "EXACTLY ONE"
+    ]
+  }
+}

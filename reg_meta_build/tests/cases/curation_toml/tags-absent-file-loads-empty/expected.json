@@ -1,0 +1,6 @@
+{
+  "loader": "tags",
+  "replaces": "test_tags.py::test_load_tags_empty_when_no_file",
+  "fails_if": "load_tags starts requiring curation/tags.toml, which synthetic builds and wheel installs do not ship",
+  "loads": []
+}

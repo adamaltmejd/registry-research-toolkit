@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree.py::test_sos_data_type_row_is_checked_at_load[noted = \"20260929\"-canonical ISO date]",
+  "fails_if": "the [[errata.data_type]] noted check accepts any date fromisoformat parses instead of the canonical YYYY-MM-DD form",
+  "note": "20260929 parses as an ISO basic-format date, so only the canonical-form check refuses it.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/sos/sample.toml [[errata.data_type]] entry 1",
+    "message_contains": [
+      "canonical ISO date"
+    ]
+  }
+}

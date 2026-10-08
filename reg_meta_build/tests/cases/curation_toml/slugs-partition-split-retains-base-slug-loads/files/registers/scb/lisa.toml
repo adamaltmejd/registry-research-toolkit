@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[identity.partition]]
+variable = "34.4"
+columns = { Kon = "34.4.kon" }
+columns_ref = "curation evidence"
+
+[[variable]]
+native_id = "34.4"
+slug = "kon"
+
+[[variable]]
+native_id = "34.4.kon"
+slug = "kon"

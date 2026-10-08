@@ -1,0 +1,8 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[flags]]
+variable = "1.5"
+is_sensitive = true

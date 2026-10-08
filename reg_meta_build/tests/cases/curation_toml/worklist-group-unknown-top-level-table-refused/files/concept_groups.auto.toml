@@ -1,0 +1,14 @@
+[[variable_group]]
+register = "scb/lisa"
+key = "x"
+label = "X"
+axis = "rank"
+[[variable_group.members]]
+variable = "x1"
+value = "1"
+label = "One"
+[[variable_group.members]]
+variable = "x2"
+value = "2"
+label = "Two"
+[[accept]]

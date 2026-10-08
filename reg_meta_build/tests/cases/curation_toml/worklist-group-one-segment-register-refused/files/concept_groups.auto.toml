@@ -1,0 +1,9 @@
+[[variable_group]]
+register = "lisa"
+key = "fam"
+label = "F"
+axis = "a"
+[[variable_group.members]]
+variable = "g"
+value = "1"
+label = "x"

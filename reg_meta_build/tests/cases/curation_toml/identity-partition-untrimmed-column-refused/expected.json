@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree_registers.py::test_identity_partition_requires_literal_map_and_reference[1]",
+  "fails_if": "the register loader accepts an [[identity.partition]] column literal with surrounding whitespace",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/test.toml [[identity.partition.columns]] entry 1",
+    "message_contains": [
+      "must be non-empty and trimmed"
+    ]
+  }
+}

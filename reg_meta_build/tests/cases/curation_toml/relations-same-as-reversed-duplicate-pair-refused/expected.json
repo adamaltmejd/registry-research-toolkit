@@ -1,0 +1,14 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestSameAsLoad::test_duplicate_unordered_pair_rejected",
+  "fails_if": "load_relations compares same_as pairs in order and keeps a->b beside b->a",
+  "note": "The second edge lists the pair reversed, so only an unordered comparison finds the duplicate.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations has a duplicate same_as pair",
+    "message_contains": [
+      "scb/lisa/x",
+      "scb/rams/y"
+    ]
+  }
+}

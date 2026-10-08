@@ -1,0 +1,13 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_empty_panel_entity_key_rejected",
+  "fails_if": "the slug loader accepts an empty panel_entity_key string",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variant]] entry 2",
+    "message_contains": [
+      "panel_entity_key",
+      "non-empty"
+    ]
+  }
+}

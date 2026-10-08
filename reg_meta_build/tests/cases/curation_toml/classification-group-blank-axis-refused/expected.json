@@ -1,0 +1,16 @@
+{
+  "loader": "classification_groups",
+  "replaces": [
+    "test_concept_groups.py::TestClassificationGroupLoader::test_invalid_shapes_fail[0]",
+    "test_concept_groups.py::TestClassificationGroupLoader::test_invalid_shapes_fail[1]"
+  ],
+  "fails_if": "load_classification_groups accepts a present-but-blank `axis` (or `key`) instead of refusing it",
+  "note": "`key`, `label` and `axis` share one non-blank validator. A blank optional `axis` is the hardest form: absent is allowed, present-but-blank is drift.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/classification_groups.toml [[classification_group.axis]] entry 1",
+    "message_contains": [
+      "must be nonempty and trimmed"
+    ]
+  }
+}

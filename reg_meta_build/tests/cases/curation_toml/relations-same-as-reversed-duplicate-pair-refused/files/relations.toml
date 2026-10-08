@@ -1,0 +1,9 @@
+[[edge]]
+type = "same_as"
+a = "scb/lisa/x"
+b = "scb/rams/y"
+
+[[edge]]
+type = "same_as"
+a = "scb/rams/y"
+b = "scb/lisa/x"

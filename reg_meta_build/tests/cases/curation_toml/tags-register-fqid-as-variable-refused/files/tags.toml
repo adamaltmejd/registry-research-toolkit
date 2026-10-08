@@ -1,0 +1,5 @@
+[[tag]]
+slug = "x"
+label = "X"
+  [[tag.member]]
+  variable = "scb/lisa"

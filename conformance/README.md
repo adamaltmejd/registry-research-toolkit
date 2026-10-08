@@ -85,13 +85,17 @@ directory that the artifact build stores (fixtures have no pins otherwise); an e
 `build_error` is that build's located refusal, and such a case sends no requests. Every
 other suite, boot cases included, is unchanged.
 
-The Rust server (`reg-meta serve`), on the whole `api` corpus and the MCP equivalence
-suite (the Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part of G0 and CI):
+The Rust server (`reg-meta serve`), on the whole suite, the `api` corpus and the MCP
+equivalence suite included (the Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part
+of G0 and CI), and the release-admission command on the synthetic steward artifact:
 
 ```sh
-cargo build --workspace
-uv run python -m pytest conformance -q -n auto -k '[api/ or test_mcp' --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' --mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'
+uv run --no-project scripts/gate.py rust release
 ```
+
+`scripts/gate.py` holds both commands. `release` skips the synthetic catalog artifact:
+on a selected catalog artifact `validate_built_db` applies the real-corpus floors, which
+it cannot meet.
 
 `test_mcp.py` (section 9's MCP equivalence) sends raw JSON-RPC to `/mcp` on the
 `--server-cmd` server: each `search` step of the `api` cases it names, as a tool call,

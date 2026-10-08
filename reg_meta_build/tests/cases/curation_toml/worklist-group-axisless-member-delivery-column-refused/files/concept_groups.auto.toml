@@ -1,0 +1,10 @@
+[[variable_group]]
+register = "scb/lisa"
+key = "fam"
+label = "Familj"
+axes = []
+[[variable_group.members]]
+variable = "vara"
+delivery_column = "COL"
+[[variable_group.members]]
+variable = "varb"

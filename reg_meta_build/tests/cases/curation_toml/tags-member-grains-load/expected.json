@@ -1,0 +1,26 @@
+{
+  "loader": "tags",
+  "match": "includes",
+  "replaces": "test_tags.py::test_load_tags_parses_both_grains",
+  "fails_if": "load_tags drops a tag's description, misparses a 3-segment variable or 2-segment register member, or stops defaulting an omitted `starred` to false",
+  "loads": [
+    {
+      "slug": "income",
+      "description": "Income measures",
+      "members": [
+        {
+          "variable": "dispink04",
+          "starred": true,
+          "rank": 0,
+          "note": "primary income measure"
+        },
+        {
+          "variable": null,
+          "register": "lisa",
+          "rank": 1,
+          "starred": false
+        }
+      ]
+    }
+  ]
+}

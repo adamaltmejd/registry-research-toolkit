@@ -1,0 +1,4 @@
+[lineage_defaults]
+"scb/rtb" = "folkbokforda-personer"
+"scb/iot" = "bostadshushall"
+"sos/rtb" = "grund-bosattning"

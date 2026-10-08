@@ -1,0 +1,110 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+source_labels = ["Former register name (AGI)"]
+
+[[variant]]
+native_id = "1.2.stock"
+slug = "stock"
+
+[[errata.delivered]]
+variant = "v"
+column = "C"
+versions = ["2020"]
+evidence = "source"
+noted = "2026-09-24"
+
+[[errata.delivered]]
+variant = "v"
+column = "VALUE"
+versions = ["2020"]
+evidence = "Steward holdings"
+noted = "2026-09-12"
+native_variable_id = 39310
+
+[[errata.column]]
+variant = "v"
+column = "C"
+name = "Name"
+definition = "Definition"
+source = "scb-docs"
+evidence = "source"
+noted = "2026-09-24"
+
+[[errata.version]]
+variant = "v"
+name = "2020"
+evidence = "source"
+noted = "2026-09-24"
+
+[[enrichment.description]]
+register = "scb/test"
+variable = "v"
+description = "Description"
+
+[[enrichment.alias]]
+register = "scb/test"
+variable = "v"
+delivery_column = "C"
+
+[[group]]
+register = "scb/test"
+key = "family"
+label = "Family"
+axis = "rank"
+members = [{ variable = "v", value = "1", label = "One" }]
+
+[[code_label_pair]]
+code = "scb/test/code"
+label = "scb/test/label"
+
+[[representation.period_family]]
+register = "scb/test"
+family_stem = "lonfink"
+label = "Lön per månad"
+slug = "lone-eller-foretagarinkomst-manad"
+
+[[representation.alias_window]]
+variable = "scb/test/test-variable"
+variant = "test-variant"
+column = "AEBUY"
+source_editions = ["2018"]
+evidence = "held"
+noted = "2026-09-13"
+
+[[identity.partition]]
+variable = "1.2"
+columns = { C = "1.2.c" }
+columns_ref = "source"
+
+[[identity.column_owner]]
+variable = "1.2"
+variant = "1.3"
+column = "C"
+owner = "1.2.c"
+ref = "source"
+
+[[identity.split]]
+variable = "NAME"
+by = "data_type"
+parts = [{ data_type = "text", owner = "1.NAME.text" }]
+
+[[identity.edition_split]]
+variant = "1.2"
+split = "1.2.stock"
+editions = ["2007-12-31"]
+source_editions = ["2007"]
+evidence = "SCB population text"
+noted = "2026-09-27"
+
+[[acknowledge]]
+code = "issue"
+subject = "scb/test/subject"
+refs = ["source"]
+fields = ["description", "name"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "reason"
+evidence = "evidence"

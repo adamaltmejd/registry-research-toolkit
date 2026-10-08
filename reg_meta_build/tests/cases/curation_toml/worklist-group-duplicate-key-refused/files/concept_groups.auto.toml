@@ -1,0 +1,18 @@
+[[variable_group]]
+register = "scb/lisa"
+key = "fam"
+label = "F"
+axis = "a"
+[[variable_group.members]]
+variable = "g"
+value = "1"
+label = "x"
+[[variable_group]]
+register = "scb/lisa"
+key = "fam"
+label = "F2"
+axis = "b"
+[[variable_group.members]]
+variable = "h"
+value = "1"
+label = "x"

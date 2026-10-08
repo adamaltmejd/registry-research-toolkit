@@ -1,0 +1,22 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_alias_windows.py::test_wrong_register_is_rejected",
+    "test_period_family_merges.py::test_load_period_family_rejects_wrong_register",
+    "test_curation_tree_registers.py::test_register_scoped_entries_reject_wrong_register[0]",
+    "test_curation_tree_registers.py::test_register_scoped_entries_reject_wrong_register[1]",
+    "test_curation_tree_registers.py::test_register_scoped_entries_reject_wrong_register[2]",
+    "test_curation_tree_registers.py::test_register_scoped_entries_reject_wrong_register[3]",
+    "test_curation_tree_registers.py::test_register_scoped_entries_reject_wrong_register[4]",
+    "test_curation_tree_registers.py::test_register_scoped_entries_reject_wrong_register[5]"
+  ],
+  "fails_if": "the register loader accepts an [[representation.alias_window]] whose variable FQID names another register",
+  "note": "One case for the register-coordinate guard (`does not match`) that enrichment, group, code_label_pair, period_family and alias_window entries share. An alias window carries no register field; its register is read off the variable FQID, the hardest form.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/testreg.toml [[representation.alias_window]] entry 1",
+    "message_contains": [
+      "does not match"
+    ]
+  }
+}

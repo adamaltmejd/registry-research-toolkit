@@ -1,0 +1,9 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[identity.split]]
+variable = "NAME"
+by = "data_type"
+parts = [{ data_type = "text", owner = "1.NAME.text" }, { data_type = "integer", owner = "2.NAME.integer" }]

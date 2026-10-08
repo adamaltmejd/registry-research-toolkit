@@ -1,0 +1,12 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestReplacedByLoad::test_variant_on_non_representation_edge_rejected",
+  "fails_if": "load_relations accepts a `variant` scope on a replaced_by edge without column endpoints",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by'",
+    "message_contains": [
+      "carries `variant` but is not a representation"
+    ]
+  }
+}

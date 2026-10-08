@@ -1,0 +1,13 @@
+[register]
+provider = "sos"
+slug = "sample"
+native_id = "1"
+
+[[errata.classification_reference]]
+deldatamangd = "MFR"
+variable = "SECMARK"
+column = "SECMARK"
+expected_reference = "Kodlista_förlossningssätt!A1"
+expected_representation = "1 = ja                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          0 = nej"
+evidence = "Workbook row 179 and derivation sheet rows 6-7."
+noted = "2026-09-29"

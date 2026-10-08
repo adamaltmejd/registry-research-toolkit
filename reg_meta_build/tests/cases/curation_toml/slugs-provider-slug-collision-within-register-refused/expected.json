@@ -1,0 +1,16 @@
+{
+  "loader": "provider_slugs",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_slug_collision_within_register_rejected",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variable_slug_collision_within_register_rejected"
+  ],
+  "fails_if": "the provider slug loader lets two variables (or variants) of one register share a slug",
+  "note": "Variant and variable slugs share one per-register uniqueness check; the variable form is harder because a split sibling and its base may share a slug, and 34.4/34.5 are not such a pair.",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "scb.toml: slug 'kon' reused by variable.'34.4' and variable.'34.5'",
+    "message_contains": [
+      "within register '34'"
+    ]
+  }
+}

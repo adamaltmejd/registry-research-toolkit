@@ -1,0 +1,13 @@
+{
+  "loader": "related_documents",
+  "replaces": "test_repo_curation_docs.py::test_related_documents_missing_document_array_raises_curation_error",
+  "fails_if": "load_related_documents ignores an unknown field in a [register.<slug>] table",
+  "note": "`documents` is a misspelling of the `document` array.",
+  "error": {
+    "code": "related_documents_invalid",
+    "locator": "related_documents `aes`",
+    "message_contains": [
+      "unknown field(s): documents"
+    ]
+  }
+}

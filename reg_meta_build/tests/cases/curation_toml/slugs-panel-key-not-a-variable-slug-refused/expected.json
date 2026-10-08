@@ -1,0 +1,17 @@
+{
+  "loader": "slug_dir",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_malformed_panel_entity_key_rejected",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_period_or_slug"
+  ],
+  "fails_if": "the slug loader stops grammar-checking a panel key against the variable slug slot",
+  "note": "A stray \"[\" is the hardest form: the catalog would later try to JSON-decode it at serve time. A non-slug time key ('Not A Slug') runs the same variable-slot grammar check.",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variant]] entry 2",
+    "message_contains": [
+      "[personnummer",
+      "is not a valid variable slug"
+    ]
+  }
+}

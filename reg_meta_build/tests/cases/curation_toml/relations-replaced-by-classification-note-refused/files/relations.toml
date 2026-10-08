@@ -1,0 +1,6 @@
+[[edge]]
+type = "replaced_by"
+from = "class/sun1996"
+to = "class/sun-niva2000"
+effective_year = 2000
+note = "split"

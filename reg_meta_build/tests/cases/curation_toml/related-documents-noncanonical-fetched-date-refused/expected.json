@@ -1,0 +1,13 @@
+{
+  "loader": "related_documents",
+  "replaces": "test_repo_curation_docs.py::test_related_documents_noncanonical_fetched_date_raises_curation_error",
+  "fails_if": "load_related_documents accepts a fetched date not in YYYY-MM-DD form",
+  "note": "20260623 is a valid ISO basic date, so only the canonical-form rule refuses it.",
+  "error": {
+    "code": "related_documents_invalid",
+    "locator": "related_documents `aes` entry #2",
+    "message_contains": [
+      "fetched"
+    ]
+  }
+}

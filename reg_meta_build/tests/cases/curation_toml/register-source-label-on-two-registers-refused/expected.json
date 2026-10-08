@@ -1,0 +1,14 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_tree_registers.py::test_duplicate_source_labels_across_registers_fail",
+  "fails_if": "the register loader compares source labels case-sensitively and lets one provider's label name two registers",
+  "note": "The labels differ only in case, so the rule must compare them case-folded.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/second.toml [register].source_labels",
+    "message_contains": [
+      "duplicate source label",
+      "curation/registers/scb/first.toml"
+    ]
+  }
+}

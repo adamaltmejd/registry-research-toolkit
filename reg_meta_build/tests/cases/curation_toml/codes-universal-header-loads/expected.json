@@ -1,0 +1,10 @@
+{
+  "loader": "valid_codes",
+  "replaces": "test_classification_storage.py::TestLoadValidCodes::test_universal_header_accepted",
+  "fails_if": "load_valid_codes stops accepting the universal code,label header or reads a trailing column as the label",
+  "note": "The SOS CSVs ship `code,label` with further columns, which are ignored.",
+  "loads": {
+    "A": "Alpha",
+    "B": "Bravo"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "loader": "valid_codes",
+  "replaces": "test_classification_storage.py::TestLoadValidCodes::test_duplicate_code",
+  "fails_if": "load_valid_codes keeps one of two rows with the same code",
+  "error": {
+    "code": "classification_csv_invalid",
+    "locator": "codes.csv:3",
+    "message_contains": [
+      "duplicate"
+    ]
+  }
+}

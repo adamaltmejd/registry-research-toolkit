@@ -1,0 +1,17 @@
+[[register.aes.document]]
+title = "Good"
+filename = "good.pdf"
+source_url = "https://mikrometadata.scb.se/"
+license = "CC BY 4.0"
+fetched = "2026-06-23"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+byte_size = 1
+
+[[register.aes.document]]
+title = "Bad"
+filename = "../bad.pdf"
+source_url = "https://mikrometadata.scb.se/"
+license = "CC BY 4.0"
+fetched = "2026-06-23"
+sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+byte_size = 1

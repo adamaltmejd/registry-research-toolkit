@@ -1,0 +1,9 @@
+{
+  "loader": "tags",
+  "replaces": "test_tags.py::test_load_tags_rejects_duplicate_member_within_tag",
+  "fails_if": "load_tags lets one tag reference the same member twice",
+  "error": {
+    "code": "tags_invalid",
+    "locator": "tag 'income' references 'scb/lisa' twice"
+  }
+}

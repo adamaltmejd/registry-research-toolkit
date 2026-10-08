@@ -1,0 +1,15 @@
+{
+  "loader": "scb_errata",
+  "replaces": [
+    "test_scb_errata.py::TestDeliveredEntry::test_builder_provenance_classes_are_reserved[scoped-attributions]",
+    "test_scb_errata.py::TestDeliveredEntry::test_builder_provenance_classes_are_reserved[overlapping-attributions]"
+  ],
+  "fails_if": "resolve_scb_errata lets a curator claim a correction class the builder reserves for its scoped provenance",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "correction class 'overlapping-attributions'",
+    "message_contains": [
+      "reserved"
+    ]
+  }
+}

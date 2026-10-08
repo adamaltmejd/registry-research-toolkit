@@ -1,0 +1,29 @@
+{
+  "loader": "scb_errata",
+  "match": "includes",
+  "replaces": [
+    "test_scb_errata.py::TestColumnEntry::test_all_versions_parses_as_none",
+    "test_scb_errata.py::TestColumnEntry::test_holdings_period_parses_as_raw_range",
+    "test_scb_errata.py::TestColumnEntry::test_holdings_period_full_dates_parse"
+  ],
+  "fails_if": "resolve_scb_errata expands `all_versions` or a `holdings_period` into named versions, or rewrites the raw holdings range",
+  "loads": {
+    "columns": [
+      {
+        "column": "Ssyk4_J16",
+        "versions": null,
+        "holdings_period": null
+      },
+      {
+        "column": "Ssyk4_J17",
+        "versions": null,
+        "holdings_period": "2002-2020"
+      },
+      {
+        "column": "Ssyk4_J18",
+        "versions": null,
+        "holdings_period": "2002-03-01/2020-11-30"
+      }
+    ]
+  }
+}

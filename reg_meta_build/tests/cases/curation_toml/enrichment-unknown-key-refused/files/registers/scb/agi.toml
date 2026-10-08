@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "agi"
+native_id = "1"
+
+[[enrichment.description]]
+register = "scb/agi"
+variable = "kon"
+description = "Kön"
+descripton = "typo"

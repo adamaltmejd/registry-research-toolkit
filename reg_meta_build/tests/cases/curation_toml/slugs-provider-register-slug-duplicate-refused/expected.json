@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_duplicate_slug_within_kind",
+  "fails_if": "the provider slug loader lets two registers of one provider share a slug",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "scb.toml: slug 'lisa' reused by register.'34' and register.'35'",
+    "message_contains": [
+      "within provider 'scb'"
+    ]
+  }
+}

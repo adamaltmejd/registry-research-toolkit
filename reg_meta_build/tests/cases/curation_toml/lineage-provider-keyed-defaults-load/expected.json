@@ -1,0 +1,17 @@
+{
+  "loader": "lineage",
+  "replaces": [
+    "test_lineage.py::TestLoadLineageConfig::test_parses_defaults_and_overrides",
+    "test_lineage.py::TestLoadLineageConfig::test_same_register_slug_across_providers_coexist"
+  ],
+  "fails_if": "load_lineage_config keys a default by register slug alone, so scb/rtb and sos/rtb collide, or drops a default",
+  "note": "The same register slug under two providers is two defaults, not a duplicate. The curation tree refuses per-variable overrides (curation-tree-lineage-override-refused), so their parse is not a case.",
+  "loads": {
+    "defaults": {
+      "scb/rtb": "folkbokforda-personer",
+      "scb/iot": "bostadshushall",
+      "sos/rtb": "grund-bosattning"
+    },
+    "overrides": {}
+  }
+}

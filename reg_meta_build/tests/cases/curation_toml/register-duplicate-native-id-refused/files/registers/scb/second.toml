@@ -1,0 +1,4 @@
+[register]
+provider = "scb"
+slug = "second"
+native_id = "1"

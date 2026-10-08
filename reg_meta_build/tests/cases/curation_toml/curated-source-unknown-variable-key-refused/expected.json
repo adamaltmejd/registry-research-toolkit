@@ -1,0 +1,20 @@
+{
+  "loader": "curated_source",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": [
+    "test_curated_source_records.py::test_broken_actual_format_contracts_fail_without_silent_fallback[is_identifer = true]",
+    "test_curated_source_records.py::test_broken_actual_format_contracts_fail_without_silent_fallback[state = [{column = \"X\"}]]"
+  ],
+  "fails_if": "read_curated_source ignores an unknown key in a [[register.variable]] entry",
+  "note": "A misspelled disclosure flag is the hardest unknown key: ignoring it would read the variable as is_identifier = false. An unsupported `state` table runs the same unknown-key check.",
+  "error": {
+    "type": "CuratedSourceError",
+    "locator": "register.0.variable.0.is_identifer",
+    "message_contains": [
+      "Extra inputs are not permitted"
+    ]
+  }
+}

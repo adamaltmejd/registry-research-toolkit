@@ -1,0 +1,9 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[identity.partition]]
+variable = "1.2"
+columns = {}
+columns_ref = "source"

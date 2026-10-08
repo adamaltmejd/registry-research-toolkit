@@ -1,0 +1,12 @@
+{
+  "loader": "worklist_concept_groups",
+  "replaces": "test_concept_groups.py::TestLoader::test_duplicate_group_keys_fail",
+  "fails_if": "load_worklist_concept_groups keeps two groups with one key under one register",
+  "error": {
+    "code": "concept_groups_invalid",
+    "locator": "concept_groups.auto.toml [[variable_group]] entry 2",
+    "message_contains": [
+      "duplicate key 'fam' under scb/lisa"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[identity.column_owner]]
+variable = "34.4"
+variant = "34.44"
+column = "Kon"
+owner = "34.4.kon"
+source_editions = ["2023"]
+ref = "documented source ownership"
+
+[[variable]]
+native_id = "34.4"
+slug = "kon"
+
+[[variable]]
+native_id = "34.4.kon"
+slug = "kon"

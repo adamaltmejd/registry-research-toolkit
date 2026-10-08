@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "code_label_pair_invalid",
+    "exit_code": 10,
+    "message_contains": ["registers/scb/sample.toml", "code_label_pair/1: identical endpoints"]
+  }
+}

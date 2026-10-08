@@ -1,0 +1,21 @@
+{
+  "loader": "scb_errata",
+  "replaces": [
+    "test_scb_errata.py::TestColumnEntry::test_required_key_missing_fails[variant]",
+    "test_scb_errata.py::TestColumnEntry::test_required_key_missing_fails[column]",
+    "test_scb_errata.py::TestColumnEntry::test_required_key_missing_fails[name]",
+    "test_scb_errata.py::TestColumnEntry::test_required_key_missing_fails[definition]",
+    "test_scb_errata.py::TestColumnEntry::test_required_key_missing_fails[source]",
+    "test_scb_errata.py::TestColumnEntry::test_required_key_missing_fails[evidence]",
+    "test_scb_errata.py::TestColumnEntry::test_required_key_missing_fails[noted]"
+  ],
+  "fails_if": "the register loader accepts an [[errata.column]] entry without one of its required keys, here the `noted` date",
+  "note": "The register file's strict [[errata.column]] model requires every one of these keys; `noted` stands for all seven.",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column.noted]] entry 1",
+    "message_contains": [
+      "Field required"
+    ]
+  }
+}

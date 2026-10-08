@@ -1,0 +1,131 @@
+{
+  "loader": "curated_source",
+  "match": "includes",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": "test_curated_source_records.py::test_repeated_conflicting_declarations_and_unmatched_refs_are_preserved",
+  "fails_if": "read_curated_source merges or drops a repeated conflicting declaration, or discards a variant reference that matches no declared variant",
+  "note": "Two declarations of one column share a semantic key but keep their own physical locations and conflicting values; an unmatched variant reference stays as written. The old test also asserted distinct record ids, which are content hashes and are not pinned here. The first declaration's delivered cells, and its register.variable table row's cells, are both its five authored keys in file order with their raw TOML values (a non-string value as compact JSON): the replaced test asserted the row keeps exactly the record's cells.",
+  "loads": {
+    "records": [
+      {
+        "$any": true
+      },
+      {
+        "locators": [
+          {
+            "semantic_record_key": [
+              "register:sample-register",
+              "variable:CODE"
+            ],
+            "physical_record": "register[0].variable[0]"
+          }
+        ],
+        "fields": {
+          "data_type": {
+            "value": "text"
+          }
+        },
+        "subject": {
+          "variant_references": [
+            {
+              "native_id": "not-yet-declared"
+            }
+          ]
+        },
+        "delivered_cells": [
+          {
+            "name": "name",
+            "raw_value": "A variable",
+            "raw_type": "str"
+          },
+          {
+            "name": "column",
+            "raw_value": "CODE",
+            "raw_type": "str"
+          },
+          {
+            "name": "data_type",
+            "raw_value": "text",
+            "raw_type": "str"
+          },
+          {
+            "name": "variants",
+            "raw_value": "[\"not-yet-declared\"]",
+            "raw_type": "list"
+          },
+          {
+            "name": "is_sensitive",
+            "raw_value": "false",
+            "raw_type": "bool"
+          }
+        ]
+      },
+      {
+        "locators": [
+          {
+            "semantic_record_key": [
+              "register:sample-register",
+              "variable:CODE"
+            ],
+            "physical_record": "register[0].variable[1]"
+          }
+        ],
+        "fields": {
+          "data_type": {
+            "value": "integer"
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "register"
+      },
+      {
+        "name": "register.variable",
+        "rows": [
+          {
+            "locator": {
+              "physical_record": "register[0].variable[0]"
+            },
+            "cells": [
+              {
+                "name": "name",
+                "raw_value": "A variable",
+                "raw_type": "str"
+              },
+              {
+                "name": "column",
+                "raw_value": "CODE",
+                "raw_type": "str"
+              },
+              {
+                "name": "data_type",
+                "raw_value": "text",
+                "raw_type": "str"
+              },
+              {
+                "name": "variants",
+                "raw_value": "[\"not-yet-declared\"]",
+                "raw_type": "list"
+              },
+              {
+                "name": "is_sensitive",
+                "raw_value": "false",
+                "raw_type": "bool"
+              }
+            ]
+          },
+          {
+            "locator": {
+              "physical_record": "register[0].variable[1]"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

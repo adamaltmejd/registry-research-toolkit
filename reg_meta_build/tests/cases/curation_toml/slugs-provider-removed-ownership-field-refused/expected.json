@@ -1,0 +1,16 @@
+{
+  "loader": "provider_slugs",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_slug_entries_reject_removed_ownership_fields[columns = { Kon = \"34.4.kon\" }\\n]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_slug_entries_reject_removed_ownership_fields[columns_ref = \"reference\"\\n]"
+  ],
+  "fails_if": "the provider slug loader takes columns/columns_ref on a variable slug entry again",
+  "note": "Column ownership moved to [[identity.partition]] in the register file; columns_ref is still a valid key there, which makes it the hardest form.",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "variable.'34.4.kon'",
+    "message_contains": [
+      "columns_ref"
+    ]
+  }
+}

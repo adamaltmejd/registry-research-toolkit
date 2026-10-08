@@ -1,0 +1,9 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_default_slug_rejected_outside_variant",
+  "fails_if": "the slug loader allows the synthetic _default slug outside the register_variant slot",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register.'34'"
+  }
+}

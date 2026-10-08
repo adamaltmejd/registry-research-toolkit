@@ -1,0 +1,18 @@
+{
+  "loader": "curated_source",
+  "args": {
+    "file": "agency.toml",
+    "provider": "agency"
+  },
+  "replaces": "test_curated_source_records.py::test_pooled_delivery_requires_explicit_valid_ordered_iso_bounds[5]",
+  "fails_if": "read_curated_source checks only the shape of a pooled variant's bounds and accepts an impossible calendar date",
+  "note": "2020-02-30 has the ISO shape, so only the calendar check refuses it.",
+  "error": {
+    "type": "CuratedSourceError",
+    "locator": "register.0.variant.1",
+    "message_contains": [
+      "Value error, day",
+      "range"
+    ]
+  }
+}

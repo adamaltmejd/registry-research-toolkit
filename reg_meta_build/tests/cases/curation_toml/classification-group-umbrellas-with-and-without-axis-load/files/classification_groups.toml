@@ -1,0 +1,24 @@
+[[classification_group]]
+key = "sun"
+label = "SUN"
+axis = "dimension"
+[[classification_group.members]]
+classification = "sun-niva2020"
+value = "niva"
+label = "Nivå"
+[[classification_group.members]]
+classification = "sun-grupp2020"
+value = "grupp"
+label = "Grupp"
+
+[[classification_group]]
+key = "sun-axisless"
+label = "SUN"
+[[classification_group.members]]
+classification = "sun-niva2020"
+value = "niva"
+label = "Nivå"
+[[classification_group.members]]
+classification = "sun-grupp2020"
+value = "grupp"
+label = "Grupp"

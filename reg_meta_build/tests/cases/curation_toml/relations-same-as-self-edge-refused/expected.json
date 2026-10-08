@@ -1,0 +1,12 @@
+{
+  "loader": "relations",
+  "replaces": "test_relation_declaration_loading.py::TestSameAsLoad::test_self_edge_rejected",
+  "fails_if": "load_relations accepts a same_as edge from an FQID to itself",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='same_as'",
+    "message_contains": [
+      "relates scb/lisa/x to itself"
+    ]
+  }
+}

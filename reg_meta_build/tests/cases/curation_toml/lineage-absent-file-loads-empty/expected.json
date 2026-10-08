@@ -1,0 +1,9 @@
+{
+  "loader": "lineage",
+  "replaces": "test_lineage.py::TestLoadLineageConfig::test_missing_file_yields_empty_config",
+  "fails_if": "load_lineage_config starts requiring curation/lineage.toml",
+  "loads": {
+    "defaults": {},
+    "overrides": {}
+  }
+}

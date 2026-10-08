@@ -1,0 +1,5 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/a"
+to = "scb/lisa/b"
+from_column = "A"

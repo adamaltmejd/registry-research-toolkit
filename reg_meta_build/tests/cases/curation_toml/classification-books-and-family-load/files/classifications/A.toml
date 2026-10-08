@@ -1,0 +1,12 @@
+[classification]
+short_name = "A"
+slug = "a"
+name = "A"
+codes_file = "a.csv"
+aliases = ["Source A"]
+family = "pair"
+family_aliases = ["Source family"]
+sentinel_codes = [{ code = "99", meaning = "Uppgift saknas" }]
+[binding]
+[[binding.variable]]
+variable = "scb/ulf/kod"

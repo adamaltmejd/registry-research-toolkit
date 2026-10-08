@@ -1,0 +1,13 @@
+{
+  "loader": "scb_errata",
+  "replaces": "test_scb_errata.py::TestColumnEntry::test_undeclared_classification_fails",
+  "fails_if": "resolve_scb_errata accepts an [[errata.column]] classification short_name no classifications/ file declares",
+  "note": "The candidate feed drops an unknown short_name with no row and no error, so a typo would ship an untagged state.",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 1 (scb/lisa)/individer-15plus/Ssyk4_J16",
+    "message_contains": [
+      "SSYK69"
+    ]
+  }
+}

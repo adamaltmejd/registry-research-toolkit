@@ -1,0 +1,12 @@
+{
+  "loader": "classifications",
+  "replaces": "test_curation_tree.py::test_short_name_must_match_file_name",
+  "fails_if": "load_classifications stops checking that a book's short_name matches its file name",
+  "error": {
+    "code": "classification_curation_invalid",
+    "locator": "classifications/A.toml: short_name 'B'",
+    "message_contains": [
+      "does not match the file name"
+    ]
+  }
+}

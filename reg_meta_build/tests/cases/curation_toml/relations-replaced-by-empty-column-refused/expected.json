@@ -1,0 +1,16 @@
+{
+  "loader": "relations",
+  "replaces": [
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_empty_column_rejected",
+    "test_relation_declaration_loading.py::TestReplacedByLoad::test_non_string_column_rejected"
+  ],
+  "fails_if": "load_relations accepts an empty or non-string `from_column`",
+  "note": "One guard requires a present column to be a non-empty string; a TOML integer fails it too.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by' `from_column`",
+    "message_contains": [
+      "must be a non-empty string when present"
+    ]
+  }
+}

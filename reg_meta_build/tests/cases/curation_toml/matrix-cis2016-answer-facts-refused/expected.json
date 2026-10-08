@@ -1,0 +1,26 @@
+{
+  "loader": "matrix_evidence",
+  "args": {
+    "source_mode": "named",
+    "expected_selector": {
+      "register": "scb/testreg",
+      "register_id": 1,
+      "variant": "individer",
+      "register_variant_id": 10,
+      "edition": "2014 - 2016",
+      "regver_id": 11529,
+      "var_id": 15662,
+      "cvid": 469456
+    }
+  },
+  "replaces": "test_scb_adapter.py::TestCis2016MatrixProjection::test_rejects_blank_answer_facts",
+  "fails_if": "load_matrix accepts CIS2014 blank-column answer_facts on a named-mode matrix",
+  "note": "answer_facts belong to the documented_blank CIS2014 mode only.",
+  "error": {
+    "code": "matrix_evidence_invalid",
+    "locator": "answer_facts",
+    "message_contains": [
+      "Extra inputs are not permitted"
+    ]
+  }
+}

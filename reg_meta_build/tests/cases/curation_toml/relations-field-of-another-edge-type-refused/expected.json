@@ -1,0 +1,17 @@
+{
+  "loader": "relations",
+  "replaces": [
+    "test_relation_declaration_loading.py::TestLoaderDispatch::test_foreign_field_effective_year_on_same_as_rejected",
+    "test_relation_declaration_loading.py::TestLoaderDispatch::test_foreign_field_a_on_replaced_by_rejected",
+    "test_relation_declaration_loading.py::TestDerivedFromLoad::test_foreign_field_effective_year_rejected"
+  ],
+  "fails_if": "load_relations accepts a field on an [[edge]] that belongs to another edge type, such as `effective_year` on a same_as edge",
+  "note": "One guard rejects any field the edge's type does not declare. A field legal for another type is the hardest form: it is the tell of a mis-typed edge.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='same_as'",
+    "message_contains": [
+      "['effective_year'] not allowed for that type"
+    ]
+  }
+}
