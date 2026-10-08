@@ -13,21 +13,18 @@ import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
-from _curation_partition_boundary_support import (
-    REGISTER,
-    build_sample,
-    partition,
-    row,
-    summary,
+from _csv_fixtures import var_row, write_scb_input
+from _pipeline_catalog_support import (
+    CatalogFixture,
+    built_db_dir,
+    prepare_accepted,
+    write_curation_tree,
 )
-from _pipeline_catalog_support import built_db_dir
 from reg_meta_build.cli import run
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-    from _pipeline_catalog_support import CatalogFixture
 
 shared_var = pytest.mark.parametrize("catalog", ["shared_var"], indirect=True)
 
@@ -115,17 +112,41 @@ def test_gate_keys_a_partitioned_split_sibling_on_its_native_id(
     gate keys it `1.5.first` and accepts its pin. Fails if the gate refuses a dotted
     provider_key, as it did for 238 entity-key variables of the v0.42.0 catalog
     (#1222)."""
-    toml = REGISTER.replace(
-        'slug = "people"\n', 'slug = "people"\npanel_entity_key = "first"\n'
-    ) + partition({"FIRST": "1.5.first", "SECOND": "1.5.second"})
-    built = build_sample(
-        tmp_path,
-        [row("FIRST", 10), row("SECOND", 11)],
-        toml,
-        summaries=[summary("FIRST"), summary("SECOND")],
+    source = tmp_path / "source"
+    columns = ("FIRST", "SECOND")
+    write_scb_input(
+        source,
+        registerinformation_rows=[
+            var_row(cvid=cvid, var_id=5, colname=column, register=("TEST", 1, 2))
+            for cvid, column in enumerate(columns, 10)
+        ],
+        unika_rows=[
+            f"TEST|Testregistret|Individer|Individer|GenericVar|{column}|2020|2020|0|0|0"
+            for column in columns
+        ],
+        include=("registerinformation", "unika"),
     )
+    curation = write_curation_tree(
+        tmp_path / "curation",
+        {
+            "registers/scb/sample.toml": (
+                '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
+                '[[variant]]\nnative_id = "1.2"\nslug = "people"\n'
+                'panel_entity_key = "first"\n'
+                '[[variable]]\nnative_id = "1.5.first"\nslug = "first"\n'
+                '[[variable]]\nnative_id = "1.5.second"\nslug = "second"\n'
+                '[[identity.partition]]\nvariable = "1.5"\n'
+                'columns = { FIRST = "1.5.first", SECOND = "1.5.second" }\n'
+                'columns_ref = "fixture"\n'
+            )
+        },
+    )
+    fixture = CatalogFixture(*prepare_accepted(tmp_path, source), curation)
+    output = tmp_path / "catalog.db"
+    built = fixture.build(output, tmp_path / "report", registers=("1",))
+    assert built["status"] == "complete"
 
-    result = validate_built_db(built.db, slug_dir=tmp_path / "curation")
+    result = validate_built_db(output, slug_dir=curation)
 
     assert "all 1 entity-key var(s) are curated" in result.format_report()
     assert result.passed, result.failures
