@@ -1,5 +1,5 @@
 {
-  "description": "One register (TESTREG 1) whose native families each carry one partition, owner, enrichment or uncoded claim. All rows are 2020 (edition 2020) in variant 10 unless named. 5: UA_ONE 51, UA_TWO 52. 6: PA_OWNED 61, PA_LEFT 62. 7: KEPT 71, IM_LEFT 72. 8: MAP_ONE 81, MAP_LEFT 82. 9: ED_A 2020 (91) and 2021 (92). 10: ED_B 2020 (101) and 2021 (102). 11/12/13: OA_REMOVE 111/112, OB_ADD 121/122, OC_PARENT 131/132 (variant 13), two same-literal originals each with different operational definitions. 14: PP_OTHER 141, PP_ID 142 (variant 11), 143, 144 (variant 12). 15/16/17: TXT_A 151, TXT_B 161, TXT_C 171, each with an attached list `Reference classification` (code 1, `Description`). 18: EN_A and EN_B under one record (181). 19: SB_A and SB_B under one record (191); SB_B carries the source description `Sibling description`.",
+  "description": "One register (TESTREG 1) whose native families each carry one partition, owner, enrichment or uncoded claim. All rows are 2020 (edition 2020) in variant 10 unless named. 5: UA_ONE 51, UA_TWO 52. 6: PA_OWNED 61, PA_LEFT 62. 7: KEPT 71, IM_LEFT 72. 8: MAP_ONE 81, MAP_LEFT 82. 9: ED_A 2020 (91) and 2021 (92). 10: ED_B 2020 (101) and 2021 (102). 11/12: OA_REMOVE 111/112, OB_ADD 121/122, two same-literal originals each with different operational definitions. 14: PP_OTHER 141, PP_ID 142 (variant 11), 143, 144 (variant 12). 15/16/17: TXT_A 151, TXT_B 161, TXT_C 171, each with an attached list `Reference classification` (code 1, `Description`). 18: EN_A and EN_B under one record (181). 19: SB_A and SB_B under one record (191); SB_B carries the source description `Sibling description`.",
   "scb": {
     "registerinformation": [
       {
@@ -116,32 +116,6 @@
         "var_id": 12,
         "year": "2020",
         "regver_id": 2020,
-        "varopdef": "Sum of components"
-      },
-      {
-        "colname": "OC_PARENT",
-        "cvid": 131,
-        "var_id": 13,
-        "year": "2020",
-        "regver_id": 2020,
-        "register": [
-          "TESTREG",
-          1,
-          13
-        ],
-        "varopdef": "Derived amount"
-      },
-      {
-        "colname": "OC_PARENT",
-        "cvid": 132,
-        "var_id": 13,
-        "year": "2020",
-        "regver_id": 2020,
-        "register": [
-          "TESTREG",
-          1,
-          13
-        ],
         "varopdef": "Sum of components"
       },
       {

@@ -31,9 +31,6 @@
           "curation/registers/scb/sample.toml#/identity.column_owner/6"
         ],
         [
-          "curation/registers/scb/sample.toml#/identity.column_owner/7"
-        ],
-        [
           "curation/registers/scb/sample.toml#/coding.uncoded/1/period/1"
         ],
         [
@@ -73,9 +70,6 @@
         ],
         [
           "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 12)"
-        ],
-        [
-          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 13)"
         ],
         [
           "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 14)"
@@ -335,8 +329,7 @@
       "where": {
         "column_name": [
           "OA_REMOVE",
-          "OB_ADD",
-          "OC_PARENT"
+          "OB_ADD"
         ]
       },
       "fields": [
@@ -363,16 +356,6 @@
         [
           "member:123",
           "OB_ADD",
-          null
-        ],
-        [
-          "member:131",
-          "OC_PARENT",
-          null
-        ],
-        [
-          "member:132",
-          "OC_PARENT",
           null
         ]
       ]

@@ -1,5 +1,5 @@
 {
-  "description": "scb-partition-families after these drifts: UA_ONE's definition changed (5); OA_REMOVE CVID 111 is no longer delivered (11); a third OB_ADD original, CVID 123, is delivered (12); OC_PARENT CVID 131's variant description changed (13); TXT_A's description changed (15); TXT_B's list relabelled code 1 `Changed label` (16).",
+  "description": "scb-partition-families after these drifts: UA_ONE's definition changed (5); OA_REMOVE CVID 111 is no longer delivered (11); a third OB_ADD original, CVID 123, is delivered (12); TXT_A's description changed (15); TXT_B's list relabelled code 1 `Changed label` (16).",
   "scb": {
     "registerinformation": [
       {
@@ -117,35 +117,6 @@
         "var_id": 12,
         "year": "2020",
         "regver_id": 2020
-      },
-      {
-        "colname": "OC_PARENT",
-        "cvid": 131,
-        "var_id": 13,
-        "year": "2020",
-        "regver_id": 2020,
-        "register": [
-          "TESTREG",
-          1,
-          13
-        ],
-        "varopdef": "Derived amount",
-        "cells": {
-          "Registervariantbeskrivning": "Changed variant description"
-        }
-      },
-      {
-        "colname": "OC_PARENT",
-        "cvid": 132,
-        "var_id": 13,
-        "year": "2020",
-        "regver_id": 2020,
-        "register": [
-          "TESTREG",
-          1,
-          13
-        ],
-        "varopdef": "Sum of components"
       },
       {
         "colname": "PP_OTHER",

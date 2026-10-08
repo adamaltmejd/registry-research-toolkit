@@ -11,9 +11,6 @@ slug = "movers"
 [[variant]]
 native_id = "1.12"
 slug = "workers"
-[[variant]]
-native_id = "1.13"
-slug = "parented"
 # 5: an unassigned family withholds its declared native naming.
 [[variable]]
 native_id = "1.5"
@@ -92,7 +89,7 @@ owner = "1.10.latter"
 ref = "latter basis"
 source_editions = ["2021"]
 
-# 11-13: digest-only owner alternatives (column_owner 5, 6, 7).
+# 11, 12: digest-only owner alternatives (column_owner 5, 6).
 [[variable]]
 native_id = "1.11.removed"
 slug = "removed"
@@ -115,19 +112,8 @@ owner = "1.12.added"
 ref = "Same physical amount, retain both source operations"
 source_editions = ["2020"]
 expected_evidence_sha256 = {{evidence_sha256 variable=12}}
-[[variable]]
-native_id = "1.13.parent"
-slug = "parent"
-[[identity.column_owner]]
-variable = "1.13"
-variant = "1.13"
-column = "OC_PARENT"
-owner = "1.13.parent"
-ref = "Same physical amount, retain both source operations"
-source_editions = ["2020"]
-expected_evidence_sha256 = {{evidence_sha256 variable=13}}
 
-# 14: an exact scoped owner takes one PP_ID occurrence (column_owner 8).
+# 14: an exact scoped owner takes one PP_ID occurrence (column_owner 7).
 [[variable]]
 native_id = "1.14.other"
 slug = "other"

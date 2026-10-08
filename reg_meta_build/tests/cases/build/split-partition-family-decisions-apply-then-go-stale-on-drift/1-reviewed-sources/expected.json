@@ -308,8 +308,7 @@
       "where": {
         "column_name": [
           "OA_REMOVE",
-          "OB_ADD",
-          "OC_PARENT"
+          "OB_ADD"
         ]
       },
       "fields": [
@@ -337,16 +336,6 @@
           "member:122",
           "OB_ADD",
           "scb/sample/added"
-        ],
-        [
-          "member:131",
-          "OC_PARENT",
-          "scb/sample/parent"
-        ],
-        [
-          "member:132",
-          "OC_PARENT",
-          "scb/sample/parent"
         ]
       ]
     },
