@@ -13,9 +13,9 @@ cases' result form (``exit``, ``stdout``, ``stderr``).
 - ``show``: every catalog node kind per named scope, retired refs, and owning
   variables against the CLI baseline.
 
-A family's ``cases`` also takes ``baseline_cli``, a future of the CLI arm's baseline
-results by case id, set once the CLI arms finish, so a family compares with a CLI
-baseline case instead of running it again.
+``show``'s ``cases`` also takes ``baseline_cli``, a future of the CLI arm's baseline
+results by case id, set once the CLI arms finish, so it compares with a CLI baseline
+case instead of running it again.
 """
 
 from __future__ import annotations
@@ -100,8 +100,11 @@ def served_cases(
             scopes = [None, "reference"] + (["holdings"] if catalog != "global" else [])
             for family in FAMILIES:
                 started = time.monotonic()
-                found = family.cases(
-                    base, cand, catalog, scopes, originals[catalog], baseline_cli
+                args = (base, cand, catalog, scopes, originals[catalog])
+                found = (
+                    show.cases(*args, baseline_cli)
+                    if family is show
+                    else family.cases(*args)
                 )
                 cases += [
                     (f"{catalog}/{key}", _result(expected), _result(actual))

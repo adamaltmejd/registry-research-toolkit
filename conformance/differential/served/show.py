@@ -2,8 +2,9 @@
 routes, mapped onto ``shape.Show``:
 
 - ``show-root``, ``show-provider/<fqid>`` per provider, ``show-register/<fqid>`` per
-  slugged register (the register node plus ``/variants``), ``show-group/<ref>`` per
-  concept group, classification group and family, ``show-classification-root`` and
+  slugged register (the register node plus ``/variants``), ``show-group/<ref>`` for
+  a seeded sample of concept groups and every classification group and family,
+  ``show-classification-root`` and
   ``show-classification/<fqid>`` per classification, and ``show-variable/<fqid>``
   for a seeded sample of variables.
 - ``show-retired/<fqid>`` per retired register and variable (a succession predecessor
@@ -21,7 +22,6 @@ not compared; a classification's family carries ``editions`` from 3d.2.
 from __future__ import annotations
 
 import json
-import random
 import sqlite3
 import time
 import tomllib
@@ -31,10 +31,17 @@ from contextlib import closing
 from pathlib import Path
 from urllib.parse import quote
 
+from conformance.differential.cases import seeded_sample
+
 # Requests in flight per server pair.
 PARALLEL = 16
 # Variables compared per catalog, drawn with the configured seed.
 VARIABLES = 80
+# simplify: sampled groups (seeded); parallelize served catalogs if a later family
+# pushes warm G1 over budget. Every group (~3,000 per catalog) took ~290 s of a warm
+# run; the LISA undated-coverage defect that full enumeration found is pinned by
+# `api/show-undated-member-coverage`.
+GROUPS = 500
 # The succession families' keys (`_CLASSIFICATION_FAMILY_LABELS`); both arms answer
 # each, a family or a 404.
 FAMILIES = ("icd", "lkf", "sni", "ssyk")
@@ -218,8 +225,12 @@ def _refs(conn: sqlite3.Connection, catalog: str) -> list[tuple[str, str, str]]:
     groups = conn.execute(
         "SELECT p.slug || '/' || r.slug || '/' || g.group_key FROM concept_group g "
         "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
-        "WHERE g.kind = 'variable' UNION SELECT 'class/' || group_key "
-        "FROM concept_group WHERE kind = 'classification' ORDER BY 1"
+        "WHERE g.kind = 'variable' ORDER BY 1"
+    ).fetchall()
+    groups = seeded_sample(SEED, catalog, "show-groups", groups, GROUPS)
+    groups += conn.execute(
+        "SELECT 'class/' || group_key FROM concept_group WHERE kind = 'classification' "
+        "ORDER BY 1"
     ).fetchall()
     rows += [("show-group", g, f"group/{g}") for (g,) in groups]
     rows += [("show-group", f"class/{key}", f"group/class/{key}") for key in FAMILIES]
@@ -235,8 +246,7 @@ def _refs(conn: sqlite3.Connection, catalog: str) -> list[tuple[str, str, str]]:
         "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
         "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL ORDER BY v.variable_id"
     ).fetchall()
-    rng = random.Random(f"{SEED}:{catalog}:show-variables")
-    sample = sorted(rng.sample(variables, min(VARIABLES, len(variables))))
+    sample = seeded_sample(SEED, catalog, "show-variables", variables, VARIABLES)
     rows += [("show-variable", f, f) for (f,) in sample]
     retired = conn.execute(
         "SELECT predecessor_provider || '/' || predecessor_register FROM "
