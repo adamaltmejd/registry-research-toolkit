@@ -120,81 +120,68 @@ def _schema_candidate(rows: list[dict]) -> list:
     )
 
 
-def _diff_column(column: dict, spelling: str) -> list:
-    return [
-        column["variable_name"],
-        column["var_id"],
-        column["data_type"],
-        column["data_length"],
-        column[spelling],
-    ]
+def _first(aliases: list[str]) -> str | None:
+    """`get diff`'s column: `aliases` is `[column]`, or `[]` without one."""
+    return aliases[0] if aliases else None
 
 
-def _diff_baseline(data: dict) -> list:
-    out = []
-    for v in data["variants"]:
-        out.append(
+def _baseline_column(column: dict) -> dict:
+    return {**column, "column": _first(column["aliases"])}
+
+
+def _baseline_change(change: dict) -> dict:
+    """A `get diff` change in `diff`'s shape: `aliases` is the column."""
+    if change["field"] == "aliases":
+        return {
+            "field": "column",
+            "from": _first(change["from"]),
+            "to": _first(change["to"]),
+        }
+    return {key: change[key] for key in ("field", "from", "to")}
+
+
+def _diff(data: dict, column=lambda c: c, change=lambda c: c) -> list:
+    """A diff's variants as sorted rows, after mapping each added or removed
+    `column` and each `change` onto `diff`'s shape."""
+
+    def columns(found: list[dict]) -> list:
+        return sorted(
+            (
+                [
+                    c["variable_name"],
+                    c["var_id"],
+                    c["data_type"],
+                    c["data_length"],
+                    c["column"],
+                ]
+                for c in map(column, found)
+            ),
+            key=json.dumps,
+        )
+
+    return sorted(
+        (
             {
                 "variant_name": v["variant_name"],
                 "summary": v["summary"],
-                "added": sorted(
-                    (_diff_column(c, "aliases") for c in v["added"]), key=json.dumps
-                ),
-                "removed": sorted(
-                    (_diff_column(c, "aliases") for c in v["removed"]), key=json.dumps
-                ),
+                "added": columns(v["added"]),
+                "removed": columns(v["removed"]),
                 "changed": sorted(
                     (
                         [
                             c["variable_name"],
                             c["var_id"],
-                            [
-                                {
-                                    "field": "column"
-                                    if ch["field"] == "aliases"
-                                    else ch["field"],
-                                    "from": ch["from"][0]
-                                    if ch["field"] == "aliases"
-                                    else ch["from"],
-                                    "to": ch["to"][0]
-                                    if ch["field"] == "aliases"
-                                    else ch["to"],
-                                }
-                                for ch in c["changes"]
-                            ],
+                            list(map(change, c["changes"])),
                         ]
                         for c in v["changed"]
                     ),
                     key=json.dumps,
                 ),
             }
-        )
-    return sorted(out, key=json.dumps)
-
-
-def _diff_candidate(data: dict) -> list:
-    out = []
-    for v in data["variants"]:
-        out.append(
-            {
-                "variant_name": v["variant_name"],
-                "summary": v["summary"],
-                "added": sorted(
-                    (_diff_column(c, "column") for c in v["added"]), key=json.dumps
-                ),
-                "removed": sorted(
-                    (_diff_column(c, "column") for c in v["removed"]), key=json.dumps
-                ),
-                "changed": sorted(
-                    (
-                        [c["variable_name"], c["var_id"], c["changes"]]
-                        for c in v["changed"]
-                    ),
-                    key=json.dumps,
-                ),
-            }
-        )
-    return sorted(out, key=json.dumps)
+            for v in data["variants"]
+        ),
+        key=json.dumps,
+    )
 
 
 def _datacolumns_refs(
@@ -277,11 +264,11 @@ def cases(
                 "to": _flag(args, "--to"),
             }
             answer = get(cand, f"/api/diff/{path}", params)
-            expected = _diff_baseline(data) if ok else "error"
+            expected = (
+                _diff(data, _baseline_column, _baseline_change) if ok else "error"
+            )
             actual = (
-                _diff_candidate(answer["body"]["data"])
-                if answer["status"] == 200
-                else "error"
+                _diff(answer["body"]["data"]) if answer["status"] == 200 else "error"
             )
             return case_id, expected, actual
         params = {"scope": scope}
