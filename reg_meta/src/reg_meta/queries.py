@@ -1840,8 +1840,8 @@ def _code_owner_annotations_batch(
         tight enum is more discriminative than the same code on a 500-value
         catalog), ties broken by slug and full catalog identity for determinism;
       - `reg_ids` (a `--register` scope) constrains BOTH the variable owners and
-        `variable_count`; classifications are catalog-scoped, so a register scope
-        leaves them empty (mirrors `_search_classifications`' guard)."""
+        `variable_count` only; which classifications own a code is a fact about
+        the code, so a register scope keeps them (and the hit's `code_system`)."""
     out: dict[int, dict[str, Any]] = {
         cid: _empty_owner_annotation() for cid in code_ids
     }
@@ -1920,42 +1920,41 @@ def _code_owner_annotations_batch(
                 }
             )
 
-        # Classifications: catalog-scoped, so a register scope leaves them empty.
+        # Classifications: catalog-scoped, so a register scope does not narrow them.
         # This owner definition (variables ∪ classifications, with NO is_valid/validity
         # filter on classification_code) is MIRRORED at build time by the value_code_fts
         # owner filter in reg_meta_build/derive.py `_VALUE_CODE_OWNED` (#478). Any
         # change to what counts as a classification owner here (e.g. adding an
         # is_valid predicate) MUST be mirrored there, or the search index and the owner annotation desync —
         # context-less hits leak into search, or valid classification codes vanish.
-        if not reg_ids:
-            for row in conn.execute(
-                "SELECT cc.code_id, COUNT(*) AS n "
-                "FROM _match_code_ids m "
-                "JOIN classification_code cc ON cc.code_id = m.code_id "
-                "GROUP BY cc.code_id"
-            ):
-                out[row["code_id"]]["classification_count"] = row["n"]
-            cls_rows = conn.execute(
-                "WITH owners AS ("
-                "  SELECT cc.code_id, c.short_name, c.name, c.slug "
-                "  FROM _match_code_ids m "
-                "  JOIN classification_code cc ON cc.code_id = m.code_id "
-                "  JOIN classification c ON c.id = cc.classification_id "
-                "), ranked AS ("
-                "  SELECT *, ROW_NUMBER() OVER ("
-                "    PARTITION BY code_id ORDER BY short_name"
-                "  ) AS rn FROM owners"
-                ") SELECT * FROM ranked WHERE rn <= ? ORDER BY code_id, rn",
-                (_CODE_OWNERS_PER_HIT,),
-            ).fetchall()
-            for r in cls_rows:
-                out[r["code_id"]]["classifications"].append(
-                    {
-                        "fqid": try_emit(Fqid.classification_fqid, r["slug"]),
-                        "short_name": r["short_name"],
-                        "name": r["name"],
-                    }
-                )
+        for row in conn.execute(
+            "SELECT cc.code_id, COUNT(*) AS n "
+            "FROM _match_code_ids m "
+            "JOIN classification_code cc ON cc.code_id = m.code_id "
+            "GROUP BY cc.code_id"
+        ):
+            out[row["code_id"]]["classification_count"] = row["n"]
+        cls_rows = conn.execute(
+            "WITH owners AS ("
+            "  SELECT cc.code_id, c.short_name, c.name, c.slug "
+            "  FROM _match_code_ids m "
+            "  JOIN classification_code cc ON cc.code_id = m.code_id "
+            "  JOIN classification c ON c.id = cc.classification_id "
+            "), ranked AS ("
+            "  SELECT *, ROW_NUMBER() OVER ("
+            "    PARTITION BY code_id ORDER BY short_name"
+            "  ) AS rn FROM owners"
+            ") SELECT * FROM ranked WHERE rn <= ? ORDER BY code_id, rn",
+            (_CODE_OWNERS_PER_HIT,),
+        ).fetchall()
+        for r in cls_rows:
+            out[r["code_id"]]["classifications"].append(
+                {
+                    "fqid": try_emit(Fqid.classification_fqid, r["slug"]),
+                    "short_name": r["short_name"],
+                    "name": r["name"],
+                }
+            )
     finally:
         conn.execute("DROP TABLE IF EXISTS _match_code_ids")
 

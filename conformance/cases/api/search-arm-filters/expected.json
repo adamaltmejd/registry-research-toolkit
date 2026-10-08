@@ -26,6 +26,14 @@
         "R3",
         "R1"
       ],
+      "/data/items/*/code_system": [
+        "ASET",
+        "ASET"
+      ],
+      "/data/items/0/classification_count": 1,
+      "/data/items/0/classifications/*/fqid": [
+        "class/aset"
+      ],
       "/data/items/0/variables/*/fqid": [
         "scb/example/v2",
         "scb/example/v1",
@@ -50,7 +58,8 @@
     "json": {
       "/data/items/*/code": [
         "R6"
-      ]
+      ],
+      "/data/items/0/code_system": null
     }
   }
 ]
