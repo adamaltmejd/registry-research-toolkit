@@ -1,0 +1,22 @@
+{
+  "fails_if": "the duplicate-row refusal stops locating each row with its own file and sheet (for example, prints the repeated row without its sheet), or stops refusing identical SOS Variabelnivå rows",
+  "note": "PAR's workbook repeats the INVARN8 row of PAR_OV byte for byte. The Variabelnivå sheet's header is row 1, so the variable rows are 2 and 3, and the message names the workbook, sheet and row of each. Both rows share one workbook and sheet: a scope slice holds one source, and each source adapter reads its records from one file (SCB, thin) or one variable sheet (SOS), while LISA already refuses a repeated semantic key. So two identical rows on different files or sheets cannot reach this refusal through a delivered input.",
+  "sources": {
+    "description": "PAR_OV delivers INVARN8 in two byte-identical Variabelnivå rows.",
+    "scb": {"registerinformation": [{"cvid": 1001, "var_id": 101, "colname": "VALUE"}]},
+    "sos": [
+      {
+        "abbrev": "PAR",
+        "title": "Patientregistret",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {"name": "PAR_OV", "label": "PAR_OV", "description": "Första vyn", "data_from": 2001, "data_to": 2020}
+        ],
+        "variables": [
+          {"name": "INVARN8", "deldatamangd": "PAR_OV", "label": "target", "data_type": "Heltal", "data_from": 2001, "data_to": 2020},
+          {"name": "INVARN8", "deldatamangd": "PAR_OV", "label": "target", "data_type": "Heltal", "data_from": 2001, "data_to": 2020}
+        ]
+      }
+    ]
+  }
+}

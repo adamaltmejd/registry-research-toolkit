@@ -1,0 +1,15 @@
+{
+  "status": "complete",
+  "projections": [
+    {
+      "table": "variants",
+      "fields": ["register", "variant"],
+      "rows": [["sample", "people"], ["remote", "default"]]
+    },
+    {
+      "table": "variables",
+      "fields": ["register", "variable"],
+      "rows": [["sample", "value"], ["remote", "amount"]]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "source_rows_duplicated",
+    "exit_code": 10,
+    "message_contains": [
+      "Patientregistret (PAR)_webb.xlsx sheet Metadata - Variabelnivå row:2 and ",
+      "Patientregistret (PAR)_webb.xlsx sheet Metadata - Variabelnivå row:3 are identical rows"
+    ]
+  }
+}

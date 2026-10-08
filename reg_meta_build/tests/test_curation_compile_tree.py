@@ -152,22 +152,10 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
         panel_time_key="period",
         panel_time_grain="delivery",
     )
-    # The build cases cannot reach these two claims yet. The panel fields need a
-    # `variants` projection field (cases/build `variants` has register/variant/name
-    # only). The untracked-default stale diagnostic never reaches the ledger: the
-    # build stops first (cases/build/thin-default-variant-without-a-tracked-slug-fails-the-build).
-    path.write_text(path.read_text().split("[[variant]]")[0])
-    _, _, _, missing, _ = compile_native_naming(
-        load_curation_tree(root),
-        cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
-        (scope,),
-        subset=True,
-    )
-    assert any(
-        issue.code == "stale_curation_entry"
-        and "no tracked default slug" in issue.detail
-        for issue in missing
-    )
+    # The build cases cannot reach the panel fields yet: they need a `variants`
+    # projection field (cases/build `variants` has register/variant/name only). The
+    # untracked-default stale diagnostic is pinned in the ledger by
+    # cases/build/thin-default-variant-without-a-tracked-slug-withholds-the-register.
 
 
 def test_tree_hash_covers_curation_and_source_slug_files(tmp_path):

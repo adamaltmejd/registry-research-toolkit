@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta.source_evidence import SourceField
 
+from reg_meta_build._curation import curation_error
 from reg_meta_build.resolved_catalog import (
     ResolvedEdition,
     ResolvedObjectType,
@@ -324,8 +325,20 @@ def resolve_parents(
                         )
                     )
                     continue
+                if key not in names and kind == "register":
+                    provider = key[1]
+                    raise curation_error(
+                        "register_curation_missing",
+                        f"Delivered {provider} register {key[-1]!r} ({name!r}, "
+                        f"source {key[0]}) has no curation file.",
+                        f"Add curation/registers/{provider}/<slug>.toml naming the "
+                        "register ([register] provider, slug and native_id) with its "
+                        "[[variant]] and [[variable]] entries.",
+                    )
                 if key not in names:
-                    raise ValueError(f"missing checked parent naming binding: {key!r}")
+                    # The register is named but this variant is not: source-scope
+                    # resolution withholds the register (unnamed_delivered_variant).
+                    continue
                 declaration = names[key]
                 expected_kind = "register" if kind == "register" else "register_variant"
                 if (

@@ -65,6 +65,7 @@ the behavior in plain words. For example,
   | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                                                                                     |
   | `dependency-`          | curated groups, tags, panel keys and relations whose catalog dependency is withheld                                                                                              |
   | `coverage-`            | delivery the formed variables owe the catalog, written or explicitly withdrawn                                                                                                   |
+  | `source-rows-`         | physical source rows the build refuses when it loads a scope                                                                                                                     |
 
 Later stages add their own prefixes to this table.
 

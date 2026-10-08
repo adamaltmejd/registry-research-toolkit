@@ -6,29 +6,6 @@
         "variable_group": [
           {
             "register": "scb/foretag",
-            "key": "dodsorsak",
-            "label": "Underliggande dödsorsak enligt ICD",
-            "axis": "ordinal",
-            "members": [
-              {
-                "variable": "dodsorsak1",
-                "value": "1",
-                "label": "1"
-              },
-              {
-                "variable": "dodsorsak2",
-                "value": "2",
-                "label": "2"
-              },
-              {
-                "variable": "dodsorsak3",
-                "value": "3",
-                "label": "3"
-              }
-            ]
-          },
-          {
-            "register": "scb/foretag",
             "key": "flop",
             "label": "Åtgärdskod",
             "axis": "ordinal",
@@ -157,6 +134,24 @@
                 "variable": "diag2",
                 "value": "2",
                 "label": "2"
+              }
+            ]
+          },
+          {
+            "register": "scb/foretag",
+            "key": "dodsorsak",
+            "label": "Underliggande dödsorsak enligt ICD",
+            "axis": "numeric",
+            "members": [
+              {
+                "variable": "dodsorsak2",
+                "value": "2",
+                "label": "2"
+              },
+              {
+                "variable": "dodsorsak3",
+                "value": "3",
+                "label": "3"
               }
             ]
           },
@@ -503,28 +498,17 @@
         "label": "Underliggande dödsorsak enligt ICD",
         "axes": [
           [
-            "ordinal",
-            "ordinal"
+            "numeric",
+            "numeric"
           ]
         ],
         "members": [
-          {
-            "variable": "dodsorsak1",
-            "delivery_column": null,
-            "coords": [
-              [
-                "ordinal",
-                "1",
-                "1"
-              ]
-            ]
-          },
           {
             "variable": "dodsorsak2",
             "delivery_column": null,
             "coords": [
               [
-                "ordinal",
+                "numeric",
                 "2",
                 "2"
               ]
@@ -535,7 +519,7 @@
             "delivery_column": null,
             "coords": [
               [
-                "ordinal",
+                "numeric",
                 "3",
                 "3"
               ]

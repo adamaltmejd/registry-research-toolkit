@@ -1,0 +1,5 @@
+{
+  "fails_if": "parent resolution refuses a delivered variant that its named register's file does not name (the bare `missing checked parent naming binding` ValueError, reported as `pipeline_build_failed`), or source-scope resolution stops withholding that register, so the diagnostic build stops instead of completing",
+  "note": "sample.toml names register 1 and variable 1.101 but has no `[[variant]]` for the delivered variant 1.10, and compile reports nothing for it. As with a thin register's untracked `_default` variant, the build withholds the register with unnamed_delivered_variant and completes; its variable reports withheld_register_dependency.",
+  "sources": "scb-value"
+}
