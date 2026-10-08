@@ -1458,8 +1458,8 @@ id = "reg_meta.queries.search"
 used_by = ["conformance", "reg_meta_build"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/cases/api", "reg_meta/tests/test_search_ranking.py", "reg_meta_build/tests/test_build_catalog_classification_boundary.py"]
-note = "The search core: the webapp's search route and conformance's reader cases switch to the 3a search operation. The build's only importer is a test (test_build_catalog_classification_boundary asserts search hits on a built catalog), which becomes a 3a search api case or goes."
+covered_by = ["conformance/cases/api", "reg_meta/tests/test_search_ranking.py"]
+note = "The search core, which the Rust `search` operation replaced for the webapp. Conformance's reader and logical cases still call it. The build's only importer is a test (test_build_catalog_classification_boundary); `api/search-english-name` pins the English-name hit it asserted."
 
 [[row]]
 kind = "import"

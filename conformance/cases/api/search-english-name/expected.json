@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {
+          "type": "classification",
+          "fqid": "class/sun2020",
+          "short_name": "SUN2020",
+          "name": "Svensk utbildningsnomenklatur",
+          "terminal_fqid": null
+        }
+      ],
+      "/data/next_cursor": null
+    }
+  }
+]

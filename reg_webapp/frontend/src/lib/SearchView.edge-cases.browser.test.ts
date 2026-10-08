@@ -146,8 +146,20 @@ describe("SearchView — typed result groups (#379)", () => {
     await expect.element(page.getByText("No matches for “zzz”.")).toBeVisible();
   });
 
-  it("surfaces a fetch error as an alert", async () => {
-    vi.mocked(search).mockRejectedValue(new Error("backend down"));
+  it("surfaces one failed call among the six as the search's alert", async () => {
+    // Only the variable arm fails; every other call answers with a hit. Fails if
+    // a failed call is dropped and the other sections render as if complete.
+    vi.mocked(search).mockImplementation(async (_q, options) => {
+      if (options?.type === "variable") {
+        throw new Error("backend down");
+      }
+      return {
+        items: [
+          { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+        ],
+        next_cursor: null,
+      };
+    });
     setQuery("kon");
     await render(SearchView);
 
@@ -158,5 +170,8 @@ describe("SearchView — typed result groups (#379)", () => {
     // A generic error must NOT trip the timeout branch — pins the `startsWith`
     // discriminator against accidental broadening (e.g. `includes`).
     await expect.element(page.getByText(/timed out/)).not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("heading", { name: "Registers" }))
+      .not.toBeInTheDocument();
   });
 });

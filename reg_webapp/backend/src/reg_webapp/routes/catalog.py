@@ -126,10 +126,8 @@ if TYPE_CHECKING:
 
 router = APIRouter(prefix="/api", dependencies=[Depends(browse_scope)])
 
-# `_catalog_conn` (the per-request read-only connection seam) now lives in
-# `reg_webapp.conn` so `routes/search.py` shares it without importing this route
-# module; imported above under its original local name to keep the call sites
-# (`with _catalog_conn(request)`) unchanged.
+# `_catalog_conn` is the per-request read-only connection seam from
+# `reg_webapp.conn`, imported above under its local name.
 
 
 def _validated_fqid(fqid: str) -> ValidatedFqidPath:

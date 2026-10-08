@@ -126,9 +126,6 @@ describe("SearchView — typed result groups (#379)", () => {
       "Registers",
     ]);
     await expect
-      .element(page.getByRole("heading", { name: "Top results" }))
-      .toBeVisible();
-    await expect
       .element(page.getByRole("link", { name: /Kön/ }).first())
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
   });
@@ -304,8 +301,13 @@ describe("SearchView — typed result groups (#379)", () => {
     expect(window.history.length).toBe(historyLength);
   });
 
-  it("omits a group whose results are empty (no empty header)", async () => {
+  it("omits an empty section, and the top-results strip with a lone hit", async () => {
+    // Fails if an empty arm renders a header, or the strip repeats the only hit
+    // its arm section already shows.
     mockSearch({
+      top: [
+        { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
+      ],
       register: [
         { type: "register", fqid: "scb/lisa", name: "LISA", purpose: null },
       ],
@@ -322,6 +324,9 @@ describe("SearchView — typed result groups (#379)", () => {
       .toBeVisible();
     await expect
       .element(page.getByRole("heading", { name: "Variables" }))
+      .not.toBeInTheDocument();
+    await expect
+      .element(page.getByRole("heading", { name: "Top results" }))
       .not.toBeInTheDocument();
   });
 
