@@ -43,18 +43,25 @@ const chromiumLaunchArgs = needsSingleProcessChromium
 // Linux CI runs). This route stays for the whole context, so interception never
 // switches off; test-setup.browser.ts arms it and waits until its iframe's
 // requests are intercepted before any test file loads.
-// simplify: drop once the provider keeps interception live across files, or
-// Playwright's `route()` resolves only when interception is in effect.
+// simplify: every browser-test request now pauses in Playwright's routing
+// (~5% on the browser project); drop once the provider keeps interception live
+// across files, or Playwright's `route()` resolves only when it is in effect.
 const ROUTE_PROBE_PATH = "/__route_probe__";
 const ROUTE_PROBE_MARKER = "intercepted";
 const armedContexts = new WeakSet<object>();
 const keepRequestInterception: BrowserCommand<[]> = async ({ context }) => {
   if (!armedContexts.has(context)) {
     armedContexts.add(context);
-    await context.route(
-      (url) => url.pathname === ROUTE_PROBE_PATH,
-      (route) => route.fulfill({ body: ROUTE_PROBE_MARKER }),
-    );
+    await context
+      .route(
+        (url) => url.pathname === ROUTE_PROBE_PATH,
+        (route) => route.fulfill({ body: ROUTE_PROBE_MARKER }),
+      )
+      .catch((error: unknown) => {
+        // Let the next file retry and surface this error, not a probe timeout.
+        armedContexts.delete(context);
+        throw error;
+      });
   }
   return { path: ROUTE_PROBE_PATH, marker: ROUTE_PROBE_MARKER };
 };
