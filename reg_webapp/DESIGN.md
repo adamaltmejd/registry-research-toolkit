@@ -1323,13 +1323,12 @@ invariant removes the spurious refetch, not the teardown.
 - **Dev** serving Just Works: the Vite dev server's default `appType: 'spa'` rewrites
   unknown paths to `index.html`, and `vite.config.ts` proxies `/api` to the backend on
   `:8000`. Deep-linking to `/catalog/...` in `bun run dev` works.
-- **Production** SPA fallback is a **deploy/maintainer task**, NOT backend code. The
-  backend is a pure JSON API — `create_app` mounts no `StaticFiles` and serves no
-  `index.html` (keeping `/api`, `/openapi.json`, `/docs` un-shadowed). The SPA is served
-  by the edge (Cloudflare), which must rewrite a cold-load deep link to any non-`/api`
-  path → `index.html` (a `_redirects` / 404-rewrite rule). This mirrors the "edge config
-  is a maintainer task" pattern (ETag section above); see the comment atop
-  `router.svelte.ts`.
+- **Production** SPA fallback is edge config, NOT server code. The origin
+  (`reg-meta serve`) is a pure JSON API and serves no `index.html`, keeping `/api`,
+  `/openapi.json` and `/mcp` un-shadowed. The SPA is served by the edge worker
+  (Cloudflare static assets, `not_found_handling: single-page-application`), which
+  answers a cold-load deep link to any non-origin path with `index.html` (Deployment →
+  Edge workers below); see the comment atop `router.svelte.ts`.
 
 The fetch wrapper (`src/lib/api.ts`) types every response off
 `components["schemas"][...]` from the codegen'd `api-types.ts`, so the SPA and the
