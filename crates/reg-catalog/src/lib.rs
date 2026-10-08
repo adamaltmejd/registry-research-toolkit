@@ -7,6 +7,7 @@ mod held;
 pub mod ops;
 
 use std::collections::BTreeMap;
+use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 
 use rusqlite::functions::FunctionFlags;
@@ -201,6 +202,16 @@ impl Catalog {
             )
         })
     }
+}
+
+/// Lowercase hex of `bytes`: cursors and `ETag` digests.
+#[must_use]
+pub fn hex(bytes: &[u8]) -> String {
+    let mut out = String::with_capacity(2 * bytes.len());
+    for byte in bytes {
+        write!(out, "{byte:02x}").expect("write to String");
+    }
+    out
 }
 
 fn supported() -> String {

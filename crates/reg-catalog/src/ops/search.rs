@@ -17,7 +17,7 @@ use utoipa::ToSchema;
 
 use super::{Params, Server};
 use crate::held::{self, Narrow};
-use crate::{Code, Error, Scope};
+use crate::{Code, Error, Scope, hex};
 
 pub const TYPES: &[&str] = &[
     "register",
@@ -849,14 +849,6 @@ fn fqid(slugs: &[Option<String>]) -> Option<String> {
         .collect::<Option<Vec<_>>>()?
         .join("/");
     joined.parse::<Fqid>().ok().map(|_| joined)
-}
-
-fn hex(bytes: &[u8]) -> String {
-    let mut out = String::with_capacity(2 * bytes.len());
-    for byte in bytes {
-        write!(out, "{byte:02x}").expect("write to String");
-    }
-    out
 }
 
 fn invalid_cursor(message: &str) -> Error {

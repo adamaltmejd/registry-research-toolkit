@@ -56,6 +56,8 @@ paths = ["/results", "/next_cursor"]
 name = "variable-page-folded-index"
 reason = "The baseline webapp reads the unfolded originals; the Rust server reads derived copies whose indexes hold fold_search text (decision 16). On the same derived copy, the checkout's FastAPI and the Rust server agree on all 114 cases (two pages of 10), so every difference comes from the index. Of the 114, 33 differ: 14 swap a row at the page limit, 10 reorder within a page and 2 across the page boundary (identical row sets: bm25 near-ties), and 7 are the three terms `ß`, `ＡＢＣ` and `ﬁlm`, which return 0 rows on the baseline and 3 to 20 now. Provisional: deleted by the reference-baseline package 3a.2a, or at the latest by 3a.13."
 case = "*/*/variable-page/*"
+# A failed page (`/0/status`, `/1/status`) stays a difference.
+paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
 
 # The baseline reader: `reg_meta` (with `reg_schema`) at this commit, installed from
 # `git archive` into its own virtualenv with the commit's locked dependencies.
