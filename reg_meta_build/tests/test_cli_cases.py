@@ -152,6 +152,7 @@ def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) ->
 
 
 _REQUEST_KEYS = {"replaces", "fails_if", "note", "argv", "env", "runs", "curation_dirs"}
+_STEP_KEYS = {"argv", "env"}
 _EXPECTED_KEYS = {
     "exit_code",
     "stdout_contains",
@@ -170,6 +171,10 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
     assert request.get("replaces"), f"{case.name}: replaces is required"
     assert ("argv" in request) != ("runs" in request), f"{case.name}: argv or runs"
     assert request.keys() <= _REQUEST_KEYS, (case.name, request.keys() - _REQUEST_KEYS)
+    for step in request.get("runs", []):
+        # A misspelled step key (say "evn") would otherwise be ignored silently.
+        assert "argv" in step, f"{case.name}: every run step needs argv"
+        assert step.keys() <= _STEP_KEYS, (case.name, step.keys() - _STEP_KEYS)
     assert "exit_code" in expected, f"{case.name}: exit_code is required"
     assert expected.keys() <= _EXPECTED_KEYS, (
         case.name,
