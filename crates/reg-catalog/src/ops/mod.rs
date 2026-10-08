@@ -343,6 +343,25 @@ fn envelope(key: &str, schema: RefOr<Schema>) -> ResponseBuilder {
     )
 }
 
+/// A route's operation id, unique as `OpenAPI` requires: the operation's name on the
+/// route that takes every parameter, and on a route without some path parameters the
+/// name with `_without_` and those parameters (`show_without_ref` for
+/// `GET /api/catalog`).
+fn operation_id(op: &Operation, route: &str) -> String {
+    let taken = op.route_params(route);
+    let missing: Vec<&str> = op
+        .params
+        .iter()
+        .filter(|p| !taken.iter().any(|t| t.name == p.name))
+        .map(|p| p.name)
+        .collect();
+    if missing.is_empty() {
+        op.name.to_owned()
+    } else {
+        format!("{}_without_{}", op.name, missing.join("_"))
+    }
+}
+
 /// The `OpenAPI` document of every registered operation.
 #[must_use]
 pub fn openapi(version: &str) -> OpenApi {
@@ -353,7 +372,7 @@ pub fn openapi(version: &str) -> OpenApi {
     for op in all() {
         for route in op.paths {
             let operation = OperationBuilder::new()
-                .operation_id(Some(op.name))
+                .operation_id(Some(operation_id(op, route)))
                 .description(Some(op.description));
             let operation = parameters(operation, route, &op.route_params(route), &mut components);
             let data = (op.result)(&mut components);

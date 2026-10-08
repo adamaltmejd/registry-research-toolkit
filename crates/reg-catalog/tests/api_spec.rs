@@ -102,7 +102,10 @@ fn openapi_matches_operations_toml() {
     for (path, item) in openapi["paths"].as_object().unwrap() {
         for (method, operation) in item.as_object().unwrap() {
             let route = format!("{} {path}", method.to_uppercase());
-            let (name, mut params) = if let Some(name) = operation["operationId"].as_str() {
+            let (name, mut params) = if let Some(id) = operation["operationId"].as_str() {
+                // A route without some of its operation's path parameters carries
+                // the name with `_without_` and them (`show_without_ref`).
+                let name = id.split("_without_").next().unwrap();
                 let row = rows
                     .get(name)
                     .unwrap_or_else(|| panic!("{name} is not in the table"));
