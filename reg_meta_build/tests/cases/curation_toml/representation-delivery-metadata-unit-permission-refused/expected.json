@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_native_partitions.py::test_delivery_metadata_rejects_redundant_unit_permission",
+  "note": "Every other key is structurally valid, so the field permission is the only refusal.",
+  "fails_if": "`DeliveryMetadataEntry.fields` admits `measurement_unit`, so a unit permission passes field validation",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[representation.delivery_metadata.fields]] entry 1",
+    "message_contains": [
+      "'name' or 'description'"
+    ]
+  }
+}

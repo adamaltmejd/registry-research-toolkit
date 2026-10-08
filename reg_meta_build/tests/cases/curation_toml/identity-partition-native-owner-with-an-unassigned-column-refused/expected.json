@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "replaces": "test_curation_compile_native_partitions.py::test_authored_native_partition_rejects_foreign_or_partial_owners[columns2-unassigned2]",
+  "fails_if": "the `[[identity.partition]]` loader accepts native ownership beside `unassigned_columns`, so OLD keeps the base key while NEW stays unassigned",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.partition]] entry 1",
+    "message_contains": [
+      "native ownership must cover all literals without split owners"
+    ]
+  }
+}

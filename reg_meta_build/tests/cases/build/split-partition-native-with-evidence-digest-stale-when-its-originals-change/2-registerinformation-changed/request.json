@@ -1,0 +1,15 @@
+{
+  "replaces": [
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_pins_complete_originals_on_fresh_compile[field]",
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_pins_complete_originals_on_fresh_compile[parent]",
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_pins_complete_originals_on_fresh_compile[missing_duplicate]",
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_pins_complete_originals_on_fresh_compile[added_duplicate]"
+  ],
+  "note": "Each original's digest includes its delivery's source revision, so any edit to the Registerinformation file, here another register's data length, stales base although its own rows are unchanged. A changed definition, register parent or physical row count of base's own originals is an edit of the same file and reaches the build the same way.",
+  "fails_if": "the native partition's digest stops covering the complete original record (its source revision and every field, parent fact and physical row), so base's partition still applies on a changed Registerinformation delivery",
+  "sources": "scb-native-partitions-data-length-changed",
+  "authored_from": "scb-native-partitions-reviewed",
+  "registers": [
+    "1"
+  ]
+}
