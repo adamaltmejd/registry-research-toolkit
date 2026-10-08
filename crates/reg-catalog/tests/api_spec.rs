@@ -114,7 +114,19 @@ fn openapi_matches_operations_toml() {
                         .any(|r| r.as_str() == Some(&route)),
                     "{route}"
                 );
-                (name, expected_params(row))
+                // A parameter another of the row's routes names in its path is a
+                // path parameter only (`show`'s `ref` on `GET /api/catalog`).
+                let mut params = expected_params(row);
+                params.retain(|param, _| {
+                    let placeholder = format!("{{{param}}}");
+                    path.contains(&placeholder)
+                        || !row["http"]
+                            .as_array()
+                            .unwrap()
+                            .iter()
+                            .any(|r| r.as_str().unwrap().contains(&placeholder))
+                });
+                (name, params)
             } else {
                 let download = downloads
                     .get(route.as_str())

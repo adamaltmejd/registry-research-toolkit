@@ -7,7 +7,7 @@ use super::{Cache, Download, Operation, Param, Type, component};
 pub const OPERATIONS: &[Operation] = &[
     Operation {
         name: "docs_get",
-        path: "/api/docs/doc/{identifier}",
+        paths: &["/api/docs/doc/{identifier}"],
         tool: Some("docs"),
         description: "One documentation entry by variable name or filename (with or \
             without `.md`): its register, tags and source, a 500-character `excerpt` and \
@@ -22,7 +22,7 @@ pub const OPERATIONS: &[Operation] = &[
     },
     Operation {
         name: "docs_related",
-        path: "/api/docs/related/{ref}",
+        paths: &["/api/docs/related/{ref}"],
         tool: Some("docs"),
         description: "A register's related documents (rehosted PDFs): title, source, \
             license, and the `sha256` and `byte_size` of the bytes \

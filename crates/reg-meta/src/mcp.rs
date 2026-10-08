@@ -69,14 +69,15 @@ impl Tools {
 /// top-level `oneOf` input; each operation's parameters are listed in the description
 /// and checked per call.
 fn tool(openapi: &Value, name: &'static str, ops: &[&Operation]) -> Tool {
+    // The last route names every path parameter (`Operation`).
     let entries: Vec<&Value> = ops
         .iter()
-        .map(|op| &openapi["paths"][op.path]["get"])
+        .map(|op| &openapi["paths"][op.paths[op.paths.len() - 1]]["get"])
         .collect();
     let mut properties = Map::new();
     let mut required = Vec::new();
     let mut signatures = Vec::new();
-    for entry in &entries {
+    for (op, entry) in ops.iter().zip(&entries) {
         let mut signature = Vec::new();
         for param in entry["parameters"].as_array().expect("parameters") {
             let name = param["name"].as_str().expect("parameter name");
@@ -86,9 +87,12 @@ fn tool(openapi: &Value, name: &'static str, ops: &[&Operation]) -> Tool {
                 previous.is_none_or(|previous| previous == schema),
                 "parameter {name:?} has two schemas"
             );
-            let optional = if param["required"] == true { "" } else { "?" };
+            // Required by the operation, not the route: `show`'s `ref` is a
+            // required path segment of one route and absent from the other.
+            let is_required = op.params.iter().any(|p| p.name == name && p.required);
+            let optional = if is_required { "" } else { "?" };
             signature.push(format!("{name}{optional}"));
-            if param["required"] == true && ops.len() == 1 {
+            if is_required && ops.len() == 1 {
                 required.push(name.to_owned());
             }
         }
@@ -227,7 +231,7 @@ impl ServerHandler for Tools {
         let call = operation(&ops, &mut arguments)
             .and_then(|op| query(arguments).map(|query| (op, query)));
         let answer = match call {
-            Ok((op, query)) => run(&self.server, op, query).await,
+            Ok((op, query)) => run(&self.server, op, op.params.iter().collect(), query).await,
             Err(err) => Answer::new(&self.server, self.server.catalog.default_scope(), Err(err)),
         };
         Ok(if answer.status == StatusCode::OK {

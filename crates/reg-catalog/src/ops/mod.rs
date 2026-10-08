@@ -147,12 +147,13 @@ pub type Params<'a> = BTreeMap<&'a str, &'a str>;
 /// The function that answers a route.
 pub type Run<T> = fn(&Server, Scope, &Params) -> Result<T, Error>;
 
-/// One operation: its name, route and MCP tool (`operations.toml`), the description
+/// One operation: its name, routes and MCP tool (`operations.toml`), the description
 /// both transports publish, its parameters, its `Cache-Control` tier, the function
-/// that answers it and its `data` schema.
+/// that answers it and its `data` schema. The last route names every path
+/// parameter; the MCP tool takes that route's parameters.
 pub struct Operation {
     pub name: &'static str,
-    pub path: &'static str,
+    pub paths: &'static [&'static str],
     pub tool: Option<&'static str>,
     pub description: &'static str,
     pub params: &'static [Param],
@@ -177,6 +178,23 @@ pub struct Download {
     pub params: &'static [Param],
     pub cache: Cache,
     pub run: Run<Raw>,
+}
+
+impl Operation {
+    /// The parameters `route` takes: a parameter another of the operation's routes
+    /// names in its path is a path parameter only, so a route without it omits it
+    /// (`GET /api/catalog` takes no `ref`).
+    #[must_use]
+    pub fn route_params(&self, route: &str) -> Vec<&'static Param> {
+        self.params
+            .iter()
+            .filter(|p| {
+                let placeholder = format!("{{{}}}", p.name);
+                route.contains(&placeholder)
+                    || !self.paths.iter().any(|other| other.contains(&placeholder))
+            })
+            .collect()
+    }
 }
 
 /// Every registered operation.
@@ -208,7 +226,7 @@ pub fn tools() -> Vec<(&'static str, Vec<&'static Operation>)> {
 /// with the result.
 pub fn call<T>(
     server: &Server,
-    declared: &[Param],
+    declared: &[&Param],
     run: Run<T>,
     query: &[(String, String)],
 ) -> (Scope, Result<T, Error>) {
@@ -283,7 +301,7 @@ fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
 fn parameters(
     mut operation: OperationBuilder,
     route: &str,
-    params: &[Param],
+    params: &[&Param],
     components: &mut Components,
 ) -> OperationBuilder {
     for param in params {
@@ -332,20 +350,23 @@ pub fn openapi(version: &str) -> OpenApi {
     component::<Error>(&mut components);
     let mut paths = PathsBuilder::new();
     for op in all() {
-        let operation = OperationBuilder::new()
-            .operation_id(Some(op.name))
-            .description(Some(op.description));
-        let operation = parameters(operation, op.path, op.params, &mut components);
-        let data = (op.result)(&mut components);
-        let operation = operation
-            .response("200", envelope("data", data).description("Success"))
-            .response("default", error_response());
-        paths = paths.path(op.path, PathItem::new(HttpMethod::Get, operation));
+        for route in op.paths {
+            let operation = OperationBuilder::new()
+                .operation_id(Some(op.name))
+                .description(Some(op.description));
+            let operation = parameters(operation, route, &op.route_params(route), &mut components);
+            let data = (op.result)(&mut components);
+            let operation = operation
+                .response("200", envelope("data", data).description("Success"))
+                .response("default", error_response());
+            paths = paths.path(*route, PathItem::new(HttpMethod::Get, operation));
+        }
     }
     // A download has no operation id of its own: it serves its operation's bytes.
     for download in downloads() {
         let operation = OperationBuilder::new().description(Some(download.description));
-        let operation = parameters(operation, download.path, download.params, &mut components);
+        let params: Vec<&Param> = download.params.iter().collect();
+        let operation = parameters(operation, download.path, &params, &mut components);
         let bytes = ResponseBuilder::new()
             .description("The raw bytes")
             .content(download.media_type, ContentBuilder::new().build());
