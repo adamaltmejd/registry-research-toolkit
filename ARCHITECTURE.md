@@ -318,9 +318,11 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
    `@pytest.mark.integration` adds the container-backed tests, which are not budgeted
    here.
 3. **Artifact (maintainer or release gate).** Run
-   `pytest conformance --run-release --artifact-dir=/path/to/catalog`. The reader admits
-   the selected artifact before execution; incompatible or non-publishable artifacts
-   fail, never silently skip. The artifact checks compare manifest accounting, sampled
+   `pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
+   after `cargo build --workspace` (the search traversal runs against the Rust server;
+   see `conformance/README.md` for the template). The reader admits the selected
+   artifact before execution; incompatible or non-publishable artifacts fail, never
+   silently skip. The artifact checks compare manifest accounting, sampled
    browse/search/validate agreement, repeated search/order bytes, CLI/HTTP order
    identity and located refusal. CI runs them against both published global catalog and
    SWECOV steward assets in independent `integration.yml` jobs, alongside the native

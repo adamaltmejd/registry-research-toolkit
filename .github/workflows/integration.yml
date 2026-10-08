@@ -160,7 +160,11 @@ jobs:
           rm "$zst"
           echo "db_dir=$db_dir" >> "$GITHUB_OUTPUT"
       # Schema drift against a published asset is a release-drift failure.
+      # Search runs against the Rust server (`--server-cmd`; a release run
+      # without it fails).
+      - run: cargo build --workspace --locked
       - name: Run artifact conformance against the downloaded DB
         run: |
           uv run python -m pytest conformance --run-release \
-            --artifact-dir="${{ steps.release-db.outputs.db_dir }}" -q
+            --artifact-dir="${{ steps.release-db.outputs.db_dir }}" \
+            --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q
