@@ -3,7 +3,7 @@
     "test_curation_toml_load_boundary.py::test_malformed_code_label_pair_fails_the_build_located[duplicate]"
   ],
   "note": "A malformed code<->label pair stops the build before resolution, naming the register file and the pair.",
-  "fails_if": "the register-file loader stops refusing an exact repeated `[[code_label_pair]]` row (the per-table `duplicate entry` check in `curation_tree._load_register_file`), so the repeat reaches the compile-time ValueError and surfaces as `pipeline_build_failed` without the located entry",
+  "fails_if": "the register-file loader stops refusing an exact repeated `[[code_label_pair]]` row (the per-table `duplicate entry` check in `curation_tree._load_register_file`), so the repeated pair is accepted",
   "sources": {
     "description": "Register 1 delivers Kod (var_id 100) and Namn (var_id 101); no Unika file.",
     "scb": {
