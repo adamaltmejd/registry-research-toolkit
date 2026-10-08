@@ -1,0 +1,10 @@
+{
+  "replaces": "test_doc_coverage.py::TestDocCoverageCli::test_cli_carries_toml_in_payload_without_output_flag",
+  "fails_if": "a worklist command without -o drops the rendered TOML from its payload (every worklist command shares this path)",
+  "note": "The artifact's `docs/` tree documents, for register slug `sample` (named TESTREG): `kon` (delivered as Kon), MissingOne and MissingTwo (absent), and an appendix with no column; for `komvux` (named `Nybörjare i Komvux`): `Komvux` (delivered as KOMVUX) and GapCol (absent); and `nowhere`, which is no register's slug. Neither register's name lower-matches its doc directory, so only the slug join finds the three gaps.",
+  "argv": [
+    "--db",
+    "{db}",
+    "doc-coverage"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "identical": false,
+  "tables": [
+    {
+      "table": "import_manifest",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "key": "schema_version",
+            "value": "5.1.0"
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "key": "schema_version",
+            "value": "9.9.9"
+          }
+        }
+      ]
+    }
+  ]
+}

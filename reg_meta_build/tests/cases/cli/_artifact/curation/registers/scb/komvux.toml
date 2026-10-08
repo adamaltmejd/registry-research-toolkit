@@ -6,6 +6,7 @@ native_id = "3"
 [[variant]]
 native_id = "3.30"
 slug = "nyborjare"
+panel_entity_key = "komvux"
 
 [[variable]]
 native_id = "3.301"

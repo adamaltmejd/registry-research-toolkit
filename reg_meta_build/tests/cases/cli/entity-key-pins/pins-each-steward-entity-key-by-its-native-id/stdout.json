@@ -1,0 +1,13 @@
+{
+  "count": 3,
+  "counts": {
+    "$exact": {
+      "scb": 3
+    }
+  },
+  "files": {
+    "$exact": {
+      "scb": "{work}/pins/scb.toml"
+    }
+  }
+}

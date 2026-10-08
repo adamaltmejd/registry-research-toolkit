@@ -1,13 +1,15 @@
 """Tests for the read-only succession-candidate diagnostic
 (`succession_candidates.py`).
 
-`infer_succession_candidates` over a hand-built synthetic DB exercises the
-candidate shape plus every gate (already-edged, co-delivered, non-adjacent), and
 `render_succession_toml` is round-tripped BOTH through a plain TOML parse and
-through `relations.py`'s real loader —
-the emitted worklist must be in the exact `[[edge]]` grammar
-`curation/relations.toml` accepts. A separate test proves the diagnostic never
-mutates the DB.
+through `relations.py`'s real loader — the emitted worklist must be in the exact
+`[[edge]]` grammar `curation/relations.toml` accepts.
+
+The cross_var_id candidate and its edge, co-delivery and gap gates, the evidence
+comments and the read-only run are pinned at the CLI boundary
+(`cases/cli/succession-candidates/`). The direction-blind edge gate, the
+representation-edge gate, the one-candidate-per-variable pair grouping and the
+day/year adjacency edges stay here until a case carries them.
 
 Fully synthetic (CLAUDE.md): builds its own in-memory DB via the `_slugged_db`
 helpers; never reads a real built DB.
@@ -206,42 +208,6 @@ def _seed_corpus(conn: sqlite3.Connection) -> None:
 
 
 class TestInfer:
-    def test_only_the_real_succession(self) -> None:
-        conn = _base_db()
-        _seed_corpus(conn)
-        result = infer_succession_candidates(conn)
-        assert [(c.predecessor.fqid, c.successor.fqid) for c in result.candidates] == [
-            ("scb/lisa/forvink-ers-aktiv", "scb/lisa/forvink-ers"),
-        ]
-        assert result.total == 1
-        assert result.per_register_counts == {"scb/lisa": 1}
-
-    def test_cross_var_id_evidence(self) -> None:
-        conn = _base_db()
-        _seed_corpus(conn)
-        (cross,) = infer_succession_candidates(conn).candidates
-        assert cross.predecessor.provider_key == "31395"
-        assert cross.successor.provider_key == "47670"
-        assert cross.predecessor.column == cross.successor.column == "ForvErs"
-        assert (cross.predecessor.valid_from, cross.predecessor.valid_to) == (
-            "2010-01-01",
-            "2021-12-31",
-        )
-        assert cross.effective_year == 2022
-        assert cross.register_fqid == "scb/lisa"
-
-    def test_the_curated_edge_is_what_suppresses_the_anninkf_pair(self) -> None:
-        # `test_only_the_real_succession` proves the AnnInk pair is absent;
-        # this proves the EDGE is why — drop it and the pair is a candidate.
-        conn = _base_db()
-        _seed_corpus(conn)
-        conn.execute("DELETE FROM variable_replaced_by")
-        conn.commit()
-        assert ("scb/lisa/anninkf", "scb/lisa/anninkf04") in [
-            (c.predecessor.fqid, c.successor.fqid)
-            for c in infer_succession_candidates(conn).candidates
-        ]
-
     def test_edge_in_the_reverse_direction_also_skips(self) -> None:
         # The gate is direction-blind: an edge either way means the pair is curated.
         conn = _base_db()
@@ -269,34 +235,6 @@ class TestInfer:
         )
         conn.commit()
         assert infer_succession_candidates(conn).total == 0
-
-    def test_the_overlapping_era_is_what_suppresses_the_kod_pair(self) -> None:
-        # var 700/701's windows are adjacent; the pair is absent only because var
-        # 700 also ships an era overlapping the successor in the same variant.
-        # Drop that era and the succession is a candidate.
-        conn = _base_db()
-        _seed_corpus(conn)
-        conn.execute("DELETE FROM variable_state WHERE valid_to = '2018-12-31'")
-        conn.commit()
-        assert ("scb/lisa/kod-gammal", "scb/lisa/kod-ny") in [
-            (c.predecessor.fqid, c.successor.fqid)
-            for c in infer_succession_candidates(conn).candidates
-        ]
-
-    def test_the_gap_is_what_suppresses_the_ort_pair(self) -> None:
-        # var 800/801 are 2010-2015 and 2018-2023 — two years apart, so not one
-        # column's era chain. Close the gap and the same pair is a candidate.
-        conn = _base_db()
-        _seed_corpus(conn)
-        conn.execute(
-            "UPDATE variable_state SET valid_from = '2016-01-01' "
-            "WHERE valid_from = '2018-01-01'"
-        )
-        conn.commit()
-        assert ("scb/lisa/ort-gammal", "scb/lisa/ort-ny") in [
-            (c.predecessor.fqid, c.successor.fqid)
-            for c in infer_succession_candidates(conn).candidates
-        ]
 
     def test_two_shared_columns_are_one_variable_grain_candidate(self) -> None:
         # A variable delivers its own column per variant. When two var_ids succeed
@@ -388,16 +326,6 @@ class TestInfer:
         expected = [("scb/lisa/wert-gammal", "scb/lisa/wert-ny")]
         assert pairs == (expected if emitted else [])
 
-    def test_empty_db(self) -> None:
-        conn = _base_db()
-        result = infer_succession_candidates(conn)
-        assert result.total == 0
-        assert (
-            render_succession_toml(result)
-            .strip()
-            .endswith("(no succession candidates)")
-        )
-
 
 class TestRender:
     def test_toml_parses_as_relations_edges(self) -> None:
@@ -414,17 +342,6 @@ class TestRender:
                 "effective_year": 2022,
             },
         ]
-
-    def test_evidence_comments_carry_the_columns_and_windows(self) -> None:
-        conn = _base_db()
-        _seed_corpus(conn)
-        toml_text = render_succession_toml(infer_succession_candidates(conn))
-        assert "# === register scb/lisa — 1 candidate(s) ===" in toml_text
-        assert (
-            "#   from: scb/lisa/forvink-ers-aktiv (Förvärvsinkomst, aktiv) "
-            "var_id 31395, column ForvErs, variant individer-15plus, "
-            "2010-01-01..2021-12-31" in toml_text
-        )
 
     def test_round_trips_through_the_relations_loader(self, tmp_path: Path) -> None:
         # The worklist's whole point: a confirmed candidate copies into
@@ -456,37 +373,3 @@ class TestRender:
         assert len(load_relations(path).replaced_by) == 1
         _add_variable_edge(conn, "forvink-ers-aktiv", "forvink-ers")
         assert infer_succession_candidates(conn).total == 0
-
-
-def test_diagnostic_does_not_mutate() -> None:
-    """The diagnostic is READ-ONLY: row counts of every table it reads are
-    unchanged after a run (no temp tables leak into the schema either)."""
-    conn = _base_db()
-    _seed_corpus(conn)
-    tables = [
-        "variable",
-        "variable_state",
-        "variable_alias",
-        "variable_replaced_by",
-        "representation_replaced_by",
-        "register",
-        "register_variant",
-        "provider",
-    ]
-
-    def _snapshot() -> dict[str, int]:
-        return {
-            t: conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0] for t in tables
-        }
-
-    before = _snapshot()
-    schema_before = {
-        row[0]
-        for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
-    }
-    render_succession_toml(infer_succession_candidates(conn))
-    assert _snapshot() == before
-    assert {
-        row[0]
-        for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
-    } == schema_before

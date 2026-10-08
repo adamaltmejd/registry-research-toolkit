@@ -1,0 +1,13 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestCli::test_exit_two_on_missing_file"
+  ],
+  "fails_if": "a missing second database is opened as a new empty one and compared (exit 1), or raises a traceback, instead of a located error and exit 2",
+  "argv": [
+    "{work}/a.db",
+    "{work}/nope.db"
+  ],
+  "databases": {
+    "a.db": "a.sql"
+  }
+}

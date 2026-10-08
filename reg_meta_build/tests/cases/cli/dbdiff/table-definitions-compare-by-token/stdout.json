@@ -1,0 +1,31 @@
+{
+  "identical": false,
+  "schema": {
+    "column_diffs": [
+      {
+        "table": "doc_fts",
+        "only_in_a": [],
+        "only_in_b": [],
+        "mismatched": [],
+        "definition_differs": true
+      },
+      {
+        "table": "t_unique",
+        "only_in_a": [],
+        "only_in_b": [],
+        "mismatched": [],
+        "definition_differs": true
+      }
+    ]
+  },
+  "tables": [
+    {
+      "table": "t_spacing",
+      "identical": true
+    },
+    {
+      "table": "t_unique",
+      "identical": true
+    }
+  ]
+}

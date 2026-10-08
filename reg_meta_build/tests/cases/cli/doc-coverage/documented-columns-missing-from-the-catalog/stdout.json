@@ -1,0 +1,13 @@
+{
+  "total": 3,
+  "per_register_counts": {
+    "$exact": {
+      "sample": 2,
+      "komvux": 1
+    }
+  },
+  "unmapped_doc_registers": [
+    "nowhere"
+  ],
+  "output_toml": "{work}/doc-coverage.toml"
+}

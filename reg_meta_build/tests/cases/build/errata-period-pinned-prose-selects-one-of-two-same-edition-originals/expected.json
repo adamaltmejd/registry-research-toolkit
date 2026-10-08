@@ -1,6 +1,14 @@
 {
   "projections": [
     {
+      "table": "issues",
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": []
+    },
+    {
       "table": "states",
       "where": {
         "variable": "answer"

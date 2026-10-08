@@ -1,0 +1,29 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestIgnore::test_schema_version_is_not_ignored",
+    "test_dbdiff.py::TestCli::test_no_default_ignore_flag"
+  ],
+  "fails_if": "the default ignore widens from the import_date row to all of import_manifest (or to schema_version), so two builds of different schema versions pass as identical; or `--no-default-ignore` still skips import_date",
+  "note": "Run 1 is the refused twin of run 2 in `reordered-rows-and-an-ignored-import-date-are-identical`: b.db differs from a.db only in import_date, compared here with the ignore list off. Run 2 compares a schema version change under the default ignore.",
+  "runs": [
+    {
+      "argv": [
+        "--no-default-ignore",
+        "{work}/a.db",
+        "{work}/b.db"
+      ]
+    },
+    {
+      "argv": [
+        "--json",
+        "{work}/a.db",
+        "{work}/c.db"
+      ]
+    }
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql",
+    "c.db": "c.sql"
+  }
+}

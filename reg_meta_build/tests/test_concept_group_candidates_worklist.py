@@ -1,116 +1,54 @@
-"""Concept-group candidate worklists: regeneration under accepted scopes and the
-rendered TOML round-trip through the worklist loader (#496).
+"""Concept-group candidate regeneration under accepted scopes (#496).
+
+The candidate catalog itself (families, the label gate, collisions, ranking and the
+round-trip through the worklist loader) and the re-emit of an accepted family whose
+key is its stem are pinned at the CLI boundary
+(`cases/cli/concept-group-candidates/`). The accepted-scope edge cases below (trim
+collisions, a degraded peer, a scope that names another group) stay here until a case
+carries them; `--curation-dir` now lets a case supply the accepted tree.
 
 Fully synthetic: `_slugged_db` helpers, never the shipped `concept_groups.toml`,
 the checkout's curation tree or a real built DB."""
 
 from __future__ import annotations
 
-import json
-import sqlite3
 from typing import TYPE_CHECKING
 
-from _concept_group_families import add_family as _add_family, base_db as _base_db
-from _slugged_db import add_register, add_variable
-from reg_meta_build.cli import run
-from reg_meta_build.concept_group_candidates import (
-    infer_concept_group_candidates,
-    render_candidates_toml,
-)
-from reg_meta_build.concept_groups import load_worklist_concept_groups
-from reg_meta_build.db import SCHEMA_VERSION
+from _slugged_db import add_variable, build_slugged_db
+from reg_meta_build.concept_group_candidates import infer_concept_group_candidates
 
 if TYPE_CHECKING:
-    from pathlib import Path
+    import sqlite3
 
-    import pytest
+
+def _base_db() -> sqlite3.Connection:
+    """An scb/lisa register with no variables and no curated classification — the
+    blank canvas each test seeds with `add_variable`."""
+    return build_slugged_db(variable=None, version=None, classification=None)
+
+
+def _add_family(
+    conn: sqlite3.Connection,
+    *,
+    register_id: int,
+    stem: str,
+    suffixes: list[int],
+    name: str,
+    var_id_base: int,
+) -> None:
+    """Add a digit-suffixed slug family (`<stem><suffix>`) all sharing one `name`
+    (a strong, foldable family). `var_id` is unique per member."""
+    for i, suffix in enumerate(suffixes):
+        add_variable(
+            conn,
+            register_id=register_id,
+            var_id=var_id_base + i,
+            name=name,
+            slug=f"{stem}{suffix}",
+        )
 
 
 class TestGenerator:
-    def test_render_escapes_control_chars_and_roundtrips(self, tmp_path: Path) -> None:
-        # A family name carrying an embedded newline (and quotes/backslash) must not
-        # break the generated `label = "..."` line or the provenance comment: the
-        # shared _toml_str escapes control chars and _toml_comment collapses newlines,
-        # so the worklist still re-parses through load_worklist_concept_groups.
-        conn = _base_db()
-        _add_family(
-            conn,
-            register_id=1,
-            stem="diag",
-            suffixes=[1, 2],
-            name='Diagnos\n"kod"\\rad',  # newline + quotes + backslash
-            var_id_base=1500,
-        )
-        conn.commit()
-        result = infer_concept_group_candidates(conn)
-        assert len(result.candidates) == 1
-        toml = render_candidates_toml(
-            result, min_siblings=2, min_label_prefix=8, min_agreement=0.5
-        )
-        # The newline in the label must have been collapsed into the single
-        # provenance comment line, not split it into a second (would-be-TOML) line:
-        # exactly one `# axis=` line, and the fragment after it ("kod"...) must NOT
-        # have leaked onto its own bare line.
-        comment_lines = [ln for ln in toml.splitlines() if ln.startswith("# axis=")]
-        assert len(comment_lines) == 1
-        assert not any(ln.startswith('"kod"') for ln in toml.splitlines())
-
-        path = tmp_path / "candidates.toml"
-        path.write_text(toml, encoding="utf-8")
-        groups = load_worklist_concept_groups(path)
-        assert {g.key for g in groups} == {"diag"}
-
-    def test_accepted_family_reemitted_when_scope_passed(self) -> None:
-        # Idempotent regeneration: simulate an accepted auto family by materializing
-        # it as a `curated` concept group keyed on its own stem ('morsak') and claiming
-        # all three members. Every member is grouped AND the (register, key) names a
-        # group, so a naive rescan would drop the family twice over.
-        #
-        # WITHOUT accepted_scopes the family is excluded (grouped members) — the bug.
-        # WITH the family's (provider, register, key) in accepted_scopes it re-emits
-        # as a candidate (members re-included, own key exempt from the collision
-        # guard), so the literal group can be regenerated without changing membership.
-        conn = _base_db()
-        _add_family(
-            conn,
-            register_id=1,
-            stem="morsak",
-            suffixes=[1, 2, 3],
-            name="ICD-kod underliggande dödsorsak",
-            var_id_base=1600,
-        )
-        cur = conn.execute(
-            "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
-            "VALUES ('variable', 1, 'morsak', 'ICD-kod', 'curated')"
-        )
-        group_id = cur.lastrowid
-        for slug in ("morsak1", "morsak2", "morsak3"):
-            vid = conn.execute(
-                "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
-                (slug,),
-            ).fetchone()[0]
-            conn.execute(
-                "INSERT INTO concept_group_variable (variable_id, group_id) "
-                "VALUES (?, ?)",
-                (vid, group_id),
-            )
-        conn.commit()
-
-        # Default (empty accepted_scopes): the materialized group hides the family.
-        bare = infer_concept_group_candidates(conn)
-        assert bare.candidates == []
-        assert bare.skipped_existing_key == 0  # no ungrouped members → no family seen
-
-        # With its group scope: the family re-emits, and its key is exempted.
-        scope = frozenset({("scb", "lisa", "morsak")})
-        aware = infer_concept_group_candidates(conn, accepted_scopes=scope)
-        assert [c.key for c in aware.candidates] == ["morsak"]
-        assert aware.skipped_existing_key == 0
-        assert aware.excluded_batteries == 0
-        c = aware.candidates[0]
-        assert c.register_fqid == "scb/lisa"
-        assert [m.suffix for m in c.members] == [1, 2, 3]
-
     def test_accepted_family_preserved_under_trim_collision(self) -> None:
         # Idempotent-regen + trim-collision interaction (Codex P2 #646): an
         # Materialized `[[group]]` family `artal-person-1/2/3` (raw stem `artal-person-`,
@@ -305,106 +243,3 @@ class TestGenerator:
         scope = frozenset({("scb", "lisa", "morsak")})
         result = infer_concept_group_candidates(conn, accepted_scopes=scope)
         assert result.candidates == []
-
-    def test_render_roundtrips_through_loader(self, tmp_path: Path) -> None:
-        conn = _base_db()
-        add_register(conn, register_id=2, slug="par", name="PAR")
-        _add_family(
-            conn,
-            register_id=1,
-            stem="morsak",
-            suffixes=[1, 2, 3],
-            name='ICD-kod "underliggande" dödsorsak',  # embedded quotes → escaping
-            var_id_base=1000,
-        )
-        _add_family(
-            conn,
-            register_id=2,
-            stem="sun-niva",
-            suffixes=[2000, 2010],
-            name="Utbildningsnivå enligt SUN",
-            var_id_base=1100,
-        )
-        conn.commit()
-        result = infer_concept_group_candidates(conn)
-        toml = render_candidates_toml(
-            result, min_siblings=2, min_label_prefix=8, min_agreement=0.5
-        )
-        path = tmp_path / "candidates.toml"
-        path.write_text(toml, encoding="utf-8")
-
-        groups = load_worklist_concept_groups(path)
-        # Every emitted candidate re-parses as a curated group, same key/register.
-        emitted = {(c.register_fqid, c.key) for c in result.candidates}
-        parsed = {(f"{g.provider}/{g.register}", g.key) for g in groups}
-        assert emitted == parsed
-        assert len(groups) == len(result.candidates)
-        # Members carry the variable-leaf reference + facet.
-        by_key = {g.key: g for g in groups}
-        morsak = by_key["morsak"]
-        assert all(m.variable is not None for m in morsak.members)
-        # The generator emits the legacy single-axis shape; the loader maps it to
-        # whole-variable members (delivery_column None) with one coord each (#819).
-        assert morsak.axes == (("ordinal", "ordinal"),)
-        assert all(m.delivery_column is None for m in morsak.members)
-        assert [m.coords[0][1] for m in morsak.members] == ["1", "2", "3"]
-
-
-_LISA_REGISTER = '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
-_MORSAK_GROUP = (
-    '[[group]]\nregister = "scb/lisa"\nkey = "morsak"\nlabel = "ICD-kod"\n'
-    'axis = "ordinal"\nmembers = ['
-    + ", ".join(
-        f'{{ variable = "morsak{n}", value = "{n}", label = "{n}" }}' for n in (1, 2, 3)
-    )
-    + "]\n"
-)
-
-
-def test_cli_curation_dir_names_the_accepted_families(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    """`--curation-dir` picks the tree whose `[[group]]` entries are accepted: the
-    built `morsak` group re-emits as a candidate only under the tree that declares
-    it. Fails if the command ignores the flag and reads the checkout's tree."""
-    conn = _base_db()
-    _add_family(
-        conn,
-        register_id=1,
-        stem="morsak",
-        suffixes=[1, 2, 3],
-        name="ICD-kod underliggande dödsorsak",
-        var_id_base=1600,
-    )
-    group_id = conn.execute(
-        "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
-        "VALUES ('variable', 1, 'morsak', 'ICD-kod', 'curated')"
-    ).lastrowid
-    conn.execute(
-        "INSERT INTO concept_group_variable (variable_id, group_id) "
-        "SELECT variable_id, ? FROM variable WHERE slug LIKE 'morsak_'",
-        (group_id,),
-    )
-    conn.execute(
-        "INSERT INTO import_manifest (key, value) VALUES ('schema_version', ?)",
-        (SCHEMA_VERSION,),
-    )
-    conn.commit()
-    db_dir = tmp_path / "db"
-    db_dir.mkdir()
-    dest = sqlite3.connect(db_dir / "reg_meta.db")
-    conn.backup(dest)
-    dest.close()
-    conn.close()
-
-    def foldable(tree_name: str, register_body: str) -> int:
-        tree = tmp_path / tree_name
-        register = tree / "registers" / "scb" / "lisa.toml"
-        register.parent.mkdir(parents=True)
-        register.write_text(register_body, encoding="utf-8")
-        args = ["--db", str(db_dir), "concept-group-candidates"]
-        assert run([*args, "--curation-dir", str(tree)]) == 0
-        return json.loads(capsys.readouterr().out)["foldable"]
-
-    assert foldable("accepts", _LISA_REGISTER + _MORSAK_GROUP) == 1
-    assert foldable("silent", _LISA_REGISTER) == 0
