@@ -1,0 +1,5 @@
+{
+  "fails_if": "parent resolution refuses a register that its curation file names, so adding scb/other.toml does not let the build complete",
+  "note": "The allowed twin: the tree adds scb/other.toml for register 2, so both registers build.",
+  "sources": "scb-two-registers"
+}

@@ -372,6 +372,47 @@ def resolve_source_scope(
     )
     for issue in parents.diagnostics:
         emit(issue)
+    # A delivered catalog variant with no naming declaration has no slug for its
+    # states; curation compile already reported the missing entry (for a thin
+    # register's `_default` variant, `stale_curation_entry`). Withhold its whole
+    # register, as an unnamed parent is withheld: every variable then reports
+    # withheld_register_dependency instead of reaching formation unmapped.
+    unnamed_variants: dict[NativeKey, list[EffectiveOccurrence]] = defaultdict(list)
+    for occurrence in corrected.occurrences:
+        key = occurrence.variant_key
+        if (
+            occurrence.use == "catalog"
+            and occurrence.variable_key is not None
+            and key is not None
+            and ("register_variant", key) not in names
+        ):
+            unnamed_variants[key].append(occurrence)
+    unnamed_parents = []
+    for key, occurrences in sorted(unnamed_variants.items(), key=lambda i: repr(i)):
+        register_key = key[:5]
+        unnamed = ResolutionDiagnostic(
+            code="unnamed_delivered_variant",
+            severity="error",
+            subject=repr(register_key),
+            detail=(
+                f"The delivered variant {key!r} has no [[variant]] naming entry in "
+                "its register's curation file, so the register is withheld."
+            ),
+            refs=tuple(
+                sorted(
+                    {record_ref(r) for o in occurrences for r in o.evidence},
+                    key=repr,
+                )
+            ),
+            fields=("identity",),
+            withheld_output=("register",),
+        )
+        emit(unnamed)
+        unnamed_parents.append(unnamed)
+        parents.registers.pop(register_key, None)
+        for owned in (parents.variants, parents.editions):
+            for child in [child for child in owned if child[:5] == register_key]:
+                del owned[child]
     register_fqids = declared_register_fqids(names.values())
     variable_fqids = Counter(
         f"{register_fqids[declaration.target.register_key]}/{declaration.naming.slug}"
@@ -382,8 +423,12 @@ def resolve_source_scope(
     )
     withheld = defaultdict(list)
     parent_causes = defaultdict(list)
-    for issue in parents.diagnostics:
-        if issue.code in {"unknown_parent_name", "withheld_parent_naming"}:
+    for issue in (*parents.diagnostics, *unnamed_parents):
+        if issue.code in {
+            "unknown_parent_name",
+            "withheld_parent_naming",
+            "unnamed_delivered_variant",
+        }:
             parent_causes[issue.subject].append(issue)
     for key, fqid in register_fqids.items():
         if key not in parents.registers and (causes := parent_causes.get(repr(key))):
@@ -407,6 +452,10 @@ def resolve_source_scope(
         for kind, key in names
         if kind == "register_variant"
     }
+    # An unnamed variant is withheld with its register. Carrying it as withheld
+    # lets curation compiled against it (an `[[enrichment.alias]]`) report a
+    # withheld dependency instead of an unconverted identity.
+    variants.update(dict.fromkeys(unnamed_variants, None))
     for key, variant in (declared_variants or {}).items():
         declaration = names.get(("register_variant", key))
         if declaration is None or declaration.naming.slug != variant.slug:

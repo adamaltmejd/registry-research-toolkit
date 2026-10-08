@@ -1,0 +1,5 @@
+{
+  "fails_if": "source-scope resolution stops carrying an unnamed delivered variant into the variant map as withheld, so the `[[enrichment.alias]]` compiled for that native variant meets an unconverted identity and the diagnostic build stops with a bare `alias has an unconverted variable or variant identity` ValueError (`pipeline_build_failed`)",
+  "note": "Step 1's tree plus an `[[enrichment.alias]]` on `value`. Compile turns the alias into a search-alias decision over the delivered variant 1.10, which has no `[[variant]]` entry. The register is withheld as in step 1, so the alias becomes a withheld dependency and the build completes.",
+  "sources": "scb-value"
+}

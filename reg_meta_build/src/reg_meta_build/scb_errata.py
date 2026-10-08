@@ -389,6 +389,8 @@ def resolve_scb_errata(
         versions.append(ErrataVersion(variant_id, name, context))
 
     delivered: list[ErrataDelivered] = []
+    # Keyed without the register: an SCB RegVarID is globally unique (2026-10-08:
+    # 597 RegVarIDs in 996,840 Registerinformation rows, each under one RegisterId).
     seen_columns: set[tuple[int, str]] = set()
     delivered_versions: dict[tuple[int, str], set[str]] = {}
     for entry in delivered_entries:

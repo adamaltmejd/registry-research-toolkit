@@ -1,0 +1,5 @@
+{
+  "fails_if": "parent resolution stops refusing a delivered register that no curation file names with the located `register_curation_missing` (for example, raises the bare `missing checked parent naming binding` ValueError again, reported as `pipeline_build_failed`)",
+  "note": "Registerinformation delivers registers 1 (TESTREG) and 2 (OTHERREG), but the tree has only scb/sample.toml. The refusal names register 2 and the file to add. A diagnostic build refuses too: without a curation file the register has no slug for the ledger to report under.",
+  "sources": "scb-two-registers"
+}

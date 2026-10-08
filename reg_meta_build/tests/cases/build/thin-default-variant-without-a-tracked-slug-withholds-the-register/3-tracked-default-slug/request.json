@@ -1,0 +1,7 @@
+{
+  "fails_if": "source-scope resolution withholds a register whose `_default` variant is named by a tracked `[[variant]]` entry, so fk/remote is missing from a strict build",
+  "note": "The allowed twin: remote.toml adds `[[variant]] slug = \"default\"` for the `_default` variant, so the strict build completes with both registers.",
+  "sources": "scb-value-fk-remote",
+  "registers": ["1", "remote"],
+  "diagnostic": false
+}

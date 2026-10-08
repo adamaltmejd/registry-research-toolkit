@@ -1,0 +1,10 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "fields": ["register", "variable"],
+      "rows": [["sample", "value"], ["other", "curated"]]
+    }
+  ]
+}
