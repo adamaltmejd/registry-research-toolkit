@@ -236,6 +236,9 @@ refactor.
   files; after a rebase, commit the diff separately
 - `uv run --no-project scripts/gate.py g1` — G1, under the heavy-job lock the Rust steps
   hold
+- `uv run --no-project scripts/gate.py heavy -- <cmd>` — run any other heavy command (a
+  parallel pytest, cargo, a derive) under the same lock, so parallel sessions don't
+  overload the machine
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
 - `uvx --from panache-cli==3.9.0 panache format --check .` — markdown format check
