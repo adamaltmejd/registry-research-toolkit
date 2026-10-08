@@ -117,13 +117,18 @@ as sorted lists, and a tuple mapping key joined with `/` (`("scb", "rtb")` is
   that value exactly: for example `"descriptors": {"$exact": {}}` claims an empty
   mapping. `{"$any": true}` is a value that must be present but is not claimed, such as
   a list element the replaced test never looked at, kept so the list still pins length
-  and position.
+  and position. `{"$contains": [...]}` claims a list by membership: each listed
+  projection matches some element, in any order. `{"$lacks": [...]}` claims that no
+  element matches any listed projection; one object may carry both. `{"$absent": true}`
+  as a key's value claims that the object has no such key. The CLI cases
+  (`cases/cli/README.md`) use these for reports whose lists are ordered by minted ids.
 
 The runner refuses a bare `{}` inside an `includes` projection: it would check only that
 some object is there, so a case whose `fails_if` names that element's content could not
 fail. Pin the element's values, or write `{"$any": true}` when the case claims nothing
-about it. `$any` is refused under `exact` and inside `$exact`, where it would weaken the
-claim.
+about it. `$any`, `$contains`, `$lacks` and `$absent` are refused under `exact` and
+inside `$exact`, where they would weaken the claim (an exact object claims an absent key
+by leaving it out), and so is an empty `$contains` or `$lacks` list.
 
 In both modes a list compares element by element, in order, and must have the same
 length; a scalar compares by value and JSON type, so `true` never matches `1`. There is

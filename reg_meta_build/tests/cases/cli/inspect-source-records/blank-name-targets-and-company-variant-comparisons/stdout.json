@@ -1,0 +1,57 @@
+{
+  "target_preview": {
+    "expected_source_target_count": 9,
+    "target_record_ids": {
+      "$contains": ["scb:2011", "scb:2012", "scb:2013", "scb:2014", "scb:2015", "scb:2016", "scb:2017", "scb:2018", "scb:2019"]
+    },
+    "existing_named_record_ids": {
+      "$contains": [
+        "scb:1990",
+        "scb:1991",
+        "scb:1992",
+        "scb:1993",
+        "scb:1994",
+        "scb:1995",
+        "scb:1996",
+        "scb:1997",
+        "scb:1998",
+        "scb:1999",
+        "scb:2000",
+        "scb:2001",
+        "scb:2002",
+        "scb:2003",
+        "scb:2004",
+        "scb:2005",
+        "scb:2006",
+        "scb:2007",
+        "scb:2008",
+        "scb:2009",
+        "scb:2010",
+        "scb:2020",
+        "scb:2021",
+        "scb:2022",
+        "scb:2023"
+      ]
+    },
+    "candidate_variable_ids": [31619],
+    "candidate_variant_ids": [153, 1335],
+    "unobserved_documented_editions": [2024]
+  },
+  "summary": {"scb_retained_occurrences": 34},
+  "source_records": {
+    "$contains": [
+      {"record_id": "scb:2011", "fields": {"column_name": {"$exact": {"status": "unknown", "raw_value": ""}}}},
+      {"record_id": "scb:2012", "fields": {"column_name": {"$exact": {"status": "unknown", "raw_value": ""}}}},
+      {"record_id": "scb:2013", "fields": {"column_name": {"$exact": {"status": "unknown", "raw_value": ""}}}},
+      {"record_id": "scb:2014", "fields": {"column_name": {"$exact": {"status": "unknown", "raw_value": ""}}}},
+      {"record_id": "scb:2015", "fields": {"column_name": {"$exact": {"status": "unknown", "raw_value": ""}}}},
+      {"record_id": "scb:2016", "fields": {"column_name": {"$exact": {"status": "unknown", "raw_value": ""}}}},
+      {"record_id": "scb:2017", "fields": {"column_name": {"$exact": {"status": "unknown", "raw_value": ""}}}},
+      {"record_id": "scb:2018", "fields": {"column_name": {"$exact": {"status": "unknown", "raw_value": ""}}}},
+      {"record_id": "scb:2019", "fields": {"column_name": {"$exact": {"status": "unknown", "raw_value": ""}}}}
+    ]
+  },
+  "comparison_outcomes": {
+    "$contains": [{"status": "missing_edition", "edition_scope": {"intervals": [{"start": "2024", "end": "2024"}]}, "scb_record_ids": []}]
+  }
+}
