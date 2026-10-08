@@ -1,0 +1,50 @@
+[register]
+provider = "scb"
+slug = "twocols"
+native_id = "23"
+[[variant]]
+native_id = "23.232"
+slug = "people"
+[[variable]]
+native_id = "23.5.a"
+slug = "v5a"
+[[identity.partition]]
+variable = "23.5"
+columns = { A = "23.5.a", B = "23.5.a" }
+columns_ref = "exact fixture"
+
+[[errata.delivered]]
+variant = "people"
+column = "A"
+versions = ["2008 - 2010"]
+evidence = "accepted A delivery"
+noted = "2026-09-28"
+
+[[errata.delivered]]
+variant = "people"
+column = "B"
+versions = ["2009 - 2010"]
+evidence = "accepted B delivery"
+noted = "2026-09-28"
+
+[[coding.choice]]
+variable = "23.5.a"
+variant = "people"
+column = "A"
+periods = [["2010-01-01", "2010-12-31"]]
+keep = "A later"
+over = ["A earlier"]
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:2301,member:2303}}
+reason = "Reviewed A overlap"
+source = "fixture"
+
+[[coding.choice]]
+variable = "23.5.a"
+variant = "people"
+column = "B"
+periods = [["2010-01-01", "2010-12-31"]]
+keep = "B later"
+over = ["B earlier"]
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:2302,member:2304}}
+reason = "Reviewed B overlap"
+source = "fixture"

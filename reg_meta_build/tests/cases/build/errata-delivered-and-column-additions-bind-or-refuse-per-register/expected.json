@@ -1,0 +1,489 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "note": "test_compiled_errata_with_declared_split_uses_native_variant: the entry binds the '2021' flow edition left in people and applies.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/split.toml#"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": []
+    },
+    {
+      "note": "split: A gains a 2021 people state; C moved to stock.",
+      "table": "states",
+      "where": {
+        "register": "split"
+      },
+      "fields": ["variable", "variant", "column"],
+      "match": "set",
+      "rows": [
+        ["v5", "people", "A"],
+        ["v6", "people", "B"],
+        ["v7", "stock", "C"]
+      ]
+    },
+    {
+      "note": "split: the added state.",
+      "table": "states",
+      "where": {
+        "register": "split",
+        "provenance": {
+          "contains": "errata:omitted-column-in-version"
+        }
+      },
+      "fields": ["variable", "variant", "column", "valid_from"],
+      "rows": [
+        ["v5", "people", "A", "2021-01-01"]
+      ]
+    },
+    {
+      "note": "test_compiled_errata_addition_to_moved_edition_is_stale[delivered] and [column]: each addition naming the moved edition is stale and names the (edition, split) pair.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/moved.toml#"
+        },
+        "detail": {
+          "contains": "('2021-12-31', '12.122.stock')"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": [
+        ["stale_curation_entry", "curation/registers/scb/moved.toml#/errata.delivered/1"],
+        ["stale_curation_entry", "curation/registers/scb/moved.toml#/errata.column/1"]
+      ]
+    },
+    {
+      "note": "moved: no other entry issue.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/moved.toml#"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": [
+        ["stale_curation_entry", "curation/registers/scb/moved.toml#/errata.delivered/1"],
+        ["stale_curation_entry", "curation/registers/scb/moved.toml#/errata.column/1"]
+      ]
+    },
+    {
+      "note": "moved: neither addition adds a state.",
+      "table": "states",
+      "where": {
+        "register": "moved",
+        "column": ["A", "NewCol"]
+      },
+      "fields": ["variable", "variant", "column", "valid_from"],
+      "rows": [
+        ["v5", "people", "A", "2020-01-01"]
+      ]
+    },
+    {
+      "note": "test_compiled_errata_blockers_are_errors[records0-stale_curation_entry]: no row documents column A.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/nodoc.toml#"
+        }
+      },
+      "fields": ["code", "locator", "detail"],
+      "rows": [
+        ["stale_curation_entry", "curation/registers/scb/nodoc.toml#/errata.delivered/1", "curation/registers/scb/nodoc.toml#/errata.delivered/1: no_documented_column_identity"]
+      ]
+    },
+    {
+      "note": "nodoc: nothing added.",
+      "table": "states",
+      "where": {
+        "register": "nodoc",
+        "provenance": {
+          "contains": "errata:omitted-column-in-version"
+        }
+      },
+      "fields": ["variable", "variant", "column", "valid_from"],
+      "rows": []
+    },
+    {
+      "note": "test_compiled_errata_blockers_are_errors[records1-overbroad_curation_entry]: column A documents two native variables.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/twovars.toml#"
+        }
+      },
+      "fields": ["code", "locator", "detail"],
+      "rows": [
+        ["overbroad_curation_entry", "curation/registers/scb/twovars.toml#/errata.delivered/1", "curation/registers/scb/twovars.toml#/errata.delivered/1: ambiguous_documented_column_identity"]
+      ]
+    },
+    {
+      "note": "twovars: nothing added.",
+      "table": "states",
+      "where": {
+        "register": "twovars",
+        "provenance": {
+          "contains": "errata:omitted-column-in-version"
+        }
+      },
+      "fields": ["variable", "variant", "column", "valid_from"],
+      "rows": []
+    },
+    {
+      "note": "test_compiled_errata_blockers_are_errors[records2-stale_curation_entry]: the named version already delivers A.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/present.toml#"
+        }
+      },
+      "fields": ["code", "locator", "detail"],
+      "rows": [
+        ["stale_curation_entry", "curation/registers/scb/present.toml#/errata.delivered/1", "curation/registers/scb/present.toml#/errata.delivered/1: now_present:2021"]
+      ]
+    },
+    {
+      "note": "present: nothing added.",
+      "table": "states",
+      "where": {
+        "register": "present",
+        "provenance": {
+          "contains": "errata:omitted-column-in-version"
+        }
+      },
+      "fields": ["variable", "variant", "column", "valid_from"],
+      "rows": []
+    },
+    {
+      "note": "test_delivered_blank_partition_rejects_unproved_owner[ambiguous]: two edition-scoped owners claim literal A, so the blank has no single owner (the replaced test accepted stale or overbroad; this pins overbroad).",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/owners.toml#"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": [
+        ["overbroad_curation_entry", "curation/registers/scb/owners.toml#/errata.delivered/1"]
+      ]
+    },
+    {
+      "note": "owners: the 2021 blank is not rewritten.",
+      "table": "states",
+      "where": {
+        "register": "owners",
+        "valid_from": "2021-01-01"
+      },
+      "fields": ["variable", "column"],
+      "rows": []
+    },
+    {
+      "note": "test_delivered_blank_partition_rejects_unproved_owner[new_literal]: the family is split by an owner for B only, so literal A has no split owner.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/unowned.toml#"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": [
+        ["stale_curation_entry", "curation/registers/scb/unowned.toml#/errata.delivered/1"]
+      ]
+    },
+    {
+      "note": "unowned: the 2021 blank is not rewritten.",
+      "table": "states",
+      "where": {
+        "register": "unowned",
+        "valid_from": "2021-01-01"
+      },
+      "fields": ["variable", "column"],
+      "rows": []
+    },
+    {
+      "note": "test_same_column_delivery_entries_preserve_distinct_blank_and_missing_editions and test_compiled_errata_delivered_addition_and_blank_target: both entries apply.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/blanks.toml#"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": []
+    },
+    {
+      "note": "blanks: the donor list binds CVID 1801 only, so the rewritten 2021 blank and the added 2022 occurrence have no coding.",
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "scb/blanks/"
+        }
+      },
+      "fields": ["code", "subject", "valid_from"],
+      "rows": [
+        ["missing_coding_period", "scb/blanks/v5", "2021-01-01"],
+        ["missing_coding_period", "scb/blanks/v5", "2022-01-01"]
+      ]
+    },
+    {
+      "note": "blanks: the blank 2021 row becomes A on variable 5, and a 2022 A occurrence is added on the donor's variable 5 in variable 6's edition.",
+      "table": "states",
+      "where": {
+        "register": "blanks"
+      },
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["v5", "people", "A", "2020-01-01", "2020-12-31"],
+        ["v5", "people", "A", "2021-01-01", "2021-12-31"],
+        ["v5", "people", "A", "2022-01-01", "2022-12-31"],
+        ["v6", "people", "B", "2022-01-01", "2022-12-31"]
+      ]
+    },
+    {
+      "note": "blanks: both errata states.",
+      "table": "states",
+      "where": {
+        "register": "blanks",
+        "provenance": {
+          "contains": "errata:omitted-column-in-version"
+        }
+      },
+      "fields": ["variable", "variant", "column", "valid_from"],
+      "rows": [
+        ["v5", "people", "A", "2021-01-01"],
+        ["v5", "people", "A", "2022-01-01"]
+      ]
+    },
+    {
+      "note": "blanks: the added 2022 occurrence copies no coding from the donor.",
+      "table": "state_codes",
+      "where": {
+        "register": "blanks",
+        "valid_from": "2022-01-01",
+        "column": "A"
+      },
+      "fields": ["code", "label"],
+      "rows": [
+        [null, null]
+      ]
+    },
+    {
+      "note": "test_compiled_errata_column_placements_and_declared_flags[*]: each placement applies.",
+      "table": "cases",
+      "where": {
+        "case_id": {
+          "contains": "curation/registers/scb/columns.toml#"
+        }
+      },
+      "fields": ["case_id", "status"],
+      "rows": [
+        ["curation/registers/scb/columns.toml#/errata.column/1", "applicable"],
+        ["curation/registers/scb/columns.toml#/errata.column/2", "applicable"],
+        ["curation/registers/scb/columns.toml#/errata.column/3", "applicable"]
+      ]
+    },
+    {
+      "note": "columns: no entry issue.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/columns.toml#"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": []
+    },
+    {
+      "note": "[all_versions = true-unknown-None]: an unknown edition scope has no finite window, so Undated has no state and is withheld.",
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "scb/columns/"
+        }
+      },
+      "fields": ["code", "subject", "valid_from"],
+      "rows": [
+        ["no_supported_states", "scb/columns/undated", null],
+        ["unsupported_occurrence", "scb/columns/undated", null]
+      ],
+      "match": "set"
+    },
+    {
+      "note": "[versions] dates Dated to 2020; [holdings_period] pools Pooled over 2019-2021.",
+      "table": "states",
+      "where": {
+        "register": "columns",
+        "column": ["Dated", "Undated", "Pooled"]
+      },
+      "fields": ["variable", "column", "valid_from", "valid_to", "pooled"],
+      "rows": [
+        ["dated", "Dated", "2020-01-01", "2020-12-31", 0],
+        ["pooled", "Pooled", "2019-01-01", "2021-12-31", 1]
+      ]
+    },
+    {
+      "note": "steward-holdings declares the columns neither identifiers nor sensitive.",
+      "table": "variables",
+      "where": {
+        "register": "columns",
+        "column": ["Dated", "Undated", "Pooled"]
+      },
+      "fields": ["variable", "column", "provider_key", "is_identifier", "is_sensitive"],
+      "rows": [
+        ["dated", "Dated", "Dated", 0, 0],
+        ["pooled", "Pooled", "Pooled", 0, 0]
+      ]
+    },
+    {
+      "note": "test_compiled_errata_declared_edition_uses_variant_support: both columns placed in the declared 2019 edition apply.",
+      "table": "cases",
+      "where": {
+        "case_id": {
+          "contains": "curation/registers/scb/declared.toml#"
+        }
+      },
+      "fields": ["case_id", "status"],
+      "rows": [
+        ["curation/registers/scb/declared.toml#/errata.column/1", "applicable"],
+        ["curation/registers/scb/declared.toml#/errata.column/2", "applicable"]
+      ]
+    },
+    {
+      "note": "declared: no entry issue.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/declared.toml#"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": []
+    },
+    {
+      "note": "declared: scb-docs fills only declared flags, so NewCol's omitted sensitivity stays unset and it is withheld.",
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "scb/declared/"
+        }
+      },
+      "fields": ["code", "subject"],
+      "rows": [
+        ["unresolved_flag", "scb/declared/new-col"]
+      ]
+    },
+    {
+      "note": "declared: Flagged, with both flags declared, gets the 2019 window.",
+      "table": "states",
+      "where": {
+        "register": "declared",
+        "column": ["NewCol", "Flagged"]
+      },
+      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["flagged", "Flagged", "2019-01-01", "2019-12-31"]
+      ]
+    },
+    {
+      "note": "declared: is_identifier false, is_sensitive false as declared.",
+      "table": "variables",
+      "where": {
+        "register": "declared",
+        "column": ["NewCol", "Flagged"]
+      },
+      "fields": ["variable", "provider_key", "is_identifier", "is_sensitive"],
+      "rows": [
+        ["flagged", "Flagged", 0, 0]
+      ]
+    },
+    {
+      "note": "test_coding_choice_on_errata_delivered_pooled_columns_keeps_exact_peers, precondition (pooledbare, no choice): both pooled blank rows join VALUE and their lists conflict in 2010.",
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "scb/pooledbare/"
+        }
+      },
+      "fields": ["code", "valid_from", "valid_to"],
+      "rows": [
+        ["conflicting_code_memberships", "2010-01-01", "2010-12-31"]
+      ],
+      "match": "includes"
+    },
+    {
+      "note": "pooledbare: 2010 publishes no value set.",
+      "table": "state_codes",
+      "where": {
+        "register": "pooledbare",
+        "valid_from": "2010-01-01"
+      },
+      "fields": ["valid_to", "code"],
+      "rows": [
+        ["2010-12-31", null]
+      ]
+    },
+    {
+      "note": "pooled: the choice, digested over both pooled blank rows and the donor, applies.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/pooled.toml#"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": []
+    },
+    {
+      "note": "pooled: the conflict clears.",
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "scb/pooled/"
+        },
+        "code": "conflicting_code_memberships"
+      },
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "note": "pooled: 2010 publishes the kept 'later' list.",
+      "table": "state_codes",
+      "where": {
+        "register": "pooled",
+        "valid_from": "2010-01-01"
+      },
+      "fields": ["valid_to", "code", "label"],
+      "rows": [
+        ["2010-12-31", "1", "Ja"]
+      ]
+    },
+    {
+      "note": "test_two_errata_delivered_blank_columns_have_separate_coding_peers: each choice, digested over its own column's blank and donor, applies.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/twocols.toml#"
+        }
+      },
+      "fields": ["code", "locator"],
+      "rows": []
+    },
+    {
+      "note": "twocols: each column keeps its 'later' list in 2010.",
+      "table": "state_codes",
+      "where": {
+        "register": "twocols",
+        "valid_from": "2010-01-01"
+      },
+      "fields": ["column", "valid_to", "code"],
+      "rows": [
+        ["A", "2010-12-31", "1"],
+        ["B", "2010-12-31", "1"]
+      ]
+    }
+  ]
+}

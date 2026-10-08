@@ -1,0 +1,47 @@
+[register]
+provider = "scb"
+slug = "declared"
+native_id = "20"
+[[variant]]
+native_id = "20.202"
+slug = "people"
+[[variable]]
+native_id = "20.5"
+slug = "v5"
+[[variable]]
+native_id = "20.NewCol"
+slug = "new-col"
+[[variable]]
+native_id = "20.Flagged"
+slug = "flagged"
+
+[[errata.version]]
+variant = "people"
+name = "2019"
+evidence = "omitted edition"
+noted = "2026-09-25"
+
+[[errata.column]]
+variant = "people"
+column = "NewCol"
+name = "New column"
+definition = "Documented"
+data_type = "integer"
+source = "scb-docs"
+evidence = "held"
+noted = "2026-09-25"
+versions = ["2019"]
+is_identifier = false
+
+[[errata.column]]
+variant = "people"
+column = "Flagged"
+name = "New column"
+definition = "Documented"
+data_type = "integer"
+source = "scb-docs"
+evidence = "held"
+noted = "2026-09-25"
+versions = ["2019"]
+is_identifier = false
+is_sensitive = false

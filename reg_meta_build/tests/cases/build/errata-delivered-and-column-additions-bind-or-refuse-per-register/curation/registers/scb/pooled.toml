@@ -1,0 +1,28 @@
+[register]
+provider = "scb"
+slug = "pooled"
+native_id = "21"
+[[variant]]
+native_id = "21.212"
+slug = "people"
+[[variable]]
+native_id = "21.5"
+slug = "value"
+
+[[errata.delivered]]
+variant = "people"
+column = "VALUE"
+versions = ["2008 - 2010", "2010 - 2012"]
+evidence = "accepted delivery"
+noted = "2026-09-28"
+
+[[coding.choice]]
+variable = "21.5"
+variant = "people"
+column = "VALUE"
+periods = [["2010-01-01", "2010-12-31"]]
+keep = "later"
+over = ["earlier"]
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:2101,member:2102,member:2103}}
+reason = "Reviewed VALUE overlap"
+source = "fixture"

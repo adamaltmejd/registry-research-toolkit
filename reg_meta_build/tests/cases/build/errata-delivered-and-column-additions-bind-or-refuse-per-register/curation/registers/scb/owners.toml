@@ -1,0 +1,39 @@
+[register]
+provider = "scb"
+slug = "owners"
+native_id = "16"
+[[variant]]
+native_id = "16.162"
+slug = "people"
+[[variable]]
+native_id = "16.5"
+slug = "v5"
+[[variable]]
+native_id = "16.5.old"
+slug = "old"
+[[variable]]
+native_id = "16.5.new"
+slug = "new"
+
+[[identity.column_owner]]
+variable = "16.5"
+variant = "16.162"
+column = "A"
+owner = "16.5.old"
+ref = "edition 2019 role"
+source_editions = ["2019"]
+
+[[identity.column_owner]]
+variable = "16.5"
+variant = "16.162"
+column = "A"
+owner = "16.5.new"
+ref = "edition 2020 role"
+source_editions = ["2020"]
+
+[[errata.delivered]]
+variant = "people"
+column = "A"
+versions = ["2021"]
+evidence = "accepted delivery"
+noted = "2026-09-25"
