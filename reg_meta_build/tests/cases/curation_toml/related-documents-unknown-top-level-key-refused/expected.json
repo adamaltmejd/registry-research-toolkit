@@ -1,0 +1,13 @@
+{
+  "loader": "related_documents",
+  "replaces": "test_repo_curation_docs.py::test_related_documents_unknown_top_level_key_raises_curation_error",
+  "fails_if": "load_related_documents ignores an unknown top-level table",
+  "note": "A misspelled [[registr.<slug>.document]] beside a valid [[register...]] entry.",
+  "error": {
+    "code": "related_documents_invalid",
+    "locator": "related_documents",
+    "message_contains": [
+      "unknown top-level key(s): registr"
+    ]
+  }
+}
