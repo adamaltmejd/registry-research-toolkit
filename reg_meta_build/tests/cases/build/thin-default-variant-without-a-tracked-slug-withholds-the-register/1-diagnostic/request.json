@@ -1,0 +1,6 @@
+{
+  "replaces": "test_curation_compile_tree.py::test_thin_default_variant_carries_panel_fields",
+  "fails_if": "source-scope resolution stops withholding the register of a delivered variant that has no naming declaration, so formation meets the unmapped `_default` variant and the diagnostic build stops with a bare `missing resolved variant mapping` ValueError (`pipeline_build_failed`) instead of completing",
+  "note": "FK's remote delivers AMOUNT with no named variant, so the register binds the not-applicable `_default` variant; remote.toml names the register and the variable but declares no `[[variant]]`. The replaced test asserted the compile-level stale_curation_entry (\"has no tracked default slug entry\"). The maintainer's decision: the build records that stale entry and withholds the register, so a diagnostic build completes with scb/sample alone; remote's variable reports withheld_register_dependency.",
+  "sources": "scb-value-fk-remote"
+}

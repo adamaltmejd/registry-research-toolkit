@@ -324,8 +324,12 @@ def resolve_parents(
                         )
                     )
                     continue
-                if key not in names:
+                if key not in names and kind == "register":
                     raise ValueError(f"missing checked parent naming binding: {key!r}")
+                if key not in names:
+                    # The register is named but this variant is not: source-scope
+                    # resolution withholds the register (unnamed_delivered_variant).
+                    continue
                 declaration = names[key]
                 expected_kind = "register" if kind == "register" else "register_variant"
                 if (

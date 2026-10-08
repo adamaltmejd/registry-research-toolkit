@@ -1,0 +1,7 @@
+[register]
+provider = "fk"
+slug = "remote"
+native_id = {{naming_id kind=register provider=fk register_key=remote}}
+[[variable]]
+slug = "amount"
+native_id = {{naming_id kind=variable provider=fk register_key=remote member_key=AMOUNT}}

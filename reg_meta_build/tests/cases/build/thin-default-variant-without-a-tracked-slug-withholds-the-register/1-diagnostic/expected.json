@@ -1,0 +1,25 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity"],
+      "rows": [
+        ["stale_curation_entry", "error"],
+        ["unnamed_delivered_variant", "error"],
+        ["withheld_register_dependency", "error"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"detail": {"contains": "default variant has no tracked default slug entry"}},
+      "fields": ["code"],
+      "rows": [["stale_curation_entry"]]
+    },
+    {
+      "table": "variables",
+      "fields": ["register", "variable"],
+      "rows": [["sample", "value"]]
+    }
+  ]
+}
