@@ -24,7 +24,7 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from ._curation import printable_error
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "9.5.0"
+SCHEMA_VERSION = "9.6.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -409,6 +409,20 @@ CREATE TABLE IF NOT EXISTS classification_family (
     -- The edition the family's chain was read from.
     is_self INTEGER NOT NULL CHECK (is_self IN (0, 1)),
     PRIMARY KEY (family_key, position)
+) WITHOUT ROWID;
+
+-- Derived (derive/schema.py): `get coded-variables` per scope, unfiltered. The reader
+-- orders and pages the rows; holdings rows only in a steward artifact.
+CREATE TABLE IF NOT EXISTS coded_variable_stats (
+    scope TEXT NOT NULL CHECK (scope IN ('reference', 'holdings')),
+    -- The ranking key: a variable's common name; unnamed variables are not ranked.
+    variable_name TEXT NOT NULL,
+    -- Distinct code text over every coded state's value sets under the name.
+    n_distinct_codes INTEGER NOT NULL CHECK (n_distinct_codes > 0),
+    n_registers INTEGER NOT NULL CHECK (n_registers > 0),
+    -- Distinct coded states.
+    n_instances INTEGER NOT NULL CHECK (n_instances > 0),
+    PRIMARY KEY (scope, variable_name)
 ) WITHOUT ROWID;
 """
 
