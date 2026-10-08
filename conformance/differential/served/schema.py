@@ -20,15 +20,18 @@ configured seed (the CLI results do not carry their argv).
 from __future__ import annotations
 
 import json
-import sqlite3
 import tomllib
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from pathlib import Path
+from typing import TYPE_CHECKING
 from urllib.parse import quote
 
 from conformance.differential import cases as generator
 from conformance.differential.served.common import get
+
+if TYPE_CHECKING:
+    import sqlite3
 
 SEED = tomllib.loads((Path(__file__).parents[1] / "config.toml").read_text())["seed"]
 # Requests in flight per server pair.
@@ -217,78 +220,78 @@ def cases(
 ) -> list[tuple[str, dict, dict]]:
     del base  # The CLI baseline is the oracle.
     argv = _argv(originals, catalog, scopes)
-    with closing(
-        sqlite3.connect(
-            f"file:{originals / 'reg_meta.db'}?mode=ro&immutable=1",
-            uri=True,
-            check_same_thread=False,
-        )
-    ) as conn:
+    datacolumns = {
+        case_id: (args[args.index("datacolumns") + 1], _flag(args, "--register"))
+        for case_id, args in argv.items()
+        if case_id.split("/")[2] == "get-datacolumns"
+    }
+    # Read before the parallel requests: one connection serves one thread.
+    with closing(generator._connect(originals)) as conn:
         variant_slugs = dict(
             conn.execute("SELECT register_variant_id, slug FROM register_variant")
         )
-        results = baseline_cli.result()
+        refs = {
+            case_id: _datacolumns_refs(conn, key, register, case_id.split("/")[1])
+            for case_id, (key, register) in datacolumns.items()
+        }
+    results = baseline_cli.result()
 
-        def run(case_id: str):
-            _, scope, command, *rest = case_id.split("/")
-            base_cli = results.get(f"{catalog}/{case_id}")
-            ok = base_cli is not None and base_cli["exit"] == 0
-            data = json.loads(base_cli["stdout"]) if ok else None
-            args = argv[f"{catalog}/{case_id}"]
-            if command == "get-datacolumns":
-                key, register = (
-                    args[args.index("datacolumns") + 1],
-                    _flag(args, "--register"),
+    def run(case_id: str):
+        scope, command, *rest = case_id.split("/")
+        base_cli = results.get(f"{catalog}/{case_id}")
+        ok = base_cli is not None and base_cli["exit"] == 0
+        data = json.loads(base_cli["stdout"]) if ok else None
+        args = argv[f"{catalog}/{case_id}"]
+        if command == "get-datacolumns":
+            with_refs = refs[f"{catalog}/{case_id}"]
+            found: set[tuple] = set()
+            for ref in with_refs:
+                rows = _pages(cand, "/api/schema/" + quote(ref), {"scope": scope})
+                found |= {(r["variant"], r["column"]) for r in rows or []}
+            fold = str.lower if scope == "holdings" else str
+            expected = (
+                sorted(
+                    {
+                        (
+                            variant_slugs.get(int(r["register_variant_id"])),
+                            fold(r["delivery_column_name"]),
+                        )
+                        for r in data
+                    }
                 )
-                with_refs = _datacolumns_refs(conn, key, register, scope)
-                found: set[tuple] = set()
-                for ref in with_refs:
-                    rows = _pages(cand, "/api/schema/" + quote(ref), {"scope": scope})
-                    found |= {(r["variant"], r["column"]) for r in rows or []}
-                fold = str.lower if scope == "holdings" else str
-                expected = (
-                    sorted(
-                        {
-                            (
-                                variant_slugs.get(int(r["register_variant_id"])),
-                                fold(r["delivery_column_name"]),
-                            )
-                            for r in data
-                        }
-                    )
-                    if ok
-                    else "error"
-                )
-                actual = (
-                    sorted({(v, fold(c)) for v, c in found if c is not None})
-                    if with_refs
-                    else "error"
-                )
-                return case_id, expected, actual
-            register = "/".join(rest)
-            path = quote(register)
-            if command == "get-diff":
-                params = {
-                    "scope": scope,
-                    "from": _flag(args, "--from"),
-                    "to": _flag(args, "--to"),
-                }
-                answer = get(cand, f"/api/diff/{path}", params)
-                expected = _diff_baseline(data) if ok else "error"
-                actual = (
-                    _diff_candidate(answer["body"]["data"])
-                    if answer["status"] == 200
-                    else "error"
-                )
-                return case_id, expected, actual
-            params = {"scope": scope}
-            if command == "get-schema-year":
-                params["period"] = _flag(args, "--years")
-            rows = _pages(cand, f"/api/schema/{path}", params)
-            expected = _schema_baseline(data, register) if ok else "error"
-            actual = _schema_candidate(rows) if rows is not None else "error"
+                if ok
+                else "error"
+            )
+            actual = (
+                sorted({(v, fold(c)) for v, c in found if c is not None})
+                if with_refs
+                else "error"
+            )
             return case_id, expected, actual
+        register = "/".join(rest)
+        path = quote(register)
+        if command == "get-diff":
+            params = {
+                "scope": scope,
+                "from": _flag(args, "--from"),
+                "to": _flag(args, "--to"),
+            }
+            answer = get(cand, f"/api/diff/{path}", params)
+            expected = _diff_baseline(data) if ok else "error"
+            actual = (
+                _diff_candidate(answer["body"]["data"])
+                if answer["status"] == 200
+                else "error"
+            )
+            return case_id, expected, actual
+        params = {"scope": scope}
+        if command == "get-schema-year":
+            params["period"] = _flag(args, "--years")
+        rows = _pages(cand, f"/api/schema/{path}", params)
+        expected = _schema_baseline(data, register) if ok else "error"
+        actual = _schema_candidate(rows) if rows is not None else "error"
+        return case_id, expected, actual
 
-        ids = sorted(case_id.split("/", 1)[1] for case_id in argv)
-        with ThreadPoolExecutor(PARALLEL) as pool:
-            return list(pool.map(run, ids))
+    ids = sorted(case_id.split("/", 1)[1] for case_id in argv)
+    with ThreadPoolExecutor(PARALLEL) as pool:
+        return list(pool.map(run, ids))
