@@ -3,8 +3,9 @@
 Each case directory is one boundary claim (`cases/cli/README.md`): the argument list
 a maintainer types, the files laid into the working directory first, and the
 oracle: the exit code, a projection of the stdout JSON envelope, stderr, and the
-files the command writes. Every case reads one synthetic artifact built from the
-readable source in `cases/cli/_artifact/`, once per test session and read-only.
+files the command writes. Every case reads a synthetic artifact built from the
+readable source in `cases/cli/_artifact/` (or from it with the case's curation files
+laid over it), once per test session and read-only.
 The command runs in-process through `reg_meta_build.cli.run`, the real CLI entry
 point (argv to JSON envelope and exit code). Expected values are read from the
 test each case replaces.
@@ -58,59 +59,86 @@ def _tree_bytes(root: Path) -> dict[str, bytes]:
     }
 
 
-@pytest.fixture(scope="session")
-def cli_artifact(prepared_cache: PreparedCache) -> Artifact:
-    """The artifact built once from `cases/cli/_artifact/`.
+class Artifacts:
+    """The artifacts the cases read, each built once from `cases/cli/_artifact/`.
 
-    It lives in the shared fixture cache's generation beside the prepared inputs
-    (`fixture_generation`), so it is reused across sessions, worktrees and xdist
-    workers and dropped with the generation when a builder source changes. Within
-    it, the entry is keyed by the content hash of its source, its curation and this
-    runner (which sets the build options), and published by an atomic rename, so
-    workers share one build and never write a path another worker reads.
+    A case that names `artifact_curation` reads its own artifact, built from the
+    shared curation tree with the case's files laid over it; every other case reads
+    the shared one. Each lives in the shared fixture cache's generation beside the
+    prepared inputs (`fixture_generation`), so it is reused across sessions,
+    worktrees and xdist workers and dropped with the generation when a builder
+    source changes. Within it, an entry is keyed by the content hash of the source,
+    the curation it is built from and this runner (which sets the build options),
+    and published by an atomic rename, so workers share one build and never write a
+    path another worker reads.
     """
-    spec = json.loads((ARTIFACT / "source.json").read_text(encoding="utf-8"))
-    inputs = _tree_bytes(ARTIFACT / "curation")
-    inputs["runner"] = Path(__file__).read_bytes()
-    key = hashlib.sha256(
-        json.dumps(
-            [spec, {path: data.hex() for path, data in inputs.items()}],
-            sort_keys=True,
-        ).encode()
-    ).hexdigest()
-    root = fixture_generation() / "cli-artifact"
-    root.mkdir(parents=True, exist_ok=True)
-    entry = root / key
-    if not (entry / "db" / "reg_meta.db").is_file():
-        prepared = prepared_cache.get(spec)
-        staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=root))
-        try:
-            shutil.copytree(ARTIFACT / "curation", staging / "curation")
-            (staging / "curation" / "classifications").mkdir()
-            output = staging / "db" / "reg_meta.db"
-            output.parent.mkdir()
-            fixture = CatalogFixture(
-                prepared.prepared,
-                prepared.commit,
-                prepared.digest,
-                staging / "curation",
-            )
-            # A diagnostic build: a publishable one stamps the builder commit and
-            # so refuses a working tree with uncommitted changes.
-            result = fixture.build(output, staging / "report", diagnostic=True)
-            if result["status"] != "diagnostic_complete" or result["counts"].get(
-                "error"
-            ):
-                raise RuntimeError(f"the CLI artifact did not build: {result}")
-            shutil.rmtree(staging / "report")
+
+    def __init__(self, prepared_cache: PreparedCache) -> None:
+        self._prepared_cache = prepared_cache
+        self._built: dict[Path | None, Artifact] = {}
+
+    def get(self, overlay: Path | None) -> Artifact:
+        if overlay not in self._built:
+            self._built[overlay] = self._build(overlay)
+        return self._built[overlay]
+
+    def _build(self, overlay: Path | None) -> Artifact:
+        spec = json.loads((ARTIFACT / "source.json").read_text(encoding="utf-8"))
+        curation = _tree_bytes(ARTIFACT / "curation")
+        if overlay is not None:
+            curation.update(_tree_bytes(overlay))
+        key = hashlib.sha256(
+            json.dumps(
+                [
+                    spec,
+                    {path: data.hex() for path, data in curation.items()},
+                    Path(__file__).read_bytes().hex(),
+                ],
+                sort_keys=True,
+            ).encode()
+        ).hexdigest()
+        root = fixture_generation() / "cli-artifact"
+        root.mkdir(parents=True, exist_ok=True)
+        entry = root / key
+        if not (entry / "db" / "reg_meta.db").is_file():
+            prepared = self._prepared_cache.get(spec)
+            staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=root))
             try:
-                staging.rename(entry)
-            except OSError:
-                if not (entry / "db" / "reg_meta.db").is_file():
-                    raise
-        finally:
-            shutil.rmtree(staging, ignore_errors=True)
-    return Artifact(entry / "db", entry / "curation")
+                # Written from the hashed bytes, so the key names what was built.
+                for path, data in curation.items():
+                    target = staging / "curation" / path
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes(data)
+                (staging / "curation" / "classifications").mkdir()
+                output = staging / "db" / "reg_meta.db"
+                output.parent.mkdir()
+                fixture = CatalogFixture(
+                    prepared.prepared,
+                    prepared.commit,
+                    prepared.digest,
+                    staging / "curation",
+                )
+                # A diagnostic build: a publishable one stamps the builder commit
+                # and so refuses a working tree with uncommitted changes.
+                result = fixture.build(output, staging / "report", diagnostic=True)
+                if result["status"] != "diagnostic_complete" or result["counts"].get(
+                    "error"
+                ):
+                    raise RuntimeError(f"the CLI artifact did not build: {result}")
+                shutil.rmtree(staging / "report")
+                try:
+                    staging.rename(entry)
+                except OSError:
+                    if not (entry / "db" / "reg_meta.db").is_file():
+                        raise
+            finally:
+                shutil.rmtree(staging, ignore_errors=True)
+        return Artifact(entry / "db", entry / "curation")
+
+
+@pytest.fixture(scope="session")
+def cli_artifacts(prepared_cache: PreparedCache) -> Artifacts:
+    return Artifacts(prepared_cache)
 
 
 def case_dirs() -> list[Path]:
@@ -154,7 +182,16 @@ def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) ->
         assert snippet not in text, (path, snippet, text)
 
 
-_REQUEST_KEYS = {"replaces", "fails_if", "note", "argv", "env", "runs", "curation_dirs"}
+_REQUEST_KEYS = {
+    "replaces",
+    "fails_if",
+    "note",
+    "argv",
+    "env",
+    "runs",
+    "curation_dirs",
+    "artifact_curation",
+}
 _STEP_KEYS = {"argv", "env"}
 _EXPECTED_KEYS = {
     "exit_code",
@@ -181,6 +218,9 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
     else:
         assert "argv" in request, f"{case.name}: argv or runs is required"
     assert request.keys() <= _REQUEST_KEYS, (case.name, request.keys() - _REQUEST_KEYS)
+    if "artifact_curation" in request:
+        overlay = case / request["artifact_curation"]
+        assert overlay.is_dir(), f"{case.name}: artifact_curation names no directory"
     for step in request.get("runs", []):
         # A misspelled step key (say "evn") would otherwise be ignored silently.
         assert "argv" in step, f"{case.name}: every run step needs argv"
@@ -206,7 +246,7 @@ _RELOADERS = {"slug_dir": lambda root: snapshot_payload(load_slug_dir(root))}
 )
 def test_cli_case(
     case: Path,
-    cli_artifact: Artifact,
+    cli_artifacts: Artifacts,
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
@@ -215,6 +255,8 @@ def test_cli_case(
     expected = json.loads((case / "expected.json").read_text(encoding="utf-8"))
     _check_keys(case, request, expected)
     runs = request.get("runs", [request])
+    overlay = request.get("artifact_curation")
+    cli_artifact = cli_artifacts.get(None if overlay is None else case / overlay)
 
     work = tmp_path / "work"
     for name in request.get("curation_dirs", ["curation"]):

@@ -21,6 +21,7 @@ cases/cli/
   <command>/<case>/
     request.json                  the argument list and the replaced test
     files/**                      laid into the working directory before the run
+    artifact_curation/**          optional: laid over the artifact's curation (below)
     expected.json                 the exit code, stderr and file claims
     stdout.json                   optional: a projection of the printed JSON
 ```
@@ -30,14 +31,14 @@ checks that the argument list names it.
 
 ## The artifact
 
-Every case reads one catalog, built once from `_artifact/`. The source spec has the
-format of `cases/build/README.md` → "Source spec", and the build runs every register in
-diagnostic mode (a publishable build stamps the builder commit and so refuses a working
-tree with uncommitted changes). The runner refuses an artifact whose build reports an
-error. The build sits beside the build cases' prepared inputs, keyed by the content hash
-of `_artifact/` and the runner, and is published by an atomic rename, so xdist workers
-share it. Cases read it in place and never write it; the runner fails a case that
-changes the artifact's directory.
+Every case reads one catalog, built once from `_artifact/` (or a variant of it, below).
+The source spec has the format of `cases/build/README.md` → "Source spec", and the build
+runs every register in diagnostic mode (a publishable build stamps the builder commit
+and so refuses a working tree with uncommitted changes). The runner refuses an artifact
+whose build reports an error. The build sits beside the build cases' prepared inputs,
+keyed by the content hash of `_artifact/` and the runner, and is published by an atomic
+rename, so xdist workers share it. Cases read it in place and never write it; the runner
+fails a case that changes the artifact's directory.
 
 The artifact delivers:
 
@@ -54,6 +55,13 @@ A change to `_artifact/` changes what every case reads. Add a register or variab
 for a claim no existing row can carry, and check the cases that enumerate the catalog
 (pins files, snapshots, file lists).
 
+A claim about one catalog row that the shared artifact cannot carry without changing
+what the other cases read gets its own artifact instead: the case names a directory in
+`artifact_curation`, and the runner builds an artifact from `_artifact/` with that
+directory laid over its curation tree, replacing files of the same path. It is keyed and
+published like the shared one, so cases with the same overlay share it, and the case's
+working directory gets that artifact's curation tree.
+
 ## The working directory
 
 Each case runs in its own empty directory, `{work}`:
@@ -68,15 +76,16 @@ The copy is cheap, so every case gets one, whether or not its command writes.
 
 ## `request.json`
 
-  | Key             | Meaning                                                                                                                                               |
-  | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `replaces`      | Required. The Python test (`file::function[param]`), or a list of them, whose assertions the expected values were read from.                          |
-  | `fails_if`      | Required. The product change that would make this case fail. The runner refuses a request without one.                                                |
-  | `note`          | Optional prose: why this case exists, and where an expected value comes from.                                                                         |
-  | `argv`          | The argument list after the program name.                                                                                                             |
-  | `env`           | Optional environment variables set for the run, such as `{"REG_META_QUIET": "1"}`. The runner unsets `REG_META_QUIET` otherwise.                      |
-  | `runs`          | Instead of `argv` and `env`: a list of `{argv, env}` run in order in one working directory. The runner refuses a top-level `argv` or `env` beside it. |
-  | `curation_dirs` | Optional. Where the artifact's curation tree is copied; defaults to `["curation"]`.                                                                   |
+  | Key                 | Meaning                                                                                                                                               |
+  | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `replaces`          | Required. The Python test (`file::function[param]`), or a list of them, whose assertions the expected values were read from.                          |
+  | `fails_if`          | Required. The product change that would make this case fail. The runner refuses a request without one.                                                |
+  | `note`              | Optional prose: why this case exists, and where an expected value comes from.                                                                         |
+  | `argv`              | The argument list after the program name.                                                                                                             |
+  | `env`               | Optional environment variables set for the run, such as `{"REG_META_QUIET": "1"}`. The runner unsets `REG_META_QUIET` otherwise.                      |
+  | `runs`              | Instead of `argv` and `env`: a list of `{argv, env}` run in order in one working directory. The runner refuses a top-level `argv` or `env` beside it. |
+  | `curation_dirs`     | Optional. Where the artifact's curation tree is copied; defaults to `["curation"]`.                                                                   |
+  | `artifact_curation` | Optional. A directory in the case laid over the artifact's curation tree before the build, for a case that reads its own artifact.                    |
 
 `fails_if` has the meaning it has in the build cases (`cases/build/README.md`): name a
 change to the product, not the behavior restated. It sits in `request.json` there and
