@@ -2,7 +2,7 @@
   "exit_code": 0,
   "stderr": {
     "contains": [
-      "Hint: 1 single-variant register(s)",
+      "Hint: 2 single-variant register(s)",
       "`slug = \"_default\"`",
       "'Nybörjare i Komvux'"
     ],

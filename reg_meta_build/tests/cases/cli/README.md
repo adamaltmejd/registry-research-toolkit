@@ -41,14 +41,14 @@ changes the artifact's directory.
 
 The artifact delivers:
 
-  | Register (native id)   | Slug      | Variants                                                           | Variables                                            |
-  | ---------------------- | --------- | ------------------------------------------------------------------ | ---------------------------------------------------- |
-  | TESTREG (1)            | `sample`  | `1.10` `people`                                                    | `1.101` `value` (VALUE in 2019, VALUE_NY in 2020)    |
-  |                        |           |                                                                    | `1.102` `kon` (Kön in 2019, Kon in 2020)             |
-  | OTHERREG (2)           | `other`   | `2.20` `people`                                                    | `2.201` `value`                                      |
-  | Nybörjare i Komvux (3) | `komvux`  | `3.30` `nyborjare` (named like the register)                       | `3.301` `komvux`                                     |
-  | PART (4)               | `part`    | `4.40` `people`                                                    | `4.5.first`, `4.5.second`: a partition of variable 5 |
-  | Företag (6)            | `foretag` | `6.60` `foretag` (named like the register), `6.61` `arbetsstallen` | `6.601` `f1`, `6.602` `f2`                           |
+  | Register (native id)                                    | Slug      | Variants                                                           | Variables                                            |
+  | ------------------------------------------------------- | --------- | ------------------------------------------------------------------ | ---------------------------------------------------- |
+  | TESTREG (1)                                             | `sample`  | `1.10` `people`                                                    | `1.101` `value` (VALUE in 2019, VALUE_NY in 2020)    |
+  |                                                         |           |                                                                    | `1.102` `kon` (Kön in 2019, Kon in 2020)             |
+  | Konjunkturstatistik, löner för statlig sektor (KLS) (2) | `other`   | `2.20` `people` (named like the register less its `(KLS)`)         | `2.201` `value`                                      |
+  | Nybörjare i Komvux (3)                                  | `komvux`  | `3.30` `nyborjare` (named like the register)                       | `3.301` `komvux`                                     |
+  | PART (4)                                                | `part`    | `4.40` `people`                                                    | `4.5.first`, `4.5.second`: a partition of variable 5 |
+  | Företag (6)                                             | `foretag` | `6.60` `foretag` (named like the register), `6.61` `arbetsstallen` | `6.601` `f1`, `6.602` `f2`                           |
 
 A change to `_artifact/` changes what every case reads. Add a register or variable only
 for a claim no existing row can carry, and check the cases that enumerate the catalog
