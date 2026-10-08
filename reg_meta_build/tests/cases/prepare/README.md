@@ -69,7 +69,10 @@ Every key is optional; a case delivers what its reader reads.
   pipe-delimited line, or for `registerinformation` the keyword arguments of
   `_csv_fixtures.var_row` (as in `cases/build/README.md`, "Source spec"). The keys are
   `registerinformation`, `unika`, `identifierare`, `timeseries`, `vardemangder` and
-  `valid_dates`; a file not named is not delivered. `replace_bytes` maps a file name to
+  `valid_dates`; a file not named is not delivered, with two exceptions a snapshot
+  requires: `registerinformation` defaults to one member row (`cvid` 1001, `var_id` 101,
+  column `VALUE`), and `vardemangder` without `valid_dates` declares every listed item
+  valid from 2000 to 2030. `replace_bytes` maps a file name to
   `{placeholder: replacement}`: after writing, each placeholder becomes the latin-1
   bytes of its replacement.
 - `variants` names alternative deliveries of the same workbook. Each is a workbook spec

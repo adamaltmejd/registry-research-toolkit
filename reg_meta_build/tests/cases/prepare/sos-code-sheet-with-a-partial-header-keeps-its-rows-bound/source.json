@@ -1,0 +1,11 @@
+{
+  "description": "sos-source without Kodlista_HDIA, plus Kodlista_Arbitrary with a header naming Tidsperiod and Kod but no label column (Other), and one code row.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_Arbitrary": [["Tidsperiod", "Kod", "Other"], ["2020", "1", "Retained evidence"]]
+    }
+  }
+}

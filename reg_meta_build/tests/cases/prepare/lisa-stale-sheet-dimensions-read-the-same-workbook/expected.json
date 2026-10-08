@@ -1,0 +1,10 @@
+{
+  "reader": "lisa_workbook",
+  "replaces": "test_lisa_workbook_layout.py::test_lisa_reader_does_not_trust_stale_sheet_dimensions",
+  "fails_if": "the LISA reader trusts a sheet's stored dimension (a read-only load, or max_row/max_column taken from the declared extent), so an understated used range loses declarations or fails the layout checks",
+  "note": "The replaced test compared the record ids of the two reads; `agree` compares the whole records and the worksheet context. Nine records is the count of lisa-reader-keeps-four-layouts-sections-periods-and-occurrences.",
+  "projections": [
+    {"of": "", "where": {"key": "records"}, "rows": [{"key": "records", "value": {"$length": 9}}]}
+  ],
+  "agree": ["records", "worksheet_context"]
+}

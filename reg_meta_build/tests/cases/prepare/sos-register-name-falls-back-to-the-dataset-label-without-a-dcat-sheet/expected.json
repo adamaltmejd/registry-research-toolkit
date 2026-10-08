@@ -1,0 +1,24 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_parent_records.py::test_sos_register_name_falls_back_to_dataset_without_dcat_sheet",
+  "fails_if": "the SOS reader reads the general Datamängd only as a dataset label even when no DCAT-AP title names the register, leaving the register unnamed",
+  "projections": [
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}},
+        "language": null,
+        "parent_facts": [{"kind": "register", "fields": {"name": {"status": "value"}}}]
+      },
+      "rows": [
+        {
+          "parent_facts": [
+            {
+              "fields": {"name": {"value": "Patientregistret källa"}, "dataset_label": null}
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

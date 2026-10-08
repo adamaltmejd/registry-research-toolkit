@@ -1,0 +1,27 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_variable_coverage.py::test_trailing_dash_subset_start_reads_open",
+  "fails_if": "the SOS reader stops reading a subset's dashed Data från as an open subset period, or a dashed subset changes how a member row's own blank end reads",
+  "projections": [
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}, "variant": {"name": "PAR_OV"}}
+      },
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2007", "end": null}]}
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "PARTIELL"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2010", "end": null}]}
+        }
+      ]
+    }
+  ]
+}

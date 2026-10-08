@@ -1,0 +1,54 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_parent_records.py::test_other_sos_workbooks_keep_token_only_subset_keys[DORS-D\\xf6dsorsaksregistret-Deldatam\\xe4ngder och datavyer-headers2-rows2-name,update_frequency]",
+  "fails_if": "the SOS reader reads the subset token by column position instead of by its Deldatamängdsnamn header, keys a subset by anything but its token, or stops reading Uppdateringsfrekvens as the update frequency",
+  "note": "native_parent_key (build-side) is formed from the variant fact's register and variant names claimed here.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"parent_facts": {"$contains": [{"kind": "variant"}]}},
+      "rows": [
+        {
+          "locators": [
+            {
+              "semantic_record_key": [
+                "register:Dödsorsaksregistret",
+                "metadata:subsets",
+                "subset:DORS",
+                "fields:name,update_frequency",
+                "language:<not declared>"
+              ]
+            }
+          ],
+          "parent_facts": [
+            {
+              "kind": "variant",
+              "register": {"name": "Dödsorsaksregistret"},
+              "variant": {"name": "DORS"}
+            }
+          ]
+        },
+        {
+          "locators": [
+            {
+              "semantic_record_key": [
+                "register:Dödsorsaksregistret",
+                "metadata:subsets",
+                "subset:COV_DORS_HERMES",
+                "fields:name,update_frequency",
+                "language:<not declared>"
+              ]
+            }
+          ],
+          "parent_facts": [
+            {
+              "kind": "variant",
+              "register": {"name": "Dödsorsaksregistret"},
+              "variant": {"name": "COV_DORS_HERMES"}
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

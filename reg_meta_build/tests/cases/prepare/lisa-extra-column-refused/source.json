@@ -1,0 +1,8 @@
+{
+  "description": "The LISA fixture with a seventh header 'Ny kolumn' in Individ!G3.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {"Individ!G3": "Ny kolumn"}
+  }
+}

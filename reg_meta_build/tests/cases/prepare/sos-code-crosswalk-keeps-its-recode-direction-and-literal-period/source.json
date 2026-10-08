@@ -1,0 +1,15 @@
+{
+  "description": "sos-source without Kodlista_HDIA, plus Kodlista_Arbitrary: a recode sheet (Indata Kod, Kodat till) delivering the same FAMSIT row twice, the output code stored as the number 3, the description padded with spaces.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_Arbitrary": [
+        ["Variabelnamn", "Tidsperiod", "Indata Kod", "Kodat till", "Beskrivning"],
+        ["FAMSIT", "1990/91-1994", "02", 3, " Annan familjesituation "],
+        ["FAMSIT", "1990/91-1994", "02", 3, " Annan familjesituation "]
+      ]
+    }
+  }
+}

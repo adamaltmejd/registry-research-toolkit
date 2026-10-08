@@ -1,0 +1,17 @@
+{
+  "description": "sos-source without Kodlista_HDIA, plus Kodlista_Arbitrary: a crosswalk between two peer code columns (SCBkod, SiSkod) under an 'Används i variabeln' preamble, with a 1994- section row (row 3), a row under it with no period of its own (row 4) and a row with its own period and only a SiSkod (row 5).",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_Arbitrary": [
+        ["Används i variabeln", "BHEM"],
+        ["Tidsperiod", "SCBkod", "SiSkod", "Namn"],
+        ["1994-", null, null, null],
+        [null, 16, 313, "Håkanstorp"],
+        ["2000-2001", null, 314, "Ensidig uppgift"]
+      ]
+    }
+  }
+}

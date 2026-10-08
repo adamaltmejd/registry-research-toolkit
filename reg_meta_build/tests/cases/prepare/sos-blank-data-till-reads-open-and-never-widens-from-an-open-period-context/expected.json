@@ -1,0 +1,62 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_variable_coverage.py::test_blank_end_reads_open_without_register_or_subset_context",
+    "test_sos_variable_coverage.py::test_blank_end_open_rule_never_widens_start_or_end"
+  ],
+  "fails_if": "the SOS reader fills a delivered blank Data till from the register or subset period (open or closed), backfills a blank Data från from an open period, reads a malformed end as an open bound, or widens an explicit end to the open period",
+  "note": "The replaced test read the open context and a closed enclosing subset as separate workbooks; one workbook carries both, PAR_SV standing in for the closed subset.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "PARTIELL"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2010", "end": null}]},
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "2010"},
+              {"name": "Data till", "raw_value": ""}
+            ]
+          }
+        }
+      ],
+      "note": "Blank end, open register and open subset: still the row's own open end."
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "PARTIELL_SV"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2010", "end": null}]}
+        }
+      ],
+      "note": "Blank end in a closed subset: the subset's 2020 is not copied in."
+    },
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:2"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "note": "An explicit end is not widened by the open context.",
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2001", "end": "2020"}]}
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "BLANK_START"}}},
+      "rows": [{"edition_scope": {"kind": "unknown"}}],
+      "note": "A blank start is not backfilled from the open context."
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "MALFORMED_END"}}},
+      "rows": [{"edition_scope": {"kind": "unknown"}}],
+      "note": "A malformed end is not read as an open bound."
+    }
+  ]
+}

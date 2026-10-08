@@ -1,0 +1,479 @@
+{
+  "reader": "lisa_workbook",
+  "replaces": [
+    "test_lisa_workbook_layout.py::test_lisa_reader_preserves_four_layouts_sections_periods_and_occurrences",
+    "test_lisa_workbook_layout.py::test_lisa_reader_rejects_changed_actual_layout_with_coordinates[valid-control-None]"
+  ],
+  "fails_if": "the LISA reader drops or merges a declaration of one of the four sheet layouts (the same PersonNr under three year-independent sections), splits a multi-line or space-separated period wrongly, stops attaching a continuation row to the declaration above it, attaches a worksheet footnote to a record, or stops reporting a keyed text row or footnote as worksheet context",
+  "note": "Expected values are the replaced test's and its fixture's. Each context is [sheet title, nearest section text row above the declaration] from cases/lisa/layout.json; the continuation notes are layout row 323's B and F cells. worksheet_context is rendered from layout.json: every text row as `worksheet-context <sheet>!A<row>: <text>` and every non-blank cell of footnote rows 815-819 as `worksheet-footnote Individ!B<row>: <text>` (62 items; the old test claimed the 57 context items as a set and the 5 footnotes by count, first and last). The valid-control parametrization of the layout refusals is this unmodified delivery, whose worksheet context holds Individ!A5. AmPolTyp's and KU2YrkStalln's sensitivity are lisa-sensitivity-declarations-keep-their-raw-text.",
+  "projections": [
+    {
+      "of": "",
+      "where": {
+        "key": "records"
+      },
+      "note": "Nine declarations across the four sheets, each read once.",
+      "rows": [
+        {
+          "key": "records",
+          "value": {
+            "$length": 9,
+            "$once": [
+              {
+                "locators": [
+                  {
+                    "physical_table": "Individ",
+                    "physical_record": "row:8"
+                  }
+                ],
+                "fields": {
+                  "column_name": {
+                    "value": "PersonNr"
+                  }
+                }
+              },
+              {
+                "locators": [
+                  {
+                    "physical_table": "Individ",
+                    "physical_record": "row:44"
+                  }
+                ],
+                "fields": {
+                  "column_name": {
+                    "value": "RekrBidr"
+                  }
+                }
+              },
+              {
+                "locators": [
+                  {
+                    "physical_table": "Individ",
+                    "physical_record": "row:322"
+                  }
+                ],
+                "fields": {
+                  "column_name": {
+                    "value": "KU2YrkStalln"
+                  }
+                }
+              },
+              {
+                "locators": [
+                  {
+                    "physical_table": "Individ",
+                    "physical_record": "row:600"
+                  }
+                ],
+                "fields": {
+                  "column_name": {
+                    "value": "AmPolTyp"
+                  }
+                }
+              },
+              {
+                "locators": [
+                  {
+                    "physical_table": "Individ årsoberoende",
+                    "physical_record": "row:6"
+                  }
+                ],
+                "fields": {
+                  "column_name": {
+                    "value": "PersonNr"
+                  }
+                }
+              },
+              {
+                "locators": [
+                  {
+                    "physical_table": "Individ årsoberoende",
+                    "physical_record": "row:31"
+                  }
+                ],
+                "fields": {
+                  "column_name": {
+                    "value": "PersonNr"
+                  }
+                }
+              },
+              {
+                "locators": [
+                  {
+                    "physical_table": "Individ årsoberoende",
+                    "physical_record": "row:35"
+                  }
+                ],
+                "fields": {
+                  "column_name": {
+                    "value": "PersonNr"
+                  }
+                }
+              },
+              {
+                "locators": [
+                  {
+                    "physical_table": "Företag",
+                    "physical_record": "row:9"
+                  }
+                ],
+                "fields": {
+                  "column_name": {
+                    "value": "ForetagKod"
+                  }
+                }
+              },
+              {
+                "locators": [
+                  {
+                    "physical_table": "Arbetsställe",
+                    "physical_record": "row:7"
+                  }
+                ],
+                "fields": {
+                  "column_name": {
+                    "value": "Ast_LoneSum"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "fields": {
+          "column_name": {
+            "value": "PersonNr"
+          }
+        }
+      },
+      "note": "Four PersonNr occurrences keep four identities (#2 is the shared source revision); each takes its section as context and is year-independent.",
+      "rows": [
+        {
+          "record_id": "scb-lisa-variable-availability:record:sha256:#1",
+          "locators": [
+            {
+              "physical_table": "Individ"
+            }
+          ],
+          "context": {
+            "$exact": [
+              "Individvariabler",
+              "Födelseland"
+            ]
+          },
+          "edition_scope": {
+            "kind": "year_independent"
+          }
+        },
+        {
+          "record_id": "scb-lisa-variable-availability:record:sha256:#3",
+          "locators": [
+            {
+              "physical_table": "Individ årsoberoende"
+            }
+          ],
+          "context": {
+            "$exact": [
+              "Årgångsoberoende individvariabler, 3 tabeller",
+              "Födelseland"
+            ]
+          },
+          "edition_scope": {
+            "kind": "year_independent"
+          }
+        },
+        {
+          "record_id": "scb-lisa-variable-availability:record:sha256:#4",
+          "locators": [
+            {
+              "physical_table": "Individ årsoberoende"
+            }
+          ],
+          "context": {
+            "$exact": [
+              "Årgångsoberoende individvariabler, 3 tabeller",
+              "Avlidna"
+            ]
+          },
+          "edition_scope": {
+            "kind": "year_independent"
+          }
+        },
+        {
+          "record_id": "scb-lisa-variable-availability:record:sha256:#5",
+          "locators": [
+            {
+              "physical_table": "Individ årsoberoende"
+            }
+          ],
+          "context": {
+            "$exact": [
+              "Årgångsoberoende individvariabler, 3 tabeller",
+              "In- och Utvandring"
+            ]
+          },
+          "edition_scope": {
+            "kind": "year_independent"
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "fields": {
+          "column_name": {
+            "value": "RekrBidr"
+          }
+        }
+      },
+      "rows": [
+        {
+          "original_period_text": "2003-2008\n2013",
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [
+              {
+                "start": "2003",
+                "end": "2008"
+              },
+              {
+                "start": "2013",
+                "end": "2013"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "fields": {
+          "column_name": {
+            "value": "Ast_LoneSum"
+          }
+        }
+      },
+      "rows": [
+        {
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [
+              {
+                "start": "1990",
+                "end": "2021"
+              },
+              {
+                "start": "2024",
+                "end": "2024"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "fields": {
+          "column_name": {
+            "value": "ForetagKod"
+          }
+        }
+      },
+      "rows": [
+        {
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [
+              {
+                "start": "2024",
+                "end": "2024"
+              }
+            ]
+          },
+          "subject": {
+            "variant": {
+              "name": "company"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "fields": {
+          "column_name": {
+            "value": "AmPolTyp"
+          }
+        }
+      },
+      "rows": [
+        {
+          "locators": [
+            {
+              "physical_record": "row:600"
+            }
+          ],
+          "subject": {
+            "variable": {
+              "native_id": "AmPolTyp",
+              "name": "AmPolTyp"
+            }
+          },
+          "fields": {
+            "description": {
+              "value": "Typ av arbetsmarknadspolitisk åtgärd"
+            },
+            "availability": {
+              "$exact": {
+                "status": "value",
+                "value": true,
+                "raw_value": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "fields": {
+          "column_name": {
+            "value": "KU2YrkStalln"
+          }
+        }
+      },
+      "note": "Continuation row 323 belongs to the declaration above it: its B and F cells extend the record's cells and context.",
+      "rows": [
+        {
+          "locators": [
+            {
+              "physical_cells": {
+                "$exact": [
+                  "Individ!A322",
+                  "Individ!B322",
+                  "Individ!C322",
+                  "Individ!D322",
+                  "Individ!E322",
+                  "Individ!F322",
+                  "Individ!B323",
+                  "Individ!F323"
+                ]
+              }
+            }
+          ],
+          "context": {
+            "$exact": [
+              "Individvariabler",
+              "För näst största förvärvskälla:",
+              "continuation-note: Före 2010 finns inte kod 5 (företagare i eget AB). För åren 1993- finns istället variabeln KU1Faman som anges som 1 om personen är en företagare i eget AB.",
+              "continuation-note: RAMS-Jobb"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "locators": [
+          {
+            "physical_cells": {
+              "$contains": [
+                "Individ!B815"
+              ]
+            }
+          }
+        ]
+      },
+      "note": "No record claims the footnote reference cell.",
+      "rows": []
+    },
+    {
+      "of": "",
+      "where": {
+        "key": "worksheet_context"
+      },
+      "rows": [
+        {
+          "key": "worksheet_context",
+          "value": {
+            "$length": 62,
+            "$once": [
+              "worksheet-context Individ!A5: Demografiska variabler",
+              "worksheet-context Individ!A6: Årsoberoende variabler, baseras på uppgifter avseende senast året av LISA",
+              "worksheet-context Individ!A7: Födelseland",
+              "worksheet-context Individ!A31: Avlidna",
+              "worksheet-context Individ!A34: In- och utvandring",
+              "worksheet-context Individ!A70: För hushåll:",
+              "worksheet-context Individ!A105: För familj:",
+              "worksheet-context Individ!A120: Utbildningsvariabler",
+              "worksheet-context Individ!A138: Sysselsättningsvariabler",
+              "worksheet-context Individ!A139: Befolkningens arbetsmarknadsstatus (BAS) är källa från 2022 om inget annat år anges",
+              "worksheet-context Individ!A201: Yrke 7)",
+              "worksheet-context Individ!A218: För största förvärvskälla:",
+              "worksheet-context Individ!A284: För näst största förvärvskälla:",
+              "worksheet-context Individ!A351: För tredje största förvärvskälla:",
+              "worksheet-context Individ!A405: Inkomstvariabler",
+              "worksheet-context Individ!A406: Inkomst av förvärvskälla",
+              "worksheet-context Individ!A446: Arbetstidsrelaterad social inkomst",
+              "worksheet-context Individ!A447: Studier:",
+              "worksheet-context Individ!A468: Värnplikt/Grundläggande militär utbildning:",
+              "worksheet-context Individ!A477: Föräldraledighet:",
+              "worksheet-context Individ!A503: Sjukdom/Arbetsskada/Rehabilitering:",
+              "worksheet-context Individ!A573: Arbetslöshet:",
+              "worksheet-context Individ!A587: Arbetsmarknadspolitisk åtgärd:",
+              "worksheet-context Individ!A613: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag):",
+              "worksheet-context Individ!A648: Delpension:",
+              "worksheet-context Individ!A652: Övrig arbetstidrelaterad social inkomst:",
+              "worksheet-context Individ!A658: Övrig inkomst",
+              "worksheet-context Individ!A659: Kapitalinkomst",
+              "worksheet-context Individ!A663: Annan inkomst",
+              "worksheet-context Individ!A664: Pension:",
+              "worksheet-context Individ!A681: Tjänstepension:",
+              "worksheet-context Individ!A694: Övrig pension:",
+              "worksheet-context Individ!A699: Summa inkomst av pensioner:",
+              "worksheet-context Individ!A703: Yrkes- och arbetsskadelivränta:",
+              "worksheet-context Individ!A709: Annan livränta:",
+              "worksheet-context Individ!A712: Efterlevandeförmån:",
+              "worksheet-context Individ!A719: Familjerelaterade inkomster:",
+              "worksheet-context Individ!A732: Övriga inkomster/ersättningar:",
+              "worksheet-context Individ!A749: Disponibel inkomst",
+              "worksheet-context Individ!A766: Huvudsaklig inkomstkälla, Befolkningens abetsmarknadsstatus",
+              "worksheet-context Individ!A788: Registerbaserad aktivitetsstatistik, RAKS",
+              "worksheet-context Individ årsoberoende!A5: Födelseland",
+              "worksheet-context Individ årsoberoende!A30: Avlidna",
+              "worksheet-context Individ årsoberoende!A34: In- och Utvandring",
+              "worksheet-context Företag!A5: Populationen i LISA:s företagstabell är företag med minst 1 sysselsatt enligt RAMS/BAS.",
+              "worksheet-context Företag!A6: 1990-2001: 16 år och äldre, 2002-2011: 16-84 år, 2012-: 16-74 år",
+              "worksheet-context Företag!A8: Karaktäristikor för organisationer",
+              "worksheet-context Företag!A48: Ekonomiska nyckeltal och ekonomisk grunddata finns för företag som ingår i Företagens ekonomi (FEK).",
+              "worksheet-context Företag!A49: FEK täcker näringslivet (exklusive de finansiella och offentliga sektorerna samt hushållens icke-vinstdrivande",
+              "worksheet-context Företag!A50:  organisationer).",
+              "worksheet-context Företag!A52: Ekonomiska nyckeltal för företag",
+              "worksheet-context Företag!A90: Ekonomisk grunddata för företag",
+              "worksheet-context Företag!A91: Från 2024 inkluderas godkända resultaträkningar även om balansräkning är underkänd och tvärtom.",
+              "worksheet-context Företag!A93: Resultaträkning",
+              "worksheet-context Företag!A111: Balansräkning",
+              "worksheet-context Arbetsställe!A5: Populationen i LISA:s företagstabell är företag med minst 1 sysselsatt enligt RAMS/BAS.",
+              "worksheet-context Arbetsställe!A6: 1990-2001: 16 år och äldre, 2002-2011: 16-84 år, 2012-: 16-74 år",
+              "worksheet-footnote Individ!B815: _ftnref2",
+              "worksheet-footnote Individ!B816: 1 Markering för variabler som innehåller känsliga personuppgifter (Ja/Nej/I vissa fall). Variabeln betraktas som en känslig personuppgift och kräver godkänd etikprövning hos Etikprövningsmyndigheten om utlämnandet görs för forskningsändamål.",
+              "worksheet-footnote Individ!B817: 2 Variabeln finns i två typer, kontakta SCB:s handläggare för vidare information",
+              "worksheet-footnote Individ!B818: 5 Fr.o.m. 2014 fördelas familjeinkomster mellan sökande och medsökande, tidigare ingick dessa ersättningar endast för den sökande",
+              "worksheet-footnote Individ!B819: 7 Från och med årgång 2020 används inte längre yrkeskoderna 01, 02, 03 (militärer) och 3360 (poliser), individer med dessa yrkeskoder ingår i stället i gruppen med okänt yrke."
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

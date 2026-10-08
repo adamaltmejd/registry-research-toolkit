@@ -1,0 +1,33 @@
+{
+  "description": "sos-source without Kodlista_HDIA, plus Kodlista_Arbitrary: a hospital directory (Från, Till, Sjukhuskod, Sjukhusnamn, ...) with a SJUKHUS row starting 2023 with a blank Till (row 2), and a METOD row whose Från does not parse (row 3).",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_Arbitrary": [
+        [
+          "Variabelnamn",
+          "Från",
+          "Till",
+          "Sjukhuskod",
+          "Region",
+          "Sjukhusnamn",
+          "Aktuella",
+          "Kommentar"
+        ],
+        [
+          "SJUKHUS",
+          2023,
+          null,
+          "10011",
+          "Stockholm",
+          " Sjukhus ",
+          "JA",
+          "Startade 202304"
+        ],
+        ["METOD", "unparseable", null, "1", "Region", "Method", null, null]
+      ]
+    }
+  }
+}

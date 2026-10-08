@@ -1,0 +1,10 @@
+{
+  "description": "A Socialstyrelsen directory holding the sos-source workbook under an upper-case .XLSX extension and an Office lock file (~$ prefix, four bytes) beside it.",
+  "files": {
+    "Socialstyrelsen/~$Metadata Patientregistret (PAR)_webb.xlsx": "lock"
+  },
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.XLSX",
+    "from": "sos-source"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "A minimal SOS workbook whose Generell information sheet (labels in column B, values in C) has two sections: 'Om metadatamallen' with Version 2.1 and a Datum written as the text '2025-01-02', then 'Om datamängden version' with Datamängd, Version 2024:2, a Datum calendar cell 2026-03-26 and an unmapped E-post row.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Syntet (PAR)_webb.xlsx",
+    "sheets": {
+      "Generell information": [
+        [null, "Om metadatamallen", null],
+        [null, "Version", "2.1"],
+        [null, "Datum", "2025-01-02"],
+        [null, "Om datamängden version", null],
+        [null, "Datamängd", "Patientregistret-syntet"],
+        [null, "Version", "2024:2"],
+        [null, "Datum", {"datetime": "2026-03-26T00:00:00"}],
+        [null, "E-post", "kontakt@example.se"]
+      ],
+      "Metadata - Variabelnivå": [["Variabelnamn"], ["TESTVAR"]]
+    }
+  }
+}

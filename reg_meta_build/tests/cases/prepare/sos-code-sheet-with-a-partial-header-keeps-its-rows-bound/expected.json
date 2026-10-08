@@ -1,0 +1,30 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_lists.py::test_partial_header_with_code_rows_keeps_binding_target",
+  "fails_if": "the SOS reader drops a code sheet whose header lacks a label column, or drops the cell under the unknown column",
+  "projections": [
+    {
+      "of": "descriptors",
+      "where": {"key": "sheet:Kodlista_Arbitrary"},
+      "rows": [{"value": {"payload_key": "sheet:Kodlista_Arbitrary"}}]
+    },
+    {
+      "of": "associations",
+      "rows": [{"descriptor_key": "sheet:Kodlista_Arbitrary", "value": {"code": "1"}}]
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Kodlista_Arbitrary"},
+      "rows": [
+        {
+          "rows": [
+            {"$any": true},
+            {
+              "cells": [{"$any": true}, {"$any": true}, {"raw_value": "Retained evidence"}]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

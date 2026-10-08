@@ -1,0 +1,7 @@
+{
+  "description": "The sos-source workbook delivered under an Office lock-file name (~$ prefix): its bytes are a readable workbook, only the name marks it a lock file.",
+  "workbook": {
+    "file": "Socialstyrelsen/~$Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source"
+  }
+}

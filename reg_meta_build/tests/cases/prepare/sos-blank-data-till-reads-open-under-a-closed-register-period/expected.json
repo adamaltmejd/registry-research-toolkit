@@ -1,0 +1,33 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_variable_coverage.py::test_blank_end_reads_open_without_register_or_subset_context",
+    "test_sos_parent_records.py::test_common_parent_metadata_preserves_languages_conflicts_and_raw_context"
+  ],
+  "fails_if": "the SOS reader closes a delivered blank Data till with the register's closed period or the enclosing subset's Data till",
+  "note": "The replaced tests read the closed register period and a closed enclosing subset (sos-complete's PAR_OV, 1900-2025) in separate workbooks; PARTIELL_SV is under both.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "PARTIELL"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2010", "end": null}]},
+          "fields": {
+            "coverage_from": {"status": "value", "value": "2010"},
+            "coverage_to": {"status": "unknown"}
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "PARTIELL_SV"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2010", "end": null}]}
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "reader": "sos_parsed",
+  "replaces": "test_sos_parser.py::test_synthetic_dcat_ap_field_map",
+  "fails_if": "the SOS parser stops mapping a DCAT-AP attribute name to its field and language column (title, description, temporal coverage, publisher, landing page, access rights, legislation), or drops an attribute it does not define instead of keeping it in extras",
+  "note": "Values are the fixture's cells (the replaced test checked description, landing page, access rights and legislation by presence or substring). The parsed extras below are the boundary form of the deleted test_dcat_ap_extras_roundtrip, which only read a hand-built SosDcatAp's arguments back.",
+  "projections": [
+    {
+      "of": "",
+      "where": {"key": "dcat_ap"},
+      "rows": [
+        {
+          "key": "dcat_ap",
+          "value": {
+            "title_sv": "Patientregistret-syntet",
+            "title_en": "Synthetic Patient Register",
+            "description_sv": "En syntetisk beskrivning",
+            "description_en": "A synthetic description",
+            "temporal_coverage_sv": "1964-",
+            "publisher_sv": "Socialstyrelsen",
+            "landing_page_sv": "https://example.se/par",
+            "access_rights_sv": "Begränsad åtkomst",
+            "legislation_sv": "Lag om hälsodataregister",
+            "extras": {"$exact": {"Okänt attribut": "extra-värde"}}
+          }
+        }
+      ]
+    }
+  ]
+}

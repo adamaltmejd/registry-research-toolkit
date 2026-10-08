@@ -1,0 +1,11 @@
+{
+  "reader": "lisa_workbook",
+  "replaces": "test_lisa_workbook_layout.py::test_lisa_reader_accepts_only_observed_unkeyed_context_rows[A322-Other-Individ!A323]",
+  "fails_if": "the LISA reader attaches a continuation row to whatever declaration precedes it instead of only the observed one (KU2YrkStalln at row 322)",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "LisaWorkbookError",
+    "locator": "Individ!A323",
+    "message_contains": ["unsupported LISA continuation", "KU2YrkStalln"]
+  }
+}

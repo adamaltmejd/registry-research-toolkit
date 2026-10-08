@@ -1,0 +1,72 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_lists.py::test_common_values_keep_duplicate_associations_competing_labels_and_period_origins",
+  "fails_if": "the SOS reader folds a repeated code row into one association, merges a competing label into the first value, drops the section period a code row inherits, stops recording the sheet-suffix or preamble member hints, or reads a sheet without a code-list header as a code list",
+  "projections": [
+    {
+      "of": "associations",
+      "where": {"descriptor_key": "sheet:Kodlista_HDIA"},
+      "note": "One association per delivered code row; the repeated row shares its value (#1, held at both rows), the competing label is another value (#2). The period comes from the section row, not the row itself.",
+      "rows": [
+        {
+          "row_number": 5,
+          "value_key": "#1",
+          "supplied_period": null,
+          "section_period": "2010-2012",
+          "section_locator": {"physical_record": "row:4"},
+          "value": {"code": "001", "label": "Klinik ett", "locators": {"$length": 2}}
+        },
+        {
+          "row_number": 6,
+          "value_key": "#1",
+          "value": {"code": "001", "label": "Klinik ett"}
+        },
+        {
+          "row_number": 7,
+          "value_key": "#2",
+          "value": {"code": "001", "label": "Annan klinik"}
+        }
+      ]
+    },
+    {
+      "of": "values",
+      "note": "Exactly two values, in delivery order.",
+      "rows": [
+        {"value": {"code": "001", "label": "Klinik ett"}},
+        {"value": {"code": "001", "label": "Annan klinik"}}
+      ]
+    },
+    {
+      "of": "descriptors",
+      "where": {"key": "sheet:Kodlista_HDIA"},
+      "rows": [
+        {
+          "value": {
+            "member_hints": [
+              {"role": "sheet_suffix", "value": "HDIA"},
+              {"role": "list_header", "value": "HDIA"},
+              {"role": "list_header", "value": "ANNAN_VAR"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Kodlista_RAW"},
+      "note": "The headerless sheet stays evidence: both delivered rows unparsed.",
+      "rows": [{"rows": [{"role": "unparsed"}, {"role": "unparsed"}]}]
+    },
+    {
+      "of": "associations",
+      "where": {"descriptor_key": "sheet:Kodlista_RAW"},
+      "rows": []
+    },
+    {
+      "of": "records",
+      "where": {"code_set_references": {"$contains": [{"$any": true}]}},
+      "note": "Preparation binds no record to a code set.",
+      "rows": []
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "description": "sos-complete with PAR_OV's Deldatamängder row relabelled 'Styrtabell för diagnoser' (B2) and given an Aggregeringsnivå column (E1) of 'Ej relevant' (E2): the two signals of a lookup table.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-complete",
+    "cells": {
+      "Deldatamängder!B2": "Styrtabell för diagnoser",
+      "Deldatamängder!E1": "Aggregeringsnivå",
+      "Deldatamängder!E2": "Ej relevant"
+    }
+  }
+}

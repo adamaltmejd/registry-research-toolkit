@@ -1,0 +1,66 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_code_lists.py::test_sheet_pointer_uses_exact_target_and_named_member_guard[Kodlista_Target!A1-None-True-False]",
+    "test_sos_code_lists.py::test_sheet_pointer_uses_exact_target_and_named_member_guard[Kodlista_Missing!A1-None-True-False]",
+    "test_sos_code_lists.py::test_sheet_pointer_uses_exact_target_and_named_member_guard[kodlista_Target-None-True-False]"
+  ],
+  "fails_if": "the SOS reader follows a cell-anchored pointer to an unnamed sheet, a pointer to a missing sheet or a sheet name in another case as a member reference, or drops such a pointer instead of keeping it as the classification declaration",
+  "projections": [
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:2"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "rows": [
+        {
+          "fields": {
+            "classification_declared": {"status": "value", "value": "Kodlista_Target!A1"}
+          },
+          "delivered_cells": {"$once": [{"name": "Länk kodverk", "raw_value": "Kodlista_Target!A1"}]}
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:3"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "rows": [
+        {
+          "fields": {
+            "classification_declared": {"status": "value", "value": "Kodlista_Missing!A1"}
+          },
+          "delivered_cells": {"$once": [{"name": "Länk kodverk", "raw_value": "Kodlista_Missing!A1"}]}
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:4"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "rows": [
+        {
+          "fields": {"classification_declared": {"status": "value", "value": "kodlista_Target"}},
+          "delivered_cells": {"$once": [{"name": "Länk kodverk", "raw_value": "kodlista_Target"}]}
+        }
+      ]
+    },
+    {
+      "of": "descriptors",
+      "where": {"key": "sheet:Kodlista_Target"},
+      "rows": [
+        {
+          "value": {
+            "member_references": {"$lacks": ["HDIA"]},
+            "member_hints": {"$lacks": [{"role": "variable_pointer"}]}
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "description": "The LISA fixture with AmPolTyp's row 600 rewritten: column A ' Å_01 ' (a decomposed Å between spaces), a description with a decomposed ä, CRLF line breaks, an indented line and a trailing no-break space, Känslig1 ' I   vissa\tfall ' and Grundregister ' Arbets  förmedlingen '.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {
+      "Individ!A600": " Å_01 ",
+      "Individ!B600": "Åtgärd\r\n\r\n  - Förklaring  ",
+      "Individ!E600": " I   vissa\tfall ",
+      "Individ!F600": " Arbets  förmedlingen "
+    }
+  }
+}

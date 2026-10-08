@@ -1,0 +1,44 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_variable_coverage.py::test_trailing_dash_start_reads_explicit_open_end",
+    "test_sos_variable_coverage.py::test_trailing_dash_widens_nothing_else[1999--2020]",
+    "test_sos_variable_coverage.py::test_trailing_dash_widens_nothing_else[1999-2003 samt 2007--None]",
+    "test_sos_variable_coverage.py::test_trailing_dash_widens_nothing_else[Senaste tre \\xe5r-None]",
+    "test_sos_variable_coverage.py::test_trailing_dash_widens_nothing_else[2011 och 2013-None]"
+  ],
+  "fails_if": "the SOS reader stops reading a trailing dash as an explicit open end, lets a dashed start override a supplied Data till, or reads a compound, free-text or two-year start as a range",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "DASH_OPEN"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "1999", "end": null}]}
+        }
+      ],
+      "note": "The dash alone carries the open end, with no period context."
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "DASH_WITH_END"}}},
+      "rows": [{"edition_scope": {"kind": "unknown"}}],
+      "note": "A dashed start beside a supplied Data till is a conflict."
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "DASH_COMPOUND"}}},
+      "rows": [{"edition_scope": {"kind": "unknown"}}]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "FREE_TEXT"}}},
+      "rows": [{"edition_scope": {"kind": "unknown"}}]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "TWO_YEARS"}}},
+      "rows": [{"edition_scope": {"kind": "unknown"}}]
+    }
+  ]
+}

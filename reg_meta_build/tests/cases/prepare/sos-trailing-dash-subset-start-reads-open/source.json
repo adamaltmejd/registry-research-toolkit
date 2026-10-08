@@ -1,0 +1,17 @@
+{
+  "description": "sos-source with an open register period (DCAT-AP Tidsperiod 2005-07-01-) and a Deldatamängder sheet whose PAR_OV row starts 2007- with a blank Data till. PARTIELL (row 6, PAR_OV) starts 2010 with a blank end.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "sheets": {
+      "Metadata-Datamängd (DCAT-AP)": [
+        ["Attribut", "Definition", "Svenska", "Engelska"],
+        ["Tidsperiod", "Tidsmässig täckning", "2005-07-01-", "2005-07-01-"]
+      ],
+      "Deldatamängder": [
+        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"],
+        ["PAR_OV", "Öppenvård", "2007-", null]
+      ]
+    }
+  }
+}

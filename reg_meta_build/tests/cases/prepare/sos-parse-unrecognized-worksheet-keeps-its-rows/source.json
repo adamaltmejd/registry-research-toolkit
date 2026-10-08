@@ -1,0 +1,9 @@
+{
+  "description": "sos-source plus a very hidden sheet 'New source structure' holding two dropdown rows (Binär/Datatyp, Ja/Heltal).",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "sheets": {"New source structure": [["Binär", "Datatyp"], ["Ja", "Heltal"]]},
+    "state": {"New source structure": "veryHidden"}
+  }
+}

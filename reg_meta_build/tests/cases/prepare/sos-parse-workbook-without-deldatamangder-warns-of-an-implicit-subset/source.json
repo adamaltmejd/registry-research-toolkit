@@ -1,0 +1,7 @@
+{
+  "description": "The sos-source workbook as written: it has no Deldatamängder sheet (the LSS/BU/SOL shape).",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source"
+  }
+}

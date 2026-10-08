@@ -1,0 +1,8 @@
+{
+  "description": "The LISA fixture with 'arbitrary unkeyed text' in Individ!B324, a row that is neither a declaration, a keyed text row nor an observed context row.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {"Individ!B324": "arbitrary unkeyed text"}
+  }
+}

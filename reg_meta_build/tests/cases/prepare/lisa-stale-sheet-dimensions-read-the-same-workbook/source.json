@@ -1,0 +1,9 @@
+{
+  "description": "The LISA fixture workbook as written; the variant declares every sheet's used range as A1 in its stored <dimension>, as a producer that never updates it leaves the XML.",
+  "workbook": {"file": "supplemental/scb-lisa-variable-availability/source.xlsx", "from": "lisa"},
+  "variants": {
+    "stale-dimension": {
+      "dimension": {"Individ": "A1", "Individ årsoberoende": "A1", "Företag": "A1", "Arbetsställe": "A1"}
+    }
+  }
+}

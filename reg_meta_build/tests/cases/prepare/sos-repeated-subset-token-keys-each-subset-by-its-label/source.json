@@ -1,0 +1,53 @@
+{
+  "description": "sos-source as the LOVA workbook, plus a 'Deldatamängder och datavyer' sheet with the label column first that delivers the token LOVA twice: row 2 and, after twelve blank rows, row 15, each with its own Deldatamängdsetikett.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata LOVA (LOVA).xlsx",
+    "from": "sos-source",
+    "sheets": {
+      "Deldatamängder och datavyer": [
+        [
+          "Deldatamängdsetikett",
+          "Deldatamängdsnamn",
+          "Deldatamängdsbeskrivning",
+          "Data från",
+          "Data till",
+          "Uppdateringsfrekvens",
+          "Aggregeringsnivå",
+          "Kommentar"
+        ],
+        [
+          "Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation",
+          "LOVA",
+          "Arbetsmarknadsstatus och vissa ekomoniska uppgifter",
+          1995,
+          null,
+          null,
+          "Individ",
+          null
+        ],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [null, null, null, null, null, null, null, null],
+        [
+          "Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus",
+          "LOVA",
+          "Uppgifter om innehavare",
+          1995,
+          null,
+          null,
+          "Individ",
+          "Huvudtabell som samanställer uppgifter från flera källar"
+        ]
+      ]
+    }
+  }
+}

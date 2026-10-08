@@ -1,0 +1,11 @@
+{
+  "description": "sos-source without Kodlista_HDIA, plus Kodlista_Arbitrary naming HDIA in a Variabelnamn preamble row above a standard header, with no code rows.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_Arbitrary": [["Variabelnamn", "HDIA"], ["Tidsperiod", "Kod", "Beskrivning"]]
+    }
+  }
+}

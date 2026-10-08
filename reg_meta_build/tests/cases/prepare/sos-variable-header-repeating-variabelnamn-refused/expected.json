@@ -1,0 +1,17 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_source_records.py::test_variable_headers_reject_duplicate_semantic_fields[ variabelNAMN -name]",
+    "test_sos_source_records.py::test_variable_headers_reject_duplicate_semantic_fields[Variabelnamn-name]",
+    "test_sos_source_records.py::test_variable_headers_reject_duplicate_semantic_fields[Data från-data_from]",
+    "test_sos_source_records.py::test_variable_headers_reject_duplicate_semantic_fields[Datatyp-data_type]"
+  ],
+  "fails_if": "the SOS parser lets a later column that normalizes to an already mapped header win (or be ignored) instead of refusing the ambiguous variable sheet at both header cells, or compares headers without trimming and case folding so the repeat passes unnoticed",
+  "note": "The hardest form of a repeated header: it matches Variabelnamn only after trimming and case folding. The exact repeats (Variabelnamn, Data från, Datatyp) are the same check on an identical header, the easy twins. The replaced test's check that parsing leaves the file's bytes unchanged is dropped: the parser only loads the workbook and has no write path.",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "SosParseError",
+    "locator": "'Variabelnamn' at B1 and ' variabelNAMN ' at L1",
+    "message_contains": ["ambiguous headers for 'name'"]
+  }
+}

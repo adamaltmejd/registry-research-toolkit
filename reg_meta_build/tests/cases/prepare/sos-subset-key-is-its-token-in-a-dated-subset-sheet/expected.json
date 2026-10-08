@@ -1,0 +1,54 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_parent_records.py::test_other_sos_workbooks_keep_token_only_subset_keys[PAR-Patientregistret-Deldatam\\xe4ngder och datavyer-headers0-rows0-coverage_from,coverage_to,name]",
+  "fails_if": "the SOS reader keys a subset with a unique Deldatamängdsnamn by anything but its token, or stops naming in its key the fields its row delivers (label, Data från, Data till)",
+  "note": "native_parent_key (build-side) is formed from the variant fact's register and variant names claimed here.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"parent_facts": {"$contains": [{"kind": "variant"}]}},
+      "rows": [
+        {
+          "locators": [
+            {
+              "semantic_record_key": [
+                "register:Patientregistret",
+                "metadata:subsets",
+                "subset:PAR_OV",
+                "fields:coverage_from,coverage_to,name",
+                "language:<not declared>"
+              ]
+            }
+          ],
+          "parent_facts": [
+            {
+              "kind": "variant",
+              "register": {"name": "Patientregistret"},
+              "variant": {"name": "PAR_OV"}
+            }
+          ]
+        },
+        {
+          "locators": [
+            {
+              "semantic_record_key": [
+                "register:Patientregistret",
+                "metadata:subsets",
+                "subset:PAR_SV",
+                "fields:coverage_from,coverage_to,name",
+                "language:<not declared>"
+              ]
+            }
+          ],
+          "parent_facts": [
+            {
+              "kind": "variant",
+              "register": {"name": "Patientregistret"},
+              "variant": {"name": "PAR_SV"}
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

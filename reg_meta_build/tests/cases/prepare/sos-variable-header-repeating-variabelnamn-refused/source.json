@@ -1,0 +1,8 @@
+{
+  "description": "sos-source with the Kopplingsvariabel header L1 replaced by ' variabelNAMN ' (Variabelnamn again, in other case between spaces) and L2 'SECOND_VALUE'.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "cells": {"Metadata - Variabelnivå!L1": " variabelNAMN ", "Metadata - Variabelnivå!L2": "SECOND_VALUE"}
+  }
+}

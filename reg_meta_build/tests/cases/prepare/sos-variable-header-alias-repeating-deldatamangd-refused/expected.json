@@ -1,0 +1,11 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_source_records.py::test_variable_headers_reject_duplicate_semantic_fields[Datavynamn-deldatamangd]",
+  "fails_if": "the SOS parser checks only identical header text for repeats, so two different headers that map to the same subset field (Deldatamängdsnamn and Datavynamn) let one silently win",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "SosParseError",
+    "locator": "'Deldatamängdsnamn' at A1 and 'Datavynamn' at L1",
+    "message_contains": ["ambiguous headers for 'deldatamangd'"]
+  }
+}

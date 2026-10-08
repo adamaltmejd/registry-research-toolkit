@@ -1,0 +1,15 @@
+{
+  "reader": "sos_parsed",
+  "replaces": "test_sos_parser.py::test_synthetic_deldatamangder_parsed",
+  "fails_if": "the SOS parser stops finding a 'Deldatamängder och datavyer' sheet, or stops mapping its name, label and year columns into one subset per row",
+  "note": "Values from the replaced test and its fixture rows.",
+  "projections": [
+    {
+      "of": "deldatamangder",
+      "rows": [
+        {"name": "PAR_OV", "label": "Öppenvård", "data_from": 2001, "data_to": 2020},
+        {"name": "PAR_SV", "label": "Slutenvård", "data_from": 1987, "data_to": 2020}
+      ]
+    }
+  ]
+}

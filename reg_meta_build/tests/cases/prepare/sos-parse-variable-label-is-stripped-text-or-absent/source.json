@@ -1,0 +1,14 @@
+{
+  "description": "A minimal SOS workbook with one variable per Variabeletikett cell shape: V1 '  Etikett ', V2 whitespace only, V3 the number 42.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Test (TST)_webb.xlsx",
+    "sheets": {
+      "Metadata - Variabelnivå": [
+        ["Variabelnamn", "Variabeletikett", "Data från"],
+        ["V1", "  Etikett ", 2001],
+        ["V2", "   ", 2001],
+        ["V3", 42, 2001]
+      ]
+    }
+  }
+}
