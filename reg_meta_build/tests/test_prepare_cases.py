@@ -30,7 +30,7 @@ from _csv_fixtures import (
 )
 from _lisa_fixtures import write_lisa_workbook
 from _workbook_spec import write_workbook
-from reg_meta.errors import EXIT_CONFIG, EXIT_INTERNAL, RegMetaError
+from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.input_snapshot import LISA_DATASET_ID, open_scb_snapshot
 from reg_meta_build.sources.code_lists import read_code_list
@@ -293,6 +293,11 @@ def _scb_events(delivery: Delivery, args: dict[str, Any]) -> Any:
     return read_scb_events(delivery.snapshot, revision)
 
 
+# `reg_meta.errors.EXIT_INTERNAL`, the top-level handler's exit code; no case
+# claims it, so it is spelled here rather than imported.
+_EXIT_INTERNAL = 30
+
+
 def _prepare_refusal(exc: Exception) -> tuple[str, int]:
     """The code and exit code `prepare-sources` reports (`cli._cmd_prepare_sources`):
     a located refusal keeps its own, a `ValueError` or `OSError` is wrapped, and any
@@ -301,7 +306,7 @@ def _prepare_refusal(exc: Exception) -> tuple[str, int]:
         return exc.code, exc.exit_code
     if isinstance(exc, (ValueError, OSError)):
         return "source_preparation_failed", EXIT_CONFIG
-    return "internal_error", EXIT_INTERNAL
+    return "internal_error", _EXIT_INTERNAL
 
 
 def _parse_sos_refusal(exc: Exception) -> tuple[str, int]:
@@ -310,7 +315,7 @@ def _parse_sos_refusal(exc: Exception) -> tuple[str, int]:
         return exc.code, exc.exit_code
     if isinstance(exc, SosParseError):
         return "sos_parse_error", EXIT_CONFIG
-    return "internal_error", EXIT_INTERNAL
+    return "internal_error", _EXIT_INTERNAL
 
 
 @dataclass(frozen=True)
