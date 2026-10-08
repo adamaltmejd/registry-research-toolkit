@@ -15,23 +15,6 @@
       ]
     },
     {
-      "table": "issues",
-      "where": {
-        "code": "stale_curation_entry",
-        "detail": {
-          "contains": "unlisted native editions ['2008']"
-        }
-      },
-      "fields": [
-        "code"
-      ],
-      "rows": [
-        [
-          "stale_curation_entry"
-        ]
-      ]
-    },
-    {
       "table": "states",
       "where": {
         "variant": "stock"

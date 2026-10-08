@@ -15,23 +15,6 @@
       ]
     },
     {
-      "table": "issues",
-      "where": {
-        "code": "stale_curation_entry",
-        "detail": {
-          "contains": "listed names without exactly one native edition ['2007']"
-        }
-      },
-      "fields": [
-        "code"
-      ],
-      "rows": [
-        [
-          "stale_curation_entry"
-        ]
-      ]
-    },
-    {
       "table": "states",
       "where": {
         "variable": "shared"
