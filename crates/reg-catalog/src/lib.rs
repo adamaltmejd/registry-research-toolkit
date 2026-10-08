@@ -34,6 +34,17 @@ pub enum Scope {
     Reference,
 }
 
+impl Scope {
+    /// The scope's name, as derived tables key their per-scope rows.
+    #[must_use]
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Holdings => "holdings",
+            Self::Reference => "reference",
+        }
+    }
+}
+
 /// An admitted artifact: schema-compatible, publishable and, when named, the
 /// selected catalog.
 pub struct Catalog {

@@ -19,7 +19,7 @@ use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
-use super::refs::{self, Target, fqid};
+use super::refs::{self, Target, VAR_ID, fqid, invalid_kind};
 use super::{Params, Server, cursor};
 use crate::held;
 use crate::{Code, Error, Scope, hex};
@@ -309,14 +309,6 @@ pub fn diff(server: &Server, scope: Scope, params: &Params) -> Result<Value, Err
     Ok(serde_json::to_value(diff).expect("Diff serializes"))
 }
 
-fn invalid_kind(value: &str) -> Error {
-    Error::new(
-        Code::InvalidRef,
-        format!("{value:?} is not a ref of a kind this operation takes."),
-        vec![value.into()],
-    )
-}
-
 /// A dated row overlaps the calendar years `(lo, hi)`.
 fn overlaps(row: &SchemaColumn, (lo, hi): (u16, u16)) -> bool {
     match (&row.valid_from, &row.valid_to) {
@@ -369,7 +361,7 @@ fn representations(
 ) -> Result<Vec<Rep>, Error> {
     // A window's own content replaces its state's only where the window is per
     // column, and a window never inherits its state's operational definition
-    // (today's `_expand_state_windows`). SCB's `var_id` is today's `_VAR_ID_EXPR`.
+    // (today's `_expand_state_windows`).
     // Holdings needs no variant predicate here: `held_clip` keeps only mapped
     // representations, whose variant is therefore held.
     let per_column = |field: &str| {
@@ -379,9 +371,7 @@ fn representations(
         "SELECT es.variable_id, es.register_variant_id, es.state_id, vs.delivery_column_name, \
          es.canonical_column, v.slug, rv.slug, rv.name, rv.description, vs.period_scope, \
          es.valid_from, es.valid_to, p.slug, r.slug, v.name, \
-         CASE WHEN v.variable_id < 4611686018427387904 AND v.provider_key GLOB '[0-9]*' \
-         AND NOT v.provider_key GLOB '*[^0-9]*' THEN CAST(v.provider_key AS INTEGER) END, \
-         v.source_label, es.delivery_column_name, {}, {}, \
+         {VAR_ID}, v.source_label, es.delivery_column_name, {}, {}, \
          CASE WHEN w.coding_metadata = 'per_column' THEN w.value_set_version_label \
          ELSE vs.value_set_version_label END, \
          CASE WHEN es.window_valid_from IS NULL THEN vs.operational_definition \

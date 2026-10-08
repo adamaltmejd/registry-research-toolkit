@@ -4,11 +4,14 @@
 //! `reg-meta`. Shared request pieces live in their own modules: refs (`refs.rs`) and
 //! cursors (`cursor.rs`).
 
+mod coded;
+mod coverage;
 mod cursor;
 mod docs;
 mod graph;
 mod lineage;
 mod refs;
+mod resolve;
 mod schema;
 mod search;
 mod show;
@@ -29,8 +32,8 @@ use utoipa::ToSchema;
 use utoipa::openapi::path::{OperationBuilder, ParameterBuilder, ParameterIn};
 use utoipa::openapi::response::ResponseBuilder;
 use utoipa::openapi::{
-    ComponentsBuilder, ContentBuilder, HttpMethod, InfoBuilder, ObjectBuilder, OpenApi,
-    OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema, Type as Json,
+    ArrayBuilder, ComponentsBuilder, ContentBuilder, HttpMethod, InfoBuilder, ObjectBuilder,
+    OpenApi, OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema, Type as Json,
 };
 
 use crate::{CONTRACT_VERSION, Catalog, Code, Docs, Error, Scope};
@@ -131,6 +134,9 @@ pub enum Type {
     /// A storage id, spelled as the decimal string results carry (ids pass 2^53).
     StorageId,
     Enum(&'static [&'static str]),
+    /// `string[]`: up to [`MAX_ITEMS`] strings, repeated keys over HTTP and a JSON
+    /// array over MCP.
+    Strings,
 }
 
 /// The `Cache-Control` tier of a 200 (today's three): identity reads revalidate every
@@ -154,8 +160,35 @@ impl Cache {
 }
 
 type Components = Vec<(String, RefOr<Schema>)>;
-/// An operation's validated parameters, `scope` excluded.
-pub type Params<'a> = BTreeMap<&'a str, &'a str>;
+/// An operation's validated parameters, `scope` excluded: each parameter's values in
+/// request order, one unless it is a [`Type::Strings`].
+#[derive(Default)]
+pub struct Params<'a> {
+    values: BTreeMap<&'a str, Vec<&'a str>>,
+}
+
+impl<'a> Params<'a> {
+    /// A parameter's value.
+    #[must_use]
+    pub fn get(&self, name: &str) -> Option<&&'a str> {
+        self.values.get(name).and_then(|values| values.first())
+    }
+
+    /// An array parameter's values; none when it is absent.
+    #[must_use]
+    pub fn list(&self, name: &str) -> &[&'a str] {
+        self.values.get(name).map_or(&[], Vec::as_slice)
+    }
+}
+
+/// A required parameter's value, which the transport has checked is present.
+impl<'a> std::ops::Index<&str> for Params<'a> {
+    type Output = &'a str;
+
+    fn index(&self, name: &str) -> &Self::Output {
+        self.get(name).expect("a required parameter")
+    }
+}
 /// The function that answers a route.
 pub type Run<T> = fn(&Server, Scope, &Params) -> Result<T, Error>;
 
@@ -248,23 +281,33 @@ pub fn call<T>(
 ) -> (Scope, Result<T, Error>) {
     let mut scope = server.catalog.default_scope();
     let result = (|| {
-        let mut params = BTreeMap::new();
+        let mut params = Params::default();
         for (name, value) in query {
-            // Unknown and repeated parameters are errors, never ignored.
-            if !declared.iter().any(|p| p.name == name)
-                || params.insert(name.as_str(), value.as_str()).is_some()
-            {
+            // Unknown and repeated parameters are errors, never ignored; a repeat is
+            // an array's next value.
+            let Some(param) = declared.iter().find(|p| p.name == name) else {
+                return Err(Error::invalid_parameter(name));
+            };
+            let values = params.values.entry(param.name).or_default();
+            values.push(value.as_str());
+            let most = if matches!(param.ty, Type::Strings) {
+                MAX_ITEMS
+            } else {
+                1
+            };
+            if values.len() > most {
                 return Err(Error::invalid_parameter(name));
             }
         }
         if let Some(missing) = declared
             .iter()
-            .find(|p| p.required && !params.contains_key(p.name))
+            .find(|p| p.required && !params.values.contains_key(p.name))
         {
             return Err(Error::invalid_parameter(missing.name));
         }
         if declared.iter().any(|p| p.name == "scope") {
-            scope = server.catalog.scope(params.remove("scope"))?;
+            let requested = params.values.remove("scope").map(|values| values[0]);
+            scope = server.catalog.scope(requested)?;
         }
         run(server, scope, &params)
     })();
@@ -274,6 +317,8 @@ pub fn call<T>(
 /// A page's `limit` when unset, and its largest accepted value (`Type::Limit`).
 const DEFAULT_LIMIT: usize = 50;
 const MAX_LIMIT: usize = 200;
+/// The most values an array parameter takes (`Type::Strings`).
+const MAX_ITEMS: usize = 200;
 
 /// `limit` (`operations.toml`): 1 to [`MAX_LIMIT`], default [`DEFAULT_LIMIT`].
 pub(crate) fn limit(params: &Params) -> Result<usize, Error> {
@@ -403,6 +448,10 @@ fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
         Type::Enum(members) => string().enum_values(Some(members.iter().copied())).into(),
         Type::Boolean => ObjectBuilder::new().schema_type(Json::Boolean).into(),
         Type::StorageId => string().pattern(Some(STORAGE_ID)).into(),
+        Type::Strings => ArrayBuilder::new()
+            .items(string())
+            .max_items(Some(MAX_ITEMS))
+            .into(),
         Type::Limit => ObjectBuilder::new()
             .schema_type(Json::Integer)
             .minimum(Some(1))

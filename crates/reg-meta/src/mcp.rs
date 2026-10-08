@@ -187,16 +187,27 @@ fn operation(
 }
 
 /// The tool arguments as the request's parameters: a string as is, a number in its
-/// JSON spelling (`limit: 5` is `limit=5`); any other value is `invalid_parameter`.
+/// JSON spelling (`limit: 5` is `limit=5`), and an array of strings as one parameter
+/// per string, as HTTP repeats an array parameter's key; any other value is
+/// `invalid_parameter`.
 fn query(arguments: JsonObject) -> Result<Vec<(String, String)>, Error> {
-    arguments
-        .into_iter()
-        .map(|(name, value)| match value {
-            Value::String(text) => Ok((name, text)),
-            Value::Number(number) => Ok((name, number.to_string())),
-            _ => Err(Error::invalid_parameter(&name)),
-        })
-        .collect()
+    let mut query = Vec::new();
+    for (name, value) in arguments {
+        match value {
+            Value::String(text) => query.push((name, text)),
+            Value::Number(number) => query.push((name, number.to_string())),
+            Value::Array(items) => {
+                for item in items {
+                    let Value::String(text) = item else {
+                        return Err(Error::invalid_parameter(&name));
+                    };
+                    query.push((name.clone(), text));
+                }
+            }
+            _ => return Err(Error::invalid_parameter(&name)),
+        }
+    }
+    Ok(query)
 }
 
 impl ServerHandler for Tools {
