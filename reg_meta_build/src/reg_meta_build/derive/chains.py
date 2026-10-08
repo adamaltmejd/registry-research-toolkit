@@ -12,39 +12,46 @@ from reg_meta_build.derive.states import reader_catalog
 
 if TYPE_CHECKING:
     import sqlite3
-    from collections.abc import Callable, Iterator
+    from collections.abc import Callable
 
     from reg_meta_build.validate import ValidationResult
 
-# Each succession table, the FQID of a node from its key columns, and its key arity.
-_SUCCESSION: tuple[tuple[str, Callable[..., Fqid], int], ...] = (
-    ("register_replaced_by", Fqid.register_fqid, 2),
-    ("variable_replaced_by", Fqid.binding_fqid, 3),
-    ("classification_replaced_by", Fqid.classification_fqid, 1),
+# Each succession table, the FQID of a node from its key columns, and those keys.
+_SUCCESSION: tuple[tuple[str, Callable[..., Fqid], tuple[str, ...]], ...] = (
+    ("register_replaced_by", Fqid.register_fqid, ("provider", "register")),
+    ("variable_replaced_by", Fqid.binding_fqid, ("provider", "register", "variable")),
+    ("classification_replaced_by", Fqid.classification_fqid, ("slug",)),
 )
-_KEYS = {
-    2: ("provider", "register"),
-    3: ("provider", "register", "variable"),
-    1: ("slug",),
-}
+
+_Successors = dict[tuple[str, ...], list[tuple[str, ...]]]
 
 
-def _edges(
-    conn: sqlite3.Connection, table: str, arity: int, *, active_year: int | None
-) -> Iterator[tuple[tuple[str, ...], tuple[str, ...]]]:
-    columns = [
-        f"{side}_{key}" for side in ("predecessor", "successor") for key in _KEYS[arity]
-    ]
+def _successors(
+    conn: sqlite3.Connection,
+    table: str,
+    keys: tuple[str, ...],
+    *,
+    active_year: int | None,
+) -> _Successors:
+    """Each predecessor's successors in key order; with `active_year`, only edges
+    whose `effective_year` is unset or at most that year."""
+    columns = ", ".join(
+        f"{side}_{key}" for side in ("predecessor", "successor") for key in keys
+    )
     where = (
         ""
         if active_year is None
         else " WHERE effective_year IS NULL OR effective_year <= ?"
     )
+    successors: _Successors = {}
     for row in conn.execute(
-        f"SELECT {', '.join(columns)} FROM {table}{where} ORDER BY {', '.join(columns)}",
+        f"SELECT {columns} FROM {table}{where} ORDER BY {columns}",
         () if active_year is None else (active_year,),
     ):
-        yield tuple(row[:arity]), tuple(row[arity:])
+        successors.setdefault(tuple(row[: len(keys)]), []).append(
+            tuple(row[len(keys) :])
+        )
+    return successors
 
 
 def succession_terminals(conn: sqlite3.Connection) -> list[tuple[str, str]]:
@@ -61,10 +68,8 @@ def succession_terminals(conn: sqlite3.Connection) -> list[tuple[str, str]]:
     """
     year = classification_succession_as_of_year(conn)
     rows: list[tuple[str, str]] = []
-    for table, fqid, arity in _SUCCESSION:
-        successors: dict[tuple[str, ...], list[tuple[str, ...]]] = {}
-        for predecessor, successor in _edges(conn, table, arity, active_year=year):
-            successors.setdefault(predecessor, []).append(successor)
+    for table, fqid, keys in _SUCCESSION:
+        successors = _successors(conn, table, keys, active_year=year)
         for start in successors:
             seen, current = {start}, start
             while len(nxt := successors.get(current, ())) == 1 and nxt[0] not in seen:
@@ -162,9 +167,7 @@ def derive_chains(conn: sqlite3.Connection) -> None:
         )
 
 
-def _cycle_node(
-    successors: dict[tuple[str, ...], list[tuple[str, ...]]],
-) -> tuple[str, ...] | None:
+def _cycle_node(successors: _Successors) -> tuple[str, ...] | None:
     """A node on a cycle, or None. Peels nodes that reach no cycle, then walks the
     remainder from its least node until a node repeats."""
     remaining = set(successors) | {s for nxt in successors.values() for s in nxt}
@@ -190,13 +193,10 @@ def check_chains(
     """Succession is acyclic and the chain tables equal a recomputation."""
     result.section("[succession chains]")
     cyclic = False
-    for table, fqid, arity in _SUCCESSION:
+    for table, fqid, keys in _SUCCESSION:
         if table not in tables:
             continue  # its own check reports the missing table
-        successors: dict[tuple[str, ...], list[tuple[str, ...]]] = {}
-        for predecessor, successor in _edges(conn, table, arity, active_year=None):
-            successors.setdefault(predecessor, []).append(successor)
-        node = _cycle_node(successors)
+        node = _cycle_node(_successors(conn, table, keys, active_year=None))
         if node is not None:
             cyclic = True
             result.fail(f"{table} has a succession cycle through {fqid(*node)}")
@@ -205,18 +205,14 @@ def check_chains(
     for table, (compute, columns) in CHAIN_TABLES.items():
         if table not in tables:
             continue  # _check_schema_shape already failed
-        stored = [
-            tuple(row)
-            for row in conn.execute(f"SELECT {columns} FROM {table} ORDER BY {columns}")
-        ]
+        stored = set(map(tuple, conn.execute(f"SELECT {columns} FROM {table}")))
         try:
-            expected = sorted(compute(conn))
+            expected = set(compute(conn))
         except (ValueError, TypeError) as exc:
             result.fail(f"{table} cannot be recomputed: {exc}")
             continue
         if stored != expected:
-            missing = len(set(expected) - set(stored))
-            surplus = len(set(stored) - set(expected))
+            missing, surplus = len(expected - stored), len(stored - expected)
             result.fail(
                 f"{table} disagrees with its recomputation: {missing:,} missing, "
                 f"{surplus:,} surplus row(s)"
