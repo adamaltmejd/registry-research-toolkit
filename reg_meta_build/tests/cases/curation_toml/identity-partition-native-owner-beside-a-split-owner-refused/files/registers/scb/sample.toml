@@ -1,0 +1,9 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[identity.partition]]
+variable = "1.1"
+columns = { First = "1.1", Second = "1.1", Sibling = "1.1.sibling" }
+columns_ref = "reviewed parallel quantity beside its sibling role"

@@ -1,0 +1,327 @@
+{
+  "replaces": [
+    "test_curation_compile_field_corrections.py::test_name_correction_uses_only_complete_same_family_witnesses",
+    "test_curation_compile_field_corrections.py::test_guarded_sos_split_checks_complete_physical_family[description]",
+    "test_curation_compile_field_corrections.py::test_guarded_sos_split_checks_complete_physical_family[missing_duplicate]",
+    "test_curation_compile_occurrence_corrections.py::test_sos_period_correction_without_native_edition_preserves_disjoint_years[coverage]"
+  ],
+  "note": "The same curation as step 1, authored from the reviewed sources and built against sources with one drift per guarded entry. authority: one of the two witness rows is gone. witness: one witness row's description changed. par ATC: one PAR_OV row's description changed. par KVA: one of the two PAR_OV rows is gone. par DIA: the upper coverage bound changed. Each entry goes stale at its own locator and its effect is withheld.",
+  "fails_if": "authority/witness: `compile_occurrence_corrections` skips the `authority_records` and family-digest check of a guarded name correction, so a partial or changed witness still renames edition 99; par: `compile_partitions` stops comparing a guarded `[[identity.split]]`'s `expected_records` with the delivered rows, so the split still applies with a changed ATC row or without the second KVA row; DIA: `_occurrence_correction_matches` stops comparing a period entry's guarded fields and scopes with the selected original, so DIA still splits into 2011 and 2013",
+  "sources": {
+    "description": "scb-sos-checked-corrections after review, one drift per guarded entry: AUTHORITY no longer delivers CVID 21's second physical row; WITNESS's first CVID 31 row has description 'Changed witness role'; PAR's first PAR_OV ATC row has description 'Annan roll'; PAR's second PAR_OV KVA row is gone; PAR_OV DIA's upper coverage bound reads '2011-2013'.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "AUTHORITY",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "AUTHORITY",
+            1,
+            2
+          ],
+          "varname": "Canonical source label"
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 30,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "WITNESS",
+            2,
+            2
+          ]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 31,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "WITNESS",
+            2,
+            2
+          ],
+          "varname": "Canonical source label",
+          "vardesc": "Changed witness role"
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 31,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "WITNESS",
+            2,
+            2
+          ],
+          "varname": "Canonical source label",
+          "data_length": "2"
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 50,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "CONFLICT",
+            4,
+            2
+          ]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 51,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "CONFLICT",
+            4,
+            2
+          ],
+          "varname": "Reviewed label"
+        },
+        {
+          "colname": "FIRST",
+          "cvid": 60,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "SHARED",
+            5,
+            10
+          ]
+        },
+        {
+          "colname": "SECOND",
+          "cvid": 60,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "SHARED",
+            5,
+            10
+          ]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 70,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "PERIOD",
+            6,
+            2
+          ]
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 70,
+          "var_id": 5,
+          "year": "2009",
+          "regver_id": 99,
+          "register": [
+            "PERIOD",
+            6,
+            2
+          ]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 71,
+          "var_id": 5,
+          "year": "2017",
+          "regver_id": 100,
+          "register": [
+            "PERIOD",
+            6,
+            2
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 80,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "SENTINEL",
+            7,
+            2
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 90,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "SUBSTANTIVE",
+            8,
+            2
+          ]
+        },
+        {
+          "colname": "First",
+          "cvid": 100,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020-2022",
+          "regver_id": 110,
+          "register": [
+            "PARALLEL",
+            9,
+            10
+          ]
+        },
+        {
+          "colname": "Second",
+          "cvid": 101,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2022-2024",
+          "regver_id": 111,
+          "register": [
+            "PARALLEL",
+            9,
+            10
+          ]
+        },
+        {
+          "colname": "Sibling",
+          "cvid": 100,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020-2022",
+          "regver_id": 110,
+          "register": [
+            "PARALLEL",
+            9,
+            10
+          ]
+        }
+      ],
+      "vardemangder": [
+        "list|1|01|Category|80|7001",
+        "list|1|99|Unknown|80|7002",
+        "list|1|01|Category|90|7003",
+        "list|1|99|Substantive industry|90|7004"
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "PAR",
+        "title": "Patientregistret",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {
+            "name": "PAR_OV",
+            "label": "PAR_OV",
+            "description": "Öppenvård",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_SV",
+            "label": "PAR_SV",
+            "description": "Slutenvård",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ],
+        "variables": [
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_OV",
+            "label": "ATC",
+            "description": "Annan roll",
+            "data_from": 2001,
+            "data_to": 2010
+          },
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_OV",
+            "label": "ATC",
+            "description": "Läkemedel",
+            "data_from": 2011,
+            "data_to": 2020
+          },
+          {
+            "name": "ATC",
+            "deldatamangd": "PAR_SV",
+            "label": "ATC",
+            "description": "Läkemedel",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "KVA",
+            "deldatamangd": "PAR_OV",
+            "label": "KVA",
+            "description": "Åtgärd",
+            "data_from": 2001,
+            "data_to": 2010
+          },
+          {
+            "name": "KVA",
+            "deldatamangd": "PAR_SV",
+            "label": "KVA",
+            "description": "Åtgärd",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "DIA",
+            "deldatamangd": "PAR_OV",
+            "label": "DIA",
+            "description": "Diagnos",
+            "data_from": "2011 och 2013",
+            "data_to": "2011-2013"
+          },
+          {
+            "name": "DIA",
+            "deldatamangd": "PAR_SV",
+            "label": "DIA",
+            "description": "Diagnos",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ]
+      }
+    ],
+    "files": {
+      "classifications/fixture.csv": [
+        "code,label",
+        "01,Canonical"
+      ]
+    }
+  },
+  "authored_from": "scb-sos-checked-corrections"
+}

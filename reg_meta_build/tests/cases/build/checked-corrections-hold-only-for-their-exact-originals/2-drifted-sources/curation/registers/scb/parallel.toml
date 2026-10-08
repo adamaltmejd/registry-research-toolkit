@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "parallel"
+native_id = "9"
+[[variant]]
+native_id = "9.10"
+slug = "people"
+[[variable]]
+native_id = "9.1.income"
+slug = "income"
+[[variable]]
+native_id = "9.1.sibling"
+slug = "sibling"
+[[identity.partition]]
+variable = "9.1"
+columns = { First = "9.1.income", Second = "9.1.income", Sibling = "9.1.sibling" }
+columns_ref = "reviewed parallel quantity beside its sibling role"
+[[representation.parallel]]
+variable = "9.1.income"
+variant = "9.10"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Reviewed original boundary"
+noted = "2026-09-29"
+columns = [{column = "First", valid_from = "2020-01-01", valid_to = "2022-12-31", source_editions = ["2020-2022"]}, {column = "Second", valid_from = "2022-01-01", valid_to = "2024-12-31", source_editions = ["2022-2024"]}]

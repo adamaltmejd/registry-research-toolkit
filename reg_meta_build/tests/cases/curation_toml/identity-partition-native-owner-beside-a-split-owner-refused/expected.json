@@ -1,0 +1,16 @@
+{
+  "loader": "register_files",
+  "replaces": [
+    "test_curation_compile_field_corrections.py::test_parallel_representation_selects_checked_owner_without_literal_changes[False-True]",
+    "test_curation_compile_field_corrections.py::test_parallel_representation_selects_checked_owner_without_literal_changes[True-True]"
+  ],
+  "fails_if": "the register loader lets an [[identity.partition]] keep some literals on the native base variable while moving another to a split owner",
+  "note": "The replaced params handed the parallel compiler an ownership where First and Second stay on the native base 1.1 and Sibling moves to 1.1.sibling. No committed curation can state that ownership: the loader refuses it here, so the compile-level claim has no boundary.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[identity.partition]] entry 1",
+    "message_contains": [
+      "native ownership must cover all literals without split owners"
+    ]
+  }
+}

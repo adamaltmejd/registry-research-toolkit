@@ -1,0 +1,157 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"subject": {"contains": "scb/authority/"}},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "authority"},
+      "fields": ["valid_from", "valid_to", "state_name"],
+      "rows": [
+        ["2009-01-01", "2009-12-31", "Canonical source label"],
+        ["2017-01-01", "2017-12-31", "Canonical source label"]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {"variable": "scb/authority/answer"},
+      "fields": ["key", "use"],
+      "rows": [
+        ["member:20", "catalog"],
+        ["member:21", "catalog"],
+        ["member:21", "catalog"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "conflicting_curation_effects"},
+      "fields": ["case_id"],
+      "rows": [
+        ["curation/registers/scb/conflict.toml#/errata.field/1"],
+        ["curation/registers/scb/conflict.toml#/errata.field/2"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "conflict"},
+      "fields": ["valid_from", "state_name"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "shared"},
+      "fields": ["variable", "column", "state_name"],
+      "rows": [
+        ["first", "FIRST", "Reviewed first construct"],
+        ["second", "SECOND", "GenericVar"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"locator": {"contains": "/period.toml#"}},
+      "fields": ["code", "locator"],
+      "rows": [
+        ["overbroad_curation_entry", "curation/registers/scb/period.toml#/errata.occurrence_period/1"]
+      ]
+    },
+    {
+      "table": "cases",
+      "where": {"case_id": {"contains": "/period.toml#"}},
+      "fields": ["case_id"],
+      "rows": []
+    },
+    {
+      "table": "state_classifications",
+      "fields": ["column", "classification"],
+      "rows": [
+        ["VALUE", "fixture"]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "sentinel"},
+      "fields": ["code", "label"],
+      "rows": [
+        ["01", "Category"],
+        ["99", "Unknown"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"locator": {"contains": "coding.sentinel"}},
+      "fields": ["code", "locator"],
+      "rows": [
+        ["stale_curation_entry", "curation/registers/scb/substantive.toml#/coding.sentinel/1/period/1"]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation", "key": ["member:100", "member:101"]},
+      "fields": ["column_name", "key", "variable"],
+      "rows": [
+        ["First", "member:100", "scb/parallel/income"],
+        ["Second", "member:101", "scb/parallel/income"],
+        ["Sibling", "member:100", "scb/parallel/sibling"]
+      ]
+    },
+    {
+      "table": "cases",
+      "where": {"case_id": {"contains": "/parallel.toml#"}},
+      "fields": ["case_id", "status"],
+      "rows": [
+        ["curation/registers/scb/parallel.toml#/representation.parallel/1", "applicable"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"locator": {"contains": "/parallel.toml#"}},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "par", "variable": ["atc-outpatient", "atc-inpatient", "kva-outpatient", "kva-inpatient"]},
+      "fields": ["variable", "variant", "valid_from", "valid_to"],
+      "rows": [
+        ["atc-outpatient", "par-ov", "2001-01-01", "2010-12-31"],
+        ["atc-outpatient", "par-ov", "2011-01-01", "2020-12-31"],
+        ["atc-inpatient", "par-sv", "2001-01-01", "2020-12-31"],
+        ["kva-outpatient", "par-ov", "2001-01-01", "2010-12-31"],
+        ["kva-outpatient", "par-ov", "2011-01-01", "2020-12-31"],
+        ["kva-inpatient", "par-sv", "2001-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "warnings",
+      "where": {"register": "par", "code": "source_identity_assumption"},
+      "fields": ["variable", "variant", "valid_from", "summary"],
+      "rows": [
+        ["atc-outpatient", "par-ov", "2001-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
+        ["atc-outpatient", "par-ov", "2011-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
+        ["atc-inpatient", "par-sv", "2001-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
+        ["kva-outpatient", "par-ov", "2001-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
+        ["kva-outpatient", "par-ov", "2011-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
+        ["kva-inpatient", "par-sv", "2001-01-01", "Separate source-defined clinical contexts; no equivalence inferred."]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "par", "variable": "dia"},
+      "fields": ["variant", "valid_from", "valid_to"],
+      "rows": [
+        ["par-ov", "2011-01-01", "2011-12-31"],
+        ["par-ov", "2013-01-01", "2013-12-31"],
+        ["par-sv", "2001-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"locator": {"contains": "/par.toml#"}},
+      "fields": ["code"],
+      "rows": []
+    }
+  ]
+}
