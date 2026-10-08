@@ -152,6 +152,38 @@ def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) ->
         assert snippet not in text, (path, snippet, text)
 
 
+_REQUEST_KEYS = {"replaces", "fails_if", "note", "argv", "env", "runs", "curation_dirs"}
+_EXPECTED_KEYS = {
+    "exit_code",
+    "stdout_contains",
+    "stderr",
+    "files",
+    "same_bytes",
+    "reloads_with",
+}
+_FILE_CLAIMS = {"absent", "toml", "json", "unchanged", "contains", "excludes"}
+
+
+def _check_keys(case: Path, request: dict, expected: dict) -> None:
+    """Refuse a case the runner would read only in part: a misspelled key would
+    otherwise drop its claim silently."""
+    assert request.get("fails_if", "").strip(), f"{case.name}: fails_if is required"
+    assert request.get("replaces"), f"{case.name}: replaces is required"
+    assert ("argv" in request) != ("runs" in request), f"{case.name}: argv or runs"
+    assert request.keys() <= _REQUEST_KEYS, (case.name, request.keys() - _REQUEST_KEYS)
+    assert "exit_code" in expected, f"{case.name}: exit_code is required"
+    assert expected.keys() <= _EXPECTED_KEYS, (
+        case.name,
+        expected.keys() - _EXPECTED_KEYS,
+    )
+    for path, claim in expected.get("files", {}).items():
+        assert claim and claim.keys() <= _FILE_CLAIMS, (case.name, path, claim)
+    stderr = expected.get("stderr", {})
+    assert stderr.keys() <= {"empty", "contains", "excludes"}, (case.name, stderr)
+    if "reloads_with" in expected:
+        assert expected["reloads_with"].keys() == {"loader", "path", "slugs"}, case.name
+
+
 _RELOADERS = {"slug_dir": lambda root: snapshot_payload(load_slug_dir(root))}
 
 
@@ -167,8 +199,7 @@ def test_cli_case(
 ) -> None:
     request = json.loads((case / "request.json").read_text(encoding="utf-8"))
     expected = json.loads((case / "expected.json").read_text(encoding="utf-8"))
-    assert request.get("fails_if", "").strip(), f"{case.name}: fails_if is required"
-    assert request.get("replaces"), f"{case.name}: replaces is required"
+    _check_keys(case, request, expected)
     runs = request.get("runs", [request])
 
     work = tmp_path / "work"
