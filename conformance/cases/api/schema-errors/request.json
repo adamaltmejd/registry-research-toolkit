@@ -1,5 +1,5 @@
 {
-  "note": "`schema`'s refusals: an ambiguous bare name lists its candidates, a ref of another kind (a provider) is invalid, a malformed period is refused, holdings needs a steward artifact, and an unknown register is not found. Fails if any of them answers rows or another code.",
+  "note": "`schema`'s refusals: an ambiguous bare name lists its candidates, a ref of another kind (a provider) is invalid, a malformed period is refused, holdings needs a steward artifact, an unknown register is not found, and a variant that is neither a slug nor `_default` is refused. Fails if any of them answers rows or another code.",
   "fixture": "show",
   "kind": "catalog",
   "requests": [
@@ -7,6 +7,7 @@
     {"operation": "schema", "path": "/api/schema/scb"},
     {"operation": "schema", "path": "/api/schema/scb/alpha", "query": {"period": "2019..2015"}},
     {"operation": "schema", "path": "/api/schema/scb/alpha", "query": {"scope": "holdings"}},
-    {"operation": "schema", "path": "/api/schema/scb/missing"}
+    {"operation": "schema", "path": "/api/schema/scb/missing"},
+    {"operation": "schema", "path": "/api/schema/scb/alpha", "query": {"variant": "Not a slug"}}
   ]
 }

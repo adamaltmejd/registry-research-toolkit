@@ -21,5 +21,9 @@
   {
     "status": 404,
     "json": {"/error/code": "not_found", "/error/fields/ref": "scb/missing"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "variant"}
   }
 ]

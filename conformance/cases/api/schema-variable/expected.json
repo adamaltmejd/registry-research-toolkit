@@ -3,7 +3,9 @@
     "status": 200,
     "json": {
       "/data/items/*/column": ["Value", "value", "Secret", "Valørarkiv"],
-      "/data/items/*/variant": ["annual", "annual", "annual", "archive"]
+      "/data/items/*/variant": ["annual", "annual", "annual", "archive"],
+      "/data/items/0/group": "group/scb/example/value-family",
+      "/data/items/0/group_label": "Value family"
     }
   },
   {
@@ -23,7 +25,7 @@
     "json": {"/data/items/*/column": ["Valørarkiv"]}
   },
   {
-    "status": 404,
-    "json": {"/error/code": "not_found", "/error/fields/ref": "monthly"}
+    "status": 200,
+    "json": {"/data/items": [], "/data/next_cursor": null}
   }
 ]

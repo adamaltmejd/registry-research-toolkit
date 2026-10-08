@@ -11,7 +11,12 @@
   {
     "status": 200,
     "json": {
+      "/data/variants/0/changed/*/fqid": ["scb/example/typed", "scb/example/value"],
       "/data/variants/0/changed/*/changes": [
+        [
+          {"field": "data_type", "from": "integer", "to": "varchar"},
+          {"field": "data_length", "from": "8", "to": "20"}
+        ],
         [{"field": "column", "from": "Value", "to": "Different"}]
       ]
     }

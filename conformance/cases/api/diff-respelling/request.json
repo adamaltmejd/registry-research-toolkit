@@ -1,5 +1,5 @@
 {
-  "note": "Twins of cli_scope/diff-explicit-reference and logical/diff-holdings: a column respelled between 2018 and 2019 (Value -> value) is a change in both scopes; holdings counts only held variables as unchanged. Fails if holdings compares the held spelling instead of the delivered one, or counts an unheld variable. `variant` keeps one variant's columns: the archive variant alone has no change (its column is the same in both years), and holdings does not hold it, so it is not found there. Fails if `variant` stops filtering or accepts an unheld variant in holdings.",
+  "note": "Twins of cli_scope/diff-explicit-reference and logical/diff-holdings: a column respelled between 2018 and 2019 (Value -> value) is a change in both scopes; holdings counts only held variables as unchanged. Fails if holdings compares the held spelling instead of the delivered one, or counts an unheld variable. `variant` keeps one variant's columns: the archive variant alone has no change (its column is the same in both years), and holdings does not hold it, so there it keeps no variants (a filter, not a missing register). Fails if `variant` stops filtering, or an unheld variant answers a variant in holdings or is refused.",
   "fixture": "reader/logical",
   "requests": [
     {
