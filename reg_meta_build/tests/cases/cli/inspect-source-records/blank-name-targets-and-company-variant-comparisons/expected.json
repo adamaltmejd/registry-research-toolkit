@@ -7,7 +7,12 @@
           "$contains": [
             {"status": "unknown_spelling", "scb_record_ids": ["scb:12"]},
             {"status": "unknown_applicability", "scb_record_ids": ["scb:22"]},
-            {"status": "ambiguous_match", "workbook_record_ids": ["Företag!row:112"], "member_ids": [52, 53]},
+            {
+              "status": "ambiguous_match",
+              "workbook_record_ids": ["Företag!row:112"],
+              "member_ids": [52, 53],
+              "scb_record_ids": {"$length": 2, "$contains": ["scb:52", "scb:53"]}
+            },
             {
               "status": "agreement",
               "workbook_record_ids": ["Företag!row:53"],
@@ -116,8 +121,18 @@
             },
             {"status": "agreement", "workbook_record_ids": ["Företag!row:92"], "scb_record_ids": ["scb:31"]},
             {"status": "ambiguous_match", "scb_record_ids": ["scb:32"]},
-            {"status": "ambiguous_match", "workbook_record_ids": ["Företag!row:94"], "member_ids": [42, 43]},
-            {"status": "ambiguous_match", "workbook_record_ids": ["Företag!row:112"], "member_ids": [52, 53]}
+            {
+              "status": "ambiguous_match",
+              "workbook_record_ids": ["Företag!row:94"],
+              "member_ids": [42, 43],
+              "scb_record_ids": {"$length": 2, "$contains": ["scb:42", "scb:43"]}
+            },
+            {
+              "status": "ambiguous_match",
+              "workbook_record_ids": ["Företag!row:112"],
+              "member_ids": [52, 53],
+              "scb_record_ids": {"$length": 2, "$contains": ["scb:52", "scb:53"]}
+            }
           ],
           "$lacks": [{"status": "unknown_spelling", "scb_record_ids": {"$contains": ["scb:53"]}}]
         }

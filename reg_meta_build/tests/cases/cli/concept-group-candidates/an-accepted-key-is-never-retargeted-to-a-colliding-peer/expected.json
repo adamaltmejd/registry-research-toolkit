@@ -20,10 +20,7 @@
     },
     "accepts.toml": {
       "contains": [
-        "register = \"scb/foretag\"\nkey = \"artal-person\"",
-        "variable = \"artal-person-1\"",
-        "variable = \"artal-person-2\"",
-        "variable = \"artal-person-3\""
+        "[[variable_group]]\nregister = \"scb/foretag\"\nkey = \"artal-person\"\nlabel = \"Antal år som person\"\naxis = \"ordinal\"\n[[variable_group.members]]\nvariable = \"artal-person-1\"\nvalue = \"1\"\nlabel = \"1\"\n[[variable_group.members]]\nvariable = \"artal-person-2\"\nvalue = \"2\"\nlabel = \"2\"\n[[variable_group.members]]\nvariable = \"artal-person-3\"\nvalue = \"3\"\nlabel = \"3\"\n\n"
       ],
       "excludes": [
         "variable = \"artal-person4\"",
