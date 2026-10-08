@@ -1836,20 +1836,6 @@ native_id = "34.MedbLandNamn"
 slug = "medborgarskap"
 
 
-# GENERATED entity-key slug pins — reg-meta-build entity-key-pins (#546).
-#
-# A panel_entity_key ref binds to a variable.slug, which CHURNS every build
-# (the default freeze zone re-derives it). These pins freeze the slug each
-# entity-key ref depends on so a reslug can't dangle the ref. The build-side
-# curation gate (validate._check_entity_key_vars_curated) makes the pin
-# MANDATORY — a new entity-key variable can't ship un-pinned.
-#
-# Regenerate after onboarding/repointing a panel: run
-#   reg-meta-build --db <built-db> entity-key-pins \
-#     --output-toml /tmp/entity_key_pins.toml
-# and fold the NON-duplicate entries in here. dbdiff-identical (slug values
-# only — pins reproduce the slug the variable already carries).
-# 240 pin(s).
 
 
 [[variable]]
