@@ -8,10 +8,13 @@ JSON in the CLI cases' result form (``exit``, ``stdout``, ``stderr``).
 - ``context``: ``data`` and ``meta.scope`` against the baseline's ``/api/context``
   plus ``/api/stats`` in the same scope, for the default scope and each available
   scope.
-- ``variable-page``: ``search`` with ``type=variable`` against the baseline's
-  variables group, for the search-eval corpus terms and the edge terms, page by page
-  to the same depth, each arm following its own cursor. Items map to
-  ``shape.SearchHit``; ``more`` is whether the page continues.
+- ``<type>-page``: ``search`` with each ``type`` against the baseline's group of that
+  type, for the search-eval corpus terms and the edge terms, page by page to the same
+  depth, each arm following its own cursor. Items map to ``shape.SearchHit``;
+  ``more`` is whether the page continues.
+- ``top``: ``search`` without ``type`` at ``limit=5``, first page, against the
+  baseline's ``top_results`` (sent only when two or more results compete; otherwise
+  its typed groups hold the one result or none).
 """
 
 from __future__ import annotations
@@ -39,6 +42,27 @@ BASELINE_APP = (
 # The baseline caps a group at 50; two pages of ten cover a continuation.
 PAGE_LIMIT = 10
 PAGES = 2
+TYPES = (
+    "register",
+    "variable",
+    "classification",
+    "classification_code",
+    "register_value",
+)
+# The baseline's top-results strip.
+TOP_LIMIT = 5
+# The `shape.SearchHit` fields a baseline row of these types keeps as they are.
+SHAPES = {
+    "register": ("fqid", "name", "purpose"),
+    "classification": ("fqid", "short_name", "name", "terminal_fqid"),
+    "classification_succession": (
+        "fqid",
+        "short_name",
+        "name",
+        "matched_count",
+        "editions",
+    ),
+}
 # Requests in flight per server pair; each search takes ~0.4 s on the baseline.
 PARALLEL = 8
 
@@ -58,8 +82,21 @@ def _get(client, path: str, params: dict) -> dict:
 
 
 def _hit(item: dict) -> dict:
-    """A baseline variables-group row as ``shape.SearchHit``."""
-    if item["type"] == "group":
+    """A baseline search row as ``shape.SearchHit``."""
+    kind = item["type"]
+    if kind == "code":
+        return {
+            **{k: item[k] for k in ("type", "code", "label", "code_system")},
+            **{k: item[k] for k in ("variable_count", "classification_count")},
+            "variables": [
+                {"fqid": v["fqid"], "name": v["name"], "register_name": v["register"]}
+                for v in item["variables"]
+            ],
+            "classifications": item["classifications"],
+        }
+    if kind in SHAPES:
+        return {"type": kind, **{k: item[k] for k in SHAPES[kind]}}
+    if kind == "group":
         return {
             "type": "group",
             "kind": item["kind"],
@@ -83,8 +120,9 @@ def _hit(item: dict) -> dict:
     }
 
 
-def _pages(client, term: str, scope: str | None, *, baseline: bool) -> list:
-    params = {"q": term, "type": "variable", "limit": PAGE_LIMIT, "scope": scope}
+def _pages(client, job: tuple, *, baseline: bool) -> list:
+    scope, kind, term = job
+    params = {"q": term, "type": kind, "limit": PAGE_LIMIT, "scope": scope}
     pages = []
     for _ in range(PAGES):
         answer = _get(client, "/api/search", params)
@@ -104,13 +142,23 @@ def _pages(client, term: str, scope: str | None, *, baseline: bool) -> list:
     return pages
 
 
-def _page_pair(base, cand, job: tuple) -> tuple:
+def _top(client, job: tuple, *, baseline: bool) -> dict:
     scope, _, term = job
-    return (
-        job,
-        _pages(base, term, scope, baseline=True),
-        _pages(cand, term, scope, baseline=False),
-    )
+    params = {"q": term, "limit": TOP_LIMIT, "scope": scope}
+    answer = _get(client, "/api/search", params)
+    if answer["status"] != 200:
+        return {"status": answer["status"]}
+    if not baseline:
+        return {"items": answer["body"]["data"]["items"]}
+    groups = answer["body"]["groups"]
+    top = [g["results"] for g in groups if g["group"] == "top_results"]
+    rows = top[0] if top else [r for g in groups for r in g["results"]]
+    return {"items": [_hit(r) for r in rows]}
+
+
+def _pair(base, cand, job: tuple) -> tuple:
+    run = _pages if job[1] else _top
+    return job, run(base, job, baseline=True), run(cand, job, baseline=False)
 
 
 def _context(base, cand, scope: str | None) -> tuple[dict, dict]:
@@ -193,13 +241,20 @@ def served_cases(
                 cases.append((f"{prefix}/context", _result(expected), _result(actual)))
             # The default scope is one of the named ones, so pages run per name.
             named = [s for s in scopes if s is not None]
-            work = [(scope, i, term) for scope in named for i, term in enumerate(terms)]
+            # A typed page per type, then the untyped first page (no type).
+            work = [
+                (scope, kind, term)
+                for scope in named
+                for kind in (*TYPES, None)
+                for term in terms
+            ]
             with ThreadPoolExecutor(PARALLEL) as pool:
-                pages = pool.map(partial(_page_pair, base, cand), work)
-                for (scope, i, _), expected, actual in pages:
+                pairs = pool.map(partial(_pair, base, cand), work)
+                for (scope, kind, term), expected, actual in pairs:
+                    mapping = f"{kind}-page" if kind else "top"
                     cases.append(
                         (
-                            f"{catalog}/{scope}/variable-page/{i}",
+                            f"{catalog}/{scope}/{mapping}/{terms.index(term)}",
                             _result(expected),
                             _result(actual),
                         )
