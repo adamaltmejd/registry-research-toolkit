@@ -284,7 +284,8 @@ def extend_db(
         _unlink_wal_sidecars,
         publish_db,
     )
-    from .derive import derive, derive_search_indexes
+    from .derive import derive
+    from .derive.search_index import derive_search_indexes
     from .fqid_slugs import populate_slugs, populate_variable_slugs
 
     data_warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(

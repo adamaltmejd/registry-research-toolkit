@@ -313,7 +313,7 @@ def _seed_first_provider_register(
 def _rebuild_fts(src: sqlite3.Connection) -> None:
     """Fill the search indexes from the seeded rows, as derive does, so the
     slugged fixture exercises ``/api/search`` (#350/#352)."""
-    from reg_meta_build.derive import derive_search_indexes
+    from reg_meta_build.derive.search_index import derive_search_indexes
 
     derive_search_indexes(src)
 

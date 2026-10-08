@@ -66,11 +66,8 @@ from reg_meta_build.db import (
     PROVIDER_ID_SCB,
     PROVIDER_ID_SOS,
 )
-from reg_meta_build.derive import (
-    SEARCH_INDEXES,
-    register_fold_search,
-    resolver_columns,
-)
+from reg_meta_build.derive.search_index import SEARCH_INDEXES, register_fold_search
+from reg_meta_build.derive.states import resolver_columns
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
 from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
