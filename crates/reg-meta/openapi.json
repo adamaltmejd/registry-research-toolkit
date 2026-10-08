@@ -8,7 +8,7 @@
     "/api/catalog": {
       "get": {
         "description": "The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`.",
-        "operationId": "show",
+        "operationId": "show_without_ref",
         "parameters": [
           {
             "name": "scope",

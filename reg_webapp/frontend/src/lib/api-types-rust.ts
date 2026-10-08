@@ -12,7 +12,7 @@ export interface paths {
             cookie?: never;
         };
         /** @description The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`. */
-        get: operations["show"];
+        get: operations["show_without_ref"];
         put?: never;
         post?: never;
         delete?: never;
@@ -600,7 +600,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    show: {
+    show_without_ref: {
         parameters: {
             query?: {
                 scope?: components["schemas"]["Scope"];
