@@ -158,7 +158,10 @@ def write_sources(spec: dict, source: Path) -> None:
             abbrev=register["abbrev"],
             title_sv=register["title"],
             description_sv=register.get("description"),
-            variables=tuple(SosVariable(**row) for row in register["variables"]),
+            variables=tuple(
+                SosVariable(**{k: v for k, v in row.items() if k != "linkage"})
+                for row in register["variables"]
+            ),
             deldatamangder=tuple(
                 SosSubset(**row) for row in register.get("subsets", ())
             ),
@@ -171,7 +174,12 @@ def write_sources(spec: dict, source: Path) -> None:
         # identifier" claim; without it every variable's flag is unknown and withheld.
         workbook = load_workbook(path)
         sheet = workbook["Metadata - Variabelnivå"]
-        sheet.cell(row=1, column=sheet.max_column + 1, value="Kopplingsvariabel")
+        linkage = sheet.max_column + 1
+        sheet.cell(row=1, column=linkage, value="Kopplingsvariabel")
+        # A variable's `linkage` text fills its cell: a declared linkage variable.
+        for row, variable in enumerate(register["variables"], start=2):
+            if variable.get("linkage"):
+                sheet.cell(row=row, column=linkage, value=variable["linkage"])
         # A delivered Kodlista names its variable in a `Variabelnamn` preamble row;
         # without it the build cannot bind the list (`unresolved_list_reference`).
         code_lists = {
@@ -915,6 +923,12 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "SELECT predecessor_slug AS predecessor, successor_slug AS successor, "
         "effective_year, note FROM classification_replaced_by"
     ),
+    "classification_codes": lambda o: o._sql(
+        "SELECT c.slug, v.code, v.label, cc.level, cc.is_valid "
+        "FROM classification_code cc "
+        "JOIN classification c ON c.id = cc.classification_id "
+        "JOIN value_code v ON v.code_id = cc.code_id"
+    ),
     "relationships": lambda o: o._sql(
         "SELECT kind, binding_status, source_dataset, v.slug AS owner, "
         "(SELECT COUNT(*) FROM source_relationship_variable e "
@@ -971,6 +985,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "classifications": "slug short_name name name_en publisher valid_from "
         "valid_to description url code_count valid_code_count supersedes",
         "classification_successions": "predecessor successor effective_year note",
+        "classification_codes": "slug code label level is_valid",
         "relationships": "kind binding_status source_dataset owner endpoints",
         "evidence": "kind disposition",
         "source_issues": "kind severity descriptor_key physical_associations refs",

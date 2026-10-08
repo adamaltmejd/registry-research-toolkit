@@ -138,8 +138,9 @@ case cannot fail and does not belong here.
     a list the build cannot bind (`unresolved_list_reference`).
   - `blank_dataset: true` blanks the `Datamängd` cell of `Generell information`, so the
     workbook names no register.
-  - Every workbook gets a blank delivered `Kopplingsvariabel` column. That column is
-    SOS's explicit "not a linkage variable" claim.
+  - Every workbook gets a delivered `Kopplingsvariabel` column. A blank cell is SOS's
+    explicit "not a linkage variable" claim; a variable's optional `linkage` text fills
+    its cell, which declares it a linkage (identifier) variable.
 - `files` maps a path under the source directory to its text, for deliveries the other
   keys do not model: an authored `Forsakringskassan/fk.toml` or a
   `classifications/<slug>.csv` code list. The text is a string, or a list of lines
@@ -231,7 +232,9 @@ Every key is optional, and only the keys that are present get checked.
   only when the two seeds happen to order the strings differently. It costs a second
   build and an interpreter start, so one case per compile surface with no other
   byte-identity witness carries it: `coding-entries-apply-or-go-stale-per-register` for
-  `[[coding.*]]`.
+  `[[coding.*]]`, and
+  `classification-book-written-with-conformance-sentinels-and-successions` for
+  classification books, their conformance and their succession edges.
 - `error`: the build or check must refuse. Only the keys present are compared:
   - `code` and `exit_code` are the located error the `build-db` and `check-curation`
     commands report. A `RegMetaError` keeps its own; a `ValueError`, `OSError` or
@@ -273,6 +276,7 @@ Every key is optional, and only the keys that are present get checked.
   | `conformance_codes`          | source member a state's book conformance records outside the book       | `register`, `variable`, `column`, `valid_from`, `valid_to`, `classification`, `code`, `label`, `member_kind`, `sentinel_meaning`, `scoped_windows`                                                                                                                                                                                                                                                           |
   | `classifications`            | built classification                                                    | `slug`, `short_name`, `name`, `name_en`, `publisher`, `valid_from`, `valid_to`, `description`, `url`, `code_count`, `valid_code_count`, `supersedes` (the predecessor slug its single pointer projects, or null)                                                                                                                                                                                             |
   | `classification_successions` | built classification succession edge                                    | `predecessor`, `successor` (slugs), `effective_year`, `note` (`curated:slug_toml` or `derived:vintage_chain`)                                                                                                                                                                                                                                                                                                |
+  | `classification_codes`       | built classification's code                                             | `slug` (the book's), `code`, `label`, `level`, `is_valid`                                                                                                                                                                                                                                                                                                                                                    |
   | `relationships`              | built literal source relationship                                       | `kind`, `binding_status`, `source_dataset`, `owner` (variable slug), `endpoints` (bound variables)                                                                                                                                                                                                                                                                                                           |
   | `evidence`                   | ledger disposition of prepared auxiliary evidence                       | `kind`, `disposition`                                                                                                                                                                                                                                                                                                                                                                                        |
   | `source_issues`              | ledger support- and value-source issue (the evidence behind issues)     | `kind`, `severity`, `descriptor_key`, `physical_associations`, `refs`                                                                                                                                                                                                                                                                                                                                        |

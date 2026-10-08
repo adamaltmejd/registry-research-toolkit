@@ -1,0 +1,10 @@
+[register]
+provider = "fk"
+slug = "nocodes"
+native_id = {{naming_id kind=register provider=fk register_key=nocodes}}
+[[variant]]
+slug = "default"
+native_id = {{naming_id kind=register_variant provider=fk register_key=nocodes member_key=_default}}
+[[variable]]
+slug = "nocodes"
+native_id = {{naming_id kind=variable provider=fk register_key=nocodes member_key=NOCODES}}

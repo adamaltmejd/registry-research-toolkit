@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "canon"
+native_id = "4049337523726598901"
+[[variant]]
+slug = "default"
+native_id = "4049337523726598901.3507384454372521807"
+[[variable]]
+slug = "outcol"
+native_id = "4049337523726598901.OUTCOL"
+[[variable]]
+slug = "twocol"
+native_id = "4049337523726598901.TWOCOL"

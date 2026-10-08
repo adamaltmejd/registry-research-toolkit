@@ -111,7 +111,7 @@ def test_scoped_sentinel_certificate_tampering_is_refused_before_publish(
     conformance disagreement, and the previous output bytes unchanged (no file for
     `alias`). No build reaches it: compile recomputes every certificate from the build
     it applies to (8a kept the application-time guards in
-    `test_source_classification_scoped_sentinels.py`). Fails if `write_resolved_catalog`
+    `test_source_classification_bindings.py`). Fails if `write_resolved_catalog`
     stops re-checking certificates against the state, the column and the written book.
     """
     if defect == "alias":
