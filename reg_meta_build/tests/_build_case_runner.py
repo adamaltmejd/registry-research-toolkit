@@ -21,10 +21,12 @@ from __future__ import annotations
 import functools
 import hashlib
 import json
+import os
 import re
 import shutil
 import sqlite3
 import subprocess
+import sys
 import tempfile
 import zipfile
 from contextlib import closing
@@ -991,6 +993,35 @@ def _refusal(error: Exception, expected: dict) -> dict:
     return {key: refusal[key] for key in expected if key in refusal}
 
 
+_REBUILD = """
+import json, sys
+from pathlib import Path
+from reg_meta_build.pipeline import build_catalog
+a = json.loads(sys.argv[1])
+build_catalog(
+    Path(a["prepared"]), a["commit"], a["digest"], Path(a["output"]),
+    Path(a["report"]), curation_dir=Path(a["curation_dir"]),
+    diagnostic=a["diagnostic"], registers=tuple(a["registers"]),
+    dump_decisions=Path(a["dump_decisions"]),
+)
+"""
+
+
+def _rebuild_in_fresh_process(args: dict) -> None:
+    """Build again in a new interpreter under another string-hash seed.
+
+    The first build runs under this process's random seed; seed 0 disables hash
+    randomization, so set and dict iteration order over strings differs between the
+    two builds and an output that depends on it shows up as a byte difference.
+    """
+    subprocess.run(
+        [sys.executable, "-c", _REBUILD, json.dumps(args)],
+        env={**os.environ, "PYTHONHASHSEED": "0"},
+        check=True,
+        capture_output=True,
+    )
+
+
 def _tree_bytes(path: Path) -> dict[str, bytes]:
     """Every file under ``path`` (or ``path`` itself), by relative name."""
     if path.is_file():
@@ -1051,7 +1082,19 @@ def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dic
     if rebuild:
         again = scratch / "rebuild"
         again.mkdir()
-        build(again / "reg_meta.db", again / "report", again / "decisions")
+        _rebuild_in_fresh_process(
+            {
+                "prepared": str(built.prepared),
+                "commit": built.commit,
+                "digest": built.digest,
+                "output": str(again / "reg_meta.db"),
+                "report": str(again / "report"),
+                "curation_dir": str(curation),
+                "diagnostic": request.get("diagnostic", True),
+                "registers": list(registers),
+                "dump_decisions": str(again / "decisions"),
+            }
+        )
         actual["rebuilt_identical"] = all(
             _tree_bytes(scratch / name) == _tree_bytes(again / name)
             for name in ("reg_meta.db", "report/events.jsonl.gz", "decisions")
