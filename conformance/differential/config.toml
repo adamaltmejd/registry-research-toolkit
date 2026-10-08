@@ -87,13 +87,13 @@ case = [
 
 [[exception]]
 name = "schema-held-request-clip"
-reason = "rust-only fix: holdings `schema` with a period clips each held window to the requested years (today's `_scope_states` with request bounds, as `states` does); the frozen `get schema --years` keeps the held window whole. Pinned by api/schema-register (holdings with period 2019). Only the window bounds differ."
+reason = "rust-only fix: holdings `schema` with a period clips each held window to the requested years (today's `_scope_states` with request bounds, as `states` does); the frozen `get schema --years` keeps the held window whole. Pinned by api/schema-register (holdings with period 2019). Only the window bounds differ. Blind spot: the glob excepts any held window bound on a sampled-year holdings schema, not only the request clip; api/schema-register and api/states-held-split pin the held clip and merge."
 case = "*/holdings/get-schema-year/*"
 paths = ["/*/1", "/*/2"]
 
 [[exception]]
 name = "coverage-alias-windows"
-reason = "rust-only fix: reference `coverage` names the columns the resolver emits each year, so a variable's source alias windows name their own column (Different in 2019 rather than its state's Value); the frozen reference `get availability` reads raw states. Pinned by api/coverage-alias-windows. Only the per-year column lists differ (years are equal: the replacing windows tile their states)."
+reason = "rust-only fix: reference `coverage` names the columns the resolver emits each year, so a variable's source alias windows name their own column (Different in 2019 rather than its state's Value); the frozen reference `get availability` reads raw states. Pinned by api/coverage-alias-windows. Only the per-year column lists differ (years are equal: the replacing windows tile their states). Blind spot: the glob excepts any per-year column list of a reference variable coverage; api/coverage-alias-windows and api/coverage-variable pin the columns per year."
 case = "*/reference/get-availability-variable/*"
 paths = ["/registers/*/3/*"]
 
