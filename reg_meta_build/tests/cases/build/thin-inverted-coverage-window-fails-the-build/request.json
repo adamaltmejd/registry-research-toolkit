@@ -1,6 +1,7 @@
 {
   "replaces": ["test_curation_thin_coverage_boundary.py::test_thin_inverted_coverage_window_fails_the_build"],
   "note": "An open variant from 2021 starts after the variable's 2019 end: no window.",
+  "fails_if": "`_compile_thin_register` stops refusing a window whose end precedes its start, so the open variant from 2021 under a variable ending 2019 builds instead of failing",
   "sources": {
     "description": "Authored FK register r (2000-2020), open variant v from 2021, variable COL (2005-2019). Plus the SCB sample.",
     "scb": {

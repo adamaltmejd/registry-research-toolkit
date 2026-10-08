@@ -3,5 +3,6 @@
     "test_build_catalog_period_family_boundary.py::test_relation_resolves_to_curated_period_family_variable"
   ],
   "note": "The family variable slug, calendar, exists only through the period-family curation.",
+  "fails_if": "the period-family compile in curation_compile.py stops declaring the family variable slug `calendar` for register 2's month columns, so the relations.toml edge to scb/other/calendar has no target and no same_as rows are built",
   "sources": "scb-calendar-months"
 }

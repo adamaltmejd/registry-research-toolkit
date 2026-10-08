@@ -4,5 +4,6 @@
     "test_build_catalog_scope_boundary.py::test_relations_into_unselected_register_are_deferred[2]"
   ],
   "note": "The full build half of the replaced test; a same_as edge is stored in both directions.",
+  "fails_if": "the full build stops writing the curated relations.toml same_as edge in both directions (or drops the replaced_by succession) between scb/sample/value and scb/other/value, so the edges table loses one of its three rows",
   "sources": "scb-two-registers"
 }

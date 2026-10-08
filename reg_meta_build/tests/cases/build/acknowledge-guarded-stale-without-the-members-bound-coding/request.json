@@ -3,5 +3,6 @@
     "test_source_acknowledgement_boundary.py::test_a_guarded_acknowledgement_also_pins_the_members_bound_coding"
   ],
   "note": "The guard covers member 1003's original rows alone, but 1003 carries a bound source code list, so the guard is not its full evidence.",
+  "fails_if": "the evidence guard in `resolve_source_scope` stops adding the member's bound code-list tokens (`guarded_coding`) to the fingerprint, so a guard over member 1003's original rows alone matches although 1003 carries a bound Kön list",
   "sources": "scb-unnamed-variable-coded"
 }

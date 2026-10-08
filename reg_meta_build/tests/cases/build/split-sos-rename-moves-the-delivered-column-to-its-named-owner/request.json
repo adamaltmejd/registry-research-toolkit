@@ -1,4 +1,5 @@
 {
   "replaces": ["test_curation_split_sos_boundary.py::test_rename_moves_the_delivered_column_to_its_named_owner"],
+  "fails_if": "the `[[identity.rename]]` compile in `curation_compile` emits only the `CheckedIdentityChange` and drops the `CheckedFieldChange` that rewrites `column_name` to the declared column, so the new-name state keeps the delivered INVARN8 column",
   "sources": "sos-par-invarn8"
 }

@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_acknowledgement_boundary.py::test_a_guarded_acknowledgement_lapses_when_its_original_rows_change[unchanged]"
   ],
+  "fails_if": "the evidence guard in `resolve_source_scope` hashes a different record set than member 1003's own originals (for example every scope original rather than `guarded_originals` of the entry's refs), so an unchanged guarded entry is reported stale",
   "sources": "scb-unnamed-variable"
 }

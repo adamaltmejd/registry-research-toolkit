@@ -3,6 +3,7 @@
     "test_curation_toml_load_boundary.py::test_malformed_search_pin_fails_the_build_located[duplicate-folded-query]"
   ],
   "note": "A malformed pin fails even a diagnostic build, before anything is resolved.",
+  "fails_if": "`load_search_pins` keys its duplicate-pin check on the raw `query` instead of `fold_search(query)`, so `Sysselsättning` and ` sysselsattning` load as two register pins",
   "sources": {
     "description": "Register 1 delivers Kod (var_id 100); no Unika file.",
     "scb": {

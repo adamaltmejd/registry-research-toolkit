@@ -2,6 +2,7 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_certificate_refuses_a_column_that_now_has_a_source_code_list"
   ],
+  "fails_if": "`compile_coding_register` keeps a comma-enumeration certificate matched after KON gains a delivered `Kodlista_KON`: every no-source-list check (`not claims`, the `raw_codings`/`codings` fingerprints, the captured record coding, `compile_coding_selection`'s complete-list check) stops seeing the new list",
   "sources": {
     "description": "sos-kon-decimal-comma plus a Kodlista_KON sheet.",
     "scb": {

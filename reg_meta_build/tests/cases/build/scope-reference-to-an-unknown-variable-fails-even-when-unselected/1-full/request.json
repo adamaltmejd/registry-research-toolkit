@@ -2,5 +2,6 @@
   "replaces": [
     "test_build_db_scope_selection.py::test_undeclared_reference_is_fatal_even_when_register_is_unselected[scb/other/missing]"
   ],
+  "fails_if": "`CatalogDependencies.require` accepts a variable key once its parent register is available, so the full build treats scb/other/missing as resolved (scb/other exists) and completes instead of raising CatalogDependencyError naming scb/other/missing",
   "sources": "scb-two-registers"
 }

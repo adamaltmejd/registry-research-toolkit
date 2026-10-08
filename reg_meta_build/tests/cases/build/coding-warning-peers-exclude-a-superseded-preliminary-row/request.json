@@ -3,5 +3,6 @@
     "test_source_coding_choices_boundary.py::test_coding_warning_peers_exclude_a_superseded_preliminary_row[final-only]"
   ],
   "note": "The SCB edition-name rule: a final edition supersedes its 'YYYY, preliminär version', retaining it as support, outside the column's catalog peers.",
+  "fails_if": "the SCB supersession rule (`compile_scb_preliminary`) stops taking the `2020, preliminär version` row out of VALUE's catalog peers, so the warning reviewed over the final row (CVID 1021) alone no longer matches the column's evidence digest and goes stale",
   "sources": "scb-value-preliminary-and-final-2020"
 }

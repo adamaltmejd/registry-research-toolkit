@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_compact_choice_applies_the_kept_list_to_every_reviewed_period"
   ],
+  "fails_if": "`compile_coding_register` compiles only the first period of a multi-period `[[coding.choice]]`, so VALUE's 2020-07-01..2020-12-31 state gets no kept list 01 and reports a membership conflict",
   "sources": "scb-value-competing-lists"
 }

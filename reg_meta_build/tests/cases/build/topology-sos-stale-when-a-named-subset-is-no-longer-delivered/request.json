@@ -1,5 +1,6 @@
 {
   "replaces": ["test_curation_topology_sos_boundary.py::test_a_named_subset_no_longer_delivered_is_stale"],
+  "fails_if": "native naming silently drops a curated `[[variant]]` that binds no delivered subset name instead of reporting `stale_curation_entry`, so variant A's disappearance from the workbook goes unreported",
   "sources": {
     "description": "SOS BU without a Deldatamängder sheet: the variable rows name their subsets. Plus the SCB sample VALUE column.",
     "scb": {

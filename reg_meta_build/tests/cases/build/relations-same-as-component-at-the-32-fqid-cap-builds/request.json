@@ -1,6 +1,7 @@
 {
   "replaces": ["test_curation_toml_load_boundary.py::test_same_as_component_at_the_32_fqid_cap_builds"],
   "note": "Curated same_as edges chain 32 variables into one identity component, the cap stated on relations.py's cap constant. Both directions of each of the 31 chain edges are stored.",
+  "fails_if": "`relations._reject_oversized_components` refuses a same_as component of exactly `_SAME_AS_MAX_COMPONENT` (32) FQIDs, so the 32-variable chain fails the build",
   "sources": {
     "description": "Register 1 delivers 32 variables V0..V31 (var_ids 100..131).",
     "scb": {

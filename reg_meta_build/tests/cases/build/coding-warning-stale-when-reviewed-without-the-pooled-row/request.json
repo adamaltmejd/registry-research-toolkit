@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_coding_warning_reviewed_without_the_pooled_row_is_stale"
   ],
+  "fails_if": "the effective-column peers `compile_coding_register` digests (`column_records` in `source_scope.py`) leave out the blank-named 2010 row pooled into VALUE, so a warning reviewed over the 2013 row (CVID 1013) alone matches and the 2010 warning is written",
   "sources": "scb-value-pooled-blank-2010"
 }

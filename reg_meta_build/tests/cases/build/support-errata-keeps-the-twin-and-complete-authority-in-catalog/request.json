@@ -3,5 +3,6 @@
     "test_curation_support_errata_boundary.py::test_checked_support_keeps_the_twin_and_complete_authority_in_catalog"
   ],
   "note": "Only the contradicted FIRST projection of CVID 20 becomes support; its SECOND twin and the authority stay catalog.",
+  "fails_if": "the support compile's `CheckedSourceUse` drops its `when` condition on the literal `column_name`, so the SECOND projection of the shared CVID 20 record also becomes support instead of staying catalog under scb/sample/second",
   "sources": "scb-support-question"
 }

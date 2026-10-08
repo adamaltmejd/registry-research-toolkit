@@ -2,6 +2,7 @@
   "replaces": [
     "test_source_physical_alternatives_boundary.py::test_physical_alternatives_report_one_missing_coding_issue_acknowledged_once"
   ],
+  "fails_if": "`resolve_source_scope` stops collapsing the identical `missing_coding_period` issue that member 1002 raises through both First and Second (the `emitted_missing_coding` dedupe), so the 2021 issue is reported and acknowledged twice",
   "sources": {
     "description": "Both columns deliver member 1001 in 2020; in 2021 First delivers 1002 and Second 1002. Only member 1001 carries the code list.",
     "scb": {

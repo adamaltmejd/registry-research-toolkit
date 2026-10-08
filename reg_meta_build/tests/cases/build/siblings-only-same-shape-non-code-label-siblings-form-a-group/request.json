@@ -3,6 +3,7 @@
     "test_curation_sibling_heuristics_boundary.py::test_only_same_shape_non_code_label_siblings_form_a_group"
   ],
   "note": "Co-delivered siblings of one source definition group unless a guard keeps them apart: a code/label pair (either column order), a numeric/text type mismatch (Swedish labels classify by ASCII fold), or differing lengths when the type is unclassifiable. Only FORNAMN/EFTERNAMN remain eligible.",
+  "fails_if": "`_looks_like_code_label_pair` stops recognizing a `<stem>namn` label beside its bare, `kod` or `id` code column in either order, so LID/LNAMN, KOMMUN/KOMMUNNAMN or SUN2000KOD/SUN2000NAMN join a concept group",
   "sources": {
     "description": "SCB register 1 delivers eight source variables, each as two columns of one edition; (var_id, column, Datatyp, Datalängd) per row.",
     "scb": {

@@ -2,5 +2,6 @@
   "replaces": [
     "test_curation_split_partition_boundary.py::test_owner_alternatives_keep_every_same_literal_original[digest-only]"
   ],
+  "fails_if": "`IdentityColumnOwnerEntry._guarded_editions` starts requiring `expected_records` whenever `expected_evidence_sha256` is given, so the digest-only owner is refused at curation load instead of keeping both CVID 20 and 21 as catalog",
   "sources": "scb-partition-owner-alternatives"
 }

@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_split_sos_boundary.py::test_subset_split_is_stale_unless_the_delivered_subsets_match[undeclared-subset]"
   ],
+  "fails_if": "the SOS split check in `curation_compile` accepts delivered subsets that merely include the declared parts, so the UNDECLARED subset reaches owner routing (KeyError or a wrongly routed row) instead of making the split stale",
   "sources": {
     "description": "ATC delivered in subsets PAR_OV, PAR_SV, PAR_TV, UNDECLARED.",
     "scb": {

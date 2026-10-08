@@ -2,6 +2,7 @@
   "replaces": [
     "test_build_db_scope_selection.py::test_undeclared_reference_is_fatal_even_when_register_is_unselected[scb/other/missing]"
   ],
+  "fails_if": "the slice deferral accepts a missing variable when only its register is declared by an unselected scope, so scb/other/missing (other.toml declares scb/other but only the variable `value`) is deferred as a warning instead of raising CatalogDependencyError",
   "sources": "scb-two-registers",
   "registers": ["1"]
 }

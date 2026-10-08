@@ -2,6 +2,7 @@
   "replaces": [
     "test_build_catalog_classification_boundary.py::test_declared_short_name_or_alias_binds_state_to_its_classification[A]"
   ],
+  "fails_if": "`_classification_references` in pipeline.py stops indexing a book's `short_name` (aliases only), so AMOUNT's declared 'A' is an unresolved classification reference and binds no book",
   "sources": {
     "description": "FK AMOUNT declares classification 'A'; books a and b.",
     "scb": {

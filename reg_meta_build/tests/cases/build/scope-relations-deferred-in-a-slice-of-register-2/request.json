@@ -2,6 +2,7 @@
   "replaces": [
     "test_build_catalog_scope_boundary.py::test_relations_into_unselected_register_are_deferred[2]"
   ],
+  "fails_if": "`resolve_metadata_dependencies` stops requiring a same_as edge's `a` endpoint, so a slice of register 2 stores the edge from the unselected scb/sample/value instead of deferring it, leaving one deferred reference and a non-empty edges table",
   "sources": "scb-two-registers",
   "registers": ["2"]
 }

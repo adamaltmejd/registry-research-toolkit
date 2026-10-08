@@ -3,5 +3,6 @@
     "test_curation_sos_errata_boundary.py::test_classification_reference_correction_clears_only_the_declaration"
   ],
   "note": "Without the entry, the SYX_A MARK original reports its link as an unresolved classification reference.",
+  "fails_if": "`source_classification_bindings` stops reporting a delivered classification link that names no known reference as `unresolved_classification_reference`, so the uncorrected SYX_A MARK original no longer shows the issue the entry exists to clear",
   "sources": "sos-syx-errata"
 }

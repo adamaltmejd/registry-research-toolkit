@@ -3,6 +3,7 @@
     "test_curation_support_delivery_boundary.py::test_parallel_columns_keep_every_nested_edition_original"
   ],
   "note": "A reviewed parallel window keeps the pooled and the nested First editions.",
+  "fails_if": "`compile_parallel_representations` treats any two overlapping nested editions of one column as a metadata conflict without consulting `reconcile_source_fields`, so the agreeing 2020-2022 and 2021-2022 First editions go stale",
   "sources": {
     "description": "Variable 1: First is pooled 2020-2022 (CVID 100) and again nested 2021-2022 (CVID 103); Second is 2022-2024 (CVID 101).",
     "scb": {

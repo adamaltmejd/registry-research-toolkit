@@ -3,6 +3,7 @@
     "test_curation_split_sos_boundary.py::test_split_owner_resolves_a_reference_from_an_unselected_register[name-split]"
   ],
   "note": "A scoped SCB build (register 1) defers a reference to an unselected SOS split owner.",
+  "fails_if": "`compile_deferred_partitions` stops reading a name split's values from the literal `name` field, so the unselected PAR scope declares no `sos/par/other` and the scoped register-1 build refuses the same_as edge as a missing dependency instead of deferring it",
   "sources": "sos-par-atc-three-labels",
   "registers": ["1"]
 }

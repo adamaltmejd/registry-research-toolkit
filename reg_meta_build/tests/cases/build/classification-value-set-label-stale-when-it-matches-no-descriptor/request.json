@@ -2,5 +2,6 @@
   "replaces": [
     "test_build_catalog_classification_boundary.py::test_full_build_reports_value_set_label_matching_no_descriptor"
   ],
+  "fails_if": "`finalize_classification_bindings` (curation_compile.py) defers an unmatched value-set label as `not_evaluated_in_subset` in a full build too, so 'No such label' is not reported as a stale entry",
   "sources": "scb-fk-book-a"
 }

@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_acknowledgement_boundary.py::test_acknowledged_fields_match_only_in_the_issue_order[issue-order]"
   ],
+  "fails_if": "`form_variable` in source_formation.py emits the two-spelling `unresolved_native_identity` issue with its fields in another order than (identity, column_name), so the entry listing them in that order goes stale",
   "sources": "scb-value-two-spellings"
 }

@@ -3,6 +3,7 @@
     "test_curation_partition_delivered_boundary.py::test_delivered_blank_row_is_rewritten_and_owned_by_the_split"
   ],
   "note": "The 2021 member with a literal blank column becomes column A under `a`.",
+  "fails_if": "the `[[errata.delivered]]` rebinding keeps the column-name rewrite of the 2021 literal-blank row but drops its `CheckedIdentityChange` to the split owner, so the rewritten row stays on variable 5 instead of becoming `a`'s 2021 state",
   "sources": {
     "description": "Variable 5 delivers A (2020, CVID 20), B in variant 3 (2020, CVID 23) and a literal blank column in 2021 (CVID 22).",
     "scb": {

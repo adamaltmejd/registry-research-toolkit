@@ -2,5 +2,6 @@
   "replaces": [
     "test_build_db_scope_selection.py::test_thin_source_has_register_scopes_selected_by_name_or_source_id"
   ],
+  "fails_if": "the thin reader (`sources/curated_records._record`) stops giving each fk.toml `[[register]]` its own register coordinate, so the thin source becomes one whole-source scope and a full build counts 2 scopes instead of 3",
   "sources": "scb-value-fk-two-thin-registers"
 }

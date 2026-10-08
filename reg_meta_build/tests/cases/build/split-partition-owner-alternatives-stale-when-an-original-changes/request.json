@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_split_partition_boundary.py::test_owner_alternatives_are_stale_when_an_original_changes"
   ],
+  "fails_if": "`_scoped_column_owners` stops comparing both the owner's `expected_records` and its `expected_evidence_sha256` with the matched originals, so CVID 21's changed operational definition no longer makes the column owner stale",
   "sources": {
     "description": "scb-partition-owner-alternatives after CVID 21's operational definition changed.",
     "scb": {

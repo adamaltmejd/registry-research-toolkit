@@ -2,6 +2,7 @@
   "replaces": [
     "test_build_catalog_classification_boundary.py::test_ambiguous_classification_reference_spelling_fails_at_its_file[alias-repeats-short-name]"
   ],
+  "fails_if": "`load_classifications` (curation_tree.py) claims aliases under their own kind instead of the namespace shared with short names, so A's alias 'B' no longer collides with book B's short name",
   "sources": {
     "description": "Books a, b, unreferenced.",
     "scb": {

@@ -2,6 +2,7 @@
   "replaces": [
     "test_build_catalog_source_relationship_boundary.py::test_unbound_crosswalk_defers_only_when_its_occurrence_source_is_unselected[sos-unselected]"
   ],
+  "fails_if": "the literal-relationship `outside_slice` test stops checking whether the declaration's dataset is among the selected occurrence sources, so a slice of SCB register 1 reports the SOS crosswalk as an unbound_source_relationship error instead of deferring it",
   "sources": "scb-sos-crosswalk",
   "registers": ["1"]
 }

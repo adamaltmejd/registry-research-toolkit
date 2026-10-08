@@ -3,6 +3,7 @@
     "test_source_coding_window_boundary.py::test_a_marker_certificate_checks_only_the_markers_bound_in_its_period"
   ],
   "note": "The 2021 delivery carries its own marker binding outside the reviewed 2020 period; the certificate still matches and states the enumerated 2020 codes.",
+  "fails_if": "`marker_binding_fingerprints` (source_value_bindings.py) stops limiting bindings to the certificate's dated window, so the 2021 member's Tal marker binding enters the 2020 certificate's fingerprint and the certificate goes stale",
   "sources": {
     "description": "VALUE defined by the same numbered enumeration in 2020 (member 1001) and 2021 (member 1002); each year delivers a Tal descriptor row, a recognized marker, not a code list.",
     "scb": {

@@ -3,5 +3,6 @@
     "test_source_coding_choices_boundary.py::test_coding_warning_peers_include_rows_pooled_into_the_column"
   ],
   "note": "The blank-named 2010 row joins VALUE through [[errata.delivered]]; a warning reviewed over both original rows applies to the pooled 2010 state.",
+  "fails_if": "the effective-column peers that `compile_coding_register` digests (`column_records` in `source_scope.py`) leave out the blank-named 2010 row (CVID 1010) pooled into VALUE by `[[errata.delivered]]`, so the warning reviewed over both rows goes stale",
   "sources": "scb-value-pooled-blank-2010"
 }

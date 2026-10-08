@@ -1,5 +1,6 @@
 {
   "replaces": ["test_build_db_scope_selection.py::test_warning_only_register_is_compiled_and_warning_roundtrips"],
+  "fails_if": "`check_curation` stops compiling coding registers in its scoped pass, so the warning-only register's `[[coding.warning]]` falls through to the stale_curation_entry fallback and the local check reports passed false",
   "sources": "scb-value",
   "mode": "check",
   "registers": ["1"]

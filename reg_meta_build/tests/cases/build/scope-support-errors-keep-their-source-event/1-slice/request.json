@@ -3,6 +3,7 @@
     "test_build_db_scope_selection.py::test_pipeline_routes_real_support_errors_without_dropping_source_event"
   ],
   "note": "The fixture's two Unika rows leave their column blank, so neither supports a column: one support source issue (an error) cites both. In this slice of register 1, one row's issue is an unknown_support_key error and the unselected register's row is deferred. The issues cite exactly the refs the source event cites, the replaced test's claim, stated with refs_of instead of semantic-record hashes.",
+  "fails_if": "`scope_support_diagnostics` stops downgrading the ref it routes to unselected register 2 (OTHERREG's blank-column Unika summary) to a deferred_out_of_slice_reference warning, so the slice of register 1 reports two unknown_support_key errors",
   "sources": "scb-two-registers-unknown-support",
   "registers": ["1"]
 }

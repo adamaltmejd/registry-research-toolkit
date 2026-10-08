@@ -2,5 +2,6 @@
   "replaces": [
     "test_build_db_scope_selection.py::test_undeclared_reference_is_fatal_even_when_register_is_unselected[scb/nosuch/value]"
   ],
+  "fails_if": "`CatalogDependencies.require` stops recording a key whose register no scope declares (scb/nosuch) as missing, treating it like a shared input with no register, so the full build completes instead of raising CatalogDependencyError naming scb/nosuch/value",
   "sources": "scb-two-registers"
 }

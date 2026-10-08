@@ -2,5 +2,6 @@
   "replaces": [
     "test_curation_split_partition_boundary.py::test_owner_alternatives_keep_every_same_literal_original[expected-records]"
   ],
+  "fails_if": "`_scoped_column_owners` captures the matched originals with `parents=False` or `coding=False`, so they no longer equal the curator's `expected_records` (captured with parents and coding) and the owner of both same-edition originals goes stale",
   "sources": "scb-partition-owner-alternatives"
 }

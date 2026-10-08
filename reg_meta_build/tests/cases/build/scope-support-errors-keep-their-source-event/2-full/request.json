@@ -3,5 +3,6 @@
     "test_build_db_scope_selection.py::test_pipeline_routes_real_support_errors_without_dropping_source_event"
   ],
   "note": "The full build reports both Unika rows as unknown_support_key errors, citing the same refs as the one support source issue.",
+  "fails_if": "a full build treats every register as out of slice: `scope_support_diagnostics` tests `context not in (selected or ())` instead of `selected is not None`, so both Unika summary refs become deferred_out_of_slice_reference warnings rather than two unknown_support_key errors",
   "sources": "scb-two-registers-unknown-support"
 }

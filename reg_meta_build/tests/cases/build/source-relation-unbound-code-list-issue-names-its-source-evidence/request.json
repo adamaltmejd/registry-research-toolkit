@@ -3,5 +3,6 @@
     "test_build_catalog_source_relationship_boundary.py::test_unbound_code_list_issue_identity_is_its_exact_source_evidence"
   ],
   "note": "Each value-source issue (a code list bound to no variable) is reported once, under a subject that names its own descriptor and source revision.",
+  "fails_if": "`_value_source_issue` (pipeline.py) builds the unresolved_list_reference subject without the workbook revision id or the physical association count, so the DIAGNOS (2) and EMPTY (0) issues no longer name their own source evidence",
   "sources": "scb-sos-crosswalk"
 }

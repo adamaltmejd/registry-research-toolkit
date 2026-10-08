@@ -3,6 +3,7 @@
     "test_curation_support_errata_boundary.py::test_nonphysical_support_is_stale_when_its_column_becomes_physical"
   ],
   "note": "The projection is selected as a negative column: once the blank column carries a name, nothing selects.",
+  "fails_if": "the nonphysical support entry is applied although its 2021 blank column is now delivered as NEW: this needs `_select_occurrence_correction` to stop selecting by negative column, the all-field `column_name` guard to be skipped and the coding pin check to be skipped",
   "sources": {
     "description": "scb-support-nonphysical after the blank 2021 column is delivered as NEW.",
     "scb": {

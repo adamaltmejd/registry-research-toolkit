@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_malformed_certificate_fails_curation_load_at_its_entry[unknown-separator]"
   ],
+  "fails_if": "`SourceEnumeration.assignment_separators` widens its item type from `Literal[',', ';']` to any string, so the separator `|` loads instead of failing with \"Input should be ',' or ';'\"",
   "sources": "sos-kon-decimal-comma-open"
 }

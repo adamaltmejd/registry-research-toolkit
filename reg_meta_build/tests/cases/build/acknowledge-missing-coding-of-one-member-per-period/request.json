@@ -3,6 +3,7 @@
     "test_source_physical_alternatives_boundary.py::test_one_member_keeps_a_missing_coding_issue_per_period"
   ],
   "note": "Pooled member 1005 delivers 2020-2022; the annual 2021 member 1006 wins its year and carries the code list, so 1005 lacks coding in 2020 and in 2022.",
+  "fails_if": "the dedupe of identical `missing_coding_period` issues in `resolve_source_scope` keys an issue without its period, so pooled member 1005's 2022 issue is dropped as a repeat of its 2020 one",
   "sources": {
     "description": "Pooled member 1005 (2020-2022) beside annual 2021 member 1006, which alone carries the code list.",
     "scb": {

@@ -3,6 +3,7 @@
     "test_build_db_scope_selection.py::test_undeclared_reference_is_fatal_even_when_register_is_unselected[scb/nosuch/value]"
   ],
   "note": "A register-scoped check cannot see every register, so it passes without claiming the edge groups or the delivery coverage.",
+  "fails_if": "`LOCAL_CHECKS_NOT_RUN` stops listing variable_edge_groups, so a register-scoped check that never resolves relations.toml claims to have proven the edge groups while an endpoint names the undeclared register scb/nosuch",
   "sources": "scb-two-registers",
   "mode": "check",
   "registers": ["1"]

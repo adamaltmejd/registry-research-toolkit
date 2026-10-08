@@ -1,4 +1,5 @@
 {
   "replaces": ["test_build_db_scope_selection.py::test_full_build_compiles_every_prepared_scope"],
+  "fails_if": "a build without --registers stops visiting every prepared scope (`visit` at pipeline.py build_catalog no longer defaults to all `scope_keys`), so scb/other's register is not compiled and scopes, physical_occurrences and variables fall below 2",
   "sources": "scb-two-registers"
 }
