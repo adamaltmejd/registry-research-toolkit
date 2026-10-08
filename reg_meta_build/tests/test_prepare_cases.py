@@ -43,7 +43,11 @@ from reg_meta_build.sources.scb_reference_records import (
     read_scb_join_keys,
 )
 from reg_meta_build.sources.scb_values import clean_scb_values
-from reg_meta_build.sources.sos import SosParseError, parse_register_file
+from reg_meta_build.sources.sos import (
+    SosParseError,
+    parse_directory,
+    parse_register_file,
+)
 from reg_meta_build.sources.sos_records import clean_sos_source
 from test_curation_toml_cases import to_json
 
@@ -230,6 +234,13 @@ def _sos_workbook(delivery: Delivery, args: dict[str, Any]) -> Any:
     return clean_sos_source(parse_register_file(path), delivery.revision(path, args))
 
 
+def _sos_parsed(delivery: Delivery, args: dict[str, Any]) -> Any:
+    """`parse-sos` on one workbook, or on every workbook of `args.directory`."""
+    if "directory" in args:
+        return parse_directory(delivery.root / args["directory"])
+    return parse_register_file(delivery.file(args))
+
+
 def _lisa_workbook(delivery: Delivery, args: dict[str, Any]) -> Any:
     path = delivery.file(args)
     revision = delivery.revision(path, {"dataset": LISA_DATASET_ID, **args})
@@ -312,10 +323,7 @@ class Reader:
 # dispatches it, plus the `parse-sos` inspection command.
 READERS: dict[str, Reader] = {
     "sos_workbook": Reader(_sos_workbook),
-    "sos_parsed": Reader(
-        lambda delivery, args: parse_register_file(delivery.file(args)),
-        _parse_sos_refusal,
-    ),
+    "sos_parsed": Reader(_sos_parsed, _parse_sos_refusal),
     "lisa_workbook": Reader(_lisa_workbook),
     "code_list": Reader(_code_list),
     "scb_column_types": Reader(_bundle_reader(read_scb_column_types)),

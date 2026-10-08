@@ -210,18 +210,18 @@ refusal that reaches it is a defect.
 
 ## Readers
 
-  | Reader             | Reads                                                                                           |
-  | ------------------ | ----------------------------------------------------------------------------------------------- |
-  | `sos_workbook`     | `clean_sos_source(parse_register_file(file))` (below)                                           |
-  | `sos_parsed`       | `parse_register_file(file)`: the parsed register `parse-sos` prints                             |
-  | `lisa_workbook`    | `read_lisa_source(file)`: `records`, `worksheet_context`                                        |
-  | `code_list`        | `read_code_list(file, name=args.name or the file stem)`                                         |
-  | `scb_column_types` | `read_scb_column_types(file)`: `declarations`, `tables`                                         |
-  | `scb_join_keys`    | `read_scb_join_keys(file)`: `declarations`, `tables`                                            |
-  | `scb_records`      | `iter_scb_observations(snapshot)`: a list of `{record, issue}`                                  |
-  | `scb_auxiliary`    | `iter_scb_auxiliary_records(snapshot, args.file)`: a list of records                            |
-  | `scb_events`       | `read_scb_events(snapshot)`: `declarations`, `tables`                                           |
-  | `scb_values`       | `clean_scb_values(snapshot)`: `provenance`, `descriptors`, `values`, `associations`, `validity` |
+  | Reader             | Reads                                                                                                  |
+  | ------------------ | ------------------------------------------------------------------------------------------------------ |
+  | `sos_workbook`     | `clean_sos_source(parse_register_file(file))` (below)                                                  |
+  | `sos_parsed`       | `parse_register_file(file)`, the register `parse-sos` prints; with `args.directory`, `parse_directory` |
+  | `lisa_workbook`    | `read_lisa_source(file)`: `records`, `worksheet_context`                                               |
+  | `code_list`        | `read_code_list(file, name=args.name or the file stem)`                                                |
+  | `scb_column_types` | `read_scb_column_types(file)`: `declarations`, `tables`                                                |
+  | `scb_join_keys`    | `read_scb_join_keys(file)`: `declarations`, `tables`                                                   |
+  | `scb_records`      | `iter_scb_observations(snapshot)`: a list of `{record, issue}`                                         |
+  | `scb_auxiliary`    | `iter_scb_auxiliary_records(snapshot, args.file)`: a list of records                                   |
+  | `scb_events`       | `read_scb_events(snapshot)`: `declarations`, `tables`                                                  |
+  | `scb_values`       | `clean_scb_values(snapshot)`: `provenance`, `descriptors`, `values`, `associations`, `validity`        |
 
 `sos_workbook` returns `records`, `tables`, `descriptors`, `values`, `associations`,
 `validity` and `declarations`. `file` is `args.file`, else the one file the case
