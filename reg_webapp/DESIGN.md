@@ -57,8 +57,7 @@ conn = reg_meta.db.open_db(db_path)  # mode=ro + _check_schema_compat
 wrong major / too-old minor raises at startup;
 `conformance/cases/boot/schema-major-mismatch` covers it). The boot connection is closed
 once the manifest is read; the parsed manifest AND the resolved `db_path` are stashed on
-`app.state` (the keys `/api/context` surfaces are validated at boot so a malformed DB
-fails fast). The lifespan holds **no** long-lived query connection — see the connection
+`app.state`. The lifespan holds **no** long-lived query connection — see the connection
 model below. The boot also loads the steward and builds its in-memory catalog index
 (below), stashing both on `app.state`.
 
@@ -915,38 +914,33 @@ variable pages to add one column each.
   distance through a long list (LISA's ~740 variables) still leaves the count and the
   Add in reach at the bottom edge.
 
-## Catalog stats (`routes/stats.py`, #675)
+## Context and catalog sizes (the Rust server, 3a.10)
 
-`GET /api/stats` returns the headline catalog-size counts
-(`{providers, registers, variables}`) the landing page renders. It is a **TOP-LEVEL**
-route (a sibling of `/api/context`), deliberately NOT under `/api/catalog`: that prefix
-is the `{fqid:path}` catch-all, so a `/api/catalog/stats` would be swallowed by the
-catch-all (or need a reserved-slug carve-out + above-the-catch-all declaration).
-
-Both artifact kinds call `Catalog.catalog_sizes()` on the per-request connection with
-the effective read scope. Counts come from SQL before the response is serialized:
-providers and registers require a surviving binding, and variables count once per
-binding FQID. Catalog artifacts default to reference; steward artifacts default to
-holdings. Explicit browse scope follows the same contract as catalog and search routes.
-
-ETag + Cache-Control ride the generic `ETagMiddleware`. `/api/stats` keeps the short
-`public, max-age=60, must-revalidate` tier so a same-steward redeploy promptly exposes
-counts from the new generation.
+`GET /api/context` is answered by the Rust server (`reg-meta serve`, the `context`
+operation in `crates/reg-catalog/src/ops/slice_3a.rs`), not by this backend. One call
+returns the steward branding, schema version, import date, the steward's period span,
+the `reg_meta` version and the headline `sizes` (`{providers, registers, variables}` in
+the read scope), as `{data, meta}`; it replaces FastAPI's `/api/context` and
+`/api/stats` (`RUST_RUNTIME_SPEC.md` decision 15). App fetches it once and threads
+`steward` and `sizes` to Home, which makes no request of its own. The SPA's types for it
+are generated from the committed `crates/reg-meta/openapi.json` into
+`frontend/src/lib/api-types-rust.ts` (a `cargo test` keeps the snapshot equal to the
+server). Locally, the Vite dev proxy sends `/api/context` to the Rust server and the
+rest of `/api` here.
 
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
-Every read endpoint (`/api/context`, `/api/stats`, the `/api/catalog` root + catch-all,
-the 7 binding-suffix sub-endpoints) carries an ETag derived from the full catalog
+Every read endpoint (the `/api/catalog` root + catch-all, the 7 binding-suffix
+sub-endpoints, search and docs) carries an ETag derived from the full catalog
 generation, effective read scope, package version, steward identity, and response body
-and a per-route `Cache-Control` (`cache_control_for`) in three tiers: `/api/context`
-revalidates always (see below); scope-sensitive reads (`/api/catalog/*`, `/api/search`,
-and `/api/stats`) keep `public, max-age=60, must-revalidate`; rebuild-stable doc-library
-reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A matching
-`If-None-Match` yields a **304** with no body, but the current body-derived middleware
-still executes the route and serializes the response first: it saves transfer, not
-origin computation or latency. The pure logic lives in `etag.py` (`compute_etag` +
-`etag_matches` + `cache_control_for`); an ASGI middleware (`ETagMiddleware`) wires it
-DRY onto every GET read response.
+and a per-route `Cache-Control` (`cache_control_for`) in two tiers: scope-sensitive
+reads (`/api/catalog/*` and `/api/search`) keep `public, max-age=60, must-revalidate`;
+rebuild-stable doc-library reads (`/api/docs/*`) keep
+`public, max-age=86400, must-revalidate`. A matching `If-None-Match` yields a **304**
+with no body, but the current body-derived middleware still executes the route and
+serializes the response first: it saves transfer, not origin computation or latency. The
+pure logic lives in `etag.py` (`compute_etag` + `etag_matches` + `cache_control_for`);
+an ASGI middleware (`ETagMiddleware`) wires it DRY onto every GET read response.
 
 **V1 early-revalidation correction (decision 2026-07-14; not implemented at this
 head).** App code, compiled catalog DB, steward branding configuration and paired docs
@@ -976,23 +970,19 @@ path meets it, so no second in-process response cache is warranted.
 - **The body-hash** makes `If-None-Match` per-URL coherent — the `?period` / `?variant`
   query is part of the URL, so it's already part of the cache key (different periods are
   different ETags).
-- **`/api/context` revalidates always** (`Cache-Control: no-cache`, in
-  `REVALIDATE_ALWAYS_PATHS`): the SPA vintage footer reads it to assert a specific
-  deploy version/date, so a sub-24h-stale copy would *visibly lie* right after a deploy.
-  The current ETag keeps an unchanged body off the wire; the early-validator correction
-  above makes that path computationally cheap too. A deploy bump produces a fresh 200.
-  Catalog and search endpoints use `max-age=60` because both embed the #322
-  concept-group folds, which can change at the same browser URL on redeploy. A long
-  browser-fresh copy would surface the old grouping to a returning user even though the
-  edge generation changed; `/api/stats` shares that short browser tier because filtered
-  counts can also change on a same-id redeploy. The body-hash ETag avoids retransmitting
-  unchanged bodies, and `public` keeps the CF edge cacheable (the #220 probe survives);
-  early validation is what removes repeated route work. Only `/api/docs/*` keeps
-  `max-age=86400` — doc-library content is rebuild-stable and a sub-day-stale list is
-  acceptable there; the ETag still guarantees correctness on revalidation. The edge
-  worker (`reg_webapp/edge/`) defers to this origin's `Cache-Control` contract (it only
-  stamps the `__edge_v` cache-generation param, orthogonal to caching policy), so the
-  per-route policy needs no edge change.
+- **`/api/context` revalidates always** (`Cache-Control: no-cache`, now set by the Rust
+  server): the SPA vintage footer reads it to assert a specific deploy version/date, so
+  a sub-24h-stale copy would *visibly lie* right after a deploy. Catalog and search
+  endpoints use `max-age=60` because both embed the #322 concept-group folds, which can
+  change at the same browser URL on redeploy. A long browser-fresh copy would surface
+  the old grouping to a returning user even though the edge generation changed. The
+  body-hash ETag avoids retransmitting unchanged bodies, and `public` keeps the CF edge
+  cacheable (the #220 probe survives); early validation is what removes repeated route
+  work. Only `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable
+  and a sub-day-stale list is acceptable there; the ETag still guarantees correctness on
+  revalidation. The edge worker (`reg_webapp/edge/`) defers to this origin's
+  `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
+  orthogonal to caching policy), so the per-route policy needs no edge change.
 - **Middleware skips WRITE endpoints** via a method gate: only `GET` reads are stamped,
   so the POST endpoints pass through with no ETag. It also skips non-200 responses — an
   error body isn't a cacheable representation, and handing the client a validator for a
@@ -1073,12 +1063,12 @@ graph edges, and lineage remain reference evidence. The browse subject is scoped
 reference neighbor does not grant holdings or orderability. Hydrated graph states use
 the scoped reader; unheld neighboring variables remain thin with no selectable states.
 
-`/api/context` reports artifact kind, manifest steward, full generation, and default
-scope alongside branding and package versions. Its optional `catalog_period_span` is
-computed once at boot from compiled physical `holding_period` MIN/MAX bounds of known
-tables with an explicit mapping, then capped at the catalog import year. It is a coarse
-UI slider bound, never a coverage or validity check. Catalog artifacts and holdings
-without dated periods return null.
+The Rust server's `context` reports branding, schema version, import date and the
+`reg_meta` version; its `meta` carries the full generation and the effective scope. Its
+optional `period_span` is computed from compiled physical `holding_period` MIN/MAX
+bounds of known tables with an explicit mapping, then capped at the catalog import year.
+It is a coarse UI slider bound, never a coverage or validity check. Catalog artifacts
+and holdings without dated periods return null.
 
 `REG_WEBAPP_STEWARDS_DIR` overrides the branding root for wheels and Docker images.
 SWECOV is the proving steward; extracting its branding and delivery pipeline into its
@@ -1388,19 +1378,19 @@ them twice.
 
 `App.svelte` renders a `<footer class="vintage">` on every route showing the reg_meta
 version, schema version, and DB build date sourced from `/api/context`
-(`context.webapp.reg_meta_version`, `context.reg_meta.schema_version`,
-`context.reg_meta.import_date`). The footer is guarded on `context` (same as the header
-`.build` chip) so it is absent until `/api/context` resolves. `import_date` is a UTC
-timestamp string (`"2026-06-12T08:30:00Z"`); the footer displays only the leading
-`YYYY-MM-DD` (split on `"T"`). The intent is citation stability: a reader quoting any
-catalog node can see which reg_meta build it reflects without navigating away.
+(`context.reg_meta_version`, `context.schema_version`, `context.import_date`). The
+footer is guarded on `context` (same as the header `.build` chip) so it is absent until
+`/api/context` resolves. `import_date` is a UTC timestamp string
+(`"2026-06-12T08:30:00Z"`); the footer displays only the leading `YYYY-MM-DD` (split on
+`"T"`). The intent is citation stability: a reader quoting any catalog node can see
+which reg_meta build it reflects without navigating away.
 
 `AppShell`'s rail carries a `YearWindowSlider` dual-thumb year slider (#614/#611) as the
 "Study window" control — a global control reachable on every route and inside the mobile
 drawer. It sets the active project window (1960 floor → the catalog vintage year from
-`context.reg_meta.import_date`; current year as the pre-context fallback), with bounds
-threaded down from `App.svelte`. It writes through `windowStore`
-(`src/lib/window.svelte.ts`) — see the store description below.
+`context.import_date`; current year as the pre-context fallback), with bounds threaded
+down from `App.svelte`. It writes through `windowStore` (`src/lib/window.svelte.ts`) —
+see the store description below.
 
 ## SPA routing + production fallback
 
@@ -1774,7 +1764,7 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   order — without the guard an older commit's slow build could overwrite a newer deploy;
   it also makes non-main dispatches deploy-inert). Two gates guard a bad image: the
   entrypoint smoke gate (container exits non-zero before ever serving when artifact
-  admission or a required route fails) and fly.toml's `/api/context` HTTP check (flyctl
+  admission or a required route fails) and fly.toml's `/api/catalog` HTTP check (flyctl
   reports failure if it never passes). Rollback: `flyctl releases --image` lists
   history; `flyctl deploy --image <old>` restores in seconds.
 - **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
@@ -2257,18 +2247,18 @@ passive "no data here", not a selection warning), while an explicit out-of-cover
 `?period` still renders honestly with its not-delivered gap. Open-ended coverage
 additionally surfaces a **"coverage through \<vintage\>"** note (M21). The per-page
 picker shares the rail slider's vintage ceiling (#631): `App.svelte` threads the ceiling
-(`context.reg_meta.import_date`'s year) down through `CatalogNodeView` →
-`BindingLeafView` → `PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker`
-(#638). On the concept-group subject page the picker is a **client-side availability
-lens** over the union of member coverage spans — it greys members not delivered in the
-active window but drives no refetch (`getConceptGroup` takes no period parameter). The
-vintage is the ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still
-delivered") projects to — the catalog only knows delivery up to its vintage — so the
-coverage band ends at the vintage and a selection past it reads as "not delivered after
-`<vintage>`". It is NOT a floor on the slider bounds: a FINITE coverage keeps its real
-end (never extended to the vintage), and a window/selection past the vintage still
-widens the bounds (the thumb renders the real value) without extending coverage.
-Wall-clock is the pre-context fallback only.
+(`context.import_date`'s year) down through `CatalogNodeView` → `BindingLeafView` →
+`PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker` (#638). On the
+concept-group subject page the picker is a **client-side availability lens** over the
+union of member coverage spans — it greys members not delivered in the active window but
+drives no refetch (`getConceptGroup` takes no period parameter). The vintage is the
+ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still delivered") projects to —
+the catalog only knows delivery up to its vintage — so the coverage band ends at the
+vintage and a selection past it reads as "not delivered after `<vintage>`". It is NOT a
+floor on the slider bounds: a FINITE coverage keeps its real end (never extended to the
+vintage), and a window/selection past the vintage still widens the bounds (the thumb
+renders the real value) without extending coverage. Wall-clock is the pre-context
+fallback only.
 
 Precedence — two backing stores, one source of truth:
 
@@ -2294,11 +2284,10 @@ update it), so the new project starts windowless (full history) unless the user 
 one. An opened project (an open / restore) keeps its own `window` unchanged. The rail
 slider also exposes an explicit ✕ clear control that writes `null` back to the store,
 making full history reachable at any time after the first interaction. Filtered steward
-deployments seed the rail and per-page picker bounds from
-`/api/context.steward.catalog_period_span` (#1037), a best-effort year span derived from
-admitted physical holding-period bounds and capped at the catalog import year. Catalog
-artifacts and holdings without dated periods fall back to the fixed 1960 →
-catalog-vintage bounds.
+deployments seed the rail and per-page picker bounds from `/api/context`'s `period_span`
+(#1037), a best-effort year span derived from admitted physical holding-period bounds
+and capped at the catalog import year. Catalog artifacts and holdings without dated
+periods fall back to the fixed 1960 → catalog-vintage bounds.
 
 ## Common study window (decision 2026-07-11)
 
@@ -2365,7 +2354,7 @@ POSTs are not. Catalog browse paths use FQID segments directly.
 
   | Method | Path                                             | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
   | ------ | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | GET    | `/api/context`                                   | Admitted artifact identity, branding, build info, default read scope.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+  | GET    | `/api/context`                                   | The Rust server's `context`: branding, build info, period span, catalog sizes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
   | GET    | `/api/catalog`                                   | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
   | GET    | `/api/search`                                    | Global FTS search → bounded typed groups (`top_results`, `registers`, folded `variables`, `classifications`, `classification_codes`, `register_value_sets`); extensible, with unknown groups skipped by the SPA. Each emitted group carries `has_more` and an opaque `next_cursor`. `?q=` is required; `?limit=` caps each group; `?type=` scopes the response (`all` default); `?cursor=` continues the requested context-bound page. Documentation is not rendered in global search.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
   | GET    | `/api/docs/search`                               | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |

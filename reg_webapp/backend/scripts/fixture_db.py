@@ -51,7 +51,7 @@ def ensure_slugged_db_importable() -> None:
 
 # A schema_version that PASSES open_db's gate (same major.minor) but differs from
 # the code constant in the PATCH (_check_schema_compat ignores patch) — so
-# test_context proves /api/context surfaces the manifest's value, not an echo of
+# the footer shows the manifest's value, not an echo of
 # reg_meta.SCHEMA_VERSION.
 _MAJOR, _MINOR, _ = reg_meta.db.SCHEMA_VERSION.split(".")
 FIXTURE_SCHEMA_VERSION = f"{_MAJOR}.{_MINOR}.999"
