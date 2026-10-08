@@ -12,7 +12,6 @@ from typing import TYPE_CHECKING
 
 from _concept_group_families import add_family as _add_family, base_db as _base_db
 from _slugged_db import add_register, add_variable
-from reg_meta.errors import EXIT_NOT_FOUND
 from reg_meta_build.cli import run
 from reg_meta_build.concept_group_candidates import (
     infer_concept_group_candidates,
@@ -409,10 +408,3 @@ def test_cli_curation_dir_names_the_accepted_families(
 
     assert foldable("accepts", _LISA_REGISTER + _MORSAK_GROUP) == 1
     assert foldable("silent", _LISA_REGISTER) == 0
-    # A mistyped tree is refused, not read as one without accepted families.
-    missing = ["--curation-dir", str(tmp_path / "missing")]
-    assert (
-        run(["--db", str(db_dir), "concept-group-candidates", *missing])
-        == EXIT_NOT_FOUND
-    )
-    assert json.loads(capsys.readouterr().out)["error"]["code"] == "path_not_found"

@@ -1898,14 +1898,15 @@ def _cmd_concept_group_candidates(
         if args.curation_dir
         else repo_curation_dir()
     )
-    # A mistyped tree would otherwise read as one with no accepted families.
-    if curation_dir is not None and not curation_dir.is_dir():
+    # A mistyped tree would otherwise read as one with no accepted families:
+    # `load_register_files` reads a root without `registers/` as empty.
+    if curation_dir is not None and not (curation_dir / "registers").is_dir():
         raise printable_error(
             RegMetaError(
                 exit_code=EXIT_NOT_FOUND,
                 code="path_not_found",
                 error_class="input",
-                message=f"curation directory {curation_dir} does not exist",
+                message=f"curation directory {curation_dir} has no registers/ directory",
                 remediation="Pass the curation tree that holds registers/.",
             )
         )
