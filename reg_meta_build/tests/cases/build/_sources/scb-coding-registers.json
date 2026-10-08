@@ -1,5 +1,5 @@
 {
-  "description": "One SCB delivery, one register per coding claim. Register n (native id n, variant n*10+2) delivers VALUE of variable 5 in 2020 as CVID n*100+1 unless noted; a list is written name (level): codes, and every item is valid 2000-2030. 31 pinfree, 36 keepgone, 37 overgone, 38 keepmembers: keep (1): 01 Label and other (1): 02 Other. 32 uncoded, 33 omit, 50 cardinality, 61 omitclash: no list. 34 extend, 42 extendgone, 43 extendwitness, 45 extendmembers: VALUE 2019 (CVID n*100+1, no list) and 2020 (CVID n*100+2) under list (1): 01 Label. 46 extendtwice: as 34, with a second list (2): 02 Label on 2020. 44 extendcovered: list (1): 01 Label. 40 uncodedcoded, 41 omitcoded: coded (1): 01 Label. 39 keeptwice and 47 split: keep (1): 01 Label, keep (2): 03 Label, other (1): 02 Other. 51 window, 52 conflict, 53 agree: first (1): 01 Label and second (1): 02 Other. 54 dup: keep (1): 01 Label, other (1): 02 Other and its duplicate other (2): 02 Other; VALUE 2021 (CVID 5402) under future (1): 03 Future. 55 digestdup: keep (1): 01 Label, its duplicate keep (2): 01 Label, other (1): 02 Other. 56 digest: list (1): 01 Label and list (2): 02 Label. 57 digestdrift: list (1): 01 Changed and list (2): 02 Label. 58 partial: VALUE 2020 under keep (1): 01 Label and other (1): 02 Other; VALUE 2021 (CVID 5802) under other (1): 02 Other alone. 62 warning: LA15 (1): LA1501 Label. 63 undated: as 31, plus VALUE in the range-less pooled edition 'HT 2021 - VT 2022' (RegVerID 2122, CVID 6302) under pooled (1): 03 Pooled. 64 undateduncoded: VALUE 2020 with no list, plus the same pooled edition (CVID 6402) under pooled (1): 03 Pooled.",
+  "description": "One SCB delivery, one register per coding claim. Register n (native id n, variant n*10+2) delivers VALUE of variable 5 in 2020 as CVID n*100+1 unless noted; a list is written name (level): codes, and every item is valid 2000-2030. 31 pinfree, 36 keepgone, 37 overgone, 38 keepmembers: keep (1): 01 Label and other (1): 02 Other. 32 uncoded, 33 omit, 50 cardinality, 61 omitclash: no list. 34 extend, 42 extendgone, 43 extendwitness, 45 extendmembers: VALUE 2019 (CVID n*100+1, no list) and 2020 (CVID n*100+2) under list (1): 01 Label. 46 extendtwice: as 34, with a second list (2): 02 Label on 2020. 44 extendcovered: list (1): 01 Label. 40 uncodedcoded, 41 omitcoded: coded (1): 01 Label. 39 keeptwice and 47 split: keep (1): 01 Label, keep (2): 03 Label, other (1): 02 Other. 51 window, 52 conflict, 53 agree: first (1): 01 Label and second (1): 02 Other. 54 dup: keep (1): 01 Label, other (1): 02 Other and its duplicate other (2): 02 Other; VALUE 2021 (CVID 5402) under future (1): 03 Future. 55 digestdup: keep (1): 01 Label, its duplicate keep (2): 01 Label, other (1): 02 Other. 56 digest: list (1): 01 Label and list (2): 02 Label. 57 digestdrift: list (1): 01 Changed and list (2): 02 Label. 58 partial: VALUE 2020 under keep (1): 01 Label and other (1): 02 Other; VALUE 2021 (CVID 5802) under other (1): 02 Other alone. 62 warning: LA15 (1): LA1501 Label. 63 undated: as 31, plus VALUE in the range-less pooled edition 'HT 2021 - VT 2022' (RegVerID 2122, CVID 6302) under pooled (1): 03 Pooled. 64 undateduncoded: VALUE 2020 with no list, plus the same pooled edition (CVID 6402) under pooled (1): 03 Pooled. 65 owncert, 66 owncertraw, 69 owncertperiod, 70 docauthority: Own list (1): 01 Label. 67 owncertlabel: Own list (1): 01 Changed. 68 owncertmember: Own list (1): 02 Label. SOS register SYN (subset SYN_A, 2019-2021) delivers SHORT, whose Kodlista lists 01 Label for 2020 only, and VARY, whose Kodlista lists 01 Label for 2020 and 02 Label for 2021; EMPTY has the same list as SHORT. An SOS Kodlista has no version label.",
   "scb": {
     "registerinformation": [
       {
@@ -459,6 +459,78 @@
           62,
           622
         ]
+      },
+      {
+        "cvid": 6501,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERT",
+          65,
+          652
+        ]
+      },
+      {
+        "cvid": 6601,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERTRAW",
+          66,
+          662
+        ]
+      },
+      {
+        "cvid": 6701,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERTLABEL",
+          67,
+          672
+        ]
+      },
+      {
+        "cvid": 6801,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERTMEMBER",
+          68,
+          682
+        ]
+      },
+      {
+        "cvid": 6901,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "OWNCERTPERIOD",
+          69,
+          692
+        ]
+      },
+      {
+        "cvid": 7001,
+        "var_id": 5,
+        "colname": "VALUE",
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "DOCAUTHORITY",
+          70,
+          702
+        ]
       }
     ],
     "vardemangder": [
@@ -509,7 +581,86 @@
       "keep|1|01|Label|5801|5801",
       "other|1|02|Other|5801|5802",
       "other|1|02|Other|5802|5803",
-      "LA15|1|LA1501|Label|6201|6201"
+      "LA15|1|LA1501|Label|6201|6201",
+      "Own list|1|01|Label|6501|6501",
+      "Own list|1|01|Label|6601|6601",
+      "Own list|1|01|Changed|6701|6701",
+      "Own list|1|02|Label|6801|6801",
+      "Own list|1|01|Label|6901|6901",
+      "Own list|1|01|Label|7001|7001"
     ]
-  }
+  },
+  "sos": [
+    {
+      "abbrev": "SYN",
+      "title": "Syntetiskt register",
+      "description": "Ett syntetiskt SOS-register för testbygget.",
+      "subsets": [
+        {
+          "name": "SYN_A",
+          "label": "Vy A",
+          "description": "Första vyn",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "variables": [
+        {
+          "name": "SHORT",
+          "deldatamangd": "SYN_A",
+          "label": "Kort",
+          "description": "Kort lista",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        },
+        {
+          "name": "VARY",
+          "deldatamangd": "SYN_A",
+          "label": "Varierande",
+          "description": "Varierande lista",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        },
+        {
+          "name": "EMPTY",
+          "deldatamangd": "SYN_A",
+          "label": "Tom",
+          "description": "Tom lista",
+          "value_set": "Se kodlista",
+          "data_from": 2019,
+          "data_to": 2021
+        }
+      ],
+      "code_lists": {
+        "SHORT": [
+          [
+            "2020",
+            "01",
+            "Label"
+          ]
+        ],
+        "VARY": [
+          [
+            "2020",
+            "01",
+            "Label"
+          ],
+          [
+            "2021",
+            "02",
+            "Label"
+          ]
+        ],
+        "EMPTY": [
+          [
+            "2020",
+            "01",
+            "Label"
+          ]
+        ]
+      }
+    }
+  ]
 }

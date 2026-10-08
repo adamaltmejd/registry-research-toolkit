@@ -1269,6 +1269,378 @@
       ],
       "rows": [],
       "note": "Same test: `not issues`."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncert"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[None]: a `[[coding.documented]]` own certificate (exact rows plus raw coding fingerprints, no enumeration) applies and keeps the source domain: list Own list, 01 Label."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "65.5",
+          "scb/owncert/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[None]: `len(cases) == 1 and not issues`."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "66.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/owncertraw.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[fingerprint]: the certificate is stale: its raw coding fingerprint is owncert's: a list with the same content but another raw assertion."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncertraw"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "owncertraw: the stale certificate leaves the source list in place (the fixture's list)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "67.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/owncertlabel.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[label]: the certificate is stale: the source label is Changed, not the certified Label."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncertlabel"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Changed"
+        ]
+      ],
+      "note": "owncertlabel: the stale certificate leaves the source list in place (the fixture's list)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "68.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/owncertmember.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[member]: the certificate is stale: the source code is 02, not the certified 01."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncertmember"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "02",
+          "Label"
+        ]
+      ],
+      "note": "owncertmember: the stale certificate leaves the source list in place (the fixture's list)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "69.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/owncertperiod.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_complete_own_source_certificate_retains_domain_and_refuses_drift[period]: the certificate is stale: its periods reach 2019, which VALUE does not deliver."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "owncertperiod"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "owncertperiod: the stale certificate leaves the source list in place (the fixture's list)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "70.5"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/docauthority.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "compact_choices.py::test_ordinary_documented_authority_still_refuses_a_complete_existing_list: an exact-row authority without raw coding fingerprints is no own certificate, so documenting a period that already has a complete list (Own list, 01 Label) is stale. Its allowed twin is register owncert."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "docauthority"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "docauthority: the source list stays."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "syn",
+        "variable": "short"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2021-01-01",
+          "2021-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "choices.py::test_extend_list_only_complete_inside_short_witness: SHORT's one list (SOS, no version label, so `list = \"\"` with exact rows) covers 2019-2021 but its member 01 is valid in 2020 only; the 2020 witness extends 01 Label to 2019, and 2021 keeps no value set."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "8646299464352216667.SHORT",
+          "sos/syn/short"
+        ],
+        "code": [
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [],
+      "note": "Same test: `not diagnostics` for the extension."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "8646299464352216667.VARY"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syn.toml#/coding.extend/2/period/1"
+        ]
+      ],
+      "note": "choice_application.py::test_extension_rejects_varying_witness_but_same_period_selection_keeps_changes (varying witness): VARY's list carries 01 in 2020 and 02 in 2021, so the 2020-2021 witness has no constant member set and the extension is refused. The build refuses it at compile (stale), where the replaced test met it at application (`nonconstant_coding_witness`)."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "syn",
+        "variable": "vary",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "note": "Same test: the refused extension gives 2019 no value set."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "syn",
+        "variable": "empty",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "provenance"
+      ],
+      "rows": [
+        [
+          "curation/registers/sos/syn.toml#/coding.uncoded/1/period/1: Reviewed coding\nfixture"
+        ]
+      ],
+      "note": "choice_application.py::test_exact_empty_evidence_can_be_accepted_as_uncoded_without_guessing_members: EMPTY's list has no member active in 2019; uncoded is accepted there and attributed to its entry."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "syn",
+        "variable": "empty",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          null
+        ]
+      ],
+      "note": "Same test: no members are guessed for the accepted window."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "8646299464352216667.EMPTY",
+          "sos/syn/empty"
+        ],
+        "code": [
+          "empty_active_coding",
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "empty_active_coding",
+          "2021-01-01",
+          "2021-12-31"
+        ]
+      ],
+      "note": "Same test: `empty_active_coding` remains only for the window the acceptance does not cover (2021; 2020 has member 01), and the entry is not stale."
     }
   ]
 }
