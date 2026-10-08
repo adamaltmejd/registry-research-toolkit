@@ -309,14 +309,15 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
    iterating. Each package stays inside its budget below.
 2. **Push / CI.** `ci.yml` runs the Python suites as a `test` matrix, one leg per root
    `testpaths` entry, each with `timeout-minutes` at its CI budget below. The `rust`
-   job's 3-minute timeout is the `crates/` budget, and it also covers the `reg-meta`
-   build and the Rust HTTP cases. The `hook-tests` job runs the Claude Code hook tests
-   (`.claude/hooks/tests`, plain bash) with a 2-minute timeout. The
-   `reg-webapp-frontend` job has a 6-minute timeout and includes the codegen drift
-   check; the OpenAPI snapshot is a backend case. A job that exceeds its budget fails.
-   The Playwright smoke driver (`dev.sh smoke`) is a local check, not a CI job.
-   `@pytest.mark.integration` adds the container-backed tests, which are not budgeted
-   here.
+   job's 3-minute timeout is the `crates/` budget, and it also covers the gate's `rust`
+   and `release` steps (`scripts/gate.py`: the workspace build, the whole conformance
+   suite against the Rust server, release admission on the synthetic steward artifact).
+   The `hook-tests` job runs the Claude Code hook tests (`.claude/hooks/tests`, plain
+   bash) with a 2-minute timeout. The `reg-webapp-frontend` job has a 6-minute timeout
+   and includes the codegen drift check; the OpenAPI snapshot is a backend case. A job
+   that exceeds its budget fails. The Playwright drivers (`dev.sh smoke`, the gate's
+   `flows` step) are local checks, not CI jobs. `@pytest.mark.integration` adds the
+   container-backed tests, which are not budgeted here.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;
@@ -356,9 +357,9 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
 G0 of `RUST_RUNTIME_SPEC.md` §4 runs conformance, the touched packages and
 `cargo test --workspace`. The reader-side rows, conformance and `crates/` sum to 59 s,
 so any change touching reader-side packages fits G0's 60 s. From slice 3a G0 also runs
-the Rust HTTP run (§10: `cargo build -p reg-meta`, then the `api` cases the Rust server
-implements, out of process), 8 s warm. G1 (under 5 min) and G2 run on real artifacts in
-tier 3 and are not package budgets. `reg_meta_build` stays Python and is outside G0.
+the Rust HTTP run (§10: `scripts/gate.py rust`, the whole suite against the Rust server,
+out of process). G1 (under 5 min) and G2 run on real artifacts in tier 3 and are not
+package budgets. `reg_meta_build` stays Python and is outside G0.
 
 ### Conformance suite
 
