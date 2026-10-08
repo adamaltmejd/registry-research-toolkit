@@ -107,8 +107,10 @@ fn get<'a>(map: &'a Map<String, Value>, key: &str) -> Option<&'a Value> {
     map.get(key).filter(|v| !v.is_null())
 }
 
-/// A string quoted for a message.
-fn q(s: &str) -> String {
+/// A string quoted for a message (see the module documentation); exported as
+/// [`crate::quote`] for the semantic layer's messages.
+#[must_use]
+pub fn q(s: &str) -> String {
     let mut quoted = String::from("'");
     for c in s.chars() {
         if c == '"' {
@@ -121,7 +123,8 @@ fn q(s: &str) -> String {
     quoted
 }
 
-fn quoted_list<'a>(items: impl IntoIterator<Item = &'a str>) -> String {
+/// Strings quoted for a message as a list: `['a', 'b']`.
+pub fn quoted_list<'a>(items: impl IntoIterator<Item = &'a str>) -> String {
     let items: Vec<String> = items.into_iter().map(q).collect();
     format!("[{}]", items.join(", "))
 }
