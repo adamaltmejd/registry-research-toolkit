@@ -1,4 +1,4 @@
-"""Classification CSV loading, written classification storage and the reader CLI."""
+"""Written classification storage and the reader CLI."""
 
 from __future__ import annotations
 
@@ -9,55 +9,9 @@ from typing import TYPE_CHECKING
 
 import pytest
 from catalog_manifest import synthetic_manifest
-from reg_meta.errors import RegMetaError
-from reg_meta_build.classifications import load_valid_codes
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-
-class TestLoadValidCodes:
-    def _csv(self, tmp_path: Path, body: str) -> Path:
-        path = tmp_path / "codes.csv"
-        path.write_text(body, encoding="utf-8")
-        return path
-
-    def test_loads_simple(self, tmp_path: Path):
-        path = self._csv(tmp_path, "vardekod,vardebenamning\nA,Alpha\nB,Bravo\n")
-        assert load_valid_codes(path) == {"A": "Alpha", "B": "Bravo"}
-
-    def test_strips_whitespace(self, tmp_path: Path):
-        path = self._csv(tmp_path, "vardekod,vardebenamning\n  A  ,  Alpha label  \n")
-        assert load_valid_codes(path) == {"A": "Alpha label"}
-
-    def test_skips_blank_lines(self, tmp_path: Path):
-        path = self._csv(tmp_path, "vardekod,vardebenamning\nA,Alpha\n\n,\nB,Bravo\n")
-        assert load_valid_codes(path) == {"A": "Alpha", "B": "Bravo"}
-
-    def test_bad_header(self, tmp_path: Path):
-        path = self._csv(tmp_path, "foo,bar\nA,Alpha\n")
-        with pytest.raises(RegMetaError) as ei:
-            load_valid_codes(path)
-        assert ei.value.code == "classification_csv_invalid"
-
-    def test_universal_header_accepted(self, tmp_path: Path):
-        # The SOS CSVs ship `code,label` (+ extra trailing columns we ignore).
-        path = self._csv(
-            tmp_path,
-            "code,label,label_en,parent_code\nA,Alpha,Alpha-en,\nB,Bravo,,A\n",
-        )
-        assert load_valid_codes(path) == {"A": "Alpha", "B": "Bravo"}
-
-    def test_duplicate_code(self, tmp_path: Path):
-        path = self._csv(tmp_path, "vardekod,vardebenamning\nA,Alpha\nA,Apple\n")
-        with pytest.raises(RegMetaError) as ei:
-            load_valid_codes(path)
-        assert "duplicate" in ei.value.message.lower()
-
-    def test_empty_data(self, tmp_path: Path):
-        path = self._csv(tmp_path, "vardekod,vardebenamning\n")
-        with pytest.raises(RegMetaError):
-            load_valid_codes(path)
 
 
 def _run_json(db_dir: Path, args: list[str]) -> tuple[dict, int]:

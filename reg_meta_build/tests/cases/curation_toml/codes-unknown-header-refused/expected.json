@@ -1,0 +1,12 @@
+{
+  "loader": "valid_codes",
+  "replaces": "test_classification_storage.py::TestLoadValidCodes::test_bad_header",
+  "fails_if": "load_valid_codes reads a CSV whose first two columns are neither vardekod,vardebenamning nor code,label",
+  "error": {
+    "code": "classification_csv_invalid",
+    "locator": "codes.csv: first two columns must be",
+    "message_contains": [
+      "'foo', 'bar'"
+    ]
+  }
+}

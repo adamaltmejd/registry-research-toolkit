@@ -1,0 +1,9 @@
+{
+  "loader": "valid_codes",
+  "replaces": "test_classification_storage.py::TestLoadValidCodes::test_empty_data",
+  "fails_if": "load_valid_codes returns an empty code list for a header-only CSV",
+  "error": {
+    "code": "classification_csv_invalid",
+    "locator": "codes.csv: no data rows"
+  }
+}
