@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "komvux"
+native_id = "3"
+
+[[variant]]
+native_id = "3.30"
+slug = "nyborjare"
+
+[[variable]]
+native_id = "3.301"
+slug = "komvux"

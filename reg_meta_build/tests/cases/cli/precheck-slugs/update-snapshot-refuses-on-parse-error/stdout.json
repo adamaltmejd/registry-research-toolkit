@@ -1,0 +1,10 @@
+{
+  "parse_errors": [
+    {
+      "code": "slug_toml_invalid"
+    }
+  ],
+  "snapshot": {
+    "update_skipped_reason": "parse_errors"
+  }
+}

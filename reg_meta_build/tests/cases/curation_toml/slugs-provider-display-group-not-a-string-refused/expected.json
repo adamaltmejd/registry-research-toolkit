@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestDisplayGroupTyped::test_non_string_rejected",
+  "fails_if": "the slug loader accepts a non-string `display_group`",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register_variant.'1.10'",
+    "message_contains": [
+      "display_group"
+    ]
+  }
+}

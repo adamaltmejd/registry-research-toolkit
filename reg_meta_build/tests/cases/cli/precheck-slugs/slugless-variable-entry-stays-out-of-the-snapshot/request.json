@@ -1,0 +1,13 @@
+{
+  "replaces": "test_fqid_slugs_precheck.py::TestSnapshot::test_snapshot_payload_skips_slugless_entries",
+  "fails_if": "the snapshot records a variable entry that carries no slug, so retiring its deprecation metadata would read as a removal",
+  "note": "Variable 1.101 carries only `deprecated = true`; 1.102 pins `kon`.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

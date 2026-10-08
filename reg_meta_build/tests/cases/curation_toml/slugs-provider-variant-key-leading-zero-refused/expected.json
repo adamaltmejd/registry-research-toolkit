@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestCanonicalIntegerKeys::test_leading_zero_variant_half_rejected",
+  "fails_if": "the slug loader accepts `1.010` beside `1.10`, so two keys alias one variant",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register_variant.'1.010'",
+    "message_contains": [
+      "canonical"
+    ]
+  }
+}

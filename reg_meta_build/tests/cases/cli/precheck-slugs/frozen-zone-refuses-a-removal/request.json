@@ -1,0 +1,13 @@
+{
+  "replaces": "test_fqid_slugs_precheck_cli.py::test_frozen_zone_refuses_non_additive_update[removal]",
+  "fails_if": "a frozen zone lets `--update-snapshot` drop a published slug (#470)",
+  "note": "The baseline carries register 5 `retired`, which no pin names any more.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

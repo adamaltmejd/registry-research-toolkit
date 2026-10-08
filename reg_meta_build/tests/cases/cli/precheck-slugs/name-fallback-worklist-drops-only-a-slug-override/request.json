@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_fqid_slugs_drift_markers.py::TestPopulateVariableSlugs::test_worklist_excludes_curated_override",
+    "test_fqid_slugs_drift_markers.py::TestPopulateVariableSlugs::test_worklist_keeps_metadata_only_override"
+  ],
+  "fails_if": "the worklist treats every curated `[variable]` row as a fix (dropping a deprecated-only or `replaced_by`-only entry), or keeps a variable a curator pinned with a string slug",
+  "note": "1.20 is fixed by a curated slug; 1.21 is only deprecated and 1.22 only points `replaced_by` at 1.21, so both slugs still ship unfixed.",
+  "argv": [
+    "--db",
+    "{db}",
+    "precheck-slugs",
+    "--slug-dir",
+    "{work}/slugs",
+    "--update-snapshot"
+  ]
+}

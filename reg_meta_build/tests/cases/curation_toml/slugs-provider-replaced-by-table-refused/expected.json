@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestGraphSemanticsRejectedInSlugToml::test_toplevel_replaced_by_array_rejected",
+  "fails_if": "the slug loader ignores a top-level `[[replaced_by]]` succession array instead of refusing it (#522)",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "scb.toml: unknown top-level table(s)",
+    "message_contains": [
+      "replaced_by"
+    ]
+  }
+}

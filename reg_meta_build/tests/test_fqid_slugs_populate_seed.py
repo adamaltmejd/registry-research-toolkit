@@ -7,7 +7,7 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _fqid_slug_support import write_register_file, write_text_file as _write
+from _fqid_slug_support import write_text_file as _write
 from _slugged_db import (
     add_register,
     add_state,
@@ -24,7 +24,6 @@ from reg_meta_build.fqid_slugs import (
     populate_slugs,
     populate_variable_slugs,
     propose_panel_entity_key,
-    seed_all,
     seed_provider_toml,
 )
 
@@ -194,35 +193,6 @@ class TestPopulateSlugs:
 
 
 class TestSeedSlugs:
-    def test_writes_only_register_auto_files(self, tmp_path: Path):
-        conn = build_slugged_db()
-        out = tmp_path / "out"
-        authored = write_register_file(out, "lisa", "1")
-        before = authored.read_bytes()
-        written = seed_all(conn, out)
-        assert set(written) == {"registers/scb/lisa.auto.toml"}
-        body = written["registers/scb/lisa.auto.toml"].read_text()
-        assert "[[variable]]" in body
-        assert 'native_id = "1.44"' in body
-        assert "[register]" not in body
-        assert authored.read_bytes() == before
-
-    def test_authored_pin_removes_matching_generated_pin_on_regeneration(
-        self, tmp_path: Path
-    ):
-        conn = build_slugged_db()
-        out = tmp_path / "out"
-        write_register_file(out, "lisa", "1")
-        seed_all(conn, out)
-        write_register_file(
-            out, "lisa", "1", body='[[variable]]\nnative_id = "1.44"\nslug = "kon"\n'
-        )
-        seed_all(conn, out)
-        body = (out / "registers" / "scb" / "lisa.auto.toml").read_text()
-        assert 'native_id = "1.44"' not in body
-        assert "never recomputed. Curator overrides" in body
-        assert "\n\n\n" not in body
-
     def test_omits_register_version_from_seed(self):
         # A2.6: register_version is not seeded at all (version left the FQID
         # grammar; no slug column). The former version-seed tests (unperiodized
@@ -293,18 +263,6 @@ class TestProposePanel:
         )
         conn.commit()
         assert propose_panel_entity_key(conn, 1, 10) == ("kon", "lopnr")
-
-    def test_seed_never_writes_authored_panel_metadata(self, tmp_path: Path):
-        conn = build_slugged_db()
-        _flag_identifier(conn, register_id=1, var_id=44)
-        out = tmp_path / "out"
-        authored = write_register_file(out, "lisa", "1")
-        before = authored.read_bytes()
-        seed_all(conn, out)
-        body = (out / "registers" / "scb" / "lisa.auto.toml").read_text()
-        assert "panel_entity_key" not in body
-        assert "panel_time_key" not in body
-        assert authored.read_bytes() == before
 
 
 class TestVariableOverridesAcceptedByPopulateSlugs:

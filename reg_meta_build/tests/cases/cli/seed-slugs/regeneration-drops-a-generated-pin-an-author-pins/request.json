@@ -1,0 +1,14 @@
+{
+  "replaces": "test_fqid_slugs_populate_seed.py::TestSeedSlugs::test_authored_pin_removes_matching_generated_pin_on_regeneration",
+  "fails_if": "regeneration keeps a generated pin whose variable now has an authored pin, so the two files pin one native id twice",
+  "note": "A generated file from an earlier seed pins 1.101; the register file now pins it too. The regenerated file keeps its header and no run of blank lines.",
+  "argv": [
+    "--db",
+    "{db}",
+    "seed-slugs",
+    "--out-dir",
+    "{work}/curation",
+    "--force",
+    "--quiet"
+  ]
+}

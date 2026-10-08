@@ -1,0 +1,16 @@
+{
+  "register": {
+    "scb/1": "sample",
+    "scb/3": "komvux",
+    "scb/4": "part",
+    "scb/6": "foretag"
+  },
+  "register_variant": {
+    "scb/1.10": "people",
+    "scb/3.30": "nyborjare",
+    "scb/4.40": "people",
+    "scb/6.60": "foretag",
+    "scb/6.61": "arbetsstallen"
+  },
+  "variable": {}
+}

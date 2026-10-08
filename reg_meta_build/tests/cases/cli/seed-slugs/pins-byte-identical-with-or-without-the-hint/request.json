@@ -1,0 +1,31 @@
+{
+  "replaces": "test_fqid_slug_cli_boundary.py::test_pins_byte_identical_with_or_without_hint",
+  "fails_if": "the hint (or `--all-hints`) changes the bytes of a generated pin file",
+  "note": "Two runs over two copies of the artifact curation, one quiet and one with every hint; the pins of register 1 (1.101 unpinned) must match byte for byte.",
+  "curation_dirs": [
+    "quiet",
+    "loud"
+  ],
+  "runs": [
+    {
+      "argv": [
+        "--db",
+        "{db}",
+        "seed-slugs",
+        "--out-dir",
+        "{work}/quiet",
+        "--quiet"
+      ]
+    },
+    {
+      "argv": [
+        "--db",
+        "{db}",
+        "seed-slugs",
+        "--out-dir",
+        "{work}/loud",
+        "--all-hints"
+      ]
+    }
+  ]
+}

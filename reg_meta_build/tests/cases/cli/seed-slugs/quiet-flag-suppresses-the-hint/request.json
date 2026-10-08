@@ -1,0 +1,13 @@
+{
+  "replaces": "test_fqid_slug_cli_boundary.py::test_quiet_flag_suppresses_hint",
+  "fails_if": "the quiet flag stops suppressing the `_default` hint on stderr",
+  "note": "Register 3 would be hinted (see `hint-names-a-mirror-variant-register`).",
+  "argv": [
+    "--db",
+    "{db}",
+    "seed-slugs",
+    "--out-dir",
+    "{work}/curation",
+    "--quiet"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestEntryParseIds::test_variant_key_wrong_shape",
+  "fails_if": "the slug loader accepts a variant key without its RegVarID",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register_variant.'1'",
+    "message_contains": [
+      "RegisterId"
+    ]
+  }
+}

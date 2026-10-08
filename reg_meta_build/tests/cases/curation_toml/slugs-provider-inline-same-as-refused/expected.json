@@ -1,0 +1,12 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_load.py::TestGraphSemanticsRejectedInSlugToml::test_inline_same_as_rejected_as_unknown_field",
+  "fails_if": "the slug loader ignores an inline `same_as`, a graph edge that belongs in `relations.toml` (#522)",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "variable.'34.137'",
+    "message_contains": [
+      "same_as"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+[variable."34.10"]
+slug = "kon"
+
+[variable."34.10.kon"]
+slug = "kon-split"
+
+[variable."5028920659479690770.ALDER"]
+slug = "alder"
+
+[variable."123.FOD_DATUMN.heltal"]
+slug = "fodelsedatum"

@@ -1,0 +1,6 @@
+{
+  "loader": "freeze_states",
+  "replaces": "test_fqid_slugs_load.py::TestLoadFreezeStates::test_absent_file_is_empty_all_churning",
+  "fails_if": "an absent freeze file loads as anything but an empty map, so some zone would leave the default `churning`",
+  "loads": {}
+}

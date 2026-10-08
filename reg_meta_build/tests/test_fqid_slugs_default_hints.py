@@ -1,18 +1,12 @@
-"""Default-slug candidate classification, candidate iteration, and hint formatting for single-variant registers."""
+"""Default-slug candidate classification and hint formatting: pure functions of
+register and variant names. Which registers of a built catalog the hint names is
+`cases/cli/seed-slugs/`."""
 
 from __future__ import annotations
-
-from _fqid_slug_support import (
-    add_single_variant_register as _add_single_variant_register,
-)
-from _slugged_db import (
-    build_slugged_db,
-)
 
 from reg_meta_build.fqid_slugs import (
     classify_default_candidate,
     format_default_slug_hints,
-    iter_default_slug_candidates,
 )
 
 
@@ -68,66 +62,6 @@ class TestClassifyDefaultCandidate:
 
     def test_missing_name(self):
         assert classify_default_candidate("", "Variant")[0] == "kept"
-
-
-class TestIterDefaultSlugCandidates:
-    def test_skips_multi_variant_register(self):
-        # The default fixture has one variant; only that register-variant
-        # pair should show up (and it's `kept` since names diverge).
-        conn = build_slugged_db()
-        # Add a second variant under the same register → no longer single-variant.
-        conn.execute(
-            "INSERT INTO register_variant "
-            "(register_variant_id, register_id, slug, name) "
-            "VALUES (?, ?, ?, ?)",
-            (11, 1, "second", "Företag"),
-        )
-        candidates = list(iter_default_slug_candidates(conn))
-        assert candidates == []
-
-    def test_yields_three_classes(self):
-        conn = build_slugged_db(
-            register=None,
-            variant=None,
-            version=None,
-            variable=None,
-            classification=None,
-        )
-        _add_single_variant_register(
-            conn,
-            register_id=42,
-            register_variant_id=124,
-            name="Nybörjare i Komvux",
-            variant_name="Nybörjare i Komvux",
-            variant_slug="nyborjare-i-komvux",
-        )
-        _add_single_variant_register(
-            conn,
-            register_id=60,
-            register_variant_id=168,
-            name="Konjunkturstatistik, löner för statlig sektor (KLS)",
-            variant_name="Konjunkturstatistik, löner för statlig sektor",
-            variant_slug=None,
-        )
-        _add_single_variant_register(
-            conn,
-            register_id=346,
-            register_variant_id=1158,
-            name="Hushållens boende",
-            variant_name="Individer",
-            variant_slug="individer",
-        )
-        cands = list(iter_default_slug_candidates(conn))
-        classes = {c.source_id: c.classification for c in cands}
-        assert classes == {
-            "42.124": "exact",
-            "60.168": "near",
-            "346.1158": "kept",
-        }
-        # Carries current slug so the hint can suppress already-applied rows.
-        by_id = {c.source_id: c for c in cands}
-        assert by_id["42.124"].current_slug == "nyborjare-i-komvux"
-        assert by_id["60.168"].current_slug is None
 
 
 class TestFormatDefaultSlugHints:
