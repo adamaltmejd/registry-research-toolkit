@@ -59,6 +59,20 @@ case = "*/*/variable-page/*"
 # A failed page (`/0/status`, `/1/status`) stays a difference.
 paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
 
+# 3a.6's other typed pages (`served.py`). Before `typed-page-folded-index`, which
+# also matches terms 4 and 5.
+[[exception]]
+name = "register-page-baseline-pins"
+reason = "The baseline webapp at 760d70fa pins `scb/lisa` for `sysselsättning` and `sos/par` for `diagnos` (G1 terms 4 and 5) from its own `search_golden.toml`; the Rust server reads the derived copies' `search_pin` table, which derive writes empty on the 9.0 originals. All 6 register pages of the two terms differ (3 scope runs each). Provisional: deleted by 3a.2a, whose baseline reads the reference copies' empty table, or at the latest by 3a.13."
+case = "*/*/register-page/[45]"
+paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
+
+[[exception]]
+name = "typed-page-folded-index"
+reason = "As `variable-page-folded-index`, for the register, classification, classification_code and register_value pages: on the same derived copy the checkout's FastAPI and the Rust server agree on all 456 cases, so every difference comes from the index. Of the 456 on the originals, 27 differ outside the two pinned terms: 23 are the three terms `ß`, `ＡＢＣ` and `ﬁlm`, which return 0 rows on the baseline (2 register, 3 classification, 9 classification_code and 9 register_value pages), and 4 register pages reorder rows within the first page (bm25 near-ties, terms 3 and 21). Provisional: deleted by 3a.2a, or at the latest by 3a.13."
+case = "*/*/[rc]*-page/*"
+paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
+
 # The baseline reader: `reg_meta` (with `reg_schema`) at this commit, installed from
 # `git archive` into its own virtualenv with the commit's locked dependencies.
 [baseline]

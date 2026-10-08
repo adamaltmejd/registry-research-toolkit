@@ -1,0 +1,9 @@
+[[pin]]
+query = "choicebook"
+type = "classification"
+fqids = ["class/example-codes"]
+
+[[pin]]
+query = "diagnos"
+type = "register"
+fqids = ["sos/par"]

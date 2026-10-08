@@ -1,0 +1,59 @@
+{
+  "kind": "catalog",
+  "fixture": "code-ranking",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "A set",
+        "type": "classification"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "A set",
+        "type": "classification",
+        "register": "scb/example"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "A set",
+        "type": "classification",
+        "period": "2019"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Rankval",
+        "type": "classification_code",
+        "register": "scb/example"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Rankval",
+        "type": "classification_code",
+        "period": "2030"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Rankval",
+        "type": "register_value",
+        "register": "scb/example"
+      }
+    }
+  ]
+}

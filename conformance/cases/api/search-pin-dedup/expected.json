@@ -1,0 +1,30 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/example"
+      ],
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/lisa"
+      ],
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/example",
+        "class/example-codes"
+      ],
+      "/data/next_cursor": null
+    }
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "Q900"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "Q901"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/qreport"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "class/qset"
+      ],
+      "/data/next_cursor": null
+    }
+  }
+]

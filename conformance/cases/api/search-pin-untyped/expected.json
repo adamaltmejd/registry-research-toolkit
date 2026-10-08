@@ -1,0 +1,29 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "register",
+        "variable",
+        "group",
+        "register"
+      ],
+      "/data/items/0/fqid": "scb/alderdom",
+      "/data/items/1/fqid": "scb/lisa/gender"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "classification",
+        "code",
+        "code",
+        "register"
+      ],
+      "/data/items/0/fqid": "class/qset",
+      "/data/items/0/short_name": "QSET",
+      "/data/items/0/name": "Q set"
+    }
+  }
+]

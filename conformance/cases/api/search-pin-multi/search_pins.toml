@@ -1,0 +1,4 @@
+[[pin]]
+query = "gizmo"
+type = "register"
+fqids = ["scb/lisa", "scb/example"]

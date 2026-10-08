@@ -1,0 +1,66 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "code",
+        "code",
+        "register",
+        "classification"
+      ],
+      "/data/items/0/code": "Q900",
+      "/data/items/1/code": "Q901",
+      "/data/items/2/fqid": "scb/qreport"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "variable",
+        "register",
+        "group"
+      ],
+      "/data/items/0/fqid": "scb/lisa/gender",
+      "/data/items/1/fqid": "scb/konj",
+      "/data/items/2/key": "kontroll"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "group",
+        "variable",
+        "variable",
+        "variable",
+        "variable"
+      ],
+      "/data/items/0/key": "disponibel-inkomst"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "group",
+        "register"
+      ],
+      "/data/items/0/key": "demografi",
+      "/data/items/1/fqid": "scb/alderdom"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/key": [
+        "tfoab",
+        "tfoab"
+      ],
+      "/data/items/*/members/0/fqid": [
+        "scb/iot/tfoab01",
+        "scb/lisa/tfoab01"
+      ]
+    }
+  }
+]

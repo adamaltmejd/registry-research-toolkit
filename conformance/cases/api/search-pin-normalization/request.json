@@ -1,0 +1,39 @@
+{
+  "kind": "catalog",
+  "search_pins": "search_pins.toml",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "syssels\u00e4ttning",
+        "type": "register"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "sysselsattning",
+        "type": "register"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "  SYSSELS\u00c4TTNING  ",
+        "type": "register"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "syssels\u00e4ttning",
+        "type": "register",
+        "cursor": ""
+      }
+    }
+  ]
+}

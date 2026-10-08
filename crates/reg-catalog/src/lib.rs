@@ -21,7 +21,7 @@ pub use error::{Code, Error, Spec};
 pub const CONTRACT_VERSION: &str = "4.0.0";
 /// The schema gate: the artifact's major must equal this major and its minor be at
 /// least this minor.
-pub const SCHEMA: (u32, u32) = (9, 2);
+pub const SCHEMA: (u32, u32) = (9, 3);
 const DB_FILENAME: &str = "reg_meta.db";
 
 /// The read scope (section 7); every read takes it.
@@ -188,7 +188,8 @@ impl Catalog {
     }
 
     /// A fresh read-only connection with the `reg-core` folds as SQL functions
-    /// (`fold_search`, `fold_identity`, `fts_term`); the server opens one per request.
+    /// (`fold_search`, `fold_identity`, `fts_term`) and `ln`; the server opens one per
+    /// request.
     ///
     /// # Errors
     ///
@@ -249,6 +250,10 @@ fn with_folds(conn: Connection) -> rusqlite::Result<Connection> {
             Ok(ctx.get::<Option<String>>(0)?.map(|s| fold(&s)))
         })
     };
+    // SQLite's math `ln`, which the bundled build omits; the code arm ranks by it.
+    conn.create_scalar_function("ln", 1, flags, |ctx| {
+        Ok(ctx.get::<Option<f64>>(0)?.map(f64::ln))
+    })?;
     unary("fold_search", reg_core::fold_search)?;
     unary("fold_identity", reg_core::fold_identity)?;
     conn.create_scalar_function("fts_term", 2, flags, |ctx| {
