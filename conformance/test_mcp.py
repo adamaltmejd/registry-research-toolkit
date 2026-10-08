@@ -47,6 +47,13 @@ EQUIVALENCE = {
         "cursor-invalid",
         "cursor-stale",
     ),
+    "docs_search": (
+        "docs-search",
+        "docs-search-errors",
+        "docs-search-cursor",
+        "docs-search-ambiguous",
+        "docs-unavailable",
+    ),
     "docs_get": ("docs-get", "docs-unavailable", "docs-scope-unavailable"),
     "docs_related": (
         "docs-related",

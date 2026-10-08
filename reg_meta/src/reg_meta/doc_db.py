@@ -25,7 +25,7 @@ DOCS_SOURCE_FILE = ".docs_source"
 # Versioning parallels the main-DB SCHEMA_VERSION. Bump the minor when the
 # code starts reading a new column / meta key, major when tables or columns
 # are renamed or removed. Patch differences are ignored.
-DOC_SCHEMA_VERSION = "1.2.0"
+DOC_SCHEMA_VERSION = "1.3.0"
 
 
 class _DocModel(BaseModel):

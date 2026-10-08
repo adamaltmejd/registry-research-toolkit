@@ -9,7 +9,7 @@ use rusqlite::{Connection, OptionalExtension};
 use crate::{Code, Error, admits, connect, supported, unavailable};
 
 /// The docs schema gate, as `reg_meta.doc_db.DOC_SCHEMA_VERSION`.
-const DOC_SCHEMA: (u32, u32) = (1, 2);
+const DOC_SCHEMA: (u32, u32) = (1, 3);
 const DOC_DB_FILENAME: &str = "reg_meta_docs.db";
 
 /// An admitted docs database.

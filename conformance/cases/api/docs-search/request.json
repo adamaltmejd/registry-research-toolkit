@@ -1,0 +1,33 @@
+{
+  "note": "Fails if the docs index or the query is not folded with fold_search (KÖN must find Kön and kontant), if a snippet is cut from folded text instead of the stored body, if paging, the register filter, the filename order of a list without q or register_ingested change, or if a query without a searchable token errors.",
+  "fixture": "reader",
+  "docs": "docs",
+  "requests": [
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "KÖN", "limit": 1}
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "KÖN", "limit": 1},
+      "cursor_from": [0, "/data/next_cursor"]
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"register": "scb/example"}
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "individen", "register": "sos/unheld", "scope": "reference"}
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "\""}
+    }
+  ]
+}

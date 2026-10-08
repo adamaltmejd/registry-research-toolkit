@@ -1,0 +1,60 @@
+[
+  {
+    "status": 200,
+    "headers": {"cache-control": "public, max-age=86400, must-revalidate"},
+    "json": {
+      "/data/items": [
+        {
+          "register": "example",
+          "variable": "Kon",
+          "filename": "Kon.md",
+          "display_name": "Kön",
+          "tags": ["type/variable", "topic/demography"],
+          "snippet": "**Könstillhörighet** för individen.",
+          "source": null,
+          "source_url": null,
+          "source_title": null
+        }
+      ],
+      "/data/total": 2,
+      "/data/register_ingested": false
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/filename": ["LoneInk.md"],
+      "/data/next_cursor": null,
+      "/data/total": 2
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/filename": [
+        "Kon.md",
+        "Kort.md",
+        "LoneInk.md",
+        "Sysselsattning.md",
+        "Tabell.md"
+      ],
+      "/data/items/*/snippet": [null, null, null, null, null],
+      "/data/next_cursor": null,
+      "/data/total": 5,
+      "/data/register_ingested": true
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [],
+      "/data/total": 0,
+      "/data/register_ingested": false,
+      "/meta/scope": "reference"
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/items": [], "/data/next_cursor": null, "/data/total": 0}
+  }
+]

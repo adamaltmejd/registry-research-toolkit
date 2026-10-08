@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 # main `search` uses, so a raw user query with FTS operators can't raise on the
 # doc index either. Same-package internal helper.
 from .doc_db import RelatedDocument, RelatedDocumentContent
-from .queries import _fts_match_query
+from .queries import _fts_match_query, fold_search
 
 if TYPE_CHECKING:
     import sqlite3
@@ -93,7 +93,7 @@ def doc_search(
 
     Returns {"total_count": int, "results": [...]}.
     """
-    match_query = _fts_match_query(query)
+    match_query = _fts_match_query(fold_search(query))
     if match_query is None:
         return {"total_count": 0, "results": []}
 

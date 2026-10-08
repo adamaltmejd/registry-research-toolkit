@@ -7,6 +7,11 @@
     {
       "operation": "docs_related",
       "path": "/api/docs/file/scb/example/Registerdokumentation.pdf"
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "kon"}
     }
   ]
 }
