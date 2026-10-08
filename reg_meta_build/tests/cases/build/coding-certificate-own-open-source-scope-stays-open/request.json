@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_reviewed_certificate_with_its_own_open_source_scope_stays_open"
+  ],
+  "sources": "sos-kon-decimal-comma-semicolon-open"
+}

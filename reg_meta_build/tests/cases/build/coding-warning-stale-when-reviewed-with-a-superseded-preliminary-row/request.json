@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_coding_warning_peers_exclude_a_superseded_preliminary_row[with-preliminary]"
+  ],
+  "sources": "scb-value-preliminary-and-final-2020"
+}

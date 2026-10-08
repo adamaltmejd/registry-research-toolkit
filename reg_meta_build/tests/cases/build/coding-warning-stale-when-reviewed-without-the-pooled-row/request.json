@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_coding_warning_reviewed_without_the_pooled_row_is_stale"
+  ],
+  "sources": "scb-value-pooled-blank-2010"
+}

@@ -1,0 +1,6 @@
+{
+  "replaces": [
+    "test_source_coding_choices_boundary.py::test_unresolved_decimal_comma_cell_publishes_no_members_without_review[comma-semicolon]"
+  ],
+  "sources": "sos-kon-decimal-comma-semicolon"
+}
