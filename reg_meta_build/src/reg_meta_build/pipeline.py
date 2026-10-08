@@ -284,17 +284,28 @@ def _refuse_duplicated_rows(records: Iterable[SourceRecord]) -> None:
         seen = first.setdefault(record.record_id, record)
         if seen is record:
             continue
-        kept, repeat = seen.locators[0], record.locators[0]
-        where = kept.physical_file
-        if kept.physical_table != kept.physical_file:
-            where += f" sheet {kept.physical_table}"
+        # Each row is located on its own: a slice holds one source, so today both
+        # rows share a file (and SOS sheet), but nothing here should assume it.
+        kept, repeat = (
+            " ".join(
+                part
+                for part in (
+                    locator.physical_file,
+                    f"sheet {locator.physical_table}"
+                    if locator.physical_table != locator.physical_file
+                    else "",
+                    locator.physical_record,
+                )
+                if part
+            )
+            for locator in (seen.locators[0], record.locators[0])
+        )
         raise printable_error(
             RegMetaError(
                 exit_code=EXIT_CONFIG,
                 code="source_rows_duplicated",
                 error_class="configuration",
-                message=f"{record.source}: {where} delivers {kept.physical_record} "
-                f"and {repeat.physical_record} as identical rows.",
+                message=f"{record.source}: {kept} and {repeat} are identical rows.",
                 remediation="Remove the repeated row from the input bundle (and "
                 "report it to the provider), then prepare a new candidate.",
             )
