@@ -1,0 +1,61 @@
+{
+  "replaces": ["test_source_parent_facts.py::test_parent_guards_track_semantics_without_changing_variable_guards"],
+  "note": "The entry is the stay case's [[representation.delivery_metadata]] for 1.5.ku, authored from _sources/scb-delivery-names-ku-agi (that case's delivery, unchanged) and built from the changed delivery below. The stale row's subject is the entry's `variable` and its locator the entry's file, table and index, both read from the curation fixture. A stale entry withholds its decision (the replaced tests assert `decision is None`); without the checked names KU's two delivery names conflict, so KU forms no state. Value from the replaced test: Registersyfte 'Changed' makes the parent-fact case stale. Every row changes, so the delivery has one register purpose and raises no parent conflict. Its 'column_name-only variable guard stays applicable' leg is not portable: such guards are compiled and captured fresh in each build.",
+  "fails_if": "`parent_fact_projection` (reg_meta_build/src/reg_meta_build/source_curation.py) projects only a parent's name, so the changed register purpose no longer differs from the authored parent facts and the delivery metadata still applies",
+  "sources": {
+    "description": "The stay delivery with the register purpose (Registersyfte) 'Changed' on every row.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "KU",
+          "cvid": 31,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020, slutlig version",
+          "regver_id": 11,
+          "vardef": "Supplied income quantity",
+          "unit": "100-tal kronor",
+          "cells": {"Registersyfte": "Changed"}
+        },
+        {
+          "colname": "AGI",
+          "cvid": 32,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020, slutlig version",
+          "regver_id": 11,
+          "vardef": "Supplied income quantity",
+          "unit": "100-tal kronor",
+          "cells": {"Registersyfte": "Changed"}
+        },
+        {
+          "colname": "KU",
+          "cvid": 33,
+          "var_id": 5,
+          "varname": "Taxable income",
+          "year": "2021",
+          "versionname": "2021",
+          "regver_id": 2021,
+          "vardef": "Supplied income quantity",
+          "unit": "100-tal kronor",
+          "cells": {"Registersyfte": "Changed"}
+        },
+        {
+          "colname": "KU",
+          "cvid": 30,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020, preliminär version",
+          "regver_id": 10,
+          "vardef": "Supplied income quantity",
+          "unit": "Olika valutor",
+          "cells": {"Registersyfte": "Changed"}
+        }
+      ]
+    }
+  },
+  "authored_from": "scb-delivery-names-ku-agi"
+}

@@ -1,0 +1,57 @@
+{
+  "replaces": ["test_source_curation_lisa_lova.py::test_lisa_unresolved_case_blocks_relevant_source_changes[target]", "test_source_curation_lisa_lova.py::test_lisa_unresolved_case_blocks_relevant_source_changes[target_subject]", "test_source_curation.py::test_reused_evidence_keeps_distinct_projection_shapes_and_new_source_changes"],
+  "note": "The entry is the stay case's [[representation.delivery_metadata]] for 1.5.ku, authored from _sources/scb-delivery-names-ku-agi (that case's delivery, unchanged) and built from the changed delivery below. The stale row's subject is the entry's `variable` and its locator the entry's file, table and index, both read from the curation fixture. A stale entry withholds its decision (the replaced tests assert `decision is None`); without the checked names KU's two delivery names conflict, so KU forms no state. The replaced tests change one projected fact of a target record (LISA: column_name; reused-evidence: data_type; target_subject: the population coordinate) and assert the case is stale (target_projection_changed, decision None). Here the target is the entry's 2021 KU record and the fact its unit. The raw code target_projection_changed is not observable: delivery metadata reports a fixed stale detail. SCB records carry no population in their subject (it is a parent fact), so target_subject folds into this same comparison.",
+  "fails_if": "`_compare_expectation` (reg_meta_build/src/reg_meta_build/source_curation.py) treats a target whose member is still delivered as unchanged, so the changed unit on the target record CVID 33 leaves the delivery metadata applied",
+  "sources": {
+    "description": "The stay delivery with the 2021 KU target row (CVID 33) given the unit 'Changed'.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "KU",
+          "cvid": 31,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020, slutlig version",
+          "regver_id": 11,
+          "vardef": "Supplied income quantity",
+          "unit": "100-tal kronor"
+        },
+        {
+          "colname": "AGI",
+          "cvid": 32,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020, slutlig version",
+          "regver_id": 11,
+          "vardef": "Supplied income quantity",
+          "unit": "100-tal kronor"
+        },
+        {
+          "colname": "KU",
+          "cvid": 33,
+          "var_id": 5,
+          "varname": "Taxable income",
+          "year": "2021",
+          "versionname": "2021",
+          "regver_id": 2021,
+          "vardef": "Supplied income quantity",
+          "unit": "Changed"
+        },
+        {
+          "colname": "KU",
+          "cvid": 30,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020, preliminär version",
+          "regver_id": 10,
+          "vardef": "Supplied income quantity",
+          "unit": "Olika valutor"
+        }
+      ]
+    }
+  },
+  "authored_from": "scb-delivery-names-ku-agi"
+}

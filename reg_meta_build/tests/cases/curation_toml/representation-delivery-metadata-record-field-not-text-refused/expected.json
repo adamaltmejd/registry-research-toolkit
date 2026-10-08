@@ -1,0 +1,11 @@
+{
+  "loader": "register_files",
+  "replaces": ["test_source_curation_json_guards.py::test_record_expectation_json_keeps_nested_and_multiple_alternative_guards[singleton-field-False]"],
+  "fails_if": "a record alternative's fields stop being checked as FieldExpectation (for example `RecordProjection.fields` typed as raw mappings in reg_meta_build/src/reg_meta_build/source_curation.py, or `require_typed_field` accepting any value for text fields), so the integer name inside `records` reaches the entry-level completeness rule instead",
+  "note": "Every alternative list here also fails the delivery-metadata rule that records be complete original projections, which refuses at the entry itself (locator \"[[representation.delivery_metadata]] entry 1\"). The asserted locator names the nested pydantic path inside `records`, so the case passes only while the nested check refuses first. The replaced test asserted only a ValidationError; the locator is derived from the fixture's key path and outer entry index. The alternative ({name, value, 1}) is the replaced param's. message_contains is the text the sibling test test_projection_order_and_value_rules_reuse_the_common_source_contract matched for a non-string name.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[representation.delivery_metadata.records.alternatives.fields]] entry 1",
+    "message_contains": ["name must carry a string value"]
+  }
+}

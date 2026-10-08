@@ -1,0 +1,10 @@
+{
+  "loader": "register_files",
+  "replaces": ["test_source_curation_json_guards.py::test_projection_and_source_json_reject_the_same_invalid_named_field[measurement_unit-negative-None]", "test_source_curation_json_guards.py::test_projection_and_source_json_reject_the_same_invalid_named_field[identifier-negative-None]"],
+  "fails_if": "`SourceFields.require_typed_field` (reg_meta_build/src/reg_meta_build/source_records.py) allows status \"negative\" on fields other than availability and column_name, so a negative `description` guard loads",
+  "note": "The file is the SCB register of errata-occurrence-period-source-coordinates-load with one expected_fields item changed; that item is the entry's only defect. The code is the located register-entry refusal every register table uses; the locator is the file, the pydantic path of the item (errata.occurrence_period.expected_fields) and the outer entry index (1). The replaced test asserted only a ValidationError; the rule is \"negative only for availability and column_name\". The replaced params used measurement_unit and identifier; this case uses description, a field the host's prose-field set requires, so the negative status is the entry's only defect and the file loads once the check is removed.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.occurrence_period.expected_fields]] entry 1"
+  }
+}
