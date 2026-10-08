@@ -22,61 +22,22 @@ seed = 0
 
 [[exception]]
 name = "derived-generation-cursor"
-reason = "The checkout arm reads derived copies, which have their own generation (section 4); a search cursor binds the generation, so none outlives it. `has_more` still compares, and page 2 of `search-limit-5` exercises the shared cursor encoder."
+reason = "The arms read copies derived by different builder commits (the baseline the reference copies, the checkout the candidate copies), so their generations differ (section 4); a search cursor binds the generation, so none outlives it. `has_more` still compares, and page 2 of `search-limit-5` exercises the shared cursor encoder."
 case = "*/*/search*"
 paths = ["/next_cursor"]
 
 [[exception]]
 name = "derived-generation-order"
-reason = "An order manifest records the catalog's schema version and generation, which a derived copy changes by design (section 4)."
+reason = "An order manifest records the catalog's generation, which differs between copies derived by different builder commits (section 4)."
 case = "*/*/order/*"
-paths = ["/provenance/catalog_generation_id", "/provenance/catalog_schema_version"]
+paths = ["/provenance/catalog_generation_id"]
 
-[[exception]]
-name = "derived-schema-version"
-reason = "`context` reports the served artifact's schema version: the derived copy's minor (9.2, section 4) against the original base's."
-case = "*/*/context"
-paths = ["/data/schema_version"]
-
-# 3a.1b pre-folds the catalog indexes with `fold_search` (decision 16).
-[[exception]]
-name = "fold-search-matches"
-reason = "The three terms that unicode61 alone did not fold now match as fold_search folds them: `ß` as `ss`, `ﬁlm` as `film`, `ＡＢＣ` as `abc` (0 rows before, up to 565 variables and 1,315 value labels after). Provisional: deleted by the reference-baseline package, or at the latest by 3a.13."
-case = "*/*/search/7[467]"
-paths = ["/results", "/has_more", "/next_cursor"]
-
-[[exception]]
-name = "folded-index-bm25"
-reason = "For the other 115 of 118 G1 terms, each catalog index's full MATCH rowid set is identical on both arms; only bm25's row-length statistics moved (`register_id` is UNINDEXED, so register_fts and variable_fts rows lose a token; NFKD changes a few token counts). Ranks move by at most 3.6% for the same row. Of the 327 differing search outputs, 246 differ only in `rank`, 60 reorder within the page and 21 swap a row at the page limit. Provisional: deleted by the reference-baseline package, or at the latest by 3a.13."
-case = "*/*/search*"
-paths = ["/results", "/next_cursor"]
-
-# 3a.5's typed variable pages (`served.py`) read the same pre-folded indexes.
-[[exception]]
-name = "variable-page-folded-index"
-reason = "The baseline webapp reads the unfolded originals; the Rust server reads derived copies whose indexes hold fold_search text (decision 16). On the same derived copy, the checkout's FastAPI and the Rust server agree on all 114 cases (two pages of 10), so every difference comes from the index. Of the 114, 33 differ: 14 swap a row at the page limit, 10 reorder within a page and 2 across the page boundary (identical row sets: bm25 near-ties), and 7 are the three terms `ß`, `ＡＢＣ` and `ﬁlm`, which return 0 rows on the baseline and 3 to 20 now. Provisional: deleted by the reference-baseline package 3a.2a, or at the latest by 3a.13."
-case = "*/*/variable-page/*"
-# A failed page (`/0/status`, `/1/status`) stays a difference.
-paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
-
-# 3a.6's other typed pages (`served.py`). Before `typed-page-folded-index`, which
-# also matches terms 4 and 5.
-[[exception]]
-name = "register-page-baseline-pins"
-reason = "The baseline webapp at 760d70fa pins `scb/lisa` for `sysselsättning` and `sos/par` for `diagnos` (G1 terms 4 and 5) from its own `search_golden.toml`; the Rust server reads the derived copies' `search_pin` table, which derive writes empty on the 9.0 originals. All 6 register pages of the two terms differ (3 scope runs each). Provisional: deleted by 3a.2a, whose baseline reads the reference copies' empty table, or at the latest by 3a.13."
-case = "*/*/register-page/[45]"
-paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
-
-[[exception]]
-name = "typed-page-folded-index"
-reason = "As `variable-page-folded-index`, for the register, classification, classification_code and register_value pages: on the same derived copy the checkout's FastAPI and the Rust server agree on all 456 cases, so every difference comes from the index. Of the 456 on the originals, 27 differ outside the two pinned terms: 23 are the three terms `ß`, `ＡＢＣ` and `ﬁlm`, which return 0 rows on the baseline (2 register, 3 classification, 9 classification_code and 9 register_value pages), and 4 register pages reorder rows within the first page (bm25 near-ties, terms 3 and 21). Provisional: deleted by 3a.2a, or at the latest by 3a.13."
-case = "*/*/[rc]*-page/*"
-paths = ["/0/items", "/0/more", "/1/items", "/1/more", "/length"]
-
-# The baseline reader: `reg_meta` (with `reg_schema`) at this commit, installed from
-# `git archive` into its own virtualenv with the commit's locked dependencies.
+# The baseline: one commit, run from a detached worktree with its own locked
+# environment. It is both the baseline reader (CLI and webapp) and the reference
+# builder, whose `reg-meta-build derive` makes the reference copies the baseline reads,
+# so code under change never derives what it is compared against. A re-pin moves both.
 [baseline]
-commit = "760d70fa5fcd65ab18c442a0f3775e0a0b86c7a4"
+commit = "553ea622fdb3a5fd42a04c46920b6f7b9a5fe8d2"
 
 # The pinned release artifacts. `sha256` is the GitHub release asset digest (of the
 # `.zst`), checked while the asset streams into the cache.

@@ -232,8 +232,10 @@ least at every maintainer checkpoint.
   `reg_meta_docs.db.zst`
   `b110210901daa4e2a13e33a8574a6e2b52b43258f05bbbc6378255ddf7e75afe` (read by `search`
   and `docs`).
-- Baseline reader: `reg_meta` at `760d70fa5fcd65ab18c442a0f3775e0a0b86c7a4` (main after
-  #1189).
+- Baseline reader and reference builder (package 3a.2a):
+  `553ea622fdb3a5fd42a04c46920b6f7b9a5fe8d2` (main after 3a.2), run from a detached
+  worktree with its own locked environment. Its `reg-meta-build derive` makes the
+  reference copies of the originals that the baseline reads.
 
 **Three verification gates, with budgets.** They are named G0–G2 so they are not
 confused with the test tiers 1–3 in `ARCHITECTURE.md`.
@@ -246,13 +248,13 @@ confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
 The G1 baseline is the Python reader **at a pinned commit, installed in its own
 environment**, never the checkout under change, so a regression moved into derive cannot
-validate itself. It reads the original pinned artifacts or, if package 3a.2a is
-approved, reference copies of them derived by a pinned builder commit, never by the code
-under change; the implementations under test read derived copies of them. It runs on
-both artifact kinds (the global catalog and the SWECOV steward artifact) and both
-scopes, over generated queries (every register, seeded variable samples,
-holdings-specific strata, the search-eval corpus terms). Each accepted difference is
-recorded as a named semantic exception in the harness.
+validate itself. It reads reference copies of the pinned artifacts, derived by a pinned
+builder commit (package 3a.2a), never by the code under change; the implementations
+under test read derived copies of them. It runs on both artifact kinds (the global
+catalog and the SWECOV steward artifact) and both scopes, over generated queries (every
+register, seeded variable samples, holdings-specific strata, the search-eval corpus
+terms). Each accepted difference is recorded as a named semantic exception in the
+harness.
 
 A slow gate is a defect to fix, not a reason to skip the gate. If derive exceeds its
 budget, make the slow table set-based before adding more tables.
@@ -972,9 +974,10 @@ Implements section 4 (G1 independence).
   until 3a.13 (the 9.0 originals have none); G0's pin cases cover them.
 - Paths: `conformance/differential/`, this file (section 4, "Current pin").
 - Acceptance: G1 reports 0 differences with neither folding exception; a deliberately
-  broken candidate index (for example the `value_code_fts` owner filter dropped, not
-  committed) shows differences; G1 under 5 min with a candidate re-derive; the PR
-  records the reference derive time. Depends on: 3a.2, 3a.6 (merge order).
+  broken candidate index (for example `value_code_fts` indexing `label` without
+  `fold_search`, not committed; the owner filter excludes no row on the 0.42.0 pin)
+  shows differences; G1 under 5 min with a candidate re-derive; the PR records the
+  reference derive time. Depends on: 3a.2, 3a.6 (merge order).
 
 **3a.13 Re-pin at checkpoint 2.** Implements section 4 (re-pin).
 
