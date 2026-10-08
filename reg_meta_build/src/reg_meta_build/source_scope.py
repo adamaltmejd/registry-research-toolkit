@@ -382,6 +382,7 @@ def resolve_source_scope(
         key = occurrence.variant_key
         if (
             occurrence.use == "catalog"
+            and occurrence.variable_key is not None
             and key is not None
             and ("register_variant", key) not in names
         ):
@@ -399,7 +400,7 @@ def resolve_source_scope(
             ),
             refs=tuple(
                 sorted(
-                    {record_ref(r) for o in occurrences for r in o.source_records},
+                    {record_ref(r) for o in occurrences for r in o.evidence},
                     key=repr,
                 )
             ),
