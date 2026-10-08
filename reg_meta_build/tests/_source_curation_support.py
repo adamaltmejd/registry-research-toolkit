@@ -114,12 +114,6 @@ def field_value(
     return FieldExpectation(name=name, status=status, value=value)
 
 
-def expected_field(record: SourceRecord, name: str) -> FieldExpectation:
-    field = getattr(record.fields, name)
-    assert field is not None
-    return FieldExpectation(name=name, status=field.status, value=field.value)
-
-
 def projection(
     *fields: FieldExpectation,
     edition_scope: TemporalScope,

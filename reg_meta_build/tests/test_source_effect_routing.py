@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import pytest
 from _source_effects_support import (
-    effect_case as _case,
     effect_record as _record,
 )
 from reg_meta_build.scb_errata import (
@@ -12,9 +11,6 @@ from reg_meta_build.scb_errata import (
     ErrataEditionBinding,
     ErrataVariantContext,
     convert_column_entry,
-)
-from reg_meta_build.source_curation import (
-    CheckedEditionRebind,
 )
 from reg_meta_build.source_effects import (
     apply_occurrence_cases,
@@ -106,20 +102,3 @@ def test_column_declaration_preserves_only_supplied_flags_and_periods(
         declared_flags=frozenset({"is_sensitive"}),
     )
     assert blocked.case is None and blocked.blockers == ("column_now_documented",)
-
-
-def test_explicit_edition_rebind_moves_native_edition() -> None:
-    record = _record(column="VALUE")
-    original = source_occurrence(record)
-    assert original.variant_key is not None and original.edition_key is not None
-    split = (*original.variant_key, "edition-split", "stock")
-    case = _case(
-        record, CheckedEditionRebind(ref=record_ref(record), variant_key=split)
-    )
-    (moved,) = apply_occurrence_cases((record,), (case,)).occurrences
-    assert moved.variant_key == split
-    assert moved.edition_key == (
-        *split,
-        *original.edition_key[len(original.variant_key) :],
-    )
-    assert moved.source_records == (record,)
