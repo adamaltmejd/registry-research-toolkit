@@ -2062,11 +2062,15 @@ def measure_codec_sample(
 def _git_bytes(repo: Path, *args: str, input_bytes: bytes | None = None) -> bytes:
     try:
         # Git read commands may otherwise refresh accepted index evidence on disk.
+        # An absolute executable and `close_fds=False` let CPython use posix_spawn
+        # instead of forking this process; Python's own descriptors are
+        # non-inheritable (PEP 446), so the child still receives only its pipes.
         process = subprocess.run(
-            ["git", "-C", str(repo), *args],
+            [shutil.which("git") or "git", "-C", str(repo), *args],
             input=input_bytes,
             check=True,
             capture_output=True,
+            close_fds=False,
             env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
         )
     except (OSError, subprocess.CalledProcessError) as exc:
