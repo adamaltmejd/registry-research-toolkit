@@ -441,18 +441,56 @@ def test_strict_corpus_failure_preserves_previous_catalog(
     assert not output.with_suffix(".db.prev").exists()
 
 
-@pytest.mark.parametrize("catalog", [True], indirect=True)
-@pytest.mark.parametrize("command", ["build", "check"])
-def test_unknown_register_scope_is_refused(
-    catalog: CatalogFixture, tmp_path: Path, command: str
+@pytest.mark.parametrize(
+    ("catalog", "spec", "code", "message"),
+    [
+        (True, "1,3", "pipeline_registers_unknown", "names no selected scope: ['3']"),
+        (
+            "thin_twin",
+            "1",
+            "pipeline_registers_ambiguous",
+            "qualify as SOURCE:ID: ['1']",
+        ),
+    ],
+    indirect=["catalog"],
+    ids=["unknown", "ambiguous"],
+)
+@pytest.mark.parametrize("command", ["build-db", "check-curation"])
+def test_unresolvable_register_scope_is_refused(
+    catalog: CatalogFixture,
+    tmp_path: Path,
+    capsys,
+    command: str,
+    spec: str,
+    code: str,
+    message: str,
 ) -> None:
-    output = tmp_path / "bad.db"
-    with pytest.raises(ValueError, match=r"names no selected scope: \['3'\]"):
-        if command == "build":
-            catalog.build(output, tmp_path / "report", registers=("1", "3"))
-        else:
-            catalog.check(tmp_path / "report", registers=("1", "3"))
-    assert not output.exists()
+    # Fails if an unknown --registers spec, or a bare id that SCB register 1 and the
+    # FK thin register keyed 1 both expose, stops being a usage refusal with its own
+    # code (e.g. the CLI rewraps it as pipeline_build_failed, or `_selected_scopes`
+    # drops its ambiguity check and selects both scopes) or writes any output.
+    prefix = ["--db", str(tmp_path / "db-dir")] if command == "build-db" else []
+    args = [
+        command,
+        *prefix,
+        "--prepared",
+        str(catalog.prepared),
+        "--input-commit",
+        catalog.commit,
+        "--input-manifest-sha256",
+        catalog.digest,
+        "--curation-dir",
+        str(catalog.curation),
+        "--report-dir",
+        str(tmp_path / "report"),
+        "--registers",
+        spec,
+    ]
+    assert run(args) == EXIT_USAGE
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert error["code"] == code
+    assert message in error["message"]
+    assert not (tmp_path / "db-dir").exists()
     assert not (tmp_path / "report").exists()
 
 

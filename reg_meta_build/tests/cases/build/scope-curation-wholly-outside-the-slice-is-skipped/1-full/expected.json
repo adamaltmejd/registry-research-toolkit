@@ -1,6 +1,7 @@
 {
   "error": {
-    "type": "CatalogDependencyError",
+    "code": "catalog_dependency_missing",
+    "exit_code": 10,
     "message_contains": ["scb/nosuch/value"]
   }
 }

@@ -1,6 +1,0 @@
-{
-  "error": {
-    "code": "pipeline_build_failed",
-    "message_contains": ["unexplained missing catalog dependencies", "scb/sample/unsplit"]
-  }
-}

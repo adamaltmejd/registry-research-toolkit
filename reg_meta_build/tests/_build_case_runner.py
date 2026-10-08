@@ -854,7 +854,7 @@ def _refusal(error: Exception, expected: dict) -> dict:
 
     Both commands wrap a `ValueError`, `OSError` or `KeyError` from the pipeline in the
     configuration error `pipeline_build_failed` (`cli._cmd_build_db`,
-    `cli._cmd_check_curation`); `type` is the Python class the pipeline raised.
+    `cli._cmd_check_curation`).
     """
     if isinstance(error, RegMetaError):
         refusal = {
@@ -868,7 +868,6 @@ def _refusal(error: Exception, expected: dict) -> dict:
             "exit_code": EXIT_CONFIG,
             "message": str(error),
         }
-    refusal["type"] = type(error).__name__
     refusal["message_contains"] = [
         text for text in expected["message_contains"] if text in refusal["message"]
     ]
