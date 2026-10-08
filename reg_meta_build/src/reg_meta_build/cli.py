@@ -694,6 +694,14 @@ def _build_parser() -> argparse.ArgumentParser:
             "(lower = a battery). Default 0.5."
         ),
     )
+    concept_group_p.add_argument(
+        "--curation-dir",
+        default=None,
+        help=(
+            "Curation tree whose literal [[group]] entries name the accepted "
+            "families (defaults to this checkout's tree)."
+        ),
+    )
 
     residue_p = sub.add_parser(
         "classification-residue",
@@ -1882,14 +1890,30 @@ def _cmd_concept_group_candidates(
 ) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
+    # Literal register groups are the record of accepted families. Their scopes
+    # tell the candidate scan to preserve matching materialized members.
+    curation_dir = (
+        Path(args.curation_dir).expanduser().resolve()
+        if args.curation_dir
+        else repo_curation_dir()
+    )
+    # A mistyped tree would otherwise read as one with no accepted families.
+    if curation_dir is not None and not curation_dir.is_dir():
+        raise printable_error(
+            RegMetaError(
+                exit_code=EXIT_NOT_FOUND,
+                code="path_not_found",
+                error_class="input",
+                message=f"curation directory {curation_dir} does not exist",
+                remediation="Pass the curation tree that holds registers/.",
+            )
+        )
+    groups = load_concept_groups(curation_dir)
+    accepted_scopes = frozenset((g.provider, g.register, g.key) for g in groups)
     # Schema-checked open: the generator reads current-schema tables
     # (variable.slug, concept_group_variable), so a stale DB should fail fast with
     # the standard actionable schema-mismatch error, not crash deep in a query.
     conn = open_built_db(db)
-    # Literal register groups are the record of accepted families. Their scopes
-    # tell the candidate scan to preserve matching materialized members.
-    groups = load_concept_groups(repo_curation_dir())
-    accepted_scopes = frozenset((g.provider, g.register, g.key) for g in groups)
     try:
         result = infer_concept_group_candidates(
             conn,
@@ -1926,6 +1950,7 @@ def _cmd_concept_group_candidates(
             "min_siblings": args.min_siblings,
             "min_label_prefix": args.min_label_prefix,
             "min_agreement": args.min_agreement,
+            "curation_dir": None if curation_dir is None else str(curation_dir),
             "output_toml": args.output_toml,
         },
         db_info=None,
@@ -2133,7 +2158,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     ),
     (
         "concept-group-candidates [-o TOML] [--min-siblings N] "
-        "[--min-label-prefix N] [--min-agreement F]",
+        "[--min-label-prefix N] [--min-agreement F] [--curation-dir DIR]",
         "Infer concept-group fold candidates (maintainer review worklist).",
     ),
     (

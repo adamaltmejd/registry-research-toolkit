@@ -1,23 +1,30 @@
 """Concept-group candidate worklists: regeneration under accepted scopes and the
 rendered TOML round-trip through the worklist loader (#496).
 
-Fully synthetic: in-memory `_slugged_db` helpers, never the shipped
-`concept_groups.toml` or a real built DB."""
+Fully synthetic: `_slugged_db` helpers, never the shipped `concept_groups.toml`,
+the checkout's curation tree or a real built DB."""
 
 from __future__ import annotations
 
+import json
+import sqlite3
 from typing import TYPE_CHECKING
 
 from _concept_group_families import add_family as _add_family, base_db as _base_db
 from _slugged_db import add_register, add_variable
+from reg_meta.errors import EXIT_NOT_FOUND
+from reg_meta_build.cli import run
 from reg_meta_build.concept_group_candidates import (
     infer_concept_group_candidates,
     render_candidates_toml,
 )
 from reg_meta_build.concept_groups import load_worklist_concept_groups
+from reg_meta_build.db import SCHEMA_VERSION
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    import pytest
 
 
 class TestGenerator:
@@ -342,3 +349,70 @@ class TestGenerator:
         assert morsak.axes == (("ordinal", "ordinal"),)
         assert all(m.delivery_column is None for m in morsak.members)
         assert [m.coords[0][1] for m in morsak.members] == ["1", "2", "3"]
+
+
+_LISA_REGISTER = '[register]\nprovider = "scb"\nslug = "lisa"\nnative_id = "1"\n'
+_MORSAK_GROUP = (
+    '[[group]]\nregister = "scb/lisa"\nkey = "morsak"\nlabel = "ICD-kod"\n'
+    'axis = "ordinal"\nmembers = ['
+    + ", ".join(
+        f'{{ variable = "morsak{n}", value = "{n}", label = "{n}" }}' for n in (1, 2, 3)
+    )
+    + "]\n"
+)
+
+
+def test_cli_curation_dir_names_the_accepted_families(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """`--curation-dir` picks the tree whose `[[group]]` entries are accepted: the
+    built `morsak` group re-emits as a candidate only under the tree that declares
+    it. Fails if the command ignores the flag and reads the checkout's tree."""
+    conn = _base_db()
+    _add_family(
+        conn,
+        register_id=1,
+        stem="morsak",
+        suffixes=[1, 2, 3],
+        name="ICD-kod underliggande dödsorsak",
+        var_id_base=1600,
+    )
+    group_id = conn.execute(
+        "INSERT INTO concept_group (kind, register_id, group_key, label, source) "
+        "VALUES ('variable', 1, 'morsak', 'ICD-kod', 'curated')"
+    ).lastrowid
+    conn.execute(
+        "INSERT INTO concept_group_variable (variable_id, group_id) "
+        "SELECT variable_id, ? FROM variable WHERE slug LIKE 'morsak_'",
+        (group_id,),
+    )
+    conn.execute(
+        "INSERT INTO import_manifest (key, value) VALUES ('schema_version', ?)",
+        (SCHEMA_VERSION,),
+    )
+    conn.commit()
+    db_dir = tmp_path / "db"
+    db_dir.mkdir()
+    dest = sqlite3.connect(db_dir / "reg_meta.db")
+    conn.backup(dest)
+    dest.close()
+    conn.close()
+
+    def foldable(tree_name: str, register_body: str) -> int:
+        tree = tmp_path / tree_name
+        register = tree / "registers" / "scb" / "lisa.toml"
+        register.parent.mkdir(parents=True)
+        register.write_text(register_body, encoding="utf-8")
+        args = ["--db", str(db_dir), "concept-group-candidates"]
+        assert run([*args, "--curation-dir", str(tree)]) == 0
+        return json.loads(capsys.readouterr().out)["foldable"]
+
+    assert foldable("accepts", _LISA_REGISTER + _MORSAK_GROUP) == 1
+    assert foldable("silent", _LISA_REGISTER) == 0
+    # A mistyped tree is refused, not read as one without accepted families.
+    missing = ["--curation-dir", str(tmp_path / "missing")]
+    assert (
+        run(["--db", str(db_dir), "concept-group-candidates", *missing])
+        == EXIT_NOT_FOUND
+    )
+    assert json.loads(capsys.readouterr().out)["error"]["code"] == "path_not_found"
