@@ -50,11 +50,13 @@ What it does (see the four numbered requirements in the A4.1 brief):
    offloads its working set to SQLite's on-disk temp store. `DiffReport`
    carries the structured result; the CLI exits non-zero on any difference.
 
-FTS5 handling: the three `*_fts` virtual tables are external-content
-(`content='variable'` etc.), so their queryable content is a pure
-projection of base tables that ARE compared. Their shadow tables
-(`*_fts_data/_idx/_docsize/_config`) hold the serialized inverted index,
-whose bytes depend on insert order — comparing them would false-positive on
+FTS5 handling: the four catalog `*_fts` tables store `fold_search`
+projections of base tables that ARE compared (`validate_built_db` checks
+each index against its source both ways, within one artifact; two artifacts
+that differ only in the fold function therefore diff as identical).
+`doc_fts` in the docs DB is still external-content (`content='doc'`).
+The shadow tables (`*_fts_data/_idx/_docsize/_config/_content`) hold the
+serialized index and stored text, whose bytes depend on insert order — comparing them would false-positive on
 an emit-order change that left content identical. So FTS virtual + shadow
 tables are included in the *schema* comparison (structure must match) but
 excluded from the *content* comparison. `sqlite_*` internal tables
