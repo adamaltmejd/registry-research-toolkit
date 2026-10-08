@@ -1,0 +1,12 @@
+{
+  "loader": "scb_errata",
+  "replaces": "test_scb_errata.py::TestColumnEntry::test_repeated_version_fails",
+  "fails_if": "resolve_scb_errata lets an [[errata.column]] `versions` list name a version twice",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 1 (scb/lisa)/individer-15plus/Ssyk4_J16",
+    "message_contains": [
+      "repeats"
+    ]
+  }
+}

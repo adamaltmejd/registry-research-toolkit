@@ -1,0 +1,20 @@
+{
+  "loader": "scb_errata",
+  "replaces": [
+    "test_scb_errata.py::TestColumnEntry::test_optional_identity_parses",
+    "test_scb_errata.py::TestColumnEntry::test_curated_identifier_is_retained",
+    "test_scb_errata.py::TestColumnEntry::test_declared_classification_passes"
+  ],
+  "fails_if": "resolve_scb_errata drops a curated data_type, declared classification, is_identifier or is_sensitive flag from an [[errata.column]] entry, or refuses the steward-holdings source",
+  "loads": {
+    "columns": [
+      {
+        "source": "steward-holdings",
+        "data_type": "text",
+        "classification": "SSYK96",
+        "is_identifier": true,
+        "is_sensitive": true
+      }
+    ]
+  }
+}

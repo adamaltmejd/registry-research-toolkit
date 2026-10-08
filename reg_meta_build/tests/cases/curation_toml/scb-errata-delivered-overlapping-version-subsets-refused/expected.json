@@ -1,0 +1,14 @@
+{
+  "loader": "scb_errata",
+  "replaces": "test_scb_errata.py::TestDeliveredEntry::test_delivered_subsets_require_disjoint_versions[2010]",
+  "fails_if": "resolve_scb_errata lets two [[errata.delivered]] entries for one folded column select the same version",
+  "note": "The second entry spells the column `KON`, so only the folded column key makes the two entries collide.",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.delivered]] entry 2 (scb/lisa)/individer-15plus",
+    "message_contains": [
+      "duplicate delivered column",
+      "2010"
+    ]
+  }
+}

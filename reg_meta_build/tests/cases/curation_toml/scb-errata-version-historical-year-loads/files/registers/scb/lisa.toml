@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[variant]]
+native_id = "34.153"
+slug = "individer-15plus"
+
+[[variant]]
+native_id = "34.1335"
+slug = "individer-16plus"
+
+[[errata.version]]
+variant = "individer-15plus"
+name = "2001"
+evidence = "the steward holds this edition"
+noted = "2026-09-12"
