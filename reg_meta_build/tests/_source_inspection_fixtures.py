@@ -20,8 +20,6 @@ import reg_meta
 import reg_meta_build
 
 if TYPE_CHECKING:
-    import pytest
-    from reg_meta_build.input_snapshot import ScbSnapshotReader
     from reg_meta_build.source_records import SourceRecord
 
 _GIT_IDENTITY = (
@@ -42,26 +40,6 @@ def field_text(record: SourceRecord, field: str) -> str | None:
         return None
     assert isinstance(observation.value, str)
     return observation.value
-
-
-def record_path_opens(monkeypatch: pytest.MonkeyPatch) -> list[Path]:
-    """Record every file opened through `pathlib.Path.open` (filesystem boundary)."""
-    opened: list[Path] = []
-    original = Path.open
-
-    def recording_open(self: Path, *args: object, **kwargs: object) -> object:
-        opened.append(Path(self).resolve())
-        return original(self, *args, **kwargs)  # type: ignore[arg-type]
-
-    monkeypatch.setattr(Path, "open", recording_open)
-    return opened
-
-
-def snapshot_record_files(snapshot: ScbSnapshotReader, name: str) -> tuple[Path, ...]:
-    """The prepared record files the accepted manifest lists for one source file."""
-    item = next(item for item in snapshot.manifest.files if item.name == name)
-    assert item.records
-    return tuple((snapshot.root / record.path).resolve() for record in item.records)
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -124,6 +102,4 @@ class InterpreterCheckout:
 __all__ = [
     "InterpreterCheckout",
     "field_text",
-    "record_path_opens",
-    "snapshot_record_files",
 ]
