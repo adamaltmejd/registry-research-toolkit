@@ -3,6 +3,7 @@
     "test_curation_partition_delivered_boundary.py::test_delivered_addition_lands_on_the_literal_columns_split_owner"
   ],
   "note": "Column A is undocumented in 2021; the added 2021 occurrence belongs to its split owner `a`.",
+  "fails_if": "the `[[errata.delivered]]` rebinding in `curation_compile.py` stops re-keying a `CuratedOccurrenceAddition` to the one split owner of its literal column, so the 2021 A addition stays on unsplit variable 5 and `a` gets no 2021 state",
   "sources": {
     "description": "Variable 5 delivers A (CVID 20) and B (CVID 21) in 2020; variable 6 delivers B in 2021 (CVID 22).",
     "scb": {

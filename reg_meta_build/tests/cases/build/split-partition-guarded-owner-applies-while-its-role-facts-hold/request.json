@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_split_partition_boundary.py::test_guarded_column_owner_is_stale_when_a_role_fact_changes[None]"
   ],
+  "fails_if": "`_field_matches` compares an `expected_fields` entry against a different source field than the one it names, so the ANSWER owner whose unit SEK, operational definition Amount and source Authority all hold goes stale",
   "sources": {
     "description": "Variable 1.5 delivers ANSWER (CVID 20) with unit SEK, operational definition Amount and source Authority.",
     "scb": {

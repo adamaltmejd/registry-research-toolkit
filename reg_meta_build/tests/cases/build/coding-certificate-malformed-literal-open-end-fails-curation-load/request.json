@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_malformed_certificate_fails_curation_load_at_its_entry[literal-open-end]"
   ],
+  "fails_if": "the source-authority validator in `curation_tree.py` stops requiring `coding_scope_bounds` to resolve the authority's `source_scope`, so a scope whose end is the literal `9999-12-31` loads instead of failing with 'requires one exact supplied interval'",
   "sources": "sos-kon-decimal-comma-open"
 }

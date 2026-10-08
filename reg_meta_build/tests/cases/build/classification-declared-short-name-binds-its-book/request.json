@@ -1,0 +1,30 @@
+{
+  "replaces": [
+    "test_build_catalog_classification_boundary.py::test_declared_short_name_or_alias_binds_state_to_its_classification[A]"
+  ],
+  "fails_if": "`_classification_references` in pipeline.py stops indexing a book's `short_name` (aliases only), so AMOUNT's declared 'A' is an unresolved classification reference and binds no book",
+  "sources": {
+    "description": "FK AMOUNT declares classification 'A'; books a and b.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": [
+        "[[register]]",
+        "key = \"remote\"",
+        "name = \"Remote\"",
+        "valid_from = \"2020-01-01\"",
+        "valid_to = \"2020-12-31\"",
+        "[[register.variable]]",
+        "name = \"Amount\"",
+        "column = \"AMOUNT\"",
+        "data_type = \"int\"",
+        "classification = \"A\""
+      ],
+      "classifications/a.csv": ["code,label", "1,One", "2,Two"],
+      "classifications/b.csv": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

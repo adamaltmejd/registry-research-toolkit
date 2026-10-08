@@ -1,0 +1,7 @@
+[classification]
+short_name = "C"
+slug = "c"
+name = "C"
+codes_file = "c.csv"
+family = "second"
+family_aliases = ["Shared"]

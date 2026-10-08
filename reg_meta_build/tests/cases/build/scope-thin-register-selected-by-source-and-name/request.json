@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_build_db_scope_selection.py::test_thin_source_has_register_scopes_selected_by_name_or_source_id"
+  ],
+  "fails_if": "`_selected_scopes` stops indexing a register scope as SOURCE:ID, so `--registers Forsakringskassan/fk.toml:aktivitetsstod` is refused as naming no selected scope",
+  "sources": "scb-value-fk-two-thin-registers",
+  "registers": ["Forsakringskassan/fk.toml:aktivitetsstod"]
+}

@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_build_db_scope_selection.py::test_curation_wholly_outside_slice_is_skipped_without_claiming_proof"
+  ],
+  "fails_if": "a full build stops refusing an edge whose target register no scope declares (`CatalogDependencies.check` no longer raises `CatalogDependencyError`), so scb/other/value → scb/nosuch/value builds instead of failing",
+  "sources": "scb-two-registers"
+}

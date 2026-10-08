@@ -3,6 +3,7 @@
     "test_curation_partition_delivered_boundary.py::test_components_refuse_a_blank_base_under_another_column"
   ],
   "note": "A 2021 member that names a column is not the blank base the entries name.",
+  "fails_if": "`scb_errata.convert_delivered_entry` stops refusing a target edition whose member already names a column (`target_under_other_column`), so the OTHER row is checked as a blank base and the entries report a different blocker",
   "sources": {
     "description": "Variable 5 delivers A, B and C in 2020 (CVIDs 20-22), and one 2021 member named OTHER (CVID 30).",
     "scb": {

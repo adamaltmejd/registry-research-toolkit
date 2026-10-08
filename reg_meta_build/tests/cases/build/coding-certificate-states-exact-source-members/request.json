@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_reviewed_decimal_comma_certificate_states_exact_source_members"
   ],
+  "fails_if": "`SourceEnumeration.matches_fields` stops stripping whitespace around each comma-split clause, so the KON cell `0=giltigt pnr,  8=Ogiltigt pnr` (two spaces before 8) no longer matches the reviewed lines and the certificate goes stale",
   "sources": "sos-kon-decimal-comma"
 }

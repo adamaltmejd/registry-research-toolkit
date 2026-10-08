@@ -1,5 +1,6 @@
 {
   "note": "Closes the stage-2 gap: an owner pinned only by `expected_evidence_sha256` (no `expected_records`) is stale once an original it covers changes. Expected values follow its `expected_records` twin, split-partition-owner-alternatives-stale-when-an-original-changes.",
+  "fails_if": "`_scoped_column_owners` stops comparing `expected_evidence_sha256` with `acknowledgement_evidence_sha256` of the matched rows, so an owner pinned only by its digest still applies after CVID 21's operational definition changed",
   "sources": {
     "description": "scb-partition-owner-alternatives after CVID 21's operational definition changed.",
     "scb": {

@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "test_source_physical_alternatives_boundary.py::test_distinct_members_keep_their_own_missing_coding_issues"
+  ],
+  "fails_if": "the dedupe of identical `missing_coding_period` issues in `resolve_source_scope` keys an issue on code, subject and period without its refs, so member 1003's 2021 issue is dropped as a repeat of member 1002's",
+  "sources": {
+    "description": "Both columns deliver member 1001 in 2020; in 2021 First delivers 1002 and Second 1003. Only member 1001 carries the code list.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "First", "cvid": 1001, "var_id": 1},
+        {"colname": "Second", "cvid": 1001, "var_id": 1},
+        {"colname": "First", "cvid": 1002, "var_id": 1, "year": "2021", "regver_id": 2021},
+        {"colname": "Second", "cvid": 1003, "var_id": 1, "year": "2021", "regver_id": 2021}
+      ],
+      "vardemangder": ["Kön|1|1|Man|1001|5001"]
+    }
+  }
+}

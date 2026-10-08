@@ -1,4 +1,5 @@
 {
   "replaces": ["test_curation_split_sos_boundary.py::test_type_split_gives_each_delivered_type_its_owner"],
+  "fails_if": "the SOS split compile in `curation_compile` stops reading `data_type` split values from the literal field (falling back to the subset name), so the integer and text ATC rows no longer match the declared types and the split goes stale",
   "sources": "sos-par-atc-two-types"
 }

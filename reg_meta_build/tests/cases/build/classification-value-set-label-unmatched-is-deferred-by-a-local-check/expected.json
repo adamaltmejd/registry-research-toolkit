@@ -1,0 +1,11 @@
+{
+  "status": "curation_check_complete",
+  "result": {"passed": true},
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    }
+  ]
+}

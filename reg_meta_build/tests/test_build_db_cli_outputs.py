@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
-from typing import TYPE_CHECKING
+import sqlite3
+from pathlib import Path
 
 import pytest
 from _pipeline_catalog_support import (
@@ -12,6 +14,7 @@ from _pipeline_catalog_support import (
     import_manifest as _manifest,
     report_issues as _issues,
 )
+from reg_meta.db import DB_FILENAME
 from reg_meta.errors import EXIT_USAGE
 from reg_meta_build.cli import run
 from reg_meta_build.pipeline import (
@@ -19,8 +22,56 @@ from reg_meta_build.pipeline import (
     check_curation,
 )
 
-if TYPE_CHECKING:
-    from pathlib import Path
+# The checkout's tracked curation tree and its slug sibling, the defaults that
+# check-curation protects when --curation-dir is omitted.
+CHECKOUT_CURATION = Path(__file__).resolve().parents[1] / "curation"
+CHECKOUT_SLUGS = CHECKOUT_CURATION.parent / "fqid_slugs"
+# One reviewed name correction per register of the two-register catalog, so a
+# scoped build has curation cases to decide and dump.
+ERRATA = (
+    '\n[[errata.field]]\nvariable = "{variable}"\nvariant = "{variant}"\n'
+    'column = "{column}"\nedition = "110"\nfield = "name"\n'
+    'value = "{value}"\n'
+    'expected_fields = [{{name = "name", status = "value", value = "{name}"}}, '
+    '{{name = "definition", status = "value", value = "A generic family label"}}, '
+    '{{name = "description", status = "absent"}}, '
+    '{{name = "operational_definition", status = "absent"}}]\n'
+    'expected_period_text = "2020"\n'
+    'expected_scope = {{kind = "intervals", intervals = [{{start = "2020", end = "2020"}}]}}\n'
+    'expected_period = {{kind = "intervals", '
+    'intervals = [{{start = "2020-01-01", end = "2020-12-31"}}]}}\n'
+    'evidence = "Reviewed fixture source label"\nnoted = "2026-10-01"\n'
+)
+
+
+def _with_errata(catalog: CatalogFixture) -> None:
+    for name, native, column, label, value in (
+        ("sample", "1", "VALUE", "GenericVar", "Reviewed value"),
+        ("other", "2", "OTHER", "OtherVar", "Reviewed other"),
+    ):
+        path = catalog.curation / f"registers/scb/{name}.toml"
+        path.write_text(
+            path.read_text(encoding="utf-8")
+            + ERRATA.format(
+                variable=f"{native}.{native}01",
+                variant=f"{native}.{native}0",
+                column=column,
+                name=label,
+                value=value,
+            ),
+            encoding="utf-8",
+        )
+
+
+def _ledger(report: Path) -> list[bytes]:
+    # Raw ledger lines, not `report_events`: the check-is-a-prefix-of-the-build
+    # assertions compare bytes, which decoding would not.
+    with gzip.open(report / "events.jsonl.gz", "rb") as stream:
+        return stream.read().splitlines()
+
+
+def _files(directory: Path) -> dict[str, bytes]:
+    return {path.name: path.read_bytes() for path in directory.iterdir()}
 
 
 def test_build_uses_tracked_tree_and_writes_no_selection_hash(
@@ -93,6 +144,7 @@ def test_cli_requires_prepared_pins_and_rejects_selection(
 def test_cli_summary_cannot_overwrite_prepared_manifest(
     catalog: CatalogFixture, tmp_path: Path, capsys, command: str
 ) -> None:
+    catalog = catalog.private(tmp_path)
     manifest = catalog.prepared / "manifest.json"
     original = manifest.read_bytes()
     common = [
@@ -239,6 +291,8 @@ def test_rerun_is_byte_identical(catalog: CatalogFixture, tmp_path: Path) -> Non
 def test_outputs_cannot_alias_inputs_or_each_other(
     catalog: CatalogFixture, tmp_path: Path, where: str
 ) -> None:
+    if where in {"prepared", "dump"}:
+        catalog = catalog.private(tmp_path)
     output = tmp_path / "output.db"
     report = tmp_path / "report"
     kwargs = {"registers": ("1",)}
@@ -385,3 +439,131 @@ def test_strict_corpus_failure_preserves_previous_catalog(
     assert summary["counts"].get("error", 0) == 0
     assert output.read_bytes() == b"previous catalog"
     assert not output.with_suffix(".db.prev").exists()
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+@pytest.mark.parametrize("command", ["build", "check"])
+def test_unknown_register_scope_is_refused(
+    catalog: CatalogFixture, tmp_path: Path, command: str
+) -> None:
+    output = tmp_path / "bad.db"
+    with pytest.raises(ValueError, match=r"names no selected scope: \['3'\]"):
+        if command == "build":
+            catalog.build(output, tmp_path / "report", registers=("1", "3"))
+        else:
+            catalog.check(tmp_path / "report", registers=("1", "3"))
+    assert not output.exists()
+    assert not (tmp_path / "report").exists()
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+def test_local_check_matches_scoped_build_decisions_and_leading_ledger(
+    catalog: CatalogFixture, tmp_path: Path
+) -> None:
+    _with_errata(catalog)
+    built = catalog.build(
+        tmp_path / "slice.db",
+        tmp_path / "build-report",
+        registers=("1",),
+        diagnostic=True,
+        dump_decisions=tmp_path / "build-decisions",
+    )
+    checked = catalog.check(
+        tmp_path / "check-report",
+        registers=("1",),
+        dump_decisions=tmp_path / "check-decisions",
+    )
+    assert built["counts"].get("error", 0) == 0
+    assert checked["passed"] is True
+    assert checked["counts"]["scopes"] == 1
+    assert checked["counts"]["physical_occurrences"] == 1
+    assert "variables" not in checked and "states" not in checked
+    assert _files(tmp_path / "check-decisions") == _files(tmp_path / "build-decisions")
+    local = _ledger(tmp_path / "check-report")
+    assert _ledger(tmp_path / "build-report")[: len(local)] == local
+
+
+@pytest.mark.parametrize("catalog", [True], indirect=True)
+@pytest.mark.parametrize("registers", [("1", "2"), ()])
+def test_decision_dump_does_not_change_catalog_or_ledger(
+    catalog: CatalogFixture, tmp_path: Path, registers: tuple[str, ...]
+) -> None:
+    _with_errata(catalog)
+    kwargs = {"registers": registers, "diagnostic": not registers}
+    catalog.build(
+        tmp_path / "dumped.db",
+        tmp_path / "dumped-report",
+        dump_decisions=tmp_path / "decisions",
+        **kwargs,
+    )
+    catalog.build(tmp_path / "plain.db", tmp_path / "plain-report", **kwargs)
+    assert (tmp_path / "dumped.db").read_bytes() == (tmp_path / "plain.db").read_bytes()
+    assert (tmp_path / "dumped-report/events.jsonl.gz").read_bytes() == (
+        tmp_path / "plain-report/events.jsonl.gz"
+    ).read_bytes()
+    with sqlite3.connect(tmp_path / "plain.db") as conn:
+        assert sorted(conn.execute("SELECT name FROM variable")) == [
+            ("Reviewed other",),
+            ("Reviewed value",),
+        ]
+
+
+def _check_args(catalog: CatalogFixture, report: Path) -> list[str]:
+    return [
+        "check-curation",
+        "--prepared",
+        str(catalog.prepared),
+        "--input-commit",
+        catalog.commit,
+        "--input-manifest-sha256",
+        catalog.digest,
+        "--registers",
+        "1",
+        "--report-dir",
+        str(report),
+    ]
+
+
+def test_check_output_cannot_replace_default_catalog(
+    catalog: CatalogFixture, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The default catalog location comes from ``REG_META_DB``."""
+    db_dir = tmp_path / "active"
+    db_dir.mkdir()
+    active = db_dir / DB_FILENAME
+    previous = active.with_name(active.name + ".prev")
+    active.write_bytes(b"active catalog sentinel")
+    previous.write_bytes(b"previous catalog sentinel")
+    monkeypatch.setenv("REG_META_DB", str(db_dir))
+    alias = tmp_path / "catalog-alias.json"
+    alias.symlink_to(active)
+    summary = tmp_path / "summary.json"
+    # The summary is written through <output>.tmp; a hard link there is the catalog.
+    summary.with_suffix(".json.tmp").hardlink_to(active)
+    report = tmp_path / "report"
+    args = [*_check_args(catalog, report), "--curation-dir", str(catalog.curation)]
+    for destination in (active, previous, alias, summary):
+        assert run(["--output", str(destination), *args]) == EXIT_USAGE
+        assert active.read_bytes() == b"active catalog sentinel"
+        assert previous.read_bytes() == b"previous catalog sentinel"
+    assert not summary.exists()
+    assert not report.exists()
+
+
+@pytest.mark.parametrize("tree", ["curation", "fqid_slugs"])
+def test_check_output_cannot_enter_default_curation_tree(
+    catalog: CatalogFixture, tmp_path: Path, tree: str
+) -> None:
+    """Without ``--curation-dir`` check-curation reads the checkout's own tree."""
+    root = CHECKOUT_CURATION if tree == "curation" else CHECKOUT_SLUGS
+    assert root.is_dir()
+    # Aim below an existing tracked file: the path lies inside the default tree,
+    # but a regressed guard cannot create it, so the checkout stays clean.
+    tracked = min(root.rglob("*.toml"))
+    destination = tracked / "summary.json"
+    report = tmp_path / "report"
+    original = tracked.read_bytes()
+    args = ["--output", str(destination), *_check_args(catalog, report)]
+    assert run(args) == EXIT_USAGE
+    assert tracked.read_bytes() == original
+    assert not report.exists()

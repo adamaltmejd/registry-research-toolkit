@@ -29,6 +29,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import pytest
 from _csv_fixtures import (
     replace_registerinformation_cell,
     summary_rows,
@@ -45,16 +46,27 @@ from _sos_fixtures import (
 )
 from openpyxl import load_workbook
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.pipeline import build_catalog
-from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
+from reg_meta.source_evidence import canonical_sha256
+from reg_meta_build.pipeline import build_catalog, check_curation
+from reg_meta_build.prepared_catalog import (
+    ReferenceEvidence,
+    open_prepared_catalog_sources,
+)
 from reg_meta_build.source_coding import coding_source_sha256
 from reg_meta_build.source_coordinates import native_variant_key
 from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
     capture_expectations,
 )
+from reg_meta_build.source_naming import authored_naming_id
+from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import SourceFields
-from reg_meta_build.source_value_bindings import bind_code_lists, open_value_bindings
+from reg_meta_build.source_value_bindings import (
+    ValueBindingResult,
+    bind_code_lists,
+    marker_binding_fingerprints,
+    open_value_bindings,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -129,6 +141,8 @@ def write_sources(spec: dict, source: Path) -> None:
     for relative, text in spec.get("files", {}).items():
         path = source / relative
         path.parent.mkdir(parents=True, exist_ok=True)
+        if not isinstance(text, str):
+            text = "\n".join(text) + "\n"
         path.write_text(text, encoding="utf-8")
     for register in spec.get("sos", ()):
         workbook_spec = SosRegister(
@@ -153,6 +167,13 @@ def write_sources(spec: dict, source: Path) -> None:
         workbook = load_workbook(path)
         sheet = workbook["Metadata - Variabelnivå"]
         sheet.cell(row=1, column=sheet.max_column + 1, value="Kopplingsvariabel")
+        for name, sheet_rows in register.get("sheets", {}).items():
+            extra = workbook.create_sheet(name)
+            for row in sheet_rows:
+                extra.append(row)
+        if register.get("blank_dataset"):
+            # The `Datamängd` cell names the register; blank, the workbook has none.
+            workbook["Generell information"]["C4"] = None
         workbook.save(path)
         workbook.close()
 
@@ -168,27 +189,45 @@ class PreparedSet:
     def records(self) -> tuple[SourceRecord, ...]:
         return _records(self.prepared, self.commit, self.digest)
 
+    def bindings(self, record: SourceRecord) -> ValueBindingResult:
+        """The source lists the prepared value store binds to one record."""
+        with open_value_bindings(self.opened().value_sources) as sessions:
+            return bind_code_lists(record, sessions)
+
     def coding_sha256(self, records: tuple[SourceRecord, ...]) -> list[str]:
         """The bound physical code-list evidence of ``records``, as curators pin it."""
-        opened = open_prepared_catalog_sources(
+        return [
+            coding_source_sha256(claim)
+            for record in records
+            for claim in self.bindings(record).claims
+        ]
+
+    def opened(self):
+        return open_prepared_catalog_sources(
             self.prepared, expected_sha256=self.digest, input_commit=self.commit
         )
-        with open_value_bindings(opened.value_sources) as sessions:
-            return [
-                coding_source_sha256(claim)
-                for record in records
-                for claim in bind_code_lists(record, sessions).claims
-            ]
 
     def revision(self, record: SourceRecord) -> dict:
-        opened = open_prepared_catalog_sources(
-            self.prepared, expected_sha256=self.digest, input_commit=self.commit
-        )
         return next(
             revision.model_dump(mode="json")
-            for revision in opened.records.manifest.revisions
+            for revision in self.opened().records.manifest.revisions
             if revision.revision_id == record.source_revision_id
         )
+
+    def relationship(self, table: str):
+        """The one literal relationship declaration delivered in ``table``."""
+        (declaration,) = (
+            evidence.declaration
+            for evidence in self.opened().iter_evidence()
+            if isinstance(evidence, ReferenceEvidence)
+            and evidence.declaration.locator.physical_table == table
+        )
+        return declaration
+
+    def table_sha256(self, table: str) -> str:
+        """The content hash of the one prepared evidence table named ``table``."""
+        (found,) = (t for t in self.opened().records.iter_tables() if t.name == table)
+        return canonical_sha256(found.model_dump(mode="json"))
 
 
 @functools.cache
@@ -233,6 +272,12 @@ class PreparedCache:
         return PreparedSet(
             entry / "prepared" / "catalog", selection["commit"], selection["digest"]
         )
+
+
+@pytest.fixture(scope="session")
+def prepared_cache(tmp_path_factory: pytest.TempPathFactory) -> PreparedCache:
+    """The session's prepared inputs, shared by the build cases and `catalog`."""
+    return PreparedCache(cache_root(tmp_path_factory.getbasetemp()))
 
 
 def cache_root(basetemp: Path) -> Path:
@@ -320,6 +365,18 @@ def _fields(args: dict[str, str]) -> tuple[str, ...]:
     )
 
 
+def _marker_bindings(s: PreparedSet, record: SourceRecord, args: dict[str, str]):
+    """The fingerprints of the record's marker bindings in ``from``..``to``."""
+    scope = source_occurrence(record).edition_period_scope
+    markers = marker_binding_fingerprints(
+        ((scope, binding) for binding in s.bindings(record).bindings),
+        args["from"],
+        args["to"],
+    )
+    assert markers is not None, f"placeholder binds no marker: {args}"
+    return list(markers)
+
+
 def _scope(record: SourceRecord, args: dict[str, str], attribute: str) -> dict:
     scope = getattr(record, attribute).model_dump(mode="json")
     if "end" in args:
@@ -353,8 +410,22 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
     ),
     "revision": lambda s, a: s.revision(_one(s.records(), a)),
     "locators": lambda s, a: [
-        locator.model_dump(mode="json") for locator in _one(s.records(), a).locators
+        locator.model_dump(mode="json")
+        for record in _select(s.records(), a)
+        for locator in record.locators
     ],
+    "marker_bindings": lambda s, a: _marker_bindings(s, _one(s.records(), a), a),
+    "relationship_row": lambda s, a: s.relationship(a["table"]).locator.physical_record,
+    "relationship_sha256": lambda s, a: canonical_sha256(
+        s.relationship(a["table"]).model_dump(mode="json")
+    ),
+    "table_sha256": lambda s, a: s.table_sha256(a["table"]),
+    "naming_id": lambda s, a: authored_naming_id(
+        a["kind"],
+        provider=a["provider"],
+        register_key=a["register_key"],
+        member_key=a.get("member_key"),
+    ),
     "variant_key": lambda s, a: _variant_key(_one(s.records(), a)),
 }
 
@@ -409,33 +480,59 @@ class Outcome:
             return [dict(row) for row in conn.execute(sql)]
 
 
-def _issues(outcome: Outcome) -> list[dict]:
+def _refs(refs) -> list[str]:
+    """Source record refs as `<source>#<semantic key parts joined by />`."""
     return [
-        {
-            "code": event["code"],
-            "severity": event["severity"],
-            "subject": str(event["subject"]),
-            "case_id": event.get("case_id"),
-            "locator": _locator(str(event.get("detail") or "")),
-            "detail": event.get("detail"),
-        }
-        for event in outcome.events
-        if event["kind"] == "issue"
+        f"{ref['source']}#{'/'.join(ref['semantic_record_key'])}" for ref in refs or ()
     ]
 
 
+def _issue_row(event: dict) -> dict:
+    return {
+        "code": event["code"],
+        "severity": event["severity"],
+        "subject": str(event["subject"]),
+        "case_id": event.get("case_id"),
+        "locator": _locator(str(event.get("detail") or "")),
+        "detail": event.get("detail"),
+        "acknowledged_by": event.get("acknowledged_by"),
+        "valid_from": event.get("valid_from"),
+        "valid_to": event.get("valid_to"),
+    }
+
+
+def _issues(outcome: Outcome) -> list[dict]:
+    return [_issue_row(event) for event in outcome.events if event["kind"] == "issue"]
+
+
 def _issue_refs(outcome: Outcome) -> list[dict]:
-    """One row per source record an issue cites."""
+    """One row per source record an issue cites: the issue's fields, then the ref,
+    as its parts and in the `_refs` string form other tables' `refs` use."""
     return [
         {
-            "code": event["code"],
-            "case_id": event.get("case_id"),
+            **_issue_row(event),
             "source": ref["source"],
             "key": ref["semantic_record_key"],
+            "ref": _refs([ref])[0],
         }
         for event in outcome.events
         if event["kind"] == "issue"
-        for ref in event.get("refs", ())
+        for ref in event.get("refs") or ()
+    ]
+
+
+def _source_issues(outcome: Outcome) -> list[dict]:
+    """Support- and value-source issues: the source evidence behind ledger issues."""
+    return [
+        {
+            "kind": event["kind"],
+            "severity": event.get("severity"),
+            "descriptor_key": event.get("descriptor_key"),
+            "physical_associations": event.get("physical_associations"),
+            "refs": _refs(event.get("refs")),
+        }
+        for event in outcome.events
+        if event["kind"] in {"support_source_issue", "value_source_issue"}
     ]
 
 
@@ -513,16 +610,22 @@ def _concept_groups(outcome: Outcome) -> list[dict]:
 def _warnings(outcome: Outcome) -> list[dict]:
     return [
         {
+            "register": row["register"],
+            "variable": row["variable"],
             "column": row["delivery_column_name"],
-            "valid_from": payload["valid_from"],
-            "valid_to": payload["valid_to"],
-            "variable_fqid": payload.get("variable_fqid"),
+            "valid_from": payload.get("valid_from"),
+            "valid_to": payload.get("valid_to"),
+            "code": payload["code"],
             "variant": payload.get("variant"),
+            "detail": payload["detail"],
             "summary": payload.get("summary"),
             "fields": payload.get("fields"),
+            "refs": _refs(payload.get("refs")),
         }
         for row in outcome._sql(
-            "SELECT delivery_column_name, warning_json FROM data_warning"
+            "SELECT r.slug AS register, v.slug AS variable, w.delivery_column_name, "
+            "w.warning_json FROM data_warning w JOIN register r USING (register_id) "
+            "LEFT JOIN variable v ON v.variable_id = w.variable_id"
         )
         for payload in (json.loads(row["warning_json"]),)
     ]
@@ -567,17 +670,44 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "JOIN register r ON r.register_id = v.register_id "
         "JOIN register_variant rv ON rv.register_variant_id = a.register_variant_id"
     ),
-    "same_as": lambda o: o._sql(
-        "SELECT a_provider || '/' || a_register || '/' || a_variable AS a, "
-        "b_provider || '/' || b_register || '/' || b_variable AS b "
-        "FROM variable_same_as"
-    ),
     "concept_groups": _concept_groups,
     "warnings": _warnings,
     "search_pins": lambda o: o._sql(
         "SELECT key AS query, type, position, entity FROM search_pin"
     ),
     "manifest": lambda o: o._sql("SELECT key, value FROM import_manifest"),
+    "edges": lambda o: o._sql(
+        "SELECT 'same_as' AS type, "
+        "a_provider || '/' || a_register || '/' || a_variable AS a, "
+        "b_provider || '/' || b_register || '/' || b_variable AS b "
+        "FROM variable_same_as UNION ALL SELECT 'replaced_by', "
+        "predecessor_provider || '/' || predecessor_register || '/' "
+        "|| predecessor_variable, "
+        "successor_provider || '/' || successor_register || '/' || successor_variable "
+        "FROM variable_replaced_by"
+    ),
+    "state_classifications": lambda o: o._sql(
+        "SELECT s.delivery_column_name AS column, c.slug AS classification "
+        "FROM state_classification sc "
+        "JOIN classification c ON c.id = sc.classification_id "
+        "JOIN variable_state s ON s.state_id = sc.state_id"
+    ),
+    "classifications": lambda o: o._sql(
+        "SELECT slug, short_name, name, name_en FROM classification"
+    ),
+    "relationships": lambda o: o._sql(
+        "SELECT kind, binding_status, source_dataset, v.slug AS owner, "
+        "(SELECT COUNT(*) FROM source_relationship_variable e "
+        "WHERE e.relationship_id = r.relationship_id) AS endpoints "
+        "FROM source_relationship r "
+        "LEFT JOIN variable v ON v.variable_id = r.owner_variable_id"
+    ),
+    "evidence": lambda o: [
+        {"kind": event["evidence_kind"], "disposition": event["disposition"]}
+        for event in o.events
+        if event["kind"] == "prepared_evidence"
+    ],
+    "source_issues": _source_issues,
 }
 
 
@@ -585,8 +715,10 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
 FIELDS: dict[str, frozenset[str]] = {
     name: frozenset(fields.split())
     for name, fields in {
-        "issues": "code severity subject case_id locator detail",
-        "issue_refs": "code case_id source key",
+        "issues": "code severity subject case_id locator detail acknowledged_by "
+        "valid_from valid_to",
+        "issue_refs": "code severity subject case_id locator detail acknowledged_by "
+        "valid_from valid_to source key ref",
         "cases": "case_id status",
         "uses": "source native_variable key column_name data_type name description "
         "use variable",
@@ -598,11 +730,17 @@ FIELDS: dict[str, frozenset[str]] = {
         "is_identifier is_sensitive",
         "variants": "register variant name",
         "aliases": "register variable variant column",
-        "same_as": "a b",
         "concept_groups": "variables",
-        "warnings": "column valid_from valid_to variable_fqid variant summary fields",
+        "warnings": "register variable column valid_from valid_to code variant detail "
+        "summary fields refs",
         "search_pins": "query type position entity",
         "manifest": "key value",
+        "edges": "type a b",
+        "state_classifications": "column classification",
+        "classifications": "slug short_name name name_en",
+        "relationships": "kind binding_status source_dataset owner endpoints",
+        "evidence": "kind disposition",
+        "source_issues": "kind severity descriptor_key physical_associations refs",
     }.items()
 }
 
@@ -629,6 +767,37 @@ def _matches(row: dict, where: dict) -> bool:
 
 def _sorted(rows: list[list]) -> list[list]:
     return sorted(rows, key=lambda row: json.dumps(row, ensure_ascii=False))
+
+
+def _cited_refs(outcome: Outcome, selector: dict) -> list[str]:
+    """Every source ref the rows of ``selector`` cite, in the `_refs` string form."""
+    known = FIELDS[selector["table"]]
+    where = selector.get("where", {})
+    if selector.keys() - {"table", "where"} or not set(where) <= known:
+        raise ValueError(f"unknown field in refs_of {selector}")
+    if not known & {"ref", "refs"}:
+        raise ValueError(f"refs_of names a table without refs: {selector}")
+    return [
+        ref
+        for row in outcome.table(selector["table"])
+        if _matches(row, where)
+        for ref in (row["refs"] if "refs" in known else [row["ref"]])
+    ]
+
+
+def expected_rows(outcome: Outcome, spec: dict) -> list[list]:
+    """A projection's expected rows: literal, or the refs another projection cites.
+
+    `{"refs_of": {"table": ..., "where": ...}}` states a relation instead of values:
+    the projection's one `ref` field must list exactly the refs those rows cite. Both
+    sides are read from the same build, so no source ref is written as a literal.
+    """
+    rows = spec["rows"]
+    if isinstance(rows, list):
+        return rows
+    if rows.keys() != {"refs_of"} or spec["fields"] != ["ref"]:
+        raise ValueError(f"unknown expected rows in projection {spec}")
+    return [[ref] for ref in _cited_refs(outcome, rows["refs_of"])]
 
 
 def project(outcome: Outcome, spec: dict) -> dict:
@@ -667,70 +836,100 @@ def project(outcome: Outcome, spec: dict) -> dict:
 # -- Running a step ---------------------------------------------------------------
 
 
-def _refusal(error: Exception) -> dict:
-    """A build refusal as `reg-meta-build build` reports it.
+def _subset(actual, expected):
+    """``actual`` cut to the shape of ``expected``: only the keys it names, nested.
 
-    The command wraps a `ValueError`, `OSError` or `KeyError` from the build in the
-    configuration error `pipeline_build_failed` (`cli._cmd_build`).
+    An expected list names members that must be present, in its own order.
+    """
+    if isinstance(expected, dict) and isinstance(actual, dict):
+        return {key: _subset(actual.get(key), value) for key, value in expected.items()}
+    if isinstance(expected, list) and isinstance(actual, list):
+        return [item for item in expected if item in actual]
+    return actual
+
+
+def _refusal(error: Exception, expected: dict) -> dict:
+    """A refusal as `reg-meta-build build-db` and `check-curation` report it, cut to the
+    keys ``expected`` names.
+
+    Both commands wrap a `ValueError`, `OSError` or `KeyError` from the pipeline in the
+    configuration error `pipeline_build_failed` (`cli._cmd_build_db`,
+    `cli._cmd_check_curation`); `type` is the Python class the pipeline raised.
     """
     if isinstance(error, RegMetaError):
-        return {
+        refusal = {
             "code": error.code,
             "exit_code": error.exit_code,
             "message": error.message,
         }
-    return {
-        "code": "pipeline_build_failed",
-        "exit_code": EXIT_CONFIG,
-        "message": str(error),
-    }
+    else:
+        refusal = {
+            "code": "pipeline_build_failed",
+            "exit_code": EXIT_CONFIG,
+            "message": str(error),
+        }
+    refusal["type"] = type(error).__name__
+    refusal["message_contains"] = [
+        text for text in expected["message_contains"] if text in refusal["message"]
+    ]
+    return {key: refusal[key] for key in expected if key in refusal}
 
 
 def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dict]:
     """Run one case step; return ``(actual, expected)`` in the same shape."""
     request = json.loads((step / "request.json").read_text(encoding="utf-8"))
+    # A case states the product change that makes it fail, so a reviewer can check
+    # that its oracle can fail at all (cases/build/README.md).
+    fails_if = request.get("fails_if")
+    if not isinstance(fails_if, str) or not fails_if.strip():
+        raise ValueError(f"{step}/request.json: fails_if must be a non-empty string")
     expected = json.loads((step / "expected.json").read_text(encoding="utf-8"))
     built = cache.get(source_spec(request["sources"]))
     authored = cache.get(source_spec(request.get("authored_from", request["sources"])))
     curation = render_curation(step / "curation", scratch / "curation", authored)
     output, report = scratch / "reg_meta.db", scratch / "report"
+    registers = tuple(request.get("registers", ()))
     try:
-        result = build_catalog(
-            built.prepared,
-            built.commit,
-            built.digest,
-            output,
-            report,
-            curation_dir=curation,
-            diagnostic=request.get("diagnostic", True),
-            registers=tuple(request.get("registers", ())),
-        )
+        if request.get("mode", "build") == "check":
+            result = check_curation(
+                built.prepared,
+                built.commit,
+                built.digest,
+                report,
+                curation_dir=curation,
+                registers=registers,
+            )
+        else:
+            result = build_catalog(
+                built.prepared,
+                built.commit,
+                built.digest,
+                output,
+                report,
+                curation_dir=curation,
+                diagnostic=request.get("diagnostic", True),
+                registers=registers,
+            )
     except (RegMetaError, ValueError, OSError, KeyError) as error:
         if "error" not in expected:
             raise
-        refusal = _refusal(error)
-        wanted = expected["error"]
-        refusal["message_contains"] = [
-            text for text in wanted["message_contains"] if text in refusal["message"]
-        ]
-        return {
-            "error": {key: refusal[key] for key in wanted if key in refusal}
-        }, expected
+        return {"error": _refusal(error, expected["error"])}, expected
     actual: dict = {}
     if "error" in expected:
         actual["error"] = None
     if "status" in expected:
         actual["status"] = result["status"]
+    if "result" in expected:
+        actual["result"] = _subset(result, expected["result"])
     if "projections" in expected:
         outcome = Outcome(result, report_events(report), output, built)
-        actual["projections"] = [
-            project(outcome, spec) for spec in expected["projections"]
+        specs = [
+            {**spec, "rows": expected_rows(outcome, spec)}
+            for spec in expected["projections"]
         ]
+        actual["projections"] = [project(outcome, spec) for spec in specs]
         expected = {
             **expected,
-            "projections": [
-                {**spec, "rows": _sorted(spec["rows"])}
-                for spec in expected["projections"]
-            ],
+            "projections": [{**spec, "rows": _sorted(spec["rows"])} for spec in specs],
         }
     return actual, expected

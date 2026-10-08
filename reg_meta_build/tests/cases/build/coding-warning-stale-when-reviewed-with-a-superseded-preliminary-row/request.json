@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_coding_warning_peers_exclude_a_superseded_preliminary_row[with-preliminary]"
   ],
+  "fails_if": "the SCB supersession rule (`compile_scb_preliminary`) stops taking the `2020, preliminär version` row (CVID 1020) out of VALUE's peers, so a warning reviewed over both 2020 rows matches the column digest and is written",
   "sources": "scb-value-preliminary-and-final-2020"
 }

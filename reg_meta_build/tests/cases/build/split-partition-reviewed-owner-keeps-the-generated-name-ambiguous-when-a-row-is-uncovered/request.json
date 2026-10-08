@@ -3,6 +3,7 @@
     "test_curation_owner_column_boundary.py::test_reviewed_owner_replaces_generated_name_only_with_complete_coverage[years1-extra1]"
   ],
   "note": "`sample.auto.toml` generates `1.5.answer`; the reviewed owner takes 2020. Issue codes carried over from the replaced test, whose docstring says they were recorded from a build run.",
+  "fails_if": "`_scoped_partition_entries` retires the generated `answer` name even when the reviewed owner covers only the 2020 row, so the uncovered 2021 row no longer reports `ambiguous_named_identity` for `scb/sample/answer`",
   "sources": {
     "description": "Variable 5 delivers ANSWER in 2020 and 2021.",
     "scb": {

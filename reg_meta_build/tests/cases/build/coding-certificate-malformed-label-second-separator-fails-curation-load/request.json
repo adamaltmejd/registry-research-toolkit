@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_malformed_certificate_fails_curation_load_at_its_entry[label-second-separator]"
   ],
+  "fails_if": "the comma-equals label check in `SourceEnumeration._explicit_decimal_lines` tests only the first assignment separator, so the label `giltigt pnr; annat` under separators `[',', ';']` is accepted although it hides the second separator",
   "sources": "sos-kon-decimal-comma-open"
 }

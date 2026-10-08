@@ -3,5 +3,6 @@
     "test_curation_sos_errata_boundary.py::test_classification_reference_entry_fails_closed_on_changed_facts"
   ],
   "note": "A changed link, representation or column, a blank link, a missing or changed description witness, or several subset peers apply nothing; only the exact original and the matching witness are corrected.",
+  "fails_if": "`_compile_sos_register` ignores a classification-reference entry's `expected_description` witness, so the ANNATVITTNE and UTANVITTNE entries (/7, /8) are not reported stale",
   "sources": "sos-syx-errata"
 }

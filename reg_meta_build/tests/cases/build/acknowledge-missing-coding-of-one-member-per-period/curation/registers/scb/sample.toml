@@ -1,0 +1,20 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.1"
+slug = "income"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/sample/income"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:1\", \"member:1005\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "Accepted while the source stays unresolved."
+evidence = "Synthetic fixture issue."

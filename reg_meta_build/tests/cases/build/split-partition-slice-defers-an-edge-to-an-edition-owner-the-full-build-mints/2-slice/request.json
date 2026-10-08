@@ -1,5 +1,6 @@
 {
   "note": "Register 9 only: scb/sample is out of the slice, so the edge defers.",
+  "fails_if": "the out-of-slice compile drops an edition-scoped owner's family (no binding for `1.5.new` in `compile_deferred_partitions` / `compile_deferred_naming`), so the unselected `scb/sample` no longer declares `scb/sample/new` and the slice refuses the edge",
   "sources": "scb-anchor-and-edition-owners",
   "registers": ["9"]
 }

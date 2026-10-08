@@ -2,6 +2,7 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_changed_source_scope_makes_an_own_scope_certificate_stale[2005-2024]"
   ],
+  "fails_if": "`compile_coding_register` keeps an own-scope certificate matched after KON's open delivery closes at 2024 — that needs its captured-record comparison, its `source_scope` comparison and its window-coverage (`used`) check all loosened, since each alone reports it stale",
   "sources": {
     "description": "sos-kon-decimal-comma-semicolon-open after its open KON delivery closed at 2024.",
     "scb": {

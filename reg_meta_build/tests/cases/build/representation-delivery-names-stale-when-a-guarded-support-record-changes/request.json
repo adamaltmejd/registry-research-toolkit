@@ -3,6 +3,7 @@
     "test_curation_support_delivery_boundary.py::test_delivery_names_are_stale_when_a_guarded_support_record_changes"
   ],
   "note": "A changed preliminary literal invalidates the metadata; KU names then conflict.",
+  "fails_if": "`compile_delivery_metadata` stops checking the entry's `support` expectations, so the changed unit on the preliminary KU row (CVID 30) no longer stales the name metadata and KU is published",
   "sources": {
     "description": "Variable 5: KU names its 2020 final (CVID 31) and its 2021 delivery (CVID 33) differently; AGI (CVID 32) is a sibling; a superseded 2020 preliminary KU edition (CVID 30) has the unit 'Changed literal'.",
     "scb": {

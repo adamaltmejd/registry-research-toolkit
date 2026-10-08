@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_split_sos_boundary.py::test_subset_split_is_stale_unless_the_delivered_subsets_match[declared-subset-missing]"
   ],
+  "fails_if": "the SOS split check in `curation_compile` accepts delivered subsets that are a subset of the declared parts, so PAR_OV and PAR_TV form their owners although the declared PAR_SV is missing",
   "sources": {
     "description": "ATC delivered in subsets PAR_OV, PAR_TV.",
     "scb": {

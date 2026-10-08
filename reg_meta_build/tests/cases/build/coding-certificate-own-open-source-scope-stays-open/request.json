@@ -2,5 +2,6 @@
   "replaces": [
     "test_source_coding_choices_boundary.py::test_reviewed_certificate_with_its_own_open_source_scope_stays_open"
   ],
+  "fails_if": "the source-authority validator in `curation_tree.py` treats an omitted `source_scope` end like the refused literal 9999 end, so the certificate carrying KON's own open-ended scope fails to load instead of publishing 2005-01-01..9999-12-31 states",
   "sources": "sos-kon-decimal-comma-semicolon-open"
 }

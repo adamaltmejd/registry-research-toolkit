@@ -3,6 +3,7 @@
     "test_curation_support_delivery_boundary.py::test_delivery_names_stay_on_the_partition_owner_states[with-preliminary]"
   ],
   "note": "Checked name metadata keeps each KU delivery name instead of withholding KU. It is checked against the partition-owned, preliminary-superseded occurrences: a superseded preliminary edition is support, never a named delivery.",
+  "fails_if": "`compile_delivery_metadata` counts the superseded preliminary KU occurrence (CVID 30, use `support`) as an owned delivery, so the owner set no longer equals the entry's records, the entry goes stale and KU is withheld",
   "sources": {
     "description": "Variable 5: KU names its 2020 final (CVID 31) and its 2021 delivery (CVID 33) differently; AGI (CVID 32) is a sibling; a superseded 2020 preliminary KU edition (CVID 30) has the unit 'Olika valutor'.",
     "scb": {

@@ -3,6 +3,7 @@
     "test_curation_owner_column_boundary.py::test_variant_scoped_owner_leaves_other_variants_original"
   ],
   "note": "Issue codes carried over from the replaced test, whose docstring says they were recorded from a build run.",
+  "fails_if": "`_scoped_column_owners` stops matching on the owner's `variant`, so the owner for variant 1.2 also claims the ANSWER row of variant 1.3 instead of leaving it unresolved under its original identity",
   "sources": {
     "description": "Variable 5 delivers ANSWER in variant 2 (CVID 21) and variant 3 (CVID 22).",
     "scb": {

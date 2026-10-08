@@ -1,0 +1,19 @@
+{
+  "description": "scb-two-registers whose Unika summaries leave the column name blank, so no summary supports a delivered column.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+      {
+        "cvid": 2001,
+        "var_id": 201,
+        "colname": "OTHER",
+        "varname": "OtherVar",
+        "register": ["OTHERREG", 2, 20]
+      }
+    ],
+    "unika": [
+      "TESTREG|Testregistret|Individer|Individer|GenericVar||2020|2020|0|0|0",
+      "OTHERREG|Testregistret|Individer|Individer|OtherVar||2020|2020|0|0|0"
+    ]
+  }
+}

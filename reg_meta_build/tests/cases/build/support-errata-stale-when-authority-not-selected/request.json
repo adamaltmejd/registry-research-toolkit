@@ -3,6 +3,7 @@
     "test_curation_support_errata_boundary.py::test_checked_support_is_stale_when_its_authority_changes[authority-not-selected]"
   ],
   "note": "Nothing selects the named authority: its literal column changed.",
+  "fails_if": "the support compile accepts an authority whose literal FIRST column no longer selects (CVID 21 now delivers CHANGED): both the authority's `_occurrence_correction_matches` and single-ref check, and the coding pin keyed on (ref, column), must stop refusing",
   "sources": {
     "description": "scb-support-question changed: Nothing selects the named authority: its literal column changed.",
     "scb": {

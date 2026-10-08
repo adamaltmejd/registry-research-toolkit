@@ -1,0 +1,15 @@
+{
+  "description": "Register 1 (TESTREG, variant 10) delivers VALUE; register 2 (OTHERREG, variant 20) delivers OTHER.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+      {
+        "cvid": 2001,
+        "var_id": 201,
+        "colname": "OTHER",
+        "varname": "OtherVar",
+        "register": ["OTHERREG", 2, 20]
+      }
+    ]
+  }
+}

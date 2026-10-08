@@ -3,5 +3,6 @@
     "test_curation_sos_errata_boundary.py::test_data_type_correction_replaces_only_the_named_original_type"
   ],
   "note": "The one matching SYX_A original becomes `date` with the entry's attribution; the same variable under SYX_B and in another register keeps its delivered type.",
+  "fails_if": "`_compile_sos_register` matches a data-type entry's peers by variable name alone, without the `subject.variant.name == entry.deldatamangd` filter, so the SYX_B DATUM row joins the peers and the entry turns over-broad instead of making SYX_A DATUM `date`",
   "sources": "sos-syx-errata"
 }

@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_build_db_scope_selection.py::test_warning_only_register_is_compiled_and_warning_roundtrips"],
+  "fails_if": "`coding_registers` (pipeline.py build_catalog) stops counting `[[coding.warning]]` entries, so the warning-only register's entry is never compiled and no source_metadata_conflict data_warning for VALUE (people, 2020) is published",
+  "sources": "scb-value",
+  "registers": ["1"]
+}

@@ -1,5 +1,6 @@
 {
   "replaces": ["test_curation_partition_map_boundary.py::test_exact_literal_map_moves_each_column_to_its_owner"],
+  "fails_if": "`_column_partition_plan` assigns a delivered literal to an owner other than the one the `[[identity.partition]]` columns map names, so ANSWER and OTHER no longer land on `answer` and `other`",
   "sources": {
     "description": "Variable 5 delivers ANSWER (CVID 21) and OTHER (CVID 22) in 2020.",
     "scb": {

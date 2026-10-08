@@ -3,6 +3,7 @@
     "test_curation_split_sos_boundary.py::test_split_owner_resolves_a_reference_from_an_unselected_register[rename]"
   ],
   "note": "A scoped SCB build (register 1) defers a reference to an unselected SOS split owner.",
+  "fails_if": "`compile_deferred_partitions` stops matching a rename's record by `deldatamangd` and delivered `name` (or skips renames), so the unselected PAR scope binds no `sos/par/new-name` and the scoped build refuses the same_as edge instead of deferring it",
   "sources": "sos-par-invarn8",
   "registers": ["1"]
 }

@@ -3,6 +3,7 @@
     "test_curation_thin_coverage_boundary.py::test_thin_delivery_period_intersects_register_variant_and_variable_bounds"
   ],
   "note": "Register 2000-2020, variant 2010-2018 and variable 2005-2019 give 2010-2018.",
+  "fails_if": "`_compile_thin_register` stops intersecting the variable's bounds with its variant's (for example takes the earliest start), so COL's state is not 2010-01-01..2018-12-31",
   "sources": {
     "description": "Authored FK register r (2000-2020), variant v (2010-2018), variable COL (2005-2019). Plus the SCB sample.",
     "scb": {

@@ -3,6 +3,7 @@
     "test_curation_enrichment_target_boundary.py::test_alias_of_a_declared_errata_column_attaches_to_its_variant"
   ],
   "note": "`new-col` exists only through `[[errata.column]]`; its alias still binds.",
+  "fails_if": "`compile_enrichment` stops taking an alias's variant keys from the `CuratedOccurrenceAddition` effects of `[[errata.column]]` cases, so the alias of `new-col` (which has no original record) goes stale with no occurrence variants and FormerA is not built",
   "sources": {
     "description": "Variable 5 delivers A in 2020 (CVID 20).",
     "scb": {

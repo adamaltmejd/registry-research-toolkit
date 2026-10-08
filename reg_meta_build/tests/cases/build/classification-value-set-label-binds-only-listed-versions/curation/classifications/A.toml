@@ -1,0 +1,7 @@
+[classification]
+short_name = "A"
+slug = "a"
+name = "A"
+codes_file = "a.csv"
+[binding]
+value_set_labels = ["Detailed book"]

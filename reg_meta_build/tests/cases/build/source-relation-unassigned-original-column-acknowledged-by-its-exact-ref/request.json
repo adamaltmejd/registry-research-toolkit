@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_build_catalog_source_relationship_boundary.py::test_unassigned_original_column_finding_reaches_exact_ack[exact]"
+  ],
+  "fails_if": "`unassigned_original_columns` findings stop being routed into the scope's source diagnostics (`compile_partitions` in curation_compile.py), where source-scoped `[[acknowledge]]` entries match, so the exact ack never applies: the finding stays an error and the ack is reported stale",
+  "sources": "scb-sos-crosswalk",
+  "registers": ["1"]
+}

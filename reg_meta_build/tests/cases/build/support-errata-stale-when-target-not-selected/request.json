@@ -3,6 +3,7 @@
     "test_curation_support_errata_boundary.py::test_checked_support_is_stale_when_its_shared_target_changes[target-not-selected]"
   ],
   "note": "Nothing selects the contradicted projection: it is gone.",
+  "fails_if": "the support compile accepts an entry whose FIRST target projection is gone: both the empty-selection checks (`bool(selected)`, `_occurrence_correction_matches`) and the coding pin keyed on (ref, column) must stop refusing it",
   "sources": {
     "description": "scb-support-question changed: Nothing selects the contradicted projection: it is gone.",
     "scb": {

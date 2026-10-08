@@ -2,5 +2,6 @@
   "replaces": [
     "test_curation_support_errata_boundary.py::test_nonphysical_support_keeps_its_quantity_witness_in_catalog"
   ],
+  "fails_if": "the nonphysical support's `CheckedSourceUse` conditions on the literal `entry.column` (\"\") instead of the negative `column_name` guard, so the blank CVID 21 projection is not marked support and the case stops being issue-free",
   "sources": "scb-support-nonphysical"
 }

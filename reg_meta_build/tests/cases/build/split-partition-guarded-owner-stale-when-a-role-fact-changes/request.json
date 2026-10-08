@@ -3,6 +3,7 @@
     "test_curation_split_partition_boundary.py::test_guarded_column_owner_is_stale_when_a_role_fact_changes[varopdef]"
   ],
   "note": "The owner's guard is one expected-fields list; the operational definition, the middle of its three facts, stands for each.",
+  "fails_if": "`_scoped_column_owners` stops checking the owner's `expected_fields`, so the ANSWER owner still claims the column after its operational definition changed from Amount to Changed",
   "sources": {
     "description": "The guarded ANSWER delivery with its operational definition changed.",
     "scb": {

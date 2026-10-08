@@ -1,0 +1,31 @@
+{
+  "replaces": [
+    "test_build_catalog_classification_boundary.py::test_ambiguous_classification_reference_spelling_fails_at_its_file[family-alias-repeated-across-families]"
+  ],
+  "fails_if": "`load_classifications` (curation_tree.py) leaves a book's `family_aliases` out of its claimed reference spellings, so 'Shared' declared as a family alias by family first (A) and family second (C) loads",
+  "sources": {
+    "description": "Books a, b, c, d, unreferenced.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": [
+        "[[register]]",
+        "key = \"remote\"",
+        "name = \"Remote\"",
+        "valid_from = \"2020-01-01\"",
+        "valid_to = \"2020-12-31\"",
+        "[[register.variable]]",
+        "name = \"Amount\"",
+        "column = \"AMOUNT\"",
+        "data_type = \"int\""
+      ],
+      "classifications/a.csv": ["code,label", "1,One", "2,Two"],
+      "classifications/b.csv": ["code,label", "1,One", "2,Two"],
+      "classifications/c.csv": ["code,label", "1,One", "2,Two"],
+      "classifications/d.csv": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[classification]
+short_name = "B"
+slug = "b"
+name = "B"
+codes_file = "b.csv"
+family = "first"

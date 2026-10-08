@@ -3,5 +3,6 @@
     "test_curation_sos_errata_boundary.py::test_data_type_entry_with_a_changed_or_absent_original_is_stale"
   ],
   "note": "A changed type, representation or column, a blank or formula type cell, a blank representation, or no such variable leaves the entry stale and the type unchanged.",
+  "fails_if": "`_compile_sos_register` stops comparing the original's representation with the entry's `expected_representation`, so the REPR (/3) and blank-representation UTANREPR (/5) entries are no longer reported stale",
   "sources": "sos-syx-errata"
 }

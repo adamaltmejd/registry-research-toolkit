@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+
+[[coding.choice]]
+variable = "1.101"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+keep = "keep"
+over = ["other"]
+expected_evidence_sha256 = {{coding_evidence_sha256 source=scb-registerinformation}}
+reason = "Reviewed competing lists"
+source = "fixture"

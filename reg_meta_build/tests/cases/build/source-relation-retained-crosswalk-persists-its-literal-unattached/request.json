@@ -1,0 +1,7 @@
+{
+  "replaces": [
+    "test_build_catalog_source_relationship_boundary.py::test_retained_crosswalk_persists_literal_without_catalog_link"
+  ],
+  "fails_if": "the pipeline stops matching a `[[documentary.retained]]` entry to its crosswalk declaration (the `documentary` lookup by dataset, table and row), so Kodlista_CROSSWALK is reported unbound_source_relationship instead of retained unattached",
+  "sources": "scb-sos-crosswalk"
+}

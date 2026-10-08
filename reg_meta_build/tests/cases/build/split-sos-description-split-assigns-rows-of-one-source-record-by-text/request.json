@@ -3,5 +3,6 @@
     "test_curation_split_sos_boundary.py::test_text_split_assigns_rows_of_one_source_record_by_text[description-reversed]"
   ],
   "note": "Parts declared in reverse order. Two texts under one owner in one subset conflict, so only the shared owner carries resolution errors.",
+  "fails_if": "the SOS split's `CheckedIdentityChange` in `curation_compile` drops its `when` condition on `description`, so all three rows of the one ATC source record take every owner's effect instead of being routed by their description",
   "sources": "sos-par-atc-three-descriptions"
 }

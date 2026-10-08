@@ -1,0 +1,10 @@
+{
+  "replaces": [
+    "test_build_db_scope_selection.py::test_curation_wholly_outside_slice_is_skipped_without_claiming_proof"
+  ],
+  "note": "Strict: the skipped edge is neither checked nor reported deferred.",
+  "fails_if": "`CatalogDependencies.entry` stops skipping a curation entry whose every register reference lies outside the slice, so the strict register-1 slice evaluates the scb/other → scb/nosuch edge and refuses or defers it instead of counting one skipped entry",
+  "sources": "scb-two-registers",
+  "registers": ["1"],
+  "diagnostic": false
+}

@@ -1,0 +1,6 @@
+{
+  "error": {
+    "type": "CatalogDependencyError",
+    "message_contains": ["scb/other/missing"]
+  }
+}

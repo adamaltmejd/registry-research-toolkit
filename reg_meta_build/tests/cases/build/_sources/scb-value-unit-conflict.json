@@ -1,0 +1,9 @@
+{
+  "description": "Two 2020 members of native variable 101 disagree on their literal unit, so the 2020 VALUE segment reports a dated occurrence conflict.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "unit": "kg"},
+      {"cvid": 1002, "var_id": 101, "colname": "VALUE", "unit": "ton"}
+    ]
+  }
+}

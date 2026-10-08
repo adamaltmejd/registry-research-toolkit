@@ -2,6 +2,7 @@
   "replaces": [
     "test_curation_split_sos_boundary.py::test_text_split_is_stale_unless_the_delivered_texts_match[name-undeclared-text]"
   ],
+  "fails_if": "the SOS split check in `curation_compile` accepts delivered names that merely include the declared parts, so the undeclared New row reaches owner routing (KeyError or a wrongly routed row) instead of making the split stale",
   "sources": {
     "description": "PAR_OV ATC rows of one source record key whose labels are First, Second, Other, New.",
     "scb": {

@@ -3,6 +3,7 @@
     "test_curation_toml_load_boundary.py::test_malformed_search_pin_fails_the_build_located[wrong-type]"
   ],
   "note": "A malformed pin fails even a diagnostic build, before anything is resolved.",
+  "fails_if": "`SearchPin._fqids_of_type` stops comparing each fqid's parsed kind with the pin's `type`, so a register pin naming the classification FQID `class/a` loads",
   "sources": {
     "description": "Register 1 delivers Kod (var_id 100); no Unika file.",
     "scb": {

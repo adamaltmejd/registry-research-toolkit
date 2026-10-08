@@ -1,0 +1,14 @@
+{
+  "status": "complete",
+  "result": {
+    "counts": {"skipped_curation": 1}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "deferred_out_of_slice_reference"},
+      "fields": ["code"],
+      "rows": []
+    }
+  ]
+}

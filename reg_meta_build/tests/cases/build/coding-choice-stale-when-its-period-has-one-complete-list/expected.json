@@ -1,0 +1,16 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "case_id", "detail"],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/sample.toml#/coding.choice/1/period/1",
+          "curation/registers/scb/sample.toml#/coding.choice/1/period/1: period is no longer contested by complete lists"
+        ]
+      ]
+    }
+  ]
+}

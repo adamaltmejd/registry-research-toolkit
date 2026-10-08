@@ -2,7 +2,8 @@
   "replaces": [
     "test_curation_enrichment_target_boundary.py::test_description_over_an_existing_source_description_is_stale"
   ],
-  "note": "The stale detail text is carried over from the replaced test, whose docstring says it was recorded from a build run.",
+  "note": "The stale entry is located by the curation tree (its first [[enrichment.description]]); the source description stays. The replaced test also pinned the stale reason's wording, which its module docstring says was recorded from a build run, so that prose is not asserted.",
+  "fails_if": "`compile_enrichment` drops the check that the target's original records carry no description, so the entry overwrites the delivered description `Already` with `Accepted prose` instead of going stale",
   "sources": {
     "description": "Variable 5 delivers A in 2020 (CVID 20) with the source description `Already`.",
     "scb": {

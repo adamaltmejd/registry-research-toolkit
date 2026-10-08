@@ -1,0 +1,23 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101.a"
+slug = "value"
+[[identity.partition]]
+variable = "1.101"
+columns = { VALUE = "1.101.a" }
+unassigned_columns = ["ALTVALUE"]
+columns_ref = "exact fixture"
+
+[[acknowledge]]
+code = "unassigned_original_columns"
+subject = "1.101"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:111\", \"variable:101\", \"member:1002\"]}"]
+fields = ["identity", "column_name"]
+reason = "Preserve the unknown original column."
+evidence = "Exact reviewed source finding."

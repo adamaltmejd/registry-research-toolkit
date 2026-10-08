@@ -3,6 +3,7 @@
     "test_curation_partition_delivered_boundary.py::test_simultaneous_components_are_added_beside_the_blank_native_base"
   ],
   "note": "Each component gets its own 2021 addition; the blank row stays as evidence.",
+  "fails_if": "the `[[errata.delivered]]` compile stops recognising reviewed simultaneous partition components (`component_base_key` stays None), so each entry rewrites the one 2021 blank row instead of keeping it as evidence and adding its own occurrence",
   "sources": {
     "description": "Variable 5 delivers A, B and C in 2020 (CVIDs 20-22), and one literal blank member in 2021 (CVID 30).",
     "scb": {
