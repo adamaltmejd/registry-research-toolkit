@@ -255,8 +255,17 @@ def artifact_key(
 
 def _generation_dir() -> Path:
     """This build-input generation's cache directory, marked as in use."""
+    return generation_dir(_live_build_inputs())
+
+
+def generation_dir(build_inputs: str) -> Path:
+    """The cache directory of the generation keyed ``build_inputs``, marked as in use.
+
+    Other fixture caches (the `reg_meta_build` prepared inputs) key their own
+    generations and share this one pruning policy.
+    """
     generations = fixture_cache_dir() / "generations"
-    generation = generations / _live_build_inputs()
+    generation = generations / build_inputs
     if not generation.is_dir():
         generation.mkdir(parents=True, exist_ok=True)
         # simplify: every source edit starts a generation (~35 MB), so ones idle
