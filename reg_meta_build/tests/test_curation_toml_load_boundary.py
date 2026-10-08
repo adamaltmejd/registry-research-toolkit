@@ -159,6 +159,34 @@ def test_malformed_search_pin_fails_the_build_located(
     assert located in exc_info.value.message
 
 
+def test_diagnostic_build_stores_no_search_pins(tmp_path: Path) -> None:
+    """A diagnostic build stores no pins, so an unresolved one is not an error, and
+    records the empty-pins hash (sha256 of `[]`). Fails if partial builds start
+    writing or resolving pins."""
+    built = build_scb_catalog(
+        tmp_path,
+        curation={
+            "registers/scb/sample.toml": SCB_SAMPLE_REGISTER
+            + '[[variable]]\nnative_id = "1.100"\nslug = "kod"\n',
+            "search_pins.toml": _PIN.format("diagnos", '"sos/par"'),
+        },
+        registerinformation_rows=[
+            var_row(cvid=1000, var_id=100, colname="Kod", varname="Kod")
+        ],
+        unika_rows=[
+            "TESTREG|Testregistret|Individer|Individer|Kod|Kod|2020|2020|0|0|0"
+        ],
+    )
+    assert built.result["status"] == "diagnostic_complete"
+    with sqlite3.connect(built.db) as conn:
+        assert conn.execute("SELECT COUNT(*) FROM search_pin").fetchone() == (0,)
+        assert conn.execute(
+            "SELECT value FROM import_manifest WHERE key = 'search_pins_sha256'"
+        ).fetchone() == (
+            "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        )
+
+
 @pytest.fixture(scope="module")
 def doc_builder(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return builder_copy(tmp_path_factory.mktemp("doc-sources"))
