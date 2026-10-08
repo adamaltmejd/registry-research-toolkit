@@ -136,28 +136,48 @@ fn register(
         [register_id],
         |row| row.get(0),
     )?;
-    let sql = format!(
-        "SELECT v.variable_id FROM variable v WHERE v.register_id = ? AND {} \
-         ORDER BY v.variable_id",
-        held::variable(scope, "v.variable_id", Narrow::default())
-    );
-    let variables = conn
-        .prepare(&sql)?
-        .query_map([register_id], |row| row.get(0))?
-        .collect::<rusqlite::Result<Vec<i64>>>()?;
-    // simplify: one `emitted` read per variable (two indexed queries; ~7k for the
-    // largest register); read the register's expanded states in one query if a
-    // register's coverage passes ~1 s.
-    let mut by_variant: BTreeMap<i64, BTreeSet<u16>> = BTreeMap::new();
-    for variable_id in variables {
-        for e in states::emitted(conn, scope, variable_id, None, None)? {
-            let mut covered = years(e.valid_from.as_deref(), e.valid_to.as_deref()).peekable();
-            if covered.peek().is_some() {
-                by_variant
-                    .entry(e.register_variant_id)
-                    .or_default()
-                    .extend(covered);
+    // The whole-history representations, as `states::emitted` reads them without
+    // bounds: in reference every expanded row but `base_fallback`, read for the whole
+    // register at once (scb/frida's 7k variables one by one took 1.6 s); in holdings
+    // each held variable's, clipped to its held periods.
+    type Bounds = (i64, Option<String>, Option<String>);
+    let bounds: Vec<Bounds> = match scope {
+        Scope::Reference => conn
+            .prepare(
+                "SELECT e.register_variant_id, e.valid_from, e.valid_to \
+                 FROM expanded_state e JOIN variable v USING(variable_id) \
+                 WHERE v.register_id = ? AND e.kind != 'base_fallback'",
+            )?
+            .query_map([register_id], |row| {
+                Ok((row.get(0)?, row.get(1)?, row.get(2)?))
+            })?
+            .collect::<rusqlite::Result<_>>()?,
+        Scope::Holdings => {
+            let sql = format!(
+                "SELECT v.variable_id FROM variable v WHERE v.register_id = ? AND {}",
+                held::variable(scope, "v.variable_id", Narrow::default())
+            );
+            let variables = conn
+                .prepare(&sql)?
+                .query_map([register_id], |row| row.get(0))?
+                .collect::<rusqlite::Result<Vec<i64>>>()?;
+            // simplify: one `emitted` read per held variable (SWECOV's scb/lisa
+            // 0.56 s); clip the register's rows in one pass if a held register's
+            // coverage passes ~1 s.
+            let mut bounds = Vec::new();
+            for variable_id in variables {
+                for e in states::emitted(conn, scope, variable_id, None, None)? {
+                    bounds.push((e.register_variant_id, e.valid_from, e.valid_to));
+                }
             }
+            bounds
+        }
+    };
+    let mut by_variant: BTreeMap<i64, BTreeSet<u16>> = BTreeMap::new();
+    for (variant, from, to) in bounds {
+        let mut covered = years(from.as_deref(), to.as_deref()).peekable();
+        if covered.peek().is_some() {
+            by_variant.entry(variant).or_default().extend(covered);
         }
     }
     let all: BTreeSet<u16> = by_variant.values().flatten().copied().collect();

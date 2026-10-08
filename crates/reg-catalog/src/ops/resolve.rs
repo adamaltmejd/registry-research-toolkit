@@ -51,19 +51,25 @@ pub fn resolve(server: &Server, scope: Scope, params: &Params) -> Result<Value, 
         .map(|register| register.id);
     let columns = params.list("columns");
     let wanted: Vec<String> = columns.iter().map(|c| reg_core::fold_identity(c)).collect();
-    // One pass over the aliases for every requested name. The state's spelling
+    // One pass over the aliases for every requested name (a join on the names
+    // instead folded every alias once per name: 4 s for 200). The state's spelling
     // takes the fold over the aliases' (today's `representative_columns`); the
     // alias's own row decides holdings, never the request's string.
+    // simplify: the state spelling reads each matched variable's wide state rows
+    // (1.3 s for the pin's 200 most delivered columns, 3.9k variables; one common
+    // column 40 ms); read the narrow base rows of `expanded_state` instead if
+    // resolve's latency matters.
     let sql = format!(
-        "WITH wanted(lower) AS (SELECT DISTINCT value FROM json_each(?1)), \
-         alias AS (SELECT variable_id, register_variant_id, delivery_column_name, \
+        "WITH alias AS MATERIALIZED (SELECT * FROM (SELECT variable_id, \
+         register_variant_id, delivery_column_name, \
          fold_identity(delivery_column_name) AS lower FROM variable_alias) \
+         WHERE lower IN (SELECT value FROM json_each(?1))) \
          SELECT a.lower, MIN(a.delivery_column_name), \
          (SELECT MIN(vs.delivery_column_name) FROM variable_state vs \
           WHERE vs.variable_id = v.variable_id \
           AND fold_identity(vs.delivery_column_name) = a.lower), \
          p.slug, r.slug, v.slug, {VAR_ID}, v.name \
-         FROM alias a JOIN wanted USING(lower) \
+         FROM alias a \
          JOIN variable v ON v.variable_id = a.variable_id \
          JOIN register r ON r.register_id = v.register_id \
          JOIN provider p ON p.provider_id = r.provider_id \
