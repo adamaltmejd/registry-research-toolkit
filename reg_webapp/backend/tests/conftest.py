@@ -5,7 +5,7 @@ fixture DBs and point the app at them via the highest-precedence ``REG_META_DB``
 override (``reg_meta.db.default_db_dir``).
 
 - ``/api/catalog`` resolves/lists against the full reg_meta schema → the
-  ``catalog_db`` / ``docs_db`` fixtures delegate to ``scripts/fixture_db.py``,
+  ``catalog_db`` fixture delegates to ``scripts/fixture_db.py``,
   the builder ``dev.sh --fixture-db`` also runs, so the DB pair the tests assert
   against and the one the dev servers render are the same bytes.
 """
@@ -17,7 +17,6 @@ from typing import TYPE_CHECKING
 
 import pytest
 import reg_meta.db
-import reg_meta.doc_db
 from fastapi.testclient import TestClient
 from reg_meta.catalog import Catalog
 from reg_webapp.app import create_app
@@ -43,17 +42,6 @@ def catalog_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     fixture_db.build_catalog_fixture_db(db_path)
     _point_app_at(monkeypatch, tmp_path)
     return db_path
-
-
-@pytest.fixture
-def docs_db(catalog_db: Path) -> Path:
-    """The catalog DB PLUS a `reg_meta_docs.db` in the same REG_META_DB dir, so
-    the app boots the main catalog AND opens the optional docs index (#354).
-    Returns the docs DB path. Tests that want the docs-ABSENT degradation use the
-    plain ``catalog_db`` fixture (no docs DB written)."""
-    docs_path = catalog_db.parent / reg_meta.doc_db.DOC_DB_FILENAME
-    fixture_db.build_docs_fixture_db(docs_path)
-    return docs_path
 
 
 @pytest.fixture

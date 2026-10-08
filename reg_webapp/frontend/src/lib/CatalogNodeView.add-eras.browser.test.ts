@@ -196,12 +196,7 @@ beforeEach(() => {
   vi.mocked(getRegisterVariants).mockResolvedValue(
     variantsResponse(variant("_default")),
   );
-  vi.mocked(getRelatedDocuments).mockResolvedValue({
-    kind: "related-documents",
-    ingested: true,
-    register: "lisa",
-    documents: [],
-  });
+  vi.mocked(getRelatedDocuments).mockResolvedValue([]);
   // Both stores are module singletons: clear the browse-time window fallback, then
   // open a fresh empty draft — the state a catalog page authors into. A fresh draft
   // seeds its window from that (now empty) fallback, so each case starts windowless.

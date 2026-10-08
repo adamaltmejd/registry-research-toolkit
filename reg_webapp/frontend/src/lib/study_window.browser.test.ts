@@ -144,15 +144,11 @@ beforeEach(() => {
     lineage_warnings: [],
   } as never);
   vi.mocked(getDocsForVariable).mockResolvedValue({
-    results: [],
-    total_count: 0,
-  } as never);
-  vi.mocked(getRelatedDocuments).mockResolvedValue({
-    kind: "related-documents",
-    ingested: true,
-    register: "lisa",
-    documents: [],
+    items: [],
+    total: 0,
+    register_ingested: true,
   });
+  vi.mocked(getRelatedDocuments).mockResolvedValue([]);
   // Validation answers clean, and every other read the cards make answers empty:
   // what these cases assert is the window, not the catalog names.
   vi.stubGlobal(

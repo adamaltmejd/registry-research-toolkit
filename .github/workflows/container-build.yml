@@ -653,6 +653,21 @@ jobs:
           rpc tools/list '{}' | jq -e '[.result.tools[].name] | index("search")'
           rpc tools/call '{"name": "search", "arguments": {"q": "inkomst", "limit": 1}}' \
             | jq -e '.result.isError == false'
+      # Public docs smoke (RUST_RUNTIME_SPEC.md package 3b.6): the docs pages'
+      # operations answer through the edge — a search hit, that hit's document, and
+      # AES's first related PDF. Fails when the deployed image lacks a compatible
+      # docs database (`docs_unavailable`) or a docs route stops answering.
+      - name: Public docs smoke
+        if: steps.head.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          api=https://catalog.swecov.se/api/docs
+          filename=$(curl -sfS "$api/search?q=inkomst&limit=1" | jq -er '.data.items[0].filename')
+          curl -sfS "$api/doc/$(jq -rn --arg f "$filename" '$f | @uri')" | jq -e '.data.excerpt != null'
+          pdf=$(curl -sfS "$api/related/scb/aes" | jq -er '.data[0].filename | @uri')
+          type=$(curl -sfS -o /dev/null -w '%{content_type}' "$api/file/scb/aes/$pdf")
+          echo "related document: $type"
+          [ "$type" = "application/pdf" ] || { echo "FATAL: related document is $type" >&2; exit 1; }
 
   # Edge worker (SPA + /api passthrough) for data.swecov.se. Separate Worker
   # deployment from catalog.swecov.se so each origin can bump its own cache

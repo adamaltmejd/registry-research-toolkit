@@ -167,48 +167,6 @@ note = "A register's variant list for the variant browser, a show facet."
 
 [[row]]
 kind = "route"
-id = "GET /api/docs/doc/{identifier}"
-disposition = "replaced"
-operation = "docs_get"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-note = "Docs judgment, all five docs routes: they read their own DB but render on register and variable pages, and docs search reuses the 3a FTS builder, so they land with show after 3a."
-
-[[row]]
-kind = "route"
-id = "GET /api/docs/file/{register}/{filename}"
-disposition = "replaced"
-operation = "docs_related"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-note = "Raw-bytes download (section 7): media type and bytes kept; its metadata comes from the related-documents operation."
-
-[[row]]
-kind = "route"
-id = "GET /api/docs/for-variable"
-disposition = "replaced"
-operation = "docs_search"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "route"
-id = "GET /api/docs/related/{register}"
-disposition = "replaced"
-operation = "docs_related"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "route"
-id = "GET /api/docs/search"
-disposition = "replaced"
-operation = "docs_search"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "route"
 id = "POST /api/project/order"
 disposition = "replaced"
 operation = "order"
@@ -249,7 +207,7 @@ id = "docs get"
 disposition = "replaced"
 operation = "docs_get"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_commands.py"]
+covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/api/docs-get"]
 
 [[row]]
 kind = "command"
@@ -257,8 +215,8 @@ id = "docs list"
 disposition = "replaced"
 operation = "docs_search"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/selection/docs-default-mismatch"]
-note = "The SPA has no docs listing route; the docs operations need one for agents."
+covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/selection/docs-default-mismatch", "conformance/cases/api/docs-search"]
+note = "docs_search without `q` lists the docs by filename."
 
 [[row]]
 kind = "command"
@@ -266,8 +224,8 @@ id = "docs search"
 disposition = "replaced"
 operation = "docs_search"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_commands.py"]
-note = "Docs go with show; see the docs route rows."
+covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/api/docs-search", "conformance/cases/api/docs-search-errors"]
+note = "Ported in 3b.6, with the docs cutover."
 
 [[row]]
 kind = "command"
@@ -890,7 +848,7 @@ id = "reg_meta.doc_db"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
+covered_by = ["reg_meta/tests/test_doc_commands.py"]
 
 [[row]]
 kind = "import"
@@ -912,14 +870,6 @@ note = "The docs DB schema has one home, reg_meta_build."
 
 [[row]]
 kind = "import"
-id = "reg_meta.doc_db.RelatedDocument"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta_build/tests/test_doc_db_related_documents_boundary.py"]
-
-[[row]]
-kind = "import"
 id = "reg_meta.doc_db.doc_db_path"
 used_by = ["reg_meta_build"]
 disposition = "retained"
@@ -933,46 +883,6 @@ used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.doc_get"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.doc_registers"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.doc_search"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.related_document_content"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.related_documents_for_register"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
 [[row]]
 kind = "import"

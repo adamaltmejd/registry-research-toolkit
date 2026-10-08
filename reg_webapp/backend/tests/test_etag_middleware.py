@@ -56,20 +56,13 @@ def test_304_drops_content_type_and_length(catalog_db):
     assert resp.headers["etag"] == etag
 
 
-@pytest.mark.parametrize(
-    ("path", "cache_control"),
-    [
-        # Fold- or steward-dependent reads get the short window (#499, #506, #726).
-        ("/api/catalog/scb/lisa/kon/states", _SHORT),
-        # Rebuild-stable doc reads keep 24h.
-        ("/api/docs/search?q=kon", "public, max-age=86400, must-revalidate"),
-    ],
-)
-def test_read_cache_control_tier(docs_db, path, cache_control):
+def test_read_cache_control(catalog_db):
+    # Fails if fold- or steward-dependent reads lose the short window (#499, #506,
+    # #726).
     with TestClient(create_app()) as client:
-        resp = client.get(path)
+        resp = client.get("/api/catalog/scb/lisa/kon/states")
     assert resp.status_code == 200
-    assert resp.headers["cache-control"] == cache_control
+    assert resp.headers["cache-control"] == _SHORT
 
 
 @pytest.mark.parametrize(

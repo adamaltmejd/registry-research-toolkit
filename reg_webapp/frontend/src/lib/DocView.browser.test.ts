@@ -19,11 +19,11 @@ vi.mock("./api", async (importOriginal) => {
 // A minimal loaded doc; cases override the fields under test.
 function doc(overrides: Partial<DocDetail> = {}): DocDetail {
   return {
-    kind: "doc",
     filename: "lisa_kon.md",
     display_name: "LISA — Kön",
+    body: "Kön är en bakgrundsvariabel.",
     excerpt: "Kön är en bakgrundsvariabel.",
-    register: "LISA",
+    register: "scb/lisa",
     variable: "Kön",
     source: null,
     source_url: null,
@@ -42,11 +42,14 @@ afterEach(() => {
 });
 
 describe("DocView (#394)", () => {
-  it("surfaces the backend 404 detail and the LISA-only note", async () => {
+  it("surfaces the server's 404 message and the LISA-only note", async () => {
     vi.mocked(getDoc).mockRejectedValue(
       new ApiError(
         404,
-        { detail: "no documentation for 'x'" },
+        {
+          error: { code: "not_found", message: "no documentation for 'x'" },
+          meta: {},
+        },
         "no documentation for 'x'",
       ),
     );
@@ -75,15 +78,6 @@ describe("DocView (#394)", () => {
 
     await expect.element(page.getByText("foo <b>bar</b>")).toBeVisible();
     expect(document.querySelector("blockquote b")).toBeNull();
-  });
-
-  it("falls back to the filename in the heading when display_name is null", async () => {
-    vi.mocked(getDoc).mockResolvedValue(doc({ display_name: null }));
-    await render(DocView, { identifier: "lisa_kon.md" });
-
-    await expect
-      .element(page.getByRole("heading", { name: "lisa_kon.md" }))
-      .toBeVisible();
   });
 
   it("renders the source pointer as an off-site link, labelled by source_title", async () => {
@@ -140,7 +134,11 @@ describe("DocView (#394)", () => {
 
   it("renders an alert WITHOUT the LISA note on a non-404 error", async () => {
     vi.mocked(getDoc).mockRejectedValue(
-      new ApiError(500, { detail: "internal error" }, "internal error"),
+      new ApiError(
+        500,
+        { error: { code: "internal", message: "internal error" }, meta: {} },
+        "internal error",
+      ),
     );
     await render(DocView, { identifier: "lisa_kon.md" });
 
