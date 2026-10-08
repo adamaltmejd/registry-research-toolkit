@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Ad-hoc verifier for .claude/hooks/worktree_bootstrap.sh (run it directly; like
-# test_block_no_verify.sh it is not wired into pytest/CI).
+# Verifier for .claude/hooks/worktree_bootstrap.sh. Run it directly; the
+# `hook-tests` job in .github/workflows/ci.yml runs it (and its sibling) on
+# ubuntu-latest. It is not wired into pytest.
 #
 # The hook does real provisioning (uv sync / bun install), so we stub uv/bun on
 # PATH (they log their call and mimic uv/bun creating .venv / node_modules) and

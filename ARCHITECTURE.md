@@ -308,11 +308,13 @@ return-model cases retain contracts that have no equivalent CLI or HTTP projecti
 2. **Push / CI.** `ci.yml` runs the Python suites as a `test` matrix, one leg per root
    `testpaths` entry, each with `timeout-minutes` at its CI budget below. The `rust`
    job's 3-minute timeout is the `crates/` budget, and it also covers the `reg-meta`
-   build and the Rust HTTP cases. The `reg-webapp-frontend` job has a 6-minute timeout
-   and includes the codegen drift check; the OpenAPI snapshot is a backend case. A job
-   that exceeds its budget fails. The Playwright smoke driver (`dev.sh smoke`) is a
-   local check, not a CI job. `@pytest.mark.integration` adds the container-backed
-   tests, which are not budgeted here.
+   build and the Rust HTTP cases. The `hook-tests` job runs the Claude Code hook tests
+   (`.claude/hooks/tests`, plain bash) with a 2-minute timeout. The
+   `reg-webapp-frontend` job has a 6-minute timeout and includes the codegen drift
+   check; the OpenAPI snapshot is a backend case. A job that exceeds its budget fails.
+   The Playwright smoke driver (`dev.sh smoke`) is a local check, not a CI job.
+   `@pytest.mark.integration` adds the container-backed tests, which are not budgeted
+   here.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance --run-release --artifact-dir=/path/to/catalog`. The reader admits
    the selected artifact before execution; incompatible or non-publishable artifacts
@@ -343,6 +345,7 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
   | `reg_webapp/backend/tests`           | 10 s  | 3 min  | Only what conformance cannot reach: boot, middleware, docs routes and the `openapi.json` snapshot, over a TestClient.                |
   | `reg_schema/tests`                   | 4 s   | 2 min  | One validator over `reg_schema/test_corpus/`, pure and in-process.                                                                   |
   | `scripts/tests`                      | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints, the opt-in marker gate); a few nested pytest runs dominate.                    |
+  | `.claude/hooks/tests`                | 5 s   | 2 min  | Exit-code and message contracts of the Claude Code hooks (deny payloads, bootstrap idempotence); plain bash with stubbed `uv`/`bun`. |
   | `crates/` (`cargo test --workspace`) | 10 s  | 3 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
   | frontend (`bun run test`)            | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
 
