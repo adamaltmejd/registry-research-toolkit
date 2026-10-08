@@ -176,6 +176,16 @@ def _fill(value: Any, places: dict[str, str]) -> Any:
     return value
 
 
+def _refuse_constant(name: str) -> object:
+    raise ValueError(f"stdout is not JSON: it holds {name}")
+
+
+def _strict_json(text: str) -> Any:
+    """``text`` parsed as JSON. Python's parser also accepts ``NaN``, ``Infinity``
+    and ``-Infinity``, which are not JSON; they are refused here."""
+    return json.loads(text, parse_constant=_refuse_constant)
+
+
 def _check_file(work: Path, path: str, claim: dict, before: dict[str, bytes]) -> None:
     matches = sorted(work.glob(path))
     if claim.get("absent"):
@@ -366,7 +376,7 @@ def test_cli_case(
     if stdout.is_file():
         claim = _fill(json.loads(stdout.read_text(encoding="utf-8")), places)
         assert unclaimed(claim, "$stdout", exact=False) is None
-        departure = mismatch(json.loads(captured.out), claim, "$stdout", exact=False)
+        departure = mismatch(_strict_json(captured.out), claim, "$stdout", exact=False)
         assert departure is None, departure
     for snippet in _fill(expected.get("stdout_contains", []), places):
         assert snippet in captured.out, (snippet, captured.out)

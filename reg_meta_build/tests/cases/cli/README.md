@@ -169,13 +169,15 @@ must return exactly:
 ## `stdout.json`
 
 A `reg-meta-build` subcommand prints the JSON payload of its envelope, or
-`{"error": {...}}` when it refuses; `dbdiff --json` prints its report. `stdout.json` is
-a projection of what the last run printed, compared the way an `includes` projection is
-in `cases/curation_toml/README.md` → "`loads` projection": an object compares only the
-keys it names, a list compares element by element and must have the same length, a
-scalar compares by value and JSON type, `{"$exact": value}` compares a value whole, and
-`{"$any": true}` is a value that must be present but is not claimed. A bare `{}` is
-refused. Strings take the `{work}` placeholder.
+`{"error": {...}}` when it refuses; `dbdiff --json` prints its report. The output is
+parsed as strict JSON: `NaN`, `Infinity` and `-Infinity`, which Python's parser accepts,
+fail the case. `stdout.json` is a projection of what the last run printed, compared the
+way an `includes` projection is in `cases/curation_toml/README.md` → "`loads`
+projection": an object compares only the keys it names, a list compares element by
+element and must have the same length, a scalar compares by value and JSON type,
+`{"$exact": value}` compares a value whole, and `{"$any": true}` is a value that must be
+present but is not claimed. A bare `{}` is refused. Strings take the `{work}`
+placeholder.
 
 Do not project values the catalog mints, such as a built register id: they are
 surrogates, not claims.

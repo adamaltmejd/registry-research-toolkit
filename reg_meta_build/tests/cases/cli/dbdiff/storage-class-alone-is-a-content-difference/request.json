@@ -6,10 +6,11 @@
     "test_dbdiff.py::TestContentDiffs::test_storage_class_alone_is_a_content_diff[text-blob]",
     "test_dbdiff.py::TestContentDiffs::test_storage_class_alone_is_a_content_diff[text-null]",
     "test_dbdiff.py::TestContentDiffs::test_storage_class_alone_is_a_content_diff[blob-null]",
-    "test_dbdiff.py::TestFtsAndStorageClass::test_storage_class_note"
+    "test_dbdiff.py::TestFtsAndStorageClass::test_storage_class_note",
+    "test_dbdiff.py::TestCli::test_json_sample_cells_keep_storage_class"
   ],
-  "fails_if": "the row hash stops tagging each value with its storage class (say it hashes the value's text), so 1, '1', X'31' and 1.0 collide and their tables read as identical; or the report drops its note on `int_real`, whose integer 1 and real 1.0 SQLite groups as one value, leaving a difference with no differing rows unexplained",
-  "note": "The note text is the report's explanation for a fingerprint difference with an empty row diff, read from dbdiff's module (the replaced test asserted only that a note is present).",
+  "fails_if": "the row hash stops tagging each value with its storage class (say it hashes the value's text), so 1, '1', X'31' and 1.0 collide and their tables read as identical; or the report drops its note on `int_real`, whose integer 1 and real 1.0 SQLite groups as one value, leaving a difference with no differing rows unexplained; or `--json` prints a sample cell other than in its storage class (integer and real as JSON numbers, text as a string, a BLOB as a `{\"blob\": …}` object, NULL as null), so integer 1 and text '1' print alike",
+  "note": "The note text is the report's explanation for a fingerprint difference with an empty row diff, read from dbdiff's module (the replaced test asserted only that a note is present). Each sample cell is the fixture's value in its storage class; a BLOB prints as its length and the hex of its bytes.",
   "argv": [
     "--json",
     "{work}/a.db",

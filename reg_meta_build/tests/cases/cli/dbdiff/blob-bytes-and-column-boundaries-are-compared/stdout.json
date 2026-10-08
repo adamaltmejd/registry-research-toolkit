@@ -30,8 +30,10 @@
         {
           "net": 1,
           "row": {
-            "id": "1",
-            "payload": "<blob 3B 0x000102>"
+            "id": 1,
+            "payload": {
+              "blob": "<blob 3B 0x000102>"
+            }
           }
         }
       ],
@@ -39,8 +41,10 @@
         {
           "net": -1,
           "row": {
-            "id": "1",
-            "payload": "<blob 3B 0x000103>"
+            "id": 1,
+            "payload": {
+              "blob": "<blob 3B 0x000103>"
+            }
           }
         }
       ]

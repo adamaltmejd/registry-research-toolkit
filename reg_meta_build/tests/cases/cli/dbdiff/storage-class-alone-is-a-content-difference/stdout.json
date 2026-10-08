@@ -3,15 +3,67 @@
   "tables": [
     {
       "table": "blob_null",
-      "identical": false
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": {
+              "blob": "<blob 1B 0x31>"
+            }
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": null
+          }
+        }
+      ]
     },
     {
       "table": "int_blob",
-      "identical": false
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": 1
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": {
+              "blob": "<blob 1B 0x31>"
+            }
+          }
+        }
+      ]
     },
     {
       "table": "int_null",
-      "identical": false
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": 1
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": null
+          }
+        }
+      ]
     },
     {
       "table": "int_real",
@@ -22,15 +74,65 @@
     },
     {
       "table": "int_text",
-      "identical": false
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": 1
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": "1"
+          }
+        }
+      ]
     },
     {
       "table": "text_blob",
-      "identical": false
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": "1"
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": {
+              "blob": "<blob 1B 0x31>"
+            }
+          }
+        }
+      ]
     },
     {
       "table": "text_null",
-      "identical": false
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": "1"
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": null
+          }
+        }
+      ]
     }
   ]
 }
