@@ -17,6 +17,7 @@ from acceptance_requests import (
     response_fqids,
 )
 from artifact_requests import (
+    MAX_QUERY_CHARS,
     cli_json,
     http_search_contains,
     require,
@@ -107,6 +108,7 @@ def check_generation_seeded_stratified_binding_agreement(
     )
     require(sample == repeated, "Generation-seeded sample is not reproducible")
     ceiling_refined = 0
+    query_cap_refused = 0
     for candidate in sample:
         for scope in scopes(manifest):
             browse = artifact_client.get(
@@ -154,6 +156,7 @@ def check_generation_seeded_stratified_binding_agreement(
             ceiling_refined += require_search_reaches(
                 artifact_dir, search, capsys, query, scope, candidate.variable
             )
+            query_cap_refused += len(query) > MAX_QUERY_CHARS
         project = candidate.project(manifest.get("steward", "global"))
         validated = artifact_client.post("/api/project/validate", json=project)
         require(
@@ -201,6 +204,7 @@ def check_generation_seeded_stratified_binding_agreement(
             Counter(stratum for c in sample for stratum in c.strata)
         ),
         "search_ceiling_refined": ceiling_refined,
+        "query_cap_refused": query_cap_refused,
     }
     print(json.dumps(receipt, sort_keys=True))
     return receipt
@@ -291,8 +295,10 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
         "reference",
         binding,
     )
+    name = reference.json()["name"]
     require(
-        not http_search_contains(search, reference.json()["name"], "holdings", binding),
+        len(name) > MAX_QUERY_CHARS
+        or not http_search_contains(search, name, "holdings", binding),
         "Unheld binding entered holdings search",
     )
     require(
@@ -397,3 +403,29 @@ def test_binding_past_search_depth_ceiling_is_reached_by_refinement(
         )
     # Holdings scope sees no fillers; only the reference traversal hits the ceiling.
     assert receipt["search_ceiling_refined"] == 1
+
+
+def test_binding_named_past_query_cap_is_refused_by_http_search(
+    tmp_path, monkeypatch, capsys, request
+):
+    # The sampled variable's name is longer than the 200-character `q` cap: HTTP
+    # search must refuse it on `q` in both scopes while the CLI still reaches it.
+    # Fails if the Rust server accepts an over-cap `q` or stops locating the refusal.
+    path = build_reader_artifact(
+        tmp_path / "artifact",
+        "reader/search-query-cap",
+        "steward",
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+    )
+    monkeypatch.setenv("REG_META_DB", str(path.parent))
+    monkeypatch.setenv("REG_WEBAPP_STEWARD", "swecov")
+    monkeypatch.setenv(
+        "REG_WEBAPP_STEWARDS_DIR",
+        str(Path(__file__).resolve().parents[1] / "reg_webapp/stewards"),
+    )
+    search = search_client(request, path.parent)
+    with TestClient(create_app(rate_limit_per_minute=1000)) as client:
+        receipt = check_generation_seeded_stratified_binding_agreement(
+            path.parent, client, search, tmp_path, capsys
+        )
+    assert receipt["query_cap_refused"] == 2  # reference and holdings
