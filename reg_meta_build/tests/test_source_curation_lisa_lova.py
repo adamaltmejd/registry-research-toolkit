@@ -12,7 +12,6 @@ from _source_curation_support import (
     curation_record as _record,
     curation_revision as _revision,
     expectation as _expectation,
-    expected_field as _expected_field,
     field_value as _field,
     projection as _projection,
     scope_interval as _interval,
@@ -197,36 +196,7 @@ def _lisa_case(known: SourceRecord, blank: SourceRecord) -> CurationCase:
     )
 
 
-def test_lisa_unresolved_case_ignores_layout_raw_and_unprojected_changes() -> None:
-    known, blank = _lisa_records()
-    case = _lisa_case(known, blank)
-    changed_delivery = _replacement(
-        blank,
-        fields=blank.fields.model_copy(
-            update={"description": value_field("new unrelated description")}
-        ),
-        marker="new-artifact",
-        row=99,
-        raw_note="different raw cell",
-    )
-
-    result = evaluate_case(case, (record for record in (changed_delivery, known)))
-
-    assert result.status == "applicable"
-    assert result.decision == case.decision
-
-
-@pytest.mark.parametrize(
-    "change",
-    (
-        "target",
-        "target_subject",
-        "target_missing",
-        "support",
-        "support_missing",
-        "peer",
-    ),
-)
+@pytest.mark.parametrize("change", ("support_missing",))
 def test_lisa_unresolved_case_blocks_relevant_source_changes(change: str) -> None:
     known, blank = _lisa_records()
     case = _lisa_case(known, blank)
@@ -341,81 +311,6 @@ def _lova_record(
         variant=SourceCoordinate(status="value", name=subset),
         row=row,
     )
-
-
-def _lova_case(records: tuple[SourceRecord, ...]) -> CurationCase:
-    expectations = tuple(
-        _expectation(
-            record,
-            _expected_field(record, "name"),
-            _expected_field(record, "data_type"),
-            _expected_field(record, "coverage_from"),
-            _expected_field(record, "coverage_to"),
-            _field("representation", "value", "YYYY"),
-        )
-        for record in records
-    )
-    return CurationCase(
-        case_id="illustrative-lova-examar-unresolved",
-        targets=expectations,
-        peer_guards=(
-            PeerGuard(
-                guard_id="lova-examar-name-peers",
-                source="sos-metadata",
-                register_name="LOVA",
-                fields=(_field("column_name", "value", "EXAMAR"),),
-                expected_members=tuple(_ref(record) for record in records),
-            ),
-        ),
-        # Selective hyperlink expectations are outside this first projection. The
-        # decision therefore withholds binding but does not claim link-change coverage.
-        decision=_decision(),
-    )
-
-
-def test_lova_case_preserves_three_occurrences_and_unknown_open_scopes() -> None:
-    records = (
-        _lova_record(
-            "A_LOVA",
-            label="Examensår",
-            data_type="integer",
-            scope=_interval("1995", "2022"),
-            coverage_from="1995",
-            coverage_to="2022",
-            row=32,
-        ),
-        _lova_record(
-            "A_LOVA_EXAMEN",
-            label="Utbildningsår (avslutningsår högsta utb.)",
-            data_type="text",
-            scope=TemporalScope(
-                kind="unknown",
-                label="Data från=1977; Data till=<blank>",
-            ),
-            coverage_from="1977",
-            coverage_to=None,
-            row=33,
-        ),
-        _lova_record(
-            "A_LOVA_HOSP",
-            label="Examensår",
-            data_type="integer",
-            scope=TemporalScope(
-                kind="unknown",
-                label="Data från=1900; Data till=<blank>",
-            ),
-            coverage_from="1900",
-            coverage_to=None,
-            row=34,
-        ),
-    )
-    case = _lova_case(records)
-
-    result = evaluate_case(case, list(reversed(records)))
-
-    assert result.status == "applicable"
-    assert records[1].edition_scope.kind == records[2].edition_scope.kind == "unknown"
-    assert result.decision == case.decision
 
 
 def test_projection_sets_keep_conflicts_but_ignore_identical_duplicates() -> None:

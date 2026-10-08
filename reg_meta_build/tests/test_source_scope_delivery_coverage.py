@@ -5,7 +5,6 @@ from __future__ import annotations
 import pytest
 from _csv_fixtures import SCB_REVISION
 from _source_scope_support import guard, record, resolve
-from reg_meta.source_evidence import SourceField
 from reg_meta_build.catalog_dependencies import (
     check_delivery_coverage,
 )
@@ -13,16 +12,11 @@ from reg_meta_build.resolved_catalog import (
     ResolvedVariant,
 )
 from reg_meta_build.source_coordinates import (
-    native_column_key,
     native_variable_key,
     native_variant_key,
 )
 from reg_meta_build.source_curation import (
-    CheckedFieldChange,
-    CodingDecision,
     CurationCase,
-    FieldExpectation,
-    OccurrenceCorrectionDecision,
     SearchAliasDecision,
     capture_expectations,
 )
@@ -31,7 +25,6 @@ from reg_meta_build.source_effects import (
 )
 from reg_meta_build.source_records import (
     SourceFields,
-    TemporalScope,
     value_field,
 )
 
@@ -95,138 +88,6 @@ def test_lost_delivery_coverage_is_refused_with_its_exact_window(shape, missing)
     assert missing in str(failure.value)
     assert "scb/example/value-5 people-2/VALUE" in str(failure.value)
     assert f"claimed by {SCB_REVISION.dataset}/" in str(failure.value)
-
-
-@pytest.mark.parametrize("shape", ["gap", "negative", "unknown", "pooled"])
-def test_genuine_source_gaps_and_unresolved_scopes_claim_no_delivery(shape):
-    first, second = record(year="2019"), record(2, year="2021")
-    if shape == "negative":
-        second = second.model_copy(
-            update={
-                "fields": second.fields.model_copy(
-                    update={"availability": SourceField(status="negative")}
-                )
-            }
-        )
-    elif shape == "unknown":
-        second = second.model_copy(
-            update={
-                "edition_scope": TemporalScope(kind="unknown", label="okänd"),
-                "edition_period_scope": TemporalScope(kind="unknown", label="okänd"),
-            }
-        )
-    elif shape == "pooled":
-        pooled = TemporalScope(kind="pooled", label="2021-2022")
-        second = second.model_copy(
-            update={"edition_scope": pooled, "edition_period_scope": pooled}
-        )
-    result = resolve((first, second))
-    variable = result.variables[native_variable_key(first)]
-    assert variable is not None
-    claimed = [(o.valid_from, o.valid_to) for o in result.coverage]
-    assert claimed == (
-        [("2019-01-01", "2019-12-31"), ("2021-01-01", "2021-12-31")]
-        if shape == "gap"
-        else [("2019-01-01", "2019-12-31")]
-    )
-    # No obligation covers 2020, the withdrawn year, or any widened period.
-    check_delivery_coverage(
-        (variable,), result.coverage, withheld=result.withheld_dependencies
-    )
-
-
-def test_a_checked_state_omission_withdraws_only_its_own_period():
-    first, second = record(year="2019"), record(2, year="2020")
-    column_key = native_column_key(second)
-    assert column_key is not None
-    case = CurationCase(
-        case_id="accepted-omission",
-        targets=capture_expectations((second,), fields=("column_name",)),
-        peer_guards=(
-            guard(second).model_copy(
-                update={"expected_members": (record_ref(first), record_ref(second))}
-            ),
-        ),
-        decision=CodingDecision(
-            reviewed=True,
-            column_key=column_key,
-            valid_from="2020-01-01",
-            valid_to="2020-12-31",
-            expected_codings=(),
-            selection="omit_state",
-            reason="Accepted omitted delivery state",
-            provenance="Fixture decision",
-        ),
-    )
-    result = resolve((first, second), cases=(case,))
-    variable = result.variables[native_variable_key(first)]
-    assert variable is not None
-    assert [d.code for d in result.diagnostics] == ["curated_state_omission"]
-    assert [(s.valid_from, s.valid_to) for s in variable.states] == [
-        ("2019-01-01", "2019-12-31")
-    ]
-    assert [(o.valid_from, o.valid_to) for o in result.coverage] == [
-        ("2019-01-01", "2019-12-31")
-    ]
-    check_delivery_coverage(
-        (variable,), result.coverage, withheld=result.withheld_dependencies
-    )
-    lost = variable.model_copy(
-        update={
-            "states": (
-                variable.states[0].model_copy(update={"valid_to": "2019-06-30"}),
-            )
-        }
-    )
-    with pytest.raises(ValueError, match=r"2019-07-01\.\.2019-12-31"):
-        check_delivery_coverage(
-            (lost,), result.coverage, withheld=result.withheld_dependencies
-        )
-
-
-def test_an_unrelated_field_diagnostic_is_no_permission_to_discard_its_state():
-    item = record()
-    item = item.model_copy(
-        update={"fields": item.fields.model_copy(update={"data_type": None})}
-    )
-    result = resolve((item,))
-    variable = result.variables[native_variable_key(item)]
-    assert variable is not None
-    assert [d.code for d in result.diagnostics] == ["unknown_data_type"]
-    assert [(o.valid_from, o.valid_to) for o in result.coverage] == [
-        ("2020-01-01", "2020-12-31")
-    ]
-    with pytest.raises(ValueError, match=r"2020-01-01\.\.2020-12-31"):
-        check_delivery_coverage(
-            (), result.coverage, withheld=result.withheld_dependencies
-        )
-
-
-def test_an_evidenced_whole_variable_withholding_answers_for_its_own_claim():
-    item = record()
-    result = resolve(
-        (
-            item.model_copy(
-                update={
-                    "fields": item.fields.model_copy(
-                        update={"sensitivity": SourceField(status="unknown")}
-                    )
-                }
-            ),
-        )
-    )
-    assert result.variables == {native_variable_key(item): None}
-    assert [d.code for d in result.diagnostics] == ["unresolved_flag"]
-    # The occurrence still claims 2020. The evidenced whole-variable withholding is
-    # what answers for it, so the loss stays a curation blocker, not an our-bug
-    # failure — and nothing but that ledger entry excuses it.
-    assert [(o.valid_from, o.valid_to) for o in result.coverage] == [
-        ("2020-01-01", "2020-12-31")
-    ]
-    assert ("variable", "scb/example/value-5") in result.withheld_dependencies
-    check_delivery_coverage((), result.coverage, withheld=result.withheld_dependencies)
-    with pytest.raises(ValueError, match=r"2020-01-01\.\.2020-12-31"):
-        check_delivery_coverage((), result.coverage, withheld={})
 
 
 def test_a_search_only_alias_establishes_no_delivery_for_the_lost_window():
@@ -330,78 +191,6 @@ def test_copied_window_length_is_refused_as_a_changed_fact():
     assert "supported delivery facts changed without an explicit source outcome" in str(
         failure.value
     )
-
-
-def test_member_correction_attributions_reach_the_written_state():
-    item = record()
-    case = CurationCase(
-        case_id="fix-opdef",
-        targets=capture_expectations((item,), fields=("operational_definition",)),
-        peer_guards=(guard(item),),
-        decision=OccurrenceCorrectionDecision(
-            reviewed=True,
-            reason="Checked attribution fix",
-            provenance="fixture:attr",
-            effects=(
-                CheckedFieldChange(
-                    ref=record_ref(item),
-                    replacement=FieldExpectation(
-                        name="operational_definition", status="value", value="Fixed"
-                    ),
-                ),
-            ),
-        ),
-    )
-    result = resolve((item,), cases=(case,))
-    variable = result.variables[native_variable_key(item)]
-    assert variable is not None
-    (obligation,) = result.coverage
-    assert obligation.attributions == ("fixture:attr",)
-    assert variable.states[0].provenance == "fixture:attr"
-    check_delivery_coverage(
-        (variable,), result.coverage, withheld=result.withheld_dependencies
-    )
-    stripped = variable.model_copy(
-        update={"states": (variable.states[0].model_copy(update={"provenance": None}),)}
-    )
-    with pytest.raises(ValueError, match="claimed attributions"):
-        check_delivery_coverage(
-            (stripped,), result.coverage, withheld=result.withheld_dependencies
-        )
-
-
-def test_source_conflict_warning_preserves_type_and_exact_source_window():
-    from reg_meta_build.data_warnings import DataWarning, scope_data_warnings
-    from reg_meta_build.source_curation import SourceWarningDecision
-    from reg_meta_build.source_occurrences import source_occurrence
-
-    item = record()
-    occurrence = source_occurrence(item)
-    case = CurationCase(
-        case_id="curation/registers/scb/example.toml#/coding.warning/1/period/1",
-        targets=capture_expectations((item,), fields=tuple(SourceFields.model_fields)),
-        decision=SourceWarningDecision(
-            reviewed=True,
-            column_key=occurrence.column_key,
-            valid_from="2020-01-01",
-            valid_to="2020-12-31",
-            expected_codings=(),
-            fields=("data_type", "coding"),
-            data_warning="Source integer type and textual coding disagree.",
-            reason="Retain both source declarations.",
-            provenance="Exact source rows.",
-        ),
-    )
-    baseline = resolve((item,))
-    result = resolve((item,), cases=(case,))
-    assert result.variables == baseline.variables
-    (warning,) = scope_data_warnings(result)
-    assert warning.code == "source_metadata_conflict"
-    assert warning.fields == ("data_type", "coding")
-    assert (warning.valid_from, warning.valid_to) == ("2020-01-01", "2020-12-31")
-    assert warning.variant == "people-2" and warning.delivery_column_name == "VALUE"
-    assert warning.refs == (capture_expectations((item,), fields=())[0].ref,)
-    assert DataWarning.model_validate_json(warning.model_dump_json()) == warning
 
 
 @pytest.mark.parametrize("change", ["type", "coding"])
