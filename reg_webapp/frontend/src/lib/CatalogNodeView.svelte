@@ -424,11 +424,11 @@ let {
   // vintage for open-ended graph timelines.
   windowMinYear: number;
   // #631: the true catalog vintage year (App derives it from
-  // context.reg_meta.import_date), used by graph/picker timelines that need to
+  // context.import_date), used by graph/picker timelines that need to
   // extend open-ended histories to the catalog build vintage.
   vintageYear: number;
   windowMaxYear?: number;
-  // #1037: true only when App's bounds came from steward.catalog_period_span,
+  // #1037: true only when App's bounds came from context.period_span,
   // making them hard picker limits rather than global fallback hints.
   enforcePeriodBounds?: boolean;
 } = $props();

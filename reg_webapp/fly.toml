@@ -39,11 +39,11 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   [[http_service.checks]]
     interval = "30s"
     timeout = "5s"
-    # The entrypoint runs the smoke gate (golden /api/context + shallow
-    # catalog walk) before uvicorn binds — allow it time before checks count.
+    # The entrypoint runs the smoke gate (a shallow /api/catalog
+    # walk) before uvicorn binds — allow it time before checks count.
     grace_period = "60s"
     method = "GET"
-    path = "/api/context"
+    path = "/api/catalog"
 
 [[vm]]
   size = "shared-cpu-1x"

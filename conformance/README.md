@@ -40,19 +40,19 @@ pin raw bytes: `media_type` (the content type without parameters), `headers` (ex
 values by lower-case name) and `bytes` (a file in the case directory compared byte for
 byte), as `validate/gap-clipped` does for its order download.
 
-  | Surface directory                                             | Boundary and request interpretation                                                |
-  | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-  | cli_scope                                                     | CLI argv, optional second page, observe projection                                 |
-  | order                                                         | Public materializer plus CLI bytes, project and observe projection                 |
-  | coverage                                                      | Public coverage return models, provider/register                                   |
-  | logical                                                       | Public query/catalog operation, args/kwargs and observe projection                 |
-  | reader                                                        | Public listing/cursor/concept group return models; also source fixtures            |
-  | selection                                                     | CLI artifact selection; implicit annual-series source                              |
-  | update                                                        | Downloaded-artifact identity via CLI/update library; implicit annual-series source |
-  | boot                                                          | App startup; implicit reader source, kind and manifest mutation                    |
-  | http_catalog, http_context, http_scope, http_search, validate | HTTP request sequence and status/pointer oracle; implicit compiled source          |
-  | validate (also)                                               | CLI validate/order bytes or refusal against each HTTP project response             |
-  | fixtures                                                      | HTTP readable sources, not independently executed cases                            |
+  | Surface directory                               | Boundary and request interpretation                                                |
+  | ----------------------------------------------- | ---------------------------------------------------------------------------------- |
+  | cli_scope                                       | CLI argv, optional second page, observe projection                                 |
+  | order                                           | Public materializer plus CLI bytes, project and observe projection                 |
+  | coverage                                        | Public coverage return models, provider/register                                   |
+  | logical                                         | Public query/catalog operation, args/kwargs and observe projection                 |
+  | reader                                          | Public listing/cursor/concept group return models; also source fixtures            |
+  | selection                                       | CLI artifact selection; implicit annual-series source                              |
+  | update                                          | Downloaded-artifact identity via CLI/update library; implicit annual-series source |
+  | boot                                            | App startup; implicit reader source, kind and manifest mutation                    |
+  | http_catalog, http_scope, http_search, validate | HTTP request sequence and status/pointer oracle; implicit compiled source          |
+  | validate (also)                                 | CLI validate/order bytes or refusal against each HTTP project response             |
+  | fixtures                                        | HTTP readable sources, not independently executed cases                            |
 
 ## Out-of-process runner
 

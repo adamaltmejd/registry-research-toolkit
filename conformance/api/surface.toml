@@ -167,15 +167,6 @@ note = "A register's variant list for the variant browser, a show facet."
 
 [[row]]
 kind = "route"
-id = "GET /api/context"
-disposition = "replaced"
-operation = "context"
-owner = "3a"
-covered_by = ["conformance/cases/http_context", "reg_webapp/backend/tests/test_context.py"]
-note = "Judgment: catalog identity (schema, generation, artifact kind, default scope) is admission state, and 3a builds admission and the `meta` block. Steward branding and the period span ride along."
-
-[[row]]
-kind = "route"
 id = "GET /api/docs/doc/{identifier}"
 disposition = "replaced"
 operation = "docs_get"
@@ -240,15 +231,6 @@ disposition = "replaced"
 operation = "search"
 owner = "3a"
 covered_by = ["conformance/cases/http_search", "reg_webapp/backend/tests/test_search_results.py"]
-
-[[row]]
-kind = "route"
-id = "GET /api/stats"
-disposition = "replaced"
-operation = "context"
-owner = "3a"
-covered_by = ["conformance/cases/http_scope/stats", "conformance/cases/http_scope/stats-catalog"]
-note = "Judgment: scoped headline counts for the landing page that hosts search; they need only admission and the scope predicate, both 3a."
 
 [[row]]
 kind = "route"
@@ -511,7 +493,7 @@ id = "reg_meta"
 used_by = ["reg_meta_build", "reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_context.py", "reg_meta_build/tests/test_source_inspection.py"]
+covered_by = ["reg_webapp/backend/tests/test_etag_middleware.py", "reg_meta_build/tests/test_source_inspection.py"]
 note = "The source-inspection test fixture copies the whole package because `source_interpreter_commit` hashes `reg_meta.fqid` and `reg_meta.queries`; it goes when those modules move. The webapp imports it for `__version__`."
 
 [[row]]
@@ -546,14 +528,6 @@ disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_reader.py", "conformance/test_logical.py", "reg_meta/tests/test_catalog_resolve.py"]
 note = "Section 4: derive bootstraps from reader functions moved into reg_meta_build; holdings_compile and the SWECOV generator call it today. Only what derive and holdings call moves."
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.CatalogSizes"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3a"
-covered_by = ["conformance/cases/http_scope/stats", "conformance/cases/http_scope/stats-catalog"]
 
 [[row]]
 kind = "import"

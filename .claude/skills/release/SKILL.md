@@ -621,8 +621,14 @@ public deployment requires a `catalog` artifact and `global` branding; the named
 deployment requires a `steward` artifact naming that exact steward.
 
 Boot the webapp against each selected shipped artifact with its matching configuration
-and run the existing smoke gate. `/api/context` must report that artifact's full
-identity and default read scope; catalog artifacts default to reference and steward
+and run the existing smoke gate. Until package 3a.9 the FastAPI deploy has no
+`/api/context`: the `ETag` of `GET /api/catalog` must carry that artifact's steward id,
+full generation and default read scope (`"<version>-<steward>-<generation>-<scope>-…"`;
+through the Cloudflare edge it arrives weakened as `W/"…"`, with the same fields), and
+on the catalog deployment `GET /api/catalog?scope=holdings` must refuse with
+`scope_unavailable`. From 3a.9 on, `reg-meta serve` answers `/api/context`: its `meta`
+carries the full generation and the default scope, and the same `scope=holdings` refusal
+identifies a catalog artifact. Catalog artifacts default to reference and steward
 artifacts to holdings. Spot-check a scoped catalog or search read and a known order
 through the shared materializer. Record what these checks actually exercised; a digest
 or compiler report alone does not prove deployed HTTP behavior.

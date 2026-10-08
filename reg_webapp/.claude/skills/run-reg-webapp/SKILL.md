@@ -1,16 +1,19 @@
 ---
 name: run-reg-webapp
 description: Run, screenshot, and drive the reg_webapp dev setup (FastAPI backend +
-  Svelte SPA). Use when asked to run/start the webapp, verify a webapp change in the
-  running app, screenshot the SPA, or smoke-test catalog browsing locally.
+  Rust server + Svelte SPA). Use when asked to run/start the webapp, verify a webapp
+  change in the running app, screenshot the SPA, or smoke-test catalog browsing locally.
 ---
 
 # Run reg_webapp locally
 
-Two dev servers — a FastAPI backend, and Vite serving the SPA with an `/api` proxy
-pointed at that backend — plus a Playwright driver that loads the SPA, drills through
-the catalog, exercises the period slider, and screenshots each step. `dev.sh` picks a
-FREE port for each server on every run, so nothing here is pinned to a port.
+Three dev servers — a FastAPI backend, the Rust server (`reg-meta serve`), and Vite
+serving the SPA with an `/api` proxy that sends the routes ported to Rust (today
+`/api/context`) to the Rust server and the rest to the backend — plus a Playwright
+driver that loads the SPA, drills through the catalog, exercises the period slider, and
+screenshots each step. `dev.sh` picks a FREE port for each server on every run, so
+nothing here is pinned to a port. The proxy split lives in
+`reg_webapp/frontend/vite.config.ts`; each later slice adds its routes there.
 
 This skill is a helper you invoke by its explicit repo path, not a skill the root loader
 discovers: it lives under `reg_webapp/.claude/skills/`, which is nested and therefore
@@ -18,13 +21,18 @@ not walked. Every command below starts at the **repo root**.
 
 ## Prerequisites
 
-- `uv` and `bun` (repo-standard toolchain — see root CLAUDE.md).
+- `uv`, `bun` and `cargo` (repo-standard toolchain — see root CLAUDE.md). `dev.sh` runs
+  `cargo build --workspace` before it starts the servers.
 - Playwright's Chromium. The frontend's vitest-browser setup already installs it; if
   missing: `(cd reg_webapp/frontend && bunx playwright install chromium)`.
 - A catalog to serve. `--fixture-db` builds a synthetic one and needs nothing installed
   — that is the default path below. Serving a real catalog instead needs a DB where
   `reg_meta.db.db_path_from_args(None)` resolves (`REG_META_DB` > XDG, e.g.
-  `~/.local/share/reg_meta/reg_meta.db`).
+  `~/.local/share/reg_meta/reg_meta.db`), at a schema both servers admit: the Rust
+  server refuses a catalog below its minimum (`SCHEMA` in `crates/reg-catalog`, 9.2
+  today), so the 0.42.0 release does not serve until a 9.3 release ships. `dev.sh` then
+  fails at startup with the Rust server's `schema_incompatible` error; use
+  `--fixture-db`.
 
 ## Setup
 
@@ -34,12 +42,15 @@ uv sync --frozen
 ```
 
 No SPA build needed for dev — Vite serves source. Regenerate API types only after a
-contract change (`(cd reg_webapp/frontend && bun run gen:types)`; CI pins drift).
+contract change (`(cd reg_webapp/frontend && bun run gen:types)`; CI pins drift). The
+types come from two snapshots: refresh FastAPI's with
+`uv run python reg_webapp/backend/scripts/gen_openapi.py` and the Rust server's with
+`REG_META_BLESS=1 cargo test -p reg-meta --test openapi_snapshot` first.
 
 ## Run
 
 **Visual verification (agents) — one-shot driver modes.** `dev.sh smoke` / `dev.sh shot`
-pick free ports, run the Playwright driver against them, and **tear both servers down on
+pick free ports, run the Playwright driver against them, and **tear every server down on
 exit** — no port collisions, no leaked dev servers. Exit status is the driver's:
 
 ```sh
@@ -129,7 +140,7 @@ local verification invocation; the names allow focused verification.
 before the mode and `dev.sh` serves a *synthetic* catalog: it runs
 `reg_webapp/backend/scripts/fixture_db.py` (the same builder the backend tests'
 `catalog_db` / `docs_db` fixtures use) into a temp directory, exports it as
-`REG_META_DB` for both servers, and deletes it on exit. Content is fixed — no seed, no
+`REG_META_DB` for every server, and deletes it on exit. Content is fixed — no seed, no
 clock — so the DB pair is byte-identical run to run and a screenshot diff means a code
 change, not catalog drift. It is small but populated enough that every route the
 design-reviewer skill walks renders rows: `/`, `/catalog`, providers `fk` (register
@@ -163,10 +174,10 @@ Don't assume the installed/last-released DB is the only one the dev server can s
 it's the default, not a constraint.
 
 **Interactive (humans).** `dev.sh` with no mode starts the same auto-free-port servers
-and stays up until Ctrl-C (which tears both down). It prints the URLs — open the
+and stays up until Ctrl-C (which tears them all down). It prints the URLs — open the
 frontend in a browser, backend API docs at `<backend>/docs`. Ports are automatic, so
-parallel worktrees / lanes never collide; pin with `BACKEND_PORT=… FRONTEND_PORT=…` if
-you need to know them up front.
+parallel worktrees / lanes never collide; pin with
+`BACKEND_PORT=… RUST_PORT=… FRONTEND_PORT=…` if you need to know them up front.
 
 ```sh
 bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh
@@ -180,21 +191,22 @@ Both runners are collision-free across parallel sessions — pick by need:
   `reg-webapp` config with `autoPort: true` whose entry point is `dev.sh preview`. The
   preview MCP picks a free frontend port (exported as `$PORT`; it does this even when it
   keeps the configured 5173) and `dev.sh preview` binds exactly that, then starts the
-  backend on its own private free port and points the Vite `/api` proxy at it via
-  `REG_WEBAPP_BACKEND_URL`. So two sessions each get a distinct frontend **and** backend
-  port and a correctly-wired proxy — no collision, no cross-talk. (This replaced the old
-  two-config `autoPort: false` setup, which collided because a static launch config
-  can't inject the backend's chosen port into the frontend.) `preview_start` starts both
-  servers under one `serverId`; the browser attaches to the frontend, and the backend is
-  reached through the `/api` proxy.
+  backend and the Rust server on their own private free ports and points the Vite `/api`
+  proxy at them via `REG_WEBAPP_BACKEND_URL` and `REG_META_SERVER_URL`. So two sessions
+  each get distinct ports and a correctly-wired proxy — no collision, no cross-talk.
+  (This replaced the old two-config `autoPort: false` setup, which collided because a
+  static launch config can't inject the backend's chosen port into the frontend.)
+  `preview_start` starts all three servers under one `serverId`; the browser attaches to
+  the frontend, and the backend and Rust server are reached through the `/api` proxy.
 - **`dev.sh smoke` / `dev.sh shot` (visual verification / screenshots).** Free ports, a
   per-invocation screenshot directory, guaranteed teardown, `shot --all` for the four
   responsive breakpoints. This is the path to reach for.
 
-In a worktree both run from the checkout's own `.venv` (the `preview` entry routes
-through `dev.sh`, which resolves the repo root from its own path and launches from
-`.venv/bin/uvicorn`), so a worktree serves ITS code, not main's — the historical
-"`preview_start` serves main" footgun is gone now that the entry point is `dev.sh`.
+In a worktree both run from the checkout's own `.venv` and cargo `target/` (the
+`preview` entry routes through `dev.sh`, which resolves the repo root from its own path
+and launches `.venv/bin/uvicorn` and `target/debug/reg-meta`, built there first), so a
+worktree serves ITS code, not main's — the historical "`preview_start` serves main"
+footgun is gone now that the entry point is `dev.sh`.
 
 ## Direct invocation (backend-only changes)
 
@@ -227,9 +239,14 @@ includes the Playwright browser project).
   anywhere else: `Cannot find package 'playwright'`. (`dev.sh` does this for you.)
 - **HEAD requests 405** by design (routes register GET only; see DESIGN.md → ETag).
   Probe with `curl` GETs, not `-I`.
-- The Vite proxy defaults to `http://localhost:8000` but honors `REG_WEBAPP_BACKEND_URL`
-  (`reg_webapp/frontend/vite.config.ts`) — `dev.sh` sets it automatically; it only
-  matters if you start Vite by hand against a non-default backend port.
+- The Vite proxy defaults to `http://localhost:8000` (backend) and
+  `http://127.0.0.1:8001` (Rust server, which binds IPv4 loopback only) but honors
+  `REG_WEBAPP_BACKEND_URL` and `REG_META_SERVER_URL`
+  (`reg_webapp/frontend/vite.config.ts`) — `dev.sh` sets both automatically; they only
+  matter if you start Vite by hand against other ports.
+- **`/api/context` comes from the Rust server.** Its body is `{data, meta}` and it takes
+  only `scope`; the FastAPI backend no longer serves it, so probe the backend with
+  `/api/catalog`.
 - **Git worktrees are auto-provisioned.** A `SessionStart` hook
   (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable
   installs resolve to the worktree, not main) and `node_modules` — it runs `uv sync` +

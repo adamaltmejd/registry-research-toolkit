@@ -11,7 +11,8 @@
       "*.svelte",
       "!!**/dist",
       "!!**/node_modules",
-      "!src/lib/api-types.ts"
+      "!src/lib/api-types.ts",
+      "!src/lib/api-types-rust.ts"
     ]
   },
   "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2 },

@@ -46,7 +46,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-# Run the golden gate: waits for readiness, checks /api/context, walks
+# Run the golden gate: waits for readiness, then walks
 # /api/catalog. --server-pid lets the readiness wait fail FAST if uvicorn aborts
 # on a boot/lifespan failure (broken DB bake) instead of burning the full
 # deadline. Non-zero return halts the container (the trap reaps uvicorn).
