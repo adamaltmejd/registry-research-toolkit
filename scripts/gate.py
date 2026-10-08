@@ -4,6 +4,7 @@
     uv run --no-project scripts/gate.py all            # before opening a PR
     uv run --no-project scripts/gate.py g0 --packages reg_meta
     uv run --no-project scripts/gate.py regen          # then commit the diff
+    uv run --no-project scripts/gate.py heavy -- cargo test -p reg-catalog
 
 Each named step runs its commands in order from the repository root and stops at the
 first failure. `all` runs g0, rust, release, flows and frontend; `crates` is g0's Rust
@@ -12,7 +13,9 @@ part, for CI's `rust` job; `regen` and `g1` run only when named. The CI jobs in
 
 Steps that build or run the Rust workspace hold one machine-wide advisory lock
 (`flock` on `$XDG_CACHE_HOME/registry-research-toolkit-heavy.lock`), so parallel
-sessions run one heavy job at a time instead of overloading the machine. Stdlib only:
+sessions run one heavy job at a time instead of overloading the machine; `heavy -- CMD`
+runs any other heavy command (a parallel pytest, a cargo build, a derive or probe) under
+the same lock. Stdlib only:
 `--no-project` keeps the frontend CI job free of the workspace build.
 """
 
@@ -173,6 +176,12 @@ def heavy_lock():
 
 
 def main() -> int:
+    if sys.argv[1:2] == ["heavy"]:
+        command = sys.argv[3:] if sys.argv[2:3] == ["--"] else sys.argv[2:]
+        if not command:
+            sys.exit("gate: heavy needs a command: gate.py heavy -- CMD...")
+        with heavy_lock():
+            return subprocess.call(command)
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("steps", nargs="+", choices=[*STEPS, "all"])
     parser.add_argument(
