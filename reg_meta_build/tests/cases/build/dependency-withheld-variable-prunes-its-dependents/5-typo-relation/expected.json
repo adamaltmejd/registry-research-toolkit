@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "catalog_dependency_missing",
+    "exit_code": 10,
+    "message_contains": ["1 unexplained missing catalog dependenc", "scb/sample/typo"]
+  }
+}

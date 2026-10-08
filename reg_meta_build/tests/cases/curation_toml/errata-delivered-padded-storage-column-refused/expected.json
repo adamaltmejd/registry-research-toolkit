@@ -1,0 +1,11 @@
+{
+  "loader": "register_files",
+  "replaces": ["test_source_effect_delivery.py::test_additional_delivery_uses_only_explicit_own_storage_header[]", "test_source_effect_delivery.py::test_additional_delivery_uses_only_explicit_own_storage_header[ PHYSICAL]"],
+  "fails_if": "ErrataDeliveredEntry._additional_delivery_anchor stops requiring storage_column == storage_column.strip(), so a padded storage header loads",
+  "note": "The replaced test refused '' and ' PHYSICAL' ('trimmed nonempty header'); the loader refuses both first. The padded header is the harder form: it is non-empty. Allowed twin: the ADDP entry of cases/build/errata-delivered-additional-physical-column-keeps-its-siblings, whose exact header storage_column = \"PHYSICAL\" loads and types the column.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[errata.delivered]] entry 1",
+    "message_contains": ["storage_column requires an anchored additional physical delivery and an exact header"]
+  }
+}

@@ -1,0 +1,42 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "a"
+[[variable]]
+native_id = "1.Pool"
+slug = "pool"
+[[variable]]
+native_id = "1.Undated"
+slug = "undated"
+
+[[errata.column]]
+variant = "people"
+column = "Pool"
+name = "Pool"
+definition = "Documented"
+data_type = "text"
+is_identifier = false
+is_sensitive = false
+holdings_period = "2002-2020"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-09-25"
+
+[[errata.column]]
+variant = "people"
+column = "Undated"
+name = "Undated"
+definition = "Documented"
+data_type = "text"
+is_identifier = false
+is_sensitive = false
+all_versions = true
+source = "scb-docs"
+evidence = "held"
+noted = "2026-09-25"

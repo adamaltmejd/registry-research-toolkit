@@ -1,0 +1,135 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+steward_table_prefixes = ["CIS"]
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "v5"
+[[variable]]
+native_id = "1.6"
+slug = "v6"
+[[variable]]
+native_id = "1.7"
+slug = "v7"
+[[variable]]
+native_id = "1.8"
+slug = "v8"
+[[variable]]
+native_id = "1.9"
+slug = "v9"
+[[variable]]
+native_id = "1.10"
+slug = "v10"
+[[variable]]
+native_id = "1.11"
+slug = "v11"
+[[variable]]
+native_id = "1.12"
+slug = "v12"
+[[variable]]
+native_id = "1.20"
+slug = "v20"
+[[variable]]
+native_id = "1.21"
+slug = "v21"
+[[variable]]
+native_id = "1.22"
+slug = "v22"
+[[variable]]
+native_id = "1.23"
+slug = "v23"
+[[variable]]
+native_id = "1.24"
+slug = "v24"
+[[variable]]
+native_id = "1.25"
+slug = "v25"
+[[variable]]
+native_id = "1.26"
+slug = "v26"
+[[variable]]
+native_id = "1.27.add"
+slug = "v27-add"
+[[variable]]
+native_id = "1.27.other"
+slug = "v27-other"
+[[variable]]
+native_id = "1.27.second"
+slug = "v27-second"
+[[variable]]
+native_id = "1.27.earlier"
+slug = "v27-earlier"
+[[identity.partition]]
+variable = "1.27"
+columns = { ADD = "1.27.add", OTHER = "1.27.other", SECOND = "1.27.second", EARLIER = "1.27.earlier" }
+columns_ref = "fixture"
+[[variable]]
+native_id = "1.28.addp"
+slug = "v28-addp"
+[[variable]]
+native_id = "1.28.otherp"
+slug = "v28-otherp"
+[[identity.partition]]
+variable = "1.28"
+columns = { ADDP = "1.28.addp", OTHERP = "1.28.otherp" }
+columns_ref = "fixture"
+[[variable]]
+native_id = "1.29"
+slug = "v29"
+[[variable]]
+native_id = "1.30"
+slug = "v30"
+[[variable]]
+native_id = "1.31"
+slug = "v31"
+[[variable]]
+native_id = "1.32"
+slug = "v32"
+[[variable]]
+native_id = "1.99"
+slug = "v99"
+
+[[errata.delivered]]
+variant = "people"
+column = "AMB"
+versions = ["2020"]
+evidence = "accepted delivery"
+noted = "2026-09-25"
+
+[[errata.delivered]]
+variant = "people"
+column = "MISS"
+versions = ["2020"]
+evidence = "accepted delivery"
+noted = "2026-09-25"
+native_variable_id = 99
+
+[[errata.delivered]]
+variant = "people"
+column = "NOW"
+versions = ["2020"]
+evidence = "accepted delivery"
+noted = "2026-09-25"
+
+[[errata.delivered]]
+variant = "people"
+column = "ADDN"
+versions = ["2020"]
+evidence = "accepted delivery"
+noted = "2026-09-25"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 30
+
+[[errata.delivered]]
+variant = "people"
+column = "ADDW"
+versions = ["2020"]
+evidence = "accepted delivery"
+noted = "2026-09-25"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 29
+storage_column = "WRONG"

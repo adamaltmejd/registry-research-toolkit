@@ -1,0 +1,6 @@
+{
+  "replaces": ["test_catalog_dependency_withholding.py::test_accepted_omission_preserves_warning_severity_on_dependent_group"],
+  "note": "The cause is accepted (an [[acknowledge]] of key's unresolved_flag), so its dependents inherit warning: the old test's two diagnostics (member, then group) are both warnings and the member names the accepting case (old case_id 'accepted-omit'; the build carries it as acknowledged_by, this step's own entry). The group (value, key) keeps one member and is withheld with the cause's refs.",
+  "fails_if": "`resolve_source_scope` (source_scope.py) builds `withheld_dependencies` from the raw causes instead of `acknowledged.get(cause, cause)`, or `withheld_group` in `resolve_metadata_dependencies` always uses severity error, so the dependent rows turn error",
+  "sources": "scb-withheld-key-and-gone"
+}

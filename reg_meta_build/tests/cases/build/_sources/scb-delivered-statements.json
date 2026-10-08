@@ -1,0 +1,308 @@
+{
+  "description": "Register TEST (1, variant 2). Var 99 EDITION delivers 2018, 2020 and 2022, so a 2020 edition exists. Statement columns documented only in 2022 with Datatyp: V1 integer (var 5), V2 integer (6), V3 empty (7), V4 float (8), V5 text (9), V6 'Datum och klockslag' (10), V7 date (11), V8 empty (12). Reused identities: AMB under var 20 (2018) and 21 (2022); ANC under 22 (2018) and 23 (2022, text); MISS under 24 (2018) and 25 (2022). NOW (var 26) is delivered in 2018 and 2020. Additional physical columns: var 27 ADD 2022 (integer) with OTHER and SECOND in 2020 and EARLIER in 2018; var 28 ADDP 2022 with OTHERP 2020; var 29 ADDW 2022 with OTHERW 2020; var 30 ADDN in 2022 and 2020. Var 31 Blk 2022 (integer) plus a literal blank column in 2020 with empty Datatyp. Var 32 STMT varchar 2018, int 2022. SWECOV storage: CIS2004 V1 smallint, V2 varchar, V3 smallint, V6 smallint, V7 smallint; CIS2020 PHYSICAL varchar; CIS2004 STEW smallint, CIS2012 STEW float; CIS2016 CUR varchar; CIS2004 MIX date, CIS2012 MIX int; OTHER2004 NOPFX smallint. One non-sensitive Unika summary row per named column.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "EDITION",
+        "cvid": 101,
+        "var_id": 99,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "EDITION",
+        "cvid": 102,
+        "var_id": 99,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "EDITION",
+        "cvid": 103,
+        "var_id": 99,
+        "year": "2018",
+        "regver_id": 2018,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "V1",
+        "cvid": 104,
+        "var_id": 5,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "integer"
+      },
+      {
+        "colname": "V2",
+        "cvid": 105,
+        "var_id": 6,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "integer"
+      },
+      {
+        "colname": "V3",
+        "cvid": 106,
+        "var_id": 7,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": ""
+      },
+      {
+        "colname": "V4",
+        "cvid": 107,
+        "var_id": 8,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "float"
+      },
+      {
+        "colname": "V5",
+        "cvid": 108,
+        "var_id": 9,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "text"
+      },
+      {
+        "colname": "V6",
+        "cvid": 109,
+        "var_id": 10,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "Datum och klockslag"
+      },
+      {
+        "colname": "V7",
+        "cvid": 110,
+        "var_id": 11,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "date"
+      },
+      {
+        "colname": "V8",
+        "cvid": 111,
+        "var_id": 12,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": ""
+      },
+      {
+        "colname": "AMB",
+        "cvid": 112,
+        "var_id": 20,
+        "year": "2018",
+        "regver_id": 2018,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "AMB",
+        "cvid": 113,
+        "var_id": 21,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "ANC",
+        "cvid": 114,
+        "var_id": 22,
+        "year": "2018",
+        "regver_id": 2018,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "ANC",
+        "cvid": 115,
+        "var_id": 23,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "text"
+      },
+      {
+        "colname": "MISS",
+        "cvid": 116,
+        "var_id": 24,
+        "year": "2018",
+        "regver_id": 2018,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "MISS",
+        "cvid": 117,
+        "var_id": 25,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "NOW",
+        "cvid": 118,
+        "var_id": 26,
+        "year": "2018",
+        "regver_id": 2018,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "NOW",
+        "cvid": 119,
+        "var_id": 26,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "ADD",
+        "cvid": 120,
+        "var_id": 27,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "integer"
+      },
+      {
+        "colname": "OTHER",
+        "cvid": 121,
+        "var_id": 27,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "SECOND",
+        "cvid": 122,
+        "var_id": 27,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "EARLIER",
+        "cvid": 123,
+        "var_id": 27,
+        "year": "2018",
+        "regver_id": 2018,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "ADDP",
+        "cvid": 124,
+        "var_id": 28,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "integer"
+      },
+      {
+        "colname": "OTHERP",
+        "cvid": 125,
+        "var_id": 28,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "ADDW",
+        "cvid": 126,
+        "var_id": 29,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "integer"
+      },
+      {
+        "colname": "OTHERW",
+        "cvid": 127,
+        "var_id": 29,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "ADDN",
+        "cvid": 128,
+        "var_id": 30,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "integer"
+      },
+      {
+        "colname": "ADDN",
+        "cvid": 129,
+        "var_id": 30,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      },
+      {
+        "colname": "Blk",
+        "cvid": 130,
+        "var_id": 31,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "integer"
+      },
+      {
+        "colname": "\"\"",
+        "cvid": 131,
+        "var_id": 31,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": ["TEST", 1, 2],
+        "data_type": ""
+      },
+      {
+        "colname": "STMT",
+        "cvid": 132,
+        "var_id": 32,
+        "year": "2018",
+        "regver_id": 2018,
+        "register": ["TEST", 1, 2],
+        "data_type": "varchar"
+      },
+      {
+        "colname": "STMT",
+        "cvid": 133,
+        "var_id": 32,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": ["TEST", 1, 2],
+        "data_type": "int"
+      }
+    ],
+    "unika": ["TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V1|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V2|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V3|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V4|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V5|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V6|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V7|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|V8|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|AMB|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|AMB|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ANC|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ANC|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|MISS|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|MISS|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|NOW|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|NOW|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADD|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|OTHER|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|SECOND|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|EARLIER|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADDP|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|OTHERP|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADDW|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|OTHERW|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADDN|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|ADDN|2020|2020|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|Blk|2022|2022|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|STMT|2018|2018|0|0|0", "TEST|Testregistret|Individer|Individer|GenericVar|STMT|2022|2022|0|0|0"]
+  },
+  "files": {
+    "swecov/derived/swecov_column_types.csv": ["table_schema,table_name,table_type,column_name,data_type,character_maximum_length,numeric_precision,numeric_scale,ordinal_position", "dbo,CIS2004,BASE TABLE,V1,smallint,,,,1", "dbo,CIS2004,BASE TABLE,V2,varchar,,,,2", "dbo,CIS2004,BASE TABLE,V3,smallint,,,,3", "dbo,CIS2004,BASE TABLE,V6,smallint,,,,4", "dbo,CIS2004,BASE TABLE,V7,smallint,,,,5", "dbo,CIS2020,BASE TABLE,PHYSICAL,varchar,,,,6", "dbo,CIS2004,BASE TABLE,STEW,smallint,,,,7", "dbo,CIS2012,BASE TABLE,STEW,float,,,,8", "dbo,CIS2016,BASE TABLE,CUR,varchar,,,,9", "dbo,CIS2004,BASE TABLE,MIX,date,,,,10", "dbo,CIS2012,BASE TABLE,MIX,int,,,,11", "dbo,OTHER2004,BASE TABLE,NOPFX,smallint,,,,12"]
+  }
+}

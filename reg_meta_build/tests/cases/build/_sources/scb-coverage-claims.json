@@ -1,0 +1,79 @@
+{
+  "description": "Register 1 (TESTREG). Variable 101 delivers VALUE in 2019 (CVID 1019, length 1) and 2021 (CVID 1021, length 2), in a rangeless pooled term edition 'HT 2021 - VT 2022' (CVID 1022) and in an unparseable edition 'okänd' (CVID 1023), all in variant 10, and in variant 20 only in the rangeless pooled edition (CVID 1024). Variable 102 delivers OMIT in 2019 (CVID 1119) and 2020 (CVID 1120). Variable 103 delivers UNTYPED in 2020 with a blank Datatyp (CVID 1220). Variable 104 delivers PAR_A (CVID 1320) and PAR_B (CVID 1321) side by side in variant 10 and PAR_A alone in variant 20 (CVID 1322), all 2020.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 1019,
+        "var_id": 101,
+        "colname": "VALUE",
+        "year": "2019",
+        "regver_id": 119
+      },
+      {
+        "cvid": 1021,
+        "var_id": 101,
+        "colname": "VALUE",
+        "year": "2021",
+        "regver_id": 121,
+        "data_length": "2"
+      },
+      {
+        "cvid": 1022,
+        "var_id": 101,
+        "colname": "VALUE",
+        "year": "2022",
+        "regver_id": 122,
+        "versionname": "HT 2021 - VT 2022"
+      },
+      {
+        "cvid": 1023,
+        "var_id": 101,
+        "colname": "VALUE",
+        "year": "2023",
+        "regver_id": 123,
+        "versionname": "okänd"
+      },
+      {
+        "cvid": 1024,
+        "var_id": 101,
+        "colname": "VALUE",
+        "year": "2022",
+        "regver_id": 122,
+        "versionname": "HT 2021 - VT 2022",
+        "register": ["TESTREG", 1, 20]
+      },
+      {"cvid": 1119, "var_id": 102, "colname": "OMIT", "year": "2019", "regver_id": 119},
+      {"cvid": 1120, "var_id": 102, "colname": "OMIT", "year": "2020", "regver_id": 120},
+      {
+        "cvid": 1220,
+        "var_id": 103,
+        "colname": "UNTYPED",
+        "year": "2020",
+        "regver_id": 120,
+        "data_type": ""
+      },
+      {
+        "cvid": 1320,
+        "var_id": 104,
+        "colname": "PAR_A",
+        "year": "2020",
+        "regver_id": 120
+      },
+      {
+        "cvid": 1321,
+        "var_id": 104,
+        "colname": "PAR_B",
+        "year": "2020",
+        "regver_id": 120
+      },
+      {
+        "cvid": 1322,
+        "var_id": 104,
+        "colname": "PAR_A",
+        "year": "2020",
+        "regver_id": 120,
+        "register": ["TESTREG", 1, 20]
+      }
+    ]
+  }
+}

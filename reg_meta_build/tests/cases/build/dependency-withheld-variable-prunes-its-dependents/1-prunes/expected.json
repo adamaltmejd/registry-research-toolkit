@@ -1,0 +1,79 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "withheld_catalog_dependency"},
+      "fields": ["severity"],
+      "rows": [
+        ["error"],
+        ["error"],
+        ["error"],
+        ["error"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "withheld_catalog_dependency",
+        "subject": {"contains": "panel_entity_key"}
+      },
+      "fields": ["subject"],
+      "rows": [
+        ["scb/sample/people:panel_entity_key"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "withheld_catalog_dependency"},
+      "fields": ["ref"],
+      "match": "set",
+      "rows": {
+        "refs_of": {
+          "table": "issue_refs",
+          "where": {"code": "unresolved_flag", "subject": "scb/sample/key"}
+        }
+      }
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": ["unexplained_delivery_coverage_loss", "unexplained_delivery_fact_change"]
+      },
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variants",
+      "where": {"variant": "people"},
+      "fields": ["panel_entity_key", "panel_time_key"],
+      "rows": [
+        [null, "period"]
+      ]
+    },
+    {
+      "table": "concept_groups",
+      "fields": ["variables"],
+      "rows": [
+        [
+          ["two", "value"]
+        ]
+      ]
+    },
+    {
+      "table": "tags",
+      "fields": ["slug", "member"],
+      "rows": [
+        ["topic", null]
+      ]
+    },
+    {
+      "table": "edges",
+      "fields": ["type", "a", "b"],
+      "rows": [
+        ["same_as", "scb/sample/value", "scb/sample/two"],
+        ["same_as", "scb/sample/two", "scb/sample/value"]
+      ]
+    }
+  ]
+}

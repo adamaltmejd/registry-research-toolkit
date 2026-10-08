@@ -40,7 +40,7 @@ the behavior in plain words. For example,
   | `split-sos-`           | SOS `[[identity.split]]` and `[[identity.rename]]`                                                                      |
   | `split-partition-`     | SCB `[[identity.partition]]`, `[[identity.column_owner]]` and `[[identity.unassigned]]`, and slices that reference them |
   | `errata-delivered-`    | `[[errata.delivered]]` additions                                                                                        |
-  | `errata-column-`       | `[[errata.column]]` placements and `[[errata.version]]` declared editions                                               |
+  | `errata-column-`       | `[[errata.column]]` placements, flags and steward storage types, and `[[errata.version]]` declared editions             |
   | `errata-sos-`          | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                                                    |
   | `errata-field-`        | `[[errata.field]]` checked corrections of one source occurrence                                                         |
   | `errata-period-`       | `[[errata.occurrence_period]]` checked period corrections                                                               |
@@ -63,6 +63,8 @@ the behavior in plain words. For example,
   | `value-`               | source code lists bound to native members                                                                               |
   | `naming-`              | generated and authored slug pins under the zone freeze states                                                           |
   | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                            |
+  | `dependency-`          | curated groups, tags, panel keys and relations whose catalog dependency is withheld                                     |
+  | `coverage-`            | delivery the formed variables owe the catalog, written or explicitly withdrawn                                          |
 
 Later stages add their own prefixes to this table.
 
@@ -240,7 +242,8 @@ Every key is optional, and only the keys that are present get checked.
   | `states`                | built variable state                                                    | `register`, `variable`, `variant` (slugs), `column`, `valid_from`, `valid_to`, `data_type`, `name` (the variable's), `state_name` (the state's), `provenance`, `pooled` |
   | `state_codes`           | built state and value-set member (or one null-code row)                 | `register`, `variable`, `variant`, `column`, `valid_from`, `valid_to`, `code`, `label`                                                                                  |
   | `variables`             | built variable and delivery column (one null-column row if it has none) | `register`, `variable`, `column`, `provider_key`, `description`, `is_identifier`, `is_sensitive`                                                                        |
-  | `variants`              | built register variant                                                  | `register`, `variant`, `name`                                                                                                                                           |
+  | `variants`              | built register variant                                                  | `register`, `variant`, `name`, `panel_entity_key` (a slug, or a JSON list of slugs), `panel_time_key`                                                                   |
+  | `tags`                  | built tag member (one null-member row for a tag without members)        | `slug`, `member` (`provider/register/variable`, or `provider/register` for a register member)                                                                           |
   | `aliases`               | built search alias                                                      | `register`, `variable`, `variant`, `column`                                                                                                                             |
   | `edges`                 | built variable relation                                                 | `type` (`same_as` or `replaced_by`), `a`, `b` (`provider/register/variable`; each `same_as` direction is its own row; `replaced_by` runs `a` to `b`)                    |
   | `concept_groups`        | built concept group                                                     | `variables` (its member slugs, sorted)                                                                                                                                  |

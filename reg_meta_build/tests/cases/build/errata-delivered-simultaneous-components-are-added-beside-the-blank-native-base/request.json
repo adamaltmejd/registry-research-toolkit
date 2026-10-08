@@ -1,9 +1,10 @@
 {
   "replaces": [
-    "test_curation_partition_delivered_boundary.py::test_simultaneous_components_are_added_beside_the_blank_native_base"
+    "test_curation_partition_delivered_boundary.py::test_simultaneous_components_are_added_beside_the_blank_native_base",
+    "test_source_scope_naming.py::test_columnless_only_remainder_warns_with_original_refs"
   ],
-  "note": "Each component gets its own 2021 addition; the blank row stays as evidence.",
-  "fails_if": "the `[[errata.delivered]]` compile stops recognising reviewed simultaneous partition components (`component_base_key` stays None), so each entry rewrites the one 2021 blank row instead of keeping it as evidence and adding its own occurrence",
+  "note": "Each component gets its own 2021 addition; the blank row stays as evidence. The issue_refs projection comes from the scope naming test: a remainder whose occurrences all state no physical column is one warning (not an identity error) citing exactly those original rows, here the literal-blank 2021 member (CVID 30 in the fixture).",
+  "fails_if": "the `[[errata.delivered]]` compile stops recognising reviewed simultaneous partition components (`component_base_key` stays None), so each entry rewrites the one 2021 blank row instead of keeping it as evidence and adding its own occurrence; or `resolve_source_scope` stops special-casing an all-columnless remainder (the omitted_columnless_occurrence branch), so CVID 30 is reported as an unresolved_catalog_identity error",
   "sources": {
     "description": "Variable 5 delivers A, B and C in 2020 (CVIDs 20-22), and one literal blank member in 2021 (CVID 30).",
     "scb": {

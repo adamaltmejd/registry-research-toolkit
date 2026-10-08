@@ -456,7 +456,6 @@ def apply_occurrence_cases(
                 )
             ),
             withheld_fields=tuple(sorted(withheld)),
-            checked_fields=tuple(sorted(matching_fields)),
         )
         targets = variant_changes.get(ref, (occurrence.variant_key,))
         if targets != (occurrence.variant_key,) and (
@@ -516,10 +515,6 @@ def apply_occurrence_cases(
             conflict(claims, key, refs, ("occurrence",), (key,))
             continue
         effect = claims[0][0]
-        checked_sensitivity = (
-            effect.fields.sensitivity is not None
-            and "sensitivity" not in effect.copied_fields
-        )
         occurrences.append(
             EffectiveOccurrence(
                 provider=effect.provider,
@@ -540,7 +535,6 @@ def apply_occurrence_cases(
                 occurrence_key=key,
                 corrections=tuple(owner for _, owner in claims),
                 identity_checked=True,
-                checked_fields=("sensitivity",) if checked_sensitivity else (),
             )
         )
     return OccurrenceCorrections(

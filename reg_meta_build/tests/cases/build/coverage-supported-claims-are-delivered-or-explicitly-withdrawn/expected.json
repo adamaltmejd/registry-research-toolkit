@@ -1,0 +1,50 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["value", "people", "VALUE", "2019-01-01", "2019-12-31"],
+        ["value", "people", "VALUE", "2021-01-01", "2021-12-31"],
+        ["omit", "people", "OMIT", "2019-01-01", "2019-12-31"],
+        ["untyped", "people", "UNTYPED", "2020-01-01", "2020-12-31"],
+        ["par", "others", "PAR_A", "2020-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": ["unexplained_delivery_coverage_loss", "unexplained_delivery_fact_change"]
+      },
+      "fields": ["code", "subject"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["curated_state_omission", "unknown_data_type"]},
+      "fields": ["code", "subject"],
+      "rows": [
+        ["curated_state_omission", "scb/sample/omit"],
+        ["unknown_data_type", "scb/sample/untyped"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "unresolved_column_representation"},
+      "fields": ["key", "valid_from", "valid_to"],
+      "rows": [
+        [
+          ["register:1", "variant:10", "edition:120", "variable:104", "member:1320"],
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          ["register:1", "variant:10", "edition:120", "variable:104", "member:1321"],
+          "2020-01-01",
+          "2020-12-31"
+        ]
+      ]
+    }
+  ]
+}

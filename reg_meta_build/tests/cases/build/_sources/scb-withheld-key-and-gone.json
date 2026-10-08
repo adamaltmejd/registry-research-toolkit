@@ -1,0 +1,19 @@
+{
+  "description": "TESTREG variant 10 delivers VALUE, KEY, TWO and GONE; variant 11 delivers ELSE. Unika summarizes only VALUE, TWO and ELSE, so KEY's and GONE's flags are unknown and the build withholds scb/sample/key and scb/sample/gone as unresolved_flag.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+      {"cvid": 1002, "var_id": 102, "colname": "KEY", "varname": "KeyVar"},
+      {"cvid": 1003, "var_id": 103, "colname": "TWO", "varname": "TwoVar"},
+      {"cvid": 1004, "var_id": 104, "colname": "GONE", "varname": "GoneVar"},
+      {
+        "cvid": 1005,
+        "var_id": 105,
+        "colname": "ELSE",
+        "varname": "ElseVar",
+        "register": ["TESTREG", 1, 11]
+      }
+    ],
+    "unika": ["TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0", "TESTREG|Testregistret|Individer|Individer|TwoVar|TWO|2020|2020|0|0|0", "TESTREG|Testregistret|Individer|Individer|ElseVar|ELSE|2020|2020|0|0|0"]
+  }
+}

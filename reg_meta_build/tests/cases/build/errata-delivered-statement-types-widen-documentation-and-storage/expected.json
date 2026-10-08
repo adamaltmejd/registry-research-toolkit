@@ -1,0 +1,66 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "valid_from": "2020-01-01",
+        "column": ["V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "STMT", "BLK", "ANC"]
+      },
+      "fields": ["variable", "column", "data_type"],
+      "rows": [
+        ["v5", "V1", "integer"],
+        ["v6", "V2", "text"],
+        ["v7", "V3", "integer"],
+        ["v8", "V4", "decimal"],
+        ["v9", "V5", "text"],
+        ["v10", "V6", null],
+        ["v11", "V7", null],
+        ["v12", "V8", null],
+        ["v32", "STMT", "text"],
+        ["v31", "BLK", "integer"],
+        ["v22", "ANC", "integer"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "v5",
+        "valid_from": "2020-01-01",
+        "provenance": {"contains": ["Documented Datatyp: 2022=", "SWECOV storage "]}
+      },
+      "fields": ["variable"],
+      "rows": [
+        ["v5"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unknown_data_type",
+        "subject": "scb/sample/v12",
+        "detail": {"contains": ["Documented Datatyp: 2022=none", "SWECOV storage ", ": none"]}
+      },
+      "fields": ["subject"],
+      "rows": [
+        ["scb/sample/v12"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unknown_data_type", "valid_from": "2020-01-01"},
+      "fields": ["subject"],
+      "rows": [
+        ["scb/sample/v10"],
+        ["scb/sample/v11"],
+        ["scb/sample/v12"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
+      "fields": ["case_id"],
+      "rows": []
+    }
+  ]
+}
