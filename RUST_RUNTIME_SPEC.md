@@ -1219,11 +1219,11 @@ Author (one per package, in its own worktree):
   with `GIT_WORK_TREE=$PWD git push -u origin HEAD` (a repo hook hijacks `GIT_DIR`).
   Prefix scratch files with the package id.
 - Run the full gate, and `scripts/gate.py g1` only when the package's own G1 line says
-  G1 runs in this package (not "run in" a later one). Run other heavy commands (a
-  parallel pytest, cargo, a derive or a probe over the pinned artifacts) through
-  `scripts/gate.py heavy -- CMD`, so they share the heavy-job lock. Open the PR with
-  `gh pr create`: package id, what changed, each acceptance item with its result,
-  decisions made, anything deferred; end with
+  G1 runs in this package (a line reading "G1 (run in X)" means X runs it). Run other
+  heavy commands (a parallel pytest, cargo, a derive or a probe over the pinned
+  artifacts) through `scripts/gate.py heavy -- CMD`, so they share the heavy-job lock.
+  Open the PR with `gh pr create`: package id, what changed, each acceptance item with
+  its result, decisions made, anything deferred; end with
   `🤖 Generated with [Claude Code](https://claude.com/claude-code)`. Do not merge.
 - When the review arrives, the author applies the reviewer's report directly and re-runs
   what the fix touches. The orchestrator settles only scope questions and disagreements
