@@ -189,6 +189,7 @@ impl<'a> std::ops::Index<&str> for Params<'a> {
         self.get(name).expect("a required parameter")
     }
 }
+
 /// The function that answers a route.
 pub type Run<T> = fn(&Server, Scope, &Params) -> Result<T, Error>;
 
