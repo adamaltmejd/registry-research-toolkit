@@ -17,6 +17,7 @@ pub mod slice_3b;
 pub mod slice_3c;
 pub mod slice_3d;
 mod states;
+mod values;
 mod warnings;
 
 use std::collections::BTreeMap;
@@ -127,6 +128,8 @@ pub enum Type {
     /// An opaque `next_cursor`.
     Cursor,
     Boolean,
+    /// A storage id, spelled as the decimal string results carry (ids pass 2^53).
+    StorageId,
     Enum(&'static [&'static str]),
 }
 
@@ -327,6 +330,35 @@ pub(crate) fn value_set_version<'a>(params: &Params<'a>) -> Result<Option<&'a st
     }
 }
 
+/// The longest `q` (today's `QUERY_MAX_LEN`).
+const MAX_QUERY_CHARS: usize = 200;
+/// `Type::StorageId`'s pattern.
+const STORAGE_ID: &str = "^-?[0-9]+$";
+
+/// `q`: at most [`MAX_QUERY_CHARS`] characters and no NUL; absent is empty.
+pub(crate) fn q<'a>(params: &Params<'a>) -> Result<&'a str, Error> {
+    let q = params.get("q").copied().unwrap_or_default();
+    if q.contains('\0') || q.chars().count() > MAX_QUERY_CHARS {
+        return Err(Error::invalid_parameter("q"));
+    }
+    Ok(q)
+}
+
+/// The storage-id parameter `name`: an optional sign and decimal digits that fit
+/// an `i64`.
+pub(crate) fn storage_id(params: &Params, name: &str) -> Result<Option<i64>, Error> {
+    params
+        .get(name)
+        .map(|v| {
+            let digits = v.strip_prefix('-').unwrap_or(v);
+            (!digits.is_empty() && digits.bytes().all(|b| b.is_ascii_digit()))
+                .then(|| v.parse().ok())
+                .flatten()
+                .ok_or_else(|| Error::invalid_parameter(name))
+        })
+        .transpose()
+}
+
 /// A boolean parameter, `true` or `false` (default false).
 pub(crate) fn flag(params: &Params, name: &str) -> Result<bool, Error> {
     match params.get(name).copied() {
@@ -370,6 +402,7 @@ fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
         Type::String | Type::Ref | Type::Period | Type::Cursor => string().into(),
         Type::Enum(members) => string().enum_values(Some(members.iter().copied())).into(),
         Type::Boolean => ObjectBuilder::new().schema_type(Json::Boolean).into(),
+        Type::StorageId => string().pattern(Some(STORAGE_ID)).into(),
         Type::Limit => ObjectBuilder::new()
             .schema_type(Json::Integer)
             .minimum(Some(1))
