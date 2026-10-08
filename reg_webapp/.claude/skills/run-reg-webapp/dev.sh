@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 # Run the reg_webapp dev servers on auto-selected FREE ports — works in any
 # checkout (main, a git worktree, a container) with no port
-# collisions. Picks a free backend and frontend port, points the Vite /api proxy
-# at the backend via REG_WEBAPP_BACKEND_URL, and starts both from the .venv of
-# THIS SCRIPT's own checkout — resolved from this file's path, never from the
-# caller's cwd, so an absolute-path launch from elsewhere still serves the
-# checkout the script belongs to.
+# collisions. Picks a free port for each of the three servers — the FastAPI
+# backend, the Rust server (`reg-meta serve`, which answers the routes ported to
+# it) and Vite — points the Vite /api proxy at the first two via
+# REG_WEBAPP_BACKEND_URL and REG_META_SERVER_URL, and starts them from the .venv
+# and cargo target of THIS SCRIPT's own checkout — resolved from this file's path,
+# never from the caller's cwd, so an absolute-path launch from elsewhere still
+# serves the checkout the script belongs to.
 #
 # Modes:
-#   dev.sh                 interactive — start both servers and block (Ctrl-C stops).
+#   dev.sh                 interactive — start the servers and block (Ctrl-C stops).
 #   dev.sh smoke           ONE-SHOT — start, run the Playwright driver `smoke`, tear
 #                          down, exit with the driver's status. For agent visual
 #                          verification: random ports + guaranteed cleanup, so it
@@ -44,7 +46,7 @@
 #                          checkout where no released DB is reachable.
 #
 # Ports are automatic (two of these never collide); pin with BACKEND_PORT /
-# FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
+# RUST_PORT / FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
 # a UNIQUE per-invocation directory under /tmp — printed on startup, and kept
 # after teardown because the pictures are the evidence — unless REG_WEBAPP_SHOTS
 # names a directory of your own. So concurrent lanes, and the operator, never
@@ -170,6 +172,13 @@ if [ ! -x ".venv/bin/uvicorn" ]; then
 	exit 1
 fi
 
+# The Rust server, built from this checkout. The whole workspace, as `cargo test`
+# and CI build it, so the two share one set of compiled dependencies.
+if ! cargo build --workspace --locked -q; then
+	echo "dev: 'cargo build --workspace' failed — see output above." >&2
+	exit 1
+fi
+
 # The per-invocation shots directory (see the header). Deliberately NOT removed
 # by cleanup() — the pictures outliving the servers is the point.
 shots_dir=""
@@ -193,6 +202,7 @@ echo "dev: repo $root HEAD $(git -C "$root" rev-parse HEAD 2>/dev/null || echo u
 # Python, and this checkout's venv is already required (checked above).
 freeport() { .venv/bin/python -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()'; }
 backend_port=${BACKEND_PORT:-$(freeport)}
+rust_port=${RUST_PORT:-$(freeport)}
 if [ "$mode" = preview ]; then
 	# preview_start assigns the frontend port via $PORT (autoPort always exports it,
 	# even when it keeps the configured 5173). Bind exactly that so the MCP attaches
@@ -217,12 +227,12 @@ cleanup() {
 	# behind (it's ~0.6 MB of temp per invocation).
 	if [ -n "$fixture_db_dir" ]; then rm -rf "$fixture_db_dir"; fi
 }
-# Tear both servers down on ANY exit — including the one-shot smoke/shot paths, so
+# Tear every server down on ANY exit — including the one-shot smoke/shot paths, so
 # they never leak a dev server (the failure mode that motivated this mode).
 trap cleanup INT TERM EXIT
 
 # --fixture-db: build the deterministic synthetic reg_meta DB pair (catalog +
-# docs) into a temp dir and point BOTH servers at it via REG_META_DB — reg_meta's
+# docs) into a temp dir and point EVERY server at it via REG_META_DB — reg_meta's
 # highest-precedence DB dir, so it wins over whatever the environment resolves.
 # Built AFTER the trap so a failure mid-build still gets the dir removed.
 if [ -n "$fixture_db" ]; then
@@ -265,9 +275,17 @@ uvicorn.run(create_app(rate_limit_per_minute=600), port=int(sys.argv[1]))' "$bac
 	;;
 esac
 pids+=($!)
+# The Rust server needs its catalog directory explicitly: the fixture's, the
+# caller's REG_META_DB, or the directory reg_meta resolves by default (XDG).
+# REG_WEBAPP_STEWARD names the catalog, as it does for the backend.
+rust_db=${REG_META_DB:-$(.venv/bin/python -c 'import reg_meta.db; print(reg_meta.db.db_path_from_args(None).parent)')}
+target/debug/reg-meta serve --db "$rust_db" --catalog "${REG_WEBAPP_STEWARD:-global}" \
+	--stewards reg_webapp/stewards --port "$rust_port" &
+pids+=($!)
 (
 	cd reg_webapp/frontend &&
 		REG_WEBAPP_BACKEND_URL="http://localhost:$backend_port" \
+			REG_META_SERVER_URL="http://127.0.0.1:$rust_port" \
 			bun run dev -- --port "$frontend_port" --strictPort
 ) &
 pids+=($!)
@@ -281,10 +299,13 @@ for _ in $(seq 1 30); do
 	# OUR servers must be the ones answering. A pinned port already held by another
 	# reg_webapp instance would return 200 even though our uvicorn failed to bind
 	# (and exited) — so confirm our pids are alive BEFORE trusting a 200.
-	if ! kill -0 "${pids[0]}" 2>/dev/null || ! kill -0 "${pids[1]}" 2>/dev/null; then
+	exited=""
+	for p in "${pids[@]}"; do kill -0 "$p" 2>/dev/null || exited=1; done
+	if [ -n "$exited" ]; then
 		break # a server exited (e.g. a pinned port already in use) — fail fast
 	fi
-	if curl -sf -o /dev/null "http://localhost:$backend_port/api/context" 2>/dev/null &&
+	if curl -sf -o /dev/null "http://localhost:$backend_port/api/catalog" 2>/dev/null &&
+		curl -sf -o /dev/null "http://127.0.0.1:$rust_port/api/context" 2>/dev/null &&
 		curl -sf -o /dev/null "http://localhost:$frontend_port/" 2>/dev/null; then
 		ready=1
 		break
@@ -301,7 +322,7 @@ dev_url="http://localhost:$frontend_port"
 case "$mode" in
 smoke)
 	# One-shot: drive the smoke flow against OUR frontend, then the EXIT trap tears
-	# both servers down (no leak). Exit status is the driver's.
+	# every server down (no leak). Exit status is the driver's.
 	echo "dev: smoke on $dev_url (auto-teardown on exit)" >&2
 	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
 		bun ../.claude/skills/run-reg-webapp/driver.mjs smoke)
@@ -309,7 +330,7 @@ smoke)
 	;;
 flows)
 	# One-shot, like smoke: the driver owns the cases + their assertions, and the
-	# EXIT trap tears both servers (and their process groups) down either way.
+	# EXIT trap tears every server (and their process groups) down either way.
 	echo "dev: flows ${*:-(all scenarios)} on $dev_url → $out_dir (auto-teardown on exit)" >&2
 	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
 		bun ../.claude/skills/run-reg-webapp/driver.mjs flows "$out_dir" "$@")
@@ -329,9 +350,9 @@ shot)
 serve | preview)
 	# `serve` is interactive (Ctrl-C stops); `preview` is the preview_start entry
 	# (the MCP stops it via preview_stop). Both just block on the running servers.
-	printf 'reg_webapp dev (%s):\n  backend : http://localhost:%s\n  frontend: %s\n  driver  : REG_WEBAPP_DEV_URL=%s\n' \
+	printf 'reg_webapp dev (%s):\n  backend : http://localhost:%s\n  rust    : http://127.0.0.1:%s\n  frontend: %s\n  driver  : REG_WEBAPP_DEV_URL=%s\n' \
 		"$([ "$mode" = preview ] && echo 'preview_start' || echo 'Ctrl-C to stop')" \
-		"$backend_port" "$dev_url" "$dev_url"
+		"$backend_port" "$rust_port" "$dev_url" "$dev_url"
 	# Steady state: block until Ctrl-C (INT trap -> nonzero) or a server exits. A
 	# bare `wait` is fine — startup already succeeded; a later single-server crash
 	# is a rare dev event you'll see and Ctrl-C. (`wait -n` isn't in bash 3.2.)

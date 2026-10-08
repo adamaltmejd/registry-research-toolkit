@@ -65,12 +65,12 @@ const route = $derived(router.route);
 // release tag). Both fall back to the empty string until /api/context resolves (a
 // new project before the context loads is an edge case; the seed is corrected on
 // the next New).
-const regMetaVersion = $derived(context?.webapp.reg_meta_version ?? "");
+const regMetaVersion = $derived(context?.reg_meta_version ?? "");
 const steward = $derived(context?.steward.id ?? "");
 // The catalog VINTAGE for the site-wide footer (#355 decision 2): the date the
 // reg_meta DB was built. `import_date` is a UTC timestamp string
 // (e.g. "2026-06-12T08:30:00Z"); show just the leading YYYY-MM-DD (split on "T").
-const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
+const buildDate = $derived(context?.import_date.split("T")[0] ?? "");
 
 // The header window slider's bounds (#611 → Period model). A steward deployment
 // can expose a best-effort catalog-wide year span; use it so filtered catalogs do
@@ -78,11 +78,9 @@ const buildDate = $derived(context?.reg_meta.import_date.split("T")[0] ?? "");
 // the historical 1960 → catalog-vintage range.
 const FALLBACK_WINDOW_FLOOR_YEAR = 1960;
 const catalogVintageYear = $derived(
-  Number(context?.reg_meta.import_date.slice(0, 4)) || new Date().getFullYear(),
+  Number(context?.import_date.slice(0, 4)) || new Date().getFullYear(),
 );
-const catalogPeriodSpan = $derived(
-  context?.steward.catalog_period_span ?? null,
-);
+const catalogPeriodSpan = $derived(context?.period_span ?? null);
 const enforcePeriodBounds = $derived(catalogPeriodSpan !== null);
 const windowMinYear = $derived(
   catalogPeriodSpan?.from ?? FALLBACK_WINDOW_FLOOR_YEAR,
@@ -132,8 +130,9 @@ const qualified = $derived(providerQualified());
     <div class="routed">
       {#if route.name === "home"}
         <!-- #675: the landing page at `/`, split from the data browser. App holds
-             the context, so pass the steward through — Home fetches only /api/stats. -->
-        <Home steward={context?.steward ?? null} />
+             the context, so pass the steward and the catalog sizes through —
+             Home fetches nothing. -->
+        <Home steward={context?.steward ?? null} sizes={context?.sizes ?? null} />
       {:else if route.name === "root"}
         <CatalogRoot />
       {:else if route.name === "catalog-node"}
@@ -199,7 +198,7 @@ const qualified = $derived(providerQualified());
          Guarded on `context` (rendered only once the deployment context loaded). -->
     {#if context}
       <footer class="vintage muted">
-        as of reg_meta v{regMetaVersion} · schema {context.reg_meta.schema_version} · built {buildDate}
+        as of reg_meta v{regMetaVersion} · schema {context.schema_version} · built {buildDate}
       </footer>
     {/if}
   </AppShell>

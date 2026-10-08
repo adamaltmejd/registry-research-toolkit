@@ -9,14 +9,17 @@ import { configDefaults, defineConfig } from "vitest/config";
 // @types/node dep for one lookup. REG_WEBAPP_BACKEND_URL repoints the dev /api proxy
 // so concurrent instances (parallel worktrees / PR lanes) can each target their own
 // backend port — see reg_webapp/.claude/skills/run-reg-webapp "Parallel instances".
-const backendUrl =
-  (globalThis as { process?: { env?: Record<string, string | undefined> } })
-    .process?.env?.REG_WEBAPP_BACKEND_URL ?? "http://localhost:8000";
+// REG_META_SERVER_URL does the same for the Rust server (`reg-meta serve`), which
+// answers the routes ported to it.
 const runtimeProcess = (
   globalThis as {
     process?: { env?: Record<string, string | undefined>; platform?: string };
   }
 ).process;
+const backendUrl =
+  runtimeProcess?.env?.REG_WEBAPP_BACKEND_URL ?? "http://localhost:8000";
+const rustServerUrl =
+  runtimeProcess?.env?.REG_META_SERVER_URL ?? "http://localhost:8001";
 const isCodexSeatbeltSandbox =
   runtimeProcess?.env?.CODEX_SANDBOX === "seatbelt";
 const isMacOS = runtimeProcess?.platform === "darwin";
@@ -33,8 +36,14 @@ const chromiumLaunchArgs = needsSingleProcessChromium
 export default defineConfig({
   plugins: [svelte()],
   server: {
-    // Dev proxy: the SPA fetches /api/* from the FastAPI backend (default :8000).
+    // Dev proxy: the routes ported to the Rust server go there (default :8001),
+    // the rest of /api/* to the FastAPI backend (default :8000). Vite takes the
+    // first key the path starts with, so ported routes come before "/api".
     proxy: {
+      "/api/context": {
+        target: rustServerUrl,
+        changeOrigin: true,
+      },
       "/api": {
         target: backendUrl,
         changeOrigin: true,

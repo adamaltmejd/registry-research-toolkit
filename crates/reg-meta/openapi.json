@@ -1,0 +1,493 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "reg-meta",
+    "version": "0"
+  },
+  "paths": {
+    "/api/context": {
+      "get": {
+        "description": "The catalog's branding, identity and headline counts, for the SPA.",
+        "operationId": "context",
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Context"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/search": {
+      "get": {
+        "description": "Search the catalog's registers, variables, classifications and codes in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` (a FQID or a bare name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back as `cursor` for the next page.",
+        "operationId": "search",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "register",
+                "variable",
+                "classification",
+                "classification_code",
+                "register_value"
+              ]
+            }
+          },
+          {
+            "name": "register",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SearchPage"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Context": {
+        "type": "object",
+        "description": "`shape.Context`: branding, artifact identity and headline counts for the SPA.",
+        "required": [
+          "steward",
+          "schema_version",
+          "import_date",
+          "reg_meta_version",
+          "sizes"
+        ],
+        "properties": {
+          "import_date": {
+            "type": "string"
+          },
+          "period_span": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PeriodSpan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reg_meta_version": {
+            "type": "string"
+          },
+          "schema_version": {
+            "type": "string"
+          },
+          "sizes": {
+            "$ref": "#/components/schemas/Sizes"
+          },
+          "steward": {
+            "$ref": "#/components/schemas/Steward"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
+        "required": [
+          "code",
+          "class",
+          "message",
+          "remediation",
+          "fields"
+        ],
+        "properties": {
+          "class": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "object"
+          },
+          "message": {
+            "type": "string"
+          },
+          "remediation": {
+            "type": "string"
+          }
+        }
+      },
+      "GroupMember": {
+        "type": "object",
+        "required": [
+          "fqid"
+        ],
+        "properties": {
+          "delivery_column": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "Meta": {
+        "type": "object",
+        "description": "The response `meta` (`shape.Meta`).",
+        "required": [
+          "contract_version",
+          "generation",
+          "scope"
+        ],
+        "properties": {
+          "contract_version": {
+            "type": "string"
+          },
+          "generation": {
+            "type": "string"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/Scope"
+          }
+        }
+      },
+      "PeriodSpan": {
+        "type": "object",
+        "description": "The first and last year of the steward's held periods.",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "to": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Scope": {
+        "type": "string",
+        "description": "The read scope (section 7); every read takes it.",
+        "enum": [
+          "holdings",
+          "reference"
+        ]
+      },
+      "SearchHit": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "delivery_column_names",
+              "type"
+            ],
+            "properties": {
+              "definition": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "delivery_column_names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "fqid": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "operational_definition": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "register_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "variable"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "key",
+              "label",
+              "matched_count",
+              "members",
+              "type"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "matched_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "members": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GroupMember"
+                }
+              },
+              "register_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "group"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "`shape.SearchHit`, of the types the variable arm returns."
+      },
+      "SearchPage": {
+        "type": "object",
+        "description": "`Page<SearchHit>`.",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchHit"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "Sizes": {
+        "type": "object",
+        "description": "Browse-addressable (slugged) providers, registers and variables in the scope.",
+        "required": [
+          "providers",
+          "registers",
+          "variables"
+        ],
+        "properties": {
+          "providers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "registers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "variables": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Steward": {
+        "type": "object",
+        "description": "Deployment branding, `reg_webapp/stewards/<catalog>/steward.json`.",
+        "required": [
+          "id",
+          "name",
+          "long_name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "long_name": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

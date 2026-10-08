@@ -114,9 +114,9 @@ export function catalogRootChildren(): Read<RootResponse["children"]> {
  * a source card's title with its provider. The threshold lives here, read once at
  * the app's root and threaded down like `steward`.
  *
- * Counted off the catalog ROOT, not `/api/stats.providers`, because the shell's
+ * Counted off the catalog ROOT, not `context.sizes.providers`, because the shell's
  * rail already pays for that read — this is the canonical answer for "does a
- * register name need its provider", and `/api/stats` remains the deployment's own
+ * register name need its provider", and `context.sizes` remains the deployment's own
  * headline count on `/`. */
 export function providerQualified(): boolean {
   return providersOf(catalogRootChildren()).length > 1;

@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 from reg_meta.catalog import (
     BindingGroupRef,
     CatalogStorageId,
@@ -48,70 +48,6 @@ from reg_meta.search import (
 )
 
 from reg_meta import ClassificationDerivedFromRef  # noqa: TC001
-
-
-class CatalogPeriodSpan(BaseModel):
-    """Best-effort inclusive year span for a steward's catalog holdings."""
-
-    model_config = ConfigDict(populate_by_name=True)
-
-    from_: int = Field(alias="from")
-    to: int
-
-
-class StewardInfo(BaseModel):
-    """Deployment identity + branding, from ``steward.json``."""
-
-    id: str
-    name: str
-    long_name: str
-    catalog_period_span: CatalogPeriodSpan | None = Field(
-        default=None,
-        description=(
-            "Compiled physical-period year span for UI slider bounds; "
-            "null for catalog artifacts or holdings with no dated periods."
-        ),
-    )
-
-
-class RegMetaInfo(BaseModel):
-    """reg_meta build provenance, read from the DB ``import_manifest``."""
-
-    schema_version: str = Field(
-        description="Schema version of the reg_meta DB build (e.g. '5.2.0')."
-    )
-    import_date: str = Field(
-        description="UTC timestamp the reg_meta DB was built/imported."
-    )
-    catalog_artifact_kind: Literal["catalog", "steward"]
-    steward: str | None
-    generation_id: str
-    default_scope: Literal["holdings", "reference"]
-
-
-class WebappInfo(BaseModel):
-    """Package versions for the deployed backend + its reg_meta dependency."""
-
-    version: str = Field(description="Installed reg_webapp package version.")
-    reg_meta_version: str = Field(
-        description=(
-            "Installed reg_meta package version — distinct from "
-            "reg_meta.schema_version, which is the DB build."
-        )
-    )
-
-
-class ContextResponse(BaseModel):
-    """``GET /api/context`` — deployment identity, branding, build info.
-
-    Identity is read from the admitted artifact; branding remains deployment config.
-    The optional physical-period bound is only a UI hint.
-    """
-
-    steward: StewardInfo
-    reg_meta: RegMetaInfo
-    webapp: WebappInfo
-
 
 # ── Catalog browse (see DESIGN.md → Catalog router structure) ───────────────
 # The NODE / envelope models below carry the `kind` discriminator and any

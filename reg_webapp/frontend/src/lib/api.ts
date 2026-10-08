@@ -4,23 +4,28 @@
  * backend — no domain coupling).
  *
  * Every response type is the codegen'd `components["schemas"][...]` from
- * `./api-types` (generated from the backend's committed `openapi.json`), so the
- * client carries the exact API contract with no hand-maintained mirror.
+ * `./api-types` (generated from the backend's committed `openapi.json`) or, for
+ * the routes the Rust server answers, from `./api-types-rust` (generated from
+ * `crates/reg-meta/openapi.json`), so the client carries the exact API contract
+ * with no hand-maintained mirror.
  */
 import type { components } from "./api-types";
+import type { components as RustComponents } from "./api-types-rust";
 import { queryFromParams, type ResolutionParams } from "./period";
 
 type Schemas = components["schemas"];
+type RustSchemas = RustComponents["schemas"];
 
 /** The `/api` base. Same-origin in production (Cloudflare fronts both the SPA
- * and the API); the Vite dev server proxies `/api` to the backend on :8000. */
+ * and the API); the Vite dev server proxies `/api/context` to the Rust server
+ * and the rest of `/api` to the FastAPI backend. */
 const API_BASE = "/api";
 
 /**
  * A non-2xx response, thrown by the GET helpers. `status` is the HTTP status;
- * `body` is the parsed JSON error body when present (the backend returns
- * `{detail: ...}` on 4xx from FastAPI's `HTTPException`, and the validation
- * issue shapes elsewhere) or `null` when the body wasn't JSON; `message` is a human-readable
+ * `body` is the parsed JSON error body when present (the Rust server's
+ * `{error, meta}`, FastAPI's `{detail: ...}` from `HTTPException`, and the
+ * validation issue shapes elsewhere) or `null` when the body wasn't JSON; `message` is a human-readable
  * summary suitable for an error banner.
  */
 export class ApiError extends Error {
@@ -35,10 +40,17 @@ export class ApiError extends Error {
   }
 }
 
-/** Pull a human-readable message out of a parsed error body. FastAPI's 4xx
- * `HTTPException` serializes as `{detail: string}`; `detail` can also be a list
- * of validation errors (422). Falls back to the status line. */
+/** Pull a human-readable message out of a parsed error body. The Rust server's
+ * error document is `{error: {message, ...}, meta}`; FastAPI's 4xx
+ * `HTTPException` serializes as `{detail: string}`, and `detail` can also be a
+ * list of validation errors (422). Falls back to the status line. */
 function messageFromBody(status: number, body: unknown): string {
+  if (body && typeof body === "object" && "error" in body) {
+    const error = (body as { error: unknown }).error;
+    if (error && typeof error === "object" && "message" in error) {
+      return String((error as { message: unknown }).message);
+    }
+  }
   if (body && typeof body === "object" && "detail" in body) {
     const detail = (body as { detail: unknown }).detail;
     if (typeof detail === "string") {
@@ -195,14 +207,14 @@ export function triggerDownload(blob: Blob, filename: string): void {
 // passes `?period`, so the `StatesResponse` arm (no `kind`) is out of scope here
 // — callers narrow on `kind` (see `lib/catalog.ts`).
 
-export type Context = Schemas["ContextResponse"];
+/** The Rust server's `context`: branding, artifact identity and headline counts. */
+export type Context = RustSchemas["Context"];
 /** Deployment identity + branding (`id` / `name` / `long_name`) — the `steward`
  * block of `/api/context`, threaded into the Home landing page (#675). */
-export type StewardInfo = Schemas["StewardInfo"];
-/** The headline catalog-size counts (#675) the landing page renders —
- * slug-aware (matching the browse listings) for `global`, and filtered through
- * the steward catalog index when the deployment has one (#726). */
-export type CatalogStats = Schemas["CatalogSizes"];
+export type Steward = RustSchemas["Steward"];
+/** The headline catalog-size counts (#675) the landing page renders — slugged
+ * (browse-addressable) providers, registers and variables in the read scope. */
+export type CatalogSizes = RustSchemas["Sizes"];
 export type RootResponse = Schemas["RootResponse"];
 export type VariantsResponse = Schemas["VariantsResponse"];
 
@@ -381,15 +393,9 @@ export function classificationGroupPath(key: string): string {
   return `/catalog/group/class/${encodeURIComponent(key)}`;
 }
 
-export function getContext(): Promise<Context> {
-  return apiGet<Context>("/context");
-}
-
-/** The landing-page catalog counts (#675) — providers / registers / variables.
- * A small GET read; the Home page fetches it with `asyncResource` so the page
- * renders before the counts arrive. */
-export function getStats(): Promise<CatalogStats> {
-  return apiGet<CatalogStats>("/stats");
+/** The Rust server answers with `{data, meta}`; the SPA reads `data`. */
+export async function getContext(): Promise<Context> {
+  return (await apiGet<{ data: Context }>("/context")).data;
 }
 
 export function getCatalogRoot(): Promise<RootResponse> {

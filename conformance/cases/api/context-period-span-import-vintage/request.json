@@ -1,0 +1,9 @@
+{
+  "fixture": "period-bounds",
+  "artifacts": {
+    "built-2018": {"identity": {"import_date": "2018-12-31T00:00:00Z"}}
+  },
+  "requests": [
+    {"operation": "context", "path": "/api/context", "artifact": "built-2018"}
+  ]
+}

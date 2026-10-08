@@ -392,23 +392,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/context": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Context */
-        get: operations["get_context_api_context_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/docs/doc/{identifier}": {
         parameters: {
             query?: never;
@@ -636,26 +619,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/stats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get Stats
-         * @description Headline counts after the shared SQL scope predicate.
-         */
-        get: operations["get_stats_api_stats_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/value-sets/{value_set_id}/codes": {
         parameters: {
             query?: never;
@@ -874,29 +837,6 @@ export interface components {
              * @default []
              */
             warnings: components["schemas"]["DataWarning"][];
-        };
-        /**
-         * CatalogPeriodSpan
-         * @description Best-effort inclusive year span for a steward's catalog holdings.
-         */
-        CatalogPeriodSpan: {
-            /** From */
-            from: number;
-            /** To */
-            to: number;
-        };
-        /**
-         * CatalogSizes
-         * @description Headline catalog-size counts — browse-addressable (slugged)
-         *     providers/registers/variables; the grain the catalog listings render.
-         */
-        CatalogSizes: {
-            /** Providers */
-            providers: number;
-            /** Registers */
-            registers: number;
-            /** Variables */
-            variables: number;
         };
         /**
          * ClassificationCode
@@ -1628,18 +1568,6 @@ export interface components {
              * @default []
              */
             tags: components["schemas"]["TagMembership"][];
-        };
-        /**
-         * ContextResponse
-         * @description ``GET /api/context`` — deployment identity, branding, build info.
-         *
-         *     Identity is read from the admitted artifact; branding remains deployment config.
-         *     The optional physical-period bound is only a UI hint.
-         */
-        ContextResponse: {
-            reg_meta: components["schemas"]["RegMetaInfo"];
-            steward: components["schemas"]["StewardInfo"];
-            webapp: components["schemas"]["WebappInfo"];
         };
         /**
          * DataWarning
@@ -2394,36 +2322,6 @@ export interface components {
             name?: string | null;
         };
         /**
-         * RegMetaInfo
-         * @description reg_meta build provenance, read from the DB ``import_manifest``.
-         */
-        RegMetaInfo: {
-            /**
-             * Catalog Artifact Kind
-             * @enum {string}
-             */
-            catalog_artifact_kind: "catalog" | "steward";
-            /**
-             * Default Scope
-             * @enum {string}
-             */
-            default_scope: "holdings" | "reference";
-            /** Generation Id */
-            generation_id: string;
-            /**
-             * Import Date
-             * @description UTC timestamp the reg_meta DB was built/imported.
-             */
-            import_date: string;
-            /**
-             * Schema Version
-             * @description Schema version of the reg_meta DB build (e.g. '5.2.0').
-             */
-            schema_version: string;
-            /** Steward */
-            steward: string | null;
-        };
-        /**
          * RegisterCoverage
          * @description Coverage aggregate for one register (#351): `variable_count` is its
          *     slugged (browsable) variables; the span is over ALL their states.
@@ -2802,20 +2700,6 @@ export interface components {
             binding: string;
             /** States */
             states: components["schemas"]["VariableState"][];
-        };
-        /**
-         * StewardInfo
-         * @description Deployment identity + branding, from ``steward.json``.
-         */
-        StewardInfo: {
-            /** @description Compiled physical-period year span for UI slider bounds; null for catalog artifacts or holdings with no dated periods. */
-            catalog_period_span?: components["schemas"]["CatalogPeriodSpan"] | null;
-            /** Id */
-            id: string;
-            /** Long Name */
-            long_name: string;
-            /** Name */
-            name: string;
         };
         /**
          * StudyWindow
@@ -3433,22 +3317,6 @@ export interface components {
             /** Variants */
             variants: components["schemas"]["VariantSummary"][];
         };
-        /**
-         * WebappInfo
-         * @description Package versions for the deployed backend + its reg_meta dependency.
-         */
-        WebappInfo: {
-            /**
-             * Reg Meta Version
-             * @description Installed reg_meta package version — distinct from reg_meta.schema_version, which is the DB build.
-             */
-            reg_meta_version: string;
-            /**
-             * Version
-             * @description Installed reg_webapp package version.
-             */
-            version: string;
-        };
     };
     responses: never;
     parameters: never;
@@ -3964,26 +3832,6 @@ export interface operations {
             };
         };
     };
-    get_context_api_context_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ContextResponse"];
-                };
-            };
-        };
-    };
     get_doc_api_docs_doc__identifier__get: {
         parameters: {
             query?: never;
@@ -4224,37 +4072,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResponse"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_stats_api_stats_get: {
-        parameters: {
-            query?: {
-                scope?: ("holdings" | "reference") | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CatalogSizes"];
                 };
             };
             /** @description Validation Error */

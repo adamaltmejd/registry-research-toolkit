@@ -1,7 +1,7 @@
 """Response-body validators bound to package, steward, generation and read scope.
 
-The existing cache policies remain: context revalidates, catalog/search/stats
-have a 60-second window, and document reads have a 24-hour window. The full
+Catalog and search reads have a 60-second window and document reads a 24-hour
+window. The full
 compiled generation invalidates the keyspace even when a route body is unchanged.
 Conditional reads still execute the route before hashing its serialized bytes.
 """
@@ -12,13 +12,7 @@ import hashlib
 
 CACHE_CONTROL = "public, max-age=86400, must-revalidate"
 
-# Always-revalidate policy for deployment-identity reads: the browser must
-# revalidate every request. The existing body-derived ETag avoids retransmitting
-# an unchanged response but still executes the route; a deploy returns a fresh 200.
-CACHE_CONTROL_REVALIDATE = "no-cache"
-
-# Short window for fold-bearing reads (catalog + search) and steward-dependent
-# stats. A fresh fold or steward catalog edit must surface promptly for a
+# Short window for fold-bearing reads (catalog + search). A fresh fold or steward catalog edit must surface promptly for a
 # returning user whose browser holds the unversioned cached copy. The body-hash
 # ETag already changes when the body changes, but the 24h `CACHE_CONTROL` window
 # lets the browser serve its stale copy for a day WITHOUT revalidating. 60s
@@ -28,10 +22,6 @@ CACHE_CONTROL_REVALIDATE = "no-cache"
 # and the #220 probe survive, which `no-cache` would break.
 CACHE_CONTROL_SHORT = "public, max-age=60, must-revalidate"
 
-# Exact API paths that must revalidate every request because they visibly assert
-# a version/date (a stale copy lies). Currently only the vintage-footer source.
-REVALIDATE_ALWAYS_PATHS = frozenset({"/api/context"})
-
 # API path prefixes that get the short fold-bearing window. PREFIX (not exact)
 # match. The catalog read surface is `/api/catalog`, `/api/catalog/{...}/variants`,
 # the `{fqid:path}` suffixed sub-endpoints (states/predecessors/successors
@@ -39,14 +29,11 @@ REVALIDATE_ALWAYS_PATHS = frozenset({"/api/context"})
 # catch-all — all share the `/api/catalog` prefix. `/api/search` is the
 # variable/code search route (routes/search.py); it embeds the same #322
 # concept-group folds, so it shares the staleness gap and the short window (#506).
-# `/api/stats` uses the compiled holdings artifact for filtered
-# deployments (#726), so a same-id steward catalog redeploy needs a prompt
-# revalidation opportunity too.
 # The doc-library search lives at `/api/docs/search` (under the `/api/docs` prefix)
 # and is rebuild-stable, so it correctly stays on the 24h tier: it does NOT start
 # with any short-cache prefix here (`/api/docs/search`.startswith(`/api/search`)
 # is False).
-SHORT_CACHE_PATH_PREFIXES = ("/api/catalog", "/api/search", "/api/stats")
+SHORT_CACHE_PATH_PREFIXES = ("/api/catalog", "/api/search")
 
 # 16 hex chars of the body sha256 — enough to make per-URL ETags
 # collision-safe in practice while keeping the header short.
@@ -56,23 +43,13 @@ _HASH_PREFIX_LEN = 16
 def cache_control_for(path: str) -> str:
     """The ``Cache-Control`` policy for a read endpoint by its API path.
 
-    Three tiers, checked in order:
+    Two tiers:
 
-    - ``REVALIDATE_ALWAYS_PATHS`` (exact match, currently ``/api/context``) →
-      ``CACHE_CONTROL_REVALIDATE`` (``no-cache``): revalidate every request, they
-      assert a deploy version/date.
     - ``SHORT_CACHE_PATH_PREFIXES`` (prefix match, the fold- or steward-dependent
-      ``/api/catalog/*``, ``/api/search``, and ``/api/stats`` reads) →
-      ``CACHE_CONTROL_SHORT`` (60s): curated folds and steward catalog edits must
-      surface promptly.
+      ``/api/catalog/*`` and ``/api/search`` reads) → ``CACHE_CONTROL_SHORT``
+      (60s): curated folds and steward catalog edits must surface promptly.
     - everything else (the rebuild-stable ``/api/docs/*`` reads) → the 24h
-      ``CACHE_CONTROL``.
-
-    Exact-match is checked first so ``/api/context`` can never be shadowed by a
-    prefix; no catalog path is in ``REVALIDATE_ALWAYS_PATHS`` today, but the order
-    keeps the intent explicit."""
-    if path in REVALIDATE_ALWAYS_PATHS:
-        return CACHE_CONTROL_REVALIDATE
+      ``CACHE_CONTROL``."""
     if path.startswith(SHORT_CACHE_PATH_PREFIXES):
         return CACHE_CONTROL_SHORT
     return CACHE_CONTROL
