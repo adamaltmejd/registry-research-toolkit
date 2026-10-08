@@ -1,0 +1,10 @@
+{
+  "replaces": "test_entity_key_pins.py::TestCli::test_without_slug_dir_is_usage_error",
+  "fails_if": "entity-key-pins defaults to the repo's global curation dir when --slug-dir is missing, scoping pins to the global registers",
+  "argv": [
+    "--db",
+    "{work}/no-db",
+    "entity-key-pins"
+  ],
+  "note": "The guard fires before the database opens, so `--db` names no database: a missing guard surfaces a different error."
+}

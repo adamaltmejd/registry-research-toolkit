@@ -1,0 +1,9 @@
+{
+  "count": 1,
+  "counts": {
+    "$exact": {
+      "scb": 1
+    }
+  },
+  "output_toml": "{work}/pins.toml"
+}

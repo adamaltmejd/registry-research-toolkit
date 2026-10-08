@@ -1,0 +1,15 @@
+{
+  "replaces": "test_entity_key_pins.py::TestGenerator::test_overwrite_guard_refuses_without_force[force]",
+  "fails_if": "--force stops replacing an existing pin file, so a refused run cannot be repeated deliberately",
+  "note": "From the artifact curation: variant 1.10 carries the composite key [value, kon] (variables 1.101 and 1.102); variant 4.40 carries `lopnr`, the slug of partition member 4.7.lopnrny (its native id names its column, not its slug); variant 3.30 carries `komvux`, but the steward dir names only registers 1 and 4.",
+  "argv": [
+    "--db",
+    "{db}",
+    "entity-key-pins",
+    "--slug-dir",
+    "{work}/slugs",
+    "--out-dir",
+    "{work}/pins",
+    "--force"
+  ]
+}

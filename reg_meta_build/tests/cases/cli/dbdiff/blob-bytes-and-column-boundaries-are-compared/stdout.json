@@ -1,0 +1,53 @@
+{
+  "identical": false,
+  "tables": [
+    {
+      "table": "pair",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "x": "a",
+            "y": "b\u0003"
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "x": "a\u0003b",
+            "y": ""
+          }
+        }
+      ]
+    },
+    {
+      "table": "widget",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "id": 1,
+            "payload": {
+              "blob": "<blob 3B 0x000102>"
+            }
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "id": 1,
+            "payload": {
+              "blob": "<blob 3B 0x000103>"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

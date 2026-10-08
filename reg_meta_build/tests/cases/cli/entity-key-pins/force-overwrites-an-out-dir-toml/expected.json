@@ -1,0 +1,23 @@
+{
+  "exit_code": 0,
+  "files": {
+    "pins/scb.toml": {
+      "toml": {
+        "variable": {
+          "1.101": {
+            "slug": "value"
+          },
+          "1.102": {
+            "slug": "kon"
+          },
+          "4.7.lopnrny": {
+            "slug": "lopnr"
+          }
+        }
+      },
+      "excludes": [
+        "# pre-existing"
+      ]
+    }
+  }
+}

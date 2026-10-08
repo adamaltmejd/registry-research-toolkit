@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "test_dbdiff.py::TestSchemaDiffs::test_inline_unique_column_change_caught",
+    "test_dbdiff.py::TestSchemaDiffs::test_whitespace_run_ddl_change_ignored",
+    "test_dbdiff.py::TestFtsAndStorageClass::test_fts_option_change_caught"
+  ],
+  "fails_if": "tables are compared by PRAGMA table_info alone, so the UNIQUE constraint moving from a to b and doc_fts's tokenizer changing from unicode61 to porter (neither touches a column) pass; or CREATE statements are compared without collapsing whitespace runs, so the reindented t_spacing joins the column diffs",
+  "note": "`column_diffs` lists every table whose definition differs, so t_spacing's absence from it is the whitespace claim.",
+  "argv": [
+    "--json",
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

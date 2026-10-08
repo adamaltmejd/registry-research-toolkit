@@ -1,0 +1,15 @@
+{
+  "replaces": [
+    "test_entity_key_pins.py::TestCli::test_checkout_global_slug_root_is_usage_error",
+    "test_entity_key_pins.py::TestCli::test_slug_dir_nesting_a_directory_is_global_root"
+  ],
+  "fails_if": "entity-key-pins accepts a slug dir that nests a directory (the global curation root, here the artifact's `curation/` with its `registers/` tree), scoping pins to the global registers",
+  "argv": [
+    "--db",
+    "{work}/no-db",
+    "entity-key-pins",
+    "--slug-dir",
+    "{work}/curation"
+  ],
+  "note": "The guard fires before the database opens, so `--db` names no database: a missing guard surfaces a different error."
+}

@@ -1,0 +1,20 @@
+{
+  "exit_code": 0,
+  "files": {
+    "accepts.toml": {
+      "contains": [
+        "key = \"morsak\"",
+        "variable = \"dodsorsak1\""
+      ]
+    },
+    "silent.toml": {
+      "contains": [
+        "variable = \"dodsorsak2\""
+      ],
+      "excludes": [
+        "key = \"morsak\"",
+        "variable = \"dodsorsak1\""
+      ]
+    }
+  }
+}

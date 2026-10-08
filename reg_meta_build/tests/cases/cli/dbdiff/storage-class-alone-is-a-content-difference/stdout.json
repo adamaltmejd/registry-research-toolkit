@@ -1,0 +1,138 @@
+{
+  "identical": false,
+  "tables": [
+    {
+      "table": "blob_null",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": {
+              "blob": "<blob 1B 0x31>"
+            }
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": null
+          }
+        }
+      ]
+    },
+    {
+      "table": "int_blob",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": 1
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": {
+              "blob": "<blob 1B 0x31>"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": "int_null",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": 1
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": null
+          }
+        }
+      ]
+    },
+    {
+      "table": "int_real",
+      "identical": false,
+      "note": "fingerprint differs but value-level diff is empty; likely a storage-class/type difference",
+      "sample_a_not_b": [],
+      "sample_b_not_a": []
+    },
+    {
+      "table": "int_text",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": 1
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": "1"
+          }
+        }
+      ]
+    },
+    {
+      "table": "text_blob",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": "1"
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": {
+              "blob": "<blob 1B 0x31>"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "table": "text_null",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "v": "1"
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "v": null
+          }
+        }
+      ]
+    }
+  ]
+}
