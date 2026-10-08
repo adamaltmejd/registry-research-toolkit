@@ -22,5 +22,14 @@
       ],
       "/data/items/0/matched_count": 1
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/key": [
+        "value-family"
+      ],
+      "/data/items/0/matched_count": 2
+    }
   }
 ]

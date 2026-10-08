@@ -28,6 +28,16 @@
         "type": "variable",
         "period": "2012"
       }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "register": "scb/example",
+        "period": "2019"
+      }
     }
   ]
 }
