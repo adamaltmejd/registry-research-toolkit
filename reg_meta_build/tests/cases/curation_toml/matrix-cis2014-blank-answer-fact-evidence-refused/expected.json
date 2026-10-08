@@ -1,0 +1,26 @@
+{
+  "loader": "matrix_evidence",
+  "args": {
+    "source_mode": "documented_blank",
+    "expected_selector": {
+      "register": "scb/innovation-foretag",
+      "register_id": 257,
+      "variant": "_default",
+      "register_variant_id": 553,
+      "edition": "2012 - 2014",
+      "regver_id": 7293,
+      "var_id": 15662,
+      "cvid": 400684
+    }
+  },
+  "replaces": [
+    "test_scb_adapter.py::TestCis2014MatrixProjection::test_answer_facts_are_required_and_strict[4]",
+    "test_scb_adapter.py::TestCis2014MatrixProjection::test_answer_facts_are_required_and_strict[5]"
+  ],
+  "fails_if": "load_matrix accepts blank evidence for a reviewed answer fact",
+  "note": "Whitespace-only is the hardest blank evidence; an empty flag_evidence runs the same non-empty rule.",
+  "error": {
+    "code": "matrix_evidence_invalid",
+    "locator": "answer_facts.data_type_evidence"
+  }
+}

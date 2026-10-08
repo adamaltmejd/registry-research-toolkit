@@ -1,0 +1,44 @@
+{
+  "loader": "matrix_evidence",
+  "args": {
+    "source_mode": "documented_blank",
+    "expected_selector": {
+      "register": "scb/innovation-foretag",
+      "register_id": 257,
+      "variant": "_default",
+      "register_variant_id": 553,
+      "edition": "2012 - 2014",
+      "regver_id": 7293,
+      "var_id": 15662,
+      "cvid": 400684
+    }
+  },
+  "replaces": [
+    "test_scb_adapter.py::TestCis2014MatrixProjection::test_answer_facts_are_required_and_strict",
+    "test_scb_adapter.py::TestCis2014MatrixProjection::test_invalid_mode_selector_and_answer_coordinates_fail_config"
+  ],
+  "fails_if": "load_matrix refuses a complete documented_blank matrix or drops or rewrites its reviewed answer_facts disclosure flags",
+  "note": "The allowed twin of every CIS2014 refusal: each refusal case is this payload with one defect. The reviewed answer facts carry both disclosure flags as false.",
+  "loads": {
+    "source_mode": "documented_blank",
+    "answer_facts": {
+      "data_type": "decimal",
+      "is_identifier": false,
+      "is_sensitive": false
+    },
+    "answers": [
+      {
+        "key": "group-enterprises-sweden",
+        "columns": [
+          "CO11"
+        ]
+      },
+      {
+        "key": "group-enterprises-other-europe",
+        "columns": [
+          "CO12"
+        ]
+      }
+    ]
+  }
+}

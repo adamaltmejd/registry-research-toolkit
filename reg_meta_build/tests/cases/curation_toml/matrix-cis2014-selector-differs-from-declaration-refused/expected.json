@@ -1,0 +1,26 @@
+{
+  "loader": "matrix_evidence",
+  "args": {
+    "source_mode": "documented_blank",
+    "expected_selector": {
+      "register": "scb/innovation-foretag",
+      "register_id": 257,
+      "variant": "_default",
+      "register_variant_id": 553,
+      "edition": "2012 - 2014",
+      "regver_id": 7293,
+      "var_id": 15662,
+      "cvid": 400684
+    }
+  },
+  "replaces": "test_scb_adapter.py::TestCis2014MatrixProjection::test_invalid_mode_selector_and_answer_coordinates_fail_config[1]",
+  "fails_if": "load_matrix accepts matrix evidence whose selector differs from the declaration that activates it",
+  "note": "The file's selector names another CVID than the checked declaration.",
+  "error": {
+    "code": "matrix_evidence_unknown_selector",
+    "locator": "cvid=400685",
+    "message_contains": [
+      "differs from the checked declaration"
+    ]
+  }
+}
