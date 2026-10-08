@@ -1,0 +1,18 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": ["locator"],
+      "rows": [
+        ["curation/registers/scb/unit.toml#/representation.delivery_metadata/1"],
+        ["curation/registers/scb/missing.toml#/representation.delivery_metadata/1"],
+        ["curation/registers/scb/new.toml#/representation.delivery_metadata/1"],
+        ["curation/registers/scb/partial.toml#/representation.delivery_metadata/1"],
+        ["curation/registers/scb/window.toml#/representation.delivery_metadata/1"]
+      ]
+    }
+  ]
+}
