@@ -1,0 +1,22 @@
+{
+  "loader": "slug_dir",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_reserved_http_suffix_slug_allowed_for_register_variant",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_default_slug_allowed_for_variant"
+  ],
+  "fails_if": "the slug loader applies the register/variable reserved-token or _default ban to the register_variant slot",
+  "note": "A variant slug rides a ?variant= query value, never a path segment, so the HTTP-suffix reservation does not apply, and only the variant slot takes the synthetic _default slug.",
+  "loads": [
+    {},
+    {
+      "kind": "register_variant",
+      "source_id": "34.0",
+      "slug": "_default"
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.1",
+      "slug": "states"
+    }
+  ]
+}

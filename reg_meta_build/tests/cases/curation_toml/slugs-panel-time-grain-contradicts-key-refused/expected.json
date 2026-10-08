@@ -1,0 +1,17 @@
+{
+  "loader": "slug_dir",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_mismatch_rejected[0]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_mismatch_rejected[1]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_mismatch_rejected[2]"
+  ],
+  "fails_if": "the slug loader stops checking that panel_time_grain agrees with panel_time_key (\"period\" pairs with delivery, a slug or composite key with row)",
+  "note": "A composite key is a per-row coordinate, so \"delivery\" contradicts it; the other two forms (\"period\" with \"row\", a bare slug with \"delivery\") run the same agreement check.",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variant]] entry 2",
+    "message_contains": [
+      "expected 'row'"
+    ]
+  }
+}

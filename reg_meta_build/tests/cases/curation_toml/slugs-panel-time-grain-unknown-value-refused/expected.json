@@ -1,0 +1,13 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_invalid_panel_time_grain_rejected",
+  "fails_if": "the slug loader accepts a panel_time_grain other than \"delivery\" or \"row\"",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variant]] entry 2",
+    "message_contains": [
+      "panel_time_grain",
+      "yearly"
+    ]
+  }
+}

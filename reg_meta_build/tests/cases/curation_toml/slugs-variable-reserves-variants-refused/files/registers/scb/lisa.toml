@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[variable]]
+native_id = "34.3"
+slug = "alder"
+
+[[variable]]
+native_id = "34.4"
+slug = "variants"

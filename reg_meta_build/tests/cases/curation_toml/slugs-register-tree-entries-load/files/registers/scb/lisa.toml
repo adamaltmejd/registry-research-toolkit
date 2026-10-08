@@ -1,0 +1,34 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[variant]]
+native_id = "34.151"
+slug = "individer-15plus"
+display_group = "Individer  "
+panel_entity_key = "personnummer"
+panel_time_key = "period"
+panel_time_grain = "delivery"
+
+[[variant]]
+native_id = "34.152"
+slug = "foretag"
+display_group = "   "
+panel_entity_key = ["foretag", "arbetsstalle"]
+panel_time_key = "manad"
+panel_time_grain = "row"
+
+[[variant]]
+native_id = "34.153"
+slug = "utrikeshandel-tjanster"
+panel_entity_key = "kon"
+panel_time_key = ["ar", "kvartal"]
+
+[[variable]]
+native_id = "34.4"
+slug = "kon"
+
+[[variable]]
+native_id = "34.99"
+deprecated = true

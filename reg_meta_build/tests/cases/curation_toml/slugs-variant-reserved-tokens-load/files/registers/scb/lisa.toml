@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "lisa"
+native_id = "34"
+
+[[variant]]
+native_id = "34.0"
+slug = "_default"
+
+[[variant]]
+native_id = "34.1"
+slug = "states"

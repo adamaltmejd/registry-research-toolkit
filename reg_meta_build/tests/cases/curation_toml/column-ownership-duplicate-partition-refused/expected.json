@@ -1,0 +1,13 @@
+{
+  "loader": "column_ownership",
+  "args": {
+    "provider": "scb",
+    "source_id": "34.4"
+  },
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_duplicate_partition_fails",
+  "fails_if": "declared_column_ownership picks one of two [[identity.partition]] maps for the same family instead of refusing",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml: duplicate [[identity.partition]] for '34.4'"
+  }
+}

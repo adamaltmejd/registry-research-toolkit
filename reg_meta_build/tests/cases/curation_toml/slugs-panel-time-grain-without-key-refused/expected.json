@@ -1,0 +1,12 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_grain_without_key_rejected",
+  "fails_if": "the slug loader accepts a panel_time_grain with no panel_time_key to qualify",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variant]] entry 2",
+    "message_contains": [
+      "without a `panel_time_key`"
+    ]
+  }
+}

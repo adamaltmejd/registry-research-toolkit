@@ -1,0 +1,27 @@
+{
+  "loader": "slug_dir",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_sos_split_retains_only_declared_owner_base_slug[current-True]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_sos_split_retains_only_declared_owner_base_slug[current-False]"
+  ],
+  "fails_if": "the register slug tree stops honouring an [[identity.split]] part owner as authorization to keep the pinned base slug",
+  "note": "The base slug lives in the curating zone's generated pin file, so the pinned-plus-authored merge is the check that runs (the harder of the two base placements).",
+  "loads": [
+    {
+      "kind": "variable",
+      "source_id": "123.EXAMAR",
+      "slug": "examar"
+    },
+    {
+      "kind": "register",
+      "source_id": "123",
+      "slug": "lova",
+      "provider": "sos"
+    },
+    {
+      "kind": "variable",
+      "source_id": "123.EXAMAR.current",
+      "slug": "examar"
+    }
+  ]
+}

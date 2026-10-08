@@ -1,0 +1,13 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_composite_time_key_rejects_period_element",
+  "fails_if": "the slug loader accepts the single-only \"period\" sentinel inside a composite panel_time_key list",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variant]] entry 2",
+    "message_contains": [
+      "period",
+      "single-only"
+    ]
+  }
+}

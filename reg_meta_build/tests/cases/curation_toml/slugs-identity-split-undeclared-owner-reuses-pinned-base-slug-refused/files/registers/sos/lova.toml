@@ -1,0 +1,13 @@
+[register]
+provider = "sos"
+slug = "lova"
+native_id = "123"
+
+[[identity.split]]
+variable = "EXAMAR"
+by = "data_type"
+parts = [{ data_type = "integer", owner = "123.EXAMAR.undeclared" }, { data_type = "text", owner = "123.EXAMAR.highest" }]
+
+[[variable]]
+native_id = "123.EXAMAR.current"
+slug = "examar"

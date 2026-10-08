@@ -1,0 +1,75 @@
+{
+  "loader": "slug_dir",
+  "replaces": [
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_minimal_register",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_with_display_group",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_display_group_whitespace_trimmed",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_with_panel_simple_entity_key",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_with_panel_composite_entity_key",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_with_panel_composite_time_key",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_period_or_slug",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_panel_time_key_period_and_valid_slug_still_accepted",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[0]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[1]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[2]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[3]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[4]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variant_panel_time_key_grain_consistent_accepted[5]",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variable_override",
+    "test_fqid_slugs_provider_toml.py::TestProviderToml::test_variable_without_slug_keeps_metadata"
+  ],
+  "fails_if": "the slug loader stops trimming display_group, mis-stores a composite panel key (not as a list), requires a panel_time_grain beside every panel_time_key, rejects the bare \"period\" sentinel, or requires a slug on a variable entry that only carries deprecation metadata",
+  "note": "One register file carries every entry shape: the register slug, a bare entity key with the \"period\" sentinel and \"delivery\" grain, a composite entity key with a slug time key and \"row\" grain, a composite time key with the grain left unset (the coupling is optional), display_group trimmed and a whitespace-only display_group dropped, a variable override, and a slug-less variable that keeps only deprecation metadata.",
+  "loads": [
+    {
+      "kind": "register",
+      "source_id": "34",
+      "slug": "lisa",
+      "provider": "scb"
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.151",
+      "slug": "individer-15plus",
+      "display_group": "Individer",
+      "panel_entity_key": "personnummer",
+      "panel_time_key": "period",
+      "panel_time_grain": "delivery"
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.152",
+      "slug": "foretag",
+      "display_group": null,
+      "panel_entity_key": [
+        "foretag",
+        "arbetsstalle"
+      ],
+      "panel_time_key": "manad",
+      "panel_time_grain": "row"
+    },
+    {
+      "kind": "register_variant",
+      "source_id": "34.153",
+      "slug": "utrikeshandel-tjanster",
+      "panel_entity_key": "kon",
+      "panel_time_key": [
+        "ar",
+        "kvartal"
+      ],
+      "panel_time_grain": null
+    },
+    {
+      "kind": "variable",
+      "source_id": "34.4",
+      "slug": "kon",
+      "deprecated": false
+    },
+    {
+      "kind": "variable",
+      "source_id": "34.99",
+      "slug": null,
+      "deprecated": true
+    }
+  ]
+}

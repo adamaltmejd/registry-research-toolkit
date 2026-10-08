@@ -1,0 +1,12 @@
+{
+  "loader": "slug_dir",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_split_without_partition_cannot_reuse_base_slug",
+  "fails_if": "the register slug tree lets a split sibling share its base family's slug with no identity declaration authorizing it",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[variable]] entry 2",
+    "message_contains": [
+      "slug 'kon' reused by"
+    ]
+  }
+}

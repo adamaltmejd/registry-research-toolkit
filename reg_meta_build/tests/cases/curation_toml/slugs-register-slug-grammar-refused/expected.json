@@ -1,0 +1,9 @@
+{
+  "loader": "provider_slugs",
+  "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_invalid_slug_grammar",
+  "fails_if": "the slug loader accepts a slug outside the lowercase-kebab grammar",
+  "error": {
+    "code": "slug_toml_invalid",
+    "locator": "register.'34'"
+  }
+}
