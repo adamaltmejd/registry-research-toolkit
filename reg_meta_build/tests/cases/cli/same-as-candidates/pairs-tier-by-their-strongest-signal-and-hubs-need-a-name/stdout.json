@@ -1,0 +1,16 @@
+{
+  "total": 10,
+  "counts_by_tier": {
+    "$exact": {
+      "1": 4,
+      "2": 1,
+      "3": 4,
+      "4": 1
+    }
+  },
+  "max_tier": 4,
+  "min_value_set_codes": 3,
+  "max_signal_fanout": 3,
+  "hub_suppressed": 0,
+  "output_toml": "{work}/cap3.toml"
+}

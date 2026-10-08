@@ -1,0 +1,103 @@
+{
+  "exit_code": 0,
+  "files": {
+    "candidates.toml": {
+      "toml": {
+        "edge": [
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/par/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/pdiag", "b": "scb/ulf/diag", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/pciv", "b": "scb/ulf/civ", "note": "candidate:tier2"},
+          {"type": "same_as", "a": "scb/par/pdiag", "b": "scb/ulf/bidiag", "note": "candidate:tier3"},
+          {"type": "same_as", "a": "scb/par/region", "b": "scb/ulf/munic", "note": "candidate:tier4"}
+        ]
+      },
+      "contains": [
+        "# hub fanout cap: 2 distinct registers",
+        "# hub-suppressed pairs (cap removed, names disagreed): 3"
+      ]
+    },
+    "tier1.toml": {
+      "toml": {
+        "edge": [
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/par/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/pdiag", "b": "scb/ulf/diag", "note": "candidate:tier1"}
+        ]
+      }
+    },
+    "floor4.toml": {
+      "toml": {
+        "edge": [
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/par/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/pdiag", "b": "scb/ulf/diag", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/pciv", "b": "scb/ulf/civ", "note": "candidate:tier2"},
+          {"type": "same_as", "a": "scb/par/pdiag", "b": "scb/ulf/bidiag", "note": "candidate:tier3"}
+        ]
+      },
+      "contains": [
+        "# hub-suppressed pairs (cap removed, names disagreed): 3"
+      ]
+    },
+    "uncapped.toml": {
+      "toml": {
+        "edge": [
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/par/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/pdiag", "b": "scb/ulf/diag", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/pciv", "b": "scb/ulf/civ", "note": "candidate:tier2"},
+          {"type": "same_as", "a": "scb/hub/ha", "b": "scb/par/ha", "note": "candidate:tier3"},
+          {"type": "same_as", "a": "scb/hub/ha", "b": "scb/ulf/ha", "note": "candidate:tier3"},
+          {"type": "same_as", "a": "scb/par/ha", "b": "scb/ulf/ha", "note": "candidate:tier3"},
+          {"type": "same_as", "a": "scb/par/pdiag", "b": "scb/ulf/bidiag", "note": "candidate:tier3"},
+          {"type": "same_as", "a": "scb/par/region", "b": "scb/ulf/munic", "note": "candidate:tier4"}
+        ]
+      },
+      "contains": [
+        "# hub fanout cap: disabled (hub-clique pairs included)",
+        "# hub-suppressed pairs (cap removed, names disagreed): 0"
+      ]
+    },
+    "cap3.toml": {
+      "toml": {
+        "edge": [
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/par/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/hub/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/pdiag", "b": "scb/ulf/diag", "note": "candidate:tier1"},
+          {"type": "same_as", "a": "scb/par/pciv", "b": "scb/ulf/civ", "note": "candidate:tier2"},
+          {"type": "same_as", "a": "scb/hub/ha", "b": "scb/par/ha", "note": "candidate:tier3"},
+          {"type": "same_as", "a": "scb/hub/ha", "b": "scb/ulf/ha", "note": "candidate:tier3"},
+          {"type": "same_as", "a": "scb/par/ha", "b": "scb/ulf/ha", "note": "candidate:tier3"},
+          {"type": "same_as", "a": "scb/par/pdiag", "b": "scb/ulf/bidiag", "note": "candidate:tier3"},
+          {"type": "same_as", "a": "scb/par/region", "b": "scb/ulf/munic", "note": "candidate:tier4"}
+        ]
+      },
+      "contains": [
+        "# hub fanout cap: 3 distinct registers",
+        "# hub-suppressed pairs (cap removed, names disagreed): 0"
+      ]
+    }
+  },
+  "reloads_with": {
+    "loader": "relations",
+    "path": "candidates.toml",
+    "result": {
+      "same_as": [
+        {"a": "scb/hub/hb", "b": "scb/par/hb", "note": "candidate:tier1"},
+        {"a": "scb/hub/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+        {"a": "scb/par/hb", "b": "scb/ulf/hb", "note": "candidate:tier1"},
+        {"a": "scb/par/pdiag", "b": "scb/ulf/diag", "note": "candidate:tier1"},
+        {"a": "scb/par/pciv", "b": "scb/ulf/civ", "note": "candidate:tier2"},
+        {"a": "scb/par/pdiag", "b": "scb/ulf/bidiag", "note": "candidate:tier3"},
+        {"a": "scb/par/region", "b": "scb/ulf/munic", "note": "candidate:tier4"}
+      ],
+      "replaced_by": []
+    }
+  }
+}

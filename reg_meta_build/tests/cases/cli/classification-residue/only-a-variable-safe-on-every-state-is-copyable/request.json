@@ -1,0 +1,26 @@
+{
+  "replaces": [
+    "test_classification_residue.py::TestDumpClassificationResidue::test_multi_family_unclassified_is_residual_with_evidence",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_two_standalone_both_above_floor_is_ambiguous_not_safe",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_single_label_unambiguous_standalone_is_safe",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_standalone_on_chain_is_not_standalone",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_classified_state_excludes_value_set_from_residue",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_single_family_value_set_never_residual",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_partial_residue_one_classified_one_null",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_variable_on_two_safe_value_sets_emits_one_link",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_variable_safe_on_two_value_sets_conflicting_class_is_flagged",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_mixed_state_variable_is_not_copyable_safe_only_variable_is",
+    "test_classification_residue.py::TestDumpClassificationResidue::test_mixed_state_other_state_classified_to_different_class",
+    "test_classification_residue.py::TestClassificationResidueCli::test_cli_emits_summary_and_loadable_worklist"
+  ],
+  "fails_if": "dump_classification_residue lists a value set whose every state is classified, lists a classified state beside the unclassified ones, keeps a single-family value set, or counts a book on a supersedes chain as standalone; or render_residue_toml emits a copyable binding per state instead of per variable, for a variable whose safe value sets name two books, or for a variable with another state that is unclassified on a non-safe value set or classified to a different book (or holds back one whose other state is classified to the same book)",
+  "note": "Read from `_classified` (source.json, curation/classifications/). Residual value sets, by code list: X (9 codes, in FAM_A and FAM_B under the same labels: ambiguous; famvar2's state is bound to FAM_A, so only famvar and mixedvar are listed); S1 (8 codes, in FAM_S under its labels and in FAM_R relabeled: safe, target FAM_S; six unclassified states); S2 (FAM_S and FAM_R: safe; dualvar only, because samevar's S2 state is bound to FAM_S by its version label); T (FAM_T and FAM_R: safe, target FAM_T; conflvar); SNI (SNI2002 and SNI2007, a derived vintage chain: ambiguous, neither standalone). Not residual: XB (in FAM_A and FAM_B, but boundvar is bound to FAM_A) and ONE (one book, FAM_ONE). Every candidate contains every code of its list (containment 1.00); label agreement is 1.00 where the CSV carries the list's own labels and 0.00 for FAM_R. Copyable: dualvar (two safe lists, both FAM_S: one binding), safevar, and samevar (its other state is classified to FAM_S itself). Held back: conflvar (S1 → FAM_S, T → FAM_T), mixedvar (its X state is ambiguous) and diffvar (its 2015 state is bound to FAM_ONE by the label `Ett 2015`). Totals are the old CLI test's relation: total = safe + ambiguous. The old tests' payload-without--o claim is `doc-coverage/a-counts-only-run-carries-the-worklist-in-its-payload` (one shared `_emit_toml`). Value-set and variable ids are minted, so no claim names one.",
+  "artifact": "_classified",
+  "argv": [
+    "--db",
+    "{db}",
+    "classification-residue",
+    "-o",
+    "{work}/residue.toml"
+  ]
+}

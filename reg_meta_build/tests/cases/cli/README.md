@@ -20,6 +20,7 @@ cases/cli/
     source.json                   the source spec the artifact is built from
     curation/                     the curation tree that builds it
     docs/                         the doc library built beside it (`reg_meta_docs.db`)
+  _classified/                    another artifact (`artifact`): source.json and curation/
   <command>/<case>/
     request.json                  the argument list and the replaced test
     *.sql                         optional: the case's own databases (`databases`)
@@ -87,11 +88,25 @@ for a claim no existing row can carry, and check the cases that enumerate the ca
 (pins files, snapshots, file lists).
 
 A claim about one catalog row that the shared artifact cannot carry without changing
-what the other cases read gets its own artifact instead: the case names a directory in
-`artifact_curation`, and the runner builds an artifact from `_artifact/` with that
-directory laid over its curation tree, replacing files of the same path. It is keyed and
-published like the shared one, so cases with the same overlay share it, and the case's
-working directory gets that artifact's curation tree.
+what the other cases read gets its own artifact instead. When the claim needs only
+curation, the case names a directory in `artifact_curation`, and the runner builds an
+artifact from `_artifact/` with that directory laid over its curation tree, replacing
+files of the same path. It is keyed and published like the shared one, so cases with the
+same overlay share it, and the case's working directory gets that artifact's curation
+tree.
+
+When the claim needs source rows the shared artifact does not deliver (code lists,
+classification books, more registers), the case names another artifact directory in
+`artifact`: a directory beside `_artifact/`, its name starting with `_`, with its own
+`source.json` and `curation/` (and optional `docs/`). It is built, keyed and published
+like `_artifact/`, and every case that names it reads one build. An `artifact_curation`
+overlay lays over that directory's curation instead.
+
+`_classified/` is the artifact of the `same-as-candidates` and `classification-residue`
+cases. Its `source.json` description lists what it delivers: three registers (`ulf`,
+`par`, `hub`), a code list on every column, the classification books in `files`, and
+their bindings in `curation/classifications/`. Each case's `note` says which rows carry
+its claims.
 
 ## The working directory
 
@@ -126,6 +141,7 @@ as text.
   | `env`               | Optional environment variables set for the run, such as `{"REG_META_QUIET": "1"}`. The runner unsets `REG_META_QUIET` otherwise.                      |
   | `runs`              | Instead of `argv` and `env`: a list of `{argv, env}` run in order in one working directory. The runner refuses a top-level `argv` or `env` beside it. |
   | `curation_dirs`     | Optional. Where the artifact's curation tree is copied; defaults to `["curation"]`.                                                                   |
+  | `artifact`          | Optional. The artifact directory beside `_artifact/` (for example `_classified`) that the case reads instead (above).                                 |
   | `artifact_curation` | Optional. A directory in the case laid over the artifact's curation tree before the build, for a case that reads its own artifact.                    |
   | `databases`         | Optional. `{path under {work}: SQL file in the case directory}`: the databases built before the run (above).                                          |
 
@@ -160,11 +176,12 @@ A claim other than `absent` needs exactly one file to match.
 `reloads_with` names a `loader`, the `path` under `{work}` it reads, and the `result` it
 must return exactly:
 
-  | Loader                   | Reads                                                       | Returns                                                                                                                    |
-  | ------------------------ | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-  | `slug_dir`               | a slug directory, through `load_slug_dir`                   | `snapshot_payload(...)`: `{kind: {"<provider>/<native id>": slug}}`                                                        |
-  | `relations`              | a relations file, through `load_relations`                  | `{"replaced_by": [{from, to, from_column, to_column, variant, effective_year}]}`, in file order                            |
-  | `concept_group_worklist` | a candidate catalog, through `load_worklist_concept_groups` | `{"<provider>/<register>/<key>": {label, axes, members: [{variable, delivery_column, coords}]}}`, axes and coords as lists |
+  | Loader                   | Reads                                                                                                   | Returns                                                                                                                    |
+  | ------------------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+  | `slug_dir`               | a slug directory, through `load_slug_dir`                                                               | `snapshot_payload(...)`: `{kind: {"<provider>/<native id>": slug}}`                                                        |
+  | `relations`              | a relations file, through `load_relations`                                                              | `{"same_as": [{a, b, note}], "replaced_by": [{from, to, from_column, to_column, variant, effective_year}]}`, in file order |
+  | `classification_binding` | a worklist's `[binding]` table, through `ClassificationBinding` (a classification file's binding model) | `{"variable": [{variable, note}]}`, in file order                                                                          |
+  | `concept_group_worklist` | a candidate catalog, through `load_worklist_concept_groups`                                             | `{"<provider>/<register>/<key>": {label, axes, members: [{variable, delivery_column, coords}]}}`, axes and coords as lists |
 
 ## `stdout.json`
 

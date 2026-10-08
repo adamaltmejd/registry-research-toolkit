@@ -1,0 +1,54 @@
+{
+  "exit_code": 0,
+  "files": {
+    "residue.toml": {
+      "toml": {
+        "binding": {
+          "variable": [
+            {"variable": "scb/ulf/dualvar", "note": "residue:safe"},
+            {"variable": "scb/ulf/safevar", "note": "residue:safe"},
+            {"variable": "scb/ulf/samevar", "note": "residue:safe"}
+          ]
+        }
+      },
+      "contains": [
+        "# 5 residual value set(s); 3 safe-subset (single label-unambiguous standalone).",
+        "n_codes=9, 2 unclassified state(s)",
+        "n_codes=8, 6 unclassified state(s)",
+        "#   candidate FAM_A: containment=1.00, label_agree=1.00, standalone=yes",
+        "#   candidate FAM_B: containment=1.00, label_agree=1.00, standalone=yes",
+        "#   candidate FAM_R: containment=1.00, label_agree=0.00, standalone=yes",
+        "#   candidate FAM_S: containment=1.00, label_agree=1.00, standalone=yes",
+        "#   candidate FAM_T: containment=1.00, label_agree=1.00, standalone=yes",
+        "#   candidate SNI2002: containment=1.00, label_agree=1.00, standalone=no",
+        "#   candidate SNI2007: containment=1.00, label_agree=1.00, standalone=no",
+        "#   state: variable = scb/ulf/famvar (Familjevariabel)",
+        "#   state: variable = scb/ulf/snivar (Näringsgren)",
+        "# -> curation/classifications/FAM_S.toml\n[[binding.variable]]\nvariable = \"scb/ulf/dualvar\"",
+        "# -> curation/classifications/FAM_S.toml\n[[binding.variable]]\nvariable = \"scb/ulf/safevar\"",
+        "# -> curation/classifications/FAM_S.toml\n[[binding.variable]]\nvariable = \"scb/ulf/samevar\"",
+        "# CONFLICT: variable scb/ulf/conflvar (Konfliktvariabel) maps to multiple safe classifications ['FAM_S', 'FAM_T'] across its value sets",
+        "# MIXED-STATE: variable scb/ulf/diffvar (Annan variabel) has a safe value set (target FAM_S)",
+        "# MIXED-STATE: variable scb/ulf/mixedvar (Blandad variabel) has a safe value set (target FAM_S)"
+      ],
+      "excludes": [
+        "famvar2",
+        "boundvar",
+        "onevar",
+        "FAM_ONE",
+        "MIXED-STATE: variable scb/ulf/samevar"
+      ]
+    }
+  },
+  "reloads_with": {
+    "loader": "classification_binding",
+    "path": "residue.toml",
+    "result": {
+      "variable": [
+        {"variable": "scb/ulf/dualvar", "note": "residue:safe"},
+        {"variable": "scb/ulf/safevar", "note": "residue:safe"},
+        {"variable": "scb/ulf/samevar", "note": "residue:safe"}
+      ]
+    }
+  }
+}

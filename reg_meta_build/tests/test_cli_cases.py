@@ -4,8 +4,9 @@ Each case directory is one boundary claim (`cases/cli/README.md`): the argument 
 a maintainer types, the files laid into the working directory first, and the
 oracle: the exit code, a projection of the stdout JSON envelope, stderr, and the
 files the command writes. Every case reads a synthetic artifact built from the
-readable source in `cases/cli/_artifact/` (or from it with the case's curation files
-laid over it), once per test session and read-only.
+readable source in `cases/cli/_artifact/` (or in another artifact directory beside
+it, or with the case's curation files laid over it), once per test session and
+read-only.
 The command runs in-process through its real entry point: `reg_meta_build.cli.run`
 (argv to JSON envelope and exit code) for a `reg-meta-build` subcommand, or the
 program's own `main` for a command directory in `_PROGRAMS`. A command that compares
@@ -31,6 +32,7 @@ from _case_projection import mismatch, unclaimed
 from _pipeline_catalog_support import CatalogFixture
 from reg_meta_build.cli import run
 from reg_meta_build.concept_groups import load_worklist_concept_groups
+from reg_meta_build.curation_tree import ClassificationBinding
 from reg_meta_build.dbdiff import main as dbdiff_main
 from reg_meta_build.doc_db import build_doc_db
 from reg_meta_build.relations import load_relations
@@ -69,33 +71,35 @@ def _tree_bytes(root: Path) -> dict[str, bytes]:
 
 
 class Artifacts:
-    """The artifacts the cases read, each built once from `cases/cli/_artifact/`.
+    """The artifacts the cases read, each built once from `cases/cli/_artifact/` or
+    from the artifact directory beside it that a case names in `artifact`.
 
-    A case that names `artifact_curation` reads its own artifact, built from the
-    shared curation tree with the case's files laid over it; every other case reads
-    the shared one. Each lives in the shared fixture cache's generation beside the
-    prepared inputs (`fixture_generation`), so it is reused across sessions,
-    worktrees and xdist workers and dropped with the generation when a builder
-    source changes. Within it, an entry is keyed by the content hash of the source,
-    the curation it is built from, its docs and this runner (which sets the build
-    options), and published by an atomic rename, so workers share one build and
-    never write a path another worker reads.
+    A case that names `artifact_curation` reads its own artifact, built from that
+    directory's curation tree with the case's files laid over it; every other case
+    reads its directory's artifact as is. Each lives in the shared fixture cache's
+    generation beside the prepared inputs (`fixture_generation`), so it is reused
+    across sessions, worktrees and xdist workers and dropped with the generation
+    when a builder source changes. Within it, an entry is keyed by the content hash
+    of the source, the curation it is built from, its docs and this runner (which
+    sets the build options), and published by an atomic rename, so workers share
+    one build and never write a path another worker reads.
     """
 
     def __init__(self, prepared_cache: PreparedCache) -> None:
         self._prepared_cache = prepared_cache
-        self._built: dict[Path | None, Artifact] = {}
+        self._built: dict[tuple[Path, Path | None], Artifact] = {}
 
-    def get(self, overlay: Path | None) -> Artifact:
-        if overlay not in self._built:
-            self._built[overlay] = self._build(overlay)
-        return self._built[overlay]
+    def get(self, base: Path, overlay: Path | None) -> Artifact:
+        if (base, overlay) not in self._built:
+            self._built[base, overlay] = self._build(base, overlay)
+        return self._built[base, overlay]
 
-    def _build(self, overlay: Path | None) -> Artifact:
-        spec = json.loads((ARTIFACT / "source.json").read_text(encoding="utf-8"))
-        curation = _tree_bytes(ARTIFACT / "curation")
+    def _build(self, base: Path, overlay: Path | None) -> Artifact:
+        spec = json.loads((base / "source.json").read_text(encoding="utf-8"))
+        curation = _tree_bytes(base / "curation")
         if overlay is not None:
             curation.update(_tree_bytes(overlay))
+        docs = base / "docs"
         key = hashlib.sha256(
             json.dumps(
                 [
@@ -103,7 +107,9 @@ class Artifacts:
                     {path: data.hex() for path, data in curation.items()},
                     {
                         path: data.hex()
-                        for path, data in _tree_bytes(ARTIFACT / "docs").items()
+                        for path, data in (
+                            _tree_bytes(docs) if docs.is_dir() else {}
+                        ).items()
                     },
                     Path(__file__).read_bytes().hex(),
                 ],
@@ -122,7 +128,7 @@ class Artifacts:
                     target = staging / "curation" / path
                     target.parent.mkdir(parents=True, exist_ok=True)
                     target.write_bytes(data)
-                (staging / "curation" / "classifications").mkdir()
+                (staging / "curation" / "classifications").mkdir(exist_ok=True)
                 output = staging / "db" / "reg_meta.db"
                 output.parent.mkdir()
                 fixture = CatalogFixture(
@@ -139,7 +145,8 @@ class Artifacts:
                 ):
                     raise RuntimeError(f"the CLI artifact did not build: {result}")
                 shutil.rmtree(staging / "report")
-                build_doc_db(ARTIFACT / "docs", output.parent)
+                if docs.is_dir():
+                    build_doc_db(docs, output.parent)
                 try:
                     staging.rename(entry)
                 except OSError:
@@ -220,6 +227,7 @@ _REQUEST_KEYS = {
     "env",
     "runs",
     "curation_dirs",
+    "artifact",
     "artifact_curation",
     "databases",
 }
@@ -249,6 +257,16 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
     else:
         assert "argv" in request, f"{case.name}: argv or runs is required"
     assert request.keys() <= _REQUEST_KEYS, (case.name, request.keys() - _REQUEST_KEYS)
+    if "artifact" in request:
+        # An artifact directory sits beside `_artifact/`, named with a leading
+        # underscore so the runner never reads it as a command directory.
+        base = CASES / request["artifact"]
+        assert request["artifact"].startswith("_") and "/" not in request["artifact"], (
+            f"{case.name}: artifact names a directory beside _artifact/"
+        )
+        assert (base / "source.json").is_file() and (base / "curation").is_dir(), (
+            f"{case.name}: artifact {request['artifact']} has no source.json or curation/"
+        )
     if "artifact_curation" in request:
         overlay = case / request["artifact_curation"]
         assert overlay.is_dir(), f"{case.name}: artifact_curation names no directory"
@@ -279,8 +297,13 @@ def _check_keys(case: Path, request: dict, expected: dict) -> None:
 
 
 def _relations(path: Path) -> dict[str, Any]:
-    """The `replaced_by` edges `load_relations` reads, in file order."""
+    """The `same_as` and `replaced_by` edges `load_relations` reads, in file order."""
+    relations = load_relations(path)
     return {
+        "same_as": [
+            {"a": edge.a_fqid(), "b": edge.b_fqid(), "note": edge.note}
+            for edge in relations.same_as
+        ],
         "replaced_by": [
             {
                 "from": str(edge.predecessor),
@@ -290,7 +313,21 @@ def _relations(path: Path) -> dict[str, Any]:
                 "variant": edge.variant,
                 "effective_year": edge.effective_year,
             }
-            for edge in load_relations(path).replaced_by
+            for edge in relations.replaced_by
+        ],
+    }
+
+
+def _classification_binding(path: Path) -> dict[str, Any]:
+    """The `[binding]` table of a worklist, read by the classification curation
+    model a `classifications/<short_name>.toml` file's binding loads through."""
+    binding = ClassificationBinding.model_validate(
+        tomllib.loads(path.read_text(encoding="utf-8")).get("binding", {})
+    )
+    return {
+        "variable": [
+            {"variable": bound.variable, "note": bound.note}
+            for bound in binding.variable
         ]
     }
 
@@ -317,6 +354,7 @@ def _concept_group_worklist(path: Path) -> dict[str, Any]:
 _RELOADERS = {
     "slug_dir": lambda root: snapshot_payload(load_slug_dir(root)),
     "relations": _relations,
+    "classification_binding": _classification_binding,
     "concept_group_worklist": _concept_group_worklist,
 }
 
@@ -336,7 +374,10 @@ def test_cli_case(
     _check_keys(case, request, expected)
     runs = request.get("runs", [request])
     overlay = request.get("artifact_curation")
-    cli_artifact = cli_artifacts.get(None if overlay is None else case / overlay)
+    cli_artifact = cli_artifacts.get(
+        CASES / request.get("artifact", ARTIFACT.name),
+        None if overlay is None else case / overlay,
+    )
 
     # Resolved, so `{work}` matches the resolved paths a command prints.
     work = tmp_path.resolve() / "work"
