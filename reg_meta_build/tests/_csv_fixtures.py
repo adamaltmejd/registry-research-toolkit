@@ -1228,6 +1228,36 @@ def write_scb_input(
     return scb_dir
 
 
+def init_fixture_repo(repo: Path, *, name: str, email: str) -> None:
+    """Create a fixture Git repository with its commit identity and line endings.
+
+    The config is appended to `.git/config` directly, the file `git config` would
+    write: three `git config` processes per repository were a measurable share of
+    the suite's CPU.
+    """
+    subprocess.run(["git", "init", "-q", "-b", "main", str(repo)], check=True)
+    with (repo / ".git" / "config").open("a", encoding="utf-8") as config:
+        config.write(
+            f"[user]\n\tname = {name}\n\temail = {email}\n[core]\n\tautocrlf = false\n"
+        )
+
+
+def commit_fixture(repo: Path, message: str, *paths: str) -> str:
+    """Stage ``paths`` (default: everything), commit, and return the new commit."""
+    subprocess.run(
+        ["git", "-C", str(repo), "add", *(("--", *paths) if paths else ("-A",))],
+        check=True,
+    )
+    subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", message], check=True)
+    # The commit just wrote HEAD's loose ref; reading it skips a `git rev-parse`.
+    head = (repo / ".git" / "HEAD").read_text(encoding="utf-8").strip()
+    if not head.startswith("ref: "):
+        return head
+    return (
+        (repo / ".git" / head.removeprefix("ref: ")).read_text(encoding="utf-8").strip()
+    )
+
+
 def write_scb_snapshot(root: Path, scb_dir: Path) -> ScbSnapshotSelection:
     """Commit a normalized snapshot of ``scb_dir`` in a synthetic input repo."""
     root.mkdir(parents=True, exist_ok=True)
@@ -1263,24 +1293,10 @@ def write_scb_snapshot(root: Path, scb_dir: Path) -> ScbSnapshotSelection:
     repo = root / "input-repo"
     snapshot = repo / "snapshot"
     prepare_snapshot(inventory, snapshot, converter_commit="f" * 40)
-    for args in (
-        ("init", "-q"),
-        ("config", "user.email", "test@example.invalid"),
-        ("config", "user.name", "Test"),
-        ("config", "core.autocrlf", "false"),
-        ("add", "."),
-        ("commit", "-q", "-m", "snapshot"),
-    ):
-        subprocess.run(["git", "-C", str(repo), *args], check=True)
-    commit = subprocess.run(
-        ["git", "-C", str(repo), "rev-parse", "HEAD"],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
+    init_fixture_repo(repo, name="Test", email="test@example.invalid")
     return ScbSnapshotSelection(
         path=snapshot,
-        input_commit=commit,
+        input_commit=commit_fixture(repo, "snapshot"),
         manifest_sha256=hashlib.sha256(
             (snapshot / "manifest.json").read_bytes()
         ).hexdigest(),
@@ -1291,15 +1307,7 @@ def repin_scb_snapshot(
     selection: ScbSnapshotSelection, message: str = "fixture update"
 ) -> ScbSnapshotSelection:
     """Commit fixture mutations and return their updated snapshot selection."""
-    repo = selection.path.parent
-    subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
-    subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", message], check=True)
-    commit = subprocess.run(
-        ["git", "-C", str(repo), "rev-parse", "HEAD"],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
+    commit = commit_fixture(selection.path.parent, message)
     return ScbSnapshotSelection(
         path=selection.path,
         input_commit=commit,
@@ -1332,17 +1340,7 @@ def write_input_bundle_from_snapshot(
     repo = snapshot.path.parent
     bundle = repo / "bundle"
     prepare_input_bundle(input_dir, snapshot, bundle, lisa_workbook=lisa_workbook)
-    subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
-    subprocess.run(
-        ["git", "-C", str(repo), "commit", "-q", "-m", "catalog bundle"],
-        check=True,
-    )
-    commit = subprocess.run(
-        ["git", "-C", str(repo), "rev-parse", "HEAD"],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
+    commit = commit_fixture(repo, "catalog bundle")
     return CatalogBundleSelection(
         path=bundle,
         input_commit=commit,
@@ -1356,15 +1354,7 @@ def repin_input_bundle(
     selection: CatalogBundleSelection, message: str = "fixture bundle update"
 ) -> CatalogBundleSelection:
     """Commit fixture mutations and return updated bundle commit identity."""
-    repo = selection.path.parent
-    subprocess.run(["git", "-C", str(repo), "add", "-A"], check=True)
-    subprocess.run(["git", "-C", str(repo), "commit", "-q", "-m", message], check=True)
-    commit = subprocess.run(
-        ["git", "-C", str(repo), "rev-parse", "HEAD"],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
+    commit = commit_fixture(selection.path.parent, message)
     return CatalogBundleSelection(
         path=selection.path,
         input_commit=commit,
