@@ -18,5 +18,13 @@
         [{"field": "column", "from": "Value", "to": "value"}]
       ]
     }
+  },
+  {
+    "status": 200,
+    "json": {"/data/variants": []}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "archive"}
   }
 ]

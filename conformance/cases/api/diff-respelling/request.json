@@ -1,5 +1,5 @@
 {
-  "note": "Twins of cli_scope/diff-explicit-reference and logical/diff-holdings: a column respelled between 2018 and 2019 (Value -> value) is a change in both scopes; holdings counts only held variables as unchanged. Fails if holdings compares the held spelling instead of the delivered one, or counts an unheld variable.",
+  "note": "Twins of cli_scope/diff-explicit-reference and logical/diff-holdings: a column respelled between 2018 and 2019 (Value -> value) is a change in both scopes; holdings counts only held variables as unchanged. Fails if holdings compares the held spelling instead of the delivered one, or counts an unheld variable. `variant` keeps one variant's columns: the archive variant alone has no change (its column is the same in both years), and holdings does not hold it, so it is not found there. Fails if `variant` stops filtering or accepts an unheld variant in holdings.",
   "fixture": "reader/logical",
   "requests": [
     {
@@ -11,6 +11,16 @@
       "operation": "diff",
       "path": "/api/diff/scb/example",
       "query": {"from": "2018", "to": "2019", "scope": "holdings"}
+    },
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2018", "to": "2019", "scope": "reference", "variant": "archive"}
+    },
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2018", "to": "2019", "scope": "holdings", "variant": "archive"}
     }
   ]
 }
