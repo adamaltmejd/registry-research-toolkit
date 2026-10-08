@@ -189,6 +189,52 @@
   },
   "components": {
     "schemas": {
+      "CodeClassification": {
+        "type": "object",
+        "properties": {
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "short_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "CodeVariable": {
+        "type": "object",
+        "properties": {
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "register_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "Context": {
         "type": "object",
         "description": "`shape.Context`: branding, artifact identity and headline counts for the SPA.",
@@ -224,6 +270,36 @@
           },
           "steward": {
             "$ref": "#/components/schemas/Steward"
+          }
+        }
+      },
+      "Edition": {
+        "type": "object",
+        "required": [
+          "slug"
+        ],
+        "properties": {
+          "effective_year": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "slug": {
+            "type": "string"
           }
         }
       },
@@ -329,6 +405,38 @@
           {
             "type": "object",
             "required": [
+              "type"
+            ],
+            "properties": {
+              "fqid": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "purpose": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "register"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
               "delivery_column_names",
               "type"
             ],
@@ -420,9 +528,143 @@
                 ]
               }
             }
+          },
+          {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "fqid": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "short_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "terminal_fqid": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "classification"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "matched_count",
+              "editions",
+              "type"
+            ],
+            "properties": {
+              "editions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Edition"
+                }
+              },
+              "fqid": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "matched_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "short_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "classification_succession"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "code",
+              "label",
+              "variable_count",
+              "variables",
+              "classification_count",
+              "classifications",
+              "type"
+            ],
+            "properties": {
+              "classification_count": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "classifications": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CodeClassification"
+                }
+              },
+              "code": {
+                "type": "string"
+              },
+              "code_system": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "label": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "code"
+                ]
+              },
+              "variable_count": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "variables": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CodeVariable"
+                }
+              }
+            }
           }
         ],
-        "description": "`shape.SearchHit`, of the types the variable arm returns."
+        "description": "`shape.SearchHit`."
       },
       "SearchPage": {
         "type": "object",

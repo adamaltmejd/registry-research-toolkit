@@ -42,6 +42,16 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CodeClassification: {
+            fqid?: string | null;
+            name?: string | null;
+            short_name?: string | null;
+        };
+        CodeVariable: {
+            fqid?: string | null;
+            name?: string | null;
+            register_name?: string | null;
+        };
         /** @description `shape.Context`: branding, artifact identity and headline counts for the SPA. */
         Context: {
             import_date: string;
@@ -50,6 +60,13 @@ export interface components {
             schema_version: string;
             sizes: components["schemas"]["Sizes"];
             steward: components["schemas"]["Steward"];
+        };
+        Edition: {
+            /** Format: int64 */
+            effective_year?: number | null;
+            fqid?: string | null;
+            name?: string | null;
+            slug: string;
         };
         /** @description The error document `{code, class, message, remediation, fields}` (section 7). */
         Error: {
@@ -82,8 +99,14 @@ export interface components {
          * @enum {string}
          */
         Scope: "holdings" | "reference";
-        /** @description `shape.SearchHit`, of the types the variable arm returns. */
+        /** @description `shape.SearchHit`. */
         SearchHit: {
+            fqid?: string | null;
+            name?: string | null;
+            purpose?: string | null;
+            /** @enum {string} */
+            type: "register";
+        } | {
             definition?: string | null;
             delivery_column_names: string[];
             fqid?: string | null;
@@ -101,6 +124,33 @@ export interface components {
             register_name?: string | null;
             /** @enum {string} */
             type: "group";
+        } | {
+            fqid?: string | null;
+            name?: string | null;
+            short_name?: string | null;
+            terminal_fqid?: string | null;
+            /** @enum {string} */
+            type: "classification";
+        } | {
+            editions: components["schemas"]["Edition"][];
+            fqid?: string | null;
+            matched_count: number;
+            name?: string | null;
+            short_name?: string | null;
+            /** @enum {string} */
+            type: "classification_succession";
+        } | {
+            /** Format: int64 */
+            classification_count: number;
+            classifications: components["schemas"]["CodeClassification"][];
+            code: string;
+            code_system?: string | null;
+            label: string;
+            /** @enum {string} */
+            type: "code";
+            /** Format: int64 */
+            variable_count: number;
+            variables: components["schemas"]["CodeVariable"][];
         };
         /** @description `Page<SearchHit>`. */
         SearchPage: {
