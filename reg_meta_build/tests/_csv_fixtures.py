@@ -1229,16 +1229,19 @@ def write_scb_input(
 
 
 def init_fixture_repo(repo: Path, *, name: str, email: str) -> None:
-    """Create a fixture Git repository with its commit identity and line endings.
+    """Create a fixture Git repository that commits the same on every machine.
 
-    The config is appended to `.git/config` directly, the file `git config` would
-    write: three `git config` processes per repository were a measurable share of
-    the suite's CPU.
+    It sets its own identity and line endings, and turns off commit signing: a
+    developer's global `commit.gpgsign` otherwise signs every fixture commit with
+    their key, one signing process per commit. The config is appended to
+    `.git/config` directly, the file `git config` would write, because a `git
+    config` process per key was a measurable share of the suite's CPU.
     """
     subprocess.run(["git", "init", "-q", "-b", "main", str(repo)], check=True)
     with (repo / ".git" / "config").open("a", encoding="utf-8") as config:
         config.write(
-            f"[user]\n\tname = {name}\n\temail = {email}\n[core]\n\tautocrlf = false\n"
+            f"[user]\n\tname = {name}\n\temail = {email}\n"
+            "[core]\n\tautocrlf = false\n[commit]\n\tgpgsign = false\n"
         )
 
 
