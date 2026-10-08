@@ -1835,31 +1835,6 @@
           }
         }
       },
-      "Column": {
-        "type": "object",
-        "description": "A requested name: `matched` with its variables, or `no_match`.",
-        "required": [
-          "column_name",
-          "status",
-          "matches"
-        ],
-        "properties": {
-          "column_name": {
-            "type": "string"
-          },
-          "matches": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Match"
-            },
-            "description": "Ordered by register, provider key and variable; split siblings share a\n`var_id` and differ by `fqid`."
-          },
-          "status": {
-            "type": "string",
-            "description": "`matched` or `no_match`."
-          }
-        }
-      },
       "ConceptGroup": {
         "type": "object",
         "description": "A register's concept group: its members in scope.",
@@ -3357,6 +3332,31 @@
           }
         }
       },
+      "Resolution": {
+        "type": "object",
+        "description": "A requested name: `matched` with its variables, or `no_match`.",
+        "required": [
+          "column_name",
+          "status",
+          "matches"
+        ],
+        "properties": {
+          "column_name": {
+            "type": "string"
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Match"
+            },
+            "description": "Ordered by register, provider key and variable; split siblings share a\n`var_id` and differ by `fqid`."
+          },
+          "status": {
+            "type": "string",
+            "description": "`matched` or `no_match`."
+          }
+        }
+      },
       "Resolved": {
         "type": "object",
         "required": [
@@ -3366,7 +3366,7 @@
           "columns": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Column"
+              "$ref": "#/components/schemas/Resolution"
             },
             "description": "One row per requested name, in request order."
           }

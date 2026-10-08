@@ -125,6 +125,9 @@ pub fn coverage(server: &Server, scope: Scope, params: &Params) -> Result<Value,
     Ok(serde_json::to_value(coverage).expect("Coverage serializes"))
 }
 
+/// A representation's register variant and bounds.
+type Bounds = (i64, Option<String>, Option<String>);
+
 fn register(
     conn: &Connection,
     scope: Scope,
@@ -140,7 +143,6 @@ fn register(
     // bounds: in reference every expanded row but `base_fallback`, read for the whole
     // register at once (scb/frida's 7k variables one by one took 1.6 s); in holdings
     // each held variable's, clipped to its held periods.
-    type Bounds = (i64, Option<String>, Option<String>);
     let bounds: Vec<Bounds> = match scope {
         Scope::Reference => conn
             .prepare(
@@ -212,28 +214,6 @@ fn variable(
     scope: Scope,
     variable_id: i64,
 ) -> Result<Option<VariableCoverage>, Error> {
-    let sql = format!(
-        "SELECT p.slug, r.slug, v.slug, v.name, r.name, {VAR_ID} FROM variable v \
-         JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
-         WHERE v.variable_id = ?"
-    );
-    let (provider, register, slug, variable_name, register_name, var_id): (
-        Option<String>,
-        Option<String>,
-        Option<String>,
-        Option<String>,
-        String,
-        Option<i64>,
-    ) = conn.query_row(&sql, [variable_id], |row| {
-        Ok((
-            row.get(0)?,
-            row.get(1)?,
-            row.get(2)?,
-            row.get(3)?,
-            row.get(4)?,
-            row.get(5)?,
-        ))
-    })?;
     let mut all = BTreeSet::new();
     let mut aliases_by_year: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     for e in states::emitted(conn, scope, variable_id, None, None)? {
@@ -247,18 +227,28 @@ fn variable(
     let Some(span) = Span::of(&all) else {
         return Ok(None);
     };
-    Ok(Some(VariableCoverage {
-        // A resolved ref names a variable with a FQID.
-        fqid: fqid(&[provider.clone(), register.clone(), slug]).unwrap_or_default(),
-        variable_name,
-        span: span.clone(),
-        register_count: 1,
-        registers: vec![RegisterYears {
-            register: fqid(&[provider, register]),
-            register_name,
-            var_id,
-            span,
-            aliases_by_year,
-        }],
-    }))
+    let sql = format!(
+        "SELECT p.slug, r.slug, v.slug, v.name, r.name, {VAR_ID} FROM variable v \
+         JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
+         WHERE v.variable_id = ?"
+    );
+    let coverage = conn.query_row(&sql, [variable_id], |row| {
+        let [provider, register, slug]: [Option<String>; 3] =
+            [row.get(0)?, row.get(1)?, row.get(2)?];
+        Ok(VariableCoverage {
+            // A resolved ref names a variable with a FQID.
+            fqid: fqid(&[provider.clone(), register.clone(), slug]).unwrap_or_default(),
+            variable_name: row.get(3)?,
+            span: span.clone(),
+            register_count: 1,
+            registers: vec![RegisterYears {
+                register: fqid(&[provider, register]),
+                register_name: row.get(4)?,
+                var_id: row.get(5)?,
+                span,
+                aliases_by_year,
+            }],
+        })
+    })?;
+    Ok(Some(coverage))
 }

@@ -3896,31 +3896,6 @@
     },
     "outputSchema": {
       "$defs": {
-        "Column": {
-          "description": "A requested name: `matched` with its variables, or `no_match`.",
-          "properties": {
-            "column_name": {
-              "type": "string"
-            },
-            "matches": {
-              "description": "Ordered by register, provider key and variable; split siblings share a\n`var_id` and differ by `fqid`.",
-              "items": {
-                "$ref": "#/$defs/Match"
-              },
-              "type": "array"
-            },
-            "status": {
-              "description": "`matched` or `no_match`.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "column_name",
-            "status",
-            "matches"
-          ],
-          "type": "object"
-        },
         "Error": {
           "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
           "properties": {
@@ -4007,12 +3982,37 @@
           ],
           "type": "object"
         },
+        "Resolution": {
+          "description": "A requested name: `matched` with its variables, or `no_match`.",
+          "properties": {
+            "column_name": {
+              "type": "string"
+            },
+            "matches": {
+              "description": "Ordered by register, provider key and variable; split siblings share a\n`var_id` and differ by `fqid`.",
+              "items": {
+                "$ref": "#/$defs/Match"
+              },
+              "type": "array"
+            },
+            "status": {
+              "description": "`matched` or `no_match`.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "column_name",
+            "status",
+            "matches"
+          ],
+          "type": "object"
+        },
         "Resolved": {
           "properties": {
             "columns": {
               "description": "One row per requested name, in request order.",
               "items": {
-                "$ref": "#/$defs/Column"
+                "$ref": "#/$defs/Resolution"
               },
               "type": "array"
             }

@@ -16,12 +16,12 @@ use crate::{Error, Scope};
 #[derive(Serialize, ToSchema)]
 pub struct Resolved {
     /// One row per requested name, in request order.
-    columns: Vec<Column>,
+    columns: Vec<Resolution>,
 }
 
 /// A requested name: `matched` with its variables, or `no_match`.
 #[derive(Serialize, ToSchema)]
-pub struct Column {
+pub struct Resolution {
     column_name: String,
     /// `matched` or `no_match`.
     status: &'static str,
@@ -107,7 +107,7 @@ pub fn resolve(server: &Server, scope: Scope, params: &Params) -> Result<Value, 
         .zip(&wanted)
         .map(|(name, lower)| {
             let matches = found.get(lower).cloned().unwrap_or_default();
-            Column {
+            Resolution {
                 column_name: (*name).to_owned(),
                 status: if matches.is_empty() {
                     "no_match"

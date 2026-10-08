@@ -433,17 +433,6 @@ export interface components {
             n_registers: number;
             variable_name: string;
         };
-        /** @description A requested name: `matched` with its variables, or `no_match`. */
-        Column: {
-            column_name: string;
-            /**
-             * @description Ordered by register, provider key and variable; split siblings share a
-             *     `var_id` and differ by `fqid`.
-             */
-            matches: components["schemas"]["Match"][];
-            /** @description `matched` or `no_match`. */
-            status: string;
-        };
         /** @description A register's concept group: its members in scope. */
         ConceptGroup: {
             axes: components["schemas"]["Axis"][];
@@ -857,9 +846,20 @@ export interface components {
             source_url: string;
             title: string;
         };
+        /** @description A requested name: `matched` with its variables, or `no_match`. */
+        Resolution: {
+            column_name: string;
+            /**
+             * @description Ordered by register, provider key and variable; split siblings share a
+             *     `var_id` and differ by `fqid`.
+             */
+            matches: components["schemas"]["Match"][];
+            /** @description `matched` or `no_match`. */
+            status: string;
+        };
         Resolved: {
             /** @description One row per requested name, in request order. */
-            columns: components["schemas"]["Column"][];
+            columns: components["schemas"]["Resolution"][];
         };
         /** @description The catalog root: the providers in scope and the classification root. */
         Root: {
