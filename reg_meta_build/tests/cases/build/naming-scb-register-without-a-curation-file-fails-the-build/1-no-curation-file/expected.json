@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "register_curation_missing",
+    "exit_code": 10,
+    "message_contains": ["scb register 2", "OTHERREG"]
+  }
+}
