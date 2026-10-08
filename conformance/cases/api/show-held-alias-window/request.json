@@ -1,0 +1,14 @@
+{
+  "note": "A held representation delivered only under an alias window (Alias, 2018) is its own delivery with the window's bounds, and the provider's coverage is that window. Twin of coverage/alias-window. Fails if holdings drops an alias-only representation or reports its state's 2010..2025 bounds.",
+  "fixture": "alias-window-only",
+  "requests": [
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb/example"
+    },
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb"
+    }
+  ]
+}

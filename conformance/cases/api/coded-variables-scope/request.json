@@ -1,0 +1,8 @@
+{
+  "note": "Coded variables per scope. Reference counts every coded state under a name: Value's three codes (0 and 1 in its annual states, 2 in its 2020 and archive states) over four states, then Value reference's one. Holdings counts only the held representations, Value's 2018 and 2019 states and their codes 0 and 1. Twin of cli_scope/coded-variables-explicit-reference and logical/coded-holdings. Fails if holdings counts unheld states or codes, or reference drops a state.",
+  "fixture": "reader/logical",
+  "requests": [
+    {"operation": "coded_variables", "path": "/api/coded-variables", "query": {"scope": "reference"}},
+    {"operation": "coded_variables", "path": "/api/coded-variables"}
+  ]
+}

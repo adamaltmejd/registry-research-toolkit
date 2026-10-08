@@ -66,6 +66,11 @@ EQUIVALENCE = {
     "lineage": ("lineage", "lineage-unheld-reference", "graph-errors"),
     "schema": ("schema-paging", "schema-errors"),
     "diff": ("diff-register", "diff-errors"),
+    "coverage": ("coverage-register", "coverage-errors"),
+    "coded_variables": ("coded-variables-order",),
+    # `resolve-columns` sends `columns` as a JSON array, `resolve-errors` 201 of them
+    # and a repeated scalar as an array.
+    "resolve": ("resolve-columns", "resolve-errors"),
 }
 READER = {"fixture": "reader"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.

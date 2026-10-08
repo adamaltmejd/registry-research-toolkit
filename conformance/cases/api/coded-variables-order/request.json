@@ -1,0 +1,37 @@
+{
+  "note": "Coded variables by distinct codes, ties by name, paged: Delta (3 codes), then Bravo and Charlie (2 each, the page boundary inside the tie), Alpha (1, in two registers) and Echo (1). Foxtrot and Golf have no common name and are not ranked. A cursor answers only on its generation; holdings needs a steward artifact; limit is 1..200. Fails if the order follows registers instead of codes, a tie splits differently, a page repeats or skips a row, a nameless variable is ranked, or a refusal changes code.",
+  "fixture": "reader/coded-ranking",
+  "kind": "catalog",
+  "artifacts": {
+    "regenerated": {
+      "identity": {
+        "curation_tree_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    }
+  },
+  "requests": [
+    {"operation": "coded_variables", "path": "/api/coded-variables", "query": {"limit": 2}},
+    {
+      "operation": "coded_variables",
+      "path": "/api/coded-variables",
+      "query": {"limit": 2},
+      "cursor_from": [0, "/data/next_cursor"]
+    },
+    {
+      "operation": "coded_variables",
+      "path": "/api/coded-variables",
+      "query": {"limit": 2},
+      "cursor_from": [1, "/data/next_cursor"]
+    },
+    {
+      "operation": "coded_variables",
+      "path": "/api/coded-variables",
+      "query": {"limit": 2},
+      "artifact": "regenerated",
+      "cursor_from": [0, "/data/next_cursor"]
+    },
+    {"operation": "coded_variables", "path": "/api/coded-variables", "query": {"cursor": "zz"}},
+    {"operation": "coded_variables", "path": "/api/coded-variables", "query": {"scope": "holdings"}},
+    {"operation": "coded_variables", "path": "/api/coded-variables", "query": {"limit": 0}}
+  ]
+}

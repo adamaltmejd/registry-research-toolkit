@@ -1,0 +1,6 @@
+{
+  "note": "A per-column coding window's value set counts toward its name: regd's Sex state has no value set of its own, but its SexA and SexQ windows code 1, 2, F and M, so Sex has four distinct codes over its fourteen registers. Twin of logical/coded-per-column-reference. Fails if windows' value sets are ignored or a state without a coded value set is counted as coded.",
+  "fixture": "reader/cli-values-groups",
+  "kind": "catalog",
+  "requests": [{"operation": "coded_variables", "path": "/api/coded-variables"}]
+}

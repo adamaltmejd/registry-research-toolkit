@@ -1,0 +1,19 @@
+{
+  "note": "Delivered column names to variables, one row per requested name in request order, sent as repeated `columns` keys. A name matches its case twins and names the column by the state's spelling (`value` matches Value, delivered as Value in 2018 and value in 2019); a non-ASCII name folds as Python lowers it. Holdings matches only held representations: Secret (an unheld column of a held variant), Valørarkiv (an unheld variant) and Valuereference (an unheld variable) do not. Twin of cli_scope/resolve-explicit-reference, logical/resolve-holdings and logical/alias-case-twin-resolve. Fails if a repeated key is refused or collapsed, rows lose request order, a case twin is not matched or is named by its own spelling, or holdings matches an unheld representation.",
+  "fixture": "reader/logical",
+  "requests": [
+    {
+      "operation": "resolve",
+      "path": "/api/resolve",
+      "query": {
+        "scope": "reference",
+        "columns": ["value", "Secret", "VALØRARKIV", "Valuereference", "Missing"]
+      }
+    },
+    {
+      "operation": "resolve",
+      "path": "/api/resolve",
+      "query": {"columns": ["value", "Secret", "VALØRARKIV", "Valuereference", "Missing"]}
+    }
+  ]
+}

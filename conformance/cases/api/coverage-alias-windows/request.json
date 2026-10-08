@@ -1,0 +1,26 @@
+{
+  "note": "Rust-only fix (D6): coverage lists the columns the resolver emits per year, so Value's source alias windows (Value in 2018, Different in 2019, replacing its 2018..2019 state) name Different in 2019, in reference as in holdings. The frozen reader's reference `get availability` reads the raw state and names Value in both years. Typed's per-column 2019 window keeps its state's spelling. Fails if reference coverage reads raw states instead of the expanded representations, or holdings reads an unheld variable.",
+  "fixture": "reader/logical-alias-diff",
+  "requests": [
+    {
+      "operation": "coverage",
+      "path": "/api/coverage/scb/example/value",
+      "query": {"scope": "reference"}
+    },
+    {
+      "operation": "coverage",
+      "path": "/api/coverage/scb/example/value",
+      "query": {"scope": "holdings"}
+    },
+    {
+      "operation": "coverage",
+      "path": "/api/coverage/scb/example/typed",
+      "query": {"scope": "reference"}
+    },
+    {
+      "operation": "coverage",
+      "path": "/api/coverage/scb/example/typed",
+      "query": {"scope": "holdings"}
+    }
+  ]
+}

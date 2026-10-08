@@ -1,0 +1,27 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/years": [2018, 2019],
+      "/data/registers/*/aliases_by_year": [{"2018": ["Value"], "2019": ["Different"]}]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/years": [2018, 2019],
+      "/data/registers/*/aliases_by_year": [{"2018": ["Value"], "2019": ["Different"]}]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/years": [2018, 2019],
+      "/data/registers/*/aliases_by_year": [{"2018": ["Typed"], "2019": ["Typed"]}]
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/example/typed"}
+  }
+]
