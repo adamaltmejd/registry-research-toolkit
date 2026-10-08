@@ -32,6 +32,9 @@ jobs:
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
+      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
       # Podman ships with the runner image; no apt step (see ci.yml's
       # `package-integration` for why).
@@ -83,6 +86,9 @@ jobs:
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
+      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
       # Tier 3 admits the downloaded artifact and its embedded import_manifest,
       # never synthetic data. Each kind uses its own job and directory.

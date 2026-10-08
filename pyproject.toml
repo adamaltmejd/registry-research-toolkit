@@ -20,6 +20,7 @@ dev = [
   "hatchling>=1.32.0",
   "httpx2>=2.4.0",
   "hypothesis>=6.155.2",
+  "maturin>=1.15.0",
   "openpyxl>=3.1.5",
   "pytest>=9.0.3",
   "pytest-xdist>=3.8.0",
@@ -120,6 +121,7 @@ reg-webapp = { workspace = true }
 
 [tool.uv.workspace]
 members = [
+  "crates/reg-core-py",
   "reg_meta",
   "reg_meta_build",
   "reg_schema",

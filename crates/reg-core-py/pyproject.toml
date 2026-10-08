@@ -1,0 +1,24 @@
+[build-system]
+requires = ["maturin>=1.15.0,<2"]
+build-backend = "maturin"
+
+[project]
+name = "reg-core-py"
+version = "0.0.0"
+description = "Python bindings to reg-core for the reg_meta build"
+requires-python = ">=3.14"
+
+[tool.maturin]
+module-name = "reg_core_py"
+
+[tool.uv]
+# uv keys a path build on pyproject.toml alone, so without these a Rust edit would
+# leave the installed extension stale. The fixture cache key
+# (reg_meta/tests/reader_artifacts.py) and the G1 derive key
+# (conformance/differential/cache.py) hash the same paths.
+cache-keys = [
+  { file = "**" },
+  { file = "../reg-core/**" },
+  { file = "../../Cargo.toml" },
+  { file = "../../Cargo.lock" },
+]

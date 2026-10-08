@@ -7,9 +7,10 @@ shared cache, derives a copy of each artifact with the checkout's builder (once 
 base and builder source, so on a committed tree), generates the seeded cases, runs
 each case through both readers' ``reg-meta`` CLI JSON in parallel worker processes
 (the baseline on the originals, the checkout on the derived copies), and compares
-exit code, stdout bytes and stderr per case. Writes ``report.json`` into
-``<cache>/report/`` and prints a plain-text summary. Exit 0 when no case differs
-(outside a named exception), 1 when any does.
+exit code, stdout bytes and stderr per case. Then runs the fold sweep (``folds.py``):
+the baseline's ``fold_search`` against ``reg-core-py``. Writes ``report.json`` into
+``<cache>/report/`` and prints a plain-text summary. Exit 0 when no case and no fold
+input differs (outside a named exception), 1 when any does.
 
 The arm under test is this interpreter's ``reg_meta`` with the caller's environment,
 so a perturbed copy is tested with ``PYTHONPATH=<copy>/src uv run python -m
@@ -38,7 +39,7 @@ import tomllib
 from collections import Counter
 from pathlib import Path
 
-from conformance.differential import cache, cases
+from conformance.differential import cache, cases, folds
 
 HERE = Path(__file__).resolve().parent
 DRIVER = HERE / "driver.py"
@@ -219,6 +220,7 @@ def run(config: dict) -> int:
         differences.append(compare(case_id, slot.get("baseline"), slot.get("checkout")))
     for t in threads:
         t.join()
+    fold_sweep = folds.sweep(baseline_python, dirs)
 
     exceptions = config["exception"]
     for diff in differences:
@@ -244,6 +246,7 @@ def run(config: dict) -> int:
             k: round(v, 1) for k, v in seconds.most_common()
         },
         "diffs": differences,
+        "fold_sweep": fold_sweep,
     }
     report_dir.mkdir(parents=True, exist_ok=True)
     report_path = report_dir / "report.json"
@@ -266,8 +269,15 @@ def run(config: dict) -> int:
         for diff in unexcepted[:MAX_PATHS]:
             where = ", ".join(diff["paths"][:3]) or ", ".join(diff["fields"])
             print(f"  {diff['id']}: {where}")
+    print(
+        f"fold sweep: {fold_sweep['inputs']} inputs in {fold_sweep['wall_seconds']} s: "
+        f"{fold_sweep['differences']} differences, "
+        f"{fold_sweep['excepted'][folds.EXCEPTION]} excepted ({folds.EXCEPTION})"
+    )
+    for diff in fold_sweep["diffs"]:
+        print(f"  {diff['input']!r}: {diff['baseline']!r} vs {diff['checkout']!r}")
     print(f"report: {report_path}")
-    return 1 if unexcepted else 0
+    return 1 if unexcepted or fold_sweep["differences"] else 0
 
 
 def main() -> int:
