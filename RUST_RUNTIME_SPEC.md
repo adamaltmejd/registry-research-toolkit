@@ -246,11 +246,11 @@ confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
 The G1 baseline is the Python reader **at a pinned commit, installed in its own
 environment**, never the checkout under change, so a regression moved into derive cannot
-validate itself. It reads the original pinned artifacts (from package 3a.2a, if the
-maintainer approves it: reference copies derived by a pinned builder commit, never by
-the code under change); the implementations under test read derived copies of them. It
-runs on both artifact kinds (the global catalog and the SWECOV steward artifact) and
-both scopes, over generated queries (every register, seeded variable samples,
+validate itself. It reads the original pinned artifacts or, if package 3a.2a is
+approved, reference copies of them derived by a pinned builder commit, never by the code
+under change; the implementations under test read derived copies of them. It runs on
+both artifact kinds (the global catalog and the SWECOV steward artifact) and both
+scopes, over generated queries (every register, seeded variable samples,
 holdings-specific strata, the search-eval corpus terms). Each accepted difference is
 recorded as a named semantic exception in the harness.
 
@@ -549,7 +549,7 @@ every runner calls Python in-process, so it must become implementation-neutral f
 - Add a runner seam: HTTP cases run against a server process started by a command
   template, so the same corpus runs against FastAPI today and `reg-meta serve` later.
   Servers are reused per artifact. Search pins are build input (package 3a.2), so every
-  HTTP case runs out of process.
+  HTTP case can run out of process.
 - Process-boundary cases stay process-level: startup admission failure (a server that
   never listens), catalog selection and `fetch`.
 - Rewrite the CLI argv cases (`cli_scope`), the 49 `logical` cases and the 5 `coverage`
@@ -649,7 +649,9 @@ Order and parallelism (at most three in flight):
 - Then **3a.1b** (needs 3a.1a) and **3a.2** (needs 3a.1a; merges after 3a.1b). Only
   3a.1b (9.2.0) and 3a.2 (9.3.0) bump the artifact schema, in that order.
 - **3a.5** (needs 3a.1b, 3a.3, 3a.4); then **3a.6** (needs 3a.2, 3a.5) and **3a.7**
-  (needs 3a.5) in parallel.
+  (needs 3a.5) in parallel. **3a.2a** (needs 3a.2) builds alongside and merges on
+  checkpoint-2 question 7; until then 3a.5 and 3a.6 carry provisional, named G1
+  exceptions, which it deletes.
 - **3a.9** (needs 3a.6, 3a.7), **3a.10** (needs 3a.9), **3a.11** (needs 3a.10),
   **3a.13** (needs 3a.11 and the 9.3.0 release), then checkpoint 2. From the 3a.1b
   merge, deploys pause until the maintainer releases at 9.3.0 (container-build schema
@@ -946,13 +948,17 @@ atomically.
 merged only on approval).** Implements section 4 (G1 independence).
 
 - Changes: the harness pins a reference builder commit (main after 3a.2, `553ea622`) and
-  installs its `reg_meta_build` with `reg-core-py` in an isolated environment beside the
-  baseline reader, which moves to the same commit. It derives reference copies of the
-  pinned originals once, cached apart from candidate copies with provenance and output
-  digests, and never from the checkout. The baseline CLI and webapp read the reference
-  copies; the checkout arm keeps reading candidate-derived copies. `fold-search-matches`
-  and `folded-index-bm25` are deleted. Candidate copies of the two catalogs derive in
-  parallel (the G1 budget).
+  runs it from a detached `git worktree` of that commit with its own locked environment
+  (maturin builds `reg-core-py`), since `builder_commit()` needs a clean source
+  checkout; the baseline reader moves to the same commit. It derives reference copies of
+  the pinned originals once, cached apart from candidate copies (keyed by base sha256
+  and reference commit, with output digests), never from the checkout. The baseline CLI
+  and webapp read the reference copies; the checkout arm keeps reading candidate-derived
+  copies. `fold-search-matches`, `folded-index-bm25` and the now-empty
+  `derived-schema-version` go; `derived-generation-cursor` and
+  `derived-generation-order` stay (the arms' `builder_commit` differs). Candidate copies
+  of the two catalogs derive in parallel (the G1 budget). Pins stay unexercised by G1
+  until 3a.13 (the 9.0 originals have none); G0's pin cases cover them.
 - Paths: `conformance/differential/`, this file (section 4, "Current pin").
 - Acceptance: G1 reports 0 differences with neither folding exception; a deliberately
   broken candidate index (for example the `value_code_fts` owner filter dropped, not
@@ -961,13 +967,14 @@ merged only on approval).** Implements section 4 (G1 independence).
 
 **3a.13 Re-pin at checkpoint 2.** Implements section 4 (re-pin).
 
-- Today's reader takes display text from FTS columns, so the pinned baseline
-  (`760d70fa`) would show folded text on any 9.2+ artifact. Both pins move: the artifact
-  to the 9.3.0 release, and the baseline reader commit to main after 3a.2, which reads
-  9.3 and takes display text from base tables (its webapp still serves `/api/search`).
-- G1 runs on the old pin with the old baseline and on the new pin with the new baseline
-  (a 9.3 reader refuses the 9.0 originals), and records each difference; the PR updates
-  section 4's "Current pin" and `conformance/differential/config.toml`.
+- The artifact pin moves to the 9.3.0 release. With 3a.2a, the baseline is already at
+  main after 3a.2 and the 9.3.0 originals already carry folded indexes and pins, so the
+  baseline reads the release directly and the reference derive is retired. Without
+  3a.2a, the baseline reader commit moves now (760d70fa would show folded text on any
+  9.2+ artifact) and the provisional folding exceptions go.
+- G1 runs on the old pin with its baseline and on the new pin with the new baseline, and
+  records each difference; the PR updates section 4's "Current pin" and
+  `conformance/differential/config.toml`.
 - Acceptance: G1 on both pins, under 5 min each. Depends on: 3a.11 and the release.
 
 #### Checkpoint 2 questions for the maintainer

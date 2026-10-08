@@ -52,8 +52,10 @@ What it does (see the four numbered requirements in the A4.1 brief):
 
 FTS5 handling: the four catalog `*_fts` tables store `fold_search`
 projections of base tables that ARE compared (`validate_built_db` checks
-each index against its source both ways). Their shadow tables
-(`*_fts_data/_idx/_docsize/_config`) hold the serialized inverted index,
+each index against its source both ways, within one artifact; two artifacts
+that differ only in the fold function therefore diff as identical).
+`doc_fts` in the docs DB is still external-content (`content='doc'`). Their shadow tables
+(`*_fts_data/_idx/_docsize/_config/_content`) hold the serialized inverted index,
 whose bytes depend on insert order — comparing them would false-positive on
 an emit-order change that left content identical. So FTS virtual + shadow
 tables are included in the *schema* comparison (structure must match) but
