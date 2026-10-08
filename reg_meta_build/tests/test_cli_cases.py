@@ -22,7 +22,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import pytest
-from _build_case_runner import cache_root
 from _case_projection import mismatch, unclaimed
 from _pipeline_catalog_support import CatalogFixture
 from reg_meta_build.cli import run
@@ -59,24 +58,24 @@ def _tree_bytes(root: Path) -> dict[str, bytes]:
 
 
 @pytest.fixture(scope="session")
-def cli_artifact(
-    prepared_cache: PreparedCache, tmp_path_factory: pytest.TempPathFactory
-) -> Artifact:
-    """The artifact built once per session from `cases/cli/_artifact/`.
+def cli_artifact(prepared_cache: PreparedCache) -> Artifact:
+    """The artifact built once from `cases/cli/_artifact/`.
 
-    Keyed by the content hash of its source and curation and published by an
-    atomic rename, so xdist workers share one build and never write a path another
-    worker reads.
+    It sits beside the prepared inputs, keyed by the content hash of its source,
+    its curation and this runner (which sets the build options), and is published
+    by an atomic rename, so xdist workers share one build and never write a path
+    another worker reads.
     """
     spec = json.loads((ARTIFACT / "source.json").read_text(encoding="utf-8"))
-    curation = _tree_bytes(ARTIFACT / "curation")
+    inputs = _tree_bytes(ARTIFACT / "curation")
+    inputs["runner"] = Path(__file__).read_bytes()
     key = hashlib.sha256(
         json.dumps(
-            [spec, {path: data.hex() for path, data in curation.items()}],
+            [spec, {path: data.hex() for path, data in inputs.items()}],
             sort_keys=True,
         ).encode()
     ).hexdigest()
-    root = cache_root(tmp_path_factory.getbasetemp()).with_name("cli-artifact")
+    root = prepared_cache.root.with_name("cli-artifact")
     root.mkdir(parents=True, exist_ok=True)
     entry = root / key
     if not (entry / "db" / "reg_meta.db").is_file():

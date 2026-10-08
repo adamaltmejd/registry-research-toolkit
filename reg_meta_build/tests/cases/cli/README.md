@@ -30,13 +30,14 @@ checks that the argument list names it.
 
 ## The artifact
 
-Every case reads one catalog, built once per test session from `_artifact/`. The source
-spec has the format of `cases/build/README.md` → "Source spec", and the build runs every
-register in diagnostic mode (a publishable build stamps the builder commit and so
-refuses a working tree with uncommitted changes). The runner refuses an artifact whose
-build reports an error. xdist workers share the one build: it is keyed by the content
-hash of `_artifact/` and published by an atomic rename. Cases read it in place and never
-write it; the runner fails a case that changes the artifact's directory.
+Every case reads one catalog, built once from `_artifact/`. The source spec has the
+format of `cases/build/README.md` → "Source spec", and the build runs every register in
+diagnostic mode (a publishable build stamps the builder commit and so refuses a working
+tree with uncommitted changes). The runner refuses an artifact whose build reports an
+error. The build sits beside the build cases' prepared inputs, keyed by the content hash
+of `_artifact/` and the runner, and is published by an atomic rename, so xdist workers
+share it. Cases read it in place and never write it; the runner fails a case that
+changes the artifact's directory.
 
 The artifact delivers:
 
