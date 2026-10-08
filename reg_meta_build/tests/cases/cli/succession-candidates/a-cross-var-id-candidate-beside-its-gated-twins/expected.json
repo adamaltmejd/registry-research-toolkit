@@ -1,0 +1,39 @@
+{
+  "exit_code": 0,
+  "files": {
+    "succession.toml": {
+      "toml": {
+        "edge": [
+          {
+            "type": "replaced_by",
+            "from": "scb/foretag/forvink-ers-aktiv",
+            "to": "scb/foretag/forvink-ers",
+            "effective_year": 2020
+          }
+        ]
+      },
+      "contains": [
+        "# === register scb/foretag — 1 candidate(s) ===",
+        "# cross_var_id",
+        "#   from: scb/foretag/forvink-ers-aktiv (Förvärvsinkomst, aktiv) var_id 31395, column FORVERS, variant foretag, 2019-01-01..2019-12-31",
+        "#   to  : scb/foretag/forvink-ers (Förvärvsinkomst) var_id 47670, column FORVERS, variant foretag, 2020-01-01..2020-12-31"
+      ]
+    }
+  },
+  "reloads_with": {
+    "loader": "relations",
+    "path": "succession.toml",
+    "result": {
+      "replaced_by": [
+        {
+          "from": "scb/foretag/forvink-ers-aktiv",
+          "to": "scb/foretag/forvink-ers",
+          "from_column": null,
+          "to_column": null,
+          "variant": "",
+          "effective_year": 2020
+        }
+      ]
+    }
+  }
+}

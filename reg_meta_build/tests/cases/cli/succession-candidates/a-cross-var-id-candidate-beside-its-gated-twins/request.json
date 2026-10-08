@@ -1,0 +1,21 @@
+{
+  "replaces": [
+    "test_succession_candidates.py::TestInfer::test_only_the_two_real_successions",
+    "test_succession_candidates.py::TestInfer::test_cross_var_id_evidence",
+    "test_succession_candidates.py::TestInfer::test_the_curated_edge_is_what_suppresses_the_anninkf_pair",
+    "test_succession_candidates.py::TestInfer::test_the_overlapping_era_is_what_suppresses_the_kod_pair",
+    "test_succession_candidates.py::TestInfer::test_the_gap_is_what_suppresses_the_ort_pair",
+    "test_succession_candidates.py::TestInfer::test_one_variables_own_column_rename_is_not_a_candidate",
+    "test_succession_candidates.py::TestRender::test_evidence_comments_carry_the_columns_and_windows",
+    "test_succession_candidates.py::test_diagnostic_does_not_mutate"
+  ],
+  "fails_if": "succession-candidates stops skipping a pair already joined by a curated replaced_by edge, a pair whose predecessor is still delivered beside its successor, or a pair with a year's gap between its eras; pairs one variable's own column rename; or emits an edge the relations loader cannot read",
+  "note": "From the artifact source, register 6 (variant `foretag`) delivers four cross-var_id column pairs. FORVERS: var 31395 in 2019, then var 47670 in 2020, the one candidate. ANNINK (41660, then 37046) has the same shape but `_artifact/curation/relations.toml` already curates its edge. KOD (700, then 701) has the same shape but var 700 keeps delivering in 2020 as KODX, so the pair was co-delivered. ORT (800 in 2018, 801 in 2020) is not adjacent. Register 1's var 101 renames VALUE to VALUE_NY within one variable. The effective year is the successor era's first year. The runner's artifact fingerprint check is the read-only claim.",
+  "argv": [
+    "--db",
+    "{db}",
+    "succession-candidates",
+    "-o",
+    "{work}/succession.toml"
+  ]
+}
