@@ -1,0 +1,15 @@
+{
+  "note": "Twin of logical/alias-case-twin-fts. Fails if a period search stops finding the variable whose 2019 delivery `value` is held under its case twin `Value`, or reports a column other than the canonical spelling.",
+  "fixture": "reader/case-twins",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "value",
+        "type": "variable",
+        "period": "2019"
+      }
+    }
+  ]
+}

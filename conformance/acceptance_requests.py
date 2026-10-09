@@ -11,8 +11,6 @@ import re
 from collections import defaultdict
 from dataclasses import dataclass, replace
 
-from reg_meta.catalog import Catalog
-
 
 @dataclass(frozen=True)
 class AcceptanceBinding:
@@ -81,11 +79,32 @@ def admitted_bindings(conn, scope):
     return {row[0] for row in conn.execute(query)}
 
 
+# The spellings the builder's compiled `expanded_state` emits at a point: rows whose
+# own bounds cover it (year-independent rows for `_default`), with a base_fallback
+# only where no source or coded window of its state covers the point
+# (reg_meta_build/derive/states.py, db.py `expanded_state`).
+POINT_SPELLINGS = """
+    SELECT DISTINCT es.delivery_column_name FROM expanded_state es
+    WHERE es.variable_id = :variable AND es.register_variant_id = :variant
+      AND es.delivery_column_name IS NOT NULL
+      AND CASE WHEN :period = '_default' THEN es.valid_from IS NULL
+          ELSE es.valid_from <= :period AND es.valid_to >= :period END
+      AND (es.kind != 'base_fallback' OR NOT EXISTS (
+          SELECT 1 FROM expanded_state w
+          WHERE w.state_id = es.state_id
+            AND w.kind IN ('source_window', 'coded_window')
+            AND CASE WHEN :period = '_default' THEN w.valid_from IS NULL
+                ELSE w.valid_from <= :period AND w.valid_to >= :period END))
+"""
+
+
 def acceptance_sample(conn, generation, *, steward, size=50):
     """Rank independent delivery/physical intersections with generation SHA-256.
 
     Select one distinct binding from each available stratum, then fill in hash order.
-    Public point resolution selects the applicable native spelling after proposal ranking.
+    Point resolution over the artifact's compiled `expanded_state` (POINT_SPELLINGS),
+    never the server under test, selects the applicable native spelling after
+    proposal ranking; the caller then requires the server to serve it.
     Counts returned describe raw proposals, not the entire eligible delivery universe.
     Unknown physical tables cannot supply a binding and are checked separately.
     """
@@ -212,25 +231,29 @@ def acceptance_sample(conn, generation, *, steward, size=50):
         return hashlib.sha256((generation + encoded).encode()).hexdigest()
 
     ranked = sorted(candidates.values(), key=rank)
-    reference = Catalog(conn, scope="reference")
+    ids = {coordinate: key for key, coordinate in coordinates.items()}
     resolved = {}
 
     def applicable(candidate):
         key = (candidate.variable, candidate.variant, candidate.period)
         if key not in resolved:
-            resolved[key] = reference.resolve_at(
-                candidate.variable,
-                candidate.period,
-                variant=candidate.variant.rsplit("/", 1)[1],
-                with_codes=False,
-            )
+            variable, variant = ids[(candidate.variable, candidate.variant)]
+            resolved[key] = [
+                row[0]
+                for row in conn.execute(
+                    POINT_SPELLINGS,
+                    {
+                        "variable": variable,
+                        "variant": variant,
+                        "period": candidate.period,
+                    },
+                )
+            ]
         native = sorted(
             {
-                state.delivery_column_name
-                for state in resolved[key]
-                if state.delivery_column_name
-                and state.delivery_column_name.lower()
-                == candidate.representation.lower()
+                column
+                for column in resolved[key]
+                if column and column.lower() == candidate.representation.lower()
             }
         )
         return replace(candidate, representation=native[0]) if native else None

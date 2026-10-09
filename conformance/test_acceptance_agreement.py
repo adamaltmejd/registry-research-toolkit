@@ -13,11 +13,9 @@ from acceptance_requests import (
     acceptance_sample,
     admitted_bindings,
     identity_digest,
-    response_fqids,
 )
 from artifact_requests import (
     MAX_QUERY_CHARS,
-    cli_json,
     http_search_contains,
     require,
     require_query_refused,
@@ -31,9 +29,7 @@ from reader_artifacts import (
     build_reader_artifact,
     replicate_filler,
 )
-from reg_meta.cli import run
-from reg_meta.db import get_manifest, open_db
-from reg_meta.order import materialize_order, project_from_raw
+from reg_meta_build.db import get_manifest, open_db
 
 
 def scopes(manifest):
@@ -108,10 +104,10 @@ def test_complete_admitted_set_agrees_with_http(artifact_dir, request):
     print(json.dumps({"complete_http_admitted_sets": observations}, sort_keys=True))
 
 
-def check_generation_seeded_stratified_binding_agreement(
-    artifact_dir, server, tmp_path, capsys
-):
-    """`server` is the Rust server's client (`server_client`)."""
+def check_generation_seeded_stratified_binding_agreement(artifact_dir, server):
+    """`server` is the Rust server's client (`server_client`). The sample and its
+    native spellings come from the artifact alone; a sampled binding the server
+    does not serve fails the run."""
     with open_db(artifact_dir / "reg_meta.db") as conn:
         manifest = get_manifest(conn)
         steward = manifest["catalog_artifact_kind"] == "steward"
@@ -157,25 +153,8 @@ def check_generation_seeded_stratified_binding_agreement(
                 "Sample native representation missing from point/variant states",
             )
             query = browse.json()["data"]["name"]
-            cli_browse = cli_json(
-                artifact_dir,
-                capsys,
-                [
-                    "--scope",
-                    scope,
-                    "get",
-                    "varinfo",
-                    query,
-                    "--register",
-                    candidate.variable.rsplit("/", 1)[0],
-                ],
-            )
-            require(
-                candidate.variable in response_fqids(cli_browse),
-                "Sample missing from CLI logical browse",
-            )
             ceiling_refined += require_search_reaches(
-                artifact_dir, server, capsys, query, scope, candidate.variable
+                server, query, scope, candidate.variable
             )
             query_cap_refused += len(query) > MAX_QUERY_CHARS
         project = candidate.project(manifest.get("steward", "global"))
@@ -189,32 +168,13 @@ def check_generation_seeded_stratified_binding_agreement(
             ),
             "Sample validation disagrees with physical/semantic admission",
         )
-        project_path = tmp_path / "acceptance-project.json"
-        project_path.write_text(json.dumps(project))
-        code = run(["--db", str(artifact_dir), "validate", str(project_path)])
-        require(
-            code == 0
-            and json.loads(capsys.readouterr().out) == validated.json()["data"],
-            "Sample CLI/HTTP validation results disagree",
-        )
-        code = run(["--db", str(artifact_dir), "order", str(project_path)])
-        cli_bytes = capsys.readouterr().out
-        require(code == 0, "Sample CLI order disagrees with admission")
         ordered = server.post("/api/project/order/manifest", json=project)
         require(
             ordered.status_code == 200, "Sample HTTP order disagrees with admission"
         )
-        require(cli_bytes == ordered.text, "Sample CLI/HTTP order bytes disagree")
         if candidate is sample[0]:
-            # Repeat and materializer bytes on one candidate keep tier 3 bounded.
-            require_repeatable(
-                artifact_dir,
-                server,
-                capsys,
-                project_path,
-                ordered,
-                query,
-            )
+            # Repeats on one candidate keep tier 3 bounded.
+            require_repeatable(server, project, ordered, query, steward=steward)
     receipt = {
         "sample_count": len(sample),
         "sample_sha256": identity_digest([c.identity() for c in sample]),
@@ -231,21 +191,14 @@ def check_generation_seeded_stratified_binding_agreement(
     return receipt
 
 
-def require_repeatable(artifact_dir, server, capsys, project_path, ordered, query):
-    """Materializer, CLI and HTTP order bytes agree and repeat; search first
-    pages repeat byte for byte."""
-    project = json.loads(project_path.read_text())
-    with open_db(artifact_dir / "reg_meta.db") as conn:
-        result = materialize_order(project_from_raw(project), conn)
-        steward = get_manifest(conn)["catalog_artifact_kind"] == "steward"
+def require_repeatable(server, project, ordered, query, *, steward):
+    """`order`'s data is its download's document, and the download bytes and the
+    search first page repeat byte for byte."""
+    answer = server.post("/api/project/order", json=project)
     require(
-        result.manifest is not None and result.manifest.to_json() == ordered.text,
-        "Materializer and adapter order bytes differ",
-    )
-    code = run(["--db", str(artifact_dir), "order", str(project_path)])
-    require(
-        code == 0 and capsys.readouterr().out == ordered.text,
-        "Repeated CLI order bytes differ",
+        answer.status_code == 200
+        and answer.json()["data"] == json.loads(ordered.content),
+        "Order data and its download disagree",
     )
     require(
         server.post("/api/project/order/manifest", json=project).content
@@ -259,53 +212,27 @@ def require_repeatable(artifact_dir, server, capsys, project_path, ordered, quer
         == server.get("/api/search", params=params).content,
         "Repeated HTTP first page differs",
     )
-    argv = [
-        "--db",
-        str(artifact_dir),
-        "--format",
-        "json",
-        "search",
-        "--query",
-        query,
-        "--type",
-        "variable",
-        "--no-fold",
-        "--limit",
-        "100",
-        "--scope",
-        scope,
-    ]
-    require(run(argv) == 0, "CLI sample search failed")
-    first = capsys.readouterr().out
-    require(run(argv) == 0, "Repeated CLI sample search failed")
-    require(capsys.readouterr().out == first, "Repeated CLI first page differs")
 
 
-def test_generation_seeded_stratified_binding_agreement(
-    artifact_dir, tmp_path, capsys, request
-):
+def test_generation_seeded_stratified_binding_agreement(artifact_dir, request):
     check_generation_seeded_stratified_binding_agreement(
-        artifact_dir,
-        server_client(request, artifact_dir),
-        tmp_path,
-        capsys,
+        artifact_dir, server_client(request, artifact_dir)
     )
 
 
 def test_unheld_deep_link_and_reference_search_do_not_admit_order(
-    artifact_dir, tmp_path, capsys, request
+    artifact_dir, request
 ):
     with open_db(artifact_dir / "reg_meta.db") as conn:
         if get_manifest(conn)["catalog_artifact_kind"] != "steward":
             pytest.skip("catalog refusals are pinned in test_artifact")
         project = sample_project(conn, unheld=True)
-        refused = materialize_order(project_from_raw(project), conn)
     server = server_client(request, artifact_dir)
     binding = project["sources"][0]["bindings"][0]["variable"]
     reference = server.get("/api/catalog/" + binding, params={"scope": "reference"})
     require(reference.status_code == 200, "Unheld reference deep link is missing")
     name = reference.json()["data"]["name"]
-    require_search_reaches(artifact_dir, server, capsys, name, "reference", binding)
+    require_search_reaches(server, name, "reference", binding)
     if len(name) > MAX_QUERY_CHARS:
         # The name is out of contract for HTTP search (search has no FQID arm);
         # prove holdings exclusion by its in-cap prefix, which reference search
@@ -345,21 +272,10 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
         ),
         "Unheld order refusal is not located",
     )
-    require(refused.manifest is None, "Unheld reference binding was ordered")
+    download = server.post("/api/project/order/manifest", json=project)
     require(
-        blocked["fields"]["findings"]
-        == [f.model_dump(mode="json") for f in refused.findings],
-        "HTTP refusal findings disagree with materializer",
-    )
-    path = tmp_path / "unheld-acceptance.json"
-    path.write_text(json.dumps(project))
-    code = run(["--db", str(artifact_dir), "--format", "json", "order", str(path)])
-    captured = capsys.readouterr()
-    require(code != 0, "CLI admitted unheld reference order")
-    output = json.loads(captured.out)
-    require(
-        output["error"]["message"] == blocked["message"],
-        "Unheld CLI/HTTP refusal differs",
+        (download.status_code, download.json()) == (422, ordered.json()),
+        "Unheld download refusal differs from the order refusal",
     )
 
 
@@ -374,22 +290,19 @@ def test_unheld_deep_link_and_reference_search_do_not_admit_order(
         "partitions",
     ],
 )
-def test_source_built_stratified_boundary_agreement(fixture, tmp_path, capsys, request):
+def test_source_built_stratified_boundary_agreement(fixture, tmp_path, request):
     path = build_reader_artifact(
         tmp_path / "artifact",
         fixture,
         "steward",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
-    server = server_client(request, path.parent)
     check_generation_seeded_stratified_binding_agreement(
-        path.parent, server, tmp_path, capsys
+        path.parent, server_client(request, path.parent)
     )
 
 
-def test_binding_past_search_depth_ceiling_is_reached_by_refinement(
-    tmp_path, capsys, request
-):
+def test_binding_past_search_depth_ceiling_is_reached_by_refinement(tmp_path, request):
     # Unheld fillers sharing the sampled "Year"'s exact name, as many as the depth
     # ceiling, outrank it in reference scope: exact-name matches alone fill it.
     source = replicate_filler(CASES / "reader/search-ceiling", tmp_path / "source")
@@ -399,19 +312,16 @@ def test_binding_past_search_depth_ceiling_is_reached_by_refinement(
         "steward",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
-    server = server_client(request, path.parent)
     receipt = check_generation_seeded_stratified_binding_agreement(
-        path.parent, server, tmp_path, capsys
+        path.parent, server_client(request, path.parent)
     )
     # Holdings scope sees no fillers; only the reference traversal hits the ceiling.
     assert receipt["search_ceiling_refined"] == 1
 
 
-def test_binding_named_past_query_cap_is_refused_by_http_search(
-    tmp_path, capsys, request
-):
+def test_binding_named_past_query_cap_is_refused_by_http_search(tmp_path, request):
     # The sampled variable's name is longer than the 200-character `q` cap: HTTP
-    # search must refuse it on `q` in both scopes while the CLI still reaches it.
+    # search must refuse it on `q` in both scopes, while browse still reaches it.
     # Fails if the Rust server accepts an over-cap `q` or stops locating the refusal.
     path = build_reader_artifact(
         tmp_path / "artifact",
@@ -419,8 +329,7 @@ def test_binding_named_past_query_cap_is_refused_by_http_search(
         "steward",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
-    server = server_client(request, path.parent)
     receipt = check_generation_seeded_stratified_binding_agreement(
-        path.parent, server, tmp_path, capsys
+        path.parent, server_client(request, path.parent)
     )
     assert receipt["query_cap_refused"] == 2  # reference and holdings
