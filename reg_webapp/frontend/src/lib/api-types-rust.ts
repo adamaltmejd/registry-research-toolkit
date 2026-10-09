@@ -655,7 +655,7 @@ export interface components {
          */
         Delivery: {
             column?: string | null;
-            coverage: components["schemas"]["Coverage"];
+            coverage: components["schemas"]["ShowCoverage"];
             /** @description `intervals`, or `year_independent` (no windows). */
             period_scope: string;
             variant: string;
@@ -905,7 +905,7 @@ export interface components {
         };
         /** @description A group member; two members of one variable differ by `delivery_column`. */
         Member: {
-            coverage?: components["schemas"]["Coverage"] | null;
+            coverage?: components["schemas"]["ShowCoverage"] | null;
             delivery_column?: string | null;
             facets: components["schemas"]["Facet"][];
             fqid: string;
@@ -1050,7 +1050,7 @@ export interface components {
             variants: components["schemas"]["Variant"][];
         };
         RegisterChild: {
-            coverage?: components["schemas"]["RegisterCoverage"] | null;
+            coverage?: components["schemas"]["ShowRegisterCoverage"] | null;
             fqid: string;
             name?: string | null;
             purpose?: string | null;
@@ -1265,6 +1265,26 @@ export interface components {
             /** @enum {string} */
             kind: "classification_family";
         });
+        /**
+         * @description The span a variable or column is delivered over: its earliest start and latest
+         *     finite end (null when unknown, or when `open_ended`), and the states (held
+         *     periods in holdings) behind it.
+         */
+        ShowCoverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            state_count: number;
+        };
+        /** @description A register's span: its variables and the earliest and latest of their states. */
+        ShowRegisterCoverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            variable_count: number;
+        };
         /** @description Browse-addressable (slugged) providers, registers and variables in the scope. */
         Sizes: {
             /** Format: int64 */
@@ -1427,7 +1447,7 @@ export interface components {
             tags: components["schemas"]["Tag"][];
         };
         VariableChild: {
-            coverage?: components["schemas"]["Coverage"] | null;
+            coverage?: components["schemas"]["ShowCoverage"] | null;
             /** @description Every `(variant, column)` the variable is delivered under in scope. */
             deliveries: components["schemas"]["Delivery"][];
             fqid: string;

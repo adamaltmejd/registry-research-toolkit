@@ -2476,7 +2476,7 @@
             ]
           },
           "coverage": {
-            "$ref": "#/components/schemas/Coverage"
+            "$ref": "#/components/schemas/ShowCoverage"
           },
           "period_scope": {
             "type": "string",
@@ -3326,7 +3326,7 @@
           "coverage": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/Coverage",
+                "$ref": "#/components/schemas/ShowCoverage",
                 "description": "Present on a group's own page only: the member's coverage, its column's\nfor a representation member (empty when no state delivers the column)."
               },
               {
@@ -3804,7 +3804,7 @@
           "coverage": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/RegisterCoverage"
+                "$ref": "#/components/schemas/ShowRegisterCoverage"
               },
               {
                 "type": "null"
@@ -4762,6 +4762,64 @@
         ],
         "description": "A `kind`-tagged summary of a ref."
       },
+      "ShowCoverage": {
+        "type": "object",
+        "description": "The span a variable or column is delivered over: its earliest start and latest\nfinite end (null when unknown, or when `open_ended`), and the states (held\nperiods in holdings) behind it.",
+        "required": [
+          "open_ended",
+          "state_count"
+        ],
+        "properties": {
+          "coverage_from": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "coverage_to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "open_ended": {
+            "type": "boolean"
+          },
+          "state_count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ShowRegisterCoverage": {
+        "type": "object",
+        "description": "A register's span: its variables and the earliest and latest of their states.",
+        "required": [
+          "variable_count",
+          "open_ended"
+        ],
+        "properties": {
+          "coverage_from": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "coverage_to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "open_ended": {
+            "type": "boolean"
+          },
+          "variable_count": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "Sizes": {
         "type": "object",
         "description": "Browse-addressable (slugged) providers, registers and variables in the scope.",
@@ -5382,7 +5440,7 @@
           "coverage": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/Coverage",
+                "$ref": "#/components/schemas/ShowCoverage",
                 "description": "Null in holdings for a variable with no held delivery."
               },
               {

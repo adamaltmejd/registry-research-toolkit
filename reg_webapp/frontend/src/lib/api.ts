@@ -263,8 +263,8 @@ export type VariableChild = RustSchemas["VariableChild"];
 /** One `(variant, delivery column)` a register child is delivered under (Y-82),
  * with that pair's own windows. */
 export type VariableDeliveryModel = RustSchemas["Delivery"];
-export type CoverageModel = RustSchemas["Coverage"];
-export type RegisterCoverageModel = RustSchemas["RegisterCoverage"];
+export type CoverageModel = RustSchemas["ShowCoverage"];
+export type RegisterCoverageModel = RustSchemas["ShowRegisterCoverage"];
 /** A register variant with its versions' prose (the `?variant=` browse axis). */
 export type VariantModel = RustSchemas["Variant"];
 export type TagModel = RustSchemas["Tag"];
