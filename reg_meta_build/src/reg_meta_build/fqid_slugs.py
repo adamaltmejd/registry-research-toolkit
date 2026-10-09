@@ -28,9 +28,8 @@ from dataclasses import dataclass
 from itertools import combinations, groupby
 from typing import TYPE_CHECKING, Any, Literal, cast, get_args
 
-from reg_meta.errors import RegMetaError
-
 from ._curation import curation_error, display_path, repo_curation_dir
+from .errors import RegMetaError
 from .id import is_canonical_scb
 from .slug_grammar import derive_variable_slug, validate_slug
 
@@ -1667,6 +1666,18 @@ def write_auto_toml(
 # for the catalog row's (provider, register slug), as `seed_all` does.
 
 
+def _decode_panel_entity_key(raw: str | None) -> str | tuple[str, ...] | None:
+    """Decode a stored panel key (A4.4c): a JSON-array string → tuple
+    (composite key), any other string → itself (simple bare slug / "period"),
+    NULL → None. Mirrors the `populate_slugs` writer (json.dumps for the tuple
+    case). Generic — reused for both `panel_entity_key` and `panel_time_key`."""
+    if raw is None:
+        return None
+    if raw.startswith("["):
+        return tuple(json.loads(raw))
+    return raw
+
+
 def _decode_panel_entity_key_refs(raw: str | None) -> tuple[str, ...]:
     """Decode a stored `panel_entity_key` to the tuple of slugs it references.
 
@@ -1677,7 +1688,6 @@ def _decode_panel_entity_key_refs(raw: str | None) -> tuple[str, ...]:
     the resolution gate and this enumeration can't disagree on the wire format.
     Local import: keeps `fqid_slugs`'s module import light and dodges any cycle
     through the build graph."""
-    from reg_meta.catalog import _decode_panel_entity_key
 
     decoded = _decode_panel_entity_key(raw)
     if decoded is None:

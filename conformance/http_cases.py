@@ -19,7 +19,7 @@ from contextlib import closing, suppress
 from pathlib import Path
 
 import httpx2
-from reg_meta.errors import RegMetaError
+from reg_meta_build.errors import RegMetaError
 
 CASES = Path(__file__).parent / "cases"
 READY_PATH = "/openapi.json"

@@ -25,7 +25,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from reg_meta.db import db_path_from_args, open_db
+from reg_meta_build.db import db_path_from_args, open_db
 
 from reg_meta_build.fqid_slugs import iter_default_slug_candidates
 

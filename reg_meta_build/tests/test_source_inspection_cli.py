@@ -15,7 +15,7 @@ from _csv_fixtures import (
 )
 from _lisa_fixtures import write_lisa_workbook
 from _source_inspection_fixtures import InterpreterCheckout
-from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE
+from reg_meta_build.errors import EXIT_CONFIG, EXIT_USAGE
 from reg_meta_build.input_snapshot import (
     LISA_DATASET_ID,
     LisaWorkbookSelection,
@@ -317,38 +317,3 @@ def test_pinned_bundle_cli_reports_deterministic_source_targets_without_cold_val
     assert full_a == full_b
     assert full_a.target_preview is None
     assert full_a.summary.workbook_selected_occurrences == 9
-
-
-def test_source_interpreter_pin_rejects_a_loaded_dependency_from_another_checkout(
-    tmp_path: Path,
-) -> None:
-    input_dir = tmp_path / "source"
-    write_scb_input(input_dir)
-    workbook = write_lisa_workbook(input_dir / "docs" / "lisa.xlsx")
-    selection = write_input_bundle(
-        tmp_path / "accepted",
-        input_dir,
-        lisa_workbook=LisaWorkbookSelection(
-            path=workbook,
-            upstream_revision="2024-2025",
-            sha256=hashlib.sha256(workbook.read_bytes()).hexdigest(),
-        ),
-    )
-    # reg_meta is loaded from a second clean repository, not the builder's checkout.
-    checkout = InterpreterCheckout(tmp_path / "interpreter", split_reg_meta=True)
-
-    result = checkout.run(
-        [
-            "inspect-source-records",
-            "--input-bundle",
-            str(selection.path),
-            "--input-commit",
-            selection.input_commit,
-            "--input-manifest-sha256",
-            selection.manifest_sha256,
-        ]
-    )
-
-    assert result.returncode == EXIT_CONFIG
-    error = json.loads(result.stdout)["error"]
-    assert "must come from the same Git checkout" in error["message"]

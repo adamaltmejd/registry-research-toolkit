@@ -12,8 +12,8 @@ from _slugged_db import (
     add_variant,
     build_slugged_db,
 )
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.catalog_dependencies import resolve_variable_successions
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.resolved_catalog import (
     ResolvedClassificationLink,
     ResolvedClassificationSuccession,

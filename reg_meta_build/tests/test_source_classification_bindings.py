@@ -12,7 +12,6 @@ from dataclasses import replace
 
 import pytest
 from _csv_fixtures import scb_record
-from reg_meta.source_evidence import canonical_sha256
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationCode,
@@ -34,6 +33,7 @@ from reg_meta_build.source_curation import (
     SourceEvidence,
     capture_expectations,
 )
+from reg_meta_build.source_evidence import canonical_sha256
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
     NativeCoordinates,

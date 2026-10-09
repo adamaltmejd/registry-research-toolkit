@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import pytest
 from _source_scope_support import guard, record, resolve
-from reg_meta.source_evidence import canonical_sha256
 from reg_meta_build.source_coordinates import (
     native_variable_key,
     source_register_key,
@@ -16,6 +15,7 @@ from reg_meta_build.source_coordinates import (
 from reg_meta_build.source_curation import (
     capture_expectations,
 )
+from reg_meta_build.source_evidence import canonical_sha256
 from reg_meta_build.source_naming import (
     AcceptedNamingEntry,
     NamingAmbiguity,

@@ -13,8 +13,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from _csv_fixtures import commit_fixture, init_fixture_repo
-from reg_meta.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.prepared_sources import prepare_source_records
+from reg_meta_build.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.source_records import (
     CodeSetReference,
     NativeCoordinates,

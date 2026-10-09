@@ -12,7 +12,6 @@ from dataclasses import replace
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_dependencies import (
     check_delivery_coverage,
 )
@@ -31,6 +30,7 @@ from reg_meta_build.source_curation import (
 from reg_meta_build.source_effects import (
     record_ref,
 )
+from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (

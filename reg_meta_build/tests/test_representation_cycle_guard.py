@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import pytest
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.relations import (
     reject_nonmonotone_representation_cycles,
 )

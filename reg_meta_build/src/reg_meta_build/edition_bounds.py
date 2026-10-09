@@ -6,9 +6,19 @@ import re
 from functools import cache
 
 from reg_core_py import is_period, period_bounds
-from reg_meta.queries import extract_year
 
 from ._curation import fold_column
+
+_YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
+
+
+def extract_year(version_name: str) -> int | None:
+    """Extract a 1900-2099 year from a version name. Rejects 4-digit runs
+    embedded in longer digit sequences (so "v19999" → None, not 1999) and
+    out-of-range numbers (so "Komvux 1234-poäng" → None, not 1234)."""
+    m = _YEAR_RE.search(version_name)
+    return int(m.group()) if m else None
+
 
 # A period-grammar year (1900-2099) as a regex fragment.
 YEAR_PATTERN = r"(?:19|20)\d{2}"

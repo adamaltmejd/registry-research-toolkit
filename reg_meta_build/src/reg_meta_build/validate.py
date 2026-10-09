@@ -54,9 +54,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 from reg_core_py import fold_search
-from reg_meta.catalog import _decode_panel_entity_key
-from reg_meta.db import classification_succession_as_of_year, open_db
-from reg_meta.errors import RegMetaError
 
 from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.artifact_identity import search_pins_sha256
@@ -81,6 +78,10 @@ from reg_meta_build.relations import (
     _variable_vintage_stream_key,
 )
 from reg_meta_build.scb_errata import ERRATA_COLUMN_SOURCE_LABEL
+
+from .db import classification_succession_as_of_year, open_db
+from .errors import RegMetaError
+from .fqid_slugs import _decode_panel_entity_key
 
 # Seeded non-SCB provider ids (SOS, FOHM, … — every built-in provider that
 # mints into the high band). The global build's minted-id band check enforces

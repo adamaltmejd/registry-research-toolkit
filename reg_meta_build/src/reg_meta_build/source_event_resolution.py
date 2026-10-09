@@ -5,8 +5,6 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import TYPE_CHECKING
 
-from reg_meta.source_evidence import canonical_sha256
-
 from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE
 from reg_meta_build.resolved_metadata import (
     ResolvedSuccession,
@@ -25,6 +23,8 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_reference_resolution import ReferenceMetadataResolution
+
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator, Mapping, Sequence

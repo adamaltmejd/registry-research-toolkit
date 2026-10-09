@@ -220,15 +220,6 @@ covered_by = ["conformance/cases/api/validate-references-resolve", "conformance/
 
 [[row]]
 kind = "import"
-id = "reg_meta"
-used_by = ["reg_meta_build"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_inspection_cli.py"]
-note = "The source-inspection test fixture copies the whole package because `source_interpreter_commit` hashes `reg_meta.queries` (for `extract_year`); it goes when that module moves (4.4)."
-
-[[row]]
-kind = "import"
 id = "reg_meta.catalog.Catalog"
 used_by = ["conformance", "reg_meta_build"]
 disposition = "retained"
@@ -238,118 +229,11 @@ note = "Section 4: derive bootstraps from reader functions moved into reg_meta_b
 
 [[row]]
 kind = "import"
-id = "reg_meta.catalog.DataWarning"
-used_by = ["reg_meta_build", "reg_webapp"]
-disposition = "retained"
-owner = "4"
-covered_by = ["conformance/cases/api/warnings-filters", "reg_meta_build/tests/test_resolved_writer_data_warnings.py"]
-note = "The build writes data warnings; the model moves with the writer."
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog._decode_panel_entity_key"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/cases/cli/entity-key-pins", "reg_meta/tests/test_catalog_listing.py"]
-note = "Private-name import, which the repo rules forbid; it moves with its module. The decoder belongs beside the build's panel-key encoder."
-
-[[row]]
-kind = "import"
 id = "reg_meta.cli.run"
 used_by = ["conformance"]
 disposition = "removed"
 owner = "4"
 covered_by = ["conformance/test_cli_scope.py", "conformance/test_validate.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.cli_common.NoRepeatParser"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
-
-[[row]]
-kind = "import"
-id = "reg_meta.cli_common.apply_leaf_help"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
-
-[[row]]
-kind = "import"
-id = "reg_meta.cli_common.handle_cli_exception"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
-
-[[row]]
-kind = "import"
-id = "reg_meta.cli_common.reorder_global_flags"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
-
-[[row]]
-kind = "import"
-id = "reg_meta.cli_common.success_envelope"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
-
-[[row]]
-kind = "import"
-id = "reg_meta.cli_common.write_json"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "reg-meta-build's CLI shares the envelope and exit helpers; they move into its cli."
-
-[[row]]
-kind = "import"
-id = "reg_meta.db"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/selection"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.db.CLASSIFICATION_SUCCESSION_AS_OF_YEAR"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_resolved_writer_classifications.py"]
-note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.db.CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_resolved_writer_classifications.py"]
-note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.db.DB_FILENAME"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
 
 [[row]]
 kind = "import"
@@ -362,35 +246,8 @@ note = "The artifact schema and its gate have one home, reg_meta_build (section 
 
 [[row]]
 kind = "import"
-id = "reg_meta.db.classification_succession_as_of_year"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_resolved_writer_classifications.py"]
-note = "The artifact schema and its gate have one home, reg_meta_build (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.db.db_path_from_args"
-used_by = ["reg_meta_build", "scripts"]
-disposition = "retained"
-owner = "4"
-covered_by = ["conformance/cases/selection"]
-note = "Default artifact directory for build output."
-
-[[row]]
-kind = "import"
-id = "reg_meta.db.default_db_dir"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["conformance/cases/selection"]
-note = "Default artifact directory for build output."
-
-[[row]]
-kind = "import"
 id = "reg_meta.db.get_manifest"
-used_by = ["conformance", "reg_meta_build"]
+used_by = ["conformance"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_artifact.py"]
@@ -399,7 +256,7 @@ note = "Build-side artifact IO (extend-db, validate_built_db, derive); conforman
 [[row]]
 kind = "import"
 id = "reg_meta.db.open_db"
-used_by = ["conformance", "reg_meta_build", "scripts"]
+used_by = ["conformance", "reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_artifact.py"]
@@ -407,158 +264,8 @@ note = "Build-side artifact IO (extend-db, validate_built_db, derive); conforman
 
 [[row]]
 kind = "import"
-id = "reg_meta.doc_db"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_doc_commands.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_db.DOC_DB_FILENAME"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
-note = "The docs DB schema has one home, reg_meta_build."
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_db.DOC_SCHEMA_VERSION"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
-note = "The docs DB schema has one home, reg_meta_build."
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_db.doc_db_path"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_db.open_doc_db"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.documentary.DocumentaryRelationship"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
-note = "Build-time documentary relationship models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.documentary.DocumentaryVariableReference"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
-note = "Build-time documentary relationship models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.documentary.LiteralSourceRelationship"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
-note = "Build-time documentary relationship models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.documentary.SourceCodeCrosswalkDeclaration"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
-note = "Build-time documentary relationship models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.documentary.SourceCodeOperand"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
-note = "Build-time documentary relationship models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.documentary.SourceDerivationClause"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
-note = "Build-time documentary relationship models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.documentary.SourceDerivationDeclaration"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
-note = "Build-time documentary relationship models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.documentary.UnresolvedDocumentaryReference"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
-note = "Build-time documentary relationship models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.documentary._SourceDeclaration"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_documentary.py"]
-note = "Private-name import, which the repo rules forbid; it moves with its module. Build-time documentary relationship models."
-
-[[row]]
-kind = "import"
 id = "reg_meta.errors.EXIT_CONFIG"
-used_by = ["conformance", "reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.errors.EXIT_NOT_FOUND"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.errors.EXIT_OUTPUT"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.errors.EXIT_USAGE"
-used_by = ["reg_meta_build"]
+used_by = ["conformance"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
@@ -567,7 +274,7 @@ note = "The build's error class and exit codes; the Rust reader has its own erro
 [[row]]
 kind = "import"
 id = "reg_meta.errors.RegMetaError"
-used_by = ["conformance", "reg_meta_build", "scripts"]
+used_by = ["conformance", "reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
@@ -593,96 +300,6 @@ note = "FQID and period grammar move to reg-core; the build reaches them through
 
 [[row]]
 kind = "import"
-id = "reg_meta.inventory.ColumnMapping"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
-note = "Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
-id = "reg_meta.inventory.DeliveryInventory"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_inventory_coverage_misses.py", "reg_meta_build/tests/test_holdings_steward_boundary.py"]
-note = "Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
-id = "reg_meta.inventory.InventoryColumn"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
-note = "Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
-id = "reg_meta.inventory.InventoryTable"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_holdings_steward_boundary.py"]
-note = "Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
-id = "reg_meta.inventory._intersect"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
-note = "Private-name import, which the repo rules forbid; it moves with its module. Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
-id = "reg_meta.inventory._merge"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
-note = "Private-name import, which the repo rules forbid; it moves with its module. Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
-id = "reg_meta.inventory._render"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
-note = "Private-name import, which the repo rules forbid; it moves with its module. Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
-id = "reg_meta.inventory.edition_bounds"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_triage.py"]
-note = "Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
-id = "reg_meta.inventory.load_inventory"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta/tests/test_inventory.py", "reg_meta_build/tests/test_swecov_inventory.py"]
-note = "Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
-id = "reg_meta.inventory.validate_inventory_placements"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_holdings_steward_boundary.py"]
-note = "Holdings inventory input, compiled into the artifact by holdings_compile."
-
-[[row]]
-kind = "import"
 id = "reg_meta.order.materialize_order"
 used_by = ["conformance"]
 disposition = "removed"
@@ -700,7 +317,7 @@ covered_by = ["conformance/test_order.py", "conformance/test_artifact_sample.py"
 [[row]]
 kind = "import"
 id = "reg_meta.queries"
-used_by = ["conformance", "reg_meta_build"]
+used_by = ["conformance"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_logical.py", "reg_meta_build/tests/test_source_inspection_cli.py"]
@@ -726,15 +343,6 @@ note = "Private-name import, which the repo rules forbid, by the fold corpus gen
 
 [[row]]
 kind = "import"
-id = "reg_meta.queries.extract_year"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_build_db.py"]
-note = "Judgment: a version-name year heuristic, not the period grammar, so it moves rather than going to reg-core-py."
-
-[[row]]
-kind = "import"
 id = "reg_meta.queries.fold_search"
 used_by = ["conformance", "crates"]
 disposition = "removed"
@@ -750,105 +358,6 @@ disposition = "removed"
 owner = "4"
 covered_by = ["conformance/cases/api", "reg_meta/tests/test_search_ranking.py"]
 note = "The search core, which the Rust `search` operation replaced for the webapp. Conformance's reader and logical cases still call it. The build no longer imports it: English-name search coverage is the `api/search-english-name` case."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence.DeliveredCell"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_records.py"]
-note = "Build-input source evidence models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence.FieldScalar"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_records.py"]
-note = "Build-input source evidence models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence.FieldState"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_records.py"]
-note = "Build-input source evidence models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence.RecordLocator"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_records.py"]
-note = "Build-input source evidence models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence.SourceField"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_records.py"]
-note = "Build-input source evidence models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence.SourceRecordRef"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_curation_compile_tree.py"]
-note = "Build-input source evidence models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence.SourceRevision"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_records.py"]
-note = "Build-input source evidence models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence._HASH_RE"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_records.py"]
-note = "Private-name import, which the repo rules forbid; it moves with its module. Build-input source evidence models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence._SourceModel"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_records.py"]
-note = "Private-name import, which the repo rules forbid; it moves with its module. Build-input source evidence models."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence.canonical_json"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_coding.py"]
-note = "Canonical JSON (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.source_evidence.canonical_sha256"
-used_by = ["reg_meta_build", "reg_webapp"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_source_coding.py", "reg_meta_build/tests/test_source_event_resolution.py"]
-note = "Canonical JSON SHA-256 (section 5)."
 
 [[row]]
 kind = "import"

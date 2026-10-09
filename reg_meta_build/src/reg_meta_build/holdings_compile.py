@@ -7,17 +7,16 @@ import tomllib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta.inventory import (
+from .db import catalog_coordinate_ids
+from .holdings_accounting import HoldingsAccounting, account_holdings
+from .inventory import (
     DeliveryInventory,
     InventoryColumn,
     edition_bounds,
     load_inventory,
     validate_inventory_placements,
 )
-from reg_meta.source_evidence import canonical_json
-
-from .db import catalog_coordinate_ids
-from .holdings_accounting import HoldingsAccounting, account_holdings
+from .source_evidence import canonical_json
 
 if TYPE_CHECKING:
     from pathlib import Path

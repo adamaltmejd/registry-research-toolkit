@@ -18,7 +18,6 @@ from _csv_fixtures import (
     write_scb_snapshot,
 )
 from _prepared_fixtures import accept_prepared
-from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.input_snapshot import prepare_input_bundle
 from reg_meta_build.pipeline import build_catalog
 from reg_meta_build.prepared_catalog import (
@@ -26,6 +25,7 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
     prepare_catalog_sources,
 )
+from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.source_reference_records import SourceColumnTypeDeclaration
 from reg_meta_build.sources.swecov_column_types import (
     SwecovColumnTypesError,

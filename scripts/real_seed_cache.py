@@ -39,7 +39,7 @@ returns HEAD as the acceptance commit. A tree not yet committed at HEAD, with it
 payload inventory complete, is reported as awaiting acceptance, without a rerun. Any
 other failed check drops the record and misses.
 
-Build key: the content of `reg_meta_build/src`, `reg_meta/src`, `reg_schema/src`,
+Build key: the content of `reg_meta_build/src`, `reg_schema/src`,
 `crates/reg-core`, `crates/reg-core-py`, `Cargo.toml`, `Cargo.lock` and `uv.lock`; the
 builder's own `curation_tree_sha256` of the selected curation tree; the prepared
 commit and manifest digest; the mode and `--registers`; the Python and SQLite
@@ -104,7 +104,6 @@ EXIT_CONFIG = 10  # reg-meta-build's exit for a diagnostic completion
 EXIT_AWAITING = 3
 PACKAGES = {
     "reg_meta_build": "reg_meta_build/src",
-    "reg_meta": "reg_meta/src",
     "reg_schema": "reg_schema/src",
 }
 # The prepare key's code boundary, as roots of a static import walk
@@ -117,18 +116,13 @@ PACKAGES = {
 # `curation_tree` and `fqid_slugs` can read the curation tree, and the prepare path
 # calls none of those readers).
 #
-# Stage 4 of RUST_RUNTIME_SPEC.md moves the retained `reg_meta` modules into
-# `reg_meta_build` (4.4) and deletes `reg_meta/` and `reg_schema/` (4.9a): update
-# these roots and `PACKAGES` then; a missing root stops the tool rather than
-# shrinking the key.
+# Stage 4.9a of RUST_RUNTIME_SPEC.md deletes `reg_schema/`: update `PACKAGES` then;
+# a missing root stops the tool rather than shrinking the key.
 PREPARE_ROOTS = (
     "reg_meta_build.prepared_catalog",
     "reg_meta_build.input_snapshot",
     "reg_meta_build.db",
     "reg_meta_build._curation",
-    "reg_meta.cli_common",
-    "reg_meta.db",
-    "reg_meta.errors",
 )
 # Keyed by content but not walked: the CLI imports every subcommand's module at load,
 # so walking it would key prepare on the whole builder. Their import-time code runs
@@ -147,7 +141,7 @@ import importlib.util
 request = json.loads(sys.argv[1])
 facts = {"python": sys.version, "sqlite": sqlite3.sqlite_version}
 root = Path(request["root"]).resolve()
-for package in ("reg_meta_build", "reg_meta"):
+for package in ("reg_meta_build",):
     spec = importlib.util.find_spec(package)
     if spec is None:
         continue

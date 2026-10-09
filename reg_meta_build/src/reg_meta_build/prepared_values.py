@@ -31,7 +31,6 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from reg_meta.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 
 from reg_meta_build._accepted_prepared import (
     check_accepted_files,
@@ -55,6 +54,8 @@ from reg_meta_build.source_values import (
     SourceValueValidity,
     SourceValueWindow,
 )
+
+from .source_evidence import DeliveredCell, RecordLocator, SourceRevision
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator

@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from catalog_manifest import synthetic_manifest
-from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import write_resolved_catalog
@@ -28,6 +27,7 @@ from reg_meta_build.source_curation import (
     capture_expectations,
 )
 from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
+from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_naming import (
     NamingDeclaration,

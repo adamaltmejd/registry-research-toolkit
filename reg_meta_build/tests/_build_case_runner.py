@@ -51,8 +51,7 @@ from _sos_fixtures import (
 )
 from openpyxl import load_workbook
 from reader_artifacts import build_inputs_digest, generation_dir
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.source_evidence import canonical_sha256
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.pipeline import build_catalog, check_curation
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
@@ -67,6 +66,7 @@ from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
     capture_expectations,
 )
+from reg_meta_build.source_evidence import canonical_sha256
 from reg_meta_build.source_naming import authored_naming_id
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import SourceFields

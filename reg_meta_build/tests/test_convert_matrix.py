@@ -6,7 +6,6 @@ import json
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.cis2016_matrix import Cis2014Matrix, Cis2016Matrix, convert_matrix
 from reg_meta_build.source_coding import (
     CodeListClaim,
@@ -15,6 +14,7 @@ from reg_meta_build.source_coding import (
 )
 from reg_meta_build.source_curation import OccurrenceCorrectionDecision, evaluate_case
 from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
+from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.source_naming import check_naming_target
 from reg_meta_build.source_records import value_field
 from reg_meta_build.sources.scb_records import clean_scb_row
@@ -392,7 +392,7 @@ def test_matrix_evidence_does_not_activate_without_declaration(tmp_path) -> None
 def test_matrix_activation_refuses_missing_or_changed_checked_evidence(
     tmp_path, change
 ) -> None:
-    from reg_meta.errors import EXIT_CONFIG, RegMetaError
+    from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 
     compile, evidence, path, _, _, _ = _matrix_activation(tmp_path)
     if change == "missing":

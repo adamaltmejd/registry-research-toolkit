@@ -5,9 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from reg_meta.source_evidence import canonical_sha256
-
 from .input_snapshot import SnapshotError, _builder_source_identity, _git
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping

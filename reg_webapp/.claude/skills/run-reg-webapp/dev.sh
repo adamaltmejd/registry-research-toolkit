@@ -257,7 +257,7 @@ fi
 # The Rust server needs its catalog directory explicitly: the fixture's, the
 # caller's REG_META_DB, or the directory reg_meta resolves by default (XDG).
 # REG_WEBAPP_STEWARD names the catalog.
-rust_db=${REG_META_DB:-$(.venv/bin/python -c 'import reg_meta.db; print(reg_meta.db.db_path_from_args(None).parent)')}
+rust_db=${REG_META_DB:-$(.venv/bin/python -c 'import reg_meta_build.db; print(reg_meta_build.db.db_path_from_args(None).parent)')}
 target/debug/reg-meta serve --db "$rust_db" --catalog "${REG_WEBAPP_STEWARD:-global}" \
 	--stewards reg_webapp/stewards --port "$rust_port" &
 pids+=($!)

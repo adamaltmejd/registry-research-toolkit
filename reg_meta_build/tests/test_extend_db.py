@@ -15,13 +15,13 @@ from pathlib import Path
 
 import pytest
 from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
-from reg_meta.catalog import DataWarning
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.source_evidence import canonical_sha256
+from reg_meta_build.data_warnings import DataWarning
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.extend_db import (
     extend_db,
 )
 from reg_meta_build.id import mint
+from reg_meta_build.source_evidence import canonical_sha256
 from reg_meta_build.validate import validate_built_db
 
 _STEWARD = "swecov"

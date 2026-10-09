@@ -14,7 +14,7 @@ from pathlib import Path
 import pytest
 from _prepared_fixtures import accept_prepared
 from catalog_manifest import synthetic_manifest
-from reg_meta.catalog import DataWarning
+from reg_meta_build.data_warnings import DataWarning
 from reg_meta_build.extend_db import extend_db
 from reg_meta_build.resolved_catalog import ResolvedVariable, write_resolved_catalog
 

@@ -10,7 +10,9 @@ import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from catalog_manifest import synthetic_manifest
 from pydantic import ValidationError
-from reg_meta.documentary import (
+from reg_meta_build.curation_tree import DocumentaryBindingEntry
+from reg_meta_build.db import open_built_db
+from reg_meta_build.documentary import (
     DocumentaryRelationship,
     DocumentaryVariableReference,
     SourceCodeCrosswalkDeclaration,
@@ -18,14 +20,6 @@ from reg_meta.documentary import (
     SourceDerivationClause,
     SourceDerivationDeclaration,
 )
-from reg_meta.source_evidence import (
-    DeliveredCell,
-    RecordLocator,
-    SourceRevision,
-    canonical_sha256,
-)
-from reg_meta_build.curation_tree import DocumentaryBindingEntry
-from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
     ResolvedState,
@@ -36,6 +30,12 @@ from reg_meta_build.resolved_catalog import (
 from reg_meta_build.resolved_metadata import ResolvedMetadata
 from reg_meta_build.source_coordinates import native_variable_key
 from reg_meta_build.source_documentary import compile_documentary_bindings
+from reg_meta_build.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceRevision,
+    canonical_sha256,
+)
 from reg_meta_build.source_records import (
     SourceEvidenceRow,
     SourceEvidenceTable,

@@ -5,7 +5,8 @@ from __future__ import annotations
 from typing import Literal, Self
 
 from pydantic import Field, field_validator, model_validator
-from reg_meta.source_evidence import (
+
+from .source_evidence import (
     _HASH_RE,
     DeliveredCell,
     FieldScalar,
