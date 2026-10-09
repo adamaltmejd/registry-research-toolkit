@@ -166,6 +166,8 @@ describe("pickerRepresentations (#678 direct picker)", () => {
         valid_from: null, // unknown start
         valid_to: "2008-12-31",
         classification_slugs: [],
+        variant_family: null,
+        variant_family_label: null,
       } as GraphState,
     ]);
     expect(row.from).toBe("0001-01-01");

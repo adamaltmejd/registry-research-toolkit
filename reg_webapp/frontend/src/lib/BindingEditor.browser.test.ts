@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { StatesResponse, VariableStateModel } from "./api";
-import { getCatalogNode } from "./api";
+import type { VariableStateModel } from "./api";
+import { getStates } from "./api";
 import BindingEditor from "./BindingEditor.svelte";
 import { bindingFieldsFromResolution } from "./catalog";
 import { resetCatalogNames } from "./catalog_names.svelte";
+import { state } from "./catalog-test-helpers";
 import type { Binding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 
@@ -17,51 +18,31 @@ import { projectStore } from "./project_store.svelte";
 // column — the ordinary pick — that name is RESOLVED from the catalog at the
 // source's (variant, period), through the same leaf resolve the picker runs.
 
-// Stub the leaf resolve; keep the rest of api.ts real (the types + path helpers
-// `catalog.ts` uses) — the partial-mock pattern the catalog views use.
+// Stub the `states` resolve; keep the rest of api.ts real (the types + path
+// helpers `catalog.ts` uses) — the partial-mock pattern the catalog views use.
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
-    getDataWarnings: vi.fn().mockResolvedValue([]),
+    getStates: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
   };
 });
 
-/** One `?period`-resolved state, minimal: the resolve reads only the delivery
+/** One `period`-resolved state, minimal: the resolve reads only the delivery
  * column and the era that ranks it. */
-function state(
+function columnState(
   column: string | null,
   validFrom: string,
   validTo: string,
 ): VariableStateModel {
-  return {
-    warning_ids: [],
-    state_id: "1",
-    period_scope: "intervals",
+  return state({
     variant: "v1",
-    variant_label: null,
-    register_variant_id: "1",
     valid_from: validFrom,
     valid_to: validTo,
     data_type: "int",
-    data_length: null,
     delivery_column_name: column,
-    source_register_text: null,
-    provenance: null,
-    pooled: false,
-    value_set_version_label: "",
-    value_set_id: null,
-    value_set: null,
-    value_set_summary: null,
-    is_identifier: false,
-    classifications: [],
-  } as VariableStateModel;
-}
-
-/** The `?period`+`?variant` resolve payload for a leaf. */
-function resolved(...states: VariableStateModel[]): StatesResponse {
-  return { states } as unknown as StatesResponse;
+  });
 }
 
 /** The row under test, always at the source's (`v1`, 2020) — the coordinate the
@@ -103,10 +84,10 @@ beforeEach(() => {
   // The name cache is a session singleton: reset it so each case's stubbed resolve
   // is the one its row reads.
   resetCatalogNames();
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getCatalogNode).mockResolvedValue(
-    resolved(state("Kon", "2010-01-01", "9999-12-31")),
-  );
+  vi.mocked(getStates).mockReset();
+  vi.mocked(getStates).mockResolvedValue([
+    columnState("Kon", "2010-01-01", "9999-12-31"),
+  ]);
 });
 
 describe("BindingEditor read-only cart row", () => {
@@ -121,7 +102,7 @@ describe("BindingEditor read-only cart row", () => {
       .element(page.getByRole("link", { name: "scb/lisa/kon" }))
       .toHaveAttribute("href", "/catalog/scb/lisa/kon");
     // A file that names its own column asks the catalog nothing.
-    expect(vi.mocked(getCatalogNode).mock.calls).toHaveLength(0);
+    expect(vi.mocked(getStates).mock.calls).toHaveLength(0);
 
     // No picker / type select / display_name input / Advanced disclosure.
     expect(
@@ -155,7 +136,7 @@ describe("BindingEditor read-only cart row", () => {
   it("keeps the FQID alone when nothing there resolves to a column", async () => {
     // Offline, or a variable outside this steward's catalog: the row must stay
     // readable and must not invent a name.
-    vi.mocked(getCatalogNode).mockRejectedValue(new Error("offline"));
+    vi.mocked(getStates).mockRejectedValue(new Error("offline"));
     const binding = bindingFieldsFromResolution(
       "scb/lisa/kon",
       { kind: "derived", type: "categorical" },
@@ -186,11 +167,13 @@ describe("BindingEditor read-only cart row", () => {
     await expect
       .element(page.getByRole("link", { name: "scb/lisa/kon" }))
       .toBeVisible();
-    expect(vi.mocked(getCatalogNode).mock.calls).toHaveLength(0);
+    expect(vi.mocked(getStates).mock.calls).toHaveLength(0);
   });
 
   it("resolves one (fqid, period, variant) ONCE however many rows ask", async () => {
     // A hundred-column cart must not re-issue a request per row or per render.
+    // Fails if the `states` read is not shared through the name cache (package C
+    // moved the resolve to `getStates`).
     const binding = bindingFieldsFromResolution(
       "scb/lisa/kon",
       { kind: "derived", type: "categorical" },
@@ -202,7 +185,7 @@ describe("BindingEditor read-only cart row", () => {
     await renderRow(binding);
     await expect.element(page.getByText("Kon", { exact: true })).toBeVisible();
 
-    expect(vi.mocked(getCatalogNode).mock.calls).toHaveLength(1);
+    expect(vi.mocked(getStates).mock.calls).toHaveLength(1);
   });
 
   it("shows the '(no variable)' fallback, unlinked, for a binding without a variable", async () => {

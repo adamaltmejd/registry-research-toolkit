@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import { getCatalogNode, getCatalogRoot, getRegisterVariants } from "./api";
+import { getShow, getStates } from "./api";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import type { Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import {
-  providerNode,
-  registerNode,
+  providerShow,
+  registerChild,
+  registerShow,
   renderCard,
-  rootResponse,
+  rootShow,
   stubCatalog,
-  variantsResponse,
 } from "./source-editor-test-helpers";
 
 // #991/#993: SourceEditor is the cart source card — it DISPLAYS the register it
@@ -23,17 +23,17 @@ import {
 // catalog (the draft holds only the coordinate) and never a slug rule — and they are
 // composed as separate elements, not strung into one dot-joined heading.
 
-// Stub the three catalog GETs the card's names come from; keep the rest of api.ts
-// real (the types + path helpers `catalog.ts` uses) — the partial-mock pattern
-// `VariantBrowser` / `CatalogNodeView` use for the same reads.
+// Stub the catalog reads the card's names and columns come from (`show`,
+// `states`); keep the rest of api.ts real (the types + path helpers `catalog.ts`
+// uses) — the partial-mock pattern `VariantBrowser` / `CatalogNodeView` use for
+// the same reads.
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getCatalogRoot: vi.fn(),
-    getRegisterVariants: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getShow: vi.fn(),
+    getStates: vi.fn(),
   };
 });
 
@@ -47,9 +47,8 @@ beforeEach(() => {
   // The name cache is a session singleton too — a case stubbing a different
   // catalog for the same coordinate must not read the previous case's answer.
   resetCatalogNames();
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getCatalogRoot).mockReset();
-  vi.mocked(getRegisterVariants).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getStates).mockReset();
   stubCatalog();
 });
 describe("SourceEditor cart card", () => {
@@ -134,20 +133,22 @@ describe("SourceEditor cart card", () => {
     await expect
       .element(page.getByText("Individer, 15 år och äldre", { exact: true }))
       .toBeVisible();
-    // ONE variants read for the register both cards sit on: the name cache is keyed
-    // per register, so the second card — and every re-render of either — asks
-    // nothing. A cart of a hundred columns on one register makes this one request.
-    expect(vi.mocked(getRegisterVariants).mock.calls).toHaveLength(1);
+    // ONE register read for the register both cards sit on: the name cache is
+    // keyed per register, so the second card — and every re-render of either —
+    // asks nothing. A cart of a hundred columns on one register makes this one
+    // request. Fails if the variants are read per card (they ride the register's
+    // `show` since package C).
+    expect(
+      vi.mocked(getShow).mock.calls.filter(([ref]) => ref === "scb/lisa"),
+    ).toHaveLength(1);
   });
 
   it("titles a `_default` variant with the register alone", async () => {
     // `_default` is the whole-register default, not a population anyone picked.
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      providerNode("fk", registerNode("fk/midas", "MiDAS")),
-    );
-    vi.mocked(getRegisterVariants).mockResolvedValue(
-      variantsResponse({ slug: "_default", name: null }),
-    );
+    stubCatalog({
+      fk: providerShow("fk", registerChild("fk/midas", "MiDAS")),
+      "fk/midas": registerShow("fk/midas", { slug: "_default", name: null }),
+    });
     const source = {
       name: "MIDAS",
       register_variant: "fk/midas/_default",
@@ -173,12 +174,12 @@ describe("SourceEditor cart card", () => {
   });
 
   it("names the provider that owns the register where the deployment has more than one", async () => {
-    vi.mocked(getCatalogRoot).mockResolvedValue(
-      rootResponse(
+    stubCatalog({
+      "": rootShow(
         { fqid: "scb", name: "Statistiska Centralbyrån" },
         { fqid: "fk", name: "Försäkringskassan" },
       ),
-    );
+    });
     const source = {
       name: "LISA",
       register_variant: "scb/lisa/individer-15plus",
@@ -212,8 +213,10 @@ describe("SourceEditor cart card", () => {
     // Offline, or a coordinate outside this steward's catalog: the card must stay
     // readable and must not invent a word. The title falls back to the coordinate,
     // and the detail row does not then repeat it.
-    vi.mocked(getCatalogNode).mockRejectedValue(new Error("offline"));
-    vi.mocked(getRegisterVariants).mockRejectedValue(new Error("offline"));
+    stubCatalog({
+      scb: new Error("offline"),
+      "scb/lisa": new Error("offline"),
+    });
     const source = {
       name: "LISA",
       register_variant: "scb/lisa/individer-15plus",
@@ -255,7 +258,7 @@ describe("SourceEditor cart card", () => {
     // Half a name is worse than none: "LISA" alone is how a `_default` source reads,
     // and two variants of one register would title identically. The card says the
     // coordinate until it can say the whole name.
-    vi.mocked(getRegisterVariants).mockRejectedValue(new Error("offline"));
+    stubCatalog({ "scb/lisa": new Error("offline") });
     const source = {
       // Not named "LISA": the register's word must be absent from the whole card.
       name: "s1",
@@ -401,9 +404,9 @@ describe("SourceEditor cart card", () => {
     // curated name can be long and unbroken too.
     const longRegisterName =
       "Longitudinell_integrationsdatabas_for_sjukforsakrings_och_arbetsmarknadsstudier";
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      providerNode("scb", registerNode("scb/lisa", longRegisterName)),
-    );
+    stubCatalog({
+      scb: providerShow("scb", registerChild("scb/lisa", longRegisterName)),
+    });
     const source = {
       name: "a_very_long_source_name_that_would_not_normally_wrap_on_its_own",
       register_variant: "scb/lisa/v1",

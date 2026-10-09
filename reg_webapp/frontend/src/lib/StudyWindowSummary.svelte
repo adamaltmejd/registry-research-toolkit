@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getCatalogNode, isCatalogNode } from "./api";
+import { getShow } from "./api";
 import { unmountedFlag } from "./async.svelte";
 import { periodLabel, periodWindowRelation, yearWindowLabel } from "./period";
 import {
@@ -118,9 +118,9 @@ async function prepare(): Promise<void> {
   outcome = null;
   try {
     const registers = overlapRegisters(sources, window);
-    let reads: Awaited<ReturnType<typeof getCatalogNode>>[];
+    let reads: Awaited<ReturnType<typeof getShow>>[];
     try {
-      reads = await Promise.all(registers.map((r) => getCatalogNode(r)));
+      reads = await Promise.all(registers.map((r) => getShow(r)));
     } catch {
       if (!unmounted()) {
         outcome = { kind: "unreadable" };
@@ -137,12 +137,7 @@ async function prepare(): Promise<void> {
     const children = new Map(
       registers.map((register, i) => {
         const node = reads[i];
-        return [
-          register,
-          isCatalogNode(node) && node.kind === "register"
-            ? node.children.filter((c) => c.kind === "binding")
-            : [],
-        ];
+        return [register, node.kind === "register" ? node.children : []];
       }),
     );
     const plan = planWindowOverlap(sources, window, children);

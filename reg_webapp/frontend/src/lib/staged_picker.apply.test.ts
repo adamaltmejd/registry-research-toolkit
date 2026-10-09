@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  getCatalogNode,
+  getStates,
   type VariableDeliveryModel,
   type VariableStateModel,
 } from "./api";
@@ -9,6 +9,7 @@ import {
   type PickerRepresentation,
   pickerRepresentations,
 } from "./catalog";
+import { state } from "./catalog-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import {
   applyStagedPicks,
@@ -20,10 +21,10 @@ import {
 // resolve → commit stack. Sibling: staged_picker.test.ts (row enumeration).
 
 // Only the ONE call the staging stack makes on its own — `resolveBindingAt`'s
-// `?period` resolve, one GET per staged add. Everything else in ./api stays real.
+// `period` states read, one per staged add. Everything else in ./api stays real.
 vi.mock("./api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./api")>()),
-  getCatalogNode: vi.fn(),
+  getStates: vi.fn(),
 }));
 
 // ── The shared staged add → resolve → commit stack (Y-83) ────────────────────
@@ -33,28 +34,15 @@ vi.mock("./api", async (importOriginal) => ({
 /** A minimal `VariableStateModel` — the fields the row enumeration + the type
  * derivation read. */
 function leafState(over: Partial<VariableStateModel>): VariableStateModel {
-  return {
-    warning_ids: [],
-    state_id: "1",
-    period_scope: "intervals",
+  return state({
     variant: "individer",
-    variant_label: null,
-    register_variant_id: "1",
     valid_from: "1990-01-01",
     valid_to: "2023-12-31",
     data_type: "int",
-    data_length: null,
     delivery_column_name: "Kon",
-    source_register_text: null,
-    provenance: null,
-    pooled: false,
-    value_set_version_label: "",
     value_set_id: "7",
-    value_set: null,
-    is_identifier: false,
-    classifications: [],
     ...over,
-  };
+  });
 }
 
 /** The same two deliveries as `konStates`, in the form the REGISTER list receives
@@ -161,14 +149,12 @@ function picksOf(
 
 const SEED = { regMetaVersion: "reg_meta/v1.0.0", steward: "global" };
 
-/** Resolve every `?period` GET to the picked variant's own state, so the staged
- * binding derives a concrete type (the #991 write-once shape). */
+/** Resolve every `period` states read to the picked variant's own states, so the
+ * staged binding derives a concrete type (the #991 write-once shape). */
 function stubResolve(states: VariableStateModel[]): void {
-  vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
-    const variant = typeof params?.variant === "string" ? params.variant : "";
-    return {
-      states: states.filter((s) => !variant || s.variant === variant),
-    } as never;
+  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
+    const variant = params?.variant ?? "";
+    return states.filter((s) => !variant || s.variant === variant);
   });
 }
 
@@ -264,12 +250,12 @@ describe("applyStagedPicks", () => {
     // through, and leaves the draft untouched — so the draft identity beside it
     // cannot see it, and only asking `cancelled` a second time can.
     let gone = false;
-    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+    // Fails if the batch commits after a states read its host outlived
+    // (the resolve now reads `getStates`, RUST_RUNTIME_SPEC.md package C).
+    vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
       gone = true;
-      const variant = typeof params?.variant === "string" ? params.variant : "";
-      return {
-        states: konStates.filter((s) => !variant || s.variant === variant),
-      } as never;
+      const variant = params?.variant ?? "";
+      return konStates.filter((s) => !variant || s.variant === variant);
     });
     projectStore.newProject({
       reg_meta_version: SEED.regMetaVersion,
