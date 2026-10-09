@@ -1445,6 +1445,70 @@ Publication uses staged output and atomic replacement, with the previous generat
 retained as `.prev`. No source preparation, decision refresh, network fetch or LLM call
 occurs during a build.
 
+## Compiled resolver
+
+The resolver has one home: derive (`derive/states.py`, `derive/browse.py`). It compiles
+what resolution computes from the artifact alone, so the reader keeps only the
+request-dependent rules (the window fallback and warning attribution,
+[../crates/DESIGN.md](../crates/DESIGN.md), "Compiled states and request-time rules").
+
+**One spelling per delivery column.** A column spelled several ways across states and
+alias windows (`fastigheter` windows IDVE, IdVe and idve over one column) is one column
+under the `py_lower` fold, the rule that validates `variable_alias ⊇ state columns`. Its
+name is the representative: the state's own spelling where a state names the column,
+else the lowest by byte order. Lowest rather than first seen, because the reads are
+unordered and first seen would follow the query plan. Derive stores it as
+`canonical_column`.
+
+**Alias windows.** `variable_alias_window` gives resolver-visible delivery columns their
+own validity. A monthly family folds twelve month-named columns into one variable with
+an annual state per year and each month's column as a sub-annual window; multi-alias SCB
+cvids (`LoneInk_LISA2006`, `LoneInk_LISA2007`) use the same table so every concrete
+column can be picked and ordered. A window overrides only its column and bounds; the
+claim (state, value set, version label) is shared, so a window's identity is
+`(state_id, delivery_column_name, valid_from)`. `column_metadata = "per_column"` windows
+also carry their own type, length, definitions, names and source text, and per-column
+coding windows their own value set and classification links; these override the base
+even when NULL. Per-column windows are clipped to successive base states; shared windows
+must lie inside their state. A window's `provenance` follows the state's: source-derived
+windows leave it NULL, and an exact-edition curated alias carries its correction class,
+evidence and editions and is additive rather than replacing.
+
+**Compiled relations.**
+
+- `expanded_state`: every representation the resolver can emit over a base state's whole
+  history, one row per base state plus one per participating alias window. Its `kind` is
+  `base` (always emitted), `base_fallback` (a base that some source window is spelled
+  like, so it can be replaced), `source_window`, `coded_window` (a per-column coded
+  window) or `curated_window` (additive). Each row carries its bounds, the emitted
+  `delivery_column_name`, the window's key start and `canonical_column`. It references
+  the state and window rows rather than copying their content.
+- `resolver_column`: the canonical columns of every row that is not `base_fallback`.
+  This whole-history universe is the only relation that authorizes a holdings mapping;
+  it says nothing about applicability to one holding edition.
+- `browse_delivery` and `delivery_window`: deliveries per register and scope, with their
+  disjoint windows. Browse deliberately keeps alias windows no state contains, so it is
+  a different contract from `resolver_column`.
+
+`validate_built_db` recomputes each relation and requires equality, one canonical
+spelling per (variable, variant, fold), and disjoint delivery windows. A variable with
+no window rows maps one to one.
+
+**Search indexes.** Derive fills the four FTS5 indexes with `fold_search` text
+(`reg-core-py`). `variable_fts` reads the materialized `variable_search_text`, which
+adds an aggregate of the variable's delivery-column aliases and falls back to state
+names for a nameless variable. `value_code_fts` indexes labels only, and leaves out a
+curated stoplist of junk labels (`NULL`, `Ja`/`Nej`, `Uppgift saknas`, the `Okänt*`,
+`Okänd*` and `Felaktig*` sentinel families) and ownerless codes: no owning variable and
+no classification, orphans of year projection with nothing to annotate. The exclusions
+hide rows from search only; `value_code` and `value_set` keep every row, and the
+reader's direct code match applies the same owner predicate.
+
+**Slug reservations.** Slug minting still rejects `_default`, `class`, period-shaped
+strings and the former FastAPI suffix words (`reg_meta.fqid`). The Rust routes put the
+operation before the ref, so the suffix words protect no route; whether the set shrinks
+is decided when the grammar moves to `reg-core` (package 4.3).
+
 ## Inspection and verification
 
 Source inspection and building share readers and applicability rules. Source-target
@@ -1558,49 +1622,72 @@ overlay variables, so the steward path keeps the gate (`_check_entity_key_vars_c
 steward registers. `entity-key-pins --slug-dir <steward dir>` generates the missing
 pins.
 
-Compile the four relations specified in `reg_meta/DESIGN.md` → "Compiled holdings
-relations and read scope". Reuse inventory models, edition/interval primitives, catalog
-IDs and the common atomic writer. Preserve exact physical identifiers, authored edition
-shapes, partitions, unmapped columns/reasons and pinned input evidence locators. Include
-retained unknown-scope census tables with their authored reason, no physical periods and
-no logical mappings. Year-independent scope is explicit, not a fabricated interval. No
-segment relation, findings relation, excluded rows or semantic state resolution.
+The published artifact is the sole runtime source of physical holdings; accepted
+inventory TOML is a builder input, never a second runtime catalog. Reference metadata
+describes meaning and validity, holdings describe possession, and the reader decides
+semantic applicability at query time. Four relations hold the facts:
+
+- `holding_table`: one row per exact opaque physical identifier, with explicit `scope`
+  (`intervals`, `year_independent` or `unknown`), the authored edition as typed JSON
+  read before year normalization (int, token, range and list kept apart, list order and
+  endpoints preserved), an optional `partition`, the input evidence locator
+  `source_ref`, and an authored `retain_unknown_reason` for unknown scope only. Unknown
+  scope may have no edition; a supplied one is kept, none is invented.
+- `holding_period`: the inclusive ISO intervals of an interval-scope table, sorted and
+  disjoint; year-independent and unknown tables have none. Holes are preserved: a range
+  or list table is never expanded into annual tables or clipped to metadata validity.
+- `holding_column`: the literal, case-preserving column name and a nullable authored
+  `unmapped_reason`. A column with no mapping records possession without admission; a
+  reason cannot accompany mappings.
+- `holding_mapping`: the column's existing `variable_id` and `variant_id` and the
+  required `representation_literal` and `representation_canonical`. The authored binding
+  identity is kept, including a literal `same_as` source; it is never replaced by a
+  donor, state or window id. `_default` resolves to a real variant row, never a
+  wildcard. One column may map several variants or representations.
+
+Physical ids are unique, column names are unique per table and canonical triples are
+unique per column; physical names compare exactly. SQL enforces foreign keys, local
+checks and those uniques. Validation enforces same-register ownership of variable and
+variant, nonempty tables, edition/scope correspondence, reason/mapping exclusivity,
+disjoint intervals and the one-to-one placement rule below, with aggregated, located
+errors. Reuse inventory models, edition and interval primitives, catalog ids and the
+common atomic writer. Year-independent scope is explicit, not a fabricated interval.
+There is no segment relation, findings relation, excluded rows or semantic state
+resolution in the artifact.
 
 Require every mapping's representation. Resolve authored variable/variant coordinates to
 existing IDs, validate register ownership, then fold the literal with the shared Python
-`str.lower()`/`py_lower` rule. The folded literal must name exactly one delivery column
-in the universe `Catalog._expand_state_windows` emits for that variable/variant over the
-whole history (states plus participating alias windows); no match fails. Store the
-literal and the representative spelling `representative_columns(states, windows)` gives
-that column (ratified 2026-10-04; the states-only draft was stricter than the resolver
-and would have rejected legitimate alias-only columns). Do not apply NFC or Unicode
-casefold. Rejected accepted mappings require separate review, never silent compiler
-fallback. After canonicalization, pass canonical spellings to the shared pure placement
-validator extracted from `DeliveryInventory._check_one_to_one_resolution` for temporal
-ambiguity per cell per partition, including labelled/unlabelled conflicts. Reject
-duplicate canonical triples within a physical column with actionable input locators
-before insertion; SQL UNIQUE remains the final guard. Do not infer aliases'
-applicability or clip physical holdings to state windows during compilation.
+`str.lower()`/`py_lower` rule. The folded literal must name exactly one column of
+`resolver_column` for that variable/variant (the whole-history universe of states plus
+participating alias windows, "Compiled resolver"); no match fails publication with the
+coordinate and locator. Store the literal and that column's canonical spelling. A
+states-only universe would be stricter than the resolver and reject legitimate
+alias-only columns. Do not apply NFC or Unicode casefold. Rejected accepted mappings
+require separate review, never silent compiler fallback. After canonicalization, pass
+canonical spellings to the shared placement validator (the inventory model passes the
+authored spellings to the same check) for temporal ambiguity per cell per partition,
+including labelled/unlabelled conflicts. Reject duplicate canonical triples within a
+physical column with actionable input locators before insertion; SQL UNIQUE remains the
+final guard. Do not infer aliases' applicability or clip physical holdings to state
+windows during compilation.
 
 Compilation does not retain the former Y-115 build assertion that a held single-year
 column has a catalog window in that same year. A physical holding is preserved even when
 semantic applicability is absent for its edition; the whole-history fold gate
 establishes its binding identity only. Query-time resolution and ordering must still
 require applicable column windows and reject uncovered requests. The compiler reads the
-delivery universe through the reader's public `Catalog.delivery_columns`; there is no
-second expansion.
+delivery universe from `resolver_column`; there is no second expansion.
 
 The existing coverage assessment keeps range/list editions "temporally unassessed". That
 disposition is builder accounting only: it is derivable from
 `holding_table.edition_json` and reaches curators as the coverage report's
 skipped-tables line (`inventory_coverage.skipped_tables_line`). It is not written as a
 `data_warning`, which carries source limitations and interpretation assumptions only
-(`reg_meta/DESIGN.md` → "Data warnings"). Single-period assessment's flat union is
-source accounting, not `Catalog` semantic resolution. The latter remains query-time,
-including per-column storage/coding intersections, shared-window containment,
-replacement participation/fallback and additive curated windows. The compiled
-`holding_table` evidence is the sole authority for unknown scopes; the former
-`unknown_holding_edition` / `unknown_source_validity` holding warnings are retired.
+([../crates/DESIGN.md](../crates/DESIGN.md), "Data warnings"). Single-period
+assessment's flat union is source accounting, not semantic resolution, which stays in
+`expanded_state` and the reader's request-time rules. The compiled `holding_table`
+evidence is the sole authority for unknown scopes; the former `unknown_holding_edition`
+/ `unknown_source_validity` holding warnings are retired.
 
 The accounting gate proves the disjoint union dated ∪ year-independent ∪
 retained-unknown ∪ excluded ∪ lookup equals the raw table/column census from accepted
@@ -1609,7 +1696,9 @@ fails publication. Runtime relations contain only dated, year-independent and
 retained-unknown facts; exclusions and lookups remain accepted build evidence. Store
 counts and the accounting projection digest in the manifest. Strict gates and existing
 disclosure confinement remain mandatory; no raw individual-level content enters
-artifacts.
+artifacts. This compiler is the only mapping, ownership and accounting gate: the runtime
+checks schema, completeness, publishability and steward identity at admission, and never
+rebuilds or rechecks an inventory.
 
 ### Artifact manifest and deterministic generation
 
@@ -1709,11 +1798,57 @@ policies; a tracked default policy is not evidence that a later private candidat
 identical dispositions. Changed policy or inventory bytes require a fresh acceptance.
 The public prepared sources and builder code remain separately pinned.
 
+### Inventory TOML
+
+The inventory is authored as TOML (decided 2026-08-31), following the generated
+`auto.toml` plus curated overrides pattern: humans curate editions and leave rationale
+in comments, so the format must take comments. A `project_data.json` source is a logical
+selection; a steward's physical delivery topology is this separate data.
+
+The shape is `table → column → zero or more mappings`, `version = 1`. Frozen models
+reject unknown keys, malformed FQIDs, empty input and duplicate physical names. Every
+mapping requires `register_variant`, `variable` and a nonempty literal `representation`.
+Changed input bytes always require fresh acceptance.
+
+A table has an opaque exact `id`, an explicit `edition`, a `period_scope` defaulting to
+`intervals`, an optional `partition` and all its literal columns. Finite editions use
+the shared period grammar: a token, a `{from, to}` range, or a sorted, nonoverlapping
+list. Year-independent input sets `period_scope = "year_independent"` and the whole
+edition `"_default"`, and its mappings name concrete variants. `_default` is never a
+finite or unknown-scope sentinel. Retained unknown tables come from accepted
+`retain_unknown` policy plus the raw census, not invented finite entries. Partitions use
+the slug grammar (`_default`, `class` and period-shaped values are rejected); they name
+shards of a delivery, not populations a researcher selects. An unmapped column keeps its
+authored reason where one is given; none is synthesized.
+
+### Holdings resolution invariants
+
+**One-to-one resolution** (decided 2026-09-01). Every admitted
+`(register_variant, variable, representation, period)` cell resolves to exactly one
+physical `(table, column)`, so extraction never chooses between sources. Validation, and
+therefore the steward build, errors whenever two mappings could serve the same cell: the
+same variant and variable, the same canonical representation and overlapping editions,
+across tables or across columns of one table. That error is the supersession worklist
+("Holdings curation rules" below). Zero-column cells are not errors; they are not
+admitted. One physical column may still serve several variants (the combined
+Utrikeshandel table), and several tables may map one coordinate over disjoint editions
+(the ordinary annual series).
+
+**Disjoint partitions.** Some registers arrive as several tables split by sub-population
+within one edition: survey strata (`ITftg_Mikro`/`ITftg_Stora`), reporter streams
+(`Arb_`/`Soc_AGIIndivid`), administrative splits (`NDR_adults` over and under 70),
+per-municipality deliveries (SÄBO). They are one user-facing variant: nothing semantic
+differs across the shards, and a researcher should not need delivery trivia to get the
+whole register. Partitions are an inventory and order concept, never a catalog concept.
+The one-to-one rule holds per cell and partition: overlapping tables conflict unless
+they carry distinct curated partition labels; equal labels, or an unlabelled
+whole-population claim, conflict on overlapping cells. The order emits every partition
+as its own file ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest").
+
 ### Holdings curation rules
 
-These rules govern how the steward inventory is curated. The resolver invariants the
-curated inventory must satisfy are `reg_meta/DESIGN.md` → "Holdings resolution
-invariants".
+These rules govern how the steward inventory is curated so that it satisfies the
+invariants above.
 
 **Editions (2026-07-14, #1137).** Each inventory table carries one explicit physical
 edition in the shared finite period grammar. A table without an edition encoded in its
