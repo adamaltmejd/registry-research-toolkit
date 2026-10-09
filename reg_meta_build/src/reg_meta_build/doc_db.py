@@ -22,6 +22,7 @@ from typing import NoReturn, cast
 from reg_meta.doc_db import DOC_DB_FILENAME, DOC_SCHEMA_VERSION
 
 from ._curation import curation_error
+from .derive.search_index import register_fold_search
 
 # No logging.basicConfig here -- messages surface only when the caller
 # (e.g. CLI --verbose) configures a handler.  This is intentional for
@@ -41,12 +42,6 @@ CREATE TABLE IF NOT EXISTS doc (
     source_title TEXT,
     body         TEXT NOT NULL,
     body_clean   TEXT NOT NULL
-);
-
-CREATE VIRTUAL TABLE IF NOT EXISTS doc_fts USING fts5(
-    display_name, variable, body_clean,
-    content='doc', content_rowid='doc_id',
-    tokenize='unicode61'
 );
 
 CREATE INDEX IF NOT EXISTS idx_doc_variable ON doc(variable);
@@ -74,6 +69,50 @@ CREATE TABLE IF NOT EXISTS related_document (
 CREATE INDEX IF NOT EXISTS idx_related_document_register
     ON related_document(register);
 """
+
+# The index holds `fold_search` text (decision 16), so `fold_search` is the only fold
+# and the tokenizer only splits. It reads its display text from `doc` (external
+# content): `snippet()` maps the index's token positions onto the stored body, so
+# snippets keep their case and diacritics. Footgun: FTS5's 'rebuild' re-tokenizes the
+# unfolded `doc` columns and so unfolds the index; never run it here, `index_docs`
+# refills the index instead. `PRAGMA integrity_check` and the default
+# 'integrity-check' are safe; a strict 'integrity-check' (rank 1) compares the index
+# with the unfolded columns and reports a false "malformed".
+DOC_FTS_DDL = """\
+DROP TABLE IF EXISTS doc_fts;
+CREATE VIRTUAL TABLE doc_fts USING fts5(
+    display_name, variable, body_clean,
+    content='doc', content_rowid='doc_id',
+    tokenize='unicode61 remove_diacritics 0'
+);
+INSERT INTO doc_fts(rowid, display_name, variable, body_clean)
+    SELECT doc_id, fold_search(display_name), fold_search(variable),
+           fold_search(body_clean)
+    FROM doc ORDER BY doc_id;
+"""
+
+
+def index_docs(conn: sqlite3.Connection) -> None:
+    """(Re)fill `doc_fts` with `fold_search` text of `doc` and stamp the doc schema
+    and the docs generation.
+
+    The generation is the SHA-256 of the schema version and every `doc` row in
+    `doc_id` order: what `docs_search` selects and orders, so its cursors go stale
+    when the documents change, even when the catalog beside them does not.
+
+    The docs build ends with it; G1 runs it over a copy of a pinned docs database to
+    make its candidate copy. Commits.
+    """
+    register_fold_search(conn)
+    conn.executescript(DOC_FTS_DDL)
+    digest = sha256(DOC_SCHEMA_VERSION.encode())
+    for row in conn.execute("SELECT * FROM doc ORDER BY doc_id"):
+        digest.update(json.dumps(list(row), ensure_ascii=False).encode() + b"\n")
+    conn.executemany(
+        "INSERT OR REPLACE INTO doc_meta (key, value) VALUES (?, ?)",
+        [("schema_version", DOC_SCHEMA_VERSION), ("generation", digest.hexdigest())],
+    )
+    conn.commit()
 
 
 # ---------------------------------------------------------------------------
@@ -834,12 +873,7 @@ def build_doc_db(
         related_docs_dir=related_docs_dir,
     )
 
-    # Populate FTS index
-    conn.execute("INSERT INTO doc_fts(doc_fts) VALUES('rebuild')")
-
-    # Store metadata
     for key, value in (
-        ("schema_version", DOC_SCHEMA_VERSION),
         ("doc_count", str(total)),
         ("related_document_count", str(related_total)),
     ):
@@ -848,7 +882,7 @@ def build_doc_db(
             (key, value),
         )
 
-    conn.commit()
+    index_docs(conn)
     conn.close()
     log.info("Indexed %d docs from %s → %s", total, docs_dir, db_path)
     return db_path

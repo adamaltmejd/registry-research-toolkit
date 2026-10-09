@@ -178,10 +178,15 @@ def _run_json(argv: list[str], *, verbose: bool = False) -> tuple[dict, int]:
 
 class TestDocSearch:
     def test_search_finds_by_content(self, doc_db_path: str):
-        data, code = _run_json(["--db", doc_db_path, "docs", "search", "sjukpenning"])
+        # Fails if `doc_search` stops folding the query with `fold_search`: the
+        # index holds folded text, so a raw "försäkringskassan" matches nothing. The
+        # snippet stays the stored text, diacritics included.
+        data, code = _run_json(
+            ["--db", doc_db_path, "docs", "search", "FÖRSÄKRINGSKASSAN"]
+        )
         assert code == 0
-        assert data["total_count"] >= 1
-        assert any(r["variable"] == "SjukPP" for r in data["results"])
+        assert [r["variable"] for r in data["results"]] == ["SjukPP"]
+        assert "**Försäkringskassan**" in data["results"][0]["snippet"]
 
     def test_search_finds_non_variable(self, doc_db_path: str):
         data, code = _run_json(["--db", doc_db_path, "docs", "search", "testregister"])

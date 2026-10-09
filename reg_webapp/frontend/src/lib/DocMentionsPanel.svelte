@@ -11,9 +11,8 @@ import { parseInlineMarkdown } from "./inline_markdown";
 // #394's SearchView fires a second independent asyncResource for its docs group).
 // The whole panel's worst case is one inline muted/error line inside this section.
 //
-// The hook is FUZZY (every result is `fuzzy:true`) — a name/provider_key text
-// match, NOT an authoritative variable→doc link; the section-level caption marks
-// the list as heuristic.
+// The hook is FUZZY — a name/provider_key text match, NOT an authoritative
+// variable→doc link; the section-level caption marks the list as heuristic.
 //
 // Omit-when-empty (the LineagePanels / DimensionsPanel ethos): the WHOLE section
 // is omitted when there's nothing usable to show — no docs index, no docs for
@@ -21,9 +20,8 @@ import { parseInlineMarkdown } from "./inline_markdown";
 // hide a section whose state is unknown, which would read as a confirmed absence).
 let { node }: { node: BindingNodeData } = $props();
 
-// The bare register slug = 2nd FQID segment (`scb/lisa/kon` → `lisa`); the
-// backend matches it verbatim against the bare register slug, NOT `scb/lisa`.
-const register = $derived(fqidSegments(node.fqid)[1]);
+// The register FQID = the first two FQID segments (`scb/lisa/kon` → `scb/lisa`).
+const register = $derived(fqidSegments(node.fqid).slice(0, 2).join("/"));
 // The query: the variable's display name when present, else its slug (3rd
 // segment). $derived off `node` so the fetch refetches when the leaf changes.
 const q = $derived(node.name?.trim() || fqidSegments(node.fqid)[2]);
@@ -44,14 +42,15 @@ const resource = asyncResource((signal) =>
 );
 
 const data = $derived(resource.data);
-const results = $derived(data?.results ?? []);
+const results = $derived(data?.items ?? []);
 // Show the section while loading / on error / when it has usable hits; omit it
-// once we KNOW there's nothing to show — no docs index, no docs for this register,
-// or zero hits (those resolved-empty states are noise on the subject page).
+// once we KNOW there's nothing to show — no docs index (`null`), no docs for this
+// register, or zero hits (those resolved-empty states are noise on the subject
+// page).
 const show = $derived(
   resource.loading ||
     !!resource.error ||
-    (!!data && data.ingested && data.register_ingested && results.length > 0),
+    (!!data && data.register_ingested && results.length > 0),
 );
 
 function sourceLabel(url: string, title?: string | null): string {
@@ -89,7 +88,7 @@ function sourceLabel(url: string, title?: string | null): string {
         </p>
       {/if}
       <!-- One section-level caption marks the WHOLE list as fuzzy/heuristic name
-           matches (every result is `fuzzy:true`) — cleaner than per-row badges. -->
+           matches — cleaner than per-row badges. -->
       <p class="muted fuzzy-note">
         Heuristic name matches — not authoritative variable→documentation links.
       </p>
@@ -133,7 +132,7 @@ function sourceLabel(url: string, title?: string | null): string {
           </li>
         {/each}
       </ul>
-      {@const caption = showingOf(results.length, data.total_count)}
+      {@const caption = showingOf(results.length, data.total)}
       {#if caption}
         <p class="muted count">{caption}</p>
       {/if}

@@ -120,9 +120,11 @@ beforeEach(() => {
   );
   vi.mocked(getDocsForVariable).mockReset();
   vi.mocked(getDocsForVariable).mockResolvedValue({
-    results: [],
-    total_count: 0,
-  } as never);
+    items: [],
+    next_cursor: null,
+    total: 0,
+    register_ingested: true,
+  });
   // No `?period` — the embedded states drive the plan.
   window.history.pushState({}, "", "/__reset__");
   router.navigate("/catalog/scb/lisa/kon");

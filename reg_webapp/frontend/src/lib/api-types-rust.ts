@@ -193,6 +193,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/docs/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or a bare name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches. */
+        get: operations["docs_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/graph/{ref}": {
         parameters: {
             query?: never;
@@ -221,6 +238,23 @@ export interface paths {
         get: operations["lineage"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, with `ok` false when one is an error. A `schema_version` other than 3.0.0 is reported alone; then the document's structure, then each source's variant and period and each binding's variable, availability in the period (a narrower availability is an `info` clip), representation and value set, and on a steward catalog what the steward holds. An invalid project is a result, not an error. */
+        post: operations["validate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -563,6 +597,35 @@ export interface components {
             variable?: string | null;
         };
         /**
+         * @description `docs_search`'s page: its hits, the total they page through, and whether
+         *     `register` has any documentation (false without `register`).
+         */
+        DocPage: {
+            items: components["schemas"]["DocResult"][];
+            next_cursor?: string | null;
+            register_ingested: boolean;
+            total: number;
+        };
+        /**
+         * @description One documentation hit: today's `DocResult` without the webapp's per-route `fuzzy`
+         *     flag.
+         */
+        DocResult: {
+            display_name: string;
+            filename: string;
+            register: string;
+            /**
+             * @description About 24 words of the plain text around the match, matched words in `**`; none
+             *     without `q`.
+             */
+            snippet?: string | null;
+            source?: string | null;
+            source_title?: string | null;
+            source_url?: string | null;
+            tags: string[];
+            variable?: string | null;
+        };
+        /**
          * @description A directed succession edge, predecessor to successor. A representation edge
          *     names its columns and, when scoped, its variant.
          */
@@ -678,6 +741,8 @@ export interface components {
             /** Format: int64 */
             min: number;
         };
+        /** @enum {string} */
+        IssueLevel: "error" | "warning" | "info";
         Lineage: {
             edges: components["schemas"]["LineageEdge"][];
             /**
@@ -1110,6 +1175,23 @@ export interface components {
             slug: string;
             starred: boolean;
         };
+        /** @description The validation result: `ok` when no issue is an error. */
+        Validation: {
+            /** @description In emission order: per source, its variant and period, then per binding. */
+            issues: components["schemas"]["ValidationIssue"][];
+            ok: boolean;
+        };
+        /** @description One finding about the document. */
+        ValidationIssue: {
+            /** @description A stable identifier, such as `period_outside_state_validity`. */
+            code: string;
+            level: components["schemas"]["IssueLevel"];
+            message: string;
+            /** @description An RFC 6901 JSON pointer into the document; empty for the whole document. */
+            path: string;
+            /** @description The successor a `variable_replaced` finding names; null otherwise. */
+            successor_fqid: string | null;
+        };
         /**
          * @description `value_set_summary`: a value set's code count and, when its codes are a dense
          *     integer run, its span.
@@ -1539,6 +1621,47 @@ export interface operations {
             };
         };
     };
+    docs_search: {
+        parameters: {
+            query?: {
+                q?: string;
+                register?: string;
+                scope?: components["schemas"]["Scope"];
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
     graph: {
         parameters: {
             query?: {
@@ -1599,6 +1722,45 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Lineage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    validate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Validation"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

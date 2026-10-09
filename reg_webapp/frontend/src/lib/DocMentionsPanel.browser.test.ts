@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { BindingNodeData, DocVariableMentions } from "./api";
+import type { BindingNodeData, DocPage } from "./api";
 import { getDocsForVariable } from "./api";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 
@@ -31,17 +31,12 @@ function node(over: Partial<BindingNodeData> = {}): BindingNodeData {
   } as unknown as BindingNodeData;
 }
 
-// A docs-mentions envelope; cases override the fields under test.
-function mentions(
-  overrides: Partial<DocVariableMentions> = {},
-): DocVariableMentions {
+// A docs page; cases override the fields under test.
+function mentions(overrides: Partial<DocPage> = {}): DocPage {
   return {
-    kind: "doc-mentions",
-    ingested: true,
-    register: "lisa",
     register_ingested: true,
-    total_count: 0,
-    results: [],
+    total: 0,
+    items: [],
     ...overrides,
   };
 }
@@ -74,11 +69,22 @@ describe("DocMentionsPanel (#402)", () => {
       .toBeVisible();
   });
 
+  it("omits the whole section when the deployment has no docs database", async () => {
+    // `null` = `docs_unavailable`: fails if the panel shows an empty section or an
+    // error for a deployment shipped without docs.
+    vi.mocked(getDocsForVariable).mockResolvedValue(null);
+    await render(DocMentionsPanel, { node: node() });
+
+    await expect
+      .element(page.getByRole("heading", { name: "Parsed documentation" }))
+      .not.toBeInTheDocument();
+  });
+
   it("omits the whole section when this register has no ingested docs", async () => {
     // The index EXISTS but THIS register has no docs — a resolved-empty state, so
     // the whole section is omitted (no "no docs for this register" wall).
     vi.mocked(getDocsForVariable).mockResolvedValue(
-      mentions({ ingested: true, register_ingested: false }),
+      mentions({ register_ingested: false }),
     );
     await render(DocMentionsPanel, { node: node() });
 
@@ -89,7 +95,7 @@ describe("DocMentionsPanel (#402)", () => {
 
   it("omits the whole section when the index is present but has zero hits", async () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
-      mentions({ ingested: true, register_ingested: true, total_count: 0 }),
+      mentions({ register_ingested: true, total: 0 }),
     );
     await render(DocMentionsPanel, { node: node() });
 
@@ -106,15 +112,15 @@ describe("DocMentionsPanel (#402)", () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({
         register_ingested: true,
-        total_count: 1,
-        results: [
+        total: 1,
+        items: [
           {
+            register: "lisa",
             filename: "lisa kon.md",
             display_name: "LISA — Kön",
             snippet: "foo <b>bar</b>",
             source_url: "https://www.scb.se/lisa-source.pdf",
             source_title: "Full LISA PDF",
-            fuzzy: true,
             tags: [],
           },
         ],
@@ -139,13 +145,13 @@ describe("DocMentionsPanel (#402)", () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({
         register_ingested: true,
-        total_count: 1,
-        results: [
+        total: 1,
+        items: [
           {
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: "…the **kön** variable…",
-            fuzzy: true,
             tags: [],
           },
         ],
@@ -170,13 +176,13 @@ describe("DocMentionsPanel (#402)", () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({
         register_ingested: true,
-        total_count: 1,
-        results: [
+        total: 1,
+        items: [
           {
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: "see _below_ for detail",
-            fuzzy: true,
             tags: [],
           },
         ],
@@ -195,13 +201,13 @@ describe("DocMentionsPanel (#402)", () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({
         register_ingested: true,
-        total_count: 7,
-        results: [
+        total: 7,
+        items: [
           {
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: null,
-            fuzzy: true,
             tags: [],
           },
         ],
@@ -217,13 +223,13 @@ describe("DocMentionsPanel (#402)", () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({
         register_ingested: true,
-        total_count: 1,
-        results: [
+        total: 1,
+        items: [
           {
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: null,
-            fuzzy: true,
             tags: [],
           },
         ],
@@ -234,14 +240,16 @@ describe("DocMentionsPanel (#402)", () => {
     await expect.element(page.getByText(/showing/i)).not.toBeInTheDocument();
   });
 
-  it("scopes the fetch to the register = 2nd FQID segment", async () => {
+  it("scopes the fetch to the register FQID (first two FQID segments)", async () => {
+    // Fails if the panel sends the bare register slug (`rams`), which the Rust
+    // `docs_search` does not match.
     vi.mocked(getDocsForVariable).mockResolvedValue(mentions());
     await render(DocMentionsPanel, {
       node: node({ fqid: "scb/rams/yrke", name: "Yrke" }),
     });
 
     const call = vi.mocked(getDocsForVariable).mock.calls[0];
-    expect(call?.[1]?.register).toBe("rams");
+    expect(call?.[1]?.register).toBe("scb/rams");
   });
 
   it("queries by the variable's display name when present", async () => {
@@ -272,13 +280,13 @@ describe("DocMentionsPanel (#402)", () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({
         register_ingested: true,
-        total_count: 1,
-        results: [
+        total: 1,
+        items: [
           {
+            register: "lisa",
             filename: "lisa_naringsgren.md",
             display_name: "LISA — Näringsgren",
             snippet: null,
-            fuzzy: true,
             tags: [],
           },
         ],
@@ -307,13 +315,13 @@ describe("DocMentionsPanel (#402)", () => {
     vi.mocked(getDocsForVariable).mockResolvedValue(
       mentions({
         register_ingested: true,
-        total_count: 1,
-        results: [
+        total: 1,
+        items: [
           {
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: null,
-            fuzzy: true,
             tags: [],
           },
         ],

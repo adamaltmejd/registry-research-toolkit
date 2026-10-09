@@ -1,0 +1,11 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": true,
+      "/data/issues/*/code": [
+        "range_period_partially_covered"
+      ]
+    }
+  }
+]

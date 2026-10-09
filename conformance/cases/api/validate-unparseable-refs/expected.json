@@ -1,0 +1,24 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": false,
+      "/data/issues": [
+        {
+          "code": "fqid_unresolved",
+          "level": "error",
+          "message": "binding variable 'scb/example/Kon_X' is not a parseable FQID",
+          "path": "/sources/0/bindings/0/variable",
+          "successor_fqid": null
+        },
+        {
+          "code": "value_set_missing",
+          "level": "error",
+          "message": "value_set 'class/Kon_X' is not a parseable FQID",
+          "path": "/sources/0/bindings/1/value_set",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

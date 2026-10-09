@@ -3,8 +3,9 @@ import { getDoc } from "./api";
 import { asyncResource } from "./async.svelte";
 
 // The minimal documentation viewer (#394): metadata + a source POINTER + a
-// BOUNDED excerpt for one doc. There is NO full-body endpoint and we never fetch
-// or render one — the excerpt is shown as TEXT and the source pointer sends the
+// BOUNDED excerpt for one doc. `docs_get` also carries the full `body` (for
+// agents); the SPA never renders it — the excerpt is shown as TEXT and the source
+// pointer sends the
 // reader to the SCB original. NEVER {@html}: `excerpt` may carry FTS highlight
 // markers and Svelte's `{value}` auto-escaping is the republication guard.
 let { identifier }: { identifier: string } = $props();
@@ -16,15 +17,15 @@ const doc = $derived(resource.data);
 {#if resource.loading}
   <p class="muted" aria-busy="true">Loading…</p>
 {:else if resource.status === 404}
-  <!-- 404 covers BOTH "index not ingested" and "no doc for this id"; the backend
-       `detail` (resource.error) distinguishes them — surface it verbatim. -->
+  <!-- 404 covers BOTH `docs_unavailable` and `not_found`; the server's error
+       message (resource.error) distinguishes them — surface it verbatim. -->
   <p class="error" role="alert">{resource.error}</p>
   <p class="muted">Documentation coverage is LISA-only today.</p>
 {:else if resource.error}
   <p class="error" role="alert">{resource.error}</p>
 {:else if doc}
   <article class="doc-view">
-    <h2>{doc.display_name ?? doc.filename}</h2>
+    <h2>{doc.display_name}</h2>
 
     {#if doc.register || doc.variable || doc.tags.length > 0}
       <dl class="meta">

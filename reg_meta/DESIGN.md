@@ -160,9 +160,11 @@ not match `Kön` on those arms. Arms over ASCII identifiers (the group's `group_
 result row carries its navigable `fqid`.
 
 The docs index (`doc_queries.doc_search`, a separate `reg_meta_docs.db` FTS index) uses
-the same `_fts_match_query` builder, so a raw doc query is operator-safe and
-prefix-matched too. It is not pre-folded: it passes the raw query, and `unicode61` folds
-both sides there (`snippet()` positions would shift under folding).
+the same `_fts_match_query` builder over `fold_search(q)`, so a doc query is
+operator-safe, prefix-matched and folded like the catalog's. Since doc schema 1.3.0 the
+docs build stores `fold_search` text in `doc_fts`, an external-content index over `doc`:
+`snippet()` maps the index's token positions onto the stored body, so snippets keep case
+and diacritics (`reg_meta_build/DESIGN.md`, "Document database").
 
 ## Register lookup strategy
 

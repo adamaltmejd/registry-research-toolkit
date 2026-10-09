@@ -128,6 +128,58 @@ pub(crate) fn emitted(
     }
 }
 
+/// The value set and version label `e` emits: a coded window's own, else its state's.
+pub(crate) fn value_set(
+    conn: &Connection,
+    variable_id: i64,
+    e: &Emitted,
+) -> Result<(Option<i64>, String), Error> {
+    let pair = |row: &Row| Ok((row.get(0)?, row.get(1)?));
+    if let Some(start) = &e.window_valid_from {
+        let coded = conn
+            .prepare_cached(
+                "SELECT value_set_id, value_set_version_label FROM variable_alias_window \
+                 WHERE variable_id = ? AND register_variant_id = ? \
+                 AND delivery_column_name = ? AND valid_from = ? \
+                 AND coding_metadata = 'per_column'",
+            )?
+            .query_row(
+                params![
+                    variable_id,
+                    e.register_variant_id,
+                    e.delivery_column_name,
+                    start
+                ],
+                pair,
+            )
+            .optional()?;
+        if let Some(coded) = coded {
+            return Ok(coded);
+        }
+    }
+    Ok(conn
+        .prepare_cached(
+            "SELECT value_set_id, value_set_version_label FROM variable_state WHERE state_id = ?",
+        )?
+        .query_row([e.state_id], pair)?)
+}
+
+/// The register variant `slug` of `variable_id`'s register; none when it has no such
+/// variant (today's `_resolve_variant_id`).
+pub(crate) fn variant_id(
+    conn: &Connection,
+    variable_id: i64,
+    slug: &str,
+) -> Result<Option<i64>, Error> {
+    Ok(conn
+        .prepare_cached(
+            "SELECT rv.register_variant_id FROM register_variant rv \
+             JOIN variable v USING(register_id) WHERE v.variable_id = ? AND rv.slug = ?",
+        )?
+        .query_row(params![variable_id, slug], |row| row.get(0))
+        .optional()?)
+}
+
 /// Today's sort key of a windowed variable's expansion; a missing value sorts as "".
 fn sort_key(e: &Emitted) -> (&str, &str, &str, &str) {
     (
@@ -361,17 +413,9 @@ pub fn states(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
     let variant = match variant {
         None => None,
         Some(slug) => {
-            let found = conn
-                .query_row(
-                    "SELECT rv.register_variant_id FROM register_variant rv \
-                     JOIN variable v USING(register_id) WHERE v.variable_id = ? AND rv.slug = ?",
-                    params![id, slug],
-                    |row| row.get(0),
-                )
-                .optional()?;
             // A slug no variant of the register has emits nothing (today's
             // `resolve_at`).
-            let Some(found) = found else {
+            let Some(found) = variant_id(&conn, id, slug)? else {
                 let empty = StatesPage {
                     items: Vec::new(),
                     next_cursor: None,
@@ -536,17 +580,7 @@ impl<'a> Hydrate<'a> {
     /// The representation's value-set version label: a coded window's own, else its
     /// state's.
     fn version_label(&self, e: &Emitted) -> Result<String, Error> {
-        if let Some(window) = self.window(e)?
-            && window.coded
-        {
-            return Ok(window.value_set_version_label);
-        }
-        Ok(self
-            .conn
-            .prepare_cached(
-                "SELECT value_set_version_label FROM variable_state WHERE state_id = ?",
-            )?
-            .query_row([e.state_id], |row| row.get(0))?)
+        value_set(self.conn, self.variable_id, e).map(|(_, label)| label)
     }
 
     fn state(&mut self, e: &Emitted) -> Result<State, Error> {

@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": false,
+      "/data/issues": [
+        {
+          "code": "unsupported_schema_version",
+          "level": "error",
+          "message": "project schema_version '2.0.0' is not supported: this build reads project_data.json schema 3.0.0 exactly. Re-author the project against the current schema; there is no migration path.",
+          "path": "/schema_version",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

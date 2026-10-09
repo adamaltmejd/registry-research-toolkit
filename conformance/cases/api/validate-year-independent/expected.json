@@ -1,0 +1,24 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": false,
+      "/data/issues": [
+        {
+          "code": "period_outside_state_validity",
+          "level": "error",
+          "message": "no matching year-independent delivery state",
+          "path": "/sources/1/bindings/0/variable",
+          "successor_fqid": null
+        },
+        {
+          "code": "binding_representation_unknown",
+          "level": "error",
+          "message": "no matching year-independent delivery state",
+          "path": "/sources/2/bindings/0/variable",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

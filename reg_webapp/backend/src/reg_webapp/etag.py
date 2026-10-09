@@ -1,7 +1,6 @@
 """Response-body validators bound to package, steward, generation and read scope.
 
-Catalog reads have a 60-second window and document reads a 24-hour
-window. The full compiled generation invalidates the keyspace even when a route body
+Every read (the catalog's) has a 60-second window. The full compiled generation invalidates the keyspace even when a route body
 is unchanged. Conditional reads still execute the route before hashing its serialized
 bytes.
 """
@@ -10,45 +9,20 @@ from __future__ import annotations
 
 import hashlib
 
-CACHE_CONTROL = "public, max-age=86400, must-revalidate"
-
-# Short window for fold-bearing reads (catalog). A fresh fold or steward
+# The window for the fold-bearing catalog reads. A fresh fold or steward
 # catalog edit must surface promptly for a returning user whose browser holds the
 # unversioned cached copy. The body-hash
-# ETag already changes when the body changes, but the 24h `CACHE_CONTROL` window
-# lets the browser serve its stale copy for a day WITHOUT revalidating. 60s
+# ETag already changes when the body changes, but a 24h window would let the
+# browser serve its stale copy for a day WITHOUT revalidating. 60s
 # forces revalidation soon (the ETag avoids retransmitting an unchanged body, but
 # the current middleware still executes the route). We keep it `public`
 # (NOT `no-cache`) so the Cloudflare edge stays cacheable: `CF-Cache-Status: HIT`
 # and the #220 probe survive, which `no-cache` would break.
 CACHE_CONTROL_SHORT = "public, max-age=60, must-revalidate"
 
-# API path prefixes that get the short fold-bearing window. PREFIX (not exact)
-# match. The catalog read surface is `/api/catalog`, `/api/catalog/{...}/variants`,
-# the `{fqid:path}` suffixed sub-endpoints (states/predecessors/successors
-# /dimensions/lineage/lineage_warnings), and the `/api/catalog/{fqid:path}`
-# catch-all — all share the `/api/catalog` prefix. The doc-library search at
-# `/api/docs/search` is rebuild-stable, so it stays on the 24h tier.
-SHORT_CACHE_PATH_PREFIXES = ("/api/catalog",)
-
 # 16 hex chars of the body sha256 — enough to make per-URL ETags
 # collision-safe in practice while keeping the header short.
 _HASH_PREFIX_LEN = 16
-
-
-def cache_control_for(path: str) -> str:
-    """The ``Cache-Control`` policy for a read endpoint by its API path.
-
-    Two tiers:
-
-    - ``SHORT_CACHE_PATH_PREFIXES`` (prefix match, the fold- or steward-dependent
-      ``/api/catalog/*`` reads) → ``CACHE_CONTROL_SHORT``
-      (60s): curated folds and steward catalog edits must surface promptly.
-    - everything else (the rebuild-stable ``/api/docs/*`` reads) → the 24h
-      ``CACHE_CONTROL``."""
-    if path.startswith(SHORT_CACHE_PATH_PREFIXES):
-        return CACHE_CONTROL_SHORT
-    return CACHE_CONTROL
 
 
 def compute_etag(

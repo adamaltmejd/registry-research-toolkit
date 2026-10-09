@@ -5,7 +5,7 @@
 
 use std::fmt::Write as _;
 
-use reg_core::next_iso_day;
+use reg_core::merge;
 
 use crate::Scope;
 
@@ -141,7 +141,7 @@ pub(crate) fn clip(
         lo_bound = lo_bound.max(lo);
         hi_bound = hi_bound.min(hi);
     }
-    let mut clipped: Vec<(String, String)> = held
+    let clipped: Vec<(String, String)> = held
         .iter()
         .filter_map(|(lo, hi)| {
             let lo = lo.as_deref()?.max(lo_bound);
@@ -149,17 +149,5 @@ pub(crate) fn clip(
             (lo <= hi).then(|| (lo.to_owned(), hi.to_owned()))
         })
         .collect();
-    clipped.sort();
-    let mut merged: Vec<(String, String)> = Vec::new();
-    for (lo, hi) in clipped {
-        match merged.last_mut() {
-            Some(last) if lo <= next_iso_day(&last.1) => {
-                if hi > last.1 {
-                    last.1 = hi;
-                }
-            }
-            _ => merged.push((lo, hi)),
-        }
-    }
-    merged
+    merge(clipped)
 }

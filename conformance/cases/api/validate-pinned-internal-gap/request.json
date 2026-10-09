@@ -1,0 +1,68 @@
+{
+  "note": "Twin of `validate/pinned-internal-gap`: fails if `validate` stops answering this project with 200 and these `ok` and issues (code, level, path, message, in emission order).",
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "range",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2010,
+              "to": 2020
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/lucka",
+                "type": "categorical",
+                "representation": "Lucka"
+              }
+            ]
+          },
+          {
+            "name": "list",
+            "register_variant": "scb/example/annual",
+            "period": [
+              {
+                "from": 2010,
+                "to": 2020
+              },
+              2022
+            ],
+            "bindings": [
+              {
+                "variable": "scb/example/lucka",
+                "type": "categorical",
+                "representation": "Lucka"
+              }
+            ]
+          },
+          {
+            "name": "sibling",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2013,
+              "to": 2017
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/lucka",
+                "type": "categorical",
+                "representation": "LuckaDetalj"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

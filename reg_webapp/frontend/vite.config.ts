@@ -81,6 +81,10 @@ export default defineConfig({
         target: rustServerUrl,
         changeOrigin: true,
       },
+      "/api/docs": {
+        target: rustServerUrl,
+        changeOrigin: true,
+      },
       "/api": {
         target: backendUrl,
         changeOrigin: true,

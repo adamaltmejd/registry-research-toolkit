@@ -205,12 +205,7 @@ beforeEach(() => {
   vi.mocked(getRegisterVariants).mockResolvedValue(
     variantsResponse(variant("_default")),
   );
-  vi.mocked(getRelatedDocuments).mockResolvedValue({
-    kind: "related-documents",
-    ingested: true,
-    register: "lisa",
-    documents: [],
-  });
+  vi.mocked(getRelatedDocuments).mockResolvedValue([]);
   // Both stores are module singletons: clear the browse-time window fallback, then
   // open a fresh empty draft — the state a catalog page authors into. A fresh draft
   // seeds its window from that (now empty) fallback, so each case starts windowless.
@@ -294,22 +289,17 @@ describe("CatalogNodeView register arm", () => {
     vi.mocked(getRegisterVariants).mockResolvedValue(
       variantsResponse(variant("combined", { name: "Combined register" })),
     );
-    vi.mocked(getRelatedDocuments).mockResolvedValue({
-      kind: "related-documents",
-      ingested: true,
-      register: "lisa",
-      documents: [
-        {
-          title: "LISA source PDF",
-          filename: "lisa.pdf",
-          source_url: "https://www.scb.se/lisa",
-          license: "CC BY 4.0",
-          fetched: "2026-06-01",
-          sha256: "a".repeat(64),
-          byte_size: 1024,
-        },
-      ],
-    });
+    vi.mocked(getRelatedDocuments).mockResolvedValue([
+      {
+        title: "LISA source PDF",
+        filename: "lisa.pdf",
+        source_url: "https://www.scb.se/lisa",
+        license: "CC BY 4.0",
+        fetched: "2026-06-01",
+        sha256: "a".repeat(64),
+        byte_size: 1024,
+      },
+    ]);
 
     await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -327,6 +317,11 @@ describe("CatalogNodeView register arm", () => {
       variants.element().compareDocumentPosition(sourceDocs.element()) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
+    // The panel is keyed by the register FQID: fails if the page passes the bare
+    // slug (`/api/docs/file/lisa/…`), which the Rust server does not route.
+    await expect
+      .element(page.getByRole("link", { name: "LISA source PDF" }))
+      .toHaveAttribute("href", "/api/docs/file/scb/lisa/lisa.pdf");
   });
 
   it("renders grouped variables as framed table subject links without the group-key pill", async () => {

@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": false,
+      "/data/issues/*/code": [
+        "period_outside_state_validity"
+      ],
+      "/data/issues/*/path": [
+        "/sources/0/bindings/0/variable"
+      ],
+      "/data/issues/*/successor_fqid": [
+        null
+      ]
+    }
+  }
+]
