@@ -808,7 +808,7 @@ def _alias_windows(outcome: Outcome) -> list[dict]:
     for row in outcome._sql(
         f"SELECT {key}, r.slug AS register, v.slug AS variable, rv.slug AS variant, "
         "w.delivery_column_name AS column, w.valid_to, w.column_metadata, "
-        "w.coding_metadata, w.data_type, w.data_length, w.definition, "
+        "w.provenance, w.coding_metadata, w.data_type, w.data_length, w.definition, "
         "w.measurement_unit, w.name, w.description, w.operational_definition, "
         "w.source_register_text FROM variable_alias_window w JOIN variable v USING (variable_id) "
         "JOIN register r ON r.register_id = v.register_id "
@@ -1099,7 +1099,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "variants": "register variant name panel_entity_key panel_time_key",
         "tags": "slug member",
         "aliases": "register variable variant column",
-        "alias_windows": "register variable variant column valid_from valid_to "
+        "alias_windows": "register variable variant column valid_from valid_to provenance "
         "column_metadata coding_metadata data_type data_length definition "
         "measurement_unit name description operational_definition "
         "source_register_text codes classifications",

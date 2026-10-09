@@ -1,4 +1,10 @@
-"""Synthetic proof for the curated-provider steward overlay."""
+"""The curated-provider steward overlay, driven through `extend_db` on a session base.
+
+`reg-meta-build extend-db` reaches only the strict accepted-holdings path
+(`test_holdings_steward_boundary.py`, `cases/holdings/cli`); the metadata-only
+diagnostic overlay these cases pin is a library boundary: `extend_db`'s returned
+counts, the artifact it writes, and its located `EXIT_CONFIG` refusals.
+"""
 
 from __future__ import annotations
 
@@ -8,22 +14,14 @@ from contextlib import closing
 from pathlib import Path
 
 import pytest
-from catalog_manifest import synthetic_manifest
+from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
+from reg_meta.catalog import DataWarning
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.source_evidence import canonical_sha256
 from reg_meta_build.extend_db import (
     extend_db,
 )
 from reg_meta_build.id import mint
-from reg_meta_build.resolved_catalog import (
-    ResolvedClassification,
-    ResolvedClassificationCode,
-    ResolvedCodeSet,
-    ResolvedRegister,
-    ResolvedState,
-    ResolvedVariable,
-    ResolvedVariant,
-    write_resolved_catalog,
-)
 from reg_meta_build.validate import validate_built_db
 
 _STEWARD = "swecov"
@@ -141,59 +139,24 @@ def _write_slug_dir(path: Path) -> None:
     )
 
 
-def _global_variable() -> ResolvedVariable:
-    return ResolvedVariable(
-        register=ResolvedRegister(provider="scb", slug="testreg", name="Test register"),
-        slug="category",
-        provider_key="44",
-        name="Category",
-        definition=None,
-        description=None,
-        operational_definition=None,
-        measurement_unit=None,
-        is_identifier=False,
-        is_sensitive=False,
-        states=(
-            ResolvedState(
-                variant=ResolvedVariant(slug="individuals", name="Individuals"),
-                valid_from="2020-01-01",
-                valid_to="2020-12-31",
-                delivery_column_name="Category",
-                data_type="integer",
-                data_length="1",
-                operational_definition=None,
-                provenance=None,
-                value_set=ResolvedCodeSet(members=(("1", "One"), ("2", "Two"))),
-            ),
-        ),
+# The session base: a published-shape catalog from the conformance reader fixtures,
+# one that carries a classification book (`classifications.json` there: SUN2020,
+# "Svensk utbildningsnomenklatur"). The cache stores it read-only, so each worker
+# overlays a private copy (`extend_db` cannot open a read-only base copy).
+_BASE_FIXTURE = "reader/classification-editions"
+# A word of exactly one base book's name (SUN2020's, in the fixture's
+# classifications.json).
+_BASE_BOOK_TERM = "utbildningsnomenklatur"
+
+
+@pytest.fixture(scope="session")
+def base_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    return build_reader_artifact(
+        tmp_path_factory.mktemp("base"),
+        _BASE_FIXTURE,
+        "catalog",
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
-
-
-@pytest.fixture()
-def global_db(tmp_path: Path) -> Path:
-    output = tmp_path / "global" / "reg_meta.db"
-    write_resolved_catalog((_global_variable(),), output, manifest=synthetic_manifest())
-    return output
-
-
-@pytest.fixture()
-def classified_global_db(tmp_path: Path) -> Path:
-    """The global base plus one classification book."""
-    output = tmp_path / "classified" / "reg_meta.db"
-    write_resolved_catalog(
-        (_global_variable(),),
-        output,
-        manifest=synthetic_manifest(),
-        classifications=(
-            ResolvedClassification(
-                slug="alpha",
-                short_name="ALPHA",
-                name="Alpha nomenclature",
-                codes=(ResolvedClassificationCode(code="1", label="One"),),
-            ),
-        ),
-    )
-    return output
 
 
 def _run(
@@ -201,16 +164,16 @@ def _run(
     base_db: Path,
     text: str = _BASE_TOML,
     *,
-    name: str = "out",
     skip_slugs: bool = False,
     pre_rename_hook=None,
+    data_warnings: tuple[DataWarning, ...] = (),
 ) -> tuple[dict, Path]:
-    providers_dir = _providers(tmp_path, text, name=f"{name}-providers")
+    providers_dir = _providers(tmp_path, text, name="out-providers")
     slug_dir = None
     if not skip_slugs:
-        slug_dir = tmp_path / f"{name}-slugs"
+        slug_dir = tmp_path / "out-slugs"
         _write_slug_dir(slug_dir)
-    out = tmp_path / name
+    out = tmp_path / "out"
     result = extend_db(
         base_db=base_db,
         providers_dir=providers_dir,
@@ -219,15 +182,19 @@ def _run(
         slug_dir=slug_dir,
         skip_slugs=skip_slugs,
         pre_rename_hook=pre_rename_hook,
+        data_warnings=data_warnings,
         diagnostic=True,
     )
     return result, out / "reg_meta.db"
 
 
 def test_core_graph_metadata_flags_open_dates_and_source_label(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
-    counts, out = _run(tmp_path, global_db)
+    # Fails if the overlay drops or renames a provider, register, variant or variable
+    # field the provider TOML states, loses is_identifier/is_sensitive (disclosure),
+    # or stops opening an undated state to 0001-01-01..9999-12-31.
+    counts, out = _run(tmp_path, base_db)
     assert {
         key: counts[key]
         for key in ("providers", "registers", "variants", "variables", "states")
@@ -270,9 +237,11 @@ def test_core_graph_metadata_flags_open_dates_and_source_label(
 
 
 def test_register_scoped_variable_is_pooled_across_variants(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
-    _, out = _run(tmp_path, global_db)
+    # Fails if one key declared per variant becomes one variable per variant
+    # instead of one register variable with a state in each variant.
+    _, out = _run(tmp_path, base_db)
     conn = sqlite3.connect(out)
     ids = _ids()
     assert conn.execute(
@@ -289,8 +258,10 @@ def test_register_scoped_variable_is_pooled_across_variants(
 
 
 def test_multistate_rename_preserves_one_variable(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if a column rename between states splits the variable or loses a
+    # state's window.
     text = _BASE_TOML.replace(
         '    column = "BELOPP"\n    data_type = "float"',
         '    column = "BELOPP"\n    data_type = "float"\n'
@@ -299,7 +270,7 @@ def test_multistate_rename_preserves_one_variable(
         '    data_type = "float"\n    valid_from = "2021"',
         1,
     )
-    counts, out = _run(tmp_path, global_db, text)
+    counts, out = _run(tmp_path, base_db, text)
     assert counts["variables"] == 3 and counts["states"] == 5
     conn = sqlite3.connect(out)
     assert conn.execute(
@@ -314,14 +285,16 @@ def test_multistate_rename_preserves_one_variable(
 
 
 def test_co_delivered_aliases_get_orderable_windows(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if a state's `aliases` stop becoming search aliases with the state's
+    # own (open) window.
     text = _BASE_TOML.replace(
         '    data_type = "float"',
         '    data_type = "float"\n    aliases = ["BELOPP_SEK", "Belopp-SEK"]',
         1,
     )
-    _, out = _run(tmp_path, global_db, text)
+    _, out = _run(tmp_path, base_db, text)
     conn = sqlite3.connect(out)
     var_id = _ids()["belopp"]
     assert {
@@ -346,9 +319,11 @@ def test_co_delivered_aliases_get_orderable_windows(
 
 
 def test_steward_identity_inputs_and_slug_pins_bind(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
-    _, out = _run(tmp_path, global_db)
+    # Fails if steward ids stop being minted from (provider, register, key) or the
+    # pinned register and variant slugs stop binding to those ids.
+    _, out = _run(tmp_path, base_db)
     conn = sqlite3.connect(out)
     ids = _ids()
     assert conn.execute(
@@ -364,8 +339,9 @@ def test_steward_identity_inputs_and_slug_pins_bind(
     conn.close()
 
 
-def test_new_provider_content_is_searchable(tmp_path: Path, global_db: Path) -> None:
-    _, out = _run(tmp_path, global_db)
+def test_new_provider_content_is_searchable(tmp_path: Path, base_db: Path) -> None:
+    # Fails if the overlay stops indexing its own variables for search.
+    _, out = _run(tmp_path, base_db)
     conn = sqlite3.connect(out)
     assert (
         conn.execute(
@@ -378,9 +354,10 @@ def test_new_provider_content_is_searchable(tmp_path: Path, global_db: Path) -> 
 
 
 def test_base_rows_and_base_file_are_not_clobbered(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
-    before_bytes = global_db.read_bytes()
+    # Fails if the overlay rewrites or deletes a base row, or writes the base file.
+    before_bytes = base_db.read_bytes()
     tables = (
         "provider",
         "register",
@@ -390,29 +367,31 @@ def test_base_rows_and_base_file_are_not_clobbered(
         "variable_alias",
         "variable_alias_window",
     )
-    base_conn = sqlite3.connect(global_db)
+    base_conn = sqlite3.connect(base_db)
     before = {
         table: set(base_conn.execute(f"SELECT * FROM {table}")) for table in tables
     }
     base_conn.close()
-    _, out = _run(tmp_path, global_db)
+    _, out = _run(tmp_path, base_db)
     flavored_conn = sqlite3.connect(out)
     after = {
         table: set(flavored_conn.execute(f"SELECT * FROM {table}")) for table in tables
     }
     flavored_conn.close()
     assert all(before[table] <= after[table] for table in tables)
-    assert global_db.read_bytes() == before_bytes
+    assert base_db.read_bytes() == before_bytes
 
 
 def test_overlay_keeps_base_classifications_searchable_and_reanalyzes(
-    tmp_path: Path, classified_global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
-    _, out = _run(tmp_path, classified_global_db)
+    # Fails if the overlay drops the base's classification index or ships the
+    # base's statistics (no ANALYZE after the overlay rows).
+    _, out = _run(tmp_path, base_db)
     with closing(sqlite3.connect(out)) as conn:
         hits = conn.execute(
             "SELECT COUNT(*) FROM classification_fts WHERE classification_fts MATCH ?",
-            ('"nomenclature"',),
+            (f'"{_BASE_BOOK_TERM}"',),
         ).fetchone()[0]
         (variables,) = conn.execute("SELECT COUNT(*) FROM variable").fetchone()
         stats = [
@@ -460,17 +439,20 @@ def _assert_rejected_without_output(
     ],
 )
 def test_malformed_provider_toml_is_exit_config_through_extend_db(
-    tmp_path: Path, global_db: Path, old: str, new: str, locator: str
+    tmp_path: Path, base_db: Path, old: str, new: str, locator: str
 ) -> None:
+    # Fails if a malformed provider TOML is accepted, refused under another code,
+    # or leaves an output or staging file.
     error = _assert_rejected_without_output(
-        tmp_path, global_db, _BASE_TOML.replace(old, new, 1)
+        tmp_path, base_db, _BASE_TOML.replace(old, new, 1)
     )
     assert locator in error.message
 
 
 def test_duplicate_state_key_is_rejected_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if two states of one variable starting the same period are accepted.
     text = _BASE_TOML.replace(
         '    column = "BELOPP"\n    data_type = "float"',
         '    column = "BELOPP"\n    data_type = "float"\n    valid_from = "2020"\n\n'
@@ -478,14 +460,16 @@ def test_duplicate_state_key_is_rejected_through_extend_db(
         '    data_type = "float"\n    valid_from = "2020"',
         1,
     )
-    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    error = _assert_rejected_without_output(tmp_path, base_db, text)
     assert "duplicate state key" in error.message
 
 
 @pytest.mark.parametrize("explicit_start", ["0001", "0001-01", "0001-01-01"])
 def test_year_one_state_start_is_rejected_through_extend_db(
-    tmp_path: Path, global_db: Path, explicit_start: str
+    tmp_path: Path, base_db: Path, explicit_start: str
 ) -> None:
+    # Fails if an explicit year-one start, which reads as the open-start sentinel,
+    # is accepted in any of its spellings.
     text = _BASE_TOML.replace(
         '    column = "BELOPP"\n    data_type = "float"',
         '    column = "BELOPP"\n    data_type = "float"\n\n'
@@ -493,13 +477,15 @@ def test_year_one_state_start_is_rejected_through_extend_db(
         f'    data_type = "float"\n    valid_from = "{explicit_start}"',
         1,
     )
-    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    error = _assert_rejected_without_output(tmp_path, base_db, text)
     assert f"valid_from: {explicit_start!r} is not a valid ISO period" in error.message
 
 
 def test_inverted_register_window_is_rejected_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if an inverted register window is accepted because a valid variable
+    # window overrides it.
     text = _BASE_TOML.replace(
         'purpose = "Bank delivery"',
         'purpose = "Bank delivery"\nvalid_from = "2022"\nvalid_to = "2020"',
@@ -509,14 +495,16 @@ def test_inverted_register_window_is_rejected_through_extend_db(
         '  variants = ["_default"]\n  valid_from = "2010"\n  valid_to = "2030"',
         1,
     )
-    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    error = _assert_rejected_without_output(tmp_path, base_db, text)
     assert "register 'transaktioner' has an inverted validity window" in error.message
     assert "2022-01-01 > 2020-12-31" in error.message
 
 
 def test_inverted_variable_window_is_rejected_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if an inverted variable window is accepted because a valid state
+    # window overrides it.
     text = _BASE_TOML.replace(
         '  variants = ["_default"]',
         '  variants = ["_default"]\n  valid_from = "2022"\n  valid_to = "2020"',
@@ -527,14 +515,16 @@ def test_inverted_variable_window_is_rejected_through_extend_db(
         '    valid_from = "2010"\n    valid_to = "2030"',
         1,
     )
-    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    error = _assert_rejected_without_output(tmp_path, base_db, text)
     assert "variable 'Belopp' has an inverted validity window" in error.message
     assert "2022-01-01 > 2020-12-31" in error.message
 
 
 def test_valid_child_window_overrides_register_window_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if a valid variable window stops overriding the register's (the
+    # allowed twin of the inverted-register refusal).
     text = _BASE_TOML.replace(
         'purpose = "Bank delivery"',
         'purpose = "Bank delivery"\nvalid_from = "2018"\nvalid_to = "2020"',
@@ -544,7 +534,7 @@ def test_valid_child_window_overrides_register_window_through_extend_db(
         '  variants = ["_default"]\n  valid_from = "2010"\n  valid_to = "2030"',
         1,
     )
-    _, out = _run(tmp_path, global_db, text)
+    _, out = _run(tmp_path, base_db, text)
     with closing(sqlite3.connect(out)) as conn:
         assert conn.execute(
             "SELECT valid_from, valid_to FROM variable_state "
@@ -553,21 +543,23 @@ def test_valid_child_window_overrides_register_window_through_extend_db(
 
 
 def test_inverted_state_window_is_rejected_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if a state whose start follows its end is accepted.
     text = _BASE_TOML.replace(
         '    column = "BELOPP"\n    data_type = "float"',
         '    column = "BELOPP"\n    data_type = "float"\n'
         '    valid_from = "2021"\n    valid_to = "2020"',
         1,
     )
-    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    error = _assert_rejected_without_output(tmp_path, base_db, text)
     assert "state[0] has an inverted validity window" in error.message
 
 
 def test_variable_key_cannot_repeat_within_one_variant_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if a variable key declared twice for one variant is accepted.
     needle = """\
     [[register.variable.state]]
     column = "BELOPP"
@@ -589,17 +581,19 @@ def test_variable_key_cannot_repeat_within_one_variant_through_extend_db(
 """
     )
     error = _assert_rejected_without_output(
-        tmp_path, global_db, _BASE_TOML.replace(needle, repeated)
+        tmp_path, base_db, _BASE_TOML.replace(needle, repeated)
     )
     assert "repeats variable" in error.message
 
 
 def test_pooled_variable_metadata_disagreement_is_rejected_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if per-variant declarations of one pooled variable that disagree on
+    # `name` are accepted (one of them silently wins).
     head, separator, tail = _BASE_TOML.rpartition('name = "Personnummer"')
     text = head + separator.replace("Personnummer", "Other") + tail
-    error = _assert_rejected_without_output(tmp_path, global_db, text)
+    error = _assert_rejected_without_output(tmp_path, base_db, text)
     assert "different `name`" in error.message
 
 
@@ -621,11 +615,13 @@ def _seeded_provider_run(tmp_path: Path, base_db: Path, name: str) -> dict:
 
 
 def test_provider_matching_base_name_is_reused_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
-    with closing(sqlite3.connect(global_db)) as conn:
+    # Fails if a provider the base already holds under the same name is inserted
+    # again or its base row changes.
+    with closing(sqlite3.connect(base_db)) as conn:
         before = conn.execute("SELECT * FROM provider ORDER BY provider_id").fetchall()
-    result = _seeded_provider_run(tmp_path, global_db, "Försäkringskassan")
+    result = _seeded_provider_run(tmp_path, base_db, "Försäkringskassan")
     assert result["providers"] == 0
     with closing(sqlite3.connect(tmp_path / "out" / "reg_meta.db")) as conn:
         assert (
@@ -635,10 +631,11 @@ def test_provider_matching_base_name_is_reused_through_extend_db(
 
 
 def test_provider_name_conflicting_with_base_is_rejected_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if a provider TOML naming a base provider differently is accepted.
     with pytest.raises(RegMetaError) as exc:
-        _seeded_provider_run(tmp_path, global_db, "Wrong")
+        _seeded_provider_run(tmp_path, base_db, "Wrong")
     assert exc.value.exit_code == EXIT_CONFIG
     assert exc.value.code == "extend_providers_invalid"
     assert "'fk' already has name 'Försäkringskassan'" in exc.value.message
@@ -648,8 +645,10 @@ def test_provider_name_conflicting_with_base_is_rejected_through_extend_db(
 
 
 def test_missing_or_empty_provider_directory_is_exit_config_through_extend_db(
-    tmp_path: Path, global_db: Path
+    tmp_path: Path, base_db: Path
 ) -> None:
+    # Fails if a missing or empty providers directory builds an overlay, or the
+    # refusal stops naming the directory.
     empty = tmp_path / "empty"
     empty.mkdir()
     for providers, code, locator in (
@@ -658,7 +657,7 @@ def test_missing_or_empty_provider_directory_is_exit_config_through_extend_db(
     ):
         with pytest.raises(RegMetaError) as exc:
             extend_db(
-                base_db=global_db,
+                base_db=base_db,
                 providers_dir=providers,
                 db_dir=tmp_path / "out",
                 steward=_STEWARD,
@@ -672,7 +671,9 @@ def test_missing_or_empty_provider_directory_is_exit_config_through_extend_db(
         assert not (tmp_path / "out" / "reg_meta.db").exists()
 
 
-def test_hook_failure_discards_staging_db(tmp_path: Path, global_db: Path) -> None:
+def test_hook_failure_discards_staging_db(tmp_path: Path, base_db: Path) -> None:
+    # Fails if a failure after the overlay is written leaves the staging or the
+    # final database behind.
     class HookError(RuntimeError):
         pass
 
@@ -680,97 +681,93 @@ def test_hook_failure_discards_staging_db(tmp_path: Path, global_db: Path) -> No
         raise HookError
 
     with pytest.raises(HookError):
-        _run(tmp_path, global_db, skip_slugs=True, pre_rename_hook=fail)
+        _run(tmp_path, base_db, skip_slugs=True, pre_rename_hook=fail)
     assert not (tmp_path / "out" / "reg_meta.db").exists()
     assert not (tmp_path / "out" / "reg_meta.db.tmp").exists()
 
 
-def test_extension_writes_register_warnings_using_actual_private_ids(
-    tmp_path: Path, global_db: Path
-) -> None:
-    from reg_meta_build.db import open_built_db
-
-    warning = _fixture_warning()
-    providers = _providers(tmp_path, _BASE_TOML)
-    slugs = tmp_path / "slugs"
-    _write_slug_dir(slugs)
-    out = tmp_path / "out"
-    extend_db(
-        global_db,
-        providers,
-        out,
-        steward=_STEWARD,
-        slug_dir=slugs,
-        data_warnings=(warning,),
-        diagnostic=True,
-    )
-    conn = open_built_db(out / "reg_meta.db")
-    try:
-        row = conn.execute(
-            "SELECT register_id, variable_id, register_variant_id, delivery_column_name, valid_from, valid_to FROM data_warning"
-        ).fetchone()
-        assert tuple(row) == (_ids()["register"], None, None, None, None, None)
-        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
-    finally:
-        conn.close()
-
-
-def test_warning_writer_rejects_missing_register_and_demotes_only_explicitly(
-    tmp_path: Path, global_db: Path
-) -> None:
-    import json
-
-    from reg_meta.catalog import DataWarning
-    from reg_meta.source_evidence import canonical_sha256
-    from reg_meta_build.data_warnings import write_data_warnings
-
-    warning = _fixture_warning()
-    conn = sqlite3.connect(global_db)
-    try:
-        with pytest.raises(ValueError, match="register is not written"):
-            write_data_warnings(conn, (warning,))
-        provider, register = conn.execute(
-            "SELECT p.slug,r.slug FROM register r JOIN provider p USING(provider_id) LIMIT 1"
-        ).fetchone()
-        payload = warning.model_dump(mode="json", exclude={"warning_id"})
-        payload.update(
-            register_fqid=f"{provider}/{register}",
-            variable_fqid=f"{provider}/{register}/unwritten",
-            variant="_default",
-            delivery_column_name="X",
-        )
-        missing = DataWarning.model_validate_json(
-            json.dumps({"warning_id": canonical_sha256(payload), **payload})
-        )
-        with pytest.raises(ValueError, match="variable is not written"):
-            write_data_warnings(conn, (missing,))
-        write_data_warnings(conn, (missing,), demote_missing_variables=True)
-        raw = conn.execute("SELECT warning_json FROM data_warning").fetchone()[0]
-        demoted = DataWarning.model_validate_json(raw)
-        assert demoted.variable_fqid is None and demoted.variant is None
-        assert demoted.warning_id != missing.warning_id
-    finally:
-        conn.close()
-
-
-def _fixture_warning():
-    from pathlib import Path
-
-    from reg_meta.catalog import DataWarning
-
+def _fixture_warning() -> DataWarning:
     return DataWarning.model_validate_json(
         (Path(__file__).parent / "cases/holdings/warning/warning.json").read_text()
     )
 
 
-def test_extension_preserves_base_generation_provenance(
-    tmp_path: Path, global_db: Path
+def _rescoped(warning: DataWarning, **fields: str) -> DataWarning:
+    """The warning with ``fields`` replaced and its identity re-minted."""
+    payload = warning.model_dump(mode="json", exclude={"warning_id"})
+    payload.update(fields)
+    return DataWarning.model_validate_json(
+        json.dumps({"warning_id": canonical_sha256(payload), **payload})
+    )
+
+
+def test_extension_writes_register_warnings_using_actual_private_ids(
+    tmp_path: Path, base_db: Path
 ) -> None:
-    case = Path(__file__).parent / "cases/holdings/extension-manifest"
-    request = json.loads((case / "request.json").read_text())
-    expected = json.loads((case / "expected.json").read_text())
-    _, output = _run(tmp_path, global_db)
-    with sqlite3.connect(output) as conn:
-        manifest = dict(conn.execute("SELECT key,value FROM import_manifest"))
-    assert {key: manifest[key] for key in request["fields"]} == expected
-    assert set(request["absent_fields"]).isdisjoint(manifest)
+    # Fails if extend_db drops a supplied register warning or binds it to an id
+    # other than the overlay register's minted one.
+    _, out = _run(tmp_path, base_db, data_warnings=(_fixture_warning(),))
+    with closing(sqlite3.connect(out)) as conn:
+        row = conn.execute(
+            "SELECT register_id, variable_id, register_variant_id, "
+            "delivery_column_name, valid_from, valid_to FROM data_warning"
+        ).fetchone()
+        assert tuple(row) == (_ids()["register"], None, None, None, None, None)
+        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+
+
+@pytest.mark.parametrize(
+    "scope, refusal",
+    [
+        ({"register_fqid": f"{_BANK}/unwritten"}, "register is not written"),
+        (
+            {
+                "variable_fqid": f"{_BANK}/transaktioner/unwritten",
+                "variant": "transaktioner-default",
+                "delivery_column_name": "X",
+            },
+            "variable is not written",
+        ),
+    ],
+    ids=["register", "variable"],
+)
+def test_warning_for_an_unwritten_entity_is_refused_without_output(
+    tmp_path: Path, base_db: Path, scope: dict[str, str], refusal: str
+) -> None:
+    # Fails if extend_db writes a warning whose register or variable the overlay
+    # does not hold, or demotes the variable warning to its register: only the
+    # resolved writer demotes (test_resolved_writer_data_warnings.py).
+    warning = _rescoped(_fixture_warning(), **scope)
+    with pytest.raises(ValueError, match=refusal):
+        _run(tmp_path, base_db, data_warnings=(warning,))
+    assert not (tmp_path / "out" / "reg_meta.db").exists()
+    assert not (tmp_path / "out" / "reg_meta.db.tmp").exists()
+
+
+def test_diagnostic_extension_names_its_base_generation_and_claims_none(
+    tmp_path: Path, base_db: Path
+) -> None:
+    # Fails if a diagnostic overlay keeps the base's generation_id or
+    # builder_commit (passing for a publishable generation), or stops naming the
+    # generation of the base it extends.
+    with closing(sqlite3.connect(base_db)) as conn:
+        base = dict(conn.execute("SELECT key, value FROM import_manifest"))
+    assert {"generation_id", "builder_commit"} <= base.keys()
+    _, output = _run(tmp_path, base_db)
+    with closing(sqlite3.connect(output)) as conn:
+        manifest = dict(conn.execute("SELECT key, value FROM import_manifest"))
+    assert {
+        key: manifest.get(key)
+        for key in (
+            "catalog_artifact_kind",
+            "catalog_publishable",
+            "catalog_completeness",
+            "base_generation_id",
+        )
+    } == {
+        "catalog_artifact_kind": "diagnostic",
+        "catalog_publishable": "false",
+        "catalog_completeness": "incomplete",
+        "base_generation_id": base["generation_id"],
+    }
+    assert {"generation_id", "builder_commit"}.isdisjoint(manifest)

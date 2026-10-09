@@ -2,6 +2,6 @@
   "error": {
     "code": "pipeline_build_failed",
     "exit_code": 10,
-    "message_contains": ["empty canonical codebook"]
+    "message_contains": ["cyclic classification succession relation"]
   }
 }
