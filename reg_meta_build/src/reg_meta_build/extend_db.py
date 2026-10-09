@@ -15,13 +15,11 @@ from contextlib import ExitStack, closing
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from pydantic import TypeAdapter
 from reg_core_py import GrammarError
 
 from ._curation import printable_error
-from .data_warnings import DataWarning, write_data_warnings
 from .db import DB_FILENAME, get_manifest, open_built_db
 from .errors import EXIT_CONFIG, RegMetaError
 from .id import mint
@@ -36,9 +34,6 @@ from .ir import (
 from .slug_grammar import validate_slug
 from .source_evidence import canonical_json
 from .sources.curated import CuratedAdapter
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
 
 
 @dataclass(frozen=True)
@@ -269,8 +264,6 @@ def extend_db(
     steward: str,
     slug_dir: Path | None = None,
     skip_slugs: bool = False,
-    pre_rename_hook: Callable[[Path], None] | None = None,
-    data_warnings: tuple[DataWarning, ...] = (),
     holdings_input: Path | None = None,
     input_commit: str | None = None,
     input_manifest_sha256: str | None = None,
@@ -287,13 +280,6 @@ def extend_db(
     from .derive.search_index import derive_search_indexes
     from .fqid_slugs import populate_slugs, populate_variable_slugs
 
-    data_warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
-        data_warnings, strict=True
-    )
-    if not diagnostic and (data_warnings or pre_rename_hook is not None):
-        raise ValueError(
-            "Supplemental warnings and publish hooks require diagnostic=True"
-        )
     base_db = base_db.expanduser().resolve()
     db_dir = db_dir.expanduser().resolve()
 
@@ -413,7 +399,10 @@ def extend_db(
         tmp_path = final_path.with_suffix(".db.tmp")
         if tmp_path.exists():
             tmp_path.unlink()
-        shutil.copy2(base_db, tmp_path)
+        # A released base is often read-only (0444). `copyfile` gives the staging
+        # copy a fresh writable mode; `copy2` would carry 0444 over and SQLite
+        # could not open it for writing.
+        shutil.copyfile(base_db, tmp_path)
         with tmp_path.open("rb") as copied:
             if hashlib.file_digest(copied, "sha256").hexdigest() != base_digest:
                 tmp_path.unlink(missing_ok=True)
@@ -432,7 +421,6 @@ def extend_db(
             "variants": len(graph.variants),
             "variables": len(graph.variables),
             "states": len(graph.states),
-            "data_warnings": len(data_warnings),
         }
         try:
             _progress(f"extend-db: overlaying steward {steward!r} onto {base_db.name}")
@@ -456,7 +444,6 @@ def extend_db(
                 )
                 _assert_steward_rows_slugged(conn)
 
-            write_data_warnings(conn, data_warnings)
             # Holdings must see the steward's own metadata, so derive runs over
             # base plus overlay. An unslugged diagnostic never compiles holdings;
             # it clears the inherited derived tables instead of deriving stale
@@ -576,8 +563,6 @@ def extend_db(
                         )
                     )
                 committed_steward_slugs(steward, revision=revision)
-            if pre_rename_hook is not None:
-                pre_rename_hook(tmp_path)
         except BaseException:
             tmp_path.unlink(missing_ok=True)
             _unlink_wal_sidecars(tmp_path)
