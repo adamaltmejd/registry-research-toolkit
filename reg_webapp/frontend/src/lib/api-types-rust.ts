@@ -474,6 +474,32 @@ export interface components {
             name?: string | null;
             short_name?: string | null;
         };
+        /** @description One code of a classification edition: today's `ClassificationCode`. */
+        ClassificationCode: {
+            code: string;
+            /** @description True for a canonical code, null when no canonical list exists. */
+            is_valid?: boolean | null;
+            label: string;
+            /**
+             * Format: int64
+             * @description The hierarchy depth; null when the classification is flat.
+             */
+            level?: number | null;
+        };
+        /**
+         * @description A delivered pair outside its declared book: today's
+         *     `ClassificationExtensionMember`.
+         */
+        ClassificationExtensionMember: {
+            code: string;
+            label: string;
+            /** @description `nonstandard` or `sentinel`. */
+            member_kind: string;
+            /** @description The certificates that make a source-local code a sentinel. */
+            scoped_sentinels: components["schemas"]["ScopedSentinel"][];
+            /** @description The book's curated meaning of a sentinel code. */
+            sentinel_meaning?: string | null;
+        };
         /** @description A curated group of classifications. */
         ClassificationGroup: {
             axes: components["schemas"]["Axis"][];
@@ -1139,6 +1165,19 @@ export interface components {
          * @enum {string}
          */
         Scope: "holdings" | "reference";
+        /**
+         * @description A build-time certificate of a checked, finite source sentinel decision
+         *     (today's `ScopedSentinelEvidence`).
+         */
+        ScopedSentinel: {
+            classification_sha256: string;
+            delivery_column_name: string;
+            members: string[][];
+            provenance: string;
+            source_fingerprints: string[];
+            valid_from?: string | null;
+            valid_to?: string | null;
+        };
         /** @description `shape.SearchHit`. */
         SearchHit: {
             fqid?: string | null;
@@ -1343,6 +1382,16 @@ export interface components {
             successor_fqid: string | null;
         };
         /**
+         * @description A row of `values`: a classification's code, a state's delivered pair, or a
+         *     delivered pair outside a declared book.
+         */
+        ValueRow: components["schemas"]["ClassificationCode"] | components["schemas"]["ClassificationExtensionMember"] | components["schemas"]["ValueSetMember"];
+        /** @description One delivered (code, label) pair: today's `ValueSetMember`. */
+        ValueSetMember: {
+            code: string;
+            label: string;
+        };
+        /**
          * @description `value_set_summary`: a value set's code count and, when its codes are a dense
          *     integer run, its span.
          */
@@ -1351,7 +1400,7 @@ export interface components {
             integer_range?: components["schemas"]["IntegerRange"] | null;
         };
         ValuesPage: {
-            items: unknown[];
+            items: components["schemas"]["ValueRow"][];
             next_cursor?: string | null;
             /** @description The rows matching `q` in the whole set. */
             total: number;
