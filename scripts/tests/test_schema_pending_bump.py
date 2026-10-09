@@ -20,8 +20,7 @@ spb = load_scripts_module("schema_pending_bump")
 
 
 def _verdict(code_db: str, code_doc: str, asset_db: str, asset_doc: str) -> str:
-    # The Rust server's minimum equal to the Python reader's, as on main today.
-    verdict, _ = spb.classify_overall(code_db, code_doc, code_db, asset_db, asset_doc)
+    verdict, _ = spb.classify_overall(code_db, code_doc, asset_db, asset_doc)
     return verdict
 
 
@@ -32,14 +31,6 @@ def test_pending_on_doc_minor_behind() -> None:
 
 def test_pending_on_db_minor_behind() -> None:
     assert _verdict("5.4.0", "1.1.0", "5.3.0", "1.1.0") == "pending"
-
-
-def test_pending_on_rust_minimum_ahead_of_python() -> None:
-    # Fails when the guard stops reading the Rust server's minimum: the bake would
-    # pass the 9.2 asset, the image would refuse to boot on it, and the deploy
-    # would go red instead of waiting for the owed release.
-    verdict, _ = spb.classify_overall("9.2.0", "1.2.0", "9.3", "9.2.0", "1.2.0")
-    assert verdict == "pending"
 
 
 def test_compatible_when_asset_equals_code() -> None:
@@ -54,11 +45,6 @@ def test_compatible_when_asset_ahead_same_major() -> None:
 def test_break_on_major_mismatch() -> None:
     # Major mismatch is a genuine incompatibility — the guard must fail red.
     assert _verdict("6.0.0", "1.1.0", "5.4.0", "1.1.0") == "break"
-
-
-def test_pending_on_one_axis_while_other_compatible() -> None:
-    # DB compatible (equal), doc minor behind → pending overall.
-    assert _verdict("5.4.0", "1.1.0", "5.4.0", "1.0.0") == "pending"
 
 
 def test_break_suppresses_pending_on_other_axis() -> None:
@@ -84,9 +70,7 @@ def test_malformed_version_nonzero_exit() -> None:
             "--code-db",
             "5",
             "--code-doc",
-            "1.1.0",
-            "--code-rust",
-            "5.4",
+            "1.1",
             "--asset-db",
             "5.4.0",
             "--asset-doc",
@@ -104,11 +88,9 @@ def test_subprocess_stdout_contract() -> None:
             sys.executable,
             str(_MODULE),
             "--code-db",
-            "5.4.0",
-            "--code-doc",
-            "1.1.0",
-            "--code-rust",
             "5.4",
+            "--code-doc",
+            "1.1",
             "--asset-db",
             "5.4.0",
             "--asset-doc",

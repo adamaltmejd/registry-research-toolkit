@@ -23,6 +23,7 @@ from _swecov_fixtures import (
     run_inventory as _run_inventory,
 )
 from reg_meta.inventory import load_inventory as load_delivery_inventory
+from reg_meta_build.derive.states import derive_states
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -418,6 +419,9 @@ def _case_twin_db(tmp_path: Path, flavored_db: Path, windows: tuple[str, ...]) -
             "VALUES (904, 902, ?, '0001-01-01', '9999-12-31')",
             [(window,) for window in windows],
         )
+        # The generator reads the derived `resolver_column` universe, as the
+        # holdings compiler does, so re-derive it over the edited core rows.
+        derive_states(conn)
     return db
 
 
