@@ -50,17 +50,19 @@ impl Scope {
 pub struct Catalog {
     path: PathBuf,
     manifest: BTreeMap<String, String>,
+    mmap_size: i64,
 }
 
 impl Catalog {
     /// Open `dir/reg_meta.db` and admit it. `selected` is `--catalog NAME`: `global`
-    /// for the catalog artifact, else a steward id.
+    /// for the catalog artifact, else a steward id. `mmap_size` is each connection's
+    /// `PRAGMA mmap_size` (`DEFAULT_MMAP_SIZE`; 0 disables memory-mapping).
     ///
     /// # Errors
     ///
     /// `db_not_found`, `schema_incompatible`, `catalog_unpublishable` or
     /// `catalog_mismatch`.
-    pub fn open(dir: &Path, selected: Option<&str>) -> Result<Self, Error> {
+    pub fn open(dir: &Path, selected: Option<&str>, mmap_size: i64) -> Result<Self, Error> {
         let path = dir.join(DB_FILENAME);
         if !path.is_file() {
             return Err(Error::new(
@@ -69,7 +71,7 @@ impl Catalog {
                 vec![],
             ));
         }
-        let manifest = read_manifest(&path).map_err(|err| {
+        let manifest = read_manifest(&path, mmap_size).map_err(|err| {
             Error::new(
                 Code::SchemaIncompatible,
                 format!(
@@ -79,7 +81,11 @@ impl Catalog {
                 vec![serde_json::Value::Null, supported(SCHEMA).into()],
             )
         })?;
-        let catalog = Self { path, manifest };
+        let catalog = Self {
+            path,
+            manifest,
+            mmap_size,
+        };
         catalog.gate_schema()?;
         catalog.admit_identity()?;
         // `global` names the catalog artifact, never a steward that calls itself so.
@@ -203,7 +209,7 @@ impl Catalog {
     ///
     /// `catalog_unavailable` when the admitted file cannot be opened.
     pub fn connect(&self) -> Result<Connection, Error> {
-        connect(&self.path)
+        connect(&self.path, self.mmap_size)
             .and_then(with_folds)
             .map_err(|err| unavailable(&self.path, &err))
     }
@@ -242,10 +248,18 @@ fn supported(gate: (u32, u32)) -> String {
     format!("{}.{} or a later {}.x", gate.0, gate.1, gate.0)
 }
 
+/// The default `PRAGMA mmap_size` (`serve --mmap-size`): memory-map the file (SQLite
+/// caps the size at its compile-time maximum, about 2 GiB), since a connection per
+/// request otherwise reads every page through its own small cache, and concurrent
+/// requests spend most of their time in `pread`. On a cold Linux page cache, mmap
+/// read-around reads several times more bytes than `pread`, so a small-memory host
+/// with slow storage may serve faster with 0 (off).
+pub const DEFAULT_MMAP_SIZE: i64 = 1 << 31;
+
 /// `immutable=1`: the published files never change in place (they are replaced by
 /// rename), so SQLite skips locking and never creates `-wal`/`-shm` sidecars, which
 /// a read-only directory would refuse (as `reg_meta.db.open_db`).
-fn connect(path: &Path) -> rusqlite::Result<Connection> {
+fn connect(path: &Path, mmap_size: i64) -> rusqlite::Result<Connection> {
     let mut uri = String::from("file:");
     for c in path.to_string_lossy().chars() {
         match c {
@@ -262,10 +276,7 @@ fn connect(path: &Path) -> rusqlite::Result<Connection> {
             | OpenFlags::SQLITE_OPEN_URI
             | OpenFlags::SQLITE_OPEN_NO_MUTEX,
     )?;
-    // Memory-map the file (SQLite caps the size at its compile-time maximum, about
-    // 2 GiB): a connection per request otherwise reads every page through its own
-    // small cache, and concurrent requests spend most of their time in `pread`.
-    conn.pragma_update(None, "mmap_size", 1_i64 << 31)?;
+    conn.pragma_update(None, "mmap_size", mmap_size)?;
     Ok(conn)
 }
 
@@ -295,8 +306,8 @@ fn with_folds(conn: Connection) -> rusqlite::Result<Connection> {
     Ok(conn)
 }
 
-fn read_manifest(path: &Path) -> rusqlite::Result<BTreeMap<String, String>> {
-    let conn = connect(path)?;
+fn read_manifest(path: &Path, mmap_size: i64) -> rusqlite::Result<BTreeMap<String, String>> {
+    let conn = connect(path, mmap_size)?;
     let mut stmt = conn.prepare("SELECT key, value FROM import_manifest")?;
     stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?
         .collect()
