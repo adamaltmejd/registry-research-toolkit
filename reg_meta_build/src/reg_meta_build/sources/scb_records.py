@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
-from reg_meta_build._curation import data_type_class, printable_error
+from reg_meta_build._curation import data_type_class
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_evidence import (
@@ -74,17 +74,15 @@ def _scb_native_id(
     try:
         return int(value)
     except ValueError as exc:
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="scb_native_id_invalid",
-                error_class="configuration",
-                message=(
-                    f"Invalid SCB native ID in {filename} "
-                    f"at row {row_number}, field {field}: {value!r}."
-                ),
-                remediation="Re-export the file from mikrometadata.scb.se.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="scb_native_id_invalid",
+            error_class="configuration",
+            message=(
+                f"Invalid SCB native ID in {filename} "
+                f"at row {row_number}, field {field}: {value!r}."
+            ),
+            remediation="Re-export the file from mikrometadata.scb.se.",
         ) from exc
 
 

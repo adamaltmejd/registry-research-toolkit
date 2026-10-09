@@ -59,7 +59,7 @@ def canonical_inventory(
             seen = set()
             for index, mapping in enumerate(column.mappings):
                 locator = f"policy/inventory.toml:table[{table.id!r}].column[{column.name!r}].mapping[{index}]"
-                variable_id = variables.get(str(mapping.variable))
+                variable_id = variables.get(mapping.variable)
                 variant_id = variants.get(mapping.register_variant)
                 if variable_id is None or variant_id is None:
                     rejections.append(
@@ -185,7 +185,7 @@ def compile_holdings(
                     (
                         column_id,
                         variants[mapping.register_variant],
-                        variables[str(mapping.variable)],
+                        variables[mapping.variable],
                         literal.representation,
                         mapping.representation,
                     ),

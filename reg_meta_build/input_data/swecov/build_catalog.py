@@ -2094,10 +2094,10 @@ def _inventory_mapping_records(
         for r in records
         if r["coord"] == entry.register_variant
         and r["col"] == entry.representation
-        and (not entry.select_owner or r["vslug"] == entry.variable.variable)
+        and (not entry.select_owner or r["vslug"] == entry.variable.rsplit("/", 1)[1])
     ]
     admitted, issue = _inventory_period_records(selected, edition)
-    owned = [r for r in admitted if r["vslug"] == entry.variable.variable]
+    owned = [r for r in admitted if r["vslug"] == entry.variable.rsplit("/", 1)[1]]
     return owned, "stale_declared_mapping_target" if issue or not owned else None
 
 
@@ -2503,7 +2503,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                         r["col"] != entry.representation
                         or (
                             not entry.select_owner
-                            and r["vslug"] != entry.variable.variable
+                            and r["vslug"] != entry.variable.rsplit("/", 1)[1]
                         )
                     )
                 ] + declared

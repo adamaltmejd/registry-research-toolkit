@@ -19,7 +19,6 @@ from reg_meta_build._curation import (
     SEARCH_PINS_FILE,
     curation_error,
     load_search_pins,
-    printable_error,
 )
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
@@ -246,28 +245,24 @@ def _selected_scopes(
             names[str(register[-1])].add((source, register))
             names[f"{source}:{register[-1]}"].add((source, register))
     if unknown := set(specs) - names.keys():
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="pipeline_registers_unknown",
-                error_class="usage",
-                message=f"--registers names no selected scope: {sorted(unknown)}",
-                remediation="Name each scope by its native register id, SOURCE:ID, "
-                "or a whole source, as the prepared input declares it.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="pipeline_registers_unknown",
+            error_class="usage",
+            message=f"--registers names no selected scope: {sorted(unknown)}",
+            remediation="Name each scope by its native register id, SOURCE:ID, "
+            "or a whole source, as the prepared input declares it.",
         )
     if ambiguous := sorted(
         spec for spec in set(specs) if len({source for source, _ in names[spec]}) > 1
     ):
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="pipeline_registers_ambiguous",
-                error_class="usage",
-                message="--registers names scopes in several sources, qualify as "
-                f"SOURCE:ID: {ambiguous}",
-                remediation="Qualify each named scope as SOURCE:ID.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="pipeline_registers_ambiguous",
+            error_class="usage",
+            message="--registers names scopes in several sources, qualify as "
+            f"SOURCE:ID: {ambiguous}",
+            remediation="Qualify each named scope as SOURCE:ID.",
         )
     return {key for spec in specs for key in names[spec]}
 
@@ -302,15 +297,13 @@ def _refuse_duplicated_rows(records: Iterable[SourceRecord]) -> None:
             )
             for locator in (seen.locators[0], record.locators[0])
         )
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="source_rows_duplicated",
-                error_class="configuration",
-                message=f"{record.source}: {kept} and {repeat} are identical rows.",
-                remediation="Remove the repeated row from the input bundle (and "
-                "report it to the provider), then prepare a new candidate.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="source_rows_duplicated",
+            error_class="configuration",
+            message=f"{record.source}: {kept} and {repeat} are identical rows.",
+            remediation="Remove the repeated row from the input bundle (and "
+            "report it to the provider), then prepare a new candidate.",
         )
 
 

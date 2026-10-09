@@ -194,8 +194,8 @@ def check_error(exc: RegMetaError, error: dict[str, Any]) -> str | None:
     exit_code = error.get("exit_code", EXIT_CONFIG)
     if exc.exit_code != exit_code:
         return f"exit code {exc.exit_code} != {exit_code}"
-    # Fails if a build-side refusal skips `printable_error`: its str() and any
-    # log or traceback would print empty.
+    # Fails if `RegMetaError.__str__` stops printing the message: any log or
+    # traceback of a refusal would print empty.
     if str(exc) != exc.message:
         return f"str(exc) {str(exc)!r} != message {exc.message!r}"
     # Fails if a refusal prints a checkout path absolute instead of repo-relative.

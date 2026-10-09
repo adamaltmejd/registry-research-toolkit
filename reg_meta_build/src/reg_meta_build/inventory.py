@@ -13,16 +13,14 @@ chooses between sources. reg_meta/DESIGN.md → "Holdings resolution invariants"
 is the decision text; the format is documented in reg_meta/DESIGN.md →
 "Inventory TOML authoring contract".
 
-Deliberately reg_schema-free: the contract needs only reg_meta's own period
-grammar (`fqid.period_token_to_bounds`) and FQID parser, so the `reg_meta →
-reg_schema` dependency the materializer takes is not taken here.
+Deliberately reg_schema-free: the contract needs only reg-core's period grammar
+and FQID parser (`reg_core_py`).
 This module holds no DB access — it is pure domain code over an authored file.
 """
 
 from __future__ import annotations
 
 import tomllib
-from datetime import date, timedelta
 from typing import TYPE_CHECKING, Literal
 
 from pydantic import (
@@ -33,17 +31,15 @@ from pydantic import (
     field_validator,
     model_validator,
 )
+from reg_core_py import (
+    next_iso_day,
+    parse_fqid,
+    period_bounds,
+    period_token_for_bounds,
+)
 
 from .errors import EXIT_CONFIG, RegMetaError
-from .fqid import (
-    DEFAULT_VARIANT_SLUG,
-    Fqid,
-    FqidKind,
-    period_token_for_bounds,
-    period_token_to_bounds,
-    snap_to_real_month_end,
-    validate_slug,
-)
+from .slug_grammar import DEFAULT_VARIANT_SLUG, validate_slug
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -106,8 +102,8 @@ def _year_int_to_token(value: object) -> object:
 
 def _segment_bounds(segment: EditionSegment) -> tuple[str, str]:
     if isinstance(segment, EditionRange):
-        lo, _ = period_token_to_bounds(segment.from_)
-        _, hi = period_token_to_bounds(segment.to)
+        lo, _ = _token_bounds(segment.from_)
+        _, hi = _token_bounds(segment.to)
         if lo > hi:
             raise ValueError(
                 f"edition range 'from' is after 'to': {segment.from_!r}..{segment.to!r}"
@@ -119,7 +115,24 @@ def _segment_bounds(segment: EditionSegment) -> tuple[str, str]:
             "(a table with no edition encoded in its name still needs a curated "
             "edition — see reg_meta_build/DESIGN.md → Holdings curation rules)"
         )
-    return period_token_to_bounds(segment)
+    return _token_bounds(segment)
+
+
+# simplify: keeps reg_meta's always-Feb-29 end so derive agrees with the pinned 0.45.0 artifacts (G1); delete in 4.10 with the 10.0.0 content change, together with conformance/holdings_accounting.py's Feb-29 bound
+# (`_token_bounds` and its inverse `_token_for_bounds` below)
+def _token_bounds(token: str) -> tuple[str, str]:
+    lo, hi = period_bounds(token)
+    if len(token) == 7 and hi.endswith("-02-28"):  # a non-leap `YYYY-02` month
+        hi = hi[:8] + "29"
+    return lo, hi
+
+
+def _token_for_bounds(lo: str, hi: str) -> str:
+    """`period_token_for_bounds` under the Feb-29 convention: `YYYY-02` is
+    `..-02-29`, so a window ending on the 28th is not the whole month."""
+    if lo[5:] == "02-01" and hi == f"{lo[:8]}28":
+        return f"{lo}..{hi}"
+    return period_token_for_bounds(lo, hi)
 
 
 def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
@@ -127,8 +140,8 @@ def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
 
     The finite-period expansion the coverage/materializer lane intersects
     against a requested period. Reuses the shared period grammar
-    (`fqid.period_token_to_bounds`), so an inventory edition and a project
-    period expand identically. Raises `ValueError` (`FqidError` for a malformed
+    (`reg_core_py.period_bounds`), so an inventory edition and a project
+    period expand identically. Raises `ValueError` (`GrammarError` for a malformed
     token) — the inventory validator surfaces it as `inventory_invalid`."""
     segments = edition if isinstance(edition, tuple) else (edition,)
     if not segments:
@@ -149,8 +162,8 @@ def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
 
 # ── interval algebra and period rendering over inclusive ISO dates ──────────
 #
-# Shared with `order.py` and `catalog.py`, which import these: an inventory
-# edition, a project period, an availability window, a resolution conflict
+# Shared with `inventory_coverage.py` and `derive/browse.py`, which import these: an
+# inventory edition, a project period, an availability window, a resolution conflict
 # and a delivery's windows must all expand and render through ONE grammar, so a
 # clip, an overlap, an edition and a browse row can never disagree about bounds
 # or spelling.
@@ -165,25 +178,12 @@ def _intersect(a: _Interval, b: _Interval) -> _Interval | None:
     return (lo, hi) if lo <= hi else None
 
 
-def _next_day(iso: str) -> str:
-    """The day after an inclusive upper bound. Bounds reaching the open-ended
-    `9999-12-31` sentinel have no successor and stay put (they are always
-    clipped against a finite requested period before the arithmetic runs).
-    Snapped first: the period grammar synthesizes a non-leap `YYYY-02-29` upper
-    bound, which `date` arithmetic would raise on (`snap_to_real_month_end`)."""
-    if iso >= "9999-12-31":
-        return iso
-    return (
-        date.fromisoformat(snap_to_real_month_end(iso)) + timedelta(days=1)
-    ).isoformat()
-
-
 def _merge(intervals: list[_Interval]) -> tuple[_Interval, ...]:
     """Sort and coalesce intervals, joining overlapping AND day-adjacent ones
     (`..2018-12-31` + `2019-01-01..` is one continuous window, not two)."""
     merged: list[_Interval] = []
     for lo, hi in sorted(intervals):
-        if merged and lo <= _next_day(merged[-1][1]):
+        if merged and lo <= next_iso_day(merged[-1][1]):
             if hi > merged[-1][1]:
                 merged[-1] = (merged[-1][0], hi)
         else:
@@ -201,7 +201,7 @@ def _render(intervals: tuple[_Interval, ...]) -> str:
 
 
 def _render_interval(lo: str, hi: str) -> str:
-    token = period_token_for_bounds(lo, hi)
+    token = _token_for_bounds(lo, hi)
     if ".." not in token:
         return token
     # A multi-year span has no single token; render the ENDPOINTS as tokens so
@@ -281,7 +281,7 @@ class ColumnMapping(_InventoryModel):
     representation is a required join discriminator, not an output substitute."""
 
     register_variant: str
-    variable: Fqid
+    variable: str
     representation: str = Field(min_length=1)
 
     @field_validator("register_variant")
@@ -294,19 +294,18 @@ class ColumnMapping(_InventoryModel):
                 f"<provider>/<register>/<variant>; got {value!r}"
             )
         provider, register, variant = parts
-        validate_slug(provider, FqidKind.PROVIDER)
-        validate_slug(register, FqidKind.REGISTER)
+        validate_slug(provider, "provider")
+        validate_slug(register, "register")
         validate_slug(variant, "register_variant", allow_default=True)
         return value
 
     @field_validator("variable")
     @classmethod
-    def _check_binding_fqid(cls, value: Fqid) -> Fqid:
-        if value.kind is not FqidKind.VARIABLE_BINDING:
+    def _check_binding_fqid(cls, value: str) -> str:
+        if (kind := parse_fqid(value).kind) != "variable":
             raise ValueError(
                 "variable must be a 3-segment binding FQID "
-                f"<provider>/<register>/<variable>; got {value!s} "
-                f"({value.kind.value})"
+                f"<provider>/<register>/<variable>; got {value} ({kind})"
             )
         return value
 
@@ -317,7 +316,7 @@ class ColumnMapping(_InventoryModel):
         enforces for a project source's bindings. A mapping that crosses
         registers is an authoring slip, not a legal combined table."""
         prefix = tuple(self.register_variant.split("/")[:2])
-        if (self.variable.provider, self.variable.register) != prefix:
+        if tuple(self.variable.split("/")[:2]) != prefix:
             raise ValueError(
                 f"variable {self.variable!s} does not belong to register_variant "
                 f"{self.register_variant!r} (prefix mismatch)"
@@ -575,7 +574,7 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
             for mapping in column.mappings:
                 key = (
                     mapping.register_variant,
-                    str(mapping.variable),
+                    mapping.variable,
                     table.period_scope,
                 )
                 located.setdefault(key, []).append(
@@ -652,9 +651,8 @@ def _error_path(raw: object, loc: tuple[int | str, ...], *, missing: bool) -> st
     index is not a locator.
 
     The path stops at the deepest key that exists in the authored TOML, so a
-    union arm Pydantic appends to the location (`edition.str`,
-    `variable.is-instance[Fqid]`) doesn't masquerade as a key the author can
-    look for. The one absent key worth naming is a `missing` error's own field.
+    union arm Pydantic appends to the location (`edition.str`) doesn't
+    masquerade as a key the author can look for. The one absent key worth naming is a `missing` error's own field.
     """
     node = raw
     parts: list[str] = []
