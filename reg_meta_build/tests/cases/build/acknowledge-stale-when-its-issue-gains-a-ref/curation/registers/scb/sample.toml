@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+
+[[acknowledge]]
+code = "unresolved_catalog_identity"
+subject = "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 102)"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:102\", \"member:1003\"]}"]
+fields = ["identity"]
+reason = "Accepted while the source stays unresolved."
+evidence = "Synthetic fixture issue."
