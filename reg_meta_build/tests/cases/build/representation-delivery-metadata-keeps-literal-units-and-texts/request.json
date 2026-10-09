@@ -27,7 +27,8 @@
             "UNITS",
             1,
             10
-          ]
+          ],
+          "varopdef": "Income counted in 2020"
         },
         {
           "colname": "VALUE",
@@ -42,7 +43,9 @@
             "UNITS",
             1,
             10
-          ]
+          ],
+          "varopdef": "Income counted in 2021",
+          "data_length": "12"
         },
         {
           "colname": "VALUE",
@@ -281,7 +284,8 @@
             "UNITS",
             1,
             10
-          ]
+          ],
+          "varopdef": "Income counted in 2020"
         },
         {
           "colname": "VALUE",
@@ -296,7 +300,9 @@
             "UNITS",
             1,
             10
-          ]
+          ],
+          "varopdef": "Income counted in 2021",
+          "data_length": "12"
         },
         {
           "colname": "VALUE",

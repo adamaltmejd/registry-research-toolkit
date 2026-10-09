@@ -30,6 +30,20 @@
         ["a", "others", "A", "2021-01-01"],
         ["a", "people", "A", "2020-01-01"]
       ]
+    },
+    {
+      "table": "alias_windows",
+      "fields": ["variable", "column"],
+      "note": "The search alias FormerA declares no window, and a state's own column is no alias window: the variable has none.",
+      "rows": []
+    },
+    {
+      "table": "search_text",
+      "fields": ["variable", "description", "delivery_column_names"],
+      "note": "The search index holds the variable's own description and every published spelling: the delivered A and the search alias FormerA.",
+      "rows": [
+        ["a", "Accepted prose", ["A", "FormerA"]]
+      ]
     }
   ]
 }
