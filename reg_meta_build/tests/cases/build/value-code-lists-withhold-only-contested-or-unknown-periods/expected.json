@@ -24,9 +24,10 @@
         ["sos/cod/rivcode", "conflicting_code_memberships", "2020-01-01", "2020-12-31"],
         ["sos/cod/rivlabel", "conflicting_code_memberships", "2020-01-01", "2020-12-31"],
         ["scb/nocode/value", "unknown_code_membership", "2020-01-01", "2020-12-31"],
+        ["scb/nocells/value", "unknown_code_membership", "2020-01-01", "2020-12-31"],
         ["scb/versions/value", "conflicting_coding_labels", "2020-01-01", "2020-12-31"]
       ],
-      "note": "Every coding issue of the build, exactly: one per withheld period, with that period's window. ADJ, YDUP, SPLIT, EQ and DUPS have none (the old tests' `issues == ()`)."
+      "note": "Every coding issue of the build, exactly: one per withheld period, with that period's window. ADJ, YDUP, SPLIT, EQ and DUPS have none (the old tests' `issues == ()`); neither have BLANK and ALLBLANK, whose blank row is no missing code."
     },
     {
       "table": "state_codes",
@@ -128,17 +129,19 @@
     },
     {
       "table": "state_codes",
-      "where": {"register": ["blank", "dups", "nocode", "versions"]},
+      "where": {"register": ["allblank", "blank", "dups", "nocells", "nocode", "versions"]},
       "fields": ["register", "valid_from", "valid_to", "code", "label"],
       "rows": [
+        ["allblank", "2020-01-01", "2020-12-31", null, null],
         ["blank", "2020-01-01", "2020-12-31", "", "Uppgift saknas"],
         ["blank", "2020-01-01", "2020-12-31", "0", "Label"],
         ["dups", "2020-01-01", "2020-12-31", "001", "Another label"],
         ["dups", "2020-01-01", "2020-12-31", "001", "Original label"],
+        ["nocells", "2020-01-01", "2020-12-31", null, null],
         ["nocode", "2020-01-01", "2020-12-31", null, null],
         ["versions", "2020-01-01", "2020-12-31", "001", "Label"]
       ],
-      "note": "test_exact_codes_labels_duplicates_and_occurrence_evidence_survive and test_non_sheet_annual_label_boundary_keeps_both_labels (DUPS: a Vardemangder list is not a sheet, so two labels of 001 are both kept and the repeated row is one member); test_missing_code_or_label_withholds_complete_list_only_where_member_applies[None-Label] (NOCODE: an undelivered Värdekod is unknown membership and withholds the list for the CVID's year); BLANK (maintainer decision 2026-10-09): a row delivering an empty code and an empty label is an export artifact, neither a member nor a missing code, so the list publishes without it and reports no issue, while the empty code labelled 'Uppgift saknas' is the member \"\"; test_conflicting_labels_preserve_agreed_codes_without_selecting_a_label (VERSIONS: two version names with equal members keep 001 and report only the label conflict; the withheld version label itself has no projection)."
+      "note": "test_exact_codes_labels_duplicates_and_occurrence_evidence_survive and test_non_sheet_annual_label_boundary_keeps_both_labels (DUPS: a Vardemangder list is not a sheet, so two labels of 001 are both kept and the repeated row is one member); test_missing_code_or_label_withholds_complete_list_only_where_member_applies[None-Label] (NOCODE: an undelivered Värdekod is unknown membership and withholds the list for the CVID's year); BLANK (maintainer decision 2026-10-09): a row delivering an empty code and an empty label is an export artifact, neither a member nor a missing code, so the list publishes without it and reports no issue, while the empty code labelled 'Uppgift saknas' is the member \"\"; ALLBLANK, whose only row is that artifact, states no list and no issue, so its state carries no value set; NOCELLS: a row whose code and label are both undelivered is still a missing code and withholds the list; test_conflicting_labels_preserve_agreed_codes_without_selecting_a_label (VERSIONS: two version names with equal members keep 001 and report only the label conflict; the withheld version label itself has no projection)."
     }
   ]
 }
