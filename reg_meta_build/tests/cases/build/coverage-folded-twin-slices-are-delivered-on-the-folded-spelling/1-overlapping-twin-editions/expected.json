@@ -1,0 +1,30 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["kon", "people", "KON", "2019-01-01", "2020-12-31"],
+        ["kon", "people", "KON", "2022-01-01", "2022-12-31"]
+      ],
+      "note": "One spelling: Kon's surviving 2019..2020 slice is written on KON beside KON's 2022; the overlapping 2021 is withheld."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "column_spelling_folded",
+          "unexplained_delivery_coverage_loss",
+          "unresolved_column_representation"
+        ]
+      },
+      "fields": ["code", "severity", "subject", "valid_from", "valid_to"],
+      "rows": [
+        ["column_spelling_folded", "warning", "scb/sample/kon", null, null],
+        ["unresolved_column_representation", "error", "scb/sample/kon", "2021-01-01", "2021-12-31"]
+      ],
+      "note": "The fold and the overlap's own withholding, and no coverage loss."
+    }
+  ]
+}

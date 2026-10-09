@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "kon"
+[[coding.omit]]
+variable = "1.5"
+variant = "people"
+column = "Kon"
+periods = [["2020-01-01", "2020-12-31"]]
+reason = "Accepted omitted delivery state"
+source = "Fixture decision"

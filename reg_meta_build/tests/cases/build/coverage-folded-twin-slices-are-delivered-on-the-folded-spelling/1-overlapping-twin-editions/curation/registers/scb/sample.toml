@@ -8,9 +8,3 @@ slug = "people"
 [[variable]]
 native_id = "1.5"
 slug = "kon"
-
-[[enrichment.alias]]
-register = "scb/sample"
-variable = "kon"
-delivery_column = "KON"
-provenance = "Existing search spelling"

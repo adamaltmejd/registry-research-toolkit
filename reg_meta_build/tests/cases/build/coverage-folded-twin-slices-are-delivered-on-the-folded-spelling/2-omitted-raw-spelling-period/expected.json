@@ -1,0 +1,32 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["kon", "people", "KON", "2019-01-01", "2019-12-31"],
+        ["kon", "people", "KON", "2022-01-01", "2022-12-31"]
+      ],
+      "note": "Kon's 2019 is written on KON; 2020 is omitted and 2021 withheld."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "column_spelling_folded",
+          "curated_state_omission",
+          "unexplained_delivery_coverage_loss",
+          "unresolved_column_representation"
+        ]
+      },
+      "fields": ["code", "severity", "subject", "valid_from", "valid_to"],
+      "rows": [
+        ["column_spelling_folded", "warning", "scb/sample/kon", null, null],
+        ["curated_state_omission", "warning", "scb/sample/kon", "2020-01-01", "2020-12-31"],
+        ["unresolved_column_representation", "error", "scb/sample/kon", "2021-01-01", "2021-12-31"]
+      ],
+      "note": "The omission and the overlap each withdraw their own period, and no coverage loss."
+    }
+  ]
+}

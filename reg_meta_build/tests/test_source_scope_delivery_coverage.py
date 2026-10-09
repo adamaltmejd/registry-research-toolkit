@@ -1,17 +1,16 @@
 """Complete-scope composition: lost delivery coverage is refused with its exact window.
 
-The build reaches the lost-coverage refusal only through one formation defect,
-which writes a claimed window on another column:
-``cases/build/coverage-lost-delivery-is-reported-with-its-exact-window-and-source``
-pins that refusal and the allowed side is
-``cases/build/coverage-supported-claims-are-delivered-or-explicitly-withdrawn``.
-The two arms below stay as unit tests by maintainer decision (#1267), because no
-known build reaches them: that defect loses whole claimed windows, never one day
-inside a delivered window, and formation mints each claim and its states from
-the same segment and variant, which nothing afterwards re-slugs
-(``resolve_panel_dependencies`` rewrites the variant object and keeps its slug).
+The lost-coverage refusal arms stay as unit tests by maintainer decision (#1267).
+No known build reaches them: formation mints each claim and its states from the
+same segment and variant, which nothing afterwards re-slugs
+(``resolve_panel_dependencies`` rewrites the variant object and keeps its slug),
+so only a product defect that damages a written state can lose coverage. The
+last one found wrote a folded case twin's sliced state on its raw spelling while
+its claim moved to the folded one; its fixed form is
+``cases/build/coverage-folded-twin-slices-are-delivered-on-the-folded-spelling``.
 Each test forms a variable from a real record, damages its states the way such
-a defect would, and expects the refusal.
+a defect would, and expects the refusal. The allowed side is
+``cases/build/coverage-supported-claims-are-delivered-or-explicitly-withdrawn``.
 """
 
 from __future__ import annotations
@@ -23,6 +22,7 @@ from reg_meta_build.catalog_dependencies import (
     check_delivery_coverage,
 )
 from reg_meta_build.resolved_catalog import (
+    ResolvedAlias,
     ResolvedVariant,
 )
 from reg_meta_build.source_coordinates import (
@@ -33,20 +33,34 @@ from reg_meta_build.source_effects import (
 )
 
 
-def _states(variable, shape):
+def _damaged(variable, shape):
     """Damage one whole-2020 state the way an engineering defect would."""
     (state,) = variable.states
     if shape == "exact_day":
-        return (
+        holed = (
             state.model_copy(update={"valid_to": "2020-03-06"}),
             state.model_copy(update={"valid_from": "2020-03-08"}),
         )
+        return variable.model_copy(update={"states": holed})
+    kept = state.model_copy(update={"valid_to": "2020-06-30"})
     moved = state.model_copy(update={"valid_from": "2020-07-01"})
-    return (
-        state.model_copy(update={"valid_to": "2020-06-30"}),
-        moved.model_copy(
-            update={"variant": ResolvedVariant(slug="people-3", name="Households")}
-        ),
+    if shape == "column":
+        # The second half is written on another column; the claimed column keeps
+        # only a windowless search alias, which delivers no period.
+        return variable.model_copy(
+            update={
+                "states": (
+                    kept,
+                    moved.model_copy(update={"delivery_column_name": "OTHER"}),
+                ),
+                "aliases": (
+                    ResolvedAlias(variant=state.variant, delivery_column_name="VALUE"),
+                ),
+            }
+        )
+    other_variant = ResolvedVariant(slug="people-3", name="Households")
+    return variable.model_copy(
+        update={"states": (kept, moved.model_copy(update={"variant": other_variant}))}
     )
 
 
@@ -54,15 +68,17 @@ def _states(variable, shape):
     "shape,missing",
     [
         ("exact_day", "2020-03-07..2020-03-07"),
+        ("column", "2020-07-01..2020-12-31"),
         ("variant", "2020-07-01..2020-12-31"),
     ],
 )
 def test_lost_delivery_coverage_is_refused_with_its_exact_window(shape, missing):
     """Input: one whole-2020 state holed for one day, or with its second half
-    moved to another variant. Refusal: "delivery coverage was lost" naming
+    moved to another column (beside a windowless search alias on the claimed
+    column) or to another variant. Refusal: "delivery coverage was lost" naming
     exactly the missing window, the coordinate and the source. Fails if the guard
-    widens periods, accepts another variant as delivery, or reports the hull
-    instead of the exact gap.
+    widens periods, accepts another column, a windowless search alias or another
+    variant as delivery, or reports the hull instead of the exact gap.
     """
     item = record()
     result = resolve((item,))
@@ -84,7 +100,7 @@ def test_lost_delivery_coverage_is_refused_with_its_exact_window(shape, missing)
     check_delivery_coverage(
         (variable,), result.coverage, withheld=result.withheld_dependencies
     )
-    damaged = variable.model_copy(update={"states": _states(variable, shape)})
+    damaged = _damaged(variable, shape)
     with pytest.raises(ValueError, match="delivery coverage was lost") as failure:
         check_delivery_coverage(
             (damaged,), result.coverage, withheld=result.withheld_dependencies

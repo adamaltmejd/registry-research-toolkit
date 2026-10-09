@@ -1,0 +1,33 @@
+{
+  "note": "Kon and KON are case twins of one column, delivered in different editions, so formation folds them onto the most recent spelling, KON (first delivered 2021, after Kon's 2019). Their 2021 deliveries overlap, so 2021 is withheld as an unresolved parallel-column representation, and the slices either side survive as narrowed copies of their states. Every slice of the folded column is written on KON, including the copied 2019..2020 slice of Kon's pooled 2019-2021 edition, so the delivery Kon's claim names is the one written and no coverage is lost. Expected values follow from the fixture: Kon's edition minus the withheld 2021 is 2019-01-01..2020-12-31, KON's 2022 edition is untouched.",
+  "fails_if": "`form_native_variable` (source_formation.py) renames only the state objects it formed and misses the narrowed copies `_disjoint_representations` makes of them, so Kon's 2019..2020 slice is written on its raw spelling while its claim moved to KON, the states row reads Kon and the build reports unexplained_delivery_coverage_loss for KON 2019-01-01..2020-12-31",
+  "sources": {
+    "description": "Register 1 (TESTREG), variant 10, variable 5 delivers column Kon in a pooled 2019-2021 edition (CVID 19, edition 119) and its case twin KON in 2021 (CVID 21, edition 121) and 2022 (CVID 22, edition 122).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "Kon",
+          "cvid": 19,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 119,
+          "versionname": "2019-2021"
+        },
+        {
+          "colname": "KON",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 121
+        },
+        {
+          "colname": "KON",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 122
+        }
+      ]
+    }
+  }
+}
