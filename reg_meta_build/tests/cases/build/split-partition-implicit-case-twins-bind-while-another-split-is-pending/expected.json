@@ -22,6 +22,30 @@
     },
     {
       "table": "issues",
+      "fields": [
+        "code",
+        "severity",
+        "locator"
+      ],
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "rows": [
+        [
+          "stale_curation_entry",
+          "error",
+          "curation/registers/scb/sample.toml#variable/1.5.kon-1"
+        ],
+        [
+          "stale_curation_entry",
+          "error",
+          "curation/registers/scb/sample.toml#variable/1.5.other"
+        ]
+      ],
+      "note": "Each unmatched pin is a stale entry located at its [[variable]] pin, as in split-partition-split-naming-stale-when-it-matches-no-delivered-column, where every literal is bound."
+    },
+    {
+      "table": "issues",
       "where": {
         "code": "ambiguous_named_identity"
       },

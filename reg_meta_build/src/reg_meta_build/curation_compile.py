@@ -2184,19 +2184,40 @@ def _partition_ambiguity(
     entries: tuple[AcceptedNamingEntry, ...],
     split_ids: tuple[str, ...],
     bound: set[str],
+    scoped: Mapping[tuple[SourceRecordRef, str], str],
     expectations: tuple[Any, ...],
     guard: PeerGuard,
-) -> NamingAmbiguity:
-    entries = tuple(entry for entry in entries if entry.entry.source_id not in bound)
-    split_ids = tuple(split for split in split_ids if split not in bound)
+) -> tuple[NamingAmbiguity | None, tuple[AcceptedNamingEntry, ...]]:
+    """The unbound splits that still name a delivered literal, and the unmatched rest.
+
+    An unbound split whose suffix no delivered column derives (outside the rows a
+    column owner already gives a split) can own nothing: its entries come back as
+    unmatched for the caller to report stale, not as an ambiguity to attribute.
+    """
     columns: dict[str, list[SourceRecord]] = defaultdict(list)
     for record in records:
         if (column := _literal_field(record, "column_name")) is not None:
             columns[column].append(record)
     candidates: dict[str, list[str]] = defaultdict(list)
-    for column in columns:
-        if suffix := derive_variable_slug(column):
+    for column, members in columns.items():
+        if (suffix := derive_variable_slug(column)) and any(
+            (record_ref(record), column) not in scoped for record in members
+        ):
             candidates[suffix].append(column)
+    unmatched = {
+        split
+        for split in split_ids
+        if split not in bound and split.rsplit(".", 1)[1] not in candidates
+    }
+    split_ids = tuple(
+        split for split in split_ids if split not in bound and split not in unmatched
+    )
+    unmatched_entries = tuple(
+        entry for entry in entries if entry.entry.source_id in unmatched
+    )
+    entries = tuple(entry for entry in entries if entry.entry.source_id in split_ids)
+    if not split_ids:
+        return None, unmatched_entries
     bound_suffixes = {split.rsplit(".", 1)[1] for split in bound}
     ambiguous_candidates = {
         suffix: literals
@@ -2223,7 +2244,7 @@ def _partition_ambiguity(
             )
         ),
         reason="Some accepted split keys lack exact literal ownership.",
-    )
+    ), unmatched_entries
 
 
 def _partition_originals(
@@ -2681,17 +2702,31 @@ def compile_partitions(
                     item for item in entries if item.entry.source_id in bound
                 )
                 if bound != set(split_ids):
-                    ambiguities[scope_key].append(
-                        _partition_ambiguity(
-                            native,
-                            records,
-                            entries,
-                            split_ids,
-                            bound,
-                            expectations,
-                            guard,
-                        )
+                    ambiguity, unmatched = _partition_ambiguity(
+                        native,
+                        records,
+                        entries,
+                        split_ids,
+                        bound,
+                        scoped,
+                        expectations,
+                        guard,
                     )
+                    if ambiguity is not None:
+                        ambiguities[scope_key].append(ambiguity)
+                    # An explicit map owns columns by literal, not by suffix; a
+                    # failed map is already reported stale above.
+                    if not partitions:
+                        diagnostics.extend(
+                            _stale_partition(
+                                entry.entry_id,
+                                entry.entry.source_id,
+                                "split naming matches no delivered column: no "
+                                "column outside a column owner's rows derives its "
+                                f"suffix {entry.entry.source_id.rsplit('.', 1)[1]!r}",
+                            )
+                            for entry in unmatched
+                        )
             elif native[1] == "sos":
                 if len(sos_splits) + len(sos_renames) != 1:
                     raise ValueError(
@@ -3239,17 +3274,19 @@ def compile_deferred_partitions(
                     item for item in entries if item.entry.source_id in bound
                 )
                 if bound != set(split_ids):
-                    ambiguities[scope_key].append(
-                        _partition_ambiguity(
-                            native,
-                            records,
-                            entries,
-                            split_ids,
-                            bound,
-                            expectations,
-                            guard,
-                        )
+                    # Outside the slice: the complete build reports unmatched splits.
+                    ambiguity, _unmatched = _partition_ambiguity(
+                        native,
+                        records,
+                        entries,
+                        split_ids,
+                        bound,
+                        scoped,
+                        expectations,
+                        guard,
                     )
+                    if ambiguity is not None:
+                        ambiguities[scope_key].append(ambiguity)
             elif native[1] == "sos":
                 if len(sos_splits) + len(sos_renames) != 1:
                     raise ValueError(

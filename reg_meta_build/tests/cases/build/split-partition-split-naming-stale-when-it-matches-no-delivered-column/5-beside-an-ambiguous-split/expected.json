@@ -1,0 +1,28 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject", "locator"],
+      "rows": [
+        ["ambiguous_named_identity", "scb/sample/kon", null],
+        [
+          "stale_curation_entry",
+          "1.5.other",
+          "curation/registers/scb/sample.toml#variable/1.5.other"
+        ],
+        [
+          "unresolved_catalog_identity",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)",
+          null
+        ]
+      ],
+      "note": "The sibling's ambiguous kon and the native family's null provider key, unchanged, beside the stale pin."
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "column"],
+      "rows": []
+    }
+  ]
+}
