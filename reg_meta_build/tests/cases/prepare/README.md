@@ -1,7 +1,7 @@
 # Prepare cases
 
-Each directory here is one boundary claim about preparing a provider delivery. The claim
-is stated as data:
+Each directory here is one claim about a per-source reader's contract: what the reader
+returns for a provider delivery. The claim is stated as data:
 
 - the delivery, as the provider ships it (a workbook, a CSV, an SQL file or an SCB
   snapshot),
@@ -13,10 +13,12 @@ is stated as data:
 its reader stops matching its `expected.json`.
 
 The readers are the ones `prepared_catalog.prepare_catalog_sources` calls per input
-role, run in process on the case's delivery. Prepare stores what they return unchanged,
-so a case reads the prepared records without the bundle commit, acceptance and build a
-full prepare costs. A claim about the build (formation, coding, curation) belongs in
-`cases/build/`.
+role, run in process on the case's delivery, without the bundle commit, acceptance and
+build a full prepare costs. These cases do not run `prepare_catalog_sources`: the
+prepare boundary itself (role dispatch, input accounting, artifact serialization and
+open-time validation) is owned by `cases/build/`, whose runner prepares every case's
+sources, and by `test_prepared_catalog.py`. A claim about the build (formation, coding,
+curation) belongs in `cases/build/`.
 
 ## Layout
 

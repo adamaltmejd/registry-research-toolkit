@@ -1,13 +1,18 @@
-"""The `cases/prepare/` corpus: raw provider deliveries through the prepare readers.
+"""The `cases/prepare/` corpus: raw provider deliveries through the per-source readers.
 
-Each case directory is one boundary claim (`cases/prepare/README.md`): a delivery as
-a provider ships it, the reader the prepare step dispatches that input role to, and
-the oracle in `expected.json`. The oracle is a set of projections of the prepared
-records (or the reader's other prepared evidence), or the located refusal the
-prepare command reports. Expected values are read from the test each case replaces.
+Each case directory is one reader-contract claim (`cases/prepare/README.md`): a
+delivery as a provider ships it, the reader the prepare step dispatches that input
+role to, and the oracle in `expected.json`. The oracle is a set of projections of
+what the reader returns (records or its other evidence), or the located refusal the
+prepare command reports for it. Expected values are read from the test each case
+replaces.
 
 Readers run in process on the case's delivery, so a case costs one small fixture
 write and no build; the SCB readers also commit the one fixture snapshot they read.
+This corpus does not run `prepare_catalog_sources`. The prepare boundary (role
+dispatch, input accounting, artifact serialization and open-time validation) is
+owned by the build corpus, which prepares every case's sources, and by
+`test_prepared_catalog.py`.
 """
 
 from __future__ import annotations
