@@ -186,6 +186,24 @@ def test_tool_of_several_needs_an_operation(servers):
         assert document["error"]["fields"] == {"parameter": parameter}
 
 
+def test_array_argument_only_for_an_array_parameter(servers):
+    # Fails when a tool call flattens an array for a parameter that is not
+    # `string[]` (`ref: ["…"]` resolved, `register: []` read as no filter) or
+    # accepts an empty array for one that is (`columns: []`), instead of refusing
+    # it with `invalid_parameter` naming the parameter. HTTP has no spelling of an
+    # empty array, so these have no `api` twin.
+    client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    for tool, arguments, parameter in (
+        ("resolve", {"register": [], "columns": ["Value"]}, "register"),
+        ("resolve", {"columns": []}, "columns"),
+        ("coverage", {"ref": ["scb/example"]}, "ref"),
+    ):
+        is_error, document = call(client, tool, arguments)
+        assert is_error
+        assert document["error"]["code"] == "invalid_parameter"
+        assert document["error"]["fields"] == {"parameter": parameter}
+
+
 def test_tools_list_matches_golden(servers):
     # Fails when a tool, its description or a schema changes without updating
     # `cases/mcp/tools-list.json`, or a tool name drifts from `operations.toml`.

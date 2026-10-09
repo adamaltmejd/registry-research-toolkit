@@ -105,7 +105,7 @@ fn years(from: Option<&str>, to: Option<&str>) -> impl Iterator<Item = u16> {
 
 pub fn coverage(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
     let conn = server.catalog.connect()?;
-    let value = params.get("ref").copied().unwrap_or_default();
+    let value = params["ref"];
     let coverage = match refs::resolve(&conn, scope, Some(value))? {
         Target::Register { id, provider, slug } => {
             register(&conn, scope, id, format!("{provider}/{slug}"))?.map(Coverage::Register)

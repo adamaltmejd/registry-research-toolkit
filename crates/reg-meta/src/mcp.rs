@@ -14,7 +14,7 @@ use axum::extract::{ConnectInfo, DefaultBodyLimit, FromRequest, Request, State};
 use axum::http::{HeaderMap, StatusCode, header};
 use axum::middleware::{Next, from_fn_with_state};
 use axum::response::{IntoResponse, Response};
-use reg_catalog::ops::{self, Operation, Server};
+use reg_catalog::ops::{self, Operation, Server, Type};
 use reg_catalog::{Code, Error};
 use rmcp::model::{
     CallToolRequestParams, CallToolResponse, CallToolResult, Implementation, JsonObject,
@@ -187,16 +187,20 @@ fn operation(
 }
 
 /// The tool arguments as the request's parameters: a string as is, a number in its
-/// JSON spelling (`limit: 5` is `limit=5`), and an array of strings as one parameter
-/// per string, as HTTP repeats an array parameter's key; any other value is
-/// `invalid_parameter`.
-fn query(arguments: JsonObject) -> Result<Vec<(String, String)>, Error> {
+/// JSON spelling (`limit: 5` is `limit=5`), and an array parameter's non-empty array
+/// of strings as one parameter per string, as HTTP repeats its key; any other value,
+/// an array for another parameter included, is `invalid_parameter`.
+fn query(op: &Operation, arguments: JsonObject) -> Result<Vec<(String, String)>, Error> {
     let mut query = Vec::new();
     for (name, value) in arguments {
+        let is_array = op
+            .params
+            .iter()
+            .any(|p| p.name == name && matches!(p.ty, Type::Strings));
         match value {
             Value::String(text) => query.push((name, text)),
             Value::Number(number) => query.push((name, number.to_string())),
-            Value::Array(items) => {
+            Value::Array(items) if is_array && !items.is_empty() => {
                 for item in items {
                     let Value::String(text) = item else {
                         return Err(Error::invalid_parameter(&name));
@@ -240,7 +244,7 @@ impl ServerHandler for Tools {
         }
         let mut arguments = request.arguments.unwrap_or_default();
         let call = operation(&ops, &mut arguments)
-            .and_then(|op| query(arguments).map(|query| (op, query)));
+            .and_then(|op| query(op, arguments).map(|query| (op, query)));
         let answer = match call {
             Ok((op, query)) => run(&self.server, op, op.params.iter().collect(), query).await,
             Err(err) => Answer::new(&self.server, self.server.catalog.default_scope(), Err(err)),

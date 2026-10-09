@@ -69,7 +69,7 @@ paths = ["/*/period_token"]
 
 [[exception]]
 name = "schema-alias-windows"
-reason = "rust-only fix: `schema` lists the representations the resolver emits over the whole history in reference as in holdings, so a variable whose source alias windows replace its state (shared metadata, no per-column window) lists its windows; the frozen reference `get schema` expands only variables with a per-column window and lists such a state raw. Pinned by api/schema-alias-windows. The added rows shift every later row of the sorted comparison, so the whole answer is excepted, for each register G1 reports."
+reason = "rust-only fix: `schema` lists the representations the resolver emits over the whole history in reference as in holdings, so a variable whose source alias windows replace its state (shared metadata, no per-column window) lists its windows; the frozen reference `get schema` expands only variables with a per-column window and lists such a state raw. Pinned by api/schema-alias-windows. The added rows shift every later row of the sorted comparison, so the whole answer is excepted, for each register G1 reports. Blind spot: every other column of these registers' reference `get schema` answers goes uncompared; api/schema-register, api/schema-variable and api/schema-alias-windows pin the row rule. The globs cover more cases than G1 reported (10 global: summary for all seven SCB registers, sampled year for bas, ekonomiskt-bistand and lisa; 16 SWECOV: summary for all twelve, sampled year for bas, ekonomiskt-bistand, it-anvandning and lisa) because a sampled year that misses every replaced state agrees with the baseline, and the sampled year moves with the seed."
 case = [
   "*/reference/get-schema-*/scb/bas",
   "*/reference/get-schema-*/scb/ekonomiskt-bistand",

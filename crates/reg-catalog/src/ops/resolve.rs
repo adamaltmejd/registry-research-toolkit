@@ -57,8 +57,8 @@ pub fn resolve(server: &Server, scope: Scope, params: &Params) -> Result<Value, 
     // alias's own row decides holdings, never the request's string.
     // simplify: the state spelling reads each matched variable's wide state rows
     // (1.3 s for the pin's 200 most delivered columns, 3.9k variables; one common
-    // column 40 ms); read the narrow base rows of `expanded_state` instead if
-    // resolve's latency matters.
+    // column 40 ms); read the narrow base rows of `expanded_state` instead if a
+    // 200-name resolve passes ~2 s.
     let sql = format!(
         "WITH alias AS MATERIALIZED (SELECT * FROM (SELECT variable_id, \
          register_variant_id, delivery_column_name, \
