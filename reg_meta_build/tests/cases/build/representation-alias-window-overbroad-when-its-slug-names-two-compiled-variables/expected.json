@@ -1,0 +1,17 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "case_id", "locator"],
+      "rows": [
+        ["overbroad_curation_entry", "curation/registers/scb/innovation-foretag.toml#/representation.alias_window/1", "curation/registers/scb/innovation-foretag.toml#/representation.alias_window/1"]
+      ]
+    },
+    {
+      "table": "alias_windows",
+      "fields": ["variable"],
+      "rows": []
+    }
+  ]
+}

@@ -9,7 +9,7 @@ perf budgets, version policy, testing-strategy overview) lives in the root
 `ARCHITECTURE.md`; remaining/unbuilt work lives in `REFACTOR_SPEC.md`. The API contract
 is `conformance/api/operations.toml` with its snapshot `crates/reg-meta/openapi.json`.
 
-**Compiled holdings.** `ARCHITECTURE.md` and `reg_meta/DESIGN.md` own the compiled
+**Compiled holdings.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog or steward artifact and delegates
 scope-sensitive reads to the shared SQL reader. Steward configuration supplies branding;
 it does not supply holdings. The optional SPA scope switch is deferred. HTTP browse
@@ -340,7 +340,7 @@ joins SQLite drives from `variable_state` and scans the WHOLE table instead of s
   NOT the resolver's: a browse row names columns rather than promising a resolution,
   which is why it keeps a window no state contains where `_expand_state_windows` drops
   it. Compiler validation checks deliverability before publication; see
-  reg_meta/DESIGN.md for the compiled mapping and state contracts. Columns are
+  reg_meta_build/DESIGN.md for the compiled mapping and state contracts. Columns are
   identified case-insensitively (`py_lower`, the rule the build validates
   `variable_alias ⊇ state columns` with), so an alias that only re-spells a listed
   column is that one delivery.
@@ -1486,13 +1486,13 @@ artifact's own identity, and a `scope` parameter is `invalid_parameter`.
   as an open object) and pinned by `conformance/cases/api/order-errors`.
 
 The order pipeline and its findings are `ops/order.rs` (today's
-`reg_meta.order.materialize_order`; see `reg_meta/DESIGN.md` → Order materializer and
-manifest): steward holdings on a steward artifact, canonical columns on the global one.
+`reg_meta.order.materialize_order`; see `crates/DESIGN.md` → Order manifest): steward
+holdings on a steward artifact, canonical columns on the global one.
 
 ## Semantic validation
 
 The semantic layer, its rules and its issue codes are `ops/validate.rs`, ported from
-`reg_meta`'s frozen `semantic.py` (`reg_meta/DESIGN.md` → Project semantic validation),
+`reg_meta`'s frozen `semantic.py` (`crates/DESIGN.md` → Project semantic validation),
 whose CLI adapter `reg-meta validate` G1 compares it with.
 
 ## Cost protection (`crates/reg-meta/src/limit.rs`)
@@ -1578,7 +1578,7 @@ to get wrong. A source's bindings can go stale relative to its period after the 
 (e.g. the author widens the period); that drift is the **server validator's job** to
 surface (`range_period_partially_covered` for a widening past availability,
 `period_outside_state_validity` when nothing is left,
-`binding_state_drifts_within_period` across a transition — see `reg_meta/DESIGN.md` →
+`binding_state_drifts_within_period` across a transition — see `crates/DESIGN.md` →
 Project semantic validation) — the auto-validate flow that surfaces this on every edit
 is the sibling #994 (shipped — see § "Browser storage + project-file persistence"
 below). `ValidationPanel` carries a "Fix in catalog" link on each finding that resolves
