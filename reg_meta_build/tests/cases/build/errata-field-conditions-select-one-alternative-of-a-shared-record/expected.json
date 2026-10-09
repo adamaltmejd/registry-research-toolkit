@@ -1,0 +1,125 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "register": [
+          "condition",
+          "condrev",
+          "condpeer",
+          "condconf"
+        ]
+      },
+      "fields": [
+        "register",
+        "variable",
+        "column",
+        "name",
+        "description"
+      ],
+      "rows": [
+        [
+          "condition",
+          "invarn",
+          "INVARN8",
+          "Date8",
+          "Description 8"
+        ],
+        [
+          "condrev",
+          "invarn",
+          "INVARN8",
+          "Date8",
+          "Description 8"
+        ],
+        [
+          "condpeer",
+          "invarn",
+          "INVARN8",
+          "Date8",
+          null
+        ]
+      ],
+      "note": "Both TOML orders give the Date9 row the Date8 row's name and description. In condpeer the three rows agree on the name only, so the description is withheld."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "conflicting_variable_fact"
+      },
+      "fields": [
+        "subject",
+        "fields"
+      ],
+      "rows": [
+        [
+          "scb/condpeer/invarn",
+          [
+            "description"
+          ]
+        ],
+        [
+          "scb/condconf/invarn",
+          [
+            "name"
+          ]
+        ]
+      ],
+      "note": "condpeer: the third row kept its own description. condconf: only the contested name conflicts; the description entry still applied."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "conflicting_curation_effects",
+        "detail": {
+          "contains": [
+            "condconf.toml#/errata.field/1[",
+            "condconf.toml#/errata.field/3["
+          ]
+        }
+      },
+      "fields": [
+        "fields"
+      ],
+      "match": "set",
+      "rows": [
+        [
+          [
+            "name"
+          ]
+        ]
+      ],
+      "note": "The two name entries of condconf conflict on the name field."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "conflicting_curation_effects"
+      },
+      "fields": [
+        "subject"
+      ],
+      "match": "set",
+      "rows": [
+        [
+          "source='scb-registerinformation' semantic_record_key=('register:13', 'variant:10', 'edition:2020', 'variable:5', 'member:83')"
+        ]
+      ],
+      "note": "No other register's entries conflict."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "conflicting_curation_effects",
+        "detail": {
+          "contains": "condconf.toml#/errata.field/2["
+        }
+      },
+      "fields": [
+        "fields"
+      ],
+      "rows": [],
+      "note": "The description entry is not part of the name conflict."
+    }
+  ]
+}
