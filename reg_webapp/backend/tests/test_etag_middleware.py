@@ -108,18 +108,14 @@ def test_generation_invalidates_an_identical_body(tmp_path, monkeypatch):
 
 
 def test_different_bodies_under_identical_metadata_do_not_share_a_validator(
-    docs_db,
+    catalog_db,
 ):
     # Fails if compute_etag drops the body digest: version, steward and generation
     # are identical here, so only the body can tell the two apart, and an ETag
     # cached for one read would otherwise turn the next into a stale 304.
     with TestClient(create_app()) as client:
-        kon = client.get("/api/docs/doc/Kon")
-        other = client.get(
-            "/api/docs/search",
-            params={"q": "kon"},
-            headers={"If-None-Match": kon.headers["etag"]},
-        )
-    assert kon.status_code == other.status_code == 200
-    assert kon.content != other.content
-    assert kon.headers["etag"] != other.headers["etag"]
+        spec = client.get("/openapi.json")
+        other = client.get("/docs", headers={"If-None-Match": spec.headers["etag"]})
+    assert spec.status_code == other.status_code == 200
+    assert spec.content != other.content
+    assert spec.headers["etag"] != other.headers["etag"]

@@ -711,7 +711,7 @@ note = "FQID and period grammar move to reg-core; the build reaches them through
 [[row]]
 kind = "import"
 id = "reg_meta.fqid.FqidError"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_meta_build"]
 disposition = "replaced"
 owner = "4"
 covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
@@ -774,7 +774,7 @@ note = "FQID and period grammar move to reg-core; the build reaches them through
 [[row]]
 kind = "import"
 id = "reg_meta.fqid.validate_slug"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_meta_build"]
 disposition = "replaced"
 owner = "4"
 covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
