@@ -1,6 +1,8 @@
 //! A POST's JSON body: one UTF-8 JSON object without a byte-order mark, duplicate keys
 //! at any depth (last-wins would silently validate the wrong value) or nesting past
-//! `serde_json`'s depth limit. Anything else is `malformed_request`. Today's
+//! `serde_json`'s depth limit (128 levels; frozen Python's recursion limit allowed about
+//! 1,000, so a project nested between the two is refused here and validated there).
+//! Anything else is `malformed_request`. Today's
 //! `reg_meta.order.parse_project`. The HTTP transport applies it to a POST operation's
 //! body; MCP takes the body as an object argument, already parsed.
 

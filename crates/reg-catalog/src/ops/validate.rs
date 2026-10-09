@@ -541,7 +541,7 @@ fn resolve_binding(
     let (variable, at) = (quote(&binding.variable), &source.register_variant);
     let pin = binding.representation.as_deref();
     let Some(requested) = requested else {
-        return year_independent(conn, source, binding, id, variant, blocked);
+        return year_independent(conn, binding, id, variant, blocked);
     };
     let mut states = Vec::new();
     let mut by_column: BTreeMap<String, Vec<Interval>> = BTreeMap::new();
@@ -672,19 +672,15 @@ fn reach(
     Ok(reached)
 }
 
-/// A `_default` request: the variant's year-independent states.
+/// A `_default` request: the variant's year-independent states. The structural
+/// validator refuses `_default` on a `_default` variant, so the variant is concrete.
 fn year_independent(
     conn: &Connection,
-    source: &Source,
     binding: &Binding,
     id: i64,
     variant: i64,
     blocked: impl Fn(&'static str, String) -> Resolution,
 ) -> Result<Resolution, Error> {
-    if source.register_variant.ends_with("/_default") {
-        let message = "year-independent selection requires a concrete variant";
-        return Ok(blocked("binding_unavailable", message.into()));
-    }
     let independent: Vec<Emitted> = emitted(conn, Scope::Reference, id, Some(variant), None)?
         .into_iter()
         .filter(|e| e.period_scope == "year_independent")

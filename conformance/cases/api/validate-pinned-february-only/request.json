@@ -1,5 +1,5 @@
 {
-  "note": "Twin of `validate/pinned-february-only`: fails if `validate` stops answering this project with 200 and these `ok` and issues (code, level, path, message, in emission order).",
+  "note": "Pins a Rust-only fix, so do not re-sync it to `validate/pinned-february-only`: the non-leap February clip renders as its month token `2019-02`, where the frozen Python validator writes `2019-02-01..2019-02-28`. Fails if the clip stops being reported or that window stops rendering as its token.",
   "kind": "catalog",
   "fixture": "semantic",
   "requests": [
