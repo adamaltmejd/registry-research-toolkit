@@ -139,8 +139,21 @@ PREPARE_ENTRY_FILES = ("reg_meta_build/src/reg_meta_build/cli.py",)
 PROBE = """
 import json, sqlite3, subprocess, sys
 from pathlib import Path
+import importlib.util
 request = json.loads(sys.argv[1])
 facts = {"python": sys.version, "sqlite": sqlite3.sqlite_version}
+root = Path(request["root"]).resolve()
+for package in ("reg_meta_build", "reg_meta"):
+    spec = importlib.util.find_spec(package)
+    if spec is None:
+        continue
+    origin = Path(spec.origin).resolve()
+    if not origin.is_relative_to(root):
+        print(json.dumps({"environment_error": (
+            f"uv run imports {package} from {origin}, not from the keyed checkout "
+            f"{root}; unset UV_PROJECT_ENVIRONMENT or run from that checkout"
+        )}))
+        sys.exit(0)
 if request.get("curation"):
     from reg_meta_build.curation_compile import tree_sha256
     facts["curation_tree_sha256"] = tree_sha256(Path(request["curation"]))
@@ -188,12 +201,17 @@ def probe(**request) -> dict:
     python = shlex.split(
         os.environ.get("REG_REAL_SEED_PYTHON", "uv run --quiet python")
     )
-    argv = [*python, "-c", PROBE, json.dumps(request)]
-    return json.loads(
+    argv = [*python, "-c", PROBE, json.dumps({**request, "root": str(ROOT)})]
+    facts = json.loads(
         subprocess.run(
             argv, cwd=ROOT, capture_output=True, text=True, check=True
         ).stdout
     )
+    # The keys hash this checkout; a probe (and so a builder) importing another copy
+    # would key one tree and run another.
+    if error := facts.get("environment_error"):
+        sys.exit(f"real-seed-cache: {error}")
+    return facts
 
 
 def git(directory: Path, *args: str) -> str:
