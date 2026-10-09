@@ -72,11 +72,16 @@ DEFERRED_REFERENCE = "deferred_out_of_slice_reference"
 def resolve_classification_successions(
     classifications: tuple[ResolvedClassification, ...],
     declared: tuple[ResolvedClassificationSuccession, ...] = (),
-) -> tuple[ResolvedClassificationSuccession, ...]:
+    withheld: Mapping[str, tuple[str, tuple[ResolutionDiagnostic, ...]]] = {},
+) -> tuple[
+    tuple[ResolvedClassificationSuccession, ...], tuple[ResolutionDiagnostic, ...]
+]:
     """Combine existing automatic edition chains and explicit accepted edges.
 
     Check the whole graph before materialization. An explicit edge cannot hide a
     duplicate, missing endpoint or cycle by being checked in a separate pass.
+    A withheld book (slug to its name and causes) still holds its place in an
+    edition chain, so no edge skips it; every edge that names it is withheld.
     """
     if len({c.slug for c in classifications}) != len(classifications):
         raise ValueError("duplicate classification identity in succession resolution")
@@ -88,14 +93,36 @@ def resolve_classification_successions(
             note="derived:vintage_chain",
         )
         for a, b, year in classification_succession_edges(
-            (c.slug, c.name) for c in classifications
+            (
+                *((c.slug, c.name) for c in classifications),
+                *((slug, name) for slug, (name, _) in withheld.items()),
+            )
         )
     )
-    combined = tuple(
-        sorted((*derived, *declared), key=lambda e: (e.predecessor, e.successor))
-    )
-    _prepare_classification_succession(classifications, combined)
-    return combined
+    combined = []
+    diagnostics = []
+    for edge in sorted(
+        (*derived, *declared), key=lambda e: (e.predecessor, e.successor)
+    ):
+        ends = [s for s in (edge.predecessor, edge.successor) if s in withheld]
+        if not ends:
+            combined.append(edge)
+            continue
+        output = f"classification_succession:{edge.predecessor}->{edge.successor}"
+        diagnostics.extend(
+            cause.model_copy(
+                update={
+                    "code": "withheld_catalog_dependency",
+                    "subject": output,
+                    "detail": f"Classification {slug!r} is withheld: {cause.code}: {cause.detail}",
+                    "withheld_output": (output,),
+                }
+            )
+            for slug in ends
+            for cause in withheld[slug][1]
+        )
+    _prepare_classification_succession(classifications, tuple(combined))
+    return tuple(combined), tuple(diagnostics)
 
 
 def resolve_variable_successions(

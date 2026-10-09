@@ -36,7 +36,7 @@ from reg_meta_build.source_intervals import coding_scope_bounds, scope_bounds
 from reg_meta_build.source_records import SourceFields
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Mapping
+    from collections.abc import Collection, Iterable, Mapping
 
     from reg_meta_build.resolved_catalog import ResolvedClassification
     from reg_meta_build.source_coordinates import NativeKey
@@ -73,6 +73,7 @@ def _source_bindings(
     family_references: Mapping[str, tuple[str, ...]],
     coding: Mapping[NativeKey, CodingResolution],
     classifications: Mapping[str, ResolvedClassification],
+    withheld: Collection[str] = (),
 ) -> tuple[dict[NativeKey, list[_Binding]], list[ResolutionDiagnostic]]:
     """Read explicit declarations; an absent declaration is not a negative claim.
 
@@ -122,12 +123,17 @@ def _source_bindings(
             slug = references.get(field.value)
             if slug is None and field.value in family_references:
                 members = family_references[field.value]
-                if any(member not in classifications for member in members):
+                if any(
+                    member not in classifications and member not in withheld
+                    for member in members
+                ):
                     raise ValueError(
                         "classification family has an unconverted codebook"
                     )
-                covering = []
-                for member in members:
+                # Which edition covers the occurrence cannot be checked while one
+                # is withheld, so the reference names it and is withheld with it.
+                covering = [member for member in members if member in withheld][:1]
+                for member in () if covering else members:
                     book = classifications[member]
                     valid_from, valid_to = book.valid_from, book.valid_to
                     if all(
@@ -140,7 +146,9 @@ def _source_bindings(
                     slug = covering[0]
             if slug is None:
                 code = "unresolved_classification_reference"
-            elif slug not in classifications or classifications[slug].slug != slug:
+            elif slug not in withheld and (
+                slug not in classifications or classifications[slug].slug != slug
+            ):
                 raise ValueError("source classification has an unconverted codebook")
         periods = (
             tuple(
@@ -284,6 +292,7 @@ def apply_classification_cases(
     override: tuple[str, str] | None = None,
     matched_labels: set[str] | None = None,
     duplicate_overrides: set[str] | None = None,
+    withheld_classifications: Mapping[str, tuple[ResolutionDiagnostic, ...]] = {},
 ) -> ClassificationBindingResolution:
     """Compose source declarations and checked cases before state formation.
 
@@ -298,6 +307,7 @@ def apply_classification_cases(
     explicitly open scopes remain open; finite curation windows never widen.
     Multiple book claims do not select a winner or establish book equivalence.
     An occurrence-field correction can replace a checked original declaration.
+    A binding to a withheld book (no agreed canonical code) is withheld with it.
     """
     occurrences = tuple(occurrences)
     ordered = tuple(sorted(cases, key=lambda c: c.case_id))
@@ -333,12 +343,20 @@ def apply_classification_cases(
                 )
     evaluations = evaluate_cases(ordered, records)
     selected, diagnostics = _source_bindings(
-        occurrences, references, family_references, coding, classifications
+        occurrences,
+        references,
+        family_references,
+        coding,
+        classifications,
+        withheld_classifications.keys(),
     )
     rule_bindings = _label_rule_bindings(coding, occurrences, label_rules)
     for key, bindings in rule_bindings.items():
         for binding in bindings:
             assert binding.classification is not None
+            if binding.classification in withheld_classifications:
+                selected[key].append(binding)
+                continue
             book = classifications[binding.classification]
             selected[key].append(
                 replace(
@@ -409,6 +427,30 @@ def apply_classification_cases(
             for key, start, end in active_windows
         ):
             duplicate_overrides.add(ref)
+    withheld_bindings = []
+    for key, bindings in selected.items():
+        for index, binding in enumerate(bindings):
+            causes = withheld_classifications.get(binding.classification or "")
+            if causes is None:
+                continue
+            bindings[index] = replace(binding, unresolved=True)
+            withheld_bindings.append(
+                ResolutionDiagnostic(
+                    code="withheld_catalog_dependency",
+                    severity="error",
+                    subject=repr(key),
+                    detail=f"Classification {binding.classification!r} is withheld "
+                    f"({', '.join(sorted({c.code for c in causes}))}); its binding "
+                    f"from {binding.provenance[0]} is withheld with it.",
+                    refs=binding.refs,
+                    fields=("classification",),
+                    valid_from=binding.valid_from,
+                    valid_to=binding.valid_to,
+                    withheld_output=("state.classification",),
+                )
+            )
+    # Duplicate physical originals bind once per original; report each binding once.
+    diagnostics.extend(dict.fromkeys(withheld_bindings))
     canonical = {}
     sentinel_maps = {}
     for case, evaluation in zip(ordered, evaluations, strict=True):
