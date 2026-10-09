@@ -1,8 +1,9 @@
 {
   "replaces": [
-    "test_curation_compile_occurrence_corrections.py::test_checked_occurrence_corrections_preserve_originals_and_unselected_editions[True]"
+    "test_curation_compile_occurrence_corrections.py::test_checked_occurrence_corrections_preserve_originals_and_unselected_editions[True]",
+    "test_source_effects.py::test_period_effect_is_exact_and_conflicts_do_not_restore_old_dates"
   ],
-  "note": "The moved state's provenance is the entry's locator and its `evidence` text. The replaced test's entry gave an open start and an unknown period; this one gives a finite reviewed 2016 interval for both scopes, so the moved state does not overlap edition 100's and is visible as one row. The claim is unchanged: only edition 99 moves.",
+  "note": "The moved state's provenance is the entry's locator and its `evidence` text. The replaced test's entry gave an open start and an unknown period; this one gives a finite reviewed 2016 interval for both scopes, so the moved state does not overlap edition 100's and is visible as one row. The claim is unchanged: only edition 99 moves. The moved state spans exactly the reviewed year, 2016-01-01 to 2016-12-31 (test_period_effect_is_exact_and_conflicts_do_not_restore_old_dates: a 2019 interval gives exactly 2019-01-01..2019-12-31; its conflict half is checked-corrections-compose-or-conflict-only-against-their-originals).",
   "fails_if": "`compile_occurrence_corrections` emits the period effect for every record of the native family instead of only the selected edition-99 original, so edition 100 also moves to 2016, or keeps edition 99's delivered 2009 period",
   "sources": "scb-answer-2009-and-2017"
 }

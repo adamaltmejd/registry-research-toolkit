@@ -1,0 +1,76 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "note": "Step 1's cases under the reversed locators (entry n of k is now entry k-n+1). renamed's entry no longer compiles: its column is gone.",
+      "table": "cases",
+      "fields": ["case_id", "status"],
+      "rows": [
+        ["curation/registers/scb/compose.toml#/errata.field/1", "applicable"],
+        ["curation/registers/scb/compose.toml#/errata.field/2", "applicable"],
+        ["curation/registers/scb/compose.toml#/errata.field/3", "applicable"],
+        ["curation/registers/scb/later.toml#/errata.field/2", "applicable"],
+        ["curation/registers/scb/periods.toml#/errata.occurrence_period/1", "applicable"],
+        ["curation/registers/scb/periods.toml#/errata.occurrence_period/2", "applicable"],
+        ["curation/registers/scb/consensus.toml#/errata.field/1", "applicable"],
+        ["curation/registers/scb/consensus.toml#/errata.field/2", "applicable"]
+      ]
+    },
+    {
+      "note": "Step 1's entry issues under the reversed locators, plus renamed's entry, stale because the column it was written against is now delivered as RENAMED (test_layout_changes_preserve_applicability_but_relevant_changes_do_not: a renamed column makes the case stale).",
+      "table": "issues",
+      "where": {"case_id": {"contains": "curation/registers/scb/"}},
+      "fields": ["code", "case_id", "fields", "withheld_output"],
+      "rows": [
+        ["stale_curation_entry", "curation/registers/scb/later.toml#/errata.field/1", [], ["curation/registers/scb/later.toml#/errata.field/1"]],
+        ["stale_curation_entry", "curation/registers/scb/renamed.toml#/errata.field/1", [], ["curation/registers/scb/renamed.toml#/errata.field/1"]],
+        ["conflicting_curation_effects", "curation/registers/scb/periods.toml#/errata.occurrence_period/1", ["period"], ["occurrence"]],
+        ["conflicting_curation_effects", "curation/registers/scb/periods.toml#/errata.occurrence_period/2", ["period"], ["occurrence"]],
+        ["conflicting_curation_effects", "curation/registers/scb/consensus.toml#/errata.field/1", ["measurement_unit"], ["measurement_unit"]],
+        ["conflicting_curation_effects", "curation/registers/scb/consensus.toml#/errata.field/2", ["measurement_unit"], ["measurement_unit"]]
+      ]
+    },
+    {
+      "note": "As step 1, with CVID 502 now delivered before CVID 501.",
+      "table": "issues",
+      "where": {"subject": "scb/consensus/amount"},
+      "fields": ["code", "fields"],
+      "rows": [
+        ["conflicting_occurrence_facts", ["measurement_unit"]],
+        ["delivery_units_vary", ["measurement_unit"]]
+      ]
+    },
+    {
+      "note": "Step 1's states: moving every record to another physical row and reversing every register's entries changes none of them (test_layout_changes_preserve_applicability_but_relevant_changes_do_not: a record on another physical row keeps its case applicable; test_disjoint_and_equal_effects_compose_against_original_evidence: the result is the same in reverse order). renamed keeps its delivered description under the new column, because its correction no longer applies.",
+      "table": "states",
+      "fields": ["register", "variable", "column", "valid_from", "valid_to", "name", "description", "data_type", "measurement_unit"],
+      "rows": [
+        ["compose", "answer", "VALUE", "2020-01-01", "2020-12-31", "GenericVar", "Corrected", "integer", null],
+        ["later", "answer", "VALUE", "2020-01-01", "2020-12-31", "GenericVar", "Original description", "integer", null],
+        ["renamed", "answer", "RENAMED", "2020-01-01", "2020-12-31", "GenericVar", "Original description", "integer", null],
+        ["consensus", "amount", "AMOUNT", "2020-01-01", "2020-12-31", "GenericVar", null, "integer", null]
+      ]
+    },
+    {
+      "note": "Step 1's three corrections, under their reversed locators, in locator order.",
+      "table": "states",
+      "where": {"register": "compose"},
+      "fields": ["provenance"],
+      "rows": [
+        ["curation/registers/scb/compose.toml#/errata.field/1: The delivered description is corrected.\n\ncuration/registers/scb/compose.toml#/errata.field/2: A second reviewer also reads the delivered OLD column as VALUE.\n\ncuration/registers/scb/compose.toml#/errata.field/3: The delivered OLD column is VALUE."]
+      ]
+    },
+    {
+      "note": "As step 1; CVID 401 is delivered as RENAMED.",
+      "table": "uses",
+      "where": {"key": ["member:101", "member:201", "member:301", "member:401"]},
+      "fields": ["key", "column_name", "description", "variable"],
+      "rows": [
+        ["member:101", "OLD", "Original description", "scb/compose/answer"],
+        ["member:201", "OLD", "Original description", "scb/later/answer"],
+        ["member:301", "ANSWER", "Original description", null],
+        ["member:401", "RENAMED", "Original description", "scb/renamed/answer"]
+      ]
+    }
+  ]
+}

@@ -432,6 +432,23 @@
       ]
     },
     {
+      "note": "blanks: the 2021 row the first entry rewrites to A keeps its delivered blank column as a prepared record: the ledger records no literal for it (null), not the A its state carries (test_source_effects.py::test_disjoint_and_equal_effects_compose_against_original_evidence: the record's blank column stays a negative claim after the cases apply).",
+      "table": "uses",
+      "where": {
+        "key": "member:1802"
+      },
+      "fields": [
+        "column_name",
+        "variable"
+      ],
+      "rows": [
+        [
+          null,
+          "scb/blanks/v5"
+        ]
+      ]
+    },
+    {
       "note": "test_compiled_errata_column_placements_and_declared_flags[*]: each placement applies.",
       "table": "cases",
       "where": {

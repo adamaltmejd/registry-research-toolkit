@@ -1,0 +1,36 @@
+[register]
+provider = "scb"
+slug = "consensus"
+native_id = "5"
+[[variant]]
+native_id = "5.50"
+slug = "people"
+[[variable]]
+native_id = "5.5"
+slug = "amount"
+[[errata.field]]
+variable = "5.5"
+variant = "5.50"
+column = "AMOUNT"
+edition = "2020"
+expected_fields = {{expected_fields key=member:501 fields=name,definition,description,operational_definition,classification_declared,representation,data_type,coverage_from,coverage_to,measurement_unit}}
+expected_period_text = {{period_text key=member:501}}
+expected_scope = {{edition_scope key=member:501}}
+expected_period = {{period_scope key=member:501}}
+evidence = "Another reviewer reads CVID 501's unit as 'Styck'."
+noted = "2026-10-09"
+field = "measurement_unit"
+value = "Styck"
+[[errata.field]]
+variable = "5.5"
+variant = "5.50"
+column = "AMOUNT"
+edition = "2020"
+expected_fields = {{expected_fields key=member:501 fields=name,definition,description,operational_definition,classification_declared,representation,data_type,coverage_from,coverage_to,measurement_unit}}
+expected_period_text = {{period_text key=member:501}}
+expected_scope = {{edition_scope key=member:501}}
+expected_period = {{period_scope key=member:501}}
+evidence = "One reviewer reads CVID 501's unit as CVID 502's."
+noted = "2026-10-09"
+field = "measurement_unit"
+value = "Kronor"

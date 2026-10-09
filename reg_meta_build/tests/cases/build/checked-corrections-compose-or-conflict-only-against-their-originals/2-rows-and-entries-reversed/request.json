@@ -1,0 +1,22 @@
+{
+  "replaces": [
+    "test_source_effects.py::test_disjoint_and_equal_effects_compose_against_original_evidence",
+    "test_source_effects.py::test_layout_changes_preserve_applicability_but_relevant_changes_do_not"
+  ],
+  "note": "Step 1's curation with every register's entries in reverse TOML order (the replaced test applied its cases in both orders), built from step 1's source with every Registerinformation row reversed, so each record sits on another physical row (the replaced test moved its record to row 99), and with renamed's column delivered as RENAMED (the replaced test's relevant change). The curation is authored from step 1's source. Only renamed changes outcome.",
+  "fails_if": "a checked correction's selection or application depends on its original's physical row or on the TOML order of its entries, so a register's step-1 outcome changes (for example, compose's description entry applied first sees no delivered OLD, or the later entry now precedes the column correction and applies); or `_select_occurrence_correction` stops comparing the delivered column, so renamed's description correction still applies to RENAMED",
+  "sources": {
+    "description": "scb-checked-correction-compositions with its Registerinformation rows in reverse order, so every record sits on another physical row, and renamed's CVID 401 delivered as RENAMED instead of ANSWER.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "AMOUNT", "cvid": 502, "var_id": 5, "year": "2020", "regver_id": 2020, "unit": "Kronor", "register": ["CONSENSUS", 5, 50]},
+        {"colname": "AMOUNT", "cvid": 501, "var_id": 5, "year": "2020", "regver_id": 2020, "unit": "Antal", "register": ["CONSENSUS", 5, 50]},
+        {"colname": "RENAMED", "cvid": 401, "var_id": 5, "year": "2020", "regver_id": 2020, "vardesc": "Original description", "register": ["RENAMED", 4, 40]},
+        {"colname": "ANSWER", "cvid": 301, "var_id": 5, "year": "2020", "regver_id": 2020, "vardesc": "Original description", "register": ["PERIODS", 3, 30]},
+        {"colname": "OLD", "cvid": 201, "var_id": 5, "year": "2020", "regver_id": 2020, "vardesc": "Original description", "register": ["LATER", 2, 20]},
+        {"colname": "OLD", "cvid": 101, "var_id": 5, "year": "2020", "regver_id": 2020, "vardesc": "Original description", "register": ["COMPOSE", 1, 10]}
+      ]
+    }
+  },
+  "authored_from": "scb-checked-correction-compositions"
+}
