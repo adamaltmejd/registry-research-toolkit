@@ -715,7 +715,9 @@ def cmd_build(args: argparse.Namespace) -> int:
         if reason := incomplete(args, run_dir, code, fields):
             sys.stderr.write(f"real-seed-cache: not stored ({reason})\n")
             # Reaps failed runs past their retention, so repeated failures cannot
-            # fill the disk; this one stays for diagnosis.
+            # fill the disk. This one's retention starts now (its mtime is from
+            # creation, and a build can outlast the grace period), so it stays.
+            os.utime(run_dir)
             evict(
                 home,
                 run_dir,
