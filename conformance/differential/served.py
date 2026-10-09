@@ -3,8 +3,9 @@ against the checkout's on its derived copies, request by request.
 
 Both arms are the same server, so every request goes to both unchanged and the
 answers compare as raw bytes (``__main__.compare``): the status as ``exit`` and the
-body as ``stdout``. A body that is not JSON (a docs PDF) compares by its SHA-256. A
-paged request is walked page by page, each arm following its own cursor (the cursor
+body as ``stdout``. A body that is not JSON (a docs PDF) compares by its SHA-256 and
+its stable headers. An order manifest must also be the canonical encoding of its own
+document on each arm (``_noncanonical_manifests``). A paged request is walked page by page, each arm following its own cursor (the cursor
 binds the catalog's generation, which differs between an original and its derived
 copy); page ``n`` past the first is case ``<key>/page<n>``.
 
@@ -74,6 +75,14 @@ SEARCH_TYPES = (
 FAMILIES = ("icd", "lkf", "sni", "ssyk")
 PARTITIONS = ("source_extensions", "canonical", "nonstandard", "sentinels")
 JSON = {"content-type": "application/json"}
+# The headers a download sets that do not carry the generation (its ETag does).
+DOWNLOAD_HEADERS = (
+    "content-type",
+    "content-disposition",
+    "x-content-type-options",
+    "content-length",
+    "cache-control",
+)
 
 
 def _route(ref: str) -> str:
@@ -437,8 +446,38 @@ def _result(response) -> dict:
     if response.headers.get("content-type", "").startswith("application/json"):
         body = response.text
     else:
-        body = "sha256:" + hashlib.sha256(response.content).hexdigest()
+        body = json.dumps(
+            {
+                "sha256": hashlib.sha256(response.content).hexdigest(),
+                "headers": {h: response.headers.get(h) for h in DOWNLOAD_HEADERS},
+            }
+        )
     return {"exit": response.status_code, "stdout": body, "stderr": "", "seconds": 0.0}
+
+
+def _noncanonical_manifests(cases: dict[str, dict[str, dict]]) -> list[tuple]:
+    """A ``<case>/canonical`` difference per arm whose order manifest is not the
+    canonical encoding of its own document (sorted keys, two-space indent, non-ASCII
+    as is, trailing newline). Two arms that agree on non-canonical bytes would
+    otherwise compare equal; the difference is in ``stderr``, which no exception
+    covers."""
+    out = []
+    for case_id, arms in sorted(cases.items()):
+        if "/download/order/" not in case_id:
+            continue
+        for arm, result in sorted(arms.items()):
+            if result["exit"] != 200:
+                continue
+            text = result["stdout"]
+            document = json.loads(text)
+            canonical = json.dumps(
+                document, sort_keys=True, indent=2, ensure_ascii=False
+            )
+            if text != canonical + "\n":
+                ok = {"exit": 200, "stdout": "", "stderr": "", "seconds": 0.0}
+                bad = {**ok, "stderr": f"{arm}: manifest bytes are not canonical"}
+                out.append((f"{case_id}/canonical/{arm}", ok, bad))
+    return out
 
 
 def _walk(client, request: tuple) -> list[tuple[str, dict]]:
@@ -557,10 +596,11 @@ def served_cases(
         for (catalog, _, arm), pages in walked.items():
             for key, result in pages:
                 cases.setdefault(f"{catalog}/{key}", {})[arm] = result
-        return [
+        out = [
             (case_id, arms.get("baseline"), arms.get("checkout"))
             for case_id, arms in sorted(cases.items())
         ]
+        return out + _noncanonical_manifests(cases)
     finally:
         baseline.close()
         checkout.close()
