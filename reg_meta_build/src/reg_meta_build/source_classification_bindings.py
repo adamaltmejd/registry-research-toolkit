@@ -61,6 +61,9 @@ class _Binding:
     provenance: tuple[str, ...]
     inline_only: bool = False
     unresolved: bool = False
+    # Names a withheld book: it publishes nothing, but unlike an unresolved
+    # binding it does not block the other books bound in its window.
+    withheld: bool = False
     rule: bool = False
     override: bool = False
     sentinel_members: tuple[tuple[str, str], ...] = ()
@@ -433,7 +436,7 @@ def apply_classification_cases(
             causes = withheld_classifications.get(binding.classification or "")
             if causes is None:
                 continue
-            bindings[index] = replace(binding, unresolved=True)
+            bindings[index] = replace(binding, withheld=True)
             withheld_bindings.append(
                 ResolutionDiagnostic(
                     code="withheld_catalog_dependency",
@@ -620,6 +623,9 @@ def apply_classification_cases(
             ]
             if any(d.override for d in active):
                 active = [d for d in active if not d.rule]
+            # After the override check: an override to a withheld book still
+            # displaces the label rules it overrides.
+            active = [d for d in active if not d.withheld]
             if not active or segment.state_disposition != "include":
                 if prior:
                     segments.append(segment)

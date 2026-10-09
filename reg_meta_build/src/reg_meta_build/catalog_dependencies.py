@@ -99,11 +99,14 @@ def resolve_classification_successions(
             )
         )
     )
+    edges = tuple(
+        sorted((*derived, *declared), key=lambda e: (e.predecessor, e.successor))
+    )
+    # Duplicates, unknown endpoints and cycles stay fatal through a withheld book.
+    _prepare_classification_succession(classifications, edges, withheld.keys())
     combined = []
     diagnostics = []
-    for edge in sorted(
-        (*derived, *declared), key=lambda e: (e.predecessor, e.successor)
-    ):
+    for edge in edges:
         ends = [s for s in (edge.predecessor, edge.successor) if s in withheld]
         if not ends:
             combined.append(edge)
@@ -121,7 +124,6 @@ def resolve_classification_successions(
             for slug in ends
             for cause in withheld[slug][1]
         )
-    _prepare_classification_succession(classifications, tuple(combined))
     return tuple(combined), tuple(diagnostics)
 
 

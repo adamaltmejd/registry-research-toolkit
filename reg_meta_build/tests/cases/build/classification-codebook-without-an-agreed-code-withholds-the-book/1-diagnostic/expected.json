@@ -34,8 +34,9 @@
         "detail": {"contains": "its binding"}
       },
       "fields": ["severity", "fields", "valid_from", "valid_to"],
-      "note": "AMOUNT's declared EMP2007 binding is withheld for its one 2020 delivery.",
+      "note": "AMOUNT's declared EMP2007 binding and VALUE's 'Older list' label binding to emp2007 are each withheld for their one 2020 delivery.",
       "rows": [
+        ["error", ["classification"], "2020-01-01", "2020-12-31"],
         ["error", ["classification"], "2020-01-01", "2020-12-31"]
       ]
     },
@@ -55,8 +56,10 @@
       "table": "issues",
       "fields": ["code"],
       "match": "set",
+      "note": "No other issue; VALUE's two value-set versions in one period withhold only its coding label (conflicting_coding_labels).",
       "rows": [
         ["conflicting_classification_labels"],
+        ["conflicting_coding_labels"],
         ["empty_canonical_classification"],
         ["withheld_catalog_dependency"]
       ]
@@ -74,7 +77,8 @@
     {
       "table": "state_classifications",
       "fields": ["variable", "classification"],
-      "rows": [["score", "emp2020"]]
+      "note": "VALUE keeps its emp2020 binding beside the withheld emp2007 one.",
+      "rows": [["score", "emp2020"], ["value", "emp2020"]]
     },
     {
       "table": "states",
