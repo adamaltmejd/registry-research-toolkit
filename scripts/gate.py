@@ -5,6 +5,7 @@
     uv run --no-project scripts/gate.py g0 --packages reg_meta
     uv run --no-project scripts/gate.py regen          # then commit the diff
     uv run --no-project scripts/gate.py heavy -- cargo test -p reg-catalog
+    uv run --no-project scripts/gate.py real-seed -- uv run reg-meta-build build-db ...
 
 Each named step runs its commands in order from the repository root and stops at the
 first failure. `all` runs g0, rust, release, flows and frontend; `crates` is g0's Rust
@@ -16,7 +17,9 @@ slots (`flock` on `$XDG_CACHE_HOME/registry-research-toolkit-heavy-<n>.lock`), s
 parallel sessions run at most three heavy jobs at a time instead of overloading the
 machine; `heavy -- CMD`
 runs any other heavy command (a parallel pytest, a cargo build, a derive or probe) under
-the same lock. Stdlib only:
+the same lock. `real-seed -- CMD` is for real-seed `reg-meta-build` runs (prepare,
+build, extend, check-curation): it also holds a single real-seed slot, so a second
+real-seed run queues instead of halving the first one's speed. Stdlib only:
 `--no-project` keeps the frontend CI job free of the workspace build.
 """
 
@@ -164,13 +167,13 @@ STEPS = {f.__name__: f for f in (g0, crates, rust, release, flows, frontend, reg
 
 
 @contextmanager
-def heavy_lock():
-    """Hold one of SLOTS machine-wide heavy-job slots (one flock file each)."""
+def heavy_lock(kind="heavy", slots=SLOTS):
+    """Hold one of `slots` machine-wide `kind` slots (one flock file each)."""
     cache = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
     cache.mkdir(parents=True, exist_ok=True)
     handles = [
-        (cache / f"registry-research-toolkit-heavy-{i}.lock").open("w")
-        for i in range(SLOTS)
+        (cache / f"registry-research-toolkit-{kind}-{i}.lock").open("w")
+        for i in range(slots)
     ]
     try:
         waiting = False
@@ -183,7 +186,7 @@ def heavy_lock():
                 yield
                 return
             if not waiting:
-                print(f"gate: waiting for one of {SLOTS} heavy-job slots", flush=True)
+                print(f"gate: waiting for one of {slots} {kind} slots", flush=True)
                 waiting = True
             time.sleep(5)
     finally:
@@ -192,11 +195,15 @@ def heavy_lock():
 
 
 def main() -> int:
-    if sys.argv[1:2] == ["heavy"]:
+    if (kind := sys.argv[1:2]) in (["heavy"], ["real-seed"]):
         command = sys.argv[3:] if sys.argv[2:3] == ["--"] else sys.argv[2:]
         if not command:
-            sys.exit("gate: heavy needs a command: gate.py heavy -- CMD...")
-        with heavy_lock():
+            sys.exit(f"gate: {kind[0]} needs a command: gate.py {kind[0]} -- CMD...")
+        # Real-seed slot first, so a queued build does not sit on a heavy slot.
+        real_seed = (
+            heavy_lock("real-seed", 1) if kind == ["real-seed"] else nullcontext()
+        )
+        with real_seed, heavy_lock():
             return subprocess.call(command)
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("steps", nargs="+", choices=[*STEPS, "all"])

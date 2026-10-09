@@ -19,6 +19,12 @@ omits catalog dependencies, delivery coverage, SQLite and corpus validation, eve
 selected registers. Run full verification at an agreed, coherent batch checkpoint.
 Curation-only edits do not require source preparation.
 
+Run every real-seed `prepare-sources`, `build-db`, `extend-db` and `check-curation`
+under `uv run --no-project scripts/gate.py real-seed -- CMD`. It allows one real-seed
+run on the machine at a time and holds a heavy-job slot, so a concurrent run queues
+instead of slowing both. A `waiting for one of 1 real-seed slots` line means another
+session's run holds it: let it finish rather than working around the lock.
+
 During the SWECOV restoration, the builder produces schema 8 databases while readers
 still require schema 6. Keep restoration changes in `reg_meta_build`; reader and UI
 adaptation is a later task. Verify candidate outputs with builder-owned openers or
@@ -52,7 +58,8 @@ separate candidate. Use `prepare-input-bundle --help` for capture; it takes sepa
 snapshot pins. Commit and verify the raw candidate before running:
 
 ```sh
-uv run reg-meta-build prepare-sources --input-bundle "$raw_bundle" \
+uv run --no-project scripts/gate.py real-seed -- \
+  uv run reg-meta-build prepare-sources --input-bundle "$raw_bundle" \
   --input-commit "$raw_bundle_commit" \
   --input-manifest-sha256 "$raw_bundle_sha256" \
   --output-dir "$new_prepared_dir"
@@ -82,7 +89,8 @@ prepared_commit="EXACT_PREPARED_ACCEPTANCE_SHA"
 prepared_manifest_sha256="EXACT_TOP_LEVEL_PREPARED_SHA256"
 
 # Diagnostic: complete the scan and retain unresolved discrepancies (exit 10).
-uv run reg-meta-build build-db --prepared "$prepared" \
+uv run --no-project scripts/gate.py real-seed -- \
+  uv run reg-meta-build build-db --prepared "$prepared" \
   --input-commit "$prepared_commit" --input-manifest-sha256 "$prepared_manifest_sha256" \
   --report-dir "$run_dir/report" --timing \
   --diagnostic --diagnostic-db-path "$run_dir/diagnostic.db" \
@@ -100,7 +108,8 @@ Use a separate new run directory for strict verification:
 
 ```sh
 run_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-build.XXXXXX")"
-uv run reg-meta-build --db "$run_dir/catalog" build-db \
+uv run --no-project scripts/gate.py real-seed -- \
+  uv run reg-meta-build --db "$run_dir/catalog" build-db \
   --prepared "$prepared" \
   --input-commit "$prepared_commit" --input-manifest-sha256 "$prepared_manifest_sha256" \
   --report-dir "$run_dir/report" --timing \
