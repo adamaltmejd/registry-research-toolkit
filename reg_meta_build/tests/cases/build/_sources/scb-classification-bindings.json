@@ -1,5 +1,5 @@
 {
-  "description": "SCB: one register per label-rule claim (LKF, PAIR, MULTI, SPLIT 2019-2021, CONTRAC, CONTRAL, OVR) with Vardemangder version names; plus the sample VALUE. SOS workbook CLS (subset CLS_A 2019-2020): one variable per conformance or declaration claim, each with a Kodlista; UNK, UNRESURL and UNRESFRAG are each delivered twice with two declarations. FK registers openreg (open from 2010), span (2019-2021), overlap (2020), none (1990-1991), pooled (a pooled 2020-2021 variant) and nocodes. Canonical-SCB register canon with OUTCOL (list 'outside'), TWOCOL (list 01) and MEMBERS (no book; list 01 'Participation' twice, 1, a labelled blank and 01 'Another label'), DUPLAB (book FIX; list 01 under two labels, 02 with an empty label) and BLANKB (book FIX; list 01 and a labelled blank code). Books FIX/ALT (01, 02), TWO (02), SEN (01, 02; sentinel 00000), HUN (0-98), families pair (OLD 2000-2019, NEW 2020-) and overlap (P1 2000-2020, P2 2020-), DIG and CNF.",
+  "description": "SCB: one register per label-rule claim (LKF, PAIR, MULTI, SPLIT 2019-2021, CONTRAC, CONTRAL, OVR) with Vardemangder version names; plus the sample VALUE. SOS workbook CLS (subset CLS_A 2019-2020): one variable per conformance or declaration claim, each with a Kodlista; UNK, UNRESURL and UNRESFRAG are each delivered twice with two declarations; WHELD declares FIX once. FK registers openreg (open from 2010), span (2019-2021), overlap (2020), none (1990-1991), pooled (a pooled 2020-2021 variant) and nocodes. Canonical-SCB register canon with OUTCOL (list 'outside'), TWOCOL (list 01) and MEMBERS (no book; list 01 'Participation' twice, 1, a labelled blank and 01 'Another label'), DUPLAB (book FIX; list 01 under two labels, 02 with an empty label) and BLANKB (book FIX; list 01 and a labelled blank code). Books FIX/ALT (01, 02), TWO (02), SEN (01, 02; sentinel 00000), HUN (0-98), families pair (OLD 2000-2019, NEW 2020-) and overlap (P1 2000-2020, P2 2020-), DIG and CNF.",
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
@@ -173,6 +173,16 @@
           "external_classification": "FIX extra",
           "data_from": 2020,
           "data_to": 2020
+        },
+        {
+          "name": "WHELD",
+          "deldatamangd": "CLS_A",
+          "label": "Wheld",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "external_classification": "FIX",
+          "data_from": 2020,
+          "data_to": 2020
         }
       ],
       "code_lists": {
@@ -312,6 +322,9 @@
           ["2020", "01", "Source label"]
         ],
         "UNRESFRAG": [
+          ["2020", "01", "Source label"]
+        ],
+        "WHELD": [
           ["2020", "01", "Source label"]
         ]
       }

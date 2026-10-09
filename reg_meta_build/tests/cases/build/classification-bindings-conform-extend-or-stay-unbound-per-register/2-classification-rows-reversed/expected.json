@@ -188,6 +188,8 @@
         ["sentinel_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:SENTMIX"]],
         ["empty_active_coding", "error", "2019-01-01", "2019-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:GAP"]],
         ["unknown_classification_declaration", "warning", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:UNK"]],
+        ["unknown_classification_declaration", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:WHELD"]],
+        ["conflicting_occurrence_facts", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:WHELD"]],
         ["unresolved_classification_reference", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:UNRESURL"]],
         ["conflicting_occurrence_facts", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:UNRESURL"]],
         ["unresolved_classification_reference", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:UNRESFRAG"]],
@@ -208,6 +210,16 @@
         ["conflicting_code_memberships", "error", "2020-01-01", "2020-12-31", ["register:8", "variant:80", "edition:2020", "variable:801", "member:8001"]]
       ],
       "note": "Every classification diagnostic, and the coding diagnostics beside it, as the issue window and the source record it cites. `conflicting_occurrence_facts` is not a coding diagnostic: UNRESURL and UNRESFRAG deliver one SOS variable twice to put two declarations on one column, and the two rows disagree on `classification_declared` (UNK's blank declaration does not count as a disagreement); a change to duplicate-row handling breaks these rows for a reason outside classification. A clean register (CONF, DUPLAB, LKF, PAIR, OVR, OPENCOL, SENTFREE, the sample) has none: DUPLAB's '01' under two labels in one list is no membership conflict (the replaced test's `diagnostics == ()`; the conflicting_classification_labels projection below cites only CNF). SPLIT warns only for 2020, citing only the 2020 edition. The SCB version-label conflict that PAIR, MULTI and SPLIT also report (`conflicting_coding_labels`) is the coding fold's (Stage 8a, Finding 6), not a classification claim, so it is left out of the filter."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "conflicting_curation_effects"},
+      "fields": ["case_id", "fields"],
+      "rows": [
+        ["curation/registers/sos/cls.toml#/errata.field/1", ["classification_declared"]],
+        ["curation/registers/sos/cls.toml#/errata.field/2", ["classification_declared"]]
+      ],
+      "note": "WHELD's two checked corrections replace its delivered FIX with TWO and with ALT. They conflict, so the build withholds `classification_declared` as unknown. That withheld unknown is an error and blocks ALT's `[[binding.variable]]` override for sos/cls/wheld: WHELD has no state_classifications row above, and keeps its 01 code. An ordinary unknown (UNK) only warns and keeps its binding."
     },
     {
       "table": "issues",

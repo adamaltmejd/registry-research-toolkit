@@ -1,5 +1,5 @@
 {
-  "description": "SOS workbook VAL (Värderegistret, subsets VAL_A and VAL_B) with one variable per list-reference shape, and workbook OTH (Andraregistret) whose EXPLICIT has no list. Kodlista sheets are written literally: a `Variabelnamn` or `Används i variabeln` preamble names a variable, a `Variabelnamn` column names one per row, a Tidsperiod-only row opens a period section, and Kodlista_SJUKHUS uses the hospital layout whose Från/Till cells are row validity (dates, yyyymm or yyyy). FIRST is delivered again in VAL_B, a row no pointer names. CIVILOP, CIVILCP, CIVILH, CIVILHS and CIVILR each have a sheet shaped like Kodlista_Civil with one drift from CIVIL's exact pointer and single matching header: a pointer to another sheet, a pointer in another case, a header naming someone else, a second header, a row naming another variable. IDINLINE, IDPERIOD, IDDAY and IDCLAMP carry a Kopplingsvariabel (linkage) mark; every other variable's cell is blank. Plus the SCB sample.",
+  "description": "SOS workbook VAL (Värderegistret, subsets VAL_A and VAL_B) with one variable per list-reference shape, and workbook OTH (Andraregistret) whose EXPLICIT has no list. Kodlista sheets are written literally: a `Variabelnamn` or `Används i variabeln` preamble names a variable, a `Variabelnamn` column names one per row, a Tidsperiod-only row opens a period section, and Kodlista_SJUKHUS uses the hospital layout whose Från/Till cells are row validity (dates, yyyymm or yyyy). FIRST is delivered again in VAL_B, a row no pointer names. CIVILOP, CIVILCP, CIVILH, CIVILHS and CIVILR each have a sheet shaped like Kodlista_Civil with one drift from CIVIL's exact pointer and single matching header: a pointer to another sheet, a pointer in another case, a header naming someone else, a second header, a row naming another variable. IDINLINE, IDPERIOD, IDDAY and IDCLAMP carry a Kopplingsvariabel (linkage) mark; IDMIX is delivered twice in VAL_A, marked once and once with a formula cell (`=1`, which makes no claim); every other variable's cell is blank. Plus the SCB sample.",
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
@@ -40,6 +40,8 @@
         {"name": "IDPERIOD", "deldatamangd": "VAL_A", "label": "Idperiod", "description": "Kod", "data_from": 2019, "data_to": 2021, "linkage": "Ja"},
         {"name": "IDDAY", "deldatamangd": "VAL_A", "label": "Idday", "description": "Kod", "data_from": 2020, "data_to": 2020, "linkage": "Ja"},
         {"name": "IDCLAMP", "deldatamangd": "VAL_A", "label": "Idclamp", "description": "Kod", "data_from": 2019, "data_to": 2021, "linkage": "Ja"},
+        {"name": "IDMIX", "deldatamangd": "VAL_A", "label": "Idmix", "description": "Kod", "data_from": 2020, "data_to": 2020, "linkage": "Ja"},
+        {"name": "IDMIX", "deldatamangd": "VAL_A", "label": "Idmix", "description": "Kod", "data_from": 2020, "data_to": 2020, "linkage": "=1"},
         {"name": "CIVILOP", "deldatamangd": "VAL_A", "label": "Civilop", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se Kodlista_Civil"},
         {"name": "CIVILCP", "deldatamangd": "VAL_A", "label": "Civilcp", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se kodlista_Civilcp"},
         {"name": "CIVILH", "deldatamangd": "VAL_A", "label": "Civilh", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se Kodlista_Civilh"},
@@ -118,6 +120,12 @@
           ["Variabelnamn", "IDPERIOD"],
           ["Tidsperiod", "Kod", "Beskrivning"],
           ["2019-2021", "0", "Label"],
+          ["2020", "1", null]
+        ],
+        "Kodlista_IDMIX": [
+          ["Variabelnamn", "IDMIX"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2020", "0", "Label"],
           ["2020", "1", null]
         ],
         "Kodlista_IDCLAMP": [
