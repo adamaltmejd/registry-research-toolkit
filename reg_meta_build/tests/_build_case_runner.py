@@ -934,8 +934,8 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
         "s.delivery_column_name AS column, s.valid_from, s.valid_to, s.data_type, "
         "v.name, s.name AS state_name, s.provenance, s.pooled, s.data_length, "
-        "s.definition, s.measurement_unit, s.description, s.operational_definition "
-        + _STATE_JOIN
+        "s.definition, s.measurement_unit, s.description, s.operational_definition, "
+        "s.source_register_text " + _STATE_JOIN
     ),
     "state_codes": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
@@ -1052,7 +1052,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "case_uses": "case_id source key use variable",
         "states": "register variable variant column valid_from valid_to data_type "
         "name state_name provenance pooled data_length definition measurement_unit "
-        "description operational_definition",
+        "description operational_definition source_register_text",
         "state_codes": "register variable variant column valid_from valid_to code label",
         "variables": "register variable column provider_key description "
         "is_identifier is_sensitive",

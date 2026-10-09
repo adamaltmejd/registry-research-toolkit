@@ -146,14 +146,17 @@
       },
       "fields": [
         "column",
-        "operational_definition"
+        "operational_definition",
+        "source_register_text"
       ],
       "rows": [
         [
           "First",
+          null,
           null
         ]
-      ]
+      ],
+      "note": "The backing state takes neither column's operational definition nor First's attribution 'Question 1'; first has none, and absent is a distinct value."
     },
     {
       "table": "states",
