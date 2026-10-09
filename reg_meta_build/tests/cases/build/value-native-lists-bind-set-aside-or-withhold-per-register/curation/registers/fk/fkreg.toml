@@ -8,3 +8,6 @@ native_id = {{naming_id kind=register_variant provider=fk register_key=fkreg mem
 [[variable]]
 slug = "fkvar"
 native_id = {{naming_id kind=variable provider=fk register_key=fkreg member_key=FKVAR}}
+[[variable]]
+slug = "fkcanon"
+native_id = {{naming_id kind=variable provider=fk register_key=fkreg member_key=FKCANON}}

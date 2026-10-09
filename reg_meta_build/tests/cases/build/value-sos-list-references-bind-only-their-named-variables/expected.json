@@ -34,7 +34,7 @@
         ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:REVERSED", "2020-01-01", "2020-12-31"],
         ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:IDINLINE", "2020-01-01", "2020-12-31"]
       ],
-      "note": "Every coding issue of the build, by the Variabelnivå row it cites. Variables absent here bind cleanly or have no list: EXPLICIT, CIVIL, CIVILNP, ANCHORED, both FIRST rows, SECOND, OUTSIDER, RESOLVED, both INLINE rows, DAY, MONTH, BLANK, IDPERIOD, IDDAY, IDCLAMP and OTH's EXPLICIT. UNRESOLVED states no claim, so it has no unknown_code_membership beside its own issue."
+      "note": "Every coding issue of the build, by the Variabelnivå row it cites. Variables absent here bind cleanly or have no list: EXPLICIT, CIVIL, CIVILNP, ANCHORED, CIVILOP, CIVILCP, CIVILH, CIVILHS, CIVILR, both FIRST rows, SECOND, OUTSIDER, RESOLVED, both INLINE rows, DAY, MONTH, BLANK, IDPERIOD, IDDAY, IDCLAMP and OTH's EXPLICIT. UNRESOLVED states no claim, so it has no unknown_code_membership beside its own issue."
     },
     {
       "table": "source_issues",
@@ -45,13 +45,18 @@
     },
     {
       "table": "state_codes",
-      "where": {"register": "val", "variable": ["explicit", "civil", "civilnp", "anchored", "first", "second", "outsider", "ambiga", "ambigb", "conflict", "unresolved", "resolved", "inline", "cvalid"]},
+      "where": {"register": "val", "variable": ["explicit", "civil", "civilnp", "anchored", "civilop", "civilcp", "civilh", "civilhs", "civilr", "first", "second", "outsider", "ambiga", "ambigb", "conflict", "unresolved", "resolved", "inline", "cvalid"]},
       "fields": ["variable", "variant", "code", "label"],
       "rows": [
         ["explicit", "val-a", "1", "Ett"],
         ["civil", "val-a", "1", "Ogift"],
         ["civilnp", "val-a", null, null],
         ["anchored", "val-a", null, null],
+        ["civilop", "val-a", null, null],
+        ["civilcp", "val-a", null, null],
+        ["civilh", "val-a", null, null],
+        ["civilhs", "val-a", null, null],
+        ["civilr", "val-a", null, null],
         ["first", "val-a", "1", "Delad"],
         ["first", "val-b", null, null],
         ["second", "val-a", "1", "Delad"],
@@ -67,7 +72,7 @@
         ["inline", "val-b", null, null],
         ["cvalid", "val-a", null, null]
       ],
-      "note": "Each variable's one state (2020; CVALID 2010). CIVIL binds Kodlista_Civil, whose header spells the member `Civil`, only through its exact `Se Kodlista_Civil` pointer: CIVILNP (no pointer) and ANCHORED (a cell-anchored pointer) leave the same shape unbound. FIRST and SECOND each bind the shared list their own row points at; OUTSIDER does not, and neither does FIRST's VAL_B row: the same workbook and member name at another locator, which the pointer does not name (the replaced test's same-name-elsewhere record). INLINE's enumeration binds only the VAL_A row that delivers it, not the VAL_B row of the same variable. A list naming two variables (AMBIG), a row naming another variable than its header (CONFLICT, whose older 2001-2002 list is inactive), and an enumeration whose members run together (UNRESOLVED) withhold the coding."
+      "note": "Each variable's one state (2020; CVALID 2010). CIVIL binds Kodlista_Civil, whose header spells the member `Civil`, only through its exact `Se Kodlista_Civil` pointer: CIVILNP (no pointer) and ANCHORED (a cell-anchored pointer) leave the same shape unbound. With an exact pointer, every other guard still holds the case-differing header back (the replaced test's drift legs): CIVILOP points at Kodlista_Civil, not its own Kodlista_Civilop; CIVILCP's pointer `Se kodlista_Civilcp` differs from its sheet in case; Kodlista_Civilh's header names `Annan`; Kodlista_Civilhs names a second variable (`Sibling`); Kodlista_Civilr's row names `SIBLING`. None of them reports an issue. FIRST and SECOND each bind the shared list their own row points at; OUTSIDER does not, and neither does FIRST's VAL_B row: the same workbook and member name at another locator, which the pointer does not name (the replaced test's same-name-elsewhere record). INLINE's enumeration binds only the VAL_A row that delivers it, not the VAL_B row of the same variable. A list naming two variables (AMBIG), a row naming another variable than its header (CONFLICT, whose older 2001-2002 list is inactive), and an enumeration whose members run together (UNRESOLVED) withhold the coding."
     },
     {
       "table": "state_codes",
@@ -93,7 +98,7 @@
         ["reversed", "2020-01-01", "2020-12-31", null, null],
         ["blank", "2020-01-01", "2020-12-31", "A", "Alla"]
       ],
-      "note": "test_value_bounds_keep_day_precision_and_invalid_bounds_unknown, one variable per bound pair of Kodlista_SJUKHUS's Från/Till cells: a leap-day window keeps its days (DAY), a compact yyyymm bound is that whole month (MONTH), an impossible date (2019-02-29) and reversed years (2021..2020) are unknown validity and withhold the list (BADDATE, REVERSED), and blank bounds leave the member unrestricted (BLANK)."
+      "note": "test_value_bounds_keep_day_precision_and_invalid_bounds_unknown, one variable per bound pair of Kodlista_SJUKHUS's Från/Till cells: a leap-day window keeps its days (DAY), a compact yyyymm bound is that whole month (MONTH), an impossible date (2019-02-29) and reversed years (2021..2020) are unknown validity and withhold the list (BADDATE, REVERSED), and a row with both cells empty leaves the member unrestricted (BLANK). BLANK's empty cells give its row no validity at all, so it never reaches `value_window`'s blank-bound branch; the open-ended VardemangderValidDates rows of value-native-lists-bind-set-aside-or-withhold-per-register (`3101|2008-11-19|`) do."
     },
     {
       "table": "state_codes",

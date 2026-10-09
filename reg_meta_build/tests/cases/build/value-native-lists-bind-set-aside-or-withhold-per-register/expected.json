@@ -36,10 +36,15 @@
         ["unknown_code_validity", "scb-registerinformation#register:46/variant:460/edition:110/variable:4601/member:46001", null, null],
         ["unknown_code_validity", "scb-registerinformation#register:46/variant:460/edition:110/variable:4601/member:46001", null, null],
         ["unknown_code_membership", "scb-registerinformation#register:46/variant:460/edition:110/variable:4601/member:46001", "2020-01-01", "2020-12-31"],
+        ["unknown_code_validity", "scb-registerinformation#register:50/variant:500/edition:110/variable:5001/member:50001", null, null],
+        ["unknown_code_membership", "scb-registerinformation#register:50/variant:500/edition:110/variable:5001/member:50001", "2020-01-01", "2020-12-31"],
+        ["unknown_code_validity", "scb-registerinformation#register:51/variant:510/edition:110/variable:5101/member:51001", null, null],
+        ["unknown_code_membership", "scb-registerinformation#register:51/variant:510/edition:110/variable:5101/member:51001", "2020-01-01", "2020-12-31"],
         ["empty_active_coding", "scb_canonical/scb_canonical.toml#register:rowvalid/variable:ROWVALID", "1990-01-01", "1990-12-31"],
-        ["declared_value_list_not_found", "Forsakringskassan/fk.toml#register:fkreg/variable:FKVAR", null, null]
+        ["declared_value_list_not_found", "Forsakringskassan/fk.toml#register:fkreg/variable:FKVAR", null, null],
+        ["declared_value_list_not_found", "Forsakringskassan/fk.toml#register:fkreg/variable:FKCANON", null, null]
       ],
-      "note": "Every coding issue of the build, by the source record it cites (register N's CVID N*1000+1 in edition 110). Registers absent here bind cleanly: setaside, partial and pooledaside report only the set-aside warning; pooled, marker, markermix, unlisted, checked, named and every identifier register report nothing. SET-ASIDE: one warning per bound list, so collide's two lists warn twice. GROUPED: two unknown_code_validity issues for three associations, one per descriptor (`first` with its duplicated row, then `second`); which descriptor and its occurrence count are in `detail` only."
+      "note": "Every coding issue of the build, by the source record it cites (register N's CVID N*1000+1 in edition 110). Registers absent here bind cleanly: setaside, partial and pooledaside report only the set-aside warning; pooled, marker, markermix, unlisted, checked, named and every identifier register report nothing; marker and markermix's `Tal` items have an unknown window (`bad|bad`), which a non-member never reaches. IDBLANK (a blank Unika flag with no Identifierare row, an unknown flag) and IDNONE (no Unika row at all, no flag) are not identifiers, so each list keeps both errors like unkvalid's, even though the variable itself is withheld (`unresolved_flag`) and forms no value set. FKREG: FKVAR names its delivered fk-list and FKCANON the canonical named-list; each is not found, because a declared list binds only inside the canonical SCB source. SET-ASIDE: one warning per bound list, so collide's two lists warn twice. GROUPED: two unknown_code_validity issues for three associations, one per descriptor (`first` with its duplicated row, then `second`); which descriptor and its occurrence count are in `detail` only."
     },
     {
       "table": "state_codes",
@@ -67,9 +72,10 @@
         ["checked", "2021-01-01", "9999-12-31", "01", "One"],
         ["rowvalid", "1990-01-01", "1990-12-31", null, null],
         ["named", "2020-01-01", "2020-12-31", "01", "First"],
+        ["fkreg", "2020-01-01", "2020-12-31", null, null],
         ["fkreg", "2020-01-01", "2020-12-31", null, null]
       ],
-      "note": "Every built value set. A null row is a state with no value set. unkscope and rangeless form no state (next projection)."
+      "note": "Every built value set. A null row is a state with no value set; fkreg's two are FKVAR and FKCANON. unkscope and rangeless form no state (next projection), nor do idblank and idnone, whose variables are withheld."
     },
     {
       "table": "states",
