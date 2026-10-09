@@ -105,24 +105,17 @@ def test_complete_admitted_set_agrees_with_http(artifact_dir, request):
 
 
 def check_generation_seeded_stratified_binding_agreement(artifact_dir, server):
-    """`server` is the Rust server's client (`server_client`)."""
-
-    def resolve(variable, period, variant):
-        states = browse_states(
-            server,
-            variable,
-            {"scope": "reference", "period": period, "variant": variant},
-        )
-        return [state["delivery_column_name"] for state in states]
-
+    """`server` is the Rust server's client (`server_client`). The sample and its
+    native spellings come from the artifact alone; a sampled binding the server
+    does not serve fails the run."""
     with open_db(artifact_dir / "reg_meta.db") as conn:
         manifest = get_manifest(conn)
         steward = manifest["catalog_artifact_kind"] == "steward"
         sample, available_strata, available_bindings = acceptance_sample(
-            conn, manifest["generation_id"], steward=steward, resolve=resolve
+            conn, manifest["generation_id"], steward=steward
         )
         repeated, _, _ = acceptance_sample(
-            conn, manifest["generation_id"], steward=steward, resolve=resolve
+            conn, manifest["generation_id"], steward=steward
         )
     require(
         sample

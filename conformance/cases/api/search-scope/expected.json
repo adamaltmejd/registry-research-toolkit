@@ -29,7 +29,8 @@
       ],
       "/data/items/0/members/*/fqid": [
         "scb/example/value"
-      ]
+      ],
+      "/data/next_cursor": null
     }
   },
   {
@@ -41,7 +42,8 @@
       "/data/items/0/members/*/fqid": [
         "scb/example/reference",
         "scb/example/value"
-      ]
+      ],
+      "/data/next_cursor": null
     }
   }
 ]

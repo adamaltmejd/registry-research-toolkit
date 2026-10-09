@@ -1,4 +1,5 @@
 {
+  "note": "Twin of cli_scope/search-group-distinct-members (#1166). Fails if a group whose label and every member match the query counts a member once per matching field (matched_count above 3) or lists a member twice.",
   "fixture": "reader/concept-group-cli",
   "kind": "catalog",
   "requests": [

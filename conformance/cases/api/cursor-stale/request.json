@@ -1,4 +1,5 @@
 {
+  "note": "Twin of reader/cursor. Fails if a cursor outlives a change of generation (stale_cursor), or if it is refused by an artifact that differs only in import_date, which is not part of the generation.",
   "fixture": "reader",
   "artifacts": {
     "regenerated": {

@@ -1,0 +1,14 @@
+{
+  "note": "Twin of selection/docs-named-mismatch. Fails if the server serves a global catalog artifact selected as the swecov steward, instead of refusing with catalog_mismatch; admission-catalog-mismatch pins the other direction.",
+  "fixture": "reader",
+  "kind": "catalog",
+  "serve": {
+    "catalog": "swecov"
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

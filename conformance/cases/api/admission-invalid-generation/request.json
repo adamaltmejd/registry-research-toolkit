@@ -1,4 +1,5 @@
 {
+  "note": "Twin of selection/invalid-generation. Fails if the server admits a generation_id that is not 64 lowercase hex digits, instead of refusing to start with catalog_unpublishable.",
   "fixture": "reader",
   "kind": "catalog",
   "serve": {
