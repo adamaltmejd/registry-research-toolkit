@@ -1,0 +1,18 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "state_codes",
+      "where": {"column": "VALUE"},
+      "fields": ["valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["2020-01-01", "2020-12-31", "1", "Less than 500"],
+        ["2020-01-01", "2020-12-31", "2", "At least 500"]
+      ]
+    }
+  ]
+}

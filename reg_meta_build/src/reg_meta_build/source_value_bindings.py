@@ -661,7 +661,9 @@ class ValueBindingSession:
                     record.locators,
                     self.session.source.manifest.revision.revision_id,
                     descriptor_key,
-                    len(associations),
+                    # Skipped blank codes state nothing, so they are not part of the
+                    # list a marker certificate checks for completeness.
+                    len(associations) - blank_codes,
                     tuple(inactive),
                     tuple(non_membership),
                     tuple(set_aside),
