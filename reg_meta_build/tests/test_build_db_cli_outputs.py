@@ -24,7 +24,11 @@ from reg_meta_build.pipeline import (
     build_catalog,
     check_curation,
 )
-from reg_meta_build.resolved_catalog import write_resolved_catalog
+from reg_meta_build.resolved_catalog import (
+    ResolvedCodeSet,
+    ResolvedVariable,
+    write_resolved_catalog,
+)
 
 # The checkout's tracked curation tree and its slug sibling, the defaults that
 # check-curation protects when --curation-dir is omitted.
@@ -293,18 +297,35 @@ def test_rerun_is_byte_identical(catalog: CatalogFixture, tmp_path: Path) -> Non
 
 def test_catalog_bytes_do_not_depend_on_writer_input_order(tmp_path: Path) -> None:
     # Fails if the writer stores registers, variables, states or manifest entries in
-    # the order it receives them (drops a sort before an insert), so one resolved
-    # catalog handed over in another order changes the artifact's bytes. A rebuild
-    # replays one order, and the build cases' reversed-row steps compare projections,
+    # the order it receives them (drops a sort before an insert), or stops sorting and
+    # deduplicating a value set's members, so one resolved catalog handed over in
+    # another order, or with a member repeated, changes the artifact's bytes or is
+    # refused. A rebuild replays one order, a build hands the writer members already
+    # sorted and unique, and the build cases' reversed-row steps compare projections,
     # which ignore order; this is the byte-level witness.
-    variables = (resolved_variable(), resolved_variable("sos"))
+    members = (("01", "Participation"), ("02", "Employment"))
+
+    def coded(variable: ResolvedVariable, states, given) -> ResolvedVariable:
+        value_set = ResolvedCodeSet(members=given)
+        return variable.model_copy(
+            update={
+                "states": tuple(
+                    s.model_copy(update={"value_set": value_set}) for s in states
+                )
+            }
+        )
+
+    variables = tuple(
+        coded(v, v.states, members)
+        for v in (resolved_variable(), resolved_variable("sos"))
+    )
     first, reordered = tmp_path / "first.db", tmp_path / "reordered.db"
     write_resolved_catalog(
         variables, first, manifest=synthetic_manifest() | {"z": "last", "a": "first"}
     )
     write_resolved_catalog(
         tuple(
-            v.model_copy(update={"states": tuple(reversed(v.states))})
+            coded(v, reversed(v.states), (*reversed(members), *members))
             for v in reversed(variables)
         ),
         reordered,
