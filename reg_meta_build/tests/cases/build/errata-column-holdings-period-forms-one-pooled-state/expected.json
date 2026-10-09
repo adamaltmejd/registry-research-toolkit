@@ -49,14 +49,14 @@
         "subject": "scb/sample/undated"
       },
       "fields": [
-        "ref"
+        "code"
       ],
       "rows": [
         [
-          "scb-registerinformation#register:1/variant:2/edition:2021/variable:6/member:21"
+          "unsupported_occurrence"
         ]
       ],
-      "note": "the undated declaration's one evidence record is the variant's first delivered row"
+      "note": "the undated declaration cites exactly one delivered record of its variant; which one is not part of the contract (it follows source row order today)"
     },
     {
       "table": "issues",
