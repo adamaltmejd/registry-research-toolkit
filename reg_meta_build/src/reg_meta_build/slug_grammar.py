@@ -22,8 +22,9 @@ _RESERVED_VARIABLE_SLUG = "variants"
 # `group/...` the group ref, so no provider may take the slug `group`.
 _RESERVED_PROVIDER_SLUG = "group"
 
-# simplify: kept only while reg_meta's reader validates these slugs (derive/chains,
-# derive/browse via reader_catalog); delete in 4.9a with reg_meta.
+# simplify: no build path reaches reg_meta's reader any more (since 4.2b), so the
+# reader no longer needs these reserved. 4.9a decides whether the Rust server's
+# route suffixes still need them or they are dropped.
 _RESERVED_HTTP_SUFFIX_SLUGS = frozenset(
     {
         "states",

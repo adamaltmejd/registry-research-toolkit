@@ -14,13 +14,7 @@ import sqlite3
 from concurrent.futures import ProcessPoolExecutor
 from contextlib import contextmanager
 from functools import lru_cache
-from typing import TYPE_CHECKING, Literal
-
-# Bootstrap by calling the reader (RUST_RUNTIME_SPEC.md section 4). The resolver
-# rules `expanded_state` reads moved here from `reg_meta.catalog` in stage 4
-# (package 4.2), unchanged, so the derived rows still equal what the reader emits;
-# `browse` and `chains` still call the reader through `reader_catalog`.
-from reg_meta.catalog import Catalog
+from typing import TYPE_CHECKING
 
 from reg_meta_build.db import register_py_lower
 
@@ -78,16 +72,6 @@ def named_rows(conn: sqlite3.Connection) -> Iterator[sqlite3.Connection]:
         yield _prepare(conn)
     finally:
         conn.row_factory = factory
-
-
-@contextmanager
-def reader_catalog(
-    conn: sqlite3.Connection, scope: Literal["reference", "holdings"] = "reference"
-) -> Iterator[Catalog]:
-    """The reader over `conn` as derive calls it, with the row factory it needs;
-    `conn`'s own row factory is restored on exit."""
-    with named_rows(conn):
-        yield Catalog(conn, scope=scope)
 
 
 # The resolver's whole-history rules, moved from `reg_meta.catalog` (package 4.2).
