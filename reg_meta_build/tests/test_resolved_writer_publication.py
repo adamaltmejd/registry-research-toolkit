@@ -109,7 +109,8 @@ _YEAR = ResolvedAliasWindow(valid_from="2000-01-01", valid_to="2000-12-31")
 # The writer's input contract, one row per stated rule at its hardest case: the
 # variables handed to the writer and the refusal. "20000101" parses as an ISO date and
 # is refused only because it does not round-trip; "false" is truthy, so a lax flag
-# would publish it as sensitive.
+# would publish it as sensitive. An off-calendar date is refused by the date parser,
+# whose wording differs between implementations, so those rows match the refused field.
 INVALID_VARIABLES: dict[str, tuple[Callable[[], tuple[ResolvedVariable, ...]], str]] = {
     "empty-catalog": (tuple, "empty resolved catalog"),
     "variable-without-states": (
@@ -144,7 +145,7 @@ INVALID_VARIABLES: dict[str, tuple[Callable[[], tuple[ResolvedVariable, ...]], s
     ),
     "state-date-not-on-the-calendar": (
         lambda: (_with_state(valid_from="2000-02-30"),),
-        "day 30 must be in range",
+        r"states\.0\.valid_from\n",
     ),
     "state-bounds-reversed": (
         lambda: (_with_state(valid_from="2001-01-01"),),
@@ -176,7 +177,7 @@ INVALID_VARIABLES: dict[str, tuple[Callable[[], tuple[ResolvedVariable, ...]], s
     ),
     "alias-window-date-not-on-the-calendar": (
         lambda: (_alias_window_ending("2021-02-29"),),
-        "day 29 must be in range",
+        r"aliases\.0\.windows\.0\.valid_to\n",
     ),
     "alias-windows-overlapping": (
         lambda: (_with_alias_windows(_YEAR, _YEAR),),
