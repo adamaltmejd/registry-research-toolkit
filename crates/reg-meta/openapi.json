@@ -1883,6 +1883,73 @@
           }
         }
       },
+      "ClassificationCode": {
+        "type": "object",
+        "description": "One code of a classification edition: today's `ClassificationCode`.",
+        "required": [
+          "code",
+          "label"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "is_valid": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "True for a canonical code, null when no canonical list exists."
+          },
+          "label": {
+            "type": "string"
+          },
+          "level": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "The hierarchy depth; null when the classification is flat."
+          }
+        }
+      },
+      "ClassificationExtensionMember": {
+        "type": "object",
+        "description": "A delivered pair outside its declared book: today's\n`ClassificationExtensionMember`.",
+        "required": [
+          "code",
+          "label",
+          "member_kind",
+          "scoped_sentinels"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "member_kind": {
+            "type": "string",
+            "description": "`nonstandard` or `sentinel`."
+          },
+          "scoped_sentinels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScopedSentinel"
+            },
+            "description": "The certificates that make a source-local code a sentinel."
+          },
+          "sentinel_meaning": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The book's curated meaning of a sentinel code."
+          }
+        }
+      },
       "ClassificationGroup": {
         "type": "object",
         "description": "A curated group of classifications.",
@@ -4164,6 +4231,56 @@
           "reference"
         ]
       },
+      "ScopedSentinel": {
+        "type": "object",
+        "description": "A build-time certificate of a checked, finite source sentinel decision\n(today's `ScopedSentinelEvidence`).",
+        "required": [
+          "delivery_column_name",
+          "classification_sha256",
+          "source_fingerprints",
+          "members",
+          "provenance"
+        ],
+        "properties": {
+          "classification_sha256": {
+            "type": "string"
+          },
+          "delivery_column_name": {
+            "type": "string"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "provenance": {
+            "type": "string"
+          },
+          "source_fingerprints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "valid_from": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "valid_to": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "SearchHit": {
         "oneOf": [
           {
@@ -5094,6 +5211,36 @@
           }
         }
       },
+      "ValueRow": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ClassificationCode"
+          },
+          {
+            "$ref": "#/components/schemas/ClassificationExtensionMember"
+          },
+          {
+            "$ref": "#/components/schemas/ValueSetMember"
+          }
+        ],
+        "description": "A row of `values`: a classification's code, a state's delivered pair, or a\ndelivered pair outside a declared book."
+      },
+      "ValueSetMember": {
+        "type": "object",
+        "description": "One delivered (code, label) pair: today's `ValueSetMember`.",
+        "required": [
+          "code",
+          "label"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
       "ValueSetSummary": {
         "type": "object",
         "description": "`value_set_summary`: a value set's code count and, when its codes are a dense\ninteger run, its span.",
@@ -5126,7 +5273,9 @@
         "properties": {
           "items": {
             "type": "array",
-            "items": {}
+            "items": {
+              "$ref": "#/components/schemas/ValueRow"
+            }
           },
           "next_cursor": {
             "type": [

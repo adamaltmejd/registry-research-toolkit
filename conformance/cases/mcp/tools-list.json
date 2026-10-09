@@ -2600,6 +2600,73 @@
     },
     "outputSchema": {
       "$defs": {
+        "ClassificationCode": {
+          "description": "One code of a classification edition: today's `ClassificationCode`.",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "is_valid": {
+              "description": "True for a canonical code, null when no canonical list exists.",
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "label": {
+              "type": "string"
+            },
+            "level": {
+              "description": "The hierarchy depth; null when the classification is flat.",
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "label"
+          ],
+          "type": "object"
+        },
+        "ClassificationExtensionMember": {
+          "description": "A delivered pair outside its declared book: today's\n`ClassificationExtensionMember`.",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "member_kind": {
+              "description": "`nonstandard` or `sentinel`.",
+              "type": "string"
+            },
+            "scoped_sentinels": {
+              "description": "The certificates that make a source-local code a sentinel.",
+              "items": {
+                "$ref": "#/$defs/ScopedSentinel"
+              },
+              "type": "array"
+            },
+            "sentinel_meaning": {
+              "description": "The book's curated meaning of a sentinel code.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "code",
+            "label",
+            "member_kind",
+            "scoped_sentinels"
+          ],
+          "type": "object"
+        },
         "Error": {
           "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
           "properties": {
@@ -2656,10 +2723,92 @@
           ],
           "type": "string"
         },
+        "ScopedSentinel": {
+          "additionalProperties": false,
+          "description": "A build-time certificate of a checked, finite source sentinel decision\n(today's `ScopedSentinelEvidence`).",
+          "properties": {
+            "classification_sha256": {
+              "type": "string"
+            },
+            "delivery_column_name": {
+              "type": "string"
+            },
+            "members": {
+              "items": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "provenance": {
+              "type": "string"
+            },
+            "source_fingerprints": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "valid_from": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "valid_to": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "delivery_column_name",
+            "classification_sha256",
+            "source_fingerprints",
+            "members",
+            "provenance"
+          ],
+          "type": "object"
+        },
+        "ValueRow": {
+          "description": "A row of `values`: a classification's code, a state's delivered pair, or a\ndelivered pair outside a declared book.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ClassificationCode"
+            },
+            {
+              "$ref": "#/$defs/ClassificationExtensionMember"
+            },
+            {
+              "$ref": "#/$defs/ValueSetMember"
+            }
+          ]
+        },
+        "ValueSetMember": {
+          "description": "One delivered (code, label) pair: today's `ValueSetMember`.",
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "label"
+          ],
+          "type": "object"
+        },
         "ValuesPage": {
           "properties": {
             "items": {
-              "items": {},
+              "items": {
+                "$ref": "#/$defs/ValueRow"
+              },
               "type": "array"
             },
             "next_cursor": {
