@@ -2,16 +2,15 @@
 provider = "scb"
 slug = "sample"
 native_id = "1"
-
 [[variant]]
 native_id = "1.10"
 slug = "people"
-
 [[variable]]
-native_id = "1.101"
-slug = "curated"
-deprecated = true
-
+native_id = "1.5.kon"
+slug = "kon"
 [[variable]]
-native_id = "1.103"
-slug = "stale"
+native_id = "1.5.left"
+slug = "left"
+[[variable]]
+native_id = "1.5.other"
+slug = "other"

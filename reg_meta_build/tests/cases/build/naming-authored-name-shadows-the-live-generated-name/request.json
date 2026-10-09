@@ -1,6 +1,9 @@
 {
-  "replaces": "test_curation_compile_tree.py::test_native_names_overlay_and_unnamed_provider_keys_compile",
-  "fails_if": "the native naming overlay lets a live generated `sample.auto.toml` entry win over the authored `sample.toml` entry for the same native variable, so VALUE is named `generated`",
-  "note": "The replaced test wrote no slug_state.toml, so every generated name was inactive and its \"authored wins\" assertion could not fail. Here the scb zone is `curating`, so the generated layer is live: OTHER (1.102, named only in sample.auto.toml) takes its generated slug, while VALUE (1.101, named in both files) takes the authored one. The authored 1.103 names a variable the source does not deliver and goes stale.",
+  "replaces": [
+    "test_curation_compile_tree.py::test_native_names_overlay_and_unnamed_provider_keys_compile",
+    "test_source_scope_naming.py::test_checked_naming_retains_accepted_deprecation"
+  ],
+  "fails_if": "the native naming overlay lets a live generated `sample.auto.toml` entry win over the authored `sample.toml` entry for the same native variable, so VALUE is named `generated`; or `resolve_source_scope` (source_scope.py) stops copying the accepted naming's `deprecated` onto the formed variable, so `curated` is published with deprecated 0",
+  "note": "The replaced test wrote no slug_state.toml, so every generated name was inactive and its \"authored wins\" assertion could not fail. Here the scb zone is `curating`, so the generated layer is live: OTHER (1.102, named only in sample.auto.toml) takes its generated slug, while VALUE (1.101, named in both files) takes the authored one. The authored 1.103 names a variable the source does not deliver and goes stale. From the deprecation test: a delivered variable whose accepted name carries `deprecated = true` is still formed and keeps the flag; the authored 1.101 entry carries it and the generated 1.102 entry does not, so only `curated` is deprecated.",
   "sources": "scb-unnamed-variable"
 }
