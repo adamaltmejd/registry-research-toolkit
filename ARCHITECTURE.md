@@ -181,31 +181,15 @@ results leave it.
 ### Real-seed output cache
 
 Real-seed `prepare-sources` and `build-db` runs take one to two hours each, so
-`scripts/real_seed_cache.py` reuses their outputs by input key (#1329). It is tooling,
-not builder code: it reads only what the builder already reports. Each key covers only
-what its step reads, because a key over the whole builder would miss on almost every
-change:
-
-- **Prepare** keys the raw bundle commit and `catalog-bundle.json` digest, the code
-  `prepare-sources` runs, `uv.lock` and the Python and SQLite versions. The code is a
-  static import walk from the preparation entry point, function-local imports included
-  and generous at every doubt: a dynamic import pulls in its whole package, and the CLI
-  file is keyed without being walked. The pipeline, the curation compiler and the
-  binding and resolution modules fall outside it, so a change there reuses the
-  preparation. A stored preparation is an index record (prepared path, top-level
-  manifest digest, acceptance commit), not a copy, and every lookup re-checks it.
-- **Build** keys the whole builder (`reg_meta_build/src`, `reg_meta/src`,
-  `reg_schema/src`, the native crates, `uv.lock`, `Cargo.lock`), the builder's own
-  `curation_tree_sha256`, the prepared pins, the mode and `--registers`, and for a
-  publishable build the checkout commit the database records. It stores the report and
-  database, keeping the two most recently used entries.
-
-A miss runs under the real-seed lock and stores only a completed run. The shared digest,
-staging and eviction helpers live in `scripts/keyed_cache.py`, which the G1 derive cache
-and the synthetic fixture cache also use. A key that leaves out a real input returns
-stale output silently; `--verify` reruns a step uncached and compares bytes, the
-determinism replay aimed at the cache. Builder phase caching (resolve separately from
-derive) is a `reg_meta_build` change and waits for the builder work in #1296.
+`scripts/real_seed_cache.py` reuses their outputs by input key (#1329). It is tooling
+over the builder's existing reports and checks, not builder code. Each key covers only
+what its step reads, so a resolution change reuses the preparation; the module docstring
+lists the fields. The invariant is that a key leaving out a real input would return
+stale output silently, so every key errs generous, a hit re-checks what it returns, only
+completed runs are stored, and `build --verify` reruns uncached and compares bytes. The
+digest, staging and eviction helpers it shares with the G1 derive cache and the
+synthetic fixture cache live in `scripts/keyed_cache.py`. Phase caching inside the
+builder waits for the builder work in #1296.
 
 ### Catalog artifact identity and read scope
 

@@ -106,11 +106,15 @@ def staged(entry: Path) -> Iterator[Path]:
         shutil.rmtree(staging, ignore_errors=True)
 
 
-def evict(home: Path, current: Path, keep: int, label: str) -> None:
+def evict(
+    home: Path, current: Path, keep: int, label: str, *, min_idle: float = 0
+) -> None:
     """Delete all but the `keep` most recently used entries under `home` (`current`
     always stays), and the staging directories of builds that died.
 
-    An entry's mtime is its last use: callers `os.utime` an entry on every hit.
+    An entry's mtime is its last use: callers `os.utime` an entry on every hit. An
+    entry used within the last `min_idle` seconds also stays, so a path another
+    session is still reading is not deleted under it.
     """
     mtimes = {}
     for p in home.iterdir():
@@ -122,8 +126,9 @@ def evict(home: Path, current: Path, keep: int, label: str) -> None:
         key=mtimes.__getitem__,
         reverse=True,
     )
-    cutoff = time.time() - STAGING_RETENTION_SECONDS
-    stale = [p for p in keys[keep:] if p != current] + [
+    now = time.time()
+    cutoff = now - STAGING_RETENTION_SECONDS
+    stale = [p for p in keys[keep:] if p != current and mtimes[p] < now - min_idle] + [
         p for p in mtimes if p.name.startswith(STAGING_PREFIX) and mtimes[p] < cutoff
     ]
     for path in stale:

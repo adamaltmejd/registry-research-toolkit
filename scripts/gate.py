@@ -186,7 +186,11 @@ def heavy_lock(kind="heavy", slots=SLOTS):
                 yield
                 return
             if not waiting:
-                print(f"gate: waiting for one of {slots} {kind} slots", flush=True)
+                print(
+                    f"gate: waiting for one of {slots} {kind} slots",
+                    file=sys.stderr,
+                    flush=True,
+                )
                 waiting = True
             time.sleep(5)
     finally:
