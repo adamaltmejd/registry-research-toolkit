@@ -22,6 +22,7 @@ let { node }: { node: ClassificationShow } = $props();
     codeCount={null}
     filterLabel="Filter codes"
     filterPlaceholder="Filter codes…"
+    emptyText="This classification has no codes."
   />
 </section>
 

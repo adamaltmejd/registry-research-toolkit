@@ -724,9 +724,7 @@ export function variantCardName(
  * single home for that fallback chain — the register's variant surfaces
  * (`variants.ts`) and the cart's source card must not drift into two spellings of
  * one variant. */
-export function variantLabel(
-  variant: VariantModel,
-): string {
+export function variantLabel(variant: VariantModel): string {
   return variant.name ?? variant.display_group ?? variant.slug;
 }
 

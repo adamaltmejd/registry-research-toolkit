@@ -45,6 +45,8 @@ interface Props {
   codeCount: number | null;
   filterLabel?: string;
   filterPlaceholder?: string;
+  /** The line for a set with no codes at all. */
+  emptyText?: string;
 }
 
 let {
@@ -57,6 +59,7 @@ let {
   codeCount,
   filterLabel = "Filter codes",
   filterPlaceholder = "Filter codes…",
+  emptyText = "This value set has no codes.",
 }: Props = $props();
 
 // One request covers the ordinary coding; it is also the server's ceiling.
@@ -224,7 +227,7 @@ function retry(): void {
       {#if filtering}
         No codes match “{query}”.
       {:else}
-        This value set has no codes.
+        {emptyText}
       {/if}
     </p>
   {/if}

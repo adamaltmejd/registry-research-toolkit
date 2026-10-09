@@ -69,7 +69,8 @@ describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
 
   // The section used to be omitted for an empty embedded list; its size is now
   // unknown until the first page answers, so it renders and says it is empty.
-  // Fails if an empty edition renders a blank section or drops the heading.
+  // Fails if an empty edition renders a blank section, drops the heading, or
+  // calls the classification a value set.
   it("keeps the section and states the absence for an edition with no codes", async () => {
     valuesFor("class/sun2020", []);
 
@@ -78,6 +79,8 @@ describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
     await expect
       .element(page.getByRole("heading", { name: "Codes" }))
       .toBeVisible();
-    await expect.element(page.getByText(/has no codes/)).toBeVisible();
+    await expect
+      .element(page.getByText("This classification has no codes."))
+      .toBeVisible();
   });
 });
