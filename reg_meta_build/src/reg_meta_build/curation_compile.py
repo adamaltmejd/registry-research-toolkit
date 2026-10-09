@@ -2200,10 +2200,9 @@ def _partition_ambiguity(
             columns[column].append(record)
     candidates: dict[str, list[str]] = defaultdict(list)
     for column, members in columns.items():
-        if (suffix := derive_variable_slug(column)) and any(
-            (record_ref(record), column) not in scoped for record in members
-        ):
-            candidates[suffix].append(column)
+        # The fallback discriminator matches `_column_partition_plan`'s.
+        if any((record_ref(record), column) not in scoped for record in members):
+            candidates[derive_variable_slug(column) or "x"].append(column)
     unmatched = {
         split
         for split in split_ids
