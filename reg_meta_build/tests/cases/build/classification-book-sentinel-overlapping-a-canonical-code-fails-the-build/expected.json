@@ -1,8 +1,9 @@
 {
   "error": {
-    "code": "pipeline_build_failed",
+    "code": "classification_entry_invalid",
     "exit_code": 10,
     "message_contains": [
+      "classifications/EXAMPLE-CODES.toml: ",
       "'example-codes'",
       "sentinel codes also in the canonical code set",
       "'001'"

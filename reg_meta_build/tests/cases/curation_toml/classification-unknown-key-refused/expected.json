@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree.py::test_unknown_key_names_file_and_key",
   "fails_if": "load_classifications accepts a key outside the documented [classification] fields",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "classification_unknown_key",
     "locator": "classifications/A.toml: `classification.version`",
     "message_contains": [
       "Extra inputs are not permitted"

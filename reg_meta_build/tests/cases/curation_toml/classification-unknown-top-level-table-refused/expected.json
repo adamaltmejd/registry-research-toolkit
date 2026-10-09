@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree.py::test_unknown_top_level_table_fails",
   "fails_if": "load_classifications ignores a top-level table other than [classification] and [binding]",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "classification_unknown_key",
     "locator": "classifications/A.toml: `link`"
   }
 }
