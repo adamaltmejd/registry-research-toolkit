@@ -11,10 +11,11 @@ declares one MCP server, the hosted register metadata catalog at
   column names passed to `resolve`, and any `project_data.json` document passed to
   `order`. Do not put personal data or confidential material in these arguments.
 - The server answers from register metadata only (schemas, value codes, documentation),
-  not microdata. The server keeps no log of tool calls; it keeps a short-lived
-  per-client-address counter for rate limiting.
-- Traffic passes through Cloudflare and Fly.io, which host the service and process
-  connection metadata such as IP addresses under their own policies.
+  not microdata.
+- The catalog server does not log tool arguments; it keeps a short-lived
+  per-client-address counter for rate limiting. Cloudflare and Fly.io, which host it,
+  may log requests and connection metadata such as IP addresses under their own
+  policies.
 - The plugin is designed so that row-level MONA data must not leave MONA. Only aggregate
   statistics may be exported, and the researcher remains responsible for reviewing every
   export before it leaves MONA.
