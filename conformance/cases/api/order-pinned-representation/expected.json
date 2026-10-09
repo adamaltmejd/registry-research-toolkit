@@ -1,0 +1,33 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/entries/*/logical/representation": [
+        "Valueold"
+      ],
+      "/data/entries/*/requested_period": [
+        "2018"
+      ],
+      "/data/entries/*/physical/column": [
+        "Observed"
+      ],
+      "/data/clips": [
+        {
+          "ordered_period": "2018",
+          "requested_period": "2018..2019",
+          "source": "source",
+          "variable": "scb/example/value"
+        }
+      ],
+      "/data/provenance/mode": "steward_holdings"
+    }
+  },
+  {
+    "status": 200,
+    "media_type": "application/json",
+    "headers": {
+      "content-disposition": "attachment; filename=\"order.json\""
+    },
+    "bytes": "order.json"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "LonFinkJan",
+        "variable": "scb/example/lonfink",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "LonFinkJan",
+        "edition": "2018-01,2018-04",
+        "table": ""
+      },
+      "requested_period": "2018-01,2018-04",
+      "source": "source"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "catalog",
+    "catalog_generation_id": "d3829f11a01b8028e9899d928e8bae65f95bf2df3b76c911226fc04697758b56",
+    "catalog_schema_version": "9.6.0",
+    "mode": "global_fallback",
+    "project_hash": "82a86951ad3ebee2da9b469639c37bb8fa852914360714496906d9a3127ba603",
+    "project_name": "Synthetic semantic",
+    "project_reg_meta_version": "5.1.0",
+    "project_schema_version": "3.0.0",
+    "steward": "global"
+  },
+  "version": 1
+}

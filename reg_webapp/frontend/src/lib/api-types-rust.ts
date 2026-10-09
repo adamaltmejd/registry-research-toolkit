@@ -244,6 +244,75 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/project/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description The order manifest of a `project_data.json` document (the JSON body; the `project` argument over MCP): per source and binding, each table and column that delivers it, clipped to where the binding is available (each clip listed), from the steward's holdings on a steward catalog and by canonical column on the global catalog. A project `validate` rejects structurally is `project_invalid`; any finding that leaves part of the request undeliverable blocks the whole order (`order_blocked`, with every finding). POST /api/project/order/manifest serves the same manifest as the exact `order.json` bytes. */
+        post: operations["order"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/order/manifest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description `order`'s manifest as the exact `order.json` bytes, an attachment. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            responses: {
+                /** @description The raw bytes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": unknown;
+                    };
+                };
+                /** @description An error in `api/errors.toml` */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: components["schemas"]["Error"];
+                            meta: components["schemas"]["Meta"];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/project/validate": {
         parameters: {
             query?: never;
@@ -438,6 +507,16 @@ export interface components {
             fqid: string;
             groups: components["schemas"]["Group"][];
             name: string;
+        };
+        /**
+         * @description An availability clip: the binding asked for `requested_period` and is ordered
+         *     for `ordered_period`, where it is available.
+         */
+        ClipReport: {
+            ordered_period: string;
+            requested_period: string;
+            source: string;
+            variable: string;
         };
         CodeClassification: {
             fqid?: string | null;
@@ -773,6 +852,16 @@ export interface components {
             message: string;
             warning_kind: string;
         };
+        /** @description The project-side coordinate of an entry. */
+        LogicalCoordinate: {
+            provider: string;
+            register: string;
+            /** @description The canonical delivery column the slice resolved to. */
+            representation: string;
+            /** @description The binding's variable FQID. */
+            variable: string;
+            variant: string;
+        };
         Match: {
             fqid?: string | null;
             /**
@@ -813,6 +902,55 @@ export interface components {
             definition?: string | null;
             name: string;
         };
+        /** @description One resolved binding: what was asked for and what the steward delivers. */
+        OrderEntry: {
+            logical: components["schemas"]["LogicalCoordinate"];
+            physical: components["schemas"]["PhysicalCoordinate"];
+            /** @description The availability-clipped period this table serves. */
+            requested_period: string;
+            /** @description The project source's name. */
+            source: string;
+        };
+        /**
+         * @description The order manifest: machine-written here, machine-read by the steward-side
+         *     extract system, never hand-edited.
+         */
+        OrderManifest: {
+            /** @description Every availability clip, also when nothing blocked. */
+            clips: components["schemas"]["ClipReport"][];
+            /**
+             * @description One per resolved logical-to-physical binding, per source and binding in
+             *     declaration order, then by table, edition and column.
+             */
+            entries: components["schemas"]["OrderEntry"][];
+            provenance: components["schemas"]["OrderProvenance"];
+            /**
+             * Format: int32
+             * @description The manifest contract version, 1.
+             */
+            version: number;
+        };
+        /**
+         * @description Which project, against which catalog, for which deployment: the manifest is
+         *     self-contained offline.
+         */
+        OrderProvenance: {
+            /** @description `catalog` or `steward`. */
+            artifact_kind: string;
+            catalog_generation_id: string;
+            catalog_schema_version: string;
+            /**
+             * @description `steward_holdings` (a steward's compiled holdings grounded the entries) or
+             *     `global_fallback` (canonical resolution alone, blank `table`).
+             */
+            mode: string;
+            /** @description SHA-256 of the project's canonical JSON. */
+            project_hash: string;
+            project_name: string;
+            project_reg_meta_version: string;
+            project_schema_version: string;
+            steward: string;
+        };
         OwningVariable: {
             fqid?: string | null;
             name?: string | null;
@@ -826,6 +964,18 @@ export interface components {
             from: number;
             /** Format: int64 */
             to: number;
+        };
+        /**
+         * @description The steward-side coordinate of an entry; in the global fallback `table` is
+         *     blank, `column` the canonical column and `edition` the requested period.
+         */
+        PhysicalCoordinate: {
+            column: string;
+            /** @description The table's edition, rendered as a period. */
+            edition: string;
+            /** @description The table's disjoint-partition label; absent when it has none. */
+            partition?: string | null;
+            table: string;
         };
         Population: {
             comment?: string | null;
@@ -1722,6 +1872,45 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Lineage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    order: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["OrderManifest"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

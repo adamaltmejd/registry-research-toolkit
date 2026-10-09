@@ -883,6 +883,115 @@
         }
       }
     },
+    "/api/project/order": {
+      "post": {
+        "description": "The order manifest of a `project_data.json` document (the JSON body; the `project` argument over MCP): per source and binding, each table and column that delivers it, clipped to where the binding is available (each clip listed), from the steward's holdings on a steward catalog and by canonical column on the global catalog. A project `validate` rejects structurally is `project_invalid`; any finding that leaves part of the request undeliverable blocks the whole order (`order_blocked`, with every finding). POST /api/project/order/manifest serves the same manifest as the exact `order.json` bytes.",
+        "operationId": "order",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "A project_data.json document"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/OrderManifest"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/project/order/manifest": {
+      "post": {
+        "description": "`order`'s manifest as the exact `order.json` bytes, an attachment.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "A project_data.json document"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The raw bytes",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/project/validate": {
       "post": {
         "description": "Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, with `ok` false when one is an error. A `schema_version` other than 3.0.0 is reported alone; then the document's structure, then each source's variant and period and each binding's variable, availability in the period (a narrower availability is an `info` clip), representation and value set, and on a steward catalog what the steward holds. An invalid project is a result, not an error.",
@@ -1896,6 +2005,30 @@
             }
           },
           "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ClipReport": {
+        "type": "object",
+        "description": "An availability clip: the binding asked for `requested_period` and is ordered\nfor `ordered_period`, where it is available.",
+        "required": [
+          "source",
+          "variable",
+          "requested_period",
+          "ordered_period"
+        ],
+        "properties": {
+          "ordered_period": {
+            "type": "string"
+          },
+          "requested_period": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "variable": {
             "type": "string"
           }
         }
@@ -3047,6 +3180,36 @@
           }
         }
       },
+      "LogicalCoordinate": {
+        "type": "object",
+        "description": "The project-side coordinate of an entry.",
+        "required": [
+          "provider",
+          "register",
+          "variant",
+          "variable",
+          "representation"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "register": {
+            "type": "string"
+          },
+          "representation": {
+            "type": "string",
+            "description": "The canonical delivery column the slice resolved to."
+          },
+          "variable": {
+            "type": "string",
+            "description": "The binding's variable FQID."
+          },
+          "variant": {
+            "type": "string"
+          }
+        }
+      },
       "Match": {
         "type": "object",
         "required": [
@@ -3210,6 +3373,114 @@
           }
         }
       },
+      "OrderEntry": {
+        "type": "object",
+        "description": "One resolved binding: what was asked for and what the steward delivers.",
+        "required": [
+          "source",
+          "logical",
+          "requested_period",
+          "physical"
+        ],
+        "properties": {
+          "logical": {
+            "$ref": "#/components/schemas/LogicalCoordinate"
+          },
+          "physical": {
+            "$ref": "#/components/schemas/PhysicalCoordinate"
+          },
+          "requested_period": {
+            "type": "string",
+            "description": "The availability-clipped period this table serves."
+          },
+          "source": {
+            "type": "string",
+            "description": "The project source's name."
+          }
+        }
+      },
+      "OrderManifest": {
+        "type": "object",
+        "description": "The order manifest: machine-written here, machine-read by the steward-side\nextract system, never hand-edited.",
+        "required": [
+          "version",
+          "provenance",
+          "entries",
+          "clips"
+        ],
+        "properties": {
+          "clips": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClipReport"
+            },
+            "description": "Every availability clip, also when nothing blocked."
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderEntry"
+            },
+            "description": "One per resolved logical-to-physical binding, per source and binding in\ndeclaration order, then by table, edition and column."
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/OrderProvenance"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The manifest contract version, 1.",
+            "minimum": 0
+          }
+        }
+      },
+      "OrderProvenance": {
+        "type": "object",
+        "description": "Which project, against which catalog, for which deployment: the manifest is\nself-contained offline.",
+        "required": [
+          "mode",
+          "steward",
+          "project_name",
+          "project_schema_version",
+          "project_reg_meta_version",
+          "project_hash",
+          "catalog_schema_version",
+          "catalog_generation_id",
+          "artifact_kind"
+        ],
+        "properties": {
+          "artifact_kind": {
+            "type": "string",
+            "description": "`catalog` or `steward`."
+          },
+          "catalog_generation_id": {
+            "type": "string"
+          },
+          "catalog_schema_version": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "description": "`steward_holdings` (a steward's compiled holdings grounded the entries) or\n`global_fallback` (canonical resolution alone, blank `table`)."
+          },
+          "project_hash": {
+            "type": "string",
+            "description": "SHA-256 of the project's canonical JSON."
+          },
+          "project_name": {
+            "type": "string"
+          },
+          "project_reg_meta_version": {
+            "type": "string"
+          },
+          "project_schema_version": {
+            "type": "string"
+          },
+          "steward": {
+            "type": "string"
+          }
+        }
+      },
       "OwningVariable": {
         "type": "object",
         "properties": {
@@ -3262,6 +3533,34 @@
           "to": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "PhysicalCoordinate": {
+        "type": "object",
+        "description": "The steward-side coordinate of an entry; in the global fallback `table` is\nblank, `column` the canonical column and `edition` the requested period.",
+        "required": [
+          "edition",
+          "table",
+          "column"
+        ],
+        "properties": {
+          "column": {
+            "type": "string"
+          },
+          "edition": {
+            "type": "string",
+            "description": "The table's edition, rendered as a period."
+          },
+          "partition": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The table's disjoint-partition label; absent when it has none."
+          },
+          "table": {
+            "type": "string"
           }
         }
       },

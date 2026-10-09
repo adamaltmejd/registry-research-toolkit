@@ -4839,21 +4839,52 @@
   },
   {
     "name": "order",
-    "description": "Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, with `ok` false when one is an error. A `schema_version` other than 3.0.0 is reported alone; then the document's structure, then each source's variant and period and each binding's variable, availability in the period (a narrower availability is an `info` clip), representation and value set, and on a steward catalog what the steward holds. An invalid project is a result, not an error.",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `validate` (project): Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, with `ok` false when one is an error. A `schema_version` other than 3.0.0 is reported alone; then the document's structure, then each source's variant and period and each binding's variable, availability in the period (a narrower availability is an `info` clip), representation and value set, and on a steward catalog what the steward holds. An invalid project is a result, not an error.\n- `order` (project): The order manifest of a `project_data.json` document (the JSON body; the `project` argument over MCP): per source and binding, each table and column that delivers it, clipped to where the binding is available (each clip listed), from the steward's holdings on a steward catalog and by canonical column on the global catalog. A project `validate` rejects structurally is `project_invalid`; any finding that leaves part of the request undeliverable blocks the whole order (`order_blocked`, with every finding). POST /api/project/order/manifest serves the same manifest as the exact `order.json` bytes.",
     "inputSchema": {
       "properties": {
+        "operation": {
+          "enum": [
+            "validate",
+            "order"
+          ],
+          "type": "string"
+        },
         "project": {
           "description": "A project_data.json document",
           "type": "object"
         }
       },
       "required": [
-        "project"
+        "operation"
       ],
       "type": "object"
     },
     "outputSchema": {
       "$defs": {
+        "ClipReport": {
+          "description": "An availability clip: the binding asked for `requested_period` and is ordered\nfor `ordered_period`, where it is available.",
+          "properties": {
+            "ordered_period": {
+              "type": "string"
+            },
+            "requested_period": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "variable": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "variable",
+            "requested_period",
+            "ordered_period"
+          ],
+          "type": "object"
+        },
         "Error": {
           "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
           "properties": {
@@ -4890,6 +4921,36 @@
           ],
           "type": "string"
         },
+        "LogicalCoordinate": {
+          "description": "The project-side coordinate of an entry.",
+          "properties": {
+            "provider": {
+              "type": "string"
+            },
+            "register": {
+              "type": "string"
+            },
+            "representation": {
+              "description": "The canonical delivery column the slice resolved to.",
+              "type": "string"
+            },
+            "variable": {
+              "description": "The binding's variable FQID.",
+              "type": "string"
+            },
+            "variant": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "provider",
+            "register",
+            "variant",
+            "variable",
+            "representation"
+          ],
+          "type": "object"
+        },
         "Meta": {
           "description": "The response `meta` (`shape.Meta`).",
           "properties": {
@@ -4907,6 +4968,142 @@
             "contract_version",
             "generation",
             "scope"
+          ],
+          "type": "object"
+        },
+        "OrderEntry": {
+          "description": "One resolved binding: what was asked for and what the steward delivers.",
+          "properties": {
+            "logical": {
+              "$ref": "#/$defs/LogicalCoordinate"
+            },
+            "physical": {
+              "$ref": "#/$defs/PhysicalCoordinate"
+            },
+            "requested_period": {
+              "description": "The availability-clipped period this table serves.",
+              "type": "string"
+            },
+            "source": {
+              "description": "The project source's name.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "logical",
+            "requested_period",
+            "physical"
+          ],
+          "type": "object"
+        },
+        "OrderManifest": {
+          "description": "The order manifest: machine-written here, machine-read by the steward-side\nextract system, never hand-edited.",
+          "properties": {
+            "clips": {
+              "description": "Every availability clip, also when nothing blocked.",
+              "items": {
+                "$ref": "#/$defs/ClipReport"
+              },
+              "type": "array"
+            },
+            "entries": {
+              "description": "One per resolved logical-to-physical binding, per source and binding in\ndeclaration order, then by table, edition and column.",
+              "items": {
+                "$ref": "#/$defs/OrderEntry"
+              },
+              "type": "array"
+            },
+            "provenance": {
+              "$ref": "#/$defs/OrderProvenance"
+            },
+            "version": {
+              "description": "The manifest contract version, 1.",
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "version",
+            "provenance",
+            "entries",
+            "clips"
+          ],
+          "type": "object"
+        },
+        "OrderProvenance": {
+          "description": "Which project, against which catalog, for which deployment: the manifest is\nself-contained offline.",
+          "properties": {
+            "artifact_kind": {
+              "description": "`catalog` or `steward`.",
+              "type": "string"
+            },
+            "catalog_generation_id": {
+              "type": "string"
+            },
+            "catalog_schema_version": {
+              "type": "string"
+            },
+            "mode": {
+              "description": "`steward_holdings` (a steward's compiled holdings grounded the entries) or\n`global_fallback` (canonical resolution alone, blank `table`).",
+              "type": "string"
+            },
+            "project_hash": {
+              "description": "SHA-256 of the project's canonical JSON.",
+              "type": "string"
+            },
+            "project_name": {
+              "type": "string"
+            },
+            "project_reg_meta_version": {
+              "type": "string"
+            },
+            "project_schema_version": {
+              "type": "string"
+            },
+            "steward": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode",
+            "steward",
+            "project_name",
+            "project_schema_version",
+            "project_reg_meta_version",
+            "project_hash",
+            "catalog_schema_version",
+            "catalog_generation_id",
+            "artifact_kind"
+          ],
+          "type": "object"
+        },
+        "PhysicalCoordinate": {
+          "description": "The steward-side coordinate of an entry; in the global fallback `table` is\nblank, `column` the canonical column and `edition` the requested period.",
+          "properties": {
+            "column": {
+              "type": "string"
+            },
+            "edition": {
+              "description": "The table's edition, rendered as a period.",
+              "type": "string"
+            },
+            "partition": {
+              "description": "The table's disjoint-partition label; absent when it has none.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "table": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "edition",
+            "table",
+            "column"
           ],
           "type": "object"
         },
@@ -4978,6 +5175,21 @@
           "properties": {
             "data": {
               "$ref": "#/$defs/Validation"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/OrderManifest"
             },
             "meta": {
               "$ref": "#/$defs/Meta"

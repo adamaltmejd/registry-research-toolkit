@@ -315,6 +315,18 @@ pub fn next_iso_day(s: &str) -> String {
     }
 }
 
+/// The day before an ISO date, snapped first ([`snap_month_end`]); an unreadable
+/// date is returned as is. Today's `reg_meta.order._prev_day`.
+#[must_use]
+pub fn prev_iso_day(s: &str) -> String {
+    match iso_date(&snap_month_end(s)) {
+        None => s.to_owned(),
+        Some((y, 1, 1)) => iso((y.saturating_sub(1), 12, 31)),
+        Some((y, m, 1)) => iso((y, m - 1, last_day(y, m - 1))),
+        Some((y, m, d)) => iso((y, m, d - 1)),
+    }
+}
+
 /// An ISO date past its month's end (a stored, synthesized non-leap `YYYY-02-29`) as
 /// that month's last day; any other string as is. Today's
 /// `reg_meta.fqid.snap_to_real_month_end`.
