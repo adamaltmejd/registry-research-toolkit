@@ -8,5 +8,13 @@
       "/error/code": "stale_cursor",
       "/error/fields/generation": "ddb5499577608df94f55c96792b7c39f79b08849977b5c6e95057d82e1fd1005"
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/example/second"
+      ]
+    }
   }
 ]

@@ -27,6 +27,26 @@
         "type": "variable",
         "scope": "reference"
       }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "scope": "holdings",
+        "limit": 1
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "scope": "reference",
+        "limit": 1
+      }
     }
   ]
 }

@@ -1,0 +1,13 @@
+{
+  "fixture": "reader/concept-group-cli",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Lönesumma"
+      }
+    }
+  ]
+}

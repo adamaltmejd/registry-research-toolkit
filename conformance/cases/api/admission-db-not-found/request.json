@@ -1,0 +1,12 @@
+{
+  "serve": {
+    "catalog": "global",
+    "db": "absent"
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

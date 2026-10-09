@@ -1,0 +1,14 @@
+{
+  "fixture": "reader/case-twins",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "value",
+        "type": "variable",
+        "period": "2019"
+      }
+    }
+  ]
+}

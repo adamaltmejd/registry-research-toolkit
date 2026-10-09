@@ -1,0 +1,18 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/example/value"
+      ],
+      "/data/items/*/name": [
+        "Neutral"
+      ],
+      "/data/items/*/delivery_column_names": [
+        [
+          "Value"
+        ]
+      ]
+    }
+  }
+]

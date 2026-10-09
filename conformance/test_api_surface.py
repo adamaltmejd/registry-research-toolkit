@@ -114,8 +114,8 @@ def _is_reg_meta(module: str) -> bool:
 def _discover_imports() -> dict[str, set[str]]:
     """Map each imported `reg_meta` name to its consumer roots.
 
-    `from M import N` is `M.N`; `import M` is `M`; so `from reg_meta import queries`
-    and `import reg_meta.queries` are one row.
+    `from M import N` is `M.N`; `import M` is `M`; so importing `queries` from
+    `reg_meta` and importing the module `reg_meta.queries` are one row.
     """
     found: dict[str, set[str]] = {}
     for path in _consumer_files():

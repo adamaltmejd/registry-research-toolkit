@@ -1,0 +1,16 @@
+{
+  "fixture": "reader",
+  "kind": "catalog",
+  "serve": {
+    "catalog": "global"
+  },
+  "manifest": {
+    "catalog_artifact_kind": ""
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}
