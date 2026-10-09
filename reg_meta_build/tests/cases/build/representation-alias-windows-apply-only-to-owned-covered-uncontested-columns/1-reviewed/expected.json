@@ -1,0 +1,94 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "case_id", "valid_from", "valid_to"],
+      "rows": [
+        ["unowned_alias_window", "curation/registers/scb/searched.toml#/representation.alias_window/1", "2019-01-01", "2019-12-31"],
+        ["unsupported_alias_window", "curation/registers/scb/gap.toml#/representation.alias_window/1", "2019-01-01", "2019-12-31"],
+        ["conflicting_alias_window_owner", "curation/registers/scb/contested.toml#/representation.alias_window/1", "2019-01-01", "2019-12-31"],
+        ["conflicting_alias_window_decisions", "curation/registers/scb/compete.toml#/representation.alias_window/1", "2019-01-01", "2019-12-31"],
+        ["conflicting_alias_window_decisions", "curation/registers/scb/compete.toml#/representation.alias_window/2", "2019-01-01", "2019-12-31"],
+        ["stale_curation_entry", "curation/registers/scb/stale.toml#/representation.alias_window/1", null, null],
+        ["overbroad_curation_entry", "curation/registers/scb/twice.toml#/representation.alias_window/1", null, null]
+      ],
+      "note": "OWNED and PARALLEL report no error. Each refused window names its own bounds; COMPETE's two entries are withheld on the 2019 overlap only."
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
+      "fields": ["code", "locator"],
+      "rows": [
+        ["stale_curation_entry", "curation/registers/scb/stale.toml#/representation.alias_window/1"],
+        ["overbroad_curation_entry", "curation/registers/scb/twice.toml#/representation.alias_window/1"]
+      ],
+      "note": "The compile refusals locate the entry."
+    },
+    {
+      "table": "alias_windows",
+      "fields": ["register", "variable", "variant", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["owned", "value", "people", "OLD", "2019-01-01", "2020-12-31"],
+        ["compete", "first", "people", "X", "2018-01-01", "2018-12-31"],
+        ["compete", "second", "people", "X", "2020-01-01", "2020-12-31"],
+        ["parallel", "income", "people", "First", "2020-01-01", "2020-12-31"],
+        ["parallel", "income", "people", "first", "2020-01-01", "2020-12-31"]
+      ],
+      "note": "SEARCHED, GAP, CONTESTED, STALE and TWICE publish no window."
+    },
+    {
+      "table": "alias_windows",
+      "where": {"provenance": {"contains": "curation/registers/scb/owned.toml#/representation.alias_window/1"}},
+      "fields": ["register", "column", "valid_from"],
+      "rows": [
+        ["owned", "OLD", "2019-01-01"]
+      ],
+      "note": "A curated window carries its entry's attribution, which the reader reads as an additive representation."
+    },
+    {
+      "table": "alias_windows",
+      "where": {"register": "parallel"},
+      "fields": ["column", "provenance"],
+      "rows": [
+        ["First", null],
+        ["first", null]
+      ],
+      "note": "A source-derived window has no provenance (db.py, variable_alias_window)."
+    },
+    {
+      "table": "states",
+      "where": {"register": ["owned", "gap"]},
+      "fields": ["register", "variable", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["owned", "value", "OLD", "2018-01-01", "2018-12-31"],
+        ["owned", "value", "NEW", "2019-01-01", "2019-12-31"],
+        ["owned", "value", "NEW", "2020-01-01", "2020-12-31"],
+        ["owned", "later", "OLD", "2021-01-01", "2021-12-31"],
+        ["gap", "value", "OLD", "2018-01-01", "2018-12-31"],
+        ["gap", "value", "NEW", "2019-07-01", "2019-12-31"]
+      ],
+      "note": "One state per delivered row: the OWNED window adds no availability. GAP's autumn-term edition starts in July."
+    },
+    {
+      "table": "aliases",
+      "where": {"register": "searched"},
+      "fields": ["variable", "column"],
+      "rows": [
+        ["value", "NEW"],
+        ["value", "OLD"]
+      ],
+      "note": "The search alias OLD is published; its refused window is not."
+    },
+    {
+      "table": "cases",
+      "where": {"case_id": "curation/registers/scb/parallel.toml#/enrichment.alias/1"},
+      "fields": ["status"],
+      "rows": [
+        ["applicable"]
+      ],
+      "note": "PARALLEL's search alias is evaluated and applied beside the existing window."
+    }
+  ]
+}

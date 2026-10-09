@@ -1,0 +1,24 @@
+[register]
+provider = "scb"
+slug = "searched"
+native_id = "32"
+[[variant]]
+native_id = "32.320"
+slug = "people"
+[[variable]]
+native_id = "32.5"
+slug = "value"
+
+[[enrichment.alias]]
+register = "scb/searched"
+variable = "value"
+delivery_column = "OLD"
+provenance = "delivery list"
+
+[[representation.alias_window]]
+variable = "scb/searched/value"
+variant = "people"
+column = "OLD"
+source_editions = ["2019"]
+evidence = "The 2019 analysis table holds OLD."
+noted = "2026-10-09"

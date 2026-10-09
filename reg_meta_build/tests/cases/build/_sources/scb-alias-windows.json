@@ -1,0 +1,29 @@
+{
+  "description": "One SCB delivery of eight registers (variant id register id * 10), one per alias-window claim. OWNED (31): variable 5 delivers OLD in 2018 (CVID 3101) and NEW in 2019 (CVID 3102, length 1) and 2020 (CVID 3103, length 2); variable 6 delivers OLD in 2021 (CVID 3104). SEARCHED (32): variable 5 delivers NEW in 2019 (CVID 3201); no variable delivers OLD. GAP (33): variable 5 delivers OLD in 2018 (CVID 3301) and NEW in edition 'Höstterminen 2019' (CVID 3302). CONTESTED (34): variable 5 delivers OLD in 2018 (CVID 3401) and NEW in 2019 (CVID 3402); variable 6 delivers OLD in 2019 (CVID 3403). COMPETE (35): variable 5 delivers X in 2017 (CVID 3501) and Y in 2018 and 2019 (CVIDs 3502, 3503); variable 6 delivers X in 2016 (CVID 3504) and Z in 2019 and 2020 (CVIDs 3505, 3506). PARALLEL (36): variable 5 delivers the case-equivalent literals First and first as two members of one 2020 edition (CVIDs 3601, 3602). STALE (37): variable 5 delivers NEW in 2019 (CVID 3701). TWICE (38): variable 5 delivers OLD in 2018 (CVID 3801) and NEW twice in 2019, as two members (CVIDs 3802, 3803).",
+  "scb": {
+    "registerinformation": [
+      {"colname": "OLD", "cvid": 3101, "var_id": 5, "year": "2018", "regver_id": 2018, "register": ["OWNED", 31, 310]},
+      {"colname": "NEW", "cvid": 3102, "var_id": 5, "year": "2019", "regver_id": 2019, "register": ["OWNED", 31, 310]},
+      {"colname": "NEW", "cvid": 3103, "var_id": 5, "year": "2020", "regver_id": 2020, "data_length": "2", "register": ["OWNED", 31, 310]},
+      {"colname": "OLD", "cvid": 3104, "var_id": 6, "year": "2021", "regver_id": 2021, "register": ["OWNED", 31, 310]},
+      {"colname": "NEW", "cvid": 3201, "var_id": 5, "year": "2019", "regver_id": 2019, "register": ["SEARCHED", 32, 320]},
+      {"colname": "OLD", "cvid": 3301, "var_id": 5, "year": "2018", "regver_id": 2018, "register": ["GAP", 33, 330]},
+      {"colname": "NEW", "cvid": 3302, "var_id": 5, "year": "2019", "versionname": "Höstterminen 2019", "regver_id": 2019, "register": ["GAP", 33, 330]},
+      {"colname": "OLD", "cvid": 3401, "var_id": 5, "year": "2018", "regver_id": 2018, "register": ["CONTESTED", 34, 340]},
+      {"colname": "NEW", "cvid": 3402, "var_id": 5, "year": "2019", "regver_id": 2019, "register": ["CONTESTED", 34, 340]},
+      {"colname": "OLD", "cvid": 3403, "var_id": 6, "year": "2019", "regver_id": 2019, "register": ["CONTESTED", 34, 340]},
+      {"colname": "X", "cvid": 3501, "var_id": 5, "year": "2017", "regver_id": 2017, "register": ["COMPETE", 35, 350]},
+      {"colname": "Y", "cvid": 3502, "var_id": 5, "year": "2018", "regver_id": 2018, "register": ["COMPETE", 35, 350]},
+      {"colname": "Y", "cvid": 3503, "var_id": 5, "year": "2019", "regver_id": 2019, "register": ["COMPETE", 35, 350]},
+      {"colname": "X", "cvid": 3504, "var_id": 6, "year": "2016", "regver_id": 2016, "register": ["COMPETE", 35, 350]},
+      {"colname": "Z", "cvid": 3505, "var_id": 6, "year": "2019", "regver_id": 2019, "register": ["COMPETE", 35, 350]},
+      {"colname": "Z", "cvid": 3506, "var_id": 6, "year": "2020", "regver_id": 2020, "register": ["COMPETE", 35, 350]},
+      {"colname": "First", "cvid": 3601, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["PARALLEL", 36, 360]},
+      {"colname": "first", "cvid": 3602, "var_id": 5, "year": "2020", "regver_id": 2020, "register": ["PARALLEL", 36, 360]},
+      {"colname": "NEW", "cvid": 3701, "var_id": 5, "year": "2019", "regver_id": 2019, "register": ["STALE", 37, 370]},
+      {"colname": "OLD", "cvid": 3801, "var_id": 5, "year": "2018", "regver_id": 2018, "register": ["TWICE", 38, 380]},
+      {"colname": "NEW", "cvid": 3802, "var_id": 5, "year": "2019", "regver_id": 2019, "register": ["TWICE", 38, 380]},
+      {"colname": "NEW", "cvid": 3803, "var_id": 5, "year": "2019", "regver_id": 2019, "register": ["TWICE", 38, 380]}
+    ]
+  }
+}

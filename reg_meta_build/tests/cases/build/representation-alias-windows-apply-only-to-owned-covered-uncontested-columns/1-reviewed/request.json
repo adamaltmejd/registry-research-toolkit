@@ -1,0 +1,15 @@
+{
+  "replaces": [
+    "test_source_effect_alias_windows.py::test_search_alias_preserves_existing_precise_windows",
+    "test_source_effect_alias_windows.py::test_alias_window_needs_owned_alias_and_does_not_expand_states",
+    "test_source_effect_alias_windows.py::test_alias_window_checks_original_ownership_and_complete_period_coverage",
+    "test_source_effect_alias_windows.py::test_alias_window_rejects_another_supported_owner_in_the_same_period",
+    "test_source_effect_alias_windows.py::test_competing_alias_window_decisions_withhold_only_their_overlap",
+    "test_alias_windows.py::test_unresolved_compiled_variable_fqid_is_stale",
+    "test_alias_windows.py::test_alias_window_uses_named_keys_and_source_edition",
+    "test_alias_windows.py::test_alias_window_with_two_record_targets_is_overbroad"
+  ],
+  "note": "One register per claim of `[[representation.alias_window]]`. A window's bounds are 1 January of its first source edition to 31 December of its last. OWNED: value owns OLD through its 2018 state, and NEW's 2019 and 2020 states (two states, since 2020's data length differs) cover the 2019-2020 window across a state boundary, so the window applies, attributed to its entry, and adds no state; later's OLD in 2021 is another owner outside the window and does not block it. SEARCHED: OLD's only owner is the `[[enrichment.alias]]` of the same build, and ownership is checked on the variables before any annotation, so the window is unowned and the search alias stays without windows. GAP: the autumn-term 2019 state leaves January to June uncovered. CONTESTED: rival delivers OLD in 2019, another supported owner in the window. COMPETE: two windows assign X to first (2018-2019) and second (2019-2020); the old test's March-April and April-May month windows become these annual editions, so only the 2019 overlap is withheld, once per entry, and each keeps its own year. PARALLEL: a search alias on first, whose 2020 window comes from `[[representation.parallel]]`, keeps that window, and a source-derived window has no provenance. STALE names a variable slug the register does not compile; TWICE's 2019 edition has two NEW members of the variable.",
+  "fails_if": "`apply_alias_cases` (source_annotations.py) checks ownership on the annotated variables instead of the originals (SEARCHED's window applies); drops the `owned`, `covered` or other-owner check (SEARCHED, GAP or CONTESTED applies); requires one state to cover a whole window or counts another owner outside the window (OWNED's window is withheld); withholds a competing window whole instead of its overlap (COMPETE loses 2018 or 2020); replaces an existing alias on a search alias instead of keeping it (PARALLEL's first loses its 2020 window); writes a window without its entry's provenance, or a state for it; or `compile_alias_windows` (curation_compile.py) stops refusing an unresolved FQID (STALE) or an edition with two targets (TWICE), or derives the bounds from anything but the source edition years",
+  "sources": "scb-alias-windows"
+}
