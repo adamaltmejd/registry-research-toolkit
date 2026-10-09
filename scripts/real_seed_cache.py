@@ -27,31 +27,39 @@ the rebuild for 6 hours): the check that the key covers every input. For a prepa
 `reg-meta-build prepare-sources` into a new directory and compare its
 `prepared_manifest_sha256` with the stored one.
 
+Both keys hash code as the working-tree content of the files git would commit:
+tracked files, uncommitted edits included, and untracked files `.gitignore` does not
+exclude (a new module the code imports), but not ignored junk (`.DS_Store`, build
+output). The native extension sources are the uv `cache-keys` of `crates/reg-core-py`
+(`keyed_cache.NATIVE_SOURCES`); since the extension is compiled, both keys also hold
+`rustc -V`, run from the repository root.
+
 Prepare key: the raw bundle commit, `catalog-bundle.json` digest and the bundle's path
 in its repository (the manifest records it); the content of every file in the code
 boundary (`prepare_code_files`: a static import walk, `uv.lock`, and the native
-extension sources because a walked module imports `reg_core_py`); the Python and
-SQLite versions. A prepare entry is an index record (prepared path and top-level
-manifest digest), not a copy of the 14 GB tree the maintainer commits to a local
-acceptance repository. A lookup runs the builder's own warm-build check
+extension sources because a walked module imports `reg_core_py`); the Python, SQLite
+and Rust toolchain versions. A prepare entry is an index record (prepared path and
+top-level manifest digest), not a copy of the 14 GB tree the maintainer commits to a
+local acceptance repository. A lookup runs the builder's own warm-build check
 (`open_prepared_catalog_sources`) against that repository's current HEAD; a hit
 returns HEAD as the acceptance commit. A tree not yet committed at HEAD, with its
 payload inventory complete, is reported as awaiting acceptance, without a rerun. Any
 other failed check drops the record and misses.
 
-Build key: the content of `reg_meta_build/src`, `reg_schema/src`,
-`crates/reg-core`, `crates/reg-core-py`, `Cargo.toml`, `Cargo.lock` and `uv.lock`; the
-builder's own `curation_tree_sha256` of the selected curation tree; the prepared
-commit and manifest digest; the mode and `--registers`; the Python and SQLite
-versions; and for a publishable build the checkout's HEAD, which the database records.
+Build key: the content of `reg_meta_build/src`, `uv.lock` and the native extension
+sources; the builder's own `curation_tree_sha256` of the selected curation tree; the
+prepared commit and manifest digest; the mode and the `--registers` scopes as a sorted
+set (the builder selects by set); the Python, SQLite and Rust toolchain versions; and
+for a publishable build the checkout's HEAD, which the database records.
 Every build lookup, hit or miss, first runs the admission checks the builder runs
 before it resolves anything (the prepared tree at the pinned commit and, for a
 publishable build, a clean builder checkout at the keyed commit); a failure exits 10
-with the builder's error code instead of returning the entry. A build entry holds the
-report directory and the database; the report's path fields are rewritten to the
-entry's location when it is stored. A hit checks the database's and the ledger's
-sizes (not their hashes) against the entry. The `KEEP` most recently
-used entries stay, and so does any entry used within 6 hours.
+with the builder's error code instead of returning the entry; a probe that cannot
+import the builder's admission code exits 4 with `probe_environment_failed`. A build
+entry holds the report directory and the database; the report's path fields are
+rewritten to the entry's location when it is stored. A hit checks the database's and
+the ledger's sizes (not their hashes) against the entry. The `KEEP` most recently used
+entries stay, and so does any entry used within 6 hours.
 
 The cache lives in `$REG_REAL_SEED_CACHE`, else `$XDG_CACHE_HOME/reg-meta-real-seed`,
 else `~/.cache/reg-meta-real-seed`. `$REG_REAL_SEED_BUILDER` replaces the
@@ -64,6 +72,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import functools
 import gzip
 import hashlib
 import json
@@ -73,6 +82,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import tomllib
 import zlib
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -102,10 +112,9 @@ MARKER = ".real-seed-cache"
 KEEP = 2
 EXIT_CONFIG = 10  # reg-meta-build's exit for a diagnostic completion
 EXIT_AWAITING = 3
-PACKAGES = {
-    "reg_meta_build": "reg_meta_build/src",
-    "reg_schema": "reg_schema/src",
-}
+EXIT_PROBE = 4
+# The workspace packages the prepare walk follows; it refuses any other one it reaches.
+PACKAGES = {"reg_meta_build": "reg_meta_build/src"}
 # The prepare key's code boundary, as roots of a static import walk
 # (`prepare_code_files`): the preparation entry point, and the modules the CLI's
 # `prepare-sources` handler and its output-confinement check import from.
@@ -116,8 +125,7 @@ PACKAGES = {
 # `curation_tree` and `fqid_slugs` can read the curation tree, and the prepare path
 # calls none of those readers).
 #
-# Stage 4.9a of RUST_RUNTIME_SPEC.md deletes `reg_schema/`: update `PACKAGES` then;
-# a missing root stops the tool rather than shrinking the key.
+# A missing root stops the tool rather than shrinking the key.
 PREPARE_ROOTS = (
     "reg_meta_build.prepared_catalog",
     "reg_meta_build.input_snapshot",
@@ -182,6 +190,12 @@ if request.get("admit"):
             from reg_meta_build.artifact_identity import builder_commit
             if builder_commit() != admit["builder_commit"]:
                 raise ValueError("Builder revision changed during compilation")
+    except ImportError as exc:
+        # The environment, not the inputs: no admission check ran.
+        facts["probe_error"] = {
+            "code": "probe_environment_failed",
+            "message": f"{type(exc).__name__}: {exc}",
+        }
     except Exception as exc:
         facts["admission_error"] = {
             "code": getattr(exc, "code", None) or "pipeline_build_failed",
@@ -212,6 +226,20 @@ def probe(**request) -> dict:
     return facts
 
 
+def rustc_version() -> str:
+    """`rustc -V` from the repository root, which picks the toolchain that builds
+    `reg_core_py`."""
+    try:
+        return subprocess.run(
+            ["rustc", "-V"], cwd=ROOT, capture_output=True, text=True, check=True
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError) as exc:
+        sys.exit(
+            f"real-seed-cache: `rustc -V` failed ({exc}); the keys need the Rust "
+            "toolchain that builds reg_core_py on PATH"
+        )
+
+
 def git(directory: Path, *args: str) -> str:
     return subprocess.run(
         ["git", "-C", str(directory), *args],
@@ -227,12 +255,39 @@ def digest(fields: dict) -> str:
     ).hexdigest()
 
 
+def repo_files(paths) -> set[str]:
+    """The files under `paths` that git would commit and that exist on disk: tracked
+    ones and untracked ones not ignored. Repo-relative."""
+    listed = subprocess.run(
+        [
+            "git",
+            "-C",
+            str(ROOT),
+            "ls-files",
+            "-z",
+            "--cached",
+            "--others",
+            "--exclude-standard",
+            "--",
+            *paths,
+        ],
+        capture_output=True,
+        check=True,
+    ).stdout.decode()
+    return {path for path in listed.split("\0") if path and (ROOT / path).is_file()}
+
+
 def code_digests(paths) -> dict[str, str]:
-    # `tree_digest` hashes a missing tree as empty; a key must refuse it instead, so a
-    # moved or deleted source (the stage-4 moves) names the path to update.
-    if missing := [path for path in paths if not (ROOT / path).exists()]:
+    files = repo_files(paths)
+    under = {
+        path: [ROOT / f for f in files if f == path or f.startswith(f"{path}/")]
+        for path in paths
+    }
+    # An empty tree would hash as a constant; a key must refuse it instead, so a
+    # moved or deleted source names the path to update.
+    if missing := [path for path, found in under.items() if not found]:
         sys.exit(f"real-seed-cache: keyed source missing, update the key: {missing}")
-    return {path: tree_digest(ROOT / path) for path in paths}
+    return {path: tree_digest(ROOT / path, found) for path, found in under.items()}
 
 
 def emit(payload: dict) -> None:
@@ -254,9 +309,31 @@ def write_json(path: Path, payload: dict) -> None:
 # -- the prepare code boundary ---------------------------------------------------
 
 
+@functools.cache
+def workspace_packages() -> frozenset[str]:
+    """The top-level modules in the `src/` of each uv workspace member."""
+    members = tomllib.loads((ROOT / "pyproject.toml").read_text())["tool"]["uv"][
+        "workspace"
+    ]["members"]
+    return frozenset(
+        path.name.removesuffix(".py")
+        for member in members
+        if (ROOT / member / "src").is_dir()
+        for path in (ROOT / member / "src").iterdir()
+        if path.is_dir() or path.suffix == ".py"
+    )
+
+
 def _module_file(module: str) -> Path | None:
+    """The workspace file of `module`, or None for a stdlib or third-party module
+    (`uv.lock` and the runtime versions key those)."""
     top = module.split(".")[0]
     if top not in PACKAGES:
+        if top in workspace_packages():
+            sys.exit(
+                f"real-seed-cache: the prepare walk reaches {module}, in workspace "
+                f"package {top} that PACKAGES does not key; add it"
+            )
         return None
     base = ROOT / PACKAGES[top] / Path(*module.split("."))
     if (base / "__init__.py").is_file():
@@ -337,12 +414,12 @@ def prepare_code_files() -> list[str]:
             native |= any(t.split(".")[0] == "reg_core_py" for t in targets)
             pending += targets
     files = {path.relative_to(ROOT).as_posix() for path in seen.values()}
-    for directory in {path.parent for path in seen.values()}:
-        files.update(
-            p.relative_to(ROOT).as_posix()
-            for p in directory.iterdir()
-            if p.is_file() and p.suffix not in {".py", ".pyc"}
-        )
+    directories = {path.parent.relative_to(ROOT).as_posix() for path in seen.values()}
+    files.update(
+        path
+        for path in repo_files(directories)
+        if path.rpartition("/")[0] in directories and not path.endswith(".py")
+    )
     files.update(PREPARE_ENTRY_FILES)
     files.add("uv.lock")
     if native:
@@ -360,7 +437,7 @@ def prepare_fields(args: argparse.Namespace) -> dict:
         "bundle_manifest_sha256": args.input_manifest_sha256,
         "bundle_path": git(Path(args.input_bundle), "rev-parse", "--show-prefix"),
         "code": code_digests(prepare_code_files()),
-        "runtime": probe(),
+        "runtime": {**probe(), "rustc": rustc_version()},
     }
 
 
@@ -525,8 +602,7 @@ def build_code(args: argparse.Namespace) -> dict:
     """The builder code a build runs. A publishable build also records the
     checkout's commit in the database, so that commit is keyed too."""
     return {
-        # `reg_schema/src` goes with stage 4.9a; drop it here then.
-        "code": code_digests((*BUILDER_SOURCES, PACKAGES["reg_schema"])),
+        "code": code_digests(BUILDER_SOURCES),
         "builder_commit": (
             git(ROOT, "rev-parse", "HEAD")
             if not args.diagnostic and not args.registers
@@ -550,18 +626,21 @@ def build_fields(args: argparse.Namespace) -> dict:
             "builder_commit": code["builder_commit"],
         },
     )
+    if error := facts.pop("probe_error", None):
+        emit({"hit": False, "error": error})
+        sys.exit(EXIT_PROBE)
     if error := facts.pop("admission_error", None):
         emit({"hit": False, "error": error})
         sys.exit(EXIT_CONFIG)
     return {
         "step": "build",
         "mode": "diagnostic" if args.diagnostic else "strict",
-        "registers": args.registers.split(",") if args.registers else [],
+        "registers": sorted(set(args.registers.split(","))) if args.registers else [],
         "prepared_commit": args.input_commit,
         "prepared_manifest_sha256": args.input_manifest_sha256,
         **code,
         "curation_tree_sha256": facts.pop("curation_tree_sha256"),
-        "runtime": facts,
+        "runtime": {**facts, "rustc": rustc_version()},
     }
 
 
