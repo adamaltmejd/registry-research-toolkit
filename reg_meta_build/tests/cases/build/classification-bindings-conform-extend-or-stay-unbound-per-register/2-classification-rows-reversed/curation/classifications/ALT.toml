@@ -1,0 +1,9 @@
+[classification]
+short_name = "ALT"
+slug = "alt"
+name = "ALT"
+codes_file = "alt.csv"
+[binding]
+value_set_labels = ["Beta", "Middle"]
+[[binding.variable]]
+variable = "scb/ovr/ovr"

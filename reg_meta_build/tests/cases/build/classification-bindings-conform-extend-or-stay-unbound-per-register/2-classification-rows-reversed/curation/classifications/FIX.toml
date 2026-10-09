@@ -1,0 +1,9 @@
+[classification]
+short_name = "FIX"
+slug = "fix"
+name = "FIX"
+codes_file = "fix.csv"
+[binding]
+value_set_labels = ["LKF 1998", "First", "Second", "Alpha", "Span"]
+[[binding.variable]]
+variable = "scb/canon/outcol"

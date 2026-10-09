@@ -1,6 +1,5 @@
 {
   "status": "diagnostic_complete",
-  "rebuilt_identical": true,
   "projections": [
     {
       "table": "state_classifications",
@@ -263,11 +262,11 @@
     {
       "table": "issues",
       "where": {"code": "conflicting_classification_labels"},
-      "fields": ["severity", "subject"],
+      "fields": ["severity", "subject", "detail"],
       "rows": [
-        ["error", "cnf"]
+        ["error", "cnf", "Canonical code '1' has labels ['Competing', 'First']; no member was selected."]
       ],
-      "note": "The two refs above belong to one issue on book CNF (`conflict.refs` in the replaced test), not one issue per competing row."
+      "note": "The two refs above belong to one issue on book CNF (`conflict.refs` in the replaced test), not one issue per competing row. Its evidence names both labels of code 1 in sorted order, whatever order cnf.csv delivers them in."
     }
   ]
 }

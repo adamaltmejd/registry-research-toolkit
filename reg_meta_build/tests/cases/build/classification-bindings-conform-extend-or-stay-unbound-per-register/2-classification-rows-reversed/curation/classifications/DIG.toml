@@ -1,0 +1,5 @@
+[classification]
+short_name = "DIG"
+slug = "dig"
+name = "DIG"
+codes_file = "dig.csv"

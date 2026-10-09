@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_source_value_bindings.py::test_item_validity_set_aside_is_independent_of_association_order"
+  ],
+  "note": "Step 1's sources and curation with the Vardemangder associations of each set-aside member reversed (setaside, partial, pooledaside, asideunk, collide); the curation is authored from step 1's sources. Row order inside a source reaches the build: prepare keeps each association's ordinal (prepared_values.py), and the bind canonicalizes a set-aside list by locator (source_value_bindings.py:609-611). The expected projections are step 1's, copied.",
+  "fails_if": "`ValueBindingSession.bind` (source_value_bindings.py) lets the first Vardemangder association of a list decide the item-validity set-aside, or stops sorting the set-aside associations and members, so the reversed rows change a set-aside register's value set or its warnings",
+  "sources": "scb-value-bindings-associations-reversed",
+  "authored_from": "scb-value-bindings"
+}

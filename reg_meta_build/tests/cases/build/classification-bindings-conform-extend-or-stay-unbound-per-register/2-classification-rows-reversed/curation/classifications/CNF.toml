@@ -1,0 +1,5 @@
+[classification]
+short_name = "CNF"
+slug = "cnf"
+name = "CNF"
+codes_file = "cnf.csv"

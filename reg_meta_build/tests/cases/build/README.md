@@ -234,8 +234,11 @@ Every key is optional, and only the keys that are present get checked.
   build and an interpreter start, so one case per compile surface with no other
   byte-identity witness carries it: `coding-entries-apply-or-go-stale-per-register` for
   `[[coding.*]]`, and
-  `classification-bindings-conform-extend-or-stay-unbound-per-register` for
-  classification bindings and their conformance.
+  `classification-bindings-conform-extend-or-stay-unbound-per-register` (step 1) for
+  classification bindings and their conformance. A rebuild reruns the same rows; source
+  row order is a separate property, shown by a later step that builds the relevant rows
+  reversed and expects the first step's projections (that case's step 2, and
+  `value-native-lists-bind-set-aside-or-withhold-per-register` step 2).
 - `error`: the build or check must refuse. Only the keys present are compared:
   - `code` and `exit_code` are the located error the `build-db` and `check-curation`
     commands report. A `RegMetaError` keeps its own; a `ValueError`, `OSError` or
