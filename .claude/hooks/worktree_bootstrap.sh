@@ -137,7 +137,9 @@ provision() { # $1 = root; synchronous; idempotent; stamps the fingerprint on su
 	local root=$1
 	if ! venv_ok "$root"; then
 		if command -v uv >/dev/null 2>&1; then
-			if (cd "$root" && uv sync --frozen) >/dev/null 2>&1; then
+			# An inherited UV_PROJECT_ENVIRONMENT would sync this checkout into
+			# another checkout's .venv (#1337); always target $root/.venv.
+			if (cd "$root" && env -u UV_PROJECT_ENVIRONMENT uv sync --frozen) >/dev/null 2>&1; then
 				fingerprint "$root/uv.lock" >"$root/$VENV_MARKER"
 			else
 				echo "worktree_bootstrap: 'uv sync --frozen' failed in $root" >&2
