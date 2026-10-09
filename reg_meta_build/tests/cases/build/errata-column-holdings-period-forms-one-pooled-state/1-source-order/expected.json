@@ -45,18 +45,23 @@
     {
       "table": "issue_refs",
       "where": {
-        "code": "unsupported_occurrence",
         "subject": "scb/sample/undated"
       },
       "fields": [
-        "code"
+        "code",
+        "ref"
       ],
       "rows": [
         [
-          "unsupported_occurrence"
+          "no_supported_states",
+          "scb-registerinformation#register:1/variant:2/edition:2020/variable:5/member:20"
+        ],
+        [
+          "unsupported_occurrence",
+          "scb-registerinformation#register:1/variant:2/edition:2020/variable:5/member:20"
         ]
       ],
-      "note": "the undated declaration cites exactly one delivered record of its variant; which one is not part of the contract (it follows source row order today)"
+      "note": "each issue of the undated declaration cites exactly one delivered record of its variant: the least ref in the canonical ref order (refs sort by their string form, as every ref list in scb_errata.py does). Both refs share source, register and variant, so `edition:2020` < `edition:2021` decides: CVID 20, whatever the row order (step 2)"
     },
     {
       "table": "issues",

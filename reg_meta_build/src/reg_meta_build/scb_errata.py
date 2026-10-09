@@ -1195,7 +1195,9 @@ def convert_column_entry(
     if entry.versions is None:
         # This member establishes the native variant coordinate only. It says
         # nothing about when the independently declared column was delivered.
-        references.add(record_ref(records[0]))
+        # The least ref, not the first row: delivery row order must not move the
+        # anchor, its peer guard or the refs its issues cite.
+        references.add(min((record_ref(record) for record in records), key=str))
     anchors = context.records_for_refs(references)
     expected = capture_expectations(anchors, fields=("availability",))
     guards = [

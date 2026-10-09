@@ -238,8 +238,9 @@ Every key is optional, and only the keys that are present get checked.
   `classification-bindings-conform-extend-or-stay-unbound-per-register` (step 1) for
   classification bindings and their conformance. A rebuild reruns the same rows; source
   row order is a separate property, shown by a later step that builds the relevant rows
-  reversed and expects the first step's projections (that case's step 2, and
-  `value-native-lists-bind-set-aside-or-withhold-per-register` step 2).
+  reversed and expects the first step's projections (that case's step 2,
+  `value-native-lists-bind-set-aside-or-withhold-per-register` step 2, and
+  `errata-column-holdings-period-forms-one-pooled-state` step 2).
 - `error`: the build or check must refuse. Only the keys present are compared:
   - `code` and `exit_code` are the located error the `build-db` and `check-curation`
     commands report. A `RegMetaError` keeps its own; a `ValueError`, `OSError` or
