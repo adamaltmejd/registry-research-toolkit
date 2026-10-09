@@ -1,5 +1,5 @@
 {
-  "description": "One SCB register per coding claim, VALUE (var 5) in each. Competing lists narrow/keeper (CHOICE 11, REPEAT 12; ALTERNATIVES 28 delivers its member by two physical rows, data_length blank and 10); 2021 lists copied to an unlisted 2020 (EXTEND 13 'keeper', UNLABELLED 14 with no list name); blank-labelled token 1 (ROWS 15, ROWSADDED 16, ROWSKEEP 17); 99 Unknown beside 01 Category for books FIX/FIX2 (SENTINEL 18; SUBSTANTIVE 19 with 2019's 99 'Substantive industry'); unlisted 2020 beside a 2021 list or with its own list (PDF 20, PDFCOMPLETE 21, PDFNOWINDOW 22, PDFCONFLICT 23); a numbered definition with a Tal marker (MARKER 25, MARKERPARTIAL 26, MARKERLATER 27 with a 2021 list); 2019 'Sector' with 14 Landsting/Region and 1968 'Old sector' (LABELS 29); 2016/2017 'Status' lists with 30 Matrix/Model imputation (WITNESS 30-33) or a 2020 list agreeing or not (CONTRARY 34-36); bare LEG/SPEC named by 'Kategori LEG = legitimation eller SPEC = specialitet' (ALPHA 37); 16310 Pachygyria, 16320 Microgyria, 16310 Erroneous (SUPPORT 38). DOCVALID 41 and DOCKEEP 42 each deliver 1 One whose item has two VardemangderValidDates rows: an unknown one (`bad|bad`) and 2000-01-01..2030-12-31, so the item's validity is unknown in 2020 whatever the second row says.",
+  "description": "One SCB register per coding claim, VALUE (var 5) in each. Competing lists narrow/keeper (CHOICE 11, REPEAT 12; ALTERNATIVES 28 delivers its member by two physical rows, data_length blank and 10); 2021 lists copied to an unlisted 2020 (EXTEND 13 'keeper', UNLABELLED 14 with no list name); blank-labelled token 1 (ROWS 15, ROWSADDED 16, ROWSKEEP 17); 99 Unknown beside 01 Category for books FIX/FIX2 (SENTINEL 18; SUBSTANTIVE 19 with 2019's 99 'Substantive industry'); unlisted 2020 beside a 2021 list or with its own list (PDF 20, PDFCOMPLETE 21, PDFNOWINDOW 22, PDFCONFLICT 23); a numbered definition with a Tal marker (MARKER 25, MARKERPARTIAL 26, MARKERLATER 27 with a 2021 list); 2019 'Sector' with 14 Landsting/Region and 1968 'Old sector' (LABELS 29); 2016/2017 'Status' lists with 30 Matrix/Model imputation (WITNESS 30-33) or a 2020 list agreeing or not (CONTRARY 34-36); bare LEG/SPEC named by 'Kategori LEG = legitimation eller SPEC = specialitet' (ALPHA 37); 16310 Pachygyria, 16320 Microgyria, 16310 Erroneous (SUPPORT 38). DOCVALID 41 and DOCKEEP 42 each deliver 1 One whose item has two VardemangderValidDates rows: an unknown one (`bad|bad`) and 2000-01-01..2030-12-31, so the item's validity is unknown in 2020 whatever the second row says. WARNING 43 delivers VALUE in 2020 (CVID 4300, int) with list `list` 1 One.",
   "scb": {
     "registerinformation": [
       {
@@ -643,6 +643,18 @@
           42,
           2
         ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 4300,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 432020,
+        "register": [
+          "WARNING",
+          43,
+          2
+        ]
       }
     ],
     "vardemangder": [
@@ -726,7 +738,8 @@
       "complete|1|16310|Erroneous|3800|3813",
       "binary|1|1|Label|4000|4011",
       "doc|1|1|One|4100|4111",
-      "doc|1|1|One|4200|4211"
+      "doc|1|1|One|4200|4211",
+      "list|1|1|One|4300|4301"
     ],
     "valid_dates": [
       "1101|2000-01-01|2030-12-31",
@@ -811,7 +824,8 @@
       "4111|bad|bad",
       "4111|2000-01-01|2030-12-31",
       "4211|bad|bad",
-      "4211|2000-01-01|2030-12-31"
+      "4211|2000-01-01|2030-12-31",
+      "4301|2000-01-01|2030-12-31"
     ]
   },
   "files": {

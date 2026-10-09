@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "warning"
+native_id = "43"
+[[variant]]
+native_id = "43.2"
+slug = "people"
+[[variable]]
+native_id = "43.5"
+slug = "value"
+
+[[coding.warning]]
+variable = "43.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+fields = ["data_type", "coding"]
+data_warning = "Conflict"
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:4300}}
+reason = "Retain both"
+source = "Source rows"

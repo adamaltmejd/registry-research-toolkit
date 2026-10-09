@@ -1,5 +1,5 @@
 {
-  "description": "scb-coding-authority-reviewed with code lists drifted per register (Registerinformation unchanged): CHOICE's kept 1 relabelled 'Changed'; REPEAT's kept 1 gains a second row; EXTEND's 2021 item 1 valid only from 2021-05-01; LABELS' 'Region' becomes 'Different'; SUPPORT's 'Pachygyria' becomes 'Changed'; ROWS gains token 2; MARKER's Tal row text changes; MARKERLATER's 2020 Tal row becomes list 'new'; book FIX gains 99; SUBSTANTIVE's 2020 99 becomes 'Not stated'. New rows take item ids 9001-9002, so no other row moves. DOCVALID 41 and DOCKEEP 42 each deliver 1 One whose item has two VardemangderValidDates rows: an unknown one (`bad|bad`) and 2000-01-01..2030-12-31, so the item's validity is unknown in 2020 whatever the second row says. Drifted: DOCVALID's known row starts 2001-01-01 (its validity is still unknown); DOCKEEP is unchanged.",
+  "description": "scb-coding-authority-reviewed with code lists drifted per register (Registerinformation unchanged): CHOICE's kept 1 relabelled 'Changed'; REPEAT's kept 1 gains a second row; EXTEND's 2021 item 1 valid only from 2021-05-01; LABELS' 'Region' becomes 'Different'; SUPPORT's 'Pachygyria' becomes 'Changed'; ROWS gains token 2; MARKER's Tal row text changes; MARKERLATER's 2020 Tal row becomes list 'new'; book FIX gains 99; SUBSTANTIVE's 2020 99 becomes 'Not stated'. New rows take item ids 9001-9002, so no other row moves. DOCVALID 41 and DOCKEEP 42 each deliver 1 One whose item has two VardemangderValidDates rows: an unknown one (`bad|bad`) and 2000-01-01..2030-12-31, so the item's validity is unknown in 2020 whatever the second row says. Drifted: DOCVALID's known row starts 2001-01-01 (its validity is still unknown); DOCKEEP is unchanged. WARNING 43's 1 One is relabelled 'Changed'.",
   "scb": {
     "registerinformation": [
       {
@@ -643,6 +643,18 @@
           42,
           2
         ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 4300,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 432020,
+        "register": [
+          "WARNING",
+          43,
+          2
+        ]
       }
     ],
     "vardemangder": [
@@ -728,7 +740,8 @@
       "keeper|1|1|Label|1200|9001",
       "source|1|2||1500|9002",
       "doc|1|1|One|4100|4111",
-      "doc|1|1|One|4200|4211"
+      "doc|1|1|One|4200|4211",
+      "list|1|1|Changed|4300|4301"
     ],
     "valid_dates": [
       "1101|2000-01-01|2030-12-31",
@@ -815,7 +828,8 @@
       "4111|bad|bad",
       "4111|2001-01-01|2030-12-31",
       "4211|bad|bad",
-      "4211|2000-01-01|2030-12-31"
+      "4211|2000-01-01|2030-12-31",
+      "4301|2000-01-01|2030-12-31"
     ]
   },
   "files": {

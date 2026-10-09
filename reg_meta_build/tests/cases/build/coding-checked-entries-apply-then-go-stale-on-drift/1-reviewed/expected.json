@@ -453,6 +453,13 @@
           "2020-12-31",
           null,
           null
+        ],
+        [
+          "warning",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "One"
         ]
       ],
       "note": "Each 2020 state carries the replaced test's selected members, or the null row where its entry is stale. A sentinel keeps the source list on both halves of its split. docvalid and dockeep carry their documented 1 One over a list whose item validity is unknown."
@@ -662,6 +669,32 @@
         ]
       ],
       "note": "A documented state's provenance names the PDF, its digest and page; pdfconflict's non-overlapping first half keeps its first entry's. The filter matches the entries' own authored URL, digest and page, not generated prose."
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "register": "warning"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to",
+        "summary",
+        "fields"
+      ],
+      "rows": [
+        [
+          "VALUE",
+          "2020-01-01",
+          "2020-12-31",
+          "Conflict",
+          [
+            "data_type",
+            "coding"
+          ]
+        ]
+      ],
+      "note": "warning: the digest-guarded [[coding.warning]] applies to the reviewed sources and publishes its data_warning over its fields; the stale-issue projection above has no row for it."
     }
   ]
 }
