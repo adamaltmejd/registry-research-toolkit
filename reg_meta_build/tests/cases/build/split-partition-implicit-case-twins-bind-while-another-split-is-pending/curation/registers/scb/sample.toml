@@ -11,3 +11,6 @@ slug = "kon"
 [[variable]]
 native_id = "1.5.other"
 slug = "other"
+[[variable]]
+native_id = "1.5.kon-1"
+slug = "kon-1"

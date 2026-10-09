@@ -1,0 +1,38 @@
+[register]
+provider = "scb"
+slug = "condrev"
+native_id = "11"
+[[variant]]
+native_id = "11.10"
+slug = "people"
+[[variable]]
+native_id = "11.5"
+slug = "invarn"
+[[errata.field]]
+variable = "11.5"
+variant = "11.10"
+column = "INVARN8"
+edition = "2020"
+expected_records = {{expected_records key=member:81}}
+expected_fields = {{expected_fields key=member:81 member=Date9 fields=prose}}
+expected_period_text = {{period_text key=member:81 member=Date9}}
+expected_scope = {{edition_scope key=member:81 member=Date9}}
+expected_period = {{period_scope key=member:81 member=Date9}}
+evidence = "The Date9 row's description is the Date8 row's."
+noted = "2026-09-30"
+field = "description"
+value = "Description 8"
+[[errata.field]]
+variable = "11.5"
+variant = "11.10"
+column = "INVARN8"
+edition = "2020"
+expected_records = {{expected_records key=member:81}}
+expected_fields = {{expected_fields key=member:81 member=Date9 fields=prose}}
+expected_period_text = {{period_text key=member:81 member=Date9}}
+expected_scope = {{edition_scope key=member:81 member=Date9}}
+expected_period = {{period_scope key=member:81 member=Date9}}
+evidence = "The Date9 row's name is the Date8 row's."
+noted = "2026-09-30"
+field = "name"
+value = "Date8"
