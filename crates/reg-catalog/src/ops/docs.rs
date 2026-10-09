@@ -3,7 +3,7 @@
 
 use reg_core::{fold_search, fts_match_query, normalized_search_query, py_strip};
 use rusqlite::types::Value as Sql;
-use rusqlite::{OptionalExtension, Row, params_from_iter};
+use rusqlite::{Connection, OptionalExtension, Row, params_from_iter};
 use serde::Serialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
@@ -63,14 +63,7 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
     let docs = docs(server)?;
     let conn = docs.connect()?;
     let register_ingested = match &register {
-        Some(register) => conn
-            .query_row(
-                "SELECT 1 FROM doc WHERE register = ? LIMIT 1",
-                [&register.slug],
-                |_| Ok(()),
-            )
-            .optional()?
-            .is_some(),
+        Some(register) => ingested(&conn, register.slug.as_deref())?,
         None => false,
     };
     // The cursor binds what selects and orders the rows, never `limit`, and both
@@ -159,6 +152,17 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
         })?
         .collect::<rusqlite::Result<_>>()?;
     Ok(page(items, next_cursor, filenames.len(), register_ingested))
+}
+
+/// Whether the register has any documentation.
+fn ingested(conn: &Connection, register: Option<&str>) -> rusqlite::Result<bool> {
+    conn.query_row(
+        "SELECT 1 FROM doc WHERE register = ? LIMIT 1",
+        [register],
+        |_| Ok(()),
+    )
+    .optional()
+    .map(|found| found.is_some())
 }
 
 fn page(
