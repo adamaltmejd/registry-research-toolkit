@@ -85,6 +85,30 @@ export default defineConfig({
         target: rustServerUrl,
         changeOrigin: true,
       },
+      "/api/catalog": {
+        target: rustServerUrl,
+        changeOrigin: true,
+      },
+      "/api/states": {
+        target: rustServerUrl,
+        changeOrigin: true,
+      },
+      "/api/warnings": {
+        target: rustServerUrl,
+        changeOrigin: true,
+      },
+      "/api/values": {
+        target: rustServerUrl,
+        changeOrigin: true,
+      },
+      "/api/graph": {
+        target: rustServerUrl,
+        changeOrigin: true,
+      },
+      "/api/lineage": {
+        target: rustServerUrl,
+        changeOrigin: true,
+      },
       "/api": {
         target: backendUrl,
         changeOrigin: true,
