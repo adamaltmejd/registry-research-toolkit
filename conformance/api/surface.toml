@@ -304,11 +304,11 @@ note = "Responses are JSON only (section 7), so the flag has nothing to select."
 [[row]]
 kind = "import"
 id = "reg_meta"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_meta_build"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_etag_middleware.py", "reg_meta_build/tests/test_source_inspection_cli.py"]
-note = "The source-inspection test fixture copies the whole package because `source_interpreter_commit` hashes `reg_meta.fqid` and `reg_meta.queries`; it goes when those modules move. The webapp imports it for `__version__`."
+covered_by = ["reg_meta_build/tests/test_source_inspection_cli.py"]
+note = "The source-inspection test fixture copies the whole package because `source_interpreter_commit` hashes `reg_meta.fqid` and `reg_meta.queries`; it goes when those modules move."
 
 [[row]]
 kind = "import"

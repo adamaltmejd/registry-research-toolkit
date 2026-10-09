@@ -1,7 +1,7 @@
 # reg_webapp — design
 
-FastAPI backend + Svelte SPA. The catalog reads (context, search, the catalog pages) are
-the Rust server's (`reg-meta serve`); the backend serves the docs library and the
+FastAPI backend + Svelte SPA. The catalog reads (context, search, docs, the catalog
+pages) are the Rust server's (`reg-meta serve`); the backend serves the
 project-authoring write surface (validate / order); the SPA is the researcher's
 authoring client. This file records the package-local design rationale. Cross-cutting
 topology (package tree, dependency graph, perf budgets, version policy, testing-strategy
@@ -20,9 +20,10 @@ clients can request reference or holdings scope explicitly.
 
 The data is public-ish registry metadata; there is **no server-side user-private state**
 (project files live in the browser, never on the server). "Auth" here is really cost
-protection, on two axes: read GETs are edge-cacheable + ETag- revalidated (cheap), and
-the actual-work POST endpoints carry an origin-side body-size cap + per-IP rate limit.
-Real auth is a v2+ concern, layered on only if a steward ever needs private data.
+protection, on two axes: read GETs (the Rust server's) are edge-cacheable +
+ETag-revalidated (cheap), and the actual-work POST endpoints carry an origin-side
+body-size cap + per-IP rate limit. Real auth is a v2+ concern, layered on only if a
+steward ever needs private data.
 
 ## Layout
 
@@ -525,18 +526,12 @@ are generated from the committed `crates/reg-meta/openapi.json` into
 server). Locally, the Vite dev proxy sends `/api/context` to the Rust server and the
 rest of `/api` here.
 
-## ETag / Cache-Control (`etag.py` + `middleware.py`)
+## ETag / Cache-Control
 
-FastAPI serves no GET read under `/api` any more; its one GET, `/openapi.json`, carries
-an ETag derived from the full catalog generation, package version, steward identity and
-response body, and `Cache-Control: public, max-age=86400, must-revalidate`. The context,
-search, docs and catalog reads are the Rust server's, which sets its own validators and
-`Cache-Control` (`crates/reg-catalog`). Package F deletes this middleware with the app.
-A matching `If-None-Match` yields a **304** with no body, but the current body-derived
-middleware still executes the route and serializes the response first: it saves
-transfer, not origin computation or latency. The pure logic lives in `etag.py`
-(`compute_etag` + `etag_matches`); an ASGI middleware (`ETagMiddleware`) wires it DRY
-onto every GET read response.
+FastAPI serves no GET read under `/api` and sets no validator: its project writes are
+POSTs, and its own `/openapi.json` and `/docs` are not cached reads. The context,
+search, docs and catalog reads are the Rust server's, which sets their ETags and
+`Cache-Control` (`crates/reg-catalog`).
 
 **V1 early-revalidation correction (decision 2026-07-14; not implemented at this
 head).** App code, compiled catalog DB, steward branding configuration and paired docs
@@ -558,13 +553,6 @@ without route execution. This complements rather than masks the bounded cold-que
 arbitrary first-time queries still have to meet the origin budget. #1135's bounded SQL
 path meets it, so no second in-process response cache is warranted.
 
-- **`reg_meta_version`** is the INSTALLED `reg_meta.__version__` (the v1.x Model A
-  package release), NOT the DB `schema_version` manifest. `steward_id` is
-  `app.state.steward.id`.
-- **The generation** participates even when the response body is unchanged: a validator
-  from one generation cannot identify another.
-- **The body-hash** makes `If-None-Match` per-URL coherent — the query is part of the
-  URL, so it's already part of the cache key.
 - **The Rust server's tiers**: `/api/context` revalidates always (`no-cache`): the SPA
   vintage footer reads it to assert a specific deploy version/date, so a stale copy
   would *visibly lie* right after a deploy. Catalog and search reads use `max-age=60`
@@ -575,13 +563,9 @@ path meets it, so no second in-process response cache is warranted.
   revalidation. The edge worker (`reg_webapp/edge/`) defers to this origin's
   `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
   orthogonal to caching policy), so the per-route policy needs no edge change.
-- **Middleware skips WRITE endpoints** via a method gate: only `GET` reads are stamped,
-  so the POST endpoints pass through with no ETag. It also skips non-200 responses — an
-  error body isn't a cacheable representation, and handing the client a validator for a
-  transient error would be wrong.
-- We unit-test only the ETag / Cache-Control LOGIC + the 304 behavior. The **edge** side
-  (Cloudflare edge caching / DDoS shielding / edge rate-limits) is a deploy/maintainer
-  concern and not backend code. Remaining: edge config — see `REFACTOR_SPEC.md`.
+- The **edge** side (Cloudflare edge caching / DDoS shielding / edge rate-limits) is a
+  deploy/maintainer concern and not backend code. Remaining: edge config — see
+  `REFACTOR_SPEC.md`.
 
 ## Production performance baseline (2026-07-14)
 
@@ -669,13 +653,13 @@ surface is introduced.
 ## Pydantic boundary
 
 reg_webapp defines its **own** webapp-local Pydantic response models (`models.py`) for
-the project-write and docs-library routes; the catalog pages' models are the Rust
-server's. reg_meta's frozen Pydantic models (`OrderFinding`) are embedded directly as
-field types, never re-modeled. For `project_data`-related responses (`/api/project/*`)
-the webapp uses **`reg_schema` Pydantic models directly** — no wrapper layer,
-eliminating that drift surface. The **only** 1:1 Pydantic wrapper is
-`ValidationResult`/`ValidationIssue` (reg_schema is a frozen dataclass consumed
-cross-runtime by the SPA, so the webapp wraps it 1:1 there).
+the project-write routes; the catalog pages' models are the Rust server's. reg_meta's
+frozen Pydantic models (`OrderFinding`) are embedded directly as field types, never
+re-modeled. For `project_data`-related responses (`/api/project/*`) the webapp uses
+**`reg_schema` Pydantic models directly** — no wrapper layer, eliminating that drift
+surface. The **only** 1:1 Pydantic wrapper is `ValidationResult`/`ValidationIssue`
+(reg_schema is a frozen dataclass consumed cross-runtime by the SPA, so the webapp wraps
+it 1:1 there).
 
 One gotcha: a `register` field on a `pydantic.BaseModel` shadows `BaseModel.register` (a
 method) and warns. The docs models name the Python attribute `register_name` and
@@ -1943,9 +1927,8 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
 
 Two servers answer `/api/`. The Rust server (`reg-meta serve`; contract
 `conformance/api/operations.toml`, snapshot `crates/reg-meta/openapi.json`) answers the
-reads; this backend (snapshot `backend/openapi.json`) answers the docs library and the
-project writes. This table is the orientation map. Read GETs are edge-cacheable, write
-POSTs are not.
+reads; this backend (snapshot `backend/openapi.json`) answers the project writes. This
+table is the orientation map. Read GETs are edge-cacheable, write POSTs are not.
 
   | Method | Path                                 | Server  | Purpose                                                                                                                   |
   | ------ | ------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------- |

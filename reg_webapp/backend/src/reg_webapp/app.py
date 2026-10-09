@@ -28,7 +28,6 @@ from .limits import (
     BodySizeLimitMiddleware,
     RateLimitMiddleware,
 )
-from .middleware import ETagMiddleware
 from .routes import project
 from .stewards import load_steward
 
@@ -101,18 +100,13 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     )
     # Middleware ordering (Starlette executes add_middleware in REVERSE order —
     # last-added runs OUTERMOST / first on the way in). Cost protection (see
-    # DESIGN.md → Cost protection (limits.py)) must
-    # gate a write BEFORE the handler reads the body, so the cap + limiter run
-    # outermost. Adding the rate limiter LAST puts it outermost (it rejects an
-    # over-budget IP before the body is even buffered); the body cap next (it
-    # streams + counts the body before the handler reads it); the ETag middleware
-    # innermost (GET/HEAD-only — writes pass through it untouched, confirmed in
-    # middleware.py: `_CACHEABLE_METHODS == {"GET"}`).
-    app.add_middleware(ETagMiddleware)
+    # DESIGN.md → Cost protection (limits.py)) must gate a write BEFORE the handler
+    # reads the body: the rate limiter runs outermost (it rejects an over-budget IP
+    # before the body is even buffered), the body cap next (it streams + counts the
+    # body before the handler reads it).
     app.add_middleware(BodySizeLimitMiddleware)
     app.add_middleware(RateLimitMiddleware, per_minute=rate_limit_per_minute)
-    # A5.2b-ii write surface: project validate/order. The ETag middleware skips
-    # these (method gate); the cap + limiter gate them.
+    # A5.2b-ii write surface: project validate/order, gated by the cap + limiter.
     app.include_router(project.router)
 
     return app

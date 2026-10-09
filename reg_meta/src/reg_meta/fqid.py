@@ -386,14 +386,12 @@ def validate_slug(
     ):
         raise FqidError(
             f"slug in {slot_name} is a reserved HTTP-suffix: {value!r} "
-            f"(it would shadow the `/catalog/{{fqid:path}}/{value}` catalog route — "
-            f"see reg_webapp routes/catalog.py)"
+            f"(see RESERVED_HTTP_SUFFIX_SLUGS in reg_meta.fqid)"
         )
     if slot_name == "variable" and value == RESERVED_VARIANTS_SLUG:
         raise FqidError(
             f"slug in {slot_name} is reserved: {value!r} (it would shadow the "
-            f"`/catalog/{{provider}}/{{register}}/variants` register sub-resource — "
-            f"see reg_webapp routes/catalog.py)"
+            f"`/catalog/{{provider}}/{{register}}/variants` page of the SPA)"
         )
     # `group` is reserved in the PROVIDER slot ONLY: the 5-seg group SUBJECT route
     # `/catalog/group/{provider}/{register}/{key}` (#617) is declared above the
@@ -405,7 +403,7 @@ def validate_slug(
         raise FqidError(
             f"slug in {slot_name} is reserved: {value!r} (it would shadow the "
             f"`/catalog/group/{{provider}}/{{register}}/{{key}}` concept-group "
-            f"subject route — see reg_webapp routes/catalog.py)"
+            f"page of the SPA and the `group/...` ref)"
         )
 
 

@@ -1,8 +1,8 @@
 """Webapp-local Pydantic response models.
 
 These are reg_webapp's OWN response models (see DESIGN.md → Pydantic boundary) for
-the project-write and docs-library routes. The catalog pages read the Rust server,
-so no catalog node models live here. reg_meta's frozen Pydantic models (here
+the project-write routes. The catalog pages read the Rust server, so no catalog
+node models live here. reg_meta's frozen Pydantic models (here
 `OrderFinding`) are embedded directly rather than re-modeled.
 """
 

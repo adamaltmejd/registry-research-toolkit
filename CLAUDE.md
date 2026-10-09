@@ -68,8 +68,8 @@ maintenance, not line count) on every change. Two repo-specific notes:
   adapter/route legitimately needs a new module, but a small format-agnostic leaf inside
   it (a validator, a write loop, a clamp gate) gets re-pasted instead of hoisted. Before
   writing a leaf, check whether an internal capability already does it
-  (`reg_meta_build`'s `_curation.py` and `db.py`, `reg_webapp`'s `query_input.py` are
-  typical homes). Extend it; don't re-type it.
+  (`reg_meta_build`'s `_curation.py` and `db.py` are typical homes). Extend it; don't
+  re-type it.
 - **The ladder cuts both ways.** This repo *under*-uses libraries as often as it
   over-builds (e.g. `reg_meta_build` hand-rolls TOML validators though it already ships
   Pydantic for its build-time IR). "Installed dep solves it → use it" binds as hard as

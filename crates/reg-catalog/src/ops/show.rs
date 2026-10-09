@@ -1,5 +1,4 @@
-//! `show`: the summary of any ref (`shape.Show`), from today's `CatalogNode` and group
-//! node models (`reg_webapp/routes/catalog.py`) without the parts the facet
+//! `show`: the summary of any ref (`shape.Show`), without the parts the facet
 //! operations serve (states, lineage, chains, codes, warnings).
 
 use std::collections::{BTreeMap, BTreeSet};

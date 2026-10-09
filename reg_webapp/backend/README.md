@@ -1,8 +1,8 @@
 # reg_webapp backend
 
-FastAPI backend serving the reg_meta catalog to the Svelte SPA. See `../DESIGN.md` for
-the boot seam, steward layering, the Pydantic boundary, and the API surface (catalog
-browse + the project-write endpoints).
+FastAPI backend for the Svelte SPA's project writes (`/api/project/validate` and
+`/api/project/order`). See `../DESIGN.md` for the boot seam, steward layering, the
+Pydantic boundary, and the API surface.
 
 ## Run locally
 
@@ -12,8 +12,9 @@ uv run uvicorn reg_webapp.app:create_app --factory --reload
 
 The backend opens the real reg_meta DB read-only at its default path (or the
 `REG_META_DB` override) via `reg_meta.db.open_db`, which asserts schema compatibility.
-The SPA's `/api/context`, `/api/search` and `/api/docs/*` are answered by the Rust
-server (`reg-meta serve`).
+Every catalog read (`/api/context`, `/api/search`, `/api/docs/*`, `/api/catalog/*`,
+`/api/states`, `/api/warnings`, `/api/values`, `/api/graph`, `/api/lineage`) is answered
+by the Rust server (`reg-meta serve`).
 
 For the full dev setup (this server, the Rust server, the Vite SPA and a Playwright
 smoke driver), see the `/run-reg-webapp` skill at
