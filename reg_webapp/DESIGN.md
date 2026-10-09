@@ -1248,8 +1248,9 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 
 - **The image runs the Rust server alone** (RUST_RUNTIME_SPEC.md package 3a.9, decision
   15): `reg-meta serve` with the baked DB pair and the steward branding, no uvicorn and
-  no Python at runtime. The Dockerfile has three stages: the `regmeta-db` bake (still
-  the Python `reg-meta update` fetch until stage 4), a pinned Rust stage building
+  no Python at runtime. The Dockerfile has three stages: the `regmeta-db` bake (Debian
+  slim with `curl` and `zstd`: download the release assets, verify each against the
+  SHA-256 digest GitHub records for it, unpack), a pinned Rust stage building
   `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate. The image serves
   the API and `/mcp` only; the edge workers serve the SPA, which `container-build.yml`'s
   edge jobs build themselves. Since 3e.4 the Rust server answers every route the SPA
@@ -1279,37 +1280,39 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 - **Deploys**: one workflow (`container-build.yml`) owns both origin apps plus the edge
   workers, scoped by a `changes` paths-filter job. Image-affecting main pushes
   (Dockerfile COPY surfaces + bake inputs) build, push to `registry.fly.io`
-  (SHA-tagged), and `flyctl deploy --image` each affected origin. The bake build-arg is
-  the RESOLVED newest `reg_meta/v*` tag (never `latest` — a literal `latest` makes the
-  bake layer's buildx cache key insensitive to data-only releases and can even resurrect
-  a stale cached layer after a pinned dispatch). The global Fly app uses
-  `FLY_API_TOKEN`; SWECOV uses the separate app-scoped `FLY_API_TOKEN_SWECOV`. The
-  SWECOV image also requires a matching `reg_meta_swecov.db.zst` asset on the resolved
-  `reg_meta/v*` release: the bake runs `reg-meta update --catalog swecov --tag <tag>`,
-  which fetches that asset and the shared docs asset into the steward's own directory
-  and fails the build (exit 10) when the release lacks it. The SWECOV metadata is
-  non-confidential for the current testing steward, so the flavored DB is a public
-  release asset. An explicit `--db` update cannot bootstrap an empty image layer
-  (reg_meta/DESIGN.md → Artifact selection), which is why the bake uses the named
-  catalog. Nothing deploys without green CI: a `wait-ci` job polls this commit's ci.yml
-  run and the origin/edge deploy jobs require its success — an image that builds but
-  fails lint/ty/pytest never ships. Each deploy job carries a HEAD-of-main guard (GHA
-  concurrency serializes by build-completion order, not commit order — without the guard
-  an older commit's slow build could overwrite a newer deploy; it also makes non-main
-  dispatches deploy-inert). Two gates guard a bad image: the entrypoint smoke gate (it
-  probes `context`, `search` and `/mcp` with `curl`, each carrying `__edge_v`, and the
-  container exits non-zero before ever serving when artifact admission or a probe fails)
-  and fly.toml's `/api/context` HTTP check (flyctl reports failure if it never passes).
-  Rollback: `flyctl releases --image` lists history; `flyctl deploy --image <old>`
-  restores in seconds.
-- **Pending-schema-bump guard (#448)**: when `main`'s `SCHEMA_VERSION` /
-  `DOC_SCHEMA_VERSION` or the Rust server's minimum (`SCHEMA` in
-  `crates/reg-catalog/src/lib.rs`) is AHEAD of the latest released `reg_meta/v*` asset
-  (same major, higher minor), the bake's `reg-meta update` would refuse the
-  behind-schema asset (exit 10), or the image would refuse to boot on it, and turn
-  `build-image` red — pausing **all** deploys for a state that is expected (the owed
-  reg_meta release ships the matching asset). A standalone `schema-guard` job compares
-  the code constants against the released tag's (`git show <tag>:…`) via the pure
+  (SHA-tagged), and `flyctl deploy --image` each affected origin. The bake build-args
+  are the RESOLVED newest `reg_meta/v*` tag (never `latest` — a literal `latest` would
+  make the bake layer's buildx cache key insensitive to data-only releases and could
+  even resurrect a stale cached layer after a pinned dispatch) and the SHA-256 digests
+  GitHub records for its catalog and docs assets, which the `schema-guard` job resolves
+  with the tag; the bake has no defaults and refuses an unverified download. The global
+  Fly app uses `FLY_API_TOKEN`; SWECOV uses the separate app-scoped
+  `FLY_API_TOKEN_SWECOV`. The SWECOV image also requires a matching
+  `reg_meta_swecov.db.zst` asset on the resolved `reg_meta/v*` release: the bake fetches
+  that asset and the shared docs asset into `/opt/reg_meta`, and the build fails when
+  the release lacks it (its digest resolves empty; the global image is unaffected). The
+  SWECOV metadata is non-confidential for the current testing steward, so the flavored
+  DB is a public release asset. The bake does no schema admission: the server admits the
+  pair at boot (`--catalog` rejects a DB of another catalog), and the schema guard below
+  keeps a behind-schema asset from being built. Nothing deploys without green CI: a
+  `wait-ci` job polls this commit's ci.yml run and the origin/edge deploy jobs require
+  its success — an image that builds but fails lint/ty/pytest never ships. Each deploy
+  job carries a HEAD-of-main guard (GHA concurrency serializes by build-completion
+  order, not commit order — without the guard an older commit's slow build could
+  overwrite a newer deploy; it also makes non-main dispatches deploy-inert). Two gates
+  guard a bad image: the entrypoint smoke gate (it probes `context`, `search` and `/mcp`
+  with `curl`, each carrying `__edge_v`, and the container exits non-zero before ever
+  serving when artifact admission or a probe fails) and fly.toml's `/api/context` HTTP
+  check (flyctl reports failure if it never passes). Rollback: `flyctl releases --image`
+  lists history; `flyctl deploy --image <old>` restores in seconds.
+- **Pending-schema-bump guard (#448)**: when the Rust server's schema gates (`SCHEMA` in
+  `crates/reg-catalog/src/lib.rs`, `DOC_SCHEMA` in `docs.rs`) are AHEAD of the latest
+  released `reg_meta/v*` asset (same major, higher minor), the image would refuse to
+  boot on the behind-schema asset and fail its deploy — for a state that is expected
+  (the owed reg_meta release ships the matching asset). A standalone `schema-guard` job
+  compares the gates against the builder's `SCHEMA_VERSION` / `DOC_SCHEMA_VERSION` at
+  the released tag (`git show <tag>:reg_meta_build/…`; tags before 4.4, which import the
+  docs constant from `reg_meta.doc_db`, fall back to that file) via the pure
   `scripts/schema_pending_bump.py` helper, which returns a three-way verdict (`break` /
   `pending` / `compatible`). On a detected code-ahead `pending` bump (with both assets
   present) it publishes a `pending_bump=true` job output that defers the bake + deploy
@@ -1321,42 +1324,42 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   skipped. Once the owed release ships, the **build** self-clears on the next
   image-affecting main push (the bake now passes), and the **deploy** is self-clearing
   on release too: publishing the owed `reg_meta/v*` release auto-dispatches
-  `container-build.yml` (via `publish_reg_meta.yml`'s `deploy-image` job, after the PyPI
-  publish succeeds), which re-resolves the now-current asset and deploys — no manual
+  `container-build.yml` (via `publish_reg_meta.yml`'s `deploy-image` job, after the
+  release's CI passes), which re-resolves the now-current asset and deploys — no manual
   `workflow_dispatch` needed. During a pending-bump window a later **edge-only** main
   push now correctly waits too: `schema-guard` ran (the edge filter matched), so
   `edge-deploy` sees `pending_bump == true` and holds its SPA/cache-gen ship alongside
   the origin, rather than going live against the still-pre-bump origin. The guard
   green-neutralizes **only** the safe code-ahead case; on a genuine **major break** — or
   a `pending` release that is ALSO **missing** a `.zst` asset (a #343 invariant
-  violation, verified via `gh release view`) — `schema-guard` **fails red (exits
-  non-zero)** rather than emitting `pending_bump=false`. Because all three deploy jobs
-  gate on `needs.schema-guard.result == 'success'`, a failed guard cleanly blocks
-  build-image + deploy + edge-deploy — closing the edge-only hole where a skipped bake
-  left nothing to fail (pre-fix the break surfaced only as the bake's exit 10 on image
-  pushes, so an edge-only push shipped a new SPA/cache generation against a still-stuck
-  origin) and giving a clearer red than a bake exit-10. The guard is also bypassed for
-  an explicit `workflow_dispatch` `reg_meta_tag` pin — a deliberate pin of a specific
-  (possibly older) release has no owed release coming, so it must fail loud in the bake
-  if incompatible, not green-no-op (and dispatch always runs build-image, so there is no
-  edge-only leak there). The comparison rule is unit-tested because CI can't reach the
+  violation: its digest resolves empty) — `schema-guard` **fails red (exits non-zero)**
+  rather than emitting `pending_bump=false`. Because all three deploy jobs gate on
+  `needs.schema-guard.result == 'success'`, a failed guard cleanly blocks build-image +
+  deploy + edge-deploy — closing the edge-only hole where a skipped bake left nothing to
+  fail (pre-fix the break surfaced only in the bake on image pushes, so an edge-only
+  push shipped a new SPA/cache generation against a still-stuck origin). An explicit
+  `workflow_dispatch` `reg_meta_tag` pin is never neutralized: a deliberate pin of a
+  specific (possibly older) release has no owed release coming, so anything but
+  `compatible` fails the guard red — the bake reads no schema, and the image would only
+  refuse at boot on Fly. The comparison rule is unit-tested because CI can't reach the
   code-ahead branch on a normal commit (main's schema usually equals the latest
-  release); its sources of truth are `_check_schema_compat` in
-  `reg_meta/src/reg_meta/db.py` and `reg-catalog`'s schema gate. Trade-off: during the
+  release); its source of truth is `reg-catalog`'s schema gates. Trade-off: during the
   bump window the Dockerfile bake isn't exercised (a build-only PR goes green-skipped),
   re-exercised once the release lands.
 - **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
-  stage (`regmeta-db`) whose cache key covers only the workspace skeleton, the reg_meta
-  source tree, and `REG_META_TAG` — app-code edits reuse the cached DB layer instead of
-  re-downloading the release pair. PR builds neither `load` the image into the runner's
-  docker (nothing runs it; all gates execute during the build) nor write GHA buildx
-  cache (PR-scoped cache is unreadable from main and would only evict useful entries
-  from the repo's 10 GB pool); PRs still read main's cache. Every pushed tag is an
-  immutable rollback handle: `workflow_dispatch` rebuilds on an existing HEAD get a
-  `-<run_id>` suffix instead of overwriting `:sha`. A post-deploy prune step keeps the
-  newest 10 tags and deletes older manifests via the registry v2 DELETE (supported by
-  Fly — verified live 2026-06-11; buildx pushes OCI indexes, so age is read from the
-  image config's `.created`, and a digest shared with any kept tag is never deleted).
+  stage (`regmeta-db`) that copies nothing from the build context, so its cache key is
+  the base image and its build args (tag, flavor, digests) — app-code edits reuse the
+  cached DB layer instead of re-downloading the release pair, and an asset re-uploaded
+  under an existing tag changes its digest and rebakes. PR builds neither `load` the
+  image into the runner's docker (nothing runs it; all gates execute during the build)
+  nor write GHA buildx cache (PR-scoped cache is unreadable from main and would only
+  evict useful entries from the repo's 10 GB pool); PRs still read main's cache. Every
+  pushed tag is an immutable rollback handle: `workflow_dispatch` rebuilds on an
+  existing HEAD get a `-<run_id>` suffix instead of overwriting `:sha`. A post-deploy
+  prune step keeps the newest 10 tags and deletes older manifests via the registry v2
+  DELETE (supported by Fly — verified live 2026-06-11; buildx pushes OCI indexes, so age
+  is read from the image config's `.created`, and a digest shared with any kept tag is
+  never deleted).
 - **Cloudflare zone**: `catalog.swecov.se` (global catalog) and `data.swecov.se` (SWECOV
   flavor), orange-cloud A/AAAA → each hostname's matching Fly app shared IPv4 +
   dedicated IPv6, plus `_fly-ownership` TXT records (prove ownership behind the proxy)

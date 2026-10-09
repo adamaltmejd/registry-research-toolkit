@@ -1,5 +1,8 @@
-name: Publish reg_meta to PyPI
+name: Release reg_meta
 
+# A published reg_meta/v* release ships no package (no PyPI, RUST_RUNTIME_SPEC.md
+# stage 4 decision 3): its DB assets are checked by artifact conformance and baked
+# into the origin images by container-build.yml.
 on:
   release:
     types: [published]
@@ -9,91 +12,12 @@ jobs:
     if: startsWith(github.event.release.tag_name, 'reg_meta/v')
     uses: ./.github/workflows/ci.yml
 
-  publish:
-    needs: ci
-    runs-on: ubuntu-latest
-    environment: pypi
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.0.1
-        with:
-          version: "0.12.11"
-      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2.9.2
-
-      # Smoke-test the release's DB assets before pushing to PyPI. There is no
-      # pypi-environment approval pause; the release must stay draft until
-      # reg_meta.db.zst and reg_meta_docs.db.zst have been uploaded or copied
-      # forward per the release skill.
-      #
-      # download_db and download_docs_db each validate the asset's schema
-      # before install, so an incompatible asset fails here instead of in
-      # users' terminals. `reg_meta update` resolves the most recent release
-      # carrying each asset via the walker, so a doc-less package release
-      # still serves a prior-release doc DB — if no release in the walker's
-      # window has a usable doc asset, the update fails and the workflow
-      # exits non-zero.
-      #
-      # The smoke queries exercise the exact code paths that broke silently
-      # in issue #8 (get schema → v.source_label) and confirm that the doc
-      # search index is populated and schema-compatible.
-      - name: Verify release DB assets are usable
-        env:
-          XDG_DATA_HOME: ${{ runner.temp }}/xdg
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          uv sync --frozen
-          uv run reg-meta update --force -y
-          uv run reg-meta get schema --register LISA --summary --format json > /dev/null
-          # `docs search` must return at least one result — exit 0 with an
-          # empty result set would mean the doc DB shipped empty. Use
-          # `// 0` so a missing field coerces to a valid integer for -lt.
-          docs_total=$(uv run reg-meta docs search lisa --limit 1 --format json | jq '.total_count // 0')
-          if [ "$docs_total" -lt 1 ]; then
-            echo "::error::Doc DB appears empty: docs search returned total_count=${docs_total}"
-            exit 1
-          fi
-
-      # Registry-install preflight — the last gate before an immutable upload.
-      # reg_meta's `reg-schema` floor is a real PyPI resolution for anyone
-      # running `uv tool install reg-meta`, so this builds a clean container
-      # holding reg_meta alone (no local reg_schema in the build context) and
-      # installs it with `--no-sources`. If the declared floor does not resolve
-      # from the index, the step exits non-zero and nothing is uploaded — the
-      # PyPI version would otherwise be permanently uninstallable. This repeats
-      # the check the release skill runs locally before the draft is published;
-      # a server-side workflow can only start after that GitHub visibility, so
-      # both exist. `-m "not release"` deselects test_update_and_query: the
-      # release's own assets are smoke-tested above, and the clean-container
-      # download runs post-publish (the `integration` job below).
-      # Podman ships with the runner image; no apt step (see ci.yml's
-      # `package-integration` for why).
-      - name: Check rootless Podman
-        timeout-minutes: 2
-        run: podman info
-      - name: Verify reg_meta installs from the registry in a clean container
-        run: |
-          uv run python -m pytest reg_meta/tests/test_integration.py \
-            --run-integration --install-mode registry -m "not release"
-
-      - run: uv build reg_meta/ --out-dir dist/
-      - uses: pypa/gh-action-pypi-publish@v1.14.2
-
-  # Post-release end-to-end smoke: install reg_meta into a clean Podman container
-  # and run the full install → `reg-meta update` (downloads this release's DB) →
-  # query pipeline. Stronger than the `publish` job's in-runner verify above
-  # (clean container, only the package installed — the real user path). It
-  # installs the TAGGED SOURCE with its dependencies resolved from the registry,
-  # not the wheel just uploaded to PyPI; what it proves is that a
-  # registry-resolved reg_meta can fetch and query this release's assets.
-  # Inherits the reg_meta/v* gate via `needs: publish` (publish needs the
-  # tag-gated `ci` job), so it never fires for reg_meta_build/v* releases.
+  # Post-release check of this release's DB assets: conformance against the global
+  # and SWECOV artifacts, served by the Rust server (integration.yml). Inherits the
+  # reg_meta/v* gate via `needs: ci` (a skipped `ci` skips it), so it never fires for
+  # reg_meta_build/v* releases.
   integration:
-    needs: publish
+    needs: ci
     uses: ./.github/workflows/integration.yml
 
   # Self-clearing deploy (#448): a reg_meta release can ship the DB asset an
@@ -107,8 +31,10 @@ jobs:
   # suffixed image tag, HEAD guards). workflow_dispatch is the documented
   # exception to the GITHUB_TOKEN no-recursion rule, so the default token works.
   # Also auto-deploys data-only releases (previously a manual workflow_dispatch).
+  # The deployed image's entrypoint smoke gate admits the baked assets before the
+  # origin serves them.
   deploy-image:
-    needs: publish
+    needs: ci
     runs-on: ubuntu-latest
     permissions:
       actions: write

@@ -3,14 +3,14 @@
 # at the context boundary (assertion #3, alongside the in-image RUN check):
 # a maintainer's local build-db writes reg_meta.provenance.db* next to the
 # catalog DB, and any reg_meta.db / *.db lying around the working tree must never
-# enter the image — `reg-meta update` re-fetches the release DB at build time.
+# enter the image — the bake stage fetches the release DB pair at build time.
 
 # --- #224: maintainer-only provenance debug sibling (never ships) ---
 **/reg_meta.provenance.db
 **/reg_meta.provenance.db-*
 **/reg_meta.provenance.db*
 
-# --- Local DB artifacts (the image bakes its own via `reg-meta update`) ---
+# --- Local DB artifacts (the image bakes its own from the release) ---
 **/*.db
 **/*.db-shm
 **/*.db-wal
@@ -27,6 +27,7 @@ reg_meta_build/input_data/
 .agents/
 .venv/
 **/.venv/
+target/
 **/__pycache__/
 **/*.pyc
 .pytest_cache/

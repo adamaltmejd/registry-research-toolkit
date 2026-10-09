@@ -1,78 +1,30 @@
-name: Integration (Podman)
+name: Artifact conformance
 
-# Server-side home for the release-asset-dependent tests. The container half
-# (reg_meta/tests/test_integration.py) installs reg_meta into a clean
-# python:3.14-slim container and exercises install → `reg-meta update`
-# (downloads the DB from GitHub Releases) → query; the host half is the
-# conformance artifact gate. These independent jobs need a
-# published release asset matching the current SCHEMA_VERSION, so this workflow
-# deliberately does NOT run on push/PR — a red X on unrelated work when a
-# release is merely owed would be noise. The workspace-mode package tests run in
-# ci.yml's `package-integration` job; CI's `test` job runs `-m "not integration"`.
+# Server-side home for the release-asset-dependent checks: conformance against the
+# published global and SWECOV DB assets, served by the Rust server. They need a
+# published release asset matching the current schema, so this workflow deliberately
+# does NOT run on push/PR — a red X on unrelated work when a release is merely owed
+# would be noise.
 on:
-  # Weekly drift catch (GitHub Releases availability only — the base image and
-  # uv are digest-pinned since Y-25). Off the top of the hour — GitHub
-  # delays/drops crons scheduled at :00 under load.
+  # Weekly drift catch (GitHub Releases availability). Off the top of the hour —
+  # GitHub delays/drops crons scheduled at :00 under load.
   schedule:
     - cron: "17 6 * * 1"
   # Called by publish_reg_meta.yml after a reg_meta/v* release is published, to
-  # validate the just-published artifact end-to-end from a clean container.
+  # validate the just-published artifacts.
   workflow_call:
   # Manual on-demand run (e.g. after uploading a fresh DB asset).
   workflow_dispatch:
 
 jobs:
-  integration:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.0.1
-        with:
-          version: "0.12.11"
-      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2.9.2
-      - run: uv sync --frozen
-      # Podman ships with the runner image; no apt step (see ci.yml's
-      # `package-integration` for why).
-      - name: Check rootless Podman
-        timeout-minutes: 2
-        run: podman info
-      # Both opt-in flags: --run-integration (all container tests) and --run-release
-      # (the subset that needs a published release asset). Serial, NOT `-n auto`:
-      # the module-scoped image fixture builds the container once; xdist would
-      # rebuild it per worker. GITHUB_TOKEN authenticates the in-container
-      # `reg-meta update` GitHub API call (forwarded by the native runner) — the
-      # unauthenticated 60/hr-per-IP limit is easily exhausted from shared runner
-      # IPs. The separate conformance jobs select assets with --artifact-dir.
-      #
-      # `--install-mode registry` is explicit even though it is the module's
-      # default: this job is the post-publish check of the PUBLISHED consumer's
-      # install, so reg_schema must come from PyPI, never from the checkout.
-      #
-      # A failure during a release-owed window (main's SCHEMA_VERSION past the
-      # newest published asset) is expected and informative — a release-drift
-      # signal, not a code regression. The post-release call never hits this (the
-      # matching asset was just published).
-      - name: Run Podman integration + release tests
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          uv run python -m pytest reg_meta/tests/test_integration.py \
-            --run-integration --run-release \
-            --install-mode registry -m "integration or release"
-
   artifact-conformance:
     name: Artifact conformance (${{ matrix.catalog }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
-    # Keep both artifact kinds and the native registry boundary independent:
-    # schema drift in one asset must not suppress the other gates.
+    # Keep both artifact kinds independent: schema drift in one asset must not
+    # suppress the other's gate.
     strategy:
       fail-fast: false
       matrix:
@@ -90,6 +42,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
+      - run: cargo build --workspace --locked
       # Tier 3 admits the downloaded artifact and its embedded import_manifest,
       # never synthetic data. Each kind uses its own job and directory.
       #
@@ -105,10 +58,13 @@ jobs:
       # hand back a reg_schema/v* or reg_meta_build/v* release.
       #
       # The SHA-256 digest GitHub records for the asset is verified BEFORE
-      # decompression. A missing or duplicated asset, a malformed or mismatched
-      # digest, a schema-incompatible DB, nonpublishable manifest or mismatched
-      # catalog selection all fail before conformance. There is deliberately
-      # no fallback to an older asset, another artifact kind or synthetic data.
+      # decompression. Admission is then the Rust server's own, at boot with
+      # `--catalog "$CATALOG"`: a missing or duplicated asset, a malformed or
+      # mismatched digest, a schema-incompatible DB, nonpublishable manifest or an
+      # artifact of another catalog all fail before conformance (the conformance
+      # servers take `{catalog}` from the artifact itself, so only this boot pins
+      # the expected kind). There is deliberately no fallback to an older asset,
+      # another artifact kind or synthetic data.
       - name: Provision the selected release DB
         id: release-db
         env:
@@ -142,27 +98,20 @@ jobs:
             echo "::error::$ASSET digest mismatch: $actual != $digest"
             exit 1
           fi
-          uv run python - "$zst" "$db_dir/reg_meta.db" "$CATALOG" <<'PY'
-          import sys
-          from pathlib import Path
-
-          import zstandard
-          from reg_meta.db import open_db, validate_catalog_selection
-
-          src, dest = (Path(arg) for arg in sys.argv[1:3])
-          with src.open("rb") as fh, dest.open("wb") as out:
-              zstandard.ZstdDecompressor().copy_stream(fh, out)
-          # Admit schema/publication identity and the exact selected kind before
-          # publishing the directory output. Current schema admission stays strict.
-          with open_db(dest) as conn:
-              validate_catalog_selection(conn, sys.argv[3])
-          PY
-          rm "$zst"
+          zstd -q -d --rm "$zst" -o "$db_dir/reg_meta.db"
+          target/debug/reg-meta serve --db "$db_dir" --catalog "$CATALOG" \
+            --stewards reg_webapp/stewards --port 18000 &
+          pid=$!
+          # The refusal's error document is on the server's stderr.
+          until curl -fs -o /dev/null http://127.0.0.1:18000/api/context; do
+            kill -0 "$pid" 2>/dev/null || { echo "::error::$ASSET refused at server admission"; exit 1; }
+            sleep 1
+          done
+          kill "$pid"
           echo "db_dir=$db_dir" >> "$GITHUB_OUTPUT"
       # Schema drift against a published asset is a release-drift failure.
       # Search runs against the Rust server (`--server-cmd`; a release run
       # without it fails).
-      - run: cargo build --workspace --locked
       - name: Run artifact conformance against the downloaded DB
         run: |
           uv run python -m pytest conformance --run-release \
