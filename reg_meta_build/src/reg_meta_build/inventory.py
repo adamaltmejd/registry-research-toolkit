@@ -119,11 +119,20 @@ def _segment_bounds(segment: EditionSegment) -> tuple[str, str]:
 
 
 # simplify: keeps reg_meta's always-Feb-29 end so derive agrees with the pinned 0.45.0 artifacts (G1); delete in 4.10 with the 10.0.0 content change, together with conformance/holdings_accounting.py's Feb-29 bound
+# (`_token_bounds` and its inverse `_token_for_bounds` below)
 def _token_bounds(token: str) -> tuple[str, str]:
     lo, hi = period_bounds(token)
     if len(token) == 7 and hi.endswith("-02-28"):  # a non-leap `YYYY-02` month
         hi = hi[:8] + "29"
     return lo, hi
+
+
+def _token_for_bounds(lo: str, hi: str) -> str:
+    """`period_token_for_bounds` under the Feb-29 convention: `YYYY-02` is
+    `..-02-29`, so a window ending on the 28th is not the whole month."""
+    if lo[5:] == "02-01" and hi == f"{lo[:8]}28":
+        return f"{lo}..{hi}"
+    return period_token_for_bounds(lo, hi)
 
 
 def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
@@ -192,7 +201,7 @@ def _render(intervals: tuple[_Interval, ...]) -> str:
 
 
 def _render_interval(lo: str, hi: str) -> str:
-    token = period_token_for_bounds(lo, hi)
+    token = _token_for_bounds(lo, hi)
     if ".." not in token:
         return token
     # A multi-year span has no single token; render the ENDPOINTS as tokens so
