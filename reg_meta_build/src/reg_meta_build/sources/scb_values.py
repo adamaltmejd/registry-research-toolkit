@@ -114,17 +114,11 @@ def _clean_value(payload_key: str, cells: tuple[RawCell, ...]) -> SourceValue:
             f"{_VALUE_FILE} value payload {payload_key} has {len(cells)} cells, expected 2"
         )
     code, label = cells
-    clean_code, clean_label = _clean_cell(code, token=True), _clean_cell(label)
-    if not clean_code:
-        # A blank code the list labels is a real member, the empty code (SCB's
-        # documented `["", "Uppgift saknas"]`); an unlabeled blank is a missing
-        # code, so coding reports it as unknown membership.
-        clean_code = "" if clean_label else None
     return SourceValue(
         payload_key=payload_key,
         raw_cells=(code, label),
-        code=clean_code,
-        label=clean_label,
+        code=_clean_cell(code, token=True),
+        label=_clean_cell(label),
     )
 
 

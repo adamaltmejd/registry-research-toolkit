@@ -497,11 +497,20 @@ class ValueBindingSession:
             )
             members, inactive, non_membership = [], [], []
             set_aside = []
+            blank_rows = 0
             for association in associations:
+                value = self.session.value(association.value_key)
+                if value.code == "" and value.label == "":
+                    # A row delivering an empty code and an empty label is an export
+                    # artifact (maintainer decision 2026-10-09): no member and no
+                    # missing code, so it neither publishes nor withholds the list.
+                    # Undelivered cells stay a missing code. The prepared
+                    # association remains the evidence.
+                    blank_rows += 1
+                    continue
                 if (
                     descriptor.non_membership_codes
-                    and self.session.value(association.value_key).code
-                    in descriptor.non_membership_codes
+                    and value.code in descriptor.non_membership_codes
                 ):
                     non_membership.append(association)
                     continue
@@ -594,7 +603,6 @@ class ValueBindingSession:
                 if member_scope is None:
                     inactive.append(association)
                     continue
-                value = self.session.value(association.value_key)
                 members.append(
                     CodeMembershipClaim(
                         value.code,
@@ -609,7 +617,7 @@ class ValueBindingSession:
             if set_aside:
                 set_aside.sort(key=lambda association: association.locator)
                 members.sort(key=lambda member: member.associations[0].locator)
-            if len(non_membership) != len(associations):
+            if len(non_membership) + blank_rows != len(associations):
                 claim = CodeListClaim(
                     claim_id,
                     scope,

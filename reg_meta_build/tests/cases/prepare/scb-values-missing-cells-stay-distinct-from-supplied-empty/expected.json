@@ -1,8 +1,8 @@
 {
   "reader": "scb_values",
   "replaces": "test_scb_value_records.py::test_normalized_payloads_keep_missing_distinct_from_supplied_empty",
-  "fails_if": "the SCB value reader reads an undelivered label, version, level, validity date or raw cell as a delivered empty one (or the reverse), or keeps an unlabelled blank code as a real empty code",
-  "note": "A delivered empty code is still a blank code: with no label it is a missing code (maintainer decision 2026-10-08, an unlabelled blank is missing), so both rows read code null and the delivered/undelivered distinction stays in raw_cells and the label. The replaced test claimed the delivered-empty code as \"\"; that claim changed with the decision. The labelled blank is scb-values-labelled-blank-code-is-the-empty-code.",
+  "fails_if": "the SCB value reader reads an undelivered code, label, version, level or validity date as a delivered empty one (or the reverse), or drops the fully blank row 6 from the prepared associations",
+  "note": "Row 6 (delivered empty code and label) is an export artifact that binding states no member for (maintainer decision 2026-10-09), but preparation keeps it as evidence: the Vardemangder association count must still equal the snapshot's. The skip is pinned at the build boundary, cases/build/value-code-lists-withhold-only-contested-or-unknown-periods (BLANK).",
   "projections": [
     {
       "of": "associations",
@@ -10,8 +10,7 @@
         {
           "value": {
             "code": null,
-            "label": null,
-            "raw_cells": [null, null]
+            "label": null
           },
           "descriptor": {
             "version": null
@@ -19,9 +18,8 @@
         },
         {
           "value": {
-            "code": null,
-            "label": "",
-            "raw_cells": ["", ""]
+            "code": "",
+            "label": ""
           },
           "descriptor": {
             "version": ""

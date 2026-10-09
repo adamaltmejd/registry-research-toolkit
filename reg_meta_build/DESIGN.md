@@ -197,13 +197,17 @@ supply no flags; conflicting flags are not combined with Boolean OR.
 
 SCB value preparation keeps descriptor/value dictionaries, ordered CVID/ItemId
 associations, validity declarations, disconnected identifiers and duplicates. Missing,
-empty and zero stay distinct. A descriptor label is not a global code-list ID. Exact
-validity dates are not truncated to years or silently repaired. An edition's explicit
-item associations establish membership across its finite scope when known global item
-dates would leave gaps. This is the accepted continuity assumption when no independent
-period information is supplied. Original item dates remain evidence and every widened
-association emits a warning. Supplied and section windows still restrict membership;
-unknown or conflicting validity, ambiguous joins and competing lists still withhold.
+empty and zero stay distinct. A delivered empty code with a label is the member `""`
+(SCB's `["", "Uppgift saknas"]`); an undelivered code is a missing code. A row
+delivering an empty code and an empty label is an export artifact: binding keeps its
+association as evidence and states no member, so it neither publishes nor withholds the
+list. A descriptor label is not a global code-list ID. Exact validity dates are not
+truncated to years or silently repaired. An edition's explicit item associations
+establish membership across its finite scope when known global item dates would leave
+gaps. This is the accepted continuity assumption when no independent period information
+is supplied. Original item dates remain evidence and every widened association emits a
+warning. Supplied and section windows still restrict membership; unknown or conflicting
+validity, ambiguous joins and competing lists still withhold.
 
 The exact `Tal` and `Beskrivande text` rows whose code, version and level agree are type
 declarations, not enumerated codes. Cleaning records that distinction on the descriptor;
