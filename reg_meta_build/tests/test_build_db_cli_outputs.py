@@ -452,8 +452,6 @@ def test_strict_corpus_failure_preserves_previous_catalog(
 
 
 def test_publication_keeps_exactly_the_replaced_generation(tmp_path: Path) -> None:
-    # Replaces test_ir_scaffolding.py::
-    # test_publish_db_installs_new_bytes_and_keeps_prior_generation.
     # Fails if publication stops linking the live catalog aside to `.prev`, stops
     # evicting an older `.prev` (the link then raises FileExistsError), installs
     # something other than the new catalog, or leaves its staging behind.
@@ -472,9 +470,7 @@ def test_publication_keeps_exactly_the_replaced_generation(tmp_path: Path) -> No
 def test_failed_publication_step_preserves_live_catalog(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, step: str
 ) -> None:
-    # Replaces test_ir_scaffolding.py::test_publish_db_backup_failure_leaves_live_db_intact
-    # (link) and ::test_publish_db_replace_failure_leaves_live_db_intact (replace), Y-52.
-    # Fails if publication moves the live catalog aside before its final replace
+    # Y-52. Fails if publication moves the live catalog aside before its final replace
     # (rotate-then-rename leaves the live name absent), replaces it before the
     # backup link succeeded, or leaves its staging behind on failure. The failing
     # filesystem is the mocked process boundary. It fails only the publication call
