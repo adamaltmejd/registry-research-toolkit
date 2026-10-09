@@ -47,7 +47,6 @@ from reg_meta_build.resolved_metadata import (
     ResolvedGroupFacet,
     ResolvedGroupVariable,
     ResolvedMetadata,
-    ResolvedStateRef,
     ResolvedSuccession,
     ResolvedVariableGroup,
     RetainedDocumentaryRelationship,
@@ -180,29 +179,6 @@ def _variable_fqid(variable: ResolvedVariable) -> str:
     return f"{register.provider}/{register.slug}/{variable.slug}"
 
 
-def _state_dependency_key(
-    fqid: str, variant: str, state: ResolvedState | ResolvedStateRef
-) -> DependencyKey:
-    if state.period_scope == "year_independent":
-        return (
-            "independent_state",
-            fqid,
-            variant,
-            state.delivery_column_name,
-            state.value_set_version_label,
-        )
-    assert state.valid_from is not None and state.valid_to is not None
-    return (
-        "state",
-        fqid,
-        variant,
-        state.valid_from,
-        state.valid_to,
-        state.delivery_column_name,
-        state.value_set_version_label,
-    )
-
-
 def variable_dependency_keys(variable: ResolvedVariable) -> set[DependencyKey]:
     """Exact materialized references, shared by resolution and dependency checks."""
     fqid = _variable_fqid(variable)
@@ -218,7 +194,6 @@ def variable_dependency_keys(variable: ResolvedVariable) -> set[DependencyKey]:
         )
     for item in variable.states:
         keys.add(("variant_states", fqid, item.variant.slug))
-        keys.add(_state_dependency_key(fqid, item.variant.slug, item))
     return keys
 
 
@@ -229,10 +204,12 @@ class CoverageObligation:
     Already reduced by the explicit outcomes that withhold part of the claim, so
     an obligation left here has no accepted excuse for going missing. The claimed
     delivery facts travel with the window: exact type/length claims and the member
-    correction attributions the written state must still contain. Each fact claim
-    is tri-state: ('value', text) the written state must equal, ('negative',
-    None) asserting the source leaves the fact absent so the written state must
-    be None, or None for no claim, which is never compared.
+    correction attributions the written state must still contain. A fact claim
+    is ('value', text) the written state must equal, or None for no claim, which
+    is never compared. Only the unit claim can also be ('negative', None):
+    formation claims the absence of a unit the source leaves out, so the written
+    state must leave it None. A source states no other fact negatively
+    (`SourceFields`).
     """
 
     fqid: str
@@ -341,9 +318,9 @@ def check_delivery_coverage(
     Every overlapping final state on the same coordinate, and every shared state
     behind an alias window for that coordinate, must also keep each claimed fact
     and contain every claimed attribution as an exact provenance element. Each
-    fact travels as tri-state: a value claim the written state must equal, a
-    negative claim the written state must leave absent, or no claim, which is
-    never compared. A conflicting representation fact clears the claim to none.
+    fact travels as a value claim the written state must equal or as no claim,
+    which is never compared; a negative unit claim requires the written unit to
+    stay absent. A conflicting representation fact clears the claim to none.
     A variable or one of its variants that the ledger withholds outright, with
     source evidence, owes nothing at that exact coordinate; the claim stays a
     curation blocker whichever stage recorded it, and a sibling stays checked.
@@ -406,27 +383,7 @@ def check_delivery_coverage(
                 ob_losses.append(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} {start}..{end} claimed by {refs}"
                 )
-        claimed_type = obligation.data_type_claim
-        claimed_length = obligation.data_length_claim
         claimed_attributions = obligation.attributions
-        check_type = claimed_type is not None
-        expected_type: str | None = None
-        type_claim_label = "None"
-        if claimed_type is not None:
-            if claimed_type[0] == "value":
-                expected_type = claimed_type[1]
-                type_claim_label = repr(claimed_type[1])
-            else:
-                type_claim_label = "None (negative source claim)"
-        check_length = claimed_length is not None
-        expected_length: str | None = None
-        length_claim_label = "None"
-        if claimed_length is not None:
-            if claimed_length[0] == "value":
-                expected_length = claimed_length[1]
-                length_claim_label = repr(claimed_length[1])
-            else:
-                length_claim_label = "None (negative source claim)"
         alias_cover = _alias_overlap(by_fqid.get(obligation.fqid, ()), obligation)
         if alias_cover:
             backing: dict[tuple[str, str, str, str], ResolvedState] = {}
@@ -470,21 +427,6 @@ def check_delivery_coverage(
                         f"alias backing is ambiguous: {count} states of variant "
                         f"{obligation.variant} overlap {first}..{last}"
                     )
-        if (
-            not check_type
-            and not check_length
-            and not claimed_attributions
-            and obligation.coding_claim is None
-            and obligation.column_text_claim is None
-            and obligation.name_claim is None
-            and obligation.description_claim is None
-            and obligation.definition_claim is None
-            and obligation.measurement_unit_claim is None
-            and not alias_cover
-        ):
-            losses.extend(ob_losses)
-            notes.append((obligation, ob_facts, ob_losses))
-            continue
         candidates: dict[tuple[str, str, str | None, str | None], ResolvedState] = {}
         for variable in by_fqid.get(obligation.fqid, ()):
             for state in variable.states:
@@ -558,10 +500,10 @@ def check_delivery_coverage(
                     and window.valid_to >= obligation.valid_from
                 ]
                 for window in metadata_windows:
+                    # A per-column window always carries a finite domain
+                    # (ResolvedAliasWindow); its backing state must carry none.
                     if window.coding_metadata == "per_column" and (
-                        window.value_set is None
-                        or not window.value_set.members
-                        or state.value_set is not None
+                        state.value_set is not None
                         or state.value_set_version_label
                         or state.classification_links
                     ):
@@ -666,18 +608,14 @@ def check_delivery_coverage(
                     f"{obligation.fqid} {obligation.variant}/{obligation.column} "
                     f"{scope_label} claimed by {refs}: column operation/source attribution changed"
                 )
-            if check_type and state.data_type != expected_type:
-                ob_facts.append(
-                    f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                    f"{scope_label} claimed by {refs}: "
-                    f"claimed data_type={type_claim_label} written {state.data_type!r}"
-                )
-            if check_length and state.data_length != expected_length:
-                ob_facts.append(
-                    f"{obligation.fqid} {obligation.variant}/{obligation.column} "
-                    f"{scope_label} claimed by {refs}: "
-                    f"claimed data_length={length_claim_label} written {state.data_length!r}"
-                )
+            for field in ("data_type", "data_length"):
+                claim = getattr(obligation, field + "_claim")
+                if claim is not None and getattr(state, field) != claim[1]:
+                    ob_facts.append(
+                        f"{obligation.fqid} {obligation.variant}/{obligation.column} "
+                        f"{scope_label} claimed by {refs}: "
+                        f"claimed {field}={claim[1]!r} written {getattr(state, field)!r}"
+                    )
             if claimed_attributions:
                 elements = (
                     set(state.provenance.split("\n\n")) if state.provenance else set()
@@ -784,22 +722,10 @@ def _dependency_register(key: DependencyKey) -> str | None:
     return fqid if kind in {"register", "variant"} else fqid.rsplit("/", 1)[0]
 
 
-def _declared_entities(key: DependencyKey) -> tuple[DependencyKey, ...]:
-    """The declared registers, variants and variables a key names. A representation
-    or state is proven only this far; shared inputs name none."""
-    kind = key[0]
-    if kind in {"register", "variant", "variable"}:
-        return (key,)
-    if kind in _SHARED_KINDS:
-        return ()
-    variable = ("variable", key[1])
-    if kind in {"state", "variant_states"}:
-        variant = key[2]
-    else:  # a representation, optionally of one variant
-        variant = key[3] if len(key) == 4 else None
-    if variant is None:
-        return (variable,)
-    return variable, ("variant", key[1].rsplit("/", 1)[0], variant)
+# Only an entity reference is deferred to the complete build. Compile keeps a group
+# member in its group's register and a representation succession within one
+# register, so an entry naming a representation outside the slice is skipped whole.
+_DEFERRABLE_KINDS = frozenset({"register", "variant", "variable"})
 
 
 class CatalogDependencies:
@@ -811,10 +737,10 @@ class CatalogDependencies:
     A register-scoped build names its `slice_registers` and the `unselected`
     registers, variants and variables that other scope files declare but were not
     formed. A curation entry whose every register reference lies outside the
-    slice is skipped. In any other entry a missing key naming only unselected
-    entities is deferred to the complete build as a warning; any other missing
-    key, such as one no scope declares, stays missing, exactly as in the complete
-    build.
+    slice is skipped. In any other entry a missing register, variant or variable
+    that an unselected scope declares is deferred to the complete build as a
+    warning; any other missing key, such as one no scope declares, stays missing,
+    exactly as in the complete build.
     """
 
     def __init__(
@@ -880,18 +806,13 @@ class CatalogDependencies:
             (self.withheld[k] for k in (key, *parents) if k in self.withheld),
             None,
         )
-        if (
-            causes is None
-            and self.unselected
-            and (declared := _declared_entities(key))
-            and all(entity in self.unselected for entity in declared)
-        ):
+        if causes is None and key[0] in _DEFERRABLE_KINDS and key in self.unselected:
             self.diagnostics.append(
                 ResolutionDiagnostic(
                     code=DEFERRED_REFERENCE,
                     severity="warning",
                     subject=output,
-                    detail=f"Dependency {key!r} names {declared!r}, declared only by unselected scopes; the complete build resolves it.",
+                    detail=f"Dependency {key!r} is declared only by unselected scopes; the complete build resolves it.",
                     withheld_output=(output,),
                 )
             )
@@ -1189,6 +1110,8 @@ def resolve_metadata_dependencies(
     Tags and sufficiently populated groups retain their independent members.
     Binary relations are indivisible. Missing references without an explicit
     source-resolution cause are fatal even if another endpoint is withheld.
+    State lineage is resolved after this check (`resolve_catalog_lineage`, which
+    refuses metadata that already carries it), so none is checked here.
     """
     metadata = ResolvedMetadata.model_validate(metadata)
     validate_metadata_structure(metadata)
@@ -1228,17 +1151,6 @@ def resolve_metadata_dependencies(
             key,
             output=output,
             parents=(("variable", fqid), ("register", fqid.rsplit("/", 1)[0])),
-        )
-
-    def state(ref: ResolvedStateRef, output: str) -> bool:
-        return dependencies.require(
-            _state_dependency_key(ref.variable, ref.variant, ref),
-            output=output,
-            parents=(
-                ("variant_states", ref.variable, ref.variant),
-                ("variable", ref.variable),
-                ("register", ref.variable.rsplit("/", 1)[0]),
-            ),
         )
 
     def withheld_group(output: str, start: int) -> None:
@@ -1394,16 +1306,6 @@ def resolve_metadata_dependencies(
                 dependencies.require(("classification", end), output=o)
                 for end in (e.derived, e.source)
             ],
-        ),
-        "state_lineage": selected(
-            metadata.state_lineage,
-            "state_lineage",
-            lambda e, o: [state(e.consumer, o), state(e.source, o)],
-        ),
-        "lineage_warnings": selected(
-            metadata.lineage_warnings,
-            "lineage_warnings",
-            lambda e, o: [state(e.consumer, o)],
         ),
         "documentary_relationships": selected(
             metadata.documentary_relationships,
