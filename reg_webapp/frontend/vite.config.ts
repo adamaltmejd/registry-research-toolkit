@@ -87,13 +87,19 @@ export default defineConfig({
         extends: true,
         // Unit tests read two cross-package oracles as text (`?raw`), which Vite
         // refuses outside the allowed roots (default: this package): the server
-        // fold's corpus (catalog.fold.test.ts) and reg_schema's version
-        // (project_data.test.ts). Allow those directories, not the whole repo. A
+        // fold's corpus (catalog.fold.test.ts) and reg-core's project schema version
+        // and structural corpus (project_data.test.ts, validation.test.ts). Allow
+        // those directories, not the whole repo. A
         // single-file entry does not work here: Vite compares it against the id
         // with its `?raw` query attached.
         server: {
           fs: {
-            allow: [".", "../../conformance/cases/folds", "../../reg_schema"],
+            allow: [
+              ".",
+              "../../conformance/cases/folds",
+              "../../crates/reg-core/src",
+              "../../crates/reg-core/tests/project/corpus",
+            ],
           },
         },
         test: {
