@@ -356,15 +356,15 @@ the loop:
 Each contract that crosses a language or package boundary has exactly one
 implementation:
 
-  | Contract                              | Single home                           | Reached from                                          |
-  | ------------------------------------- | ------------------------------------- | ----------------------------------------------------- |
-  | Artifact schema (DDL, manifest)       | `reg_meta_build` (Python)             | Rust reader reads it; `SCHEMA_VERSION` gate           |
-  | Resolver semantics                    | `reg_meta_build` derive (Python)      | Compiled into the artifact                            |
-  | FQID and period grammar               | Rust core crate                       | Build via Python bindings; SPA via WASM               |
-  | Text folds                            | Rust core crate                       | Build via Python bindings (fills `*_folded` columns)  |
-  | Canonical JSON + SHA-256              | Rust core crate                       | Build via Python bindings                             |
-  | Project schema + structural validator | Rust core crate (replaces reg_schema) | Server, MCP; SPA via WASM; JSON Schema export         |
-  | Result types                          | Rust structs (serde + utoipa)         | OpenAPI; MCP tool schemas and TS types derive from it |
+  | Contract                                | Single home                                       | Reached from                                          |
+  | --------------------------------------- | ------------------------------------------------- | ----------------------------------------------------- |
+  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)                         | Rust reader reads it; `SCHEMA_VERSION` gate           |
+  | Resolver semantics                      | `reg_meta_build` derive (Python)                  | Compiled into the artifact                            |
+  | FQID and period grammar                 | Rust core crate                                   | Build via Python bindings; SPA via WASM               |
+  | Text folds                              | Rust core crate                                   | Build via Python bindings (fills `*_folded` columns)  |
+  | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python; package 4.4 assumption) | Build only; no Rust consumer recomputes a build hash  |
+  | Project schema + structural validator   | Rust core crate (replaces reg_schema)             | Server, MCP; SPA via WASM; JSON Schema export         |
+  | Result types                            | Rust structs (serde + utoipa)                     | OpenAPI; MCP tool schemas and TS types derive from it |
 
 Notes:
 
