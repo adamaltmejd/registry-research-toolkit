@@ -1,5 +1,0 @@
-[classification]
-short_name = "EMP"
-slug = "emp"
-name = "EMP"
-codes_file = "emp.csv"
