@@ -58,9 +58,9 @@ DEFAULT_VARIANT_SLUG = "_default"
 # sub-resource routes that greedy-shadow variable canonical paths; a slug equal
 # to one of these would mint an FQID whose URL is permanently captured by the
 # route, so they're reserved in the slot(s) whose canonical URL position the
-# route occupies. Source of truth for the route list:
-# `reg_webapp/backend/src/reg_webapp/routes/catalog.py` (kept in lockstep with these
-# sets by `reg_webapp/backend/tests/test_reserved_slugs.py` via `openapi.json`).
+# route occupies. The FastAPI catalog routes these sets protected were deleted
+# (RUST_RUNTIME_SPEC.md package C); the SPA's `/catalog/...` routes still use
+# `variants` and `group`. Whether the sets shrink is decided in stage 4.
 #
 # The binding-suffix routes `/catalog/{fqid:path}/<suffix>` greedy-match ANY
 # fqid path, so `<suffix>` shadows a 3-seg variable leaf (`scb/lisa/states`), a
@@ -109,8 +109,8 @@ RESERVED_GROUP_SLUG = "group"
 # The FQID-grammar prose (see DESIGN.md → FQID grammar) pairs the regex `^[a-z][a-z0-9-]*[a-z0-9]$` with "single hyphens
 # only"; the form below enforces both in one expression. Anchored with `\Z`, NOT
 # `$`: Python's `$` also matches just before a single trailing newline, so `$`
-# would accept a slug like `kon\n` — a hole the reg_webapp path guard (see reg_webapp/DESIGN.md → FQID path guard (catalog_fqid.py)) (which
-# delegates here) and build-time slug validation both rely on this rejecting.
+# would accept a slug like `kon\n` — a hole build-time slug validation relies on
+# this rejecting.
 _SLUG_RE = re.compile(r"^[a-z](?:-?[a-z0-9])*\Z")
 _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
 
@@ -131,8 +131,8 @@ _DAY = r"(?:0[1-9]|[12]\d|3[01])"
 
 # `\Z` not `$` (same footgun fixed for `_SLUG_RE` above): Python's `$` also matches
 # just before a single trailing newline, so `^{_YEAR}$` would accept `"2020\n"`.
-# `is_period` is the `?period` allow-list reg_webapp delegates to (see reg_webapp/DESIGN.md → query allow-list (period_param.py)), so a
-# trailing-newline period must be rejected here, not opened-and-queried downstream.
+# `is_period` is the reader's period allow-list, so a trailing-newline period must be
+# rejected here, not opened-and-queried downstream.
 _PERIOD_PATTERNS = (
     re.compile(rf"^{_YEAR}\Z"),
     re.compile(rf"^{_YEAR}-{_MONTH}\Z"),
