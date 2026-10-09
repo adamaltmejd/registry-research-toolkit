@@ -1,0 +1,13 @@
+{
+  "description": "Five SCB registers, one checked-correction claim each, every column delivered in 2020 (RegVerID 2020) under variable 5. compose (register 1) delivers OLD (CVID 101); later (register 2) delivers OLD (CVID 201); periods (register 3) delivers ANSWER (CVID 301); renamed (register 4) delivers ANSWER (CVID 401); each with the description 'Original description'. consensus (register 5) delivers AMOUNT twice, CVID 501 in unit 'Antal' and CVID 502 in unit 'Kronor'.",
+  "scb": {
+    "registerinformation": [
+      {"colname": "OLD", "cvid": 101, "var_id": 5, "year": "2020", "regver_id": 2020, "vardesc": "Original description", "register": ["COMPOSE", 1, 10]},
+      {"colname": "OLD", "cvid": 201, "var_id": 5, "year": "2020", "regver_id": 2020, "vardesc": "Original description", "register": ["LATER", 2, 20]},
+      {"colname": "ANSWER", "cvid": 301, "var_id": 5, "year": "2020", "regver_id": 2020, "vardesc": "Original description", "register": ["PERIODS", 3, 30]},
+      {"colname": "ANSWER", "cvid": 401, "var_id": 5, "year": "2020", "regver_id": 2020, "vardesc": "Original description", "register": ["RENAMED", 4, 40]},
+      {"colname": "AMOUNT", "cvid": 501, "var_id": 5, "year": "2020", "regver_id": 2020, "unit": "Antal", "register": ["CONSENSUS", 5, 50]},
+      {"colname": "AMOUNT", "cvid": 502, "var_id": 5, "year": "2020", "regver_id": 2020, "unit": "Kronor", "register": ["CONSENSUS", 5, 50]}
+    ]
+  }
+}
