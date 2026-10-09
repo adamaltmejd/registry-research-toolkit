@@ -234,7 +234,7 @@ used_by = ["conformance", "reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_reader.py", "conformance/test_logical.py", "reg_meta/tests/test_catalog_resolve.py"]
-note = "Section 4: derive bootstraps from reader functions moved into reg_meta_build; holdings_compile and the SWECOV generator call it today. Only what derive and holdings call moves."
+note = "Section 4: derive bootstraps from reader functions moved into reg_meta_build; package 4.2 moved the resolver rules `expanded_state` and `coded_variable_stats` read, and derive's browse and chains still call it today. Only what derive calls moves."
 
 [[row]]
 kind = "import"
@@ -244,15 +244,6 @@ disposition = "retained"
 owner = "4"
 covered_by = ["conformance/cases/api/warnings-filters", "reg_meta_build/tests/test_resolved_writer_data_warnings.py"]
 note = "The build writes data warnings; the model moves with the writer."
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog._applicable_alias_windows"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/test_logical.py"]
-note = "Private-name import: derive's `expanded_state` reads the resolver's window participation rule in place (section 4 bootstrap, package 3b.1). The seam also calls `Catalog._variable_windows` and `Catalog._states_in_bounds` and reads the `_StoredAliasWindow` tuple layout (index 3 provenance, 4 column_metadata, 11 coding_metadata, 16 the window's own start). Stage 4 moves all of it into reg_meta_build with the rest of the resolver."
 
 [[row]]
 kind = "import"
@@ -822,15 +813,6 @@ disposition = "retained"
 owner = "4"
 covered_by = ["reg_meta_build/tests/test_build_db.py"]
 note = "Judgment: a version-name year heuristic, not the period grammar, so it moves rather than going to reg-core-py."
-
-[[row]]
-kind = "import"
-id = "reg_meta.queries.get_coded_variables"
-used_by = ["reg_meta_build"]
-disposition = "retained"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/cases/api/coded-variables-scope"]
-note = "Derive's `coded_variable_stats` calls the reader's aggregate in place (section 4 bootstrap, package 3c.1); stage 4 moves it into reg_meta_build."
 
 [[row]]
 kind = "import"
