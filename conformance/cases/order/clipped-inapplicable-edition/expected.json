@@ -14,13 +14,5 @@
       "variable": "scb/example/value",
       "period": "2019"
     }
-  ],
-  "clips": [
-    {
-      "source": "Example",
-      "variable": "scb/example/value",
-      "requested_period": "2018..2020",
-      "ordered_period": "2020"
-    }
   ]
 }

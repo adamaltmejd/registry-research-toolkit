@@ -1,0 +1,166 @@
+[
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "project_invalid",
+      "/error/message": "project schema_version '2.0.0' is not supported: this build reads project_data.json schema 3.0.0 exactly. Re-author the project against the current schema; there is no migration path.",
+      "/error/fields": {
+        "issues": [
+          {
+            "code": "unsupported_schema_version",
+            "level": "error",
+            "message": "project schema_version '2.0.0' is not supported: this build reads project_data.json schema 3.0.0 exactly. Re-author the project against the current schema; there is no migration path.",
+            "path": "/schema_version",
+            "successor_fqid": null
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "project_invalid",
+      "/error/message": "cannot materialize an order for a structurally invalid project: missing_required_field@/name; fqid_register_variant_mismatch@/sources/0/bindings/0/variable",
+      "/error/fields": {
+        "issues": [
+          {
+            "code": "missing_required_field",
+            "level": "error",
+            "message": "required top-level field 'name' is missing",
+            "path": "/name",
+            "successor_fqid": null
+          },
+          {
+            "code": "fqid_register_variant_mismatch",
+            "level": "error",
+            "message": "binding FQID prefix ['scb', 'other'] must equal the source register_variant prefix ['scb', 'example']",
+            "path": "/sources/0/bindings/0/variable",
+            "successor_fqid": null
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "order_blocked",
+      "/error/message": "order blocked by 1 finding: steward_mismatch: this project's steward is 'swecov' and this deployment serves the 'global' steward; order the project from the deployment that serves 'swecov'. Its steward is provenance — no deployment rewrites it to match its own",
+      "/error/fields": {
+        "findings": [
+          {
+            "code": "steward_mismatch",
+            "message": "this project's steward is 'swecov' and this deployment serves the 'global' steward; order the project from the deployment that serves 'swecov'. Its steward is provenance — no deployment rewrites it to match its own",
+            "source": null,
+            "variable": null,
+            "period": null
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "order_blocked",
+      "/error/message": "order blocked by 1 finding: project_empty: project binds no variables — an empty project is a valid editable draft but cannot produce a header-only manifest",
+      "/error/fields": {
+        "findings": [
+          {
+            "code": "project_empty",
+            "message": "project binds no variables — an empty project is a valid editable draft but cannot produce a header-only manifest",
+            "source": null,
+            "variable": null,
+            "period": null
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "order_blocked",
+      "/error/message": "order blocked by 3 findings: period_not_orderable: [inverted] source 'inverted' has no orderable period: edition range 'from' is after 'to': '2019'..'2018'; variable_unresolved: [range scb/example/missing] column 'scb/example/missing' does not resolve against the catalog at scb/example/annual: FQID does not resolve to any row: scb/example/missing; binding_unavailable: [range scb/example/kon 2010..2015] column 'scb/example/kon' has no state covering scb/example/annual anywhere in 2010..2015",
+      "/error/fields": {
+        "findings": [
+          {
+            "code": "period_not_orderable",
+            "message": "source 'inverted' has no orderable period: edition range 'from' is after 'to': '2019'..'2018'",
+            "source": "inverted",
+            "variable": null,
+            "period": null
+          },
+          {
+            "code": "variable_unresolved",
+            "message": "column 'scb/example/missing' does not resolve against the catalog at scb/example/annual: FQID does not resolve to any row: scb/example/missing",
+            "source": "range",
+            "variable": "scb/example/missing",
+            "period": null
+          },
+          {
+            "code": "binding_unavailable",
+            "message": "column 'scb/example/kon' has no state covering scb/example/annual anywhere in 2010..2015",
+            "source": "range",
+            "variable": "scb/example/kon",
+            "period": "2010..2015"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "order_blocked",
+      "/error/message": "order blocked by 3 findings: period_not_orderable: [inverted] source 'inverted' has no orderable period: edition range 'from' is after 'to': '2019'..'2018'; variable_unresolved: [range scb/example/missing] column 'scb/example/missing' does not resolve against the catalog at scb/example/annual: FQID does not resolve to any row: scb/example/missing; binding_unavailable: [range scb/example/kon 2010..2015] column 'scb/example/kon' has no state covering scb/example/annual anywhere in 2010..2015",
+      "/error/fields": {
+        "findings": [
+          {
+            "code": "period_not_orderable",
+            "message": "source 'inverted' has no orderable period: edition range 'from' is after 'to': '2019'..'2018'",
+            "source": "inverted",
+            "variable": null,
+            "period": null
+          },
+          {
+            "code": "variable_unresolved",
+            "message": "column 'scb/example/missing' does not resolve against the catalog at scb/example/annual: FQID does not resolve to any row: scb/example/missing",
+            "source": "range",
+            "variable": "scb/example/missing",
+            "period": null
+          },
+          {
+            "code": "binding_unavailable",
+            "message": "column 'scb/example/kon' has no state covering scb/example/annual anywhere in 2010..2015",
+            "source": "range",
+            "variable": "scb/example/kon",
+            "period": "2010..2015"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/error/code": "malformed_request"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/error/code": "malformed_request"
+    }
+  },
+  {
+    "status": 413,
+    "json": {
+      "/error/code": "payload_too_large",
+      "/error/fields": {
+        "limit_bytes": 1048576
+      }
+    }
+  }
+]

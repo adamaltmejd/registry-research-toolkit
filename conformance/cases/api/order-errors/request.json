@@ -1,0 +1,173 @@
+{
+  "note": "Fails if `order` stops refusing a project it cannot order with its located error: `project_invalid` with validate's issues for a foreign schema_version (alone) and for a structurally invalid document; `order_blocked` with every finding, in accumulation order, for a steward mismatch (checked first, whole-project), an empty project, and a project whose sources block on an unorderable period, an unresolved variable and an unavailable binding; or if the manifest download stops refusing the blocked project with the same document, or either route stops refusing a duplicate key (`malformed_request`) or the download a body over the 1 MiB cap (`payload_too_large`) before ordering. Expected findings and messages are the frozen Python materializer's, except `variable_unresolved`'s, which carries the detail the frozen message leaves empty (a rust-only fix: Python formats a RegMetaError whose str() is empty, ending the message in `: `).",
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "body": {
+        "schema_version": "2.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Old"
+      }
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "sources": [
+          {
+            "name": "point",
+            "register_variant": "scb/example/annual",
+            "period": 2015,
+            "bindings": [
+              {
+                "variable": "scb/other/kon",
+                "type": "categorical"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "swecov",
+        "reg_meta_version": "5.1.0",
+        "name": "Elsewhere",
+        "sources": []
+      }
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Draft",
+        "sources": []
+      }
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Blocked",
+        "sources": [
+          {
+            "name": "inverted",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": 2018
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "range",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2010,
+              "to": 2015
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/missing",
+                "type": "categorical"
+              },
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order/manifest",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Blocked",
+        "sources": [
+          {
+            "name": "inverted",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": 2018
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "range",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2010,
+              "to": 2015
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/missing",
+                "type": "categorical"
+              },
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "content": "{\"schema_version\": \"3.0.0\", \"steward\": \"global\", \"reg_meta_version\": \"5.1.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"register_variant\": \"scb/example/annual\", \"period\": 2018, \"bindings\": [{\"variable\": \"scb/example/kon\", \"type\": \"categorical\"}]}]}"
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order/manifest",
+      "content": "{\"schema_version\": \"3.0.0\", \"steward\": \"global\", \"reg_meta_version\": \"5.1.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"register_variant\": \"scb/example/annual\", \"period\": 2018, \"bindings\": [{\"variable\": \"scb/example/kon\", \"type\": \"categorical\"}]}]}"
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order/manifest",
+      "nested_arrays": 600000
+    }
+  ]
+}
