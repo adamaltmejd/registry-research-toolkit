@@ -30,3 +30,8 @@ slug = "par"
 variable = "1.104"
 columns = { PAR_A = "1.104", PAR_B = "1.104" }
 columns_ref = "reviewed shared identity"
+[[group]]
+register = "scb/sample"
+key = "columns"
+label = "Columns"
+members = [{ variable = "value", delivery_column = "VALUE" }, { variable = "par", delivery_column = "PAR_A" }, { variable = "par", delivery_column = "PAR_B" }]
