@@ -236,26 +236,26 @@ it when the new release needs a newer reader: it runs G1 on the old pin (with it
 baseline) and the new pin (with its baseline) and records any difference. Re-pin at
 least at every maintainer checkpoint.
 
-**Current pin** (package 3a.13; the data lives in
+**Current pin** (package R, checkpoint 3; the data lives in
 `conformance/differential/config.toml`):
 
-- Release `reg_meta/v0.43.0` (schema 9.3.0). Asset SHA-256s: global `reg_meta.db.zst`
-  `60acf6c8ee37ff5566f536af4337b876b4413899dc4d9a01c685499f513bd3c5`; SWECOV
-  `reg_meta_swecov.db.zst`
-  `67bc9cd8d07d897dc969d89b4fef4b012a128c6144fa2c65b6ff3742c71ee652`; docs
+- Release `reg_meta/v0.44.0` (schema 9.6.0, docs schema 1.3.0). Asset SHA-256s: global
+  `reg_meta.db.zst` `e8eb69576c95b5d658a5eb1e1608583bba9a090cf5c313c2f4bb27168cb06a7d`;
+  SWECOV `reg_meta_swecov.db.zst`
+  `704e93060ff0a5b9f484109e292dcc3b00949fc61b50e1819a53ec3a0cfa5f75`; docs
   `reg_meta_docs.db.zst`
-  `b110210901daa4e2a13e33a8574a6e2b52b43258f05bbbc6378255ddf7e75afe` (read by `search`
+  `85a1a6c883fca2ded5203c60c33d8657a438344c39ab088c0b01299a47721f57` (read by `search`
   and `docs`).
 - Baseline reader: `553ea622fdb3a5fd42a04c46920b6f7b9a5fe8d2` (main after 3a.2), run
   from a detached worktree with its own locked environment. It reads the release
-  originals directly; the reference derive of package 3a.2a is retired (3a.13). It stays
-  behind the release commit (`4727589`, whose assets record `builder_commit` `c934f80b`)
-  because each SPA cutover deletes the webapp routes it replaces (3a.10: `/api/context`,
-  `/api/stats`; 3a.11: `/api/search`), and the served arm compares against the baseline
-  webapp. Later cutovers delete more, so the baseline cannot move past 553ea622 while
-  that holds; Python fixes after it are named exceptions (#1240's
-  `register-scope-code-classifications`), and `reader-version` covers the release
-  versions. Package R resolves this.
+  originals directly; the reference derive of package 3a.2a is retired (3a.13). The
+  baseline commit is pinned separately from the artifact pin until stage 4 retires the
+  Python runtime (package R): each SPA cutover deleted the webapp routes it replaced
+  (3a.10, 3a.11, C, 3b.6, 3e.4) and F deleted the app, while the served arm compares
+  against the baseline webapp, so no later commit can serve as baseline. Python fixes
+  after it are named exceptions (#1240's `register-scope-code-classifications`),
+  `reader-version` covers the release versions, and `docs-fold-raw-query` covers the
+  frozen docs search on the folded 1.3.0 `doc_fts`.
 
 **Three verification gates, with budgets.** They are named G0–G2 so they are not
 confused with the test tiers 1–3 in `ARCHITECTURE.md`.
