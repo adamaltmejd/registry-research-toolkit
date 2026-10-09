@@ -93,7 +93,6 @@ jobs:
             edge:
               - "reg_webapp/frontend/**"
               - "reg_webapp/edge/**"
-              - "reg_webapp/backend/openapi.json"
               - "crates/reg-meta/openapi.json"
               - ".github/workflows/container-build.yml"
 

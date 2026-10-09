@@ -1,21 +1,20 @@
 # Surface inventory (RUST_RUNTIME_SPEC.md package 1.1a): every surface the Python
 # runtime exposes today, and where it goes. `conformance/test_api_surface.py` fails when
-# a route, `reg-meta` subcommand or imported `reg_meta` name lacks a row, or a row names
+# a `reg-meta` subcommand or imported `reg_meta` name lacks a row, or a row names
 # something that no longer exists. Reviewed at checkpoint 1; judgment calls say so in
-# `note`.
+# `note`. The FastAPI route rows went as each slice deleted its routes; package F
+# deleted the app.
 #
-# kind         route: an operation in the committed reg_webapp/backend/openapi.json,
-#                     id = "METHOD /path" as OpenAPI writes it (no `:path` converter).
-#              command: an `add_parser` in reg_meta/src/reg_meta/cli.py, id = the argv path.
+# kind         command: an `add_parser` in reg_meta/src/reg_meta/cli.py, id = the argv path.
 #              skill: a command the register-metadata-search skill documents
 #                     (plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md),
 #                     id = its text as written there.
 #              import: a `reg_meta` name imported by any git-visible .py file outside
 #                     reg_meta/ (tests, scripts and tools included).
 #                     `from M import N` is "M.N"; `import M` is "M".
-# disposition  route, command, skill:
+# disposition  command, skill:
 #                retained  the same surface stays.
-#                replaced  route and command rows: a Rust operation covers it (HTTP and
+#                replaced  command rows: a Rust operation covers it (HTTP and
 #                          MCP, section 7); package 1.1 adds its name as `operation`, this
 #                          file does not choose names. Skill rows: `note` names the
 #                          replacement (the binary, `fetch`, MCP `tools/list`).
@@ -28,9 +27,8 @@
 # owner        the stage-3 slice that ports the surface (3a admission + search, 3b show /
 #              states / values, 3c schema / diff / coverage / coded, 3d chains and graph,
 #              3e order and project validation), or stage 4 / 5. For an import only the
-#              webapp or conformance uses, the slice whose route deletions remove its last
-#              importer; anything imported by a module several slices share (models.py,
-#              app wiring) goes in stage 4. Build-side imports are always stage 4.
+#              webapp or conformance uses, the slice whose deletions remove its last
+#              importer; otherwise stage 4. Build-side imports are always stage 4.
 # covered_by   the existing tests or conformance cases that exercise the surface today
 #              (paths; empty means none). For imports this is a proxy: the nearest test of
 #              the name's behavior, not of each consumer's use of it.
@@ -395,7 +393,7 @@ id = "reg_meta.db"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/test_boot.py"]
+covered_by = ["conformance/cases/selection"]
 
 [[row]]
 kind = "import"

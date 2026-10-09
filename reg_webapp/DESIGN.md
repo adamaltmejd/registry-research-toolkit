@@ -2,13 +2,12 @@
 
 Svelte SPA on the Rust server (`reg-meta serve`), which answers every `/api` route: the
 catalog reads (context, search, docs, the catalog pages) and the project operations
-(validate / order). The SPA is the researcher's authoring client. The FastAPI backend
-serves no route since `RUST_RUNTIME_SPEC.md` package 3e.4; package F deletes it. This
-file records the package-local design rationale. Cross-cutting topology (package tree,
-dependency graph, perf budgets, version policy, testing-strategy overview) lives in the
-root `ARCHITECTURE.md`; remaining/unbuilt work lives in `REFACTOR_SPEC.md`. The API
-contract is `conformance/api/operations.toml` with its snapshot
-`crates/reg-meta/openapi.json`.
+(validate / order). The SPA is the researcher's authoring client. There is no Python web
+server: `RUST_RUNTIME_SPEC.md` package F deleted the FastAPI app. This file records the
+package-local design rationale. Cross-cutting topology (package tree, dependency graph,
+perf budgets, version policy, testing-strategy overview) lives in the root
+`ARCHITECTURE.md`; remaining/unbuilt work lives in `REFACTOR_SPEC.md`. The API contract
+is `conformance/api/operations.toml` with its snapshot `crates/reg-meta/openapi.json`.
 
 **Compiled holdings.** `ARCHITECTURE.md` and `reg_meta/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog or steward artifact and delegates
@@ -29,51 +28,37 @@ private data.
 
 ```text
 reg_webapp/
-  backend/                # uv workspace member (own pyproject, src-layout)
-    src/reg_webapp/        # FastAPI app (no routes; package F deletes it), stewards
-    scripts/gen_openapi.py # deterministic OpenAPI dumper
-    openapi.json           # committed snapshot (canonical API contract)
-    tests/                 # pytest, HTTP corpora and source-built artifacts
+  backend/                # uv workspace member: dev tooling only (until stage 4)
+    scripts/fixture_db.py  # the synthetic catalog + docs DB pair (dev.sh --fixture-db)
+    scripts/run_search_eval.py  # search relevance vs search_eval.toml
+    tests/                 # the period-grammar parity test
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
-    src/lib/api-types.ts   # codegen'd from ../backend/openapi.json
-  stewards/               # per-steward config (sibling of backend/frontend)
+    src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
+  stewards/               # per-steward branding, read by `reg-meta serve --stewards`
     global/steward.json    # identity only; no catalog → full universe
   DESIGN.md
 ```
 
-`stewards/` is a sibling of `backend/` and `frontend/`: a steward config is deployment
-data, not backend source. The loader resolves it relative to the module
-(`stewards.STEWARDS_DIR`) so it works regardless of cwd.
+`stewards/` is deployment data, not server source: `reg-meta serve --stewards DIR` reads
+`DIR/<catalog>/steward.json` and nothing else.
 
-## Boot seam (the reg_meta read-only DB)
+## Boot seam (artifact admission)
 
-The FastAPI lifespan opens reg_meta read-only through reg_meta's **own** helpers, never
-a hardcoded path:
-
-```python
-db_path = reg_meta.db.db_path_from_args(None)  # REG_META_DB > XDG > platform
-conn = reg_meta.db.open_db(db_path)  # mode=ro + _check_schema_compat
-```
-
-`open_db` already opens `mode=ro` and runs `_check_schema_compat` — a real
-`SCHEMA_VERSION` assert vs the DB manifest. That is the **load-bearing** schema gate (a
-wrong major / too-old minor raises at startup;
-`conformance/cases/boot/schema-major-mismatch` covers it). The boot connection is closed
-once the manifest is read; the parsed manifest is stashed on `app.state`. The boot also
-loads the steward and stashes it there. The lifespan holds no query connection: the app
-serves no route.
-
-The webapp reads reg_meta read-only and ships no DDL, so it owns no `SCHEMA_VERSION` —
-the only schema gate is `open_db`'s boot compat check against reg_meta's manifest.
+The Rust server admits its catalog at startup and refuses to serve otherwise
+(`Catalog::open` in `crates/reg-catalog`): the schema gate (`schema_incompatible`), the
+artifact identity (`catalog_unpublishable`), and the selected `--catalog` against the
+artifact's own name (`catalog_mismatch`; a steward artifact never serves as `global`).
+The `api` corpus pins each refusal (`conformance/cases/api/admission-*`). The branding
+comes from the admitted catalog's name, so a deployment cannot pair one steward's
+artifact with another's branding. The webapp ships no DDL and owns no `SCHEMA_VERSION`.
 
 ## Catalog pages (the Rust server)
 
-FastAPI serves no catalog route. The SPA's catalog pages read the Rust server
-(`reg-meta serve`): `show` (`GET /api/catalog` for the root, `GET /api/catalog/{ref}`
-for every other node) and its facets `states`, `warnings`, `values`, `graph` and
-`lineage` (`GET /api/<facet>/{ref}`). Every response is `{data, meta}`; an error is
-`{error: {code, message, fields}, meta}`. The contract is
-`conformance/api/operations.toml`, the SPA's types are generated from
+The SPA's catalog pages read the Rust server (`reg-meta serve`): `show`
+(`GET /api/catalog` for the root, `GET /api/catalog/{ref}` for every other node) and its
+facets `states`, `warnings`, `values`, `graph` and `lineage` (`GET /api/<facet>/{ref}`).
+Every response is `{data, meta}`; an error is `{error: {code, message, fields}, meta}`.
+The contract is `conformance/api/operations.toml`, the SPA's types are generated from
 `crates/reg-meta/openapi.json` into `frontend/src/lib/api-types-rust.ts`, and the
 "Catalog surface" section of `frontend/src/lib/api.ts` is the one place the SPA calls
 them. Locally the Vite dev proxy sends these paths to the Rust server. Ref and period
@@ -209,9 +194,8 @@ and classifications are its navigable targets.
 ## Docs library (the Rust server's `docs` operations)
 
 `/api/docs/*` (#354/#742) is served by the Rust server since package 3b.6 (the vite dev
-proxy sends `/api/docs` there); FastAPI has no docs routes. The operations
-(`conformance/api/operations.toml`) read the prebuilt `reg_meta_docs.db` beside the
-catalog, each answering `{data, meta}`:
+proxy sends `/api/docs` there). The operations (`conformance/api/operations.toml`) read
+the prebuilt `reg_meta_docs.db` beside the catalog, each answering `{data, meta}`:
 
 - `docs_search` (`GET /api/docs/search?q=&register=&limit=&cursor=`): with `q`, the
   entries matching every word, best first, with an FTS `snippet`; without `q`, every
@@ -509,13 +493,13 @@ variable pages to add one column each.
 ## Context and catalog sizes (the Rust server, 3a.10)
 
 `GET /api/context` is answered by the Rust server (`reg-meta serve`, the `context`
-operation in `crates/reg-catalog/src/ops/slice_3a.rs`), not by this backend. One call
-returns the steward branding, schema version, import date, the steward's period span,
-the `reg_meta` version and the headline `sizes` (`{providers, registers, variables}` in
-the read scope), as `{data, meta}`; it replaces FastAPI's `/api/context` and
-`/api/stats` (`RUST_RUNTIME_SPEC.md` decision 15). App fetches it once and threads
-`steward` and `sizes` to Home, which makes no request of its own. The SPA's types for it
-are generated from the committed `crates/reg-meta/openapi.json` into
+operation in `crates/reg-catalog/src/ops/slice_3a.rs`). One call returns the steward
+branding, schema version, import date, the steward's period span, the `reg_meta` version
+and the headline `sizes` (`{providers, registers, variables}` in the read scope), as
+`{data, meta}`; it replaces FastAPI's `/api/context` and `/api/stats`
+(`RUST_RUNTIME_SPEC.md` decision 15). App fetches it once and threads `steward` and
+`sizes` to Home, which makes no request of its own. The SPA's types for it are generated
+from the committed `crates/reg-meta/openapi.json` into
 `frontend/src/lib/api-types-rust.ts` (a `cargo test` keeps the snapshot equal to the
 server). Locally, the Vite dev proxy sends `/api/context` to the Rust server and the
 rest of `/api` here.
@@ -636,10 +620,10 @@ bounds of known tables with an explicit mapping, then capped at the catalog impo
 It is a coarse UI slider bound, never a coverage or validity check. Catalog artifacts
 and holdings without dated periods return null.
 
-`REG_WEBAPP_STEWARDS_DIR` overrides the branding root for wheels and Docker images.
-SWECOV is the proving steward; extracting its branding and delivery pipeline into its
-own system remains separate from this runtime cut. No generic per-steward extension
-surface is introduced.
+The Docker image copies the branding root to `/opt/reg_webapp/stewards/` and passes it
+as `--stewards`. SWECOV is the proving steward; extracting its branding and delivery
+pipeline into its own system remains separate from this runtime cut. No generic
+per-steward extension surface is introduced.
 
 ## Pydantic boundary
 
@@ -648,15 +632,13 @@ document, typed for the SPA from `crates/reg-meta/openapi.json`.
 
 ## OpenAPI snapshot + TS codegen (the drift gate)
 
-`openapi.json` is committed and is the canonical contract. `gen_openapi.py` dumps
-`create_app().openapi()` with `sort_keys=True` + a trailing newline so the snapshot is
-byte-stable across machines. `app.openapi()` builds without the lifespan (no DB needed),
-so the dumper runs offline. The SPA codegens `src/lib/api-types.ts` from the snapshot
-via `openapi-typescript`. Two checks keep these in lockstep: `test_openapi_snapshot.py`
-(in the always-run `test` job) asserts the committed `openapi.json` equals a fresh
-render of the app, and the `reg-webapp-frontend` CI job regenerates `api-types.ts` from
-the committed snapshot and fails on any diff — so app, snapshot, TS types, and the
-committed tree must agree.
+`crates/reg-meta/openapi.json` is committed and is the canonical contract. The SPA
+codegens `src/lib/api-types-rust.ts` from it via `openapi-typescript`. Two checks keep
+these in lockstep: `cargo test -p reg-meta --test openapi_snapshot` asserts the
+committed snapshot equals the server's rendered document, and the frontend gate step
+(`scripts/gate.py frontend`, run by the `reg-webapp-frontend` CI job) regenerates the
+types from the snapshot and fails on any diff — so server, snapshot, TS types, and the
+committed tree must agree. `scripts/gate.py regen` refreshes both.
 
 ## Frontend toolchain
 
@@ -670,8 +652,8 @@ the JS/CSS/HTML parts of `.svelte` but does **not** yet parse Svelte control-flo
   Biome can't see template-bound usage of `<script>` declarations and false-fires.
   **`svelte-check`** (the `check` script) is the authoritative type/template gate and
   does see template usage.
-- The codegen'd `src/lib/api-types.ts` is excluded from Biome entirely (codegen output,
-  never hand-formatted).
+- The codegen'd `src/lib/api-types-rust.ts` is excluded from Biome entirely (codegen
+  output, never hand-formatted).
 
 **UI behavior layer: Bits UI** (`bits-ui@2.19.1`, the Svelte-5-runes major) is the
 sanctioned headless-primitives library for a11y-critical widgets — comboboxes, menus,
@@ -957,8 +939,8 @@ invariant removes the spurious refetch, not the teardown.
   Edge workers below); see the comment atop `router.svelte.ts`.
 
 The fetch wrapper (`src/lib/api.ts`) types every response off
-`components["schemas"][...]` from the codegen'd `api-types.ts`, so the SPA and the
-backend contract can't drift. The catch-all returns the `kind`-discriminated
+`components["schemas"][...]` from the codegen'd `api-types-rust.ts`, so the SPA and the
+server contract can't drift. The catch-all returns the `kind`-discriminated
 `CatalogNode` union; components narrow on `kind` via `src/lib/catalog.ts` helpers
 (unit-tested).
 
@@ -1271,7 +1253,7 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate. The image serves
   the API and `/mcp` only; the edge workers serve the SPA, which `container-build.yml`'s
   edge jobs build themselves. Since 3e.4 the Rust server answers every route the SPA
-  calls; the backend package serves none, and package F deletes it.
+  calls; package F deleted the FastAPI app.
 - **Hosted MCP** (decision 12): `/mcp` on `catalog.swecov.se`. The global worker
   forwards `/mcp` (`ROUTE_MCP` in `wrangler.jsonc` only; the SWECOV worker does not,
   since a steward catalog is never served over hosted MCP), and `fly.toml` passes

@@ -1,7 +1,9 @@
-"""reg_webapp: FastAPI backend serving the reg_meta catalog to the SPA.
+"""reg_webapp: the workspace member beside the Svelte SPA.
 
-See ``../DESIGN.md`` for the boot seam, steward layering, and the
-Pydantic boundary. The Rust server (``reg-meta serve``) answers ``/api/context``.
+The Rust server (``reg-meta serve``) serves every route. This member holds dev
+tooling only (``scripts/``: the synthetic fixture DB and the search eval) and the
+period-grammar parity test; see ``../../README.md``. It stays a workspace member
+because the Dockerfile's ``regmeta-db`` stage copies its pyproject until stage 4.
 """
 
 __version__ = "0.1.0"

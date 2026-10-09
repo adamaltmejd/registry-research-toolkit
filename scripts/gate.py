@@ -118,11 +118,8 @@ def flows() -> None:
 def frontend() -> None:
     for script in ("check", "lint", "test", "build", "gen:types"):
         run(["bun", "run", script], cwd=FRONTEND)
-    # A diff means the SPA's types drifted from the committed API contracts.
-    run(
-        "git diff --exit-code -- src/lib/api-types.ts src/lib/api-types-rust.ts",
-        cwd=FRONTEND,
-    )
+    # A diff means the SPA's types drifted from the committed API contract.
+    run("git diff --exit-code -- src/lib/api-types-rust.ts", cwd=FRONTEND)
 
 
 def regen() -> None:
@@ -156,7 +153,6 @@ def regen() -> None:
     )
     golden = ROOT / "conformance/cases/mcp/tools-list.json"
     golden.write_text(json.dumps(tools, indent=2) + "\n", encoding="utf-8")
-    run("uv run python reg_webapp/backend/scripts/gen_openapi.py")
     run("bun run gen:types", cwd=FRONTEND)
 
 

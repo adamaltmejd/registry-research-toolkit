@@ -1260,8 +1260,6 @@ in-flight list.
 
   | Dual structure                                                                                                                                            | Deleted in                                                                                          |
   | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-  | Three-server dev setup (`dev.sh`: uvicorn, `reg-meta serve`, vite) and the per-route vite proxy                                                           | F                                                                                                   |
-  | Dual TS types (`api-types.ts`, `api-types-rust.ts`) and dual OpenAPI (`backend/openapi.json`, `crates/reg-meta/openapi.json`)                             | F                                                                                                   |
   | Three-axis schema guard (`scripts/schema_pending_bump.py`: Python main DB, doc DB, Rust minimum)                                                          | stage 4 (Rust axes only)                                                                            |
   | Python `SCHEMA_VERSION` bumped for tables only Rust reads                                                                                                 | stage 4                                                                                             |
   | Image DB bake through the Python `reg-meta update` (Dockerfile `regmeta-db` stage)                                                                        | stage 4 (curl, SHA-256, zstd)                                                                       |
@@ -1713,9 +1711,10 @@ so the deleting package removes the row mechanically (checkpoint 2):
   `reg_meta.holdings.{ReadScope,resolve_scope}` and the `reg_webapp` entry of `used_by`
   for `reg_meta.errors.{EXIT_NOT_FOUND,EXIT_USAGE}`.
 - In 3e.4: `reg_meta.order.OrderFinding` (`routes/project.py`, `OrderBlockedModel`).
-- In F: the remaining app-wiring rows (`reg_meta`, `reg_meta.db`, `reg_meta.doc_db`, the
-  other `reg_meta.holdings.*`, and the remaining `reg_webapp` use of
-  `reg_meta.errors.*`).
+- In F: none (corrected in F). `app.py`'s `reg_meta.db` was the last app-wiring import;
+  `reg_meta.db` and `reg_meta.doc_db` keep their rows because the dev fixture builder
+  (`reg_webapp/backend/scripts/fixture_db.py`) imports them, and `reg_meta` and the
+  other `reg_meta.holdings.*` and `reg_meta.errors.*` rows no longer list `reg_webapp`.
 
 #### Stage 3b–3e decisions (maintainer, 2026-10-08)
 

@@ -69,9 +69,9 @@ replaced.
    plus the one or two primitives closest to what you are building.
 5. The closest existing view under `frontend/src/lib/` and its `*.browser.test.ts` —
    that is the pattern you extend.
-6. If the change touches backend response shape: `reg_webapp/backend/openapi.json`, the
-   route/model code, and the generated `frontend/src/lib/api-types.ts` contract before
-   proposing UI.
+6. If the change touches server response shape: `crates/reg-meta/openapi.json`, the
+   operation code, and the generated `frontend/src/lib/api-types-rust.ts` contract
+   before proposing UI.
 
 ## Composition ladder (reuse first)
 

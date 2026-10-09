@@ -1109,8 +1109,8 @@ try {
     mkdirSync(outDir, { recursive: true });
     // The project the two recovery scenarios open, and the manifest it must
     // produce, are DERIVED from the deployment the flows run against — never
-    // pinned to a stale capture. Shapes: reg_webapp/backend/tests/
-    // test_project_order.py (a valid global-fallback project + its entry).
+    // pinned to a stale capture. Shapes: conformance/cases/api/order-* (a valid
+    // global-fallback project + its entry).
     // Playwright's APIRequestContext, not bun's global fetch. This is still an
     // out-of-page HTTP client (it does not run in the renderer), but it resolves
     // `localhost` the way the browser does; bun picks ::1 with no fallback while
