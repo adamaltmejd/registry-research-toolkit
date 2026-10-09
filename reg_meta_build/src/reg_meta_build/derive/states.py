@@ -70,8 +70,8 @@ def _prepare(conn: sqlite3.Connection) -> sqlite3.Connection:
 
 @contextmanager
 def named_rows(conn: sqlite3.Connection) -> Iterator[sqlite3.Connection]:
-    """`conn` with the row factory and fold derive's reads need; `conn`'s own row
-    factory is restored on exit."""
+    """`conn` with the row factory and the `py_lower` fold derive's reads need;
+    `conn`'s own row factory is restored on exit."""
     factory = conn.row_factory
     try:
         yield _prepare(conn)
