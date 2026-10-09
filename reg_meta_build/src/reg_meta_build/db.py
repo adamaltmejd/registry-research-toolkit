@@ -766,7 +766,7 @@ DDL = (
 -- Core tables (all IDs stored as INTEGER for compact storage)
 
 -- Data providers (publishers): scb, sos, ... See _PROVIDER_SEED for the seed.
--- Promoted to first-class in schema v3.1 for FQID grammar (see reg_meta/DESIGN.md → FQID grammar).
+-- Promoted to first-class in schema v3.1 for FQID grammar (see crates/DESIGN.md → FQID grammar).
 CREATE TABLE provider (
     provider_id INTEGER PRIMARY KEY,
     slug        TEXT NOT NULL UNIQUE,
@@ -777,7 +777,7 @@ CREATE TABLE provider (
 -- are nullable in 3.1. Curated values land in step 1c; the build refuses to
 -- compile with NULL slugs from then on. The `_default` placeholder for
 -- variant-less registers is synthesized at FQID-resolve time (catalog.py),
--- never persisted. See reg_meta/DESIGN.md → FQID grammar and DESIGN.md → Slug curation.
+-- never persisted. See crates/DESIGN.md → FQID grammar and DESIGN.md → Slug curation.
 CREATE TABLE register (
     register_id INTEGER PRIMARY KEY,
     provider_id INTEGER NOT NULL REFERENCES provider(provider_id),
@@ -814,7 +814,7 @@ CREATE TABLE register_variant (
 );
 
 -- Register-version metadata. The FQID grammar has no version segment (see
--- reg_meta/DESIGN.md → FQID grammar), so this table carries NO `slug` column:
+-- crates/DESIGN.md → FQID grammar), so this table carries NO `slug` column:
 -- period is a delivery coordinate, not identity. The coalescer also reads
 -- `registerversionnamn` for the variable_state valid_from/to year fallback, and
 -- the lineage linkers derive a per-edition period from it. Since #799, the
@@ -1014,7 +1014,7 @@ CREATE TABLE variable_alias_build (
     PRIMARY KEY (cvid, delivery_column_name)
 );
 
--- Per-era shape of a variable (see reg_meta/DESIGN.md → Two-level variable model). One row per coalesced
+-- Per-era shape of a variable (see crates/DESIGN.md → Two-level variable model). One row per coalesced
 -- `(register_id, register_variant_id, var_id, data_type, data_length, value_set_id,
 -- value_set_version_label, grain)` tuple over `variable_instance`; populated
 -- by `_coalesce_variable_states` after CSV import. A2.5/A2.6 flipped the
@@ -1424,7 +1424,7 @@ CREATE TABLE code_variable_map (
 -- meanwhile.
 CREATE INDEX idx_code_variable_map_variable ON code_variable_map(variable_id);
 
--- Curated cross-register / cross-provider equivalence edges (see reg_meta/DESIGN.md → Composite registers and source tracking).
+-- Curated cross-register / cross-provider equivalence edges (see crates/DESIGN.md → Edges and lineage).
 -- **Variable grain**: endpoints are `(provider, register, variable)` slug
 -- triples. Slug-anchored (not cvid-anchored), so the link survives rebuilds
 -- even if provider IDs shift. Each TOML same_as entry becomes two rows

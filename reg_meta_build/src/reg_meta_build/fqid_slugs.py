@@ -2,7 +2,7 @@
 
 Global slugs live in register files under ``reg_meta_build/curation/registers/``.
 Steward slugs remain in per-provider files under ``reg_meta_build/fqid_slugs/``.
-This module parses them against the FQID grammar (see reg_meta/DESIGN.md → FQID
+This module parses them against the FQID grammar (see crates/DESIGN.md → FQID
 grammar and DESIGN.md → Slug curation),
 writes the slug columns during build, and ships the seed/precheck/snapshot
 machinery the CLI exposes.
@@ -630,7 +630,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
             '(e.g. `[registers."..."]` -> `[register."..."]`).',
         )
     entries: list[SlugEntry] = []
-    # Slug uniqueness scope follows the FQID grammar (see reg_meta/DESIGN.md → FQID grammar):
+    # Slug uniqueness scope follows the FQID grammar (see crates/DESIGN.md → FQID grammar):
     # - register: provider-wide (`<provider>/<register>`)
     # - register_variant, variable: per parent register (the register slot in
     #   `<provider>/<register>/<variant>...` already disambiguates them).

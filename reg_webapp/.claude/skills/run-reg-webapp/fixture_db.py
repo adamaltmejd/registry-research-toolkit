@@ -1,19 +1,22 @@
-"""Build the deterministic synthetic reg_meta DB pair the dev servers serve without a
-released catalog.
+"""Build the deterministic synthetic global catalog and docs DB pair the dev servers
+serve without a released catalog.
 
-Its consumer is ``dev.sh --fixture-db``: the pair, built into a temp dir, so
-``smoke`` / ``shot`` / ``flows`` / plain serve render a populated catalog where no
-released DB is reachable.
+Its consumers are ``dev.sh --fixture-db`` (the global catalog; a steward's comes from
+``conformance/fixture_cache.py``), built into a temp dir so ``smoke`` / ``shot`` /
+``flows`` / plain serve render a populated catalog where no released DB is reachable,
+and the browser flows, which assert on its content (``scb/lisa``, ``scb/rams``).
 
-It lives in ``scripts/`` (not ``src/reg_webapp/``) because it needs the repo
-checkout: the catalog builder rides on ``reg_meta_build``'s ``_slugged_db`` test
-helper, and ``reg_meta_build`` is not a reg_webapp runtime dependency.
+It needs the repo checkout: the catalog builder rides on ``reg_meta_build``'s
+``_slugged_db`` test helper.
+
+simplify: seeded Python rows, not readable source; port the content to a conformance
+case that ``conformance/fixture_cache.py`` builds when this file next needs a change.
 
 The content is fixed (no randomness, no clock): the same interpreter builds a
 byte-identical pair on every run, which is what makes a screenshot diff meaningful.
 
 Usage:
-    uv run python reg_webapp/backend/scripts/fixture_db.py <dir>
+    uv run python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py <dir>
 """
 
 from __future__ import annotations
@@ -28,10 +31,10 @@ from pathlib import Path
 import reg_meta_build.db
 import reg_meta_build.doc_db
 
-_SLUGGED_DB_DIR = Path(__file__).resolve().parents[3] / "reg_meta_build" / "tests"
-_READER_FIXTURE_DIR = (
-    Path(__file__).resolve().parents[3] / "conformance/cases/reader/fixture"
-)
+# reg_webapp/.claude/skills/run-reg-webapp/ → the repository root.
+_REPO = Path(__file__).resolve().parents[4]
+_SLUGGED_DB_DIR = _REPO / "reg_meta_build" / "tests"
+_READER_FIXTURE_DIR = _REPO / "conformance/cases/reader/fixture"
 FIXTURE_IMPORT_DATE = json.loads(
     (_READER_FIXTURE_DIR / "import_metadata.json").read_text()
 )["import_date"]
@@ -39,7 +42,7 @@ FIXTURE_IMPORT_DATE = json.loads(
 
 def ensure_slugged_db_importable() -> None:
     """Put ``reg_meta_build/tests`` on sys.path so the bare-name ``_slugged_db``
-    helper imports (mirrors reg_meta/tests/conftest.py). Idempotent."""
+    helper imports. Idempotent."""
     if str(_SLUGGED_DB_DIR) not in sys.path:
         sys.path.insert(0, str(_SLUGGED_DB_DIR))
 
@@ -1080,45 +1083,14 @@ def build_docs_fixture_db(db_path: Path) -> None:
         conn.close()
 
 
-def build_reader_fixture_db(
-    db_dir: Path,
-    *,
-    kind: str,
-    fixture: str | Path = "reader",
-    identity_overrides: dict[str, str] | None = None,
-) -> Path:
-    """Build the shared readable-source catalog or steward artifact.
-
-    The reader's test support runs the real catalog writer, holdings compiler and
-    artifact validator. Dev servers and HTTP conformance cases use these same bytes.
-    """
-    reader_tests = Path(__file__).resolve().parents[3] / "conformance"
-    if str(reader_tests) not in sys.path:
-        sys.path.insert(0, str(reader_tests))
-    from reader_artifacts import build_reader_artifact
-
-    return build_reader_artifact(
-        db_dir,
-        fixture,
-        kind,
-        identity_overrides={
-            "import_date": FIXTURE_IMPORT_DATE,
-            **(identity_overrides or {}),
-        },
-    )
-
-
-def build_fixture_db_dir(db_dir: Path, *, kind: str | None = None) -> Path:
+def build_fixture_db_dir(db_dir: Path) -> Path:
     """Build BOTH fixture DBs into ``db_dir`` — the shape ``REG_META_DB`` points at.
 
     The catalog DB is what the app boots on; the docs DB is optional at boot but
     `/doc/<identifier>` renders an empty state without it, so `--fixture-db` always
     writes the pair."""
-    if kind is None:
-        db_dir.mkdir(parents=True, exist_ok=True)
-        build_catalog_fixture_db(db_dir / reg_meta_build.db.DB_FILENAME)
-    else:
-        build_reader_fixture_db(db_dir, kind=kind)
+    db_dir.mkdir(parents=True, exist_ok=True)
+    build_catalog_fixture_db(db_dir / reg_meta_build.db.DB_FILENAME)
     build_docs_fixture_db(db_dir / reg_meta_build.doc_db.DOC_DB_FILENAME)
     return db_dir
 
@@ -1126,9 +1098,8 @@ def build_fixture_db_dir(db_dir: Path, *, kind: str | None = None) -> Path:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("db_dir", type=Path, help="directory to write the DB pair into")
-    parser.add_argument("--kind", choices=("catalog", "steward"))
     args = parser.parse_args()
-    print(build_fixture_db_dir(args.db_dir, kind=args.kind))
+    print(build_fixture_db_dir(args.db_dir))
 
 
 if __name__ == "__main__":

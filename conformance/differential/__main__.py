@@ -1,31 +1,17 @@
-"""G1: the pinned release's reader against the checkout's, on the pinned artifacts.
+"""G1: the pinned release's server against the checkout's, on the pinned artifacts.
 
     uv run python -m conformance.differential
 
-Fetches (once) the pinned artifacts and builds the release tag's baseline (its Python
-environment and ``reg-meta`` binary) into the shared cache, derives a candidate copy
-of each artifact with the checkout's builder (once per base and builder source, so on
-a committed tree), generates the seeded cases from the
-originals, runs each case through both readers' ``reg-meta`` CLI JSON in parallel
-worker processes (the baseline on the release originals, the checkout on the candidate
-copies), and compares exit code, stdout bytes and stderr per case. Then runs the
-fold sweep (``folds.py``): the baseline's ``fold_search`` against ``reg-core-py``.
-Writes ``report.json`` into ``<cache>/report/`` and prints a plain-text summary. Exit 0
-when no case and no fold input differs (outside a named exception), 1 when any does.
-
-The arm under test is this interpreter's ``reg_meta`` with the caller's environment,
-so a perturbed copy is tested with ``PYTHONPATH=<copy>/src uv run python -m
-conformance.differential``; the baseline arm runs isolated and never sees it.
-
-Normalization: none. Every case passes ``--format json`` without ``-v``, which
-prints only the payload's ``data``; the envelope fields the CLI contract marks as
-volatile (``generated_at``, ``run.duration_ms``, ``database``) are never printed.
-``order`` and ``validate`` print their canonical bytes. Outputs are compared byte for
-byte.
-
-The served operations run over HTTP (``served.py``): the checkout's ``reg-meta serve``
-on the candidate copies against the release tag's on the originals, every request sent
-to both unchanged and compared the same way, as raw bytes.
+Fetches (once) the pinned artifacts and builds the release tag's ``reg-meta`` binary
+into the shared cache, derives a candidate copy of each artifact with the checkout's
+builder (once per base and builder source, so on a committed tree), writes the seeded
+projects from the originals (``cases.py``), and sends every served request
+(``served.py``) to both servers: the release tag's on the originals and the
+checkout's on the candidate copies. Both arms run the same server, so every request
+goes to both unchanged and the answers compare as raw bytes: the status as ``exit``,
+the body as ``stdout``. Writes ``report.json`` into ``<cache>/report/`` and prints a
+plain-text summary. Exit 0 when no case differs (outside a named exception), 1 when
+any does.
 """
 
 from __future__ import annotations
@@ -33,22 +19,16 @@ from __future__ import annotations
 import fnmatch
 import hashlib
 import json
-import os
-import queue
 import shutil
-import subprocess
 import sys
-import threading
 import time
 import tomllib
 from collections import Counter
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from conformance.differential import cache, cases, folds, served
+from conformance.differential import cache, cases, served
 
 HERE = Path(__file__).resolve().parent
-DRIVER = HERE / "driver.py"
 MAX_PATHS = 20
 
 
@@ -132,133 +112,33 @@ def _excepted(diff: dict, exceptions: list[dict]) -> str | None:
     return None
 
 
-def _worker(
-    python: list[str],
-    env: dict[str, str],
-    db_dirs: dict[str, str],
-    todo: queue.Queue,
-    done: queue.Queue,
-    arm: str,
-) -> None:
-    proc = subprocess.Popen(
-        [*python, str(DRIVER)],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        env=env,
-        text=True,
-        encoding="utf-8",
-    )
-    assert proc.stdin is not None and proc.stdout is not None
-    try:
-        while True:
-            try:
-                case = todo.get_nowait()
-            except queue.Empty:
-                break
-            case = cases.Case(
-                case.id, [db_dirs.get(arg, arg) for arg in case.argv], case.page2
-            )
-            proc.stdin.write(case.to_json() + "\n")
-            proc.stdin.flush()
-            line = proc.stdout.readline()
-            if not line:
-                raise RuntimeError(f"{arm} driver exited during {case.id}")
-            for result in json.loads(line):
-                done.put((arm, result))
-    finally:
-        proc.stdin.close()
-        proc.wait()
-        done.put((arm, None))
-
-
 def run(config: dict) -> int:
     started = time.monotonic()
     pins = cache.Pins.from_config(config)
     baseline_tree = cache.ensure_baseline(pins)
-    baseline_python = cache.baseline_python(baseline_tree)
     dirs = cache.ensure_artifacts(pins)
     derived = cache.ensure_derived(pins, dirs, cache.derive_source())
     server = cache.ensure_server()
     setup_seconds = time.monotonic() - started
     report_dir = cache.cache_root() / "report"
     shutil.rmtree(report_dir, ignore_errors=True)
-    all_cases = cases.generate(dirs, config, report_dir / "projects")
-    # The served cases run beside the CLI arms (G1 budget).
-    with ThreadPoolExecutor(1) as served_pool:
-        served_future = served_pool.submit(
-            served.served_cases,
-            cache.baseline_server(baseline_tree),
-            baseline_tree / "reg_webapp" / "stewards",
-            server,
-            dirs,
-            derived,
-            report_dir / "servers",
-            report_dir / "projects",
-            config["seed"],
-        )
-        # Half the cores per arm; both arms run at once.
-        workers = max(1, (os.cpu_count() or 2) // 2)
-        arms = {
-            "baseline": (
-                [str(baseline_python), "-I"],
-                cache.isolated_env(),
-                {},
-            ),
-            "checkout": (
-                [sys.executable, "-P"],
-                dict(os.environ),
-                {str(dirs[c]): str(derived[c]) for c in dirs},
-            ),
-        }
-        done: queue.Queue = queue.Queue()
-        threads = []
-        for arm, (python, env, db_dirs) in arms.items():
-            todo: queue.Queue = queue.Queue()
-            # Holdings-scope cases hold the slowest reads; queue them first so they
-            # do not form the tail.
-            for case in sorted(all_cases, key=lambda c: "/holdings/" not in c.id):
-                todo.put(case)
-            for _ in range(workers):
-                t = threading.Thread(
-                    target=_worker,
-                    args=(python, env, db_dirs, todo, done, arm),
-                    daemon=True,
-                )
-                t.start()
-                threads.append(t)
-
-        pending: dict[str, dict[str, dict]] = {}
-        differences: list[dict] = []
-        compared: Counter[str] = Counter()
-        seconds: Counter[str] = Counter()
-        finished = 0
-        while finished < len(threads):
-            arm, result = done.get()
-            if result is None:
-                finished += 1
-                continue
-            slot = pending.setdefault(result["id"], {})
-            slot[arm] = result
-            if len(slot) == 2:
-                del pending[result["id"]]
-                command = result["id"].split("/")[2]
-                compared[command] += 1
-                seconds[command] += slot["baseline"]["seconds"]
-                diff = compare(result["id"], slot["baseline"], slot["checkout"])
-                if diff is not None:
-                    differences.append(diff)
-        for case_id, slot in pending.items():
-            compared[case_id.split("/")[2]] += 1
-            differences.append(
-                compare(case_id, slot.get("baseline"), slot.get("checkout"))
-            )
-        for t in threads:
-            t.join()
-        fold_sweep = folds.sweep(baseline_python, dirs)
-        for case_id, base, cand in served_future.result():
-            compared[case_id.split("/")[2]] += 1
-            if (diff := compare(case_id, base, cand)) is not None:
-                differences.append(diff)
+    cases.write_projects(dirs, config, report_dir / "projects")
+    results = served.served_cases(
+        cache.baseline_server(baseline_tree),
+        baseline_tree / "reg_webapp" / "stewards",
+        server,
+        dirs,
+        derived,
+        report_dir / "servers",
+        report_dir / "projects",
+        config["seed"],
+    )
+    differences: list[dict] = []
+    compared: Counter[str] = Counter()
+    for case_id, base, cand in results:
+        compared[case_id.split("/")[2]] += 1
+        if (diff := compare(case_id, base, cand)) is not None:
+            differences.append(diff)
 
     exceptions = config["exception"]
     for diff in differences:
@@ -278,12 +158,7 @@ def run(config: dict) -> int:
         "excepted": len(differences) - len(unexcepted),
         "wall_seconds": round(wall, 1),
         "setup_seconds": round(setup_seconds, 1),
-        "workers_per_arm": workers,
-        "baseline_seconds_by_command": {
-            k: round(v, 1) for k, v in seconds.most_common()
-        },
         "diffs": differences,
-        "fold_sweep": fold_sweep,
     }
     report_dir.mkdir(parents=True, exist_ok=True)
     report_path = report_dir / "report.json"
@@ -292,9 +167,8 @@ def run(config: dict) -> int:
     print(f"G1 {pins.tag} | baseline {pins.tag} vs checkout | seed {config['seed']}")
     print(
         f"{report['cases']} cases compared in {report['wall_seconds']} s "
-        f"({report['setup_seconds']} s fetching and deriving, {workers} workers "
-        f"per arm): {len(unexcepted)} differences, "
-        f"{report['excepted']} excepted"
+        f"({report['setup_seconds']} s fetching and deriving): "
+        f"{len(unexcepted)} differences, {report['excepted']} excepted"
     )
     if unexcepted:
         by_command = Counter(d["id"].split("/")[2] for d in unexcepted)
@@ -303,15 +177,8 @@ def run(config: dict) -> int:
         for diff in unexcepted[:MAX_PATHS]:
             where = ", ".join(diff["paths"][:3]) or ", ".join(diff["fields"])
             print(f"  {diff['id']}: {where}")
-    print(
-        f"fold sweep: {fold_sweep['inputs']} inputs in {fold_sweep['wall_seconds']} s: "
-        f"{fold_sweep['differences']} differences, "
-        f"{fold_sweep['excepted'][folds.EXCEPTION]} excepted ({folds.EXCEPTION})"
-    )
-    for diff in fold_sweep["diffs"]:
-        print(f"  {diff['input']!r}: {diff['baseline']!r} vs {diff['checkout']!r}")
     print(f"report: {report_path}")
-    return 1 if unexcepted or fold_sweep["differences"] else 0
+    return 1 if unexcepted else 0
 
 
 def main() -> int:

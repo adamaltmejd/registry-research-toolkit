@@ -5,22 +5,11 @@ Tests decorated with these markers are skipped unless explicitly opted in.
 
     pytest                          # unit tests only
     pytest --run-integration        # include integration tests
-
---install-mode picks which installation the package integration module builds.
-It is registered HERE, not in reg_meta/tests/conftest.py, because a run can invoke
-the WHOLE suite in one process (`pytest -n auto --run-integration
---install-mode workspace`): an option registered under a subdirectory conftest
-is unknown at argument-parse time and would abort that run.
 """
 
 from __future__ import annotations
 
 import pytest
-
-# The two installation boundaries reg_meta/tests/test_integration.py can build.
-# What each one proves — and why `registry` is the default — is documented there,
-# next to the Dockerfile steps that implement them.
-INSTALL_MODES = ("registry", "workspace")
 
 # marker name -> CLI flag description
 OPTIONAL_MARKERS: dict[str, str] = {
@@ -54,14 +43,6 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         type=str,
         default=None,
         help="accepted holdings input directory (requires --run-release and --artifact-dir)",
-    )
-    parser.addoption(
-        "--install-mode",
-        choices=INSTALL_MODES,
-        default="registry",
-        help="installation the package integration module builds "
-        "(registry: reg_meta alone, --no-sources, deps from PyPI; "
-        "workspace: this checkout's reg_schema + reg_meta wheels)",
     )
 
 

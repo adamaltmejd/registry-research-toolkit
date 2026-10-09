@@ -6,7 +6,7 @@
 # become MEASURABLE (the precondition #393 calls out; it gates the ranking items
 # 2/5/6/7). Run with:
 #
-#     uv run python reg_webapp/backend/scripts/run_search_eval.py
+#     uv run --no-project scripts/run_search_eval.py
 #
 # against a `reg-meta serve` over a real catalog — it reports, per case, whether
 # `intended` appears in its group and at what rank.

@@ -112,16 +112,15 @@ into the directory you name:
 
 ```sh
 db="$(mktemp -d)"
-uv run python reg_webapp/.claude/skills/run-reg-webapp/catalog_fixture_db.py "$db"
+uv run python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py "$db"
 REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows /tmp/project-flows
 ```
 
 The flows assert against the synthetic catalog those two lines set up (`scb/lisa/kon` at
 variant `individer-15plus` → column `Kon`, `scb/rams/syss` → column `Syss` for the
 catalog-draft case's second pick, and `scb/lisa/forsamling` → column `Forsamling` for
-the one it ticks off the register list), which `catalog_fixture_db.py` builds with the
-shared fixture builder (`reg_webapp/backend/scripts/fixture_db.py`, below) — not a
-released DB. A nonzero exit is a failed assertion, an unexpected JS page error,
+the one it ticks off the register list), which `fixture_db.py` (beside `dev.sh`) builds
+— not a released DB. A nonzero exit is a failed assertion, an unexpected JS page error,
 horizontal overflow at some viewport, or a server that never started; the servers are
 torn down either way.
 
@@ -134,14 +133,16 @@ local verification invocation; the names allow focused verification. The repo ga
 `--fixture-db` into a temporary directory, kept only on failure.
 
 **Deterministic UI verification (`--fixture-db`) — the default.** Pass `--fixture-db`
-before the mode and `dev.sh` serves a *synthetic* catalog: it runs
-`reg_webapp/backend/scripts/fixture_db.py` into a temp directory, exports it as
-`REG_META_DB`, and deletes it on exit. Content is fixed — no seed, no clock — so the DB
-pair is byte-identical run to run and a screenshot diff means a code change, not catalog
-drift. It is small but populated enough that every route the design-reviewer skill walks
-renders rows: `/`, `/catalog`, providers `fk` (register `midas`) and `scb` (`lisa` /
-`rams`), bindings like `/catalog/scb/lisa/kon` (value set, succession, lineage), the
-groups `/catalog/group/scb/rams/ink` and `/catalog/group/class/sun`, `/search?q=kon`,
+before the mode and `dev.sh` serves a *synthetic* catalog: it runs `fixture_db.py`
+(beside `dev.sh`) into a temp directory, exports it as `REG_META_DB`, and deletes it on
+exit. With `REG_WEBAPP_STEWARD` set it serves the conformance suite's synthetic steward
+artifact instead, from the shared fixture cache (`conformance/fixture_cache.py`).
+Content is fixed — no seed, no clock — so the DB pair is byte-identical run to run and a
+screenshot diff means a code change, not catalog drift. It is small but populated enough
+that every route the design-reviewer skill walks renders rows: `/`, `/catalog`,
+providers `fk` (register `midas`) and `scb` (`lisa` / `rams`), bindings like
+`/catalog/scb/lisa/kon` (value set, succession, lineage), the groups
+`/catalog/group/scb/rams/ink` and `/catalog/group/class/sun`, `/search?q=kon`,
 `/project`, and `/doc/Kon.md`. `smoke` drills it end to end.
 
 ```sh

@@ -39,10 +39,10 @@ returns HEAD as the acceptance commit. A tree not yet committed at HEAD, with it
 payload inventory complete, is reported as awaiting acceptance, without a rerun. Any
 other failed check drops the record and misses.
 
-Build key: the content of `reg_meta_build/src`, `reg_schema/src`,
-`crates/reg-core`, `crates/reg-core-py`, `Cargo.toml`, `Cargo.lock` and `uv.lock`; the
-builder's own `curation_tree_sha256` of the selected curation tree; the prepared
-commit and manifest digest; the mode and `--registers`; the Python and SQLite
+Build key: the content of `reg_meta_build/src`, `crates/reg-core`,
+`crates/reg-core-py`, `Cargo.toml`, `Cargo.lock` and `uv.lock`; the builder's own
+`curation_tree_sha256` of the selected curation tree; the prepared commit and manifest
+digest; the mode and `--registers`; the Python and SQLite
 versions; and for a publishable build the checkout's HEAD, which the database records.
 Every build lookup, hit or miss, first runs the admission checks the builder runs
 before it resolves anything (the prepared tree at the pinned commit and, for a
@@ -104,7 +104,6 @@ EXIT_CONFIG = 10  # reg-meta-build's exit for a diagnostic completion
 EXIT_AWAITING = 3
 PACKAGES = {
     "reg_meta_build": "reg_meta_build/src",
-    "reg_schema": "reg_schema/src",
 }
 # The prepare key's code boundary, as roots of a static import walk
 # (`prepare_code_files`): the preparation entry point, and the modules the CLI's
@@ -115,9 +114,6 @@ PACKAGES = {
 # reading a repository file outside its package (today only `_curation`,
 # `curation_tree` and `fqid_slugs` can read the curation tree, and the prepare path
 # calls none of those readers).
-#
-# Stage 4.9a of RUST_RUNTIME_SPEC.md deletes `reg_schema/`: update `PACKAGES` then;
-# a missing root stops the tool rather than shrinking the key.
 PREPARE_ROOTS = (
     "reg_meta_build.prepared_catalog",
     "reg_meta_build.input_snapshot",
@@ -525,8 +521,7 @@ def build_code(args: argparse.Namespace) -> dict:
     """The builder code a build runs. A publishable build also records the
     checkout's commit in the database, so that commit is keyed too."""
     return {
-        # `reg_schema/src` goes with stage 4.9a; drop it here then.
-        "code": code_digests((*BUILDER_SOURCES, PACKAGES["reg_schema"])),
+        "code": code_digests(BUILDER_SOURCES),
         "builder_commit": (
             git(ROOT, "rev-parse", "HEAD")
             if not args.diagnostic and not args.registers

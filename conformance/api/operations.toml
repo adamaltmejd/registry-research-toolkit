@@ -1,8 +1,7 @@
 # Operation table (RUST_RUNTIME_SPEC.md package 1.1): the API contract the Rust server
 # implements, defined once and exposed over HTTP and MCP (section 7). Error codes live in
-# `errors.toml`; `conformance/test_api_spec.py` lints both, the `api` cases and the
-# `operation` keys in `surface.toml`. Approved at checkpoint 1; choices section 7 does
-# not dictate say so in `note`.
+# `errors.toml`; `conformance/test_api_spec.py` lints both and the `api` cases.
+# Approved at checkpoint 1; choices section 7 does not dictate say so in `note`.
 #
 # Every response is `{"data": <result>, "meta": <Meta>}`; an error is
 # `{"error": <Error>, "meta": <Meta>}` (shapes below). Raw-bytes downloads
@@ -10,7 +9,7 @@
 #
 # [[operation]]
 #   name     the operation, in reg-catalog and in MCP dispatch.
-#   slice    the stage-3 slice that ports it (surface.toml's owners).
+#   slice    the stage-3 slice that ported it.
 #   http     its routes, "METHOD /path". `{ref}` spans several path segments (a FQID);
 #            other placeholders are one segment. Query parameters for GET, a JSON body
 #            for POST.
