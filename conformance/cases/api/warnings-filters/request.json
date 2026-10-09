@@ -1,5 +1,5 @@
 {
-  "note": "Twins of http_catalog/warnings and logical/warnings-absent-period, warnings-absent-representation and warnings-held-grain: fails if scope, variant, period, representation (through the canonical spelling) or unassigned_only filter differently from today's data_warnings, or a variable's list loses its register's unassigned warnings.",
+  "note": "Twins of logical/warnings-absent-period, warnings-absent-representation and warnings-held-grain: fails if scope, variant, period, representation (through the canonical spelling) or unassigned_only filter differently from today's data_warnings, or a variable's list loses its register's unassigned warnings.",
   "fixture": "reader/logical",
   "requests": [
     {

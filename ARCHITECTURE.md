@@ -244,14 +244,15 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   `bun run gen:types` + `git diff --exit-code` so the codegen'd TS types stay in sync.
   (There is no `make` target — drift is a failing test, not a Makefile step.) A future
   Go/Rust port of the query API reproduces the same spec; clients are unaffected.
-- **Performance budget (v1 targets, not yet CI-enforced).** Starting points:
-  `/api/catalog/*` p95 ≤ 200 ms (cache miss); `/api/project/validate` and
-  `/api/project/order` p95 ≤ 1 s; representative broad all-scope `/api/search`
-  cache-miss p95 ≤ 500 ms and browser-cold search LCP < 2.5 s. Search correctness and
-  latency are origin properties: edge hits do not substitute for cold-origin evidence.
-  Classification/value-set initial responses must be bounded by bucket/page limits
-  rather than total code cardinality, and cold/repeat rendered routes target CLS < 0.1.
-  The 200-column load-test fixture is committed
+- **Performance budget (v1 targets, not yet CI-enforced).** Starting points: the catalog
+  reads the Rust server answers (`/api/catalog/*` and the facets
+  `/api/{states,warnings,values,graph,lineage}/*`) p95 ≤ 200 ms (cache miss);
+  `/api/project/validate` and `/api/project/order` p95 ≤ 1 s; representative broad
+  all-scope `/api/search` cache-miss p95 ≤ 500 ms and browser-cold search LCP < 2.5 s.
+  Search correctness and latency are origin properties: edge hits do not substitute for
+  cold-origin evidence. Classification/value-set initial responses must be bounded by
+  bucket/page limits rather than total code cardinality, and cold/repeat rendered routes
+  target CLS < 0.1. The 200-column load-test fixture is committed
   (`reg_schema/test_corpus/load_test_200col/`), but the load-test harness and CI perf
   gate are remaining work (see `REFACTOR_SPEC.md`).
 - **Cross-package version compatibility.** `reg_webapp` **floor-pins** its runtime deps
@@ -267,9 +268,10 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
 ## API style
 
 The webapp API is **REST**, not GraphQL or tRPC: edge-cacheability is the primary cost
-lever (`/api/catalog/*` reads are `Cache-Control`d and ETagged so Cloudflare absorbs
-repeat traffic), and a stable resource grammar is the thing a future port must
-reproduce. See [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
+lever (the Rust server's catalog reads, `/api/catalog/*` and its facets, carry
+`Cache-Control` and ETags so Cloudflare absorbs repeat traffic), and a stable resource
+grammar is the thing a future port must reproduce. See
+[`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
 
 ## Testing strategy
 
@@ -355,7 +357,7 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
   | `reg_meta_build/tests`                        | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.                           |
   | `conformance`                                 | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                                                       |
   | `reg_meta/tests`                              | 15 s  | 3 min  | Stateless reader: CLI JSON and grammar cases over one session-built synthetic artifact.                                                                       |
-  | `reg_webapp/backend/tests`                    | 10 s  | 3 min  | Only what conformance cannot reach: boot, middleware, docs routes and the `openapi.json` snapshot, over a TestClient.                                         |
+  | `reg_webapp/backend/tests`                    | 10 s  | 3 min  | Only what conformance cannot reach: boot, the project routes and the `openapi.json` snapshot, over a TestClient.                                              |
   | `reg_schema/tests`                            | 4 s   | 2 min  | One validator over `reg_schema/test_corpus/`, pure and in-process.                                                                                            |
   | `scripts/tests`                               | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints, the opt-in marker gate); a few nested pytest runs dominate.                                             |
   | `.claude/hooks/tests`                         | 5 s   | 2 min  | Exit-code and message contracts of the Claude Code hooks (deny payloads, bootstrap idempotence); plain bash with stubbed `uv`/`bun`.                          |

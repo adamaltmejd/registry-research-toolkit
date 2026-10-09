@@ -1,20 +1,21 @@
 <script lang="ts">
 import { Tabs } from "bits-ui";
 import {
-  type ClassificationFamilyNodeData,
   type ClassificationGraphNode,
-  type ClassificationGroupNodeData,
-  type ClassificationNodeData,
-  getCatalogNode,
-  getClassificationGroup,
-  getClassificationGroupGraph,
+  type ClassificationShow,
+  type ClassificationSubjectShow,
+  type ConceptGroupMember,
+  classificationGroupRef,
+  type FamilyEdition,
+  getGraph,
+  getShow,
   type RelationshipGraph,
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import ClassificationCodesPanel from "./ClassificationCodesPanel.svelte";
 import ClassificationEditionGraph from "./ClassificationEditionGraph.svelte";
 import ClassificationRelatedLinks from "./ClassificationRelatedLinks.svelte";
-import { catalogHref, leafSlug, narrowCatalogNode } from "./catalog";
+import { catalogHref, leafSlug } from "./catalog";
 import { classificationGraphHasRenderableSuccession } from "./picker_graph";
 import { router } from "./router.svelte";
 import SubjectView from "./SubjectView.svelte";
@@ -39,12 +40,22 @@ import TechnicalDetails from "./TechnicalDetails.svelte";
 interface Props {
   key: string;
   activeFqid?: string | null;
-  initialActiveNode?: ClassificationNodeData | null;
+  initialActiveNode?: ClassificationShow | null;
 }
 
 let { key, activeFqid = null, initialActiveNode = null }: Props = $props();
 
-const resource = asyncResource(() => getClassificationGroup(key));
+const resource = asyncResource(async (): Promise<ClassificationSubjectShow> => {
+  const ref = classificationGroupRef(key);
+  const shown = await getShow(ref);
+  if (
+    shown.kind !== "classification_group" &&
+    shown.kind !== "classification_family"
+  ) {
+    throw new Error(`${ref} did not resolve to a classification group`);
+  }
+  return shown;
+});
 const node = $derived(resource.data);
 const EMPTY_GRAPH: RelationshipGraph = { nodes: [], edges: [], focus_id: null };
 // Classification umbrella pages consume the same relationship-graph contract as
@@ -52,9 +63,8 @@ const EMPTY_GRAPH: RelationshipGraph = { nodes: [], edges: [], focus_id: null };
 // pages; there is no add-to-project picker for classifications.
 const graphResource = asyncResource(() => {
   const activeKey = key;
-  return node?.kind === "classification-group" ||
-    node?.kind === "classification-family"
-    ? getClassificationGroupGraph(activeKey)
+  return node != null
+    ? getGraph(classificationGroupRef(activeKey))
     : Promise.resolve(EMPTY_GRAPH);
 });
 const graph = $derived(graphResource.data);
@@ -64,7 +74,7 @@ const graphReady = $derived(
 
 interface EditionTab {
   value: string;
-  fqid: string | null;
+  fqid: string;
   label: string;
   name: string;
   meta: string;
@@ -75,15 +85,11 @@ interface EditionTab {
 /** A member's display label: its own curated short facet label (umbrellas are
  * axis-less — each member carries its own picker label, with no shared group
  * axis), falling back to the member name, then its leaf slug. */
-function memberLabel(
-  member: ClassificationGroupNodeData["members"][number],
-): string {
+function memberLabel(member: ConceptGroupMember): string {
   return member.facets[0]?.label ?? member.name ?? leafSlug(member.fqid);
 }
 
-function editionLabel(
-  edition: ClassificationFamilyNodeData["editions"][number],
-): string {
+function editionLabel(edition: FamilyEdition): string {
   return edition.name ?? edition.slug;
 }
 
@@ -99,9 +105,7 @@ function graphNodeForFqid(fqid: string | null): ClassificationGraphNode | null {
   );
 }
 
-function memberTab(
-  member: ClassificationGroupNodeData["members"][number],
-): EditionTab {
+function memberTab(member: ConceptGroupMember): EditionTab {
   const point = graphNodeForFqid(member.fqid);
   return {
     value: member.fqid,
@@ -114,39 +118,34 @@ function memberTab(
   };
 }
 
-function familyTab(
-  edition: ClassificationFamilyNodeData["editions"][number],
-): EditionTab {
+function familyTab(edition: FamilyEdition): EditionTab {
   return {
-    value: edition.fqid ?? `missing:${edition.slug}`,
+    value: edition.fqid,
     fqid: edition.fqid,
     label: editionLabel(edition),
     name: edition.name ?? edition.slug,
     meta: `${edition.slug}${edition.is_current ? " - current" : ""}`,
-    versionYear: edition.version_year,
+    versionYear: edition.version_year ?? null,
     isCurrent: edition.is_current,
   };
 }
 
 const tabs = $derived.by((): EditionTab[] => {
-  if (node?.kind === "classification-family") {
+  if (node?.kind === "classification_family") {
     return node.editions.map(familyTab);
   }
-  if (node?.kind === "classification-group") {
+  if (node?.kind === "classification_group") {
     return node.members.map(memberTab);
   }
   return [];
 });
 const expectsEditionGraph = $derived(
-  tabs.length > 1 || (initialActiveNode?.edition_chain?.length ?? 0) > 1,
+  tabs.length > 1 || (initialActiveNode?.family?.editions.length ?? 0) > 1,
 );
 
 function latestTabFqid(tabList: EditionTab[]): string | null {
   let best: EditionTab | null = null;
   for (const tab of tabList) {
-    if (tab.fqid == null) {
-      continue;
-    }
     if (best == null) {
       best = tab;
       continue;
@@ -168,7 +167,7 @@ function latestTabFqid(tabList: EditionTab[]): string | null {
 
 let selectedFqid = $state<string | null>(null);
 const tabSelectionReady = $derived(
-  node?.kind !== "classification-group" || !graphResource.loading,
+  node?.kind !== "classification_group" || !graphResource.loading,
 );
 
 $effect(() => {
@@ -196,14 +195,13 @@ const activeNodeResource = asyncResource(async () => {
   if (initialActiveNode?.fqid === fqid) {
     return initialActiveNode;
   }
-  const resolved = narrowCatalogNode(await getCatalogNode(fqid));
-  if (resolved?.kind !== "classification") {
+  const resolved = await getShow(fqid);
+  if (resolved.kind !== "classification") {
     throw new Error(`${fqid} did not resolve to a classification`);
   }
   return resolved;
 });
 const activeNode = $derived(activeNodeResource.data);
-const activeNodeHasCodes = $derived((activeNode?.codes ?? []).length > 0);
 const focusedGraph = $derived.by((): RelationshipGraph | null => {
   if (graph == null || selectedFqid == null) {
     return graph;
@@ -222,7 +220,7 @@ const reserveEditionGraph = $derived(
 
 function selectEdition(value: string): void {
   const tab = tabs.find((item) => item.value === value);
-  if (tab?.fqid == null) {
+  if (tab == null) {
     return;
   }
   selectedFqid = tab.fqid;
@@ -245,7 +243,6 @@ function selectEdition(value: string): void {
             {#each tabs as tab (tab.value)}
               <Tabs.Trigger
                 value={tab.value}
-                disabled={tab.fqid == null}
                 class="edition-tab"
                 title={tab.name}
               >
@@ -260,10 +257,8 @@ function selectEdition(value: string): void {
               <p class="muted" aria-busy="true">Loading value set…</p>
             {:else if activeNodeResource.error}
               <p class="error" role="alert">{activeNodeResource.error}</p>
-            {:else if activeNode && activeNodeHasCodes}
+            {:else if activeNode}
               <ClassificationCodesPanel node={activeNode} />
-            {:else}
-              <p class="muted">No codes are available for this edition.</p>
             {/if}
           </Tabs.Content>
         </Tabs.Root>
@@ -294,7 +289,7 @@ function selectEdition(value: string): void {
       {resource.error}
     {/if}
   </p>
-{:else if node?.kind === "classification-family"}
+{:else if node?.kind === "classification_family"}
   {#snippet description()}
     <TechnicalDetails>
       <dl class="meta">
@@ -427,17 +422,13 @@ function selectEdition(value: string): void {
     text-align: left;
     cursor: pointer;
   }
-  .edition-tabs :global(.edition-tab:hover:not(:disabled)) {
+  .edition-tabs :global(.edition-tab:hover) {
     background: var(--surface-hover);
   }
   .edition-tabs :global(.edition-tab[data-state="active"]) {
     border-color: var(--border);
     border-bottom-color: var(--surface);
     background: var(--surface);
-  }
-  .edition-tabs :global(.edition-tab:disabled) {
-    color: var(--text-faint);
-    cursor: not-allowed;
   }
   .edition-tabs :global(.edition-tab:focus-visible) {
     outline: none;

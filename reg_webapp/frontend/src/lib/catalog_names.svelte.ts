@@ -23,13 +23,7 @@
  * invented name would not be.
  */
 
-import {
-  getCatalogNode,
-  getCatalogRoot,
-  getRegisterVariants,
-  isCatalogNode,
-  type RootResponse,
-} from "./api";
+import { getShow, getStates, type RootChild } from "./api";
 import {
   deliveryColumnNamesFromStates,
   fqidSegments,
@@ -105,8 +99,11 @@ export function resetCatalogNames(): void {
 /** The catalog root's children — the deployment's providers (plus the
  * classification root), for the shell's facet rail and for `sourceNames`'
  * provider word. */
-export function catalogRootChildren(): Read<RootResponse["children"]> {
-  return read("root", async () => (await getCatalogRoot()).children ?? []);
+export function catalogRootChildren(): Read<RootChild[]> {
+  return read("root", async () => {
+    const root = await getShow();
+    return root.kind === "root" ? root.children : [];
+  });
 }
 
 /** Whether this deployment serves more than one PROVIDER (false until the root read
@@ -125,9 +122,7 @@ export function providerQualified(): boolean {
 /** The PROVIDER nodes of a root read — the root also carries the classification
  * sentinel, which owns no register and qualifies no name. One spelling, so the
  * count above and the gate in `sourceNames` cannot drift apart. */
-function providersOf(
-  root: Read<RootResponse["children"]>,
-): RootResponse["children"] {
+function providersOf(root: Read<RootChild[]>): RootChild[] {
   return (root.value ?? []).filter((child) => child.kind === "provider");
 }
 
@@ -155,17 +150,17 @@ export function sourceNames(registerVariant: string): SourceNames {
   }
   const registerFqid = registerPrefixOf(registerVariant);
   const root = catalogRootChildren();
-  // The PROVIDER's node names every register it owns, in one small payload. The
-  // register's OWN node would name just this one and carry every variable in the
-  // register along with it — so a cart on several registers of one provider reads
-  // once here, and reads less.
+  // The PROVIDER's node names every register it owns, in one small payload, so a
+  // cart on several registers of one provider reads it once.
   const registersRead = read(`registers:${provider}`, async () => {
-    const node = await getCatalogNode(provider);
-    return isCatalogNode(node) && node.kind === "provider" ? node.children : [];
+    const node = await getShow(provider);
+    return node.kind === "provider" ? node.children : [];
   });
+  // The variants ride the register's own node, which carries its variables too:
+  // one read per register, shared by every source on it.
   const variantsRead = read(`variants:${registerFqid}`, async () => {
-    const response = await getRegisterVariants(registerFqid);
-    return response.variants ?? [];
+    const node = await getShow(registerFqid);
+    return node.kind === "register" ? node.variants : [];
   });
   const loading = root.loading || registersRead.loading || variantsRead.loading;
   // Trimmed to null, so "no name" is ONE condition: the heading falls back to the
@@ -205,7 +200,7 @@ export function sourceNames(registerVariant: string): SourceNames {
  * `deliveryColumnNamesFromStates`) — null while the read is in flight, when it
  * failed, and when nothing there names one column.
  *
- * The same `?period`+`?variant` leaf resolve the picker runs on a pick
+ * The same `period`+`variant` states read the picker runs on a pick
  * (`resolveBindingAt`), cached per `(fqid, period, variant)` so two columns of one
  * source, and every re-render of either, share the one request. A source with no
  * period cannot be resolved at all (the resolve needs one) and issues none — nor
@@ -220,10 +215,7 @@ export function columnNames(
   if (!fqid || !period || !variant) {
     return UNASKED;
   }
-  return read(`resolve:${fqid}?${period}&${variant}`, async () => {
-    const resolved = await getCatalogNode(fqid, { period, variant });
-    return isCatalogNode(resolved)
-      ? []
-      : deliveryColumnNamesFromStates(resolved.states ?? []);
-  });
+  return read(`resolve:${fqid}?${period}&${variant}`, async () =>
+    deliveryColumnNamesFromStates(await getStates(fqid, { period, variant })),
+  );
 }

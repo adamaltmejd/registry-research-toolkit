@@ -1,20 +1,21 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { ValueSetCodesResponse, ValueSetMemberModel } from "./api";
-import { ApiError, getValueSetCodes } from "./api";
+import type { ValueSetMemberModel, ValuesPage } from "./api";
+import { ApiError, getValues } from "./api";
 import ValueSetCodes from "./ValueSetCodes.svelte";
 
 // The bounded code panel (Y-46). The binding leaf carries a coding's id and size,
-// not its members, so this is where the codes are actually read — one page at a
-// time, filtered ACROSS THE WHOLE SET server-side. Under test: the loading,
-// error/retry and empty states the ticket asks for, plus paging, the filter's
-// page reset, and the exact request parameters (a wrong `offset`/`q` composition
-// is invisible in the rendered list until it silently drops codes).
+// not its members, so this is where the codes are actually read through `values`
+// — one cursor page at a time, filtered ACROSS THE WHOLE SET server-side. Under
+// test: the loading, error/retry and empty states the ticket asks for, plus
+// paging, the filter's page reset, the exact request parameters (a wrong
+// `cursor`/`q` composition is invisible in the rendered list until it silently
+// drops codes), and a classification's levels under paging.
 
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getValueSetCodes: vi.fn() };
+  return { ...actual, getValues: vi.fn() };
 });
 
 function members(n: number, offset = 0): ValueSetMemberModel[] {
@@ -24,42 +25,49 @@ function members(n: number, offset = 0): ValueSetMemberModel[] {
   }));
 }
 
-/** Serve `all` the way the route does: filter the COMPLETE set, then window it. */
+/** Serve `all` the way the operation does: filter the COMPLETE set, then window
+ * it; the cursor is opaque to the panel (here, the next row's index). */
 function serve(all: ValueSetMemberModel[]): void {
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (valueSetId, { state = null, q = "", offset = 0, limit = 200 }) => {
+  vi.mocked(getValues).mockImplementation(
+    async (_ref, { q = "", cursor = null, limit = 200 } = {}) => {
       const needle = q.trim().toLowerCase();
       const matched = all.filter(
         (c) =>
           c.code.toLowerCase().includes(needle) ||
           c.label.toLowerCase().includes(needle),
       );
+      const start = cursor ? Number(cursor) : 0;
+      const end = start + limit;
       return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        q,
+        items: matched.slice(start, end),
+        next_cursor: end < matched.length ? String(end) : null,
         total: matched.length,
-        offset,
-        limit,
-        codes: matched.slice(offset, offset + limit),
       };
     },
   );
 }
 
+function page_(items: ValueSetMemberModel[], total: number): ValuesPage {
+  return { items, next_cursor: null, total };
+}
+
 beforeEach(() => {
-  vi.mocked(getValueSetCodes).mockReset();
+  vi.mocked(getValues).mockReset();
 });
 
 describe("ValueSetCodes — the bounded code read", () => {
   it("announces loading, then renders the page it fetched", async () => {
-    let release: (r: ValueSetCodesResponse) => void = () => {};
-    vi.mocked(getValueSetCodes).mockReturnValue(
-      new Promise<ValueSetCodesResponse>((resolve) => {
+    let release: (r: ValuesPage) => void = () => {};
+    vi.mocked(getValues).mockReturnValue(
+      new Promise<ValuesPage>((resolve) => {
         release = resolve;
       }),
     );
-    await render(ValueSetCodes, { valueSetId: "7", codeCount: 2 });
+    await render(ValueSetCodes, {
+      ref: "scb/lisa/kommun",
+      stateId: "7",
+      codeCount: 2,
+    });
 
     // Busy while in flight — the placeholder is decorative, the status is on the
     // container (DESIGN.md → loading).
@@ -67,24 +75,20 @@ describe("ValueSetCodes — the bounded code read", () => {
     expect(status).not.toBeNull();
     expect(status?.textContent).toContain("Loading codes…");
 
-    release({
-      value_set_id: "7",
-      state_id: null,
-      q: "",
-      total: 2,
-      offset: 0,
-      limit: 200,
-      codes: members(2),
-    });
+    release(page_(members(2), 2));
     await expect.element(page.getByText("Kommun 0")).toBeVisible();
     expect(document.querySelector('[aria-busy="true"]')).toBeNull();
   });
 
   it("reports a failed read and retries it on demand", async () => {
-    vi.mocked(getValueSetCodes).mockRejectedValueOnce(
+    vi.mocked(getValues).mockRejectedValueOnce(
       new ApiError(503, null, "value set 7 is unavailable"),
     );
-    await render(ValueSetCodes, { valueSetId: "7", codeCount: 2 });
+    await render(ValueSetCodes, {
+      ref: "scb/lisa/kommun",
+      stateId: "7",
+      codeCount: 2,
+    });
 
     const alert = page.getByRole("alert");
     await expect.element(alert).toBeVisible();
@@ -98,16 +102,24 @@ describe("ValueSetCodes — the bounded code read", () => {
 
   it("says an empty coding is empty, and a filter with no match is no match", async () => {
     serve([]);
-    await render(ValueSetCodes, { valueSetId: "7", codeCount: 0 });
+    await render(ValueSetCodes, {
+      ref: "scb/lisa/kommun",
+      stateId: "7",
+      codeCount: 0,
+    });
     await expect
       .element(page.getByText("This value set has no codes."))
       .toBeVisible();
     // A set the leaf already counted as empty is answered here: no page to ask
     // for, so no request and no skeleton before the sentence.
-    expect(vi.mocked(getValueSetCodes)).not.toHaveBeenCalled();
+    expect(vi.mocked(getValues)).not.toHaveBeenCalled();
 
     serve(members(8));
-    await render(ValueSetCodes, { valueSetId: "8", codeCount: 8 });
+    await render(ValueSetCodes, {
+      ref: "scb/lisa/kommun",
+      stateId: "8",
+      codeCount: 8,
+    });
     await page
       .getByRole("textbox", { name: "Filter codes" })
       .fill("Härjedalen");
@@ -118,17 +130,20 @@ describe("ValueSetCodes — the bounded code read", () => {
 
   it("pages through a set larger than one request, tracking the real total", async () => {
     serve(members(450));
-    await render(ValueSetCodes, { valueSetId: "9", codeCount: 450 });
+    await render(ValueSetCodes, {
+      ref: "scb/lisa/kommun",
+      stateId: "9",
+      codeCount: 450,
+    });
 
     await expect.element(page.getByText("Kommun 0")).toBeVisible();
     await expect
       .element(page.getByText("Showing 200 of 450 codes."))
       .toBeVisible();
-    expect(vi.mocked(getValueSetCodes).mock.calls[0][1]).toMatchObject({
-      offset: 0,
-      limit: 200,
-      q: "",
-    });
+    expect(vi.mocked(getValues).mock.calls[0].slice(0, 2)).toMatchObject([
+      "scb/lisa/kommun",
+      { state: "9", cursor: null, limit: 200, q: "" },
+    ]);
 
     await page.getByRole("button", { name: "Load more codes" }).click();
     await expect
@@ -144,9 +159,12 @@ describe("ValueSetCodes — the bounded code read", () => {
     await expect
       .element(page.getByRole("button", { name: "Load more codes" }))
       .not.toBeInTheDocument();
-    expect(
-      vi.mocked(getValueSetCodes).mock.calls.map((c) => c[1].offset),
-    ).toEqual([0, 200, 400]);
+    // Each page continues from the cursor the previous page answered.
+    expect(vi.mocked(getValues).mock.calls.map((c) => c[1]?.cursor)).toEqual([
+      null,
+      "200",
+      "400",
+    ]);
   });
 
   it("filters the COMPLETE set and restarts paging, not the loaded pages", async () => {
@@ -154,7 +172,11 @@ describe("ValueSetCodes — the bounded code read", () => {
     // outside the pages this panel had loaded. A client-side filter over the
     // loaded pages would report 11; filtering the whole set first reports 61.
     serve(members(750));
-    await render(ValueSetCodes, { valueSetId: "9", codeCount: 750 });
+    await render(ValueSetCodes, {
+      ref: "scb/lisa/kommun",
+      stateId: "9",
+      codeCount: 750,
+    });
     await expect
       .element(page.getByText("Showing 200 of 750 codes."))
       .toBeVisible();
@@ -166,18 +188,22 @@ describe("ValueSetCodes — the bounded code read", () => {
     await page.getByRole("textbox", { name: "Filter codes" }).fill("Kommun 7");
     await expect.element(page.getByText("61 of 750")).toBeVisible();
     await expect.element(page.getByText("Kommun 749")).toBeVisible();
-    // The accumulated pages were dropped with the query change (offset back to 0),
-    // so the filtered list is the filtered set — not 400 stale rows plus it.
+    // The accumulated pages were dropped with the query change (no cursor), so
+    // the filtered list is the filtered set — not 400 stale rows plus it.
     expect(document.querySelectorAll(".code-row")).toHaveLength(61);
-    expect(vi.mocked(getValueSetCodes).mock.lastCall?.[1]).toMatchObject({
+    expect(vi.mocked(getValues).mock.lastCall?.[1]).toMatchObject({
       q: "Kommun 7",
-      offset: 0,
+      cursor: null,
     });
   });
 
   it("sends one read for a burst of keystrokes, not one per character", async () => {
     serve(members(40));
-    await render(ValueSetCodes, { valueSetId: "7", codeCount: 40 });
+    await render(ValueSetCodes, {
+      ref: "scb/lisa/kommun",
+      stateId: "7",
+      codeCount: 40,
+    });
     await expect.element(page.getByText("Kommun 39")).toBeVisible();
 
     // Fake the clock around the burst so the debounce timer only fires when
@@ -194,7 +220,7 @@ describe("ValueSetCodes — the bounded code read", () => {
     await expect.element(page.getByText("11 of 40")).toBeVisible();
     // Each query re-reads the WHOLE set server-side, so a request per keystroke
     // is what this debounce exists to prevent.
-    expect(vi.mocked(getValueSetCodes).mock.calls.map((c) => c[1].q)).toEqual([
+    expect(vi.mocked(getValues).mock.calls.map((c) => c[1]?.q)).toEqual([
       "",
       "Kommun 3",
     ]);
@@ -202,14 +228,18 @@ describe("ValueSetCodes — the bounded code read", () => {
 
   it("keeps the paging button focused while the page it asked for loads", async () => {
     serve(members(450));
-    await render(ValueSetCodes, { valueSetId: "9", codeCount: 450 });
+    await render(ValueSetCodes, {
+      ref: "scb/lisa/kommun",
+      stateId: "9",
+      codeCount: 450,
+    });
     await expect
       .element(page.getByText("Showing 200 of 450 codes."))
       .toBeVisible();
 
-    let release: (r: ValueSetCodesResponse) => void = () => {};
-    vi.mocked(getValueSetCodes).mockReturnValue(
-      new Promise<ValueSetCodesResponse>((resolve) => {
+    let release: (r: ValuesPage) => void = () => {};
+    vi.mocked(getValues).mockReturnValue(
+      new Promise<ValuesPage>((resolve) => {
         release = resolve;
       }),
     );
@@ -227,32 +257,29 @@ describe("ValueSetCodes — the bounded code read", () => {
     // …and pressing it again mid-flight must not re-ask for the same page.
     button.click();
 
-    release({
-      value_set_id: "9",
-      state_id: null,
-      q: "",
-      total: 450,
-      offset: 200,
-      limit: 200,
-      codes: members(200, 200),
-    });
+    release({ items: members(200, 200), next_cursor: "400", total: 450 });
     await expect
       .element(page.getByText("Showing 400 of 450 codes."))
       .toBeVisible();
-    expect(
-      vi.mocked(getValueSetCodes).mock.calls.map((c) => c[1].offset),
-    ).toEqual([0, 200]);
+    expect(vi.mocked(getValues).mock.calls.map((c) => c[1]?.cursor)).toEqual([
+      null,
+      "200",
+    ]);
     expect(document.activeElement).toBe(button);
   });
 
   it("does not guess a filtered count before the server reports one", async () => {
     serve(members(40));
-    await render(ValueSetCodes, { valueSetId: "7", codeCount: 40 });
+    await render(ValueSetCodes, {
+      ref: "scb/lisa/kommun",
+      stateId: "7",
+      codeCount: 40,
+    });
     await expect.element(page.getByText("Kommun 39")).toBeVisible();
 
-    let release: (r: ValueSetCodesResponse) => void = () => {};
-    vi.mocked(getValueSetCodes).mockReturnValue(
-      new Promise<ValueSetCodesResponse>((resolve) => {
+    let release: (r: ValuesPage) => void = () => {};
+    vi.mocked(getValues).mockReturnValue(
+      new Promise<ValuesPage>((resolve) => {
         release = resolve;
       }),
     );
@@ -261,44 +288,33 @@ describe("ValueSetCodes — the bounded code read", () => {
     // server never made about this query — withhold the count until it does.
     expect(document.querySelector(".filter-count")).toBeNull();
 
-    release({
-      value_set_id: "7",
-      state_id: null,
-      q: "Kommun 3",
-      total: 11,
-      offset: 0,
-      limit: 200,
-      codes: members(11, 30),
-    });
+    release(page_(members(11, 30), 11));
     await expect.element(page.getByText("11 of 40")).toBeVisible();
   });
 
-  it("reads a state's stored mismatch list when given one, and hides a pointless filter", async () => {
-    // The stub serves the stored mismatch list only for state 34 (value set 12);
-    // any other read gets the whole coding, so the rendered list shows which one
-    // the panel asked for.
+  it("reads a state's part against a declared classification when given one, and hides a pointless filter", async () => {
+    // The stub serves the nonstandard part only for state 34 of scb/lisa/sni
+    // against sni2007; any other read gets the whole coding, so the rendered list
+    // shows which one the panel asked for.
     const mismatches: ValueSetMemberModel[] = [
       { code: "X1", label: "Stored mismatch one" },
       { code: "X2", label: "Stored mismatch two" },
     ];
-    vi.mocked(getValueSetCodes).mockImplementation(
-      async (valueSetId, { state = null, offset = 0, limit = 200 }) => {
-        const codes =
-          valueSetId === "12" && state === "34" ? mismatches : members(3);
-        return {
-          value_set_id: String(valueSetId),
-          state_id: state,
-          q: "",
-          total: codes.length,
-          offset,
-          limit,
-          codes,
-        };
-      },
-    );
+    vi.mocked(getValues).mockImplementation(async (ref, params = {}) => {
+      const codes =
+        ref === "scb/lisa/sni" &&
+        params.state === "34" &&
+        params.classification === "class/sni2007" &&
+        params.partition === "nonstandard"
+          ? mismatches
+          : members(3);
+      return page_(codes, codes.length);
+    });
     await render(ValueSetCodes, {
-      valueSetId: "12",
+      ref: "scb/lisa/sni",
       stateId: "34",
+      classification: "class/sni2007",
+      partition: "nonstandard",
       codeCount: 2,
       filterLabel: "Filter nonconforming codes",
     });
@@ -310,5 +326,76 @@ describe("ValueSetCodes — the bounded code read", () => {
         .getByRole("textbox", { name: "Filter nonconforming codes" })
         .elements(),
     ).toEqual([]);
+  });
+
+  it("sizes a set it was not told the size of from the first page's total", async () => {
+    // Fails if an unknown `codeCount` (null) never shows the filter box, or if
+    // typing a filter (whose total counts matches) makes it vanish.
+    serve(members(40));
+    await render(ValueSetCodes, { ref: "class/kommun", codeCount: null });
+    await expect.element(page.getByText("Kommun 39")).toBeVisible();
+    const box = page.getByRole("textbox", { name: "Filter codes" });
+    await expect.element(box).toBeVisible();
+    await box.fill("Kommun 3");
+    await expect.element(page.getByText("11 of 40")).toBeVisible();
+  });
+
+  it("shows a classification's levels row by row under paging", async () => {
+    // Fails if a paged ClassificationCode row stops carrying its own level: the
+    // page holds a level-2 code whose level-1 parent is on it, and another whose
+    // parent was on an earlier page.
+    const codes = [
+      { code: "A", label: "Jordbruk", level: 1, is_valid: true },
+      { code: "01", label: "Växtodling", level: 2, is_valid: true },
+      { code: "02", label: "Skogsbruk", level: 2, is_valid: true },
+    ];
+    vi.mocked(getValues).mockResolvedValue({
+      items: codes,
+      next_cursor: null,
+      total: 3,
+    });
+    await render(ValueSetCodes, { ref: "class/sni2007", codeCount: null });
+
+    await expect.element(page.getByText("Växtodling")).toBeVisible();
+    const row = (label: string) =>
+      page.getByText(label).element().closest("li") as HTMLElement;
+    expect(row("Jordbruk").getAttribute("aria-level")).toBe("1");
+    expect(row("Växtodling").getAttribute("aria-level")).toBe("2");
+    expect(
+      page.getByText("Växtodling").element().getBoundingClientRect().left,
+    ).toBeGreaterThan(
+      page.getByText("Jordbruk").element().getBoundingClientRect().left,
+    );
+    expect(getValues).toHaveBeenCalledWith(
+      "class/sni2007",
+      expect.objectContaining({ state: null, cursor: null }),
+      expect.anything(),
+    );
+  });
+
+  it("renders a classification that starts below level 1 flat", async () => {
+    // Fails if the indent counts from level 1 instead of the shallowest loaded
+    // level: ICD-10-SE's codes are all level 2, so none of them is nested.
+    vi.mocked(getValues).mockResolvedValue({
+      items: [
+        { code: "A00", label: "Kolera", level: 2, is_valid: true },
+        { code: "A01", label: "Tyfoidfeber", level: 2, is_valid: true },
+      ],
+      next_cursor: null,
+      total: 2,
+    });
+    await render(ValueSetCodes, { ref: "class/icd-10-se", codeCount: null });
+
+    await expect.element(page.getByText("Tyfoidfeber")).toBeVisible();
+    const row = (label: string) =>
+      page.getByText(label).element().closest("li") as HTMLElement;
+    expect(row("Kolera").getAttribute("aria-level")).toBe("1");
+    expect(row("Tyfoidfeber").getAttribute("aria-level")).toBe("1");
+    const list = row("Kolera").closest("ul") as HTMLElement;
+    for (const label of ["Kolera", "Tyfoidfeber"]) {
+      expect(row(label).getBoundingClientRect().left).toBe(
+        list.getBoundingClientRect().left,
+      );
+    }
   });
 });

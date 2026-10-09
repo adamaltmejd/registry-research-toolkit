@@ -244,6 +244,7 @@ import {
 
 function group(over: Partial<ConceptGroup>): ConceptGroup {
   return {
+    fqid: "group/scb/lisa/ink",
     key: "ink",
     label: "Inkomst",
     source: "token",

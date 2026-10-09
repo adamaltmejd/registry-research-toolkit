@@ -3,18 +3,19 @@ import {
   ApiError,
   apiGet,
   classificationGroupPath,
-  getBindingLineageWarnings,
-  getCatalogNode,
-  getConceptGroup,
   getContext,
   getDoc,
   getDocsForVariable,
   getRelatedDocuments,
-  getValueSetCodes,
+  getShow,
+  getStates,
+  getValues,
+  getWarnings,
   relatedDocumentFileHref,
   search,
   validateProject,
 } from "./api";
+import { resolveBindingAt } from "./catalog";
 
 // Stub the global fetch per test. jsdom provides `Response`, but we hand-build
 // the minimal shape `apiGet` reads (ok / status / json) so the tests don't
@@ -114,70 +115,168 @@ describe("getContext", () => {
   });
 });
 
-describe("getCatalogNode", () => {
-  // Capture the requested URL for a single stubbed call.
-  async function urlFor(
-    fqidPath: string,
-    params?: Parameters<typeof getCatalogNode>[1],
-  ): Promise<string> {
+describe("getShow", () => {
+  it("GETs the ref with each segment encoded and returns the envelope's `data`", async () => {
+    // Fails if getShow stops encoding segments (a `ö` or reserved char would
+    // reach the server raw) or hands callers the `{data, meta}` envelope.
     let seen = "";
+    const data = { kind: "variable", fqid: "scb/lisa/kön" };
     stubFetch(async (url) => {
       seen = url;
-      return { ok: true, status: 200, json: async () => ({ kind: "binding" }) };
+      return { ok: true, status: 200, json: async () => ({ data, meta: {} }) };
     });
-    await getCatalogNode(fqidPath, params);
-    return seen;
-  }
-
-  it("URL-encodes each FQID segment but keeps the slash separators", async () => {
-    // Segments encoded individually; the path separators survive.
-    expect(await urlFor("scb/lisa/kön")).toBe("/api/catalog/scb/lisa/k%C3%B6n");
+    expect(await getShow("scb/lisa/kön")).toEqual(data);
+    expect(seen).toBe("/api/catalog/scb/lisa/k%C3%B6n");
   });
+});
 
-  it("omits undefined/empty params but keeps the present ones", async () => {
-    const url = await urlFor("scb/lisa/kon", {
+describe("getStates", () => {
+  it("follows `next_cursor` to the last page, keeping the narrowing params on each", async () => {
+    // Fails if getStates returns only the first page (a long history would
+    // silently lose states) or drops `period`/`limit` on a continuation.
+    const seen: string[] = [];
+    const pages: Record<
+      string,
+      { items: unknown[]; next_cursor: string | null }
+    > = {
+      "": { items: [{ state_id: "1" }], next_cursor: "c1" },
+      c1: { items: [{ state_id: "2" }], next_cursor: "c2" },
+      c2: { items: [{ state_id: "3" }], next_cursor: null },
+    };
+    stubFetch(async (url) => {
+      seen.push(url);
+      const cursor = new URL(url, "https://catalog.test").searchParams.get(
+        "cursor",
+      );
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ data: pages[cursor ?? ""], meta: {} }),
+      };
+    });
+    const states = await getStates("scb/lisa/kon", {
       period: "2018..2020",
       variant: undefined,
       value_set_version: "",
     });
-    // The `..` range and reserved chars are percent-encoded by URLSearchParams.
-    expect(url).toBe("/api/catalog/scb/lisa/kon?period=2018..2020");
+    expect(states.map((s) => s.state_id)).toEqual(["1", "2", "3"]);
+    expect(seen).toEqual([
+      "/api/states/scb/lisa/kon?period=2018..2020&limit=200",
+      "/api/states/scb/lisa/kon?period=2018..2020&limit=200&cursor=c1",
+      "/api/states/scb/lisa/kon?period=2018..2020&limit=200&cursor=c2",
+    ]);
   });
 });
 
-describe("getConceptGroup", () => {
-  it("encodes provider/register/key as fixed route segments", async () => {
-    let seen = "";
-    stubFetch(async (url) => {
-      seen = url;
-      return { ok: true, status: 200, json: async () => ({}) };
-    });
-    await getConceptGroup("scb", "lsön", "a/b", "member x/y");
-    expect(seen).toBe(
-      "/api/catalog/group/scb/ls%C3%B6n/a%2Fb?member=member%20x%2Fy",
+// The catalog reads take ONE period; the SPA writes a source's disjoint windows as a
+// comma list and the whole history as `_default` (the project grammar). These pin the
+// read side at the fetch boundary: `_default` is a read without `period`, a list is
+// one read per member, merged. Each fails if the split is removed (the server
+// refuses both forms with 422 invalid_period).
+function stubByPeriod(rows: Record<string, unknown>, seen: string[]): void {
+  stubFetch(async (url) => {
+    seen.push(url);
+    const period = new URL(url, "https://catalog.test").searchParams.get(
+      "period",
     );
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ data: rows[period ?? "none"], meta: {} }),
+    };
+  });
+}
+
+describe("catalog reads over a period list or `_default`", () => {
+  it("resolves a staged add over disjoint windows and over the whole history", async () => {
+    const column = (id: string, from: string) => ({
+      state_id: id,
+      delivery_column_name: "Kon",
+      valid_from: from,
+      valid_to: null,
+      data_type: "int",
+      value_set_id: null,
+      value_set_summary: null,
+      is_identifier: false,
+    });
+    const page = (...items: unknown[]) => ({ items, next_cursor: null });
+    const seen: string[] = [];
+    stubByPeriod(
+      {
+        "2005..2010": page(column("1", "2005-01-01")),
+        "2015..2020": page(
+          column("1", "2005-01-01"),
+          column("2", "2015-01-01"),
+        ),
+        none: page(column("1", "2005-01-01"), column("2", "2015-01-01")),
+      },
+      seen,
+    );
+    const listed = await resolveBindingAt(
+      "scb/lisa/kon",
+      "2005..2010,2015..2020",
+      "v",
+    );
+    const whole = await resolveBindingAt("scb/lisa/kon", "_default", "v");
+    expect(listed).toEqual({ kind: "derived", type: "numeric" });
+    expect(whole).toEqual({ kind: "derived", type: "numeric" });
+    expect(seen).toEqual([
+      "/api/states/scb/lisa/kon?period=2005..2010&variant=v&limit=200",
+      "/api/states/scb/lisa/kon?period=2015..2020&variant=v&limit=200",
+      "/api/states/scb/lisa/kon?variant=v&limit=200",
+    ]);
+  });
+
+  it("merges a period list's warnings once each in warning order, and reads `_default` unfiltered", async () => {
+    const warning = (id: string) => ({ warning_id: id, summary: id });
+    const seen: string[] = [];
+    stubByPeriod(
+      {
+        "2005..2010": [warning("w2"), warning("w3")],
+        "2015..2020": [warning("w1"), warning("w3")],
+        none: [warning("w1"), warning("w2"), warning("w3")],
+      },
+      seen,
+    );
+    const listed = await getWarnings("scb/lisa", {
+      period: "2005..2010,2015..2020",
+    });
+    const whole = await getWarnings("scb/lisa", { period: "_default" });
+    expect(listed.map((w) => w.warning_id)).toEqual(["w1", "w2", "w3"]);
+    expect(whole.map((w) => w.warning_id)).toEqual(["w1", "w2", "w3"]);
+    expect(seen).toEqual([
+      "/api/warnings/scb/lisa?period=2005..2010",
+      "/api/warnings/scb/lisa?period=2015..2020",
+      "/api/warnings/scb/lisa",
+    ]);
   });
 });
 
-describe("classificationGroupPath / getClassificationGroup (#756)", () => {
+it("refuses a period list with an empty member before reading", async () => {
+  // Fails if `2018,` reads its empty member without `period` — the whole
+  // history — instead of refusing it as the server refuses a malformed period.
+  const seen: string[] = [];
+  stubByPeriod({}, seen);
+  for (const read of [
+    () => getStates("scb/lisa/kon", { period: "2018," }),
+    () => getWarnings("scb/lisa", { period: "2018," }),
+  ]) {
+    await expect(read()).rejects.toMatchObject({
+      name: "ApiError",
+      status: 422,
+      body: { error: { code: "invalid_period" } },
+    });
+  }
+  expect(seen).toEqual([]);
+});
+
+describe("classificationGroupPath (#756)", () => {
   it("builds the fixed `class` route with the key encoded", () => {
     // The path is `/api`-less (like conceptGroupPath) — `apiGet` prepends `/api`.
     expect(classificationGroupPath("sun")).toBe("/catalog/group/class/sun");
-    expect(classificationGroupPath("a/b")).toBe("/catalog/group/class/a%2Fb");
-  });
-});
-
-describe("binding sub-endpoint helpers", () => {
-  // The SPA now fetches only `/lineage_warnings` (succession rides the embedded
-  // `succession_chain`, #582). GETs `/catalog/{encodeFqid}/lineage_warnings`.
-  it("encodes the FQID segments in a sub-endpoint URL", async () => {
-    let seen = "";
-    stubFetch(async (url) => {
-      seen = url;
-      return { ok: true, status: 200, json: async () => ({}) };
-    });
-    await getBindingLineageWarnings("scb/lisa/kön");
-    expect(seen).toBe("/api/catalog/scb/lisa/k%C3%B6n/lineage_warnings");
+    expect(classificationGroupPath("kön")).toBe(
+      "/catalog/group/class/k%C3%B6n",
+    );
   });
 });
 
@@ -401,40 +500,34 @@ describe("getRelatedDocuments / relatedDocumentFileHref (#742)", () => {
   });
 });
 
-it("round-trips adjacent catalog IDs above JavaScript’s safe integer range without collision", async () => {
+it("sends state ids above JavaScript's safe integer range verbatim to `values`", async () => {
+  // Fails if a state id is parsed as a number on the way out (two adjacent ids
+  // past 2^53 would collide on one value set) or a values param is dropped.
   const paths: string[] = [];
   stubFetch(async (url) => {
     paths.push(url);
-    const parsed = new URL(url, "https://catalog.test");
     return {
       ok: true,
       status: 200,
       json: async () => ({
-        value_set_id: parsed.pathname.split("/")[3],
-        state_id: parsed.searchParams.get("state"),
-        codes: [],
-        total: 0,
-        offset: 0,
-        limit: 200,
-        q: "",
+        data: { items: [], next_cursor: null, total: 0 },
+        meta: {},
       }),
     };
   });
   const ids = ["9007199254740992", "9007199254740993"];
   for (const id of ids) {
-    const response = await getValueSetCodes(id, {
+    const page = await getValues("scb/lisa/sni", {
       state: id,
-      classification: "sni2007",
+      classification: "class/sni2007",
       partition: "sentinels",
       column: "NgS1",
       alias_window_from: "2013-01-01",
     });
-    expect(response.value_set_id).toBe(id);
-    expect(response.state_id).toBe(id);
+    expect(page).toEqual({ items: [], next_cursor: null, total: 0 });
   }
   expect(new Set(paths).size).toBe(2);
-  expect(paths[1]).toContain("/9007199254740993/codes?");
-  expect(paths[1]).toContain("state=9007199254740993");
-  expect(paths[1]).toContain("classification=sni2007");
-  expect(paths[1]).toContain("alias_window_from=2013-01-01");
+  expect(paths[1]).toBe(
+    "/api/values/scb/lisa/sni?state=9007199254740993&classification=class%2Fsni2007&partition=sentinels&column=NgS1&alias_window_from=2013-01-01",
+  );
 });

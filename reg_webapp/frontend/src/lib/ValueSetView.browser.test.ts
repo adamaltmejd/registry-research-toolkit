@@ -1,14 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import { getValueSetCodes } from "./api";
+import { getValues } from "./api";
 import ValueSetView from "./ValueSetView.svelte";
 import {
-  CODES,
   classState,
   coding,
+  FQID,
   normalizedText,
   plainState,
+  serveValues,
   state,
 } from "./value-set-view-test-helpers";
 
@@ -28,41 +29,12 @@ import {
 // the same order the route does (filter the whole set, then page it).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getValueSetCodes: vi.fn() };
+  return { ...actual, getValues: vi.fn() };
 });
 
 beforeEach(() => {
-  vi.mocked(getValueSetCodes).mockReset();
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (
-      valueSetId,
-      {
-        state = null,
-        partition = "source_extensions",
-        q = "",
-        offset = 0,
-        limit = 200,
-      },
-    ) => {
-      const all = CODES.get(`${valueSetId}:${state ?? ""}:${partition}`) ?? [];
-      const needle = q.trim().toLowerCase();
-      const matched = all.filter(
-        (c) =>
-          c.code.toLowerCase().includes(needle) ||
-          c.label.toLowerCase().includes(needle),
-      );
-      return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        period_scope: "intervals",
-        q,
-        total: matched.length,
-        offset,
-        limit,
-        codes: matched.slice(offset, offset + limit),
-      };
-    },
-  );
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockImplementation(serveValues);
 });
 
 const ageState = state({
@@ -109,7 +81,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
             }),
           ]
         : [first];
-      await render(ValueSetView, { states, narrowed: false });
+      await render(ValueSetView, { fqid: FQID, states, narrowed: false });
       await expect
         .element(
           page.getByText("Löneinkomst i januari från största förvärvskällan"),
@@ -143,6 +115,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
 
   it("omits common facts and does not fill absent delivery facts", async () => {
     await render(ValueSetView, {
+      fqid: FQID,
       states: [
         state({
           name: "Common name",
@@ -201,7 +174,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       }),
     ];
 
-    await render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { fqid: FQID, states, narrowed: false });
 
     expect(document.querySelectorAll(".vs-list > li")).toHaveLength(1);
     await expect.element(page.getByText("month_jan")).toBeVisible();
@@ -244,7 +217,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       }),
     ];
 
-    await render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { fqid: FQID, states, narrowed: false });
 
     await expect.element(page.getByText("reason (2010)")).toBeVisible();
     await expect.element(page.getByText("Early definition")).toBeVisible();
@@ -257,6 +230,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // reports its size and explains itself, while a state that delivers free text
     // has no code surface at all.
     await render(ValueSetView, {
+      fqid: FQID,
       states: [
         state({
           state_id: "40",
@@ -297,7 +271,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     await expect
       .element(page.getByText("This value set has no codes."))
       .toBeVisible();
-    expect(vi.mocked(getValueSetCodes)).not.toHaveBeenCalled();
+    expect(vi.mocked(getValues)).not.toHaveBeenCalled();
   });
 
   it("shuts an open code disclosure when the states are re-resolved", async () => {
@@ -306,6 +280,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // so the row closes with it — an expanded row over an unmounted panel would
     // read as "this coding has no codes".
     const { rerender } = await render(ValueSetView, {
+      fqid: FQID,
       states: [plainState, classState],
       narrowed: false,
     });
@@ -331,6 +306,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
 
   it("a dense integer value set renders as a range, not an expandable code dump", async () => {
     await render(ValueSetView, {
+      fqid: FQID,
       states: [ageState, plainState],
       narrowed: false,
     });
@@ -341,7 +317,11 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("single-state dense integer detail renders the same range summary", async () => {
-    await render(ValueSetView, { states: [ageState], narrowed: false });
+    await render(ValueSetView, {
+      fqid: FQID,
+      states: [ageState],
+      narrowed: false,
+    });
     expect(normalizedText(".vs-numeric-range")).toContain(
       "Integer values 0-20 (21 values)",
     );
@@ -352,6 +332,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // A pooled-marked state shows the "pooled" badge beside its window; an
     // ordinary state shows none.
     const { rerender } = await render(ValueSetView, {
+      fqid: FQID,
       states: [state({ pooled: true })],
       narrowed: false,
     });
@@ -377,6 +358,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       classifications: [],
     };
     await render(ValueSetView, {
+      fqid: FQID,
       states: [
         state({
           ...base,
@@ -418,7 +400,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       state({ ...classState, state_id: "9", value_set_id: "101" }), // SAME edition, distinct id
       plainState,
     ];
-    await render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { fqid: FQID, states, narrowed: false });
     await expect.element(page.getByText("Kommun historisk")).toBeVisible();
     expect(
       page.getByRole("link", { name: "LKF 2007", exact: true }).elements(),
@@ -444,7 +426,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "1971-01-01",
       valid_to: "1973-12-31",
     });
-    await render(ValueSetView, { states: [a, b], narrowed: false });
+    await render(ValueSetView, { fqid: FQID, states: [a, b], narrowed: false });
     const labels = [...document.querySelectorAll(".vs-label")].map(
       (el) => el.textContent,
     );
@@ -477,7 +459,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
         delivery_column_name: "KOMMUN_ID",
       }),
     ];
-    await render(ValueSetView, { states, narrowed: false });
+    await render(ValueSetView, { fqid: FQID, states, narrowed: false });
     await expect
       .element(
         page.getByText(
@@ -489,6 +471,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
 
   it("single-state detail omits default/noise rows and wholly unknown windows", async () => {
     await render(ValueSetView, {
+      fqid: FQID,
       states: [
         state({
           variant: "_default",
@@ -513,6 +496,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
 
   it("multi-state usage omits default/noise labels and wholly unknown windows", async () => {
     await render(ValueSetView, {
+      fqid: FQID,
       states: [
         state({
           state_id: "10",

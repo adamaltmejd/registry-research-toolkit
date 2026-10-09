@@ -1,4 +1,4 @@
-"""Build the deterministic synthetic reg_meta DB pair the backend serves without a
+"""Build the deterministic synthetic reg_meta DB pair the dev servers serve without a
 released catalog.
 
 Two consumers, one builder:
@@ -82,7 +82,7 @@ def stamp_manifest(conn: sqlite3.Connection) -> None:
 
 
 def build_catalog_fixture_db(db_path: Path) -> None:
-    """Build a slugged catalog DB on disk for the ``/api/catalog`` tests.
+    """Build the slugged catalog DB on disk (``catalog_db`` and ``--fixture-db``).
 
     Uses ``reg_meta_build``'s ``_slugged_db`` builder: the default
     ``scb/lisa/kon`` binding (with one state) plus a value-set on it, a second
@@ -320,7 +320,7 @@ def _derive(src: sqlite3.Connection) -> None:
 
 
 def _seed_tags(src: sqlite3.Connection) -> None:
-    """Seed thematic tags so catalog routes exercise the #311 consumption path."""
+    """Seed thematic tags so the catalog pages exercise the #311 consumption path."""
     from _slugged_db import seed_tags
     from reg_meta_build.tags import CuratedTag, TagMember
 
@@ -414,189 +414,13 @@ def _seed_code_variable_map(src: sqlite3.Connection) -> None:
     )
 
 
-# The topic the Y-18 ranking fixture puts in a register purpose, a variable
-# name/definition AND the head of six incidental value-code labels. INVENTED text
-# for that fixture, not a claim about any real register's terms.
-_TOPIC = "covid test testing provtagning"
-
-
-def seed_topical_rows(src: sqlite3.Connection) -> None:
-    """Layer the Y-18 topical ranking scenario onto a built catalog fixture.
-
-    Deliberately NOT called by `build_catalog_fixture_db`: only the backend's
-    `topical_catalog_db` fixture seeds it, so the pair `dev.sh --fixture-db`
-    builds (and the UI gates screenshot) stays byte-identical. Reproduces a
-    researcher's topical search where the intended register/variable competes
-    with value codes whose LABELS merely begin with the same term.
-    """
-    ensure_slugged_db_importable()
-    from _slugged_db import add_state, add_value_set, add_variable
-
-    variant_id = 20  # scb/rams `standard`
-    value_set_id = 2
-    delivery_column = "CovidAnalys04"
-
-    # The register carries the topic in its PURPOSE and the variable in its
-    # NAME + DEFINITION — the "present definition/name match" the codes displace.
-    src.execute(
-        "UPDATE register SET purpose = ? WHERE slug = 'rams'",
-        (f"Sysselsättning samt {_TOPIC} på arbetsmarknaden.",),
-    )
-    add_variable(
-        src, register_id=2, var_id=78, name="Antal covid analyser", slug="covidanalys"
-    )
-    src.execute(
-        "UPDATE variable SET definition = ? WHERE slug = 'covidanalys'",
-        (f"Antal analyser per månad: {_TOPIC}.",),
-    )
-    add_state(
-        src,
-        register_id=2,
-        variable_slug="covidanalys",
-        register_variant_id=variant_id,
-        delivery_column_name=delivery_column,
-        value_set_id=value_set_id,
-    )
-    variable_id = src.execute(
-        "SELECT variable_id FROM variable WHERE slug = 'covidanalys'"
-    ).fetchone()[0]
-    # `variable_fts`'s delivery_column_names (and the search result's own chips)
-    # read `variable_alias`, so the exact-identifier control needs the alias row.
-    src.execute(
-        "INSERT INTO variable_alias "
-        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, ?, ?)",
-        (variable_id, variant_id, delivery_column),
-    )
-
-    # Two incidental code sets whose LABELS begin with the topic, one per value
-    # group: a `classification_code` row makes a code classification-owned, a bare
-    # `mapping_count > 0` makes it register-local (same split as
-    # `_seed_code_variable_map`).
-    icd10_id = src.execute(
-        "SELECT id FROM classification WHERE slug = 'icd-10-se'"
-    ).fetchone()[0]
-    for ordinal, code in enumerate(("C900", "C901", "C902")):
-        code_id = src.execute(
-            "INSERT INTO value_code (code, label, mapping_count) VALUES (?, ?, 0)",
-            (code, f"{_TOPIC} incidental klassifikationsetikett {ordinal}"),
-        ).lastrowid
-        src.execute(
-            "INSERT INTO classification_code "
-            "(classification_id, code_id, level, is_valid) VALUES (?, ?, NULL, 1)",
-            (icd10_id, code_id),
-        )
-    add_value_set(
-        src,
-        value_set_id=value_set_id,
-        codes=[
-            (code, f"{_TOPIC} incidental värdemängdsetikett {ordinal}")
-            for ordinal, code in enumerate(("L900", "L901", "L902"))
-        ],
-    )
-    src.execute(
-        "INSERT INTO code_variable_map (code_id, variable_id) "
-        "SELECT code_id, ? FROM value_set_member WHERE value_set_id = ?",
-        (variable_id, value_set_id),
-    )
-    src.execute(
-        "UPDATE value_code SET mapping_count = ("
-        "SELECT COUNT(*) FROM code_variable_map WHERE code_id = value_code.code_id)"
-    )
-    _derive(src)
-
-
-def seed_case_twin_column(src: sqlite3.Connection) -> None:
-    """Layer the Y-102/Y-107 case-twin holding onto a built catalog fixture.
-
-    Deliberately NOT called by `build_catalog_fixture_db` (like `seed_topical_rows`):
-    only the backend's `case_twin_db` fixture seeds it, so the pair
-    `dev.sh --fixture-db` builds (and the UI gates screenshot) stays byte-identical.
-
-    One `scb/lisa` variable `idve` whose column carries TWO spellings across its own
-    history. The 2013–2018 era has an alias WINDOW and expands into it, so every
-    resolver read of that era answers `Idh` — which is where a generated inventory
-    (Y-92) takes its literal from, and what the boot gate resolves it against. The
-    2019–2023 era has no window and stands on `variable_state`'s own `IdH`, the
-    spelling `representative_columns` names the column by. So a steward holding
-    `Idh` (`_steward_helpers.CASE_TWIN_HOLDINGS`) holds — admissibly, the boot gate
-    says so — a column the catalog ALSO spells `IdH`, and every surface that matches
-    held against catalog spelling has to fold the two together: the register row's
-    delivery/coverage cells, the leaf's states, the group's members, a
-    steward-narrowed search hit, and the semantic representation check. A third era
-    renames the column `Taxvarde` and stays UNHELD, so those same surfaces show the
-    fold widens nothing else.
-
-    `variable_alias` carries `IdH` and not `Idh`: the build requires the alias set to
-    cover the window columns only under the fold (`_check_variable_alias_window`), and
-    the search row's delivery-column chips are read from `variable_alias`.
-    """
-    ensure_slugged_db_importable()
-    from _slugged_db import add_state, add_variable
-
-    add_variable(src, register_id=1, var_id=970, name="Fastighet", slug="idve")
-    vid = src.execute(
-        "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'idve'"
-    ).fetchone()[0]
-    for column, valid_from, valid_to in (
-        ("IdH", "2013-01-01", "2018-12-31"),
-        ("IdH", "2019-01-01", "2023-12-31"),
-        ("Taxvarde", "2024-01-01", "9999-12-31"),
-    ):
-        add_state(
-            src,
-            register_id=1,
-            variable_slug="idve",
-            register_variant_id=10,  # lisa's default variant
-            valid_from=valid_from,
-            valid_to=valid_to,
-            delivery_column_name=column,
-        )
-    src.executemany(
-        "INSERT INTO variable_alias "
-        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, 10, ?)",
-        [(vid, "IdH"), (vid, "Taxvarde")],
-    )
-    # The window the steward's spelling comes from: contained in the first era and
-    # naming its column under the alias history's own case, so that era expands into
-    # `Idh` while the second stands on `IdH`.
-    src.execute(
-        "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
-        "delivery_column_name, valid_from, valid_to) "
-        "VALUES (?, 10, 'Idh', '2013-01-01', '2018-12-31')",
-        (vid,),
-    )
-    # The two columns as two REPRESENTATION members of one curated group (#819) —
-    # one variable, members distinguished by `delivery_column_name`, as
-    # `_seed_representation_group` does for the monthly family.
-    src.execute(
-        "INSERT INTO concept_group (group_id, kind, register_id, group_key, "
-        "label, source) VALUES (13, 'variable', 1, 'fastighet-rep', "
-        "'Fastighetsbeteckning', 'curated')"
-    )
-    src.execute(
-        "INSERT INTO concept_group_axis (group_id, axis, ordinal, label) "
-        "VALUES (13, 'era', 0, 'era')"
-    )
-    for column, value, label in (("IdH", "1", "–2023"), ("Taxvarde", "2", "2024–")):
-        cur = src.execute(
-            "INSERT INTO concept_group_variable "
-            "(group_id, variable_id, delivery_column_name) VALUES (13, ?, ?)",
-            (vid, column),
-        )
-        src.execute(
-            "INSERT INTO concept_group_variable_facet "
-            "(member_id, axis, value, label) VALUES (?, 'era', ?, ?)",
-            (cur.lastrowid, value, label),
-        )
-    _derive(src)
-
-
 def _seed_merged_family(src: sqlite3.Connection, add_variable, add_state) -> None:
     """Seed a MERGED monthly-family variable (#319) on scb/lisa: one variable
     `lonfink` with ONE annual 2018 state + three month columns in `variable_alias`
     and three `variable_alias_window` rows (jan/feb/mars 2018). Exercises the
-    resolver's read-time per-month expansion through `/api/catalog/{fqid}?period=`
-    and the backend's compound-key (state_id, column, valid_from) dedup."""
+    resolver's read-time per-month expansion through a `?period` states read
+    (`/api/states/{fqid}?period=`) and its compound-key (state_id, column,
+    valid_from) dedup."""
     add_variable(src, register_id=1, var_id=950, name="Lön per månad", slug="lonfink")
     add_state(
         src,
@@ -1091,11 +915,11 @@ def _seed_concept_groups(src: sqlite3.Connection, add_variable) -> None:
     )
     # #571: a classification SUCCESSION chain sun1996 → sun2000 → sun2020 (distinct
     # from the umbrella concept-group above — that's a presentation fold, this is the
-    # edition timeline the leaf node embeds as `edition_chain`). All three are LIVE
+    # edition timeline the classification page shows). All three are LIVE
     # `classification` rows — the build validator forbids succession edges to dead
     # slugs (validate.py, the classification_replaced_by check), so the fixture
     # mirrors that invariant; sun2020 is the terminal. Exercises the full-chain walk
-    # through the real `/api/catalog/class/sun2020` route.
+    # through the real `/api/graph/class/sun2020` route.
     src.execute(
         "INSERT INTO classification (id, short_name, name, slug) "
         "VALUES (49, 'SUN1996', 'Svensk utbildningsnomenklatur', 'sun1996')"
@@ -1131,9 +955,9 @@ def _seed_classification_split_root(src: sqlite3.Connection) -> None:
 
     A DISTINCT root from the linear sun1996→sun2000→sun2020 chain in
     `_seed_concept_groups`, kept separate so the linear `class/sun2020` test stays a
-    clean 3-edition chain. Browsing the split root
-    (`/api/catalog/class/sni-root1996`) must embed ALL three branches in
-    `edition_chain`, with the three 2020 tips all `is_current`. All editions are LIVE
+    clean 3-edition chain. The split root's graph
+    (`/api/graph/class/sni-root1996`) must reach ALL three branches, with the three
+    2020 tips all current. All editions are LIVE
     rows (the build validator forbids dead succession endpoints)."""
     src.execute(
         "INSERT INTO classification (id, short_name, name, slug) "

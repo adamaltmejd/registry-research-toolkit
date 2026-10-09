@@ -3,7 +3,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
+import { getGraph, getShow, getStates } from "./api";
 import {
   graph,
   mockResolveColumns,
@@ -19,19 +19,19 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
-    getConceptGroup: vi.fn(),
-    getConceptGroupGraph: vi.fn(),
+    getStates: vi.fn(),
+    getShow: vi.fn(),
+    getGraph: vi.fn(),
   };
 });
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getStates).mockReset();
   mockResolveColumns({});
-  vi.mocked(getConceptGroup).mockReset();
-  vi.mocked(getConceptGroupGraph).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getGraph).mockReset();
   // Default: an empty graph (overridden per case).
-  vi.mocked(getConceptGroupGraph).mockResolvedValue(graph([]));
+  vi.mocked(getGraph).mockResolvedValue(graph([]));
   router.navigate("/catalog/group/scb/rams/ink");
   windowStore.set(null);
   projectStore.newProject({
@@ -43,8 +43,8 @@ beforeEach(() => {
 describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   // ── Member → leaf navigation (#678) ─────────────────────────────────────────
   it("a single-column member's COLUMN CHIP is the leaf-navigation link (no separate 'View' link)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
 
     await renderGroup();
 
@@ -78,8 +78,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   // ── #678 finding 5: the member link carries the active group ?period ─────────
   it("a member nav link carries the active group ?period", async () => {
     router.navigate("/catalog/group/scb/rams/ink?period=2018..2020");
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
 
     await renderGroup();
 
@@ -100,8 +100,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 
   // ── #678 finding 6: chip nav goes through the SPA router (no full reload) ─────
   it("a plain chip click routes in-app without toggling the row", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
 
     await renderGroup();
 
@@ -126,8 +126,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   it("a modifier chip click is left to the browser", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
 
     await renderGroup();
 
@@ -165,11 +165,12 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
 });
 
 describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
-  it("marks the band the validated ?member= hint names", async () => {
-    // The backend echoes the validated focus slug on `node.member`; the band keyed by
-    // the member fqid whose leaf slug is that slug gets the focus marker.
-    vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+  it("marks the band the ?member= hint names", async () => {
+    // The page matches the hint against its members client-side (the Rust `show`
+    // has no member echo): the band keyed by the member fqid whose leaf slug is the
+    // hint gets the focus marker. Fails if the focus stops reading `?member=`.
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
     router.navigate("/catalog/group/scb/rams/ink?member=inkfeb");
 
     await renderGroup();
@@ -186,9 +187,24 @@ describe("ConceptGroupView ?member= focus highlight (#678 finding 5)", () => {
     expect(focused.textContent).toContain("Inkfeb");
   });
 
+  it("focuses nothing when ?member= names no member of the group", async () => {
+    // The refusal twin of the case above: the server used to drop an unknown hint;
+    // the client-side match must too. Fails if an unknown slug marks a band.
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
+    router.navigate("/catalog/group/scb/rams/ink?member=nope");
+
+    await renderGroup();
+
+    await expect
+      .element(page.getByRole("checkbox", { name: /Inkfeb/ }))
+      .toBeVisible();
+    expect(document.querySelectorAll(".focused")).toHaveLength(0);
+  });
+
   it("keeps a focused successor navigable after succession folds to list mode", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node({ member: "inkfeb" }));
-    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue({
       ...twoSingleColGraph(),
       edges: [
         {

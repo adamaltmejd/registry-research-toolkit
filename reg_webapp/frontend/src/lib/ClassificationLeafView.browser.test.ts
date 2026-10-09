@@ -1,53 +1,57 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { ClassificationNodeData } from "./api";
-import { getBindingGraph } from "./api";
+import type { ClassificationShow } from "./api";
+import { getGraph, getValues } from "./api";
 import ClassificationLeafView from "./ClassificationLeafView.svelte";
 
 // The classification leaf rendered through the unified SubjectView shell (#638 PR1).
-// The codes are EMBEDDED on the node (render synchronously); the picker surface is
-// the #906 compact edition DAG, fetched via `getBindingGraph(node.fqid)` — stubbed
-// empty here so it omits itself (its own failure domain; the leaf renders regardless).
-// This guards the shell wiring: the title (nodeLabel = name), the short-name meta dl,
-// and the embedded codes panel.
+// The codes are the `values` facet; the picker surface is the #906 compact edition
+// DAG, fetched via `getGraph(node.fqid)` — stubbed empty here so it omits itself (its
+// own failure domain; the leaf renders regardless). This guards the shell wiring: the
+// title (nodeLabel = name), the short-name meta dl, and the codes panel.
 
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getBindingGraph: vi.fn() };
+  return { ...actual, getGraph: vi.fn(), getValues: vi.fn() };
 });
 
-function node(
-  overrides: Partial<ClassificationNodeData> = {},
-): ClassificationNodeData {
+function node(overrides: Partial<ClassificationShow> = {}): ClassificationShow {
   return {
     kind: "classification",
     fqid: "class/sun2020",
     name: "Svensk utbildningsnomenklatur",
     short_name: "SUN2020",
-    edition_chain: [],
-    codes: [
-      { code: "1", label: "Förgymnasial", level: 1, is_valid: true },
-      { code: "3", label: "Eftergymnasial", level: 1, is_valid: true },
-    ],
+    family: null,
     dimensions: [],
     derived_from: [],
     derivatives: [],
+    variables: [],
     ...overrides,
-  } as unknown as ClassificationNodeData;
+  };
 }
 
 beforeEach(() => {
-  vi.mocked(getBindingGraph).mockReset();
-  vi.mocked(getBindingGraph).mockResolvedValue({
+  vi.mocked(getGraph).mockReset();
+  vi.mocked(getGraph).mockResolvedValue({
     nodes: [],
     edges: [],
     focus_id: null,
-  } as never);
+  });
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockResolvedValue({
+    items: [
+      { code: "1", label: "Förgymnasial", level: 1, is_valid: true },
+      { code: "3", label: "Eftergymnasial", level: 1, is_valid: true },
+    ],
+    next_cursor: null,
+    total: 2,
+  });
 });
 
 describe("ClassificationLeafView (#638 shell)", () => {
-  it("renders the title, short-name meta, and the embedded codes panel", async () => {
+  // Fails if the leaf stops mounting the codes panel or the shell's title/meta.
+  it("renders the title, short-name meta, and the codes panel", async () => {
     await render(ClassificationLeafView, { node: node() });
 
     // The shell's title is nodeLabel(node) = the classification name.
@@ -69,7 +73,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
     await expect
       .element(page.getByText("SUN2020", { exact: true }))
       .toBeVisible();
-    // The embedded value-set codes panel renders inside the shell.
+    // The codes panel renders inside the shell.
     await expect
       .element(page.getByRole("heading", { name: "Codes" }))
       .toBeVisible();
@@ -77,7 +81,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
   });
 
   it("renders the compact classification edition graph when the graph fetch has editions", async () => {
-    vi.mocked(getBindingGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes: [
         {
           kind: "classification",
@@ -118,7 +122,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
         },
       ],
       focus_id: "sun2020",
-    } as never);
+    });
 
     await render(ClassificationLeafView, { node: node() });
 
@@ -136,7 +140,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
   });
 
   it("omits sibling-only succession chains when the viewed edition has no edge", async () => {
-    vi.mocked(getBindingGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes: [
         {
           kind: "classification",
@@ -177,7 +181,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
         },
       ],
       focus_id: "niva-test",
-    } as never);
+    });
 
     await render(ClassificationLeafView, {
       node: node({
@@ -203,7 +207,6 @@ describe("ClassificationLeafView (#638 shell)", () => {
         derived_from: [
           {
             fqid: "class/icd-9-ks87",
-            slug: "icd-9-ks87",
             short_name: "ICD-9-KS87",
             name: "Klassifikation av sjukdomar 1987",
             note: "Primary-care setting variant of ICD-9-KS87",
@@ -212,7 +215,6 @@ describe("ClassificationLeafView (#638 shell)", () => {
         derivatives: [
           {
             fqid: "class/ks87-p-extra",
-            slug: "ks87-p-extra",
             short_name: "KS87-P extra",
             name: "Extra derived classification",
             note: null,

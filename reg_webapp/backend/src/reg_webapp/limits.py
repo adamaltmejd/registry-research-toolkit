@@ -16,9 +16,8 @@ stdlib-only ASGI middlewares, no new dependency (no slowapi):
   IP-only by design (no session token — that adds a fingerprinting surface for
   anonymous public data); a localStorage token is a later, opt-in concern.
 
-Both gate ONLY the write methods (POST). Read GETs flow through untouched — they
-are edge-cached (Cloudflare) and ETag-revalidated (``ETagMiddleware``), a
-different and cheaper protection axis. The cap MUST run BEFORE a handler reads
+Both gate ONLY the write methods (POST). Read GETs (``/openapi.json``, ``/docs``)
+flow through untouched. The cap MUST run BEFORE a handler reads
 the body, and the limiter before any work; ``app.py`` adds them so they wrap the
 routers (see its middleware-ordering note).
 
@@ -53,8 +52,8 @@ MAX_BODY_BYTES = 1024 * 1024
 # allowed but a burst beyond the bucket is 429'd.
 RATE_LIMIT_PER_MINUTE = 30
 
-# Only write methods are gated. GET/HEAD reads are edge-cached + ETag-revalidated
-# (a separate, cheaper axis) and must pass through both middlewares untouched.
+# Only write methods are gated; GET/HEAD reads pass through both middlewares
+# untouched.
 _WRITE_METHODS = frozenset({"POST", "PUT", "PATCH", "DELETE"})
 
 

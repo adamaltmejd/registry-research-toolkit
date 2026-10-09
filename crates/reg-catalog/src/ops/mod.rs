@@ -572,6 +572,10 @@ fn operation_id(op: &Operation, route: &str) -> String {
 }
 
 /// The `OpenAPI` document of every registered operation.
+///
+/// # Panics
+///
+/// When two types register different schemas under one name.
 #[must_use]
 pub fn openapi(version: &str) -> OpenApi {
     let mut components = Components::new();
@@ -613,6 +617,14 @@ pub fn openapi(version: &str) -> OpenApi {
             HttpMethod::Get
         };
         paths = paths.path(download.path, PathItem::new(method, operation));
+    }
+    // Two types with one schema name would silently replace each other's schema
+    // (3c.3's `Coverage` once replaced `show`'s): refuse instead.
+    let mut named: BTreeMap<&str, &RefOr<Schema>> = BTreeMap::new();
+    for (name, schema) in &components {
+        if let Some(other) = named.insert(name, schema) {
+            assert!(other == schema, "two types share the schema name {name}");
+        }
     }
     OpenApiBuilder::new()
         .info(InfoBuilder::new().title("reg-meta").version(version))

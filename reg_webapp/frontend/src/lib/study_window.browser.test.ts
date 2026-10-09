@@ -1,20 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type {
-  BindingNodeData,
-  StatesResponse,
-  VariableStateModel,
-} from "./api";
+import type { ShowNode, VariableShow, VariableStateModel } from "./api";
 import {
-  getBindingGraph,
-  getBindingLineageWarnings,
-  getCatalogNode,
   getDocsForVariable,
+  getGraph,
+  getLineage,
   getRelatedDocuments,
+  getShow,
+  getStates,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import { resetCatalogNames } from "./catalog_names.svelte";
+import { state as baseState } from "./catalog-test-helpers";
 import ProjectEditor from "./ProjectEditor.svelte";
 import type { Period, Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
@@ -32,10 +30,11 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getBindingGraph: vi.fn(),
-    getBindingLineageWarnings: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getShow: vi.fn(),
+    getStates: vi.fn(),
+    getGraph: vi.fn(),
+    getLineage: vi.fn(),
     getDocsForVariable: vi.fn(),
     getRelatedDocuments: vi.fn(),
   };
@@ -47,50 +46,64 @@ const SEED = {
 } as const;
 
 function state(over: Partial<VariableStateModel>): VariableStateModel {
-  return {
-    warning_ids: [],
-    state_id: "1",
-    period_scope: "intervals",
+  return baseState({
     variant: "individer",
-    variant_label: null,
-    register_variant_id: "1",
     valid_from: "2010-01-01",
     valid_to: "2015-12-31",
-    data_type: null,
-    data_length: null,
     delivery_column_name: "Kon",
-    source_register_text: null,
-    provenance: null,
-    pooled: false,
-    value_set_version_label: "",
-    value_set_id: null,
-    value_set: null,
-    is_identifier: false,
-    classifications: [],
     ...over,
-  };
+  });
 }
 
-function leaf(states: VariableStateModel[]): BindingNodeData {
+/** `scb/lisa/kon`'s `show`: metadata only; its states are a separate read. */
+function leaf(): VariableShow {
   return {
-    kind: "binding",
+    kind: "variable",
     fqid: "scb/lisa/kon",
     name: "Kön",
     definition: null,
     description: null,
     measurement_unit: null,
+    operational_definition: null,
+    source_register_text: null,
     is_identifier: false,
     is_sensitive: false,
-    register_id: "1",
-    variable_id: "1",
-    source_register_id: null,
-    source_register_text: null,
-    states,
+    deprecated: false,
+    group: null,
     same_as: [],
-    lineage: [],
-    succession_chain: [],
-    via_same_as: null,
-  } as unknown as BindingNodeData;
+    tags: [],
+  };
+}
+
+/** A register's `show` listing one variable delivered under `variant` from
+ * `from` to `to` (in `Col`) — the read the overlap plan works from. */
+function registerShow(
+  fqid: string,
+  variable: string,
+  variant: string,
+  from: string,
+  to: string,
+): ShowNode {
+  return {
+    kind: "register",
+    fqid,
+    children: [
+      {
+        fqid: variable,
+        deliveries: [
+          {
+            column: "Col",
+            variant,
+            period_scope: "intervals",
+            windows: [{ valid_from: from, valid_to: to }],
+          },
+        ],
+      },
+    ],
+    groups: [],
+    tags: [],
+    variants: [],
+  } as unknown as ShowNode;
 }
 
 /** `Kon` delivered in two eras with a gap: 2005–2008, then 2012–2020. */
@@ -133,16 +146,20 @@ function sourcePeriods(): Period[] {
 
 beforeEach(() => {
   resetCatalogNames();
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getBindingGraph).mockResolvedValue({
+  vi.mocked(getStates).mockReset();
+  // The cards' name reads find no catalog: what these cases assert is the window.
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getShow).mockRejectedValue(new Error("offline"));
+  vi.mocked(getGraph).mockResolvedValue({
     nodes: [],
     edges: [],
     focus_id: null,
-  } as never);
-  vi.mocked(getBindingLineageWarnings).mockResolvedValue({
-    binding: "scb/lisa/kon",
-    lineage_warnings: [],
-  } as never);
+  });
+  vi.mocked(getLineage).mockResolvedValue({
+    edges: [],
+    warnings: [],
+    registers: [],
+  });
   vi.mocked(getDocsForVariable).mockResolvedValue({
     items: [],
     total: 0,
@@ -171,12 +188,12 @@ afterEach(() => {
 
 describe("common study window — catalog picker", () => {
   function renderLeaf(states: VariableStateModel[]) {
-    vi.mocked(getCatalogNode).mockResolvedValue({
-      states,
-    } as unknown as StatesResponse);
+    // The `?period` subset read answers the same history the page loaded.
+    vi.mocked(getStates).mockResolvedValue(states);
     return render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: leaf(states),
+      node: leaf(),
+      states,
       regMetaVersion: SEED.reg_meta_version,
       steward: SEED.steward,
       windowMinYear: 1960,
@@ -338,24 +355,20 @@ describe("common study window — project page", () => {
   });
 
   it("leaves a source alone when the catalog lists no delivery for one of its columns", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue({
-      kind: "register",
-      fqid: "scb/lisa",
-      children: [
-        {
-          kind: "binding",
-          fqid: "scb/lisa/kon",
-          deliveries: [
-            {
-              column: "Kon",
-              variant: "individer",
-              period_scope: "intervals",
-              windows: [{ valid_from: "2000-01-01", valid_to: "9999-12-31" }],
-            },
-          ],
-        },
-      ],
-    } as never);
+    // Fails if the overlap plan stops reading the register's `show` children
+    // (package C: `getShow`, variable children without a `kind`).
+    vi.mocked(getShow).mockImplementation(async (ref) => {
+      if (ref === "scb/lisa") {
+        return registerShow(
+          "scb/lisa",
+          "scb/lisa/kon",
+          "individer",
+          "2000-01-01",
+          "9999-12-31",
+        );
+      }
+      throw new Error("offline");
+    });
     loadDraft(
       [
         {
@@ -388,30 +401,28 @@ describe("common study window — project page", () => {
   });
 
   it("applies the window overlap only to the sources that have one", async () => {
-    vi.mocked(getCatalogNode).mockImplementation(async (fqid) => {
-      const deliveries: Record<string, [string, string, string, string]> = {
-        "scb/lisa": ["scb/lisa/kon", "individer", "2000-01-01", "9999-12-31"],
-        "scb/rtb": ["scb/rtb/kommun", "befolkning", "1990-01-01", "2005-12-31"],
-      };
-      const [variable, variant, from, to] = deliveries[fqid];
-      return {
-        kind: "register",
-        fqid,
-        children: [
-          {
-            kind: "binding",
-            fqid: variable,
-            deliveries: [
-              {
-                column: "Col",
-                variant,
-                period_scope: "intervals",
-                windows: [{ valid_from: from, valid_to: to }],
-              },
-            ],
-          },
-        ],
-      } as never;
+    // Fails if the overlap plan stops reading the register's `show` children
+    // (package C: `getShow`, variable children without a `kind`).
+    vi.mocked(getShow).mockImplementation(async (ref) => {
+      if (ref === "scb/lisa") {
+        return registerShow(
+          "scb/lisa",
+          "scb/lisa/kon",
+          "individer",
+          "2000-01-01",
+          "9999-12-31",
+        );
+      }
+      if (ref === "scb/rtb") {
+        return registerShow(
+          "scb/rtb",
+          "scb/rtb/kommun",
+          "befolkning",
+          "1990-01-01",
+          "2005-12-31",
+        );
+      }
+      throw new Error("offline");
     });
     loadDraft(
       [

@@ -22,5 +22,12 @@
         ["Valuetwo", "Secondhidden"]
       ]
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/members/*/fqid": ["scb/example/value"],
+      "/data/members/*/delivery_column": [null]
+    }
   }
 ]

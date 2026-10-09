@@ -5,22 +5,19 @@
  * structure).
  */
 import {
-  type BindingChild,
-  type BindingGroupRef,
-  type CatalogNode,
   type ConceptGroup,
   classificationGroupPath,
   conceptGroupPath,
   encodeFqid,
   type GroupAxisModel,
   type GroupFacetModel,
-  getCatalogNode,
-  isCatalogNode,
-  type StatesResponse,
+  getStates,
+  type ShowNode,
+  type VariableChild,
   type VariableDeliveryModel,
   type VariableGraphNode,
   type VariableStateModel,
-  type VariantsResponse,
+  type VariantModel,
 } from "./api";
 import {
   type Coverage,
@@ -41,25 +38,10 @@ import type { BreadcrumbItem } from "./ui/types";
  * "Data browser".) */
 export const DATA_BROWSER_LABEL = "Data browser";
 
-/** Narrow the catch-all browse response to a browsable `CatalogNode`, or `null`
- * for a no-`kind` payload (a `?period` `StatesResponse` or a sub-endpoint
- * envelope) — the boundary every browse consumer narrows at before switching on
- * `kind`. */
-export function narrowCatalogNode(
-  data: CatalogNode | StatesResponse | null,
-): CatalogNode | null {
-  return data !== null && isCatalogNode(data) ? data : null;
-}
-
-/** The binding children of a register node, in order. `[]` for any other node
- * kind — a register's `children` mix binding entries with a `VariantsRef`, so
- * callers want only the `kind === "binding"` ones (the pickable / browsable
- * variable list). */
-export function bindingChildren(node: CatalogNode): BindingChild[] {
-  if (node.kind !== "register") {
-    return [];
-  }
-  return node.children.filter((c): c is BindingChild => c.kind === "binding");
+/** The variable children of a register node, in order. `[]` for any other node
+ * kind. */
+export function bindingChildren(node: ShowNode): VariableChild[] {
+  return node.kind === "register" ? node.children : [];
 }
 
 // ── Concept-group folding (#303) ────────────────────────────────────────────
@@ -177,14 +159,14 @@ export function narrowGroupsToMembers(
   groups: readonly ConceptGroup[] | undefined,
   items: readonly {
     fqid: string;
-    deliveries?: readonly { column: string | null }[];
+    deliveries?: readonly { column?: string | null }[];
   }[],
 ): ConceptGroup[] {
   const deliveredColumns = new Map<string, Set<string | null>>();
   for (const item of items) {
     deliveredColumns.set(
       item.fqid,
-      new Set((item.deliveries ?? []).map((d) => d.column)),
+      new Set((item.deliveries ?? []).map((d) => d.column ?? null)),
     );
   }
   const narrowed: ConceptGroup[] = [];
@@ -379,33 +361,25 @@ export function qualifierFromFocus(
 
 /** The "member of ⟨group label⟩" context link from the graph FOCUS node + the
  * leaf's `node.group` ref (#678). The label comes from the focus node's
- * `group_label`; the HREF still comes from the leaf `BindingGroupRef`
- * (provider/register/key) — that's the authoritative group-subject coordinate,
- * already resolved server-side. `null` when ungrouped (no `group_label`) or when
- * the leaf carries no group ref. */
+ * `group_label`; the HREF comes from the leaf's group ref
+ * (`group/<provider>/<register>/<key>`), resolved server-side. `null` when
+ * ungrouped (no `group_label`) or when the leaf carries no group ref. */
 export function groupLinkFromFocus(
   focus: VariableGraphNode | null | undefined,
-  ref: BindingGroupRef | null | undefined,
+  ref: string | null | undefined,
 ): { label: string; href: string } | null {
   if (!focus || focus.group_label == null || !ref) {
     return null;
   }
-  return {
-    label: focus.group_label,
-    href: groupHref(`${ref.provider}/${ref.register}`, ref.key),
-  };
+  return { label: focus.group_label, href: catalogHref(ref) };
 }
 
-/** A node's display label — its `name` when present, else its FQID (providers
- * and registers carry an optional `name`; classifications carry a required
- * `name`; the classification-root carries a default `name`). The concept-group
- * SUBJECT (#617) is NOT a `CatalogNode` arm — it's served by the fixed
- * `/catalog/group/...` route and labelled directly off its `label` in
- * `ConceptGroupView`, so it never reaches this catch-all labeller. */
-export function nodeLabel(node: CatalogNode): string {
-  if (node.kind === "classification-root" || node.kind === "classification") {
-    return node.name;
-  }
+/** A node's display label — its `name` when present, else its FQID. Groups are
+ * labelled off their own `label` by their views. */
+export function nodeLabel(node: {
+  fqid: string;
+  name?: string | null;
+}): string {
   return node.name ?? node.fqid;
 }
 
@@ -735,7 +709,7 @@ export function sourceCardHeading(
  * so each member's name already reads family first and population second — two
  * sources from one family read as one family with a changed frame on their own. */
 export function variantCardName(
-  variants: readonly VariantsResponse["variants"][number][],
+  variants: readonly VariantModel[],
   variant: string,
 ): string | null {
   if (variant === "_default") {
@@ -750,9 +724,7 @@ export function variantCardName(
  * single home for that fallback chain — the register's variant surfaces
  * (`variants.ts`) and the cart's source card must not drift into two spellings of
  * one variant. */
-export function variantLabel(
-  variant: VariantsResponse["variants"][number],
-): string {
+export function variantLabel(variant: VariantModel): string {
   return variant.name ?? variant.display_group ?? variant.slug;
 }
 
@@ -934,7 +906,7 @@ export function coexistingColumns(
     delivery_column_name: string | null;
     valid_from: string | null;
     valid_to: string | null;
-    period_scope?: "intervals" | "year_independent";
+    period_scope?: string;
   }[],
 ): Set<string> {
   const from = (s: { valid_from: string | null }): string =>
@@ -1055,7 +1027,7 @@ export interface PickerRepresentation {
   pinRepresentation?: boolean;
   from: string | null;
   to: string | null;
-  period_scope?: "intervals" | "year_independent";
+  period_scope?: string;
   /** The column's DISJOINT delivery windows (#678 finding: an interrupted series),
    * each an inclusive ISO span, in chronological order. A continuously-delivered
    * column has exactly one window spanning `from`..`to`; a column delivered in
@@ -1310,7 +1282,7 @@ function minIso(a: string, b: string): string {
  * nullable), so the leaf call needs no cast — this widens the param, it doesn't
  * fork the function. */
 export interface PickerStateInput {
-  period_scope?: "intervals" | "year_independent";
+  period_scope?: string;
   state_id: string;
   variant: string;
   /** The variant's curator DISPLAY name (`register_variant.name`), or null for a
@@ -1616,7 +1588,7 @@ export function deliveryColumnRows(
               state_id: String(stateId++),
               variant: delivery.variant,
               variant_label: null,
-              delivery_column_name: delivery.column,
+              delivery_column_name: delivery.column ?? null,
               value_set_version_label: "",
               value_set_id: null,
               period_scope: "year_independent" as const,
@@ -1628,7 +1600,7 @@ export function deliveryColumnRows(
             state_id: String(stateId++),
             variant: delivery.variant,
             variant_label: null,
-            delivery_column_name: delivery.column,
+            delivery_column_name: delivery.column ?? null,
             value_set_version_label: "",
             value_set_id: null,
             // The wire carries the catalog sentinels raw (`0001-01-01` start unknown,
@@ -2457,7 +2429,7 @@ export function representationInWindow(
     from: string | null;
     to: string | null;
     selectable?: boolean;
-    period_scope?: "intervals" | "year_independent";
+    period_scope?: string;
   },
   window: [number, number] | null,
 ): boolean {
@@ -2492,7 +2464,7 @@ export function representationInWindow(
 export interface ValueSetSpan {
   from: string | null;
   to: string | null;
-  period_scope?: "intervals" | "year_independent";
+  period_scope?: string;
   /** Whether the span's states are pooled-edition coverage (Y-202). Spans
    * never fuse across pooled/annual evidence, so the view can badge exactly
    * the pooled windows. */
@@ -3050,7 +3022,7 @@ export function formatStateWindow(s: VariableStateModel): string | null {
 export function windowTitle(
   validFrom: string | null,
   validTo: string | null,
-  periodScope?: "intervals" | "year_independent",
+  periodScope?: string,
 ): string {
   if (periodScope === "year_independent") return "Year-independent delivery";
   if (validFrom === null && validTo === null) return "Delivery dates unknown";
@@ -3136,7 +3108,7 @@ export function yearOf(iso: string | null): number | null {
 /** Why a binding could not be resolved to a real type at the source's
  * (period, variant). Drives an honest "set the period" / "no data here" result
  * instead of dressing the opaque fallback as a derived type. */
-export type UnresolvedReason = "period-unset" | "no-states" | "not-a-leaf";
+export type UnresolvedReason = "period-unset" | "no-states";
 
 /** The outcome of resolving one binding's variable at a (period, variant).
  *  - `derived`: a single representation → the type ready to apply.
@@ -3156,14 +3128,14 @@ export interface BindingFieldOptions {
 }
 
 /**
- * Resolve `fqid` at the source's (`period`, `variant`) through the catalog
- * `?period` resolve — the SINGLE source of truth for pick-time binding-field
- * derivation. A null/blank period is `unresolved` ("period-unset") WITHOUT a fetch
- * (the resolve needs a period). A leaf that yields no covering state is
- * `no-states`; a non-leaf payload is `not-a-leaf` (shouldn't happen with
- * `?period`). >1 co-existing representation is `ambiguous` (deferred to the picker
- * chooser); exactly one is `derived` with the resolved type. A network/422 throws — the
- * caller owns the error surface. */
+ * Resolve `fqid` at the source's (`period`, `variant`) through `states` with a
+ * `period` — the SINGLE source of truth for pick-time binding-field derivation. A
+ * null/blank period is `unresolved` ("period-unset") WITHOUT a fetch (the resolve
+ * needs a period). A variable that yields no covering state is `no-states`. >1
+ * co-existing representation is `ambiguous` (deferred to the picker chooser);
+ * exactly one is `derived` with the resolved type. A network error or a refusal
+ * (a non-variable ref, a malformed modifier) throws — the caller owns the error
+ * surface. */
 export async function resolveBindingAt(
   fqid: string,
   period: string | null,
@@ -3172,22 +3144,20 @@ export async function resolveBindingAt(
   if (!period) {
     return { kind: "unresolved", reason: "period-unset" };
   }
-  const resolved = await getCatalogNode(fqid, {
+  const states = await getStates(fqid, {
     period,
     variant: variant || undefined,
   });
-  if (isCatalogNode(resolved) || resolved.states.length === 0) {
-    return {
-      kind: "unresolved",
-      reason: isCatalogNode(resolved) ? "not-a-leaf" : "no-states",
-    };
+  const [first] = states;
+  if (first === undefined) {
+    return { kind: "unresolved", reason: "no-states" };
   }
   // >1 co-existing (overlapping-window) column is a genuine choice; a sequential
   // column rename within the period is drift and resolves like one column.
-  if (coexistingColumns(resolved.states).size >= 2) {
-    return { kind: "ambiguous", fqid, states: resolved.states };
+  if (coexistingColumns(states).size >= 2) {
+    return { kind: "ambiguous", fqid, states };
   }
-  return { kind: "derived", type: deriveType(resolved.states[0]) };
+  return { kind: "derived", type: deriveType(first) };
 }
 
 /** Map a `resolveBindingAt` result to a binding's FINAL fields (the #991 write-once

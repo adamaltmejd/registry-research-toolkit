@@ -4,82 +4,95 @@
 import type { ComponentProps } from "svelte";
 import { vi } from "vitest";
 import { render } from "vitest-browser-svelte";
-import type {
-  CatalogNode,
-  RootResponse,
-  StatesResponse,
-  VariantsResponse,
-} from "./api";
-import { getCatalogNode, getCatalogRoot, getRegisterVariants } from "./api";
+import { getShow, getStates, type ShowNode } from "./api";
 import type { Period, Source } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import SourceEditor from "./SourceEditor.svelte";
 
 /** The catalog root as a deployment serving `providers` (the shell's facet list,
  * and what decides whether a card's title carries its provider). */
-export function rootResponse(
+export function rootShow(
   ...providers: { fqid: string; name: string }[]
-): RootResponse {
+): ShowNode {
   return {
     kind: "root",
     children: providers.map(({ fqid, name }) => ({
-      kind: "provider",
+      kind: "provider" as const,
       fqid,
       name,
     })),
-  } as unknown as RootResponse;
+  } as unknown as ShowNode;
 }
 
-/** A register entry carrying its curated display name — "LISA", "MiDAS": the word
- * the register's own catalog page is headed with. */
-export function registerNode(fqid: string, name: string | null) {
-  return { kind: "register", fqid, name, purpose: null, coverage: null };
+/** A provider's register entry carrying its curated display name — "LISA",
+ * "MiDAS": the word the register's own catalog page is headed with. */
+export function registerChild(fqid: string, name: string | null) {
+  return { fqid, name, purpose: null, tags: [], coverage: null };
 }
 
-/** A provider node listing the registers it owns — the read the card's register
- * word comes from (one light payload per provider, not one register node each). */
-export function providerNode(
+/** A provider's `show`, listing the registers it owns — the read the card's
+ * register word comes from (one light payload per provider, not one register
+ * node each). */
+export function providerShow(
   fqid: string,
-  ...registers: ReturnType<typeof registerNode>[]
-): CatalogNode {
+  ...registers: ReturnType<typeof registerChild>[]
+): ShowNode {
   return {
     kind: "provider",
     fqid,
     name: fqid,
     children: registers,
-  } as unknown as CatalogNode;
+  } as unknown as ShowNode;
 }
 
-/** A register's variant list, as `GET /{provider}/{register}/variants` returns it. */
-export function variantsResponse(
+/** A register's `show`, carrying its variants (the card's variant word). */
+export function registerShow(
+  fqid: string,
   ...variants: { slug: string; name?: string | null }[]
-): VariantsResponse {
-  return { variants } as unknown as VariantsResponse;
+): ShowNode {
+  return {
+    kind: "register",
+    fqid,
+    name: null,
+    children: [],
+    groups: [],
+    tags: [],
+    variants: variants.map((v) => ({ versions: [], ...v })),
+  } as unknown as ShowNode;
 }
 
-/** The LISA fixture every case starts from: a single-provider deployment whose
- * `scb/lisa` register delivers the two individual-frame variants of one succession
- * family plus the workplace frame. A case that needs another register/deployment
- * overrides the mock it cares about. */
-export function stubCatalog(): void {
-  vi.mocked(getCatalogRoot).mockResolvedValue(
-    rootResponse({ fqid: "scb", name: "Statistiska Centralbyrån" }),
-  );
-  vi.mocked(getCatalogNode).mockImplementation(async (fqid) =>
-    fqid === "scb"
-      ? providerNode("scb", registerNode("scb/lisa", "LISA"))
-      : // The columns' own leaf resolve (BindingEditor.browser.test.ts owns it):
-        // nothing covering, so the rows show their FQID alone.
-        ({ states: [] } as unknown as StatesResponse),
-  );
-  vi.mocked(getRegisterVariants).mockResolvedValue(
-    variantsResponse(
+/** The LISA catalog every case starts from: a single-provider deployment whose
+ * `scb/lisa` register delivers the two individual-frame variants of one
+ * succession family plus the workplace frame. Keyed by ref, `""` the root. */
+function lisaCatalog(): Record<string, ShowNode | Error> {
+  return {
+    "": rootShow({ fqid: "scb", name: "Statistiska Centralbyrån" }),
+    scb: providerShow("scb", registerChild("scb/lisa", "LISA")),
+    "scb/lisa": registerShow(
+      "scb/lisa",
       { slug: "v1", name: "Individer 15+" },
       { slug: "individer-15plus", name: "Individer, 15 år och äldre" },
       { slug: "individer-16plus", name: "Individer, 16 år och äldre" },
       { slug: "arbetsstallen", name: "Arbetsställen" },
     ),
-  );
+  };
+}
+
+/** Stub `show` over the LISA catalog with `overrides` laid over it by ref (an
+ * `Error` makes that read fail; a ref in neither is a 404-like failure), and the
+ * columns' own `states` read (BindingEditor.browser.test.ts owns it) to nothing
+ * covering, so the rows show their FQID alone. */
+export function stubCatalog(
+  overrides: Record<string, ShowNode | Error> = {},
+): void {
+  const catalog = { ...lisaCatalog(), ...overrides };
+  vi.mocked(getShow).mockImplementation(async (ref) => {
+    const node = catalog[ref ?? ""];
+    if (node === undefined) throw new Error(`no catalog node ${ref}`);
+    if (node instanceof Error) throw node;
+    return node;
+  });
+  vi.mocked(getStates).mockResolvedValue([]);
 }
 
 /** The card under test, always at index 0 of the fresh draft above. Every case

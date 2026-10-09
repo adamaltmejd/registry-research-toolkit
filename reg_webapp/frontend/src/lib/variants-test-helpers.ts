@@ -1,11 +1,10 @@
 /**
  * Fixtures for the register-variant surfaces (Y-79), shared by the `variants.ts`
  * unit tests and the `VariantBrowser` / `VariantsSummary` / `CatalogNodeView`
- * browser tests so the `VariantsResponse` wire shape is spelled once (same
- * reason as `picker-test-helpers.ts`). Fully typed — a wire change fails HERE
+ * browser tests so the `Variant` wire shape is spelled once (same reason as
+ * `picker-test-helpers.ts`). Fully typed — a wire change fails HERE
  * rather than passing through an `as unknown as` cast in every suite.
  */
-import type { VariantsResponse } from "./api";
 import type { Variant, Version } from "./variants";
 
 /** One `register_version` row as SCB delivers it: the same prose every year with
@@ -56,9 +55,4 @@ export function variant(slug: string, fields: Partial<Variant> = {}): Variant {
     versions: [],
     ...fields,
   };
-}
-
-/** A `GET /api/catalog/{provider}/{register}/variants` payload. */
-export function variantsResponse(...variants: Variant[]): VariantsResponse {
-  return { register: "scb/lisa", variants };
 }

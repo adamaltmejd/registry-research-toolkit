@@ -1,4 +1,5 @@
 {
+  "note": "The class/example-codes step fails if holdings scope refuses a classification on a steward catalog: classifications are shared, not held.",
   "requests": [
     {"operation": "show", "path": "/api/catalog/scb/example/retired"},
     {"operation": "show", "path": "/api/catalog/scb/example/retired-unheld"},
@@ -15,6 +16,7 @@
       "query": {"scope": "reference"}
     },
     {"operation": "show", "path": "/api/catalog/fk/unheld"},
-    {"operation": "show", "path": "/api/catalog/fk/unheld", "query": {"scope": "reference"}}
+    {"operation": "show", "path": "/api/catalog/fk/unheld", "query": {"scope": "reference"}},
+    {"operation": "show", "path": "/api/catalog/class/example-codes"}
   ]
 }

@@ -115,6 +115,12 @@ reason = "As docs-fold-search: the CLI search mixes docs search's hits into its 
 case = "*/*/search/7[47]"
 paths = ["/doc_hint", "/next_cursor", "/results"]
 
+[[exception]]
+name = "classification-code-is-valid-bool"
+reason = "rust-only fix: the frozen `get classification --codes` (`queries.get_classification_with_codes`) passes the SQLite integer through, so a canonical code reads `\"is_valid\": 1`; `values` emits the boolean its documented ClassificationCode model (and today's webapp model, `catalog.ClassificationCode.is_valid: bool | None`) declares. Every pinned row is is_valid = 1 (83 classifications, no 0), so the values agree and only the JSON type differs, which G1's type-strict comparison reports. The type is fixed by the Rust field (`Option<bool>`) and the committed openapi.json (`boolean | null`); api/values-classification pins `is_valid: true`. Blind spot: the path excepts any is_valid difference on these cases, a wrong value as well as the type; api/values-classification pins the value."
+case = "*/*/values-classification-codes/*"
+paths = ["/*/3"]
+
 # The baseline reader (CLI and webapp), run from a detached worktree with its own
 # locked environment. It reads the release originals, so code under change never
 # derives what it is compared against. 553ea622 (main after 3a.2) is the last commit

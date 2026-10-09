@@ -1,21 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { StatesResponse } from "./api";
+import type { VariableStateModel } from "./api";
 import {
-  getBindingGraph,
-  getBindingLineageWarnings,
-  getCatalogNode,
   getDocsForVariable,
-  getValueSetCodes,
+  getGraph,
+  getLineage,
+  getStates,
+  getValues,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import {
-  node,
+  leaf,
   pickerStates,
   SEED,
   state,
-  statesResponse,
 } from "./binding-leaf-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
@@ -27,61 +26,44 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getBindingGraph: vi.fn(),
-    getBindingLineageWarnings: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getStates: vi.fn(),
+    getGraph: vi.fn(),
+    getLineage: vi.fn(),
     getDocsForVariable: vi.fn(),
-    getValueSetCodes: vi.fn(),
+    getValues: vi.fn(),
   };
 });
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+  vi.mocked(getStates).mockReset();
+  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
     const variant =
       typeof params?.variant === "string" ? params.variant : undefined;
-    return statesResponse(
-      pickerStates.filter(
-        (s) => variant === undefined || s.variant === variant,
-      ),
+    return pickerStates.filter(
+      (s) => variant === undefined || s.variant === variant,
     );
   });
   // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
   // itself and the header derives no qualifier. Member-identity cases override it.
-  vi.mocked(getBindingGraph).mockReset();
-  vi.mocked(getBindingGraph).mockResolvedValue({
+  vi.mocked(getGraph).mockReset();
+  vi.mocked(getGraph).mockResolvedValue({
     nodes: [],
     edges: [],
     focus_id: null,
   } as never);
-  vi.mocked(getBindingLineageWarnings).mockReset();
-  vi.mocked(getBindingLineageWarnings).mockResolvedValue({
-    binding: "scb/lisa/kon",
-    lineage_warnings: [],
-  } as never);
-  vi.mocked(getValueSetCodes).mockReset();
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (valueSetId, { state = null, q = "", offset = 0, limit = 200 }) => {
-      const codes =
-        valueSetId === "814"
-          ? [
-              { code: "0", label: "Nej" },
-              { code: "1", label: "Ja" },
-            ]
-          : [];
-      return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        period_scope: "intervals",
-        q,
-        total: codes.length,
-        offset,
-        limit,
-        codes: codes.slice(offset, offset + limit),
-      };
-    },
-  );
+  vi.mocked(getLineage).mockReset();
+  vi.mocked(getLineage).mockResolvedValue({
+    edges: [],
+    warnings: [],
+    registers: [],
+  });
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockResolvedValue({
+    items: [],
+    next_cursor: null,
+    total: 0,
+  });
   vi.mocked(getDocsForVariable).mockReset();
   vi.mocked(getDocsForVariable).mockResolvedValue({
     items: [],
@@ -141,15 +123,10 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       valid_from: "1990-01-01",
       valid_to: "1990-12-31",
     });
-    vi.mocked(getCatalogNode).mockImplementation(
-      async (_fqid, params) =>
-        ({
-          // The period-only scope (no variant param) returns the same-period rows of
-          // ALL variants; the variant-scoped resolve returns only individer's.
-          states: params?.variant
-            ? [inA, inB]
-            : [inA, inB, samePeriodOtherVariant],
-        }) as never,
+    vi.mocked(getStates).mockImplementation(async (_fqid, params) =>
+      // The period-only scope (no variant param) returns the same-period rows of
+      // ALL variants; the variant-scoped resolve returns only individer's.
+      params?.variant ? [inA, inB] : [inA, inB, samePeriodOtherVariant],
     );
     router.navigate(
       "/catalog/scb/lisa/kon?period=2007..2008&variant=individer",
@@ -157,7 +134,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([inA, inB, samePeriodOtherVariant, outsideIndivider]),
+      ...leaf([inA, inB, samePeriodOtherVariant, outsideIndivider]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -198,17 +175,14 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
-    vi.mocked(getCatalogNode).mockImplementation(
-      async (_fqid, params) =>
-        ({
-          states: params?.variant ? [picked] : [picked, samePeriodOtherVariant],
-        }) as never,
+    vi.mocked(getStates).mockImplementation(async (_fqid, params) =>
+      params?.variant ? [picked] : [picked, samePeriodOtherVariant],
     );
     router.navigate("/catalog/scb/lisa/kon?period=2007&variant=individer");
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([picked, samePeriodOtherVariant]),
+      ...leaf([picked, samePeriodOtherVariant]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -240,9 +214,9 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
-    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+    vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
       if (params?.variant) {
-        return { states: [picked] } as never;
+        return [picked];
       }
       throw new Error("scope failed");
     });
@@ -250,7 +224,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([picked, otherVariant]),
+      ...leaf([picked, otherVariant]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -300,19 +274,19 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       valid_from: "2007-01-01",
       valid_to: "2007-12-31",
     });
-    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+    vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
       // The variant-scoped PRIMARY resolve fails (a stale `?variant=typo`); the
       // period-only scope would succeed but is moot once the primary errors.
       if (params?.variant) {
         throw new Error("422 bad variant");
       }
-      return { states: [individerCoding, otherCoding] } as never;
+      return [individerCoding, otherCoding];
     });
     router.navigate("/catalog/scb/lisa/kon?period=2007&variant=typo");
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([individerCoding, otherCoding]),
+      ...leaf([individerCoding, otherCoding]),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -335,7 +309,7 @@ describe("BindingLeafView — the applied period's pending resolve (Y-65)", () =
     router.navigate("/catalog/scb/lisa/kon?period=2019..2020");
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(pickerStates),
+      ...leaf(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -354,8 +328,8 @@ describe("BindingLeafView — the applied period's pending resolve (Y-65)", () =
 
     // Hold the resolve the Apply triggers, so its in-flight moment is observable.
     const { promise: resolving, resolve: finishResolve } =
-      Promise.withResolvers<StatesResponse>();
-    vi.mocked(getCatalogNode).mockReturnValue(resolving as never);
+      Promise.withResolvers<VariableStateModel[]>();
+    vi.mocked(getStates).mockReturnValue(resolving);
 
     await from.fill("2018");
     const field = from.element() as HTMLInputElement;
@@ -372,7 +346,7 @@ describe("BindingLeafView — the applied period's pending resolve (Y-65)", () =
     expect(field.value).toBe("2018");
     expect(window.location.search).toBe("?period=2018..2020");
 
-    finishResolve(statesResponse(pickerStates.slice(1)));
+    finishResolve(pickerStates.slice(1));
     await expect.element(loading).not.toBeInTheDocument();
     expect(document.activeElement).toBe(field);
   });
@@ -391,7 +365,7 @@ it("omits annual availability controls for year-independent delivery and preserv
     ...SEED,
     vintageYear: 2026,
     fqidPath: "scb/lisa/kon",
-    node: node([independent]),
+    ...leaf([independent]),
   });
   await expect
     .element(
@@ -408,7 +382,7 @@ it("omits annual availability controls for year-independent delivery and preserv
     ...SEED,
     vintageYear: 2026,
     fqidPath: "scb/lisa/kon",
-    node: node([
+    ...leaf([
       independent,
       state({
         state_id: "2",

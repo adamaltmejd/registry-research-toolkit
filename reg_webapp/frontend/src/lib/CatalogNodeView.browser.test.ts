@@ -1,58 +1,86 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { CatalogNode } from "./api";
+import type {
+  ClassificationGroupShow,
+  ClassificationRootShow,
+  ClassificationShow,
+  ProviderShow,
+  RegisterShow,
+  ShowNode,
+  VariableShow,
+} from "./api";
 import {
-  getCatalogNode,
-  getClassificationGroup,
-  getClassificationGroupGraph,
-  getRegisterVariants,
+  ApiError,
+  getGraph,
   getRelatedDocuments,
+  getShow,
+  getStates,
+  getValues,
 } from "./api";
 import CatalogNodeView from "./CatalogNodeView.svelte";
+import { registerShow, variableChild } from "./catalog-node-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
-import { variant, variantsResponse } from "./variants-test-helpers";
+import { variant } from "./variants-test-helpers";
 import { windowStore } from "./window.svelte";
 
-// CatalogNodeView fetches one node via `getCatalogNode(fqidPath)` and switches on
-// `kind`. Mock that single GET (mirrors ConceptGroupView's api-mock style); keep
-// the rest of api.ts real (the type exports + path helpers `catalog.ts` uses).
+// CatalogNodeView reads one node via `getShow(fqidPath)` and switches on `kind`;
+// the views it delegates to read their own facets (`getGraph`, `getValues`,
+// `getWarnings`). Mock those GETs; keep the rest of api.ts real (the type exports +
+// path helpers `catalog.ts` uses).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getClassificationGroup: vi.fn(),
-    getClassificationGroupGraph: vi.fn(),
-    getRegisterVariants: vi.fn(),
+    getShow: vi.fn(),
+    getStates: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getGraph: vi.fn(),
+    getValues: vi.fn(),
     getRelatedDocuments: vi.fn(),
   };
 });
 
+/** `getShow` answers each ref from `nodes` and 404s the rest. */
+function mockShow(nodes: Record<string, ShowNode>): void {
+  vi.mocked(getShow).mockImplementation(async (ref) => {
+    const node = ref === undefined ? undefined : nodes[ref];
+    if (node === undefined) {
+      throw new ApiError(404, null, `not found: ${ref}`);
+    }
+    return node;
+  });
+}
+
+function renderNode(fqidPath: string) {
+  return render(CatalogNodeView, {
+    fqidPath,
+    regMetaVersion: "test",
+    steward: "global",
+    windowMinYear: 1960,
+    vintageYear: 2024,
+  });
+}
+
 // A minimal classification-root node with ONE folded umbrella group (`sun`): the
 // root carries the flat classification children AND the derived `groups`, and
-// `foldGroupedRows` folds the grouped child under the group row. Shaped exactly
-// like the wire types (ClassificationRootResponse → ClassificationNode children +
-// ConceptGroupSummary groups whose members are ConceptGroupMember).
-function classificationRoot(): CatalogNode {
+// `foldGroupedRows` folds the grouped child under the group row.
+function classificationRoot(): ClassificationRootShow {
   return {
-    kind: "classification-root",
+    kind: "classification_root",
     fqid: "class",
     name: "Classifications",
+    families: [],
     children: [
-      {
-        kind: "classification",
-        fqid: "class/sun2020",
-        name: "SUN 2020",
-        short_name: "sun2020",
-      },
+      { fqid: "class/sun2020", name: "SUN 2020", short_name: "sun2020" },
     ],
     groups: [
       {
+        fqid: "group/class/sun",
         key: "sun",
         label: "SUN",
         source: "token",
+        tags: [],
         axes: [{ name: "dimension", label: "dimension" }],
         members: [
           {
@@ -65,19 +93,19 @@ function classificationRoot(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  };
 }
 
-function classificationRootWithFamily(): CatalogNode {
+function classificationRootWithFamily(): ClassificationRootShow {
   return {
-    kind: "classification-root",
+    kind: "classification_root",
     fqid: "class",
     name: "Classifications",
     children: [],
     groups: [],
     families: [
       {
-        kind: "classification-family",
+        fqid: "group/class/ssyk",
         key: "ssyk",
         label: "SSYK",
         editions: [
@@ -102,45 +130,33 @@ function classificationRootWithFamily(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  };
 }
 
 // A provider node (`scb`) with two register children: `scb/lisa` (named, with a
-// purpose blurb) and `scb/lev` (named, null purpose). Shaped like ProviderResponse
-// → RegisterNode children — the #806 provider arm renders these as DataTable links
-// (name → catalog link) with the FQID code element dropped.
-function providerNode(): CatalogNode {
+// purpose blurb) and `scb/lev` (named, null purpose) — the #806 provider arm
+// renders these as DataTable links (name → catalog link).
+function providerNode(): ProviderShow {
   return {
     kind: "provider",
     fqid: "scb",
     name: "SCB",
     children: [
       {
-        kind: "register",
         fqid: "scb/lisa",
         name: "LISA",
         purpose: "Longitudinal integration database",
+        tags: [],
       },
-      {
-        kind: "register",
-        fqid: "scb/lev",
-        name: "LEV",
-        purpose: null,
-      },
+      { fqid: "scb/lev", name: "LEV", purpose: null, tags: [] },
     ],
-  } as unknown as CatalogNode;
+  };
 }
 
-// A register node (`scb/lisa`) with three ungrouped binding-variable children and
-// NO `groups` (so `foldGroupedRows` — which tolerates absent groups — yields three
-// all-leaf rows). Its children carry no `deliveries` either, which the register arm
-// must tolerate the same way (a payload from before the field existed).
-// Shaped like RegisterResponse → BindingChild children.
-function registerNode(): CatalogNode {
-  return {
-    kind: "register",
-    fqid: "scb/lisa",
-    name: "LISA",
+// A register node (`scb/lisa`) with three ungrouped variable children and no
+// groups, so `foldGroupedRows` yields three all-leaf rows.
+function registerNode(fields: Partial<RegisterShow> = {}): RegisterShow {
+  return registerShow({
     tags: [
       {
         slug: "income",
@@ -151,28 +167,28 @@ function registerNode(): CatalogNode {
       },
     ],
     children: [
-      { kind: "binding", fqid: "scb/lisa/v1", name: "Alpha" },
-      { kind: "binding", fqid: "scb/lisa/v2", name: "Beta" },
-      { kind: "binding", fqid: "scb/lisa/v3", name: "Gamma" },
+      variableChild("scb/lisa/v1", "Alpha"),
+      variableChild("scb/lisa/v2", "Beta"),
+      variableChild("scb/lisa/v3", "Gamma"),
     ],
-  } as unknown as CatalogNode;
+    ...fields,
+  });
 }
 
-function groupedRegisterNode(): CatalogNode {
-  return {
-    kind: "register",
-    fqid: "scb/lisa",
-    name: "LISA",
+function groupedRegisterNode(): RegisterShow {
+  return registerShow({
     children: [
-      { kind: "binding", fqid: "scb/lisa/inkjan", name: "Inkomst januari" },
-      { kind: "binding", fqid: "scb/lisa/inkfeb", name: "Inkomst februari" },
-      { kind: "binding", fqid: "scb/lisa/kon", name: "Kön" },
+      variableChild("scb/lisa/inkjan", "Inkomst januari"),
+      variableChild("scb/lisa/inkfeb", "Inkomst februari"),
+      variableChild("scb/lisa/kon", "Kön"),
     ],
     groups: [
       {
+        fqid: "group/scb/lisa/ink",
         key: "ink",
         label: "Inkomst per månad",
         source: "token",
+        tags: [],
         axes: [{ name: "month", label: "month" }],
         members: [
           {
@@ -188,23 +204,38 @@ function groupedRegisterNode(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  });
+}
+
+function variableNode(): VariableShow {
+  return {
+    kind: "variable",
+    fqid: "scb/lisa/kon",
+    name: "Kön",
+    deprecated: false,
+    is_identifier: false,
+    is_sensitive: false,
+    same_as: [],
+    tags: [],
+  };
 }
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getClassificationGroup).mockReset();
-  vi.mocked(getClassificationGroupGraph).mockReset();
-  vi.mocked(getRegisterVariants).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getStates).mockReset();
+  vi.mocked(getGraph).mockReset();
+  vi.mocked(getValues).mockReset();
   vi.mocked(getRelatedDocuments).mockReset();
-  vi.mocked(getClassificationGroupGraph).mockResolvedValue({
+  vi.mocked(getGraph).mockResolvedValue({
     nodes: [],
     edges: [],
     focus_id: null,
   });
-  vi.mocked(getRegisterVariants).mockResolvedValue(
-    variantsResponse(variant("_default")),
-  );
+  vi.mocked(getValues).mockResolvedValue({
+    items: [],
+    next_cursor: null,
+    total: 0,
+  });
   vi.mocked(getRelatedDocuments).mockResolvedValue([]);
   // Both stores are module singletons: clear the browse-time window fallback, then
   // open a fresh empty draft — the state a catalog page authors into. A fresh draft
@@ -218,15 +249,9 @@ beforeEach(() => {
 
 describe("CatalogNodeView loading geometry", () => {
   it("announces a busy loading region while the route resolves", async () => {
-    vi.mocked(getCatalogNode).mockImplementation(() => new Promise(() => {}));
+    vi.mocked(getShow).mockImplementation(() => new Promise(() => {}));
 
-    await render(CatalogNodeView, {
-      fqidPath: "class/icd-11-se",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
+    await renderNode("class/icd-11-se");
 
     const loading = page.getByText("Loading…", { exact: true });
     await expect.element(loading).toBeVisible();
@@ -236,17 +261,32 @@ describe("CatalogNodeView loading geometry", () => {
   });
 });
 
+describe("CatalogNodeView variable arm", () => {
+  // Fails if the page renders a variable before (or without) its state history
+  // read, or swallows that read's failure: the states are read with `show`, as one
+  // load with one error surface.
+  it("reports a failed state-history read as the page's error", async () => {
+    // A retired ref: `show` answers its successor, and the states are read by
+    // that canonical fqid, not by the route path.
+    mockShow({ "scb/lisa/kon-old": variableNode() });
+    vi.mocked(getStates).mockRejectedValue(
+      new ApiError(500, null, "states unavailable"),
+    );
+
+    await renderNode("scb/lisa/kon-old");
+
+    await expect
+      .element(page.getByRole("alert"))
+      .toHaveTextContent("states unavailable");
+    expect(vi.mocked(getStates).mock.calls).toEqual([["scb/lisa/kon"]]);
+  });
+});
+
 describe("CatalogNodeView provider arm", () => {
   it("lists registers as links with their purpose under Register and Description", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(providerNode());
+    mockShow({ scb: providerNode() });
 
-    await render(CatalogNodeView, {
-      fqidPath: "scb",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
+    await renderNode("scb");
 
     // #806: each register is a name link to its catalog page…
     await expect
@@ -271,24 +311,21 @@ describe("CatalogNodeView provider arm", () => {
 
 describe("CatalogNodeView register arm", () => {
   it("renders thematic tags on the register page", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
+    mockShow({ "scb/lisa": registerNode() });
 
-    await render(CatalogNodeView, {
-      fqidPath: "scb/lisa",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
+    await renderNode("scb/lisa");
 
     await expect.element(page.getByText("Income & earnings")).toBeVisible();
   });
 
+  // Fails if the Variants section stops reading the register node's own
+  // `variants` (there is no separate variants read any more).
   it("renders register-grain source documents on register pages (#967)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(registerNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(
-      variantsResponse(variant("combined", { name: "Combined register" })),
-    );
+    mockShow({
+      "scb/lisa": registerNode({
+        variants: [variant("combined", { name: "Combined register" })],
+      }),
+    });
     vi.mocked(getRelatedDocuments).mockResolvedValue([
       {
         title: "LISA source PDF",
@@ -301,18 +338,13 @@ describe("CatalogNodeView register arm", () => {
       },
     ]);
 
-    await render(CatalogNodeView, {
-      fqidPath: "scb/lisa",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
+    await renderNode("scb/lisa");
 
     const sourceDocs = page.getByRole("heading", { name: "Source documents" });
     const variants = page.getByRole("heading", { name: "Variants" });
     await expect.element(sourceDocs).toBeVisible();
     await expect.element(variants).toBeVisible();
+    await expect.element(page.getByText("Combined register")).toBeVisible();
     expect(
       variants.element().compareDocumentPosition(sourceDocs.element()) &
         Node.DOCUMENT_POSITION_FOLLOWING,
@@ -325,15 +357,9 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("renders grouped variables as framed table subject links without the group-key pill", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(groupedRegisterNode());
+    mockShow({ "scb/lisa": groupedRegisterNode() });
 
-    const { container } = await render(CatalogNodeView, {
-      fqidPath: "scb/lisa",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
+    const { container } = await renderNode("scb/lisa");
 
     await expect
       .element(page.getByRole("link", { name: /Inkomst per månad/ }))
@@ -351,18 +377,13 @@ describe("CatalogNodeView register arm", () => {
 });
 
 describe("CatalogNodeView classification-root arm (#756)", () => {
+  // Fails if the arm stops matching the `classification_root` kind.
   it("renders the umbrella group as a link to its subject page", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(classificationRoot());
+    mockShow({ class: classificationRoot() });
 
-    await render(CatalogNodeView, {
-      fqidPath: "class",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
+    await renderNode("class");
 
-    // #756: the classification umbrella now LINKS to `/catalog/group/class/<key>`
+    // #756: the classification umbrella LINKS to `/catalog/group/class/<key>`
     // (the `.group-link` anchor in ConceptGroupRow's asLink path) — the same flip
     // the register groups got in #673.
     await expect
@@ -382,28 +403,24 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
   it("renders a classification leaf as a link plus its short name", async () => {
     // Use a root with an UNGROUPED classification leaf (the grouped one folds into
     // the umbrella group row, which is a separate widget).
-    vi.mocked(getCatalogNode).mockResolvedValue({
-      kind: "classification-root",
-      fqid: "class",
-      name: "Classifications",
-      children: [
-        {
-          kind: "classification",
-          fqid: "class/atc",
-          name: "Anatomical Therapeutic Chemical",
-          short_name: "ATC",
-        },
-      ],
-      groups: [],
-    } as unknown as CatalogNode);
-
-    await render(CatalogNodeView, {
-      fqidPath: "class",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
+    mockShow({
+      class: {
+        kind: "classification_root",
+        fqid: "class",
+        name: "Classifications",
+        children: [
+          {
+            fqid: "class/atc",
+            name: "Anatomical Therapeutic Chemical",
+            short_name: "ATC",
+          },
+        ],
+        groups: [],
+        families: [],
+      },
     });
+
+    await renderNode("class");
 
     await expect
       .element(page.getByRole("link", { name: /Anatomical/ }))
@@ -413,15 +430,9 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
   });
 
   it("renders a classification succession family as a stable concept link", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(classificationRootWithFamily());
+    mockShow({ class: classificationRootWithFamily() });
 
-    await render(CatalogNodeView, {
-      fqidPath: "class",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
+    await renderNode("class");
 
     await expect
       .element(page.getByRole("link", { name: "SSYK (2 editions)" }))
@@ -430,55 +441,58 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
     await expect.element(page.getByText("ssyk2012")).toBeVisible();
   });
 
+  // Fails if a grouped classification stops opening its group page on the
+  // node's own (canonical) fqid tab, or the subject key stops reading the first
+  // dimension when the classification has no family.
   it("renders a grouped classification FQID through the canonical group tabs", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue({
+    const sunMembers = [
+      {
+        fqid: "class/sun2020",
+        name: "SUN 2020",
+        facets: [{ axis: null, value: "niva", label: "Utbildningsnivå" }],
+      },
+    ];
+    const classification: ClassificationShow = {
       kind: "classification",
       fqid: "class/sun2020",
       name: "SUN 2020",
       short_name: "SUN2020",
-      edition_chain: [],
-      codes: [{ code: "1", label: "Man", level: 1, is_valid: true }],
       dimensions: [
         {
+          fqid: "group/class/sun",
           key: "sun",
           label: "Svensk utbildningsnomenklatur",
           source: "token",
+          tags: [],
           axes: [],
-          members: [
-            {
-              fqid: "class/sun2020",
-              name: "SUN 2020",
-              facets: [{ axis: null, value: "niva", label: "Utbildningsnivå" }],
-            },
-          ],
+          members: sunMembers,
         },
       ],
       family: null,
       derived_from: [],
       derivatives: [],
-    } as unknown as CatalogNode);
-    vi.mocked(getClassificationGroup).mockResolvedValue({
-      kind: "classification-group",
+      variables: [],
+    };
+    const group: ClassificationGroupShow = {
+      kind: "classification_group",
+      fqid: "group/class/sun",
       key: "sun",
       label: "Svensk utbildningsnomenklatur",
       source: "token",
       axes: [],
-      members: [
-        {
-          fqid: "class/sun2020",
-          name: "SUN 2020",
-          facets: [{ axis: null, value: "niva", label: "Utbildningsnivå" }],
-        },
-      ],
+      members: sunMembers,
+    };
+    mockShow({
+      "class/sun2020": classification,
+      "group/class/sun": group,
+    });
+    vi.mocked(getValues).mockResolvedValue({
+      items: [{ code: "1", label: "Man", level: 1, is_valid: true }],
+      next_cursor: null,
+      total: 1,
     });
 
-    await render(CatalogNodeView, {
-      fqidPath: "class/sun2020",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
+    await renderNode("class/sun2020");
 
     await expect
       .element(
@@ -491,123 +505,5 @@ describe("CatalogNodeView classification-root arm (#756)", () => {
       .element(page.getByRole("tab", { name: /Utbildningsnivå/ }))
       .toHaveAttribute("aria-selected", "true");
     await expect.element(page.getByText("Man")).toBeVisible();
-  });
-
-  it("opens classification family aliases on the canonical self edition tab", async () => {
-    vi.mocked(getCatalogNode)
-      .mockResolvedValueOnce({
-        kind: "classification",
-        fqid: "class/ssyk1996-legacy",
-        name: "SSYK 1996",
-        short_name: "SSYK1996",
-        edition_chain: [
-          {
-            slug: "ssyk1996",
-            fqid: "class/ssyk1996",
-            name: "SSYK 1996",
-            effective_year: 2012,
-            version_year: 1996,
-            is_current: false,
-            is_self: true,
-          },
-          {
-            slug: "ssyk2012",
-            fqid: "class/ssyk2012",
-            name: "SSYK 2012",
-            effective_year: null,
-            version_year: 2012,
-            is_current: true,
-            is_self: false,
-          },
-        ],
-        codes: [
-          { code: "1", label: "Older occupation", level: 1, is_valid: true },
-        ],
-        dimensions: [],
-        family: {
-          kind: "classification-family",
-          key: "ssyk",
-          label: "SSYK",
-          editions: [
-            {
-              slug: "ssyk1996",
-              fqid: "class/ssyk1996",
-              name: "SSYK 1996",
-              effective_year: 2012,
-              version_year: 1996,
-              is_current: false,
-              is_self: true,
-            },
-            {
-              slug: "ssyk2012",
-              fqid: "class/ssyk2012",
-              name: "SSYK 2012",
-              effective_year: null,
-              version_year: 2012,
-              is_current: true,
-              is_self: false,
-            },
-          ],
-        },
-        derived_from: [],
-        derivatives: [],
-      } as unknown as CatalogNode)
-      .mockResolvedValueOnce({
-        kind: "classification",
-        fqid: "class/ssyk1996",
-        name: "SSYK 1996",
-        short_name: "SSYK1996",
-        edition_chain: [],
-        codes: [
-          { code: "1", label: "Older occupation", level: 1, is_valid: true },
-        ],
-        dimensions: [],
-        family: null,
-        derived_from: [],
-        derivatives: [],
-      } as unknown as CatalogNode);
-    vi.mocked(getClassificationGroup).mockResolvedValue({
-      kind: "classification-family",
-      key: "ssyk",
-      label: "SSYK",
-      editions: [
-        {
-          slug: "ssyk1996",
-          fqid: "class/ssyk1996",
-          name: "SSYK 1996",
-          short_name: "SSYK1996",
-          effective_year: 2012,
-          version_year: 1996,
-          is_current: false,
-          is_self: true,
-        },
-        {
-          slug: "ssyk2012",
-          fqid: "class/ssyk2012",
-          name: "SSYK 2012",
-          short_name: "SSYK2012",
-          effective_year: null,
-          version_year: 2012,
-          is_current: true,
-          is_self: false,
-        },
-      ],
-    });
-
-    await render(CatalogNodeView, {
-      fqidPath: "class/ssyk1996-legacy",
-      regMetaVersion: "test",
-      steward: "global",
-      windowMinYear: 1960,
-      vintageYear: 2024,
-    });
-
-    await expect
-      .element(page.getByRole("tab", { name: /SSYK 1996/ }))
-      .toHaveAttribute("aria-selected", "true");
-    await expect
-      .element(page.getByRole("tab", { name: /SSYK 2012/ }))
-      .toHaveAttribute("aria-selected", "false");
-    await expect.element(page.getByText("Older occupation")).toBeVisible();
   });
 });
