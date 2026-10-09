@@ -1,0 +1,54 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variants",
+      "fields": ["variant", "panel_entity_key", "panel_time_key"],
+      "rows": [
+        ["people", "value", "period"],
+        ["others", null, "period"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "withheld_catalog_dependency", "subject": {"contains": "panel_entity_key"}},
+      "fields": ["subject", "key"],
+      "rows": [
+        [
+          "scb/sample/others:panel_entity_key",
+          ["register:1", "variant:20", "edition:122", "variable:101", "member:1024"]
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "withheld_catalog_dependency", "subject": {"contains": "variable_group"}},
+      "fields": ["subject", "severity"],
+      "note": "Only the member naming PAR_B is withheld: people's PAR_A and PAR_B are both withheld as unresolved_column_representation, but others still delivers PAR_A.",
+      "rows": [
+        ["variable_group:scb/sample/columns:member:scb/sample/par:PAR_B", "error"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "withheld_catalog_dependency", "subject": {"contains": "variable_group"}},
+      "fields": ["ref"],
+      "rows": {
+        "refs_of": {
+          "table": "issue_refs",
+          "where": {"code": "unresolved_column_representation", "subject": "scb/sample/par"}
+        }
+      }
+    },
+    {
+      "table": "concept_groups",
+      "fields": ["variables"],
+      "note": "The group keeps its two supported members, value/VALUE and par/PAR_A, so it is published.",
+      "rows": [
+        [
+          ["par", "value"]
+        ]
+      ]
+    }
+  ]
+}
