@@ -17,25 +17,32 @@
     },
     {
       "table": "issues",
-      "fields": ["code", "severity", "subject", "withheld_output"],
+      "where": {"code": "ambiguous_named_identity"},
+      "fields": ["severity", "subject", "withheld_output"],
+      "note": "The replaced test's exact withheld set, translated to firms and the literal ANSWER.",
       "rows": [
         [
-          "ambiguous_named_identity",
           "error",
           "scb/sample/answer",
           ["('variant_states', 'scb/sample/answer', 'firms')"]
         ],
         [
-          "ambiguous_named_identity",
           "error",
           "scb/sample/answer",
           ["('succession_representation', 'scb/sample/answer', 'answer', 'firms')"]
-        ],
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code", "subject"],
+      "note": "No other issue: the rows the owner leaves (CVIDs 21 and 22) stay on the unresolved native family, and nothing names `third`.",
+      "rows": [
+        ["ambiguous_named_identity", "scb/sample/answer"],
+        ["ambiguous_named_identity", "scb/sample/answer"],
         [
           "unresolved_catalog_identity",
-          "error",
-          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)",
-          ["variable"]
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)"
         ]
       ]
     },

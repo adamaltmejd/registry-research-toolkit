@@ -109,7 +109,9 @@ def test_ambiguous_naming_cannot_hide_a_missing_conversion():
     """Kept as a unit test by maintainer decision (#1267): no build reaches it,
     because the pipeline derives a provider-key entry (None when unnamed) for
     every native variable the scope delivers, so an ambiguous native family never
-    lacks one. Input: an ambiguity whose family has no provider-key entry.
+    lacks one. (The same refusal is reachable for a converted partition key with
+    no provider key: a defect reported on the stage 7b-2 scope-naming PR, not
+    this guard.) Input: an ambiguity whose family has no provider-key entry.
     Refusal: "missing explicit provider key". Fails if an ambiguity can stand in
     for a missing conversion. Its former second leg (an ambiguity with no
     unresolved native row) is reachable and is the build case
