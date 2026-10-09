@@ -3,8 +3,8 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import type { ConceptGroupNodeData, RelationshipGraph } from "./api";
-import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
+import type { ConceptGroupShow, RelationshipGraph } from "./api";
+import { getGraph, getShow, getStates } from "./api";
 import {
   graph,
   gstate,
@@ -21,19 +21,19 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
-    getConceptGroup: vi.fn(),
-    getConceptGroupGraph: vi.fn(),
+    getStates: vi.fn(),
+    getShow: vi.fn(),
+    getGraph: vi.fn(),
   };
 });
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getStates).mockReset();
   mockResolveColumns({});
-  vi.mocked(getConceptGroup).mockReset();
-  vi.mocked(getConceptGroupGraph).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getGraph).mockReset();
   // Default: an empty graph (overridden per case).
-  vi.mocked(getConceptGroupGraph).mockResolvedValue(graph([]));
+  vi.mocked(getGraph).mockResolvedValue(graph([]));
   router.navigate("/catalog/group/scb/rams/ink");
   windowStore.set(null);
   projectStore.newProject({
@@ -46,7 +46,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
   /** A two-member group whose members are a succession PAIR: predecessor `old` →
    * successor `new` (effective 2005). Both are members, so the fold collapses them to
    * ONE band (led by `new`) with `old` as history. */
-  function successionNode(): ConceptGroupNodeData {
+  function successionNode(): ConceptGroupShow {
     return node({
       key: "disponibel-inkomst",
       label: "Disponibel inkomst",
@@ -65,7 +65,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
           coverage: null,
         },
       ],
-    } as unknown as Partial<ConceptGroupNodeData>);
+    } as unknown as Partial<ConceptGroupShow>);
   }
 
   /** The graph: a node per member + a succession edge old→new (predecessor→successor,
@@ -113,12 +113,11 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
   }
 
   it("keeps a focused superseded predecessor visible in faceted succession groups", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
         key: "faceted-succession",
         label: "Faceted succession",
         axes: [{ name: "level", label: "Level" }],
-        member: "dispink-old",
         members: [
           {
             fqid: "scb/iot/dispink-old",
@@ -133,9 +132,9 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    vi.mocked(getGraph).mockResolvedValue(successionGraph());
     router.navigate(
       "/catalog/group/scb/iot/faceted-succession?member=dispink-old",
     );
@@ -160,8 +159,8 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
   });
 
   it("folds a predecessor→successor member pair into ONE band led by the LATEST edition", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    vi.mocked(getShow).mockResolvedValue(successionNode());
+    vi.mocked(getGraph).mockResolvedValue(successionGraph());
     router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
 
     await renderGroup({
@@ -203,8 +202,8 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
   });
 
   it("allows a folded predecessor row to be selected for its era (#926)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    vi.mocked(getShow).mockResolvedValue(successionNode());
+    vi.mocked(getGraph).mockResolvedValue(successionGraph());
     mockResolveColumns({
       "scb/iot/dispink-old": ["DINFold"],
       "scb/iot/dispink-new": ["DINFnew"],
@@ -240,7 +239,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
   });
 
   it("keeps faceted succession predecessors selectable from folded history", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
         key: "faceted-succession",
         label: "Faceted succession",
@@ -259,9 +258,9 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    vi.mocked(getGraph).mockResolvedValue(successionGraph());
     router.navigate("/catalog/group/scb/iot/faceted-succession");
 
     await renderGroup({
@@ -287,8 +286,8 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
   });
 
   it("preserves ?period on folded predecessor history links", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(successionGraph());
+    vi.mocked(getShow).mockResolvedValue(successionNode());
+    vi.mocked(getGraph).mockResolvedValue(successionGraph());
     router.navigate(
       "/catalog/group/scb/iot/disponibel-inkomst?period=2010..2012",
     );
@@ -316,7 +315,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
   it("does NOT fold when the successor is OUTSIDE the group (partial chain)", async () => {
     // The edge's target is not a group member → the predecessor stays a normal band
     // (only pairs with BOTH endpoints in the group fold).
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
         key: "g",
         label: "G",
@@ -329,9 +328,9 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes: [
         vnode("scb/iot/dispink-old", [
           gstate({
@@ -370,7 +369,7 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
     // A→B (effective 2000), B→C (effective 2010). All three are members, so A and B
     // are both superseded and fold away; only C remains as a band, carrying both as
     // history (oldest-first [A, B]).
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
         key: "disponibel-inkomst",
         label: "Disponibel inkomst",
@@ -395,9 +394,9 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes: [
         vnode(
           "scb/iot/dispink-a",
@@ -496,10 +495,10 @@ describe("ConceptGroupView inter-variable succession fold (#902)", () => {
   it("omits the 'until <year>' marker when effective_year is null", async () => {
     // A null effective_year (the edge carries no supersession year) must not render a
     // ".history-until" element — the `{#if … != null}` guard suppresses "until null".
-    vi.mocked(getConceptGroup).mockResolvedValue(successionNode());
+    vi.mocked(getShow).mockResolvedValue(successionNode());
     const g = successionGraph();
     g.edges[0].effective_year = null;
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(g);
+    vi.mocked(getGraph).mockResolvedValue(g);
     router.navigate("/catalog/group/scb/iot/disponibel-inkomst");
 
     await renderGroup({

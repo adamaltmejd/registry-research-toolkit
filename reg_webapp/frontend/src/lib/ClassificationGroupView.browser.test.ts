@@ -2,37 +2,53 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type {
-  ClassificationFamilyNodeData,
-  ClassificationGroupNodeData,
-  ClassificationNodeData,
+  ClassificationCodeModel,
+  ClassificationFamilyShow,
+  ClassificationGroupShow,
+  ClassificationShow,
   RelationshipGraph,
+  ShowNode,
 } from "./api";
-import {
-  ApiError,
-  getCatalogNode,
-  getClassificationGroup,
-  getClassificationGroupGraph,
-} from "./api";
+import { ApiError, getGraph, getShow, getValues } from "./api";
 import ClassificationGroupView from "./ClassificationGroupView.svelte";
 import { router } from "./router.svelte";
 
 // Mock the GETs the view drives (mirrors ConceptGroupView.browser.test's
 // api-mock style); keep the rest of api.ts real (the type exports + router).
+// `show` answers the group ref with `groupShow` (or rejects with `groupError`) and
+// any other ref with `memberShow`; `values` answers a classification ref with
+// its registered codes, else `DEFAULT_CODES`.
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
-    getClassificationGroup: vi.fn(),
-    getClassificationGroupGraph: vi.fn(),
+    getShow: vi.fn(),
+    getGraph: vi.fn(),
+    getValues: vi.fn(),
   };
 });
 
+const DEFAULT_CODES: ClassificationCodeModel[] = [
+  { code: "1", label: "Man", level: 1, is_valid: true },
+];
+let groupShow: ShowNode | null = null;
+let groupError: Error | null = null;
+let memberShow: ShowNode | null = null;
+const codesByFqid = new Map<string, ClassificationCodeModel[]>();
+
+function showGroup(shown: ShowNode): void {
+  groupShow = shown;
+}
+function showMember(shown: ShowNode): void {
+  memberShow = shown;
+}
+
 function node(
-  overrides: Partial<ClassificationGroupNodeData> = {},
-): ClassificationGroupNodeData {
+  overrides: Partial<ClassificationGroupShow> = {},
+): ClassificationGroupShow {
   return {
-    kind: "classification-group",
+    kind: "classification_group",
+    fqid: `group/class/${overrides.key ?? "sun"}`,
     key: "sun",
     label: "Svensk utbildningsnomenklatur",
     source: "token",
@@ -52,14 +68,15 @@ function node(
       },
     ],
     ...overrides,
-  } as unknown as ClassificationGroupNodeData;
+  };
 }
 
 function familyNode(
-  overrides: Partial<ClassificationFamilyNodeData> = {},
-): ClassificationFamilyNodeData {
+  overrides: Partial<ClassificationFamilyShow> = {},
+): ClassificationFamilyShow {
   return {
-    kind: "classification-family",
+    kind: "classification_family",
+    fqid: `group/class/${overrides.key ?? "ssyk"}`,
     key: "ssyk",
     label: "SSYK",
     editions: [
@@ -85,24 +102,33 @@ function familyNode(
       },
     ],
     ...overrides,
-  } as unknown as ClassificationFamilyNodeData;
+  };
 }
 
-function classificationNode(
-  overrides: Partial<ClassificationNodeData> = {},
-): ClassificationNodeData {
-  return {
+/** A classification `show` node; `codes` registers what `values` answers for its
+ * FQID (the codes are no longer embedded on the node). */
+function classificationNode({
+  codes,
+  ...overrides
+}: Partial<ClassificationShow> & {
+  codes?: ClassificationCodeModel[];
+} = {}): ClassificationShow {
+  const shown: ClassificationShow = {
     kind: "classification",
     fqid: "class/sun2020",
     name: "SUN 2020",
     short_name: "SUN2020",
-    edition_chain: [],
-    codes: [{ code: "1", label: "Man", level: 1, is_valid: true }],
+    family: null,
     dimensions: [],
     derived_from: [],
     derivatives: [],
+    variables: [],
     ...overrides,
-  } as unknown as ClassificationNodeData;
+  };
+  if (codes) {
+    codesByFqid.set(shown.fqid, codes);
+  }
+  return shown;
 }
 
 function groupGraph(): RelationshipGraph {
@@ -197,11 +223,27 @@ function familyGraph(): RelationshipGraph {
 }
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getClassificationGroup).mockReset();
-  vi.mocked(getClassificationGroupGraph).mockReset();
-  vi.mocked(getCatalogNode).mockResolvedValue(classificationNode());
-  vi.mocked(getClassificationGroupGraph).mockResolvedValue({
+  groupShow = null;
+  groupError = null;
+  codesByFqid.clear();
+  memberShow = classificationNode();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getShow).mockImplementation(async (ref) => {
+    if (ref?.startsWith("group/")) {
+      if (groupError) throw groupError;
+      if (groupShow) return groupShow;
+    } else if (memberShow) {
+      return memberShow;
+    }
+    throw new Error(`unexpected show ${ref}`);
+  });
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockImplementation(async (ref) => {
+    const items = codesByFqid.get(ref) ?? DEFAULT_CODES;
+    return { items, next_cursor: null, total: items.length };
+  });
+  vi.mocked(getGraph).mockReset();
+  vi.mocked(getGraph).mockResolvedValue({
     nodes: [],
     edges: [],
     focus_id: null,
@@ -212,7 +254,7 @@ beforeEach(() => {
 
 describe("ClassificationGroupView (#756)", () => {
   it("renders the umbrella label + members as edition tabs", async () => {
-    vi.mocked(getClassificationGroup).mockResolvedValue(node());
+    showGroup(node());
 
     await render(ClassificationGroupView, { key: "sun" });
 
@@ -237,7 +279,7 @@ describe("ClassificationGroupView (#756)", () => {
   });
 
   it("demotes key + source into a 'Technical details' disclosure, OMITTING the Facets row when axis-less", async () => {
-    vi.mocked(getClassificationGroup).mockResolvedValue(node());
+    showGroup(node());
 
     await render(ClassificationGroupView, { key: "sun" });
 
@@ -253,12 +295,10 @@ describe("ClassificationGroupView (#756)", () => {
   });
 
   it("shows a 404 not-found message for an unknown umbrella key", async () => {
-    vi.mocked(getClassificationGroup).mockRejectedValue(
-      new ApiError(
-        404,
-        { detail: "no classification group 'nope'" },
-        "not found",
-      ),
+    groupError = new ApiError(
+      404,
+      { error: { code: "not_found", message: "no group/class/nope" } },
+      "not found",
     );
 
     await render(ClassificationGroupView, { key: "nope" });
@@ -269,7 +309,7 @@ describe("ClassificationGroupView (#756)", () => {
   });
 
   it("defaults to the current group member before future-dated graph successors", async () => {
-    vi.mocked(getClassificationGroup).mockResolvedValue(
+    showGroup(
       node({
         key: "icd",
         label: "ICD",
@@ -287,7 +327,7 @@ describe("ClassificationGroupView (#756)", () => {
         ],
       }),
     );
-    vi.mocked(getClassificationGroupGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes: [
         {
           kind: "classification",
@@ -315,7 +355,7 @@ describe("ClassificationGroupView (#756)", () => {
       edges: [],
       focus_id: null,
     });
-    vi.mocked(getCatalogNode).mockResolvedValue(
+    showMember(
       classificationNode({
         fqid: "class/icd10",
         name: "ICD-10",
@@ -335,13 +375,12 @@ describe("ClassificationGroupView (#756)", () => {
       .element(page.getByRole("tab", { name: /ICD-11/ }))
       .toHaveAttribute("aria-selected", "false");
     await expect.element(page.getByText("Current diagnosis")).toBeVisible();
-    expect(getCatalogNode).toHaveBeenCalledWith("class/icd10");
   });
 
   it("renders a succession family as an edition-chain subject page", async () => {
-    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
-    vi.mocked(getClassificationGroupGraph).mockResolvedValue(familyGraph());
-    vi.mocked(getCatalogNode).mockResolvedValue(
+    showGroup(familyNode());
+    vi.mocked(getGraph).mockResolvedValue(familyGraph());
+    showMember(
       classificationNode({
         fqid: "class/ssyk2012",
         name: "SSYK 2012",
@@ -372,7 +411,6 @@ describe("ClassificationGroupView (#756)", () => {
     await vi.waitFor(() => {
       expect(document.querySelector(".code-label")?.textContent).toBe("Yrke");
     });
-    expect(getClassificationGroupGraph).toHaveBeenCalledWith("ssyk");
   });
 
   it("keeps lower content stable when a branched edition graph exceeds the reserved slot", async () => {
@@ -383,7 +421,7 @@ describe("ClassificationGroupView (#756)", () => {
       ["right", 2001, false],
       ["current", 2010, true],
     ] as const;
-    vi.mocked(getClassificationGroup).mockResolvedValue(
+    showGroup(
       familyNode({
         key: "branch",
         label: "Branched editions",
@@ -399,19 +437,18 @@ describe("ClassificationGroupView (#756)", () => {
         })),
       }),
     );
-    vi.mocked(getClassificationGroupGraph).mockImplementation(
+    vi.mocked(getGraph).mockImplementation(
       () =>
         new Promise((resolve) => {
           resolveGraph = resolve;
         }),
     );
-    vi.mocked(getCatalogNode).mockResolvedValue(
+    showMember(
       classificationNode({
         fqid: "class/current",
         derived_from: [
           {
             fqid: "class/root",
-            slug: "root",
             short_name: "root",
             name: "root",
             note: null,
@@ -479,8 +516,8 @@ describe("ClassificationGroupView (#756)", () => {
       name: "Nivå aggregat",
       short_name: "NIVA",
     });
-    vi.mocked(getClassificationGroup).mockResolvedValue(node());
-    vi.mocked(getClassificationGroupGraph).mockImplementation(
+    showGroup(node());
+    vi.mocked(getGraph).mockImplementation(
       () =>
         new Promise((resolve) => {
           resolveGraph = resolve;
@@ -513,16 +550,14 @@ describe("ClassificationGroupView (#756)", () => {
 
   it("collapses the reserved graph row after the graph request fails", async () => {
     let rejectGraph: (reason: Error) => void = () => {};
-    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
-    vi.mocked(getClassificationGroupGraph).mockImplementation(
+    showGroup(familyNode());
+    vi.mocked(getGraph).mockImplementation(
       () =>
         new Promise((_, reject) => {
           rejectGraph = reject;
         }),
     );
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      classificationNode({ fqid: "class/ssyk2012" }),
-    );
+    showMember(classificationNode({ fqid: "class/ssyk2012" }));
 
     const { container } = await render(ClassificationGroupView, {
       key: "ssyk",
@@ -545,20 +580,19 @@ describe("ClassificationGroupView (#756)", () => {
 
   it("keeps related classifications after the value set while the graph resolves", async () => {
     let resolveGraph: (value: RelationshipGraph) => void = () => {};
-    vi.mocked(getClassificationGroup).mockResolvedValue(familyNode());
-    vi.mocked(getClassificationGroupGraph).mockImplementation(
+    showGroup(familyNode());
+    vi.mocked(getGraph).mockImplementation(
       () =>
         new Promise((resolve) => {
           resolveGraph = resolve;
         }),
     );
-    vi.mocked(getCatalogNode).mockResolvedValue(
+    showMember(
       classificationNode({
         fqid: "class/ssyk2012",
         derived_from: [
           {
             fqid: "class/ssyk1996",
-            slug: "ssyk1996",
             short_name: "SSYK1996",
             name: "SSYK 1996",
             note: null,
@@ -592,7 +626,7 @@ describe("ClassificationGroupView (#756)", () => {
   });
 
   it("defaults to the current family edition before future-dated successors", async () => {
-    vi.mocked(getClassificationGroup).mockResolvedValue(
+    showGroup(
       familyNode({
         key: "icd",
         label: "ICD",
@@ -620,7 +654,7 @@ describe("ClassificationGroupView (#756)", () => {
         ],
       }),
     );
-    vi.mocked(getCatalogNode).mockResolvedValue(
+    showMember(
       classificationNode({
         fqid: "class/icd10",
         name: "ICD-10",
@@ -641,7 +675,6 @@ describe("ClassificationGroupView (#756)", () => {
       .toHaveAttribute("aria-selected", "false");
     await expect.element(page.getByText(/icd10 - current/)).toBeVisible();
     await expect.element(page.getByText("Current diagnosis")).toBeVisible();
-    expect(getCatalogNode).toHaveBeenCalledWith("class/icd10");
   });
 
   it("uses the active member FQID without re-fetching the initial classification node", async () => {
@@ -651,7 +684,7 @@ describe("ClassificationGroupView (#756)", () => {
       short_name: "NIVA",
       codes: [{ code: "A", label: "Aggregatnivå", level: 1, is_valid: true }],
     });
-    vi.mocked(getClassificationGroup).mockResolvedValue(node());
+    showGroup(node());
 
     await render(ClassificationGroupView, {
       key: "sun",
@@ -663,7 +696,7 @@ describe("ClassificationGroupView (#756)", () => {
       .element(page.getByRole("tab", { name: /Aggregat/ }))
       .toHaveAttribute("aria-selected", "true");
     await expect.element(page.getByText("Aggregatnivå")).toBeVisible();
-    expect(getCatalogNode).not.toHaveBeenCalled();
+    expect(getShow).not.toHaveBeenCalledWith("class/niva-test");
   });
 
   it("renders related classifications for an active grouped classification node", async () => {
@@ -675,7 +708,6 @@ describe("ClassificationGroupView (#756)", () => {
       derived_from: [
         {
           fqid: "class/sun2020",
-          slug: "sun2020",
           short_name: "SUN2020",
           name: "Svensk utbildningsnomenklatur",
           note: "Grouped source classification",
@@ -684,14 +716,13 @@ describe("ClassificationGroupView (#756)", () => {
       derivatives: [
         {
           fqid: "class/niva-extra",
-          slug: "niva-extra",
           short_name: "NIVA extra",
           name: "Extra grouped derivative",
           note: null,
         },
       ],
     });
-    vi.mocked(getClassificationGroup).mockResolvedValue(node());
+    showGroup(node());
 
     await render(ClassificationGroupView, {
       key: "sun",
@@ -715,6 +746,6 @@ describe("ClassificationGroupView (#756)", () => {
     await expect
       .element(page.getByRole("link", { name: "NIVA extra" }))
       .toHaveAttribute("href", "/catalog/class/niva-extra");
-    expect(getCatalogNode).not.toHaveBeenCalled();
+    expect(getShow).not.toHaveBeenCalledWith("class/niva-test");
   });
 });

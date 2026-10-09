@@ -3,8 +3,8 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import type { ConceptGroupNodeData, RelationshipGraph } from "./api";
-import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
+import type { ConceptGroupShow, RelationshipGraph } from "./api";
+import { getGraph, getShow, getStates } from "./api";
 import {
   graph,
   gstate,
@@ -22,9 +22,9 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
-    getConceptGroup: vi.fn(),
-    getConceptGroupGraph: vi.fn(),
+    getStates: vi.fn(),
+    getShow: vi.fn(),
+    getGraph: vi.fn(),
   };
 });
 
@@ -83,12 +83,12 @@ function twoMultiColGraph(): RelationshipGraph {
 }
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getStates).mockReset();
   mockResolveColumns({});
-  vi.mocked(getConceptGroup).mockReset();
-  vi.mocked(getConceptGroupGraph).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getGraph).mockReset();
   // Default: an empty graph (overridden per case).
-  vi.mocked(getConceptGroupGraph).mockResolvedValue(graph([]));
+  vi.mocked(getGraph).mockResolvedValue(graph([]));
   router.navigate("/catalog/group/scb/rams/ink");
   windowStore.set(null);
   projectStore.newProject({
@@ -99,8 +99,8 @@ beforeEach(() => {
 
 describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   it("selecting columns across two members + Apply commits the right staged diff", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
     mockResolveColumns({
       "scb/rams/inkjan": ["Inkjan"],
       "scb/rams/inkfeb": ["Inkfeb"],
@@ -151,8 +151,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   // `?period` narrows nothing, so a pick on an open-ended column has no finite
   // period to author and must be refused rather than written as `period: ""`.
   it("refuses a pick that resolves no finite period, leaving the draft unchanged", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(openEndedGraph());
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(openEndedGraph());
     mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
 
     await renderGroup();
@@ -185,8 +185,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   // #678 finding 3: an active ?period is HONORED on add (the committed source carries
   // the user's narrowed window, not the row's full span).
   it("commits the row span INTERSECTED with the active ?period, not the full span", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
     mockResolveColumns({ "scb/rams/inkjan": ["Inkjan"] });
     // inkjan spans 2010–2015; narrow the group to 2012..2014.
     router.navigate("/catalog/group/scb/rams/ink?period=2012..2014");
@@ -219,8 +219,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   it("clamps a stale group ?period to steward bounds before staged add (#1037)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/rams/inkjan", [
           gstate({
@@ -259,8 +259,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   it("a per-variable select-all grabs every column of that variable", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoMultiColGraph());
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoMultiColGraph());
 
     await renderGroup();
 
@@ -302,7 +302,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   it("pins a representation-grained member even when the final source period resolves a sibling column", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
         key: "disp",
         label: "Disponibel inkomst",
@@ -336,9 +336,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/rams/dispink", [
           gstate({
@@ -388,7 +388,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   it("keeps a lone delivery-column group member on the null representation convention", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
         key: "solo-rep",
         label: "Solo representation",
@@ -403,9 +403,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/rams/solo", [
           gstate({
@@ -442,7 +442,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // column; the graph node now carries BOTH `IncA` and a NON-member `IncExtra`
     // (the variable's full set). The band must restrict to the member column so the
     // non-member column is never selectable.
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
         members: [
           {
@@ -453,9 +453,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/rams/ink", [
           gstate({
@@ -501,7 +501,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   it("list fallback renders a disabled row for a member with no graph state", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
         members: [
           {
@@ -524,9 +524,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes: [
         vnode("scb/rams/empty", []),
         vnode("scb/rams/live", [

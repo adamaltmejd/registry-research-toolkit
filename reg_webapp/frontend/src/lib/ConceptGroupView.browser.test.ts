@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import type { ConceptGroupNodeData } from "./api";
-import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
+import type { ConceptGroupShow } from "./api";
+import { getGraph, getShow, getStates } from "./api";
 import {
   graph,
   gstate,
@@ -15,8 +15,8 @@ import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 
-// The group page (#678) drives TWO catalog GETs: `getConceptGroup` (members +
-// facets) and `getConceptGroupGraph` (the union graph carrying each member's
+// The group page (#678) drives TWO catalog GETs: `getShow` (members +
+// facets) and `getGraph` (the union graph carrying each member's
 // states). Mock both; keep the rest of api.ts real (the type exports + router).
 //
 // The picker is ONE compact, integrated COLUMN list (#678 compact redesign): every
@@ -28,19 +28,19 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
-    getConceptGroup: vi.fn(),
-    getConceptGroupGraph: vi.fn(),
+    getStates: vi.fn(),
+    getShow: vi.fn(),
+    getGraph: vi.fn(),
   };
 });
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getStates).mockReset();
   mockResolveColumns({});
-  vi.mocked(getConceptGroup).mockReset();
-  vi.mocked(getConceptGroupGraph).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getGraph).mockReset();
   // Default: an empty graph (overridden per case).
-  vi.mocked(getConceptGroupGraph).mockResolvedValue(graph([]));
+  vi.mocked(getGraph).mockResolvedValue(graph([]));
   router.navigate("/catalog/group/scb/rams/ink");
   windowStore.set(null);
   projectStore.newProject({
@@ -51,8 +51,8 @@ beforeEach(() => {
 
 describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   it("renders single-column members as rows led by their own names", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(twoSingleColGraph());
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(twoSingleColGraph());
 
     await renderGroup();
 
@@ -81,10 +81,10 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   it("a member with no graph node renders a quiet 'No columns' subheading, not dropped", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getShow).mockResolvedValue(node());
     // Only inkjan has a graph node (single column → a row); inkfeb is absent (0
     // columns → a subheading with the empty marker).
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/rams/inkjan", [
           gstate({
@@ -114,7 +114,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   it("renders alias-only representation members as not-delivered disabled rows (#840)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
         key: "disprep",
         label: "Disponibel inkomst",
@@ -148,7 +148,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         ],
       }),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/rams/disp", [
           gstate({
@@ -177,8 +177,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   it("shows a data-starts-late warning when the window starts before a column's data (#678)", async () => {
     // fordonsreg ?period=1980..2004: data starts 2003, so each in-window row gets a
     // warning by its start year; a column covering the window start does NOT.
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         // inkjan: data starts 2003 (after the 1980 window start) but is IN window →
         // the warning fires.
@@ -228,11 +228,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   });
 
   it("shows NO data-starts-late warning on a FULLY-out-of-window row (it's already dimmed) (#678)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getShow).mockResolvedValue(node());
     // inkjan's only column is 2010–2015 — entirely AFTER the 1980..2004 window. Its
     // start (2010) is > the window start (1980), but the row is fully out → dimmed,
     // and the warning is suppressed (it's for IN-window rows only).
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/rams/inkjan", [
           gstate({
@@ -286,17 +286,16 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         coverage: null,
       },
     ];
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
-        provider: "scb",
-        register: "moms",
+        register: "scb/moms",
         key: "naringsgren",
         label: "Näringsgren",
         axes: [],
         members,
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/moms/naringsgren_ng0", [
           gstate({
@@ -371,10 +370,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // concept names. Instead of leading every band with the (repeated) name, cluster
     // by name → render each name ONCE as a group heading, and beneath it each band
     // leads with its distinguishing delivery column.
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
-        provider: "scb",
-        register: "iot",
+        register: "scb/iot",
         key: "disponibel-inkomst",
         label: "Disponibel inkomst",
         axes: [],
@@ -398,9 +396,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/iot/dispink_cdisphb", [
           gstate({ variant: "individer", delivery_column_name: "CDISPHB" }),
@@ -449,10 +447,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
     // The moms/naringsgren shape: every member shares the name → ONE cluster, so no
     // heading is rendered (the name is already the page title) and bands lead with
     // their column — exactly today's behavior, unchanged.
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
-        provider: "scb",
-        register: "moms",
+        register: "scb/moms",
         key: "naringsgren",
         label: "Näringsgren",
         axes: [],
@@ -470,9 +467,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/moms/naringsgren_ng0", [
           gstate({ variant: "individer", delivery_column_name: "Ng0" }),
@@ -499,10 +496,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   it("a facet group of single-column members leads each row with its FACET label, once", async () => {
     // The moderns-utbildningsniva shape: name constant, a facet axis varies → the
     // facet (specialskola / grundskola) leads each row, not the column.
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       node({
-        provider: "scb",
-        register: "forskoleklass",
+        register: "scb/forskoleklass",
         key: "utbildning",
         label: "Moderns utbildningsnivå",
         axes: [{ name: "skolform", label: "Skolform" }],
@@ -522,9 +518,9 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
             coverage: null,
           },
         ],
-      } as unknown as Partial<ConceptGroupNodeData>),
+      } as unknown as Partial<ConceptGroupShow>),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode("scb/forskoleklass/utb_spec", [
           gstate({
