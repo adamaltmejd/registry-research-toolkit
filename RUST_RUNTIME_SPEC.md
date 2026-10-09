@@ -1861,20 +1861,21 @@ section 5.
   `container-build.yml` resolves the tag and asset digests (as `integration.yml` does)
   and passes them as build args; the stage downloads (tag `/` URL-encoded), checks the
   SHA-256 and unpacks. The schema guard reads
-  `reg_meta_build/src/reg_meta_build/{db,doc_db}.py` at the tag, and only those (at
-  0.45.0 the builder's `doc_db.py` still imports `DOC_SCHEMA_VERSION` from
-  `reg_meta.doc_db`; 4.4 moves it, hence the dependency below); the Python reader axis
-  and the `reg_meta/**` path filter leave `schema_pending_bump.py`. `integration.yml`
-  drops the Podman job; admission is `zstd -d` plus the server's own admission at boot.
-  `publish_reg_meta.yml` drops the PyPI build, publish and CLI smoke, keeping the
-  dispatches (D3).
+  `reg_meta_build/src/reg_meta_build/{db,doc_db}.py` at the tag, falling back to
+  `reg_meta/src/reg_meta/doc_db.py` for the docs schema when the builder file lacks
+  `DOC_SCHEMA_VERSION` (tags before 4.4, including 0.45.0, import it from
+  `reg_meta.doc_db`). The fallback carries
+  `simplify: fallback for tags before 4.4; delete it in the first release after 4.4`.
+  The Python reader axis and the `reg_meta/**` path filter leave
+  `schema_pending_bump.py`. `integration.yml` drops the Podman job; admission is
+  `zstd -d` plus the server's own admission at boot. `publish_reg_meta.yml` drops the
+  PyPI build, publish and CLI smoke, keeping the dispatches (D3).
 - Paths: `reg_webapp/Dockerfile`,
   `.github/workflows/{container-build,integration,publish_reg_meta}.yml`,
   `scripts/schema_pending_bump.py` and its test, `reg_webapp/DESIGN.md`.
-- Acceptance: full gate; `docker build` for `global` and `swecov` at the first release
-  tag after 4.4 passes the entrypoint smoke; actionlint clean. Maintainer step: the next
-  push deploys.
-- Depends on: 4.4, and a release after it deployed and running cleanly in production.
+- Acceptance: full gate; `docker build` for `global` and `swecov` at `reg_meta/v0.45.0`
+  passes the entrypoint smoke; actionlint clean. Maintainer step: the next push deploys.
+- Depends on: 0.45.0 deployed and running cleanly in production.
 
 **4.6 Agent plugin on MCP.** Implements section 8 and decision 12.
 
@@ -2005,21 +2006,20 @@ binaries and checksums. Depends on: 4.9b. Blocks nothing.
 
 ```
 0.45.0 tag ── 4.1 ─┬─ 4.2 ─┐
-                   └─ 4.3 ─┴─ 4.4* ─┬─ 4.7 ──────────────────────┐
-                                    └─ [release deployed] ─ 4.5 ─┤
-checkpoint 3 ───── 4.6 ──────────────────────────────────────────┼─ 4.9a ─┬─ 4.9b ─ 4.12
-checkpoint 3 ───── 4.8 ──────────────────────────────────────────┘        └─ 4.10a–e** ─ [G2 + 10.0.0] ─ 4.11
+                   └─ 4.3 ─┴─ 4.4* ─ 4.7 ─┐
+0.45.0 deployed ── 4.5 ───────────────────┤
+checkpoint 3 ───── 4.6 ───────────────────┼─ 4.9a ─┬─ 4.9b ─ 4.12
+checkpoint 3 ───── 4.8 ───────────────────┘        └─ 4.10a–e** ─ [G2 + 10.0.0] ─ 4.11
 *  4.4 merges in the window agreed with test-audit before 4.2 and 4.3 start
 ** on one integration branch; 4.10b–e also wait for test-audit's reg_meta_build rewrite
 ```
 
 Waves, at most three packages in flight:
 
-1. 4.1, 4.6, 4.8.
-2. 4.2 and 4.3, with 4.6 or 4.8 in the third slot.
+1. 4.1, 4.6, 4.8. 4.5 takes the first free slot once 0.45.0 has deployed cleanly.
+2. 4.2 and 4.3, with 4.5, 4.6 or 4.8 in the third slot.
 3. 4.4 alone, in the agreed window.
-4. 4.7, alongside what is left of 4.6 and 4.8; 4.5 takes the first free slot once a
-   release after 4.4 has deployed cleanly.
+4. 4.7, alongside what is left of 4.5, 4.6 and 4.8.
 5. 4.9a alone.
 6. 4.9b, then 4.12; 4.10a–e on the integration branch, each sub-package counting as one
    package in flight.
