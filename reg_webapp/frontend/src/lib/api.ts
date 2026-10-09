@@ -400,35 +400,73 @@ export function getShow(ref?: string): Promise<ShowNode> {
  * about 1,000 states (5 pages) or the leaf's load time becomes noticeable. */
 const STATES_PAGE = 200;
 
+/** Read `period` the way the SPA writes it, over operations that take ONE period:
+ * `_default` (and no period) is the whole history, one read without `period`; a
+ * comma list (a source's disjoint windows) is one read per member, merged and
+ * deduplicated by `key`. Project validation accepts the list grammar, catalog
+ * reads one period each (RUST_RUNTIME_SPEC.md package C). */
+async function readPerPeriod<T>(
+  period: string | null | undefined,
+  read: (period: string | undefined) => Promise<T[]>,
+  key: (item: T) => string,
+): Promise<T[]> {
+  const periods =
+    !period || period === "_default"
+      ? [undefined]
+      : period.split(",").map((member) => member.trim());
+  if (periods.length === 1) {
+    return read(periods[0]);
+  }
+  const merged = new Map<string, T>();
+  for (const items of await Promise.all(periods.map(read))) {
+    for (const item of items) {
+      if (!merged.has(key(item))) {
+        merged.set(key(item), item);
+      }
+    }
+  }
+  return [...merged.values()];
+}
+
 /** A variable's states: its whole history, or with `period` (and the
- * `variant`/`value_set_version` modifiers) the resolved subset. Walks every page;
- * the server stops paging at depth 1000, so a longer history ends there. A
- * malformed modifier is the server's 422 (an `ApiError`). */
-export async function getStates(
+ * `variant`/`value_set_version` modifiers) the resolved subset; a period list
+ * unions its members' subsets. Walks every page; the server stops paging at depth
+ * 1000, so a longer history ends there. A malformed modifier is the server's 422
+ * (an `ApiError`). */
+export function getStates(
   ref: string,
   params: ResolutionParams = {},
 ): Promise<VariableStateModel[]> {
-  const items: VariableStateModel[] = [];
-  let cursor: string | null | undefined;
-  do {
-    const query = new URLSearchParams(queryFromParams(params));
-    query.set("limit", String(STATES_PAGE));
-    if (cursor) {
-      query.set("cursor", cursor);
-    }
-    const page = await rustGet<{
-      items: VariableStateModel[];
-      next_cursor?: string | null;
-    }>(`/states/${encodeFqid(ref)}`, query);
-    items.push(...page.items);
-    cursor = page.next_cursor;
-  } while (cursor);
-  return items;
+  return readPerPeriod(
+    params.period,
+    async (period) => {
+      const items: VariableStateModel[] = [];
+      let cursor: string | null | undefined;
+      do {
+        const query = new URLSearchParams(
+          queryFromParams({ ...params, period }),
+        );
+        query.set("limit", String(STATES_PAGE));
+        if (cursor) {
+          query.set("cursor", cursor);
+        }
+        const page = await rustGet<{
+          items: VariableStateModel[];
+          next_cursor?: string | null;
+        }>(`/states/${encodeFqid(ref)}`, query);
+        items.push(...page.items);
+        cursor = page.next_cursor;
+      } while (cursor);
+      return items;
+    },
+    (s) => `${s.state_id}|${s.delivery_column_name}|${s.valid_from}`,
+  );
 }
 
 /** A register's or variable's data warnings. `unassigned_only` keeps a
- * register's warnings that name no variable. */
-export function getWarnings(
+ * register's warnings that name no variable; a period list unions its members'
+ * warnings, in `warning_id` order as the server orders one read. */
+export async function getWarnings(
   ref: string,
   params: {
     unassigned_only?: boolean;
@@ -437,11 +475,21 @@ export function getWarnings(
     representation?: string | null;
   } = {},
 ): Promise<DataWarningModel[]> {
-  const query = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    if (value) query.set(key, String(value));
-  }
-  return rustGet<DataWarningModel[]>(`/warnings/${encodeFqid(ref)}`, query);
+  const warnings = await readPerPeriod(
+    params.period,
+    (period) => {
+      const query = new URLSearchParams();
+      for (const [key, value] of Object.entries({ ...params, period })) {
+        if (value) query.set(key, String(value));
+      }
+      return rustGet<DataWarningModel[]>(`/warnings/${encodeFqid(ref)}`, query);
+    },
+    (w) => w.warning_id,
+  );
+  // Code-point order, as SQLite's binary collation orders one read.
+  return warnings.sort((a, b) =>
+    a.warning_id < b.warning_id ? -1 : a.warning_id > b.warning_id ? 1 : 0,
+  );
 }
 
 /** One page of `values`: a classification's codes (`ref` a classification), or

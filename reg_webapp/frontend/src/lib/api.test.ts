@@ -10,10 +10,12 @@ import {
   getShow,
   getStates,
   getValues,
+  getWarnings,
   relatedDocumentFileHref,
   search,
   validateProject,
 } from "./api";
+import { resolveBindingAt } from "./catalog";
 
 // Stub the global fetch per test. jsdom provides `Response`, but we hand-build
 // the minimal shape `apiGet` reads (ok / status / json) so the tests don't
@@ -162,6 +164,90 @@ describe("getStates", () => {
       "/api/states/scb/lisa/kon?period=2018..2020&limit=200",
       "/api/states/scb/lisa/kon?period=2018..2020&limit=200&cursor=c1",
       "/api/states/scb/lisa/kon?period=2018..2020&limit=200&cursor=c2",
+    ]);
+  });
+});
+
+// The catalog reads take ONE period; the SPA writes a source's disjoint windows as a
+// comma list and the whole history as `_default` (the project grammar). These pin the
+// read side at the fetch boundary: `_default` is a read without `period`, a list is
+// one read per member, merged. Each fails if the split is removed (the server
+// refuses both forms with 422 invalid_period).
+function stubByPeriod(rows: Record<string, unknown>, seen: string[]): void {
+  stubFetch(async (url) => {
+    seen.push(url);
+    const period = new URL(url, "https://catalog.test").searchParams.get(
+      "period",
+    );
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ data: rows[period ?? "none"], meta: {} }),
+    };
+  });
+}
+
+describe("catalog reads over a period list or `_default`", () => {
+  it("resolves a staged add over disjoint windows and over the whole history", async () => {
+    const column = (id: string, from: string) => ({
+      state_id: id,
+      delivery_column_name: "Kon",
+      valid_from: from,
+      valid_to: null,
+      data_type: "int",
+      value_set_id: null,
+      value_set_summary: null,
+      is_identifier: false,
+    });
+    const page = (...items: unknown[]) => ({ items, next_cursor: null });
+    const seen: string[] = [];
+    stubByPeriod(
+      {
+        "2005..2010": page(column("1", "2005-01-01")),
+        "2015..2020": page(
+          column("1", "2005-01-01"),
+          column("2", "2015-01-01"),
+        ),
+        none: page(column("1", "2005-01-01"), column("2", "2015-01-01")),
+      },
+      seen,
+    );
+    const listed = await resolveBindingAt(
+      "scb/lisa/kon",
+      "2005..2010,2015..2020",
+      "v",
+    );
+    const whole = await resolveBindingAt("scb/lisa/kon", "_default", "v");
+    expect(listed).toEqual({ kind: "derived", type: "numeric" });
+    expect(whole).toEqual({ kind: "derived", type: "numeric" });
+    expect(seen).toEqual([
+      "/api/states/scb/lisa/kon?period=2005..2010&variant=v&limit=200",
+      "/api/states/scb/lisa/kon?period=2015..2020&variant=v&limit=200",
+      "/api/states/scb/lisa/kon?variant=v&limit=200",
+    ]);
+  });
+
+  it("merges a period list's warnings once each in warning order, and reads `_default` unfiltered", async () => {
+    const warning = (id: string) => ({ warning_id: id, summary: id });
+    const seen: string[] = [];
+    stubByPeriod(
+      {
+        "2005..2010": [warning("w2"), warning("w3")],
+        "2015..2020": [warning("w1"), warning("w3")],
+        none: [warning("w1"), warning("w2"), warning("w3")],
+      },
+      seen,
+    );
+    const listed = await getWarnings("scb/lisa", {
+      period: "2005..2010,2015..2020",
+    });
+    const whole = await getWarnings("scb/lisa", { period: "_default" });
+    expect(listed.map((w) => w.warning_id)).toEqual(["w1", "w2", "w3"]);
+    expect(whole.map((w) => w.warning_id)).toEqual(["w1", "w2", "w3"]);
+    expect(seen).toEqual([
+      "/api/warnings/scb/lisa?period=2005..2010",
+      "/api/warnings/scb/lisa?period=2015..2020",
+      "/api/warnings/scb/lisa",
     ]);
   });
 });
