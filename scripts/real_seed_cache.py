@@ -47,7 +47,9 @@ Every build lookup, hit or miss, first runs the admission checks the builder run
 before it resolves anything (the prepared tree at the pinned commit and, for a
 publishable build, a clean builder checkout at the keyed commit); a failure exits 10
 with the builder's error code instead of returning the entry. A build entry holds the
-report directory and the database. The `KEEP` most recently
+report directory and the database; the report's path fields are rewritten to the
+entry's location when it is stored. A hit checks the database's and the ledger's
+sizes (not their hashes) against the entry. The `KEEP` most recently
 used entries stay, and so does any entry used within 6 hours.
 
 The cache lives in `$REG_REAL_SEED_CACHE`, else `$XDG_CACHE_HOME/reg-meta-real-seed`,
@@ -384,13 +386,15 @@ def lookup_prepare(home: Path, key: str) -> dict | None:
             "prepared_commit": commit,
         }
     manifest = prepared / "manifest.json"
-    tracked = subprocess.run(
-        ["git", "-C", str(prepared), "ls-files", "--error-unmatch", "manifest.json"],
+    # Committed at HEAD, not merely tracked: a staged but uncommitted tree still
+    # awaits acceptance.
+    committed = subprocess.run(
+        ["git", "-C", str(prepared), "cat-file", "-e", "HEAD:./manifest.json"],
         capture_output=True,
         check=False,
     )
     if (
-        tracked.returncode
+        committed.returncode
         and manifest.is_file()
         and file_sha256(manifest) == record["manifest_sha256"]
     ):
@@ -550,10 +554,14 @@ def lookup_build(home: Path, key: str) -> dict | None:
         return None
     record = json.loads((entry / "entry.json").read_text())
     database = entry / record["database"]
+    events = entry / "report/events.jsonl.gz"
+    # Sizes and an mtime, not hashes: a hit must stay cheap. `--verify` reads both.
     if (
         not database.is_file()
         or [database.stat().st_size, database.stat().st_mtime_ns]
         != [record["database_size"], record["database_mtime_ns"]]
+        or not events.is_file()
+        or events.stat().st_size != record["events_size"]
         or not (entry / "report/summary.json").is_file()
     ):
         sys.stderr.write(f"real-seed-cache: dropping a changed entry: {entry}\n")
@@ -635,6 +643,19 @@ def incomplete(args: argparse.Namespace, run_dir: Path, code: int, fields: dict)
     return None
 
 
+def relocate(run_dir: Path, entry: Path) -> None:
+    """Point the path fields of `report/summary.json` and `result.json` at `entry`.
+
+    The builder records the database path it wrote, which is the staging directory
+    about to be renamed; a stored report must name where the entry lives. Only JSON
+    string values that start with the staging path change; every other byte of the
+    builder's report, and the event ledger, stays as written.
+    """
+    old, new = json.dumps(str(run_dir))[:-1], json.dumps(str(entry))[:-1]
+    for path in (run_dir / "report/summary.json", run_dir / "result.json"):
+        path.write_text(path.read_text().replace(old, new))
+
+
 def events_sha256(report: Path) -> str:
     with gzip.open(report / "events.jsonl.gz", "rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
@@ -672,17 +693,19 @@ def cmd_build(args: argparse.Namespace) -> int:
         database = run_dir / database_name(args)
         database.chmod(0o444)
         stat = database.stat()
+        entry = home / key
+        relocate(run_dir, entry)
         record = {
             "key": key,
             "fields": fields,
             "database": database_name(args),
             "database_size": stat.st_size,
             "database_mtime_ns": stat.st_mtime_ns,
+            "events_size": (run_dir / "report/events.jsonl.gz").stat().st_size,
             "status": summary["status"],
             "publication_ready": summary.get("publication_ready"),
         }
         write_json(run_dir / "entry.json", record)
-        entry = home / key
         run_dir.rename(entry)
         evict(home, entry, KEEP, "real-seed-cache", min_idle=STAGING_RETENTION_SECONDS)
     emit(build_result(home, record, hit=False))
@@ -695,17 +718,25 @@ def verify_build(args: argparse.Namespace, home: Path, key: str, fields: dict) -
     if record is None:
         sys.exit("real-seed-cache: nothing stored under this key to verify")
     entry = home / key
+    # Read the stored side first: an unreadable ledger is a broken entry, found
+    # before a full rebuild is spent on it.
+    try:
+        stored = {
+            "database": file_sha256(entry / record["database"]),
+            "events": events_sha256(entry / "report"),
+        }
+    except (OSError, EOFError) as exc:
+        shutil.rmtree(entry, ignore_errors=True)
+        emit({"identical": False, "reason": f"stored entry unreadable, dropped: {exc}"})
+        return 1
     with real_seed_lock():
         run_dir, code = run_build(args, home)
     if reason := incomplete(args, run_dir, code, fields):
         emit({"identical": False, "reason": reason, "run_dir": str(run_dir)})
         return 1
     comparison = {
-        "database": [
-            file_sha256(entry / record["database"]),
-            file_sha256(run_dir / database_name(args)),
-        ],
-        "events": [events_sha256(entry / "report"), events_sha256(run_dir / "report")],
+        "database": [stored["database"], file_sha256(run_dir / database_name(args))],
+        "events": [stored["events"], events_sha256(run_dir / "report")],
     }
     identical = all(stored == rerun for stored, rerun in comparison.values())
     if identical:

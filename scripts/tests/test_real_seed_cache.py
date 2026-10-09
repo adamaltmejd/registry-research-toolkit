@@ -47,6 +47,7 @@ failed = os.environ.get("STUB_FAIL") == "1"
 (report / "summary.json").write_text(json.dumps({
     "status": "engineering_failure" if failed else "diagnostic_complete",
     "curation_tree_sha256": curation_sha(option("--curation-dir")),
+    "database": option("--diagnostic-db-path"),
 }))
 print("{}")
 sys.exit(10)
@@ -100,9 +101,11 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     tmp_path: Path,
 ) -> None:
     # Fails if a failed run is stored (the next build hits it), if a lookup ignores
-    # the stored entry (the repeat runs again), if a hit skips the build's admission
-    # checks (a changed prepared checkout returns the old entry), or if the key leaves
-    # out the curation tree (the edited tree hits the old entry).
+    # the stored entry (the repeat runs again), if the stored report still names the
+    # staging directory, if a hit skips the build's admission checks (a changed
+    # prepared checkout returns the old entry), if a hit skips the ledger (a truncated
+    # one is returned), or if the key leaves out the curation tree (the edited tree
+    # hits the old entry).
     curation = tmp_path / "curation"
     (curation / "registers").mkdir(parents=True)
     (curation / "registers/a.toml").write_text("[register]\n")
@@ -131,6 +134,8 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     code, again = build()
     assert (code, again["hit"], _calls(tmp_path)) == (0, True, 2)
     assert Path(again["database"]).read_bytes() == b"catalog"
+    summary = json.loads(Path(again["report"], "summary.json").read_text())
+    assert summary["database"] == again["database"]
 
     code, refused = build(admit_fail=True)
     assert (code, refused["error"]["code"], _calls(tmp_path)) == (
@@ -139,9 +144,14 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
         2,
     )
 
+    ledger = Path(again["report"], "events.jsonl.gz")
+    ledger.write_bytes(ledger.read_bytes()[:-1])
+    code, truncated = build()
+    assert (code, truncated["hit"], _calls(tmp_path)) == (0, False, 3)
+
     (curation / "registers/a.toml").write_text("[register]\nname = 'edited'\n")
     code, edited = build()
-    assert (code, edited["hit"], _calls(tmp_path)) == (0, False, 3)
+    assert (code, edited["hit"], _calls(tmp_path)) == (0, False, 4)
     assert edited["key"] != again["key"]
 
 
