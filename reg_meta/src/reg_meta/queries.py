@@ -1122,8 +1122,8 @@ def _fill_exact_variables(
     phrases = _fts_quoted_tokens(folded_query)
     if not folded_query or not phrases:
         return
-    # `variable.name`, not `variable_search_text.name`: the view evaluates its
-    # state and alias-window fallbacks per row, ~25x slower.
+    # `variable.name`, not `variable_search_text.name` (written when that was a
+    # per-row view; a table since schema 9.7, and this reader is frozen).
     # simplify: past `limit` exact matches the admitted subset is by id, not by
     # rank; rank them in SQL if a real name is ever shared by ~1,000 variables.
     conn.execute(

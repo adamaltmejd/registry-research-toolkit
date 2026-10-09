@@ -69,7 +69,11 @@ from reg_meta_build.db import (
 from reg_meta_build.derive.browse import check_browse
 from reg_meta_build.derive.chains import CHAIN_TABLES, check_chains
 from reg_meta_build.derive.schema import check_coded
-from reg_meta_build.derive.search_index import SEARCH_INDEXES, register_fold_search
+from reg_meta_build.derive.search_index import (
+    SEARCH_INDEXES,
+    VARIABLE_SEARCH_TEXT,
+    register_fold_search,
+)
 from reg_meta_build.derive.states import check_states
 from reg_meta_build.id import _MINT_BIT, is_canonical_scb
 from reg_meta_build.relations import (
@@ -1524,7 +1528,8 @@ def _check_search_indexes(
     *,
     corpus: bool,
 ) -> None:
-    """Each full-text index holds exactly `fold_search` of its source rows.
+    """Each full-text index holds exactly `fold_search` of its source rows, and
+    `variable_search_text`, the variable index's source, exactly its own.
 
     The stored row (rowid, verbatim keys, folded text) must equal the derive
     source's, both ways, so a missing, stray, misaligned or unfolded row fails.
@@ -1532,23 +1537,35 @@ def _check_search_indexes(
     fixture may stoplist its whole label set."""
     result.section("[search indexes]")
     register_fold_search(conn)
+
+    def differ(source: str, stored: str) -> tuple[list[int], list[int]]:
+        """The first-column keys of rows only in `source`, then only in `stored`."""
+
+        def keys(a: str, b: str) -> list[int]:
+            query = f"SELECT * FROM ({a} EXCEPT {b}) ORDER BY 1"
+            return [row[0] for row in conn.execute(query)]
+
+        return keys(source, stored), keys(stored, source)
+
+    # The variable index's source and the variable hits' display text.
+    if "variable_search_text" not in tables:
+        result.fail("variable_search_text missing")
+    else:
+        unmatched, stray = differ(
+            VARIABLE_SEARCH_TEXT, "SELECT * FROM variable_search_text"
+        )
+        if unmatched or stray:
+            result.fail(
+                f"variable_search_text differs from its source: variable_ids "
+                f"{unmatched[:10]} missing or stale, {stray[:10]} stray"
+            )
+        else:
+            result.ok("variable_search_text holds every variable's search text")
     for table, source in SEARCH_INDEXES.items():
         if table not in tables:
             result.fail(f"{table} missing")
             continue
-        stored = f"SELECT rowid, * FROM {table}"
-        unmatched = [
-            row[0]
-            for row in conn.execute(
-                f"SELECT * FROM ({source} EXCEPT {stored}) ORDER BY 1"
-            )
-        ]
-        stray = [
-            row[0]
-            for row in conn.execute(
-                f"SELECT * FROM ({stored} EXCEPT {source}) ORDER BY 1"
-            )
-        ]
+        unmatched, stray = differ(source, f"SELECT rowid, * FROM {table}")
         if unmatched:
             result.fail(
                 f"{len(unmatched):,} source row(s) not held as folded text in "

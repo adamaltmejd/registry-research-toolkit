@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "variable_search_text differs from its source"
+  ]
+}

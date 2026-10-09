@@ -99,7 +99,8 @@ pub(super) fn arm(
         .collect::<rusqlite::Result<_>>()?;
     if is_code_shaped(request.q) {
         // Classifications containing the code (exact first), once each: a name hit
-        // or a pin is not repeated.
+        // or a pin is not repeated. The prefix LIKE holds the exact match too, and
+        // alone it can use idx_value_code_code_nocase.
         let q = py_strip(request.q);
         let named: Vec<i64> = hits.iter().map(|h| h.id).collect();
         let mut stmt = conn.prepare(&format!(
@@ -107,7 +108,7 @@ pub(super) fn arm(
              MAX(CASE WHEN vc.code = ?1 COLLATE NOCASE THEN 1 ELSE 0 END) AS has_exact \
              FROM value_code vc JOIN classification_code cc ON cc.code_id = vc.code_id \
              JOIN classification c ON c.id = cc.classification_id \
-             WHERE (vc.code = ?1 OR vc.code LIKE ?2 ESCAPE '\\') \
+             WHERE vc.code LIKE ?2 ESCAPE '\\' \
              AND c.id NOT IN (SELECT value FROM json_each(?3)) AND {} \
              GROUP BY c.id, c.short_name, c.name, c.slug \
              ORDER BY has_exact DESC, c.short_name, c.id LIMIT {HORIZON}",

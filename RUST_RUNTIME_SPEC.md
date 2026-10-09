@@ -114,7 +114,7 @@ About 70% of the hotspots are A or B. The main ones:
   | `same_as` BFS                                                                                                            | A     | none: unreachable, not ported (3d.1)                                    |
   | Concept-group tag N+1, group member assembly                                                                             | A     | `concept_group_tag`, pre-ordered member rows                            |
   | `get coded-variables` (72 s; 5.5 s unfiltered since #1175)                                                               | A     | `coded_variable_stats` per scope; reader only orders and pages the rows |
-  | `variable_search_text` view (correlated `group_concat` for 43k variables)                                                | A     | Materialized FTS content table                                          |
+  | `variable_search_text` view (correlated `group_concat` for 43k variables)                                                | A     | Materialized table, same name and columns (#1305, schema 9.7)           |
   | Search arm merge, scoring, cursor, fold decisions; period intersection with a request; `get diff`; order materialization | C     | Stays in the reader                                                     |
 
 Consequences:
