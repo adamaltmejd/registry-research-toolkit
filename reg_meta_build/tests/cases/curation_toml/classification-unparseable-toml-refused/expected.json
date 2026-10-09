@@ -1,0 +1,9 @@
+{
+  "loader": "classifications",
+  "note": "An unterminated string: the file is not TOML, so the refusal is the unreadable-file code, not the entry-shape code a valid TOML with a wrong value gets.",
+  "fails_if": "load_classifications reports a classification TOML syntax error under another rule family's code (as it did when every book refusal shared `classification_curation_invalid`)",
+  "error": {
+    "code": "classification_toml_unreadable",
+    "locator": "Could not parse classifications/A.toml"
+  }
+}

@@ -855,13 +855,23 @@ def _prepare_classification_succession(
     """
     by_slug = {item.slug: item for item in classifications}
     graph = TopologicalSorter({slug: set() for slug in (*by_slug, *withheld)})
-    seen: set[tuple[str, str]] = set()
+    seen: dict[tuple[str, str], str | None] = {}
     predecessors: dict[str, str] = {}
     for edge in edges:
         pair = edge.predecessor, edge.successor
         if pair in seen:
-            raise ValueError(f"duplicate classification succession relation: {pair}")
-        seen.add(pair)
+            # Edition chains derive one edge per pair, so a repeat is always a
+            # relations.toml edge restating it or another curated edge.
+            raise curation_error(
+                "relations_invalid",
+                "curation/relations.toml [[edge]] type='replaced_by' "
+                f"class/{pair[0]} -> class/{pair[1]}: duplicate classification "
+                f"succession relation {pair!r} (from {seen[pair]} and "
+                f"{edge.note}).",
+                "Delete the restated edge: the build derives a succession "
+                "between editions of one family from their names.",
+            )
+        seen[pair] = edge.note
         for slug in pair:
             if slug not in by_slug and slug not in withheld:
                 raise ValueError(f"unknown classification succession endpoint: {slug}")
@@ -878,7 +888,15 @@ def _prepare_classification_succession(
     try:
         graph.prepare()
     except CycleError as exc:
-        raise ValueError("cyclic classification succession relation") from exc
+        # Derived edition chains run forward in time, so a curated
+        # replaced_by edge closes every cycle.
+        raise curation_error(
+            "relations_invalid",
+            "curation/relations.toml [[edge]] type='replaced_by': cyclic "
+            "classification succession relation through "
+            f"{', '.join(f'class/{slug}' for slug in sorted(set(exc.args[1])))}.",
+            "Remove the replaced_by edge that closes the cycle.",
+        ) from exc
     ordered = []
     while graph.is_active():
         ready = sorted(graph.get_ready())

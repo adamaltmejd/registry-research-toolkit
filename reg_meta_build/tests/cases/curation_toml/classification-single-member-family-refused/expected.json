@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree.py::test_single_member_family_fails",
   "fails_if": "load_classification_families accepts a family with one member edition",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "classification_family_invalid",
     "locator": "classifications/A.toml: invalid family 'pair'",
     "message_contains": [
       "at least two distinct slugs"
