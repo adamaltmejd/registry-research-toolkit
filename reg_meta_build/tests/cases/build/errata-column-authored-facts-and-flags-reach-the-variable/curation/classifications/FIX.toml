@@ -1,0 +1,5 @@
+[classification]
+short_name = "FIX"
+slug = "fix"
+name = "Fix"
+codes_file = "fix.csv"

@@ -3,14 +3,15 @@
   "projections": [
     {
       "table": "states",
-      "where": {"variable": ["c-stew", "c-cur", "c-mix", "c-nopfx"]},
-      "fields": ["variable", "column", "valid_from", "data_type"],
+      "where": {"variable": ["c-stew", "c-cur", "c-mix", "c-nopfx", "c-documented"]},
+      "fields": ["variable", "column", "valid_from", "valid_to", "data_type"],
       "rows": [
-        ["c-stew", "STEW", "2020-01-01", "decimal"],
-        ["c-cur", "CUR", "2020-01-01", "integer"],
-        ["c-mix", "MIX", "2020-01-01", null],
-        ["c-nopfx", "NOPFX", "2020-01-01", null]
-      ]
+        ["c-stew", "STEW", "2020-01-01", "2020-12-31", "decimal"],
+        ["c-cur", "CUR", "2020-01-01", "2020-12-31", "integer"],
+        ["c-mix", "MIX", "2020-01-01", "2020-12-31", null],
+        ["c-nopfx", "NOPFX", "2020-01-01", "2020-12-31", null]
+      ],
+      "note": "each declaration names only the 2020 edition, so it forms one 2020 state though the register also delivers 2018 and 2022; the stale BLK declaration forms none"
     },
     {
       "table": "states",
