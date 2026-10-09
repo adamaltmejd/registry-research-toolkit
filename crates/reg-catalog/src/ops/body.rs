@@ -14,7 +14,7 @@ use serde_json::{Map, Value};
 use crate::{Code, Error};
 
 /// The cap on a request body, POST operations' and `/mcp`'s: the 1 MiB write-body cap
-/// FastAPI's `limits.py` kept before 3e.4.
+/// the Python backend's `limits.py` kept before 3e.4.
 pub const MAX_BYTES: usize = 1024 * 1024;
 
 /// `payload_too_large`: a body over [`MAX_BYTES`].
