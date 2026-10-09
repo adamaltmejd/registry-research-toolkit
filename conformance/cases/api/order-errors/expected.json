@@ -143,6 +143,24 @@
     }
   },
   {
+    "status": 422,
+    "json": {
+      "/error/code": "order_blocked",
+      "/error/message": "order blocked by 1 finding: variable_unresolved: [independent scb/example/missing _default] column 'scb/example/missing' does not resolve against the catalog at scb/example/annual: FQID does not resolve to any row: scb/example/missing",
+      "/error/fields": {
+        "findings": [
+          {
+            "code": "variable_unresolved",
+            "message": "column 'scb/example/missing' does not resolve against the catalog at scb/example/annual: FQID does not resolve to any row: scb/example/missing",
+            "source": "independent",
+            "variable": "scb/example/missing",
+            "period": "_default"
+          }
+        ]
+      }
+    }
+  },
+  {
     "status": 400,
     "json": {
       "/error/code": "malformed_request"

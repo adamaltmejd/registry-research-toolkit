@@ -325,8 +325,15 @@ impl Order<'_> {
         });
     }
 
-    /// The binding's variable and variant, or its `variable_unresolved` finding.
-    fn ids(&mut self, source: &Source, binding: &Binding) -> Result<Option<Ids>, Error> {
+    /// The binding's variable and variant, or its `variable_unresolved` finding, which
+    /// names the period `_default` for a year-independent request (`requested` none)
+    /// and no period for a dated one, as today's.
+    fn ids(
+        &mut self,
+        source: &Source,
+        binding: &Binding,
+        requested: Option<&[Interval]>,
+    ) -> Result<Option<Ids>, Error> {
         let detail = match binding.variable.parse() {
             Ok(Fqid::Variable {
                 provider,
@@ -341,8 +348,8 @@ impl Order<'_> {
                         variant: variant_id(self.conn, id, slug)?,
                     }));
                 }
-                // Today's message ends in this detail's place with an empty one (the
-                // frozen reader formats an error whose str() is empty): a Rust-only fix.
+                // Today's message carries an empty detail here (the frozen reader
+                // formats an error whose str() is empty): a Rust-only fix.
                 format!("FQID does not resolve to any row: {}", binding.variable)
             }
             Ok(_) => "not a binding FQID".to_owned(),
@@ -353,7 +360,8 @@ impl Order<'_> {
             quote(&binding.variable),
             source.register_variant
         );
-        self.finding(source, binding, "variable_unresolved", message, None);
+        let period = requested.is_none().then(|| "_default".to_owned());
+        self.finding(source, binding, "variable_unresolved", message, period);
         Ok(None)
     }
 
@@ -363,7 +371,7 @@ impl Order<'_> {
         binding: &Binding,
         requested: Option<&[Interval]>,
     ) -> Result<(), Error> {
-        let Some(ids) = self.ids(source, binding)? else {
+        let Some(ids) = self.ids(source, binding, requested)? else {
             return Ok(());
         };
         let pin = binding.representation.as_deref();
@@ -572,12 +580,17 @@ impl Order<'_> {
         // its edition, partition and the requested days it serves.
         let mut contributions: Vec<Contribution> = Vec::new();
         let mut blocked = false;
+        let held = if self.steward {
+            held_representations(self.conn, id, variant)?
+        } else {
+            BTreeSet::new()
+        };
         for (lo, hi, column) in slices {
             let slice = (lo.clone(), hi.clone());
             let mut covered = Vec::new();
             if self.steward {
                 let canonical = canonical(self.conn, id, variant, column)?;
-                if !held_representations(self.conn, id, variant)?.contains(&canonical) {
+                if !held.contains(&canonical) {
                     blocked = true;
                     let message = format!(
                         "no steward table maps {at} {variable} representation {}; a missing \

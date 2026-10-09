@@ -4,6 +4,13 @@ case data and the committed `order.json` bytes (RUST_RUNTIME_SPEC.md section 9).
 Runs against the `--server-cmd` server only, like the `api` corpus. A case that
 orders commits the frozen Python CLI's `order.json`; a blocked case has none, and
 its `expected.json` findings are the oracle.
+
+Recipe for a new case's `order.json` (a content decision, reviewed in the diff; never
+rewritten to make a run pass): build the case's artifact as this test does,
+`cached_case_artifact({"fixture": request["fixture"], "kind": request["artifact"]})`
+(fixed `FIXTURE_IMPORT_DATE`, so the generation is stable), write
+`request["project"]` to a file and save the stdout of
+`reg-meta --db <artifact dir> order <project.json>` as the case's `order.json`.
 """
 
 from __future__ import annotations

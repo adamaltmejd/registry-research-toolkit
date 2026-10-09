@@ -31,8 +31,10 @@ configuration. The documented equals form selects the current checkout reliably.
 
 Each case directory has `request.json` and `expected.json`. `observe` fields and JSON
 pointer projections define the compared public result; errors also pin the exit/status
-and located findings. Orders additionally compare CLI and materializer serialization and
-repeat raw bytes, including provenance. Every validate and order step in the validate
+and located findings. Order cases run only against `--server-cmd`: the manifest
+download's bytes compare with the case's committed `order.json` (the frozen CLI's,
+provenance included), `order`'s `data` with that document, and a blocked case's
+`order_blocked` findings on both routes. Every validate and order step in the validate
 surface also runs through `reg-meta validate` or `reg-meta order`: a 200 compares bytes
 and exit code with the HTTP response, and a 400 (a malformed document, sent verbatim
 from a step's `content` string, encoded with its optional `encoding`, or built by
@@ -47,7 +49,7 @@ byte), as `validate/gap-clipped` does for its order download.
   | Surface directory                  | Boundary and request interpretation                                                |
   | ---------------------------------- | ---------------------------------------------------------------------------------- |
   | cli_scope                          | CLI argv, optional second page, observe projection                                 |
-  | order                              | Public materializer plus CLI bytes, project and observe projection                 |
+  | order                              | HTTP order and download (`--server-cmd`), `order.json` bytes, observe projection   |
   | coverage                           | Public coverage return models, provider/register                                   |
   | logical                            | Public query/catalog operation, args/kwargs and observe projection                 |
   | reader                             | Public listing/cursor/concept group return models; also source fixtures            |
@@ -183,7 +185,8 @@ additions:
 
 SQLite integrity, reader admission, deterministic search/order, sampled
 browse/search/validate agreement, CLI/HTTP/materializer order bytes, CLI/HTTP validation
-bytes, and located unheld/unresolved refusal run on both synthetic kinds by default. A
+bytes, and located unheld/unresolved refusal run on both synthetic kinds by default (the
+unresolved refusal on the `--server-cmd` server, against the frozen materializer). A
 real run uses one admitted schema-9 artifact and also runs `validate_built_db`, the
 build's structural authority (foreign keys, manifest identity, holdings table/column
 accounting); synthetic artifacts already pass it when they are built. Real identifiers
