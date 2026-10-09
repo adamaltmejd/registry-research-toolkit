@@ -1,0 +1,26 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5.answer-a"
+slug = "answer-a"
+[[variable]]
+native_id = "1.5.answer-b"
+slug = "answer-b"
+[[errata.field]]
+variable = "1.5"
+variant = "1.10"
+column = "ANSWER_A"
+edition = "2020"
+expected_fields = {{expected_fields key=member:20 column=ANSWER_A}}
+expected_period_text = {{period_text key=member:20 column=ANSWER_A}}
+expected_scope = {{edition_scope key=member:20 column=ANSWER_A}}
+expected_period = {{period_scope key=member:20 column=ANSWER_A}}
+evidence = "Independent checked field correction"
+noted = "2026-09-30"
+field = "column_name"
+value = "ANSWER_B"

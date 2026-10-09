@@ -52,16 +52,9 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 
 then install `microdata-tools-se` from the plugin marketplace UI.
 
-This bundles the `/microdata-tools-se:register-metadata-search` skill and keeps it
-updated through the plugin host. The skill uses the underlying CLI below; install it
-once per machine.
-
-### CLIs
-
-```bash
-uv tool install reg-meta
-reg-meta update            # download metadata DB (~400 MB compressed)
-```
+The plugin connects to the hosted catalog MCP server at `https://catalog.swecov.se/mcp`
+and bundles the `/microdata-tools-se:register-metadata-search` skill, which documents
+its tools. Nothing else to install.
 
 ## Quick start
 
