@@ -1706,10 +1706,14 @@ so the deleting package removes the row mechanically (checkpoint 2):
   `reg_meta.fqid.{CLASSIFICATION_PREFIX,DEFAULT_VARIANT_SLUG,RESERVED_*}`, and the
   `reg_webapp` entry of `used_by` for
   `reg_meta.fqid.{Fqid,FqidError,FqidKind,parse,validate_slug,is_period}` and
-  `reg_meta.queries.fold_search`.
+  `reg_meta.queries.fold_search`. Also in C, because their last `reg_webapp` importer
+  went with the catalog routes (corrected in C; earlier text put them in F):
+  `reg_meta.holdings.{ReadScope,resolve_scope}` and the `reg_webapp` entry of `used_by`
+  for `reg_meta.errors.{EXIT_NOT_FOUND,EXIT_USAGE}`.
 - In 3e.4: `reg_meta.order.OrderFinding` (`routes/project.py`, `OrderBlockedModel`).
-- In F: the app-wiring rows (`reg_meta`, `reg_meta.db`, `reg_meta.doc_db`,
-  `reg_meta.holdings.*`, and the `reg_webapp` use of `reg_meta.errors.*`).
+- In F: the remaining app-wiring rows (`reg_meta`, `reg_meta.db`, `reg_meta.doc_db`, the
+  other `reg_meta.holdings.*`, and the remaining `reg_webapp` use of
+  `reg_meta.errors.*`).
 
 #### Stage 3b–3e decisions (maintainer, 2026-10-08)
 
