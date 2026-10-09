@@ -1910,13 +1910,12 @@ def _inventory_period_records(
 def _representative_spelling(db_path: Path) -> Callable[[str, str, str], str | None]:
     """The spelling the holdings compiler stores for a delivery column, or None
     when the fold is not in the resolver's delivery universe. Reads the same
-    public `Catalog.delivery_columns` universe and exact-coordinate resolution
+    derived `resolver_column` universe and exact-coordinate resolution
     (`catalog_coordinate_ids`) that `holdings_compile.canonical_inventory`
     canonicalizes with. Opened per call: only a case-only twin with neither a
     curated nor a physical literal asks."""
     from contextlib import closing
 
-    from reg_meta.catalog import Catalog
     from reg_meta.db import register_py_lower
     from reg_meta_build.db import catalog_coordinate_ids
 
@@ -1931,10 +1930,15 @@ def _representative_spelling(db_path: Path) -> Callable[[str, str, str], str | N
             )
             if variable not in variables or coord not in variants:
                 return None
-            universe = Catalog(conn).delivery_columns(
-                variables[variable], variants[coord]
+            universe = dict(
+                conn.execute(
+                    "SELECT delivery_column_lower, delivery_column_name "
+                    "FROM resolver_column "
+                    "WHERE variable_id = ? AND register_variant_id = ?",
+                    (variables[variable], variants[coord]),
+                ).fetchall()
             )
-        return {name.lower(): name for name in universe}.get(column.lower())
+        return universe.get(column.lower())
 
     return representative
 
