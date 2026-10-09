@@ -43,12 +43,17 @@ Build key: the content of `reg_meta_build/src`, `reg_meta/src`, `reg_schema/src`
 builder's own `curation_tree_sha256` of the selected curation tree; the prepared
 commit and manifest digest; the mode and `--registers`; the Python and SQLite
 versions; and for a publishable build the checkout's HEAD, which the database records.
-A build entry holds the report directory and the database. The `KEEP` most recently
+Every build lookup, hit or miss, first runs the admission checks the builder runs
+before it resolves anything (the prepared tree at the pinned commit and, for a
+publishable build, a clean builder checkout at the keyed commit); a failure exits 10
+with the builder's error code instead of returning the entry. A build entry holds the
+report directory and the database. The `KEEP` most recently
 used entries stay, and so does any entry used within 6 hours.
 
 The cache lives in `$REG_REAL_SEED_CACHE`, else `$XDG_CACHE_HOME/reg-meta-real-seed`,
 else `~/.cache/reg-meta-real-seed`. `$REG_REAL_SEED_BUILDER` replaces the
-`uv run reg-meta-build` command line (the tool's contract tests run a stub there).
+`uv run reg-meta-build` command line and `$REG_REAL_SEED_PYTHON` the `uv run python`
+that runs the project-environment probe (the tool's contract tests stub both).
 Stdlib only, like `gate.py`.
 """
 
@@ -107,6 +112,11 @@ PACKAGES = {
 # reading a repository file outside its package (today only `_curation`,
 # `curation_tree` and `fqid_slugs` can read the curation tree, and the prepare path
 # calls none of those readers).
+#
+# Stage 4 of RUST_RUNTIME_SPEC.md moves the retained `reg_meta` modules into
+# `reg_meta_build` (4.4) and deletes `reg_meta/` and `reg_schema/` (4.9a): update
+# these roots and `PACKAGES` then; a missing root stops the tool rather than
+# shrinking the key.
 PREPARE_ROOTS = (
     "reg_meta_build.prepared_catalog",
     "reg_meta_build.input_snapshot",
@@ -122,8 +132,10 @@ PREPARE_ROOTS = (
 PREPARE_ENTRY_FILES = ("reg_meta_build/src/reg_meta_build/cli.py",)
 # What this stdlib-only script needs from the project environment: the interpreter
 # and SQLite the builder runs on, the builder's own curation digest (the value a
-# build records as `curation_tree_sha256`), and the builder's warm-build check of an
-# accepted prepared tree at its repository's HEAD.
+# build records as `curation_tree_sha256`), the builder's warm-build check of an
+# accepted prepared tree at its repository's HEAD, and the admission checks a build
+# runs before it resolves anything (the same check of the prepared pins and, for a
+# publishable build, the clean builder source).
 PROBE = """
 import json, sqlite3, subprocess, sys
 from pathlib import Path
@@ -146,6 +158,24 @@ if request.get("prepared"):
         facts["accepted_commit"] = head
     except Exception as exc:
         facts["accepted_error"] = str(exc) or type(exc).__name__
+if request.get("admit"):
+    admit = request["admit"]
+    try:
+        from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
+        open_prepared_catalog_sources(
+            Path(admit["prepared"]),
+            input_commit=admit["input_commit"],
+            expected_sha256=admit["manifest_sha256"],
+        )
+        if admit["builder_commit"] is not None:
+            from reg_meta_build.artifact_identity import builder_commit
+            if builder_commit() != admit["builder_commit"]:
+                raise ValueError("Builder revision changed during compilation")
+    except Exception as exc:
+        facts["admission_error"] = {
+            "code": getattr(exc, "code", None) or "pipeline_build_failed",
+            "message": str(exc),
+        }
 print(json.dumps(facts))
 """
 
@@ -154,8 +184,11 @@ def builder() -> list[str]:
     return shlex.split(os.environ.get("REG_REAL_SEED_BUILDER", "uv run reg-meta-build"))
 
 
-def probe(**request: str) -> dict[str, str]:
-    argv = ["uv", "run", "--quiet", "python", "-c", PROBE, json.dumps(request)]
+def probe(**request) -> dict:
+    python = shlex.split(
+        os.environ.get("REG_REAL_SEED_PYTHON", "uv run --quiet python")
+    )
+    argv = [*python, "-c", PROBE, json.dumps(request)]
     return json.loads(
         subprocess.run(
             argv, cwd=ROOT, capture_output=True, text=True, check=True
@@ -179,6 +212,10 @@ def digest(fields: dict) -> str:
 
 
 def code_digests(paths) -> dict[str, str]:
+    # `tree_digest` hashes a missing tree as empty; a key must refuse it instead, so a
+    # moved or deleted source (the stage-4 moves) names the path to update.
+    if missing := [path for path in paths if not (ROOT / path).exists()]:
+        sys.exit(f"real-seed-cache: keyed source missing, update the key: {missing}")
     return {path: tree_digest(ROOT / path) for path in paths}
 
 
@@ -248,6 +285,8 @@ def prepare_code_files() -> list[str]:
     Data files beside any walked module count, as do the native extension sources
     when a walked module imports `reg_core_py`, and `uv.lock` always.
     """
+    if missing := [m for m in PREPARE_ROOTS if _module_file(m) is None]:
+        sys.exit(f"real-seed-cache: prepare walk root missing, update it: {missing}")
     seen: dict[str, Path] = {}
     native = False
     pending = list(PREPARE_ROOTS)
@@ -443,6 +482,7 @@ def build_code(args: argparse.Namespace) -> dict:
     """The builder code a build runs. A publishable build also records the
     checkout's commit in the database, so that commit is keyed too."""
     return {
+        # `reg_schema/src` goes with stage 4.9a; drop it here then.
         "code": code_digests((*BUILDER_SOURCES, PACKAGES["reg_schema"])),
         "builder_commit": (
             git(ROOT, "rev-parse", "HEAD")
@@ -453,14 +493,30 @@ def build_code(args: argparse.Namespace) -> dict:
 
 
 def build_fields(args: argparse.Namespace) -> dict:
-    facts = probe(curation=args.curation_dir or str(ROOT / "reg_meta_build/curation"))
+    code = build_code(args)
+    facts = probe(
+        curation=args.curation_dir or str(ROOT / "reg_meta_build/curation"),
+        # Run on every lookup, hit or miss: a hit must refuse exactly what the build
+        # would refuse before it starts.
+        admit=None
+        if args.key
+        else {
+            "prepared": args.prepared,
+            "input_commit": args.input_commit,
+            "manifest_sha256": args.input_manifest_sha256,
+            "builder_commit": code["builder_commit"],
+        },
+    )
+    if error := facts.pop("admission_error", None):
+        emit({"hit": False, "error": error})
+        sys.exit(EXIT_CONFIG)
     return {
         "step": "build",
         "mode": "diagnostic" if args.diagnostic else "strict",
         "registers": args.registers.split(",") if args.registers else [],
         "prepared_commit": args.input_commit,
         "prepared_manifest_sha256": args.input_manifest_sha256,
-        **build_code(args),
+        **code,
         "curation_tree_sha256": facts.pop("curation_tree_sha256"),
         "runtime": facts,
     }
