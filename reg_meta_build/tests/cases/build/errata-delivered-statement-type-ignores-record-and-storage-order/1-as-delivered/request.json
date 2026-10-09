@@ -1,0 +1,86 @@
+{
+  "replaces": [
+    "test_source_effect_delivery.py::test_delivered_type_is_order_independent_across_records_and_storage"
+  ],
+  "note": "The old test's records and storage as delivered: VALUE documented 2018=integer and (as 'value') 2022=decimal, CIS2004 smallint and CIS2012 varchar storage, the 2020 target edition carried by another variable (EDITION). PAIR (same two documented types, no storage) is added beside it so the type itself, not only the provenance, depends on every documented record: with VALUE's varchar storage the widened type is text whatever the documented records say. Expected values: the storage substring 'CIS2004=smallint, CIS2012=varchar' is the old test's literal; its `provenance == provenance` claim across orders becomes the sorted 'Documented Datatyp: 2018=integer, 2022=decimal' substring (format pinned by errata-delivered-statement-types-widen-documentation-and-storage); the types are derived from the fixture by the widening rule that sibling's parametrize table pins (integer+varchar -> text; integer+decimal -> decimal). Step 2 delivers the same rows reversed and expects these projections.",
+  "fails_if": "`scb_errata.convert_delivered_entry` types the addition from only the first documented record (for example `documented_classes[:1]`), so PAIR's 2020 state is integer instead of decimal",
+  "sources": {
+    "description": "Register TEST (1, variant 2). VALUE (var 5) is documented in 2018 as integer and, spelled 'value', in 2022 as decimal; PAIR (var 6) in 2018 as integer and in 2022 as decimal. EDITION (var 99) delivers 2020, so a 2020 edition exists that neither column is delivered in. SWECOV storage: CIS2004 VALUE smallint, CIS2012 VALUE varchar; PAIR has no storage.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 10,
+          "var_id": 5,
+          "year": "2018",
+          "regver_id": 2018,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "integer"
+        },
+        {
+          "colname": "value",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "decimal"
+        },
+        {
+          "colname": "PAIR",
+          "cvid": 11,
+          "var_id": 6,
+          "year": "2018",
+          "regver_id": 2018,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "integer"
+        },
+        {
+          "colname": "PAIR",
+          "cvid": 21,
+          "var_id": 6,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "decimal"
+        },
+        {
+          "colname": "EDITION",
+          "cvid": 30,
+          "var_id": 99,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "int"
+        }
+      ]
+    },
+    "files": {
+      "swecov/derived/swecov_column_types.csv": [
+        "table_schema,table_name,table_type,column_name,data_type,character_maximum_length,numeric_precision,numeric_scale,ordinal_position",
+        "dbo,CIS2004,BASE TABLE,VALUE,smallint,,,,1",
+        "dbo,CIS2012,BASE TABLE,VALUE,varchar,,,,2"
+      ]
+    }
+  }
+}

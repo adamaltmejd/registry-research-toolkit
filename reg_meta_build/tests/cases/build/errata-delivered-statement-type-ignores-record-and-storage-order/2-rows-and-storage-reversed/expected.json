@@ -1,0 +1,86 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "valid_from": "2020-01-01",
+        "column": [
+          "VALUE",
+          "PAIR"
+        ]
+      },
+      "fields": [
+        "variable",
+        "column",
+        "data_type"
+      ],
+      "rows": [
+        [
+          "v5",
+          "VALUE",
+          "text"
+        ],
+        [
+          "v6",
+          "PAIR",
+          "decimal"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "v5",
+        "valid_from": "2020-01-01",
+        "provenance": {
+          "contains": [
+            "CIS2004=smallint, CIS2012=varchar",
+            "Documented Datatyp: 2018=integer, 2022=decimal"
+          ]
+        }
+      },
+      "fields": [
+        "variable"
+      ],
+      "rows": [
+        [
+          "v5"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "v6",
+        "valid_from": "2020-01-01",
+        "provenance": {
+          "contains": [
+            "Documented Datatyp: 2018=integer, 2022=decimal"
+          ]
+        }
+      },
+      "fields": [
+        "variable"
+      ],
+      "rows": [
+        [
+          "v6"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": []
+    }
+  ]
+}

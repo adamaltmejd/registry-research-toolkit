@@ -1,11 +1,10 @@
-"""Shared synthetic records, cases and storage columns for the checked-correction (source effects) tests."""
+"""Shared synthetic records and cases for the checked-correction (source effects) tests."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from _csv_fixtures import SCB_REVISION, scb_record
-from reg_meta.source_evidence import RecordLocator, SourceField
+from _csv_fixtures import scb_record
 from reg_meta_build.source_curation import (
     CheckedFieldChange,
     CurationCase,
@@ -25,10 +24,7 @@ from reg_meta_build.source_records import (
     SourceFields,
     SourceRecord,
     TemporalScope,
-    value_field,
 )
-from reg_meta_build.source_reference_records import SourceColumnTypeDeclaration
-from reg_meta_build.sources.swecov_column_types import index_swecov_column_types
 
 if TYPE_CHECKING:
     from reg_meta_build.source_curation import OccurrenceEffect
@@ -114,29 +110,4 @@ def effect_field(record: SourceRecord, name: str, value: str) -> CheckedFieldCha
     return CheckedFieldChange(
         ref=record_ref(record),
         replacement=FieldExpectation(name=name, status="value", value=value),
-    )
-
-
-def storage_columns(
-    *pairs: tuple[str, str],
-    column: str = "MISSING",
-) -> dict[tuple[str, str], SourceColumnTypeDeclaration]:
-    return index_swecov_column_types(
-        SourceColumnTypeDeclaration(
-            revision=SCB_REVISION,
-            locator=RecordLocator(
-                semantic_record_key=("storage", table, column),
-                physical_file="fixture.csv",
-                physical_table=table,
-                physical_record=f"row:{index}",
-                physical_cells=(),
-            ),
-            delivered_cells=(),
-            table_name=value_field(table),
-            column_name=value_field(column),
-            data_type=value_field(sql_type),
-            declared_width=SourceField(status="unknown"),
-            nullable=SourceField(status="unknown"),
-        )
-        for index, (table, sql_type) in enumerate(pairs, start=1)
     )
