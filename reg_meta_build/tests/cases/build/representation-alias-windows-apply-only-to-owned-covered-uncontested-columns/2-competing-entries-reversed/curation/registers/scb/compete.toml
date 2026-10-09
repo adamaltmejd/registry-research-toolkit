@@ -1,0 +1,29 @@
+[register]
+provider = "scb"
+slug = "compete"
+native_id = "35"
+[[variant]]
+native_id = "35.350"
+slug = "people"
+[[variable]]
+native_id = "35.6"
+slug = "second"
+[[variable]]
+native_id = "35.5"
+slug = "first"
+
+[[representation.alias_window]]
+variable = "scb/compete/second"
+variant = "people"
+column = "X"
+source_editions = ["2020", "2019"]
+evidence = "The 2019 and 2020 analysis tables hold X for the second variable."
+noted = "2026-10-09"
+
+[[representation.alias_window]]
+variable = "scb/compete/first"
+variant = "people"
+column = "X"
+source_editions = ["2019", "2018"]
+evidence = "The 2018 and 2019 analysis tables hold X for the first variable."
+noted = "2026-10-09"

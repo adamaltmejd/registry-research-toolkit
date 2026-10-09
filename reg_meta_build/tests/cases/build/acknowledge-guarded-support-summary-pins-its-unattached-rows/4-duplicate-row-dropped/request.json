@@ -1,0 +1,20 @@
+{
+  "replaces": ["test_source_scope_acknowledgements.py::test_guarded_support_acknowledgement_pins_unattached_originals[physical_duplicate]"],
+  "note": "Step 1's entry, with its evidence hash authored from an export that delivers TESTREG's blank-column Unika summary twice (two byte-identical rows, so one semantic key and one ref). The build reads step 1's export, with the summary once. The built file is step 1's, so the subject (which names its revision id) is step 1's and the entry still matches its issue; only the evidence guard differs. From the old test (change='physical_duplicate', the authored pair cut to its first row): nothing is acknowledged and the entry is stale. Allowed twin: step 1, the same entry authored and built over one row. The build accepts a repeated Unika row (the duplicate-row refusal covers scope sources only), so the authored export is one a build could read.",
+  "fails_if": "`acknowledgement_evidence_sha256` (source_curation.py) hashes the distinct record ids of the originals (which the two byte-identical rows share) instead of every full original, so the pin authored over both delivered summary rows still matches the one row the build delivers and register 1's summary issue is acknowledged",
+  "authored_from": {
+    "description": "scb-two-registers-unknown-support, with TESTREG's blank-column Unika summary delivered twice.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {"cvid": 2001, "var_id": 201, "colname": "OTHER", "varname": "OtherVar", "register": ["OTHERREG", 2, 20]}
+      ],
+      "unika": [
+        "TESTREG|Testregistret|Individer|Individer|GenericVar||2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|GenericVar||2020|2020|0|0|0",
+        "OTHERREG|Testregistret|Individer|Individer|OtherVar||2020|2020|0|0|0"
+      ]
+    }
+  },
+  "sources": "scb-two-registers-unknown-support"
+}

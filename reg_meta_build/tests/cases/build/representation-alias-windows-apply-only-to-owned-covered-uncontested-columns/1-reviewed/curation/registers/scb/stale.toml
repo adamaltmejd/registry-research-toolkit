@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "stale"
+native_id = "37"
+[[variant]]
+native_id = "37.370"
+slug = "people"
+[[variable]]
+native_id = "37.5"
+slug = "value"
+
+[[representation.alias_window]]
+variable = "scb/stale/missing"
+variant = "people"
+column = "OLD"
+source_editions = ["2019"]
+evidence = "The 2019 analysis table holds OLD."
+noted = "2026-10-09"

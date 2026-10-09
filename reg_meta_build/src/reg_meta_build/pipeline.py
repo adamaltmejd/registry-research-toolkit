@@ -767,6 +767,7 @@ def _run_pipeline(
     coverage: list[CoverageObligation] = []
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
     books = {}
+    withheld_books: dict[str, tuple[ResolutionDiagnostic, ...]] = {}
     data_warnings = {}
     lineage_originals = {
         ref: []
@@ -976,13 +977,25 @@ def _run_pipeline(
                         members.values(),
                         source=declaration.source,
                         subject=str(declaration.metadata.get("slug")),
+                        book_refs=tuple(
+                            SourceRecordRef(
+                                source=declaration.source,
+                                semantic_record_key=locator.semantic_record_key,
+                            )
+                            for locator in session.descriptor(
+                                declaration.descriptor
+                            ).locators
+                        ),
                     )
                 for value in resolved.diagnostics:
                     issue(value)
                 if not resolved.codes:
-                    raise ValueError(
-                        "empty canonical codebook dependency is not yet supported"
-                    )
+                    # Withhold the book: its bindings, metadata and successions
+                    # cite these causes, and the rest of the build completes.
+                    slug = str(declaration.metadata.get("slug"))
+                    withheld_books[slug] = resolved.diagnostics
+                    withheld[("classification", slug)] = resolved.diagnostics
+                    continue
                 metadata = dict(declaration.metadata)
                 book = ResolvedClassification.model_validate(
                     {
@@ -1213,6 +1226,7 @@ def _run_pipeline(
                         value_sessions=sessions,
                         support=support,
                         classifications=books,
+                        withheld_classifications=withheld_books,
                         classification_references=references,
                         classification_family_references=family_references,
                         label_rules=label_rules,
@@ -1655,9 +1669,18 @@ def _run_pipeline(
                         part.skipped
                         for part in (edges, source_events, resolved_metadata, lineage)
                     )
-                successions = resolve_classification_successions(
-                    tuple(books.values()), selected.classification_successions
+                successions, withheld_successions = resolve_classification_successions(
+                    tuple(books.values()),
+                    selected.classification_successions,
+                    {
+                        slug: (str(declaration.metadata.get("name")), causes)
+                        for declaration in selected.classifications
+                        for slug in [str(declaration.metadata.get("slug"))]
+                        if (causes := withheld_books.get(slug))
+                    },
                 )
+                for value in withheld_successions:
+                    issue(value)
                 final_metadata = resolve_variable_successions(
                     lineage.metadata, lineage.variables, successions
                 )

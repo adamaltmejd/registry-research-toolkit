@@ -1,0 +1,17 @@
+{
+  "replaces": [
+    "test_source_scope_acknowledgements.py::test_a_stale_acknowledgement_is_an_error"
+  ],
+  "note": "The entry is the unguarded acknowledgement of member 1003's unresolved catalog identity (as in `acknowledge-guarded-by-its-unchanged-original-rows`, without its evidence digest). The build reads scb-unnamed-variable with unnamed variable 1.102 also delivered as member 1004 in a 2021 edition, so the identity issue now names both members. From the old test's last arm ('coordinates match exactly, never by containment'): the entry, whose refs are a subset of the issue's, matches nothing, so the issue stays an error and the entry is stale. The old test's first arm (the issue no longer occurs, so the entry is stale) is the easier form of the same exact-match rule, already shown by `acknowledge-dated-issue-stale-with-a-contained-window` and `acknowledge-dated-issue-stale-without-a-period`, whose entries also match no issue.",
+  "fails_if": "the acknowledgement matcher in `resolve_source_scope` (source_scope.py) drops `refs` from the held issue key, or accepts an entry whose refs are a subset of the issue's, so the entry naming only member 1003 acknowledges the issue that names 1003 and 1004",
+  "sources": {
+    "description": "scb-unnamed-variable, with unnamed variable 1.102 also delivered as member 1004 in a 2021 edition.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {"cvid": 1003, "var_id": 102, "colname": "OTHER", "vardef": "A generic family label"},
+        {"cvid": 1004, "var_id": 102, "colname": "OTHER", "vardef": "A generic family label", "year": "2021", "regver_id": 2021}
+      ]
+    }
+  }
+}

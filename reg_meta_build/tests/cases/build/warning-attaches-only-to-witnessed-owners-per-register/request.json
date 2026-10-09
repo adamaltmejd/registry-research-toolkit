@@ -1,0 +1,37 @@
+{
+  "replaces": [
+    "test_resolved_writer_data_warnings.py::test_data_warnings_persist_exact_ownership_without_inventing_scope",
+    "test_resolved_writer_data_warnings.py::test_warning_ownership_requires_complete_source_and_delivery_witnesses",
+    "test_resolved_writer_data_warnings.py::test_assumption_warns_on_added_physical_column_not_anchor_identity[fields0-assumed_storage_type]"
+  ],
+  "fails_if": "any one of, per register: `scope_data_warnings` stops attaching an owned, dated issue to its one witnessed state, or `write_data_warnings` stores a coordinate (variable, variant, column, period) that differs from the warning's JSON (acked); a warning copies the diagnostic's detail instead of the reviewer's reason or the code's published text, or hashes anything but the diagnostic's own detail (acked, alternatives, undated, unowned); the QUALITY_CODES filter lets an unacknowledged issue of another code through (unacked); the witness check accepts a state set that differs from the delivery witnesses, so a ref delivered through two columns is pinned to one (alternatives); an undated issue is given a state or period (undated); an issue whose refs have no formed owner is pinned to a variable of its register (unowned); or an [[errata.column]] data_warning maps its data_type field to another code, lands on the delivered anchor, or cites another occurrence's records (storage)",
+  "note": "One build, one claim per register; each projection is scoped to its register and names its claim in its `note`. Expected values come from the replaced tests: the scoped warning carries its variable, variant, column and period and persists every JSON field (first test, scoped leg); an unowned warning stays register-wide with null variable, variant, column and period (first test, unscoped leg; second test, missing-ref leg); an undated owned issue keeps its variable and no variant (second test, undated leg); the published detail differs from the diagnostic's, and the stored hash is that of the diagnostic's detail (second test; `detail_hash_of` states the relation, so no hash literal is written); an unacknowledged non-quality issue publishes nothing (second test, metadata_projected leg); and an added column's data_type assumption is assumed_storage_type on that column, with no refs and the case as its subject (third test, data_type leg). The reviewed reasons, the [[errata.column]] summary, the column and the 2020 period come from the curation and the source spec; the summaries and details of unowned and undated are each code's published copy. The acked fixture is acknowledge-dated-issue-by-its-exact-period's, alternatives is acknowledge-missing-coding-of-physical-alternatives-once's, and undated is coding-entries-apply-or-go-stale-per-register's undated register without its choice.",
+  "sources": {
+    "description": "One SCB delivery of six registers, one per data-warning claim; register n has variant n*10 and its 2020 edition RegVerID n*100+10. acked (1): members 1001 and 1002 of variable 101 deliver VALUE in 2020 with units kg and ton. unacked (2): the same conflict as members 2001 and 2002 of variable 201. alternatives (3): variable 301 delivers member 3001 in 2020 and member 3002 in 2021 (RegVerID 3021) through both First and Second; only 3001 carries a list (Kön: 1 Man). undated (4): variable 401 delivers VALUE in 2020 (member 4001, list keep: 01 Label) and in the range-less pooled edition 'HT 2021 - VT 2022' (RegVerID 4122, member 4002, list pooled: 03 Pooled). unowned (5): variable 501 delivers VALUE (member 5001) and the unpinned variable 502 delivers OTHER (member 5002), both under list keep: 01 Label. storage (6): variable 601 delivers VALUE (member 6001, list keep: 01 Label); the curation adds the undelivered column Stored.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE", "unit": "kg", "regver_id": 110, "register": ["ACKED", 1, 10]},
+        {"cvid": 1002, "var_id": 101, "colname": "VALUE", "unit": "ton", "regver_id": 110, "register": ["ACKED", 1, 10]},
+        {"cvid": 2001, "var_id": 201, "colname": "VALUE", "unit": "kg", "regver_id": 210, "register": ["UNACKED", 2, 20]},
+        {"cvid": 2002, "var_id": 201, "colname": "VALUE", "unit": "ton", "regver_id": 210, "register": ["UNACKED", 2, 20]},
+        {"cvid": 3001, "var_id": 301, "colname": "First", "regver_id": 310, "register": ["ALTERNATIVES", 3, 30]},
+        {"cvid": 3001, "var_id": 301, "colname": "Second", "regver_id": 310, "register": ["ALTERNATIVES", 3, 30]},
+        {"cvid": 3002, "var_id": 301, "colname": "First", "year": "2021", "regver_id": 3021, "register": ["ALTERNATIVES", 3, 30]},
+        {"cvid": 3002, "var_id": 301, "colname": "Second", "year": "2021", "regver_id": 3021, "register": ["ALTERNATIVES", 3, 30]},
+        {"cvid": 4001, "var_id": 401, "colname": "VALUE", "regver_id": 410, "register": ["UNDATED", 4, 40]},
+        {"cvid": 4002, "var_id": 401, "colname": "VALUE", "year": "2021", "regver_id": 4122, "versionname": "HT 2021 - VT 2022", "register": ["UNDATED", 4, 40]},
+        {"cvid": 5001, "var_id": 501, "colname": "VALUE", "regver_id": 510, "register": ["UNOWNED", 5, 50]},
+        {"cvid": 5002, "var_id": 502, "colname": "OTHER", "regver_id": 510, "register": ["UNOWNED", 5, 50]},
+        {"cvid": 6001, "var_id": 601, "colname": "VALUE", "regver_id": 610, "register": ["STORAGE", 6, 60]}
+      ],
+      "vardemangder": [
+        "Kön|1|1|Man|3001|5301",
+        "keep|1|01|Label|4001|5401",
+        "pooled|1|03|Pooled|4002|5402",
+        "keep|1|01|Label|5001|5501",
+        "keep|1|01|Label|5002|5502",
+        "keep|1|01|Label|6001|5601"
+      ]
+    }
+  }
+}

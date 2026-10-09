@@ -30,7 +30,6 @@ import json
 import random
 import sqlite3
 import tomllib
-from contextlib import closing
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -220,33 +219,61 @@ def _held_register_ids(conn: sqlite3.Connection) -> set[int]:
     }
 
 
-def _register_cases(
-    b: _Builder,
-    conn: sqlite3.Connection,
-    scopes: list[str],
-    seed: int,
-) -> None:
+@dataclass(frozen=True)
+class RegisterSample:
+    """One register's seeded draws: a year, a pair of years and delivery columns, and
+    the scopes it is asked in (every register in reference; the held and unheld
+    strata in holdings)."""
+
+    fqid: str
+    name: str
+    year: int | None
+    pair: list[int] | None
+    columns: list[str]
+    scopes: list[str]
+
+
+def register_samples(
+    conn: sqlite3.Connection, catalog: str, scopes: list[str], seed: int
+) -> list[RegisterSample]:
     years = _register_years(conn)
     aliases = _register_aliases(conn)
     registers = _registers(conn)
     in_scope = {"reference": {r[0] for r in registers}}
     if "holdings" in scopes:
         held = _held_register_ids(conn)
-        rng = _rng(seed, b.catalog, "holdings-registers")
+        rng = _rng(seed, catalog, "holdings-registers")
         in_scope["holdings"] = set(
             _sample(rng, sorted(held), HELD_REGISTERS)
             + _sample(rng, sorted(in_scope["reference"] - held), UNHELD_REGISTERS)
         )
+    out = []
     for register_id, fqid, name in registers:
-        rng = _rng(seed, b.catalog, f"register:{fqid}")
+        rng = _rng(seed, catalog, f"register:{fqid}")
         span = years.get(register_id, [])
         year = rng.choice(span) if span else None
         pair = sorted(rng.sample(span, 2)) if len(span) >= 2 else None
         columns = _sample(rng, aliases.get(register_id, []), RESOLVE_COLUMNS)
-        b.add(f"get-register-name/{fqid}", ["get", "register", name])
-        for scope in scopes:
-            if register_id not in in_scope[scope]:
-                continue
+        named = [s for s in scopes if register_id in in_scope[s]]
+        out.append(RegisterSample(fqid, name, year, pair, columns, named))
+    return out
+
+
+def _register_cases(
+    b: _Builder,
+    conn: sqlite3.Connection,
+    scopes: list[str],
+    seed: int,
+) -> None:
+    for sample in register_samples(conn, b.catalog, scopes, seed):
+        fqid, year, pair, columns = (
+            sample.fqid,
+            sample.year,
+            sample.pair,
+            sample.columns,
+        )
+        b.add(f"get-register-name/{fqid}", ["get", "register", sample.name])
+        for scope in sample.scopes:
             reg = fqid
             b.add(f"get-register/{reg}", ["get", "register", fqid], scope=scope)
             b.add(f"get-groups/{reg}", ["get", "groups", fqid], scope=scope)
@@ -501,18 +528,6 @@ def _docs_cases(b: _Builder, db_dir: Path) -> None:
         b.add(f"docs-search/{i}", ["docs", "search", term])
 
 
-def register_and_variable_cases(catalog: str, db_dir: Path, seed: int) -> list[Case]:
-    """One catalog's register and variable cases, in `generate`'s order. The served
-    `schema` family reads their argv to send the same requests."""
-    steward = catalog != "global"
-    scopes = ["reference", "holdings"] if steward else ["reference"]
-    b = _Builder(catalog, db_dir)
-    with closing(connect(db_dir)) as conn:
-        _register_cases(b, conn, scopes, seed)
-        _variable_cases(b, _variable_strata(conn, catalog, steward, seed), scopes)
-    return b.cases
-
-
 def generate(dirs: dict[str, Path], config: dict, project_dir: Path) -> list[Case]:
     """Every G1 case for the pinned catalogs, in a stable order."""
     seed = config["seed"]
@@ -521,10 +536,11 @@ def generate(dirs: dict[str, Path], config: dict, project_dir: Path) -> list[Cas
     for catalog, db_dir in sorted(dirs.items()):
         steward = catalog != "global"
         scopes = ["reference", "holdings"] if steward else ["reference"]
-        cases.extend(register_and_variable_cases(catalog, db_dir, seed))
         b = _Builder(catalog, db_dir)
         conn = connect(db_dir)
         try:
+            _register_cases(b, conn, scopes, seed)
+            _variable_cases(b, _variable_strata(conn, catalog, steward, seed), scopes)
             _classification_cases(b, conn, scopes, seed)
             _search_cases(b, conn, scopes, seed)
             _project_cases(b, conn, catalog, tag, seed, project_dir)

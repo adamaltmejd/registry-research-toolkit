@@ -1,7 +1,7 @@
 //! `states`: a variable's representations over the compiled `expanded_state`, with
 //! the request-dependent rules of section 3 applied at read time: the window
 //! fallback, held and requested clipping and warning attribution
-//! (`reg_meta/DESIGN.md`, "Compiled states and browse deliveries").
+//! (`crates/DESIGN.md`, "Compiled states and request-time rules").
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -254,7 +254,7 @@ struct Warning {
 }
 
 /// The ids of `warnings` that apply to `e` at its emitted bounds, by the
-/// attribution predicate of `reg_meta/DESIGN.md`; `warnings` are the variable's,
+/// attribution predicate of `crates/DESIGN.md`; `warnings` are the variable's,
 /// ordered by id.
 fn warning_ids(warnings: &[Warning], e: &Emitted) -> Vec<String> {
     let column = e.canonical_column.as_deref().map(fold_identity);

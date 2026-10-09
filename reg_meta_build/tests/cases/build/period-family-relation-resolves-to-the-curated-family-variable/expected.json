@@ -8,10 +8,11 @@
     },
     {
       "table": "variables",
-      "where": {"register": "sample"},
-      "fields": ["variable", "provider_key"],
+      "where": {"variable": ["value", "plain"]},
+      "fields": ["register", "variable", "column", "provider_key"],
       "rows": [
-        ["value", "101"]
+        ["sample", "value", "VALUE", "101"],
+        ["other", "plain", "OTHERVALUE", "230"]
       ]
     },
     {

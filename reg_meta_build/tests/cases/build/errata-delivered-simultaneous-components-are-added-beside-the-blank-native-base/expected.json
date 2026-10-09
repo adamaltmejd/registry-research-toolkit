@@ -10,12 +10,28 @@
     },
     {
       "table": "issues",
-      "fields": ["code", "subject"],
+      "fields": ["code", "severity", "subject"],
       "rows": [
         [
           "omitted_columnless_occurrence",
+          "warning",
           "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)"
+        ],
+        [
+          "unresolved_catalog_identity",
+          "error",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 6)"
         ]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "unresolved_catalog_identity"},
+      "fields": ["key"],
+      "note": "Variable 6's identity error cites both of its rows: the stated-absent and the unknown column.",
+      "rows": [
+        [["register:1", "variant:2", "edition:2020", "variable:6", "member:40"]],
+        [["register:1", "variant:2", "edition:2021", "variable:6", "member:41"]]
       ]
     },
     {

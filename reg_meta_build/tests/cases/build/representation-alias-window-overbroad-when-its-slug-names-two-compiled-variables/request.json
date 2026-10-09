@@ -1,0 +1,28 @@
+{
+  "replaces": [
+    "test_alias_windows.py::test_alias_window_with_two_compiled_variable_keys_is_overbroad"
+  ],
+  "note": "The blank donor (variable 15662) is pinned to the slug answer-sweden, which its documented-blank `[[representation.matrix]]` also gives the answer variable it converts, so the window's FQID names two compiled variable keys: the donor's and the answer's, which extends the donor's key as the replaced test's `(*key, \"split\")` did. The refusal is overbroad, ahead of the edition checks: the pooled edition '2012 - 2014' alone would make the entry stale. The donor publishes no variable, so the answers build as in `matrix-blank-answers-inherit-the-donor-code-list`, whose source this case shares.",
+  "fails_if": "`compile_alias_windows` (curation_compile.py) stops refusing a variable FQID that resolves to more than one compiled key, or checks the editions first, so the entry is reported stale (or binds one of the two variables) instead of overbroad",
+  "sources": {
+    "description": "SCB register 257 (variant 553) delivers one blank-column source instance (var_id 15662, CVID 400684, edition '2012 - 2014') whose value set is the single code 1/Yes; no Unika file.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 400684,
+          "var_id": 15662,
+          "colname": "",
+          "varname": "Partner location",
+          "register": ["Innovation", 257, 553],
+          "regver_id": 7293,
+          "versionname": "2012 - 2014",
+          "year": "2014",
+          "data_type": "varchar"
+        }
+      ],
+      "vardemangder": ["Svar|1|1|Yes|400684|7001"],
+      "valid_dates": ["7001|2012-01-01|2014-12-31"],
+      "unika": null
+    }
+  }
+}
