@@ -268,32 +268,50 @@ it("keeps every declared book and reads scoped special codes using exact large I
     overlap: 0.5,
     nonconforming_codes: [],
   };
-  vi.mocked(getValues).mockImplementation(async (_ref, options) => ({
+  // The server's answer by request: the coded 2013 window's own value set only
+  // when the read names the window (column + start), else the base state's set;
+  // the stored sentinels only for the book's ref (`class/sni2007`) — a bare slug
+  // resolves as a name and does not answer them.
+  const window = (options: Parameters<typeof getValues>[1]) =>
+    options?.state === stateId &&
+    options.column === "NgS1" &&
+    options.alias_window_from === "2013-01-01";
+  vi.mocked(getValues).mockImplementation(async (ref, options) => ({
     next_cursor: null,
     total: 1,
     items:
-      options?.classification == null
-        ? [{ code: "0", label: "Original source label" }]
-        : [
-            {
-              code: "0",
-              label: "Original source label",
-              member_kind: "sentinel",
-              sentinel_meaning: null,
-              scoped_sentinels: [
+      ref !== FQID
+        ? []
+        : options?.classification == null
+          ? [
+              window(options)
+                ? { code: "0", label: "Original source label" }
+                : { code: "9", label: "Base state label" },
+            ]
+          : options.classification !== "class/sni2007" ||
+              options.partition !== "sentinels" ||
+              !window(options)
+            ? []
+            : [
                 {
-                  valid_from: "2013-01-01",
-                  valid_to: "2013-12-31",
-                  delivery_column_name: "NgS1",
-                  classification_sha256: "a".repeat(64),
-                  source_fingerprints: ["b".repeat(64)],
-                  members: [["0", "No recorded industry"]],
-                  provenance:
-                    "Reviewed source coding for this column and period.",
+                  code: "0",
+                  label: "Original source label",
+                  member_kind: "sentinel",
+                  sentinel_meaning: null,
+                  scoped_sentinels: [
+                    {
+                      valid_from: "2013-01-01",
+                      valid_to: "2013-12-31",
+                      delivery_column_name: "NgS1",
+                      classification_sha256: "a".repeat(64),
+                      source_fingerprints: ["b".repeat(64)],
+                      members: [["0", "No recorded industry"]],
+                      provenance:
+                        "Reviewed source coding for this column and period.",
+                    },
+                  ],
                 },
               ],
-            },
-          ],
   }));
   await render(ValueSetView, {
     fqid: FQID,
@@ -328,22 +346,18 @@ it("keeps every declared book and reads scoped special codes using exact large I
   expect(
     document.querySelector('a[href="/catalog/class/sni2002"]'),
   ).not.toBeNull();
-  await page.getByText("Special source codes (1)").click();
+  // Fails if the coded window's value set is read without its column and window
+  // start (or with a rounded state id): the base state's codes would show instead.
+  await expect.element(page.getByText("Original source label")).toBeVisible();
   await expect
-    .element(page.getByText("Original source label").first())
-    .toBeVisible();
+    .element(page.getByText("Base state label"))
+    .not.toBeInTheDocument();
+  // Fails if the book is sent as a bare slug, which the server resolves as a
+  // name rather than as the classification's ref: no special codes would show.
+  await page.getByText("Special source codes (1)").click();
   await expect
     .element(page.getByText("No recorded industry", { exact: false }))
     .toBeVisible();
-  const request = vi.mocked(getValues).mock.lastCall;
-  expect(request?.[0]).toBe(FQID);
-  expect(request?.[1]).toMatchObject({
-    state: stateId,
-    classification: "sni2007",
-    partition: "sentinels",
-    column: "NgS1",
-    alias_window_from: "2013-01-01",
-  });
   await page.getByRole("button", { name: "Source evidence" }).click();
   await expect
     .element(

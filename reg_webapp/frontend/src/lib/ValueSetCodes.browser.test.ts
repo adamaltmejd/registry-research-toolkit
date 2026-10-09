@@ -304,7 +304,7 @@ describe("ValueSetCodes — the bounded code read", () => {
       const codes =
         ref === "scb/lisa/sni" &&
         params.state === "34" &&
-        params.classification === "sni2007" &&
+        params.classification === "class/sni2007" &&
         params.partition === "nonstandard"
           ? mismatches
           : members(3);
@@ -313,7 +313,7 @@ describe("ValueSetCodes — the bounded code read", () => {
     await render(ValueSetCodes, {
       ref: "scb/lisa/sni",
       stateId: "34",
-      classification: "sni2007",
+      classification: "class/sni2007",
       partition: "nonstandard",
       codeCount: 2,
       filterLabel: "Filter nonconforming codes",

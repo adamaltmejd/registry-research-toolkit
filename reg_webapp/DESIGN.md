@@ -541,8 +541,7 @@ catalog `generation_id`. Loose delivery inventory is no longer an HTTP input. In
 read scope in the canonical request identity and caches/cursors. For known pure GET
 reads, derive the validator from that token plus steward and the canonical request
 identity, and satisfy a matching `If-None-Match` before route execution, DB work, or
-body serialization. Keep the current body-derived path as the conservative fallback for
-an unknown or mutable GET. This makes a 304 cheap without weakening exact representation
+body serialization. This makes a 304 cheap without weakening exact representation
 identity.
 
 Browser and shared-cache freshness are separate concerns. Keep a short browser window

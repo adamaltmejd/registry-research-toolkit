@@ -410,10 +410,26 @@ async function readPerPeriod<T>(
   read: (period: string | undefined) => Promise<T[]>,
   key: (item: T) => string,
 ): Promise<T[]> {
-  const periods =
+  const periods: (string | undefined)[] =
     !period || period === "_default"
       ? [undefined]
       : period.split(",").map((member) => member.trim());
+  // An empty member (`2018,`) would read without `period`, i.e. the whole history,
+  // and widen the answer; refuse it as the server refuses any malformed period.
+  if (periods.includes("")) {
+    const message = `Invalid period ${JSON.stringify(period)}: a list member is empty.`;
+    throw new ApiError(
+      422,
+      {
+        error: {
+          code: "invalid_period",
+          message,
+          fields: { parameter: "period" },
+        },
+      },
+      message,
+    );
+  }
   if (periods.length === 1) {
     return read(periods[0]);
   }

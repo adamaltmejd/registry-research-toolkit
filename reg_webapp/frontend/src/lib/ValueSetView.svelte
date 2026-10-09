@@ -346,8 +346,8 @@ type ConformanceScope = { coding: string | null };
 // `values` reads a coding through a state that carries it (keyed by the variable
 // and a state, not by the coding's id): any state of the distinct value set
 // answers the same codes, so the first one stands in.
-function stateOf(vs: DistinctValueSet): string {
-  return states.find((s) => s.value_set_id === vs.valueSetId)?.state_id ?? "";
+function stateOf(vs: DistinctValueSet): VariableStateModel | undefined {
+  return states.find((s) => s.value_set_id === vs.valueSetId);
 }
 
 // The reader's toggle → `openPanels`; `openPanels` → the `open` attribute. An
@@ -363,10 +363,14 @@ function trackDisclosure(key: string, event: Event): void {
      carry each coding's id and size, not its members, so the panel fetches its
      own bounded pages (and owns their loading / error / empty states) around the
      shared CodeList (#638 PR3). -->
-{#snippet valueSetTable(stateId: string, codeCount: number)}
+{#snippet valueSetTable(state: VariableStateModel | undefined, codeCount: number)}
+  <!-- A coding of a coded alias window is that window's, not the base state's:
+       the column and window start name it, or `values` reads the state's own set. -->
   <ValueSetCodes
     ref={fqid}
-    {stateId}
+    stateId={state?.state_id ?? ""}
+    column={state?.coding_window_from != null ? state.delivery_column_name : null}
+    aliasWindowFrom={state?.coding_window_from ?? null}
     {codeCount}
     filterLabel="Filter value set"
     filterPlaceholder="Filter value set…"
@@ -421,7 +425,7 @@ function trackDisclosure(key: string, event: Event): void {
           <summary>Matching source codes ({conf.matched_code_count})</summary>
           {#if openPanels[canonicalKey]}
             <ValueSetCodes ref={fqid} stateId={source.stateId}
-              classification={conf.declared_classification_slug} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition="canonical" codeCount={conf.matched_code_count}
+              classification={`class/${conf.declared_classification_slug}`} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition="canonical" codeCount={conf.matched_code_count}
               filterLabel="Filter matching source codes" filterPlaceholder="Filter matching source codes…" />
           {/if}
         </details>
@@ -436,7 +440,7 @@ function trackDisclosure(key: string, event: Event): void {
             <summary>{section.label} ({section.count})</summary>
             {#if openPanels[panelKey]}
               <ValueSetCodes ref={fqid} stateId={source.stateId}
-                classification={conf.declared_classification_slug} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition={section.partition}
+                classification={`class/${conf.declared_classification_slug}`} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition={section.partition}
                 codeCount={section.count} filterLabel={`Filter ${section.label.toLowerCase()}`}
                 filterPlaceholder={`Filter ${section.label.toLowerCase()}…`} />
             {/if}
@@ -684,7 +688,7 @@ function trackDisclosure(key: string, event: Event): void {
       {#if summary.integer_range}
         {@render denseIntegerRange(summary.integer_range, summary.code_count)}
       {:else}
-        {@render valueSetTable(s.state_id, summary.code_count)}
+        {@render valueSetTable(s, summary.code_count)}
       {/if}
     {/if}
   </div>

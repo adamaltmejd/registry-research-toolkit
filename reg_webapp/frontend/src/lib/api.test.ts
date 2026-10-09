@@ -252,6 +252,24 @@ describe("catalog reads over a period list or `_default`", () => {
   });
 });
 
+it("refuses a period list with an empty member before reading", async () => {
+  // Fails if `2018,` reads its empty member without `period` — the whole
+  // history — instead of refusing it as the server refuses a malformed period.
+  const seen: string[] = [];
+  stubByPeriod({}, seen);
+  for (const read of [
+    () => getStates("scb/lisa/kon", { period: "2018," }),
+    () => getWarnings("scb/lisa", { period: "2018," }),
+  ]) {
+    await expect(read()).rejects.toMatchObject({
+      name: "ApiError",
+      status: 422,
+      body: { error: { code: "invalid_period" } },
+    });
+  }
+  expect(seen).toEqual([]);
+});
+
 describe("classificationGroupPath (#756)", () => {
   it("builds the fixed `class` route with the key encoded", () => {
     // The path is `/api`-less (like conceptGroupPath) — `apiGet` prepends `/api`.
@@ -501,7 +519,7 @@ it("sends state ids above JavaScript's safe integer range verbatim to `values`",
   for (const id of ids) {
     const page = await getValues("scb/lisa/sni", {
       state: id,
-      classification: "sni2007",
+      classification: "class/sni2007",
       partition: "sentinels",
       column: "NgS1",
       alias_window_from: "2013-01-01",
@@ -510,6 +528,6 @@ it("sends state ids above JavaScript's safe integer range verbatim to `values`",
   }
   expect(new Set(paths).size).toBe(2);
   expect(paths[1]).toBe(
-    "/api/values/scb/lisa/sni?state=9007199254740993&classification=sni2007&partition=sentinels&column=NgS1&alias_window_from=2013-01-01",
+    "/api/values/scb/lisa/sni?state=9007199254740993&classification=class%2Fsni2007&partition=sentinels&column=NgS1&alias_window_from=2013-01-01",
   );
 });

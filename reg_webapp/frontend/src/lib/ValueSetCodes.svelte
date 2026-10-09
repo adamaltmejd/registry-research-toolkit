@@ -36,6 +36,8 @@ interface Props {
    * stored part against that declared classification instead. */
   stateId?: string | null;
   partition?: "canonical" | "source_extensions" | "nonstandard" | "sentinels";
+  /** The declared classification's ref (`class/<slug>`). A bare slug would be
+   * resolved as a name, which can be ambiguous. */
   classification?: string;
   column?: string | null;
   aliasWindowFrom?: string | null;
