@@ -1,0 +1,23 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "subject", "valid_from", "valid_to"],
+      "rows": [
+        ["conflicting_alias_window_decisions", "('scb-registerinformation', 'scb', 'register', 'native-int', 35, 'variable', 'native-int', 5)", "2019-01-01", "2019-12-31"],
+        ["conflicting_alias_window_decisions", "('scb-registerinformation', 'scb', 'register', 'native-int', 35, 'variable', 'native-int', 6)", "2019-01-01", "2019-12-31"]
+      ],
+      "note": "One withheld overlap per variable: first is variable 5 and second variable 6 of the source fixture."
+    },
+    {
+      "table": "alias_windows",
+      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["first", "X", "2018-01-01", "2018-12-31"],
+        ["second", "X", "2020-01-01", "2020-12-31"]
+      ]
+    }
+  ]
+}

@@ -961,9 +961,15 @@ anchors for accepted deliveries; a changed delivery invalidates the decision.
 
 Canonical classification membership comes from the selected prepared codebook.
 Conflicting or incomplete canonical members remain issues; source labels are never
-rewritten to fit canonical labels. A literal source-reference dictionary or checked
-declaration establishes a variable binding. Code overlap percentages, URL guesses and
-name similarity cannot.
+rewritten to fit canonical labels. A book with no agreed member reports
+`empty_canonical_classification`, citing its codebook header and contested rows, and is
+withheld in diagnostic and strict builds alike, so strict stops through the issue path,
+not a crash. What depends on it is withheld with `withheld_catalog_dependency`: its
+bindings (a family reference with a withheld edition included, since its covering
+edition cannot be checked), its `coding.sentinel` entries, its metadata, and its
+succession edges. The book keeps its place in a derived edition chain, so no edge skips
+it. A literal source-reference dictionary or checked declaration establishes a variable
+binding. Code overlap percentages, URL guesses and name similarity cannot.
 
 The label binding is a rule. A state whose value-set version label exactly matches an
 entry on a classification's label list binds to that classification. The binding is

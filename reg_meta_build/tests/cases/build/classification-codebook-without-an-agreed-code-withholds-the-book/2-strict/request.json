@@ -1,0 +1,7 @@
+{
+  "fails_if": "a strict build stops counting `empty_canonical_classification` as an error (so it places a catalog without emp2007 instead of stopping blocked), or raises on the empty book again instead of reaching the normal issue path",
+  "note": "The same tree as step 1, built strict over both registers (a register list keeps a strict build from needing a publishable, clean checkout): the error-level issues block the build and nothing is placed.",
+  "sources": "scb-fk-emp-editions",
+  "registers": ["1", "remote"],
+  "diagnostic": false
+}
