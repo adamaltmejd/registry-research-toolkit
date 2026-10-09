@@ -1,6 +1,7 @@
-"""Delivery metadata: the two checks no build reaches (delivery coverage of literal
-units and texts, and the open source-scope comparison). The reachable behavior is the
-build case `representation-delivery-metadata-keeps-literal-units-and-texts` and the
+"""Delivery metadata: the checks no build reaches (delivery coverage of literal units
+and texts, and the runtime copies of the source-scope, window and applicability
+guards). The reachable behavior is the build case
+`representation-delivery-metadata-keeps-literal-units-and-texts` and the
 `representation-delivery-metadata-*` loader cases."""
 
 from __future__ import annotations
@@ -226,18 +227,58 @@ def test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption():
     delivery-metadata column over 2020-01-01..9999-12-31 that names that scope. Expected:
     the column applies and the state ends 9999-12-31; the same column naming another open
     scope (2020-01-01-), or the record's effective scope changed to 2019- or 2020..2021,
-    is refused as `stale_delivery_metadata_scope`. No build reaches this: SCB delivers no
-    open edition scope, and `compile_delivery_metadata` refuses a changed source scope
-    before resolution (stale_curation_entry), so this runtime check is defense in depth.
+    is refused as `stale_delivery_metadata_scope`. Two more runtime guards on the
+    two-edition fixture: a column window ending 2020-12-31 resolves, but formation leaves
+    the 2021 name outside it (`conflicting_variable_fact` on `name`); and a target record
+    whose supplied name moved does not resolve (`target_projection_changed`).
+    No build reaches these: SCB delivers no open edition scope, and
+    `compile_delivery_metadata` refuses a changed source scope, a changed record or a
+    window that does not cover the record set before resolution (stale_curation_entry),
+    so these runtime checks are defense in depth.
     The column-model refusals are the loader cases
     `representation-delivery-metadata-*-source-scope-refused` and
-    `...-open-ended-window-without-source-scope-refused`.
+    `...-open-ended-window-without-source-scope-refused`; the allowed open scope is
+    `representation-delivery-metadata-open-source-scope-loads`.
     Fails if `resolve_representation_cases` stops comparing a column's `source_scope`
-    with the effective occurrence scopes it covers.
+    with the effective occurrence scopes it covers, or applies a case its evaluation did
+    not find applicable; or if formation stops checking each occurrence's bounds against
+    the column window.
     """
     from reg_meta_build.source_curation import DeliveryMetadataColumn, SourceEvidence
 
     original, case, variants, coding = _unit_fixture()
+    short = case.model_copy(
+        update={
+            "decision": case.decision.model_copy(
+                update={
+                    "columns": (
+                        case.decision.columns[0].model_copy(
+                            update={"valid_to": "2020-12-31"}
+                        ),
+                    )
+                }
+            )
+        }
+    )
+    # A window that stops short of the 2021 record still resolves, but formation does
+    # not apply the name permission past the window: the two names conflict.
+    resolution, formed = _form_units((original, short, variants, coding))
+    assert resolution.cases == (short,)
+    assert any(
+        d.code == "conflicting_variable_fact" and d.fields == ("name",)
+        for d in formed.diagnostics
+    )
+    # A target record whose supplied name moved does not resolve.
+    changed = original[1].model_copy(
+        update={
+            "fields": original[1].fields.model_copy(
+                update={"name": value_field("Income 2021 revised")}
+            )
+        }
+    )
+    stale = resolve_representation_cases((original[0], changed), (case,), coding=coding)
+    assert not stale.cases
+    assert [d.code for d in stale.diagnostics] == ["target_projection_changed"]
     scope = TemporalScope(
         kind="intervals", intervals=(ScopeInterval(start="2020", end=None),)
     )

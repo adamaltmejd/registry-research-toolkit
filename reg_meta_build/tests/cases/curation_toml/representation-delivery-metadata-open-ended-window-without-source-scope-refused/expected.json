@@ -5,6 +5,9 @@
   "note": "The replaced test's `{source_scope: None}` leg on its open column (2020-01-01..9999-12-31).",
   "error": {
     "code": "register_entry_invalid",
-    "locator": "curation/registers/scb/sample.toml [[representation.delivery_metadata.columns]] entry 1"
+    "locator": "curation/registers/scb/sample.toml [[representation.delivery_metadata.columns]] entry 1",
+    "message_contains": [
+      "curation windows require finite ISO date bounds"
+    ]
   }
 }
