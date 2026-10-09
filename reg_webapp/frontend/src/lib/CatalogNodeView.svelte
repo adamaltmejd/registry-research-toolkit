@@ -1391,6 +1391,12 @@ async function addSelected(): Promise<void> {
              SubjectView shell, same as the binding leaf + concept group. -->
         <ClassificationLeafView {node} />
       {/if}
+    {:else}
+      <!-- The router sends the root and group refs to their own views, so a kind
+           landing here is a routing mistake: say so rather than render nothing. -->
+      <p class="error" role="alert">
+        This page cannot show a <code>{node.kind}</code> node: <code>{fqidPath}</code>
+      </p>
     {/if}
   </article>
 {/if}
