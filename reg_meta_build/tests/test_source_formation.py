@@ -370,6 +370,9 @@ def test_checked_column_keeps_its_literal_when_twins_fold() -> None:
     ]
     (warning,) = [d for d in result.diagnostics if d.code == "column_spelling_folded"]
     assert "most recent spelling (v0115)" in warning.detail
+    # The warning names the exception it just applied: a message claiming every
+    # state takes the most recent spelling contradicts the 2002 `V0115` state.
+    assert "identity curation assigns" in warning.detail
     assert sorted((c.valid_from, c.column) for c in result.coverage) == [
         ("2002-01-01", "V0115"),
         ("2004-01-01", "v0115"),

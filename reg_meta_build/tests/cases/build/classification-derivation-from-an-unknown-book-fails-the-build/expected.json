@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "relations_invalid",
+    "exit_code": 10,
+    "message_contains": [
+      "curation/relations.toml [[edge]] type='derived_from' class/sni2000 -> class/sni1990",
+      "classification derivation names uncompiled book ['sni1990']"
+    ]
+  }
+}

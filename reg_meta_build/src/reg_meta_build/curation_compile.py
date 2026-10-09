@@ -431,8 +431,13 @@ def compile_declared_metadata(
         if edge.predecessor.kind == "classification":
             predecessor, successor = a.removeprefix("class/"), b.removeprefix("class/")
             if predecessor not in books or successor not in books:
-                raise ValueError(
-                    f"classification succession names uncompiled book: {a} -> {b}"
+                raise curation_error(
+                    "relations_invalid",
+                    "curation/relations.toml [[edge]] type='replaced_by' "
+                    f"{a} -> {b}: classification succession names uncompiled "
+                    f"book {sorted({predecessor, successor} - books)!r}.",
+                    "Name books declared in curation/classifications/, or add "
+                    "the missing book's file.",
                 )
             class_successions.append(
                 ResolvedClassificationSuccession(
@@ -485,8 +490,13 @@ def compile_declared_metadata(
             str(edge.source).removeprefix("class/"),
         )
         if a not in books or b not in books:
-            raise ValueError(
-                f"classification derivation names uncompiled book: {a} -> {b}"
+            raise curation_error(
+                "relations_invalid",
+                "curation/relations.toml [[edge]] type='derived_from' "
+                f"{edge.derived} -> {edge.source}: classification derivation "
+                f"names uncompiled book {sorted({a, b} - books)!r}.",
+                "Name books declared in curation/classifications/, or add "
+                "the missing book's file.",
             )
         derivations.append(
             ResolvedClassificationDerivation(derived=a, source=b, note=edge.note)
