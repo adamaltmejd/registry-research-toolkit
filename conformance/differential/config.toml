@@ -117,7 +117,7 @@ paths = ["/doc_hint", "/next_cursor", "/results"]
 
 [[exception]]
 name = "docs-fold-raw-query"
-reason = "Maintainer ruling 2026-10-09 (G2 of v0.44.0, package R): the frozen 553ea622 baseline sends the raw query to doc_fts, which holds fold_search text from docs schema 1.3.0 (3b.6, decision 16), so a term with non-ASCII letters (`kön`, `år`, `civilstånd`, `född år`) matches no document; the checkout's Python docs search and Rust docs_search fold the query and find them. ASCII terms agree. The keys are the non-ASCII positions of eval_terms + EDGE_TERMS that hit a document, which do not depend on the pin; `ß` and `ﬁlm` (34, 37) stay under docs-fold-search. Revisit at stage 4, when the Python baseline goes."
+reason = "Maintainer ruling 2026-10-09 (G2 of v0.44.0, package R): the frozen 553ea622 baseline sends the raw query to doc_fts, which holds fold_search text from docs schema 1.3.0 (3b.6, decision 16), so a term with non-ASCII letters (`kön`, `år`, `civilstånd`, `född år`) matches no document; the checkout's Python docs search and Rust docs_search fold the query and find them. ASCII terms agree. The keys are the non-ASCII positions of eval_terms + EDGE_TERMS that hit a document: the positions do not move with the pin, but which of them hit a document depends on the docs asset; `ß` and `ﬁlm` (34, 37) stay under docs-fold-search. Revisit at stage 4, when the Python baseline goes."
 case = [
   "global/*/docs[-_]search*/4",
   "global/*/docs[-_]search*/6",
