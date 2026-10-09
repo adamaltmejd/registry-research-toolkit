@@ -382,7 +382,7 @@ def _validate_panel_slug_ref(
     JSON-decode, or a non-slug-shaped value) fails LOUDLY at build time, not as a
     runtime decode crash when the webapp serves that variant. Validating against
     the `variable` slot (not the field name) is deliberate: it also rejects a
-    reference to a reserved HTTP-suffix token (`states`/`variants`/…) — no variable
+    reference to a reserved slot token (`variants`) — no variable
     can ever be minted with such a slug, so a panel key naming one is dangling
     metadata (Codex P2 on #228). `field` is kept only for the diagnostic message."""
     try:
