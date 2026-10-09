@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "owned"
+native_id = "31"
+[[variant]]
+native_id = "31.310"
+slug = "people"
+[[variable]]
+native_id = "31.5"
+slug = "value"
+[[variable]]
+native_id = "31.6"
+slug = "later"
+
+[[representation.alias_window]]
+variable = "scb/owned/value"
+variant = "people"
+column = "OLD"
+source_editions = ["2019", "2020"]
+evidence = "The 2019 and 2020 analysis tables still hold OLD."
+noted = "2026-10-09"
