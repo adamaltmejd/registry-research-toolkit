@@ -370,7 +370,7 @@ source = { editable = "crates/reg-core-py" }
 
 [[package]]
 name = "reg-meta"
-version = "0.43.0"
+version = "0.44.0"
 source = { editable = "reg_meta" }
 dependencies = [
     { name = "pydantic" },
