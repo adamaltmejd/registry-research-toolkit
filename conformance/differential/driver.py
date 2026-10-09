@@ -47,11 +47,10 @@ def _run(run, argv: list[str]) -> dict:
 
 def main() -> int:
     # simplify: each case's connection reads through SQLite's small page cache, so
-    # the ten CLI arms (and the baseline webapp's workers) spend much of their CPU
-    # in `pread`. Setting `PRAGMA mmap_size` on every `sqlite3.connect` here and in
-    # the webapp's app factory cut a 1,043-case baseline sample from 68 to 38 CPU-s
-    # with identical output; add it if warm G1 still misses its budget on a quiet
-    # machine.
+    # the ten CLI arms spend much of their CPU in `pread`. Setting `PRAGMA
+    # mmap_size` on every `sqlite3.connect` cut a 1,043-case baseline sample from 68
+    # to 38 CPU-s with identical output; add it if warm G1 still misses its budget on
+    # a quiet machine.
     os.environ["REG_META_QUIET"] = "1"
     from reg_meta.cli import run
 
