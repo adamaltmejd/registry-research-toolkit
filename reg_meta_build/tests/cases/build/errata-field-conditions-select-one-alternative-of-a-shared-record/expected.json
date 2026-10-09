@@ -92,17 +92,23 @@
       "note": "The two name entries of condconf conflict on the name field."
     },
     {
-      "table": "issues",
+      "table": "issue_refs",
       "where": {
         "code": "conflicting_curation_effects"
       },
       "fields": [
-        "subject"
+        "key"
       ],
       "match": "set",
       "rows": [
         [
-          "source='scb-registerinformation' semantic_record_key=('register:13', 'variant:10', 'edition:2020', 'variable:5', 'member:83')"
+          [
+            "register:13",
+            "variant:10",
+            "edition:2020",
+            "variable:5",
+            "member:83"
+          ]
         ]
       ],
       "note": "No other register's entries conflict."
