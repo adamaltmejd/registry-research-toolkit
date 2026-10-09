@@ -45,8 +45,9 @@ def test_concurrent_preparations_from_two_source_trees_keep_their_own_copies(
     tmp_path, monkeypatch
 ):
     # Fails if two source trees share a derived path (one re-derives over or
-    # deletes the other's copy, or trips on its layout), if a copy is published
-    # before its docs copy is in place, or if a warm key re-derives.
+    # deletes the other's copy, or trips on its layout), if either preparation
+    # fails or returns a key without each catalog's copy and docs copy, or if a
+    # warm key re-derives.
     monkeypatch.setenv("REG_META_G1_CACHE", str(tmp_path / "cache"))
     interpreter = tmp_path / "python"
     interpreter.write_text(f"#!{sys.executable}\n{INTERPRETER}")

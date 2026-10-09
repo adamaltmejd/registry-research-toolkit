@@ -41,7 +41,7 @@ import sys
 import tempfile
 import time
 import urllib.request
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -394,17 +394,19 @@ def _write_provenance(path: Path, **provenance: str) -> None:
 def _evict(home: Path, current: Path) -> None:
     """Delete all but the ``KEEP`` most recently used keys (``current`` always
     stays), and the staging directories of builds that died."""
-    children = list(home.iterdir())
+    mtimes = {}
+    for p in home.iterdir():
+        # A concurrent builder can rename its staging directory away meanwhile.
+        with suppress(FileNotFoundError):
+            mtimes[p] = p.stat().st_mtime
     keys = sorted(
-        (p for p in children if not p.name.startswith(STAGING_PREFIX)),
-        key=lambda p: p.stat().st_mtime,
+        (p for p in mtimes if not p.name.startswith(STAGING_PREFIX)),
+        key=mtimes.__getitem__,
         reverse=True,
     )
     cutoff = time.time() - STAGING_RETENTION_SECONDS
     stale = [p for p in keys[KEEP:] if p != current] + [
-        p
-        for p in children
-        if p.name.startswith(STAGING_PREFIX) and p.stat().st_mtime < cutoff
+        p for p in mtimes if p.name.startswith(STAGING_PREFIX) and mtimes[p] < cutoff
     ]
     for path in stale:
         sys.stderr.write(f"g1: removing {path}\n")
