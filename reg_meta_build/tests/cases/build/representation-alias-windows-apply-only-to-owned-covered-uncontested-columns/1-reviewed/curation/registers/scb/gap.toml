@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "gap"
+native_id = "33"
+[[variant]]
+native_id = "33.330"
+slug = "people"
+[[variable]]
+native_id = "33.5"
+slug = "value"
+
+[[representation.alias_window]]
+variable = "scb/gap/value"
+variant = "people"
+column = "OLD"
+source_editions = ["Vårterminen 2019", "2020"]
+evidence = "The 2019 and 2020 analysis tables hold OLD."
+noted = "2026-10-09"

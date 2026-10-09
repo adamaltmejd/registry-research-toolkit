@@ -1,0 +1,155 @@
+{
+  "replaces": [
+    "test_source_effect_identity.py::test_field_conditions_select_original_alternative_without_touching_its_peer[False]",
+    "test_source_effect_identity.py::test_field_conditions_select_original_alternative_without_touching_its_peer[True]"
+  ],
+  "note": "One register per claim. Each register delivers one CVID whose physical rows share column INVARN8 and differ in name and description, so they are alternatives of one source record. Every entry pins all alternatives (expected_records) and selects the Date9 row by its original prose, and an alternative correction may only choose a literal another alternative delivers. condition: a name entry and a description entry on the Date9 row; both conditions read the Date9 row's original name, so the row agrees with the Date8 row and one state forms. condrev: the same entries in the reverse TOML order, with the same outcome. condpeer: a third row named Date8 with 'Description 7' must keep its own description, so the description still conflicts while the name agrees. condconf: a second name entry gives the Date9 row 'Date7'; the two name entries conflict and are withheld, while the description entry on the same row still applies, so only the name conflicts. Setup differences from the replaced test: it changed column_name (an alternative correction cannot introduce a literal no alternative delivers, and every row here shares INVARN8) and its rename had no condition (every [[errata.field]] carries its column and prose condition); the field changed is name or description instead.",
+  "fails_if": "condition/condrev: `apply_occurrence_cases` evaluates a `when` condition against the fields another case already corrected instead of the original source fields, so in one TOML order the description entry no longer matches the renamed Date9 row and the description conflicts; condpeer: a checked field change applies to every alternative of its source record regardless of its condition, so the third row's description becomes 'Description 8' and the conflict disappears; condconf: competing name assignments withhold the whole occurrence or drop the record's other corrections, so the description also conflicts, or one name wins and the conflict issue disappears",
+  "sources": {
+    "description": "Four registers (10 condition, 11 condrev, 12 condpeer, 13 condconf), each delivering INVARN8 of variable 5 in 2020 under one CVID by two or three physical rows: Date8/'Description 8' and Date9/'Description 9', plus Date8/'Description 7' in condpeer and Date7/'Description 8' in condconf.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "INVARN8",
+          "cvid": 80,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date8",
+          "vardesc": "Description 8",
+          "register": [
+            "CONDITION",
+            10,
+            10
+          ]
+        },
+        {
+          "colname": "INVARN8",
+          "cvid": 80,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date9",
+          "vardesc": "Description 9",
+          "register": [
+            "CONDITION",
+            10,
+            10
+          ]
+        },
+        {
+          "colname": "INVARN8",
+          "cvid": 81,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date8",
+          "vardesc": "Description 8",
+          "register": [
+            "CONDREV",
+            11,
+            10
+          ]
+        },
+        {
+          "colname": "INVARN8",
+          "cvid": 81,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date9",
+          "vardesc": "Description 9",
+          "register": [
+            "CONDREV",
+            11,
+            10
+          ]
+        },
+        {
+          "colname": "INVARN8",
+          "cvid": 82,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date8",
+          "vardesc": "Description 8",
+          "register": [
+            "CONDPEER",
+            12,
+            10
+          ]
+        },
+        {
+          "colname": "INVARN8",
+          "cvid": 82,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date9",
+          "vardesc": "Description 9",
+          "register": [
+            "CONDPEER",
+            12,
+            10
+          ]
+        },
+        {
+          "colname": "INVARN8",
+          "cvid": 82,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date8",
+          "vardesc": "Description 7",
+          "register": [
+            "CONDPEER",
+            12,
+            10
+          ]
+        },
+        {
+          "colname": "INVARN8",
+          "cvid": 83,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date8",
+          "vardesc": "Description 8",
+          "register": [
+            "CONDCONF",
+            13,
+            10
+          ]
+        },
+        {
+          "colname": "INVARN8",
+          "cvid": 83,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date9",
+          "vardesc": "Description 9",
+          "register": [
+            "CONDCONF",
+            13,
+            10
+          ]
+        },
+        {
+          "colname": "INVARN8",
+          "cvid": 83,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "varname": "Date7",
+          "vardesc": "Description 8",
+          "register": [
+            "CONDCONF",
+            13,
+            10
+          ]
+        }
+      ]
+    }
+  }
+}

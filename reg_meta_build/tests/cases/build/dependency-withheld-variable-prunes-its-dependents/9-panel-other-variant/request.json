@@ -1,6 +1,6 @@
 {
   "replaces": ["test_catalog_dependency_withholding.py::test_panel_requires_state_in_its_own_variant_not_only_variable"],
-  "note": "Variant 'other' names value as its panel entity key, but value has states only in 'people': the build refuses (old: 'unexplained missing catalog dependenc'). The withheld variant_states half is not reached here; it is the allowed twin, dependency-withheld-variant-states-prune-only-that-variants-panel-key, where a key whose variant states are withheld is pruned instead of refused.",
+  "note": "Variant 'other' names value as its panel entity key, but value has states only in 'people': the build refuses (old: 'unexplained missing catalog dependenc'). The withheld variant_states half is not reached here; it is the allowed twin, dependency-withheld-variant-states-and-representations-prune-only-their-dependents, where a key whose variant states are withheld is pruned instead of refused.",
   "fails_if": "`resolve_panel_dependencies` (catalog_dependencies.py) requires ('variable', fqid) instead of ('variant_states', fqid, variant), so a variable populated in another variant satisfies the key",
   "sources": "scb-withheld-key-and-gone"
 }

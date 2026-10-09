@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_source_effect_alias_windows.py::test_competing_alias_window_decisions_withhold_only_their_overlap"
+  ],
+  "note": "COMPETE alone, with its two entries, their variables and their source editions authored in reverse order, so second's window is now entry 1 and is resolved first. The replaced test asserted the result is the same for either case order; the outcome is step 1's: each entry withheld on the 2019 overlap only, first keeping 2018 and second 2020.",
+  "fails_if": "the competing-window resolution in `apply_alias_cases` depends on which entry it resolves first (for example, the earlier case keeps the overlap and only the later one is withheld), or `compile_alias_windows` takes the source editions in their authored order instead of sorting their years, so the windows listed 2020, 2019 and 2019, 2018 are refused as not contiguous",
+  "sources": "scb-alias-windows",
+  "registers": ["35"]
+}

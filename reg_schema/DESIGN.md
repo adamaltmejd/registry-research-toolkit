@@ -1,5 +1,9 @@
 # Design: reg_schema
 
+Superseded: the still-true content moved to
+[../crates/reg-core/DESIGN.md](../crates/reg-core/DESIGN.md); this file goes with the
+package.
+
 Design rationale and constraints for the `project_data.json` schema and its structural
 validator. The code (`project_data.py` / `structural.py` / `validation.py`) plus the
 generated `model_json_schema()` are the field-level reference; this file is the WHY.

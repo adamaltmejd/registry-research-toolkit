@@ -1,0 +1,18 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["kon", "Kon", "2020-01-01", "2020-12-31"],
+        ["kon", "KON", "2021-01-01", "2021-12-31"]
+      ]
+    }
+  ]
+}
