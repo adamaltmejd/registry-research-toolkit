@@ -572,6 +572,10 @@ fn operation_id(op: &Operation, route: &str) -> String {
 }
 
 /// The `OpenAPI` document of every registered operation.
+///
+/// # Panics
+///
+/// When two types register different schemas under one name.
 #[must_use]
 pub fn openapi(version: &str) -> OpenApi {
     let mut components = Components::new();
