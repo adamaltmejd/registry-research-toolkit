@@ -8,9 +8,7 @@ import unicodedata
 import pytest
 from acceptance_requests import response_fqids
 from http_cases import CASES
-from reg_meta.cli import run
-from reg_meta.db import get_manifest, open_db
-from reg_meta.order import materialize_order, project_from_raw
+from reg_meta_build.db import get_manifest, open_db
 
 
 def sample_project(conn, *, unheld=False):
@@ -132,22 +130,15 @@ def server_client(request, directory):
     )
 
 
-def cli_json(directory, capsys, arguments):
-    code = run(["--db", str(directory), "--format", "json", *arguments])
-    captured = capsys.readouterr()
-    require(code == 0, "Acceptance CLI request failed")
-    return json.loads(captured.out)
-
-
-# reg_meta/DESIGN.md: search continuation has a hard 1,000-result depth ceiling and a
+# operations.toml (search): paging stops at a hard 1,000-result depth and a
 # researcher who reaches it must refine the query. Exact identity matches always
 # lead the order (#1180), so a binding searched by its own name ranks past that
 # depth only when more exact matches than the ceiling share the name; it is then,
 # by contract, unreachable through that name alone.
 SEARCH_DEPTH_CEILING = 1_000
 # conformance/api/operations.toml (search): `q` is at most 200 characters (Unicode
-# scalar values; Python `len`). A longer name is out of contract for HTTP search,
-# which refuses it located on `q`; the CLI has no such cap.
+# scalar values; Python `len`). A longer name is out of contract for search, which
+# refuses it located on `q`.
 MAX_QUERY_CHARS = 200
 
 
@@ -167,20 +158,16 @@ def _fold(text):
 def _identity_texts(row):
     """The published identity texts the reader scores for a variable-search row.
 
-    A leaf row offers its FQID and slug leaf, names and delivery columns; a group
+    A leaf row offers its FQID and slug leaf, name and delivery columns; a group
     row offers its key and label and each member's FQID, name, delivery column
-    and facets (member slug leaves are not identity texts). CLI rows name the group
-    key and label `group_key` and `group_label`; HTTP rows `key` and `label`.
+    and facets (member slug leaves are not identity texts).
     """
     fqid = row.get("fqid")
     texts = [
         fqid,
         fqid.rsplit("/", 1)[-1] if fqid else None,
         row.get("name"),
-        row.get("datacolumn"),
         *(row.get("delivery_column_names") or ()),
-        row.get("group_key"),
-        row.get("group_label"),
         row.get("key"),
         row.get("label"),
     ]
@@ -205,9 +192,11 @@ def ceiling_exhausted(query, rows):
     )
 
 
-def http_search_traversal(client, query, scope, binding):
+def http_search_traversal(client, query, scope, binding, register=None):
     """Follow HTTP variable cursors; return (found, top-level rows consumed)."""
     params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
+    if register is not None:
+        params["register"] = register
     cursors = set()
     rows = []
     while True:
@@ -231,22 +220,6 @@ def http_search_contains(client, query, scope, binding):
     return http_search_traversal(client, query, scope, binding)[0]
 
 
-def cli_search_traversal(directory, capsys, argv, binding):
-    """Follow CLI cursors; return (found, rows consumed)."""
-    page = cli_json(directory, capsys, argv)
-    cursors = set()
-    rows = []
-    while binding not in response_fqids(page["results"]):
-        rows.extend(page["results"])
-        if not page["has_more"]:
-            return False, rows
-        cursor = page["next_cursor"]
-        require(cursor and cursor not in cursors, "Sample CLI search cursor stalled")
-        cursors.add(cursor)
-        page = cli_json(directory, capsys, [*argv, "--cursor", cursor])
-    return True, rows
-
-
 def require_query_refused(search, query, scope):
     """Require HTTP search to refuse an over-cap query as `invalid_parameter` on `q`."""
     params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
@@ -259,71 +232,50 @@ def require_query_refused(search, query, scope):
     )
 
 
-def require_search_reaches(directory, search, capsys, query, scope, binding):
-    """Require CLI and HTTP name search to reach an admitted binding.
+def require_search_reaches(search, query, scope, binding):
+    """Require HTTP name search to reach an admitted binding.
 
-    A traversal may miss it only when the miss is contractual: the traversal
-    consumed the whole depth ceiling and every consumed row matches the query
-    exactly, so exact matches alone outnumber the ceiling. The researcher's
-    documented refinement, the reader's register-scoped search, must then find the
-    binding. That proves READER reachability, not HTTP search reachability: HTTP
-    search has no register refinement, and the binding's HTTP reachability is
-    proven by the caller's `/api/catalog/<fqid>` browse checks.
+    The traversal may miss it only when the miss is contractual: it consumed the
+    whole depth ceiling and every consumed row matches the query exactly, so exact
+    matches alone outnumber the ceiling. The researcher's documented refinement,
+    search narrowed to the binding's register, must then find it.
 
-    A name longer than `MAX_QUERY_CHARS` is out of contract for HTTP search: HTTP
-    must refuse it on `q` instead, and only the CLI traversal must reach it.
+    A name longer than `MAX_QUERY_CHARS` is out of contract for search: it must be
+    refused on `q`, and the caller's `/api/catalog/<fqid>` browse checks are the
+    binding's whole reachability proof.
 
     Edge cases: a query with exactly 1,000 results looks like a truncated one.
     Returns whether the refinement was needed.
     """
-    argv = [
-        "--scope",
-        scope,
-        "search",
-        "--query",
-        query,
-        "--type",
-        "variable",
-        "--no-fold",
-        "--limit",
-        "100",
-    ]
+    if len(query) > MAX_QUERY_CHARS:
+        require_query_refused(search, query, scope)
+        return False
     # The pre-ceiling miss below is the guard for a genuine reader defect; no
     # readable fixture can pin it without introducing one, so only the ceiling
     # branch has a source-built case (reader/search-ceiling).
-    cli_found, cli_rows = cli_search_traversal(directory, capsys, argv, binding)
+    found, rows = http_search_traversal(search, query, scope, binding)
     require(
-        cli_found or ceiling_exhausted(query, cli_rows),
-        "Sample missing from CLI search traversal",
+        found or ceiling_exhausted(query, rows),
+        "Sample missing from HTTP search traversal",
     )
-    if len(query) > MAX_QUERY_CHARS:
-        require_query_refused(search, query, scope)
-        http_found = True  # the located refusal is HTTP's whole contract here
-    else:
-        http_found, http_rows = http_search_traversal(search, query, scope, binding)
-        require(
-            http_found or ceiling_exhausted(query, http_rows),
-            "Sample missing from HTTP search traversal",
-        )
-    if cli_found and http_found:
+    if found:
         return False
-    refined, _ = cli_search_traversal(
-        directory, capsys, [*argv, "--register", binding.rsplit("/", 1)[0]], binding
+    refined, _ = http_search_traversal(
+        search, query, scope, binding, register=binding.rsplit("/", 1)[0]
     )
     require(
         refined,
-        "Sample past the search depth ceiling missing from register-refined CLI search",
+        "Sample past the search depth ceiling missing from register-refined search",
     )
     return True
 
 
-def assert_sampled_agreement(artifact_dir, server, tmp_path, capsys):
-    """Observe the same adapter contracts for admitted and regression artifacts.
-    `server` is the Rust server's client (`server_client`)."""
+def assert_sampled_agreement(artifact_dir, server):
+    """Observe the same public contracts for admitted and regression artifacts;
+    return the sampled order's `data`. `server` is the Rust server's client
+    (`server_client`)."""
     with open_db(artifact_dir / "reg_meta.db") as conn:
         project = sample_project(conn)
-        result = materialize_order(project_from_raw(project), conn)
-    require(result.manifest is not None, "Sampled admitted binding did not materialize")
     fqid = project["sources"][0]["bindings"][0]["variable"]
     scope = "reference" if project["steward"] == "global" else "holdings"
     browse = server.get("/api/catalog/" + fqid, params={"scope": scope})
@@ -338,53 +290,23 @@ def assert_sampled_agreement(artifact_dir, server, tmp_path, capsys):
         first_page.content == server.get("/api/search", params=params).content,
         "Repeated HTTP first page differs",
     )
-    argv = [
-        "--db",
-        str(artifact_dir),
-        "--format",
-        "json",
-        "search",
-        "--query",
-        query,
-        "--type",
-        "variable",
-        "--no-fold",
-        "--limit",
-        "100",
-        "--scope",
-        scope,
-    ]
-    require(run(argv) == 0, "CLI sample search failed")
-    first = capsys.readouterr().out
-    require(run(argv) == 0, "Repeated CLI sample search failed")
-    require(capsys.readouterr().out == first, "Repeated CLI first page differs")
-    require_search_reaches(artifact_dir, server, capsys, query, scope, fqid)
+    require_search_reaches(server, query, scope, fqid)
     validated = server.post("/api/project/validate", json=project)
     require(
         validated.status_code == 200 and validated.json()["data"]["ok"],
         "Sample validation disagrees with admission",
     )
-    project_file = tmp_path / "project.json"
-    project_file.write_text(json.dumps(project))
-    require(
-        run(["--db", str(artifact_dir), "--format", "json", "order", str(project_file)])
-        == 0,
-        "CLI sample order failed",
-    )
-    cli = capsys.readouterr().out
+    ordered = server.post("/api/project/order", json=project)
+    require(ordered.status_code == 200, "Sampled admitted binding did not order")
     response = server.post("/api/project/order/manifest", json=project)
-    require(response.status_code == 200, "HTTP sample order failed")
+    require(response.status_code == 200, "HTTP sample order download failed")
     require(
-        cli == result.manifest.to_json() == response.text,
-        "Raw adapter serialization differs",
+        ordered.json()["data"] == json.loads(response.content),
+        "Order data and its download disagree",
     )
-    require(
-        run(["--db", str(artifact_dir), "order", str(project_file)]) == 0,
-        "Repeated CLI order failed",
-    )
-    require(capsys.readouterr().out == cli, "Repeated CLI order bytes differ")
     require(
         server.post("/api/project/order/manifest", json=project).content
         == response.content,
         "Repeated HTTP order bytes differ",
     )
+    return ordered.json()["data"]
