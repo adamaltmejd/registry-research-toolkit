@@ -1,0 +1,11 @@
+{
+  "note": "Classification groups in graph: a lone edition with no chain draws nothing; a curated group draws its members under its key and label; a member's own graph adds its groups and gives the member, first drawn ungrouped, the group's key. Fails if the empty-graph rule draws a lone edition or a member reached first keeps no group key.",
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "graph", "path": "/api/graph/class/ks87-p"},
+    {"operation": "graph", "path": "/api/graph/group/class/sunx"},
+    {"operation": "graph", "path": "/api/graph/class/sunx-a"},
+    {"operation": "graph", "path": "/api/graph/group/class/nope"}
+  ]
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/register": "scb/example",
+      "/data/register_name": "Example",
+      "/data/from": "2015",
+      "/data/to": "2019",
+      "/data/variants/*/variant": ["annual"],
+      "/data/variants/0/variant_name": "Annual",
+      "/data/variants/0/summary": {"added": 8, "removed": 0, "changed": 3, "unchanged": 3},
+      "/data/variants/0/added/*/fqid": [
+        "scb/example/avbrott",
+        "scb/example/bransch",
+        "scb/example/bransch-ny",
+        "scb/example/februari",
+        "scb/example/kon",
+        "scb/example/lan",
+        "scb/example/utgangen",
+        "scb/example/yrke"
+      ],
+      "/data/variants/0/added/0": {
+        "fqid": "scb/example/avbrott",
+        "var_id": 14,
+        "variable_name": "Avbrott",
+        "data_type": "integer",
+        "data_length": "8",
+        "column": "Avbrott"
+      },
+      "/data/variants/0/removed": [],
+      "/data/variants/0/changed": [
+        {
+          "fqid": "scb/example/lucka",
+          "var_id": 10,
+          "variable_name": "Lucka",
+          "changes": [{"field": "column", "from": "LuckaDetalj", "to": "Lucka"}]
+        },
+        {
+          "fqid": "scb/example/mitten",
+          "var_id": 16,
+          "variable_name": "Mitten",
+          "changes": [{"field": "column", "from": "MittenAlt", "to": "Mitten"}]
+        },
+        {
+          "fqid": "scb/example/omdopt",
+          "var_id": 8,
+          "variable_name": "Omdöpt",
+          "changes": [{"field": "column", "from": "OmdoptOld", "to": "OmdoptNew"}]
+        }
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/example"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "to"}
+  }
+]

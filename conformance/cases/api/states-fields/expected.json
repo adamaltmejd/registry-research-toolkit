@@ -1,0 +1,192 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {
+          "classifications": [],
+          "coding_window_from": null,
+          "data_length": "8",
+          "data_type": "integer",
+          "definition": null,
+          "delivery_column_name": "Alder",
+          "description": null,
+          "is_identifier": false,
+          "measurement_unit": null,
+          "name": null,
+          "operational_definition": null,
+          "period_scope": "year_independent",
+          "period_token": "_default",
+          "pooled": false,
+          "provenance": null,
+          "register_variant_id": "2368673293172941668",
+          "source_register_text": null,
+          "state_id": "3163730925158207475",
+          "valid_from": null,
+          "valid_to": null,
+          "value_set": null,
+          "value_set_id": null,
+          "value_set_summary": null,
+          "value_set_version_label": "",
+          "variant": "fixed",
+          "variant_family": null,
+          "variant_family_label": null,
+          "variant_label": "Fixed",
+          "warning_ids": []
+        },
+        {
+          "classifications": [
+            {
+              "conformance": {
+                "checked_code_count": 10,
+                "declared_classification_name": "Ålder i år",
+                "declared_classification_short_name": "Ålder",
+                "declared_classification_slug": "alder",
+                "matched_code_count": 9,
+                "nonconforming_code_count": 1,
+                "nonconforming_codes": [],
+                "nonstandard_code_count": 1,
+                "overlap": 0.9,
+                "sentinel_code_count": 0,
+                "status": "extended"
+              },
+              "name": "Ålder i år",
+              "provenance": null,
+              "short_name": "Ålder",
+              "slug": "alder"
+            }
+          ],
+          "coding_window_from": null,
+          "data_length": "8",
+          "data_type": "integer",
+          "definition": null,
+          "delivery_column_name": "Alder",
+          "description": null,
+          "is_identifier": false,
+          "measurement_unit": null,
+          "name": null,
+          "operational_definition": null,
+          "period_scope": "intervals",
+          "period_token": "2018",
+          "pooled": false,
+          "provenance": null,
+          "register_variant_id": "2662358479044831711",
+          "source_register_text": null,
+          "state_id": "2608178062013404771",
+          "valid_from": "2018-01-01",
+          "valid_to": "2018-12-31",
+          "value_set": null,
+          "value_set_id": "5784507368919966757",
+          "value_set_summary": {
+            "code_count": 10,
+            "integer_range": {
+              "max": 9,
+              "min": 0
+            }
+          },
+          "value_set_version_label": "v1",
+          "variant": "annual",
+          "variant_family": null,
+          "variant_family_label": null,
+          "variant_label": "Annual",
+          "warning_ids": []
+        }
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {
+          "classifications": [
+            {
+              "conformance": {
+                "checked_code_count": 3,
+                "declared_classification_name": "Kön",
+                "declared_classification_short_name": "Kön",
+                "declared_classification_slug": "kon",
+                "matched_code_count": 2,
+                "nonconforming_code_count": 1,
+                "nonconforming_codes": [],
+                "nonstandard_code_count": 1,
+                "overlap": 0.6666666666666666,
+                "sentinel_code_count": 0,
+                "status": "extended"
+              },
+              "name": "Kön",
+              "provenance": null,
+              "short_name": "Kön",
+              "slug": "kon"
+            }
+          ],
+          "coding_window_from": "2019-01-01",
+          "data_length": "8",
+          "data_type": "integer",
+          "definition": null,
+          "delivery_column_name": "KonA",
+          "description": null,
+          "is_identifier": false,
+          "measurement_unit": null,
+          "name": null,
+          "operational_definition": null,
+          "period_scope": "intervals",
+          "period_token": "2019",
+          "pooled": false,
+          "provenance": null,
+          "register_variant_id": "2662358479044831711",
+          "source_register_text": null,
+          "state_id": "2791990240659966525",
+          "valid_from": "2019-01-01",
+          "valid_to": "2019-12-31",
+          "value_set": null,
+          "value_set_id": "5841180126696770221",
+          "value_set_summary": {
+            "code_count": 3,
+            "integer_range": null
+          },
+          "value_set_version_label": "kod",
+          "variant": "annual",
+          "variant_family": null,
+          "variant_family_label": null,
+          "variant_label": "Annual",
+          "warning_ids": []
+        },
+        {
+          "classifications": [],
+          "coding_window_from": "2019-01-01",
+          "data_length": "8",
+          "data_type": "integer",
+          "definition": null,
+          "delivery_column_name": "KonB",
+          "description": null,
+          "is_identifier": false,
+          "measurement_unit": null,
+          "name": null,
+          "operational_definition": null,
+          "period_scope": "intervals",
+          "period_token": "2019",
+          "pooled": false,
+          "provenance": null,
+          "register_variant_id": "2662358479044831711",
+          "source_register_text": null,
+          "state_id": "2791990240659966525",
+          "valid_from": "2019-01-01",
+          "valid_to": "2019-12-31",
+          "value_set": null,
+          "value_set_id": "7100849214240426357",
+          "value_set_summary": {
+            "code_count": 2,
+            "integer_range": null
+          },
+          "value_set_version_label": "text",
+          "variant": "annual",
+          "variant_family": null,
+          "variant_family_label": null,
+          "variant_label": "Annual",
+          "warning_ids": []
+        }
+      ]
+    }
+  }
+]

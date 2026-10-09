@@ -94,6 +94,13 @@
     "measurement_unit": null,
     "is_sensitive": false,
     "is_identifier": false,
+    "source_register": {
+      "provider": "scb",
+      "slug": "alpha",
+      "name": "Alpha",
+      "purpose": "Synthetic register for show"
+    },
+    "source_register_text": "Alpha",
     "states": [
       {
         "variant": {"slug": "annual", "name": "Annual"},
@@ -148,6 +155,106 @@
         "data_length": "3",
         "operational_definition": null,
         "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {"provider": "scb", "slug": "beta", "name": "Beta"},
+    "slug": "d-start",
+    "provider_key": "10",
+    "name": "Diamond start",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Dstart",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": null
+      }
+    ]
+  },
+  {
+    "register": {"provider": "scb", "slug": "beta", "name": "Beta"},
+    "slug": "d-left",
+    "provider_key": "11",
+    "name": "Diamond left",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Dleft",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": null
+      }
+    ]
+  },
+  {
+    "register": {"provider": "scb", "slug": "beta", "name": "Beta"},
+    "slug": "d-right",
+    "provider_key": "12",
+    "name": "Diamond right",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Dright",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": null
+      }
+    ]
+  },
+  {
+    "register": {"provider": "scb", "slug": "beta", "name": "Beta"},
+    "slug": "d-end",
+    "provider_key": "13",
+    "name": "Diamond end",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Dend",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": null
       }
     ]
   }

@@ -21,8 +21,9 @@
 #            resolves as a FQID first, then as a bare name, so an exact ref never turns
 #            ambiguous), period (the FQID/project period grammar), scope ("holdings" | "reference", default the
 #            artifact's), limit (1..200, default 50), cursor (opaque `next_cursor`),
-#            string, integer, boolean, string[], enum(a|b), project (a project_data.json
-#            document as the body). A trailing `?` marks optional.
+#            storage_id (a storage id as the decimal string results spell it, since ids
+#            pass 2^53), string, boolean, string[], enum(a|b), project (a
+#            project_data.json document as the body). A trailing `?` marks optional.
 #   result   the `data` shape: a [shape.*] name, `Page<T>` (= {items: [T], next_cursor:
 #            cursor | null}) or a description against today's model. A list bounded by
 #            the request or the entity (a variable's warnings, a register's documents) is
@@ -107,14 +108,17 @@ name = "values"
 slice = "3b"
 http = ["GET /api/values/{ref}"]
 tool = "values"
-params = { ref = "ref", state = "integer?", partition = "enum(source_extensions|canonical|nonstandard|sentinels)?", classification = "ref?", column = "string?", alias_window_from = "string?", q = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
+params = { ref = "ref", state = "storage_id?", partition = "enum(source_extensions|canonical|nonstandard|sentinels)?", classification = "ref?", column = "string?", alias_window_from = "string?", q = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
 result = "Page<Value> plus `total` (matches of `q` in the whole set)"
 errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable", "invalid_cursor", "stale_cursor"]
 note = """A classification's codes, or the value set of one state of a variable (`state` \
 required for a variable). Value is today's ValueSetMember | \
-ClassificationExtensionMember. Offset paging becomes cursor paging; `total` stays \
+ClassificationExtensionMember | ClassificationCode: a classification's rows are \
+ClassificationCode (`level` and `is_valid`, which the classification page renders). \
+Offset paging becomes cursor paging; `total` stays \
 because the SPA shows it. The CLI's per-instance grouping goes: an agent lists states, \
-then values per state. `partition` defaults to `source_extensions`. \
+then values per state. A state without `classification` answers its whole value set; \
+with one, `partition` (default `source_extensions`) picks that book's part. \
 `alias_window_from` is an identity key: with `column` it selects which delivered alias's \
 codes, not a time filter, so it stays a string rather than a period. Default limit 50 \
 (today 200), maximum 200 (today 1000)."""

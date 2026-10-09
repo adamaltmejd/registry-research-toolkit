@@ -1,0 +1,10 @@
+{
+  "note": "A consumer's lineage edge to its source state and its name's provenance across registers (alpha's Kön has no source text, beta's names alpha), and a source's build warning. Fails if lineage reads another variable's states, drops the source FQID, misclassifies the provenance role or miscounts a state's years; a register ref is not a variable ref.",
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "lineage", "path": "/api/lineage/scb/beta/kon"},
+    {"operation": "lineage", "path": "/api/lineage/scb/alpha/kon"},
+    {"operation": "lineage", "path": "/api/lineage/scb/alpha"}
+  ]
+}

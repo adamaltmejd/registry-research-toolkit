@@ -1,0 +1,28 @@
+{
+  "note": "Twin of logical/canonical-case-twin-state-warnings: fails if warning attribution stops matching a column case-insensitively through its canonical spelling, if holdings scope keeps unheld representations, or if an unheld variable answers in holdings scope.",
+  "fixture": "reader/logical",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/value"
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/value",
+      "query": {
+        "scope": "reference"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/value",
+      "query": {
+        "period": "2019"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/reference"
+    }
+  ]
+}

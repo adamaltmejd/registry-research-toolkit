@@ -1,0 +1,10 @@
+{
+  "note": "Twin of http_catalog/states-and-deliveries' states: fails if a variable's full history loses a state or its spelling.",
+  "fixture": "compiled",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/value"
+    }
+  ]
+}

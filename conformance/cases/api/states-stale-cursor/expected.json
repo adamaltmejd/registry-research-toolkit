@@ -1,0 +1,16 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/delivery_column_name": [
+        "LonFinkJan"
+      ]
+    }
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "stale_cursor"
+    }
+  }
+]

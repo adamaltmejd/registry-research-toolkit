@@ -1,0 +1,22 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/valid_from": ["2015-01-01", "2018-01-01"],
+      "/data/items/*/valid_to": ["2016-12-31", "2018-12-31"],
+      "/data/items/*/period_token": ["2015-01-01..2016-12-31", "2018"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/valid_from": ["2016-01-01", "2018-01-01"],
+      "/data/items/*/valid_to": ["2016-12-31", "2018-12-31"],
+      "/data/items/*/period_token": ["2016", "2018"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/items": [], "/data/next_cursor": null}
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "note": "Twin of http_catalog/reference-edges' graph step. The variable's succession chain joins its graph through an edition outside the default scope: fails if graph drops a chain edition that is not live in scope.",
+  "requests": [
+    {"operation": "graph", "path": "/api/graph/scb/example/value"}
+  ]
+}

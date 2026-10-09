@@ -1,0 +1,15 @@
+{
+  "note": "Fails if a state field drifts from today's VariableState under light hydration: storage ids as strings, the year-independent `_default` token, the value-set summary with its dense integer range, stored conformance counts for a state and counts recomputed from a coded window's evidence, `value_set` null and empty `nonconforming_codes`.",
+  "fixture": "states",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/alder"
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/kon"
+    }
+  ]
+}

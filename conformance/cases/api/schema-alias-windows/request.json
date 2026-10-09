@@ -1,0 +1,21 @@
+{
+  "note": "Rust-only fix (D6): a state whose source alias windows replace it (shared metadata, no per-column window) lists its windows, Value in 2018 and Different in 2019, in reference as in holdings. The frozen reader's reference `get schema` lists the raw state (Value, 2018..2019) for such a variable and expands only per-column windows. Typed's 2019 window is per column (varchar 20 with its own definition), so that row carries the window's metadata, not its state's. Fails if reference schema reads raw states instead of the expanded representations, or a per-column window shows its state's type, width or definition.",
+  "fixture": "reader/logical-alias-diff",
+  "requests": [
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example",
+      "query": {"scope": "reference"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example",
+      "query": {"scope": "holdings"}
+    },
+    {
+      "operation": "schema",
+      "path": "/api/schema/scb/example",
+      "query": {"scope": "reference", "period": "2019"}
+    }
+  ]
+}

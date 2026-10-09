@@ -1,0 +1,25 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variant": ["annual", "archive", "annual", "annual"],
+      "/data/items/*/valid_from": ["2018-01-01", "2018-01-01", "2019-01-01", "2020-01-01"]
+    }
+  },
+  {"status": 200, "json": {"/data/items": [{"code": "0", "label": "Choice 0"}]}},
+  {"status": 200, "json": {"/data/items": [{"code": "2", "label": "Choice 2"}]}},
+  {"status": 200, "json": {"/data/items": [{"code": "1", "label": "Choice 1"}]}},
+  {"status": 200, "json": {"/data/items": [{"code": "2", "label": "Choice 2"}]}},
+  {"status": 200, "json": {"/data/items/*/valid_from": ["2018-01-01", "2019-01-01"]}},
+  {"status": 200, "json": {"/data/items/*/code": ["0"]}},
+  {"status": 200, "json": {"/data/items/*/code": ["1"]}},
+  {"status": 404, "json": {"/error/code": "not_found", "/error/fields/ref": "3963399602525864874"}},
+  {"status": 404, "json": {"/error/code": "not_found", "/error/fields/ref": "2848751535627847580"}},
+  {"status": 200, "json": {"/data/items/*/valid_from": ["2010-01-01"]}},
+  {"status": 200, "json": {"/data/items/*/code": ["0"]}},
+  {"status": 404, "json": {"/error/code": "not_found", "/error/fields/ref": "Value reference"}},
+  {"status": 404, "json": {"/error/code": "not_found", "/error/fields/ref": "Valuereference"}},
+  {"status": 200, "json": {"/data/items/*/code": ["0"], "/data/total": 3}},
+  {"status": 200, "json": {"/data/items/*/code": ["1"]}},
+  {"status": 200, "json": {"/data/items/*/code": ["2"], "/data/next_cursor": null}}
+]

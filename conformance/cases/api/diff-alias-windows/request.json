@@ -1,0 +1,16 @@
+{
+  "note": "Twin of logical/alias-diff-holdings: an alias window that replaces its state's column in 2019 (Value -> Different) is a change, in holdings as in reference. Typed's per-column 2019 window changes its type and width (integer 8 -> varchar 20), and holdings, which does not hold Typed, leaves it out. Fails if diff compares raw states instead of the expanded representations, a type or width change goes unreported, or holdings counts an unheld variable.",
+  "fixture": "reader/logical-alias-diff",
+  "requests": [
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2018", "to": "2019", "scope": "holdings"}
+    },
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2018", "to": "2019", "scope": "reference"}
+    }
+  ]
+}

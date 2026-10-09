@@ -1,0 +1,4 @@
+[
+  {"status": 200, "json": {"/data/items/*/code": ["1"]}},
+  {"status": 409, "json": {"/error/code": "stale_cursor"}}
+]
