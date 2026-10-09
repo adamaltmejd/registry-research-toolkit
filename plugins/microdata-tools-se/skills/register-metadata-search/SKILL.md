@@ -1,43 +1,65 @@
 ---
 name: register-metadata-search
-description: Query SCB register metadata using the reg-meta CLI. Use when answering
-  questions about Swedish register data — variable definitions, value codes, register
-  schemas, column names, or how data is structured across registers and years.
+description: Query Swedish register metadata (SCB, Socialstyrelsen and other holders)
+  through the catalog MCP tools. Use when answering questions about Swedish register
+  data — variable definitions, value codes, register schemas, column names, or how data
+  is structured across registers and years.
 ---
 
-# reg-meta — Register Metadata Queries
+# Register metadata queries
 
-You have access to `reg-meta`, a CLI tool for querying SCB (Statistics Sweden) register
-metadata. The database contains structural metadata about registers — not microdata.
+The plugin's `catalog` MCP server (hosted at `https://catalog.swecov.se/mcp`) answers
+questions about Swedish administrative registers. It holds structural metadata —
+registers, variables, value codes, classifications, documentation — not microdata.
 
-## Install
+## Tools
 
-If `reg-meta` is not yet installed:
+Each tool's parameters are in its MCP schema; this is what each one is for.
 
-```bash
-uv tool install reg-meta
-reg-meta update --yes
-```
+  | Tool       | Use it for                                                                                                                     |
+  | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+  | `search`   | Free-text search over registers, variables, classifications and codes. Start here.                                             |
+  | `show`     | The summary of any ref: a provider, register, variable, classification or group. No `ref` gives the catalog root.              |
+  | `states`   | A variable's delivered representations over time: variant, period bounds, column, coding, data warnings.                       |
+  | `values`   | A classification's codes, or the value set of one variable state (a `state_id` from `states`).                                 |
+  | `coverage` | The years a register or variable is delivered, with gaps.                                                                      |
+  | `schema`   | `operation`: `schema` (a register's or variable's delivered columns), `diff` (columns between two periods), `coded_variables`. |
+  | `resolve`  | Delivered column names (data-file headers) to the variables that deliver them.                                                 |
+  | `graph`    | `operation`: `graph` (succession graph) or `lineage` (source states feeding a variable).                                       |
+  | `docs`     | `operation`: `docs_search`, `docs_get` (one documentation entry) or `docs_related` (a register's rehosted PDFs).               |
+  | `order`    | `operation`: `validate` or `order` a `project_data.json` document (`project` argument).                                        |
 
-## Learning the tool
+## Conventions
 
-Run these to understand what reg-meta can do and how to use it:
+- **Refs.** A `ref` is an FQID (`scb/lisa`, `scb/lisa/kon`, `class/sun1996`) or a bare
+  name. A bare name that matches several entities fails with `ambiguous_ref`; repeat the
+  call with one of the candidates' FQIDs.
+- **Periods.** `period` takes `2019`, `2015..2019`, `LA2019`, `2019-03` or
+  `2019-01-01..2019-06-30`. `diff` takes `from` and `to` in the same grammar.
+- **Paging.** Open-ended lists return `{"items": [...], "next_cursor": ...}`. Pass
+  `next_cursor` back as `cursor`; `limit` defaults to 50 (max 200).
+- **Scope.** Leave `scope` unset. The hosted catalog serves `reference`; `holdings`
+  needs a steward catalog and fails with `scope_unavailable` there.
 
-```bash
-reg-meta --examples              # usage examples and workflows
-reg-meta --help                  # full command reference with syntax
-reg-meta <command> --help        # detailed help for a specific command
-reg-meta <command> --examples    # examples for a specific command
-```
+## Responses
 
-Use `--format json` when you need structured output for further processing.
+A successful call returns `{data, meta}`. `data` is the result; `meta` names the
+`contract_version`, the catalog `generation` and the `scope` that answered.
 
-## Troubleshooting
+A failed call is an MCP tool error carrying `{error, meta}`, where `error` is
+`{code, class, message, remediation, fields}`. Act on `code` and follow `remediation`:
 
-If a command fails unexpectedly or flags seem wrong:
+- `ambiguous_ref`: `fields.candidates` lists the FQIDs to choose from.
+- `not_found`: search for the entity and use its FQID.
+- `invalid_parameter`, `invalid_ref`, `invalid_period`: fix the named argument.
+- `invalid_cursor`, `stale_cursor`: restart the listing without `cursor`.
+- `rate_limited`: wait before retrying.
 
-1. Run `reg-meta --help` to see the current command reference.
-2. Run `reg-meta <command> --help` for current flags and examples.
-3. If the behavior still does not match these instructions, trust the CLI help output
-   and file an issue at
-   <https://github.com/adamaltmejd/registry-research-toolkit/issues>.
+## Workflow
+
+1. `search` for the concept (Swedish terms usually match best, e.g. `inkomst`).
+2. `show` the variable or register FQID from the hit.
+3. `states`, `values` and `coverage` for representations, codes and years.
+
+If a tool behaves differently from this page, trust its MCP schema and file an issue at
+<https://github.com/adamaltmejd/registry-research-toolkit/issues>.

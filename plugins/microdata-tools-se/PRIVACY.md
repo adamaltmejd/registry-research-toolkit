@@ -1,22 +1,26 @@
 # Privacy Policy
 
-`microdata-tools-se` is a local plugin bundle for Codex and Claude Code. It ships
-prompts and metadata only; the skills run local tools and read local files in the
-workspace you give them access to.
+`microdata-tools-se` is a plugin bundle for Codex and Claude Code. It ships a skill and
+declares one MCP server, the hosted register metadata catalog at
+`https://catalog.swecov.se/mcp`, operated by the plugin author.
 
 ## Data handling
 
-- `register-metadata-search` queries register metadata through the local `reg-meta` CLI.
-  That database contains schema metadata, not microdata.
+- **Queries leave your machine.** When your agent calls a catalog tool, the tool's
+  arguments are sent to the hosted server: search terms, register and variable names,
+  column names passed to `resolve`, and any `project_data.json` document passed to
+  `order`. Do not put personal data or confidential material in these arguments.
+- The server answers from register metadata only (schemas, value codes, documentation),
+  not microdata. It stores no queries; it keeps a short-lived per-client-address counter
+  for rate limiting.
+- Traffic passes through Cloudflare and Fly.io, which host the service and process
+  connection metadata such as IP addresses under their own policies.
 - The plugin is designed so that row-level MONA data must not leave MONA. Only aggregate
   statistics may be exported, and the researcher remains responsible for reviewing every
   export before it leaves MONA.
 
-## Third-party services
-
-This plugin does not require a hosted backend operated by the plugin author. It runs
-inside your local agent environment and inherits the data handling policies of the host
-application you use to run it.
+The agent host you run the plugin in (Codex or Claude Code) applies its own data
+handling policy to the conversation, including the tool results.
 
 ## Contact
 
