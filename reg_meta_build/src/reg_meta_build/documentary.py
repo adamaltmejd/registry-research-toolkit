@@ -9,6 +9,7 @@ import re
 from typing import Annotated, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from reg_core_py import parse_fqid
 
 from .ids import CatalogStorageId
 from .source_evidence import (
@@ -88,9 +89,7 @@ class DocumentaryCoordinate(BaseModel):
 
 
 def _variable_fqid(value: str) -> str:
-    from .fqid import FqidKind, parse
-
-    if parse(value).kind != FqidKind.VARIABLE_BINDING:
+    if parse_fqid(value).kind != "variable":
         raise ValueError("documentary endpoint must be a catalog variable")
     return value
 

@@ -133,6 +133,19 @@ mod reg_core_py {
             .map_err(|e| refuse(value, e))
     }
 
+    /// The coarsest period token whose bounds are exactly `lo..hi`, else `lo..hi`
+    /// (`reg_core::period_token_for_bounds`).
+    #[pyfunction]
+    fn period_token_for_bounds(lo: &str, hi: &str) -> String {
+        reg_core::period_token_for_bounds(lo, hi)
+    }
+
+    /// The day after an inclusive ISO upper bound (`reg_core::next_iso_day`).
+    #[pyfunction]
+    fn next_iso_day(s: &str) -> String {
+        reg_core::next_iso_day(s)
+    }
+
     /// `reg_core::fold_identity`, the column identity fold.
     #[pyfunction]
     fn fold_identity(s: &str) -> String {

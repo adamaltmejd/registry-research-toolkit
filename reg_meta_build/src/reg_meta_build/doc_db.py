@@ -1,9 +1,8 @@
 """Build pipeline for the reg_meta doc index.
 
 Parses frontmatter + markdown bodies under a curated docs directory and
-writes the FTS5-indexed `reg_meta_docs.db`. Connection management and
-schema-compat checks live in `reg_meta.doc_db`; this module imports the
-shared constants and supplies the build entry point.
+writes the FTS5-indexed `reg_meta_docs.db`. This module also owns the docs
+schema constants, connection management and the schema-compat check.
 """
 
 from __future__ import annotations

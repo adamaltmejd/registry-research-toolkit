@@ -12,7 +12,6 @@ from typing import TYPE_CHECKING, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
-from reg_meta_build import _curation as curation_module
 from reg_meta_build.input_snapshot import (
     LISA_DATASET_ID,
     SnapshotError,
@@ -533,15 +532,6 @@ def source_interpreter_commit() -> str:
     here = Path(__file__).resolve()
     package = here.parent
     repo = package.parents[2]
-    dependency_paths: list[Path] = []
-    for module in (curation_module,):
-        module_path = getattr(module, "__file__", None)
-        if module_path is None:
-            raise SnapshotError(
-                "source record interpreter dependency has no loaded source path: "
-                f"{module.__name__}"
-            )
-        dependency_paths.append(Path(module_path))
     _repository, commit = _tracked_source_commit(
         (
             here,
@@ -552,9 +542,10 @@ def source_interpreter_commit() -> str:
             package / "cli.py",
             package / "db.py",
             package / "edition_bounds.py",
+            package / "source_evidence.py",
+            package / "_curation.py",
             package / "sources" / "lisa.py",
             package / "sources" / "scb_records.py",
-            *dependency_paths,
             *_native_sources(repo),
             repo / "uv.lock",
         ),

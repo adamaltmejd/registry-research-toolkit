@@ -73,8 +73,8 @@ CHUNK = 1 << 20
 # ~2.6 GB of the tight disk).
 KEEP = 2
 REPO_ROOT = Path(__file__).resolve().parents[2]
-# What a derived copy depends on: the builder, the reader code derive moved, the
-# locked dependencies, and the Rust sources of `reg-core-py` (its uv `cache-keys`).
+# What a derived copy depends on: the builder, the locked dependencies, and the Rust
+# sources of `reg-core-py` (its uv `cache-keys`).
 DERIVE_SOURCES = BUILDER_SOURCES
 
 

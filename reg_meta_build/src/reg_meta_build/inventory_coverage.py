@@ -235,7 +235,7 @@ def coverage_misses(
         table for table in inventory.tables if isinstance(table.edition, str)
     )
     coords: set[_Coord] = {
-        (mapping.register_variant, str(mapping.variable))
+        (mapping.register_variant, mapping.variable)
         for table in assessed_tables
         for column in table.columns
         for mapping in column.mappings
@@ -675,7 +675,7 @@ def _placements(
     ONCE: the edition loop then only compares."""
     placed = []
     for mapping in column.mappings:
-        pair = pair_ids.get((mapping.register_variant, str(mapping.variable)))
+        pair = pair_ids.get((mapping.register_variant, mapping.variable))
         if pair is None:
             continue
         register, _, variant = mapping.register_variant.rpartition("/")
