@@ -787,6 +787,69 @@
         }
       }
     },
+    "/api/project/validate": {
+      "post": {
+        "description": "Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, with `ok` false when one is an error. A `schema_version` other than 3.0.0 is reported alone; then the document's structure, then each source's variant and period and each binding's variable, availability in the period (a narrower availability is an `info` clip), representation and value set, and on a steward catalog what the steward holds. An invalid project is a result, not an error.",
+        "operationId": "validate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "A project_data.json document"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Validation"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/resolve": {
       "get": {
         "description": "Delivered column names (data-file headers, 1 to 200 of them) to the variables delivering them, by exact case-insensitive match: one row per name, `matched` with its variables or `no_match`. `register` (a FQID or a name) keeps matches to one register. Not ref resolution: use `search` to discover names.",
@@ -2712,6 +2775,14 @@
           }
         }
       },
+      "IssueLevel": {
+        "type": "string",
+        "enum": [
+          "error",
+          "warning",
+          "info"
+        ]
+      },
       "Lineage": {
         "type": "object",
         "required": [
@@ -4483,6 +4554,60 @@
           },
           "starred": {
             "type": "boolean"
+          }
+        }
+      },
+      "Validation": {
+        "type": "object",
+        "description": "The validation result: `ok` when no issue is an error.",
+        "required": [
+          "ok",
+          "issues"
+        ],
+        "properties": {
+          "issues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationIssue"
+            },
+            "description": "In emission order: per source, its variant and period, then per binding."
+          },
+          "ok": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ValidationIssue": {
+        "type": "object",
+        "description": "One finding about the document.",
+        "required": [
+          "level",
+          "code",
+          "path",
+          "message",
+          "successor_fqid"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "A stable identifier, such as `period_outside_state_validity`."
+          },
+          "level": {
+            "$ref": "#/components/schemas/IssueLevel"
+          },
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string",
+            "description": "An RFC 6901 JSON pointer into the document; empty for the whole document."
+          },
+          "successor_fqid": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The successor a `variable_replaced` finding names; null otherwise."
           }
         }
       },
