@@ -20,9 +20,9 @@ from _swecov_fixtures import (
     build_catalog,
     flavored_db_fixture,  # noqa: F401
 )
-from reg_meta.errors import RegMetaError
-from reg_meta.inventory import edition_bounds
 from reg_meta_build.edition_bounds import edition_claims
+from reg_meta_build.errors import RegMetaError
+from reg_meta_build.inventory import edition_bounds
 
 if TYPE_CHECKING:
     from pathlib import Path

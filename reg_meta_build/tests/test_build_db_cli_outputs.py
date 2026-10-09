@@ -17,9 +17,9 @@ from _pipeline_catalog_support import (
 )
 from _resolved_catalog_support import resolved_variable
 from catalog_manifest import synthetic_manifest
-from reg_meta.db import DB_FILENAME
-from reg_meta.errors import EXIT_USAGE
 from reg_meta_build.cli import run
+from reg_meta_build.db import DB_FILENAME
+from reg_meta_build.errors import EXIT_USAGE
 from reg_meta_build.pipeline import (
     build_catalog,
     check_curation,

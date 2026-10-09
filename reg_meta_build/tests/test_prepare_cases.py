@@ -35,9 +35,9 @@ from _csv_fixtures import (
 )
 from _lisa_fixtures import write_lisa_workbook
 from _workbook_spec import write_workbook
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.source_evidence import SourceRevision
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.input_snapshot import LISA_DATASET_ID, open_scb_snapshot
+from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.sources.code_lists import read_code_list
 from reg_meta_build.sources.lisa import read_lisa_source
 from reg_meta_build.sources.scb_auxiliary import iter_scb_auxiliary_records

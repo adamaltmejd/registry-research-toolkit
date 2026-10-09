@@ -10,15 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal, Self
 
-import reg_meta.queries as reg_meta_queries
 from pydantic import BaseModel, ConfigDict, model_validator
-from reg_meta.source_evidence import (
-    DeliveredCell,
-    RecordLocator,
-    SourceField,
-    SourceRevision,
-    canonical_sha256,
-)
 
 from reg_meta_build import _curation as curation_module
 from reg_meta_build.input_snapshot import (
@@ -39,6 +31,14 @@ from reg_meta_build.sources.lisa import read_lisa_source
 from reg_meta_build.sources.scb_records import (
     LISA_REGISTER_ID,
     iter_scb_observations,
+)
+
+from .source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
+    canonical_sha256,
 )
 
 if TYPE_CHECKING:
@@ -534,7 +534,7 @@ def source_interpreter_commit() -> str:
     package = here.parent
     repo = package.parents[2]
     dependency_paths: list[Path] = []
-    for module in (reg_meta_queries, curation_module):
+    for module in (curation_module,):
         module_path = getattr(module, "__file__", None)
         if module_path is None:
             raise SnapshotError(

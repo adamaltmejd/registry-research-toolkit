@@ -12,8 +12,8 @@ from _resolved_metadata_support import (
     write_metadata_catalog as _write,
 )
 from pydantic import ValidationError
-from reg_meta.errors import RegMetaError
 from reg_meta_build.db import open_built_db
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.resolved_metadata import (
     ResolvedClassificationDerivation,
     ResolvedHistoricalPredecessor,

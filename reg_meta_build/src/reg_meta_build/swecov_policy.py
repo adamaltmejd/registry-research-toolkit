@@ -14,8 +14,8 @@ from pydantic import (
     model_validator,
 )
 from reg_core_py import parse_fqid
-from reg_meta.inventory import ColumnMapping
 
+from .inventory import ColumnMapping
 from .slug_grammar import validate_slug
 
 if TYPE_CHECKING:

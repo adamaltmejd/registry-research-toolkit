@@ -10,7 +10,7 @@ from _slugged_db import (
     add_state,
     add_variable,
 )
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,

@@ -20,13 +20,13 @@ from _csv_fixtures import (
 from _lisa_fixtures import write_lisa_workbook
 from _source_inspection_fixtures import field_text
 from pydantic import ValidationError
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.source_evidence import SourceField, SourceRevision
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.input_snapshot import (
     LisaWorkbookSelection,
     open_input_bundle,
     open_scb_snapshot,
 )
+from reg_meta_build.source_evidence import SourceField, SourceRevision
 from reg_meta_build.source_inspection import (
     CensusCompletion,
     inspect_bundle_source_records,

@@ -25,8 +25,8 @@ import sqlite3
 import sys
 from pathlib import Path
 
-import reg_meta.db
-import reg_meta.doc_db
+import reg_meta_build.db
+import reg_meta_build.doc_db
 
 _SLUGGED_DB_DIR = Path(__file__).resolve().parents[3] / "reg_meta_build" / "tests"
 _READER_FIXTURE_DIR = (
@@ -48,7 +48,7 @@ def ensure_slugged_db_importable() -> None:
 # the code constant in the PATCH (_check_schema_compat ignores patch) — so
 # the footer shows the manifest's value, not an echo of
 # reg_meta.SCHEMA_VERSION.
-_MAJOR, _MINOR, _ = reg_meta.db.SCHEMA_VERSION.split(".")
+_MAJOR, _MINOR, _ = reg_meta_build.db.SCHEMA_VERSION.split(".")
 FIXTURE_SCHEMA_VERSION = f"{_MAJOR}.{_MINOR}.999"
 
 
@@ -199,8 +199,8 @@ def build_catalog_fixture_db(db_path: Path) -> None:
 def _seed_data_warnings(conn: sqlite3.Connection) -> None:
     from hashlib import sha256
 
-    from reg_meta.catalog import DataWarning
-    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.data_warnings import DataWarning
+    from reg_meta_build.source_evidence import canonical_sha256
 
     variable_id = conn.execute(
         "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'forsamling'"
@@ -1092,7 +1092,7 @@ def build_reader_fixture_db(
     The reader's test support runs the real catalog writer, holdings compiler and
     artifact validator. Dev servers and HTTP conformance cases use these same bytes.
     """
-    reader_tests = Path(__file__).resolve().parents[3] / "reg_meta" / "tests"
+    reader_tests = Path(__file__).resolve().parents[3] / "conformance"
     if str(reader_tests) not in sys.path:
         sys.path.insert(0, str(reader_tests))
     from reader_artifacts import build_reader_artifact
@@ -1116,10 +1116,10 @@ def build_fixture_db_dir(db_dir: Path, *, kind: str | None = None) -> Path:
     writes the pair."""
     if kind is None:
         db_dir.mkdir(parents=True, exist_ok=True)
-        build_catalog_fixture_db(db_dir / reg_meta.db.DB_FILENAME)
+        build_catalog_fixture_db(db_dir / reg_meta_build.db.DB_FILENAME)
     else:
         build_reader_fixture_db(db_dir, kind=kind)
-    build_docs_fixture_db(db_dir / reg_meta.doc_db.DOC_DB_FILENAME)
+    build_docs_fixture_db(db_dir / reg_meta_build.doc_db.DOC_DB_FILENAME)
     return db_dir
 
 

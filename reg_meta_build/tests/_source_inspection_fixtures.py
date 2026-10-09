@@ -2,8 +2,8 @@
 
 `interpreter_checkout` gives `inspect-source-records` the clean tracked implementation
 its interpreter pin demands, without depending on the state of the developer's
-checkout: it copies the imported `reg_meta` and `reg_meta_build` packages (whichever
-copies this process imported) and the `reg-core`/`reg-core-py` crate sources into a
+checkout: it copies the imported `reg_meta_build` package (whichever copy this process
+imported) and the `reg-core`/`reg-core-py` crate sources into a
 fresh repository with the monorepo layout, commits them, and runs the real CLI from
 there in a subprocess.
 """
@@ -17,7 +17,6 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import reg_meta
 import reg_meta_build
 
 if TYPE_CHECKING:
@@ -69,7 +68,7 @@ def _commit_tree(repo: Path) -> str:
 class InterpreterCheckout:
     """A committed copy of the interpreter sources and a CLI runner bound to it."""
 
-    def __init__(self, root: Path, *, split_reg_meta: bool = False) -> None:
+    def __init__(self, root: Path) -> None:
         self.root = root
         build_src = root / "reg_meta_build" / "src"
         _copy_package(reg_meta_build, build_src / "reg_meta_build")
@@ -80,14 +79,8 @@ class InterpreterCheckout:
             shutil.copytree(repo / "crates" / crate, root / "crates" / crate)
         for manifest in ("Cargo.toml", "Cargo.lock"):
             shutil.copyfile(repo / manifest, root / manifest)
-        # A split checkout puts the loaded reg_meta dependency in a second repository.
-        meta_root = root.parent / f"{root.name}-reg-meta" if split_reg_meta else root
-        meta_src = meta_root / "reg_meta" / "src"
-        _copy_package(reg_meta, meta_src / "reg_meta")
         self.commit = _commit_tree(root)
-        if split_reg_meta:
-            _commit_tree(meta_root)
-        self.pythonpath = (build_src, meta_src)
+        self.pythonpath = (build_src,)
 
     def run(self, args: list[str]) -> subprocess.CompletedProcess[str]:
         env = dict(os.environ)

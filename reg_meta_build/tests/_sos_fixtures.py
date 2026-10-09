@@ -28,7 +28,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from _workbook_spec import write_workbook
-from reg_meta.source_evidence import SourceRevision
+from reg_meta_build.source_evidence import SourceRevision
 
 
 @dataclass(frozen=True)

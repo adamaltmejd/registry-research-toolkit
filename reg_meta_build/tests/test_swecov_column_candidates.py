@@ -19,7 +19,7 @@ from _swecov_fixtures import (
     build_catalog,
     flavored_db_fixture,  # noqa: F401
 )
-from reg_meta.errors import RegMetaError
+from reg_meta_build.errors import RegMetaError
 
 if TYPE_CHECKING:
     from pathlib import Path

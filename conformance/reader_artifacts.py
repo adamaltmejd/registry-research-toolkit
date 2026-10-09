@@ -15,13 +15,11 @@ import time
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from reg_meta.catalog import DataWarning
-from reg_meta.db import SCHEMA_VERSION, open_db
-from reg_meta.doc_db import DOC_DB_FILENAME
-from reg_meta.source_evidence import canonical_json, canonical_sha256
 from reg_meta_build.artifact_identity import generation_id
+from reg_meta_build.data_warnings import DataWarning
+from reg_meta_build.db import SCHEMA_VERSION, open_db
 from reg_meta_build.derive import derive_holdings
-from reg_meta_build.doc_db import build_doc_db, load_related_documents
+from reg_meta_build.doc_db import DOC_DB_FILENAME, build_doc_db, load_related_documents
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.pipeline import load_search_pins  # tests skip private _curation
 from reg_meta_build.resolved_catalog import (
@@ -32,20 +30,20 @@ from reg_meta_build.resolved_catalog import (
     write_resolved_catalog,
 )
 from reg_meta_build.resolved_metadata import ResolvedMetadata
+from reg_meta_build.source_evidence import canonical_json, canonical_sha256
 from reg_meta_build.validate import validate_built_db
 
-import reg_meta
 import reg_meta_build
 import reg_schema
 
 # The digest and staging helpers are shared with the tooling caches.
-sys.path.append(str(Path(__file__).resolve().parents[2] / "scripts"))
+sys.path.append(str(Path(__file__).resolve().parents[1] / "scripts"))
 from keyed_cache import NATIVE_SOURCES as _NATIVE_SOURCES, staged, tree_digest
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
-CASES = Path(__file__).resolve().parents[2] / "conformance/cases"
+CASES = Path(__file__).resolve().parent / "cases"
 BUILDER_CASES = CASES.parents[1] / "reg_meta_build/tests/cases/holdings"
 FIXTURE_IMPORT_DATE = json.loads(
     (CASES / "reader/fixture/import_metadata.json").read_text()
@@ -57,7 +55,7 @@ FIXTURE_CACHE_ENV = "REG_FIXTURE_CACHE"
 # its last lookup.
 FIXTURE_CACHE_RETENTION_SECONDS = 6 * 3600
 BUILD_PACKAGES = tuple(
-    Path(package.__file__).parent for package in (reg_meta_build, reg_meta, reg_schema)
+    Path(package.__file__).parent for package in (reg_meta_build, reg_schema)
 )
 # The sources `reg-core-py` is built from (its uv `cache-keys`): `uv run` rebuilds the
 # extension when they change, and so must the cache.
@@ -179,7 +177,7 @@ def build_inputs_digest(
 ) -> str:
     """Digest of every fixture-independent build input.
 
-    The defaults are the imported `reg_meta_build`, `reg_meta` and `reg_schema`
+    The defaults are the imported `reg_meta_build` and `reg_schema`
     sources (file contents, so uncommitted edits count), the Rust sources of
     `reg-core-py`, this builder,
     `installed_distributions()` and `runtime_versions()`: what actually runs,

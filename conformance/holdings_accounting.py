@@ -15,7 +15,7 @@ import tomllib
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from reg_meta.db import get_manifest, open_db
+from reg_meta_build.db import get_manifest, open_db
 
 DISPOSITIONS = ("dated", "year_independent", "retained_unknown", "excluded", "lookup")
 POLICY_NAMES = ("source_policy", "inventory_overlay", "holdings_policy")

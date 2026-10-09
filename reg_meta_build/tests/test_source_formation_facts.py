@@ -8,11 +8,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 from catalog_manifest import synthetic_manifest
-from reg_meta.source_evidence import SourceField
 from reg_meta_build.db import open_built_db
 from reg_meta_build.resolved_catalog import (
     write_resolved_catalog,
 )
+from reg_meta_build.source_evidence import SourceField
 from reg_meta_build.source_occurrences import (
     source_occurrence,
 )

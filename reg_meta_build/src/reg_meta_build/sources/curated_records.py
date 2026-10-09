@@ -20,16 +20,16 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.source_evidence import (
+
+from reg_meta_build._curation import printable_error
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.normalization import normalize_text, normalize_token
+from reg_meta_build.source_evidence import (
     DeliveredCell,
     RecordLocator,
     SourceField,
     SourceRevision,
 )
-
-from reg_meta_build._curation import printable_error
-from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_records import (
     NativeCoordinates,
     ScopeInterval,

@@ -14,9 +14,6 @@ from contextlib import closing
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
-from reg_meta.db import get_manifest
-from reg_meta.errors import RegMetaError
-
 from reg_meta_build.artifact_identity import (
     builder_commit,
     generation_id,
@@ -27,6 +24,7 @@ from reg_meta_build.db import (
     SCHEMA_VERSION,
     SEARCH_PIN_DDL,
     _unlink_wal_sidecars,
+    get_manifest,
     open_built_db,
     publish_db,
 )
@@ -35,6 +33,7 @@ from reg_meta_build.derive.chains import CHAIN_TABLES, derive_chains
 from reg_meta_build.derive.schema import derive_coded
 from reg_meta_build.derive.search_index import derive_search_indexes
 from reg_meta_build.derive.states import derive_states
+from reg_meta_build.errors import RegMetaError
 
 if TYPE_CHECKING:
     from pathlib import Path

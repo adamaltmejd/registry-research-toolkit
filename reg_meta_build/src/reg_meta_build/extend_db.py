@@ -19,14 +19,11 @@ from typing import TYPE_CHECKING, Any
 
 from pydantic import TypeAdapter
 from reg_core_py import GrammarError
-from reg_meta.catalog import DataWarning
-from reg_meta.db import DB_FILENAME
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.source_evidence import canonical_json
 
 from ._curation import printable_error
-from .data_warnings import write_data_warnings
-from .db import get_manifest, open_built_db
+from .data_warnings import DataWarning, write_data_warnings
+from .db import DB_FILENAME, get_manifest, open_built_db
+from .errors import EXIT_CONFIG, RegMetaError
 from .id import mint
 from .ir import (
     IRRegister,
@@ -37,6 +34,7 @@ from .ir import (
     IRVariant,
 )
 from .slug_grammar import validate_slug
+from .source_evidence import canonical_json
 from .sources.curated import CuratedAdapter
 
 if TYPE_CHECKING:
@@ -323,8 +321,6 @@ def extend_db(
             )
         )
 
-    from reg_meta.inventory import load_inventory
-
     from .artifact_identity import (
         builder_commit,
         committed_steward_slugs,
@@ -332,6 +328,7 @@ def extend_db(
     )
     from .holdings_accounting import account_holdings
     from .holdings_compile import compile_holdings
+    from .inventory import load_inventory
 
     with ExitStack() as inputs:
         revision = builder_commit() if not diagnostic else None

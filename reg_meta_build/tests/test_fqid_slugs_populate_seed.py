@@ -14,7 +14,7 @@ from _slugged_db import (
     add_variant,
     build_slugged_db,
 )
-from reg_meta.errors import RegMetaError
+from reg_meta_build.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,

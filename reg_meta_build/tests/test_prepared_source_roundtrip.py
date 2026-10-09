@@ -12,7 +12,6 @@ from _prepared_fixtures import (
     prepared_record as _record,
     prepared_revision as _revision,
 )
-from reg_meta.source_evidence import RecordLocator, SourceRevision
 from reg_meta_build.prepared_sources import (
     PreparedSourceError,
     PreparedSourceRecords,
@@ -20,6 +19,7 @@ from reg_meta_build.prepared_sources import (
     prepare_source_records,
     prepared_source_paths,
 )
+from reg_meta_build.source_evidence import RecordLocator, SourceRevision
 from reg_meta_build.source_records import (
     SourceEvidenceRow,
     SourceEvidenceTable,

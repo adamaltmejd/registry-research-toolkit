@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.sources.curated import CuratedAdapter
 
 if TYPE_CHECKING:

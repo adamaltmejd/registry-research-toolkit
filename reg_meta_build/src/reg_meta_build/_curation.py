@@ -28,9 +28,10 @@ from pydantic import (
     model_validator,
 )
 from reg_core_py import fold_search
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 from reg_meta_build._resolved_common import _require_trimmed
+
+from .errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
     import sqlite3

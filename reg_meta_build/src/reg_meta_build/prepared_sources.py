@@ -23,12 +23,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, field_validator
-from reg_meta.source_evidence import (
-    DeliveredCell,
-    RecordLocator,
-    SourceField,
-    SourceRevision,
-)
 
 from reg_meta_build._accepted_prepared import (
     check_accepted_files,
@@ -52,6 +46,13 @@ from reg_meta_build.source_records import (
     TemporalScope,
 )
 from reg_meta_build.source_support import SupportTarget, support_join_key
+
+from .source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator

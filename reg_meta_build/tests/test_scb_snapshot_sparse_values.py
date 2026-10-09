@@ -275,7 +275,7 @@ def test_sparse_boundaries_reject_without_normalizing_raw_index_evidence(
 def test_sparse_bundle_verifier_cli_reports_materialization_error(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    from reg_meta.errors import EXIT_CONFIG
+    from reg_meta_build.errors import EXIT_CONFIG
 
     from reg_meta_build import cli as cli_module
 

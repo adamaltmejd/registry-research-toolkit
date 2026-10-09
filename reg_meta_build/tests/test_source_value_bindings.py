@@ -5,8 +5,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
 
 import pytest
-from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.prepared_values import prepare_source_values
+from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.source_values import (
     SourceValue,
     SourceValueAssociation,

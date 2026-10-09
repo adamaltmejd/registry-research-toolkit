@@ -16,8 +16,6 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-
 from reg_meta_build._components import DisjointSet
 from reg_meta_build._curation import printable_error
 from reg_meta_build._resolved_common import _ResolvedWindow, remaining_windows
@@ -53,6 +51,8 @@ from reg_meta_build.resolved_metadata import (
     validate_metadata_structure,
 )
 from reg_meta_build.source_curation import ResolutionDiagnostic
+
+from .errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Collection, Iterable, Iterator, Mapping

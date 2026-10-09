@@ -7,8 +7,8 @@ from pathlib import Path
 import pytest
 from http_cases import ServerPool
 from reader_artifacts import FIXTURE_IMPORT_DATE, cached_reader_artifact
-from reg_meta.db import open_db
-from reg_meta.errors import RegMetaError
+from reg_meta_build.db import open_db
+from reg_meta_build.errors import RegMetaError
 
 
 def pytest_addoption(parser):

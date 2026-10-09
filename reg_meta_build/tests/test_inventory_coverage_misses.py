@@ -18,7 +18,7 @@ def test_year_independent_inventory_requires_exact_physical_column(
     delivery state of exactly that physical column. Fails if coverage matches a
     year-independent table against another column, or reports such a miss as an
     errata stanza instead of an independent-state worklist line."""
-    from reg_meta.inventory import DeliveryInventory
+    from reg_meta_build.inventory import DeliveryInventory
     from reg_meta_build.inventory_coverage import (
         coverage_misses,
         errata_stanzas,

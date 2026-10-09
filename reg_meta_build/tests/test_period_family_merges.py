@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from catalog_manifest import synthetic_manifest
-from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.curation_compile import compile_matrix_repr, compile_period_families
 from reg_meta_build.curation_tree import load_register_files
 from reg_meta_build.pipeline import CompiledScope
@@ -17,6 +16,7 @@ from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import column_identity, source_register_key
 from reg_meta_build.source_curation import RepresentationDecision
 from reg_meta_build.source_effects import apply_occurrence_cases
+from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.source_naming import NamingDeclaration, NativeNamingTarget
 from reg_meta_build.source_records import TemporalScope
 from reg_meta_build.source_representations import resolve_representation_cases

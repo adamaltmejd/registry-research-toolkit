@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 import pytest
 from reg_meta.db import SCHEMA_VERSION as READER_SCHEMA_VERSION, open_db
 from reg_meta.errors import RegMetaError
-from reg_meta.queries import extract_year
+from reg_meta_build.edition_bounds import extract_year
 
 if TYPE_CHECKING:
     from pathlib import Path

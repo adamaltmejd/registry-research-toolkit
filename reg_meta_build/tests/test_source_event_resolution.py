@@ -8,8 +8,7 @@ import pytest
 from _csv_fixtures import SCB_REVISION
 from _source_scope_support import record, resolve
 from catalog_manifest import synthetic_manifest
-from reg_meta.errors import RegMetaError
-from reg_meta.source_evidence import DeliveredCell, canonical_sha256
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.resolved_catalog import ResolvedRegister
 from reg_meta_build.resolved_metadata import ResolvedMetadata, ResolvedSuccession
 from reg_meta_build.source_coordinates import source_register_key
@@ -21,6 +20,7 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_event_resolution import SourceEventBindings
+from reg_meta_build.source_evidence import DeliveredCell, canonical_sha256
 from reg_meta_build.source_records import NativeCoordinates, value_field
 from reg_meta_build.source_reference_records import SourceEventDeclaration
 from test_source_reference_resolution import LOCATOR, REVISION

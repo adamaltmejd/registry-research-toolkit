@@ -12,7 +12,6 @@ from typing import TYPE_CHECKING, Any, Literal, Self
 
 from pydantic import Field, field_validator, model_validator
 from reg_core_py import parse_fqid
-from reg_meta.documentary import DocumentaryRelationship, LiteralSourceRelationship
 
 from reg_meta_build._resolved_common import (
     _classification_id,
@@ -31,6 +30,8 @@ from reg_meta_build.relations import (
     reject_replaced_by_cycles,
 )
 from reg_meta_build.slug_grammar import validate_slug
+
+from .documentary import DocumentaryRelationship, LiteralSourceRelationship
 
 if TYPE_CHECKING:
     import sqlite3

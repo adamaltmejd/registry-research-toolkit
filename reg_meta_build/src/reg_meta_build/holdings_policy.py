@@ -16,7 +16,8 @@ from pydantic import (
     TypeAdapter,
     field_validator,
 )
-from reg_meta.source_evidence import canonical_sha256
+
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from pathlib import Path

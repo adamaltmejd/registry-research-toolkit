@@ -7,9 +7,6 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, cast
 
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from reg_meta.source_evidence import (
-    SourceRevision,
-)
 from reg_meta_build.curation_compile import (
     compile_occurrence_corrections,
 )
@@ -29,6 +26,9 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import (
     record_ref,
+)
+from reg_meta_build.source_evidence import (
+    SourceRevision,
 )
 from reg_meta_build.source_naming import (
     NamingDeclaration,

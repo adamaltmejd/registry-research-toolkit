@@ -12,7 +12,6 @@ from dataclasses import asdict
 from typing import TYPE_CHECKING, Any, Literal, Self, cast
 
 from pydantic import BaseModel, ConfigDict, model_validator
-from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build.fqid_slugs import (
     EntityKind,
@@ -35,6 +34,8 @@ from reg_meta_build.source_curation import (
     SourceEvidence,
     evaluate_source_expectations,
 )
+
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
