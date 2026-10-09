@@ -244,6 +244,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/values/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). `q` keeps the rows whose code or label contains it, case and diacritics folded; `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or a bare name. */
+        get: operations["values"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/warnings/{ref}": {
         parameters: {
             query?: never;
@@ -988,6 +1005,12 @@ export interface components {
             code_count: number;
             integer_range?: components["schemas"]["IntegerRange"] | null;
         };
+        ValuesPage: {
+            items: unknown[];
+            next_cursor?: string | null;
+            /** @description The rows matching `q` in the whole set. */
+            total: number;
+        };
         /**
          * @description A variable's shared metadata. Its states, lineage and succession chain are the
          *     `states`, `lineage` and `graph` operations.
@@ -1502,6 +1525,53 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["StatesPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    values: {
+        parameters: {
+            query?: {
+                state?: string;
+                partition?: "source_extensions" | "canonical" | "nonstandard" | "sentinels";
+                classification?: string;
+                column?: string;
+                alias_window_from?: string;
+                q?: string;
+                scope?: components["schemas"]["Scope"];
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["ValuesPage"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

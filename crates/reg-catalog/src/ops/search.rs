@@ -34,7 +34,6 @@ pub const TYPES: &[&str] = &[
     "classification_code",
     "register_value",
 ];
-const MAX_QUERY_CHARS: usize = 200;
 /// Paging stops at this depth (today's `_MAX_CURSOR_POSITION`).
 const DEPTH: usize = 1000;
 /// Each arm's bounded candidate prefix: one row past the depth.
@@ -227,10 +226,7 @@ type Key = (u8, i64, usize, usize);
 
 pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
     let catalog = &server.catalog;
-    let q = params["q"];
-    if q.contains('\0') || q.chars().count() > MAX_QUERY_CHARS {
-        return Err(Error::invalid_parameter("q"));
-    }
+    let q = super::q(params)?;
     let ty = params.get("type").copied();
     if ty.is_some_and(|t| !TYPES.contains(&t)) {
         return Err(Error::invalid_parameter("type"));

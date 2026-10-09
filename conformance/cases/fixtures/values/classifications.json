@@ -1,0 +1,25 @@
+[
+  {
+    "slug": "yrke",
+    "short_name": "Yrke",
+    "name": "Yrkesklassificering",
+    "codes": [
+      {"code": "1", "label": "Chefer", "level": 1},
+      {"code": "11", "label": "Politiker", "level": 2},
+      {"code": "12", "label": "Verkställande direktörer", "level": 2},
+      {"code": "2", "label": "Specialister", "level": 1},
+      {"code": "21", "label": "Ingenjörer", "level": 2},
+      {"code": "22", "label": "Läkare", "level": 2}
+    ],
+    "sentinel_codes": [{"code": "99", "meaning": "Okänt yrke"}]
+  },
+  {
+    "slug": "kon",
+    "short_name": "Kön",
+    "name": "Kön",
+    "codes": [
+      {"code": "1", "label": "Man"},
+      {"code": "2", "label": "Kvinna"}
+    ]
+  }
+]

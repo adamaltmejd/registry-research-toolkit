@@ -14,6 +14,7 @@ use utoipa::ToSchema;
 
 use super::refs::{self, Target};
 use super::show::variant_families;
+use super::values::ScopedSentinel;
 use super::{Params, Server, cursor};
 use crate::{Code, Error, Scope, hex};
 
@@ -763,34 +764,22 @@ impl<'a> Hydrate<'a> {
 /// A coded window's stored conformance evidence (today's `_AliasConformanceEvidence`).
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
-struct AliasEvidence {
+pub(super) struct AliasEvidence {
     declared_classification: String,
     status: AliasStatus,
     checked_codes: Vec<String>,
     #[serde(default)]
-    nonconforming_members: Vec<(String, String)>,
+    pub nonconforming_members: Vec<(String, String)>,
     #[serde(default)]
-    sentinel_members: Vec<(String, String)>,
-    // Admitted for the shape check only: per-code evidence is the `values` facet's.
-    #[serde(default, rename = "scoped_sentinels")]
-    _scoped_sentinels: Vec<Value>,
+    pub sentinel_members: Vec<(String, String)>,
+    /// Per-code evidence, read by `values`' extension members.
+    #[serde(default)]
+    pub scoped_sentinels: Vec<ScopedSentinel>,
 }
 
-#[derive(Deserialize)]
-#[serde(rename_all = "lowercase")]
-enum AliasStatus {
-    Conforming,
-    Extended,
-}
-
-/// The conformance counts of a coded window from its evidence; corrupt evidence, or
+/// A coded window's evidence, which must declare `slug`; corrupt evidence, or
 /// evidence declaring another book, is an `internal_error`.
-fn alias_conformance(
-    slug: &str,
-    short_name: &str,
-    name: &str,
-    evidence: &str,
-) -> Result<Conformance, Error> {
+pub(super) fn alias_evidence(slug: &str, evidence: &str) -> Result<AliasEvidence, Error> {
     let corrupt = |detail: String| {
         Error::new(
             Code::InternalError,
@@ -806,6 +795,24 @@ fn alias_conformance(
             evidence.declared_classification
         )));
     }
+    Ok(evidence)
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "lowercase")]
+enum AliasStatus {
+    Conforming,
+    Extended,
+}
+
+/// The conformance counts of a coded window from its evidence ([`alias_evidence`]).
+fn alias_conformance(
+    slug: &str,
+    short_name: &str,
+    name: &str,
+    evidence: &str,
+) -> Result<Conformance, Error> {
+    let evidence = alias_evidence(slug, evidence)?;
     let codes = |members: &[(String, String)]| -> BTreeSet<String> {
         members.iter().map(|(code, _)| code.clone()).collect()
     };

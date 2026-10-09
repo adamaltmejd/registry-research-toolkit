@@ -1,9 +1,10 @@
-//! Slice 3b's operations: `show`, `states`, `warnings`, `docs_get` and
+//! Slice 3b's operations: `show`, `states`, `warnings`, `values`, `docs_get` and
 //! `docs_related`, and the related-document download.
 
 use super::docs::{self, DocDetail};
 use super::show::{Show, show};
 use super::states::{self, StatesPage};
+use super::values::{self, ValuesPage};
 use super::warnings;
 use super::{Cache, Download, Operation, Param, Type, component};
 
@@ -70,6 +71,36 @@ pub const OPERATIONS: &[Operation] = &[
         cache: Cache::Minute,
         run: warnings::warnings,
         result: warnings::schema,
+    },
+    Operation {
+        name: "values",
+        paths: &["/api/values/{ref}"],
+        tool: Some("values"),
+        description: "A classification's codes (code, label, level, validity), or the \
+            value set of one `state` of a variable (a `state_id` from `states`), ordered \
+            by code and label. `column` with `alias_window_from` (a state's \
+            `coding_window_from`) reads the coded alias window's set instead. With \
+            `classification`, a book the coding declares, `partition` picks its part: \
+            `source_extensions` (default; the codes outside the book, nonstandard and \
+            sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs \
+            whose code the book holds). `q` keeps the rows whose code or label contains \
+            it, case and diacritics folded; `total` counts them. In holdings scope, only \
+            a held state. `ref` is a classification or variable FQID or a bare name.",
+        params: &[
+            Param::required("ref", Type::Ref),
+            Param::optional("state", Type::StorageId),
+            Param::optional("partition", Type::Enum(values::PARTITIONS)),
+            Param::optional("classification", Type::Ref),
+            Param::optional("column", Type::String),
+            Param::optional("alias_window_from", Type::String),
+            Param::optional("q", Type::String),
+            Param::optional("scope", Type::Scope),
+            Param::optional("limit", Type::Limit),
+            Param::optional("cursor", Type::Cursor),
+        ],
+        cache: Cache::Minute,
+        run: values::values,
+        result: component::<ValuesPage>,
     },
     Operation {
         name: "docs_get",
