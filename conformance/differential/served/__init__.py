@@ -65,14 +65,17 @@ if TYPE_CHECKING:
     from concurrent.futures import Future
     from pathlib import Path
 
+# Run order within a catalog's lane: the families that never wait on `baseline_cli`
+# or wait only at their end come first, so the CLI arms' wall overlaps them. `schema`
+# runs in a lane of its own (`LANES`).
 FAMILIES = (
     context,
     search,
-    docs,
-    show,
     states,
+    show,
     values,
     graph,
+    docs,
     schema,
     coverage,
     coded,
@@ -80,6 +83,9 @@ FAMILIES = (
     validate,
     order,
 )
+# `schema` requests the candidate before it waits on `baseline_cli`; in a lane of
+# its own, its walks run beside the CLI arms.
+LANES = (tuple(f for f in FAMILIES if f is not schema), (schema,))
 CLI_BASELINE = {docs, show, values, graph, schema, coverage, coded, resolve}
 # The production rate limit (30 writes per minute) does not bind GETs. Eight worker
 # processes, since one Python process serves one search at a time (G1 budget).
@@ -133,10 +139,11 @@ def served_cases(
     )
     started = time.monotonic()
 
-    def run(catalog: str, base, cand) -> list[tuple[str, dict, dict]]:
+    def run(catalog: str, families: tuple) -> list[tuple[str, dict, dict]]:
+        base, cand = pairs[catalog]
         cases = []
         scopes = [None, "reference"] + (["holdings"] if catalog != "global" else [])
-        for family in FAMILIES:
+        for family in families:
             family_started = time.monotonic()
             args = (base, cand, catalog, scopes, originals[catalog])
             if family in (validate, order):
@@ -181,10 +188,11 @@ def served_cases(
             )
             for catalog in sorted(originals)
         }
-        # The catalogs run side by side: walked one after the other, the served
-        # arm was G1's critical path.
-        with ThreadPoolExecutor(len(pairs)) as pool:
-            found = pool.map(lambda item: run(item[0], *item[1]), pairs.items())
+        # Every catalog's lanes run side by side: walked one after the other, the
+        # served arm was G1's critical path.
+        jobs = [(catalog, lane) for catalog in pairs for lane in LANES]
+        with ThreadPoolExecutor(len(jobs)) as pool:
+            found = pool.map(lambda job: run(*job), jobs)
             return [case for cases in found for case in cases]
     finally:
         baseline.close()
