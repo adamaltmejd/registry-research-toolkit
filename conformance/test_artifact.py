@@ -6,7 +6,7 @@ Failure messages deliberately omit real binding and physical identifiers.
 from __future__ import annotations
 
 import pytest
-from artifact_requests import require, sample_project, search_client
+from artifact_requests import require, sample_project, server_client
 from reg_meta.db import get_manifest, open_db
 from reg_meta.order import materialize_order, project_from_raw
 from reg_meta_build.validate import validate_built_db
@@ -49,7 +49,7 @@ def test_unresolved_binding_refusal_is_located(artifact_dir, request):
         project = sample_project(conn)
         project["sources"][0]["bindings"][0]["variable"] += "-conformance-missing"
         result = materialize_order(project_from_raw(project), conn)
-    client = search_client(request, artifact_dir)
+    client = server_client(request, artifact_dir)
     binding = project["sources"][0]["bindings"][0]["variable"]
     response = client.post("/api/project/order", json=project)
     require(response.status_code == 422, "HTTP refusal did not fail closed")
