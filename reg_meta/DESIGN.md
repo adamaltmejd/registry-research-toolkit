@@ -91,11 +91,13 @@ match as tokens. Display text always comes from the base tables, never from an i
   `operational_definition`, and a `delivery_column_names` aggregate derived from
   `variable_alias.delivery_column_name` (#735/#936). The `unicode61` token rules split
   SCB column codes, so `fedunsatreason_1` matches `fedunsatreason`. Its source, and the
-  display text of a variable hit, is the `variable_search_text` view, not `variable`
-  directly, so delivery-column search stays derived from the normalized alias table and
-  a nameless variable shows its state names. Variable search rows surface the matched
-  delivery aliases for alias hits, falling back to display aliases for non-alias hits.
-  FQID slugs are **not** indexed here.
+  display text of a variable hit, is the derived `variable_search_text` table, not
+  `variable` directly, so delivery-column search stays derived from the normalized alias
+  table and a nameless variable shows its state names. It was a view until schema 9.7;
+  materialized, a cold search reads its hits' rows instead of the `variable_state` rows
+  scattered by state id that the view's name fallbacks touched. Variable search rows
+  surface the matched delivery aliases for alias hits, falling back to display aliases
+  for non-alias hits. FQID slugs are **not** indexed here.
 - **`classification_fts`** — indexes classification `short_name`, `name`, `name_en`,
   `description`. Searched via `search(..., type="classification")` (#350), the catalog
   discovery surface. Catalog-scoped: a `--register` scope excludes it, and so does a
@@ -132,17 +134,17 @@ match as tokens. Display text always comes from the base tables, never from an i
   per pair) DOWNWEIGHT, so a generic enum label shared by many variables ranks below a
   rare, discriminative one. A **code-shaped** query (digit
   + length ≥ 3, e.g. "F32", "0180") ALSO does an exact/prefix match on `value_code.code`
-    (via `idx_value_code_code`), merged + deduped with the label-FTS hits and seeded
-    above them (an exact code match is the strongest signal); plain-text queries do
-    label FTS only. The ownerless-drop applies to BOTH paths: the label-FTS index
-    (build-side filter) AND this code-shaped direct `value_code` lookup, which carries
-    the same owner predicate in `_search_values_fts` (#478) — without it a code-shaped
-    exact/prefix query would bypass the index and leak the context-less hit. The
-    code-exact rank floor means that in the flat `type="all"` CLI path, code-exact hits
-    intentionally precede other result types for a code-shaped query (the user typed a
-    code); the webapp calls `search()` per type, so its typed groups are unaffected. The
-    value arm applies owner scope inside SQL and returns only a bounded ranked prefix;
-    owner annotation is set-based and limited to the displayed page.
+    (via `idx_value_code_code_nocase` in the Rust reader), merged + deduped with the
+    label-FTS hits and seeded above them (an exact code match is the strongest signal);
+    plain-text queries do label FTS only. The ownerless-drop applies to BOTH paths: the
+    label-FTS index (build-side filter) AND this code-shaped direct `value_code` lookup,
+    which carries the same owner predicate in `_search_values_fts` (#478) — without it a
+    code-shaped exact/prefix query would bypass the index and leak the context-less hit.
+    The code-exact rank floor means that in the flat `type="all"` CLI path, code-exact
+    hits intentionally precede other result types for a code-shaped query (the user
+    typed a code); the webapp calls `search()` per type, so its typed groups are
+    unaffected. The value arm applies owner scope inside SQL and returns only a bounded
+    ranked prefix; owner annotation is set-based and limited to the displayed page.
 
 `search` takes a RAW user query and builds the FTS5 MATCH expression internally
 (`_fts_match_query`): each whitespace token becomes a quoted prefix term (`"tok"*`),

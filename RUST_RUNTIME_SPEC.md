@@ -114,7 +114,7 @@ About 70% of the hotspots are A or B. The main ones:
   | `same_as` BFS                                                                                                            | A     | none: unreachable, not ported (3d.1)                                    |
   | Concept-group tag N+1, group member assembly                                                                             | A     | `concept_group_tag`, pre-ordered member rows                            |
   | `get coded-variables` (72 s; 5.5 s unfiltered since #1175)                                                               | A     | `coded_variable_stats` per scope; reader only orders and pages the rows |
-  | `variable_search_text` view (correlated `group_concat` for 43k variables)                                                | A     | Materialized FTS content table                                          |
+  | `variable_search_text` view (correlated `group_concat` for 43k variables)                                                | A     | Materialized table, same name and columns (#1305, schema 9.7)           |
   | Search arm merge, scoring, cursor, fold decisions; period intersection with a request; `get diff`; order materialization | C     | Stays in the reader                                                     |
 
 Consequences:
@@ -260,11 +260,11 @@ least at every maintainer checkpoint.
 **Three verification gates, with budgets.** They are named G0–G2 so they are not
 confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
-  | Gate | What runs                                                                                                                                                                                                                                                     | Budget                                                 | When                                                                                                                                                        |
-  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q`, `cargo test --workspace` and, from slice 3a, the Rust HTTP run (section 10), all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).              | under 60 s, plus 30 s for the Rust HTTP run            | every change                                                                                                                                                |
-  | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min warm; a cold run is reported, not budgeted | every PR touching derive or the docs build, and once per slice before its cutover (stage 3b–3e decision 7; earlier: every PR touching derive or the reader) |
-  | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today                                             | checkpoints and releases, never per PR                                                                                                                      |
+  | Gate | What runs                                                                                                                                                                                                                                                     | Budget                                                 | When                                                                                                                                                                                                                   |
+  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q`, `cargo test --workspace` and, from slice 3a, the Rust HTTP run (section 10), all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).              | under 60 s, plus 30 s for the Rust HTTP run            | every change                                                                                                                                                                                                           |
+  | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min warm; a cold run is reported, not budgeted | every PR touching derive or the docs build, and once per slice before its cutover (stage 3b–3e decision 7; earlier: every PR touching derive or the reader); after package 4.11, at releases only (stage 4 decision 4) |
+  | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today                                             | checkpoints and releases, never per PR                                                                                                                                                                                 |
 
 The G1 baseline is the Python reader **at a pinned commit, installed in its own
 environment**, never the checkout under change, so a regression moved into derive cannot
@@ -334,7 +334,9 @@ the loop:
   where their package says so.
 - **Small PRs, squash-merged to main.** Everything before stage 4 is additive (schema
   9.x minor bumps) except the slice cutovers and 3a.9's switch of production to the Rust
-  server alone; main stays deployable and there is no long-lived integration branch.
+  server alone; main stays deployable and there is no long-lived integration branch. The
+  one exception is stage 4's schema-major package 4.10, whose PRs collect on one
+  integration branch (stage 4 decision 2).
 - **At most three packages in flight.** From stage 3b: at most three concurrent slice
   sessions, one package each, with the orchestrator the only merger (stage 3b–3e
   decision 9). Files every slice would edit (route and tool registration, the
@@ -345,23 +347,24 @@ the loop:
 - **Four maintainer checkpoints:** (1) end of stage 1: approve the surface inventory,
   operation table, error catalog and fold spec, and decide whether indexed text is
   pre-folded (section 5) — passed 2026-10-07; (2) after slice 3a: approve the pattern
-  the other slices copy; (3) before stage 4: go or no-go on retiring the Python runtime; (4)
-  stage 5 done, and this file deleted.
+  the other slices copy; (3) before stage 4: go or no-go on retiring the Python runtime
+  — passed 2026-10-09 (go; "Stage 4 decisions"); (4) stage 5 done, and this file
+  deleted.
 
 ## 5. Principle 2: one implementation per contract
 
 Each contract that crosses a language or package boundary has exactly one
 implementation:
 
-  | Contract                              | Single home                           | Reached from                                          |
-  | ------------------------------------- | ------------------------------------- | ----------------------------------------------------- |
-  | Artifact schema (DDL, manifest)       | `reg_meta_build` (Python)             | Rust reader reads it; `SCHEMA_VERSION` gate           |
-  | Resolver semantics                    | `reg_meta_build` derive (Python)      | Compiled into the artifact                            |
-  | FQID and period grammar               | Rust core crate                       | Build via Python bindings; SPA via WASM               |
-  | Text folds                            | Rust core crate                       | Build via Python bindings (fills `*_folded` columns)  |
-  | Canonical JSON + SHA-256              | Rust core crate                       | Build via Python bindings                             |
-  | Project schema + structural validator | Rust core crate (replaces reg_schema) | Server, MCP; SPA via WASM; JSON Schema export         |
-  | Result types                          | Rust structs (serde + utoipa)         | OpenAPI; MCP tool schemas and TS types derive from it |
+  | Contract                                | Single home                                       | Reached from                                          |
+  | --------------------------------------- | ------------------------------------------------- | ----------------------------------------------------- |
+  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)                         | Rust reader reads it; `SCHEMA_VERSION` gate           |
+  | Resolver semantics                      | `reg_meta_build` derive (Python)                  | Compiled into the artifact                            |
+  | FQID and period grammar                 | Rust core crate                                   | Build via Python bindings; SPA via WASM               |
+  | Text folds                              | Rust core crate                                   | Build via Python bindings (fills `*_folded` columns)  |
+  | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python; package 4.4 assumption) | Build only; no Rust consumer recomputes a build hash  |
+  | Project schema + structural validator   | Rust core crate (replaces reg_schema)             | Server, MCP; SPA via WASM; JSON Schema export         |
+  | Result types                            | Rust structs (serde + utoipa)                     | OpenAPI; MCP tool schemas and TS types derive from it |
 
 Notes:
 
@@ -445,8 +448,6 @@ Rust workspace (`crates/`):
     agents.
   - `mcp` — MCP over stdio against a local catalog, for offline use and private steward
     catalogs.
-  - `fetch` — downloads a catalog release, verifies its SHA-256 and atomically activates
-    it, for local `mcp` installs.
 - `reg-core-py` — the PyO3 module the build imports.
 
 Runtime crates are the ones this file names, plus tokio and sha2 (implied by axum/rmcp
@@ -555,17 +556,18 @@ in `conformance/api/errors.toml` (package 1.1).
 
 - **Server image:** one static binary plus the baked DBs, fetched in the Dockerfile with
   `curl`, SHA-256 verification and `zstd`.
-- **Local binary** for macOS and Linux on each `reg_meta/v*` release, built with
-  cargo-dist or a plain matrix workflow, with SHA-256 checksums. PyPI keeps
-  `uv tool install reg-meta` working through maturin with `bindings = "bin"`. It is used
-  only for `reg-meta mcp` and `reg-meta fetch`.
+- **Local binary** for macOS arm64 and Linux x86_64 on each `reg_meta/v*` release, as
+  GitHub release assets with SHA-256 checksums (package 4.12). It is used only for
+  `reg-meta mcp`; the catalog is downloaded with `curl` and `zstd`. There is no PyPI
+  package and no `fetch` run mode (stage 4 decision 3). Hosted MCP is the default.
 - **Windows** is a future target, not a build constraint now. Windows agents use the
   hosted MCP endpoint; a local Windows binary is added only if it builds and runs
   without special effort.
 - **Agent plugin:** the `microdata-tools-se` plugin declares the MCP server: the hosted
   endpoint by default, the local binary as an alternative. The skill text documents the
   tools, not shell commands.
-- **Release DB assets** gain a checksum file. `fetch` verifies before activation.
+- **Release DB assets** are verified against the SHA-256 digests GitHub records for each
+  asset (the Dockerfile bake, package 4.5).
 - **reg_meta_build** depends on `reg-core-py` as a workspace member built by maturin.
   `uv sync` builds it, which needs a Rust toolchain on the maintainer machine and in CI.
 
@@ -579,7 +581,7 @@ every runner calls Python in-process, so it must become implementation-neutral f
   Servers are reused per artifact. Search pins are build input (package 3a.2), so every
   HTTP case can run out of process.
 - Process-boundary cases stay process-level: startup admission failure (a server that
-  never listens), catalog selection and `fetch`.
+  never listens) and catalog selection.
 - Rewrite the CLI argv cases (`cli_scope`), the 30 `logical` cases (corrected
   2026-10-08; earlier text said 49) and the 5 `coverage` cases as HTTP request cases
   against the new API. Write them against the new API directly, not against today's
@@ -594,8 +596,6 @@ every runner calls Python in-process, so it must become implementation-neutral f
   it.
 - Order cases compare against committed `order.json` bytes, not against Python's own
   output.
-- `fetch` cases use a local HTTP fixture server and a URL override
-  (`REG_META_RELEASES_URL`) instead of patching `urlopen`.
 - Fixtures: a script builds each synthetic (fixture, kind) artifact once through the
   real Python pipeline, cached by a hash of every transitive build input. Entries are
   immutable; a case that mutates an artifact copies it first. Rust tests and conformance
@@ -654,14 +654,14 @@ that ports it ships *(decision 15, checkpoint 2)*.
      keys, `indent=2`, non-ASCII as is and a trailing newline; the project hash
      (`order._project_hash`) writes sorted keys, compact separators and non-ASCII as is
      (corrected 2026-10-08).
-   - Docs, context, stats and `fetch` go to the slices the surface inventory assigns.
-     The build switches to `reg-core-py` for folds in slice 3a; FQID and hashing move
-     with the build's other `reg_meta` imports in stage 4. Gated by G0 and G1.
-4. **Retire the Python runtime.** Starts at checkpoint 3. Delete what package F left of
-   the FastAPI code (F deletes the app once it serves no route); the agent plugin moves
-   to MCP; the Dockerfile and publish workflow drop the CLI (until then they keep using
-   it). The build's `reg_meta` imports move as the surface inventory says. Delete the
-   Python `reg_meta` package with its CLI, and `reg_schema`. Bump the schema major.
+   - Docs, context and stats go to the slices the surface inventory assigns. The build
+     switches to `reg-core-py` for folds in slice 3a; FQID and hashing move with the
+     build's other `reg_meta` imports in stage 4. Gated by G0 and G1.
+4. **Retire the Python runtime.** Checkpoint 3 passed 2026-10-09. The agent plugin moves
+   to MCP; the Dockerfile and publish workflow drop the CLI; the build's `reg_meta`
+   imports move into `reg_meta_build` or `reg-core-py`; the Python `reg_meta` package
+   and `reg_schema` are deleted; schema major 10.0.0 carries #1296's catalog rework.
+   Packages, order and decisions: "Stage 4 packages".
 5. **SPA on WASM.** Replace `period.ts`, `validation.ts` and the hand-written
    `project_data.ts` with `reg-core` compiled to WASM plus generated types. Ends at
    checkpoint 4.
@@ -1752,6 +1752,326 @@ so the deleting package removes the row mechanically (checkpoint 2):
 Astra's review of the draft (2026-10-08) shaped 3b.2's split, MCP parity per operation,
 the deploy-pause and release rules and the frozen-golden rule in 3e.1.
 
+### Stage 4 packages
+
+Each package follows the execution protocol (section 4) and the package and review
+protocol of stages 3b–3e. Surveyed on `origin/main` at `45cc111e` (#1305, schema 9.7.0)
+and written against `53764cfb`. The packages assume `reg_meta` 0.45.0 (schema 9.7) is
+released before stage 4 starts; at writing the tag does not exist yet. The maintainer's
+decisions are recorded after the packages ("Stage 4 decisions"); Dn below refers to
+them.
+
+What still depends on Python, by package:
+
+- **The build** imports `reg_meta` in about 60 `reg_meta_build/src` modules and 85 of
+  164 test files: the reader functions derive calls (4.2), the FQID and period grammar
+  and `register_py_lower` (4.3), and the retained modules (`source_evidence`,
+  `documentary`, `inventory`, `errors`, `cli_common`, the `db`/`doc_db` constants and
+  admission, `queries.extract_year`, `catalog.DataWarning`) (4.4).
+- **The fixture builder** `reg_meta/tests/reader_artifacts.py`, imported by conformance,
+  builder tests and the webapp's dev fixture scripts (4.4).
+- **Conformance runners** that call the Python reader or CLI (4.7), and Python G1 (4.1,
+  4.9a).
+- **Deploy and CI**: the Dockerfile's `reg-meta update` bake, the schema guard's Python
+  axis, the Podman integration job, PyPI publishing (4.5).
+- **The agent plugin** (4.6), `reg_meta/DESIGN.md` and `reg_schema/DESIGN.md` (4.8), and
+  the release skill and agent docs (4.9b).
+
+#### Packages
+
+**4.1 G1 on a pinned Rust baseline.** Implements section 4 (G1) and stage 3b–3e decision 1.
+
+- Changes: the baseline becomes the `reg-meta` binary built at `reg_meta/v0.45.0`,
+  cached in the shared G1 cache, reading the release originals; the candidate stays the
+  checkout's derive plus `reg-meta serve`. Responses compare as raw bytes: delete the
+  `served/` mappings and the 553ea622 webapp baseline, keep `cases.py` and the exception
+  machinery. The artifact pin moves to 0.45.0. Delete the `rust-only fix:` exceptions;
+  keep `derived-generation-*` and `reader-version` (for `meta` and cursors when derive
+  code differs). The Python CLI arms and the fold sweep run unchanged until 4.9a.
+- Paths: `conformance/differential/`, `conformance/test_g1_cache.py`, `scripts/gate.py`
+  (`g1`), section 4 ("Current pin", G1).
+- Acceptance: full gate; G1 on the 9.7 pin shows 0 differences outside the named
+  exceptions, within the 5-minute warm budget; cold time recorded.
+- Escalate: any difference between the pinned binary and the checkout the PR does not
+  explain. Depends on: checkpoint 3 and the 0.45.0 tag.
+
+**4.2 Derive and the SWECOV generator stop calling the reader.** Implements section 4
+("bootstrap").
+
+- Changes: `derive/states.py` gets connection-level `_states_in_bounds`,
+  `_variable_windows`, `_applicable_alias_windows` and `canonical_delivery_column` (with
+  `_delivery_column_spellings` and `representative_columns`); `derive/schema.py` gets
+  `get_coded_variables` with `scope_predicate`; `build_catalog.py`'s
+  `_representative_spelling` reads `resolver_column` (as `holdings_compile` does)
+  instead of `Catalog.delivery_columns`; `validate.py`'s recomputations use the moved
+  code. Delete the matching `surface.toml` rows.
+- Paths: `reg_meta_build/src/reg_meta_build/{derive/,validate}.py`,
+  `reg_meta_build/input_data/swecov/build_catalog.py`, the tests they touch,
+  `surface.toml`.
+- Acceptance: full gate; derived copies of both pinned artifacts byte-identical to
+  main's (SHA-256) and the SWECOV inventory output byte-identical; G1 (run in 4.2) 0
+  differences.
+- Escalate: any derived byte difference. Depends on: 4.1.
+
+**4.3 FQID, period grammar and `fold_identity` through `reg-core-py`.** Implements
+section 5.
+
+- Changes: bind `Fqid` parse (kind and parts), `is_period`, period bounds, the slug
+  check and `fold_identity`; move `derive_variable_slug`, `derive_period`, `try_emit`
+  and `_YEAR` into `reg_meta_build`; `register_py_lower` uses the binding;
+  `source_interpreter_commit` tracks the `reg-core-py` sources instead of
+  `reg_meta.fqid` and `reg_meta.queries`.
+- **Assumption:** reg-core's period bounds (Python ends every February on the 29th; G1
+  exception `february-period-token`) and its slug error wording are accepted as a
+  content change, reviewed in G2's dbdiff and in the diff of the curation
+  located-failure goldens.
+- Paths: `crates/reg-core-py/`, `crates/reg-core/src/grammar.rs` (visibility only), the
+  FQID users in `reg_meta_build/src` and their tests, `surface.toml`, `Cargo.lock`.
+- Acceptance: full gate; build cases and fixtures byte-identical except the named
+  February-bound and error-wording changes; G1 (run in 4.3; it touches `derive/chains`).
+- Escalate: any other byte change, or a character that differs between Unicode 16 and
+  17. Depends on: 4.1; runs alongside 4.2.
+
+**4.4 Move the build-input modules and the fixture builder (mechanical).**
+
+- Coordination: before 4.2 and 4.3 start, the orchestrator agrees 4.4's merge window
+  with the test-audit session; 4.4 merges in it with nothing else in flight. The sed
+  script goes in the PR body so test-audit branches rebase by rerunning it.
+- Changes: copy the retained modules into `reg_meta_build` (private-name imports become
+  imports within one module; `reg_meta/` stays untouched until 4.9a); move
+  `reader_artifacts.py` to `conformance/` with its own default output directory; rewrite
+  every importer outside `reg_meta`.
+- **Assumption:** `canonical_json` and `canonical_sha256` stay Python inside
+  `reg_meta_build`: no Rust code recomputes a build hash, Python and `serde_json` format
+  floats differently, and it is a hot path (section 11).
+- Paths: `reg_meta_build/{src,tests,input_data/swecov}`, `conformance/`,
+  `scripts/{suggest_default_slugs,parse_lisa_docs}.py`,
+  `reg_webapp/backend/scripts/fixture_db.py`,
+  `reg_webapp/.claude/skills/run-reg-webapp/{catalog_fixture_db.py,dev.sh}`, the inline
+  import in `.github/workflows/integration.yml`, root `pyproject.toml` (`pythonpath`),
+  `surface.toml`.
+- Acceptance: full gate; fixtures byte-identical (the fixture cache rebuilds cold once);
+  the private-boundary test in `scripts/tests` passes.
+- Escalate: any edit that is not a path rewrite. Depends on: 4.2, 4.3 and the agreed
+  window.
+
+**4.5 Deploy and CI drop the CLI.** Implements sections 7 and 8.
+
+- Changes: the Dockerfile's `regmeta-db` stage becomes Debian slim with curl and zstd;
+  `container-build.yml` resolves the tag and asset digests (as `integration.yml` does)
+  and passes them as build args; the stage downloads (tag `/` URL-encoded), checks the
+  SHA-256 and unpacks. The schema guard reads
+  `reg_meta_build/src/reg_meta_build/{db,doc_db}.py` at the tag, falling back to
+  `reg_meta/src/reg_meta/doc_db.py` for the docs schema when the builder file lacks
+  `DOC_SCHEMA_VERSION` (tags before 4.4, including 0.45.0, import it from
+  `reg_meta.doc_db`). The fallback carries
+  `simplify: fallback for tags before 4.4; delete it in the first release after 4.4`.
+  The Python reader axis and the `reg_meta/**` path filter leave
+  `schema_pending_bump.py`. `integration.yml` drops the Podman job; admission is
+  `zstd -d` plus the server's own admission at boot. `publish_reg_meta.yml` drops the
+  PyPI build, publish and CLI smoke, keeping the dispatches (D3).
+- Paths: `reg_webapp/Dockerfile`,
+  `.github/workflows/{container-build,integration,publish_reg_meta}.yml`,
+  `scripts/schema_pending_bump.py` and its test, `reg_webapp/DESIGN.md`.
+- Acceptance: full gate; `docker build` for `global` and `swecov` at `reg_meta/v0.45.0`
+  passes the entrypoint smoke; actionlint clean. Maintainer step: the next push deploys.
+- Depends on: 0.45.0 deployed and running cleanly in production.
+
+**4.6 Agent plugin on MCP.** Implements section 8 and decision 12.
+
+- Changes: both `plugin.json` files declare the hosted server at
+  `https://catalog.swecov.se/mcp`; `SKILL.md` documents the tools (from
+  `conformance/cases/mcp/tools-list.json`) and the `{data, meta}` and error envelopes;
+  README, PRIVACY (queries now leave the machine) and marketplace text updated, plugin
+  version bumped; the 7 `skill` rows leave `surface.toml`.
+- Paths: `plugins/microdata-tools-se/**`, `.claude-plugin/marketplace.json`,
+  `.agents/plugins/marketplace.json`, `surface.toml`.
+- Acceptance: full gate; one recorded Claude Code session lists the tools and answers a
+  `search`.
+- Escalate: whether the Codex manifest supports MCP; the PRIVACY wording. Depends on:
+  none.
+
+**4.7 Conformance without the Python reader.** Implements section 9.
+
+- Changes: delete `test_{cli_scope,logical,reader,folds,selection_update}.py`,
+  `cases/{cli_scope,logical,reader,update}` and `test_validate.py`'s CLI arm, the PR
+  listing each deleted case beside its `api` twin; selection behaviors with no twin
+  become `api` startup-refusal cases. `artifact_requests.py`,
+  `test_acceptance_agreement.py` and `test_artifact*.py` call only the Rust server;
+  `conftest.py` and `http_cases.py` use the builder's `open_db`. Command rows'
+  `covered_by` point at the `api` twins.
+- Paths: `conformance/` (except `differential/`), `surface.toml`.
+- Acceptance: full gate; no `reg_meta` import left outside `differential/`. Depends on:
+  4.4.
+
+**4.8 A home for the runtime design.**
+
+- Changes: the still-true parts of `reg_meta/DESIGN.md` go to `crates/DESIGN.md`; the
+  resolver, holdings and inventory-TOML parts to `reg_meta_build/DESIGN.md`;
+  `reg_schema/DESIGN.md` to `crates/reg-core/DESIGN.md`; SPA comments pointing at the
+  old files are updated.
+- Paths: those files, comments in `reg_webapp/frontend/src`, `ARCHITECTURE.md`.
+- Acceptance: panache format and lint; the PR lists every section as moved (with its
+  target) or dropped (with the reason). Depends on: none.
+
+**4.9a Delete `reg_meta/`, `reg_schema/`, the webapp's Python member and Python G1.**
+
+- Deletes: the three packages (`run_search_eval.py` and `search_eval.toml` move to
+  `scripts/`; `dev.sh` builds its fixture through `conformance/fixture_cache.py`);
+  `crates/reg-core/tools/gen_fold_corpus.py`, `publish_reg_schema.yml`,
+  `scripts/check_versions.sh`, `surface.toml` and `test_api_surface.py`; the `reg_meta`
+  and `reg_schema` suites in `ci.yml`; root `pyproject.toml` members, `testpaths` and
+  dependencies, `reg_meta_build`'s `reg-meta` dependency and their `uv.lock` entries; in
+  `ci.yml` also the `check-versions` job, the `package-integration` job
+  (`reg_meta/tests/test_integration.py`) and the `reg_webapp/backend/tests` matrix
+  entry; the rest of Python G1 (`driver.py`'s CLI arms, the baseline environment,
+  `folds.py`, the `reg_meta/src` cache key); the transitional-inventory rows this ends.
+- Changes: `reg_schema/test_corpus` moves to `crates/reg-core/tests/project/corpus/`
+  (only `hashes.json` keys change); the frontend consumers follow it
+  (`project_data.test.ts`'s `reg_schema/pyproject.toml?raw` import,
+  `validation.test.ts`'s corpus glob, the Vite `fs` allowlist), so the frontend gate
+  stays green and the data oracles keep their cases; the Python regeneration comments in
+  `crates/reg-core/tests/{interval,project}.rs` go.
+- Acceptance: full gate; `git grep -nE '(from|import) (reg_meta|reg_schema)\b'` returns
+  nothing; `uv sync --frozen` succeeds on a clean clone; G1 (run in 4.9a) 0 differences.
+- Depends on: 4.1–4.8.
+
+**4.9b Skills and agent docs.**
+
+- Changes: one release skill, `.agents/skills/release/SKILL.md`, with
+  `.claude/skills/release` a symlink to it; a release is a crate version bump, a tag,
+  the DB assets and the binaries (4.12), with the PyPI and `reg_schema` steps gone.
+  Package lists updated in `CLAUDE.md`, `AGENTS.md`, `ARCHITECTURE.md`, `README.md` and
+  `CONTRIBUTING.md`; the `code-cleanup` and `test-audit` skills drop the Python
+  packages.
+- Acceptance: panache format and lint; skill discovery in `scripts/tests`.
+- Depends on: 4.9a. Merges before the next release.
+
+**4.10 Schema major 10.0.0 and the catalog rework** (D2). Sub-packages 4.10a–e open
+their PRs against one integration branch, are reviewed like any package, and the
+orchestrator merges each into that branch. When all have merged, the branch lands on
+main as one merge; then the maintainer runs one G2 (a full 10.0 build compared against
+the 0.45.0 binary on the 9.7 asset) and cuts one release, the 10.0.0. Production deploys
+pause from that main merge until the release (about 2 h), because the schema guard
+treats a major mismatch as a break. No G1 runs on 4.10: a 10.0 derive refuses a 9.7
+base. The item letters below are #1296's; its numbers are not copied here. Size-only
+items from #1296 item 3 are optional: each joins the sub-package that owns its table and
+is listed in that PR. Depends on: 4.9a; 4.10b–e also wait for test-audit's
+`reg_meta_build` test rewrite to finish (#1296). 4.1–4.9 do not wait for it.
+
+- **4.10a Major bump and unread tables.** Builder `SCHEMA_VERSION` 10.0.0, Rust `SCHEMA`
+  `(10, 0)`, `FIXTURE_SCHEMA_VERSION` follows. Drop artifact tables and views that the
+  Rust reader, derive and `validate_built_db` all leave unread (known: the always-empty
+  `classification_same_as`, 3d.1), each confirmed against the artifact DDL in
+  `reg_meta_build/db.py`. Regenerate the version-carrying goldens (the set #1305
+  touched). Paths: `reg_meta_build/src/reg_meta_build/{db,validate,derive/}`,
+  `crates/reg-catalog/src/lib.rs`, the goldens. Acceptance: full gate; byte-identical
+  rebuild. Escalate: dropping anything the PR does not list.
+- **4.10b Dense `code_id`** (#1296 2a): renumbered densely in (label, code) order;
+  reader tie-breaks move to (code, label). Paths: the builder's ID assignment,
+  `crates/reg-catalog/src/ops/search/`, the goldens whose order changes. Acceptance:
+  full gate; byte-identical rebuild; ordering changes reviewed in the golden diff.
+- **4.10c Dense `variable_id` and clustering** (#1296 2b): `variable_id` renumbered in
+  (register, slug) order; `variable_state`, `expanded_state` and `browse_delivery`
+  clustered physically by variable; `state_id` stays hashed. Explicit sort keys replace
+  the `expanded_state_id` sorts in `ops/schema.rs` and `ops/graph.rs`, and every reader
+  tie-break on a storage ID is replaced by an explicit key. Paths: the builder's ID and
+  DDL code, `derive/`, `crates/reg-catalog/src/ops/`. Acceptance: full gate;
+  byte-identical rebuild; no `api` response changes except reviewed orderings.
+- **4.10d `data_warning` split and clustering** (#1296 2c, maintainer decision there):
+  build-only codes go to the build report only; user-facing rows are stored compactly
+  and clustered by (register, variable). Paths: `reg_meta_build/src` (warnings writer,
+  build report), `validate.py`, the warnings reader, the goldens. Acceptance: full gate;
+  the changed warning-code list and counts reviewed in the diff.
+- **4.10e State merging** (#1296 2d): adjacent explicit segments on one column with
+  identical resolved state facts merge into one state; never across a gap. The merged
+  state keeps the earliest segment's `state_id`. `api` cases pin a merged ID and an
+  absorbed ID (`not_found`). Paths: the builder's state writer, `validate.py`,
+  `conformance/cases/api/`, the goldens. Acceptance: full gate; byte-identical rebuild.
+
+**4.11 Re-pin G1 to 10.0.0.** Implements the section 4 re-pin: the artifact pin and the
+baseline binary both move to the 10.0.0 tag; the differences between the old and new
+pins are recorded as the maintainer's G2 found them. Paths:
+`conformance/differential/config.toml`, section 4. Acceptance: G1 0 differences. Depends
+on: the 10.0.0 release.
+
+**4.12 Release binaries** (D3). A matrix workflow on `reg_meta/v*` builds `reg-meta` for
+macOS arm64 and Linux x86_64 and uploads them with SHA-256 checksums. The plugin README
+documents `reg-meta mcp --db` with the curl and zstd recipe for a local catalog. Paths:
+`.github/workflows/`, `plugins/microdata-tools-se/README.md`, the release skill.
+Acceptance: full gate; actionlint clean; one workflow run on a test tag produces both
+binaries and checksums. Depends on: 4.9b. Blocks nothing.
+
+#### Order and parallelism
+
+```
+0.45.0 tag ── 4.1 ─┬─ 4.2 ─┐
+                   └─ 4.3 ─┴─ 4.4* ─ 4.7 ─┐
+0.45.0 deployed ── 4.5 ───────────────────┤
+checkpoint 3 ───── 4.6 ───────────────────┼─ 4.9a ─┬─ 4.9b ─ 4.12
+checkpoint 3 ───── 4.8 ───────────────────┘        └─ 4.10a–e** ─ [G2 + 10.0.0] ─ 4.11
+*  4.4 merges in the window agreed with test-audit before 4.2 and 4.3 start
+** on one integration branch; 4.10b–e also wait for test-audit's reg_meta_build rewrite
+```
+
+Waves, at most three packages in flight:
+
+1. 4.1, 4.6, 4.8. 4.5 takes the first free slot once 0.45.0 has deployed cleanly.
+2. 4.2 and 4.3, with 4.5, 4.6 or 4.8 in the third slot.
+3. 4.4 alone, in the agreed window.
+4. 4.7, alongside what is left of 4.5, 4.6 and 4.8.
+5. 4.9a alone.
+6. 4.9b, then 4.12; 4.10a–e on the integration branch, each sub-package counting as one
+   package in flight.
+7. 4.11 after the release.
+
+#### When G1 retires
+
+- **4.1:** the Python served baseline and its `served/` mappings go. G1 compares the
+  pinned 0.45.0 Rust binary with the checkout's derive and server on schema 9.7; it
+  checks 4.2 and 4.3.
+- **4.9a:** the Python CLI arms, the baseline Python environment and the fold sweep go.
+  No Python G1 is left.
+- **4.10:** no G1, because derive refuses a base from an older major; the maintainer's
+  G2 covers it. No derive change merges to main from the 4.10 merge to the 4.11 re-pin,
+  the only window without a real-artifact differential. Coverage there is G0's `api`
+  cases with MCP equivalence, `validate_built_db`, the release artifact-conformance job
+  and G2.
+- **4.11:** G1 runs again on the 10.0.0 pin. From then on it runs at releases only, not
+  on every derive PR (D4), and is deleted if it stops catching anything.
+
+#### Concurrency with test-audit
+
+- 4.4 touches test-audit's stage-9 files (`_resolved_catalog_support.py`,
+  `_source_formation_support.py`, `_source_intervals_support.py`,
+  `test_catalog_lineage.py`, `test_resolved_writer_{data_warnings,publication}.py`,
+  `test_resolved_metadata_contracts.py`, `test_source_formation_{coverage,facts}.py`,
+  `test_source_interval{s,_populations}.py`) and the shared `_build_case_runner.py`,
+  `_shared_fixtures.py` and `_slugged_db.py`. Its merge window is agreed with the
+  test-audit session in advance, and its sed script is in the PR body.
+- Smaller overlaps: 4.3 touches `test_fqid_slug*` and `test_curation_toml_*`; 4.2
+  touches `test_derive_chains.py` and the validate cases. Open PRs touching builder
+  tests at writing: #1306, #1274, #1307.
+- 4.10b–e start only after test-audit's `reg_meta_build` test rewrite finishes (D2).
+
+#### Stage 4 decisions (maintainer, 2026-10-09)
+
+1. **Checkpoint 3: go.** The Python runtime is retired (section 4 checkpoint list).
+2. **#1296's catalog rework lands inside schema 10.0.0**, not as a later track: dense
+   `code_id` (2a), dense `variable_id` with clustering and explicit sort keys (2b), the
+   `data_warning` split and clustering (2c), state merging that keeps the earliest
+   segment's `state_id` (2d), and #1296 item 3's size-only items as optional. Package
+   4.10 becomes 4.10a–e on one integration branch, merged to main together, then one G2
+   and one release, keeping the production deploy pause to about 2 h. The rework waits
+   for test-audit's `reg_meta_build` test rewrite; 4.1–4.9 do not.
+3. **Distribution.** No `fetch` run mode (decision 11 amended) and no PyPI package
+   (section 8 amended). Releases ship GitHub binaries for macOS arm64 and Linux x86_64
+   with SHA-256 checksums (4.12); hosted MCP is the default.
+4. **G1 successor:** the pinned-Rust-release baseline (4.1). After 10.0.0 ships and
+   storage is stable, G1 runs only at releases, not on every derive PR; it can be
+   deleted if it stops catching anything. 4.3's period-bound and slug-wording change and
+   4.4's Python `canonical_json` stay assumptions.
+
 ### Stage 0 results (2026-10-07)
 
 The spike lives in `spike/stage0/` (deleted by stage-1 package 1.5): a `core` crate with
@@ -1923,8 +2243,8 @@ moving. The first layer is cheap to fix in Python.
   | 8   | Where this plan lives                  | **Its own root tracker**, with the governance rule amended to allow one tracker per concurrent refactor.                                                                                                                                                                                                                                                                                                                                                                     |
   | 9   | How to avoid full rebuilds per step    | **Base/derive split, pinned artifacts, three gates (G0–G2) with budgets, incremental base build** (§4, §11).                                                                                                                                                                                                                                                                                                                                                                 |
   | 10  | Who the runtime is designed for        | **Agents and the webapp only.** No human-oriented features (text output, prompts, progress, notebook import) while building; re-evaluated after stage 5 (§7).                                                                                                                                                                                                                                                                                                                |
-  | 11  | Query CLI?                             | **None.** One operation set exposed over HTTP and MCP; the binary has run modes only (`serve`, `mcp`, `fetch`) (§6, §7).                                                                                                                                                                                                                                                                                                                                                     |
-  | 12  | Where agents reach MCP                 | **Hosted and local.** Remote MCP endpoint on `serve` at catalog.swecov.se; `reg-meta mcp` over stdio for offline use and private steward catalogs (§7).                                                                                                                                                                                                                                                                                                                      |
+  | 11  | Query CLI?                             | **None.** One operation set exposed over HTTP and MCP; the binary has run modes only (`serve`, `mcp`) (§6, §7) (amended 2026-10-09; was: also `fetch`).                                                                                                                                                                                                                                                                                                                      |
+  | 12  | Where agents reach MCP                 | **Hosted and local.** Remote MCP endpoint on `serve` at catalog.swecov.se; `reg-meta mcp` over stdio for offline use and private steward catalogs (§7), from a GitHub release binary (§8; amended 2026-10-09: no PyPI package). The hosted endpoint is the default.                                                                                                                                                                                                          |
   | 13  | Tooling and versions                   | **Latest everywhere.** Newest stable versions of languages, crates, packages and SDKs, and modern methods; no compatibility work for older toolchains. Windows later, via hosted MCP unless a local binary is effortless (§8).                                                                                                                                                                                                                                               |
   | 14  | How agents execute it                  | **Execution protocol (§4).** Work packages in this file, written per stage; mechanical done (acceptance + gates + fresh-agent review); escalate-don't-decide list; small squash PRs to main; ≤3 in flight; four maintainer checkpoints. Stage 2 builds only the derive framework; slices own their tables.                                                                                                                                                                   |
   | 15  | How the SPA moves to the Rust server   | **Per slice.** Each slice ends by switching the SPA's calls for its routes to the Rust server and deleting the replaced FastAPI routes; slices 3b and 3d share one catalog-page cutover, C (amended 2026-10-08). From 3a.9 production runs the Rust server alone, and unported pages are unavailable until their slice ships (checkpoint 2: no users, so no proxy or edge routing). Package F deletes the empty app (amended 2026-10-08; was: stage 4 retires what remains). |

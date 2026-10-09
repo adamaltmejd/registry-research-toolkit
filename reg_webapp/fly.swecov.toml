@@ -40,4 +40,5 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
 
 [[vm]]
   size = "shared-cpu-1x"
-  memory = "1gb"
+  # 2 GB: the entrypoint preloads the whole catalog into the page cache (see fly.toml).
+  memory = "2gb"

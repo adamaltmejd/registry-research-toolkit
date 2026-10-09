@@ -23,7 +23,7 @@ pub use error::{Code, Error, Spec};
 pub const CONTRACT_VERSION: &str = "4.0.0";
 /// The schema gate: the artifact's major must equal this major and its minor be at
 /// least this minor.
-pub const SCHEMA: (u32, u32) = (9, 6);
+pub const SCHEMA: (u32, u32) = (9, 7);
 const DB_FILENAME: &str = "reg_meta.db";
 
 /// The read scope (section 7); every read takes it.
