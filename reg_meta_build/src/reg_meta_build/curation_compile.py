@@ -4692,6 +4692,7 @@ def _compile_thin_register(
     reg_from = _source_text(register.fields.coverage_from)
     reg_to = _source_text(register.fields.coverage_to)
     cases = []
+    columns: dict[str, SourceRecord] = {}
     for record in records:
         variable_key = native_variable_key(record)
         if variable_key is None:
@@ -4702,6 +4703,17 @@ def _compile_thin_register(
         col = record.subject.variable.native_id
         assert isinstance(col, str)
         case_id = f"accepted-authored:{record.source}:{register_key[-1]}:{col}"
+        # Identical repeats are refused earlier (source_rows_duplicated); two
+        # differing declarations of one column would mint one case id twice.
+        if (first := columns.setdefault(col, record)) is not record:
+            raise curation_error(
+                _THIN_DECLARATION,
+                f"{case_id}: column {col!r} is declared twice, at "
+                f"{first.locators[0].physical_record} and "
+                f"{record.locators[0].physical_record}",
+                "Declare each column once per [[register]] in the authored "
+                "provider TOML.",
+            )
         selected = (
             tuple(
                 reference.native_id for reference in record.subject.variant_references

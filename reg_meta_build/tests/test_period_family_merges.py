@@ -11,6 +11,7 @@ from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.curation_compile import compile_matrix_repr, compile_period_families
 from reg_meta_build.curation_tree import load_register_files
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.pipeline import CompiledScope
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import column_identity, source_register_key
@@ -338,7 +339,7 @@ def test_checked_month_definitions_keep_literal_text_and_source_scopes(tmp_path)
     bad_alias = alias.model_copy(
         update={"windows": (alias.windows[0].model_copy(update={"definition": None}),)}
     )
-    with pytest.raises(ValueError, match="literal definition changed"):
+    with pytest.raises(RegMetaError, match="literal definition changed"):
         check_delivery_coverage(
             (
                 variable.model_copy(
