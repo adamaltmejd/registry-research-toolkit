@@ -31,6 +31,13 @@
     },
     {
       "table": "issues",
+      "where": {"code": "withheld_variant_dependency"},
+      "fields": ["code", "withheld_output"],
+      "rows": [["withheld_variant_dependency", ["state"]]],
+      "note": "The replaced test's withheld_output == (\"state\",): only the state is withheld, not the variable."
+    },
+    {
+      "table": "issues",
       "where": {
         "code": [
           "unknown_parent_name",
