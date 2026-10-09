@@ -34,7 +34,7 @@ class UndatedHolding(BaseModel):
     @field_validator("partition")
     @classmethod
     def check_partition(cls, value: str | None) -> str | None:
-        from reg_meta.fqid import validate_slug
+        from .slug_grammar import validate_slug
 
         if value is not None:
             validate_slug(value, "partition")

@@ -9,8 +9,8 @@ from hashlib import sha256
 from typing import TYPE_CHECKING
 
 from pydantic import TypeAdapter
+from reg_core_py import parse_fqid
 from reg_meta.catalog import DataWarning
-from reg_meta.fqid import Fqid
 from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build.source_curation import CodingDecision, SourceWarningDecision
@@ -111,8 +111,8 @@ def diagnostic_data_warning(
 ) -> DataWarning:
     """Project a settled diagnostic at a positively established catalog coordinate."""
     payload = {
-        "register_fqid": str(Fqid.register_fqid(*register)),
-        "variable_fqid": str(Fqid.binding_fqid(*owner)) if owner else None,
+        "register_fqid": str(parse_fqid("/".join(register))),
+        "variable_fqid": str(parse_fqid("/".join(owner))) if owner else None,
         "variant": variant,
         "delivery_column_name": column,
         "valid_from": issue.valid_from,
@@ -351,16 +351,15 @@ def scope_data_warnings(
                         continue
                     payload = {
                         "register_fqid": str(
-                            Fqid.register_fqid(
-                                variable.register_ref.provider,
-                                variable.register_ref.slug,
+                            parse_fqid(
+                                f"{variable.register_ref.provider}/"
+                                f"{variable.register_ref.slug}"
                             )
                         ),
                         "variable_fqid": str(
-                            Fqid.binding_fqid(
-                                variable.register_ref.provider,
-                                variable.register_ref.slug,
-                                variable.slug,
+                            parse_fqid(
+                                f"{variable.register_ref.provider}/"
+                                f"{variable.register_ref.slug}/{variable.slug}"
                             )
                         ),
                         "variant": state.variant.slug,

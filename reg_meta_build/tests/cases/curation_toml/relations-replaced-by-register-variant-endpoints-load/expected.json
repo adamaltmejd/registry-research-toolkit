@@ -6,13 +6,7 @@
   "loads": {
     "replaced_by": [
       {
-        "predecessor": {
-          "kind": "register",
-          "provider": "scb",
-          "register": "lisa",
-          "variable": null,
-          "classification": null
-        },
+        "predecessor": "scb/lisa",
         "predecessor_variant": "individer-16plus",
         "successor_variant": "individer-15plus",
         "effective_year": 2010

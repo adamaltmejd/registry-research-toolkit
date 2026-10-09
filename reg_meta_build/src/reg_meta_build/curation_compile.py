@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast
 
 from pydantic import TypeAdapter, ValidationError
-from reg_meta.fqid import FqidKind, derive_variable_slug, parse as parse_fqid
+from reg_core_py import parse_fqid
 from reg_meta.source_evidence import canonical_sha256
 
 from ._curation import SentinelCode, curation_error, fold_column
@@ -72,6 +72,7 @@ from .scb_errata import (
     edition_bindings,
     resolve_scb_errata,
 )
+from .slug_grammar import derive_variable_slug
 from .source_coding import (
     coding_source_sha256,
     copied_coding_fingerprints,
@@ -418,7 +419,7 @@ def compile_declared_metadata(
         [],
     )
     for edge in tree.relations.same_as:
-        if edge.grain != FqidKind.VARIABLE_BINDING:
+        if edge.grain != "variable":
             raise ValueError(
                 f"same_as must have variable binding endpoints: {edge.a_fqid()}"
             )
@@ -427,7 +428,7 @@ def compile_declared_metadata(
         same_as.append(ResolvedVariableSameAs(a=edge.a_fqid(), b=edge.b_fqid()))
     for edge in tree.relations.replaced_by:
         a, b = str(edge.predecessor), str(edge.successor)
-        if edge.predecessor.kind == FqidKind.CLASSIFICATION:
+        if edge.predecessor.kind == "classification":
             predecessor, successor = a.removeprefix("class/"), b.removeprefix("class/")
             if predecessor not in books or successor not in books:
                 raise ValueError(
@@ -7053,7 +7054,7 @@ def compile_curation(
             case_id = f"{register.source_file}#/code_label_pair/{index}"
             for ref in (pair.code, pair.label):
                 try:
-                    if parse_fqid(ref).kind != FqidKind.VARIABLE_BINDING:
+                    if parse_fqid(ref).kind != "variable":
                         raise ValueError("wrong FQID grain")
                 except ValueError as exc:
                     raise curation_error(

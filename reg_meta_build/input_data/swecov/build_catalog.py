@@ -1768,7 +1768,7 @@ def _steward_load_db(db_path: Path):
     ever fill — so those two conditions are mirrored here rather than unioning
     the two tables flat.
     """
-    from reg_meta.db import register_py_lower
+    from reg_meta_build.db import register_py_lower
 
     if not db_path.exists():
         raise SystemExit(f"reg_meta DB not found: {db_path} (pass --db <flavored>)")
@@ -1916,8 +1916,7 @@ def _representative_spelling(db_path: Path) -> Callable[[str, str, str], str | N
     curated nor a physical literal asks."""
     from contextlib import closing
 
-    from reg_meta.db import register_py_lower
-    from reg_meta_build.db import catalog_coordinate_ids
+    from reg_meta_build.db import catalog_coordinate_ids, register_py_lower
 
     def representative(coord: str, vslug: str, column: str) -> str | None:
         provider, register, _variant = coord.split("/")
