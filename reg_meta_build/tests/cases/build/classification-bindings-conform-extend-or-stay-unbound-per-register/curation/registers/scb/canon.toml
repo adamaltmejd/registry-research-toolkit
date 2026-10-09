@@ -14,3 +14,9 @@ native_id = "4049337523726598901.TWOCOL"
 [[variable]]
 slug = "members"
 native_id = "4049337523726598901.MEMBERS"
+[[variable]]
+slug = "duplab"
+native_id = "4049337523726598901.DUPLAB"
+[[variable]]
+slug = "blankb"
+native_id = "4049337523726598901.BLANKB"

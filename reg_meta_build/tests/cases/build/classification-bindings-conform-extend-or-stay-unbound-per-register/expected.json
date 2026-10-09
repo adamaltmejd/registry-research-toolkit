@@ -19,6 +19,8 @@
         ["canon", "outcol", "2020-01-01", "2020-12-31", "fix"],
         ["canon", "twocol", "2020-01-01", "2020-12-31", "fix"],
         ["canon", "twocol", "2020-01-01", "2020-12-31", "two"],
+        ["canon", "duplab", "2020-01-01", "2020-12-31", "fix"],
+        ["canon", "blankb", "2020-01-01", "2020-12-31", "fix"],
         ["lkf", "lkf", "2020-01-01", "2020-12-31", "fix"],
         ["pair", "pair", "2020-01-01", "2020-12-31", "fix"],
         ["multi", "multi", "2020-01-01", "2020-12-31", "alt"],
@@ -90,6 +92,8 @@
         ["canon", "outcol", "2020-01-01", "fix", "extended", 1, 0, 1, 0.0],
         ["canon", "twocol", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
         ["canon", "twocol", "2020-01-01", "two", "extended", 1, 0, 1, 0.0],
+        ["canon", "duplab", "2020-01-01", "fix", "conforming", 2, 2, 0, 1.0],
+        ["canon", "blankb", "2020-01-01", "fix", "extended", 2, 1, 1, 0.5],
         ["lkf", "lkf", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
         ["pair", "pair", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
         ["multi", "multi", "2020-01-01", "alt", "conforming", 1, 1, 0, 1.0],
@@ -100,7 +104,7 @@
         ["split", "split", "2021-01-01", "fix", "conforming", 1, 1, 0, 1.0],
         ["ovr", "ovr", "2020-01-01", "alt", "conforming", 1, 1, 0, 1.0]
       ],
-      "note": "Counts are read off the fixture: checked is the state's distinct codes, matched those in the book, nonconforming every other code (a curated sentinel included; conformance_codes tells the kinds apart), overlap matched/checked. No row where a state has no value set (OPENCOL, GAP 2019) or its lists conflict (CONTRAC, CONTRAL): a binding without codes, or over withheld codes, records no conformance."
+      "note": "Counts are read off the fixture: checked is the state's distinct codes, matched those in the book, nonconforming every other code (a curated sentinel included; conformance_codes tells the kinds apart), overlap matched/checked. DUPLAB (test_source_classifications.py::test_conformance_checks_literal_codes_without_rewriting_source_labels): '01' delivered under two labels is one checked code, so 2 of 2 conform. No row where a state has no value set (OPENCOL, GAP 2019) or its lists conflict (CONTRAC, CONTRAL): a binding without codes, or over withheld codes, records no conformance."
     },
     {
       "table": "conformance_codes",
@@ -116,13 +120,14 @@
         ["sentmix", "sen", "0", "not applicable", "nonstandard", null],
         ["sentmix", "sen", "99", "Unknown", "nonstandard", null],
         ["outcol", "fix", "outside", "Source label", "nonstandard", null],
-        ["twocol", "two", "01", "Source label", "nonstandard", null]
+        ["twocol", "two", "01", "Source label", "nonstandard", null],
+        ["blankb", "fix", "", "Literal source label", "nonstandard", null]
       ],
-      "note": "Each code outside its book, with the source's own label. EXT: '1' is not '01', and '9', '99' and '?' are not guessed to be sentinels of a book that names none. SENTMIX: only the exact curated code '00000' is a sentinel; '0' with the sentinel's meaning as its label is not."
+      "note": "Each code outside its book, with the source's own label. EXT: '1' is not '01', and '9', '99' and '?' are not guessed to be sentinels of a book that names none; nor is BLANKB's labelled blank code '' (test_noncanonical_tokens_are_not_guessed_to_be_sentinels[]), which is checked like any other code. SENTMIX: only the exact curated code '00000' is a sentinel; '0' with the sentinel's meaning as its label is not."
     },
     {
       "table": "state_codes",
-      "where": {"variable": ["conf", "ext", "sentonly", "gap", "opencol", "outcol", "contrac", "contral"]},
+      "where": {"variable": ["conf", "ext", "sentonly", "gap", "opencol", "outcol", "duplab", "contrac", "contral"]},
       "fields": ["variable", "valid_from", "code", "label"],
       "rows": [
         ["conf", "2020-01-01", "01", "Source label"],
@@ -138,10 +143,13 @@
         ["gap", "2020-01-01", "01", "Source label"],
         ["opencol", "2010-01-01", null, null],
         ["outcol", "2020-01-01", "outside", "Source label"],
+        ["duplab", "2020-01-01", "01", "Another supplied label"],
+        ["duplab", "2020-01-01", "01", "Source wording"],
+        ["duplab", "2020-01-01", "02", ""],
         ["contrac", "2020-01-01", null, null],
         ["contral", "2020-01-01", null, null]
       ],
-      "note": "A binding neither copies the book's labels (CONF keeps 'Source label', not 'Canonical label'), drops codes outside the book (EXT, OUTCOL, the SENTONLY sentinel), adds codes where the source has none (OPENCOL, GAP 2019), nor unions two contrary lists (CONTRAC differs by code, CONTRAL by label)."
+      "note": "A binding neither copies the book's labels (CONF keeps 'Source label', not 'Canonical label'; DUPLAB keeps both of 01's source labels and 02's empty one), drops codes outside the book (EXT, OUTCOL, the SENTONLY sentinel), adds codes where the source has none (OPENCOL, GAP 2019), nor unions two contrary lists (CONTRAC differs by code, CONTRAL by label)."
     },
     {
       "table": "state_codes",
@@ -192,6 +200,7 @@
         ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:OUTCOL"]],
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:TWOCOL"]],
         ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:TWOCOL"]],
+        ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:BLANKB"]],
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:5", "variant:50", "edition:2020", "variable:501", "member:5001"]],
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:6", "variant:60", "edition:2020", "variable:601", "member:6020"]],
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:7", "variant:70", "edition:2020", "variable:701", "member:7001"]],
@@ -199,7 +208,7 @@
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:8", "variant:80", "edition:2020", "variable:801", "member:8001"]],
         ["conflicting_code_memberships", "error", "2020-01-01", "2020-12-31", ["register:8", "variant:80", "edition:2020", "variable:801", "member:8001"]]
       ],
-      "note": "Every classification diagnostic, and the coding diagnostics beside it, as the issue window and the source record it cites. `conflicting_occurrence_facts` is not a coding diagnostic: UNRESURL and UNRESFRAG deliver one SOS variable twice to put two declarations on one column, and the two rows disagree on `classification_declared` (UNK's blank declaration does not count as a disagreement); a change to duplicate-row handling breaks these rows for a reason outside classification. A clean register (CONF, LKF, PAIR, OVR, OPENCOL, SENTFREE, the sample) has none. SPLIT warns only for 2020, citing only the 2020 edition. The SCB version-label conflict that PAIR, MULTI and SPLIT also report (`conflicting_coding_labels`) is the coding fold's (Stage 8a, Finding 6), not a classification claim, so it is left out of the filter."
+      "note": "Every classification diagnostic, and the coding diagnostics beside it, as the issue window and the source record it cites. `conflicting_occurrence_facts` is not a coding diagnostic: UNRESURL and UNRESFRAG deliver one SOS variable twice to put two declarations on one column, and the two rows disagree on `classification_declared` (UNK's blank declaration does not count as a disagreement); a change to duplicate-row handling breaks these rows for a reason outside classification. A clean register (CONF, DUPLAB, LKF, PAIR, OVR, OPENCOL, SENTFREE, the sample) has none: DUPLAB's '01' under two labels in one list is no membership conflict (the replaced test's `diagnostics == ()`; the conflicting_classification_labels projection below cites only CNF). SPLIT warns only for 2020, citing only the 2020 edition. The SCB version-label conflict that PAIR, MULTI and SPLIT also report (`conflicting_coding_labels`) is the coding fold's (Stage 8a, Finding 6), not a classification claim, so it is left out of the filter."
     },
     {
       "table": "issues",
@@ -250,6 +259,15 @@
         ["error", "classifications/cnf.csv"]
       ],
       "note": "test_source_classifications.py::test_conflicting_or_unknown_members_do_not_erase_independent_codes: the conflict is an error citing both competing rows."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "conflicting_classification_labels"},
+      "fields": ["severity", "subject"],
+      "rows": [
+        ["error", "cnf"]
+      ],
+      "note": "The two refs above belong to one issue on book CNF (`conflict.refs` in the replaced test), not one issue per competing row."
     }
   ]
 }
