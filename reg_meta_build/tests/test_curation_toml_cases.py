@@ -24,6 +24,7 @@ from typing import TYPE_CHECKING, Any
 import pytest
 from _case_projection import MATCH_MODES, mismatch, unclaimed
 from pydantic import BaseModel
+from reg_core_py import Fqid
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.cis2016_matrix import MatrixSelector, load_matrix
@@ -140,8 +141,10 @@ LOADERS: dict[str, Callable[[Path, dict[str, Any]], Any]] = {
 
 def to_json(value: Any) -> Any:
     """The loaded result as JSON data: models by their TOML (alias) field names,
-    dataclasses by field, tuples and lists as lists, sets sorted, and a tuple
-    mapping key joined with `/`."""
+    dataclasses by field, FQIDs as their string, tuples and lists as lists, sets
+    sorted, and a tuple mapping key joined with `/`."""
+    if isinstance(value, Fqid):
+        return str(value)
     if isinstance(value, BaseModel):
         return to_json(value.model_dump(mode="python", by_alias=True))
     if dataclasses.is_dataclass(value) and not isinstance(value, type):

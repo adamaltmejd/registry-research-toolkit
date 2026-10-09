@@ -11,8 +11,8 @@ from collections import defaultdict
 from typing import TYPE_CHECKING, Any, Literal, Self
 
 from pydantic import Field, field_validator, model_validator
+from reg_core_py import parse_fqid
 from reg_meta.documentary import DocumentaryRelationship, LiteralSourceRelationship
-from reg_meta.fqid import FqidKind, parse, validate_slug
 
 from reg_meta_build._resolved_common import (
     _classification_id,
@@ -30,6 +30,7 @@ from reg_meta_build.relations import (
     reject_nonmonotone_representation_cycles,
     reject_replaced_by_cycles,
 )
+from reg_meta_build.slug_grammar import validate_slug
 
 if TYPE_CHECKING:
     import sqlite3
@@ -57,23 +58,23 @@ class RetainedDocumentaryRelationship(_ResolvedModel):
     @field_validator("register_ref")
     @classmethod
     def _register_ref(cls, value: str) -> str:
-        if parse(value).kind != FqidKind.REGISTER:
+        if parse_fqid(value).kind != "register":
             raise ValueError("retained documentary scope must be a register")
         return value
 
 
-def _fqid(value: str, *kinds: FqidKind) -> str:
-    if parse(value).kind not in kinds:
+def _fqid(value: str, *kinds: str) -> str:
+    if parse_fqid(value).kind not in kinds:
         raise ValueError(f"wrong resolved reference kind: {value}")
     return value
 
 
 def _variable(value: str) -> str:
-    return _fqid(value, FqidKind.VARIABLE_BINDING)
+    return _fqid(value, "variable")
 
 
 def _register(value: str) -> str:
-    return _fqid(value, FqidKind.REGISTER)
+    return _fqid(value, "register")
 
 
 def _slug(value: str) -> str:
@@ -195,7 +196,7 @@ class ResolvedTagMember(_ResolvedModel):
     @field_validator("target")
     @classmethod
     def _target(cls, value: str) -> str:
-        return _fqid(value, FqidKind.REGISTER, FqidKind.VARIABLE_BINDING)
+        return _fqid(value, "register", "variable")
 
 
 class ResolvedTag(_ResolvedModel):
@@ -252,8 +253,8 @@ class ResolvedSuccession(_ResolvedModel):
     @model_validator(mode="after")
     def _kind(self) -> Self:
         for value in (self.predecessor, self.successor):
-            _fqid(value, FqidKind.REGISTER, FqidKind.VARIABLE_BINDING)
-        if parse(self.predecessor).kind != parse(self.successor).kind:
+            _fqid(value, "register", "variable")
+        if parse_fqid(self.predecessor).kind != parse_fqid(self.successor).kind:
             raise ValueError("succession endpoint kinds differ")
         return self
 
@@ -270,9 +271,7 @@ class ResolvedHistoricalPredecessor(_ResolvedModel):
 
     @model_validator(mode="after")
     def _kind(self) -> Self:
-        expected = (
-            FqidKind.REGISTER if self.kind == "register" else FqidKind.VARIABLE_BINDING
-        )
+        expected = "register" if self.kind == "register" else "variable"
         _fqid(self.target, expected)
         return self
 
@@ -479,7 +478,9 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
         _reject_oversized_components(graph, label=f"resolved {label}")
     graphs = defaultdict(list)
     for edge in metadata.successions:
-        graphs[parse(edge.predecessor).kind].append((edge.predecessor, edge.successor))
+        graphs[parse_fqid(edge.predecessor).kind].append(
+            (edge.predecessor, edge.successor)
+        )
     graphs["variant succession"] = [
         (e.predecessor, e.successor) for e in metadata.variant_successions
     ]
@@ -726,7 +727,7 @@ def prepare_resolved_metadata(
         rows["tag"].append((tag_id, tag.slug, tag.label, tag.description))
         for member in tag.members:
             register_id = variable_id = None
-            if parse(member.target).kind == FqidKind.REGISTER:
+            if parse_fqid(member.target).kind == "register":
                 register_id = require(register_ids, member.target, "tag register")
             else:
                 variable_id = require(variable_ids, member.target, "tag variable")
@@ -756,13 +757,9 @@ def prepare_resolved_metadata(
         )
         rows["classification_same_as"].extend(((*a, *b), (*b, *a)))
     for edge in metadata.successions:
-        kind = parse(edge.predecessor).kind
-        targets = register_ids if kind == FqidKind.REGISTER else variable_ids
-        table = (
-            "register_replaced_by"
-            if kind == FqidKind.REGISTER
-            else "variable_replaced_by"
-        )
+        kind = parse_fqid(edge.predecessor).kind
+        targets = register_ids if kind == "register" else variable_ids
+        table = "register_replaced_by" if kind == "register" else "variable_replaced_by"
         if edge.predecessor not in targets:
             require(historical, edge.predecessor, "succession predecessor")
         require(targets, edge.successor, "succession successor")

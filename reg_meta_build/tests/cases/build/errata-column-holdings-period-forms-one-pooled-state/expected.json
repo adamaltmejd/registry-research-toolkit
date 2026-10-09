@@ -3,24 +3,69 @@
   "projections": [
     {
       "table": "states",
-      "where": {"variable": ["pool", "undated"]},
-      "fields": ["variable", "column", "valid_from", "valid_to", "data_type", "pooled"],
+      "where": {
+        "variable": [
+          "pool",
+          "undated"
+        ]
+      },
+      "fields": [
+        "variable",
+        "column",
+        "valid_from",
+        "valid_to",
+        "data_type",
+        "pooled"
+      ],
       "rows": [
-        ["pool", "Pool", "2002-01-01", "2020-12-31", "text", 1]
+        [
+          "pool",
+          "Pool",
+          "2002-01-01",
+          "2020-12-31",
+          "text",
+          1
+        ]
       ]
     },
     {
       "table": "issues",
-      "where": {"code": "unsupported_occurrence"},
-      "fields": ["subject"],
+      "where": {
+        "code": "unsupported_occurrence"
+      },
+      "fields": [
+        "subject"
+      ],
       "rows": [
-        ["scb/sample/undated"]
+        [
+          "scb/sample/undated"
+        ]
       ]
     },
     {
+      "table": "issue_refs",
+      "where": {
+        "code": "unsupported_occurrence",
+        "subject": "scb/sample/undated"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "unsupported_occurrence"
+        ]
+      ],
+      "note": "the undated declaration cites exactly one delivered record of its variant; which one is not part of the contract (it follows source row order today)"
+    },
+    {
       "table": "issues",
-      "where": {"subject": "scb/sample/pool"},
-      "fields": ["code"],
+      "where": {
+        "subject": "scb/sample/pool"
+      },
+      "fields": [
+        "code"
+      ],
       "rows": []
     }
   ]

@@ -105,8 +105,8 @@ slug = "c-mix"
 native_id = "1.NOPFX"
 slug = "c-nopfx"
 [[variable]]
-native_id = "1.EDITION"
-slug = "c-edition"
+native_id = "1.BLK"
+slug = "c-documented"
 
 [[errata.column]]
 variant = "people"
@@ -155,8 +155,8 @@ noted = "2026-09-25"
 
 [[errata.column]]
 variant = "people"
-column = "EDITION"
-name = "EDITION"
+column = "BLK"
+name = "BLK"
 definition = "Documented"
 versions = ["2020"]
 data_type = "integer"

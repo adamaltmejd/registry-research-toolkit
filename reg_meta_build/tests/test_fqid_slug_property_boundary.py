@@ -13,7 +13,7 @@ from pathlib import Path
 from _slugged_db import add_state, add_variable, build_slugged_db
 from hypothesis import assume, example, given, settings, strategies as st
 from reg_meta.catalog import Catalog
-from reg_meta.fqid import derive_variable_slug, validate_slug
+from reg_meta_build.slug_grammar import derive_variable_slug, validate_slug
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,

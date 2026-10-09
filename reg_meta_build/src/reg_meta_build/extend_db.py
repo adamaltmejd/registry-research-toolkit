@@ -18,10 +18,10 @@ from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING, Any
 
 from pydantic import TypeAdapter
+from reg_core_py import GrammarError
 from reg_meta.catalog import DataWarning
 from reg_meta.db import DB_FILENAME
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import FqidError, FqidKind, validate_slug
 from reg_meta.source_evidence import canonical_json
 
 from ._curation import printable_error
@@ -36,6 +36,7 @@ from .ir import (
     IRVariableState,
     IRVariant,
 )
+from .slug_grammar import validate_slug
 from .sources.curated import CuratedAdapter
 
 if TYPE_CHECKING:
@@ -112,8 +113,8 @@ def _load_provider_ir(
     for path in paths:
         provider = path.stem
         try:
-            validate_slug(provider, FqidKind.PROVIDER)
-        except FqidError as exc:
+            validate_slug(provider, "provider")
+        except GrammarError as exc:
             raise _cfg_error(
                 f"Provider TOML basename {provider!r} is not a valid provider slug: {exc}",
                 "Rename the file to a valid, non-reserved <provider>.toml basename.",

@@ -10,15 +10,9 @@ from __future__ import annotations
 import functools
 import re
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal
 
-from reg_meta.fqid import (
-    Fqid,
-    FqidError,
-    FqidKind,
-    parse as parse_fqid,
-    validate_slug,
-)
+from reg_core_py import Fqid, GrammarError, parse_fqid
 
 from ._curation import (
     curation_error,
@@ -26,6 +20,7 @@ from ._curation import (
     located,
     require_fqid,
 )
+from .slug_grammar import validate_slug
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -66,9 +61,7 @@ _SAME_AS_MAX_COMPONENT = 32
 # curation surface for cross-provider succession. Classification grain (#579) is
 # the `class/<slug>` form (a 1→many edition split the #571 auto rule can't
 # produce, e.g. sun1996 → sun2000-niva + sun2000-inriktning).
-_REPLACED_BY_GRAINS: frozenset[FqidKind] = frozenset(
-    {FqidKind.REGISTER, FqidKind.VARIABLE_BINDING, FqidKind.CLASSIFICATION}
-)
+_REPLACED_BY_GRAINS = frozenset({"register", "variable", "classification"})
 
 # Per-type accepted/foreign field maps (besides `type`). A field legal for one
 # type is a FOREIGN key on another (e.g. `effective_year` on a same_as edge) and
@@ -122,7 +115,7 @@ class CuratedSameAs:
     for endpoint providers included in the build. Edges remain slug-anchored, but
     an edge written by the build must resolve both endpoint slugs."""
 
-    grain: FqidKind  # VARIABLE_BINDING or CLASSIFICATION
+    grain: Literal["variable", "classification"]
     a_provider: str
     a_register: str
     a_variable: str | None
@@ -349,9 +342,8 @@ def _load_same_as(entry: dict) -> CuratedSameAs:
     if len(a_segs) == 3:
         a = _require_fqid_variable(entry, "a")
         b = _require_fqid_variable(entry, "b")
-        grain = FqidKind.VARIABLE_BINDING
         edge = CuratedSameAs(
-            grain=grain,
+            grain="variable",
             a_provider=a[0],
             a_register=a[1],
             a_variable=a[2],
@@ -363,9 +355,8 @@ def _load_same_as(entry: dict) -> CuratedSameAs:
     else:
         a_cls = _classification_fqid("a", a_raw)
         b_cls = _classification_fqid("b", b_raw)
-        grain = FqidKind.CLASSIFICATION
         edge = CuratedSameAs(
-            grain=grain,
+            grain="classification",
             a_provider=a_cls[0],
             a_register=a_cls[1],
             a_variable=None,
@@ -402,12 +393,12 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
     _reject_foreign_fields(entry, "replaced_by", _REPLACED_BY_FIELDS)
     predecessor = _parse_replaced_by_fqid("from", entry.get("from"))
     successor = _parse_replaced_by_fqid("to", entry.get("to"))
-    if predecessor.kind is not successor.kind:
+    if predecessor.kind != successor.kind:
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' `from` {str(predecessor)!r} "
-            f"({predecessor.kind.value}) and `to` {str(successor)!r} "
-            f"({successor.kind.value}) are different grains.",
+            f"({predecessor.kind}) and `to` {str(successor)!r} "
+            f"({successor.kind}) are different grains.",
             "Both endpoints must be the same grain (register->register, "
             "variable->variable, or classification->classification).",
         )
@@ -439,8 +430,7 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
             "succession, or neither for an entity-grain edge.",
         )
     if pred_variant is not None and (
-        predecessor.kind is not FqidKind.REGISTER
-        or successor.kind is not FqidKind.REGISTER
+        predecessor.kind != "register" or successor.kind != "register"
     ):
         raise curation_error(
             "relations_invalid",
@@ -459,11 +449,11 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
             "or `from_column` / `to_column` for a representation succession — "
             "not both on one edge.",
         )
-    if pred_column is not None and predecessor.kind is not FqidKind.VARIABLE_BINDING:
+    if pred_column is not None and predecessor.kind != "variable":
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' carries `from_column` / "
-            f"`to_column` but the endpoints are {predecessor.kind.value}-grain.",
+            f"`to_column` but the endpoints are {predecessor.kind}-grain.",
             "Representation succession is column-within-variable; column fields "
             "require both endpoints to be variable (provider/register/variable) "
             "FQIDs.",
@@ -520,7 +510,7 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
     # human transition reason has nowhere to go. Reject `note` here rather than
     # parse-then-silently-drop it (which reads as a bug) — the reason belongs in a
     # `#` comment above the edges.
-    if note is not None and predecessor.kind is FqidKind.CLASSIFICATION:
+    if note is not None and predecessor.kind == "classification":
         raise curation_error(
             "relations_invalid",
             "relations [[edge]] type='replaced_by' on a classification "
@@ -652,7 +642,7 @@ def _require_variant_endpoint(entry: dict, field: str) -> str | None:
         )
     try:
         validate_slug(raw, "register_variant", allow_default=True)
-    except FqidError as exc:
+    except GrammarError as exc:
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' `{field}` is not a valid "
@@ -676,7 +666,7 @@ def _parse_replaced_by_fqid(field: str, raw: Any) -> Fqid:
         )
     try:
         fqid = parse_fqid(raw)
-    except FqidError as exc:
+    except GrammarError as exc:
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' `{field}` {raw!r} is not a "
@@ -688,7 +678,7 @@ def _parse_replaced_by_fqid(field: str, raw: Any) -> Fqid:
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='replaced_by' `{field}` {raw!r} is a "
-            f"{fqid.kind.value}-grain FQID; only register, variable, and "
+            f"{fqid.kind}-grain FQID; only register, variable, and "
             "classification grains are supported.",
             "Use a 2-segment register, 3-segment variable, or class/<slug> "
             "classification FQID (the variant grain is out of scope).",
@@ -707,18 +697,18 @@ def _parse_class_relation_fqid(field: str, raw: Any) -> Fqid:
         )
     try:
         fqid = parse_fqid(raw)
-    except FqidError as exc:
+    except GrammarError as exc:
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='derived_from' `{field}` {raw!r} is not a "
             f"valid FQID: {exc}.",
             'Use the classification form `class/<slug>`, e.g. "class/ks87-p".',
         ) from exc
-    if fqid.kind is not FqidKind.CLASSIFICATION:
+    if fqid.kind != "classification":
         raise curation_error(
             "relations_invalid",
             f"relations [[edge]] type='derived_from' `{field}` {raw!r} is a "
-            f"{fqid.kind.value}-grain FQID; only classification endpoints are "
+            f"{fqid.kind}-grain FQID; only classification endpoints are "
             "supported.",
             'Use the classification form `class/<slug>`, e.g. "class/ks87-p".',
         )

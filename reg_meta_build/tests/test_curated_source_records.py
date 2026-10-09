@@ -5,7 +5,7 @@ from __future__ import annotations
 import tomllib
 from pathlib import Path
 
-from reg_meta.fqid import derive_variable_slug
+from reg_meta_build.slug_grammar import derive_variable_slug
 
 
 def test_fohm_thin_slug_entries_follow_authored_columns() -> None:

@@ -36,7 +36,6 @@ from reg_meta.documentary import (
     UnresolvedDocumentaryReference,
 )
 from reg_meta.errors import RegMetaError
-from reg_meta.fqid import validate_slug
 from reg_meta.source_evidence import (  # noqa: TC002 - Pydantic resolves nested authority models at runtime.
     RecordLocator,
     SourceRevision,
@@ -59,6 +58,7 @@ from .fqid_slugs import (
 from .normalization import normalize_text
 from .relations import load_relations
 from .resolved_metadata import _variable
+from .slug_grammar import validate_slug
 from .source_curation import (
     CodeLabelEquivalence,
     ColumnRepresentation,

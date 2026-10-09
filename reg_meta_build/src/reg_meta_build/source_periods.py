@@ -7,26 +7,24 @@ import re
 from datetime import date
 from typing import Literal
 
-from reg_meta.fqid import _YEAR
-
-from .edition_bounds import edition_claims
+from .edition_bounds import YEAR_PATTERN, edition_claims
 from .normalization import normalize_text, normalize_token
 from .source_records import ScopeInterval, TemporalScope
 
 SourcePeriodIssue = Literal["pooled_period", "unparseable_period"]
 
-_YEAR_TOKEN_RE = re.compile(rf"(?<!\d)({_YEAR})(?!\d)")
-_ISO_DATE_SHAPE_RE = re.compile(rf"(?P<date>{_YEAR}-\d{{1,2}}-\d{{1,2}})\Z")
+_YEAR_TOKEN_RE = re.compile(rf"(?<!\d)({YEAR_PATTERN})(?!\d)")
+_ISO_DATE_SHAPE_RE = re.compile(rf"(?P<date>{YEAR_PATTERN}-\d{{1,2}}-\d{{1,2}})\Z")
 # The dash class every range reader shares: ASCII hyphen plus the Unicode
 # dashes SCB types, one to three of them, with surrounding spacing handled at
 # each use site.
 _RANGE_DASH = r"[-‐‑‒–—―−]{1,3}"
 _ISO_DATE_RANGE_SHAPE_RE = re.compile(
-    rf"(?P<start>{_YEAR}-\d{{1,2}}-\d{{1,2}})\s*{_RANGE_DASH}\s*"
-    rf"(?P<end>{_YEAR}-\d{{1,2}}-\d{{1,2}})\Z"
+    rf"(?P<start>{YEAR_PATTERN}-\d{{1,2}}-\d{{1,2}})\s*{_RANGE_DASH}\s*"
+    rf"(?P<end>{YEAR_PATTERN}-\d{{1,2}}-\d{{1,2}})\Z"
 )
 _SWEDISH_DATE_SHAPE_RE = re.compile(
-    rf"(?P<day>\d{{1,2}})\s+(?P<month>\S+)\s+(?P<year>{_YEAR})\Z"
+    rf"(?P<day>\d{{1,2}})\s+(?P<month>\S+)\s+(?P<year>{YEAR_PATTERN})\Z"
 )
 _AMBIGUOUS_NUMERIC_DATE_RE = re.compile(r"(?:(?:\d{1,4}[/\.]){2}\d{1,4}|\d{8})\Z")
 _SWEDISH_MONTHS = {"oktober": 10, "jan": 1}
@@ -34,27 +32,29 @@ _SWEDISH_MONTHS = {"oktober": 10, "jan": 1}
 # A school year is one period, 1 July of the first year to 30 June of the
 # second. A Deklarationsår denotes the beskattningsår named in parentheses.
 # A bare `YYYY/YYYY+1` pair reads exactly like `Läsåret YYYY/YYYY+1` (Y-208).
-_LÄSÅRET_RE = re.compile(rf"läsåret\s*({_YEAR})\s*/\s*({_YEAR})", re.IGNORECASE)
-_SPLIT_YEAR_RE = re.compile(rf"({_YEAR})\s*/\s*({_YEAR})")
+_LÄSÅRET_RE = re.compile(
+    rf"läsåret\s*({YEAR_PATTERN})\s*/\s*({YEAR_PATTERN})", re.IGNORECASE
+)
+_SPLIT_YEAR_RE = re.compile(rf"({YEAR_PATTERN})\s*/\s*({YEAR_PATTERN})")
 # Fiscal-year month ranges `YYYY-MM - YYYY-MM` (Y-208), sharing the range dash.
 _MONTH_RANGE_RE = re.compile(
-    rf"({_YEAR})-(\d{{1,2}})\s*{_RANGE_DASH}\s*({_YEAR})-(\d{{1,2}})"
+    rf"({YEAR_PATTERN})-(\d{{1,2}})\s*{_RANGE_DASH}\s*({YEAR_PATTERN})-(\d{{1,2}})"
 )
 # A full school year named by its terms (Y-208): only Höstterminen into next
 # year's Vårterminen; any other term pairing is not a school year.
 _TERM_RANGE_RE = re.compile(
-    rf"höstterminen\s*({_YEAR})\s*{_RANGE_DASH}\s*vårterminen\s*({_YEAR})",
+    rf"höstterminen\s*({YEAR_PATTERN})\s*{_RANGE_DASH}\s*vårterminen\s*({YEAR_PATTERN})",
     re.IGNORECASE,
 )
 # A pooled school-year hull `Läsåren A/A+1 - C/C+1` (Y-208): whole school
 # years, so the hull is resolvable delivery evidence unlike term edges.
 _LÄSÅREN_RANGE_RE = re.compile(
-    rf"läsåren\s*({_YEAR})\s*/\s*({_YEAR})\s*{_RANGE_DASH}\s*"
-    rf"({_YEAR})\s*/\s*({_YEAR})",
+    rf"läsåren\s*({YEAR_PATTERN})\s*/\s*({YEAR_PATTERN})\s*{_RANGE_DASH}\s*"
+    rf"({YEAR_PATTERN})\s*/\s*({YEAR_PATTERN})",
     re.IGNORECASE,
 )
 _DEKLARATIONSÅR_RE = re.compile(
-    rf"deklarationsår\s*({_YEAR})\s*\(\s*beskattningsår\s*({_YEAR})\s*\)",
+    rf"deklarationsår\s*({YEAR_PATTERN})\s*\(\s*beskattningsår\s*({YEAR_PATTERN})\s*\)",
     re.IGNORECASE,
 )
 _QUARTER_FROM_RE = re.compile(r"Kvartal 1-3 fr\.o\.m\.? (\d{4})")

@@ -10,9 +10,8 @@ from __future__ import annotations
 import sqlite3
 from typing import TYPE_CHECKING
 
-from reg_meta.db import register_py_lower
-from reg_meta.fqid import derive_variable_slug
-from reg_meta_build.db import DDL, seed_providers
+from reg_meta_build.db import DDL, register_py_lower, seed_providers
+from reg_meta_build.slug_grammar import derive_variable_slug
 
 if TYPE_CHECKING:
     from reg_meta_build.tags import CuratedTag

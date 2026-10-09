@@ -18,15 +18,19 @@ slug = "new-off"
 native_id = "1.NoFlag"
 slug = "no-flag"
 [[variable]]
+native_id = "1.NoId"
+slug = "no-id"
+[[variable]]
 native_id = "1.Held"
 slug = "held"
 
 [[errata.column]]
 variant = "people"
 column = "NewOn"
-name = "New on"
-definition = "Documented"
+name = "Authored name"
+definition = "Authored description"
 data_type = "integer"
+classification = "FIX"
 is_identifier = false
 is_sensitive = true
 versions = ["2020"]
@@ -54,6 +58,18 @@ name = "No flag"
 definition = "Documented"
 data_type = "integer"
 is_identifier = false
+versions = ["2020"]
+source = "scb-docs"
+evidence = "held"
+noted = "2026-09-25"
+
+[[errata.column]]
+variant = "people"
+column = "NoId"
+name = "No id"
+definition = "Documented"
+data_type = "integer"
+is_sensitive = true
 versions = ["2020"]
 source = "scb-docs"
 evidence = "held"
