@@ -241,12 +241,13 @@ function periodApplied(page, wire) {
 
 /** Hold every `?period` resolve open until the returned `release()` lets it
  * through. Nothing is faked — the real request is forwarded, just late — so a
- * case can act WHILE one is genuinely in flight; against a localhost backend that
+ * case can act WHILE one is genuinely in flight; against a localhost server that
  * answers in single-digit milliseconds there is otherwise no in-flight moment to
  * act in. Gated on a promise rather than a timer: the overlap is then a fact
  * rather than a race the clock usually wins, and it costs no wall time. */
 async function holdPeriodResolve(page) {
-  const pattern = /\/api\/catalog\/.*period=/;
+  // The binding page's `?period` subset is the Rust server's `states` facet.
+  const pattern = /\/api\/states\/.*period=/;
   let open;
   const held = new Promise((resolve) => {
     open = resolve;

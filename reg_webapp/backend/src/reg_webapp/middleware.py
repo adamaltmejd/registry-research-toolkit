@@ -5,22 +5,19 @@ DRY alternative to per-handler header wiring: one ASGI middleware stamps the
 (etag.py + middleware.py)) on every GET read response and turns a
 matching ``If-None-Match`` into a 304. Centralizing it here keeps the route
 handlers free of caching boilerplate and guarantees the scheme is uniform across
-the ``/api/catalog`` root, the catch-all, and the 7 suffixed
-sub-endpoints (the read surface A5.2a-ii ships).
+the read routes (the catalog reads are served by the Rust server, not here).
 
-Skips WRITE endpoints (``/api/project/*`` do NOT set ETag) — those land in
-A5.2b. We gate on the request METHOD: only
+Skips WRITE endpoints (``/api/project/*`` do NOT set ETag). We gate on the request
+METHOD: only
 ``GET`` reads are cacheable; any other method is passed through untouched. (The
 routes register GET only — FastAPI's ``@router.get`` does not auto-add HEAD, so a
 HEAD 405s before reaching here; HEAD support, if wanted for cheap CDN
 revalidation, is a deliberate later addition with its own body-stripping + test,
-not an implicit claim here.) Combined with the read-only catalog surface today, a
-method gate is sufficient and won't need editing when the write endpoints arrive.
+not an implicit claim here.)
 
 The ETag is computed from the already-serialized response BODY bytes — FastAPI
-emits the JSON deterministically (a fixed Pydantic model dump), and the
-``?period`` / ``?variant`` query is part of the URL, so it's already part of the
-cache key. The pure logic lives in ``etag.py``; this module is only the ASGI
+emits the JSON deterministically (a fixed Pydantic model dump), and the query
+string is part of the URL, so it's already part of the cache key. The pure logic lives in ``etag.py``; this module is only the ASGI
 plumbing (buffer the body, hash it, set headers, short-circuit a 304).
 """
 
@@ -32,7 +29,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 
 import reg_meta
-from reg_webapp.etag import CACHE_CONTROL_SHORT, compute_etag, etag_matches
+from reg_webapp.etag import CACHE_CONTROL, compute_etag, etag_matches
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
@@ -64,9 +61,8 @@ class ETagMiddleware(BaseHTTPMiddleware):
         body = await _read_body(response)
         steward_id = request.app.state.steward.id
         manifest = request.app.state.manifest
-        scope = getattr(request.state, "read_scope", request.app.state.default_scope)
         etag = compute_etag(
-            body, reg_meta.__version__, steward_id, manifest["generation_id"], scope
+            body, reg_meta.__version__, steward_id, manifest["generation_id"]
         )
 
         # dict() is safe here: read responses carry no repeated headers (no
@@ -75,11 +71,8 @@ class ETagMiddleware(BaseHTTPMiddleware):
         # ever emits a duplicate-key header.
         headers = dict(response.headers)
         headers["etag"] = etag
-        # The fold-bearing /api/catalog/* reads (the only GETs left) carry a short
-        # 60s window so curated concept-group folds surface promptly for returning
-        # users. Set once here so both the 200 and the reused-`headers` 304 carry
-        # it.
-        headers["cache-control"] = CACHE_CONTROL_SHORT
+        # Set once here so both the 200 and the reused-`headers` 304 carry it.
+        headers["cache-control"] = CACHE_CONTROL
 
         if etag_matches(request.headers.get("if-none-match"), etag):
             # 304: no body. Keep the validating headers (ETag/Cache-Control) and

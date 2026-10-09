@@ -73,7 +73,7 @@ def test_reads_are_not_rate_limited(catalog_db):
     """GET reads pass through the limiter untouched (method gate) — a tight write
     budget must NOT throttle reads, which are edge-cached on a different axis."""
     with TestClient(create_app(rate_limit_per_minute=1)) as c:
-        codes = [c.get("/api/catalog").status_code for _ in range(10)]
+        codes = [c.get("/openapi.json").status_code for _ in range(10)]
     assert all(code == 200 for code in codes), codes
 
 

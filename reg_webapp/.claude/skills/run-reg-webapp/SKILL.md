@@ -8,12 +8,14 @@ description: Run, screenshot, and drive the reg_webapp dev setup (FastAPI backen
 # Run reg_webapp locally
 
 Three dev servers — a FastAPI backend, the Rust server (`reg-meta serve`), and Vite
-serving the SPA with an `/api` proxy that sends the routes ported to Rust (today
-`/api/context`, `/api/search` and `/api/docs`) to the Rust server and the rest to the
-backend — plus a Playwright driver that loads the SPA, drills through the catalog,
-exercises the period slider, and screenshots each step. `dev.sh` picks a FREE port for
-each server on every run, so nothing here is pinned to a port. The proxy split lives in
-`reg_webapp/frontend/vite.config.ts`; each later slice adds its routes there.
+serving the SPA with an `/api` proxy that sends the routes ported to Rust
+(`/api/context`, `/api/search`, `/api/docs` and the catalog reads `/api/catalog`,
+`/api/states`, `/api/warnings`, `/api/values`, `/api/graph`, `/api/lineage`) to the Rust
+server and the rest (project) to the backend — plus a Playwright driver that loads the
+SPA, drills through the catalog, exercises the period slider, and screenshots each step.
+`dev.sh` picks a FREE port for each server on every run, so nothing here is pinned to a
+port. The proxy split lives in `reg_webapp/frontend/vite.config.ts`; each later slice
+adds its routes there.
 
 This skill is a helper you invoke by its explicit repo path, not a skill the root loader
 discovers: it lives under `reg_webapp/.claude/skills/`, which is nested and therefore
@@ -243,9 +245,9 @@ includes the Playwright browser project).
   `REG_WEBAPP_BACKEND_URL` and `REG_META_SERVER_URL`
   (`reg_webapp/frontend/vite.config.ts`) — `dev.sh` sets both automatically; they only
   matter if you start Vite by hand against other ports.
-- **`/api/context`, `/api/search` and `/api/docs/*` come from the Rust server.** Their
-  bodies are `{data, meta}`; the FastAPI backend no longer serves them, so probe the
-  backend with `/api/catalog`.
+- **Context, search, docs and every catalog read come from the Rust server.** Their
+  bodies are `{data, meta}`; the FastAPI backend serves none of them, so probe the
+  backend with `/openapi.json`.
 - **Git worktrees are auto-provisioned.** A `SessionStart` hook
   (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable
   installs resolve to the worktree, not main) and `node_modules` — it runs `uv sync` +
