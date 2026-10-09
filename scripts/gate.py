@@ -194,16 +194,23 @@ def heavy_lock(kind="heavy", slots=SLOTS):
             handle.close()
 
 
+@contextmanager
+def real_seed_lock():
+    """Hold the single real-seed slot, then a heavy slot.
+
+    The real-seed slot comes first, so a queued build does not sit on a heavy slot.
+    `scripts/real_seed_cache.py` holds this too.
+    """
+    with heavy_lock("real-seed", 1), heavy_lock():
+        yield
+
+
 def main() -> int:
     if (kind := sys.argv[1:2]) in (["heavy"], ["real-seed"]):
         command = sys.argv[3:] if sys.argv[2:3] == ["--"] else sys.argv[2:]
         if not command:
             sys.exit(f"gate: {kind[0]} needs a command: gate.py {kind[0]} -- CMD...")
-        # Real-seed slot first, so a queued build does not sit on a heavy slot.
-        real_seed = (
-            heavy_lock("real-seed", 1) if kind == ["real-seed"] else nullcontext()
-        )
-        with real_seed, heavy_lock():
+        with real_seed_lock() if kind == ["real-seed"] else heavy_lock():
             return subprocess.call(command)
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("steps", nargs="+", choices=[*STEPS, "all"])

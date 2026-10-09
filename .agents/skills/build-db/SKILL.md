@@ -33,6 +33,55 @@ read-only SQLite, rather than changing consumer compatibility to make a proof pa
 register and variant row must be pinned and every pin must name a row.
 `--update-snapshot` also refreshes the naming snapshot.
 
+## Reuse a cached output first
+
+Run real-seed preparations and builds through `scripts/real_seed_cache.py`. It returns a
+stored output when the inputs it keys are unchanged. On a miss it runs the same
+`reg-meta-build` command under the real-seed lock and stores the output if the run
+completed. A main-tip baseline that another session already built is a hit.
+
+```sh
+uv run --no-project scripts/real_seed_cache.py prepare --input-bundle "$raw_bundle" \
+  --input-commit "$raw_bundle_commit" --input-manifest-sha256 "$raw_bundle_sha256" \
+  --output-dir "$new_prepared_dir"
+# After committing the prepared tree in its acceptance repository:
+uv run --no-project scripts/real_seed_cache.py accept-prepared \
+  --prepared "$new_prepared_dir" --prepared-commit "$prepared_commit"
+uv run --no-project scripts/real_seed_cache.py build --prepared "$prepared" \
+  --input-commit "$prepared_commit" --input-manifest-sha256 "$prepared_manifest_sha256" \
+  --diagnostic 2> "$log"
+```
+
+Each command prints one JSON object on stdout. `hit` says whether anything ran.
+
+- **prepare:** on a hit, `--output-dir` is unused. The result names the stored
+  `prepared_path`, its `prepared_manifest_sha256` and its `prepared_commit`, which is
+  null until you run `accept-prepared`.
+- **build:** the result names `database` and `report`. A failed run is not stored; the
+  result's `run_dir` keeps its outputs for diagnosis.
+
+Cached entries are shared and read-only. Use them in place as dbdiff or comparison
+inputs; never activate, release or modify them. Copy a database before writing to it.
+
+- **What the keys cover.** A prepare key covers the raw bundle pins, `uv.lock`, the
+  Python and SQLite versions, and the code `prepare-sources` imports. Resolution and
+  binding modules are outside it, so changing them reuses the preparation. A build key
+  covers the whole builder, `curation_tree_sha256`, the prepared pins, the mode and
+  `--registers`. A strict full build also keys the checkout commit, because the database
+  records it.
+- **Inspect a key.** `--key` prints a key and its fields without running anything; diff
+  two of them to see why a lookup missed.
+- **Verify.** `--verify` reruns a step uncached and compares it with the stored entry:
+  database bytes and decompressed event-ledger bytes for a build, the top-level prepared
+  manifest digest for a prepare. Exit 1 means a key misses an input; report it instead
+  of trusting that entry. Run it at an agreed checkpoint, not routinely, because it
+  costs a full run.
+- **Not cached.** `--dump-decisions`, `check-curation` and `extend-db` run directly as
+  below.
+- **Location.** The cache lives under `$REG_REAL_SEED_CACHE`, else
+  `${XDG_CACHE_HOME:-~/.cache}/reg-meta-real-seed`. It keeps the two most recently used
+  build entries, about 1.4 GB each.
+
 ## Select inputs
 
 The same CLI option names select different artifacts at different stages:

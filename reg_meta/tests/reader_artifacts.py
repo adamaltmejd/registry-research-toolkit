@@ -38,6 +38,10 @@ import reg_meta
 import reg_meta_build
 import reg_schema
 
+# The digest and staging helpers are shared with the tooling caches.
+sys.path.append(str(Path(__file__).resolve().parents[2] / "scripts"))
+from keyed_cache import NATIVE_SOURCES as _NATIVE_SOURCES, staged, tree_digest
+
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
@@ -57,10 +61,7 @@ BUILD_PACKAGES = tuple(
 )
 # The sources `reg-core-py` is built from (its uv `cache-keys`): `uv run` rebuilds the
 # extension when they change, and so must the cache.
-NATIVE_SOURCES = tuple(
-    CASES.parents[1] / path
-    for path in ("crates/reg-core", "crates/reg-core-py", "Cargo.toml", "Cargo.lock")
-)
+NATIVE_SOURCES = tuple(CASES.parents[1] / path for path in _NATIVE_SOURCES)
 
 
 def replicate_filler(case: Path, destination: Path) -> Path:
@@ -151,27 +152,6 @@ def fixture_cache_dir() -> Path:
     return Path(tempfile.gettempdir()) / "registry-research-toolkit-fixtures"
 
 
-def _tree_digest(root: Path) -> str:
-    """Content digest of a file or directory, independent of where it lives."""
-    files = (
-        [root]
-        if root.is_file()
-        else sorted(
-            path
-            for path in root.rglob("*")
-            if path.is_file()
-            and "__pycache__" not in path.parts
-            and path.suffix != ".pyc"
-        )
-    )
-    digest = hashlib.sha256()
-    for path in files:
-        digest.update(path.relative_to(root).as_posix().encode() + b"\0")
-        with path.open("rb") as handle:
-            digest.update(hashlib.file_digest(handle, "sha256").digest())
-    return digest.hexdigest()
-
-
 def runtime_versions() -> dict[str, str]:
     """Interpreter and SQLite library versions the pipeline runs on."""
     return {
@@ -208,9 +188,9 @@ def build_inputs_digest(
     """
     return canonical_sha256(
         {
-            "packages": [_tree_digest(package) for package in packages],
-            "native": [_tree_digest(path) for path in NATIVE_SOURCES],
-            "builder": _tree_digest(builder),
+            "packages": [tree_digest(package) for package in packages],
+            "native": [tree_digest(path) for path in NATIVE_SOURCES],
+            "builder": tree_digest(builder),
             "distributions": list(
                 distributions
                 if distributions is not None
@@ -244,13 +224,13 @@ def artifact_key(
     return canonical_sha256(
         {
             "build_inputs": build_inputs or _live_build_inputs(),
-            "source": _tree_digest(fixture_source(fixture)),
-            "defaults": _tree_digest(CASES / "reader/fixture"),
+            "source": tree_digest(fixture_source(fixture)),
+            "defaults": tree_digest(CASES / "reader/fixture"),
             "kind": kind,
             "identity_overrides": dict(identity_overrides or {}),
-            "search_pins": _tree_digest(search_pins) if search_pins else None,
+            "search_pins": tree_digest(search_pins) if search_pins else None,
             # Keyed only when present, so artifacts without docs keep their keys.
-            **({"docs": _tree_digest(docs)} if docs else {}),
+            **({"docs": tree_digest(docs)} if docs else {}),
         }
     )
 
@@ -307,21 +287,13 @@ def cached_reader_artifact(
     path = entry / "reg_meta.db"
     if path.exists():
         return path
-    staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=entry.parent))
-    try:
+    with staged(entry) as staging:
         _build_artifact(
             staging, fixture_source(fixture), kind, identity_overrides, search_pins
         )
         if docs is not None:
             build_docs(docs, staging).chmod(0o444)
         (staging / "reg_meta.db").chmod(0o444)
-        try:
-            staging.rename(entry)
-        except OSError:
-            if not path.exists():
-                raise
-    finally:
-        shutil.rmtree(staging, ignore_errors=True)
     return path
 
 
