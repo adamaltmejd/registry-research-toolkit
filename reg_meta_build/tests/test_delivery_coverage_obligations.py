@@ -28,6 +28,7 @@ from reg_meta_build.catalog_dependencies import (
     CoverageObligation,
     check_delivery_coverage,
 )
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedAliasWindow,
@@ -108,21 +109,21 @@ def _allowed(variables, obligations):
 
 
 def _refusal(variables, obligations, code) -> ResolutionDiagnostic:
-    """The one located error, whose detail is also the strict-mode refusal."""
+    """The one located error, whose code and detail are also the strict-mode refusal."""
     (found,) = check_delivery_coverage(
         variables, obligations, withheld={}, diagnostic=True
     )
     assert (found.code, found.severity) == (code, "error")
-    with pytest.raises(ValueError) as failure:
+    with pytest.raises(RegMetaError) as failure:
         check_delivery_coverage(variables, obligations, withheld={})
-    assert str(failure.value) == found.detail
+    assert (failure.value.code, str(failure.value)) == (code, found.detail)
     return found
 
 
 def test_delivery_fact_change_is_a_located_error_naming_the_coordinate_and_source():
     """Input: the written type "text" against the claimed "integer". Expected: one
     ``unexplained_delivery_fact_change`` error with the obligation's refs, naming
-    the coordinate, the claim and the source; strict mode raises the same text.
+    the coordinate, the claim and the source; strict mode raises the same code and text.
     Fails if the type comparison is dropped, or the diagnostic loses its code,
     severity or refs, or diverges from the strict refusal.
     """
@@ -141,7 +142,8 @@ def test_delivery_fact_change_is_a_located_error_naming_the_coordinate_and_sourc
 def test_delivery_coverage_loss_is_a_located_error_naming_the_lost_window():
     """Input: the 2020 state truncated to 2020-06-30. Expected: one
     ``unexplained_delivery_coverage_loss`` error with the obligation's refs and
-    exactly the lost 2020-07-01..2020-12-31; strict mode raises the same text.
+    exactly the lost 2020-07-01..2020-12-31; strict mode raises the same code and
+    text.
     #1319 deleted its scope-minted twin citing this test. Fails if the guard
     widens periods, reports the hull, or the diagnostic loses its code or refs.
     """
@@ -433,5 +435,8 @@ def test_per_column_alias_coding_preserves_exact_delivery_claims(
         (FACT, f"people/{column}") for column in claims
     ]
     assert all(fragment in f.detail for f in found)
-    with pytest.raises(ValueError, match="supported delivery facts changed"):
+    with pytest.raises(
+        RegMetaError, match="supported delivery facts changed"
+    ) as failure:
         check_delivery_coverage((variable,), obligations, withheld={})
+    assert failure.value.code == FACT
