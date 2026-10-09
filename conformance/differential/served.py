@@ -261,7 +261,7 @@ def _catalog_requests(conn, catalog: str, scopes: list[str], seed: int) -> list:
             if register.columns:
                 out.append(
                     _get(
-                        key.format("resolve"),
+                        key.format("resolve-columns"),
                         "/api/resolve",
                         {"columns": register.columns, "register": register.fqid, **s},
                     )
