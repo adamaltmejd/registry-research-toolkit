@@ -91,11 +91,13 @@ match as tokens. Display text always comes from the base tables, never from an i
   `operational_definition`, and a `delivery_column_names` aggregate derived from
   `variable_alias.delivery_column_name` (#735/#936). The `unicode61` token rules split
   SCB column codes, so `fedunsatreason_1` matches `fedunsatreason`. Its source, and the
-  display text of a variable hit, is the `variable_search_text` view, not `variable`
-  directly, so delivery-column search stays derived from the normalized alias table and
-  a nameless variable shows its state names. Variable search rows surface the matched
-  delivery aliases for alias hits, falling back to display aliases for non-alias hits.
-  FQID slugs are **not** indexed here.
+  display text of a variable hit, is the derived `variable_search_text` table, not
+  `variable` directly, so delivery-column search stays derived from the normalized alias
+  table and a nameless variable shows its state names. It was a view until schema 9.7;
+  materialized, a cold search reads its hits' rows instead of the `variable_state` rows
+  scattered by state id that the view's name fallbacks touched. Variable search rows
+  surface the matched delivery aliases for alias hits, falling back to display aliases
+  for non-alias hits. FQID slugs are **not** indexed here.
 - **`classification_fts`** — indexes classification `short_name`, `name`, `name_en`,
   `description`. Searched via `search(..., type="classification")` (#350), the catalog
   discovery surface. Catalog-scoped: a `--register` scope excludes it, and so does a

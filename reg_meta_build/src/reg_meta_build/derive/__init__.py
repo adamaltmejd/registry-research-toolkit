@@ -122,8 +122,13 @@ def derive_artifact(base: Path, out: Path) -> None:
                 "INSERT OR REPLACE INTO import_manifest(key, value) VALUES (?, ?)",
                 sorted(manifest.items()),
             )
-            # The base's statistics stay valid; only the derived tables are new.
-            for table in DERIVED_TABLES:
+            # The base's statistics stay valid; only the derived tables and the
+            # search index's text table and code index are new.
+            for table in (
+                *DERIVED_TABLES,
+                "variable_search_text",
+                "idx_value_code_code_nocase",
+            ):
                 conn.execute(f"ANALYZE {table}")
             conn.commit()
         validation = validate_built_db(tmp, flavored=kind == "steward")
