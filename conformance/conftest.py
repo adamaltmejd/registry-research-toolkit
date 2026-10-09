@@ -122,5 +122,5 @@ def artifact_client(artifact_dir, monkeypatch):
         "REG_WEBAPP_STEWARDS_DIR",
         str(Path(__file__).resolve().parents[1] / "reg_webapp/stewards"),
     )
-    with TestClient(create_app(rate_limit_per_minute=1000)) as client:
+    with TestClient(create_app()) as client:
         yield client

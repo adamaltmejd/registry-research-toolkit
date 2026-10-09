@@ -230,9 +230,7 @@ def run_http_requests(steps, clients=None):
     """Send the steps through `clients` (the case artifact's client under `None`,
     each `artifacts` entry's under its name), or the app in this process."""
     if clients is None:
-        with TestClient(
-            create_app(rate_limit_per_minute=1000), raise_server_exceptions=False
-        ) as app_client:
+        with TestClient(create_app(), raise_server_exceptions=False) as app_client:
             return run_http_requests(steps, {None: app_client})
     responses = []
     for step in steps:
