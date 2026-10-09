@@ -159,14 +159,14 @@ export function narrowGroupsToMembers(
   groups: readonly ConceptGroup[] | undefined,
   items: readonly {
     fqid: string;
-    deliveries?: readonly { column: string | null }[];
+    deliveries?: readonly { column?: string | null }[];
   }[],
 ): ConceptGroup[] {
   const deliveredColumns = new Map<string, Set<string | null>>();
   for (const item of items) {
     deliveredColumns.set(
       item.fqid,
-      new Set((item.deliveries ?? []).map((d) => d.column)),
+      new Set((item.deliveries ?? []).map((d) => d.column ?? null)),
     );
   }
   const narrowed: ConceptGroup[] = [];

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getRegisterVariants } from "./api";
+import { getShow } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref } from "./catalog";
 import SubjectView from "./SubjectView.svelte";
@@ -25,11 +25,15 @@ import { foldVersions, groupVariants, showsDistinctGroup } from "./variants";
 // is real and this deep-linkable page is the only place it can be read.
 const { registerFqid }: { registerFqid: string } = $props();
 
-const variants = asyncResource(() => getRegisterVariants(registerFqid));
+// The variants ride the register's `show` node; a ref that is not a register has
+// none.
+const variants = asyncResource(() => getShow(registerFqid));
 // Fold in the derived, not in the template: `foldKey` stringifies every version
 // body, so folding under `{#each}` would re-walk the whole wall on each render.
 const entries = $derived(
-  groupVariants(variants.data?.variants ?? []).map((group) => ({
+  groupVariants(
+    variants.data?.kind === "register" ? variants.data.variants : [],
+  ).map((group) => ({
     ...group,
     segments: group.segments.map((segment) => ({
       ...segment,

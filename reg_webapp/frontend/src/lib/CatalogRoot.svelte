@@ -1,19 +1,19 @@
 <script lang="ts">
-import { getCatalogRoot } from "./api";
+import { getShow } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref, DATA_BROWSER_LABEL, matchesFilter } from "./catalog";
 import FilterInput from "./FilterInput.svelte";
 import { type Column, DataTable, EmptyState } from "./ui";
 
 // The catalog root: every provider plus the classification-root sentinel
-// (`class`). Children are a `kind`-tagged union (`provider` | `classification-
-// root`); both link via path-based URLs mirroring the API.
-const root = asyncResource(() => getCatalogRoot());
+// (`class`). Children are a `kind`-tagged union (`provider` |
+// `classification_root`); both link via path-based URLs mirroring the API.
+const root = asyncResource(() => getShow());
 
 // Same type-to-filter affordance as the deeper browse lists, for consistency.
 // Match on display name and FQID only: the root page is navigation, not metadata.
 let filter = $state("");
-const children = $derived(root.data?.children ?? []);
+const children = $derived(root.data?.kind === "root" ? root.data.children : []);
 type Child = (typeof children)[number];
 type RootRow = {
   fqid: string;
