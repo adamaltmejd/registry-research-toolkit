@@ -1,7 +1,7 @@
 """Browse deliveries: each register page's per-variable deliveries, per scope.
 
 Browse eligibility is not the resolver's: it keeps alias windows no state
-contains (`register_variable_deliveries`), so it never reads `resolver_column`.
+contains (`_reference_deliveries`), so it never reads `resolver_column`.
 Scope is data: `reference` rows in every artifact, `holdings` rows (the held
 projection, clipped to physical periods) only in a steward artifact.
 """
@@ -42,10 +42,11 @@ def browse_scopes(conn: sqlite3.Connection) -> tuple[Scope, ...]:
 
 
 def browse_deliveries(conn: sqlite3.Connection, scope: Scope) -> list[BrowseRow]:
-    """`register_variable_deliveries` for every register under `scope`.
+    """The deliveries of every register under `scope`: `_reference_deliveries`
+    or `_held_deliveries`.
 
     Rows in `browse_delivery_id` order: registers by (provider, register) slug,
-    variables by slug, then each variable's deliveries in the reader's order.
+    variables by slug, then each variable's deliveries in the order those return.
     """
     with named_rows(conn):
         registers = conn.execute(
@@ -54,7 +55,7 @@ def browse_deliveries(conn: sqlite3.Connection, scope: Scope) -> list[BrowseRow]
             "WHERE r.slug IS NOT NULL ORDER BY p.slug, r.slug"
         ).fetchall()
         # A delivery names a variant some row of its variable references; the
-        # reader joins it without requiring it to share the register.
+        # listing joins it without requiring it to share the register.
         keys = {
             (register_id, variable, variant): (variable_id, variant_id)
             for register_id, variable, variable_id, variant, variant_id in conn.execute(
@@ -107,6 +108,11 @@ def _reference_deliveries(
     resolution. Columns fold case-insensitively; spellings with windows pool their
     eras under the one spelling `representative_columns` picks. No step reads the
     row order, so the reads stay unordered.
+
+    simplify: the fuse is one `_merge` per column over one row per state or alias
+    window, about 22,684 rows on the largest register (scb/ulf). Gap-and-islands
+    SQL (a window function over `MAX(valid_to) OVER (...)`) is the upgrade if a
+    register ever makes that slow.
 
     Every join is LEFT purely to pin the join order to a per-register `SEARCH v
     USING COVERING INDEX idx_variable_slug`; the `IS NOT NULL` predicates restore
@@ -416,14 +422,15 @@ def check_browse(
     if missing or surplus or windows:
         located = sorted({(row[1], row[2]) for row in missing | surplus})[:5]
         result.fail(
-            "browse_delivery disagrees with register_variable_deliveries: "
+            "browse_delivery disagrees with its recomputation from the states and "
+            "alias history: "
             f"{len(missing):,} missing, {len(surplus):,} surplus row(s), "
             f"{len(windows):,} window set(s) without a delivery; (scope, "
             f"variable_id) {located}"
         )
     else:
         result.ok(
-            "browse_delivery equals register_variable_deliveries over "
+            "browse_delivery equals its recomputation over "
             f"{', '.join(scopes)} ({len(stored):,} rows)"
         )
     overlapping = conn.execute(
