@@ -236,38 +236,34 @@ it when the new release needs a newer reader: it runs G1 on the old pin (with it
 baseline) and the new pin (with its baseline) and records any difference. Re-pin at
 least at every maintainer checkpoint.
 
-**Current pin** (package R, checkpoint 3; the data lives in
-`conformance/differential/config.toml`):
+**Current pin** (package 4.1; the data lives in `conformance/differential/config.toml`):
 
-- Release `reg_meta/v0.44.0` (schema 9.6.0, docs schema 1.3.0). Asset SHA-256s: global
-  `reg_meta.db.zst` `e8eb69576c95b5d658a5eb1e1608583bba9a090cf5c313c2f4bb27168cb06a7d`;
+- Release `reg_meta/v0.45.0` (schema 9.7.0, docs schema 1.3.0). Asset SHA-256s: global
+  `reg_meta.db.zst` `7424797d7b94b15f9d28eb323fa6f0811145d8b6220228ad3ea32edde5cce111`;
   SWECOV `reg_meta_swecov.db.zst`
-  `704e93060ff0a5b9f484109e292dcc3b00949fc61b50e1819a53ec3a0cfa5f75`; docs
+  `ff68bc7dceb0bb024f2d5b5c90870de6af1b25cfe2c167100ac149fd46c7870d`; docs
   `reg_meta_docs.db.zst`
   `85a1a6c883fca2ded5203c60c33d8657a438344c39ab088c0b01299a47721f57` (read by `search`
   and `docs`).
-- Baseline reader: `553ea622fdb3a5fd42a04c46920b6f7b9a5fe8d2` (main after 3a.2), run
-  from a detached worktree with its own locked environment. It reads the release
-  originals directly; the reference derive of package 3a.2a is retired (3a.13). The
-  baseline commit is pinned separately from the artifact pin until stage 4 retires the
-  Python runtime (package R): each SPA cutover deleted the webapp routes it replaced
-  (3a.10, 3a.11, C, 3b.6, 3e.4) and F deleted the app, while the served arm compares
-  against the baseline webapp, so no later commit can serve as baseline. Python fixes
-  after it are named exceptions (#1240's `register-scope-code-classifications`),
-  `reader-version` covers the release versions, and `docs-fold-raw-query` covers the
-  frozen docs search on the folded 1.3.0 `doc_fts`.
+- Baseline: the release tag's own code, from a detached worktree of the tag: its
+  `reg-meta` binary (`cargo build --release`) for the served arm and its locked Python
+  environment for the CLI arms and the fold sweep (until 4.9a). It reads the release
+  originals directly. Both served arms run the same server, so requests go to both
+  unchanged and responses compare as raw bytes; `derived-generation` and
+  `reader-version` are the only exceptions.
 
 **Three verification gates, with budgets.** They are named G0–G2 so they are not
 confused with the test tiers 1–3 in `ARCHITECTURE.md`.
 
-  | Gate | What runs                                                                                                                                                                                                                                                     | Budget                                                 | When                                                                                                                                                                                                                   |
-  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q`, `cargo test --workspace` and, from slice 3a, the Rust HTTP run (section 10), all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).              | under 60 s, plus 30 s for the Rust HTTP run            | every change                                                                                                                                                                                                           |
-  | G1   | Derive on the pinned real artifacts, then the differential harness: the baseline reader against derived tables (from stage 2) and the Rust server (per operation, as it lands), on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min warm; a cold run is reported, not budgeted | every PR touching derive or the docs build, and once per slice before its cutover (stage 3b–3e decision 7; earlier: every PR touching derive or the reader); after package 4.11, at releases only (stage 4 decision 4) |
-  | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                             | ~1 h today                                             | checkpoints and releases, never per PR                                                                                                                                                                                 |
+  | Gate | What runs                                                                                                                                                                                                                                                                   | Budget                                                 | When                                                                                                                                                                                                                   |
+  | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | G0   | `uv run python -m pytest conformance <touched packages> -n auto -q`, `cargo test --workspace` and, from slice 3a, the Rust HTTP run (section 10), all on synthetic artifacts. Conformance alone took 23 s serially (299 test items, 2026-10-07).                            | under 60 s, plus 30 s for the Rust HTTP run            | every change                                                                                                                                                                                                           |
+  | G1   | Derive on the pinned real artifacts, then the differential harness: the pinned release's reader (from 4.1 its Rust server) on the originals against the checkout's derived tables and server, on both artifact kinds. Runs locally from a shared artifact cache, not in CI. | under 5 min warm; a cold run is reported, not budgeted | every PR touching derive or the docs build, and once per slice before its cutover (stage 3b–3e decision 7; earlier: every PR touching derive or the reader); after package 4.11, at releases only (stage 4 decision 4) |
+  | G2   | Full base build plus derive and G1 on the result.                                                                                                                                                                                                                           | ~1 h today                                             | checkpoints and releases, never per PR                                                                                                                                                                                 |
 
-The G1 baseline is the Python reader **at a pinned commit, installed in its own
-environment**, never the checkout under change, so a regression moved into derive cannot
+The G1 baseline is the reader **at the pinned release's tag, built in its own
+environment** (the Python reader until stage 3; from package 4.1 the tag's `reg-meta`
+binary), never the checkout under change, so a regression moved into derive cannot
 validate itself. It reads the pinned release originals, never a copy derived by the code
 under change; the implementations under test read derived copies of them. It runs on
 both artifact kinds (the global catalog and the SWECOV steward artifact) and both
@@ -600,9 +596,9 @@ every runner calls Python in-process, so it must become implementation-neutral f
   real Python pipeline, cached by a hash of every transitive build input. Entries are
   immutable; a case that mutates an artifact copies it first. Rust tests and conformance
   read the same built files. Determinism makes caching safe.
-- The G1 differential harness (section 4) maps new API results back to the pinned
-  baseline reader's results where the shapes differ; the mapping is part of the harness,
-  not the product.
+- The G1 differential harness (section 4) mapped new API results back to the pinned
+  baseline reader's results where the shapes differed, until package 4.1 made the
+  baseline the pinned release's Rust server, whose responses compare as raw bytes.
 - Expected outputs change where the new API changes the surface. Those diffs are
   reviewed as content decisions, per the testing policy.
 

@@ -70,7 +70,6 @@ def test_concurrent_preparations_from_two_source_trees_keep_their_own_copies(
         originals["global"] / cache.DOC_DB_FILENAME,
     )
     pins = cache.Pins(
-        baseline_commit="0" * 40,
         tag="reg_meta/v0.0.0",
         catalogs={c: cache.Asset(f"{c}.db.zst", f"{c}-digest") for c in CATALOGS},
         docs=cache.Asset("docs.db.zst", "docs-digest"),
