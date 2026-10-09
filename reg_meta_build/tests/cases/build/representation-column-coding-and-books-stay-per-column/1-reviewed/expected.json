@@ -1,0 +1,220 @@
+{
+  "projections": [
+    {
+      "table": "alias_windows",
+      "where": {
+        "register": "percolumn"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to",
+        "coding_metadata",
+        "codes",
+        "classifications"
+      ],
+      "rows": [
+        [
+          "First",
+          "2020-01-01",
+          "2020-12-31",
+          "per_column",
+          [
+            [
+              "01",
+              "Label"
+            ],
+            [
+              "09350",
+              "Okänt"
+            ]
+          ],
+          [
+            "codes-first"
+          ]
+        ],
+        [
+          "first",
+          "2020-01-01",
+          "2020-12-31",
+          "per_column",
+          [
+            [
+              "02",
+              "Label"
+            ]
+          ],
+          [
+            "codes-second"
+          ]
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "percolumn"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "First",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "The backing state carries no value set."
+    },
+    {
+      "table": "conformance",
+      "where": {"register": "percolumn"},
+      "fields": ["column", "window", "classification", "status", "checked", "matched", "nonconforming"],
+      "rows": [
+        ["First", "alias", "codes-first", "extended", 2, 1, 1],
+        ["first", "alias", "codes-second", "conforming", 1, 1, 0]
+      ],
+      "note": "Each alias window is checked against its own book only; the backing state has none. First's 09350 is outside codes-first, certified as a sentinel for 2020, so First is extended."
+    },
+    {
+      "table": "conformance_codes",
+      "where": {"register": "percolumn"},
+      "fields": ["column", "window", "classification", "code", "label", "member_kind", "scoped_windows"],
+      "rows": [
+        ["First", "alias", "codes-first", "09350", "Okänt", "sentinel", [["2020-01-01", "2020-12-31"]]]
+      ]
+    },
+    {
+      "table": "code_index",
+      "where": {"register": "percolumn"},
+      "fields": ["variable", "code", "label", "mapping_count"],
+      "rows": [
+        ["income", "01", "Label", 2],
+        ["income", "02", "Label", 1],
+        ["income", "09350", "Okänt", 1]
+      ],
+      "note": "The reader's code-search index reaches the per-column codes through the alias windows alone, since the backing state has no value set. 01 Label is also CONTESTED's 2021 code, hence two variables."
+    },
+    {
+      "table": "state_classifications",
+      "where": {
+        "register": "percolumn"
+      },
+      "fields": [
+        "column"
+      ],
+      "rows": [],
+      "note": "No book is inherited by the backing state."
+    },
+    {
+      "table": "alias_windows",
+      "where": {
+        "register": "facts"
+      },
+      "fields": [
+        "column",
+        "column_metadata",
+        "operational_definition",
+        "source_register_text"
+      ],
+      "rows": [
+        [
+          "First",
+          "per_column",
+          "First operation",
+          "Question 1"
+        ],
+        [
+          "first",
+          "per_column",
+          "Second operation",
+          null
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "facts"
+      },
+      "fields": [
+        "column",
+        "operational_definition",
+        "source_register_text"
+      ],
+      "rows": [
+        [
+          "First",
+          null,
+          null
+        ]
+      ],
+      "note": "The backing state takes neither column's operational definition nor First's attribution 'Question 1'; first has none, and absent is a distinct value."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "contested"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "First",
+          "2021-01-01",
+          "2021-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "alias_windows",
+      "where": {
+        "register": "contested"
+      },
+      "fields": [
+        "column"
+      ],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "fields": [
+        "code",
+        "subject",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "conflicting_code_memberships",
+          "scb/contested/income",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "sentinel_classification_codes",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 2, 'variable', 'native-int', 5, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 2, 'variant', 'native-int', 20, 'column', 'First')",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "unsupported_representation_coding",
+          "scb/contested/income",
+          "2020-01-01",
+          "2020-12-31"
+        ]
+      ],
+      "note": "PERCOLUMN reports only the sentinel warning for First's certified 09350, and FACTS builds clean; CONTESTED reports its withheld list and the unsupported per-column domain."
+    }
+  ]
+}

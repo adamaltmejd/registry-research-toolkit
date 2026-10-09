@@ -1,0 +1,5 @@
+[classification]
+short_name = "FUTURE"
+slug = "future"
+name = "Future"
+codes_file = "future.csv"

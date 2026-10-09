@@ -1,0 +1,192 @@
+{
+  "description": "SOS workbook VAL (Värderegistret, subsets VAL_A and VAL_B) with one variable per list-reference shape, and workbook OTH (Andraregistret) whose EXPLICIT has no list. Kodlista sheets are written literally: a `Variabelnamn` or `Används i variabeln` preamble names a variable, a `Variabelnamn` column names one per row, a Tidsperiod-only row opens a period section, and Kodlista_SJUKHUS uses the hospital layout whose Från/Till cells are row validity (dates, yyyymm or yyyy). FIRST is delivered again in VAL_B, a row no pointer names; EXPLICIT is delivered in both VAL_A and VAL_B. CIVILOP, CIVILCP, CIVILH, CIVILHS and CIVILR each have a sheet shaped like Kodlista_Civil with one drift from CIVIL's exact pointer and single matching header: a pointer to another sheet, a pointer in another case, a header naming someone else, a second header, a row naming another variable. IDCLAMPS mirrors IDCLAMP the other way round: an unknown (Okänd) period section, then member 1 under a known 2020 row period. Kodlista_SUFFIX has no preamble and no Variabelnamn column; only its sheet name matches variable SUFFIX. IDINLINE, IDPERIOD, IDDAY, IDCLAMP and IDCLAMPS carry a Kopplingsvariabel (linkage) mark; IDMIX is delivered twice in VAL_A, marked once and once with a formula cell (`=1`, which makes no claim); every other variable's cell is blank. Plus the SCB sample.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "VAL",
+      "title": "Värderegistret",
+      "description": "Ett syntetiskt SOS-register med kodlistereferenser.",
+      "subsets": [
+        {"name": "VAL_A", "label": "Vy A", "description": "Vy", "data_from": 2001},
+        {"name": "VAL_B", "label": "Vy B", "description": "Vy", "data_from": 2001}
+      ],
+      "variables": [
+        {"name": "EXPLICIT", "deldatamangd": "VAL_A", "label": "Explicit", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "EXPLICIT", "deldatamangd": "VAL_B", "label": "Explicit", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "CIVIL", "deldatamangd": "VAL_A", "label": "Civil", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se Kodlista_Civil"},
+        {"name": "CIVILNP", "deldatamangd": "VAL_A", "label": "Civilnp", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Kod"},
+        {"name": "ANCHORED", "deldatamangd": "VAL_A", "label": "Anchored", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se Kodlista_Anchored!A1"},
+        {"name": "FIRST", "deldatamangd": "VAL_A", "label": "First", "description": "Kod", "data_from": 2020, "data_to": 2020, "external_classification": "Se Kodlista_SHARED"},
+        {"name": "FIRST", "deldatamangd": "VAL_B", "label": "First", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "SECOND", "deldatamangd": "VAL_A", "label": "Second", "description": "Kod", "data_from": 2020, "data_to": 2020, "external_classification": "Se Kodlista_SHARED"},
+        {"name": "OUTSIDER", "deldatamangd": "VAL_A", "label": "Outsider", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "AMBIGA", "deldatamangd": "VAL_A", "label": "Ambiga", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "AMBIGB", "deldatamangd": "VAL_A", "label": "Ambigb", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "CONFLICT", "deldatamangd": "VAL_A", "label": "Conflict", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "UNRESOLVED", "deldatamangd": "VAL_A", "label": "Unresolved", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "1=Ja, 2=Nej; 9=Okänt"},
+        {"name": "RESOLVED", "deldatamangd": "VAL_A", "label": "Resolved", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "1=Ja; 2=Nej"},
+        {"name": "INLINE", "deldatamangd": "VAL_A", "label": "Inline", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "1=Ett; 2=Två"},
+        {"name": "INLINE", "deldatamangd": "VAL_B", "label": "Inline", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "CVALID", "deldatamangd": "VAL_A", "label": "Cvalid", "description": "Kod", "data_from": 2010, "data_to": 2010},
+        {"name": "DAY", "deldatamangd": "VAL_A", "label": "Day", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "MONTH", "deldatamangd": "VAL_A", "label": "Month", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "BADDATE", "deldatamangd": "VAL_A", "label": "Baddate", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "REVERSED", "deldatamangd": "VAL_A", "label": "Reversed", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "BLANK", "deldatamangd": "VAL_A", "label": "Blank", "description": "Kod", "data_from": 2020, "data_to": 2020},
+        {"name": "IDINLINE", "deldatamangd": "VAL_A", "label": "Idinline", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "1; 2", "linkage": "Ja"},
+        {"name": "IDPERIOD", "deldatamangd": "VAL_A", "label": "Idperiod", "description": "Kod", "data_from": 2019, "data_to": 2021, "linkage": "Ja"},
+        {"name": "IDDAY", "deldatamangd": "VAL_A", "label": "Idday", "description": "Kod", "data_from": 2020, "data_to": 2020, "linkage": "Ja"},
+        {"name": "IDCLAMP", "deldatamangd": "VAL_A", "label": "Idclamp", "description": "Kod", "data_from": 2019, "data_to": 2021, "linkage": "Ja"},
+        {"name": "IDMIX", "deldatamangd": "VAL_A", "label": "Idmix", "description": "Kod", "data_from": 2020, "data_to": 2020, "linkage": "Ja"},
+        {"name": "IDMIX", "deldatamangd": "VAL_A", "label": "Idmix", "description": "Kod", "data_from": 2020, "data_to": 2020, "linkage": "=1"},
+        {"name": "CIVILOP", "deldatamangd": "VAL_A", "label": "Civilop", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se Kodlista_Civil"},
+        {"name": "CIVILCP", "deldatamangd": "VAL_A", "label": "Civilcp", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se kodlista_Civilcp"},
+        {"name": "CIVILH", "deldatamangd": "VAL_A", "label": "Civilh", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se Kodlista_Civilh"},
+        {"name": "CIVILHS", "deldatamangd": "VAL_A", "label": "Civilhs", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se Kodlista_Civilhs"},
+        {"name": "CIVILR", "deldatamangd": "VAL_A", "label": "Civilr", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se Kodlista_Civilr"},
+        {"name": "IDCLAMPS", "deldatamangd": "VAL_A", "label": "Idclamps", "description": "Kod", "data_from": 2019, "data_to": 2021, "linkage": "Ja"},
+        {"name": "SUFFIX", "deldatamangd": "VAL_A", "label": "Suffix", "description": "Kod", "data_from": 2020, "data_to": 2020}
+      ],
+      "sheets": {
+        "Kodlista_EXPLICIT": [
+          ["Variabelnamn", "EXPLICIT"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Ett"]
+        ],
+        "Kodlista_Civil": [
+          ["Variabelnamn", "Civil"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Ogift"]
+        ],
+        "Kodlista_Civilnp": [
+          ["Variabelnamn", "Civilnp"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Ogift"]
+        ],
+        "Kodlista_Anchored": [
+          ["Variabelnamn", "Anchored"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Ogift"]
+        ],
+        "Kodlista_SHARED": [
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Delad"]
+        ],
+        "Kodlista_AMBIG": [
+          ["Variabelnamn", "AMBIGA"],
+          ["Används i variabeln", "AMBIGB"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Tvetydig"]
+        ],
+        "Kodlista_CONFLICT": [
+          ["Variabelnamn", "CONFLICT"],
+          ["Variabelnamn", "Tidsperiod", "Kod", "Beskrivning"],
+          ["OTHER", null, "1", "Label"]
+        ],
+        "Kodlista_CONFLICT_OLD": [
+          ["Variabelnamn", "CONFLICT"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2001-2002", "2", "Gammal"]
+        ],
+        "Kodlista_CVALID": [
+          ["Variabelnamn", "CVALID"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2001-2002", null, null],
+          ["2010", "1", "Label"]
+        ],
+        "Kodlista_SJUKHUS": [
+          [
+            "Variabelnamn",
+            "Från",
+            "Till",
+            "Sjukhuskod",
+            "Region",
+            "Sjukhusnamn",
+            "Aktuella",
+            "Kommentar"
+          ],
+          ["DAY", null, null, "A", "R", "Alla", null, null],
+          ["DAY", "2020-02-29", "2020-03-01", "B", "R", "Skottdag", null, null],
+          ["MONTH", null, null, "A", "R", "Alla", null, null],
+          ["MONTH", "202002", "202002", "B", "R", "Februari", null, null],
+          ["BADDATE", "2019-02-29", null, "B", "R", "Fel", null, null],
+          ["REVERSED", "2021", "2020", "B", "R", "Omvänd", null, null],
+          ["BLANK", null, null, "A", "R", "Alla", null, null],
+          ["IDDAY", null, null, "A", "R", "Alla", null, null],
+          ["IDDAY", "2020-02-29", "2020-03-01", "B", "R", null, null, null]
+        ],
+        "Kodlista_IDPERIOD": [
+          ["Variabelnamn", "IDPERIOD"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2019-2021", "0", "Label"],
+          ["2020", "1", null]
+        ],
+        "Kodlista_IDMIX": [
+          ["Variabelnamn", "IDMIX"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2020", "0", "Label"],
+          ["2020", "1", null]
+        ],
+        "Kodlista_IDCLAMP": [
+          ["Variabelnamn", "IDCLAMP"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2019-2021", "0", "Alla"],
+          ["2020", null, null],
+          ["Okänd", "1", "Okänd period"]
+        ],
+        "Kodlista_Civilop": [
+          ["Variabelnamn", "Civilop"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Ogift"]
+        ],
+        "Kodlista_Civilcp": [
+          ["Variabelnamn", "Civilcp"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Ogift"]
+        ],
+        "Kodlista_Civilh": [
+          ["Variabelnamn", "Annan"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Ogift"]
+        ],
+        "Kodlista_Civilhs": [
+          ["Variabelnamn", "Civilhs"],
+          ["Används i variabeln", "Sibling"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Ogift"]
+        ],
+        "Kodlista_Civilr": [
+          ["Variabelnamn", "Civilr"],
+          ["Variabelnamn", "Tidsperiod", "Kod", "Beskrivning"],
+          ["SIBLING", null, "1", "Ogift"]
+        ],
+        "Kodlista_IDCLAMPS": [
+          ["Variabelnamn", "IDCLAMPS"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["2019-2021", "0", "Alla"],
+          ["Okänd", null, null],
+          ["2020", "1", "Ettan"]
+        ],
+        "Kodlista_SUFFIX": [
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          [null, "1", "Ett"]
+        ]
+      }
+    },
+    {
+      "abbrev": "OTH",
+      "title": "Andraregistret",
+      "description": "Ett andra syntetiskt SOS-register.",
+      "subsets": [
+        {"name": "OTH_A", "label": "Vy A", "description": "Vy", "data_from": 2001}
+      ],
+      "variables": [
+        {"name": "EXPLICIT", "deldatamangd": "OTH_A", "label": "Explicit", "description": "Kod", "data_from": 2020, "data_to": 2020}
+      ]
+    }
+  ]
+}

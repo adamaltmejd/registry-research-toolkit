@@ -1,0 +1,10 @@
+{
+  "replaces": [
+    "test_classification_succession_resolution.py::test_classification_succession_checks_combined_graph[sni2020-sni2000-cyclic]",
+    "test_resolved_writer_classifications.py::test_cyclic_classification_succession_preserves_previous_catalog[None]",
+    "test_resolved_writer_classifications.py::test_cyclic_classification_succession_preserves_previous_catalog[2050]"
+  ],
+  "note": "Books sni2000 'SNI 2000' and sni2020 'SNI 2020' derive sni2000 -> sni2020 (2020); relations.toml declares sni2020 -> sni2000 dated 2050, after the as-of year, so the cycle closes only when the inactive declared edge joins the derived one in one graph. The allowed twin is the SUN chain in classification-book-written-with-conformance-sentinels-and-successions.",
+  "fails_if": "`_prepare_classification_succession` (resolved_catalog.py) checks cycles over active edges only, or `resolve_classification_successions` checks the declared and derived edges in separate passes",
+  "sources": "scb-classification-books"
+}

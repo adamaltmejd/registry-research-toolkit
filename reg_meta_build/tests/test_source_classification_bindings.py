@@ -1,282 +1,437 @@
-"""Checked codebook bindings preserve original evidence and bounded ambiguity: case bindings, sentinels, omissions and plural books."""
+"""Classification-binding guards no build reaches: the application-time scoped-sentinel
+checks, the binding contract's fail-fasts and a year-independent delivery.
 
-import sqlite3
+Every binding a build makes (source declarations, label rules, overrides, conformance,
+sentinels) is pinned by the build cases `classification-*` and
+`coding-checked-entries-apply-then-go-stale-on-drift`. These tests drive
+`apply_classification_cases` directly because the build always hands it inputs that
+pass these guards; each docstring says why.
+"""
+
 from dataclasses import replace
 
 import pytest
-from _source_classification_bindings_support import (
-    apply_bindings as _apply,
-    binding_declaration as _declaration,
-    binding_setup as _setup,
-    declared_bindings as _declared,
-    form_bindings as _form,
-    sole_classification as _sole_classification,
-    sole_conformance as _sole_conformance,
-)
-from catalog_manifest import synthetic_manifest
-from reg_meta_build.curation_compile import SentinelCode
-from reg_meta_build.db import SCHEMA_VERSION
+from _csv_fixtures import scb_record
+from reg_meta.source_evidence import canonical_sha256
 from reg_meta_build.resolved_catalog import (
+    ResolvedClassification,
     ResolvedClassificationCode,
-    write_resolved_catalog,
 )
 from reg_meta_build.source_classification_bindings import (
     apply_classification_cases,
 )
 from reg_meta_build.source_coding import (
+    CodeListClaim,
+    CodeMembershipClaim,
+    copied_coding_fingerprints,
     resolve_code_membership,
 )
 from reg_meta_build.source_coding_choices import coding_expectations
 from reg_meta_build.source_curation import (
     ClassificationDecision,
+    CurationCase,
+    PeerGuard,
+    SourceEvidence,
+    capture_expectations,
 )
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import (
+    NativeCoordinates,
     ScopeInterval,
+    SourceFields,
     TemporalScope,
     value_field,
 )
 
 
-def test_checked_classification_forms_and_writes_without_copying_canonical_labels(
-    tmp_path,
-):
-    setup = _setup()
-    result = _apply(setup)
-    assert result.diagnostics == ()
-    variable = _form(setup, result)
-    state = variable.states[0]
-    assert _sole_classification(state) == "fixture"
-    assert state.value_set is not None and state.value_set.members == (
-        ("01", "Source label"),
-    )
-    assert (
-        _sole_conformance(state) is not None
-        and _sole_conformance(state).status == "conforming"
-    )
-    assert state.provenance is not None and "binding:" in state.provenance
-    write_resolved_catalog(
-        (variable,),
-        tmp_path / "reg_meta.db",
-        manifest=synthetic_manifest(),
-        classifications=tuple(setup[3].values()),
-    )
-    with pytest.raises(ValueError, match="one application"):
-        _apply(setup, coding=result.coding)
-
-
-def test_codebook_change_is_checked_against_current_delivery():
-    setup = _setup()
-    changed = _setup(code="02")[2]
-    assert _apply(setup, coding=changed).diagnostics == ()
-    book = setup[3]["fixture"]
-    reordered = book.model_copy(update={"codes": tuple(reversed(book.codes))})
-    assert _apply(setup, classifications={"fixture": reordered}).diagnostics == ()
-    changed_book = book.model_copy(update={"name": "Changed definition"})
-    result = _apply(setup, classifications={"fixture": changed_book})
-    assert result.diagnostics == ()
-    assert (
-        _sole_classification(next(iter(result.coding.values())).segments[0])
-        == "fixture"
+def _sole_classification(state):
+    assert len(state.classification_links) <= 1
+    return (
+        state.classification_links[0].classification
+        if state.classification_links
+        else None
     )
 
 
-def test_book_losing_the_observed_code_severs_current_binding():
-    setup = _setup(code="02")
-    assert _apply(setup).diagnostics == ()
-    book = setup[3]["fixture"]
-    shrunk = book.model_copy(
-        update={"codes": tuple(c for c in book.codes if c.code != "02")}
-    )
-    result = _apply(setup, classifications={"fixture": shrunk})
-    assert result.diagnostics[0].code == "nonconforming_classification_codes"
-    state = _form(setup, result).states[0]
-    assert _sole_classification(state) == "fixture"
-    assert (
-        _sole_conformance(state) is not None
-        and _sole_conformance(state).status == "extended"
-    )
-    assert state.value_set is not None and state.value_set.members == (
-        ("02", "Source label"),
+def _sole_conformance(state):
+    assert len(state.classification_links) <= 1
+    return (
+        state.classification_links[0].conformance
+        if state.classification_links
+        else None
     )
 
 
-def test_multiple_books_retain_independent_overlap_links_and_inline_coding():
-    setup = _setup()
-    case = setup[1]
-    assert isinstance(case.decision, ClassificationDecision)
-    alternate = setup[3]["fixture"].model_copy(update={"slug": "alternate"})
-    competing = case.model_copy(
+def _setup(*, code="01"):
+    """One 2020 SCB column coded `code` 'Source label', the book `fixture` (01, 02) and
+    a reviewed classification case binding the column to it for 2020."""
+    record = scb_record(
+        colname="Column",
+        var_id=1,
+        cvid=100,
+        varname="Variable",
+        year="2020",
+        data_type="int",
+    )
+    occurrence = source_occurrence(record)
+    assert occurrence.column_key is not None
+    classification = ResolvedClassification(
+        slug="fixture",
+        short_name="FIX",
+        name="Fixture",
+        codes=(
+            ResolvedClassificationCode(code="01", label="Canonical label"),
+            ResolvedClassificationCode(code="02", label="Second label"),
+        ),
+    )
+    claims = (
+        CodeListClaim(
+            "list",
+            TemporalScope(
+                kind="intervals",
+                intervals=(ScopeInterval(start="2020", end="2020"),),
+            ),
+            (
+                CodeMembershipClaim(
+                    code, "Source label", TemporalScope(kind="year_independent")
+                ),
+            ),
+        ),
+    )
+    coding = {occurrence.column_key: resolve_code_membership(claims)}
+    expected = capture_expectations((record,), fields=("column_name",), coding=True)
+    case = CurationCase(
+        case_id="binding",
+        targets=expected,
+        peer_guards=(
+            PeerGuard(
+                guard_id="membership",
+                source=record.source,
+                native=NativeCoordinates(register_id=1, variable_id=1),
+                edition_scopes=(record.edition_scope,),
+                expected_members=tuple(e.ref for e in expected),
+            ),
+        ),
+        decision=ClassificationDecision(
+            reviewed=True,
+            column_key=occurrence.column_key,
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            expected_codings=coding_expectations(claims, "2020-01-01", "2020-12-31"),
+            classification="fixture",
+            expected_classification="0" * 64,
+            binding_scope="declared",
+            reason="Existing accepted classification declaration",
+            provenance="accepted fixture",
+        ),
+    )
+    return record, case, coding, {"fixture": classification}
+
+
+def _apply(setup, cases=None, *, coding=None, classifications=None):
+    record, case, original, books = setup
+    return apply_classification_cases(
+        (record,),
+        (case,) if cases is None else cases,
+        coding=original if coding is None else coding,
+        classifications=books if classifications is None else classifications,
+    )
+
+
+def _declaration(setup, field=None):
+    """The setup column's occurrence, declaring `field` (the book's short name)."""
+    occurrence = source_occurrence(setup[0])
+    return replace(
+        occurrence,
+        fields=occurrence.fields.model_copy(
+            update={"classification_declared": field or value_field("FIX")}
+        ),
+    )
+
+
+def _declared(setup, occurrences, **kwargs):
+    return apply_classification_cases(
+        (setup[0],),
+        (),
+        coding=kwargs.pop("coding", setup[2]),
+        classifications=kwargs.pop("classifications", setup[3]),
+        references=kwargs.pop("references", {"FIX": "fixture"}),
+        occurrences=occurrences,
+        **kwargs,
+    )
+
+
+def _scoped_sentinel_case(setup, *, start="2020-01-01", end="2020-12-31"):
+    record, case, coding, books = setup
+    decision = case.decision
+    claims = coding[decision.column_key].claims
+    return case.model_copy(
         update={
-            "case_id": "competing",
-            "decision": case.decision.model_copy(
+            "case_id": "scoped-sentinel",
+            "targets": capture_expectations(
+                (record,), fields=tuple(SourceFields.model_fields), coding=True
+            ),
+            "decision": decision.model_copy(
                 update={
-                    "classification": "alternate",
-                    "expected_classification": "0" * 64,
-                    "valid_from": "2020-07-01",
-                    "expected_codings": coding_expectations(
-                        setup[2][case.decision.column_key].claims,
-                        "2020-07-01",
-                        "2020-12-31",
+                    "valid_from": start,
+                    "valid_to": end,
+                    "expected_codings": coding_expectations(claims, start, end),
+                    "expected_source_codings": copied_coding_fingerprints(claims),
+                    "expected_classification": canonical_sha256(
+                        books["fixture"].model_dump(mode="json")
                     ),
+                    "sentinel_members": (("99", "Source label"),),
+                    "binding_scope": "inline_coding",
                 }
             ),
         }
     )
-    books = {**setup[3], "alternate": alternate}
-    result = _apply(setup, (case, competing), classifications=books)
-    states = _form(setup, result).states
-    assert [
-        (
-            s.valid_from,
-            s.valid_to,
-            tuple(link.classification for link in s.classification_links),
-        )
-        for s in states
-    ] == [
-        ("2020-01-01", "2020-06-30", ("fixture",)),
-        ("2020-07-01", "2020-12-31", ("alternate", "fixture")),
-    ]
-    assert states[0].value_set == states[1].value_set
-    assert result.diagnostics[0].code == "multiple_classifications_declared"
-    assert result.diagnostics[0].severity == "warning"
-    assert _apply(setup, (competing, case), classifications=books) == result
 
 
-def test_declared_reference_can_exist_without_inline_codes_but_inline_override_cannot():
-    setup = _setup(inline=False)
-    declared = _form(setup, _apply(setup)).states[0]
-    assert _sole_classification(declared) == "fixture" and declared.value_set is None
-    assert _sole_conformance(declared) is None
-    case = setup[1]
-    inline_case = case.model_copy(
-        update={
-            "decision": case.decision.model_copy(
-                update={"binding_scope": "inline_coding"}
-            )
-        }
-    )
-    inline = _apply(setup, (inline_case,))
-    assert inline.coding == setup[2] and inline.diagnostics == ()
+# The build compiles a `[[coding.sentinel]]` and applies it from the same build's code
+# lists and books, so the build reaches only the compile-time member/label/book match
+# (case `coding-checked-entries-apply-then-go-stale-on-drift`). The tests below keep the
+# application-time sentinel guards no build reaches (maintainer decision, as for the
+# Stage 7b delivery-coverage arms).
 
 
-def test_noncanonical_codes_keep_source_members_and_declared_evidence(tmp_path):
+@pytest.mark.parametrize("change", ["member", "outside-window", "book"])
+def test_scoped_sentinel_rejects_changed_coding_and_codebook(change):
+    """A sentinel case reviewed against one code list and book, applied to a changed
+    one (a new in-window member, a new list outside the window, or a renamed book),
+    refuses with `classification_evidence_changed` and binds no window.
+
+    No boundary reaches it: `compile_coding_register` recomputes `expected_codings`,
+    `expected_source_codings` and `expected_classification` from the same build it
+    applies to, so they never disagree. Fails if `apply_classification_cases` stops
+    comparing a scoped sentinel's pinned codings, source fingerprints or book digest
+    with the evidence it binds.
+    """
     setup = _setup(code="99")
-    result = _apply(setup)
-    variable = _form(setup, result)
-    state = variable.states[0]
-    assert _sole_classification(state) == "fixture" and state.value_set is not None
-    assert state.value_set.members == (("99", "Source label"),)
-    assert _sole_conformance(state) is not None
-    assert _sole_conformance(state).declared_classification == "fixture"
-    assert _sole_conformance(state).status == "extended"
-    assert result.diagnostics[0].code == "nonconforming_classification_codes"
-    write_resolved_catalog(
-        (variable,),
-        tmp_path / "reg_meta.db",
-        manifest=synthetic_manifest(),
-        diagnostic=True,
-        classifications=tuple(setup[3].values()),
+    case = _scoped_sentinel_case(setup, start="2020-07-01")
+    key = case.decision.column_key
+    claims = setup[2][key].claims
+    books = setup[3]
+    if change == "book":
+        books = {"fixture": books["fixture"].model_copy(update={"name": "Changed"})}
+    elif change == "outside-window":
+        claims = (
+            *claims,
+            CodeListClaim(
+                "additional",
+                TemporalScope(
+                    kind="intervals",
+                    intervals=(ScopeInterval(start="2019", end="2019"),),
+                ),
+                (
+                    CodeMembershipClaim(
+                        "02", "Other", TemporalScope(kind="year_independent")
+                    ),
+                ),
+            ),
+        )
+    else:
+        members = (*claims[0].members, replace(claims[0].members[0], code="02"))
+        claims = (replace(claims[0], members=members),)
+    result = _apply(
+        setup,
+        (setup[1], case),
+        coding={key: resolve_code_membership(claims)},
+        classifications=books,
+    )
+    assert "classification_evidence_changed" in {d.code for d in result.diagnostics}
+    assert all(
+        _sole_classification(s)
+        == (None if s.valid_from.startswith("2019") else "fixture")
+        for s in result.coding[key].segments
+    )
+    assert all(
+        not _sole_conformance(s).sentinel_members
+        for s in result.coding[key].segments
+        if _sole_conformance(s)
     )
 
 
-def test_curated_sentinel_keeps_checked_binding_with_warning(tmp_path):
-    setup = _setup(
-        code="99",
-        sentinels=(SentinelCode(code="99", meaning="not applicable"),),
-    )
-    sentinel_book = setup[3]["fixture"]
-    result = _apply(setup)
-    assert [d.code for d in result.diagnostics] == ["sentinel_classification_codes"]
-    assert result.diagnostics[0].severity == "warning"
-    variable = _form(setup, result)
-    state = variable.states[0]
-    assert _sole_classification(state) == "fixture"
-    assert state.value_set is not None and state.value_set.members == (
-        ("99", "Source label"),
-    )
-    assert _sole_conformance(state) is not None
-    assert _sole_conformance(state).status == "extended"
-    assert _sole_conformance(state).nonconforming_members == ()
-    assert _sole_conformance(state).sentinel_members == (("99", "Source label"),)
-    write_resolved_catalog(
-        (variable,),
-        tmp_path / "reg_meta.db",
-        manifest=synthetic_manifest(),
-        classifications=(sentinel_book,),
-    )
+def test_scoped_sentinel_guard_uses_accepted_owner_and_complete_effective_peers():
+    """A sentinel case on an accepted partition owner's column binds the book; applied
+    to evidence with a new peer record, no effective occurrence, or a narrowed
+    occurrence period, it binds no window and reports a diagnostic.
 
-
-def test_naming_a_sentinel_does_not_stale_the_binding():
-    setup = _setup()
-    book = setup[3]["fixture"]
-    assert _apply(setup).diagnostics == ()
-    sentinel_book = book.model_copy(
-        update={"sentinel_codes": (SentinelCode(code="99", meaning="not applicable"),)}
-    )
-    assert _apply(setup, classifications={"fixture": sentinel_book}).diagnostics == ()
-
-
-def test_accepted_omission_survives_classification_application():
-    setup = _setup()
-    key, original = next(iter(setup[2].items()))
-    omitted = replace(
+    No boundary reaches the refusal: the peer guard is compiled from the same build's
+    effective columns it is applied to. Fails if `apply_classification_cases` stops
+    checking a sentinel case's `peer_guards` against the effective column's members
+    and period, or reads the original column key instead of the accepted owner's.
+    """
+    setup = _setup(code="99")
+    record = setup[0]
+    original = source_occurrence(record)
+    accepted = replace(
         original,
-        segments=tuple(replace(s, state_disposition="omit") for s in original.segments),
+        variable_key=(*original.variable_key, "accepted-partition", "1.1.accepted"),
     )
-    result = _apply(setup, coding={key: omitted})
-    assert result.coding == {key: omitted} and result.diagnostics == ()
-
-
-def test_declared_classification_does_not_hide_an_uncovered_coding_period():
-    setup = _setup()
-    key, original = next(iter(setup[2].items()))
-    claim = replace(
-        original.claims[0],
-        scope=TemporalScope(
-            kind="intervals",
-            intervals=(ScopeInterval(start="2020-01-01", end="2020-06-30"),),
-        ),
-    )
-    case = setup[1].model_copy(
+    key = accepted.column_key
+    assert key is not None
+    case = _scoped_sentinel_case(setup)
+    case = case.model_copy(
         update={
-            "decision": setup[1].decision.model_copy(
-                update={
-                    "expected_codings": coding_expectations(
-                        (claim,), "2020-01-01", "2020-12-31"
-                    )
-                }
-            )
+            "decision": case.decision.model_copy(update={"column_key": key}),
+            "peer_guards": (
+                PeerGuard(
+                    guard_id="accepted-members",
+                    source=record.source,
+                    effective_column=key,
+                    expected_members=tuple(t.ref for t in case.targets),
+                ),
+            ),
         }
     )
-    result = _apply(setup, (case,), coding={key: resolve_code_membership((claim,))})
-    issue = result.coding[key].issues[-1]
-    assert (issue.code, issue.valid_from, issue.valid_to) == (
-        "missing_coding_period",
-        "2020-07-01",
-        "2020-12-31",
+    coding = {key: setup[2][original.column_key]}
+    arguments = {"coding": coding, "classifications": setup[3]}
+    evidence = SourceEvidence((record,), effective_occurrences=(accepted,))
+    good = apply_classification_cases(evidence, (case,), **arguments)
+    assert _sole_classification(good.coding[key].segments[0]) == "fixture"
+    peer = record.model_copy(
+        update={
+            "record_id": "new-peer",
+            "locators": tuple(
+                loc.model_copy(
+                    update={
+                        "semantic_record_key": (
+                            *loc.semantic_record_key[:-1],
+                            "member:101",
+                        )
+                    }
+                )
+                for loc in record.locators
+            ),
+        }
     )
-    assert result.coding[key].segments[-1].code_set is None
-    assert result.coding[key].claims == (claim,)
+    extra = replace(accepted, source_records=(peer,))
+    for changed in (
+        SourceEvidence((record, peer), effective_occurrences=(accepted, extra)),
+        SourceEvidence((record,), effective_occurrences=()),
+        SourceEvidence(
+            (record,),
+            effective_occurrences=(
+                replace(
+                    accepted,
+                    edition_period_scope=TemporalScope(
+                        kind="intervals",
+                        intervals=(
+                            ScopeInterval(start="2020-07-01", end="2020-12-31"),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ):
+        result = apply_classification_cases(changed, (case,), **arguments)
+        assert result.diagnostics and all(
+            _sole_classification(s) is None for s in result.coding[key].segments
+        )
 
 
-def test_missing_conversion_is_fatal_and_original_membership_change_is_stale():
+def test_scoped_sentinel_requires_every_shared_ref_original_projection():
+    """A sentinel case whose target is one record projected as two physical columns
+    binds the book while both projections are delivered; applied with one projection
+    missing, it is not applicable and binds nothing.
+
+    No boundary reaches the refusal: the build captures the targets from the same
+    records it applies the case to. Fails if `apply_classification_cases` compares a
+    target's ref instead of every captured projection alternative.
+    """
+    setup = _setup(code="99")
+    record = setup[0]
+    twin = record.model_copy(
+        update={
+            "record_id": "shared-ref-twin",
+            "fields": record.fields.model_copy(
+                update={"column_name": value_field("Sibling")}
+            ),
+        }
+    )
+    first = source_occurrence(record)
+    second = replace(source_occurrence(twin), fields=first.fields)
+    key = first.column_key
+    assert key is not None
+    case = _scoped_sentinel_case(setup)
+    targets = capture_expectations(
+        (record, twin), fields=tuple(SourceFields.model_fields), coding=True
+    )
+    assert len(targets) == 1 and len(targets[0].alternatives) == 2
+    case = case.model_copy(
+        update={
+            "targets": targets,
+            "peer_guards": (
+                PeerGuard(
+                    guard_id="complete-twins",
+                    source=record.source,
+                    effective_column=key,
+                    expected_members=tuple(t.ref for t in targets),
+                ),
+            ),
+        }
+    )
+    good = apply_classification_cases(
+        SourceEvidence((record, twin), effective_occurrences=(first, second)),
+        (case,),
+        coding=setup[2],
+        classifications=setup[3],
+    )
+    assert _sole_classification(good.coding[key].segments[0]) == "fixture"
+    missing = apply_classification_cases(
+        SourceEvidence((record,), effective_occurrences=(first,)),
+        (case,),
+        coding=setup[2],
+        classifications=setup[3],
+    )
+    assert missing.evaluations[0].status != "applicable"
+    assert _sole_classification(missing.coding[key].segments[0]) is None
+
+
+def test_source_declaration_contract_errors_are_fatal():
+    """A source declaration bound against a reference that names no converted book, a
+    column with no converted coding, no reference dictionary at all, an occurrence
+    without original evidence, or a non-text value raises instead of binding or
+    reporting a curation issue; so does applying the bindings a second time to coding
+    that already carries them.
+
+    No boundary reaches these: the pipeline builds the reference dictionary from the
+    same loaded books it converts, binds every occurrence column before this step,
+    applies the bindings once, and every adapter delivers declarations as text with
+    their source records. Fails if `apply_classification_cases` (or its
+    `_source_bindings`) treats any of these as an unresolved reference, skips the
+    occurrence, or binds the second application over the first.
+    """
     setup = _setup()
-    with pytest.raises(ValueError, match="unconverted canonical"):
-        _apply(setup, classifications={})
+    occurrence = _declaration(setup)
+    with pytest.raises(ValueError, match="unconverted codebook"):
+        _declared(setup, (occurrence,), references={"FIX": "missing"})
     with pytest.raises(ValueError, match="unconverted column"):
-        _apply(setup, coding={})
-    result = apply_classification_cases(
-        (), (setup[1],), coding=setup[2], classifications=setup[3]
-    )
-    assert result.coding == setup[2]
-    assert result.evaluations[0].status == "stale"
-    assert result.diagnostics
+        _declared(setup, (occurrence,), coding={})
+    with pytest.raises(ValueError, match="explicit reference dictionary"):
+        _declared(setup, (occurrence,), references=None)
+    with pytest.raises(ValueError, match="original evidence"):
+        _declared(setup, (replace(occurrence, source_records=()),))
+    with pytest.raises(ValueError, match="nonempty text"):
+        _declared(setup, (_declaration(setup, value_field(True)),))
+    result = _declared(setup, (occurrence,))
+    with pytest.raises(ValueError, match="one application"):
+        _declared(setup, (occurrence,), coding=result.coding)
 
 
-def test_dated_classification_decision_does_not_date_independent_delivery():
+def test_override_does_not_date_a_year_independent_delivery():
+    """A book's `[[binding.variable]]` override on a column whose coding is
+    year-independent reports `unsupported_classification_scope` and leaves the coding
+    unbound: a dated binding cannot establish applicability for an undated table.
+
+    Only LISA delivers year-independent code lists, and the build-case runner has no
+    LISA delivery (as for the year-independent coding tests Stage 8a kept). Fails if
+    `apply_classification_cases` binds a dated decision to year-independent segments
+    or drops the diagnostic.
+    """
     setup = _setup()
-    coding = {
+    year_independent = {
         key: replace(
             resolution,
             segments=tuple(
@@ -291,126 +446,13 @@ def test_dated_classification_decision_does_not_date_independent_delivery():
         )
         for key, resolution in setup[2].items()
     }
-    result = _apply(setup, coding=coding)
-    assert any(
-        issue.code == "unsupported_classification_scope" for issue in result.diagnostics
-    )
-    assert result.coding == coding
-
-
-def test_two_book_conformance_and_extensions_are_stored_independently(tmp_path):
-    setup = _setup()
-    second = setup[3]["fixture"].model_copy(
-        update={
-            "slug": "second",
-            "short_name": "TWO",
-            "codes": (ResolvedClassificationCode(code="02", label="Two"),),
-        }
-    )
-    result = _declared(
-        setup,
-        (_declaration(setup), _declaration(setup, value_field("TWO"))),
-        references={"FIX": "fixture", "TWO": "second"},
-        classifications={**setup[3], "second": second},
-    )
-    variable = _form(setup, result)
-    state = variable.states[0]
-    assert state.value_set.members == (("01", "Source label"),)
-    assert [
-        (link.classification, link.conformance.status)
-        for link in state.classification_links
-    ] == [("fixture", "conforming"), ("second", "extended")]
-    assert all(link.provenance for link in state.classification_links)
-    output = tmp_path / "reg_meta.db"
-    write_resolved_catalog(
-        (variable,),
-        output,
-        manifest=synthetic_manifest(),
-        classifications=(*setup[3].values(), second),
-    )
-    with sqlite3.connect(output) as connection:
-        assert connection.execute(
-            "SELECT c.slug, cc.status, cc.overlap FROM classification_conformance cc JOIN classification c ON c.id=cc.declared_classification_id ORDER BY c.slug"
-        ).fetchall() == [("fixture", "conforming", 1.0), ("second", "extended", 0.0)]
-        assert connection.execute(
-            "SELECT c.slug, vc.code FROM classification_conformance_code cc JOIN classification c ON c.id=cc.declared_classification_id JOIN value_code vc USING(code_id)"
-        ).fetchall() == [("second", "01")]
-        assert (
-            connection.execute("SELECT count(*) FROM state_classification").fetchone()[
-                0
-            ]
-            == 2
-        )
-        assert connection.execute("PRAGMA foreign_key_check").fetchall() == []
-        assert (
-            connection.execute(
-                "SELECT value FROM import_manifest WHERE key='schema_version'"
-            ).fetchone()[0]
-            == SCHEMA_VERSION
-        )
-    from reg_meta.db import SCHEMA_VERSION as READER_SCHEMA_VERSION, open_db
-    from reg_meta.errors import RegMetaError
-
-    with open_db(output) as conn:
-        assert (
-            conn.execute("SELECT count(*) FROM state_classification").fetchone()[0] == 2
-        )
-    conn.close()
-    from reg_meta_build.db import open_built_db
-
-    with open_built_db(output) as conn:
-        assert (
-            conn.execute("SELECT count(*) FROM state_classification").fetchone()[0] == 2
-        )
-    conn.close()
-    with sqlite3.connect(output) as conn:
-        conn.execute(
-            "UPDATE import_manifest SET value='6.18.0' WHERE key='schema_version'"
-        )
-    # The reader and the builder each name the schema version they gate on.
-    for opener, version in (
-        (open_db, READER_SCHEMA_VERSION),
-        (open_built_db, SCHEMA_VERSION),
-    ):
-        with pytest.raises(RegMetaError) as stale:
-            opener(output)
-        assert stale.value.code == "schema_incompatible"
-        assert "6.18.0" in stale.value.message and version in stale.value.message
-
-
-@pytest.mark.parametrize("difference", ["code", "label"])
-def test_plural_books_do_not_union_contrary_source_domains(difference):
-    setup = _setup()
-    key, original = next(iter(setup[2].items()))
-    first = replace(original.claims[0], version_label="First")
-    member = first.members[0]
-    changed = (
-        replace(member, code="02")
-        if difference == "code"
-        else replace(member, label="Different meaning")
-    )
-    second = replace(
-        first, claim_id="other", version_label="Second", members=(changed,)
-    )
-    coding = {key: resolve_code_membership((first, second))}
-    alternate = setup[3]["fixture"].model_copy(update={"slug": "alternate"})
     result = apply_classification_cases(
         (setup[0],),
         (),
-        coding=coding,
-        classifications={**setup[3], "alternate": alternate},
+        coding=year_independent,
+        classifications=setup[3],
         occurrences=(source_occurrence(setup[0]),),
-        label_rules={"First": "fixture", "Second": "alternate"},
+        override=("fixture", "classifications/FIX.toml#/binding/variable/1"),
     )
-    assert result.coding[key].issues == coding[key].issues
-    assert coding[key].issues
-    assert all(segment.code_set is None for segment in result.coding[key].segments)
-    assert all(
-        link.conformance is None
-        for segment in result.coding[key].segments
-        for link in segment.classification_links
-    )
-    assert tuple(
-        link.classification
-        for link in result.coding[key].segments[0].classification_links
-    ) == ("alternate", "fixture")
+    assert [d.code for d in result.diagnostics] == ["unsupported_classification_scope"]
+    assert result.coding == year_independent

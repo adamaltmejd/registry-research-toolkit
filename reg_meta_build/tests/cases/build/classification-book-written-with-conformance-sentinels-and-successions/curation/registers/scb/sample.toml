@@ -1,0 +1,29 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "extended"
+[[variable]]
+native_id = "1.102"
+slug = "sentinel"
+[[variable]]
+native_id = "1.103"
+slug = "scoped"
+[[variable]]
+native_id = "1.104"
+slug = "typeless"
+
+[[coding.sentinel]]
+variable = "1.103"
+variant = "people"
+column = "SCOPED"
+periods = [["2020-01-01", "2020-12-31"]]
+classification = "example-codes"
+members = [["09350", "Okänt"]]
+reason = "Reviewed coding"
+source = "fixture"

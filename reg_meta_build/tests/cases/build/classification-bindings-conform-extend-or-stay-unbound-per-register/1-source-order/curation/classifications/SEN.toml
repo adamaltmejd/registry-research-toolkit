@@ -1,0 +1,6 @@
+[classification]
+short_name = "SEN"
+slug = "sen"
+name = "SEN"
+codes_file = "sen.csv"
+sentinel_codes = [{ code = "00000", meaning = "not applicable" }]

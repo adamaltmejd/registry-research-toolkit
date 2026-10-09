@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "setaside"
+native_id = "31"
+[[variant]]
+native_id = "31.310"
+slug = "people"
+[[variable]]
+native_id = "31.3101"
+slug = "value"

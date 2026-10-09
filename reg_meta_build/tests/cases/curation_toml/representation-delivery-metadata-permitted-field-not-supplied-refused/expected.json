@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_representation_delivery_metadata.py::test_checked_delivery_text_keeps_source_names_without_common_winner[True]",
+  "fails_if": "`DeliveryMetadataDecision.require_targets` stops requiring each permitted field to be a positive supplied text, so a record whose name is unknown loads under a name permission",
+  "note": "The replaced test's last leg: a record whose name is unknown cannot be pinned by a name permission. The build reached it through resolve_representation_cases; the loader refuses it first, at the entry. The allowed twin is the `texts` register of cases/build/representation-delivery-metadata-keeps-literal-units-and-texts.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[representation.delivery_metadata]] entry 1",
+    "message_contains": [
+      "delivery metadata needs positive permitted source facts"
+    ]
+  }
+}

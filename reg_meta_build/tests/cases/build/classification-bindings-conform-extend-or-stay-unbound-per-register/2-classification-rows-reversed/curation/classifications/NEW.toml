@@ -1,0 +1,7 @@
+[classification]
+short_name = "NEW"
+slug = "new"
+name = "NEW"
+codes_file = "new.csv"
+family = "pair"
+valid_from = 2020

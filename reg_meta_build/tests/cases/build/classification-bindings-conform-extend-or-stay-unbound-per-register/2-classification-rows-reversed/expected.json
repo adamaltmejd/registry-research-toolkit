@@ -1,0 +1,314 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "state_classifications",
+      "fields": ["register", "variable", "valid_from", "valid_to", "classification"],
+      "rows": [
+        ["cls", "conf", "2020-01-01", "2020-12-31", "fix"],
+        ["cls", "ext", "2020-01-01", "2020-12-31", "fix"],
+        ["cls", "high", "2020-01-01", "2020-12-31", "hun"],
+        ["cls", "sentonly", "2020-01-01", "2020-12-31", "sen"],
+        ["cls", "sentmix", "2020-01-01", "2020-12-31", "sen"],
+        ["cls", "sentfree", "2020-01-01", "2020-12-31", "sen"],
+        ["cls", "gap", "2019-01-01", "2019-12-31", "fix"],
+        ["cls", "gap", "2020-01-01", "2020-12-31", "fix"],
+        ["cls", "unk", "2020-01-01", "2020-12-31", "fix"],
+        ["cls", "miss", "2019-01-01", "2019-12-31", "fix"],
+        ["cls", "miss", "2020-01-01", "2020-12-31", "fix"],
+        ["openreg", "opencol", "2010-01-01", "9999-12-31", "fix"],
+        ["member", "memcol", "2020-01-01", "2020-12-31", "new"],
+        ["canon", "outcol", "2020-01-01", "2020-12-31", "fix"],
+        ["canon", "twocol", "2020-01-01", "2020-12-31", "fix"],
+        ["canon", "twocol", "2020-01-01", "2020-12-31", "two"],
+        ["canon", "duplab", "2020-01-01", "2020-12-31", "fix"],
+        ["canon", "blankb", "2020-01-01", "2020-12-31", "fix"],
+        ["lkf", "lkf", "2020-01-01", "2020-12-31", "fix"],
+        ["pair", "pair", "2020-01-01", "2020-12-31", "fix"],
+        ["multi", "multi", "2020-01-01", "2020-12-31", "alt"],
+        ["multi", "multi", "2020-01-01", "2020-12-31", "fix"],
+        ["split", "split", "2019-01-01", "2019-12-31", "fix"],
+        ["split", "split", "2020-01-01", "2020-12-31", "alt"],
+        ["split", "split", "2020-01-01", "2020-12-31", "fix"],
+        ["split", "split", "2021-01-01", "2021-12-31", "fix"],
+        ["contrac", "contrac", "2020-01-01", "2020-12-31", "alt"],
+        ["contrac", "contrac", "2020-01-01", "2020-12-31", "fix"],
+        ["contral", "contral", "2020-01-01", "2020-12-31", "alt"],
+        ["contral", "contral", "2020-01-01", "2020-12-31", "fix"],
+        ["ovr", "ovr", "2020-01-01", "2020-12-31", "alt"],
+        ["sub", "sub", "2020-01-01", "2020-06-30", "fix"],
+        ["sub", "sub", "2020-07-01", "2020-12-31", "alt"],
+        ["sub", "sub", "2020-07-01", "2020-12-31", "fix"]
+      ],
+      "note": "Every binding the build makes, one or more per register. Absent on purpose: UNRESURL and UNRESFRAG (an unknown reference beside a known one binds nothing), SPANCOL, OVLCOL and NONECOL (a family alias no single edition covers), POOLCOL (pooled scope), NOCODES (an override needs inline codes), NOVAR (its row names no Deldatamängd, so the declaration has no column) and the sample VALUE (no declaration). SPLIT: the second book holds only in 2020, so 2019 and 2021 keep one book. OVR: the override replaces the matching rule, so 'fix' is absent. SUB: the label rule binds 'fix' over the whole 2020 coding segment and the [[coding.sentinel]] binds 'alt' over Jul-Dec only, so the segment is cut at 2020-07-01: 'fix' holds Jan-Jun and Jul-Dec as two pieces, 'alt' only Jul-Dec (the replaced tests' Jan-Jun / Jul-Dec split inside one year). MISS: the declaration binds 2019, where the source delivers no code list, as well as 2020. MEMCOL: 'NEW' is a family member's own short name and names that edition directly; the register's 2020 lies inside NEW's coverage."
+    },
+    {
+      "table": "state_classifications",
+      "where": {"register": ["lkf", "pair"]},
+      "fields": ["register", "provenance"],
+      "rows": [
+        ["lkf", "label rule: 'LKF 1998' -> fix (classifications/FIX.toml)"],
+        ["pair", "label rule: 'First' -> fix (classifications/FIX.toml)"]
+      ],
+      "note": "label_rules.py::test_label_rule_normalizes_claims_and_preserves_occurrence_evidence (the delivered '  LKF<nbsp> 1998  ' matches the rule 'LKF 1998') and ::test_two_labels_for_one_book_make_one_rule_binding (two listed labels of one book make one binding, named by the first label)."
+    },
+    {
+      "table": "state_classifications",
+      "where": {
+        "register": "openreg",
+        "provenance": {"contains": "Source classification declaration: 'FIX'"}
+      },
+      "fields": ["valid_from", "valid_to"],
+      "rows": [
+        ["2010-01-01", "9999-12-31"]
+      ],
+      "note": "declarations.py::test_source_declaration_preserves_explicit_open_scope_without_adding_codes: the declaration keeps the register's open end."
+    },
+    {
+      "table": "state_classifications",
+      "where": {
+        "register": "canon",
+        "variable": "outcol",
+        "provenance": {
+          "contains": [
+            "Source classification declaration: 'FIX'",
+            "classifications/FIX.toml#/binding/variable/1"
+          ]
+        }
+      },
+      "fields": ["classification"],
+      "rows": [
+        ["fix"]
+      ],
+      "note": "declarations.py::test_source_and_case_bindings_compose_together_and_check_conformance: the source declaration and the book's [[binding.variable]] entry name one book; both stay in the one binding's provenance."
+    },
+    {
+      "table": "conformance",
+      "fields": ["register", "variable", "valid_from", "classification", "status", "checked", "matched", "nonconforming", "overlap"],
+      "rows": [
+        ["cls", "conf", "2020-01-01", "fix", "conforming", 2, 2, 0, 1.0],
+        ["cls", "ext", "2020-01-01", "fix", "extended", 5, 1, 4, 0.2],
+        ["cls", "high", "2020-01-01", "hun", "extended", 100, 99, 1, 0.99],
+        ["cls", "sentonly", "2020-01-01", "sen", "extended", 2, 1, 1, 0.5],
+        ["cls", "sentmix", "2020-01-01", "sen", "extended", 4, 1, 3, 0.25],
+        ["cls", "sentfree", "2020-01-01", "sen", "conforming", 1, 1, 0, 1.0],
+        ["cls", "gap", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
+        ["cls", "unk", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
+        ["cls", "miss", "2020-01-01", "fix", "conforming", 2, 2, 0, 1.0],
+        ["canon", "outcol", "2020-01-01", "fix", "extended", 1, 0, 1, 0.0],
+        ["canon", "twocol", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
+        ["canon", "twocol", "2020-01-01", "two", "extended", 1, 0, 1, 0.0],
+        ["canon", "duplab", "2020-01-01", "fix", "conforming", 2, 2, 0, 1.0],
+        ["canon", "blankb", "2020-01-01", "fix", "extended", 2, 1, 1, 0.5],
+        ["lkf", "lkf", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
+        ["pair", "pair", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
+        ["multi", "multi", "2020-01-01", "alt", "conforming", 1, 1, 0, 1.0],
+        ["multi", "multi", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
+        ["split", "split", "2019-01-01", "fix", "conforming", 1, 1, 0, 1.0],
+        ["split", "split", "2020-01-01", "alt", "conforming", 1, 1, 0, 1.0],
+        ["split", "split", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
+        ["split", "split", "2021-01-01", "fix", "conforming", 1, 1, 0, 1.0],
+        ["ovr", "ovr", "2020-01-01", "alt", "conforming", 1, 1, 0, 1.0],
+        ["sub", "sub", "2020-01-01", "fix", "extended", 2, 1, 1, 0.5],
+        ["sub", "sub", "2020-07-01", "alt", "extended", 2, 1, 1, 0.5],
+        ["sub", "sub", "2020-07-01", "fix", "extended", 2, 1, 1, 0.5]
+      ],
+      "note": "Counts are read off the fixture: checked is the state's distinct codes, matched those in the book, nonconforming every other code (a curated sentinel included; conformance_codes tells the kinds apart), overlap matched/checked. DUPLAB (test_source_classifications.py::test_conformance_checks_literal_codes_without_rewriting_source_labels): '01' delivered under two labels is one checked code, so 2 of 2 conform. SUB has one row per piece of its cut 2020 segment: '99' is outside 'fix' in both, and under 'alt' it is the Jul-Dec sentinel, counted as nonconforming. No row where a state has no value set (OPENCOL, GAP 2019, MISS 2019, MEMCOL) or its lists conflict (CONTRAC, CONTRAL): a binding without codes, or over withheld codes, records no conformance."
+    },
+    {
+      "table": "conformance_codes",
+      "fields": ["variable", "classification", "code", "label", "member_kind", "sentinel_meaning"],
+      "rows": [
+        ["ext", "fix", "1", "One", "nonstandard", null],
+        ["ext", "fix", "9", "Nine", "nonstandard", null],
+        ["ext", "fix", "99", "Ninety-nine", "nonstandard", null],
+        ["ext", "fix", "?", "Unknown", "nonstandard", null],
+        ["high", "hun", "99", "Label 99", "nonstandard", null],
+        ["sentonly", "sen", "00000", "Bulk missing", "sentinel", "not applicable"],
+        ["sentmix", "sen", "00000", "Bulk missing", "sentinel", "not applicable"],
+        ["sentmix", "sen", "0", "not applicable", "nonstandard", null],
+        ["sentmix", "sen", "99", "Unknown", "nonstandard", null],
+        ["outcol", "fix", "outside", "Source label", "nonstandard", null],
+        ["twocol", "two", "01", "Source label", "nonstandard", null],
+        ["blankb", "fix", "", "Literal source label", "nonstandard", null],
+        ["sub", "fix", "99", "Unknown", "nonstandard", null],
+        ["sub", "fix", "99", "Unknown", "nonstandard", null],
+        ["sub", "alt", "99", "Unknown", "sentinel", null]
+      ],
+      "note": "Each code outside its book, with the source's own label. EXT: '1' is not '01', and '9', '99' and '?' are not guessed to be sentinels of a book that names none; nor is BLANKB's labelled blank code '' (test_noncanonical_tokens_are_not_guessed_to_be_sentinels[]), which is checked like any other code. SENTMIX: only the exact curated code '00000' is a sentinel; '0' with the sentinel's meaning as its label is not. SUB: '99' is a source extension of 'fix' once per piece of the cut segment (Jan-Jun, Jul-Dec), and in Jul-Dec the [[coding.sentinel]] member of 'alt', which names no book sentinel meaning."
+    },
+    {
+      "table": "state_codes",
+      "where": {"variable": ["conf", "ext", "sentonly", "gap", "miss", "opencol", "outcol", "duplab", "contrac", "contral", "sub"]},
+      "fields": ["variable", "valid_from", "code", "label"],
+      "rows": [
+        ["conf", "2020-01-01", "01", "Source label"],
+        ["conf", "2020-01-01", "02", "Second source"],
+        ["ext", "2020-01-01", "01", "Agreed"],
+        ["ext", "2020-01-01", "1", "One"],
+        ["ext", "2020-01-01", "9", "Nine"],
+        ["ext", "2020-01-01", "99", "Ninety-nine"],
+        ["ext", "2020-01-01", "?", "Unknown"],
+        ["sentonly", "2020-01-01", "00000", "Bulk missing"],
+        ["sentonly", "2020-01-01", "01", "Agreed"],
+        ["gap", "2019-01-01", null, null],
+        ["gap", "2020-01-01", "01", "Source label"],
+        ["miss", "2019-01-01", null, null],
+        ["miss", "2020-01-01", "01", "Source label"],
+        ["miss", "2020-01-01", "02", "Second source"],
+        ["opencol", "2010-01-01", null, null],
+        ["outcol", "2020-01-01", "outside", "Source label"],
+        ["duplab", "2020-01-01", "01", "Another supplied label"],
+        ["duplab", "2020-01-01", "01", "Source wording"],
+        ["duplab", "2020-01-01", "02", ""],
+        ["contrac", "2020-01-01", null, null],
+        ["contral", "2020-01-01", null, null],
+        ["sub", "2020-01-01", "01", "Source label"],
+        ["sub", "2020-01-01", "99", "Unknown"],
+        ["sub", "2020-07-01", "01", "Source label"],
+        ["sub", "2020-07-01", "99", "Unknown"]
+      ],
+      "note": "A binding neither copies the book's labels (CONF keeps 'Source label', not 'Canonical label'; DUPLAB keeps both of 01's source labels and 02's empty one), drops codes outside the book (EXT, OUTCOL, the SENTONLY sentinel), adds codes where the source has none (OPENCOL, GAP 2019, MISS 2019), nor unions two contrary lists (CONTRAC differs by code, CONTRAL by label). SUB: both pieces of the cut 2020 segment keep the delivered 01 and 99."
+    },
+    {
+      "table": "state_codes",
+      "where": {"variable": "members"},
+      "fields": ["valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["2020-01-01", "2020-12-31", "", "Uppgift saknas"],
+        ["2020-01-01", "2020-12-31", "01", "Another label"],
+        ["2020-01-01", "2020-12-31", "01", "Participation"],
+        ["2020-01-01", "2020-12-31", "1", "Another code"]
+      ],
+      "note": "test_resolved_writer_value_sets.py::test_documented_codes_do_not_require_known_physical_type, from a source list (canonical-SCB MEMBERS, no book): every distinct delivered (code, label) pair reaches the written value set once. The labelled blank '' 'Uppgift saknas' is a member (maintainer decision on blank codes); '01' and '1' stay distinct codes; '01' keeps both of its labels; the repeated '01' 'Participation' row is one member. The replaced test's leading-space code ' 01' cannot come from a source (every reader normalizes the code token at its read boundary, e.g. sources/code_lists.py `normalize_token`), so its storage distinctness stays a writer test in test_resolved_writer_value_sets.py."
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": [
+          "unresolved_classification_reference",
+          "unsupported_classification_scope",
+          "unknown_classification_declaration",
+          "conflicting_classification_decisions",
+          "multiple_classifications_declared",
+          "nonconforming_classification_codes",
+          "sentinel_classification_codes",
+          "missing_coding_period",
+          "unknown_classification_column",
+          "empty_active_coding",
+          "conflicting_code_memberships",
+          "conflicting_occurrence_facts"
+        ]
+      },
+      "fields": ["code", "severity", "valid_from", "valid_to", "key"],
+      "rows": [
+        ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:EXT"]],
+        ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:HIGH"]],
+        ["sentinel_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:SENTONLY"]],
+        ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:SENTMIX"]],
+        ["sentinel_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:SENTMIX"]],
+        ["empty_active_coding", "error", "2019-01-01", "2019-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:GAP"]],
+        ["missing_coding_period", "error", "2019-01-01", "2019-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:MISS"]],
+        ["unknown_classification_column", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:<unknown>", "variable:NOVAR"]],
+        ["unknown_classification_declaration", "warning", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:UNK"]],
+        ["unknown_classification_declaration", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:WHELD"]],
+        ["conflicting_occurrence_facts", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:WHELD"]],
+        ["unresolved_classification_reference", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:UNRESURL"]],
+        ["conflicting_occurrence_facts", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:UNRESURL"]],
+        ["unresolved_classification_reference", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:UNRESFRAG"]],
+        ["conflicting_occurrence_facts", "error", "2020-01-01", "2020-12-31", ["register:Klassregistret", "deldatamangd:CLS_A", "variable:UNRESFRAG"]],
+        ["unresolved_classification_reference", "error", "2019-01-01", "2021-12-31", ["register:span", "variable:SPANCOL"]],
+        ["unresolved_classification_reference", "error", "2020-01-01", "2020-12-31", ["register:overlap", "variable:OVLCOL"]],
+        ["unresolved_classification_reference", "error", "1990-01-01", "1991-12-31", ["register:none", "variable:NONECOL"]],
+        ["unsupported_classification_scope", "error", null, null, ["register:pooled", "variable:POOLCOL"]],
+        ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:OUTCOL"]],
+        ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:TWOCOL"]],
+        ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:TWOCOL"]],
+        ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:BLANKB"]],
+        ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:5", "variant:50", "edition:2020", "variable:501", "member:5001"]],
+        ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:6", "variant:60", "edition:2020", "variable:601", "member:6020"]],
+        ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:7", "variant:70", "edition:2020", "variable:701", "member:7001"]],
+        ["conflicting_code_memberships", "error", "2020-01-01", "2020-12-31", ["register:7", "variant:70", "edition:2020", "variable:701", "member:7001"]],
+        ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:8", "variant:80", "edition:2020", "variable:801", "member:8001"]],
+        ["conflicting_code_memberships", "error", "2020-01-01", "2020-12-31", ["register:8", "variant:80", "edition:2020", "variable:801", "member:8001"]],
+        ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-06-30", ["register:10", "variant:100", "edition:2020", "variable:1001", "member:10001"]],
+        ["multiple_classifications_declared", "warning", "2020-07-01", "2020-12-31", ["register:10", "variant:100", "edition:2020", "variable:1001", "member:10001"]],
+        ["nonconforming_classification_codes", "warning", "2020-07-01", "2020-12-31", ["register:10", "variant:100", "edition:2020", "variable:1001", "member:10001"]],
+        ["sentinel_classification_codes", "warning", "2020-07-01", "2020-12-31", ["register:10", "variant:100", "edition:2020", "variable:1001", "member:10001"]]
+      ],
+      "note": "Every classification diagnostic, and the coding diagnostics beside it, as the issue window and the source record it cites. `conflicting_occurrence_facts` is not a coding diagnostic: UNRESURL and UNRESFRAG deliver one SOS variable twice to put two declarations on one column, and the two rows disagree on `classification_declared` (UNK's blank declaration does not count as a disagreement); a change to duplicate-row handling breaks these rows for a reason outside classification. A clean register (CONF, DUPLAB, LKF, PAIR, OVR, OPENCOL, SENTFREE, the sample) has none: DUPLAB's '01' under two labels in one list is no membership conflict (the replaced test's `diagnostics == ()`; the conflicting_classification_labels projection below cites only CNF). SPLIT warns only for 2020, citing only the 2020 edition. SUB's warnings follow the cut: the two books and the sentinel only Jul-Dec, the 'fix' extension once per piece. GAP and MISS each bind a year with no code list and differ in why: GAP's one row names a Kodlista that has no 2019 rows, so the coding fold reports `empty_active_coding`; MISS's 2019 row names no list at all (Fritext), so no coding segment covers 2019 and the binding reports `missing_coding_period` instead of hiding the gap. NOVAR's row names no Deldatamängd, so its declaration has no column to bind (`unknown_classification_column`); its unresolved_variant and no_supported_states are formation's, outside the filter. The SCB version-label conflict that PAIR, MULTI and SPLIT also report (`conflicting_coding_labels`) is the coding fold's (Stage 8a, Finding 6), not a classification claim, so it is left out of the filter."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "conflicting_curation_effects"},
+      "fields": ["case_id", "fields"],
+      "rows": [
+        ["curation/registers/sos/cls.toml#/errata.field/1", ["classification_declared"]],
+        ["curation/registers/sos/cls.toml#/errata.field/2", ["classification_declared"]]
+      ],
+      "note": "WHELD's two checked corrections replace its delivered FIX with TWO and with ALT. They conflict, so the build withholds `classification_declared` as unknown. That withheld unknown is an error and blocks ALT's `[[binding.variable]]` override for sos/cls/wheld: WHELD has no state_classifications row above, and keeps its 01 code. An ordinary unknown (UNK) only warns and keeps its binding."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "sentinel_classification_codes"},
+      "fields": ["severity", "fields"],
+      "rows": [
+        ["warning", ["coding", "classification"]],
+        ["warning", ["coding", "classification"]],
+        ["warning", ["coding", "classification"]]
+      ],
+      "note": "test_source_classifications.py::test_curated_sentinel_keeps_binding_with_a_warning: the sentinel warning names the coding and the classification (SENTONLY, SENTMIX and SUB's [[coding.sentinel]])."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["subject"],
+      "rows": [],
+      "note": "Every value-set label (including 'LKF 1998', matched through the delivered spelling) and every [[binding.variable]] entry matched (label_rules.py: `matched == {'LKF 1998'}`)."
+    },
+    {
+      "table": "classification_codes",
+      "where": {"slug": ["dig", "cnf"]},
+      "fields": ["slug", "code", "label", "level", "is_valid"],
+      "rows": [
+        ["dig", "001", "Category", 3, 1],
+        ["dig", "02", "", 2, 1],
+        ["dig", "A1", "Other", null, 1],
+        ["dig", "٠١", "Literal", null, 1],
+        ["cnf", "03", "Independent", 2, 1]
+      ],
+      "note": "test_source_classifications.py::test_literal_codes_and_normalized_duplicates_are_order_independent (DIG: the repeated 001 row is one code, codes stay literal, an empty label is kept, level is the ASCII digit count) and ::test_conflicting_or_unknown_members_do_not_erase_independent_codes (CNF: the contested 1 is withheld, 03 survives, and the blank-code row ',Unknown code' is no member)."
+    },
+    {
+      "table": "classifications",
+      "where": {"slug": ["dig", "cnf"]},
+      "fields": ["slug", "code_count"],
+      "rows": [
+        ["dig", 4],
+        ["cnf", 1]
+      ],
+      "note": "test_classification_storage.py::TestClassificationStorage::test_books_codes_and_state_associations: a book stores its count of distinct agreed codes."
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": ["conflicting_classification_labels", "unknown_classification_member"]},
+      "fields": ["code", "severity", "source"],
+      "rows": [
+        ["conflicting_classification_labels", "error", "classifications/cnf.csv"],
+        ["conflicting_classification_labels", "error", "classifications/cnf.csv"],
+        ["unknown_classification_member", "error", "classifications/cnf.csv"]
+      ],
+      "note": "test_source_classifications.py::test_conflicting_or_unknown_members_do_not_erase_independent_codes: the conflict is an error citing both competing rows, and the blank code is an unknown member, an error citing its one row."
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["conflicting_classification_labels", "unknown_classification_member"]},
+      "fields": ["code", "severity", "subject", "detail"],
+      "rows": [
+        ["conflicting_classification_labels", "error", "cnf", "Canonical code '1' has labels ['Competing', 'First']; no member was selected."],
+        ["unknown_classification_member", "error", "cnf", "Canonical code '' has labels ['Unknown code']; no member was selected."]
+      ],
+      "note": "The two conflicting_classification_labels refs above belong to one issue on book CNF (`conflict.refs` in the replaced test), not one issue per competing row. Its evidence names both labels of code 1 in sorted order, whatever order cnf.csv delivers them in. The blank code is its own issue: no member is selected for it, so CNF keeps one code (03) and code_count 1."
+    }
+  ]
+}

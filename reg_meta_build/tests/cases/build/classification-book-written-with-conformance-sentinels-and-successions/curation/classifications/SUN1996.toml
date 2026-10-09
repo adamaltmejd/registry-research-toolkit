@@ -1,0 +1,5 @@
+[classification]
+short_name = "SUN1996"
+slug = "sun1996"
+name = "SUN 1996"
+codes_file = "sun1996.csv"

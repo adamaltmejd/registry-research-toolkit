@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_representation_delivery_metadata.py::test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption",
+  "fails_if": "`DeliveryMetadataColumn._bounded` accepts a year-independent source scope, so dated delivery metadata load over an undated delivery",
+  "note": "The replaced test's year-independent leg.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[representation.delivery_metadata.columns]] entry 1",
+    "message_contains": [
+      "delivery metadata bounds must exactly match positive supplied source scope"
+    ]
+  }
+}

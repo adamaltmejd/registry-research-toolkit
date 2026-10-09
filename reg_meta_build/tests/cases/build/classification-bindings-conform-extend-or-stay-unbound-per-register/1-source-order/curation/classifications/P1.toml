@@ -1,0 +1,9 @@
+[classification]
+short_name = "P1"
+slug = "p1"
+name = "P1"
+codes_file = "p1.csv"
+family = "overlap"
+family_aliases = ["Overlap pair"]
+valid_from = 2000
+valid_to = 2020

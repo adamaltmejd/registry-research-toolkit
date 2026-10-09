@@ -1,0 +1,595 @@
+{
+  "projections": [
+    {
+      "table": "classifications",
+      "where": {
+        "slug": "example-codes"
+      },
+      "fields": [
+        "slug",
+        "short_name",
+        "name",
+        "name_en",
+        "publisher",
+        "valid_from",
+        "valid_to",
+        "description",
+        "url",
+        "code_count",
+        "valid_code_count",
+        "supersedes"
+      ],
+      "rows": [
+        [
+          "example-codes",
+          "EXAMPLE-CODES",
+          "Canonical example",
+          "Example",
+          "Publisher",
+          2000,
+          2020,
+          "Codebook description",
+          "https://example.invalid/codebook",
+          2,
+          2,
+          "older-codes"
+        ]
+      ],
+      "note": "The whole book row; code_count 2 also shows no source member (999, missing, 98, 99, 09350) joined the book."
+    },
+    {
+      "table": "classification_codes",
+      "where": {
+        "slug": "example-codes"
+      },
+      "fields": [
+        "slug",
+        "code",
+        "label",
+        "level",
+        "is_valid"
+      ],
+      "rows": [
+        [
+          "example-codes",
+          "001",
+          "Canonical one",
+          3,
+          1
+        ],
+        [
+          "example-codes",
+          "002",
+          "Canonical two",
+          3,
+          1
+        ]
+      ],
+      "note": "The book keeps its own labels: 001 stays 'Canonical one', not EXTENDED's 'Observed label' or SENTINEL's and SCOPED's 'Source label'."
+    },
+    {
+      "table": "classifications",
+      "fields": [
+        "slug",
+        "supersedes"
+      ],
+      "rows": [
+        [
+          "a",
+          null
+        ],
+        [
+          "b",
+          null
+        ],
+        [
+          "current",
+          "a"
+        ],
+        [
+          "d",
+          "b"
+        ],
+        [
+          "example-codes",
+          "older-codes"
+        ],
+        [
+          "future",
+          null
+        ],
+        [
+          "older-codes",
+          null
+        ],
+        [
+          "sni2000",
+          null
+        ],
+        [
+          "sni2020",
+          null
+        ],
+        [
+          "sun1996",
+          null
+        ],
+        [
+          "sun2000-niva",
+          "sun1996"
+        ],
+        [
+          "sun2020-niva",
+          "sun2000-niva"
+        ],
+        [
+          "sun2025-niva",
+          "sun2020-niva"
+        ]
+      ],
+      "note": "The single predecessor pointer projects only edges active as of the as-of year. An undated edge is active: d's only predecessor is b, by the undated b -> d edge."
+    },
+    {
+      "table": "classification_successions",
+      "fields": [
+        "predecessor",
+        "successor",
+        "effective_year",
+        "note"
+      ],
+      "rows": [
+        [
+          "a",
+          "current",
+          2026,
+          "curated:slug_toml"
+        ],
+        [
+          "b",
+          "current",
+          null,
+          "curated:slug_toml"
+        ],
+        [
+          "b",
+          "d",
+          null,
+          "curated:slug_toml"
+        ],
+        [
+          "current",
+          "future",
+          2100,
+          "curated:slug_toml"
+        ],
+        [
+          "older-codes",
+          "example-codes",
+          2000,
+          "curated:slug_toml"
+        ],
+        [
+          "sun1996",
+          "sun2000-niva",
+          2000,
+          "curated:slug_toml"
+        ],
+        [
+          "sun2000-niva",
+          "sun2020-niva",
+          2020,
+          "derived:vintage_chain"
+        ],
+        [
+          "sun2020-niva",
+          "sun2025-niva",
+          2025,
+          "derived:vintage_chain"
+        ]
+      ],
+      "note": "Every edge is kept, active or not; the SNI pair derives nothing."
+    },
+    {
+      "table": "conformance",
+      "where": {
+        "variable": "extended"
+      },
+      "fields": [
+        "classification",
+        "status",
+        "checked",
+        "matched",
+        "nonconforming",
+        "overlap"
+      ],
+      "rows": [
+        [
+          "example-codes",
+          "extended",
+          3,
+          1,
+          2,
+          0.3333333333333333
+        ]
+      ]
+    },
+    {
+      "table": "conformance",
+      "where": {
+        "variable": "scoped"
+      },
+      "fields": [
+        "classification",
+        "status",
+        "checked",
+        "matched",
+        "nonconforming"
+      ],
+      "rows": [
+        [
+          "example-codes",
+          "extended",
+          2,
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "table": "conformance",
+      "where": {
+        "variable": "sentinel"
+      },
+      "fields": [
+        "classification",
+        "status"
+      ],
+      "rows": [
+        [
+          "example-codes",
+          "extended"
+        ]
+      ]
+    },
+    {
+      "table": "conformance_codes",
+      "fields": [
+        "variable",
+        "code",
+        "label",
+        "member_kind",
+        "sentinel_meaning",
+        "scoped_windows"
+      ],
+      "rows": [
+        [
+          "extended",
+          "999",
+          "Unspecified",
+          "nonstandard",
+          null,
+          []
+        ],
+        [
+          "extended",
+          "missing",
+          "Unlisted label",
+          "nonstandard",
+          null,
+          []
+        ],
+        [
+          "scoped",
+          "09350",
+          "Okänt",
+          "sentinel",
+          null,
+          [
+            [
+              "2020-01-01",
+              "2020-12-31"
+            ]
+          ]
+        ],
+        [
+          "sentinel",
+          "98",
+          "Substantive extra",
+          "nonstandard",
+          null,
+          []
+        ],
+        [
+          "sentinel",
+          "99",
+          "Source wording",
+          "sentinel",
+          "Not applicable",
+          []
+        ]
+      ],
+      "note": "A global sentinel keeps its curated meaning; a scoped one names its certificate window and no meaning."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "variable": [
+          "extended",
+          "scoped",
+          "sentinel"
+        ]
+      },
+      "fields": [
+        "variable",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "extended",
+          "001",
+          "Observed label"
+        ],
+        [
+          "extended",
+          "999",
+          "Unspecified"
+        ],
+        [
+          "extended",
+          "missing",
+          "Unlisted label"
+        ],
+        [
+          "scoped",
+          "001",
+          "Source label"
+        ],
+        [
+          "scoped",
+          "09350",
+          "Okänt"
+        ],
+        [
+          "sentinel",
+          "001",
+          "Source label"
+        ],
+        [
+          "sentinel",
+          "98",
+          "Substantive extra"
+        ],
+        [
+          "sentinel",
+          "99",
+          "Source wording"
+        ]
+      ],
+      "note": "Each value set is the matched book codes (with their source labels) plus exactly the conformance codes above."
+    },
+    {
+      "table": "code_index",
+      "where": {
+        "variable": [
+          "extended",
+          "scoped",
+          "sentinel"
+        ]
+      },
+      "fields": [
+        "register",
+        "variable",
+        "code",
+        "label",
+        "mapping_count"
+      ],
+      "rows": [
+        [
+          "sample",
+          "extended",
+          "001",
+          "Observed label",
+          1
+        ],
+        [
+          "sample",
+          "extended",
+          "999",
+          "Unspecified",
+          1
+        ],
+        [
+          "sample",
+          "extended",
+          "missing",
+          "Unlisted label",
+          1
+        ],
+        [
+          "sample",
+          "scoped",
+          "001",
+          "Source label",
+          2
+        ],
+        [
+          "sample",
+          "scoped",
+          "09350",
+          "Okänt",
+          1
+        ],
+        [
+          "sample",
+          "sentinel",
+          "001",
+          "Source label",
+          2
+        ],
+        [
+          "sample",
+          "sentinel",
+          "98",
+          "Substantive extra",
+          1
+        ],
+        [
+          "sample",
+          "sentinel",
+          "99",
+          "Source wording",
+          1
+        ]
+      ],
+      "note": "The index maps each variable to its delivered codes only: no book code (002 'Canonical two', 001 'Canonical one') reaches it through the classification binding. 001 'Source label' counts 2 because SCOPED and SENTINEL deliver the same code and label."
+    },
+    {
+      "table": "state_classifications",
+      "fields": [
+        "variable",
+        "valid_from",
+        "valid_to",
+        "classification"
+      ],
+      "rows": [
+        [
+          "extended",
+          "2020-01-01",
+          "2020-12-31",
+          "example-codes"
+        ],
+        [
+          "scoped",
+          "2020-01-01",
+          "2020-12-31",
+          "example-codes"
+        ],
+        [
+          "sentinel",
+          "2020-01-01",
+          "2020-12-31",
+          "example-codes"
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "code": [
+          "nonconforming_classification_codes",
+          "sentinel_classification_codes"
+        ]
+      },
+      "fields": [
+        "variable",
+        "code",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "extended",
+          "nonconforming_classification_codes",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "scoped",
+          "sentinel_classification_codes",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "sentinel",
+          "nonconforming_classification_codes",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "sentinel",
+          "sentinel_classification_codes",
+          "2020-01-01",
+          "2020-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "severity": "error"
+      },
+      "fields": [
+        "code",
+        "subject"
+      ],
+      "match": "set",
+      "rows": [
+        [
+          "missing_coding_period",
+          "scb/sample/typeless"
+        ],
+        [
+          "unknown_data_type",
+          "scb/sample/typeless"
+        ]
+      ],
+      "note": "The only errors are TYPELESS's unknown type and its 2022 period without a list; the bound variables publish warnings only."
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "typeless"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "data_type",
+        "data_length"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "2022-01-01",
+          "2022-12-31",
+          null,
+          null
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "variable": "typeless"
+      },
+      "fields": [
+        "valid_from",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2020-01-01",
+          "01",
+          "Participation"
+        ],
+        [
+          "2020-01-01",
+          "1",
+          "Another code"
+        ],
+        [
+          "2022-01-01",
+          null,
+          null
+        ]
+      ],
+      "note": "The unknown type does not withhold the 2020 list; 01 and 1 stay distinct codes and the repeated 01 row is one member; 2022 has no value set."
+    }
+  ]
+}

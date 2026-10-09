@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_source_representation_delivery_metadata.py::test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption"
+  ],
+  "note": "SOS delivers ALDER in SYN_A from 2005 with no end (data_to null), so its edition scope is the open interval 2005-. The `[[representation.delivery_metadata]]` entry permits the name over that one record, with column ALDER valid 2005-01-01..9999-12-31 and `source_scope` set to the record's own open scope (the `edition_scope` template). This is the replaced test's allowed leg: the entry applies (old: resolution.cases == (case,)), and the state ends 9999-12-31 (old: states[0].valid_to). Here the entry's case is evaluated applicable, no error and no stale_curation_entry are reported, and the state keeps the permitted source name.",
+  "fails_if": "`compile_delivery_metadata` (curation_compile.py) treats the open supplied scope as finite (its window-equals-hull check caps the open end below 9999-12-31), or `DeliveryMetadataColumn._bounded` (source_curation.py) reads the omitted `source_scope` end like the refused literal 9999 end; the entry then goes stale (a stale_curation_entry error, no applicable case) or fails to load, instead of applying with the 2005-01-01..9999-12-31 state",
+  "sources": "sos-alder-open"
+}

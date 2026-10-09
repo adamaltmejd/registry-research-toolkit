@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_classification_succession_resolution.py::test_classification_succession_checks_combined_graph[sni1990-sni2000-unknown classification succession endpoint]"
+  ],
+  "note": "relations.toml declares class/sni1990 -> class/sni2000 and no book sni1990 exists. Compile refuses it before the writer's own endpoint check, with its own message. The allowed twin is the SUN chain in classification-book-written-with-conformance-sentinels-and-successions.",
+  "fails_if": "`compile_curation` (curation_compile.py) keeps a classification replaced_by edge whose endpoint names no compiled book (and the writer's endpoint check is also dropped), so the edge is written dangling",
+  "sources": "scb-classification-books"
+}

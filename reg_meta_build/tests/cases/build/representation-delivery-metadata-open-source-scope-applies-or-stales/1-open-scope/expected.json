@@ -1,0 +1,35 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "cases",
+      "fields": ["case_id", "status"],
+      "note": "The entry's case applies (the replaced test's resolution.cases == (case,)).",
+      "rows": [
+        ["curation/registers/sos/syn.toml#/representation.delivery_metadata/1", "applicable"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["subject", "code", "case_id"],
+      "note": "Neither compile (stale_curation_entry) nor the runtime scope check (stale_delivery_metadata_scope) refuses the entry.",
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator", "detail"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "syn"},
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "state_name", "name"],
+      "note": "The open delivery's state ends 9999-12-31 and keeps the source label, the field the entry permits.",
+      "rows": [
+        ["alder", "syn-a", "ALDER", "2005-01-01", "9999-12-31", "Ålder vid besök", "Ålder vid besök"]
+      ]
+    }
+  ]
+}

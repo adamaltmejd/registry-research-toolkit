@@ -17,7 +17,9 @@
           "curation/registers/scb/markerlater.toml#/coding.documented/1/period/1",
           "curation/registers/scb/sentinel.toml#/coding.sentinel/1/period/1",
           "curation/registers/scb/substantive.toml#/coding.sentinel/1/period/1",
-          "curation/registers/scb/pdf.toml#/coding.documented/1/period/1"
+          "curation/registers/scb/pdf.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/docvalid.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/dockeep.toml#/coding.documented/1/period/1"
         ]
       },
       "fields": [
@@ -53,9 +55,12 @@
         ],
         [
           "curation/registers/scb/substantive.toml#/coding.sentinel/1/period/1"
+        ],
+        [
+          "curation/registers/scb/docvalid.toml#/coding.documented/1/period/1"
         ]
       ],
-      "note": "Each drifted register's entry is stale at its own locator; the untouched rowskeep and pdf are not."
+      "note": "Each drifted register's entry is stale at its own locator; the untouched rowskeep, pdf and dockeep are not. docvalid's item validity is unknown in both builds (its `bad|bad` row), so its observed intersection is the same; only its known ValidDates row moved (2000-01-01 to 2001-01-01), and the documented authority's `codings` (copied fingerprints) still see that change."
     },
     {
       "table": "state_codes",
@@ -72,7 +77,9 @@
           "markerlater",
           "sentinel",
           "substantive",
-          "pdf"
+          "pdf",
+          "docvalid",
+          "dockeep"
         ],
         "valid_from": [
           "2020-01-01",
@@ -159,6 +166,20 @@
           "Included"
         ],
         [
+          "docvalid",
+          "2020-01-01",
+          "2020-12-31",
+          null,
+          null
+        ],
+        [
+          "dockeep",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "One"
+        ],
+        [
           "sentinel",
           "2020-01-01",
           "2020-12-31",
@@ -208,7 +229,7 @@
           "Microgyria"
         ]
       ],
-      "note": "A stale guarded entry withholds its members (null row) or leaves the delivered list (markerlater's new list, support's three source rows); the stale sentinels keep the source list and no longer split the 2020 state."
+      "note": "docvalid's stale entry leaves its list with unknown validity, so it has no value set; dockeep keeps its documented 1 One. A stale guarded entry withholds its members (null row) or leaves the delivered list (markerlater's new list, support's three source rows); the stale sentinels keep the source list and no longer split the 2020 state."
     },
     {
       "table": "warnings",

@@ -1,0 +1,9 @@
+[classification]
+short_name = "TWO"
+slug = "two"
+name = "TWO"
+codes_file = "two.csv"
+[[binding.variable]]
+variable = "scb/canon/twocol"
+[[binding.variable]]
+variable = "fk/nocodes/nocodes"

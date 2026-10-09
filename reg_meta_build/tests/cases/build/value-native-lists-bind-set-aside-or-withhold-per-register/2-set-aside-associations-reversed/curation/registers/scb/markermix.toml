@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "markermix"
+native_id = "37"
+[[variant]]
+native_id = "37.370"
+slug = "people"
+[[variable]]
+native_id = "37.3701"
+slug = "value"
