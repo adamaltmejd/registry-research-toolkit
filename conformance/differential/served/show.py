@@ -37,10 +37,10 @@ from conformance.differential.cases import seeded_sample
 PARALLEL = 16
 # Variables compared per catalog, drawn with the configured seed.
 VARIABLES = 80
-# simplify: sampled groups (seeded); parallelize served catalogs if a later family
-# pushes warm G1 over budget. Every group (~3,000 per catalog) took ~290 s of a warm
-# run; the LISA undated-coverage defect that full enumeration found is pinned by
-# `api/show-undated-member-coverage`.
+# simplify: sampled groups (seeded); every group (~3,000 per catalog) took ~290 s of
+# a warm run, and the served catalogs already run side by side, so enumerate them
+# again only if the budget gains that much headroom. The LISA undated-coverage
+# defect that full enumeration found is pinned by `api/show-undated-member-coverage`.
 GROUPS = 500
 # The succession families' keys (`_CLASSIFICATION_FAMILY_LABELS`); both arms answer
 # each, a family or a 404.
