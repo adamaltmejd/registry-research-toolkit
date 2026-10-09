@@ -1061,8 +1061,8 @@ def _check_nameless_variables_named_per_state(
     one delivery state and each state carries a positive name; readers and search
     fall back to those names. This rechecks the writer's output so a regression
     cannot ship a variable with no name at all, whether it dropped one state's
-    name or every state. A state-less name-less
-    variable is therefore an offender here, for every provider."""
+    name or every state. A state-less name-less variable is therefore an
+    offender here, for every provider."""
     result.section("[name-less variables: per-state names]")
     if not {"variable", "variable_state", "register", "provider"}.issubset(tables):
         result.ok("variable / variable_state / register / provider absent — skipped")

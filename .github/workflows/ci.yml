@@ -108,9 +108,8 @@ jobs:
             budget: 6
             # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
             hypothesis_profile: thorough
-          # The full suite against the in-process Python adapters. The `rust`
-          # job reruns the whole suite against the Rust server:
-          # the same cases, a different implementation under test.
+          # The suite without `--server-cmd`; the `rust` job reruns the whole
+          # suite against the Rust server.
           - suite: conformance
             budget: 4
           - suite: scripts/tests
