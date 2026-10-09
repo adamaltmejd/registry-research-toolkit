@@ -256,6 +256,36 @@
       ],
       "rows": [],
       "note": "Neither sentinel book is bound once its certificate is stale."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "case_id": "curation/registers/scb/warning.toml#/coding.warning/1/period/1"
+      },
+      "fields": [
+        "code",
+        "severity"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "error"
+        ]
+      ],
+      "note": "warning, with its 1 One relabelled 'Changed' (the replaced [coding] leg): the [[coding.warning]] is a stale_curation_entry error (the replaced test: diagnostics [(stale_curation_entry, error)], evaluation stale)."
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "register": "warning"
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [],
+      "note": "Same leg: no data warning is published (the replaced test: `not scope_data_warnings(result)`)."
     }
   ]
 }
