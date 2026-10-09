@@ -178,6 +178,19 @@ upstream. None of these inputs cross the MONA boundary, and no source reconcilia
 changes the rule that PII stays in MONA and only aggregate, disclosure-controlled
 results leave it.
 
+### Real-seed output cache
+
+Real-seed `prepare-sources` and `build-db` runs take one to two hours each, so
+`scripts/real_seed_cache.py` reuses their outputs by input key (#1329). It is tooling
+over the builder's existing reports and checks, not builder code. Each key covers only
+what its step reads, so a resolution change reuses the preparation; the module docstring
+lists the fields. The invariant is that a key leaving out a real input would return
+stale output silently, so every key errs generous, a hit re-checks what it returns, only
+completed runs are stored, and `build --verify` reruns uncached and compares bytes. The
+digest, staging and eviction helpers it shares with the G1 derive cache and the
+synthetic fixture cache live in `scripts/keyed_cache.py`. Phase caching inside the
+builder waits for the builder work in #1296.
+
 ### Catalog artifact identity and read scope
 
 **Compiled-holdings contract (2026-10-04).** A publishable `reg_meta.db` identifies

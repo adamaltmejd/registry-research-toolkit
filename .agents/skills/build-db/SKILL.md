@@ -33,6 +33,32 @@ read-only SQLite, rather than changing consumer compatibility to make a proof pa
 register and variant row must be pinned and every pin must name a row.
 `--update-snapshot` also refreshes the naming snapshot.
 
+## Reuse a cached output first
+
+Run real-seed preparations and builds through `scripts/real_seed_cache.py`; the sections
+below show its commands. It returns a stored output when the inputs it keys are
+unchanged. On a miss it runs the `reg-meta-build` command shown under the real-seed lock
+and stores the output if the run completed. A main-tip baseline that another session
+already built is a hit. Run `reg-meta-build` directly (under `gate.py real-seed --`)
+only for what the cache does not handle: `--dump-decisions`, `check-curation` and
+`extend-db`.
+
+Each command prints one JSON object on stdout; `hit` says whether anything ran. Its
+module docstring lists every field each key covers, `--key` prints a key and its fields
+without running anything, and diffing two keys shows why a lookup missed.
+
+Cached entries are shared and read-only. Use them in place as dbdiff or comparison
+inputs; never activate, release or modify them. Copy a database before writing to it.
+The cache lives under `$REG_REAL_SEED_CACHE`, else
+`${XDG_CACHE_HOME:-~/.cache}/reg-meta-real-seed`. It keeps the two most recently used
+build entries (about 1.4 GB each) and any entry used in the last 6 hours.
+
+`build --verify` rebuilds uncached and compares database bytes and decompressed
+event-ledger bytes with the stored entry. Exit 1 means the key misses an input: report
+it instead of trusting that entry. It costs a full build, so run it at an agreed
+checkpoint. To check a prepare entry the same way, run `prepare-sources` into a new
+directory and compare its `prepared_manifest_sha256` with the stored one.
+
 ## Select inputs
 
 The same CLI option names select different artifacts at different stages:
@@ -58,12 +84,18 @@ separate candidate. Use `prepare-input-bundle --help` for capture; it takes sepa
 snapshot pins. Commit and verify the raw candidate before running:
 
 ```sh
-uv run --no-project scripts/gate.py real-seed -- \
-  uv run reg-meta-build prepare-sources --input-bundle "$raw_bundle" \
-  --input-commit "$raw_bundle_commit" \
-  --input-manifest-sha256 "$raw_bundle_sha256" \
+uv run --no-project scripts/real_seed_cache.py prepare --input-bundle "$raw_bundle" \
+  --input-commit "$raw_bundle_commit" --input-manifest-sha256 "$raw_bundle_sha256" \
   --output-dir "$new_prepared_dir"
 ```
+
+On a miss the cache runs `reg-meta-build prepare-sources` with these options into
+`--output-dir`. On a hit `--output-dir` is unused, and the result names the stored
+`prepared_path`, its `prepared_manifest_sha256` and its `prepared_commit`: the HEAD of
+the tree's acceptance repository, after the builder's warm-build check passed there. A
+stored tree that is not committed yet exits 3 with `awaiting_acceptance` instead of
+preparing again. A tree that fails the check (a missing payload, a moved or dirty
+checkout) is a miss.
 
 The output directory must not exist and must be outside the selected source directories.
 Preparation validates all selected inputs and writes atomically; it has no incremental
@@ -78,24 +110,26 @@ outside the build. Do not overlay loose files onto a pinned candidate.
 
 ## Run a diagnostic or strict build
 
-Choose a new scratch directory outside the accepted input and curation repositories. The
-report directory must not exist. Always use an explicit scratch destination for
-verification, preserving the active catalog.
-
 ```sh
-run_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-build.XXXXXX")"
 prepared="/absolute/path/to/accepted-prepared"
 prepared_commit="EXACT_PREPARED_ACCEPTANCE_SHA"
 prepared_manifest_sha256="EXACT_TOP_LEVEL_PREPARED_SHA256"
 
-# Diagnostic: complete the scan and retain unresolved discrepancies (exit 10).
-uv run --no-project scripts/gate.py real-seed -- \
-  uv run reg-meta-build build-db --prepared "$prepared" \
+# Diagnostic: complete the scan and retain unresolved discrepancies.
+uv run --no-project scripts/real_seed_cache.py build --prepared "$prepared" \
   --input-commit "$prepared_commit" --input-manifest-sha256 "$prepared_manifest_sha256" \
-  --report-dir "$run_dir/report" --timing \
-  --diagnostic --diagnostic-db-path "$run_dir/diagnostic.db" \
-  > "$run_dir/build.log" 2>&1
+  --diagnostic 2> "$log"
 ```
+
+Every lookup, a hit included, first runs the builder's own admission checks (the
+prepared pins and, for a strict full build, a clean checkout) and exits 10 with the
+builder's error if they fail. The result names `database` and `report`. On a miss the
+cache runs `build-db` in a new directory under the cache, with `--report-dir`,
+`--timing` and, for a diagnostic, `--diagnostic --diagnostic-db-path`. A run that did
+not complete is not stored; the result's `run_dir` keeps its outputs for diagnosis for 6
+hours. Run `build-db` directly only for `--dump-decisions`: give it a new scratch
+directory outside the accepted input and curation repositories and an explicit
+destination, never the active catalog.
 
 Diagnostic mode retains error severity. Invalid pins, malformed contracts and
 implementation failures still abort. An exit code of 10 alone does not prove a completed
@@ -104,17 +138,9 @@ database is marked nonpublishable; do not activate or release it. A terminal
 `engineering_failure` after source resolution is not a completed diagnostic. Preserve
 its source ledger, repair the failure, and rerun only when the batch is ready.
 
-Use a separate new run directory for strict verification:
-
-```sh
-run_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-build.XXXXXX")"
-uv run --no-project scripts/gate.py real-seed -- \
-  uv run reg-meta-build --db "$run_dir/catalog" build-db \
-  --prepared "$prepared" \
-  --input-commit "$prepared_commit" --input-manifest-sha256 "$prepared_manifest_sha256" \
-  --report-dir "$run_dir/report" --timing \
-  > "$run_dir/build.log" 2>&1
-```
+Strict verification is the same command without `--diagnostic`; the cache builds it into
+a new `--db` directory, so the active catalog is never touched. A strict full build
+needs a clean checkout, and its key includes the checkout commit.
 
 Strict builds preserve the previous destination on failure. Publication requires exit 0,
 a complete summary with `publication_ready = true`, and all structural and corpus

@@ -41,13 +41,24 @@ import shutil
 import sqlite3
 import subprocess
 import sys
-import tempfile
 import time
 import urllib.request
-from contextlib import contextmanager, suppress
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
+
+# The key sources, digests and staging/eviction helpers are shared with the other
+# caches.
+sys.path.append(str(Path(__file__).resolve().parents[2] / "scripts"))
+from keyed_cache import (
+    BUILDER_SOURCES,
+    cache_home,
+    evict,
+    file_sha256,
+    owned_root,
+    staged,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -61,22 +72,10 @@ CHUNK = 1 << 20
 # Derived keys kept: two branches alternating G1 runs re-derive neither (a key is
 # ~2.6 GB of the tight disk).
 KEEP = 2
-STAGING_PREFIX = ".staging-"
-# A staging directory older than this belongs to a build that died (a derive takes
-# minutes).
-STAGING_RETENTION_SECONDS = 6 * 3600
 REPO_ROOT = Path(__file__).resolve().parents[2]
 # What a derived copy depends on: the builder, the reader code derive moved, the
 # locked dependencies, and the Rust sources of `reg-core-py` (its uv `cache-keys`).
-DERIVE_SOURCES = (
-    "reg_meta_build/src",
-    "reg_meta/src",
-    "uv.lock",
-    "crates/reg-core",
-    "crates/reg-core-py",
-    "Cargo.toml",
-    "Cargo.lock",
-)
+DERIVE_SOURCES = BUILDER_SOURCES
 
 
 @dataclass(frozen=True)
@@ -104,10 +103,7 @@ class Pins:
 
 
 def cache_root() -> Path:
-    if env := os.environ.get("REG_META_G1_CACHE"):
-        return Path(env).expanduser().resolve()
-    base = os.environ.get("XDG_CACHE_HOME") or str(Path.home() / ".cache")
-    return Path(base).expanduser().resolve() / "reg-meta-g1"
+    return cache_home("reg-meta-g1", "REG_META_G1_CACHE")
 
 
 def _tag_dir(tag: str) -> str:
@@ -116,12 +112,8 @@ def _tag_dir(tag: str) -> str:
 
 @contextmanager
 def locked(root: Path) -> Iterator[None]:
-    # Runs prune `artifacts/`, `baseline/` and `report/` under the root, so never
-    # adopt an existing non-empty directory that is not already a G1 cache.
-    if root.is_dir() and any(root.iterdir()) and not (root / ".lock").exists():
-        raise RuntimeError(f"{root} is not a G1 cache (no .lock); pick an empty dir")
-    root.mkdir(parents=True, exist_ok=True)
-    with (root / ".lock").open("w") as handle:
+    # Runs prune `artifacts/`, `baseline/` and `report/` under the root.
+    with (owned_root(root, ".lock") / ".lock").open("w") as handle:
         fcntl.flock(handle, fcntl.LOCK_EX)
         try:
             yield
@@ -246,11 +238,6 @@ def _repo(*args: str) -> str:
     ).stdout.strip()
 
 
-def _file_sha256(path: Path) -> str:
-    with path.open("rb") as handle:
-        return hashlib.file_digest(handle, "sha256").hexdigest()
-
-
 def derive_source() -> str:
     """The checkout's derive inputs (``DERIVE_SOURCES``) as committed tree ids.
 
@@ -287,19 +274,10 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path], source: str) -> dict[str, 
     ).hexdigest()
     entry = home / key
     if not entry.is_dir():
-        staging = Path(tempfile.mkdtemp(prefix=STAGING_PREFIX, dir=home))
-        try:
+        with staged(entry) as staging:
             _derive(dirs, staging)
-            try:
-                staging.rename(entry)
-            except OSError:
-                # Another builder of this key renamed first; keep its copy.
-                if not entry.is_dir():
-                    raise
-        finally:
-            shutil.rmtree(staging, ignore_errors=True)
     os.utime(entry)
-    _evict(home, entry)
+    evict(home, entry, KEEP, "g1")
     return {catalog: entry / catalog for catalog in dirs}
 
 
@@ -388,30 +366,8 @@ def _index_docs(dirs: dict[str, Path], staging: Path) -> None:
 
 def _write_provenance(path: Path, **provenance: str) -> None:
     _stamp_path(path).write_text(
-        json.dumps({**provenance, "output_sha256": _file_sha256(path)}, indent=2) + "\n"
+        json.dumps({**provenance, "output_sha256": file_sha256(path)}, indent=2) + "\n"
     )
-
-
-def _evict(home: Path, current: Path) -> None:
-    """Delete all but the ``KEEP`` most recently used keys (``current`` always
-    stays), and the staging directories of builds that died."""
-    mtimes = {}
-    for p in home.iterdir():
-        # A concurrent builder can rename its staging directory away meanwhile.
-        with suppress(FileNotFoundError):
-            mtimes[p] = p.stat().st_mtime
-    keys = sorted(
-        (p for p in mtimes if not p.name.startswith(STAGING_PREFIX)),
-        key=mtimes.__getitem__,
-        reverse=True,
-    )
-    cutoff = time.time() - STAGING_RETENTION_SECONDS
-    stale = [p for p in keys[KEEP:] if p != current] + [
-        p for p in mtimes if p.name.startswith(STAGING_PREFIX) and mtimes[p] < cutoff
-    ]
-    for path in stale:
-        sys.stderr.write(f"g1: removing {path}\n")
-        shutil.rmtree(path, ignore_errors=True)
 
 
 def ensure_server() -> Path:
