@@ -38,9 +38,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "reg_webapp/frontend"
 CONFORMANCE = "uv run python -m pytest conformance -q -n auto"
+# A raised write limit: the suite and release admission replay many projects from one
+# address (conformance/test_mcp.py's burst case drops it to pin the default).
 SERVER_CMD = (
     "--server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog}"
-    " --stewards reg_webapp/stewards --port {port}'"
+    " --stewards reg_webapp/stewards --port {port} --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'"
 ALL = ("g0", "rust", "release", "flows", "frontend")

@@ -256,16 +256,18 @@ def test_body_over_the_cap_is_payload_too_large(servers):
 def test_burst_is_rate_limited(request, tmp_path):
     # Fails when `/mcp` stops limiting a client's burst, answers it without the error
     # document, stops sharing the client's bucket with the project POSTs (the write
-    # rate limit FastAPI's `limits.py` kept, 3e.4) or limits a read, keys a request on a `CF-Connecting-IP` that lacks the edge token (each
-    # forged address would get a fresh bucket and the burst would never be refused),
-    # keys an edge client on its full IPv6 address instead of its /64 (rotating within
-    # the /64 would never be refused), or keys an edge request on its peer (every edge
+    # rate limit FastAPI's `limits.py` kept, 3e.4) or limits a read, keys a request on
+    # a `CF-Connecting-IP` that lacks the edge token (each forged address would get a
+    # fresh bucket and the burst would never be refused), keys an edge client on its
+    # full IPv6 address instead of its /64 (rotating within the /64 would never be
+    # refused), or keys an edge request on its peer (every edge
     # client would share one bucket). A server of its own: a drained bucket would
-    # refuse the other MCP cases from this address.
+    # refuse the other MCP cases from this address. It runs at the production default:
+    # the suite's template raises `--write-limit` so its own cases are not refused.
     template = request.config.getoption("--server-cmd")
     if template is None:
         pytest.skip("MCP cases run against --server-cmd")
-    pool = ServerPool(template, tmp_path)
+    pool = ServerPool(re.sub(r" --write-limit \S+", "", template), tmp_path)
     env = artifact_env(cached_case_artifact(READER), "steward")
     try:
         client = pool.client(env | {"REG_META_EDGE_TOKEN": "edge-secret"})

@@ -2,7 +2,7 @@
 //!
 //! ```text
 //! reg-meta serve --db DIR [--catalog NAME] --stewards DIR --port N [--host ADDR]
-//!                [--public-host HOST]
+//!                [--public-host HOST] [--write-limit N]
 //! reg-meta mcp --db DIR [--catalog NAME]
 //! ```
 //!
@@ -12,7 +12,8 @@
 //! operation and download, `/openapi.json` and MCP at `/mcp` on `--host` (default
 //! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
 //! names. `/mcp` and every POST share one rate limit per client address, keyed with
-//! the edge token in `REG_META_EDGE_TOKEN` (`limit.rs`). `mcp` serves the MCP
+//! the edge token in `REG_META_EDGE_TOKEN` (`limit.rs`): `--write-limit` tokens
+//! (default 60), refilled one a second. `mcp` serves the MCP
 //! tools over stdio. A refusal prints the error document on stderr and exits with the
 //! code's status.
 
@@ -48,6 +49,7 @@ enum Mode {
         port: u16,
         host: IpAddr,
         public_host: Option<String>,
+        write_limit: u64,
     },
     Mcp,
 }
@@ -61,7 +63,7 @@ struct Args {
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     let mode = args.next();
     let (mut db, mut catalog, mut stewards, mut port) = (None, None, None, None);
-    let (mut host, mut public_host) = (None, None);
+    let (mut host, mut public_host, mut write_limit) = (None, None, None);
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--db" => &mut db,
@@ -70,6 +72,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
             "--port" => &mut port,
             "--host" => &mut host,
             "--public-host" => &mut public_host,
+            "--write-limit" => &mut write_limit,
             _ => return Err(Error::invalid_parameter(&flag)),
         };
         *slot = Some(args.next().ok_or_else(|| Error::invalid_parameter(&flag))?);
@@ -89,6 +92,14 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
                 None => Ipv4Addr::LOCALHOST.into(),
             },
             public_host,
+            write_limit: match write_limit {
+                Some(limit) => limit
+                    .parse()
+                    .ok()
+                    .filter(|&limit| limit > 0)
+                    .ok_or_else(|| Error::invalid_parameter("--write-limit"))?,
+                None => limit::DEFAULT_PER_MINUTE,
+            },
         },
         // `mcp` loads no branding and listens on no port.
         Some("mcp") => {
@@ -97,6 +108,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
                 ("--port", &port),
                 ("--host", &host),
                 ("--public-host", &public_host),
+                ("--write-limit", &write_limit),
             ];
             if let Some((flag, _)) = serve_only.iter().find(|(_, value)| value.is_some()) {
                 return Err(Error::invalid_parameter(flag));
@@ -130,6 +142,7 @@ async fn main() {
             port,
             host,
             public_host,
+            write_limit,
         } => {
             let steward =
                 Steward::load(&stewards, catalog.name()).unwrap_or_else(|err| refuse(&err));
@@ -139,7 +152,13 @@ async fn main() {
                 steward: Some(steward),
                 version: VERSION,
             };
-            serve(Arc::new(server), (host, port).into(), public_host).await;
+            serve(
+                Arc::new(server),
+                (host, port).into(),
+                public_host,
+                write_limit,
+            )
+            .await;
         }
         Mode::Mcp => {
             let server = Server {
@@ -153,9 +172,14 @@ async fn main() {
     }
 }
 
-async fn serve(server: Arc<Server>, addr: SocketAddr, public_host: Option<String>) {
+async fn serve(
+    server: Arc<Server>,
+    addr: SocketAddr,
+    public_host: Option<String>,
+    write_limit: u64,
+) {
     let openapi = ops::openapi(VERSION).to_json().expect("OpenAPI serializes");
-    let limits = Limits::new(Arc::clone(&server));
+    let limits = Limits::new(Arc::clone(&server), write_limit);
     // A POST is behind the write limits, as `/mcp` is: the rate limit, then the cap.
     let write = |handler: MethodRouter<Arc<Server>>| -> MethodRouter<Arc<Server>> {
         handler

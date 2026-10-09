@@ -1523,15 +1523,17 @@ same two origin-side guards; GET reads are not limited (they have the cheaper ed
 
 - **Rate limit** — one in-memory token bucket per client address, shared by `/mcp` and
   the POSTs: 60 tokens, refilled one a second, then `rate_limited` (429,
-  `Retry-After: 1`). The client is the edge's `CF-Connecting-IP` when the request
-  carries the edge token (`REG_META_EDGE_TOKEN`), otherwise the peer, and an IPv6
-  address counts as its /64. **Address-only** by design: a session token would bucket
-  per browser (helpful behind NAT) but adds a fingerprinting surface for anonymous
-  public data. Buckets are per process (lost on restart, not shared across replicas),
-  which suffices as the origin backstop behind the edge. The SPA's debounced validation
-  and its downloads stay far inside the budget (the `flows` run replays every scenario
-  from one address under it). A deployment whose worker sends no edge token keys every
-  client on Fly's proxy, so all of them share one bucket.
+  `Retry-After: 1`). `serve --write-limit N` changes the 60, for verification runs (the
+  conformance suite, release admission, G1) that replay many projects from one address;
+  a deployment keeps the default. The client is the edge's `CF-Connecting-IP` when the
+  request carries the edge token (`REG_META_EDGE_TOKEN`), otherwise the peer, and an
+  IPv6 address counts as its /64. **Address-only** by design: a session token would
+  bucket per browser (helpful behind NAT) but adds a fingerprinting surface for
+  anonymous public data. Buckets are per process (lost on restart, not shared across
+  replicas), which suffices as the origin backstop behind the edge. The SPA's debounced
+  validation and its downloads stay far inside the budget (the `flows` run replays every
+  scenario from one address under it). A deployment whose worker sends no edge token
+  keys every client on Fly's proxy, so all of them share one bucket.
 - **Body cap** — `payload_too_large` (413) over 1 MiB, counted as the body streams in
   (axum's `DefaultBodyLimit`), never trusting `Content-Length`. 1 MiB is far above any
   plausible `project_data.json`.

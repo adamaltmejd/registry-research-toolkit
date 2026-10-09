@@ -20,8 +20,10 @@ use crate::Answer;
 
 /// Requests per client address to `/mcp` and the POST routes together: a token bucket
 /// of this many tokens, refilled one per second. Sized for agent tool calls; the SPA's
-/// debounced validation and its order downloads stay well inside it.
-const RATE_PER_MINUTE: u64 = 60;
+/// debounced validation and its order downloads stay well inside it. `serve
+/// --write-limit` raises it for verification runs, which replay many projects from one
+/// address.
+pub const DEFAULT_PER_MINUTE: u64 = 60;
 /// simplify: buckets that have refilled are dropped only once this many addresses are
 /// tracked; make it a time-ordered sweep if a hosted burst of addresses shows in RSS
 /// or in write latency.
@@ -34,6 +36,8 @@ const EDGE_TOKEN_HEADER: &str = "x-edge-token";
 
 pub struct Limits {
     server: Arc<Server>,
+    /// Each bucket's capacity.
+    capacity: u64,
     /// The SHA-256 of the edge token; `None` trusts no request as the edge's.
     edge_token: Option<[u8; 32]>,
     buckets: Mutex<HashMap<IpAddr, Bucket>>,
@@ -45,20 +49,22 @@ struct Bucket {
 }
 
 impl Bucket {
-    /// Add a token per whole second since the last refill, up to the capacity.
-    fn refill(&mut self, now: Instant) -> &mut Self {
+    /// Add a token per whole second since the last refill, up to `capacity`.
+    fn refill(&mut self, now: Instant, capacity: u64) -> &mut Self {
         let seconds = now.duration_since(self.refilled).as_secs();
-        self.tokens = (self.tokens + seconds).min(RATE_PER_MINUTE);
+        self.tokens = self.tokens.saturating_add(seconds).min(capacity);
         self.refilled += Duration::from_secs(seconds);
         self
     }
 }
 
 impl Limits {
-    /// The limits of one server, with the edge token from [`EDGE_TOKEN_ENV`].
-    pub fn new(server: Arc<Server>) -> Arc<Self> {
+    /// The limits of one server: buckets of `capacity` tokens, and the edge token from
+    /// [`EDGE_TOKEN_ENV`].
+    pub fn new(server: Arc<Server>, capacity: u64) -> Arc<Self> {
         Arc::new(Self {
             server,
+            capacity,
             edge_token: std::env::var(EDGE_TOKEN_ENV)
                 .ok()
                 .filter(|token| !token.is_empty())
@@ -103,15 +109,16 @@ impl Limits {
             // A full bucket is the same as none. simplify: while this many addresses
             // are active, every request sweeps them all under the lock; replace the
             // sweep (see MAX_TRACKED) if it shows in write latency.
-            buckets.retain(|_, bucket| bucket.refill(now).tokens < RATE_PER_MINUTE);
+            let capacity = self.capacity;
+            buckets.retain(|_, bucket| bucket.refill(now, capacity).tokens < capacity);
         }
         let bucket = buckets
             .entry(client)
             .or_insert(Bucket {
-                tokens: RATE_PER_MINUTE,
+                tokens: self.capacity,
                 refilled: now,
             })
-            .refill(now);
+            .refill(now, self.capacity);
         let allowed = bucket.tokens > 0;
         bucket.tokens = bucket.tokens.saturating_sub(1);
         allowed
@@ -137,7 +144,10 @@ pub async fn guard(
     if !limits.allow(limits.client(request.headers(), peer.ip())) {
         let err = Error::new(
             Code::RateLimited,
-            format!("More than {RATE_PER_MINUTE} write requests a minute from this address."),
+            format!(
+                "More than {} write requests a minute from this address.",
+                limits.capacity
+            ),
             vec![1.into()],
         );
         return ([(header::RETRY_AFTER, "1")], limits.refuse(err)).into_response();

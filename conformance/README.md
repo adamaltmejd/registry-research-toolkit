@@ -10,11 +10,13 @@ solely for testing. No private product imports or internal patches are allowed.
 ```sh
 uv run python -m pytest conformance -q
 cargo build --workspace
-uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q
+uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q
 ```
 
 Release admission searches the Rust server, so `--run-release` without `--server-cmd`
-fails; without `--run-release`, the search-carrying artifact tests skip.
+fails; without `--run-release`, the search-carrying artifact tests skip. Its sampled
+projects all come from one address, so the template raises the server's write limit
+(`--write-limit`); the burst case in `test_mcp.py` drops the flag and pins the default.
 
 The first invocation runs the artifact checks on the synthetic catalog and steward
 artifacts. Fixture-bound cases always build their own named readable source; they never
@@ -205,7 +207,7 @@ accepted-input table/cell accounting, authored mappings and policy digests run o
 explicit `--holdings-input` alongside both tier-3 flags:
 
 ```sh
-uv run python -m pytest conformance --run-release --artifact-dir=/path/to/steward/catalog --holdings-input=/path/to/accepted-candidate --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q
+uv run python -m pytest conformance --run-release --artifact-dir=/path/to/steward/catalog --holdings-input=/path/to/accepted-candidate --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q
 ```
 
 Admission requires a steward artifact, a clean accepted-input Git tree, matching commit

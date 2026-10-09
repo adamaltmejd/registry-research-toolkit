@@ -184,7 +184,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "error",
   },
   // Thin defensive code: a residual ProjectData model-construction failure
-  // structural didn't replicate (routes/project.py `_model_issue`).
+  // structural didn't replicate (frozen `reg_meta.semantic.validate_project`).
   invalid_field: { label: "Invalid field", hint: "error" },
 
   // ── semantic (reg_meta-backed) ────────────────────────────────────────────
