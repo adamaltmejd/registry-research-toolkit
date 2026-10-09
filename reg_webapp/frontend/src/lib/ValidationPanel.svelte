@@ -16,7 +16,7 @@ import {
   type WindowDisjointFinding,
 } from "./validation";
 
-// The validation echo (see reg_schema/DESIGN.md → Structural rules and issue
+// The validation echo (see crates/reg-core/DESIGN.md → Structural rules and issue
 // codes). Renders the `/validate` result's issue list grouped
 // by level (error / warning / info), the ok/not-ok summary, and — distinct from a
 // 200 `ok:false` issue list — a malformed-REQUEST banner (a true 4xx ApiError).

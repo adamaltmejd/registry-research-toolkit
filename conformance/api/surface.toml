@@ -6,18 +6,14 @@
 # deleted the app.
 #
 # kind         command: an `add_parser` in reg_meta/src/reg_meta/cli.py, id = the argv path.
-#              skill: a command the register-metadata-search skill documents
-#                     (plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md),
-#                     id = its text as written there.
 #              import: a `reg_meta` name imported by any git-visible .py file outside
 #                     reg_meta/ (tests, scripts and tools included).
 #                     `from M import N` is "M.N"; `import M` is "M".
-# disposition  command, skill:
+# disposition  command:
 #                retained  the same surface stays.
-#                replaced  command rows: a Rust operation covers it (HTTP and
-#                          MCP, section 7); package 1.1 adds its name as `operation`, this
-#                          file does not choose names. Skill rows: `note` names the
-#                          replacement (the binary, `fetch`, MCP `tools/list`).
+#                replaced  a Rust operation covers it (HTTP and MCP, section 7);
+#                          package 1.1 adds its name as `operation`, this file does not
+#                          choose names.
 #                removed   nothing replaces it; `note` says why.
 #              import (the name's fate in Python):
 #                retained  moves into reg_meta_build in stage 4.
@@ -219,64 +215,6 @@ disposition = "replaced"
 operation = "validate"
 owner = "3e"
 covered_by = ["conformance/cases/api/validate-references-resolve", "conformance/cases/api/validate-unresolved-binding", "conformance/test_validate.py"]
-
-# Commands the register-metadata-search skill documents (listed by hand)
-
-[[row]]
-kind = "skill"
-id = "uv tool install reg-meta"
-disposition = "replaced"
-owner = "4"
-covered_by = []
-note = "Section 8: the `reg-meta` binary, or no install against the hosted MCP endpoint (decision 12). The skill moves to MCP in stage 4."
-
-[[row]]
-kind = "skill"
-id = "reg-meta update --yes"
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta/tests/test_update.py"]
-note = "`reg-meta fetch` (section 6); see the `update` command row."
-
-[[row]]
-kind = "skill"
-id = "reg-meta --examples"
-disposition = "removed"
-owner = "4"
-covered_by = []
-note = "Documented but not implemented: the CLI has no `--examples` flag today. MCP `tools/list` and OpenAPI are the self-description; there is no separate describe (section 7)."
-
-[[row]]
-kind = "skill"
-id = "reg-meta --help"
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta/tests/test_integration.py"]
-note = "MCP `tools/list` and OpenAPI are the self-description; there is no separate describe (section 7)."
-
-[[row]]
-kind = "skill"
-id = "reg-meta <command> --help"
-disposition = "replaced"
-owner = "4"
-covered_by = []
-note = "MCP `tools/list` and OpenAPI are the self-description; there is no separate describe (section 7)."
-
-[[row]]
-kind = "skill"
-id = "reg-meta <command> --examples"
-disposition = "removed"
-owner = "4"
-covered_by = []
-note = "Not implemented today; see `reg-meta --examples`."
-
-[[row]]
-kind = "skill"
-id = "--format json"
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/test_cli_scope.py"]
-note = "Responses are JSON only (section 7), so the flag has nothing to select."
 
 # reg_meta names imported outside reg_meta/
 

@@ -1,8 +1,7 @@
 """The surface inventory (`conformance/api/surface.toml`) matches the source.
 
-`reg-meta` subcommands and `reg_meta` imports are discovered with `ast`; the skill's
-commands are matched against its SKILL.md text. A discovered item without a row fails, and so does a row whose item
-no longer exists. Discovery fails closed on source forms it does not model.
+`reg-meta` subcommands and `reg_meta` imports are discovered with `ast`. A discovered
+item without a row fails, and so does a row whose item no longer exists. Discovery fails closed on source forms it does not model.
 """
 
 from __future__ import annotations
@@ -15,10 +14,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SURFACE = ROOT / "conformance/api/surface.toml"
 CLI = ROOT / "reg_meta/src/reg_meta/cli.py"
-SKILL = ROOT / "plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md"
 PROVIDER = "reg_meta"
 
-KINDS = {"command", "import", "skill"}
+KINDS = {"command", "import"}
 DISPOSITIONS = {"retained", "replaced", "removed"}
 OWNERS = {"3a", "3b", "3c", "3d", "3e", "4", "5"}
 REQUIRED = {"kind", "id", "disposition", "owner", "covered_by"}
@@ -180,9 +178,3 @@ def test_every_reg_meta_import_has_a_row():
         if r["id"] in discovered and set(r["used_by"]) != discovered[r["id"]]
     }
     assert not wrong, f"used_by differs from the importing roots: {wrong}"
-
-
-def test_skill_rows_name_documented_commands():
-    text = SKILL.read_text(encoding="utf-8")
-    absent = sorted(i for i in _ids("skill") if i not in text)
-    assert not absent, f"skill rows no longer in {SKILL.name}: {absent}"

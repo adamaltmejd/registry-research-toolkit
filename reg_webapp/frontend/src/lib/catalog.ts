@@ -659,7 +659,7 @@ export function routeBreadcrumbs(route: Route): BreadcrumbItem[] {
 
 // ── register_variant coordinate helpers ──────────────────────────────────────
 // A Source.register_variant is a 3-seg coordinate `provider/register/variant`
-// (see reg_schema/DESIGN.md → Two layers: models vs. validator). The binding
+// (see crates/reg-core/DESIGN.md → Scope). The binding
 // variable picker is SCOPED to the provider/register prefix
 // (enforcing the FQID-prefix coupling as UX); the resolve takes the variant.
 

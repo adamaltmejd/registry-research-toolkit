@@ -8,7 +8,7 @@ import { foldVersions, groupVariants, showsDistinctGroup } from "./variants";
 
 // The register's variants PAGE (Y-79): `/catalog/<provider>/<register>/variants`,
 // the route behind the register page's compact `VariantsSummary`. The variant
-// axis is a register SUB-RESOURCE (NOT an FQID path segment; see reg_meta/DESIGN.md
+// axis is a register SUB-RESOURCE (NOT an FQID path segment; see crates/DESIGN.md
 // → Two-level variable model), so it has its own fixed-shape route rather than a
 // catalog node. A5.3a DISPLAYS the variants for a register; the selection + the
 // period/state resolution that consumes `?variant` is A5.3b.
