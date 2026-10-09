@@ -317,10 +317,9 @@ def require_search_reaches(directory, search, capsys, query, scope, binding):
     return True
 
 
-def assert_sampled_agreement(artifact_dir, artifact_client, server, tmp_path, capsys):
+def assert_sampled_agreement(artifact_dir, server, tmp_path, capsys):
     """Observe the same adapter contracts for admitted and regression artifacts.
-    `server` is the Rust server's client (`server_client`); `artifact_client`
-    answers the project routes."""
+    `server` is the Rust server's client (`server_client`)."""
     with open_db(artifact_dir / "reg_meta.db") as conn:
         project = sample_project(conn)
         result = materialize_order(project_from_raw(project), conn)
@@ -360,9 +359,9 @@ def assert_sampled_agreement(artifact_dir, artifact_client, server, tmp_path, ca
     require(run(argv) == 0, "Repeated CLI sample search failed")
     require(capsys.readouterr().out == first, "Repeated CLI first page differs")
     require_search_reaches(artifact_dir, server, capsys, query, scope, fqid)
-    validated = artifact_client.post("/api/project/validate", json=project)
+    validated = server.post("/api/project/validate", json=project)
     require(
-        validated.status_code == 200 and validated.json()["ok"],
+        validated.status_code == 200 and validated.json()["data"]["ok"],
         "Sample validation disagrees with admission",
     )
     project_file = tmp_path / "project.json"
@@ -373,7 +372,7 @@ def assert_sampled_agreement(artifact_dir, artifact_client, server, tmp_path, ca
         "CLI sample order failed",
     )
     cli = capsys.readouterr().out
-    response = artifact_client.post("/api/project/order", json=project)
+    response = server.post("/api/project/order/manifest", json=project)
     require(response.status_code == 200, "HTTP sample order failed")
     require(
         cli == result.manifest.to_json() == response.text,
@@ -385,7 +384,7 @@ def assert_sampled_agreement(artifact_dir, artifact_client, server, tmp_path, ca
     )
     require(capsys.readouterr().out == cli, "Repeated CLI order bytes differ")
     require(
-        artifact_client.post("/api/project/order", json=project).content
+        server.post("/api/project/order/manifest", json=project).content
         == response.content,
         "Repeated HTTP order bytes differ",
     )

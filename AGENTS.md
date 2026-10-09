@@ -250,7 +250,7 @@ refactor.
 - `uv run python -m pytest conformance -q` — source-built conformance corpus and
   session-built catalog/steward artifact checks
 - `cargo build --workspace`, then
-  `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q`
+  `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q`
   — conformance checks on an admitted real artifact; all three flags required (search
   runs against the Rust server, and a missing `--server-cmd` fails), bad artifacts fail
   admission (fixture-bound goldens still use synthetic sources)

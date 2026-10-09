@@ -3,19 +3,16 @@
 //! operations' `OpenAPI` ones, and a call returns the HTTP response document: `{data,
 //! meta}`, or `{error, meta}` as a tool error.
 
-use std::collections::HashMap;
-use std::net::{IpAddr, SocketAddr};
-use std::sync::{Arc, Mutex};
-use std::time::{Duration, Instant};
+use std::sync::Arc;
 
+use crate::limit::{Limits, guard};
+use crate::{Answer, VERSION, run};
 use axum::Router;
-use axum::body::Bytes;
-use axum::extract::{ConnectInfo, DefaultBodyLimit, FromRequest, Request, State};
-use axum::http::{HeaderMap, StatusCode, header};
-use axum::middleware::{Next, from_fn_with_state};
-use axum::response::{IntoResponse, Response};
+use axum::extract::DefaultBodyLimit;
+use axum::http::StatusCode;
+use axum::middleware::from_fn_with_state;
+use reg_catalog::Error;
 use reg_catalog::ops::{self, Operation, Server, Type, body};
-use reg_catalog::{Code, Error};
 use rmcp::model::{
     CallToolRequestParams, CallToolResponse, CallToolResult, Implementation, JsonObject,
     ListToolsResult, PaginatedRequestParams, ServerCapabilities, ServerConfig, Tool,
@@ -25,22 +22,6 @@ use rmcp::transport::streamable_http_server::session::never::NeverSessionManager
 use rmcp::transport::{StreamableHttpServerConfig, StreamableHttpService};
 use rmcp::{ErrorData, RoleServer, ServerHandler, ServiceExt};
 use serde_json::{Map, Value, json};
-use sha2::{Digest, Sha256};
-
-use crate::{Answer, VERSION, run};
-
-/// `/mcp` requests per client address: a token bucket of this many tokens, refilled
-/// one per second. Sized for agent tool calls, apart from any SPA limit.
-const RATE_PER_MINUTE: u64 = 60;
-/// simplify: buckets that have refilled are dropped only once this many addresses are
-/// tracked; make it a time-ordered sweep if a hosted burst of addresses shows in RSS
-/// or in `/mcp` latency.
-const MAX_TRACKED: usize = 10_000;
-/// The secret the edge worker sends as [`EDGE_TOKEN_HEADER`] on every origin request.
-/// A request carrying it came through the edge, so its `CF-Connecting-IP` is the
-/// client's address; any other request is keyed on its peer address.
-const EDGE_TOKEN_ENV: &str = "REG_META_EDGE_TOKEN";
-const EDGE_TOKEN_HEADER: &str = "x-edge-token";
 
 /// The tool handler: one per stdio process, and per request over stateless HTTP.
 #[derive(Clone)]
@@ -293,10 +274,10 @@ pub async fn stdio(server: Arc<Server>) {
 }
 
 /// `/mcp`: streamable HTTP without sessions (each POST stands alone and is answered
-/// with JSON), behind the rate limit and then the body cap. `Host` may be a loopback
-/// name or `public_host`.
-pub fn router(server: Arc<Server>, public_host: Option<String>) -> Router {
-    let tools = Tools::new(Arc::clone(&server));
+/// with JSON), behind the write limits (`limit.rs`). `Host` may be a loopback name or
+/// `public_host`.
+pub fn router(server: Arc<Server>, public_host: Option<String>, limits: Arc<Limits>) -> Router {
+    let tools = Tools::new(server);
     let mut config = StreamableHttpServerConfig::default();
     config.legacy_session_mode = false;
     config.json_response = true;
@@ -306,123 +287,8 @@ pub fn router(server: Arc<Server>, public_host: Option<String>) -> Router {
         Arc::new(NeverSessionManager::default()),
         config,
     );
-    let limits = Arc::new(Limits {
-        server,
-        edge_token: std::env::var(EDGE_TOKEN_ENV)
-            .ok()
-            .filter(|token| !token.is_empty())
-            .map(|token| Sha256::digest(token).into()),
-        buckets: Mutex::default(),
-    });
     Router::new()
         .route_service("/mcp", service)
         .layer(from_fn_with_state(limits, guard))
         .layer(DefaultBodyLimit::max(body::MAX_BYTES))
-}
-
-struct Limits {
-    server: Arc<Server>,
-    /// The SHA-256 of the edge token; `None` trusts no request as the edge's.
-    edge_token: Option<[u8; 32]>,
-    buckets: Mutex<HashMap<IpAddr, Bucket>>,
-}
-
-struct Bucket {
-    tokens: u64,
-    refilled: Instant,
-}
-
-impl Bucket {
-    /// Add a token per whole second since the last refill, up to the capacity.
-    fn refill(&mut self, now: Instant) -> &mut Self {
-        let seconds = now.duration_since(self.refilled).as_secs();
-        self.tokens = (self.tokens + seconds).min(RATE_PER_MINUTE);
-        self.refilled += Duration::from_secs(seconds);
-        self
-    }
-}
-
-impl Limits {
-    /// The address a request is limited by: the edge-supplied `CF-Connecting-IP` when
-    /// the request carries the edge token, otherwise its peer; an IPv6 address as its
-    /// /64.
-    fn client(&self, headers: &HeaderMap, peer: IpAddr) -> IpAddr {
-        let header = |name| headers.get(name).and_then(|value| value.to_str().ok());
-        let from_edge = self.edge_token.is_some_and(|token| {
-            header(EDGE_TOKEN_HEADER).is_some_and(|sent| {
-                // Equal digests, compared without an early exit.
-                let sent: [u8; 32] = Sha256::digest(sent).into();
-                let diff = sent
-                    .iter()
-                    .zip(token)
-                    .fold(0, |diff, (a, b)| diff | (a ^ b));
-                diff == 0
-            })
-        });
-        let client = from_edge
-            .then(|| header("cf-connecting-ip")?.parse().ok())
-            .flatten()
-            .unwrap_or(peer);
-        // One host holds a whole IPv6 /64, so it is one client: keyed on the full
-        // address, it could rotate through fresh buckets.
-        match client.to_canonical() {
-            IpAddr::V6(v6) => IpAddr::V6((u128::from(v6) & !u128::from(u64::MAX)).into()),
-            v4 @ IpAddr::V4(_) => v4,
-        }
-    }
-
-    /// Take a token from `client`'s bucket; false when it is empty.
-    fn allow(&self, client: IpAddr) -> bool {
-        let now = Instant::now();
-        let mut buckets = self.buckets.lock().expect("rate buckets");
-        if buckets.len() >= MAX_TRACKED {
-            // A full bucket is the same as none. simplify: while this many addresses
-            // are active, every request sweeps them all under the lock; replace the
-            // sweep (see MAX_TRACKED) if it shows in `/mcp` latency.
-            buckets.retain(|_, bucket| bucket.refill(now).tokens < RATE_PER_MINUTE);
-        }
-        let bucket = buckets
-            .entry(client)
-            .or_insert(Bucket {
-                tokens: RATE_PER_MINUTE,
-                refilled: now,
-            })
-            .refill(now);
-        let allowed = bucket.tokens > 0;
-        bucket.tokens = bucket.tokens.saturating_sub(1);
-        allowed
-    }
-
-    /// `err` as `{error, meta}` with its status.
-    fn refuse(&self, err: Error) -> Response {
-        let answer = Answer::new(&self.server, self.server.catalog.default_scope(), Err(err));
-        (answer.status, crate::json(answer.body.to_string())).into_response()
-    }
-}
-
-/// The `/mcp` limits, answered with the error document: `rate_limited` per client
-/// address ([`Limits::client`]), then `payload_too_large` over [`body::MAX_BYTES`]
-/// (read through `DefaultBodyLimit`, which the MCP service itself does not consult).
-async fn guard(
-    State(limits): State<Arc<Limits>>,
-    ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    request: Request,
-    next: Next,
-) -> Response {
-    if !limits.allow(limits.client(request.headers(), peer.ip())) {
-        let err = Error::new(
-            Code::RateLimited,
-            format!("More than {RATE_PER_MINUTE} MCP requests a minute from this address."),
-            vec![1.into()],
-        );
-        return ([(header::RETRY_AFTER, "1")], limits.refuse(err)).into_response();
-    }
-    let (parts, body) = request.into_parts();
-    match Bytes::from_request(Request::from_parts(parts.clone(), body), &()).await {
-        Ok(bytes) => next.run(Request::from_parts(parts, bytes.into())).await,
-        Err(rejection) if rejection.status() == StatusCode::PAYLOAD_TOO_LARGE => {
-            limits.refuse(body::too_large())
-        }
-        Err(rejection) => rejection.into_response(),
-    }
 }

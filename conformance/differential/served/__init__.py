@@ -133,6 +133,10 @@ def served_cases(
                 str(REPO_ROOT / "reg_webapp/stewards"),
                 "--port",
                 "{port}",
+                # The validate and order families replay every project from one
+                # address, past the production write limit.
+                "--write-limit",
+                "100000",
             ]
         ),
         log_dir / "rust",

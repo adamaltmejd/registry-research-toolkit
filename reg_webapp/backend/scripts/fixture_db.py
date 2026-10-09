@@ -1,14 +1,9 @@
 """Build the deterministic synthetic reg_meta DB pair the dev servers serve without a
 released catalog.
 
-Two consumers, one builder:
-
-- ``reg_webapp/backend/tests/conftest.py`` (the ``catalog_db``
-  fixture) — CI has no real reg_meta asset, so the backend tests point the app at
-  this pair via ``REG_META_DB``;
-- ``dev.sh --fixture-db`` — the same pair, built into a temp dir, so ``smoke`` /
-  ``shot`` / plain serve render a populated catalog inside a container where no
-  released DB is reachable.
+Its consumer is ``dev.sh --fixture-db``: the pair, built into a temp dir, so
+``smoke`` / ``shot`` / ``flows`` / plain serve render a populated catalog where no
+released DB is reachable.
 
 It lives in ``scripts/`` (not ``src/reg_webapp/``) because it needs the repo
 checkout: the catalog builder rides on ``reg_meta_build``'s ``_slugged_db`` test
@@ -82,7 +77,7 @@ def stamp_manifest(conn: sqlite3.Connection) -> None:
 
 
 def build_catalog_fixture_db(db_path: Path) -> None:
-    """Build the slugged catalog DB on disk (``catalog_db`` and ``--fixture-db``).
+    """Build the slugged catalog DB on disk (``--fixture-db``).
 
     Uses ``reg_meta_build``'s ``_slugged_db`` builder: the default
     ``scb/lisa/kon`` binding (with one state) plus a value-set on it, a second

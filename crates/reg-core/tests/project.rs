@@ -1,6 +1,6 @@
 //! The project types, the structural validator and the two JSON encodings against
 //! data oracles: the structural corpora ([`CORPORA`]), the project bodies of
-//! `conformance/cases/{validate,order}/`, and files frozen Python wrote.
+//! `conformance/cases/{api,order}/`, and files frozen Python wrote.
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -93,7 +93,7 @@ fn valid_projects() -> Vec<(String, Value)> {
             add(key, &json(&case.join("input.json")));
         }
     }
-    for kind in ["validate", "order"] {
+    for kind in ["api", "order"] {
         for case in cases(&repo().join("conformance/cases").join(kind)) {
             let file = format!("conformance/cases/{kind}/{}/request.json", name(&case));
             let request = json(&repo().join(&file));
@@ -149,38 +149,30 @@ fn project_hashes() {
     }
 }
 
-/// Each committed manifest a validate or order case downloads (`"bytes"`) re-encodes
+/// Each committed order manifest (`conformance/cases/order/*/order.json`) re-encodes
 /// byte for byte, and its `project_hash` is the hash of the project that requested
 /// it. Fails when the pretty encoding changes (key order, indent, escaping, trailing
 /// newline).
 #[test]
 fn committed_manifest_bytes() {
     let mut seen = 0;
-    for kind in ["validate", "order"] {
-        for case in cases(&repo().join("conformance/cases").join(kind)) {
-            let request = json(&case.join("request.json"));
-            for (i, step) in json(&case.join("expected.json"))
-                .as_array()
-                .into_iter()
-                .flatten()
-                .enumerate()
-            {
-                let Some(file) = step.get("bytes").and_then(Value::as_str) else {
-                    continue;
-                };
-                seen += 1;
-                let bytes = read(&case.join(file));
-                let manifest: Value = serde_json::from_str(&bytes).unwrap();
-                assert_eq!(to_json_pretty(&manifest), bytes, "{}", case.display());
-                let project = ProjectData::from_value(&request["requests"][i]["body"]).unwrap();
-                assert_eq!(
-                    manifest["provenance"]["project_hash"],
-                    project_hash(&project),
-                    "{}",
-                    case.display()
-                );
-            }
+    for case in cases(&repo().join("conformance/cases/order")) {
+        let file = case.join("order.json");
+        if !file.exists() {
+            continue;
         }
+        seen += 1;
+        let bytes = read(&file);
+        let manifest: Value = serde_json::from_str(&bytes).unwrap();
+        assert_eq!(to_json_pretty(&manifest), bytes, "{}", case.display());
+        let project =
+            ProjectData::from_value(&json(&case.join("request.json"))["project"]).unwrap();
+        assert_eq!(
+            manifest["provenance"]["project_hash"],
+            project_hash(&project),
+            "{}",
+            case.display()
+        );
     }
     assert!(seen > 0, "no committed manifest bytes");
 }

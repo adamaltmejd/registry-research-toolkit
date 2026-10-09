@@ -74,7 +74,7 @@ describe("dirty flag", () => {
     stubFetch(async () => ({
       ok: true,
       status: 200,
-      json: async () => ({ ok: true, issues: [] }),
+      json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
     }));
     projectStore.newProject(SEED);
     // Establish a REAL green validation first — otherwise the assertion is
@@ -129,15 +129,18 @@ describe("the file-open ingress + commit", () => {
         ok: true,
         status: 200,
         json: async () => ({
-          ok: false,
-          issues: [
-            {
-              level: "error",
-              code: "unexpected_field",
-              path: "/typo_object",
-              message: "unexpected key 'typo_object' on project root",
-            },
-          ],
+          data: {
+            ok: false,
+            issues: [
+              {
+                level: "error",
+                code: "unexpected_field",
+                path: "/typo_object",
+                message: "unexpected key 'typo_object' on project root",
+              },
+            ],
+          },
+          meta: {},
         }),
       };
     });
@@ -158,12 +161,18 @@ describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
       {
         ok: true,
         status: 200,
-        json: async () => ({ ok: true, issues: [] }),
+        json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
       },
       {
         ok: false,
         status: 400,
-        json: async () => ({ detail: "request body is not a JSON object" }),
+        json: async () => ({
+          error: {
+            code: "malformed_request",
+            message: "request body is not a JSON object",
+          },
+          meta: {},
+        }),
       },
     ];
     stubFetch(async () => responses.shift() ?? responses.at(-1));
@@ -200,7 +209,7 @@ describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
     resolveFetch({
       ok: true,
       status: 200,
-      json: async () => ({ ok: true, issues: [] }),
+      json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
     });
     await pending;
     expect(projectStore.validation).toBeNull();
@@ -356,7 +365,7 @@ describe("stable client-side ids (issue #200)", () => {
         return {
           ok: true,
           status: 200,
-          json: async () => ({ ok: true, issues: [] }),
+          json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
         };
       });
       seedThreeSources();
@@ -416,23 +425,29 @@ describe("a blocked order", () => {
             ok: false,
             status: 422,
             json: async () => ({
-              detail: "order blocked by 1 finding: steward_mismatch: …",
-              findings: [
-                {
-                  code: "steward_mismatch",
-                  message: "this project belongs to another deployment",
-                  source: null,
-                  variable: null,
-                  period: null,
+              error: {
+                code: "order_blocked",
+                message: "order blocked by 1 finding: steward_mismatch: …",
+                fields: {
+                  findings: [
+                    {
+                      code: "steward_mismatch",
+                      message: "this project belongs to another deployment",
+                      source: null,
+                      variable: null,
+                      period: null,
+                    },
+                  ],
                 },
-              ],
+              },
+              meta: {},
             }),
             headers: new Headers(),
           }
         : {
             ok: true,
             status: 200,
-            json: async () => ({ ok: true, issues: [] }),
+            json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
           },
     );
     projectStore.newProject(SEED);
@@ -470,30 +485,36 @@ describe("a blocked order", () => {
             ok: false,
             status: 422,
             json: async () => ({
-              detail: "order blocked by 2 findings: …",
-              findings: [
-                {
-                  code: "variable_unresolved",
-                  message: "scb/lisa/ghostvar does not resolve",
-                  source: "lisa",
-                  variable: "scb/lisa/ghostvar",
-                  period: null,
+              error: {
+                code: "order_blocked",
+                message: "order blocked by 2 findings: …",
+                fields: {
+                  findings: [
+                    {
+                      code: "variable_unresolved",
+                      message: "scb/lisa/ghostvar does not resolve",
+                      source: "lisa",
+                      variable: "scb/lisa/ghostvar",
+                      period: null,
+                    },
+                    {
+                      code: "coverage_gap",
+                      message: "the delivery does not cover 2019",
+                      source: "lisa",
+                      variable: "scb/lisa/kon",
+                      period: "2019",
+                    },
+                  ],
                 },
-                {
-                  code: "coverage_gap",
-                  message: "the delivery does not cover 2019",
-                  source: "lisa",
-                  variable: "scb/lisa/kon",
-                  period: "2019",
-                },
-              ],
+              },
+              meta: {},
             }),
             headers: new Headers(),
           }
         : {
             ok: true,
             status: 200,
-            json: async () => ({ ok: true, issues: [] }),
+            json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
           },
     );
     projectStore.newProject(SEED);
@@ -537,16 +558,22 @@ describe("a blocked order", () => {
       ok: false,
       status: 422,
       json: async () => ({
-        detail: "order blocked by 1 finding: …",
-        findings: [
-          {
-            code: "variable_unresolved",
-            message: "scb/lisa/ghostvar does not resolve",
-            source: "lisa",
-            variable: "scb/lisa/ghostvar",
-            period: null,
+        error: {
+          code: "order_blocked",
+          message: "order blocked by 1 finding: …",
+          fields: {
+            findings: [
+              {
+                code: "variable_unresolved",
+                message: "scb/lisa/ghostvar does not resolve",
+                source: "lisa",
+                variable: "scb/lisa/ghostvar",
+                period: null,
+              },
+            ],
           },
-        ],
+        },
+        meta: {},
       }),
       headers: new Headers(),
     });

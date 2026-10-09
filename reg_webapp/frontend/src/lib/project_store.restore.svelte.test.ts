@@ -33,7 +33,7 @@ beforeEach(() => {
     vi.fn(async () => ({
       ok: true,
       status: 200,
-      json: async () => ({ ok: true, issues: [] }),
+      json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
     })),
   );
 });
