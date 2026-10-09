@@ -315,6 +315,19 @@ pub fn next_iso_day(s: &str) -> String {
     }
 }
 
+/// An ISO date past its month's end (a stored, synthesized non-leap `YYYY-02-29`) as
+/// that month's last day; any other string as is. Today's
+/// `reg_meta.fqid.snap_to_real_month_end`.
+#[must_use]
+pub fn snap_month_end(s: &str) -> String {
+    match iso_date(s) {
+        Some((y, m, d)) if (1..=12).contains(&m) && d > last_day(y, m) => {
+            iso((y, m, last_day(y, m)))
+        }
+        _ => s.to_owned(),
+    }
+}
+
 /// The coarsest period token whose bounds are exactly `lo..hi` (ISO dates), else the
 /// explicit `lo..hi`; today's `reg_meta.fqid.period_token_for_bounds`. A term wins
 /// over the half-year it equals. As there, only the school year and the day are

@@ -24,6 +24,7 @@ from http_cases import (
     artifact_env,
     cached_case_artifact,
     case_clients,
+    raw_body,
     run_http_requests,
     select_json,
 )
@@ -71,6 +72,7 @@ EQUIVALENCE = {
     # `resolve-columns` sends `columns` as a JSON array, `resolve-errors` 201 of them
     # and a repeated scalar as an array.
     "resolve": ("resolve-columns", "resolve-errors"),
+    "validate": ("validate-unavailable-everywhere", "validate-scope-rejected"),
 }
 READER = {"fixture": "reader"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.
@@ -126,8 +128,9 @@ def path_arguments(op, path):
 @pytest.mark.parametrize("operation", EQUIVALENCE)
 def test_tool_matches_http(servers, operation):
     # Fails when a tool call's document drifts from the HTTP body (envelope, meta,
-    # error fields, argument conversion, the `operation` argument of a tool of
-    # several), or when the cases stop covering an error.
+    # error fields, argument conversion, a POST body as an object argument, the
+    # `operation` argument of a tool of several), or when the cases stop covering an
+    # error.
     op = OPERATIONS[operation]
     (tool,) = (t for t in TOOLS if t["name"] == op["tool"])
     selector = (
@@ -135,6 +138,8 @@ def test_tool_matches_http(servers, operation):
         if "operation" in tool["inputSchema"]["properties"]
         else {}
     )
+    # A POST operation's body is its `project` argument.
+    body = next((p for p, t in op["params"].items() if t == "project"), None)
     codes = set()
     for name in EQUIVALENCE[operation]:
         case = CASES / "api" / name
@@ -145,11 +150,18 @@ def test_tool_matches_http(servers, operation):
         for index, step in enumerate(steps):
             path = path_arguments(op, step["path"])
             query = step.get("query", {})
-            # A download, and a parameter sent in both the path and the query, have
-            # no tool-call spelling.
-            if step["operation"] != operation or path is None or path.keys() & query:
+            # A download, a parameter sent in both the path and the query, and raw
+            # body bytes have no tool-call spelling.
+            if (
+                step["operation"] != operation
+                or path is None
+                or path.keys() & query
+                or raw_body(step) is not None
+            ):
                 continue
             arguments = selector | path | query
+            if body is not None:
+                arguments[body] = step["body"]
             if "cursor_from" in step:
                 source, pointer = step["cursor_from"]
                 arguments["cursor"] = select_json(documents[source], pointer)
@@ -167,7 +179,7 @@ def test_tool_matches_http(servers, operation):
             ), f"{name} step {index}"
             if is_error:
                 codes.add(document["error"]["code"])
-    assert codes == {"invalid_parameter", *op["errors"]}
+    assert codes == {"invalid_parameter", *op.get("errors", [])}
 
 
 def test_tool_of_several_needs_an_operation(servers):

@@ -1,0 +1,13 @@
+{
+  "note": "Twin of `validate/malformed-deep-nesting`: fails if a body nested past the JSON depth limit is not refused with `malformed_request` before any validation runs.",
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "nested_arrays": 500000
+    }
+  ]
+}

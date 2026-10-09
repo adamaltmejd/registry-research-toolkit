@@ -1,9 +1,12 @@
 //! The FQID and period grammars against `conformance/cases/grammar/` (see its README),
 //! plus one seeded round-trip loop per grammar.
 
+mod common;
+
 use std::fs;
 use std::path::PathBuf;
 
+use common::Rng;
 use reg_core::{
     Fqid, GrammarError, Period, PeriodToken, Term, next_iso_day, period_token_for_bounds,
 };
@@ -125,24 +128,7 @@ fn period_matches_corpus() {
     );
 }
 
-/// `SplitMix64`: a fixed-seed generator, so a failure reproduces.
-struct Rng(u64);
-
 impl Rng {
-    fn next(&mut self) -> u64 {
-        self.0 = self.0.wrapping_add(0x9E37_79B9_7F4A_7C15);
-        let mut z = self.0;
-        z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
-        z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
-        z ^ (z >> 31)
-    }
-
-    /// Uniform in `lo..=hi` (the modulo bias is irrelevant here).
-    fn range(&mut self, lo: u16, hi: u16) -> u16 {
-        let span = u64::from(hi - lo) + 1;
-        lo + u16::try_from(self.next() % span).expect("below span")
-    }
-
     fn small(&mut self, lo: u8, hi: u8) -> u8 {
         u8::try_from(self.range(lo.into(), hi.into())).expect("u8 range")
     }

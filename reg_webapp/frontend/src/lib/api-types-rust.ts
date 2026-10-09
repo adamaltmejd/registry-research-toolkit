@@ -227,6 +227,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/project/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, with `ok` false when one is an error. A `schema_version` other than 3.0.0 is reported alone; then the document's structure, then each source's variant and period and each binding's variable, availability in the period (a narrower availability is an `info` clip), representation and value set, and on a steward catalog what the steward holds. An invalid project is a result, not an error. */
+        post: operations["validate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/resolve": {
         parameters: {
             query?: never;
@@ -678,6 +695,8 @@ export interface components {
             /** Format: int64 */
             min: number;
         };
+        /** @enum {string} */
+        IssueLevel: "error" | "warning" | "info";
         Lineage: {
             edges: components["schemas"]["LineageEdge"][];
             /**
@@ -1109,6 +1128,23 @@ export interface components {
             rank: number;
             slug: string;
             starred: boolean;
+        };
+        /** @description The validation result: `ok` when no issue is an error. */
+        Validation: {
+            /** @description In emission order: per source, its variant and period, then per binding. */
+            issues: components["schemas"]["ValidationIssue"][];
+            ok: boolean;
+        };
+        /** @description One finding about the document. */
+        ValidationIssue: {
+            /** @description A stable identifier, such as `period_outside_state_validity`. */
+            code: string;
+            level: components["schemas"]["IssueLevel"];
+            message: string;
+            /** @description An RFC 6901 JSON pointer into the document; empty for the whole document. */
+            path: string;
+            /** @description The successor a `variable_replaced` finding names; null otherwise. */
+            successor_fqid: string | null;
         };
         /**
          * @description `value_set_summary`: a value set's code count and, when its codes are a dense
@@ -1599,6 +1635,45 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Lineage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    validate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Validation"];
                         meta: components["schemas"]["Meta"];
                     };
                 };
