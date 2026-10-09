@@ -137,7 +137,7 @@ ENV REG_META_CATALOG=$REG_META_FLAVOR
 USER app
 EXPOSE 8000
 
-# The entrypoint probes `context`, `search` and `/mcp` before handing the
+# The entrypoint probes `context`, `search`, docs search and `/mcp` before handing the
 # foreground to the server; a failed probe exits non-zero and the container never
 # serves traffic (reg_webapp/DESIGN.md → Deployment).
 ENTRYPOINT ["docker-entrypoint.sh"]

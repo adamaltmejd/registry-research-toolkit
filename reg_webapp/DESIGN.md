@@ -1300,11 +1300,12 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   job carries a HEAD-of-main guard (GHA concurrency serializes by build-completion
   order, not commit order — without the guard an older commit's slow build could
   overwrite a newer deploy; it also makes non-main dispatches deploy-inert). Two gates
-  guard a bad image: the entrypoint smoke gate (it probes `context`, `search` and `/mcp`
-  with `curl`, each carrying `__edge_v`, and the container exits non-zero before ever
-  serving when artifact admission or a probe fails) and fly.toml's `/api/context` HTTP
-  check (flyctl reports failure if it never passes). Rollback: `flyctl releases --image`
-  lists history; `flyctl deploy --image <old>` restores in seconds.
+  guard a bad image: the entrypoint smoke gate (it probes `context`, `search`, docs
+  search and `/mcp` with `curl`, each carrying `__edge_v`, and the container exits
+  non-zero before ever serving when artifact admission or a probe fails) and fly.toml's
+  `/api/context` HTTP check (flyctl reports failure if it never passes). Rollback:
+  `flyctl releases --image` lists history; `flyctl deploy --image <old>` restores in
+  seconds.
 - **Pending-schema-bump guard (#448)**: when the Rust server's schema gates (`SCHEMA` in
   `crates/reg-catalog/src/lib.rs`, `DOC_SCHEMA` in `docs.rs`) are AHEAD of the latest
   released `reg_meta/v*` asset (same major, higher minor), the image would refuse to
