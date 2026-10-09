@@ -7,14 +7,14 @@
       "fields": ["code", "case_id", "valid_from", "valid_to"],
       "rows": [
         ["unowned_alias_window", "curation/registers/scb/searched.toml#/representation.alias_window/1", "2019-01-01", "2019-12-31"],
-        ["unsupported_alias_window", "curation/registers/scb/gap.toml#/representation.alias_window/1", "2019-01-01", "2019-12-31"],
+        ["unsupported_alias_window", "curation/registers/scb/gap.toml#/representation.alias_window/1", "2019-01-01", "2020-12-31"],
         ["conflicting_alias_window_owner", "curation/registers/scb/contested.toml#/representation.alias_window/1", "2019-01-01", "2019-12-31"],
         ["conflicting_alias_window_decisions", "curation/registers/scb/compete.toml#/representation.alias_window/1", "2019-01-01", "2019-12-31"],
         ["conflicting_alias_window_decisions", "curation/registers/scb/compete.toml#/representation.alias_window/2", "2019-01-01", "2019-12-31"],
         ["stale_curation_entry", "curation/registers/scb/stale.toml#/representation.alias_window/1", null, null],
         ["overbroad_curation_entry", "curation/registers/scb/twice.toml#/representation.alias_window/1", null, null]
       ],
-      "note": "OWNED and PARALLEL report no error. Each refused window names its own bounds; COMPETE's two entries are withheld on the 2019 overlap only."
+      "note": "OWNED, PARALLEL and ALIASED report no error. Each refused window names its own bounds; COMPETE's two entries are withheld on the 2019 overlap only."
     },
     {
       "table": "issues",
@@ -34,32 +34,45 @@
         ["compete", "first", "people", "X", "2018-01-01", "2018-12-31"],
         ["compete", "second", "people", "X", "2020-01-01", "2020-12-31"],
         ["parallel", "income", "people", "First", "2020-01-01", "2020-12-31"],
-        ["parallel", "income", "people", "first", "2020-01-01", "2020-12-31"]
+        ["parallel", "income", "people", "first", "2020-01-01", "2020-12-31"],
+        ["aliased", "income", "people", "First", "2020-01-01", "2020-12-31"],
+        ["aliased", "income", "people", "first", "2020-01-01", "2020-12-31"],
+        ["aliased", "income", "people", "first", "2021-01-01", "2021-12-31"]
       ],
-      "note": "SEARCHED, GAP, CONTESTED, STALE and TWICE publish no window."
+      "note": "SEARCHED, GAP, CONTESTED, STALE and TWICE publish no window. ALIASED's first gains its 2021 window beside the 2020 one."
     },
     {
       "table": "alias_windows",
-      "where": {"provenance": {"contains": "curation/registers/scb/owned.toml#/representation.alias_window/1"}},
+      "where": {"provenance": {"contains": ["curation/registers/scb/owned.toml#/representation.alias_window/1", "The 2019 and 2020 analysis tables still hold OLD."]}},
       "fields": ["register", "column", "valid_from"],
       "rows": [
         ["owned", "OLD", "2019-01-01"]
       ],
-      "note": "A curated window carries its entry's attribution, which the reader reads as an additive representation."
+      "note": "A curated window carries its entry's locator and evidence as provenance, which the reader reads as an additive representation."
     },
     {
       "table": "alias_windows",
-      "where": {"register": "parallel"},
-      "fields": ["column", "provenance"],
+      "where": {"provenance": {"contains": ["curation/registers/scb/aliased.toml#/representation.alias_window/1", "The 2021 analysis table still holds first."]}},
+      "fields": ["register", "column", "valid_from"],
       "rows": [
-        ["First", null],
-        ["first", null]
+        ["aliased", "first", "2021-01-01"]
+      ]
+    },
+    {
+      "table": "alias_windows",
+      "where": {"register": ["parallel", "aliased"], "valid_from": "2020-01-01"},
+      "fields": ["register", "column", "provenance"],
+      "rows": [
+        ["parallel", "First", null],
+        ["parallel", "first", null],
+        ["aliased", "First", null],
+        ["aliased", "first", null]
       ],
       "note": "A source-derived window has no provenance (db.py, variable_alias_window)."
     },
     {
       "table": "states",
-      "where": {"register": ["owned", "gap"]},
+      "where": {"register": ["owned", "gap", "aliased"]},
       "fields": ["register", "variable", "column", "valid_from", "valid_to"],
       "rows": [
         ["owned", "value", "OLD", "2018-01-01", "2018-12-31"],
@@ -67,19 +80,24 @@
         ["owned", "value", "NEW", "2020-01-01", "2020-12-31"],
         ["owned", "later", "OLD", "2021-01-01", "2021-12-31"],
         ["gap", "value", "OLD", "2018-01-01", "2018-12-31"],
-        ["gap", "value", "NEW", "2019-07-01", "2019-12-31"]
+        ["gap", "value", "NEW", "2019-01-01", "2019-06-30"],
+        ["gap", "value", "NEW", "2020-01-01", "2020-12-31"],
+        ["aliased", "income", "First", "2020-01-01", "2020-12-31"],
+        ["aliased", "income", "First", "2021-01-01", "2021-12-31"]
       ],
-      "note": "One state per delivered row: the OWNED window adds no availability. GAP's autumn-term edition starts in July."
+      "note": "One state per delivered edition: an applied window adds no availability. GAP's spring-term edition ends in June, leaving July to December 2019 inside its window uncovered."
     },
     {
       "table": "aliases",
-      "where": {"register": "searched"},
-      "fields": ["variable", "column"],
+      "where": {"register": ["searched", "parallel"]},
+      "fields": ["register", "variable", "column"],
       "rows": [
-        ["value", "NEW"],
-        ["value", "OLD"]
+        ["searched", "value", "NEW"],
+        ["searched", "value", "OLD"],
+        ["parallel", "income", "First"],
+        ["parallel", "income", "first"]
       ],
-      "note": "The search alias OLD is published; its refused window is not."
+      "note": "SEARCHED's search alias OLD is published without its refused window. PARALLEL's search alias on first adds no second alias."
     },
     {
       "table": "cases",
