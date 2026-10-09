@@ -332,7 +332,9 @@ CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 # 9.5.0: derived succession tables `succession_terminal`, `classification_chain` and
 #   `classification_family` (read by the Rust server only).
 # 9.6.0: derived `coded_variable_stats` per scope; only the Rust reader reads it.
-SCHEMA_VERSION = "9.6.0"
+# 9.7.0: `variable_search_text` is a materialized table, no longer a view (same
+#   columns and rows), and `idx_value_code_code_nocase` serves code-prefix search.
+SCHEMA_VERSION = "9.7.0"
 DB_FILENAME = "reg_meta.db"
 
 

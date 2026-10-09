@@ -2,7 +2,7 @@
 //!
 //! ```text
 //! reg-meta serve --db DIR [--catalog NAME] --stewards DIR --port N [--host ADDR]
-//!                [--public-host HOST] [--write-limit N]
+//!                [--public-host HOST] [--write-limit N] [--mmap-size BYTES]
 //! reg-meta mcp --db DIR [--catalog NAME]
 //! ```
 //!
@@ -13,7 +13,9 @@
 //! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
 //! names. `/mcp` and every POST share one rate limit per client address, keyed with
 //! the edge token in `REG_META_EDGE_TOKEN` (`limit.rs`): `--write-limit` tokens
-//! (default 60), refilled one a second. `mcp` serves the MCP
+//! (default 60), refilled one a second. `--mmap-size` sets each SQLite connection's
+//! `PRAGMA mmap_size` (default 2 GiB, `reg_catalog::DEFAULT_MMAP_SIZE`; 0 disables
+//! memory-mapping). `mcp` serves the MCP
 //! tools over stdio. A refusal prints the error document on stderr and exits with the
 //! code's status.
 
@@ -35,7 +37,7 @@ use axum::routing::{MethodRouter, get, post};
 use reg_catalog::ops::{
     self, Cache, Download, Meta, Operation, Param, Raw, Run, Server, Steward, body,
 };
-use reg_catalog::{Catalog, Docs, Error, Scope, hex};
+use reg_catalog::{Catalog, DEFAULT_MMAP_SIZE, Docs, Error, Scope, hex};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 
@@ -57,13 +59,15 @@ enum Mode {
 struct Args {
     db: PathBuf,
     catalog: Option<String>,
+    /// `serve --mmap-size`; `mcp` keeps the default.
+    mmap_size: i64,
     mode: Mode,
 }
 
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     let mode = args.next();
     let (mut db, mut catalog, mut stewards, mut port) = (None, None, None, None);
-    let (mut host, mut public_host, mut write_limit) = (None, None, None);
+    let (mut host, mut public_host, mut write_limit, mut mmap_size) = (None, None, None, None);
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--db" => &mut db,
@@ -73,6 +77,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
             "--host" => &mut host,
             "--public-host" => &mut public_host,
             "--write-limit" => &mut write_limit,
+            "--mmap-size" => &mut mmap_size,
             _ => return Err(Error::invalid_parameter(&flag)),
         };
         *slot = Some(args.next().ok_or_else(|| Error::invalid_parameter(&flag))?);
@@ -109,6 +114,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
                 ("--host", &host),
                 ("--public-host", &public_host),
                 ("--write-limit", &write_limit),
+                ("--mmap-size", &mmap_size),
             ];
             if let Some((flag, _)) = serve_only.iter().find(|(_, value)| value.is_some()) {
                 return Err(Error::invalid_parameter(flag));
@@ -120,6 +126,14 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     Ok(Args {
         db: db.ok_or_else(|| Error::invalid_parameter("--db"))?.into(),
         catalog,
+        mmap_size: match mmap_size {
+            Some(bytes) => bytes
+                .parse()
+                .ok()
+                .filter(|&bytes| bytes >= 0)
+                .ok_or_else(|| Error::invalid_parameter("--mmap-size"))?,
+            None => DEFAULT_MMAP_SIZE,
+        },
         mode,
     })
 }
@@ -133,9 +147,9 @@ fn refuse(err: &Error) -> ! {
 #[tokio::main]
 async fn main() {
     let args = parse_args(std::env::args().skip(1)).unwrap_or_else(|err| refuse(&err));
-    let catalog =
-        Catalog::open(&args.db, args.catalog.as_deref()).unwrap_or_else(|err| refuse(&err));
-    let docs = Docs::open(&args.db).unwrap_or_else(|err| refuse(&err));
+    let catalog = Catalog::open(&args.db, args.catalog.as_deref(), args.mmap_size)
+        .unwrap_or_else(|err| refuse(&err));
+    let docs = Docs::open(&args.db, args.mmap_size).unwrap_or_else(|err| refuse(&err));
     match args.mode {
         Mode::Serve {
             stewards,

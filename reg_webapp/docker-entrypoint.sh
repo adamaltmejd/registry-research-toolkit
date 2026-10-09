@@ -22,8 +22,11 @@ MAX_TIME=10
 
 # `/mcp` admits the public host's `Host` header only where the deployment names one
 # (the global catalog; the SWECOV deployment serves no public MCP).
+# `--mmap-size 0`: on Fly's throttled rootfs, mmap read-around inflates cold reads.
+# Measured 2026-10-09 (0.44.0, 15-request cold mix): 592 MB / 34 s with the default
+# mmap vs 320 MB / 21 s without; warm latency is unchanged (#1296).
 set -- serve --db /opt/reg_meta --catalog "$REG_META_CATALOG" \
-    --stewards /opt/reg_webapp/stewards --host 0.0.0.0 --port "$PORT"
+    --stewards /opt/reg_webapp/stewards --host 0.0.0.0 --port "$PORT" --mmap-size 0
 if [ -n "${REG_META_PUBLIC_HOST:-}" ]; then
     set -- "$@" --public-host "$REG_META_PUBLIC_HOST"
 fi
@@ -64,7 +67,12 @@ curl -fsS --max-time "$MAX_TIME" "$BASE/mcp?$EDGE_V" \
     -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' \
     | grep -q '"name":"search"' || fail "/mcp tools/list"
 
-# Gate passed. Hand the foreground to the server: clear the EXIT-kill trap, forward
+# Gate passed. Preload the DB pair into the page cache in the background, so later
+# requests never read cold pages from the throttled rootfs (~17 MB/s, ~80 s for the
+# 1.35 GB catalog; the VM is sized to hold it, fly.toml). Best effort.
+nice cat /opt/reg_meta/*.db >/dev/null 2>&1 &
+
+# Hand the foreground to the server: clear the EXIT-kill trap, forward
 # SIGINT/SIGTERM, and wait until it has exited so its exit code propagates (a trapped
 # signal makes `wait` return early while the server is still stopping).
 trap - EXIT
