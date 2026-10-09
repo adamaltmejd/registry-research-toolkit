@@ -507,10 +507,14 @@ def served_cases(
 
         def run(jobs: list[tuple[str, tuple]]) -> dict[tuple, list]:
             """Each request's pages by ``(catalog, request key, arm)``; walks first,
-            so the longest jobs do not form the tail."""
+            so the longest jobs do not form the tail. A request asked twice (a
+            register's warnings, once per sampled variable) runs once."""
+            unique = {(catalog, request[0]): request for catalog, request in jobs}
             work = [
                 (catalog, arm, request)
-                for catalog, request in sorted(jobs, key=lambda j: j[1][4] is not None)
+                for (catalog, _), request in sorted(
+                    unique.items(), key=lambda item: item[1][4] is not None
+                )
                 for arm in ("baseline", "checkout")
             ]
             with ThreadPoolExecutor(PARALLEL) as executor:
