@@ -5,7 +5,7 @@ Native tokens retain their delivered representation and source-local meaning.
 """
 
 # Pydantic resolves inherited declaration field types at runtime.
-# ruff: noqa: TC001, TC002
+# ruff: noqa: TC001
 
 from __future__ import annotations
 
@@ -13,14 +13,15 @@ from dataclasses import dataclass
 from typing import Annotated, Literal
 
 from pydantic import Field
-from reg_meta.documentary import (
+
+from reg_meta_build.source_records import SourceEvidenceTable
+
+from .documentary import (
     SourceCodeCrosswalkDeclaration,
     SourceDerivationDeclaration,
     _SourceDeclaration,
 )
-from reg_meta.source_evidence import DeliveredCell, SourceField, SourceRevision
-
-from reg_meta_build.source_records import SourceEvidenceTable
+from .source_evidence import DeliveredCell, SourceField, SourceRevision
 
 type SourceEventAction = Literal[
     "retired", "series_break", "replaced_by", "replaces", "unknown"

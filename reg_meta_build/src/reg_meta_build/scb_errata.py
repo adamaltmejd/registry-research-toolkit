@@ -14,8 +14,6 @@ from datetime import date
 from types import MappingProxyType
 from typing import TYPE_CHECKING, cast
 
-from reg_meta.source_evidence import canonical_sha256
-
 from ._curation import (
     curation_error,
     data_type_class,
@@ -40,6 +38,7 @@ from .source_curation import (
     capture_expectations,
     record_ref,
 )
+from .source_evidence import canonical_sha256
 from .source_occurrences import source_occurrence
 from .source_periods import source_scopes
 from .source_records import NativeCoordinates, SourceFields, TemporalScope, value_field

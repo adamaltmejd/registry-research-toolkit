@@ -31,15 +31,6 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from reg_meta.documentary import (
-    DocumentaryVariableReference,
-    UnresolvedDocumentaryReference,
-)
-from reg_meta.errors import RegMetaError
-from reg_meta.source_evidence import (  # noqa: TC002 - Pydantic resolves nested authority models at runtime.
-    RecordLocator,
-    SourceRevision,
-)
 
 from ._curation import (
     SentinelCode,
@@ -52,6 +43,11 @@ from ._resolved_common import _require_trimmed
 from .cis2016_matrix import (
     MatrixSelector,  # noqa: TC001 - Pydantic resolves the nested selector at runtime.
 )
+from .documentary import (
+    DocumentaryVariableReference,
+    UnresolvedDocumentaryReference,
+)
+from .errors import RegMetaError
 from .fqid_slugs import (
     load_lineage_config,
 )
@@ -70,6 +66,10 @@ from .source_curation import (
     RecordExpectation,
     SourceEnumeration,
     SupportedCodingAssociation,
+)
+from .source_evidence import (  # noqa: TC001 - Pydantic resolves nested authority models at runtime.
+    RecordLocator,
+    SourceRevision,
 )
 from .source_records import SourceFields, TemporalScope
 from .tags import load_tags

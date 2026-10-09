@@ -17,16 +17,16 @@ from _source_curation_support import (
     scope_interval as _interval,
     source_ref as _ref,
 )
-from reg_meta.source_evidence import (
-    DeliveredCell,
-    RecordLocator,
-    SourceField,
-)
 from reg_meta_build.source_curation import (
     CurationCase,
     PeerGuard,
     RecordExpectation,
     evaluate_case,
+)
+from reg_meta_build.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
 )
 from reg_meta_build.source_records import (
     NativeCoordinates,

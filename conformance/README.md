@@ -120,9 +120,9 @@ its path for consumers outside pytest.
 
 Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`; other named
 sources live under `reg_meta_build/tests/cases/holdings`. HTTP fixture names resolve
-under `cases/fixtures` unless they name a reader source. The shared builder remains
-`reg_meta/tests/reader_artifacts.py` because package tests and dev servers use it. The
-dev script retains its path and consumes these same sources.
+under `cases/fixtures` unless they name a reader source. The shared builder is
+`conformance/reader_artifacts.py`; package tests and dev servers use it too. The dev
+script retains its path and consumes these same sources.
 
 Two inherited standalone oracles retain their consumers:
 `selection/update-expected.json` compares path/environment update trials;

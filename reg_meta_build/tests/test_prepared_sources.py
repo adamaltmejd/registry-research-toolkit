@@ -28,7 +28,7 @@ from reg_meta_build.source_support import SourceSupportBindings, SourceSupportJo
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from reg_meta.source_evidence import SourceRevision
+    from reg_meta_build.source_evidence import SourceRevision
 
 
 @pytest.mark.parametrize(

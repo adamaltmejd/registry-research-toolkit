@@ -9,7 +9,7 @@ a prepare reader), and the JSON-contract checks a prepared record passes when re
 from __future__ import annotations
 
 import pytest
-from reg_meta.source_evidence import (
+from reg_meta_build.source_evidence import (
     DeliveredCell,
     RecordLocator,
     SourceRevision,

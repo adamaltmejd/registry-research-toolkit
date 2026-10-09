@@ -11,8 +11,8 @@ from _resolved_catalog_support import (
 )
 from catalog_manifest import synthetic_manifest
 from pydantic import ValidationError
-from reg_meta.errors import RegMetaError
 from reg_meta_build.db import publish_db
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
     ResolvedAlias,

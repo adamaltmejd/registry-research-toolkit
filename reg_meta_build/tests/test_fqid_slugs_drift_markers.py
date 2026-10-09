@@ -11,7 +11,7 @@ from _slugged_db import (
     add_variable,
     build_slugged_db,
 )
-from reg_meta.errors import RegMetaError
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.slug_grammar import derive_variable_slug
 
 from reg_meta_build.fqid_slugs import (

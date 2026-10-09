@@ -20,13 +20,6 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from reg_meta.source_evidence import (
-    FieldScalar,
-    FieldState,
-    SourceField,
-    SourceRecordRef,
-    canonical_sha256,
-)
 
 from reg_meta_build._curation import fold_column
 from reg_meta_build._resolved_common import covers_window
@@ -46,6 +39,14 @@ from reg_meta_build.source_records import (
     SourceRecord,
     SourceSubject,
     TemporalScope,
+)
+
+from .source_evidence import (
+    FieldScalar,
+    FieldState,
+    SourceField,
+    SourceRecordRef,
+    canonical_sha256,
 )
 
 if TYPE_CHECKING:

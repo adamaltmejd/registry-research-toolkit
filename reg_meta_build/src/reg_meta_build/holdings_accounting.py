@@ -7,16 +7,15 @@ import tomllib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta.source_evidence import canonical_sha256
-
 from .holdings_census import census_rows
 from .holdings_policy import UndatedHolding, load_holdings_retention_policy
+from .source_evidence import canonical_sha256
 from .swecov_policy import SourcePolicy
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from reg_meta.inventory import DeliveryInventory
+    from .inventory import DeliveryInventory
 
 DISPOSITIONS = ("dated", "year_independent", "retained_unknown", "excluded", "lookup")
 POLICY_NAMES = ("source_policy.toml", "inventory_overlay.toml", "holdings_policy.toml")

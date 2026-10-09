@@ -54,9 +54,7 @@ def test_every_build_input_class_changes_the_key(tmp_path):
     for source, copy in zip(BUILD_PACKAGES, packages, strict=True):
         shutil.copytree(source, copy, ignore=shutil.ignore_patterns("__pycache__"))
     builder = tmp_path / "reader_artifacts.py"
-    shutil.copyfile(
-        Path(__file__).parents[1] / "reg_meta/tests/reader_artifacts.py", builder
-    )
+    shutil.copyfile(Path(__file__).parent / "reader_artifacts.py", builder)
     distributions = installed_distributions()
     fixture = tmp_path / "fixture"
     shutil.copytree(CASES / "reader/fixture", fixture)
@@ -102,6 +100,6 @@ def test_every_build_input_class_changes_the_key(tmp_path):
         # Cumulative edits: each must move the key off every earlier one.
         _perturb(path)
         changed[label] = key(build_inputs=inputs())
-    assert len(changed) == 10
+    assert len(changed) == 9
     assert baseline not in changed.values()
     assert len(set(changed.values())) == len(changed)

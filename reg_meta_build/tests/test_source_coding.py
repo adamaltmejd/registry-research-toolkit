@@ -14,12 +14,16 @@ import json
 from dataclasses import asdict, replace
 
 import pytest
-from reg_meta.source_evidence import DeliveredCell, RecordLocator, canonical_sha256
 from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
     coding_source_sha256,
     resolve_code_membership,
+)
+from reg_meta_build.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    canonical_sha256,
 )
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
 from reg_meta_build.source_values import (

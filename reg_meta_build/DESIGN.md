@@ -1979,7 +1979,7 @@ duplicated evidence still fails compilation. Builder schema `8.0.0` admits this 
 status; reader models remain unchanged.
 
 The shared evidence primitives and crosswalk/derivation declarations live in
-`reg_meta.source_evidence` and `reg_meta.documentary`. Build ingestion and catalog
-reading use the same strict models and validators. Source occurrence, temporal and
-reconciliation models remain build-only. This keeps the consumer independent of the
+`reg_meta_build.source_evidence` and `reg_meta_build.documentary`. Build ingestion and
+catalog reading use the same strict models and validators. Source occurrence, temporal
+and reconciliation models remain build-only. This keeps the consumer independent of the
 builder while retaining identical serialized source evidence.

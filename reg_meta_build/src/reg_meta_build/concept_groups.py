@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
-from reg_meta.errors import RegMetaError
+from .errors import RegMetaError
 
 if TYPE_CHECKING:
     from collections.abc import Iterable

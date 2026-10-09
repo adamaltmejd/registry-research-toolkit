@@ -6,27 +6,119 @@ import json
 from collections import defaultdict
 from datetime import date
 from hashlib import sha256
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal, Self
 
-from pydantic import TypeAdapter
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
 from reg_core_py import parse_fqid
-from reg_meta.catalog import DataWarning
-from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build._curation import curation_error
 from reg_meta_build.source_curation import CodingDecision, SourceWarningDecision
 from reg_meta_build.source_intervals import occurrence_bounds
 
+from .fqid import Fqid, FqidKind, validate_slug
+from .source_evidence import SourceRecordRef, canonical_sha256
+
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Mapping
-
-    from reg_meta.errors import RegMetaError
 
     from reg_meta_build.resolved_catalog import ResolvedRegister
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_curation import CurationCase, ResolutionDiagnostic
     from reg_meta_build.source_scope import ScopeResolution
+
+    from .errors import RegMetaError
+
+
+class _CatalogModel(BaseModel):
+    """Frozen Pydantic base for the catalog return surface (#681): the
+    `Resolved*` / `*Summary` / `*Ref` / edition / coverage / group / tag models
+    the webapp consumes as response models (collapsing its 1:1 wrappers in a
+    follow-up). Frozen preserves the immutability the prior `@dataclass(frozen=True)`
+    gave; `Fqid` fields ride the `Fqid.__get_pydantic_core_schema__` hook (wire =
+    the canonical FQID string). Constructed by KEYWORD (Pydantic takes no
+    positional args).
+
+    `populate_by_name` + `extra="forbid"` are hoisted here so the
+    `register`-aliasing register-bearing models don't each repeat them, and so a
+    typo'd kwarg fails loudly (restoring the prior `@dataclass`'s fail-fast).
+    `serialize_by_alias` makes a direct `model_dump()` / `model_dump_json()` emit
+    the public wire key (`register`, not the internal `register_name` attr the
+    `BaseModel.register`-method clash forced; #681) — keeping a library/CLI dump
+    aligned with the FastAPI response path, which already serializes `by_alias`.
+    Harmless on the alias-free models. Mirrors reg_schema's `_Model` shape
+    (frozen + extra-forbid + populate_by_name) — a separate base by design:
+    reg_meta must NOT depend on reg_schema."""
+
+    model_config = ConfigDict(
+        frozen=True,
+        populate_by_name=True,
+        extra="forbid",
+        serialize_by_alias=True,
+    )
+
+
+class DataWarning(_CatalogModel):
+    """Retained source limitation or interpretation assumption, not an editorial notice."""
+
+    warning_id: str = Field(pattern=r"^[0-9a-f]{64}$")
+    register_fqid: Fqid
+    variable_fqid: Fqid | None = None
+    variant: str | None = None
+    delivery_column_name: str | None = None
+    valid_from: str | None = None
+    valid_to: str | None = None
+    code: str
+    severity: Literal["warning", "error"]
+    summary: str
+    detail: str
+    diagnostic_detail_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    source_subject: str
+    fields: tuple[str, ...] = ()
+    refs: tuple[SourceRecordRef, ...] = ()
+    withheld_output: tuple[str, ...] = ()
+    acknowledged_by: str | None = None
+    case_id: str | None = None
+
+    @model_validator(mode="after")
+    def _scope_and_identity(self) -> Self:
+        if self.register_fqid.kind != FqidKind.REGISTER:
+            raise ValueError("data warning requires an actual register coordinate")
+        if self.variable_fqid is not None and (
+            self.variable_fqid.kind != FqidKind.VARIABLE_BINDING
+            or self.variable_fqid.provider != self.register_fqid.provider
+            or self.variable_fqid.register != self.register_fqid.register
+        ):
+            raise ValueError("data warning variable must belong to its register")
+        if self.variant is not None:
+            validate_slug(self.variant, "variant", allow_default=True)
+            if self.variable_fqid is None:
+                raise ValueError("state-scoped warning requires a written variable")
+        if self.delivery_column_name is not None and (
+            self.variant is None or not self.delivery_column_name.strip()
+        ):
+            raise ValueError(
+                "a warning column requires an exact variant and nonempty literal"
+            )
+        for bound in (self.valid_from, self.valid_to):
+            if bound is not None and date.fromisoformat(bound).isoformat() != bound:
+                raise ValueError("warning bounds must be canonical ISO dates")
+        if (
+            self.valid_from is not None
+            and self.valid_to is not None
+            and self.valid_from > self.valid_to
+        ):
+            raise ValueError("data warning bounds are reversed")
+        if not all(v.strip() for v in (self.code, self.summary, self.detail)):
+            raise ValueError("data warning content must be nonempty")
+        if self.warning_id != canonical_sha256(
+            self.model_dump(mode="json", exclude={"warning_id"})
+        ):
+            raise ValueError(
+                "data warning identity does not match its complete content"
+            )
+        return self
+
 
 # Editorial projection notices do not describe a problem fetching or using data.
 QUALITY_CODES = frozenset(

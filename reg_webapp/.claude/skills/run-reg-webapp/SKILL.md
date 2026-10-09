@@ -25,7 +25,7 @@ not walked. Every command below starts at the **repo root**.
   missing: `(cd reg_webapp/frontend && bunx playwright install chromium)`.
 - A catalog to serve. `--fixture-db` builds a synthetic one and needs nothing installed
   — that is the default path below. Serving a real catalog instead needs a DB where
-  `reg_meta.db.db_path_from_args(None)` resolves (`REG_META_DB` > XDG, e.g.
+  `reg_meta_build.db.db_path_from_args(None)` resolves (`REG_META_DB` > XDG, e.g.
   `~/.local/share/reg_meta/reg_meta.db`), at a schema the Rust server admits: it refuses
   a catalog below its minimum (`SCHEMA` in `crates/reg-catalog`, 9.2 today), so the
   0.42.0 release does not serve until a 9.3 release ships. `dev.sh` then fails at

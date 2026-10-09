@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from _csv_fixtures import SCB_REVISION
-from reg_meta.source_evidence import RecordLocator
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
     ResolvedVariant,
@@ -14,6 +13,7 @@ from reg_meta_build.source_coding import (
     CodeListClaim,
     resolve_code_membership,
 )
+from reg_meta_build.source_evidence import RecordLocator
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import (
     EffectiveOccurrence,

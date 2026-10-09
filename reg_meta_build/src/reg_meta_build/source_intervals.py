@@ -13,8 +13,6 @@ from datetime import date
 from functools import lru_cache
 from typing import TYPE_CHECKING, Literal
 
-from reg_meta.source_evidence import SourceField
-
 from reg_meta_build._curation import (
     SOURCE_DATA_TYPE_ALIASES,
     data_type_class,
@@ -28,6 +26,8 @@ from reg_meta_build.source_records import (
     SourceRecord,
     TemporalScope,
 )
+
+from .source_evidence import SourceField
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping

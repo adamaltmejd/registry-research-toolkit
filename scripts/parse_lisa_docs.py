@@ -1240,8 +1240,8 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
     #   - query failure (sqlite3.Error, e.g. a renamed/dropped table): left to
     #     raise. That's schema-drift — a traceback is the right "tell maintainers".
     try:
-        from reg_meta.db import open_db
-        from reg_meta.errors import RegMetaError
+        from reg_meta_build.db import open_db
+        from reg_meta_build.errors import RegMetaError
     except ImportError as e:
         print(
             f"Warning: reg_meta not installed; no fallback columns: {e}",

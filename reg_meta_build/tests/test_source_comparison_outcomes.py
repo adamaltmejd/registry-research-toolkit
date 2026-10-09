@@ -9,7 +9,7 @@ the `inspect-source-records` CLI cases (`cases/cli/inspect-source-records/`).
 
 from __future__ import annotations
 
-from reg_meta.source_evidence import RecordLocator, SourceField, SourceRevision
+from reg_meta_build.source_evidence import RecordLocator, SourceField, SourceRevision
 from reg_meta_build.source_inspection import (
     compare_availability_records,
 )

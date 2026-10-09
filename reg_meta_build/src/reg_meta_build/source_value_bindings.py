@@ -15,8 +15,6 @@ from datetime import date
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
-from reg_meta.source_evidence import canonical_sha256
-
 from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
@@ -43,10 +41,10 @@ from reg_meta_build.source_records import (
 )
 from reg_meta_build.source_values import SourceValueWindow, exact_sheet_pointer
 
+from .source_evidence import canonical_sha256
+
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
-
-    from reg_meta.source_evidence import RecordLocator
 
     from reg_meta_build.prepared_values import (
         PreparedSourceValues,
@@ -58,6 +56,8 @@ if TYPE_CHECKING:
         SourceValueAssociation,
         SourceValueDescriptor,
     )
+
+    from .source_evidence import RecordLocator
 
 
 def _explicit_sheet_member(

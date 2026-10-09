@@ -22,14 +22,6 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from reg_meta.catalog import DataWarning  # noqa: TC002
-from reg_meta.db import (
-    CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
-    CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
-    DB_FILENAME,
-    default_db_dir,
-)
-from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build._curation import (
     SEARCH_PINS_FILE,
@@ -66,6 +58,15 @@ from reg_meta_build.resolved_metadata import (
 )
 from reg_meta_build.slug_grammar import validate_slug
 from reg_meta_build.validate import column_state_overlap_failure, validate_built_db
+
+from .data_warnings import DataWarning  # noqa: TC001
+from .db import (
+    CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
+    CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
+    DB_FILENAME,
+    default_db_dir,
+)
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Iterable

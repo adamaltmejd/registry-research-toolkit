@@ -19,8 +19,8 @@ from _lisa_fixtures import write_lisa_workbook
 from _prepared_fixtures import accept_prepared, record_file_opens
 from _sos_fixtures import write_sos_input
 from openpyxl import Workbook, load_workbook
-from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE
 from reg_meta_build.cli import run
+from reg_meta_build.errors import EXIT_CONFIG, EXIT_USAGE
 from reg_meta_build.input_snapshot import (
     CatalogBundleSelection,
     LisaWorkbookSelection,

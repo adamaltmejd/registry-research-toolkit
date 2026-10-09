@@ -24,7 +24,10 @@ from _swecov_fixtures import (
     run_inventory as _run_inventory,
     synthetic_enriched as _synthetic_enriched,
 )
-from reg_meta.inventory import edition_bounds, load_inventory as load_delivery_inventory
+from reg_meta_build.inventory import (
+    edition_bounds,
+    load_inventory as load_delivery_inventory,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -276,8 +279,8 @@ def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
 ) -> None:
     import hashlib
 
-    from reg_meta.inventory import load_inventory
-    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.inventory import load_inventory
+    from reg_meta_build.source_evidence import canonical_sha256
 
     steward = tmp_path / "steward"
     steward.mkdir()

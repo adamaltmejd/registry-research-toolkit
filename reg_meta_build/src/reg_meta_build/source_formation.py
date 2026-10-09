@@ -44,13 +44,13 @@ from reg_meta_build.source_representations import form_representations
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-    from reg_meta.source_evidence import SourceField
-
     from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant
     from reg_meta_build.source_coding import CodingResolution, CodingSegment
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_records import SourceFields, SourceRecord
     from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
+
+    from .source_evidence import SourceField
 
 
 def _refs(

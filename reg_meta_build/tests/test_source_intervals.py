@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 from _source_intervals_support import interval_record as _record
-from reg_meta.source_evidence import SourceField
+from reg_meta_build.source_evidence import SourceField
 from reg_meta_build.source_intervals import resolve_occurrence_intervals
 from reg_meta_build.source_periods import source_scopes
 from reg_meta_build.source_records import (

@@ -13,9 +13,9 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import write_input_bundle, write_scb_input
-from reg_meta.db import DB_FILENAME
-from reg_meta.errors import EXIT_CONFIG
 from reg_meta_build.cli import run
+from reg_meta_build.db import DB_FILENAME
+from reg_meta_build.errors import EXIT_CONFIG
 from reg_meta_build.input_snapshot import open_input_bundle
 
 if TYPE_CHECKING:
@@ -130,7 +130,7 @@ class TestBundleCommandOutputProtection:
         capsys: pytest.CaptureFixture[str],
         command: str,
     ) -> None:
-        from reg_meta.errors import EXIT_CONFIG
+        from reg_meta_build.errors import EXIT_CONFIG
         from reg_meta_build.input_snapshot import open_input_bundle
 
         from reg_meta_build import cli as cli_mod

@@ -2,7 +2,7 @@
 
 Three caches use it: `scripts/real_seed_cache.py` (real-seed prepare and build
 outputs), `conformance/differential/cache.py` (the G1 derived copies) and
-`reg_meta/tests/reader_artifacts.py` (the synthetic fixture artifacts). It is stdlib
+`conformance/reader_artifacts.py` (the synthetic fixture artifacts). It is stdlib
 only and lives with the tooling, so `uv run --no-project` scripts import it directly;
 the test-side caches put `scripts/` on `sys.path` to reach it. Tooling never imports
 test code, so the shared pieces live here and not in a test module.
@@ -30,11 +30,9 @@ if TYPE_CHECKING:
 # The sources `reg-core-py` is built from (its uv `cache-keys`): `uv run` rebuilds the
 # extension when they change, and so must every cache of builder output.
 NATIVE_SOURCES = ("crates/reg-core", "crates/reg-core-py", "Cargo.toml", "Cargo.lock")
-# What builder output depends on: the builder, the reader code it imports, the locked
-# dependencies and the native extension. Repo-relative, in key order. Stage 4 of
-# RUST_RUNTIME_SPEC.md moves the retained `reg_meta` modules into `reg_meta_build`
-# (4.4) and deletes `reg_meta/` (4.9a): drop `reg_meta/src` here then.
-BUILDER_SOURCES = ("reg_meta_build/src", "reg_meta/src", "uv.lock", *NATIVE_SOURCES)
+# What builder output depends on: the builder, the locked dependencies and the
+# native extension. Repo-relative, in key order.
+BUILDER_SOURCES = ("reg_meta_build/src", "uv.lock", *NATIVE_SOURCES)
 STAGING_PREFIX = ".staging-"
 # A staging directory older than this belongs to a build that died.
 STAGING_RETENTION_SECONDS = 6 * 3600

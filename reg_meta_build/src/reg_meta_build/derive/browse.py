@@ -10,15 +10,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal
 
-from reg_meta.errors import EXIT_NOT_FOUND, RegMetaError
-from reg_meta.inventory import _merge
-
 from reg_meta_build.derive.states import (
     _applicable_alias_windows,
     _variable_windows,
     named_rows,
     representative_columns,
 )
+from reg_meta_build.errors import EXIT_NOT_FOUND, RegMetaError
+from reg_meta_build.inventory import _merge
 
 if TYPE_CHECKING:
     import sqlite3

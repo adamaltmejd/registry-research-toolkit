@@ -14,31 +14,9 @@ import json
 import os
 import sys
 import time
-from datetime import date
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
-
-from reg_meta.cli_common import (
-    NoRepeatParser,
-    apply_leaf_help,
-    handle_cli_exception,
-    reorder_global_flags,
-    success_envelope,
-    write_json,
-)
-from reg_meta.db import (
-    DB_FILENAME,
-    db_path_from_args,
-    default_db_dir,
-    open_db,
-)
-from reg_meta.errors import (
-    EXIT_CONFIG,
-    EXIT_NOT_FOUND,
-    EXIT_OUTPUT,
-    EXIT_USAGE,
-    RegMetaError,
-)
 
 from ._curation import printable_error, repo_curation_dir
 from .classifications import (
@@ -51,11 +29,15 @@ from .concept_group_candidates import (
 )
 from .concept_groups import load_concept_groups
 from .db import (
+    DB_FILENAME,
     SCHEMA_VERSION,
     _paths_overlap,
     _reject_input_repository_destination,
     _scb_snapshot_error,
+    db_path_from_args,
+    default_db_dir,
     open_built_db,
+    open_db,
 )
 from .derive import derive_artifact
 from .doc_coverage import compute_doc_coverage, render_doc_coverage_toml
@@ -64,6 +46,14 @@ from .doc_db import (
     load_related_documents,
     repo_docs_dir,
     repo_related_document_binaries_dir,
+)
+from .errors import (
+    EXIT_CONFIG,
+    EXIT_INTERNAL,
+    EXIT_NOT_FOUND,
+    EXIT_OUTPUT,
+    EXIT_USAGE,
+    RegMetaError,
 )
 from .extend_db import (
     extend_db,
@@ -120,6 +110,211 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 # Parser
 # ---------------------------------------------------------------------------
+
+
+CONTRACT_VERSION = "3.0.0"
+
+
+def handle_cli_exception(exc: BaseException, output_path: str | None) -> int:
+    """Render an unhandled exception as a JSON error envelope and return
+    the appropriate exit code. Shared by both CLI `run()` functions so
+    the contract stays identical across `reg_meta` and `reg-meta-build`."""
+    if isinstance(exc, RegMetaError):
+        write_json({"error": exc.to_dict()}, output_path)
+        return exc.exit_code
+    error_payload = {
+        "error": {
+            "code": "internal_error",
+            "class": "internal",
+            "message": str(exc),
+            "remediation": "Report this error to maintainers.",
+        }
+    }
+    try:
+        write_json(error_payload, output_path)
+    except Exception:  # noqa: BLE001 — last-resort error reporting; fall back to stderr
+        sys.stderr.write(json.dumps(error_payload) + "\n")
+    return EXIT_INTERNAL
+
+
+def success_envelope(
+    *,
+    command: str,
+    args_payload: dict[str, Any],
+    db_info: dict[str, Any] | None,
+    data: Any,
+    duration_ms: int,
+) -> dict[str, Any]:
+    envelope: dict[str, Any] = {
+        "contract_version": CONTRACT_VERSION,
+        "generated_at": utc_now(),
+        "request": {"command": command, "args": args_payload},
+    }
+    if db_info:
+        envelope["database"] = db_info
+    envelope["data"] = data
+    envelope["run"] = {"duration_ms": duration_ms}
+    return envelope
+
+
+_STORAGE_ID_KEYS = frozenset(
+    {
+        "id",
+        "provider_id",
+        "register_id",
+        "register_variant_id",
+        "variable_id",
+        "state_id",
+        "value_set_id",
+        "code_id",
+        "classification_id",
+        "supersedes_id",
+        "source_register_id",
+        "relationship_id",
+        "consumer_state_id",
+        "source_state_id",
+        "declared_classification_id",
+    }
+)
+
+
+def _json_storage_ids(value: Any) -> Any:
+    """Raw SQL CLI rows use the same opaque decimal IDs as catalog models."""
+    if isinstance(value, dict):
+        return {
+            key: str(item)
+            if key in _STORAGE_ID_KEYS
+            and isinstance(item, int)
+            and not isinstance(item, bool)
+            else _json_storage_ids(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (tuple, list)):
+        return [_json_storage_ids(item) for item in value]
+    return value
+
+
+def write_json(
+    payload: dict[str, Any], output_path: str | None, *, storage_ids: bool = True
+) -> None:
+    content = (
+        json.dumps(
+            _json_storage_ids(payload) if storage_ids else payload,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n"
+    )
+    if output_path:
+        tmp = Path(output_path).expanduser().resolve()
+        tmp_file = tmp.with_suffix(tmp.suffix + ".tmp")
+        tmp.parent.mkdir(parents=True, exist_ok=True)
+        tmp_file.write_text(content, encoding="utf-8")
+        tmp_file.replace(tmp)
+    else:
+        sys.stdout.write(content)
+
+
+class NoRepeatParser(argparse.ArgumentParser):
+    """ArgumentParser that rejects repeated optional flags."""
+
+    def parse_known_args(self, args=None, namespace=None):
+        if args is None:
+            args = sys.argv[1:]
+        seen: dict[str, str] = {}
+        for token in args:
+            if token.startswith("-") and "=" not in token:
+                if token in seen:
+                    self.error(f"{token} may only be specified once")
+                seen[token] = token
+        return super().parse_known_args(args, namespace)
+
+
+GLOBAL_FLAGS = {
+    "--catalog",
+    "--scope",
+    "--db",
+    "--format",
+    "--output",
+    "-v",
+    "--verbose",
+    "-q",
+    "--quiet",
+    "--version",
+}
+GLOBAL_FLAGS_WITH_VALUE = {"--db", "--catalog", "--scope", "--format", "--output"}
+
+
+def reorder_global_flags(argv: list[str]) -> list[str]:
+    """Move global flags before the subcommand so argparse handles them.
+
+    Handles both ``--flag value`` and ``--flag=value`` syntax.
+    """
+    front: list[str] = []
+    rest: list[str] = []
+    i = 0
+    while i < len(argv):
+        token = argv[i]
+        # Handle --flag=value for global flags
+        eq_name = token.split("=", 1)[0] if "=" in token else None
+        if token in GLOBAL_FLAGS:
+            front.append(token)
+            if token in GLOBAL_FLAGS_WITH_VALUE and i + 1 < len(argv):
+                i += 1
+                front.append(argv[i])
+        elif eq_name in GLOBAL_FLAGS_WITH_VALUE:
+            front.append(token)
+        else:
+            rest.append(token)
+        i += 1
+    return front + rest
+
+
+def clean_leaf_help(
+    parser: argparse.ArgumentParser, *, examples_epilog: bool = True
+) -> None:
+    """Hide -h/--help from output, rename 'positional arguments', add epilog.
+
+    ``examples_epilog`` gates the trailing ``Run … --examples`` hint. Only
+    the query CLI (`reg_meta`) implements `--examples`; the build CLI
+    (`reg-meta-build`) does not, so it passes ``False`` to avoid pointing
+    maintainers at an unrecognized flag.
+    """
+    for action in parser._actions:
+        if isinstance(action, argparse._HelpAction):
+            action.help = argparse.SUPPRESS
+            break
+    for group in parser._action_groups:
+        if group.title == "positional arguments":
+            group.title = "Arguments"
+            break
+    if examples_epilog and not parser.epilog:
+        parser.epilog = f"Run `{parser.prog} --examples` for usage examples."
+
+
+def apply_leaf_help(
+    parser: argparse.ArgumentParser, *, examples_epilog: bool = True
+) -> None:
+    """Walk subparsers (one or two levels deep) and call `clean_leaf_help`
+    on every leaf parser. Handles both `reg_meta` (subgroups → leaves) and
+    `reg-meta-build` (flat subcommands)."""
+    for action in parser._actions:
+        if not isinstance(action, argparse._SubParsersAction):
+            continue
+        for sub_p in action.choices.values():
+            nested = [
+                a for a in sub_p._actions if isinstance(a, argparse._SubParsersAction)
+            ]
+            if nested:
+                for leaf_p in nested[0].choices.values():
+                    clean_leaf_help(leaf_p, examples_epilog=examples_epilog)
+            else:
+                clean_leaf_help(sub_p, examples_epilog=examples_epilog)
+
+
+def utc_now() -> str:
+    return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def _add_pipeline_arguments(parser: argparse.ArgumentParser) -> None:
@@ -2029,7 +2224,7 @@ def _cmd_succession_candidates(
 def _cmd_doc_coverage(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
-    from reg_meta.doc_db import doc_db_path, open_doc_db
+    from .doc_db import doc_db_path, open_doc_db
 
     start = time.perf_counter()
     # Schema-checked opens of BOTH the catalog DB and the colocated doc DB: the

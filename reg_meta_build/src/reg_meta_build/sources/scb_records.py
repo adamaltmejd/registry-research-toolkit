@@ -7,16 +7,15 @@ from dataclasses import dataclass
 from functools import lru_cache
 from typing import TYPE_CHECKING
 
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.source_evidence import (
+from reg_meta_build._curation import data_type_class, printable_error
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.normalization import normalize_text, normalize_token
+from reg_meta_build.source_evidence import (
     DeliveredCell,
     RecordLocator,
     SourceField,
     SourceRevision,
 )
-
-from reg_meta_build._curation import data_type_class, printable_error
-from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_periods import SourcePeriodIssue, source_scopes
 from reg_meta_build.source_records import (
     NativeCoordinates,

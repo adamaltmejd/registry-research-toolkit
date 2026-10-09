@@ -17,7 +17,7 @@ import importlib.util
 import sys
 from pathlib import Path
 
-import reg_meta.db
+import reg_meta_build.db
 
 # Load the builder script by spec under a UNIQUE module name, the way
 # test_openapi_snapshot.py loads its sibling script: it lives in `scripts/`, not
@@ -43,7 +43,7 @@ def main() -> int:
     db_dir = Path(sys.argv[1])
     db_dir.mkdir(parents=True, exist_ok=True)
 
-    db_path = db_dir / reg_meta.db.DB_FILENAME
+    db_path = db_dir / reg_meta_build.db.DB_FILENAME
     fixture_db.build_catalog_fixture_db(db_path)
     print(f"catalog fixture DB: {db_path}")
     return 0

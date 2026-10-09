@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.extend_db import (
     extend_db,
 )

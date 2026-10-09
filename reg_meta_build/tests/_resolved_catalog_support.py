@@ -67,8 +67,8 @@ def resolved_classification(slug: str = "example-codes") -> ResolvedClassificati
 
 
 def scoped_sentinel_variable():
-    from reg_meta.source_evidence import canonical_sha256
     from reg_meta_build.resolved_catalog import ResolvedScopedSentinels
+    from reg_meta_build.source_evidence import canonical_sha256
 
     book = resolved_classification()
     certificate = ResolvedScopedSentinels(
