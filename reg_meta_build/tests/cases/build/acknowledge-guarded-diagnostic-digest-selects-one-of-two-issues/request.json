@@ -1,0 +1,29 @@
+{
+  "replaces": [
+    "test_source_scope_acknowledgements.py::test_complete_diagnostic_guard_selects_only_one_distinct_issue[output]",
+    "test_source_scope_acknowledgements.py::test_complete_diagnostic_guard_selects_only_one_distinct_issue[detail]"
+  ],
+  "note": "PINNED and UNPINNED each deliver variable 5 as the case-equivalent literals First and first of one 2020 edition, and each literal's member carries two code lists that disagree on its code's label. Each register's per-column [[representation.parallel]] entry therefore reports two unsupported_representation_coding errors that share code, subject, refs, fields and period and differ only in their detail and withheld output (the literal), as the old test's `issue` and `other` did (its [output] and [detail] params are one construction here). From the old test: an entry without a diagnostic digest matches both and is over-broad, leaving both errors (UNPINNED); one entry per issue, each pinning its issue's complete diagnostic, acknowledges exactly that issue (PINNED; old: `acknowledged == {code: 2}`, every copy a warning, `acknowledged_by` the matching entry). Each `expected_diagnostic_sha256` is the canonical SHA-256 of the issue as the build's report ledger records it before it is acknowledged, copied as a curator copies it; no placeholder renders it, because the diagnostic exists only after a build. The case shows the copy is right: a wrong digest leaves that issue an error and the entry stale (`acknowledge-guarded-stale-when-its-diagnostic-digest-differs`, which is also the old test's drift arm).",
+  "fails_if": "`resolve_source_scope` (source_scope.py) leaves `expected_diagnostic_sha256` out of the held issue key, or stops hashing the complete diagnostic for coordinates a guarded entry names, so PINNED's two entries collide or match neither issue (one issue is acknowledged twice, or both entries go stale); or the settle loop stops counting distinct matches, so UNPINNED's undigested entry acknowledges one of its two issues instead of being over-broad",
+  "sources": {
+    "description": "Variable 5 (Income) delivers the case-equivalent literals First and first as two members of one 2020 edition in PINNED (register 1: members 600, 601) and UNPINNED (register 2: members 700, 701). Each member carries two lists that disagree on its one code's label, so no literal has one complete finite domain.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "First", "cvid": 600, "var_id": 5, "varname": "Income", "regver_id": 620, "register": ["PINNED", 1, 10]},
+        {"colname": "first", "cvid": 601, "var_id": 5, "varname": "Income", "regver_id": 620, "register": ["PINNED", 1, 10]},
+        {"colname": "First", "cvid": 700, "var_id": 5, "varname": "Income", "regver_id": 720, "register": ["UNPINNED", 2, 20]},
+        {"colname": "first", "cvid": 701, "var_id": 5, "varname": "Income", "regver_id": 720, "register": ["UNPINNED", 2, 20]}
+      ],
+      "vardemangder": [
+        "First list|1|01|Label|600|6001",
+        "Rival list|1|01|Rival|600|6002",
+        "Second list|1|02|Label|601|6011",
+        "Rival list|1|02|Rival|601|6012",
+        "First list|1|01|Label|700|7001",
+        "Rival list|1|01|Rival|700|7002",
+        "Second list|1|02|Label|701|7011",
+        "Rival list|1|02|Rival|701|7012"
+      ]
+    }
+  }
+}

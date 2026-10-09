@@ -1,0 +1,26 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "acknowledged": {"unresolved_catalog_identity": null}
+  },
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {"code": "unresolved_catalog_identity"},
+      "fields": ["key", "severity", "acknowledged_by"],
+      "rows": [
+        [["register:1", "variant:10", "edition:110", "variable:102", "member:1003"], "error", null],
+        [["register:1", "variant:10", "edition:2021", "variable:102", "member:1004"], "error", null]
+      ],
+      "note": "The issue names both members of 1.102 and stays an error."
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
+      "fields": ["code", "case_id"],
+      "rows": [
+        ["stale_curation_entry", "curation/registers/scb/sample.toml#/acknowledge/1"]
+      ]
+    }
+  ]
+}
