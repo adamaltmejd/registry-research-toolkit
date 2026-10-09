@@ -115,7 +115,7 @@ describe("DocMentionsPanel (#402)", () => {
         total: 1,
         items: [
           {
-            register: "scb/lisa",
+            register: "lisa",
             filename: "lisa kon.md",
             display_name: "LISA — Kön",
             snippet: "foo <b>bar</b>",
@@ -148,7 +148,7 @@ describe("DocMentionsPanel (#402)", () => {
         total: 1,
         items: [
           {
-            register: "scb/lisa",
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: "…the **kön** variable…",
@@ -179,7 +179,7 @@ describe("DocMentionsPanel (#402)", () => {
         total: 1,
         items: [
           {
-            register: "scb/lisa",
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: "see _below_ for detail",
@@ -204,7 +204,7 @@ describe("DocMentionsPanel (#402)", () => {
         total: 7,
         items: [
           {
-            register: "scb/lisa",
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: null,
@@ -226,7 +226,7 @@ describe("DocMentionsPanel (#402)", () => {
         total: 1,
         items: [
           {
-            register: "scb/lisa",
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: null,
@@ -283,7 +283,7 @@ describe("DocMentionsPanel (#402)", () => {
         total: 1,
         items: [
           {
-            register: "scb/lisa",
+            register: "lisa",
             filename: "lisa_naringsgren.md",
             display_name: "LISA — Näringsgren",
             snippet: null,
@@ -318,7 +318,7 @@ describe("DocMentionsPanel (#402)", () => {
         total: 1,
         items: [
           {
-            register: "scb/lisa",
+            register: "lisa",
             filename: "lisa_kon.md",
             display_name: "LISA — Kön",
             snippet: null,

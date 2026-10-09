@@ -146,11 +146,19 @@ def assert_http_case(case, tmp_path, monkeypatch, servers=None):
 
 def case_clients(request, case, servers):
     """The `servers` clients of a case: its artifact's under `None`, each
-    `artifacts` entry's under its name."""
+    `artifacts` entry's under its name. An entry overrides the identity
+    (`identity`), the docs source (`docs`) or both."""
     kind = request.get("kind", "steward")
     clients = {
         name: servers.client(
-            artifact_env(cached_case_artifact(request, case, spec["identity"]), kind)
+            artifact_env(
+                cached_case_artifact(
+                    {**request, **({"docs": spec["docs"]} if "docs" in spec else {})},
+                    case,
+                    spec.get("identity"),
+                ),
+                kind,
+            )
         )
         for name, spec in request.get("artifacts", {}).items()
     }

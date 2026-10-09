@@ -1644,8 +1644,10 @@ the latest release; G1 runs on both pins and records each difference. `rust-only
 exceptions carry over (D1). The baseline commit cannot simply follow the pin: cutovers
 delete the webapp routes the served arm compares against (section 4, "Current pin"). R
 either moves the served comparisons onto the CLI baseline (the CLI-baseline pattern
-above) or keeps the webapp baseline commit separate from the artifact pin. Depends on:
-3c.3, C, F and the release.
+above) or keeps the webapp baseline commit separate from the artifact pin. The
+`docs-fold-search*` exceptions match by term position (`3[47]`, `7[47]`, 3b.6): R
+rechecks that those positions are still the terms `ß` and `ﬁlm`. Depends on: 3c.3, C, F
+and the release.
 
 #### Surface coverage (3b–3e rows)
 

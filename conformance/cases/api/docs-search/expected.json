@@ -56,5 +56,9 @@
   {
     "status": 200,
     "json": {"/data/items": [], "/data/next_cursor": null, "/data/total": 0}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items": [], "/data/total": 0, "/data/register_ingested": true}
   }
 ]

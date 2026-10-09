@@ -60,17 +60,31 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
         .get("register")
         .map(|r| refs::register(&catalog.connect()?, scope, r))
         .transpose()?;
-    let conn = docs(server)?.connect()?;
-    // The cursor binds what selects and orders the rows, never `limit`.
+    let docs = docs(server)?;
+    let conn = docs.connect()?;
+    let register_ingested = match &register {
+        Some(register) => conn
+            .query_row(
+                "SELECT 1 FROM doc WHERE register = ? LIMIT 1",
+                [&register.slug],
+                |_| Ok(()),
+            )
+            .optional()?
+            .is_some(),
+        None => false,
+    };
+    // The cursor binds what selects and orders the rows, never `limit`, and both
+    // databases' generations, since a docs-only rebuild changes the rows too.
     let context = json!([
         q.map(normalized_search_query),
         params.get("register"),
         scope
     ]);
     let context = hex(&Sha256::digest(context.to_string().as_bytes()));
+    let generation = format!("{}-{}", catalog.generation(), docs.generation());
     let after = params
         .get("cursor")
-        .map(|c| cursor::decode(c, catalog.generation(), &context, usize::MAX))
+        .map(|c| cursor::decode(c, &generation, &context, usize::MAX))
         .transpose()?;
 
     let mut filters = Vec::new();
@@ -78,7 +92,7 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
     let (from, snippet, order) = match q {
         Some(q) => {
             let Some(fts) = fts_match_query(&fold_search(q)) else {
-                return Ok(page(Vec::new(), None, 0, false));
+                return Ok(page(Vec::new(), None, 0, register_ingested));
             };
             filters.push("doc_fts MATCH ?");
             args.push(fts.into());
@@ -90,16 +104,7 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
         }
         None => ("doc d", "NULL", "d.filename"),
     };
-    let mut register_ingested = false;
     if let Some(register) = register {
-        register_ingested = conn
-            .query_row(
-                "SELECT 1 FROM doc WHERE register = ? LIMIT 1",
-                [&register.slug],
-                |_| Ok(()),
-            )
-            .optional()?
-            .is_some();
         filters.push("d.register = ?");
         args.push(register.slug.into());
     }
@@ -129,7 +134,7 @@ pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, E
     };
     let end = (offset + limit).min(filenames.len());
     let next_cursor = (end < filenames.len())
-        .then(|| cursor::encode(catalog.generation(), &context, end, &filenames[end - 1]));
+        .then(|| cursor::encode(&generation, &context, end, &filenames[end - 1]));
     let page_sql = format!(
         "SELECT d.register, d.variable, d.filename, d.display_name, d.tags, d.source, \
          d.source_url, d.source_title, {snippet} FROM {from} {filter} ORDER BY {order} \

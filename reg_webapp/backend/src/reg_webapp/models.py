@@ -557,12 +557,3 @@ class OrderBlockedModel(BaseModel):
 
     detail: str
     findings: list[OrderFinding]
-
-
-# ── Docs library (#354; see DESIGN.md → Docs library endpoints) ─────────────
-# Read surface over the prebuilt `reg_meta_docs.db` FTS index. POLICY: serve
-# EXCERPTS + a pointer to the SCB source, NEVER the full converted body
-# (marker+Gemini conversion quality + republication exposure). Coverage is
-# LISA-only today — the response distinguishes "no docs INGESTED" (the index or
-# this register isn't covered) from "no doc found for this query/variable", so a
-# UI never implies a variable is undocumented when it's merely un-ingested.

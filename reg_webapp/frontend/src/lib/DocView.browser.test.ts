@@ -23,7 +23,7 @@ function doc(overrides: Partial<DocDetail> = {}): DocDetail {
     display_name: "LISA — Kön",
     body: "Kön är en bakgrundsvariabel.",
     excerpt: "Kön är en bakgrundsvariabel.",
-    register: "scb/lisa",
+    register: "lisa",
     variable: "Kön",
     source: null,
     source_url: null,

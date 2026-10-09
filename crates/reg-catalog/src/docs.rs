@@ -15,6 +15,7 @@ const DOC_DB_FILENAME: &str = "reg_meta_docs.db";
 /// An admitted docs database.
 pub struct Docs {
     path: PathBuf,
+    generation: String,
 }
 
 impl Docs {
@@ -23,34 +24,45 @@ impl Docs {
     /// # Errors
     ///
     /// `doc_schema_incompatible` when its schema version is missing, unreadable or
-    /// outside the gate.
+    /// outside the gate, or it has no generation.
     pub fn open(dir: &Path) -> Result<Option<Self>, Error> {
         let path = dir.join(DOC_DB_FILENAME);
         if !path.is_file() {
             return Ok(None);
         }
-        let version: Option<String> = connect(&path)
-            .and_then(|conn| {
-                conn.query_row(
-                    "SELECT value FROM doc_meta WHERE key = 'schema_version'",
-                    [],
-                    |row| row.get(0),
-                )
-                .optional()
-            })
-            .unwrap_or_default();
-        if version.as_deref().is_some_and(|v| admits(DOC_SCHEMA, v)) {
-            return Ok(Some(Self { path }));
+        let meta = |key: &str| -> Option<String> {
+            connect(&path)
+                .and_then(|conn| {
+                    conn.query_row("SELECT value FROM doc_meta WHERE key = ?", [key], |row| {
+                        row.get(0)
+                    })
+                    .optional()
+                })
+                .unwrap_or_default()
+        };
+        let version = meta("schema_version");
+        if version.as_deref().is_some_and(|v| admits(DOC_SCHEMA, v))
+            && let Some(generation) = meta("generation")
+        {
+            return Ok(Some(Self { path, generation }));
         }
         Err(Error::new(
             Code::DocSchemaIncompatible,
             format!(
-                "Docs database schema {version:?} ({}) is not supported (supported: {}).",
+                "Docs database schema {version:?} ({}) is not supported, or it has no \
+                 generation (supported: {}).",
                 path.display(),
                 supported(DOC_SCHEMA)
             ),
             vec![],
         ))
+    }
+
+    /// The docs build's generation (`doc_meta`'s `generation`): a digest of the
+    /// documents, so a docs-only rebuild changes it.
+    #[must_use]
+    pub fn generation(&self) -> &str {
+        &self.generation
     }
 
     /// A fresh read-only connection; the server opens one per request.
