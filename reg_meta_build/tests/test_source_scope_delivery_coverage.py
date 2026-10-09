@@ -21,6 +21,7 @@ from _source_scope_support import record, resolve
 from reg_meta_build.catalog_dependencies import (
     check_delivery_coverage,
 )
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedVariant,
@@ -101,7 +102,7 @@ def test_lost_delivery_coverage_is_refused_with_its_exact_window(shape, missing)
         (variable,), result.coverage, withheld=result.withheld_dependencies
     )
     damaged = _damaged(variable, shape)
-    with pytest.raises(ValueError, match="delivery coverage was lost") as failure:
+    with pytest.raises(RegMetaError, match="delivery coverage was lost") as failure:
         check_delivery_coverage(
             (damaged,), result.coverage, withheld=result.withheld_dependencies
         )

@@ -15,6 +15,7 @@ from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from reg_meta_build.catalog_dependencies import (
     check_delivery_coverage,
 )
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
     ResolvedVariant,
@@ -173,7 +174,7 @@ def test_delivery_coverage_refuses_a_changed_literal_unit_or_description():
             )
         }
     )
-    with pytest.raises(ValueError, match="literal delivery unit changed"):
+    with pytest.raises(RegMetaError, match="literal delivery unit changed"):
         check_delivery_coverage((wrong_unit,), formed.coverage, withheld={})
     records, case, variants, coding = fixture
     texts = tuple(
@@ -218,7 +219,7 @@ def test_delivery_coverage_refuses_a_changed_literal_unit_or_description():
             )
         }
     )
-    with pytest.raises(ValueError, match="literal delivery description changed"):
+    with pytest.raises(RegMetaError, match="literal delivery description changed"):
         check_delivery_coverage((borrowed,), formed.coverage, withheld={})
 
 
