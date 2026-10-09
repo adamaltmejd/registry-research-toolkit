@@ -39,6 +39,12 @@ native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=U
 [[variable]]
 slug = "wheld"
 native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=WHELD}}
+[[variable]]
+slug = "miss"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=MISS}}
+[[variable]]
+slug = "novar"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=NOVAR}}
 [[errata.field]]
 variable = {{naming_id kind=variable provider=sos register_key=cls member_key=WHELD}}
 variant = "CLS_A"

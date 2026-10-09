@@ -1,5 +1,5 @@
 {
-  "description": "SCB: one register per label-rule claim (LKF, PAIR, MULTI, SPLIT 2019-2021, CONTRAC, CONTRAL, OVR) with Vardemangder version names; plus the sample VALUE. SOS workbook CLS (subset CLS_A 2019-2020): one variable per conformance or declaration claim, each with a Kodlista; UNK, UNRESURL and UNRESFRAG are each delivered twice with two declarations; WHELD declares FIX once. FK registers openreg (open from 2010), span (2019-2021), overlap (2020), none (1990-1991), pooled (a pooled 2020-2021 variant) and nocodes. Canonical-SCB register canon with OUTCOL (list 'outside'), TWOCOL (list 01) and MEMBERS (no book; list 01 'Participation' twice, 1, a labelled blank and 01 'Another label'), DUPLAB (book FIX; list 01 under two labels, 02 with an empty label) and BLANKB (book FIX; list 01 and a labelled blank code). Books FIX/ALT (01, 02), TWO (02), SEN (01, 02; sentinel 00000), HUN (0-98), families pair (OLD 2000-2019, NEW 2020-) and overlap (P1 2000-2020, P2 2020-), DIG and CNF. Rows reversed: the data rows of every multi-row classification CSV (fix.csv, alt.csv, sen.csv, hun.csv, dig.csv, cnf.csv) come in reverse order. So do the SCB Vardemangder rows of PAIR (First, Second), MULTI (Alpha, Beta) and SPLIT 2020 (Span, Middle), the two Variabelnivå rows each of UNK, UNRESURL and UNRESFRAG, and HIGH's Kodlista; nothing else changes.",
+  "description": "SCB: one register per label-rule claim (LKF, PAIR, MULTI, SPLIT 2019-2021, CONTRAC, CONTRAL, OVR) with Vardemangder version names; plus the sample VALUE. SOS workbook CLS (subset CLS_A 2019-2020): one variable per conformance or declaration claim, each with a Kodlista; UNK, UNRESURL and UNRESFRAG are each delivered twice with two declarations; WHELD declares FIX once; MISS is delivered twice, a 2019 row with no code list (Fritext) and a 2020 row with an inline list, both declaring FIX; NOVAR declares FIX on a row with no Deldatamängd and no value set. SCB register SUB (2020, label 'Span') lists 01 and 99. FK registers openreg (open from 2010), span (2019-2021), overlap (2020), none (1990-1991), pooled (a pooled 2020-2021 variant), nocodes and member (2020, declaring the family member 'NEW'). Canonical-SCB register canon with OUTCOL (list 'outside'), TWOCOL (list 01) and MEMBERS (no book; list 01 'Participation' twice, 1, a labelled blank and 01 'Another label'), DUPLAB (book FIX; list 01 under two labels, 02 with an empty label) and BLANKB (book FIX; list 01 and a labelled blank code). Books FIX/ALT (01, 02), TWO (02), SEN (01, 02; sentinel 00000), HUN (0-98), families pair (OLD 2000-2019, NEW 2020-) and overlap (P1 2000-2020, P2 2020-), DIG and CNF (a contested 1, 03 and a blank-code row). Rows reversed: the data rows of every multi-row classification CSV (fix.csv, alt.csv, sen.csv, hun.csv, dig.csv, cnf.csv) come in reverse order. So do the SCB Vardemangder rows of PAIR (First, Second), MULTI (Alpha, Beta) and SPLIT 2020 (Span, Middle), the two Variabelnivå rows each of UNK, UNRESURL, UNRESFRAG and MISS, SUB's two Vardemangder rows, and HIGH's Kodlista; nothing else changes.",
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
@@ -11,7 +11,8 @@
       {"cvid": 6021, "var_id": 601, "colname": "SPLIT", "varname": "Split", "year": "2021", "regver_id": 2021, "register": ["SPLIT", 6, 60]},
       {"cvid": 7001, "var_id": 701, "colname": "CONTRAC", "varname": "Contrac", "year": "2020", "regver_id": 2020, "register": ["CONTRAC", 7, 70]},
       {"cvid": 8001, "var_id": 801, "colname": "CONTRAL", "varname": "Contral", "year": "2020", "regver_id": 2020, "register": ["CONTRAL", 8, 80]},
-      {"cvid": 9001, "var_id": 901, "colname": "OVR", "varname": "Ovr", "year": "2020", "regver_id": 2020, "register": ["OVR", 9, 90]}
+      {"cvid": 9001, "var_id": 901, "colname": "OVR", "varname": "Ovr", "year": "2020", "regver_id": 2020, "register": ["OVR", 9, 90]},
+      {"cvid": 10001, "var_id": 1001, "colname": "SUB", "varname": "Sub", "year": "2020", "regver_id": 2020, "register": ["SUB", 10, 100]}
     ],
     "vardemangder": [
       "  LKF  1998  |1|01|Source label|3001|30011",
@@ -27,7 +28,9 @@
       "Beta|1|02|Source label|7001|70012",
       "Alpha|1|01|Source label|8001|80011",
       "Beta|1|01|Different meaning|8001|80012",
-      "Alpha|1|01|Source label|9001|90011"
+      "Alpha|1|01|Source label|9001|90011",
+      "Span|1|99|Unknown|10001|100012",
+      "Span|1|01|Source label|10001|100011"
     ]
   },
   "sos": [
@@ -180,6 +183,36 @@
           "label": "Wheld",
           "description": "Kod",
           "value_set": "Se kodlista",
+          "external_classification": "FIX",
+          "data_from": 2020,
+          "data_to": 2020
+        },
+        {
+          "name": "MISS",
+          "deldatamangd": "CLS_A",
+          "label": "Miss",
+          "description": "Kod",
+          "value_set": "01=Source label; 02=Second source",
+          "external_classification": "FIX",
+          "data_from": 2020,
+          "data_to": 2020
+        },
+        {
+          "name": "MISS",
+          "deldatamangd": "CLS_A",
+          "label": "Miss",
+          "description": "Kod",
+          "value_set": "Fritext",
+          "external_classification": "FIX",
+          "data_from": 2019,
+          "data_to": 2019
+        },
+        {
+          "name": "NOVAR",
+          "deldatamangd": null,
+          "label": "Novar",
+          "description": "Kod",
+          "value_set": null,
           "external_classification": "FIX",
           "data_from": 2020,
           "data_to": 2020
@@ -394,7 +427,17 @@
       "[[register.variable]]",
       "name = \"No codes column\"",
       "column = \"NOCODES\"",
-      "data_type = \"int\""
+      "data_type = \"int\"",
+      "[[register]]",
+      "key = \"member\"",
+      "name = \"Member\"",
+      "valid_from = \"2020-01-01\"",
+      "valid_to = \"2020-12-31\"",
+      "[[register.variable]]",
+      "name = \"Member column\"",
+      "column = \"MEMCOL\"",
+      "data_type = \"int\"",
+      "classification = \"NEW\""
     ],
     "scb_canonical/scb_canonical.toml": [
       "[[register]]",
@@ -594,6 +637,7 @@
       ],
     "classifications/cnf.csv": [
         "code,label",
+        ",Unknown code",
         "03,Independent",
         "1,Competing",
         "1,First"
