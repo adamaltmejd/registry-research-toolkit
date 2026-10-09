@@ -52,7 +52,10 @@ until curl -fsS --max-time "$MAX_TIME" -o /dev/null "$BASE/api/context?$EDGE_V" 
     sleep 1
     waited=$((waited + 1))
 done
-curl -fsS --max-time "$MAX_TIME" -o /dev/null "$BASE/api/search?q=inkomst&$EDGE_V" \
+# The first search reads its pages cold from Fly's throttled rootfs (measured
+# 2026-10-09 on 0.44.0: 328 MB in 19 s at ~17 MB/s; warm 0.2 s), so it gets the
+# readiness deadline rather than the per-request one.
+curl -fsS --max-time "$READY_DEADLINE" -o /dev/null "$BASE/api/search?q=inkomst&$EDGE_V" \
     || fail "search"
 curl -fsS --max-time "$MAX_TIME" "$BASE/mcp?$EDGE_V" \
     -H 'accept: application/json, text/event-stream' \
