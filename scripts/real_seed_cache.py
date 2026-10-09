@@ -73,6 +73,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import zlib
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -695,7 +696,10 @@ def cmd_build(args: argparse.Namespace) -> int:
         return 0
     home = cache_dir("build")
     if args.verify:
-        return verify_build(args, home, key, fields)
+        # Held throughout, so concurrent verifications cannot quarantine the same
+        # entry twice.
+        with real_seed_lock():
+            return verify_build(args, home, key, fields)
     if record := lookup_build(home, key):
         emit(build_result(home, record, hit=True))
         return 0
@@ -710,6 +714,15 @@ def cmd_build(args: argparse.Namespace) -> int:
         run_dir, code = run_build(args, home)
         if reason := incomplete(args, run_dir, code, fields):
             sys.stderr.write(f"real-seed-cache: not stored ({reason})\n")
+            # Reaps failed runs past their retention, so repeated failures cannot
+            # fill the disk; this one stays for diagnosis.
+            evict(
+                home,
+                run_dir,
+                KEEP,
+                "real-seed-cache",
+                min_idle=STAGING_RETENTION_SECONDS,
+            )
             emit(
                 {
                     "hit": False,
@@ -755,12 +768,11 @@ def verify_build(args: argparse.Namespace, home: Path, key: str, fields: dict) -
             "database": file_sha256(entry / record["database"]),
             "events": events_sha256(entry / "report"),
         }
-    except (OSError, EOFError) as exc:
+    except (OSError, EOFError, zlib.error) as exc:
         shutil.rmtree(entry, ignore_errors=True)
         emit({"identical": False, "reason": f"stored entry unreadable, dropped: {exc}"})
         return 1
-    with real_seed_lock():
-        run_dir, code = run_build(args, home)
+    run_dir, code = run_build(args, home)
     if reason := incomplete(args, run_dir, code, fields):
         emit({"identical": False, "reason": reason, "run_dir": str(run_dir)})
         return 1
