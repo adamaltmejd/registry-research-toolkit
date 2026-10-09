@@ -403,6 +403,31 @@ def _disjoint_representations(
     return result, diagnostics, {key: tuple(causes) for key, causes in withheld.items()}
 
 
+def _slice_of(state: ResolvedState, source: ResolvedState) -> bool:
+    """True when `state` is `source`, or a copy of it narrowed to a window inside its own.
+
+    Representation and disjoint handling slice a state by copying it with a
+    narrower window and nothing else changed. Two states of one column and coding
+    never overlap, so window containment names the one source of a slice.
+    """
+    if (
+        state.delivery_column_name != source.delivery_column_name
+        or state.valid_from is None
+        or state.valid_to is None
+        or source.valid_from is None
+        or source.valid_to is None
+    ):
+        return state == source
+    return (
+        source.valid_from <= state.valid_from
+        and state.valid_to <= source.valid_to
+        and state.model_copy(
+            update={"valid_from": source.valid_from, "valid_to": source.valid_to}
+        )
+        == source
+    )
+
+
 def _null_conflicting_facts(
     obligations: tuple[CoverageObligation, ...],
     conflicts: tuple[tuple[str, str, str, str, str], ...],
@@ -952,14 +977,13 @@ def form_native_variable(
     columnless_records: list[SourceRecord] = []
     # Every finite positive source claim, against the periods an explicit outcome
     # withholds from it, both keyed by the exact variant and physical column.
-    claims: list[CoverageObligation] = []
-    # Origin of every formed state and claim: True when every contributing
-    # occurrence is unchecked, i.e. the output is rooted in the folded twins
-    # rather than in an explicit partition/alias decision. Keyed by id();
-    # created_states keeps every state alive so the keys stay sound.
-    folded_state: dict[int, bool] = {}
-    folded_claim: dict[int, bool] = {}
-    created_states: list[ResolvedState] = []
+    # Each claim carries its origin: True when every contributing occurrence is
+    # unchecked, i.e. the claim is rooted in the folded twins rather than in an
+    # explicit partition/alias decision.
+    claims: list[tuple[CoverageObligation, bool]] = []
+    # The states of that same folded origin. Later stages slice states into
+    # narrower copies; a slice keeps its source's origin (`_slice_of`).
+    folded_states: list[ResolvedState] = []
     waived: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
     for key, members in sorted(by_variant.items(), key=lambda item: repr(item[0])):
         variant = variants[key]
@@ -1073,10 +1097,10 @@ def form_native_variable(
                     segment, variant, code_result, subject
                 )
                 waived[variant.slug, column].extend(uncoded)
-                created_states.extend(new_states)
+                if folded:
+                    folded_states.extend(new_states)
                 if not new_states:
-                    claims.append(new_claim)
-                    folded_claim[id(new_claim)] = folded
+                    claims.append((new_claim, folded))
                 elif segment.period_scope == "intervals":
                     assert (
                         segment.valid_from is not None and segment.valid_to is not None
@@ -1091,9 +1115,9 @@ def form_native_variable(
                         segment.valid_from,
                         segment.valid_to,
                     ):
-                        gap_claim = replace(new_claim, valid_from=start, valid_to=end)
-                        claims.append(gap_claim)
-                        folded_claim[id(gap_claim)] = folded
+                        claims.append(
+                            (replace(new_claim, valid_from=start, valid_to=end), folded)
+                        )
                 for state in new_states:
                     coding_claim = replace(
                         new_claim,
@@ -1105,9 +1129,7 @@ def form_native_variable(
                             state.source_register_text,
                         ),
                     )
-                    claims.append(coding_claim)
-                    folded_claim[id(coding_claim)] = folded
-                    folded_state[id(state)] = folded
+                    claims.append((coding_claim, folded))
                 states.extend(new_states)
                 diagnostics.extend(new_issues)
                 if new_states and _text(segment.fields, "data_type") is None:
@@ -1210,50 +1232,51 @@ def form_native_variable(
         for key, causes in withheld_representations.items()
         if key not in present_representations
     }
+    # One folded column carries one delivery name downstream, where the
+    # coverage gate matches claims to states by exact string. Only outputs
+    # rooted in the unchecked folded occurrences unify, by recorded origin
+    # — never by literal: a checked-exact column keeps its literal even
+    # when it collides with a twin spelling. Representation and disjoint
+    # handling above still see raw names, so overlapping twins keep their
+    # graceful parallel-column error; both slice the states they keep into
+    # narrower copies, and every slice of a folded state is renamed too.
+    # Aliases stay exact: they exist only via checked representation
+    # decisions naming exact columns.
     if chosen_spelling is not None:
-        # One folded column carries one delivery name downstream, where the
-        # coverage gate matches claims to states by exact string. Only outputs
-        # rooted in the unchecked folded occurrences unify, by recorded origin
-        # — never by literal: a checked-exact column keeps its literal even
-        # when it collides with a twin spelling. Representation and disjoint
-        # handling above still see raw names, so overlapping twins keep their
-        # graceful parallel-column error. Aliases stay exact: they exist only
-        # via checked representation decisions naming exact columns.
         states = [
             state.model_copy(update={"delivery_column_name": chosen_spelling})
-            if folded_state.get(id(state), False)
+            if any(_slice_of(state, source) for source in folded_states)
             else state
             for state in states
-        ]
-        claims = [
-            replace(claim, column=chosen_spelling)
-            if folded_claim.get(id(claim), False)
-            else claim
-            for claim in claims
         ]
     # What the supported occurrences still claim once every explicit outcome has
     # taken its own period back. Withholding the whole variable is one more such
     # outcome, recorded in the dependency ledger and honoured at the boundary.
     # A conflicting representation fact keeps its window but drops that exact
-    # claimed fact, like a waived delivery slice.
-    coverage = _null_conflicting_facts(
-        tuple(
-            claim
-            for claim in claims
-            if claim.period_scope == "year_independent"
-            and (claim.variant, claim.column) not in withheld_representations
+    # claimed fact, like a waived delivery slice. Every outcome is keyed by the
+    # raw column, so a folded claim takes its periods back under its raw
+    # spelling and only then moves to the folded one.
+    owed = [
+        (claim, folded)
+        for claim, folded in claims
+        if claim.period_scope == "year_independent"
+        and (claim.variant, claim.column) not in withheld_representations
+    ] + [
+        (replace(claim, valid_from=start, valid_to=end), folded)
+        for claim, folded in claims
+        if claim.period_scope == "intervals"
+        and claim.valid_from is not None
+        and claim.valid_to is not None
+        for start, end in remaining_windows(
+            waived[claim.variant, claim.column], claim.valid_from, claim.valid_to
         )
-        + tuple(
-            replace(claim, valid_from=start, valid_to=end)
-            for claim in claims
-            if claim.period_scope == "intervals"
-            and claim.valid_from is not None
-            and claim.valid_to is not None
-            for start, end in remaining_windows(
-                waived[claim.variant, claim.column], claim.valid_from, claim.valid_to
-            )
-        ),
-        representation_facts,
+    ]
+    coverage = tuple(
+        replace(piece, column=chosen_spelling)
+        if folded and chosen_spelling is not None
+        else piece
+        for claim, folded in owed
+        for piece in _null_conflicting_facts((claim,), representation_facts)
     )
     if not states:
         has_error = any(d.severity == "error" for d in diagnostics)

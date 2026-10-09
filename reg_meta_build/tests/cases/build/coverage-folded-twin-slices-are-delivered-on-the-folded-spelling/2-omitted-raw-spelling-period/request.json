@@ -1,0 +1,33 @@
+{
+  "note": "Step 1's twins, with a checked [[coding.omit]] that withdraws 2020 from the raw spelling Kon. Every explicit outcome is keyed by the raw column it names, so Kon's claim gives back 2020 (the omission) and 2021 (the overlap) under Kon before it moves to KON; what it still claims, 2019, is written on KON. Expected values follow from the fixture and the omission: Kon's 2019-2021 edition minus 2020 and 2021 is 2019-01-01..2019-12-31, KON's 2022 edition is untouched.",
+  "fails_if": "`form_native_variable` (source_formation.py) moves a folded claim to the folded spelling before it takes back the periods withheld under its raw spelling, so Kon's omitted 2020 stays owed as KON 2020-01-01..2020-12-31 and the build reports unexplained_delivery_coverage_loss",
+  "sources": {
+    "description": "Register 1 (TESTREG), variant 10, variable 5 delivers column Kon in a pooled 2019-2021 edition (CVID 19, edition 119) and its case twin KON in 2021 (CVID 21, edition 121) and 2022 (CVID 22, edition 122).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "Kon",
+          "cvid": 19,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 119,
+          "versionname": "2019-2021"
+        },
+        {
+          "colname": "KON",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 121
+        },
+        {
+          "colname": "KON",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 122
+        }
+      ]
+    }
+  }
+}
