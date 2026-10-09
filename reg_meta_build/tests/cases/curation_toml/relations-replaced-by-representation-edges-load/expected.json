@@ -13,20 +13,8 @@
   "loads": {
     "replaced_by": [
       {
-        "predecessor": {
-          "kind": "variable_binding",
-          "provider": "scb",
-          "register": "lisa",
-          "variable": "dispink",
-          "classification": null
-        },
-        "successor": {
-          "kind": "variable_binding",
-          "provider": "scb",
-          "register": "lisa",
-          "variable": "dispink",
-          "classification": null
-        },
+        "predecessor": "scb/lisa/dispink",
+        "successor": "scb/lisa/dispink",
         "predecessor_column": "DispInk04",
         "successor_column": "DispInk10",
         "effective_year": 2010,
@@ -36,20 +24,8 @@
         "variant": ""
       },
       {
-        "predecessor": {
-          "kind": "variable_binding",
-          "provider": "scb",
-          "register": "lisa",
-          "variable": "a",
-          "classification": null
-        },
-        "successor": {
-          "kind": "variable_binding",
-          "provider": "scb",
-          "register": "lisa",
-          "variable": "b",
-          "classification": null
-        },
+        "predecessor": "scb/lisa/a",
+        "successor": "scb/lisa/b",
         "predecessor_column": "A",
         "successor_column": "B"
       },

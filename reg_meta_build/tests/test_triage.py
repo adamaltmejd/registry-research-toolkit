@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from reg_meta.fqid import period_token_to_bounds
+from reg_core_py import period_bounds
 from reg_meta_build.edition_bounds import (
     edition_bounds,
     edition_claims,
@@ -12,7 +12,7 @@ from reg_meta_build.edition_bounds import (
 
 class TestEditionBounds:
     """#219 sub-annual delivery-window parser. The term/quarter/half forms must
-    AGREE with reg_meta's `period_token_to_bounds` (build & resolve share the same
+    AGREE with reg-core's `period_bounds` (build & resolve share the same
     expansion); everything else stays full-year. The second arg is the row's edition
     year — only markers matching it are narrowed, so a window can never escape it.
 
@@ -21,7 +21,7 @@ class TestEditionBounds:
     calls this for the single-year case."""
 
     def test_autumn_term_forms_agree_with_period_bounds(self) -> None:
-        ht = period_token_to_bounds("HT2024")
+        ht = period_bounds("HT2024")
         for name in (
             "Höstterminen 2024",
             "Hösttermin 2024",
@@ -34,7 +34,7 @@ class TestEditionBounds:
         assert ht == ("2024-07-01", "2024-12-31")
 
     def test_spring_term_forms_agree_with_period_bounds(self) -> None:
-        vt = period_token_to_bounds("VT2024")
+        vt = period_bounds("VT2024")
         for name in (
             "Vårterminen 2024",
             "Vårtermin 2024",
@@ -48,10 +48,8 @@ class TestEditionBounds:
         assert vt == ("2024-01-01", "2024-06-30")
 
     def test_quarter_forms_agree_with_period_bounds(self) -> None:
-        assert edition_bounds("2005 kvartal 1", 2005) == period_token_to_bounds(
-            "2005-Q1"
-        )
-        assert edition_bounds("2011 kv1", 2011) == period_token_to_bounds("2011-Q1")
+        assert edition_bounds("2005 kvartal 1", 2005) == period_bounds("2005-Q1")
+        assert edition_bounds("2011 kv1", 2011) == period_bounds("2011-Q1")
         # A range spans its endpoints (union of the two quarter tokens).
         assert edition_bounds("2005 kvartal 2-4", 2005) == ("2005-04-01", "2005-12-31")
         # …whichever dash SCB typed. `fold_column` NFKD-DROPS an en dash rather
@@ -67,12 +65,8 @@ class TestEditionBounds:
         )
 
     def test_half_year_forms_agree_with_period_bounds(self) -> None:
-        assert edition_bounds("Första halvåret 1995", 1995) == period_token_to_bounds(
-            "1995-H1"
-        )
-        assert edition_bounds("Andra halvåret 1995", 1995) == period_token_to_bounds(
-            "1995-H2"
-        )
+        assert edition_bounds("Första halvåret 1995", 1995) == period_bounds("1995-H1")
+        assert edition_bounds("Andra halvåret 1995", 1995) == period_bounds("1995-H2")
 
     def test_term_range_narrows_to_the_edition_year_term(self) -> None:
         # The edition year (extract_year = the FIRST year) selects which term is
@@ -99,7 +93,7 @@ class TestEditionBounds:
         )
 
     def test_out_of_range_term_year_does_not_crash(self) -> None:
-        # `period_token_to_bounds("HT1850")` would raise FqidError (year < 1900). The
+        # `period_bounds("HT1850")` would raise GrammarError (year < 1900). The
         # 1850 term mismatches the edition year 2024 → dropped → full 2024, no crash.
         assert edition_bounds("HT 1850, version 2024", 2024) == (
             "2024-01-01",
@@ -193,8 +187,8 @@ class TestEditionClaims:
         # HT of the first year through VT of the last, on the period grammar's
         # own term bounds.
         assert edition_claims("Läsåret 2012/2013") == (
-            (2012, *period_token_to_bounds("HT2012")),
-            (2013, *period_token_to_bounds("VT2013")),
+            (2012, *period_bounds("HT2012")),
+            (2013, *period_bounds("VT2013")),
         )
         # A bare `A/B` reads the same way.
         assert edition_claims("2012/2013") == edition_claims("Läsåret 2012/2013")
@@ -202,8 +196,8 @@ class TestEditionClaims:
     def test_school_year_range_claims_ht_first_through_vt_last(self) -> None:
         # hreg grundutbildning `Läsåren 1993/1994 - 2024/2025` → HT1993..VT2025.
         claims = edition_claims("Läsåren 1993/1994 - 2024/2025")
-        assert claims[0] == (1993, *period_token_to_bounds("HT1993"))
-        assert claims[-1] == (2025, *period_token_to_bounds("VT2025"))
+        assert claims[0] == (1993, *period_bounds("HT1993"))
+        assert claims[-1] == (2025, *period_bounds("VT2025"))
         # Interior years are whole, so every year of the series is claimed once.
         assert [year for year, _, _ in claims] == list(range(1993, 2026))
         assert claims[1] == (1994, "1994-01-01", "1994-12-31")
@@ -216,13 +210,13 @@ class TestEditionClaims:
     def test_term_range_claims_first_term_through_last(self) -> None:
         # utbildningsanalyser `Höstterminen 2020 - Vårterminen 2021`.
         assert edition_claims("Höstterminen 2020 - Vårterminen 2021") == (
-            (2020, *period_token_to_bounds("HT2020")),
-            (2021, *period_token_to_bounds("VT2021")),
+            (2020, *period_bounds("HT2020")),
+            (2021, *period_bounds("VT2021")),
         )
         # ureg `Komvux HT 1988 - VT 2024`: HT1988, whole years, then VT2024.
         claims = edition_claims("Komvux HT 1988 - VT 2024")
-        assert claims[0] == (1988, *period_token_to_bounds("HT1988"))
-        assert claims[-1] == (2024, *period_token_to_bounds("VT2024"))
+        assert claims[0] == (1988, *period_bounds("HT1988"))
+        assert claims[-1] == (2024, *period_bounds("VT2024"))
         assert claims[1] == (1989, "1989-01-01", "1989-12-31")
 
     def test_a_span_ending_in_the_future_is_still_a_span(self) -> None:
@@ -244,7 +238,7 @@ class TestEditionClaims:
         )
 
     def test_out_of_range_term_year_does_not_crash(self) -> None:
-        # `period_token_to_bounds("HT1850")` would raise; the marker is dropped,
+        # `period_bounds("HT1850")` would raise; the marker is dropped,
         # leaving a single full-year 2024 claim.
         assert edition_claims("HT 1850, version 2024") == (
             (2024, "2024-01-01", "2024-12-31"),
@@ -294,9 +288,7 @@ class TestVintageClaim:
     def test_vintage_still_narrows_within_its_own_year(self) -> None:
         # It is `edition_bounds`' window, not a blind full year: a sub-annual
         # marker on a projection version still narrows inside the vintage year.
-        assert vintage_claim("Höstterminen 2024") == (
-            (2024, *period_token_to_bounds("HT2024")),
-        )
+        assert vintage_claim("Höstterminen 2024") == ((2024, *period_bounds("HT2024")),)
 
     def test_yearless_claims_nothing(self) -> None:
         assert vintage_claim(None) == ()

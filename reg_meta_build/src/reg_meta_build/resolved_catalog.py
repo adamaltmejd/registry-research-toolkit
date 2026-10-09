@@ -28,9 +28,7 @@ from reg_meta.db import (
     CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
     DB_FILENAME,
     default_db_dir,
-    register_py_lower,
 )
-from reg_meta.fqid import Fqid, validate_slug
 from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build._curation import (
@@ -56,6 +54,7 @@ from reg_meta_build.db import (
     _provider_id_for,
     _value_set_hash,
     publish_db,
+    register_py_lower,
     seed_providers,
 )
 from reg_meta_build.derive import derive
@@ -65,6 +64,7 @@ from reg_meta_build.resolved_metadata import (
     prepare_resolved_metadata,
     write_resolved_metadata,
 )
+from reg_meta_build.slug_grammar import validate_slug
 from reg_meta_build.validate import column_state_overlap_failure, validate_built_db
 
 if TYPE_CHECKING:
@@ -83,7 +83,8 @@ class ResolvedRegister(_ResolvedModel):
 
     @model_validator(mode="after")
     def _identity(self) -> Self:
-        Fqid.register_fqid(self.provider, self.slug)
+        validate_slug(self.provider, "provider")
+        validate_slug(self.slug, "register")
         return self
 
 
@@ -484,7 +485,9 @@ class ResolvedVariable(_ResolvedModel):
 
     @model_validator(mode="after")
     def _resolved_identity_and_states(self) -> Self:
-        Fqid.binding_fqid(self.register_ref.provider, self.register_ref.slug, self.slug)
+        validate_slug(self.register_ref.provider, "provider")
+        validate_slug(self.register_ref.slug, "register")
+        validate_slug(self.slug, "variable")
         if not self.states:
             raise ValueError("a resolved variable needs at least one delivery state")
         if self.name is None and any(

@@ -6,20 +6,8 @@
   "loads": {
     "derived_from": [
       {
-        "derived": {
-          "kind": "classification",
-          "provider": null,
-          "register": null,
-          "variable": null,
-          "classification": "ks87-p"
-        },
-        "source": {
-          "kind": "classification",
-          "provider": null,
-          "register": null,
-          "variable": null,
-          "classification": "icd-9-ks87"
-        },
+        "derived": "class/ks87-p",
+        "source": "class/icd-9-ks87",
         "note": "primary-care variant"
       }
     ]

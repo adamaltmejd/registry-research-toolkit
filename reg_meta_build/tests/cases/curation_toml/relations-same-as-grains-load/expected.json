@@ -10,7 +10,7 @@
   "loads": {
     "same_as": [
       {
-        "grain": "variable_binding",
+        "grain": "variable",
         "a_provider": "scb",
         "a_register": "lisa",
         "a_variable": "inkomst",

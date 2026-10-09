@@ -11,7 +11,7 @@ import tomllib
 from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING
 
-from reg_meta.fqid import FqidError, period_token_to_bounds
+from reg_core_py import GrammarError, period_bounds
 
 from reg_meta_build._curation import curation_error, require_bool
 from reg_meta_build.db import _file_sha256
@@ -594,8 +594,8 @@ class CuratedAdapter:
 
     def _check_boundary(self, path: Path, value: str, ctx: str) -> None:
         try:
-            period_token_to_bounds(value)
-        except FqidError as exc:
+            period_bounds(value)
+        except GrammarError as exc:
             raise curation_error(
                 "curated_toml_invalid",
                 f"{path.name}: {ctx}: {value!r} is not a valid ISO period.",
@@ -799,5 +799,5 @@ class CuratedAdapter:
         return min(present) if present else None
 
     def _expanded_boundary(self, value: str, *, end: bool) -> str:
-        lo, hi = period_token_to_bounds(value)
+        lo, hi = period_bounds(value)
         return hi if end else lo
