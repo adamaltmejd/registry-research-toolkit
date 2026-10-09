@@ -74,11 +74,6 @@ extend-select = [
 # missing-comma signal here. Revisit with the default-rules adoption follow-up.
 ignore = ["ISC004"]
 
-[tool.ruff.lint.per-file-ignores]
-# B008 flags FastAPI's `Depends(...)`-in-default idiom, a known false positive;
-# the framework evaluates these per-request, never at import time.
-"reg_webapp/backend/**" = ["B008"]
-
 [tool.ruff.lint.isort]
 # Merge `from X import a` + `from X import b as c` into one block. Default
 # isort treats aliased imports as a separate group, which splits `from .fqid

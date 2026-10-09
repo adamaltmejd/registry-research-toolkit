@@ -92,7 +92,7 @@ Before pushing, always `uv run python -m pytest <tree> conformance -n auto -q`, 
 `<tree>` is the touched Python package or `scripts/tests` (just `conformance` when
 neither is touched), plus the tree's own gate: for the frontend
 `bun run check && bun run lint && bun run test && bun run build`, then
-`bun run gen:types && git diff --exit-code src/lib/api-types.ts`, in
+`bun run gen:types && git diff --exit-code src/lib/api-types-rust.ts`, in
 `reg_webapp/frontend`; for `crates/` `cargo fmt --all --check`,
 `cargo clippy --workspace --all-targets --locked -- -D warnings` and
 `cargo test --workspace --locked`; for `.claude/hooks/tests/` each `bash <file>`. Then

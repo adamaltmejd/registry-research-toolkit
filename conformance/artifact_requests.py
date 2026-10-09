@@ -108,8 +108,8 @@ def require(condition, message):
 
 def server_client(request, directory):
     """An HTTP client on the Rust server (`--server-cmd`) for the artifact in
-    `directory`: it answers `/api/search`, `/api/catalog` and `/api/states` (the
-    FastAPI app no longer does) and `/api/project/order`.
+    `directory`: it answers `/api/search`, `/api/catalog`, `/api/states` and
+    `/api/project/order`.
 
     Without `--server-cmd` the test skips, except under `--run-release`: release
     admission must not pass without its browse and search traversals."""

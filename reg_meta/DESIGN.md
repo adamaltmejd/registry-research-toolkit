@@ -458,9 +458,9 @@ reservation:
 
 `validate_slug` enforces both; `derive_variable_slug` delegates to it, so a column
 literally named e.g. "States" or "Variants" degrades to `None` (triggering the
-name/last-resort fallback) rather than minting a shadow slug. The reserved set is pinned
-to the live catalog route list by a drift guard in
-`reg_webapp/backend/tests/test_boot.py`.
+name/last-resort fallback) rather than minting a shadow slug. The reserved set's drift
+guard against the FastAPI catalog routes went with those routes (package C); stage 4
+decides whether the set shrinks.
 
 **Open — curator review cadence on rename.** Slugs are derived from the latest
 delivery-column alias. If a provider renames a column between editions and the curator

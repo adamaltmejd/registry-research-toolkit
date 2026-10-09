@@ -12,7 +12,7 @@
     "lint:tokens": "bun scripts/lint_tokens.ts",
     "format": "biome format --write .",
     "test": "vitest run",
-    "gen:types": "openapi-typescript ../backend/openapi.json -o src/lib/api-types.ts && openapi-typescript ../../crates/reg-meta/openapi.json -o src/lib/api-types-rust.ts"
+    "gen:types": "openapi-typescript ../../crates/reg-meta/openapi.json -o src/lib/api-types-rust.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.12",

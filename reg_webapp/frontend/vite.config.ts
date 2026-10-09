@@ -7,18 +7,15 @@ import { configDefaults, defineConfig } from "vitest/config";
 import type { BrowserCommand } from "vitest/node";
 
 // vite.config.ts runs under Node; read the env via globalThis so we don't pull a
-// @types/node dep for one lookup. REG_WEBAPP_BACKEND_URL repoints the dev /api proxy
-// so concurrent instances (parallel worktrees / PR lanes) can each target their own
-// backend port — see reg_webapp/.claude/skills/run-reg-webapp "Parallel instances".
-// REG_META_SERVER_URL does the same for the Rust server (`reg-meta serve`), which
-// answers the routes ported to it.
+// @types/node dep for one lookup. REG_META_SERVER_URL repoints the dev /api proxy at
+// the Rust server (`reg-meta serve`) so concurrent instances (parallel worktrees /
+// PR lanes) can each target their own port — see
+// reg_webapp/.claude/skills/run-reg-webapp "Parallel instances".
 const runtimeProcess = (
   globalThis as {
     process?: { env?: Record<string, string | undefined>; platform?: string };
   }
 ).process;
-const backendUrl =
-  runtimeProcess?.env?.REG_WEBAPP_BACKEND_URL ?? "http://localhost:8000";
 const rustServerUrl =
   runtimeProcess?.env?.REG_META_SERVER_URL ?? "http://127.0.0.1:8001";
 const isCodexSeatbeltSandbox =
@@ -69,52 +66,10 @@ const keepRequestInterception: BrowserCommand<[]> = async ({ context }) => {
 export default defineConfig({
   plugins: [svelte()],
   server: {
-    // Dev proxy: the routes ported to the Rust server go there (default :8001),
-    // the rest of /api/* to the FastAPI backend (default :8000). Vite takes the
-    // first key the path starts with, so ported routes come before "/api".
+    // Dev proxy: the Rust server answers every /api route.
     proxy: {
-      "/api/context": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
-      "/api/search": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
-      "/api/docs": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
-      "/api/catalog": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
-      "/api/states": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
-      "/api/warnings": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
-      "/api/values": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
-      "/api/graph": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
-      "/api/lineage": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
-      "/api/project": {
-        target: rustServerUrl,
-        changeOrigin: true,
-      },
       "/api": {
-        target: backendUrl,
+        target: rustServerUrl,
         changeOrigin: true,
       },
     },
