@@ -1289,7 +1289,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["period"]
 reason = "The exact supplied delivery has no safely representable availability period. Person-År, accumulated-register and quarterly table labels establish grain or cohort context but not delivery years. HT1988–VT2024 retains semester precision without literal day bounds; no daily range is invented. Population dates are retained as population metadata, not availability. Preserve every original physical column, source field, unknown/pooled scope and raw coding association; only the affected unsupported occurrence, unavailable state or unscopeable coding remains unavailable. No year-independent availability or neighbouring-period borrowing."
 evidence = "Complete accepted native families (UREG48/941originals; SCB economic assistance22/28originals plus actual Kommune prerequisite), maintained production compilation, real primary/summary/integer identifier support and all independently bound canonical books. Exact complete originals and raw bound coding multiplicity are guarded. Proof: Batch50-period70-source-proof.json."
-expected_evidence_sha256 = "9e8720ac5207d51e9d9b1512420f201716cb35bbd21b4e893c1799e164532ee2"
+expected_evidence_sha256 = "141f7e65fb3092f467e3d0354c337a649eab2f947f8059582c1ece2176f156a1"
 
 [[acknowledge]]
 code = "unsupported_occurrence"
@@ -1298,7 +1298,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["period"]
 reason = "The exact supplied delivery has no safely representable availability period. Person-År, accumulated-register and quarterly table labels establish grain or cohort context but not delivery years. HT1988–VT2024 retains semester precision without literal day bounds; no daily range is invented. Population dates are retained as population metadata, not availability. Preserve every original physical column, source field, unknown/pooled scope and raw coding association; only the affected unsupported occurrence, unavailable state or unscopeable coding remains unavailable. No year-independent availability or neighbouring-period borrowing."
 evidence = "Complete accepted native families (UREG48/941originals; SCB economic assistance22/28originals plus actual Kommune prerequisite), maintained production compilation, real primary/summary/integer identifier support and all independently bound canonical books. Exact complete originals and raw bound coding multiplicity are guarded. Proof: Batch50-period70-source-proof.json."
-expected_evidence_sha256 = "2d1b71eccb247635ce2ad385d2745c4730a526789ab24106bd757bb12885cb4b"
+expected_evidence_sha256 = "df6656ca53965259d55ca1727019326f15bf9de369cf1fc36c0ef4dec8a76d6a"
 
 [[acknowledge]]
 code = "unsupported_occurrence"

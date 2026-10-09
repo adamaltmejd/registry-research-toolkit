@@ -995,7 +995,7 @@ variable = "26.19053.astsni92"
 variant = "26.159"
 column_metadata = "per_column"
 coding_metadata = "per_column"
-columns = [{ valid_from = "1990-01-01", valid_to = "1990-12-31", column = "AstSni92", expected_codings = ["11781449c5e1842c649bf3c80b9595aa0f46f1ef07fcc55944d18d0dd64eb8c1"], source_editions = ["1990"] }, { valid_from = "1990-01-01", valid_to = "1990-12-31", column = "Astsni92", expected_codings = ["11781449c5e1842c649bf3c80b9595aa0f46f1ef07fcc55944d18d0dd64eb8c1"], source_editions = ["1990"] }]
+columns = [{ valid_from = "1990-01-01", valid_to = "1990-12-31", column = "AstSni92", expected_codings = ["e0a11a2aecae2fe47c1ab79064c8c88e44f1ab8901210df76b1de7587ad460a0"], source_editions = ["1990"] }, { valid_from = "1990-01-01", valid_to = "1990-12-31", column = "Astsni92", expected_codings = ["e0a11a2aecae2fe47c1ab79064c8c88e44f1ab8901210df76b1de7587ad460a0"], source_editions = ["1990"] }]
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -1007,7 +1007,7 @@ variable = "26.19053.astsni92"
 variant = "26.159"
 column_metadata = "per_column"
 coding_metadata = "per_column"
-columns = [{ valid_from = "1991-01-01", valid_to = "1991-12-31", column = "AstSni92", expected_codings = ["02a9bc2fc73f294182933813ba6a2af8e2550d06a22a65fe1f9150a7f748ff19"], source_editions = ["1991"] }, { valid_from = "1991-01-01", valid_to = "1991-12-31", column = "Astsni92", expected_codings = ["02a9bc2fc73f294182933813ba6a2af8e2550d06a22a65fe1f9150a7f748ff19"], source_editions = ["1991"] }]
+columns = [{ valid_from = "1991-01-01", valid_to = "1991-12-31", column = "AstSni92", expected_codings = ["149e280ddf2a354176f0699c74746a6af7e8c237d486590855530dc4175ceb2e"], source_editions = ["1991"] }, { valid_from = "1991-01-01", valid_to = "1991-12-31", column = "Astsni92", expected_codings = ["149e280ddf2a354176f0699c74746a6af7e8c237d486590855530dc4175ceb2e"], source_editions = ["1991"] }]
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -1019,6 +1019,6 @@ variable = "26.19053.astsni92"
 variant = "26.159"
 column_metadata = "per_column"
 coding_metadata = "per_column"
-columns = [{ valid_from = "1992-01-01", valid_to = "1992-12-31", column = "AstSni92", expected_codings = ["b3c7080ae037839695b3ec142bcd87a9afd32e0c3d32ee609baf93469bcbcd5e"], source_editions = ["1992"] }, { valid_from = "1992-01-01", valid_to = "1992-12-31", column = "Astsni92", expected_codings = ["b3c7080ae037839695b3ec142bcd87a9afd32e0c3d32ee609baf93469bcbcd5e"], source_editions = ["1992"] }]
+columns = [{ valid_from = "1992-01-01", valid_to = "1992-12-31", column = "AstSni92", expected_codings = ["3fa251d396ed09eaaae7c9424fde1b7b080c8eab35f3292ec937aca39832797a"], source_editions = ["1992"] }, { valid_from = "1992-01-01", valid_to = "1992-12-31", column = "Astsni92", expected_codings = ["3fa251d396ed09eaaae7c9424fde1b7b080c8eab35f3292ec937aca39832797a"], source_editions = ["1992"] }]
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"

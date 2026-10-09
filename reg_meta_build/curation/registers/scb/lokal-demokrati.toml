@@ -2965,7 +2965,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity"]
 reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "837f97ea1cba2caa532230d7b4186d73635f09e31ca49674359ae570de952a3b"
+expected_evidence_sha256 = "84e7a38cce69b69526c899d8dc45d2f8f5e4daff8e03e9e9b6a0a2298a0b1eaf"
 expected_diagnostic_sha256 = "91bc2a0ee2a9b8e995bd9f42b4d880edaf8abb5d171a3740cb77230b7f0cef67"
 
 [[acknowledge]]
