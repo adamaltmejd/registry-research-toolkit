@@ -38,6 +38,36 @@
       "note": "The whole book row; code_count 2 also shows no source member (999, missing, 98, 99, 09350) joined the book."
     },
     {
+      "table": "classification_codes",
+      "where": {
+        "slug": "example-codes"
+      },
+      "fields": [
+        "slug",
+        "code",
+        "label",
+        "level",
+        "is_valid"
+      ],
+      "rows": [
+        [
+          "example-codes",
+          "001",
+          "Canonical one",
+          3,
+          1
+        ],
+        [
+          "example-codes",
+          "002",
+          "Canonical two",
+          3,
+          1
+        ]
+      ],
+      "note": "The book keeps its own labels: 001 stays 'Canonical one', not EXTENDED's 'Observed label' or SENTINEL's and SCOPED's 'Source label'."
+    },
+    {
       "table": "classifications",
       "fields": [
         "slug",
@@ -337,6 +367,82 @@
         ]
       ],
       "note": "Each value set is the matched book codes (with their source labels) plus exactly the conformance codes above."
+    },
+    {
+      "table": "code_index",
+      "where": {
+        "variable": [
+          "extended",
+          "scoped",
+          "sentinel"
+        ]
+      },
+      "fields": [
+        "register",
+        "variable",
+        "code",
+        "label",
+        "mapping_count"
+      ],
+      "rows": [
+        [
+          "sample",
+          "extended",
+          "001",
+          "Observed label",
+          1
+        ],
+        [
+          "sample",
+          "extended",
+          "999",
+          "Unspecified",
+          1
+        ],
+        [
+          "sample",
+          "extended",
+          "missing",
+          "Unlisted label",
+          1
+        ],
+        [
+          "sample",
+          "scoped",
+          "001",
+          "Source label",
+          2
+        ],
+        [
+          "sample",
+          "scoped",
+          "09350",
+          "Okänt",
+          1
+        ],
+        [
+          "sample",
+          "sentinel",
+          "001",
+          "Source label",
+          2
+        ],
+        [
+          "sample",
+          "sentinel",
+          "98",
+          "Substantive extra",
+          1
+        ],
+        [
+          "sample",
+          "sentinel",
+          "99",
+          "Source wording",
+          1
+        ]
+      ],
+      "note": "The index maps each variable to its delivered codes only: no book code (002 'Canonical two', 001 'Canonical one') reaches it through the classification binding. 001 'Source label' counts 2 because SCOPED and SENTINEL deliver the same code and label."
     },
     {
       "table": "state_classifications",

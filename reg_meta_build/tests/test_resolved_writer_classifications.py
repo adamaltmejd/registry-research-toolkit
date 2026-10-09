@@ -39,15 +39,18 @@ def test_bad_classification_references_or_membership_preserve_previous_catalog(
 
     Input: a state linked to a book that is not written (`missing`), a link whose
     conformance claims `conforming` while its checked code 999 is not in the book
-    (`conformance`), or a conformance that leaves the value set's code 999 unchecked
-    (`unchecked`). Expected: ValueError naming classification or conformance, and the
-    previous output bytes unchanged. No build reaches it: compile binds only compiled
-    books and `resolve_classification_conformance` checks every distinct code itself.
+    (`conformance`), or a conformance that leaves the value set's blank code ''
+    unchecked (`unchecked`). Expected: ValueError naming classification or conformance
+    (for `unchecked`, the every-distinct-code partition), and the previous output bytes
+    unchanged. No build reaches it: compile binds only compiled books and
+    `resolve_classification_conformance` checks every distinct code itself.
     Fails if `write_resolved_catalog` stops cross-checking links against the written
-    books and the state's value set before it replaces the output.
+    books and the state's value set before it replaces the output, or its partition
+    check skips a falsy (blank) code.
     """
     book = _classification()
     state = _variable().states[0]
+    message = "classification|conformance"
     if defect == "missing":
         update = {
             "classification_links": (
@@ -71,7 +74,7 @@ def test_bad_classification_references_or_membership_preserve_previous_catalog(
     else:
         update = {
             "value_set": ResolvedCodeSet(
-                members=(("001", "Source label"), ("999", "Source missing"))
+                members=(("", "Source missing"), ("001", "Source label"))
             ),
             "classification_links": (
                 ResolvedClassificationLink(
@@ -84,12 +87,13 @@ def test_bad_classification_references_or_membership_preserve_previous_catalog(
                 ),
             ),
         }
+        message = "conformance must check every distinct code in the value set"
     variable = _variable().model_copy(
         update={"states": (state.model_copy(update=update),)}
     )
     output = tmp_path / "existing.db"
     output.write_bytes(b"previous")
-    with pytest.raises(ValueError, match="classification|conformance"):
+    with pytest.raises(ValueError, match=message):
         write_resolved_catalog(
             (variable,), output, manifest=synthetic_manifest(), classifications=(book,)
         )
