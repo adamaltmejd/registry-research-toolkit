@@ -301,6 +301,14 @@ Compiled holdings admission, scoped browse/search and selection guards are pinne
 through source-built request/expected corpora in `conformance/cases/`. Public library
 return-model cases retain contracts that have no equivalent CLI or HTTP projection.
 
+Conformance cases exercise only public contracts: CLI JSON, HTTP responses, order
+manifests, or documented public library return-model contracts. A public function name
+alone does not establish a contract: cases assert observable domain results or located
+errors, never object internals, call graphs or query implementation, and no product
+adapter exists solely to expose a test seam. Requests and expected results stay readable
+as data; Python-specific operation names can be revised in a separate portability pass
+after a byte-identical relocation.
+
 ### Tiers
 
 1. **Package suite (budgeted, every change).** Contract tests over synthetic fixtures
