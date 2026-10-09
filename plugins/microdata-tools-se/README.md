@@ -1,23 +1,14 @@
 # microdata-tools-se
 
 Agent plugin for working with Swedish administrative register microdata (SCB,
-Socialstyrelsen, and other holders). Bundles one skill:
+Socialstyrelsen, and other holders). It declares one MCP server and bundles one skill:
 
-  | Skill                      | Purpose                                                                           |
-  | -------------------------- | --------------------------------------------------------------------------------- |
-  | `register-metadata-search` | Query register metadata (variables, value codes, schemas) via the `reg-meta` CLI. |
+  | Component                  | Purpose                                                                        |
+  | -------------------------- | ------------------------------------------------------------------------------ |
+  | `catalog` MCP server       | The hosted register metadata catalog at `https://catalog.swecov.se/mcp`.       |
+  | `register-metadata-search` | Skill: how to query variables, value codes and schemas with the catalog tools. |
 
-## Prerequisites
-
-The skill wraps the `reg-meta` CLI. Install it before enabling the plugin:
-
-```bash
-uv tool install reg-meta
-reg-meta update --yes   # pull the latest metadata DB
-```
-
-The CLI checks for updates on startup. Upgrade explicitly with `reg-meta update`
-(package + DB).
+Nothing to install beyond the plugin: the tools run on the hosted server.
 
 ## Install
 
@@ -28,7 +19,8 @@ The CLI checks for updates on startup. Upgrade explicitly with `reg-meta update`
 /plugin install microdata-tools-se@microdata-tools-se
 ```
 
-The skill is then available as `/microdata-tools-se:register-metadata-search`.
+The tools appear as `mcp__plugin_microdata-tools-se_catalog__<tool>`, and the skill as
+`/microdata-tools-se:register-metadata-search`.
 
 ### Codex
 
@@ -44,13 +36,13 @@ Then open the Codex plugin marketplace, find `microdata-tools-se` under
 ## Scope
 
 The toolkit targets Swedish register-based work generally — research, report writing,
-statistics production — not only MONA. `register-metadata-search` works with any
-register whose schema is in the `reg_meta` DB.
+statistics production — not only MONA. The catalog holds structural metadata (registers,
+variables, value codes, classifications, documentation), not microdata.
 
 ## Personal data
 
-MONA contains personal data. The skill never exports row-level data; only aggregate
-statistics.
+MONA contains personal data. The plugin never handles row-level data, and the catalog
+holds none. Queries are sent to the hosted server; see [PRIVACY.md](PRIVACY.md).
 
 ## Support
 

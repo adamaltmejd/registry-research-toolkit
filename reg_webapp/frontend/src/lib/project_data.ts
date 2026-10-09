@@ -11,8 +11,8 @@
  * reg_webapp/DESIGN.md → Pydantic boundary). These
  * helpers only construct + immutably edit the shape the SPA posts to
  * `/api/project/validate` / `/order`. The field names mirror
- * `reg_schema/src/reg_schema/project_data.py` (see reg_schema/DESIGN.md → Two
- * layers: models vs. validator).
+ * `reg_schema/src/reg_schema/project_data.py` (see crates/reg-core/DESIGN.md → Two
+ * layers: types and validator).
  *
  * OpenAPI codegen documents the closed canonical request model, but the SPA cannot
  * use that strict type for its in-memory draft because `/validate` must also accept
@@ -116,8 +116,8 @@ export function newProjectData(seed: ProjectSeed): ProjectData {
 /**
  * Format the deployment's bare reg_meta PACKAGE version
  * (`context.webapp.reg_meta_version`, e.g. `"1.0.0"`) into the canonical
- * project_data release-tag form (`"reg_meta/v1.0.0"`; see reg_meta/DESIGN.md →
- * Release tags and distribution). Empty in → empty out (the context hasn't
+ * project_data release-tag form (`"reg_meta/v1.0.0"`; see crates/DESIGN.md →
+ * Versioning and determinism). Empty in → empty out (the context hasn't
  * resolved yet; the seed is corrected on the next New).
  */
 export function regMetaReleaseTag(packageVersion: string): string {

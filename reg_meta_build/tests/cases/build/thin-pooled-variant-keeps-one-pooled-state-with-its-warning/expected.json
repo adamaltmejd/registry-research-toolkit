@@ -29,6 +29,13 @@
           "2021-06-30"
         ]
       ]
+    },
+    {
+      "table": "warnings",
+      "where": {"column": "HEADER"},
+      "fields": ["code"],
+      "rows": [["response_domain_assumption"]],
+      "note": "test_resolved_writer_data_warnings.py::test_assumption_warns_on_added_physical_column_not_anchor_identity[fields2-response_domain_assumption]: a warning over the coding field (beside name and definition) is a response-domain assumption."
     }
   ]
 }

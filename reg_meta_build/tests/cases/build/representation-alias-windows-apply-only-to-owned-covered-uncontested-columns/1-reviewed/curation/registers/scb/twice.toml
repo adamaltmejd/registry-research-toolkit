@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "twice"
+native_id = "38"
+[[variant]]
+native_id = "38.380"
+slug = "people"
+[[variable]]
+native_id = "38.5"
+slug = "value"
+
+[[representation.alias_window]]
+variable = "scb/twice/value"
+variant = "people"
+column = "OLD"
+source_editions = ["2019"]
+evidence = "The 2019 analysis table holds OLD."
+noted = "2026-10-09"
