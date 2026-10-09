@@ -176,7 +176,7 @@ def run(config: dict) -> int:
     baseline_tree = cache.ensure_baseline(pins)
     baseline_python = cache.baseline_python(baseline_tree)
     dirs = cache.ensure_artifacts(pins)
-    derived = cache.ensure_derived(pins, dirs)
+    derived = cache.ensure_derived(pins, dirs, cache.derive_source())
     server = cache.ensure_server()
     setup_seconds = time.monotonic() - started
     report_dir = cache.cache_root() / "report"
