@@ -40,6 +40,7 @@ from __future__ import annotations
 import json
 import shlex
 import time
+from concurrent.futures import ThreadPoolExecutor
 from typing import TYPE_CHECKING
 
 from conformance.differential.cache import REPO_ROOT
@@ -130,45 +131,61 @@ def served_cases(
         ),
         log_dir / "rust",
     )
-    cases = []
+    started = time.monotonic()
+
+    def run(catalog: str, base, cand) -> list[tuple[str, dict, dict]]:
+        cases = []
+        scopes = [None, "reference"] + (["holdings"] if catalog != "global" else [])
+        for family in FAMILIES:
+            family_started = time.monotonic()
+            args = (base, cand, catalog, scopes, originals[catalog])
+            if family in (validate, order):
+                # `__main__` writes the projects beside the servers' logs.
+                found = family.cases(*args, baseline_cli, log_dir.parent / "projects")
+            elif family in CLI_BASELINE:
+                found = family.cases(*args, baseline_cli)
+            else:
+                found = family.cases(*args)
+            cases += [
+                (f"{catalog}/{key}", _result(expected), _result(actual))
+                for key, expected, actual in found
+            ]
+            # Wall time per family and when it ended (G1 budget); a family that
+            # waits on `baseline_cli` includes the wait.
+            name = family.__name__.rpartition(".")[2]
+            now = time.monotonic()
+            print(
+                f"served {catalog} {name}: {len(found)} cases in "
+                f"{now - family_started:.1f} s (done at {now - started:.0f} s)",
+                flush=True,
+            )
+        return cases
+
     try:
-        for catalog in sorted(originals):
-            base = baseline.client(
-                {
-                    "REG_META_DB": str(originals[catalog]),
-                    "REG_WEBAPP_STEWARD": catalog,
-                    "REG_WEBAPP_STEWARDS_DIR": str(baseline_stewards),
-                }
+        # One server pair per catalog, started here: the pools are not thread-safe.
+        pairs = {
+            catalog: (
+                baseline.client(
+                    {
+                        "REG_META_DB": str(originals[catalog]),
+                        "REG_WEBAPP_STEWARD": catalog,
+                        "REG_WEBAPP_STEWARDS_DIR": str(baseline_stewards),
+                    }
+                ),
+                rust.client(
+                    {
+                        "REG_META_DB": str(derived[catalog]),
+                        "REG_WEBAPP_STEWARD": catalog,
+                    }
+                ),
             )
-            cand = rust.client(
-                {"REG_META_DB": str(derived[catalog]), "REG_WEBAPP_STEWARD": catalog}
-            )
-            scopes = [None, "reference"] + (["holdings"] if catalog != "global" else [])
-            for family in FAMILIES:
-                started = time.monotonic()
-                args = (base, cand, catalog, scopes, originals[catalog])
-                if family in (validate, order):
-                    # `__main__` writes the projects beside the servers' logs.
-                    found = family.cases(
-                        *args, baseline_cli, log_dir.parent / "projects"
-                    )
-                elif family in CLI_BASELINE:
-                    found = family.cases(*args, baseline_cli)
-                else:
-                    found = family.cases(*args)
-                cases += [
-                    (f"{catalog}/{key}", _result(expected), _result(actual))
-                    for key, expected, actual in found
-                ]
-                # Wall time per family (G1 budget); a family that waits on
-                # `baseline_cli` includes the wait.
-                name = family.__name__.rpartition(".")[2]
-                print(
-                    f"served {catalog} {name}: {len(found)} cases in "
-                    f"{time.monotonic() - started:.1f} s",
-                    flush=True,
-                )
+            for catalog in sorted(originals)
+        }
+        # The catalogs run side by side: walked one after the other, the served
+        # arm was G1's critical path.
+        with ThreadPoolExecutor(len(pairs)) as pool:
+            found = pool.map(lambda item: run(item[0], *item[1]), pairs.items())
+            return [case for cases in found for case in cases]
     finally:
         baseline.close()
         rust.close()
-    return cases
