@@ -3,8 +3,9 @@
     uv run python -m conformance.differential
 
 Fetches (once) the pinned artifacts and builds the release tag's baseline (its Python
-environment and ``reg-meta`` binary) into the shared cache, derives a candidate copy of each artifact with the checkout's builder (once per
-base and builder source, so on a committed tree), generates the seeded cases from the
+environment and ``reg-meta`` binary) into the shared cache, derives a candidate copy
+of each artifact with the checkout's builder (once per base and builder source, so on
+a committed tree), generates the seeded cases from the
 originals, runs each case through both readers' ``reg-meta`` CLI JSON in parallel
 worker processes (the baseline on the release originals, the checkout on the candidate
 copies), and compares exit code, stdout bytes and stderr per case. Then runs the
