@@ -1,0 +1,23 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/nodes/*/fqid": ["scb/example/pay"],
+      "/data/nodes/0/states/*/delivery_column_name": ["Payjan", "Payfeb", "Paymar", "Pay"],
+      "/data/nodes/0/states/*/representation_run_id": [0, 0, 0, 1],
+      "/data/nodes/0/states/*/valid_from": ["2010-01-01", "2010-02-01", "2010-03-01", "2011-01-01"],
+      "/data/nodes/0/states/*/valid_to": ["2010-01-31", "2010-02-28", "2010-03-31", "2011-12-31"],
+      "/data/nodes/0/states/*/variant_label": ["Annual", "Annual", "Annual", "Annual"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/nodes/0/states/*/delivery_column_name": ["Sex", "Sexnew"],
+      "/data/nodes/0/states/*/representation_run_id": [0, 1],
+      "/data/nodes/0/states/*/value_set_version_label": ["wave-1", ""],
+      "/data/nodes/0/states/*/classification_slugs": [["example-sex"], []],
+      "/data/nodes/0/states/*/variant_family": [null, null]
+    }
+  }
+]

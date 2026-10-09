@@ -1,0 +1,24 @@
+[
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_ref",
+      "/error/fields/ref": "scb/Example"
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields/ref": "scb/nothing"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "q"
+    }
+  },
+  {"status": 422, "json": {"/error/code": "invalid_cursor"}}
+]

@@ -8,14 +8,29 @@ cases' result form (``exit``, ``stdout``, ``stderr``).
 
 - ``context``: the catalog's identity and counts per scope.
 - ``search``: each ``type``'s pages per scope and term.
-- ``docs``: ``docs_get`` per document, ``docs_related`` per register with documents,
-  and each related document's download.
+- ``docs``: ``docs_get`` per document, ``docs_search`` per document's variable and
+  against the CLI baseline's ``docs search``, ``docs list`` and ``docs get``,
+  ``docs_related`` per register with documents, and each related document's download.
 - ``show``: every catalog node kind per named scope, retired refs, and owning
   variables against the CLI baseline.
+- ``states``: ``states`` and ``warnings`` for sampled variables and their registers.
+- ``values``: sampled variables' coded states and their books' partitions, and each
+  classification's codes against the CLI baseline's ``get classification --codes``.
+- ``graph``: ``graph`` per sampled variable, group and every classification,
+  ``lineage``'s warnings per sampled variable, and its provenance rows against the
+  CLI baseline's ``get lineage``.
+- ``schema``: ``schema`` and ``diff`` against the CLI baseline's ``get schema``,
+  ``get datacolumns`` and ``get diff``.
+- ``coverage``, ``coded`` and ``resolve``: ``coverage``, ``coded_variables`` and
+  ``resolve`` against the CLI baseline's ``get availability``, ``get
+  coded-variables`` and ``resolve``.
+- ``validate``: ``validate`` on each generated project against the CLI baseline's
+  ``validate``.
 
-``show``'s ``cases`` also takes ``baseline_cli``, a future of the CLI arm's baseline
-results by case id, set once the CLI arms finish, so it compares with a CLI baseline
-case instead of running it again.
+The families in ``CLI_BASELINE`` take ``baseline_cli`` besides, a future of the CLI
+arm's baseline results by case id, set once the CLI arms finish, so they compare with
+a CLI baseline case instead of running it again; ``validate`` also takes the directory
+of the generated projects.
 """
 
 from __future__ import annotations
@@ -26,14 +41,41 @@ import time
 from typing import TYPE_CHECKING
 
 from conformance.differential.cache import REPO_ROOT
-from conformance.differential.served import context, docs, search, show
+from conformance.differential.served import (
+    coded,
+    context,
+    coverage,
+    docs,
+    graph,
+    resolve,
+    schema,
+    search,
+    show,
+    states,
+    validate,
+    values,
+)
 from conformance.http_cases import ServerPool
 
 if TYPE_CHECKING:
     from concurrent.futures import Future
     from pathlib import Path
 
-FAMILIES = (context, search, docs, show)
+FAMILIES = (
+    context,
+    search,
+    docs,
+    show,
+    states,
+    values,
+    graph,
+    schema,
+    coverage,
+    coded,
+    resolve,
+    validate,
+)
+CLI_BASELINE = {docs, show, values, graph, schema, coverage, coded, resolve}
 # The production rate limit (30 writes per minute) does not bind GETs. Eight worker
 # processes, since one Python process serves one search at a time (G1 budget).
 BASELINE_APP = (
@@ -101,11 +143,15 @@ def served_cases(
             for family in FAMILIES:
                 started = time.monotonic()
                 args = (base, cand, catalog, scopes, originals[catalog])
-                found = (
-                    show.cases(*args, baseline_cli)
-                    if family is show
-                    else family.cases(*args)
-                )
+                if family is validate:
+                    # `__main__` writes the projects beside the servers' logs.
+                    found = validate.cases(
+                        *args, baseline_cli, log_dir.parent / "projects"
+                    )
+                elif family in CLI_BASELINE:
+                    found = family.cases(*args, baseline_cli)
+                else:
+                    found = family.cases(*args)
                 cases += [
                     (f"{catalog}/{key}", _result(expected), _result(actual))
                     for key, expected, actual in found

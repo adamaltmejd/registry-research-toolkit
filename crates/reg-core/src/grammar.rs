@@ -72,8 +72,9 @@ pub enum Fqid {
     },
 }
 
-/// `^[a-z](?:-?[a-z0-9])*$` and not `class`.
-fn is_slug(s: &str) -> bool {
+/// The slug grammar: `^[a-z](?:-?[a-z0-9])*$` and not `class`.
+#[must_use]
+pub fn is_slug(s: &str) -> bool {
     let b = s.as_bytes();
     s != CLASSIFICATION_PREFIX
         && b.first().is_some_and(u8::is_ascii_lowercase)
@@ -270,6 +271,114 @@ impl Period {
         };
         (from.bounds().0.0, to.bounds().1.0)
     }
+
+    /// The first and last day the period covers, as ISO dates (`2019-02` is
+    /// `2019-02-01` to `2019-02-28`).
+    #[must_use]
+    pub fn iso_bounds(self) -> (String, String) {
+        let (from, to) = match self {
+            Self::Token(t) => (t, t),
+            Self::Range { from, to } => (from, to),
+        };
+        (iso(from.bounds().0), iso(to.bounds().1))
+    }
+}
+
+fn iso((y, m, d): Date) -> String {
+    format!("{y:04}-{m:02}-{d:02}")
+}
+
+/// `YYYY-MM-DD` as a date, without checking the day against its month (stored
+/// bounds may carry a synthesized `YYYY-02-29`).
+fn iso_date(text: &str) -> Option<Date> {
+    let bytes = text.as_bytes();
+    if bytes.len() != 10 || bytes[4] != b'-' || bytes[7] != b'-' {
+        return None;
+    }
+    let year = digits(&text[..4], 4)?;
+    let month = u8::try_from(digits(&text[5..7], 2)?).ok()?;
+    let day = u8::try_from(digits(&text[8..], 2)?).ok()?;
+    Some((year, month, day))
+}
+
+/// The day after an inclusive ISO upper bound; a day past its month's end (a
+/// synthesized non-leap `YYYY-02-29`) counts as that month's end. The open-ended
+/// `9999-12-31` and an unreadable date are returned as is. Today's
+/// `reg_meta.inventory._next_day`.
+#[must_use]
+pub fn next_iso_day(s: &str) -> String {
+    match iso_date(s) {
+        Some((9999, 12, 31)) | None => s.to_owned(),
+        Some((y, 12, d)) if d >= 31 => iso((y + 1, 1, 1)),
+        Some((y, m, d)) if d >= last_day(y, m) => iso((y, m + 1, 1)),
+        Some((y, m, d)) => iso((y, m, d + 1)),
+    }
+}
+
+/// An ISO date past its month's end (a stored, synthesized non-leap `YYYY-02-29`) as
+/// that month's last day; any other string as is. Today's
+/// `reg_meta.fqid.snap_to_real_month_end`.
+#[must_use]
+pub fn snap_month_end(s: &str) -> String {
+    match iso_date(s) {
+        Some((y, m, d)) if (1..=12).contains(&m) && d > last_day(y, m) => {
+            iso((y, m, last_day(y, m)))
+        }
+        _ => s.to_owned(),
+    }
+}
+
+/// The coarsest period token whose bounds are exactly `lo..hi` (ISO dates), else the
+/// explicit `lo..hi`; today's `reg_meta.fqid.period_token_for_bounds`. A term wins
+/// over the half-year it equals. As there, only the school year and the day are
+/// held to the grammar's years; a synthesized non-leap `YYYY-02-29` end counts as
+/// February's end.
+///
+/// Today's reader ends every February on the 29th, so it renders a non-leap
+/// February window as `YYYY-02-01..YYYY-02-28`; this renders `YYYY-02`, the token
+/// the grammar expands to exactly those bounds (a Rust-only fix, stage 3b–3e
+/// decision 6).
+#[must_use]
+pub fn period_token_for_bounds(lo: &str, hi: &str) -> String {
+    let explicit = || format!("{lo}..{hi}");
+    let (Some(l), Some(h)) = (iso_date(lo), iso_date(hi)) else {
+        return explicit();
+    };
+    let h = (h.0, h.1, h.2.min(last_day(h.0, h.1.clamp(1, 12))));
+    let (y, in_grammar) = (l.0, (1900..=2099).contains(&l.0));
+    let mut candidates = Vec::new();
+    if in_grammar {
+        candidates.push(PeriodToken::SchoolYear(y));
+    }
+    if h.0 == y && (1..=12).contains(&l.1) {
+        candidates.extend([
+            PeriodToken::Year(y),
+            PeriodToken::Term {
+                term: Term::Vt,
+                year: y,
+            },
+            PeriodToken::Term {
+                term: Term::Ht,
+                year: y,
+            },
+            PeriodToken::Month {
+                year: y,
+                month: l.1,
+            },
+        ]);
+        candidates.extend((1..=4).map(|quarter| PeriodToken::Quarter { year: y, quarter }));
+    }
+    if l == h && in_grammar {
+        candidates.push(PeriodToken::Day {
+            year: y,
+            month: l.1,
+            day: l.2,
+        });
+    }
+    candidates
+        .into_iter()
+        .find(|t| t.bounds() == (l, h))
+        .map_or_else(explicit, |t| t.to_string())
 }
 
 impl FromStr for Period {

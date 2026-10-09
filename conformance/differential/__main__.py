@@ -112,11 +112,19 @@ def compare(case_id: str, base: dict | None, cand: dict | None) -> dict | None:
 def _excepted(diff: dict, exceptions: list[dict]) -> str | None:
     """Name of the exception covering every differing path of ``diff``, if any."""
     for exc in exceptions:
-        if not fnmatch.fnmatchcase(diff["id"], exc["case"]):
+        globs = exc["case"] if isinstance(exc["case"], list) else [exc["case"]]
+        if not any(fnmatch.fnmatchcase(diff["id"], glob) for glob in globs):
             continue
         prefixes = exc.get("paths", [""])
         if diff["fields"] == ["stdout"] and all(
-            any(not pre or p == pre or p.startswith(pre + "/") for pre in prefixes)
+            any(
+                not pre
+                # A glob without wildcards matches only itself, so this also
+                # covers an exact pointer.
+                or fnmatch.fnmatchcase(p, pre)
+                or p.startswith(pre + "/")
+                for pre in prefixes
+            )
             for p in diff["paths"]
         ):
             return exc["name"]

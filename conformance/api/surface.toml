@@ -167,48 +167,6 @@ note = "A register's variant list for the variant browser, a show facet."
 
 [[row]]
 kind = "route"
-id = "GET /api/docs/doc/{identifier}"
-disposition = "replaced"
-operation = "docs_get"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-note = "Docs judgment, all five docs routes: they read their own DB but render on register and variable pages, and docs search reuses the 3a FTS builder, so they land with show after 3a."
-
-[[row]]
-kind = "route"
-id = "GET /api/docs/file/{register}/{filename}"
-disposition = "replaced"
-operation = "docs_related"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-note = "Raw-bytes download (section 7): media type and bytes kept; its metadata comes from the related-documents operation."
-
-[[row]]
-kind = "route"
-id = "GET /api/docs/for-variable"
-disposition = "replaced"
-operation = "docs_search"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "route"
-id = "GET /api/docs/related/{register}"
-disposition = "replaced"
-operation = "docs_related"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "route"
-id = "GET /api/docs/search"
-disposition = "replaced"
-operation = "docs_search"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "route"
 id = "POST /api/project/order"
 disposition = "replaced"
 operation = "order"
@@ -249,7 +207,7 @@ id = "docs get"
 disposition = "replaced"
 operation = "docs_get"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_commands.py"]
+covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/api/docs-get"]
 
 [[row]]
 kind = "command"
@@ -257,8 +215,8 @@ id = "docs list"
 disposition = "replaced"
 operation = "docs_search"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/selection/docs-default-mismatch"]
-note = "The SPA has no docs listing route; the docs operations need one for agents."
+covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/selection/docs-default-mismatch", "conformance/cases/api/docs-search"]
+note = "docs_search without `q` lists the docs by filename."
 
 [[row]]
 kind = "command"
@@ -266,8 +224,8 @@ id = "docs search"
 disposition = "replaced"
 operation = "docs_search"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_commands.py"]
-note = "Docs go with show; see the docs route rows."
+covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/api/docs-search", "conformance/cases/api/docs-search-errors"]
+note = "Ported in 3b.6, with the docs cutover."
 
 [[row]]
 kind = "command"
@@ -283,7 +241,7 @@ id = "get availability"
 disposition = "replaced"
 operation = "coverage"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/availability-reference", "conformance/cases/cli_scope/availability-holdings"]
+covered_by = ["conformance/cases/api/coverage-register", "conformance/cases/api/coverage-variable", "conformance/cases/api/coverage-alias-windows"]
 note = "The coverage operation."
 
 [[row]]
@@ -301,7 +259,7 @@ id = "get coded-variables"
 disposition = "replaced"
 operation = "coded_variables"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/coded-variables-explicit-reference"]
+covered_by = ["conformance/cases/api/coded-variables-order", "conformance/cases/api/coded-variables-scope", "conformance/cases/api/coded-variables-per-column"]
 
 [[row]]
 kind = "command"
@@ -309,7 +267,7 @@ id = "get datacolumns"
 disposition = "replaced"
 operation = "schema"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/datacolumns-explicit-reference", "conformance/cases/cli_scope/datacolumns-unheld-explicit-reference"]
+covered_by = ["conformance/cases/api/schema-variable"]
 note = "Judgment: column aliases are delivered-schema facts, so they go with schema; a show facet in 3b would also fit."
 
 [[row]]
@@ -318,7 +276,7 @@ id = "get diff"
 disposition = "replaced"
 operation = "diff"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/diff-explicit-reference"]
+covered_by = ["conformance/cases/api/diff-register", "conformance/cases/api/diff-respelling", "conformance/cases/api/diff-alias-windows"]
 
 [[row]]
 kind = "command"
@@ -351,7 +309,7 @@ id = "get schema"
 disposition = "replaced"
 operation = "schema"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/schema-reference", "conformance/cases/cli_scope/schema-holdings", "reg_meta/tests/test_cli_get_schema.py"]
+covered_by = ["conformance/cases/api/schema-register", "conformance/cases/api/schema-alias-windows", "reg_meta/tests/test_cli_get_schema.py"]
 
 [[row]]
 kind = "command"
@@ -392,7 +350,7 @@ id = "resolve"
 disposition = "replaced"
 operation = "resolve"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/resolve-explicit-reference", "reg_meta/tests/test_cli_resolve.py"]
+covered_by = ["conformance/cases/api/resolve-columns", "conformance/cases/api/resolve-errors", "reg_meta/tests/test_cli_resolve.py"]
 note = "Judgment: exact column-name to variable lookup over delivered aliases, beside datacolumns and schema. Not ref resolution, which is 3a's `ambiguous_ref`."
 
 [[row]]
@@ -616,7 +574,7 @@ id = "reg_meta.catalog.RegisterCoverage"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/test_coverage.py", "reg_webapp/backend/tests/test_coverage_payload.py"]
+covered_by = ["conformance/cases/api/show-held-disjoint-periods", "reg_webapp/backend/tests/test_coverage_payload.py"]
 
 [[row]]
 kind = "import"
@@ -664,7 +622,7 @@ id = "reg_meta.catalog.VariableCoverage"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/test_coverage.py", "reg_webapp/backend/tests/test_coverage_payload.py"]
+covered_by = ["conformance/cases/api/show-held-disjoint-periods", "reg_webapp/backend/tests/test_coverage_payload.py"]
 
 [[row]]
 kind = "import"
@@ -890,7 +848,7 @@ id = "reg_meta.doc_db"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
+covered_by = ["reg_meta/tests/test_doc_commands.py"]
 
 [[row]]
 kind = "import"
@@ -912,14 +870,6 @@ note = "The docs DB schema has one home, reg_meta_build."
 
 [[row]]
 kind = "import"
-id = "reg_meta.doc_db.RelatedDocument"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py", "reg_meta_build/tests/test_doc_db_related_documents_boundary.py"]
-
-[[row]]
-kind = "import"
 id = "reg_meta.doc_db.doc_db_path"
 used_by = ["reg_meta_build"]
 disposition = "retained"
@@ -933,46 +883,6 @@ used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["reg_meta_build/tests/cases/cli/doc-coverage"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.doc_get"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.doc_registers"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.doc_search"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.related_document_content"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.doc_queries.related_documents_for_register"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_docs.py"]
 
 [[row]]
 kind = "import"
@@ -1450,7 +1360,7 @@ id = "reg_meta.queries.get_coded_variables"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/cases/cli_scope/coded-variables-explicit-reference"]
+covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/cases/api/coded-variables-scope"]
 note = "Derive's `coded_variable_stats` calls the reader's aggregate in place (section 4 bootstrap, package 3c.1); stage 4 moves it into reg_meta_build."
 
 [[row]]

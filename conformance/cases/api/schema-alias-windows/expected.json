@@ -1,0 +1,21 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/column": ["Typed", "Value", "Typed", "Different"],
+      "/data/items/*/valid_from": ["2018-01-01", "2018-01-01", "2019-01-01", "2019-01-01"],
+      "/data/items/*/valid_to": ["2018-12-31", "2018-12-31", "2019-12-31", "2019-12-31"],
+      "/data/items/*/data_type": ["integer", "integer", "varchar", "integer"],
+      "/data/items/*/data_length": ["8", "8", "20", "8"],
+      "/data/items/*/definition": [null, null, "Typed as text from 2019", null]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/column": ["Value", "Different"]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/column": ["Typed", "Different"]}
+  }
+]

@@ -30,6 +30,7 @@ import json
 import random
 import sqlite3
 import tomllib
+from contextlib import closing
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -122,7 +123,7 @@ def seeded_sample(seed: int, catalog: str, purpose: str, rows: list, k: int) -> 
     return _sample(_rng(seed, catalog, purpose), rows, k)
 
 
-def _connect(db_dir: Path, name: str = "reg_meta.db") -> sqlite3.Connection:
+def connect(db_dir: Path, name: str = "reg_meta.db") -> sqlite3.Connection:
     return sqlite3.connect(f"file:{db_dir / name}?mode=ro&immutable=1", uri=True)
 
 
@@ -165,7 +166,7 @@ def _variables(conn: sqlite3.Connection, where: str) -> list[tuple]:
     ).fetchall()
 
 
-_HELD = (
+HELD = (
     "v.variable_id IN (SELECT hm.variable_id FROM holding_mapping hm "
     "JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) "
     "WHERE ht.scope != 'unknown')"
@@ -194,13 +195,13 @@ def _variable_strata(
     if steward:
         held_registers = (
             "v.register_id IN (SELECT v2.register_id FROM variable v2 WHERE "
-            + _HELD.replace("v.variable_id", "v2.variable_id")
+            + HELD.replace("v.variable_id", "v2.variable_id")
             + ")"
         )
         for name, where in (
-            ("held", _HELD),
-            ("unheld", "NOT " + _HELD),
-            ("unheld-in-held-register", f"NOT {_HELD} AND {held_registers}"),
+            ("held", HELD),
+            ("unheld", "NOT " + HELD),
+            ("unheld-in-held-register", f"NOT {HELD} AND {held_registers}"),
         ):
             strata[name] = _sample(
                 _rng(seed, catalog, name),
@@ -214,7 +215,7 @@ def _held_register_ids(conn: sqlite3.Connection) -> set[int]:
     return {
         r[0]
         for r in conn.execute(
-            "SELECT DISTINCT v.register_id FROM variable v WHERE " + _HELD
+            "SELECT DISTINCT v.register_id FROM variable v WHERE " + HELD
         )
     }
 
@@ -481,7 +482,7 @@ def _project_cases(
 
 
 def _docs_cases(b: _Builder, db_dir: Path) -> None:
-    conn = _connect(db_dir, "reg_meta_docs.db")
+    conn = connect(db_dir, "reg_meta_docs.db")
     try:
         docs = conn.execute(
             "SELECT filename, variable FROM doc ORDER BY doc_id"
@@ -500,6 +501,18 @@ def _docs_cases(b: _Builder, db_dir: Path) -> None:
         b.add(f"docs-search/{i}", ["docs", "search", term])
 
 
+def register_and_variable_cases(catalog: str, db_dir: Path, seed: int) -> list[Case]:
+    """One catalog's register and variable cases, in `generate`'s order. The served
+    `schema` family reads their argv to send the same requests."""
+    steward = catalog != "global"
+    scopes = ["reference", "holdings"] if steward else ["reference"]
+    b = _Builder(catalog, db_dir)
+    with closing(connect(db_dir)) as conn:
+        _register_cases(b, conn, scopes, seed)
+        _variable_cases(b, _variable_strata(conn, catalog, steward, seed), scopes)
+    return b.cases
+
+
 def generate(dirs: dict[str, Path], config: dict, project_dir: Path) -> list[Case]:
     """Every G1 case for the pinned catalogs, in a stable order."""
     seed = config["seed"]
@@ -508,11 +521,10 @@ def generate(dirs: dict[str, Path], config: dict, project_dir: Path) -> list[Cas
     for catalog, db_dir in sorted(dirs.items()):
         steward = catalog != "global"
         scopes = ["reference", "holdings"] if steward else ["reference"]
+        cases.extend(register_and_variable_cases(catalog, db_dir, seed))
         b = _Builder(catalog, db_dir)
-        conn = _connect(db_dir)
+        conn = connect(db_dir)
         try:
-            _register_cases(b, conn, scopes, seed)
-            _variable_cases(b, _variable_strata(conn, catalog, steward, seed), scopes)
             _classification_cases(b, conn, scopes, seed)
             _search_cases(b, conn, scopes, seed)
             _project_cases(b, conn, catalog, tag, seed, project_dir)

@@ -16,7 +16,7 @@ routes, mapped onto ``shape.Show``:
   the comparison is the first 100 distinct names.
 
 Fields ``shape.Show`` moves to facets (states, lineage, chains, codes, warnings) are
-not compared; a classification's family carries ``editions`` from 3d.2.
+not compared.
 """
 
 from __future__ import annotations
@@ -76,7 +76,12 @@ def _family(family: dict | None) -> dict | None:
     if family is None:
         return None
     key = family["key"]
-    return {"fqid": f"group/class/{key}", "key": key, "label": family["label"]}
+    return {
+        "fqid": f"group/class/{key}",
+        "key": key,
+        "label": family["label"],
+        "editions": family["editions"],
+    }
 
 
 def _derivation(ref: dict) -> dict:

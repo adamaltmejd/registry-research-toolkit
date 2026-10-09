@@ -1,0 +1,12 @@
+{
+  "note": "Twin of http_catalog/whole-variable-group-graph. Holdings draws only held states and leaves the unheld chain edition bare; reference draws every state. Fails if graph reads states outside the scope or hydrates an unheld edition.",
+  "fixture": "whole-variable-group",
+  "requests": [
+    {"operation": "graph", "path": "/api/graph/group/scb/example/value-family"},
+    {
+      "operation": "graph",
+      "path": "/api/graph/group/scb/example/value-family",
+      "query": {"scope": "reference"}
+    }
+  ]
+}

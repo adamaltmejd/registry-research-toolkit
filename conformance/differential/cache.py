@@ -5,9 +5,9 @@ Layout under the cache root (``$REG_META_G1_CACHE``, else
 ``$XDG_CACHE_HOME/reg-meta-g1``, else ``~/.cache/reg-meta-g1``)::
 
     artifacts/<tag>/global/reg_meta.db       + reg_meta_docs.db
-    artifacts/<tag>/global/derived/          reg_meta.db + reg_meta_docs.db -> ..
+    artifacts/<tag>/global/derived/          reg_meta.db + reg_meta_docs.db (indexed copy)
     artifacts/<tag>/swecov/reg_meta.db       + reg_meta_docs.db -> ../global/...
-    artifacts/<tag>/swecov/derived/
+    artifacts/<tag>/swecov/derived/          reg_meta.db + reg_meta_docs.db -> ../../global/derived/...
     baseline/<commit>/src/                   detached worktree of the commit + .venv
 
 Each asset is streamed once: hashed against its pinned SHA-256 while it is
@@ -302,11 +302,48 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
     if procs:
         seconds = time.monotonic() - started
         sys.stderr.write(f"g1: derived the candidate copies in {seconds:.1f} s\n")
-    for directory in dirs.values():
-        docs = directory / "derived" / DOC_DB_FILENAME
-        if not docs.is_symlink():
-            docs.symlink_to(Path("..") / DOC_DB_FILENAME)
+    _ensure_indexed_docs(pins, dirs, source)
     return {catalog: directory / "derived" for catalog, directory in dirs.items()}
+
+
+def _ensure_indexed_docs(pins: Pins, dirs: dict[str, Path], source: str) -> None:
+    """Give every ``derived/`` directory the candidate docs copy: the checkout's docs
+    build index step (``index_docs``) run over a copy of the pinned docs database,
+    kept in the first catalog's ``derived/`` and linked from the others'. Stamped
+    like a derived catalog; the step takes well under a second, so it needs no
+    derive path of its own.
+    """
+    first, *rest = sorted(dirs)
+    out = dirs[first] / "derived" / DOC_DB_FILENAME
+    key = Asset(
+        "index-docs",
+        hashlib.sha256(f"{pins.docs.sha256}\n{source}".encode()).hexdigest(),
+    )
+    if not _stamp_ok(out, key):
+        sys.stderr.write("g1: indexing the candidate docs copy\n")
+        out.unlink(missing_ok=True)
+        tmp = out.with_name(out.name + ".tmp")
+        shutil.copyfile(dirs[first] / DOC_DB_FILENAME, tmp)
+        subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "import sqlite3, sys; from reg_meta_build.doc_db import index_docs; "
+                "conn = sqlite3.connect(sys.argv[1]); index_docs(conn); conn.close()",
+                str(tmp),
+            ],
+            # As derive: never index with a perturbed tree under the committed key.
+            env=isolated_env(),
+            check=True,
+        )
+        tmp.replace(out)
+        _write_stamp(out, key, output_sha256=_file_sha256(out))
+    target = Path("..") / ".." / first / "derived" / DOC_DB_FILENAME
+    for catalog in rest:
+        link = dirs[catalog] / "derived" / DOC_DB_FILENAME
+        if not link.is_symlink() or link.readlink() != target:
+            link.unlink(missing_ok=True)
+            link.symlink_to(target)
 
 
 def ensure_server() -> Path:

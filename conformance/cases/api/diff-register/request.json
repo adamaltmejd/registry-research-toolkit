@@ -1,0 +1,22 @@
+{
+  "note": "A register's diff between two periods, against the CLI's `get diff` on the same fixture: variables delivered only at `to` are added, a renamed column is changed, and a variable delivered under two columns in one period (Ojamn, OjamnDetalj in 2019) compares by its first, so it is unchanged. Without columns in both periods the register is not found. Fails if added, removed or changed rows are miscounted, a change names the wrong field or spelling, the first column stops winning, or `to` stops being required.",
+  "fixture": "semantic",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2015", "to": "2019"}
+    },
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "1990", "to": "1991"}
+    },
+    {
+      "operation": "diff",
+      "path": "/api/diff/scb/example",
+      "query": {"from": "2015"}
+    }
+  ]
+}

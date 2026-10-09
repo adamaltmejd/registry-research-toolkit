@@ -1,0 +1,17 @@
+{
+  "note": "Twin of logical/narrowed-state-token and narrowed-state-warnings: fails if a held state stops being clipped to its held period (with the token recomputed) or keeps a warning that applies only outside it.",
+  "fixture": "reader/narrowed-pooled",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/value"
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/value",
+      "query": {
+        "scope": "reference"
+      }
+    }
+  ]
+}

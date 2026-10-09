@@ -487,80 +487,61 @@ continuation errors local to the section. Classification codes render in per-cod
 subsections, register-local value sets in their own section; a code's owning variables
 and classifications are its navigable targets.
 
-## Docs library endpoints (`routes/docs.py`)
+## Docs library (the Rust server's `docs` operations)
 
-`GET /api/docs/*` (#354/#742) exposes the prebuilt `reg_meta_docs.db` surfaces — already
-baked into the deployed container (the Dockerfile asserts it) but previously unopened by
-the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get` /
-`doc_registers` / `related_documents_for_register` / `related_document_content`); no new
-query logic beyond plumbing + the response policy.
+`/api/docs/*` (#354/#742) is served by the Rust server since package 3b.6 (the vite dev
+proxy sends `/api/docs` there); FastAPI has no docs routes. The operations
+(`conformance/api/operations.toml`) read the prebuilt `reg_meta_docs.db` beside the
+catalog, each answering `{data, meta}`:
 
-- **Endpoints**: `GET /api/docs/search?q=&register=&limit=&offset=` (register-scoped
-  optional), `GET /api/docs/doc/{identifier}` (by variable name or filename),
-  `GET /api/docs/for-variable?q=&register=` (the "mentioned in documentation"
-  variable-leaf hook), `GET /api/docs/related/{register}` (metadata for rehosted
-  register-version PDFs), and `GET /api/docs/file/{register}/{filename}` (the PDF bytes
-  for an exact register-local filename).
-- **Policy — FTS excerpts, never full converted text**: the detail endpoint returns
-  metadata + a `source` pointer + a BOUNDED `excerpt` (first `_EXCERPT_CHARS` of the
-  cleaned body), and search returns the FTS `snippet`. The full converted body is NEVER
-  served (marker+Gemini conversion quality + republication exposure). `source` is the
-  SCB source-document identifier; `source_url` is the resolved SCB PDF link (populated
-  at doc-DB build from the curated `doc_sources.toml` map, #372), None when the source
-  is uncurated; `source_title` is the human-readable publication title (also None when
-  uncurated). Coverage is LISA-only today. The related-document PDF route is the
-  separate #739/#742 licensed rehost surface: it serves curated PDF bytes verbatim with
-  `Content-Type: application/pdf`, an inline filename disposition, and JSON metadata
-  carrying `source_url`, `license`, `fetched`, `sha256`, and `byte_size`.
-- **Coverage distinction encoded in the response**: coverage is LISA-only today.
-  `ingested` is False when the docs index is absent entirely; the variable hook's
-  `register_ingested` is False when *that register* has no ingested docs. The flag
-  distinction is real and preserved in the response — a caller can tell "no docs DB"
-  from "this register has no docs" — but the SPA omits the panel entirely in all empty
-  cases rather than rendering per-state copy (see `DocMentionsPanel` below). The
-  variable hook's results are flagged `fuzzy` (a name/provider_key text match, not an
-  authoritative variable→doc link).
-- **Optional DB / graceful degradation**: the docs DB is OPTIONAL. The boot seam
-  (`app._resolve_docs_db_path`) resolves + validates it once; on absence OR
-  schema-incompat it sets `app.state.docs_db_path = None` (never crashes — a broken docs
-  index must not take down the catalog API). Endpoints then return `ingested=False`
-  (search / for-variable / related metadata) or 404 "not ingested" (doc get / PDF file).
-  When present, the per-request open is `conn.docs_conn` (same threadpool-safe model as
-  `catalog_conn`, `check_schema=False`).
-- **Not folded into `/api/search` or global SearchView**: the docs index is a *separate
-  optional DB* and its `ingested` degradation doesn't map onto a ranked list, so folding
-  it into the omnibox search would couple `/api/search` to a second DB open on every
-  search request. `SearchView.svelte` does not call `/api/docs/search` or render a docs
-  section; the docs search endpoint remains available for doc-specific callers, while
-  the SPA entrypoint is through item pages. The `/api/docs/for-variable` leaf hook has
-  its own SPA consumer (#402): `BindingLeafView.svelte` renders a `DocMentionsPanel`
-  sibling of the lineage panels, firing a SEPARATE independent `asyncResource` at
-  `/api/docs/for-variable` — a distinct failure domain (a docs error, timeout, or absent
-  index never blanks the leaf). The panel omits the entire section when the response is
-  empty in any sense (`ingested:false`, `register_ingested:false`, or zero results),
-  mirroring the omit-when-empty behaviour of the picker graph mode and `LineageDetails`
-  (#612); loading and error states still render inline, so an in-flight or errored fetch
-  never reads as a confirmed absence. When results are present, fuzzy hits are labelled
-  as such; each hit links to the `/doc/<filename>` viewer and renders the FTS snippet
-  via a safe inline-emphasis subset (`**…**` → `<mark>` for matched-term highlight,
-  `*…*`/`_…_` → `<em>`) through auto-escaped Svelte interpolation — never `{@html}`,
-  still excerpt-only.
-- **Source documents on register pages (#742/#967)**: `CatalogNodeView.svelte` renders
-  `RelatedDocumentsPanel` on register pages only, using the bare register slug. These
-  are rehosted register/register-version source PDFs with provenance, not variable-level
-  evidence, so `BindingLeafView.svelte` must not inherit them onto every variable page.
-  It renders after the register's `VariantsSummary` so source PDFs stay at the end of
-  the register page. The panel is another independent docs failure domain: loading/error
-  render inline; absent docs DB, no curated rows, or an empty register result omits the
-  whole section. Each row links the title to `/api/docs/file/{register}/{filename}` and
-  shows `Källa: SCB · {license}` plus a source URL link.
+- `docs_search` (`GET /api/docs/search?q=&register=&limit=&cursor=`): with `q`, the
+  entries matching every word, best first, with an FTS `snippet`; without `q`, every
+  entry by filename. `register` is a register ref (FQID or bare name); the page carries
+  `total` and `register_ingested` (whether that register has docs). It absorbs the old
+  `/api/docs/for-variable` hook (`q` = the variable's name). The index holds
+  `fold_search` text (decision 16, folded by the docs build), and snippets come from the
+  stored body, so they keep case and diacritics.
+- `docs_get` (`GET /api/docs/doc/{identifier}`): metadata, source pointer, a BOUNDED
+  `excerpt` and the full markdown `body` for agents. The SPA renders only the excerpt
+  (marker+Gemini conversion quality + republication exposure).
+- `docs_related` (`GET /api/docs/related/{register ref}`) and its download
+  (`GET /api/docs/file/{register ref}/{filename}`): the curated #739/#742 rehost
+  surface, PDF bytes served verbatim with `Content-Type: application/pdf`, an inline
+  filename disposition, and JSON metadata carrying `source_url`, `license`, `fetched`,
+  `sha256` and `byte_size`.
+
+`source` is the SCB source-document identifier; `source_url` is the resolved SCB PDF
+link (populated at doc-DB build from the curated `doc_sources.toml` map, #372), null
+when the source is uncurated; `source_title` is the publication title. Coverage is
+LISA-only today.
+
+- **Optional DB**: a deployment without a docs database answers `docs_unavailable` (404)
+  on every docs operation; an incompatible one refuses server startup. The SPA's
+  `getDocsForVariable` and `getRelatedDocuments` map `docs_unavailable` to `null`, so
+  both panels treat it like "no docs" and omit their section.
+- **Not in global search**: `SearchView.svelte` does not call `/api/docs/search`; the
+  SPA reaches docs through item pages.
 - **Parsed documentation on variable pages (#402/#967)**: `BindingLeafView.svelte`
-  renders `DocMentionsPanel` in the `SubjectView` docs slot. These are fuzzy
-  variable-aware parsed-doc matches from `/api/docs/for-variable`, not authoritative
-  source-document links. Each row links to the parsed `/doc/{filename}` view and exposes
-  the full source PDF link when the docs index provides `source_url`.
-- **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
-  edge cache key, in the body → ETag) — no per-route caching code.
+  renders `DocMentionsPanel` in the `SubjectView` docs slot, firing a SEPARATE
+  `asyncResource` at `docs_search` with the variable's name and its register FQID — a
+  distinct failure domain (a docs error, timeout, or absent index never blanks the
+  leaf). The panel omits the entire section when there is nothing to show (no docs
+  database, `register_ingested:false`, or zero items); loading and error states render
+  inline, so an in-flight or errored fetch never reads as a confirmed absence. The hits
+  are fuzzy name matches, not authoritative variable→doc links, and the section caption
+  says so. Each hit links to the `/doc/<filename>` viewer and renders the snippet via a
+  safe inline-emphasis subset (`**…**` → `<mark>` for the matched term, `*…*`/`_…_` →
+  `<em>`) through auto-escaped Svelte interpolation — never `{@html}`.
+- **Source documents on register pages (#742/#967)**: `CatalogNodeView.svelte` renders
+  `RelatedDocumentsPanel` on register pages only, with the register FQID. These are
+  rehosted register-version source PDFs with provenance, not variable-level evidence, so
+  `BindingLeafView.svelte` must not inherit them. It renders after the register's
+  `VariantsSummary`. The panel is another independent docs failure domain: loading and
+  error render inline; no docs database or no curated rows omits the section. Each row
+  links the title to `/api/docs/file/{register FQID}/{filename}` and shows
+  `Källa: SCB · {license}` plus a source URL link.
+- **Caching**: the Rust server's cache tier for the docs operations is a day
+  (`public, max-age=86400, must-revalidate`): doc-library content is rebuild-stable.
 
 ## Coverage aggregates (#351)
 
@@ -836,17 +817,15 @@ rest of `/api` here.
 
 ## ETag / Cache-Control (`etag.py` + `middleware.py`)
 
-Every read endpoint (the `/api/catalog` root + catch-all, the 7 binding-suffix
-sub-endpoints and docs) carries an ETag derived from the full catalog generation,
-effective read scope, package version, steward identity, and response body and a
-per-route `Cache-Control` (`cache_control_for`) in two tiers: scope-sensitive reads
-(`/api/catalog/*`) keep `public, max-age=60, must-revalidate`; rebuild-stable
-doc-library reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A
-matching `If-None-Match` yields a **304** with no body, but the current body-derived
-middleware still executes the route and serializes the response first: it saves
-transfer, not origin computation or latency. The pure logic lives in `etag.py`
-(`compute_etag` + `etag_matches` + `cache_control_for`); an ASGI middleware
-(`ETagMiddleware`) wires it DRY onto every GET read response.
+Every FastAPI read endpoint (the `/api/catalog` root + catch-all and the binding-suffix
+sub-endpoints) carries an ETag derived from the full catalog generation, effective read
+scope, package version, steward identity, and response body and
+`Cache-Control: public, max-age=60, must-revalidate` (`CACHE_CONTROL_SHORT`). A matching
+`If-None-Match` yields a **304** with no body, but the current body-derived middleware
+still executes the route and serializes the response first: it saves transfer, not
+origin computation or latency. The pure logic lives in `etag.py` (`compute_etag` +
+`etag_matches`); an ASGI middleware (`ETagMiddleware`) wires it DRY onto every GET read
+response.
 
 **V1 early-revalidation correction (decision 2026-07-14; not implemented at this
 head).** App code, compiled catalog DB, steward branding configuration and paired docs
@@ -884,11 +863,11 @@ path meets it, so no second in-process response cache is warranted.
   the old grouping to a returning user even though the edge generation changed. The
   body-hash ETag avoids retransmitting unchanged bodies, and `public` keeps the CF edge
   cacheable (the #220 probe survives); early validation is what removes repeated route
-  work. Only `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable
-  and a sub-day-stale list is acceptable there; the ETag still guarantees correctness on
-  revalidation. The edge worker (`reg_webapp/edge/`) defers to this origin's
-  `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
-  orthogonal to caching policy), so the per-route policy needs no edge change.
+  work. The Rust server's docs operations keep `max-age=86400` (doc-library content is
+  rebuild-stable; section "Docs library"). The edge worker (`reg_webapp/edge/`) defers
+  to this origin's `Cache-Control` contract (it only stamps the `__edge_v`
+  cache-generation param, orthogonal to caching policy), so the per-route policy needs
+  no edge change.
 - **Middleware skips WRITE endpoints** via a method gate: only `GET` reads are stamped,
   so the POST endpoints pass through with no ETag. It also skips non-200 responses — an
   error body isn't a cacheable representation, and handing the client a validator for a
@@ -2287,9 +2266,8 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | GET    | `/api/context`                                   | The Rust server's `context`: branding, build info, period span, catalog sizes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
   | GET    | `/api/catalog`                                   | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
   | GET    | `/api/search`                                    | The Rust server's `search`: one ranked list per call (`?type=` keeps one arm), `{items, next_cursor}`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-  | GET    | `/api/docs/search`                               | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-  | GET    | `/api/docs/doc/{identifier}`                     | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-  | GET    | `/api/docs/for-variable`                         | Parsed-document hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+  | GET    | `/api/docs/search`                               | The Rust server's `docs_search`: docs matching `q` (or every doc), optional `?register=`, `{items, next_cursor, total, register_ingested}`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+  | GET    | `/api/docs/doc/{identifier}`                     | The Rust server's `docs_get`: one doc by variable/filename — metadata, source pointer, excerpt, body.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
   | GET    | `/api/catalog/{fqid}`                            | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record (every state's identity, window and coding REFERENCE + a cardinality-independent `value_set_summary` — members come from `/api/value-sets/{id}/codes`, Y-46) + its full variable `succession_chain` (#582). At the current head a classification leaf embeds its succession chain, complete value-set `codes`, curated `dimensions`, and optional derived `family` (#1116); the v1 `CodeList` payload correction removes the complete codes in favor of bounded metadata/buckets plus the dedicated code-page/export paths. Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). A dead/renamed binding, register, or classification slug with a successor 301-redirects to its terminal successor (kind-dispatched — #355 PART 2, #412, #571); `?period` branch and sub-endpoints also redirect (#411). |
   | GET    | `/api/value-sets/{value_set_id}/codes`           | One coding's `(code, label)` members, one bounded page at a time (`?offset`/`?limit`, default 200/max 1000, clamped). `?q=` filters the COMPLETE set before the window (browser-identical case/diacritic folding); `total` is the filtered total. `?state=` reads that state's stored classification-mismatch list instead, 404ing unless the state carries the value set. (Y-46)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
   | GET    | `/api/catalog/{provider}/{register}/variants`    | The register's variant browser.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
@@ -2305,7 +2283,8 @@ POSTs are not. Catalog browse paths use FQID segments directly.
   | POST   | `/api/project/order`                             | The materialized JSON order manifest, downloaded as `order.json`; 422 (`OrderBlockedModel`: `detail` + typed `findings`) when the result is not an order.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 Global FTS search shipped as `GET /api/search` (#350) and moved to the Rust server in
-3a.11; the docs library shipped as `/api/docs/*` (#354).
+3a.11; the docs library shipped as `/api/docs/*` (#354) and moved to the Rust server in
+3b.6 (with `/api/docs/related/{ref}` and its file download).
 
 ## §16 input-validation gates (security boundary)
 

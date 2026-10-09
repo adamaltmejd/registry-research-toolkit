@@ -18,9 +18,7 @@ from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING, Any
 
 import reg_meta.db
-import reg_meta.doc_db
 from fastapi import FastAPI
-from reg_meta.errors import RegMetaError
 from reg_meta.holdings import resolve_scope
 
 from . import __version__
@@ -30,12 +28,11 @@ from .limits import (
     RateLimitMiddleware,
 )
 from .middleware import ETagMiddleware
-from .routes import catalog, docs, project
+from .routes import catalog, project
 from .stewards import load_steward
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
-    from pathlib import Path
 
 
 class _RegistryApp(FastAPI):
@@ -86,29 +83,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # Provider coverage memo for this app's one artifact (routes/catalog.py
     # `_provider_coverage`); discarded with the app.
     app.state.provider_coverage = {}
-    # Docs library (#354) is OPTIONAL: the deployed container ships
-    # reg_meta_docs.db, but a dev/test env (or a steward without docs) may lack
-    # it. Resolve + validate it ONCE here; on absence OR schema-incompat, leave
-    # `docs_db_path` None so the docs endpoints degrade to "not ingested" rather
-    # than 500 — a broken/missing docs index must NOT take down the catalog API.
-    # The validated path feeds the per-request open (check_schema=False) in
-    # routes/docs.py `docs_conn`.
-    app.state.docs_db_path = _resolve_docs_db_path()
     yield
-
-
-def _resolve_docs_db_path() -> Path | None:
-    """Resolve the docs DB the same way reg_meta does (REG_META_DB > XDG >
-    platform), validating it once. Returns the path when present + schema-compat,
-    else None (docs gracefully unavailable). Never raises — docs are auxiliary."""
-    docs_db_path = reg_meta.doc_db.doc_db_path(None)
-    try:
-        # Raises RegMetaError on missing file OR incompatible schema.
-        conn = reg_meta.doc_db.open_doc_db(docs_db_path)
-    except RegMetaError:
-        return None
-    conn.close()
-    return docs_db_path
 
 
 def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI:
@@ -140,9 +115,6 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     app.add_middleware(BodySizeLimitMiddleware)
     app.add_middleware(RateLimitMiddleware, per_minute=rate_limit_per_minute)
     app.include_router(catalog.router)
-    # Docs library (#354) — GET reads over the optional reg_meta_docs.db; same
-    # ETag/edge-cache axis as the catalog routes.
-    app.include_router(docs.router)
     # A5.2b-ii write surface: project validate/order. The ETag middleware skips
     # these (method gate); the cap + limiter gate them.
     app.include_router(project.router)

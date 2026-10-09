@@ -1,0 +1,24 @@
+{
+  "note": "Fails if held clipping stops merging day-adjacent held periods (2015 and 2016 become one row) or stops splitting a state at a gap (2018 its own row), or if a request stops clipping the held rows (2016..2018) or keeps a state no held period overlaps (2017).",
+  "fixture": "states",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/andel"
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/andel",
+      "query": {
+        "period": "2016..2018"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/andel",
+      "query": {
+        "period": "2017"
+      }
+    }
+  ]
+}

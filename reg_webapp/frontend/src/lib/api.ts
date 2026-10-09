@@ -20,8 +20,8 @@ type Schemas = components["schemas"];
 type RustSchemas = RustComponents["schemas"];
 
 /** The `/api` base. Same-origin in production (Cloudflare fronts both the SPA
- * and the API); the Vite dev server proxies `/api/context` and `/api/search` to
- * the Rust server and the rest of `/api` to the FastAPI backend. */
+ * and the API); the Vite dev server proxies the routes ported to the Rust server
+ * there and the rest of `/api` to the FastAPI backend (`vite.config.ts`). */
 const API_BASE = "/api";
 
 /**
@@ -749,68 +749,83 @@ export async function search(
 }
 
 // ── Docs surface (#354/#394/#402/#742) ─────────────────────────────────────
-// `GET /api/docs/search?q=` returns a single documentation result group over the
-// docs FTS index; `GET /api/docs/doc/{identifier}` returns one doc's metadata +
-// source pointer + a BOUNDED excerpt (never the full body); `GET
-// /api/docs/for-variable?q=&register=` is the binding-leaf "mentioned in
-// documentation" hook (#402), and `GET /api/docs/related/{register}` +
-// `/api/docs/file/{register}/{filename}` are the related-document PDF surface
-// (#742). When the deployment ships no docs index, search/related endpoints
-// return `ingested:false` with empty results (NOT a 500), and doc/file endpoints
-// return 404 — the SPA degrades silently on search (failure isolation in
-// SearchView + DocMentionsPanel + RelatedDocumentsPanel) and shows a clear note on
-// the doc viewer.
+// The Rust server's docs operations, each `{data, meta}`: `docs_search`
+// (`GET /api/docs/search?q=&register=`, the binding-leaf "mentioned in
+// documentation" hook #402), `docs_get` (`GET /api/docs/doc/{identifier}`: one
+// doc's metadata, source pointer and a BOUNDED `excerpt`; the SPA never renders
+// its `body`) and `docs_related` (`GET /api/docs/related/{register FQID}`, with
+// the bytes at `/api/docs/file/{register FQID}/{filename}`, #742). A deployment
+// without a docs database answers `docs_unavailable` (404): the search and
+// related helpers return `null` for it, so the panels degrade silently, and the
+// doc viewer shows the error.
 // Snippets/excerpts are EXCERPTS, rendered as TEXT only (Svelte auto-escapes
-// `{value}`) — never `{@html}` (they may carry FTS highlight markers; the full
+// `{value}`) — never `{@html}` (they carry `**` highlight markers; the full
 // converted FTS document lives at the SCB source, not here).
 
-export type DocResult = Schemas["DocResult"];
-export type DocDetail = Schemas["DocDetail"];
-export type DocVariableMentions = Schemas["DocVariableMentions"];
-export type RelatedDocument = Schemas["RelatedDocument"];
-export type RelatedDocumentsResponse = Schemas["RelatedDocumentsResponse"];
+export type DocPage = RustSchemas["DocPage"];
+export type DocResult = RustSchemas["DocResult"];
+export type DocDetail = RustSchemas["DocDetail"];
+export type RelatedDocument = RustSchemas["RelatedDocument"];
 
-/** Resolve one doc by its `identifier` (a filename — a single path segment, so
- * `encodeURIComponent` the whole thing). 404 when the index is absent OR the doc
- * isn't found (the `detail` distinguishes them — surfaced via the resource error). */
-export function getDoc(identifier: string): Promise<DocDetail> {
-  return apiGet<DocDetail>(`/docs/doc/${encodeURIComponent(identifier)}`);
+/** A docs read's `data`, or `null` when the deployment ships no docs database. */
+async function docsData<T>(request: Promise<{ data: T }>): Promise<T | null> {
+  try {
+    return (await request).data;
+  } catch (e) {
+    if (
+      e instanceof ApiError &&
+      (e.body as { error?: { code?: unknown } } | null)?.error?.code ===
+        "docs_unavailable"
+    ) {
+      return null;
+    }
+    throw e;
+  }
 }
 
-/** The binding-leaf "mentioned in documentation" hook (#402): FUZZY
- * name/provider_key text matches for `q`, scoped to the bare `register` slug
- * (e.g. `"lisa"`, matched verbatim). Shares the search query + abort/timeout
- * plumbing (a ~12s client `TimeoutError` layered with the caller's teardown
- * `signal`); `limit` caps the results. An absent docs index returns
- * `ingested:false`, and a register with no ingested docs `register_ingested:false`
- * — neither is an error; the panel distinguishes both from "no mentions found"
- * (every `DocResult` is `fuzzy:true` — a heuristic match, NOT an authoritative
- * variable→doc link). */
+/** Resolve one doc by its `identifier` (a variable name or a filename — a single
+ * path segment, so `encodeURIComponent` the whole thing). A 404 (`not_found` or
+ * `docs_unavailable`) surfaces as an `ApiError` whose message says which. */
+export async function getDoc(identifier: string): Promise<DocDetail> {
+  return (
+    await apiGet<{ data: DocDetail }>(
+      `/docs/doc/${encodeURIComponent(identifier)}`,
+    )
+  ).data;
+}
+
+/** The binding-leaf "mentioned in documentation" hook (#402): text matches for
+ * `q` in the docs of the `register` FQID (e.g. `"scb/lisa"`). Shares the search
+ * query + abort/timeout plumbing (a ~12s client `TimeoutError` layered with the
+ * caller's teardown `signal`); `limit` caps the results. `null` when the
+ * deployment has no docs database; `register_ingested:false` when the register has
+ * no docs — the panel distinguishes both from "no mentions found". */
 export function getDocsForVariable(
   q: string,
-  options?: { register?: string; limit?: number; signal?: AbortSignal },
-): Promise<DocVariableMentions> {
-  return searchGet<DocVariableMentions>("/docs/for-variable", q, options);
+  options: { register: string; limit?: number; signal?: AbortSignal },
+): Promise<DocPage | null> {
+  return docsData(searchGet<{ data: DocPage }>("/docs/search", q, options));
 }
 
-/** List rehosted register-version PDFs for a bare register slug. An absent docs
- * DB returns `ingested:false`; a present DB with no curated rows returns
- * `documents:[]`. */
+/** The rehosted register-version PDFs of a register FQID; `null` when the
+ * deployment has no docs database. */
 export function getRelatedDocuments(
   register: string,
   options?: { signal?: AbortSignal },
-): Promise<RelatedDocumentsResponse> {
-  return apiGet<RelatedDocumentsResponse>(
-    `/docs/related/${encodeURIComponent(register)}`,
-    { signal: options?.signal },
+): Promise<RelatedDocument[] | null> {
+  return docsData(
+    apiGet<{ data: RelatedDocument[] }>(
+      `/docs/related/${encodeFqid(register)}`,
+      { signal: options?.signal },
+    ),
   );
 }
 
-/** Same-origin PDF URL for one related document. This is a browser `href`, not a
- * JSON fetch helper, so it includes the `/api` base. */
+/** Same-origin PDF URL for one related document of a register FQID. This is a
+ * browser `href`, not a JSON fetch helper, so it includes the `/api` base. */
 export function relatedDocumentFileHref(
   register: string,
   filename: string,
 ): string {
-  return `${API_BASE}/docs/file/${encodeURIComponent(register)}/${encodeURIComponent(filename)}`;
+  return `${API_BASE}/docs/file/${encodeFqid(register)}/${encodeURIComponent(filename)}`;
 }

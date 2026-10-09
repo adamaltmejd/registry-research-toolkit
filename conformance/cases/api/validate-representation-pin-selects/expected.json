@@ -1,0 +1,9 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": true,
+      "/data/issues": []
+    }
+  }
+]

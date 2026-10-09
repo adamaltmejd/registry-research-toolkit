@@ -1,0 +1,62 @@
+{
+  "note": "Fails if a declared book's partitions of a state or of a coded alias window drift from the stored conformance: source extensions (the default) as nonstandard and sentinel members with their meaning and scoped certificate, each kind alone, and the delivered pairs whose code the book holds; if `q` stops filtering a partition; or if a book the coding does not declare, or a classification that names another kind, answers instead of its located error.",
+  "fixture": "values",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "states", "path": "/api/states/scb/example/yrke"},
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"classification": "class/yrke"},
+      "query_from": {"state": [0, "/data/items/0/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"classification": "class/yrke", "partition": "nonstandard"},
+      "query_from": {"state": [0, "/data/items/0/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"classification": "class/yrke", "partition": "sentinels"},
+      "query_from": {"state": [0, "/data/items/0/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"classification": "class/yrke", "partition": "canonical"},
+      "query_from": {"state": [0, "/data/items/0/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"classification": "class/yrke", "partition": "canonical", "q": "chef"},
+      "query_from": {"state": [0, "/data/items/0/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"classification": "class/yrke", "column": "Yrke", "alias_window_from": "2019-01-01"},
+      "query_from": {"state": [0, "/data/items/1/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"classification": "class/yrke", "partition": "canonical", "column": "Yrke", "alias_window_from": "2019-01-01"},
+      "query_from": {"state": [0, "/data/items/1/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"classification": "class/kon"},
+      "query_from": {"state": [0, "/data/items/0/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"classification": "scb/example"},
+      "query_from": {"state": [0, "/data/items/0/state_id"]}
+    }
+  ]
+}

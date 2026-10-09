@@ -22,11 +22,15 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use axum::Router;
-use axum::extract::{Path, Query, State};
+use axum::body::Bytes;
+use axum::extract::rejection::BytesRejection;
+use axum::extract::{DefaultBodyLimit, Path, Query, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode, header};
 use axum::response::{IntoResponse, Response};
-use axum::routing::get;
-use reg_catalog::ops::{self, Cache, Download, Meta, Operation, Param, Raw, Run, Server, Steward};
+use axum::routing::{get, post};
+use reg_catalog::ops::{
+    self, Cache, Download, Meta, Operation, Param, Raw, Run, Server, Steward, body,
+};
 use reg_catalog::{Catalog, Docs, Error, Scope, hex};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
@@ -149,12 +153,15 @@ async fn serve(server: Arc<Server>, addr: SocketAddr, public_host: Option<String
     let mut app = Router::new().route("/openapi.json", get(|| async move { json(openapi) }));
     for op in ops::all() {
         for &route in op.paths {
-            app = app.route(
-                &axum_route(route),
+            let handler = if op.body().is_some() {
+                post(move |state, query, body| submit(op, route, state, query, body))
+                    .layer(DefaultBodyLimit::max(body::MAX_BYTES))
+            } else {
                 get(move |state, path, query, headers| {
                     answer(op, route, state, path, query, headers)
-                }),
-            );
+                })
+            };
+            app = app.route(&axum_route(route), handler);
         }
     }
     for download in ops::downloads() {
@@ -304,6 +311,35 @@ async fn answer(
         "application/json",
         raw,
     )
+}
+
+/// One POST operation over HTTP: its body, capped at [`body::MAX_BYTES`] and parsed
+/// strictly ([`body::parse`]), is the body parameter. Answered `{data, meta}` or
+/// `{error, meta}` without cache validators: a POST answer is not cached.
+async fn submit(
+    op: &'static Operation,
+    route: &'static str,
+    State(server): State<Arc<Server>>,
+    Query(query): Query<Vec<(String, String)>>,
+    bytes: Result<Bytes, BytesRejection>,
+) -> Response {
+    let parsed = match bytes {
+        Ok(bytes) => body::parse(&bytes),
+        Err(rejection) if rejection.status() == StatusCode::PAYLOAD_TOO_LARGE => {
+            Err(body::too_large())
+        }
+        Err(rejection) => return rejection.into_response(),
+    };
+    let answer = match parsed {
+        Ok(project) => {
+            let mut params = request_params(route, Vec::new(), query);
+            let name = op.body().expect("a POST operation has a body").name;
+            params.push((name.to_owned(), project.to_string()));
+            run(&server, op, op.route_params(route), params).await
+        }
+        Err(err) => Answer::new(&server, server.catalog.default_scope(), Err(err)),
+    };
+    (answer.status, json(answer.body.to_string())).into_response()
 }
 
 /// One download over HTTP: the raw bytes with its media type, under the same

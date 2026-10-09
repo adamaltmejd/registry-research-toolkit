@@ -1,0 +1,77 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/items/*/valid_from": ["2018-01-01", "2019-01-01"]}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {"code": "7", "label": "Lokal kod", "member_kind": "nonstandard", "sentinel_meaning": null, "scoped_sentinels": []},
+        {
+          "code": "98",
+          "label": "Uppgift saknas",
+          "member_kind": "sentinel",
+          "sentinel_meaning": null,
+          "scoped_sentinels": [
+            {
+              "valid_from": "2018-01-01",
+              "valid_to": "2018-12-31",
+              "delivery_column_name": "Yrke",
+              "classification_sha256": "523d1a0734471ed809b2142c766015e40dce05e0badb062310e186b80916cc44",
+              "source_fingerprints": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
+              "members": [["98", "Uppgift saknas"]],
+              "provenance": "Source documentation, 2018"
+            }
+          ]
+        },
+        {"code": "99", "label": "Okänd", "member_kind": "sentinel", "sentinel_meaning": "Okänt yrke", "scoped_sentinels": []}
+      ],
+      "/data/total": 3
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/code": ["7"], "/data/total": 1}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/code": ["98", "99"], "/data/items/*/sentinel_meaning": [null, "Okänt yrke"]}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {"code": "1", "label": "Chefer"},
+        {"code": "11", "label": "Politiker"},
+        {"code": "2", "label": "Specialister"},
+        {"code": "21", "label": "Ingenjörer"}
+      ],
+      "/data/total": 4
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/items": [{"code": "1", "label": "Chefer"}], "/data/total": 1}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {"code": "8", "label": "Annan", "member_kind": "nonstandard", "sentinel_meaning": null, "scoped_sentinels": []}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {"/data/items": [{"code": "1", "label": "Chefer"}]}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "class/kon"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "scb/example"}
+  }
+]

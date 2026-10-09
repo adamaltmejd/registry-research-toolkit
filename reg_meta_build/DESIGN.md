@@ -1784,6 +1784,22 @@ documents to change catalog facts.
 `doc_db.py` owns the build and FTS creation. Read schema constants and helpers remain in
 `reg_meta`, so querying the document database does not import maintainer tooling.
 
+`doc_fts` holds `fold_search` text (decision 16 of `RUST_RUNTIME_SPEC.md`; doc schema
+1.3.0) under `unicode61 remove_diacritics 0`, so `fold_search` is the only fold, as in
+the catalog's search indexes. It stays an external-content index over `doc`: FTS5's
+`snippet()` reads the stored body and places the index's token positions on it, so
+snippets keep their case and diacritics. A fold that splits a token (NFKD of `½` is
+`1⁄2`) would shift the highlights within that one document. FTS5's `rebuild`
+re-tokenizes the unfolded `doc` columns and so unfolds the index; it is never run on it,
+and `index_docs` refills the index instead. `PRAGMA integrity_check` and FTS5's default
+`integrity-check` are safe; a strict `integrity-check` (rank 1) compares the index with
+the unfolded columns and reports a false "malformed". The build ends with `index_docs`,
+and G1 runs it over a copy of the pinned docs database for its candidate copy.
+`index_docs` also stamps `doc_meta.generation`, a SHA-256 of the schema version and the
+`doc` rows, which `docs_search`'s cursors bind beside the catalog generation, so a
+docs-only rebuild makes them stale. It takes about 0.05 s for the release's 503
+documents (0.76 MB of text), so the docs need no derive step.
+
 ### Literal documentary relationships
 
 `documentary.binding` binds a supplied crosswalk or derivation row to its exact catalog

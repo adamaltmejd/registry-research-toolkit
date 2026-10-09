@@ -5,6 +5,8 @@
 
 use std::fmt::Write as _;
 
+use reg_core::merge;
+
 use crate::Scope;
 
 /// Narrows a variable's holdings: to tables of `years` (intervals tables whose
@@ -120,4 +122,32 @@ pub(crate) fn shown_column(scope: Scope, alias: &str) -> String {
              {alias}.delivery_column_name)"
         ),
     }
+}
+
+/// A held representation's periods, as `holding_period` rows; `(None, None)` is a
+/// table without periods (a year-independent one).
+pub(crate) type Periods = Vec<(Option<String>, Option<String>)>;
+
+/// Today's `_scope_states` clip: `held`'s dated periods clipped to a dated
+/// representation's `own` bounds and the `request`'s (ISO dates), sorted, with
+/// overlapping and day-adjacent periods merged (`inventory._merge`).
+pub(crate) fn clip(
+    held: &[(Option<String>, Option<String>)],
+    own: (&str, &str),
+    request: Option<(&str, &str)>,
+) -> Vec<(String, String)> {
+    let (mut lo_bound, mut hi_bound) = own;
+    if let Some((lo, hi)) = request {
+        lo_bound = lo_bound.max(lo);
+        hi_bound = hi_bound.min(hi);
+    }
+    let clipped: Vec<(String, String)> = held
+        .iter()
+        .filter_map(|(lo, hi)| {
+            let lo = lo.as_deref()?.max(lo_bound);
+            let hi = hi.as_deref()?.min(hi_bound);
+            (lo <= hi).then(|| (lo.to_owned(), hi.to_owned()))
+        })
+        .collect();
+    merge(clipped)
 }

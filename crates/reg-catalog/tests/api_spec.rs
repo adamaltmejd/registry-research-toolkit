@@ -64,6 +64,10 @@ fn param_schema(ty: &str) -> Value {
         "scope" => json!({"$ref": "#/components/schemas/Scope"}),
         "string" | "ref" | "period" | "cursor" => json!({"type": "string"}),
         "limit" => json!({"type": "integer", "minimum": 1, "maximum": 200}),
+        "boolean" => json!({"type": "boolean"}),
+        "storage_id" => json!({"type": "string", "pattern": "^-?[0-9]+$"}),
+        // At most 200 values: the table's one array, `resolve`'s `columns`.
+        "string[]" => json!({"type": "array", "items": {"type": "string"}, "maxItems": 200}),
         _ => panic!("map parameter type {ty:?}"),
     }
 }
@@ -72,7 +76,7 @@ fn param_schema(ty: &str) -> Value {
 /// parameters, every served download a `[[download]]` row with the same route and
 /// media type, taking its operation's parameters plus its route's other
 /// placeholders, and `meta.contract_version` is the table's. A parameter the route
-/// names is a path parameter. Fails when a route, parameter, its location or
+/// names is a path parameter; a `project` one is the request body of a POST route. Fails when a route, parameter, its location or
 /// optionality, or a media type drifts on either side. (Completeness per slice joins
 /// when slice 3a's last operation ships.)
 #[test]
@@ -167,30 +171,51 @@ fn openapi_matches_operations_toml() {
                     (param, value)
                 })
                 .collect();
-            let actual: BTreeMap<String, Value> = operation["parameters"]
-                .as_array()
-                .unwrap()
-                .iter()
-                .map(|p| {
-                    (
-                        p["name"].as_str().unwrap().to_owned(),
-                        json!({"in": p["in"], "required": p["required"], "schema": p["schema"]}),
-                    )
-                })
-                .collect();
-            assert_eq!(actual, expected, "{route}");
+            assert_body(&route, operation, rows[name]);
+            assert_eq!(served_params(operation), expected, "{route}");
             served.insert(name.to_owned());
         }
     }
     assert!(served.contains("context") && served.contains("search"));
 }
 
-/// An operation row's `params` as `{required, schema}` by name.
+/// A served operation's path and query parameters as `{in, required, schema}` by name.
+fn served_params(operation: &Value) -> BTreeMap<String, Value> {
+    operation["parameters"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .map(|p| {
+            (
+                p["name"].as_str().unwrap().to_owned(),
+                json!({"in": p["in"], "required": p["required"], "schema": p["schema"]}),
+            )
+        })
+        .collect()
+}
+
+/// A row with a `project` parameter takes it as the route's JSON object body, never a
+/// path or query parameter; any other row takes no body.
+fn assert_body(route: &str, operation: &Value, row: &toml::Table) {
+    let body = row["params"]
+        .as_table()
+        .unwrap()
+        .values()
+        .any(|ty| ty.as_str() == Some("project"));
+    assert_eq!(
+        operation["requestBody"]["content"]["application/json"]["schema"]["type"].as_str(),
+        body.then_some("object"),
+        "{route}"
+    );
+}
+
+/// An operation row's path and query `params` as `{required, schema}` by name.
 fn expected_params(row: &toml::Table) -> BTreeMap<String, Value> {
     row["params"]
         .as_table()
         .unwrap()
         .iter()
+        .filter(|(_, ty)| ty.as_str() != Some("project"))
         .map(|(param, ty)| {
             let ty = ty.as_str().unwrap();
             let optional = ty.ends_with('?');

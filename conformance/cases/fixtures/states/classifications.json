@@ -1,0 +1,60 @@
+[
+  {
+    "slug": "alder",
+    "short_name": "Ålder",
+    "name": "Ålder i år",
+    "codes": [
+      {
+        "code": "0",
+        "label": "0 år"
+      },
+      {
+        "code": "1",
+        "label": "1 år"
+      },
+      {
+        "code": "2",
+        "label": "2 år"
+      },
+      {
+        "code": "3",
+        "label": "3 år"
+      },
+      {
+        "code": "4",
+        "label": "4 år"
+      },
+      {
+        "code": "5",
+        "label": "5 år"
+      },
+      {
+        "code": "6",
+        "label": "6 år"
+      },
+      {
+        "code": "7",
+        "label": "7 år"
+      },
+      {
+        "code": "8",
+        "label": "8 år"
+      }
+    ]
+  },
+  {
+    "slug": "kon",
+    "short_name": "Kön",
+    "name": "Kön",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Man"
+      },
+      {
+        "code": "2",
+        "label": "Kvinna"
+      }
+    ]
+  }
+]

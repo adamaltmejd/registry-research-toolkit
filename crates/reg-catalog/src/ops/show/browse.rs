@@ -85,13 +85,6 @@ pub struct Window {
     valid_to: String,
 }
 
-fn scope_name(scope: Scope) -> &'static str {
-    match scope {
-        Scope::Reference => "reference",
-        Scope::Holdings => "holdings",
-    }
-}
-
 /// A register's deliveries in scope, by variable id, each variable's in today's
 /// order.
 pub(super) fn deliveries(
@@ -106,7 +99,7 @@ pub(super) fn deliveries(
          JOIN variable v USING(variable_id) \
          JOIN delivery_window dw ON dw.browse_delivery_id = bd.browse_delivery_id \
          WHERE bd.scope = ?1 AND v.register_id = ?2 ORDER BY 1, 2",
-        (scope_name(scope), register_id),
+        (scope.as_str(), register_id),
         |row| {
             Ok((
                 row.get::<_, i64>(0)?,
@@ -126,7 +119,7 @@ pub(super) fn deliveries(
          JOIN variable v USING(variable_id) \
          JOIN register_variant rv ON rv.register_variant_id = bd.register_variant_id \
          WHERE bd.scope = ?1 AND v.register_id = ?2 ORDER BY bd.browse_delivery_id",
-        (scope_name(scope), register_id),
+        (scope.as_str(), register_id),
         |row| {
             Ok((
                 row.get::<_, i64>(0)?,

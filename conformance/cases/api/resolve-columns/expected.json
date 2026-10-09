@@ -1,0 +1,28 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/columns/*/column_name": ["value", "Secret", "VALØRARKIV", "Valuereference", "Missing"],
+      "/data/columns/*/status": ["matched", "matched", "matched", "matched", "no_match"],
+      "/data/columns/0/matches": [
+        {
+          "fqid": "scb/example/value",
+          "var_id": 44,
+          "variable_name": "Value",
+          "matched_column": "Value",
+          "register": "scb/example"
+        }
+      ],
+      "/data/columns/*/matches/*/matched_column": [["Value"], ["Secret"], ["Valørarkiv"], ["Valuereference"], []],
+      "/data/columns/3/matches/*/fqid": ["scb/example/reference"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/columns/*/status": ["matched", "no_match", "no_match", "no_match", "no_match"],
+      "/data/columns/0/matches/*/matched_column": ["Value"],
+      "/meta/scope": "holdings"
+    }
+  }
+]

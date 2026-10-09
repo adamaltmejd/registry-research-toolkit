@@ -1,0 +1,12 @@
+{
+  "note": "The request errors of graph and lineage that their other cases do not reach: holdings on a catalog without holdings, an unknown parameter, and lineage of a retired ref at a split. Fails if either operation stops validating its scope or parameters, or lineage resolves a split.",
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "graph", "path": "/api/graph/scb/alpha/kon", "query": {"scope": "holdings"}},
+    {"operation": "graph", "path": "/api/graph/scb/alpha/kon", "query": {"period": "2018"}},
+    {"operation": "lineage", "path": "/api/lineage/scb/alpha/kon", "query": {"scope": "holdings"}},
+    {"operation": "lineage", "path": "/api/lineage/scb/alpha/kon", "query": {"period": "2018"}},
+    {"operation": "lineage", "path": "/api/lineage/scb/alpha/split"}
+  ]
+}

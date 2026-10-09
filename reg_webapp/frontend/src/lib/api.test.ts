@@ -9,7 +9,9 @@ import {
   getContext,
   getDoc,
   getDocsForVariable,
+  getRelatedDocuments,
   getValueSetCodes,
+  relatedDocumentFileHref,
   search,
   validateProject,
 } from "./api";
@@ -304,63 +306,97 @@ describe("search", () => {
 });
 
 describe("getDoc (#394)", () => {
-  it("GETs the doc endpoint with the WHOLE identifier as one encoded segment", async () => {
+  it("GETs the WHOLE identifier as one encoded segment and returns `data`", async () => {
     // A space AND a reserved char (`&`) prove encodeURIComponent runs over the
     // entire identifier (one path segment / filename), not split on anything.
+    // Fails if the identifier is split, or if getDoc returns the envelope.
+    let seen = "";
+    const data = { filename: "lisa kon&x.md", display_name: "LISA", tags: [] };
+    stubFetch(async (url) => {
+      seen = url;
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ data, meta: {} }),
+      };
+    });
+    expect(await getDoc("lisa kon&x.md")).toEqual(data);
+    expect(seen).toBe("/api/docs/doc/lisa%20kon%26x.md");
+  });
+});
+
+// The Rust server's error document for a docs read.
+function docsError(code: string): () => Promise<unknown> {
+  return async () => ({
+    ok: false,
+    status: 404,
+    json: async () => ({ error: { code, message: code }, meta: {} }),
+  });
+}
+
+describe("getDocsForVariable (#402)", () => {
+  it("GETs /docs/search with q, limit and the register FQID, and returns `data`", async () => {
+    // `kö n` exercises the URLSearchParams encoding (space → `+`, ö → `%C3%B6`).
+    // Fails if the path, the register parameter or the `{data, meta}` unwrap
+    // changes. The abort/timeout plumbing is `searchGet`'s, asserted on `search`.
+    let seen = "";
+    const data = { items: [], total: 0, register_ingested: true };
+    stubFetch(async (url) => {
+      seen = url;
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ data, meta: {} }),
+      };
+    });
+    expect(
+      await getDocsForVariable("kö n", { register: "scb/lisa", limit: 5 }),
+    ).toEqual(data);
+    expect(seen).toBe(
+      "/api/docs/search?q=k%C3%B6+n&limit=5&register=scb%2Flisa",
+    );
+  });
+
+  it("returns null for `docs_unavailable` and throws any other error", async () => {
+    // A deployment without a docs database is not an error to the panel. Fails if
+    // `docs_unavailable` throws, or if another 404 code is swallowed as "no docs".
+    stubFetch(docsError("docs_unavailable"));
+    expect(
+      await getDocsForVariable("kon", { register: "scb/lisa" }),
+    ).toBeNull();
+
+    stubFetch(docsError("not_found"));
+    await expect(
+      getDocsForVariable("kon", { register: "scb/nope" }),
+    ).rejects.toMatchObject({ name: "ApiError", status: 404 });
+  });
+});
+
+describe("getRelatedDocuments / relatedDocumentFileHref (#742)", () => {
+  it("GETs the register FQID path, returns `data`, and maps `docs_unavailable` to null", async () => {
+    // Fails if the FQID is encoded as one segment (`scb%2Flisa`), the envelope is
+    // returned, or a docs-less deployment throws.
+    const docs = [{ filename: "lisa.pdf" }];
     let seen = "";
     stubFetch(async (url) => {
       seen = url;
       return {
         ok: true,
         status: 200,
-        json: async () => ({ kind: "doc", filename: "lisa kon.md", tags: [] }),
+        json: async () => ({ data: docs, meta: {} }),
       };
     });
-    await getDoc("lisa kon&x.md");
-    expect(seen).toBe("/api/docs/doc/lisa%20kon%26x.md");
+    expect(await getRelatedDocuments("scb/lisa")).toEqual(docs);
+    expect(seen).toBe("/api/docs/related/scb/lisa");
+
+    stubFetch(docsError("docs_unavailable"));
+    expect(await getRelatedDocuments("scb/lisa")).toBeNull();
   });
-});
 
-describe("getDocsForVariable (#402)", () => {
-  // Mirror the `search` harness: capture the URL + fetch init for one
-  // call. `getDocsForVariable` shares the same `searchGet` plumbing against the
-  // `/docs/for-variable` path, plus the `register` filter the for-variable hook
-  // appends — so the encoding/abort assertions are the same shape.
-  async function callFor(
-    q: string,
-    options?: Parameters<typeof getDocsForVariable>[1],
-  ): Promise<{ url: string; init: RequestInit | undefined }> {
-    let url = "";
-    let init: RequestInit | undefined;
-    vi.stubGlobal(
-      "fetch",
-      vi.fn((u: string, i?: RequestInit) => {
-        url = u;
-        init = i;
-        return Promise.resolve({
-          ok: true,
-          status: 200,
-          json: async () => ({
-            ingested: true,
-            kind: "doc-mentions",
-            register: "lisa",
-            register_ingested: true,
-            total_count: 0,
-            results: [],
-          }),
-        });
-      }),
-    );
-    await getDocsForVariable(q, options);
-    return { url, init };
-  }
-
-  it("encodes q + register + limit (the register filter is appended)", async () => {
-    // `searchGet` appends params in q → limit → register order; `kö n` exercises
-    // the URLSearchParams encoding (space → `+`, ö → `%C3%B6`).
-    const { url } = await callFor("kö n", { register: "lisa", limit: 5 });
-    expect(url).toBe(
-      "/api/docs/for-variable?q=k%C3%B6+n&limit=5&register=lisa",
+  it("builds the file href from the register FQID and an encoded filename", () => {
+    // Fails if the FQID's `/` is encoded or the filename is not.
+    expect(relatedDocumentFileHref("scb/lisa", "lisa manual.pdf")).toBe(
+      "/api/docs/file/scb/lisa/lisa%20manual.pdf",
     );
   });
 });

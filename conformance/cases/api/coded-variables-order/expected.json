@@ -1,0 +1,41 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variable_name": ["Delta", "Bravo"],
+      "/data/items/*/n_distinct_codes": [3, 2]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {"variable_name": "Charlie", "n_distinct_codes": 2, "n_registers": 1, "n_instances": 1},
+        {"variable_name": "Alpha", "n_distinct_codes": 1, "n_registers": 2, "n_instances": 2}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variable_name": ["Echo"],
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 409,
+    "json": {"/error/code": "stale_cursor"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_cursor"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "scope_unavailable"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "limit"}
+  }
+]

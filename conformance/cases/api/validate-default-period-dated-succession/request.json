@@ -1,0 +1,31 @@
+{
+  "note": "Rust-only fix: a `_default` (year-independent) period on a variable with a dated successor (`bransch`, replaced from 2019) raises IndexError in the frozen Python validator (a 500). Fails if the replacement hint is computed against a request with no last year, or a binding without a year-independent state stops being `period_outside_state_validity`.",
+  "fixture": "semantic",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "source",
+            "register_variant": "scb/example/annual",
+            "period": "_default",
+            "bindings": [
+              {
+                "variable": "scb/example/bransch",
+                "type": "categorical"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

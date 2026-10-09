@@ -14,7 +14,7 @@ use axum::extract::{ConnectInfo, DefaultBodyLimit, FromRequest, Request, State};
 use axum::http::{HeaderMap, StatusCode, header};
 use axum::middleware::{Next, from_fn_with_state};
 use axum::response::{IntoResponse, Response};
-use reg_catalog::ops::{self, Operation, Server};
+use reg_catalog::ops::{self, Operation, Server, Type, body};
 use reg_catalog::{Code, Error};
 use rmcp::model::{
     CallToolRequestParams, CallToolResponse, CallToolResult, Implementation, JsonObject,
@@ -32,8 +32,6 @@ use crate::{Answer, VERSION, run};
 /// `/mcp` requests per client address: a token bucket of this many tokens, refilled
 /// one per second. Sized for agent tool calls, apart from any SPA limit.
 const RATE_PER_MINUTE: u64 = 60;
-/// The `/mcp` body cap, today's `limits.py` cap on write bodies.
-const MAX_BODY_BYTES: usize = 1024 * 1024;
 /// simplify: buckets that have refilled are dropped only once this many addresses are
 /// tracked; make it a time-ordered sweep if a hosted burst of addresses shows in RSS
 /// or in `/mcp` latency.
@@ -67,21 +65,36 @@ impl Tools {
 /// takes an `operation` argument naming one, and its other arguments are that
 /// operation's parameters. They stay one flat object, since agent APIs reject a
 /// top-level `oneOf` input; each operation's parameters are listed in the description
-/// and checked per call.
+/// and checked per call. A POST operation's body is the argument its body parameter
+/// names.
 fn tool(openapi: &Value, name: &'static str, ops: &[&Operation]) -> Tool {
     // The last route names every path parameter (`Operation`).
     let entries: Vec<&Value> = ops
         .iter()
-        .map(|op| &openapi["paths"][op.paths[op.paths.len() - 1]]["get"])
+        .map(|op| {
+            let method = if op.body().is_some() { "post" } else { "get" };
+            &openapi["paths"][op.paths[op.paths.len() - 1]][method]
+        })
         .collect();
     let mut properties = Map::new();
     let mut required = Vec::new();
     let mut signatures = Vec::new();
     for (op, entry) in ops.iter().zip(&entries) {
         let mut signature = Vec::new();
-        for param in entry["parameters"].as_array().expect("parameters") {
-            let name = param["name"].as_str().expect("parameter name");
-            let schema = param["schema"].clone();
+        let mut params: Vec<(&str, Value)> = entry["parameters"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .map(|param| {
+                let name = param["name"].as_str().expect("parameter name");
+                (name, param["schema"].clone())
+            })
+            .collect();
+        if let Some(body) = op.body() {
+            let content = &entry["requestBody"]["content"]["application/json"];
+            params.push((body.name, content["schema"].clone()));
+        }
+        for (name, schema) in params {
             let previous = properties.insert(name.to_owned(), schema.clone());
             assert!(
                 previous.is_none_or(|previous| previous == schema),
@@ -187,16 +200,41 @@ fn operation(
 }
 
 /// The tool arguments as the request's parameters: a string as is, a number in its
-/// JSON spelling (`limit: 5` is `limit=5`); any other value is `invalid_parameter`.
-fn query(arguments: JsonObject) -> Result<Vec<(String, String)>, Error> {
-    arguments
-        .into_iter()
-        .map(|(name, value)| match value {
-            Value::String(text) => Ok((name, text)),
-            Value::Number(number) => Ok((name, number.to_string())),
-            _ => Err(Error::invalid_parameter(&name)),
-        })
-        .collect()
+/// JSON spelling (`limit: 5` is `limit=5`), an array parameter's non-empty array of
+/// strings as one parameter per string, as HTTP repeats its key, and the body
+/// parameter's object as its JSON text; any other value, an array for another
+/// parameter or a non-object body included, is `invalid_parameter`.
+fn query(op: &Operation, arguments: JsonObject) -> Result<Vec<(String, String)>, Error> {
+    let body = op.body().map(|param| param.name);
+    let mut query = Vec::new();
+    for (name, value) in arguments {
+        let is_array = op
+            .params
+            .iter()
+            .any(|p| p.name == name && matches!(p.ty, Type::Strings));
+        if body == Some(name.as_str()) {
+            if !value.is_object() {
+                return Err(Error::invalid_parameter(&name));
+            }
+            let text = value.to_string();
+            query.push((name, text));
+            continue;
+        }
+        match value {
+            Value::String(text) => query.push((name, text)),
+            Value::Number(number) => query.push((name, number.to_string())),
+            Value::Array(items) if is_array && !items.is_empty() => {
+                for item in items {
+                    let Value::String(text) = item else {
+                        return Err(Error::invalid_parameter(&name));
+                    };
+                    query.push((name.clone(), text));
+                }
+            }
+            _ => return Err(Error::invalid_parameter(&name)),
+        }
+    }
+    Ok(query)
 }
 
 impl ServerHandler for Tools {
@@ -229,7 +267,7 @@ impl ServerHandler for Tools {
         }
         let mut arguments = request.arguments.unwrap_or_default();
         let call = operation(&ops, &mut arguments)
-            .and_then(|op| query(arguments).map(|query| (op, query)));
+            .and_then(|op| query(op, arguments).map(|query| (op, query)));
         let answer = match call {
             Ok((op, query)) => run(&self.server, op, op.params.iter().collect(), query).await,
             Err(err) => Answer::new(&self.server, self.server.catalog.default_scope(), Err(err)),
@@ -279,7 +317,7 @@ pub fn router(server: Arc<Server>, public_host: Option<String>) -> Router {
     Router::new()
         .route_service("/mcp", service)
         .layer(from_fn_with_state(limits, guard))
-        .layer(DefaultBodyLimit::max(MAX_BODY_BYTES))
+        .layer(DefaultBodyLimit::max(body::MAX_BYTES))
 }
 
 struct Limits {
@@ -363,7 +401,7 @@ impl Limits {
 }
 
 /// The `/mcp` limits, answered with the error document: `rate_limited` per client
-/// address ([`Limits::client`]), then `payload_too_large` over [`MAX_BODY_BYTES`]
+/// address ([`Limits::client`]), then `payload_too_large` over [`body::MAX_BYTES`]
 /// (read through `DefaultBodyLimit`, which the MCP service itself does not consult).
 async fn guard(
     State(limits): State<Arc<Limits>>,
@@ -383,11 +421,7 @@ async fn guard(
     match Bytes::from_request(Request::from_parts(parts.clone(), body), &()).await {
         Ok(bytes) => next.run(Request::from_parts(parts, bytes.into())).await,
         Err(rejection) if rejection.status() == StatusCode::PAYLOAD_TOO_LARGE => {
-            limits.refuse(Error::new(
-                Code::PayloadTooLarge,
-                format!("The request body exceeds {MAX_BODY_BYTES} bytes."),
-                vec![MAX_BODY_BYTES.into()],
-            ))
+            limits.refuse(body::too_large())
         }
         Err(rejection) => rejection.into_response(),
     }

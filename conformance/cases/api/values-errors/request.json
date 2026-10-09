@@ -1,0 +1,21 @@
+{
+  "note": "Fails if a ref of another kind, a missing or ambiguous ref, an unavailable scope, a missing or malformed state, a state the variable does not have, a state's parameter on a classification, a partition without its book, an unknown partition, a column without its window key or a bad limit or q stops answering with its located error.",
+  "fixture": "values",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "values", "path": "/api/values/scb/example"},
+    {"operation": "values", "path": "/api/values/scb/example/missing", "query": {"state": "1"}},
+    {"operation": "values", "path": "/api/values/Yrke"},
+    {"operation": "values", "path": "/api/values/class/yrke", "query": {"scope": "holdings"}},
+    {"operation": "values", "path": "/api/values/scb/example/yrke"},
+    {"operation": "values", "path": "/api/values/scb/example/yrke", "query": {"state": "1.5"}},
+    {"operation": "values", "path": "/api/values/scb/example/yrke", "query": {"state": "1"}},
+    {"operation": "values", "path": "/api/values/class/yrke", "query": {"state": "1"}},
+    {"operation": "values", "path": "/api/values/class/yrke", "query": {"partition": "canonical"}},
+    {"operation": "values", "path": "/api/values/scb/example/yrke", "query": {"state": "1", "partition": "canonical"}},
+    {"operation": "values", "path": "/api/values/scb/example/yrke", "query": {"state": "1", "partition": "all"}},
+    {"operation": "values", "path": "/api/values/scb/example/yrke", "query": {"state": "1", "column": "Yrke"}},
+    {"operation": "values", "path": "/api/values/class/yrke", "query": {"limit": 201}},
+    {"operation": "values", "path": "/api/values/class/yrke", "query": {"q": "yxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}}
+  ]
+}

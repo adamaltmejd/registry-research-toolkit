@@ -1,0 +1,14 @@
+{
+  "note": "Twin of `validate/malformed-non-utf8`: fails if a body that is not UTF-8 is not refused with `malformed_request` before any validation runs.",
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "content": "{\"schema_version\": \"3.0.0\", \"steward\": \"global\", \"reg_meta_version\": \"5.1.0\", \"name\": \"Synthetic semantic\", \"sources\": [{\"name\": \"source\", \"register_variant\": \"scb/example/annual\", \"period\": 2018, \"bindings\": [{\"variable\": \"scb/example/kon\", \"type\": \"categorical\"}]}]}",
+      "encoding": "utf-16"
+    }
+  ]
+}

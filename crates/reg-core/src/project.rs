@@ -19,7 +19,36 @@ use serde::{Deserialize, Serialize, Serializer};
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 
-use crate::{ValidationResult, validate_structural};
+use crate::{
+    Interval, IssueLevel, Period, PeriodToken, ValidationIssue, ValidationResult, merge, quote,
+    validate_structural,
+};
+
+/// The `project_data.json` contract this runtime reads, exactly: `reg_schema`'s
+/// version, which the frozen Python validator also reads (the two converge in
+/// stage 4).
+pub const SCHEMA_VERSION: &str = "3.0.0";
+
+/// The supported-version decision, taken before any other check reads the document
+/// as this contract: a string `schema_version` other than [`SCHEMA_VERSION`] is one
+/// `unsupported_schema_version` issue. An absent or non-string one is the structural
+/// validator's to report. Today's `reg_meta.order.schema_version_issue`.
+#[must_use]
+pub fn version_issue(raw: &Value) -> Option<ValidationIssue> {
+    let version = raw.get("schema_version")?.as_str()?;
+    (version != SCHEMA_VERSION).then(|| ValidationIssue {
+        level: IssueLevel::Error,
+        code: "unsupported_schema_version",
+        path: "/schema_version".into(),
+        message: format!(
+            "project schema_version {} is not supported: this build reads \
+             project_data.json schema {SCHEMA_VERSION} exactly. Re-author the project \
+             against the current schema; there is no migration path.",
+            quote(version)
+        ),
+        successor_fqid: None,
+    })
+}
 
 /// A closed string enum: one list of `(variant, wire name)` pairs gives the serde
 /// encoding and the allowed values the validator reports.
@@ -216,6 +245,67 @@ pub enum PeriodSegment {
 pub enum SourcePeriod {
     List(Vec<PeriodSegment>),
     Segment(PeriodSegment),
+}
+
+impl SourcePeriod {
+    /// The requested days, merged ([`merge`]); `None` for `"_default"`, a
+    /// year-independent selection. Today's `reg_meta.order.requested_intervals`.
+    ///
+    /// # Errors
+    ///
+    /// A scalar `{from, to}` whose start is after its end, which the structural
+    /// validator accepts (it checks inversion in lists only): the reason the period
+    /// is not orderable.
+    ///
+    /// # Panics
+    ///
+    /// On an endpoint outside the period grammar, which the structural validator
+    /// refuses, so a [`ProjectData`] never holds one.
+    pub fn intervals(&self) -> Result<Option<Vec<Interval>>, String> {
+        let segments = match self {
+            Self::Segment(PeriodSegment::Value(PeriodValue::Token(t))) if t == "_default" => {
+                return Ok(None);
+            }
+            Self::Segment(segment) => std::slice::from_ref(segment),
+            Self::List(list) => list.as_slice(),
+        };
+        let mut days = Vec::new();
+        for segment in segments {
+            days.push(match segment {
+                PeriodSegment::Value(v) => Period::Token(v.token()).iso_bounds(),
+                PeriodSegment::Range(PeriodRange { from, to }) => {
+                    let (lo, hi) = Period::Range {
+                        from: from.token(),
+                        to: to.token(),
+                    }
+                    .iso_bounds();
+                    if lo > hi {
+                        return Err(format!(
+                            "edition range 'from' is after 'to': {}..{}",
+                            quote(&from.spelling()),
+                            quote(&to.spelling())
+                        ));
+                    }
+                    (lo, hi)
+                }
+            });
+        }
+        Ok(Some(merge(days)))
+    }
+}
+
+impl PeriodValue {
+    /// The value as a token string: an int year zero-padded to four digits.
+    fn spelling(&self) -> String {
+        match self {
+            Self::Year(year) => format!("{year:04}"),
+            Self::Token(token) => token.clone(),
+        }
+    }
+
+    fn token(&self) -> PeriodToken {
+        PeriodToken::parse(&self.spelling()).expect("an accepted project's periods parse")
+    }
 }
 
 /// A panel over sources.

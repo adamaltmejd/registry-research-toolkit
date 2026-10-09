@@ -1,0 +1,25 @@
+[
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/candidates/*/fqid": ["scb/alpha/kon", "scb/beta/kon"]
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "scb/alpha/kon"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_period", "/error/fields/parameter": "to"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "scope_unavailable"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/missing"}
+  }
+]

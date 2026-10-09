@@ -1,8 +1,11 @@
-//! Slice 3b's operations: `show`, `docs_get` and `docs_related`, and the
-//! related-document download.
+//! Slice 3b's operations: `show`, `states`, `warnings`, `values`, `docs_search`,
+//! `docs_get` and `docs_related`, and the related-document download.
 
-use super::docs::{self, DocDetail};
+use super::docs::{self, DocDetail, DocPage};
 use super::show::{Show, show};
+use super::states::{self, StatesPage};
+use super::values::{self, ValuesPage};
+use super::warnings;
 use super::{Cache, Download, Operation, Param, Type, component};
 
 pub const OPERATIONS: &[Operation] = &[
@@ -23,6 +26,102 @@ pub const OPERATIONS: &[Operation] = &[
         cache: Cache::Minute,
         run: show,
         result: component::<Show>,
+    },
+    Operation {
+        name: "states",
+        paths: &["/api/states/{ref}"],
+        tool: Some("states"),
+        description: "A variable's states: each representation it was delivered in, with \
+            its variant, bounds, column, coding and the ids of the data warnings that \
+            apply to it. Without `period`, the whole history; with `period`, the dated \
+            states overlapping it, a state's alias windows standing in for it where they \
+            overlap. `variant` and `value_set_version` (`_none` for the empty label) \
+            narrow the list. In holdings scope, only what is held, clipped to the held \
+            periods. `ref` is a variable FQID or a bare name.",
+        params: &[
+            Param::required("ref", Type::Ref),
+            Param::optional("period", Type::Period),
+            Param::optional("variant", Type::String),
+            Param::optional("value_set_version", Type::String),
+            Param::optional("scope", Type::Scope),
+            Param::optional("limit", Type::Limit),
+            Param::optional("cursor", Type::Cursor),
+        ],
+        cache: Cache::Minute,
+        run: states::states,
+        result: component::<StatesPage>,
+    },
+    Operation {
+        name: "warnings",
+        paths: &["/api/warnings/{ref}"],
+        tool: None,
+        description: "A register's or variable's data warnings, ordered by id: a \
+            variable's include its register's unassigned ones. `period`, `variant` and \
+            `representation` (a delivery column) keep the warnings that may apply to \
+            them; `unassigned_only` keeps the register's unassigned ones. In holdings \
+            scope, a variable's warnings apply only to what is held.",
+        params: &[
+            Param::required("ref", Type::Ref),
+            Param::optional("period", Type::Period),
+            Param::optional("variant", Type::String),
+            Param::optional("representation", Type::String),
+            Param::optional("unassigned_only", Type::Boolean),
+            Param::optional("scope", Type::Scope),
+        ],
+        cache: Cache::Minute,
+        run: warnings::warnings,
+        result: warnings::schema,
+    },
+    Operation {
+        name: "values",
+        paths: &["/api/values/{ref}"],
+        tool: Some("values"),
+        description: "A classification's codes (code, label, level, validity), or the \
+            value set of one `state` of a variable (a `state_id` from `states`), ordered \
+            by code and label. `column` with `alias_window_from` (a state's \
+            `coding_window_from`) reads the coded alias window's set instead. With \
+            `classification`, a book the coding declares, `partition` picks its part: \
+            `source_extensions` (default; the codes outside the book, nonstandard and \
+            sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs \
+            whose code the book holds). `q` keeps the rows whose code or label contains \
+            it, case and diacritics folded; `total` counts them. In holdings scope, only \
+            a held state. `ref` is a classification or variable FQID or a bare name.",
+        params: &[
+            Param::required("ref", Type::Ref),
+            Param::optional("state", Type::StorageId),
+            Param::optional("partition", Type::Enum(values::PARTITIONS)),
+            Param::optional("classification", Type::Ref),
+            Param::optional("column", Type::String),
+            Param::optional("alias_window_from", Type::String),
+            Param::optional("q", Type::String),
+            Param::optional("scope", Type::Scope),
+            Param::optional("limit", Type::Limit),
+            Param::optional("cursor", Type::Cursor),
+        ],
+        cache: Cache::Minute,
+        run: values::values,
+        result: component::<ValuesPage>,
+    },
+    Operation {
+        name: "docs_search",
+        paths: &["/api/docs/search"],
+        tool: Some("docs"),
+        description: "Search the documentation: with `q`, the entries whose title, \
+            variable or text match every word (as prefixes, case and diacritics \
+            ignored), best match first, each with a `snippet` marking the matched words \
+            in `**`; without `q`, every entry by filename. `register` (a register FQID \
+            or a bare name) keeps that register's entries; `register_ingested` says \
+            whether it has any. `total` counts the matches.",
+        params: &[
+            Param::optional("q", Type::String),
+            Param::optional("register", Type::Ref),
+            Param::optional("scope", Type::Scope),
+            Param::optional("limit", Type::Limit),
+            Param::optional("cursor", Type::Cursor),
+        ],
+        cache: Cache::Day,
+        run: docs::search,
+        result: component::<DocPage>,
     },
     Operation {
         name: "docs_get",

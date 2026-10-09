@@ -1,0 +1,24 @@
+{
+  "note": "Fails if a state stops answering its own value set ordered by code and label, if `column` with `alias_window_from` stops selecting the coded alias window's value set instead of the state's, or if a state whose only coding is a window's answers something without the window's identity instead of not_found.",
+  "fixture": "values",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "states", "path": "/api/states/scb/example/yrke"},
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query_from": {"state": [0, "/data/items/0/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query": {"column": "Yrke", "alias_window_from": "2019-01-01"},
+      "query_from": {"state": [0, "/data/items/1/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/yrke",
+      "query_from": {"state": [0, "/data/items/1/state_id"]}
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "A2015"
+edition = 2015
+[[table.column]]
+name = "Andel"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/andel"
+representation = "Andel"
+
+[[table]]
+id = "A2016"
+edition = 2016
+[[table.column]]
+name = "Andel"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/andel"
+representation = "Andel"
+
+[[table]]
+id = "A2018"
+edition = 2018
+[[table.column]]
+name = "Andel"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/andel"
+representation = "Andel"

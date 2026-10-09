@@ -1,0 +1,18 @@
+{
+  "note": "Fails if a schema_version other than 3.0.0 stops being answered by `unsupported_schema_version` alone: here the document also lacks `sources`, which the structural layer would report.",
+  "fixture": "semantic",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "2.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Old"
+      }
+    }
+  ]
+}

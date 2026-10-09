@@ -1,0 +1,39 @@
+{
+  "note": "Fails if the window fallback changes: a base_fallback state must yield to the source windows that overlap the request (2018-02, the range, the spanning period), stand alone where none does (the 2018-04 gap), and never appear without a period. The February window's token is `2018-02`, a Rust-only fix: today's reader ends every February on the 29th and renders `2018-02-01..2018-02-28`.",
+  "fixture": "states",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink"
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink",
+      "query": {
+        "period": "2018-04"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink",
+      "query": {
+        "period": "2018-02"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink",
+      "query": {
+        "period": "2018-02..2018-04"
+      }
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/lonfink",
+      "query": {
+        "period": "2017..2019"
+      }
+    }
+  ]
+}
