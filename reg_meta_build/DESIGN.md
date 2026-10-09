@@ -1516,9 +1516,9 @@ reader's direct code match applies the same owner predicate.
 **Slug reservations.** The slug grammar (with `class` reserved) is `reg-core`'s, reached
 through `reg-core-py`; `slug_grammar.validate_slug` adds the build's slot policy:
 `_default` only as the register_variant coordinate, and `variants` (variable slot) and
-`group` (provider slot), which SPA routes capture. The Rust routes put the operation
-before the ref, so the former FastAPI suffix words (`states`, `graph`, ...) protect no
-route and were dropped in package 4.3.
+`group` (provider slot), which SPA routes capture. The former FastAPI suffix words
+(`states`, `graph`, ...) protect no route (the Rust routes put the operation first) but
+stay reserved while `reg_meta`'s reader still refuses them; they go in package 4.9a.
 
 ## Inspection and verification
 

@@ -383,7 +383,7 @@ def _validate_panel_slug_ref(
     JSON-decode, or a non-slug-shaped value) fails LOUDLY at build time, not as a
     runtime decode crash when the webapp serves that variant. Validating against
     the `variable` slot (not the field name) is deliberate: it also rejects a
-    reference to a reserved variable slug (`variants`) — no variable
+    reference to a reserved HTTP-suffix token (`states`/`variants`/…) — no variable
     can ever be minted with such a slug, so a panel key naming one is dangling
     metadata (Codex P2 on #228). `field` is kept only for the diagnostic message."""
     try:
@@ -2517,7 +2517,7 @@ def populate_variable_slugs(
         # variable_instance. "Latest" = highest valid_to, lexically smallest on
         # ties (matches the coalescer tie-break). `kol` is the latest *sluggable*
         # column (#547): it skips columns that reject to NULL (reserved tokens
-        # like `Variants`, period-shaped, empty), so a non-drift
+        # like `States`/`Variants`, period-shaped, empty), so a non-drift
         # variable whose raw latest column is non-sluggable still slugs from a
         # real earlier column instead of falling through to the name basis.
         # `early_kol` is the mirror (lowest valid_from) — the #139 split-sibling
@@ -2529,7 +2529,7 @@ def populate_variable_slugs(
         # space the basis selection consumes — so pure case/punctuation/diacritic
         # column noise (`PersonNr`/`personnr`, `Kön`/`Kon`) that slugifies
         # identically does NOT read as a rename. Columns that don't slugify
-        # (reserved tokens like `Variants`, period-shaped, or empty)
+        # (reserved tokens like `States`/`Variants`, period-shaped, or empty)
         # yield NULL, which COUNT(DISTINCT) ignores — so a real column paired with
         # a non-sluggable one counts as 1 and does NOT read as drift. Ordered by
         # register so the per-register uniqueness scope is one groupby pass.
