@@ -99,7 +99,7 @@ paths = ["/registers/*/3/*"]
 
 [[exception]]
 name = "docs-fold-search"
-reason = "Docs folding (decision 16, 3b.6): doc_fts now holds fold_search text, so fold_search's full case folding and NFKD apply where unicode61 did not. The edge terms `ß` (folds to `ss`) and `ﬁlm` (NFKD `film`) find documents the baseline's unicode61 index never matched; both readers, the checkout's Python docs search and Rust docs_search, now find them."
+reason = "Docs folding (decision 16, 3b.6): doc_fts now holds fold_search text, so fold_search's full case folding and NFKD apply where unicode61 did not. The edge terms `ß` (folds to `ss`) and `ﬁlm` (NFKD `film`) find documents the baseline never matched (through a unicode61 index before docs schema 1.3.0, and since the v0.44.0 pin by sending the raw term to the folded index, as in docs-fold-raw-query); both readers, the checkout's Python docs search and Rust docs_search, now find them."
 case = "global/-/docs-search/3[47]"
 paths = ["/results", "/total_count"]
 
@@ -116,6 +116,46 @@ case = "*/*/search/7[47]"
 paths = ["/doc_hint", "/next_cursor", "/results"]
 
 [[exception]]
+name = "docs-fold-raw-query"
+reason = "Maintainer ruling 2026-10-09 (G2 of v0.44.0, package R): the frozen 553ea622 baseline sends the raw query to doc_fts, which holds fold_search text from docs schema 1.3.0 (3b.6, decision 16), so a term with non-ASCII letters (`kön`, `år`, `civilstånd`, `född år`) matches no document; the checkout's Python docs search and Rust docs_search fold the query and find them. ASCII terms agree. The keys are the non-ASCII positions of eval_terms + EDGE_TERMS that hit a document, which do not depend on the pin; `ß` and `ﬁlm` (34, 37) stay under docs-fold-search. Revisit at stage 4, when the Python baseline goes."
+case = [
+  "global/*/docs[-_]search*/4",
+  "global/*/docs[-_]search*/6",
+  "global/*/docs[-_]search*/9",
+  "global/*/docs[-_]search*/18",
+  "global/*/docs[-_]search*/2[0-3]",
+  "global/*/docs[-_]search*/29",
+  "global/*/docs[-_]search*/33",
+]
+paths = ["/results", "/total", "/total_count"]
+
+[[exception]]
+name = "docs-fold-raw-query-hint"
+reason = "As docs-fold-raw-query: the CLI search mixes docs hits into its results and doc_hint, so on these non-ASCII terms the checkout gains doc rows the baseline misses, which moves the cursor, `has_more` and, in a full page, the trailing catalog rows (onto page 2 for limit-5). The keys are the search positions G1 reported on v0.44.0 with seed 0 (eval terms, sampled variable-name words and edge terms, all non-ASCII); the sampled words move with the pin and the seed, so the next re-pin rederives them. Blind spot: `/results` is excepted whole on these cases, so a catalog-row regression on them goes unseen; on v0.44.0 R reran them and every case's catalog rows (pages 1 and 2 together) were an order-preserving prefix of the baseline's."
+case = [
+  "global/reference/search/[469]",
+  "global/reference/search/18",
+  "global/reference/search/3[568]",
+  "global/reference/search/4[23]",
+  "global/reference/search/5[2479]",
+  "global/reference/search/6[01239]",
+  "global/reference/search/73",
+  "global/reference/search-*/9",
+  "swecov/*/search/[469]",
+  "swecov/*/search/18",
+  "swecov/*/search/20",
+  "swecov/*/search/3[19]",
+  "swecov/*/search/4[1258]",
+  "swecov/*/search/56",
+  "swecov/*/search/6[01239]",
+  "swecov/*/search/73",
+  "swecov/*/search-*/[49]",
+  "swecov/reference/search-limit-5/4/page2",
+  "swecov/holdings/search-limit-5/9/page2",
+]
+paths = ["/doc_hint", "/has_more", "/next_cursor", "/results"]
+
+[[exception]]
 name = "classification-code-is-valid-bool"
 reason = "rust-only fix: the frozen `get classification --codes` (`queries.get_classification_with_codes`) passes the SQLite integer through, so a canonical code reads `\"is_valid\": 1`; `values` emits the boolean its documented ClassificationCode model (and today's webapp model, `catalog.ClassificationCode.is_valid: bool | None`) declares. Every pinned row is is_valid = 1 (83 classifications, no 0), so the values agree and only the JSON type differs, which G1's type-strict comparison reports. The type is fixed by the Rust field (`Option<bool>`) and the committed openapi.json (`boolean | null`); api/values-classification pins `is_valid: true`. Blind spot: the path excepts any is_valid difference on these cases, a wrong value as well as the type; api/values-classification pins the value."
 case = "*/*/values-classification-codes/*"
@@ -124,9 +164,10 @@ paths = ["/*/3"]
 # The baseline reader (CLI and webapp), run from a detached worktree with its own
 # locked environment. It reads the release originals, so code under change never
 # derives what it is compared against. 553ea622 (main after 3a.2) is the last commit
-# whose webapp serves every route the served arm compares against (3a.10 and 3a.11
-# deleted /api/context, /api/stats and /api/search), so it cannot move to the release
-# commit; Python fixes after it are named exceptions (section 4, "Current pin").
+# whose webapp serves every route the served arm compares against (the SPA cutovers
+# deleted them and F the app), so it is pinned apart from [release] until stage 4
+# retires the Python runtime; Python fixes after it are named exceptions (section 4,
+# "Current pin").
 [baseline]
 commit = "553ea622fdb3a5fd42a04c46920b6f7b9a5fe8d2"
 

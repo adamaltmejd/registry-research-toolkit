@@ -1647,7 +1647,10 @@ either moves the served comparisons onto the CLI baseline (the CLI-baseline patt
 above) or keeps the webapp baseline commit separate from the artifact pin. The
 `docs-fold-search*` exceptions match by term position (`3[47]`, `7[47]`, 3b.6): R
 rechecks that those positions are still the terms `ß` and `ﬁlm`. Depends on: 3c.3, C, F
-and the release.
+and the release. **Shipped 2026-10-09**: pin `reg_meta/v0.44.0`; the baseline stays at
+553ea622, pinned apart from the release until stage 4; `docs-fold-raw-query` and
+`docs-fold-raw-query-hint` record the maintainer's G2 ruling; positions 34/37 and 74/77
+are still `ß` and `ﬁlm`.
 
 #### Surface coverage (3b–3e rows)
 
