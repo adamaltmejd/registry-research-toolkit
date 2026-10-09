@@ -1,27 +1,24 @@
 """The surface inventory (`conformance/api/surface.toml`) matches the source.
 
-Routes come from the committed OpenAPI snapshot; `reg-meta` subcommands and
-`reg_meta` imports are discovered with `ast`; the skill's commands are matched against
-its SKILL.md text. A discovered item without a row fails, and so does a row whose item
+`reg-meta` subcommands and `reg_meta` imports are discovered with `ast`; the skill's
+commands are matched against its SKILL.md text. A discovered item without a row fails, and so does a row whose item
 no longer exists. Discovery fails closed on source forms it does not model.
 """
 
 from __future__ import annotations
 
 import ast
-import json
 import subprocess
 import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SURFACE = ROOT / "conformance/api/surface.toml"
-OPENAPI = ROOT / "reg_webapp/backend/openapi.json"
 CLI = ROOT / "reg_meta/src/reg_meta/cli.py"
 SKILL = ROOT / "plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md"
 PROVIDER = "reg_meta"
 
-KINDS = {"route", "command", "import", "skill"}
+KINDS = {"command", "import", "skill"}
 DISPOSITIONS = {"retained", "replaced", "removed"}
 OWNERS = {"3a", "3b", "3c", "3d", "3e", "4", "5"}
 REQUIRED = {"kind", "id", "disposition", "owner", "covered_by"}
@@ -32,16 +29,6 @@ OPTIONAL = {"note", "used_by", "operation"}
 def _rows(kind: str | None = None) -> list[dict]:
     rows = tomllib.loads(SURFACE.read_text(encoding="utf-8"))["row"]
     return [r for r in rows if kind is None or r["kind"] == kind]
-
-
-def _discover_routes() -> set[str]:
-    """Routes as the committed OpenAPI schema lists them.
-
-    `reg_webapp/backend/tests/test_openapi_snapshot.py` keeps the snapshot equal to
-    the app's rendered schema, so a route cannot exist without appearing here.
-    """
-    paths = json.loads(OPENAPI.read_text(encoding="utf-8"))["paths"]
-    return {f"{method.upper()} {path}" for path, ops in paths.items() for method in ops}
 
 
 def _discover_commands() -> set[str]:
@@ -178,10 +165,6 @@ def test_rows_are_well_formed():
                 assert row["owner"] == "4", label
         else:
             assert "used_by" not in row, label
-
-
-def test_every_route_has_a_row():
-    _assert_same("route", _discover_routes())
 
 
 def test_every_subcommand_has_a_row():

@@ -106,21 +106,3 @@ def http_servers(request, tmp_path_factory):
         yield pool
     finally:
         pool.close()
-
-
-@pytest.fixture
-def artifact_client(artifact_dir, monkeypatch):
-    from fastapi.testclient import TestClient
-    from reg_meta.db import get_manifest
-    from reg_webapp.app import create_app
-
-    with open_db(artifact_dir / "reg_meta.db") as conn:
-        manifest = get_manifest(conn)
-    monkeypatch.setenv("REG_META_DB", str(artifact_dir))
-    monkeypatch.setenv("REG_WEBAPP_STEWARD", manifest.get("steward", "global"))
-    monkeypatch.setenv(
-        "REG_WEBAPP_STEWARDS_DIR",
-        str(Path(__file__).resolve().parents[1] / "reg_webapp/stewards"),
-    )
-    with TestClient(create_app(rate_limit_per_minute=1000)) as client:
-        yield client

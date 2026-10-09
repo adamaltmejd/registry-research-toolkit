@@ -11,7 +11,8 @@ Rust runtime and compiled-catalog refactor.
 - `reg_meta_build` (CLI `reg-meta-build`) — build the reg_meta SQLite DBs from SCB
   exports (maintainer-only).
 - `reg_schema` (library) — `project_data.json` schema and structural validator.
-- `reg_webapp` — FastAPI backend + Svelte SPA: catalog browse + project authoring.
+- `reg_webapp` — Svelte SPA over the Rust server (`reg-meta serve`): catalog browse +
+  project authoring.
 
 The `reg_monabundle` (MONA bundle build + runtime + PII scanner) and `mock_data_wizard`
 (local mock-data generation) packages have been archived to branch
@@ -183,8 +184,8 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 refactor.
 
 - **Library packages** (`reg_meta`, `reg_meta_build`):
-  - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base) so FastAPI can
-    consume its catalog models directly (adopted #681, 2026-06-22); `reg_meta_build`
+  - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base; adopted #681,
+    2026-06-22, for the since-deleted FastAPI app); `reg_meta_build`
     uses Pydantic v2 `_IRBase` models for the build-time IR core and
     `@dataclass(frozen=True)` for local value types in feature modules.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
@@ -193,17 +194,15 @@ refactor.
   - CLI: argparse. No click/typer.
 - **`reg_schema`** (authoring/validation surface): Pydantic v2. Reasons: (1) it's the
   canonical structural validator for `project_data.json` — Pydantic's declarative
-  field/model validators are the right tool; (2) FastAPI in `reg_webapp/backend/`
-  consumes `reg_schema` models directly as response models, killing the 1:1 wrapper
-  drift surface; (3) `model_json_schema()` gives the SPA's TypeScript codegen a free,
-  always-correct schema source. See `reg_schema/DESIGN.md`.
-- **Web backend** (`reg_webapp/backend/`): FastAPI + Pydantic REST. `reg_schema`
-  Pydantic models are response models directly (no wrapper layer). `reg_meta`'s frozen
-  Pydantic catalog models are consumed directly — the webapp's `kind`-discriminated node
-  models embed them as field types (collapsed in #681). The only remaining 1:1 wrapper
-  is reg_schema's `ValidationResult`/`ValidationIssue`.
+  field/model validators are the right tool; (2) `model_json_schema()` gives a free,
+  always-correct schema source. Frozen until stage 4 of `RUST_RUNTIME_SPEC.md` (the Rust
+  server validates projects). See `reg_schema/DESIGN.md`.
+- **Web server**: the Rust `reg-meta serve` (`crates/reg-meta/`) answers every `/api`
+  route and `/mcp`; there is no Python web backend (`RUST_RUNTIME_SPEC.md` package F
+  deleted the FastAPI app). `reg_webapp/backend/` keeps only dev tooling: the synthetic
+  fixture DB, the search eval and the period-grammar parity test.
 - **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed.
-  TS types codegen'd from FastAPI's `openapi.json`.
+  TS types codegen'd from the Rust server's `crates/reg-meta/openapi.json`.
 - **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into Apple Container
   (macOS) or Podman (Linux) tests; `@pytest.mark.release` opts into real-artifact tests.
   Build/parse coverage is fully synthetic (no gitignored real SCB/SOS data) and runs the
@@ -217,7 +216,7 @@ refactor.
 
 # Run (dev servers)
 
-- `reg_webapp` local dev (FastAPI + Vite with an `/api` proxy): the `/run-reg-webapp`
+- `reg_webapp` local dev (Rust server + Vite with an `/api` proxy): the `/run-reg-webapp`
   skill (`reg_webapp/.claude/skills/run-reg-webapp/`) has the verified launch steps + a
   Playwright driver for smoke/screenshots. `.claude/launch.json` registers a single
   `reg-webapp` config for `preview_start` (its entry point is `dev.sh preview`, so
@@ -250,7 +249,7 @@ refactor.
 - `uv run python -m pytest conformance -q` — source-built conformance corpus and
   session-built catalog/steward artifact checks
 - `cargo build --workspace`, then
-  `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q`
+  `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q`
   — conformance checks on an admitted real artifact; all three flags required (search
   runs against the Rust server, and a missing `--server-cmd` fails), bad artifacts fail
   admission (fixture-bound goldens still use synthetic sources)

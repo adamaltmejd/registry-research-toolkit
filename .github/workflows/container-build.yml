@@ -93,7 +93,6 @@ jobs:
             edge:
               - "reg_webapp/frontend/**"
               - "reg_webapp/edge/**"
-              - "reg_webapp/backend/openapi.json"
               - "crates/reg-meta/openapi.json"
               - ".github/workflows/container-build.yml"
 
@@ -690,6 +689,25 @@ jobs:
           get "catalog/$group" | jq -e '.data.kind == "concept_group"'
           classification=$(get catalog/class | jq -er '.data.children[0].fqid')
           get "catalog/$classification" | jq -e '.data.kind == "classification"'
+      # Public project smoke (RUST_RUNTIME_SPEC.md package 3e.4): the project
+      # editor's POSTs answer through the edge from the Rust server — an empty
+      # project validates clean, and its order download is refused with the
+      # located `order_blocked` document. Fails when the worker stops routing
+      # /api/project, the write limit or the body parse refuses a plain request,
+      # or either operation stops answering its document.
+      - name: Public project smoke
+        if: steps.head.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          api=https://catalog.swecov.se/api/project
+          project='{"schema_version": "3.0.0", "steward": "global", "reg_meta_version": "5.1.0", "name": "smoke", "sources": []}'
+          post() { curl -sS -o "$2" -w '%{http_code}' -H 'content-type: application/json' -d "$project" "$api/$1"; }
+          code=$(post validate validated.json)
+          [ "$code" = 200 ] || { echo "FATAL: validate answered $code" >&2; cat validated.json >&2; exit 1; }
+          jq -e '.data.ok == true' validated.json
+          code=$(post order/manifest ordered.json)
+          [ "$code" = 422 ] || { echo "FATAL: the empty order answered $code" >&2; cat ordered.json >&2; exit 1; }
+          jq -e '.error.code == "order_blocked" and any(.error.fields.findings[]; .code == "project_empty")' ordered.json
 
   # Edge worker (SPA + /api passthrough) for data.swecov.se. Separate Worker
   # deployment from catalog.swecov.se so each origin can bump its own cache

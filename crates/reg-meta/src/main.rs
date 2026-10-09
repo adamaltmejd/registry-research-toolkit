@@ -2,7 +2,7 @@
 //!
 //! ```text
 //! reg-meta serve --db DIR [--catalog NAME] --stewards DIR --port N [--host ADDR]
-//!                [--public-host HOST]
+//!                [--public-host HOST] [--write-limit N]
 //! reg-meta mcp --db DIR [--catalog NAME]
 //! ```
 //!
@@ -11,29 +11,35 @@
 //! `DIR/<catalog>/steward.json` under `--stewards` and serves every registered
 //! operation and download, `/openapi.json` and MCP at `/mcp` on `--host` (default
 //! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
-//! names, and the edge token in `REG_META_EDGE_TOKEN` (`mcp.rs`). `mcp` serves the MCP
+//! names. `/mcp` and every POST share one rate limit per client address, keyed with
+//! the edge token in `REG_META_EDGE_TOKEN` (`limit.rs`): `--write-limit` tokens
+//! (default 60), refilled one a second. `mcp` serves the MCP
 //! tools over stdio. A refusal prints the error document on stderr and exits with the
 //! code's status.
 
+mod limit;
 mod mcp;
 
+use std::convert::Infallible;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::path::PathBuf;
 use std::sync::Arc;
 
 use axum::Router;
 use axum::body::Bytes;
-use axum::extract::rejection::BytesRejection;
 use axum::extract::{DefaultBodyLimit, Path, Query, State};
 use axum::http::{HeaderMap, HeaderValue, StatusCode, header};
+use axum::middleware::from_fn_with_state;
 use axum::response::{IntoResponse, Response};
-use axum::routing::{get, post};
+use axum::routing::{MethodRouter, get, post};
 use reg_catalog::ops::{
     self, Cache, Download, Meta, Operation, Param, Raw, Run, Server, Steward, body,
 };
 use reg_catalog::{Catalog, Docs, Error, Scope, hex};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
+
+use crate::limit::Limits;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -43,6 +49,7 @@ enum Mode {
         port: u16,
         host: IpAddr,
         public_host: Option<String>,
+        write_limit: u64,
     },
     Mcp,
 }
@@ -56,7 +63,7 @@ struct Args {
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     let mode = args.next();
     let (mut db, mut catalog, mut stewards, mut port) = (None, None, None, None);
-    let (mut host, mut public_host) = (None, None);
+    let (mut host, mut public_host, mut write_limit) = (None, None, None);
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--db" => &mut db,
@@ -65,6 +72,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
             "--port" => &mut port,
             "--host" => &mut host,
             "--public-host" => &mut public_host,
+            "--write-limit" => &mut write_limit,
             _ => return Err(Error::invalid_parameter(&flag)),
         };
         *slot = Some(args.next().ok_or_else(|| Error::invalid_parameter(&flag))?);
@@ -84,6 +92,14 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
                 None => Ipv4Addr::LOCALHOST.into(),
             },
             public_host,
+            write_limit: match write_limit {
+                Some(limit) => limit
+                    .parse()
+                    .ok()
+                    .filter(|&limit| limit > 0)
+                    .ok_or_else(|| Error::invalid_parameter("--write-limit"))?,
+                None => limit::DEFAULT_PER_MINUTE,
+            },
         },
         // `mcp` loads no branding and listens on no port.
         Some("mcp") => {
@@ -92,6 +108,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
                 ("--port", &port),
                 ("--host", &host),
                 ("--public-host", &public_host),
+                ("--write-limit", &write_limit),
             ];
             if let Some((flag, _)) = serve_only.iter().find(|(_, value)| value.is_some()) {
                 return Err(Error::invalid_parameter(flag));
@@ -125,6 +142,7 @@ async fn main() {
             port,
             host,
             public_host,
+            write_limit,
         } => {
             let steward =
                 Steward::load(&stewards, catalog.name()).unwrap_or_else(|err| refuse(&err));
@@ -134,7 +152,13 @@ async fn main() {
                 steward: Some(steward),
                 version: VERSION,
             };
-            serve(Arc::new(server), (host, port).into(), public_host).await;
+            serve(
+                Arc::new(server),
+                (host, port).into(),
+                public_host,
+                write_limit,
+            )
+            .await;
         }
         Mode::Mcp => {
             let server = Server {
@@ -148,14 +172,27 @@ async fn main() {
     }
 }
 
-async fn serve(server: Arc<Server>, addr: SocketAddr, public_host: Option<String>) {
+async fn serve(
+    server: Arc<Server>,
+    addr: SocketAddr,
+    public_host: Option<String>,
+    write_limit: u64,
+) {
     let openapi = ops::openapi(VERSION).to_json().expect("OpenAPI serializes");
+    let limits = Limits::new(Arc::clone(&server), write_limit);
+    // A POST is behind the write limits, as `/mcp` is: the rate limit, then the cap.
+    let write = |handler: MethodRouter<Arc<Server>>| -> MethodRouter<Arc<Server>> {
+        handler
+            .layer::<_, Infallible>(from_fn_with_state(Arc::clone(&limits), limit::guard))
+            .layer(DefaultBodyLimit::max(body::MAX_BYTES))
+    };
     let mut app = Router::new().route("/openapi.json", get(|| async move { json(openapi) }));
     for op in ops::all() {
         for &route in op.paths {
             let handler = if op.body().is_some() {
-                post(move |state, query, body| submit(op, route, state, query, body))
-                    .layer(DefaultBodyLimit::max(body::MAX_BYTES))
+                write(post(move |state, query, body| {
+                    submit(op, route, state, query, body)
+                }))
             } else {
                 get(move |state, path, query, headers| {
                     answer(op, route, state, path, query, headers)
@@ -166,8 +203,9 @@ async fn serve(server: Arc<Server>, addr: SocketAddr, public_host: Option<String
     }
     for download in ops::downloads() {
         let handler = if download.body().is_some() {
-            post(move |state, query, body| submit_download(download, state, query, body))
-                .layer(DefaultBodyLimit::max(body::MAX_BYTES))
+            write(post(move |state, query, body| {
+                submit_download(download, state, query, body)
+            }))
         } else {
             get(move |state, path, query, headers| fetch(download, state, path, query, headers))
         };
@@ -175,11 +213,11 @@ async fn serve(server: Arc<Server>, addr: SocketAddr, public_host: Option<String
     }
     let app = app
         .with_state(Arc::clone(&server))
-        .merge(mcp::router(server, public_host));
+        .merge(mcp::router(server, public_host, limits));
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("bind the port");
-    // The peer address keys the `/mcp` rate limit of a request not proven to come
+    // The peer address keys the write rate limit of a request not proven to come
     // through the edge.
     axum::serve(
         listener,
@@ -316,7 +354,7 @@ async fn answer(
     )
 }
 
-/// One POST operation over HTTP: its body, capped at [`body::MAX_BYTES`] and parsed
+/// One POST operation over HTTP: its body, capped by [`limit::guard`] and parsed
 /// strictly ([`body::parse`]), is the body parameter. Answered `{data, meta}` or
 /// `{error, meta}` without cache validators: a POST answer is not cached.
 async fn submit(
@@ -324,10 +362,10 @@ async fn submit(
     route: &'static str,
     State(server): State<Arc<Server>>,
     Query(query): Query<Vec<(String, String)>>,
-    bytes: Result<Bytes, BytesRejection>,
+    bytes: Bytes,
 ) -> Response {
     let body = op.body().expect("a POST operation has a body");
-    let params = match posted(&server, body, route, query, bytes) {
+    let params = match posted(&server, body, route, query, &bytes) {
         Ok(params) => params,
         Err(refused) => return *refused,
     };
@@ -341,10 +379,10 @@ async fn submit_download(
     download: &'static Download,
     State(server): State<Arc<Server>>,
     Query(query): Query<Vec<(String, String)>>,
-    bytes: Result<Bytes, BytesRejection>,
+    bytes: Bytes,
 ) -> Response {
     let body = download.body().expect("a POST download has a body");
-    let params = match posted(&server, body, download.path, query, bytes) {
+    let params = match posted(&server, body, download.path, query, &bytes) {
         Ok(params) => params,
         Err(refused) => return *refused,
     };
@@ -355,25 +393,17 @@ async fn submit_download(
     }
 }
 
-/// A POST's request parameters: the query's, then its body, capped at
-/// [`body::MAX_BYTES`] and parsed strictly ([`body::parse`]), as the parameter
-/// `body`; or the response refusing the body (axum's own when it refuses before
-/// reading).
+/// A POST's request parameters: the query's, then its body, parsed strictly
+/// ([`body::parse`]), as the parameter `body`; or the response refusing the body.
 fn posted(
     server: &Server,
     body: &Param,
     route: &str,
     query: Vec<(String, String)>,
-    bytes: Result<Bytes, BytesRejection>,
+    bytes: &[u8],
 ) -> Result<Vec<(String, String)>, Box<Response>> {
-    let refused = |err| Box::new(refusal(server, server.catalog.default_scope(), err));
-    let project = match bytes {
-        Ok(bytes) => body::parse(&bytes).map_err(refused)?,
-        Err(rejection) if rejection.status() == StatusCode::PAYLOAD_TOO_LARGE => {
-            return Err(refused(body::too_large()));
-        }
-        Err(rejection) => return Err(Box::new(rejection.into_response())),
-    };
+    let project = body::parse(bytes)
+        .map_err(|err| Box::new(refusal(server, server.catalog.default_scope(), err)))?;
     let mut params = request_params(route, Vec::new(), query);
     params.push((body.name.to_owned(), project.to_string()));
     Ok(params)

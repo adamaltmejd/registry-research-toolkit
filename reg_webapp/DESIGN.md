@@ -1,14 +1,13 @@
 # reg_webapp — design
 
-FastAPI backend + Svelte SPA. The catalog reads (context, search, docs, the catalog
-pages) are the Rust server's (`reg-meta serve`); the backend serves the
-project-authoring write surface (validate / order); the SPA is the researcher's
-authoring client. This file records the package-local design rationale. Cross-cutting
-topology (package tree, dependency graph, perf budgets, version policy, testing-strategy
-overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in
-`REFACTOR_SPEC.md`. The backend's API contract is the committed `backend/openapi.json`;
-the Rust server's is `conformance/api/operations.toml` with its snapshot
-`crates/reg-meta/openapi.json`.
+Svelte SPA on the Rust server (`reg-meta serve`), which answers every `/api` route: the
+catalog reads (context, search, docs, the catalog pages) and the project operations
+(validate / order). The SPA is the researcher's authoring client. There is no Python web
+server: `RUST_RUNTIME_SPEC.md` package F deleted the FastAPI app. This file records the
+package-local design rationale. Cross-cutting topology (package tree, dependency graph,
+perf budgets, version policy, testing-strategy overview) lives in the root
+`ARCHITECTURE.md`; remaining/unbuilt work lives in `REFACTOR_SPEC.md`. The API contract
+is `conformance/api/operations.toml` with its snapshot `crates/reg-meta/openapi.json`.
 
 **Compiled holdings.** `ARCHITECTURE.md` and `reg_meta/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog or steward artifact and delegates
@@ -20,66 +19,46 @@ clients can request reference or holdings scope explicitly.
 
 The data is public-ish registry metadata; there is **no server-side user-private state**
 (project files live in the browser, never on the server). "Auth" here is really cost
-protection, on two axes: read GETs (the Rust server's) are edge-cacheable +
-ETag-revalidated (cheap), and the actual-work POST endpoints carry an origin-side
-body-size cap + per-IP rate limit. Real auth is a v2+ concern, layered on only if a
-steward ever needs private data.
+protection, on two axes: read GETs are edge-cacheable + ETag-revalidated (cheap), and
+the actual-work POSTs carry an origin-side body-size cap + per-client rate limit (Cost
+protection, below). Real auth is a v2+ concern, layered on only if a steward ever needs
+private data.
 
 ## Layout
 
 ```text
 reg_webapp/
-  backend/                # uv workspace member (own pyproject, src-layout)
-    src/reg_webapp/        # FastAPI app, routes, models, stewards loader
-    scripts/gen_openapi.py # deterministic OpenAPI dumper
-    openapi.json           # committed snapshot (canonical API contract)
-    tests/                 # pytest, HTTP corpora and source-built artifacts
+  backend/                # uv workspace member: dev tooling only (until stage 4)
+    scripts/fixture_db.py  # the synthetic catalog + docs DB pair (dev.sh --fixture-db)
+    scripts/run_search_eval.py  # search relevance vs search_eval.toml
+    tests/                 # the period-grammar parity test
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
-    src/lib/api-types.ts   # codegen'd from ../backend/openapi.json
-  stewards/               # per-steward config (sibling of backend/frontend)
+    src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
+  stewards/               # per-steward branding, read by `reg-meta serve --stewards`
     global/steward.json    # identity only; no catalog → full universe
   DESIGN.md
 ```
 
-`stewards/` is a sibling of `backend/` and `frontend/`: a steward config is deployment
-data, not backend source. The loader resolves it relative to the module
-(`stewards.STEWARDS_DIR`) so it works regardless of cwd.
+`stewards/` is deployment data, not server source: `reg-meta serve --stewards DIR` reads
+`DIR/<catalog>/steward.json` and nothing else.
 
-## Boot seam (the reg_meta read-only DB)
+## Boot seam (artifact admission)
 
-The FastAPI lifespan opens reg_meta read-only through reg_meta's **own** helpers, never
-a hardcoded path:
-
-```python
-db_path = reg_meta.db.db_path_from_args(None)  # REG_META_DB > XDG > platform
-conn = reg_meta.db.open_db(db_path)  # mode=ro + _check_schema_compat
-```
-
-`open_db` already opens `mode=ro` and runs `_check_schema_compat` — a real
-`SCHEMA_VERSION` assert vs the DB manifest. That is the **load-bearing** schema gate (a
-wrong major / too-old minor raises at startup;
-`conformance/cases/boot/schema-major-mismatch` covers it). The boot connection is closed
-once the manifest is read; the parsed manifest AND the resolved `db_path` are stashed on
-`app.state`. The boot also loads the steward and stashes it there.
-
-The lifespan holds **no** long-lived query connection. A shared `sqlite3` connection is
-not safe across FastAPI's sync-handler threadpool, so the project routes open a fresh
-read-only connection per request (`project_validation.per_request_conn`). It is a plain
-`with` on the handling thread, never a generator `Depends` (which can run on another
-threadpool thread), and skips the schema re-check (`check_schema=False`) the boot
-already ran.
-
-The webapp reads reg_meta read-only and ships no DDL, so it owns no `SCHEMA_VERSION` —
-the only schema gate is `open_db`'s boot compat check against reg_meta's manifest.
+The Rust server admits its catalog at startup and refuses to serve otherwise
+(`Catalog::open` in `crates/reg-catalog`): the schema gate (`schema_incompatible`), the
+artifact identity (`catalog_unpublishable`), and the selected `--catalog` against the
+artifact's own name (`catalog_mismatch`; a steward artifact never serves as `global`).
+The `api` corpus pins each refusal (`conformance/cases/api/admission-*`). The branding
+comes from the admitted catalog's name, so a deployment cannot pair one steward's
+artifact with another's branding. The webapp ships no DDL and owns no `SCHEMA_VERSION`.
 
 ## Catalog pages (the Rust server)
 
-FastAPI serves no catalog route. The SPA's catalog pages read the Rust server
-(`reg-meta serve`): `show` (`GET /api/catalog` for the root, `GET /api/catalog/{ref}`
-for every other node) and its facets `states`, `warnings`, `values`, `graph` and
-`lineage` (`GET /api/<facet>/{ref}`). Every response is `{data, meta}`; an error is
-`{error: {code, message, fields}, meta}`. The contract is
-`conformance/api/operations.toml`, the SPA's types are generated from
+The SPA's catalog pages read the Rust server (`reg-meta serve`): `show`
+(`GET /api/catalog` for the root, `GET /api/catalog/{ref}` for every other node) and its
+facets `states`, `warnings`, `values`, `graph` and `lineage` (`GET /api/<facet>/{ref}`).
+Every response is `{data, meta}`; an error is `{error: {code, message, fields}, meta}`.
+The contract is `conformance/api/operations.toml`, the SPA's types are generated from
 `crates/reg-meta/openapi.json` into `frontend/src/lib/api-types-rust.ts`, and the
 "Catalog surface" section of `frontend/src/lib/api.ts` is the one place the SPA calls
 them. Locally the Vite dev proxy sends these paths to the Rust server. Ref and period
@@ -215,9 +194,8 @@ and classifications are its navigable targets.
 ## Docs library (the Rust server's `docs` operations)
 
 `/api/docs/*` (#354/#742) is served by the Rust server since package 3b.6 (the vite dev
-proxy sends `/api/docs` there); FastAPI has no docs routes. The operations
-(`conformance/api/operations.toml`) read the prebuilt `reg_meta_docs.db` beside the
-catalog, each answering `{data, meta}`:
+proxy sends `/api/docs` there). The operations (`conformance/api/operations.toml`) read
+the prebuilt `reg_meta_docs.db` beside the catalog, each answering `{data, meta}`:
 
 - `docs_search` (`GET /api/docs/search?q=&register=&limit=&cursor=`): with `q`, the
   entries matching every word, best first, with an FTS `snippet`; without `q`, every
@@ -515,23 +493,21 @@ variable pages to add one column each.
 ## Context and catalog sizes (the Rust server, 3a.10)
 
 `GET /api/context` is answered by the Rust server (`reg-meta serve`, the `context`
-operation in `crates/reg-catalog/src/ops/slice_3a.rs`), not by this backend. One call
-returns the steward branding, schema version, import date, the steward's period span,
-the `reg_meta` version and the headline `sizes` (`{providers, registers, variables}` in
-the read scope), as `{data, meta}`; it replaces FastAPI's `/api/context` and
-`/api/stats` (`RUST_RUNTIME_SPEC.md` decision 15). App fetches it once and threads
-`steward` and `sizes` to Home, which makes no request of its own. The SPA's types for it
-are generated from the committed `crates/reg-meta/openapi.json` into
+operation in `crates/reg-catalog/src/ops/slice_3a.rs`). One call returns the steward
+branding, schema version, import date, the steward's period span, the `reg_meta` version
+and the headline `sizes` (`{providers, registers, variables}` in the read scope), as
+`{data, meta}`; it replaces FastAPI's `/api/context` and `/api/stats`
+(`RUST_RUNTIME_SPEC.md` decision 15). App fetches it once and threads `steward` and
+`sizes` to Home, which makes no request of its own. The SPA's types for it are generated
+from the committed `crates/reg-meta/openapi.json` into
 `frontend/src/lib/api-types-rust.ts` (a `cargo test` keeps the snapshot equal to the
 server). Locally, the Vite dev proxy sends `/api/context` to the Rust server and the
 rest of `/api` here.
 
 ## ETag / Cache-Control
 
-FastAPI serves no GET read under `/api` and sets no validator: its project writes are
-POSTs, and its own `/openapi.json` and `/docs` are not cached reads. The context,
-search, docs and catalog reads are the Rust server's, which sets their ETags and
-`Cache-Control` (`crates/reg-catalog`).
+The Rust server sets the reads' ETags and `Cache-Control` (`crates/reg-catalog`); a POST
+answer (`validate`, `order`, the manifest download) carries no validator.
 
 **V1 early-revalidation correction (decision 2026-07-14; not implemented at this
 head).** App code, compiled catalog DB, steward branding configuration and paired docs
@@ -644,38 +620,25 @@ bounds of known tables with an explicit mapping, then capped at the catalog impo
 It is a coarse UI slider bound, never a coverage or validity check. Catalog artifacts
 and holdings without dated periods return null.
 
-`REG_WEBAPP_STEWARDS_DIR` overrides the branding root for wheels and Docker images.
-SWECOV is the proving steward; extracting its branding and delivery pipeline into its
-own system remains separate from this runtime cut. No generic per-steward extension
-surface is introduced.
+The Docker image copies the branding root to `/opt/reg_webapp/stewards/` and passes it
+as `--stewards`. SWECOV is the proving steward; extracting its branding and delivery
+pipeline into its own system remains separate from this runtime cut. No generic
+per-steward extension surface is introduced.
 
 ## Pydantic boundary
 
-reg_webapp defines its **own** webapp-local Pydantic response models (`models.py`) for
-the project-write routes; the catalog pages' models are the Rust server's. reg_meta's
-frozen Pydantic models (`OrderFinding`) are embedded directly as field types, never
-re-modeled. For `project_data`-related responses (`/api/project/*`) the webapp uses
-**`reg_schema` Pydantic models directly** — no wrapper layer, eliminating that drift
-surface. The **only** 1:1 Pydantic wrapper is `ValidationResult`/`ValidationIssue`
-(reg_schema is a frozen dataclass consumed cross-runtime by the SPA, so the webapp wraps
-it 1:1 there).
-
-One gotcha: a `register` field on a `pydantic.BaseModel` shadows `BaseModel.register` (a
-method) and warns. The docs models name the Python attribute `register_name` and
-`Field(alias="register")` it, so the wire/JSON key (and OpenAPI schema property) stays
-`register` while the warning is gone.
+The webapp defines no Pydantic models of its own: every `/api` response is a Rust server
+document, typed for the SPA from `crates/reg-meta/openapi.json`.
 
 ## OpenAPI snapshot + TS codegen (the drift gate)
 
-`openapi.json` is committed and is the canonical contract. `gen_openapi.py` dumps
-`create_app().openapi()` with `sort_keys=True` + a trailing newline so the snapshot is
-byte-stable across machines. `app.openapi()` builds without the lifespan (no DB needed),
-so the dumper runs offline. The SPA codegens `src/lib/api-types.ts` from the snapshot
-via `openapi-typescript`. Two checks keep these in lockstep: `test_openapi_snapshot.py`
-(in the always-run `test` job) asserts the committed `openapi.json` equals a fresh
-render of the app, and the `reg-webapp-frontend` CI job regenerates `api-types.ts` from
-the committed snapshot and fails on any diff — so app, snapshot, TS types, and the
-committed tree must agree.
+`crates/reg-meta/openapi.json` is committed and is the canonical contract. The SPA
+codegens `src/lib/api-types-rust.ts` from it via `openapi-typescript`. Two checks keep
+these in lockstep: `cargo test -p reg-meta --test openapi_snapshot` asserts the
+committed snapshot equals the server's rendered document, and the frontend gate step
+(`scripts/gate.py frontend`, run by the `reg-webapp-frontend` CI job) regenerates the
+types from the snapshot and fails on any diff — so server, snapshot, TS types, and the
+committed tree must agree. `scripts/gate.py regen` refreshes both.
 
 ## Frontend toolchain
 
@@ -689,8 +652,8 @@ the JS/CSS/HTML parts of `.svelte` but does **not** yet parse Svelte control-flo
   Biome can't see template-bound usage of `<script>` declarations and false-fires.
   **`svelte-check`** (the `check` script) is the authoritative type/template gate and
   does see template usage.
-- The codegen'd `src/lib/api-types.ts` is excluded from Biome entirely (codegen output,
-  never hand-formatted).
+- The codegen'd `src/lib/api-types-rust.ts` is excluded from Biome entirely (codegen
+  output, never hand-formatted).
 
 **UI behavior layer: Bits UI** (`bits-ui@2.19.1`, the Svelte-5-runes major) is the
 sanctioned headless-primitives library for a11y-critical widgets — comboboxes, menus,
@@ -976,8 +939,8 @@ invariant removes the spurious refetch, not the teardown.
   Edge workers below); see the comment atop `router.svelte.ts`.
 
 The fetch wrapper (`src/lib/api.ts`) types every response off
-`components["schemas"][...]` from the codegen'd `api-types.ts`, so the SPA and the
-backend contract can't drift. The catch-all returns the `kind`-discriminated
+`components["schemas"][...]` from the codegen'd `api-types-rust.ts`, so the SPA and the
+server contract can't drift. The catch-all returns the `kind`-discriminated
 `CatalogNode` union; components narrow on `kind` via `src/lib/catalog.ts` helpers
 (unit-tested).
 
@@ -1289,21 +1252,19 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   the Python `reg-meta update` fetch until stage 4), a pinned Rust stage building
   `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate. The image serves
   the API and `/mcp` only; the edge workers serve the SPA, which `container-build.yml`'s
-  edge jobs build themselves. The FastAPI routes not yet ported to Rust (browse, project
-  authoring, orders) are unavailable in production until their slice ships (checkpoint
-  2: no users, so no proxy or fallback); the backend package stays for dev and tests
-  until stage 4.
+  edge jobs build themselves. Since 3e.4 the Rust server answers every route the SPA
+  calls; package F deleted the FastAPI app.
 - **Hosted MCP** (decision 12): `/mcp` on `catalog.swecov.se`. The global worker
   forwards `/mcp` (`ROUTE_MCP` in `wrangler.jsonc` only; the SWECOV worker does not,
   since a steward catalog is never served over hosted MCP), and `fly.toml` passes
   `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
-  `/mcp` rate-limits per client address (60 a minute, apart from the SPA's limits).
-  Behind Fly the peer is Fly's proxy, so the worker proves a request came through the
-  edge with a shared secret (`EDGE_TOKEN` on the worker, `REG_META_EDGE_TOKEN` on the
-  Fly app, sent as `x-edge-token`); only such a request is keyed on its
-  `CF-Connecting-IP`. Any other request, a direct-origin hit included, is keyed on its
-  peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret every edge
-  `/mcp` client shares the proxy's bucket. After each global edge deploy,
+  `/mcp` and the project POSTs share one rate limit per client address (60 a minute;
+  Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
+  request came through the edge with a shared secret (`EDGE_TOKEN` on the worker,
+  `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only such a request is
+  keyed on its `CF-Connecting-IP`. Any other request, a direct-origin hit included, is
+  keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret
+  every edge `/mcp` client shares the proxy's bucket. After each global edge deploy,
   `container-build.yml` sends `initialize`, `tools/list` and one `search` to the public
   `/mcp`.
 - **Apps**: `reg-webapp-global` serves `catalog.swecov.se`; `reg-webapp-swecov` serves
@@ -1494,96 +1455,70 @@ Older catalog-only fixtures continue to serve unrelated route tests. Real pinned
 artifacts are checked separately for order parity, latency, and rendered evidence;
 synthetic success is not a real-corpus or deployment claim.
 
-## Project-write surface (`routes/project.py`)
+## Project operations (the Rust server, 3e.4)
 
-Two POST endpoints: `/api/project/validate`, `/api/project/order`. Both read the body as
-a **raw JSON dict** (not a typed param) because `/validate` must accept malformed specs
-to diagnose them. Unknown top-level keys remain verbatim until the structural layer
-reports each as `unexpected_field`; they are never normalized or dropped by typed model
-construction first. OpenAPI documents the canonical closed `ProjectData` schema, while
-the SPA keeps a raw diagnostic transport type so malformed uploads can reach this
-boundary unchanged.
+The project editor POSTs the WHOLE serialized draft, a raw object, to two operations of
+the `order` MCP tool (`crates/reg-catalog/src/ops/slice_3e.rs`). The body is parsed
+strictly (`ops/body.rs`: one UTF-8 JSON object, no byte-order mark, no duplicate key at
+any depth, `serde_json`'s depth limit); anything else is `malformed_request` (400)
+before the operation runs. Unknown keys survive the parse, so `validate` reports each as
+`unexpected_field`. Neither operation takes a `scope`: a project is read in the
+artifact's own identity, and a `scope` parameter is `invalid_parameter`.
 
-- **`/validate` status discipline.** A spec that FAILS validation is a *successful
-  validation response* — **HTTP 200 with `ok=false` + the issues**. 4xx is reserved for
-  a malformed REQUEST (non-JSON, duplicate JSON keys, a too-deeply-nested or non-object
-  body, an oversized body). Apart from the size cap, that refusal is reg_meta's shared
-  `order.parse_project`, the same reader the CLI applies to a file, and the 400 `detail`
-  is its message. Everything after the body read is a thin adapter over reg_meta's
-  `semantic.validate_project` (supported version → structural → semantic, the
-  **concatenated** issue list; see `reg_meta/DESIGN.md` → Project semantic validation).
-  The adapter hands it `per_request_conn` as the opener, so the DB-free layers still run
-  first and a rejected body costs no DB hit. The 200 body is `semantic.validation_json`
-  VERBATIM (a raw `Response`, like `/order`), so the SPA and `reg-meta validate` read
-  byte-identical findings, pinned by the conformance corpus;
-  `response_model=ValidationResultModel` still publishes the typed contract.
-- **`/order`** materializes the JSON order manifest and serves it as an `order.json`
-  download (see below). Unlike `/validate`, it **gates** first: you cannot materialize
-  an order from an invalid spec → 422.
+- **`POST /api/project/validate`** answers `{data: {ok, issues}, meta}`. A project that
+  FAILS validation is a successful answer — **200 with `ok: false`** and every issue in
+  emission order (supported version → structural → semantic). A non-2xx is a refused
+  REQUEST (`malformed_request`, `payload_too_large`, `rate_limited`), which the SPA
+  banners apart from the issue list.
+- **`POST /api/project/order`** answers `{data: manifest, meta}`;
+  **`POST /api/project/order/manifest`** serves the same manifest as the exact
+  `order.json` bytes, `attachment; filename="order.json"`. The SPA's Download order.json
+  uses the download. Anything that is NOT an order is a 422 on both routes, never a
+  partial manifest: `project_invalid` for a document `validate` rejects structurally
+  (its issues in `fields.issues`), `order_blocked` when any finding leaves part of the
+  request undeliverable (every finding in `fields.findings`, each with its stable `code`
+  and its `source` / `variable` / `period` coordinates). Fail-closed is a contract, so
+  the findings ship as data: `orderFindingsFromError` narrows them at the HTTP boundary,
+  and the SPA renders each through the SAME per-finding path as a validation issue
+  (`ValidationPanel`; `validation.orderFindingPointer` resolves the materializer's
+  by-VALUE coordinates to the by-POSITION pointer `findingLocation` already locates a
+  card by). The finding shape is declared in `api.ts` (the error catalog types `fields`
+  as an open object) and pinned by `conformance/cases/api/order-errors`.
 
-**The order manifest.** The compiled contract uses a thin adapter over
-`reg_meta.order.materialize_order(project, conn)`. The adapter uses that signature
-directly. The pipeline and every fail-closed finding live in `reg_meta/DESIGN.md` →
-"Order materializer and manifest (`order.py`)". The adapter owns exactly three things:
-
-- **The selected artifact connection**, opened read-only for this request after boot
-  validates manifest identity. `catalog_artifact_kind` chooses global logical fallback
-  or compiled steward holdings. Missing steward holdings or identity mismatch fails;
-  browse scope never bypasses project provenance or physical coverage. No inventory
-  argument, `app.state.inventory`, loose TOML or inventory reconciliation survives.
-- **The download**: the 200 body is `OrderManifest.to_json()` VERBATIM (the handler
-  returns a raw `Response`, which FastAPI passes through without re-serializing), so the
-  SPA download and `reg-meta order` hand the steward byte-identical files, pinned by a
-  cross-adapter test. `response_model=` still publishes the reg_meta `OrderManifest` as
-  the typed contract for the OpenAPI snapshot and the SPA codegen, so this is NOT a
-  `response_model` carve-out.
-- **The "not an order" status**: 422, never a partial 200 — for an invalid spec
-  (`order.project_from_raw`, the gate both adapters share) and for a fail-closed blocked
-  order alike. The body is the typed `OrderBlockedModel`: a `detail` line
-  (`order.blocked_message`, the same text the CLI envelopes, kept because every 4xx here
-  carries one) **and `findings` — reg_meta's own `OrderFinding` models**, each with its
-  stable `code` and its `source` / `variable` / `period` coordinates. Fail-closed is a
-  CONTRACT, so it ships as data at the boundary this API validates JSON contracts at: a
-  flattened string would force every client to parse prose. `findings` is empty only for
-  a spec the gate rejected before the materializer saw it. The SPA renders each finding
-  through the SAME per-finding path as a validation issue (`ValidationPanel`;
-  `validation.orderFindingPointer` resolves the materializer's by-VALUE coordinates to
-  the by-POSITION pointer `findingLocation` already locates a card by).
-
-**Connection model = per-request open ON ONE THREAD** (the locked cross-thread guard).
-`/validate` and `/order` are `async` only to read the body off the wire; the blocking
-work (structural parse + per-binding sqlite resolution) is offloaded via
-`run_in_threadpool`, and the reg_meta connection opens on **that** worker thread inside
-a `with`-block — NEVER a generator `Depends` (which can run on a different AnyIO thread
-→ `sqlite3.ProgrammingError`).
+The order pipeline and its findings are `ops/order.rs` (today's
+`reg_meta.order.materialize_order`; see `reg_meta/DESIGN.md` → Order materializer and
+manifest): steward holdings on a steward artifact, canonical columns on the global one.
 
 ## Semantic validation
 
-The reg_meta-backed semantic layer, its rules and its issue codes live in shared
-`reg_meta` project code: see `reg_meta/DESIGN.md` → Project semantic validation
-(`semantic.py`). `/validate` (above) is one of its two thin adapters; the other is
-`reg-meta validate`.
+The semantic layer, its rules and its issue codes are `ops/validate.rs`, ported from
+`reg_meta`'s frozen `semantic.py` (`reg_meta/DESIGN.md` → Project semantic validation),
+whose CLI adapter `reg-meta validate` G1 compares it with.
 
-## Cost protection (`limits.py`)
+## Cost protection (`crates/reg-meta/src/limit.rs`)
 
-Two stdlib-only ASGI middlewares (no `slowapi` dep) gate ONLY the write methods (POST);
-read GETs flow through untouched (they have the cheaper edge-cache + ETag axis). These
-are **origin-side** guards — Cloudflare fronts production with the same budgets at the
-edge (remaining — see `REFACTOR_SPEC.md`); these catch direct origin hits that bypass
-the edge.
+Every POST (the project operations and the manifest download) and `/mcp` sit behind the
+same two origin-side guards; GET reads are not limited (they have the cheaper edge-cache
 
-- **`BodySizeLimitMiddleware`** — a **streaming** byte-count guard that 413s a body
-  exceeding `MAX_BODY_BYTES` (1 MB). It counts bytes as they arrive rather than trusting
-  `Content-Length` (absent on chunked transfers, and spoofable), so an oversized
-  chunked/under-declared body is still caught even if the handler never reads it. 1 MB
-  is far above any plausible `project_data.json`.
-- **`RateLimitMiddleware`** — an in-memory per-IP token bucket (`request.client.host`,
-  \~`RATE_LIMIT_PER_MINUTE` req/min/IP → 429). **IP-only** by design: a session token
-  would bucket per-browser (helpful behind NAT) but adds a fingerprinting surface for
-  anonymous public data — layer it in only if a steward needs it. A missing client host
-  buckets under one shared key (fail closed). Buckets are per-process (lost on restart,
-  not shared across replicas) — sufficient as the origin backstop behind the edge
-  limiter; a shared store (Redis) is a scale-out concern, not v1.
++ ETag axis). Cloudflare fronts production with its own edge budgets; these catch direct
+  origin hits that bypass the edge.
+
+- **Rate limit** — one in-memory token bucket per client address, shared by `/mcp` and
+  the POSTs: 60 tokens, refilled one a second, then `rate_limited` (429,
+  `Retry-After: 1`). `serve --write-limit N` changes the 60, for verification runs (the
+  conformance suite, release admission, G1) that replay many projects from one address;
+  a deployment keeps the default. The client is the edge's `CF-Connecting-IP` when the
+  request carries the edge token (`REG_META_EDGE_TOKEN`), otherwise the peer, and an
+  IPv6 address counts as its /64. **Address-only** by design: a session token would
+  bucket per browser (helpful behind NAT) but adds a fingerprinting surface for
+  anonymous public data. Buckets are per process (lost on restart, not shared across
+  replicas), which suffices as the origin backstop behind the edge. The SPA's debounced
+  validation and its downloads stay far inside the budget (the `flows` run replays every
+  scenario from one address under it). A deployment whose worker sends no edge token
+  keys every client on Fly's proxy, so all of them share one bucket.
+- **Body cap** — `payload_too_large` (413) over 1 MiB, counted as the body streams in
+  (axum's `DefaultBodyLimit`), never trusting `Content-Length`. 1 MiB is far above any
+  plausible `project_data.json`.
 
 ## Browse-only authoring: the data-order cart model (#991, #992/#993)
 
@@ -1924,27 +1859,27 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
 
 ## API surface
 
-Two servers answer `/api/`. The Rust server (`reg-meta serve`; contract
-`conformance/api/operations.toml`, snapshot `crates/reg-meta/openapi.json`) answers the
-reads; this backend (snapshot `backend/openapi.json`) answers the project writes. This
-table is the orientation map. Read GETs are edge-cacheable, write POSTs are not.
+The Rust server (`reg-meta serve`; contract `conformance/api/operations.toml`, snapshot
+`crates/reg-meta/openapi.json`) answers every `/api` route. This table is the
+orientation map. Read GETs are edge-cacheable, write POSTs are not.
 
-  | Method | Path                                 | Server  | Purpose                                                                                                                   |
-  | ------ | ------------------------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------- |
-  | GET    | `/api/context`                       | Rust    | `context`: branding, build info, period span, catalog sizes.                                                              |
-  | GET    | `/api/search`                        | Rust    | `search`: one ranked list per call (`?type=` keeps one arm), `{items, next_cursor}`.                                      |
-  | GET    | `/api/catalog`, `/api/catalog/{ref}` | Rust    | `show`: the root, or any node by ref (`kind`-tagged); a retired ref answers its terminal successor.                       |
-  | GET    | `/api/states/{ref}`                  | Rust    | A variable's states, cursor-paged; `period`, `variant`, `value_set_version` narrow.                                       |
-  | GET    | `/api/warnings/{ref}`                | Rust    | A register's or variable's data warnings; `period`, `variant`, `representation`, `unassigned_only` filter.                |
-  | GET    | `/api/values/{ref}`                  | Rust    | A classification's codes, or a variable state's value set (`state=`), cursor-paged; `q` filters, `total`.                 |
-  | GET    | `/api/graph/{ref}`                   | Rust    | The relationship graph of a variable, classification or group, succession included.                                       |
-  | GET    | `/api/lineage/{ref}`                 | Rust    | A variable's lineage edges, lineage warnings and source registers.                                                        |
-  | GET    | `/api/docs/search`                   | Rust    | `docs_search`: docs matching `q` (or every doc), optional `?register=`, `{items, next_cursor, total, register_ingested}`. |
-  | GET    | `/api/docs/doc/{identifier}`         | Rust    | `docs_get`: one doc by variable/filename — metadata, source pointer, excerpt, body.                                       |
-  | GET    | `/api/docs/related/{ref}`            | Rust    | `docs_related`: metadata of the register's rehosted source PDFs.                                                          |
-  | GET    | `/api/docs/file/{ref}/{filename}`    | Rust    | One rehosted source PDF's bytes.                                                                                          |
-  | POST   | `/api/project/validate`              | FastAPI | Three-layer validation; 200 + `ok` + issues.                                                                              |
-  | POST   | `/api/project/order`                 | FastAPI | The materialized JSON order manifest, downloaded as `order.json`; 422 (`OrderBlockedModel`) when not an order.            |
+  | Method | Path                                 | Server | Purpose                                                                                                                   |
+  | ------ | ------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------- |
+  | GET    | `/api/context`                       | Rust   | `context`: branding, build info, period span, catalog sizes.                                                              |
+  | GET    | `/api/search`                        | Rust   | `search`: one ranked list per call (`?type=` keeps one arm), `{items, next_cursor}`.                                      |
+  | GET    | `/api/catalog`, `/api/catalog/{ref}` | Rust   | `show`: the root, or any node by ref (`kind`-tagged); a retired ref answers its terminal successor.                       |
+  | GET    | `/api/states/{ref}`                  | Rust   | A variable's states, cursor-paged; `period`, `variant`, `value_set_version` narrow.                                       |
+  | GET    | `/api/warnings/{ref}`                | Rust   | A register's or variable's data warnings; `period`, `variant`, `representation`, `unassigned_only` filter.                |
+  | GET    | `/api/values/{ref}`                  | Rust   | A classification's codes, or a variable state's value set (`state=`), cursor-paged; `q` filters, `total`.                 |
+  | GET    | `/api/graph/{ref}`                   | Rust   | The relationship graph of a variable, classification or group, succession included.                                       |
+  | GET    | `/api/lineage/{ref}`                 | Rust   | A variable's lineage edges, lineage warnings and source registers.                                                        |
+  | GET    | `/api/docs/search`                   | Rust   | `docs_search`: docs matching `q` (or every doc), optional `?register=`, `{items, next_cursor, total, register_ingested}`. |
+  | GET    | `/api/docs/doc/{identifier}`         | Rust   | `docs_get`: one doc by variable/filename — metadata, source pointer, excerpt, body.                                       |
+  | GET    | `/api/docs/related/{ref}`            | Rust   | `docs_related`: metadata of the register's rehosted source PDFs.                                                          |
+  | GET    | `/api/docs/file/{ref}/{filename}`    | Rust   | One rehosted source PDF's bytes.                                                                                          |
+  | POST   | `/api/project/validate`              | Rust   | `validate`: 200 + `ok` + issues, an invalid project included.                                                             |
+  | POST   | `/api/project/order`                 | Rust   | `order`: the manifest; 422 `project_invalid` or `order_blocked` (with every finding) when not an order.                   |
+  | POST   | `/api/project/order/manifest`        | Rust   | The same manifest as the exact `order.json` bytes, an attachment (the SPA's download).                                    |
 
 Global FTS search shipped as `GET /api/search` (#350) and moved to the Rust server in
 3a.11; the docs library shipped as `/api/docs/*` (#354) and moved to the Rust server in
@@ -1954,8 +1889,9 @@ Global FTS search shipped as `GET /api/search` (#350) and moved to the Rust serv
 
 Hostile input on the catalog and docs reads (a malformed ref, a traversal-shaped path, a
 bad period, variant or query) is refused by the Rust server with a located error; the
-grammars and refusals are pinned in `conformance/cases/api`. On this backend the project
-routes read the raw body through `request_body.py` and reject any `scope` parameter.
+grammars and refusals are pinned in `conformance/cases/api`. A project body is parsed
+strictly (`ops/body.rs`, Project operations above), and a `scope` parameter on a project
+operation is refused as `invalid_parameter`.
 
 ## Forward-looking open UX notes
 

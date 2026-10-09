@@ -63,20 +63,29 @@ describe("issuesUnderPointer (roll-up)", () => {
       code: "a",
       path: "/sources/1",
       message: "exact",
+      successor_fqid: null,
     },
     {
       level: "error" as const,
       code: "b",
       path: "/sources/1/bindings/0/type",
       message: "descendant",
+      successor_fqid: null,
     },
     {
       level: "error" as const,
       code: "c",
       path: "/sources/10/name",
       message: "sibling-10",
+      successor_fqid: null,
     },
-    { level: "warning" as const, code: "d", path: "", message: "doc" },
+    {
+      level: "warning" as const,
+      code: "d",
+      path: "",
+      message: "doc",
+      successor_fqid: null,
+    },
   ];
 
   it("does NOT false-match /sources/10 when the prefix is /sources/1", () => {

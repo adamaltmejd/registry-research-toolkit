@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "reg-webapp"
 version = "0.1.0"
-description = "FastAPI backend for the Svelte SPA's project validation and order writes"
+description = "Dev tooling beside the Svelte SPA: the fixture DB, the search eval, the period parity test"
 readme = "README.md"
 requires-python = ">=3.14"
 authors = [{ name = "Adam Altmejd", email = "adam@altmejd.se" }]
@@ -18,23 +18,11 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 # Internal deps carry meaningful floors, matching the repo's floor-pin convention
-# (cf. reg_meta_build's `reg-meta>=0.37.0`): reg_webapp's project routes call
-# reg_meta's DB boot, order and semantic validation (floor: the release they were
-# last changed against, reg-meta 0.43.0) and serve reg-schema's project_data
-# response models (reg-schema 3.0.0, the finite-only `Source.period`). Exact pins
-# are deliberately NOT used — they'd force monorepo-wide version lockstep and
-# wouldn't enable out-of-workspace builds anyway (these packages resolve via
-# [tool.uv.sources], not PyPI).
-# starlette is a DIRECT import (limits.py uses its Response and ASGI types), so it's declared here with its security floor
-# (GHSA-82w8-qh3p-5jfq, fixed in 1.3.1) rather than left to fastapi's transitive
-# pin; fastapi >=0.137.0 is the first release whose starlette range admits 1.3.x.
+# (cf. reg_meta_build's `reg-meta>=0.37.0`). The Rust server (`reg-meta serve`)
+# serves every route; this member keeps only dev tooling (package F of
+# RUST_RUNTIME_SPEC.md deleted the FastAPI app).
 dependencies = [
     "reg-meta>=0.43.0",
-    "reg-schema>=3.0.0",
-    "fastapi>=0.137.0",
-    "starlette>=1.3.1",
-    "uvicorn>=0.48.0",
-    "pydantic>=2.13.4",
 ]
 
 [project.urls]

@@ -10,6 +10,9 @@
   representation's spelling and ``schema`` the delivered one; one is a case twin of
   the other, so holdings compares them folded.
 
+A steward catalog's reference ``get-schema-summary`` whose baseline answer equals the
+global catalog's case of the same register is not walked again (G1 budget).
+
 Rows compare as sorted lists of the fields both arms carry: storage ids are not part of
 the API, and the CLI emits the window-only fields (operational definition, source text,
 definition, unit) only on expanded rows. A refusal compares as ``error``. The sampled
@@ -176,13 +179,26 @@ def cases(
             case_id: matched_refs(conn, key, register, case_id.split("/")[1])
             for case_id, (key, register) in datacolumns.items()
         }
-    results = baseline_cli.result()
+        # Each register's state rows: its whole-history walk's length.
+        states = dict(
+            conn.execute(
+                "SELECT p.slug || '/' || r.slug, count(*) FROM variable_state "
+                "JOIN register_variant USING(register_variant_id) "
+                "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
+                "GROUP BY 1"
+            )
+        )
 
+    def baseline(case_id: str) -> tuple[bool, object]:
+        """Whether the CLI baseline case succeeded, and its JSON."""
+        base_cli = baseline_cli.result().get(f"{catalog}/{case_id}")
+        ok = base_cli is not None and base_cli["exit"] == 0
+        return ok, json.loads(base_cli["stdout"]) if ok else None
+
+    # Each case requests the candidate before it waits on `baseline_cli`, so the
+    # walks run beside the CLI arms (G1 budget).
     def run(case_id: str):
         scope, command, *rest = case_id.split("/")
-        base_cli = results.get(f"{catalog}/{case_id}")
-        ok = base_cli is not None and base_cli["exit"] == 0
-        data = json.loads(base_cli["stdout"]) if ok else None
         args = argv[f"{catalog}/{case_id}"]
         if command == "get-datacolumns":
             with_refs = refs[f"{catalog}/{case_id}"]
@@ -191,6 +207,7 @@ def cases(
                 rows = pages(cand, "/api/schema/" + quote(ref), {"scope": scope})
                 found |= {(r["variant"], r["column"]) for r in rows or []}
             fold = str.lower if scope == "holdings" else str
+            ok, data = baseline(case_id)
             expected = (
                 sorted(
                     {
@@ -219,6 +236,7 @@ def cases(
                 "to": flag(args, "--to"),
             }
             answer = get(cand, f"/api/diff/{path}", params)
+            ok, data = baseline(case_id)
             expected = (
                 _diff(data, _baseline_column, _baseline_change) if ok else "error"
             )
@@ -230,10 +248,47 @@ def cases(
         if command == "get-schema-year":
             params["period"] = flag(args, "--years")
         rows = pages(cand, f"/api/schema/{path}", params)
+        ok, data = baseline(case_id)
         expected = _schema_baseline(data, register) if ok else "error"
         actual = _schema_candidate(rows) if rows is not None else "error"
         return case_id, expected, actual
 
-    ids = sorted(case_id.split("/", 1)[1] for case_id in argv)
+    def twin(case_id: str) -> bool:
+        """A steward catalog's reference ``get schema --summary`` whose baseline
+        answer equals the global catalog's for the same register (the SCB registers
+        both carry): the global walk compares the same rows."""
+        scope, command, *_ = case_id.split("/")
+        if (scope, command) != ("reference", "get-schema-summary"):
+            return False
+        results = baseline_cli.result()
+        mine = results.get(f"{catalog}/{case_id}")
+        other = results.get(f"global/{case_id}")
+        return (
+            mine is not None
+            and other is not None
+            and all(mine[k] == other[k] for k in ("exit", "stdout", "stderr"))
+        )
+
+    ids = [case_id.split("/", 1)[1] for case_id in argv]
+    if catalog != "global":
+        # simplify: a twin is not walked, so the server's reference `schema` on the
+        # steward file goes uncompared for the registers it shares unchanged with
+        # the global file (the steward's own registers and holdings still walk);
+        # compare a twin's first page if a steward-only reference defect slips by.
+        walked = [case_id for case_id in ids if not twin(case_id)]
+        print(
+            f"served {catalog} schema: {len(ids) - len(walked)} reference summaries "
+            "not walked, equal to the global catalog's",
+            flush=True,
+        )
+        ids = walked
+
+    def length(case_id: str) -> tuple:
+        _, command, *rest = case_id.split("/")
+        return command != "get-schema-summary", -states.get("/".join(rest), 0)
+
+    # A walk's pages run one after another, so the longest walks start first
+    # instead of forming the tail.
+    ids.sort(key=lambda case_id: (*length(case_id), case_id))
     with ThreadPoolExecutor(PARALLEL) as pool:
-        return list(pool.map(run, ids))
+        return sorted(pool.map(run, ids), key=lambda case: case[0])

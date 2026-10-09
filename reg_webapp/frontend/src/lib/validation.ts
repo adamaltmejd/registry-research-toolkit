@@ -20,7 +20,7 @@
  *    code + level).
  */
 
-import type { components } from "./api-types";
+import type { components as RustComponents } from "./api-types-rust";
 import { catalogHref, registerPrefixOf } from "./catalog";
 import {
   periodLabel,
@@ -39,8 +39,8 @@ import {
   safeSourceRegisterVariant,
 } from "./project_data";
 
-export type ValidationIssue = components["schemas"]["ValidationIssueModel"];
-export type ValidationResult = components["schemas"]["ValidationResultModel"];
+export type ValidationIssue = RustComponents["schemas"]["ValidationIssue"];
+export type ValidationResult = RustComponents["schemas"]["Validation"];
 
 /**
  * Decode an RFC-6901 JSON pointer into its reference tokens. The empty string
@@ -184,7 +184,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "error",
   },
   // Thin defensive code: a residual ProjectData model-construction failure
-  // structural didn't replicate (routes/project.py `_model_issue`).
+  // structural didn't replicate (frozen `reg_meta.semantic.validate_project`).
   invalid_field: { label: "Invalid field", hint: "error" },
 
   // ── semantic (reg_meta-backed) ────────────────────────────────────────────

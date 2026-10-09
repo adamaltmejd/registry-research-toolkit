@@ -31,11 +31,12 @@ git ls-files '<dir>/tests/*.py' | xargs wc -l | tail -1
 uv run python -m pytest <dir> -n auto -q --durations=20
 ```
 
-The frontend counts product, colocated tests and the generated `api-types.ts` apart:
+The frontend counts product, colocated tests and the generated `api-types-rust.ts`
+apart:
 
 ```sh
 cd reg_webapp/frontend
-git ls-files 'src/*.ts' 'src/*.svelte' | rg -v '\.test\.ts$|api-types\.ts$' | xargs wc -l | tail -1
+git ls-files 'src/*.ts' 'src/*.svelte' | rg -v '\.test\.ts$|api-types-rust\.ts$' | xargs wc -l | tail -1
 git ls-files 'src/*.test.ts' | xargs wc -l | tail -1
 bun run test
 ```
@@ -52,8 +53,7 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
 
 - **Dependencies.** Each package's `[project] dependencies` against what its `src/`
   imports and what runs it outside Python imports: entry points, Dockerfiles and
-  entrypoint scripts, CI workflows (`uvicorn` is only invoked from
-  `reg_webapp/docker-entrypoint.sh`). For the frontend, `package.json` dependencies and
+  entrypoint scripts and CI workflows. For the frontend, `package.json` dependencies and
   devDependencies against imports, package scripts, `vite.config.ts` and CI steps. The
   workspace-root `[dependency-groups].dev` against tests, tooling, build configuration
   and CI. A dependency in one and not the other is a finding.
@@ -147,7 +147,7 @@ was removed. Before each push: `uv run ruff check`, `uv run ruff format --check`
 `cargo clippy --workspace --all-targets --locked -- -D warnings` and
 `cargo test --workspace --locked`, as CI runs them; for the frontend,
 `bun run check && bun run lint && bun run test && bun run build`, then
-`bun run gen:types && git diff --exit-code src/lib/api-types.ts`, in
+`bun run gen:types && git diff --exit-code src/lib/api-types-rust.ts`, in
 `reg_webapp/frontend`, as CI runs them; for the edge worker, after
 `bun run gen:types && bun run build` in `reg_webapp/frontend` (the worker binds its
 `dist/`), `bunx wrangler@4.130.0 deploy --dry-run --config <c>` for each of

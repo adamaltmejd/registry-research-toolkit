@@ -489,6 +489,7 @@ describe("SourceEditor cart card", () => {
           code: "fqid_unresolved",
           path: "/sources/0/bindings/0/variable",
           message: "nope",
+          successor_fqid: null,
         },
       ],
     });

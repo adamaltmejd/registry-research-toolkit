@@ -173,8 +173,13 @@ describe("AppShell — project chip", () => {
         ok: true,
         status: 200,
         json: async () => ({
-          ok: true,
-          issues: [{ level: "warning", code: "w", path: "", message: "note" }],
+          data: {
+            ok: true,
+            issues: [
+              { level: "warning", code: "w", path: "", message: "note" },
+            ],
+          },
+          meta: {},
         }),
       })),
     );
@@ -227,7 +232,7 @@ describe("AppShell — project chip", () => {
       vi.fn(async () => ({
         ok: true,
         status: 200,
-        json: async () => ({ ok: true, issues: [] }),
+        json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
       })),
     );
     projectStore.newProject({

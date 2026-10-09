@@ -32,33 +32,6 @@ afterEach(() => {
 });
 
 describe("apiGet", () => {
-  it("throws ApiError carrying status + parsed {detail} body on a 404", async () => {
-    stubFetch(async () => ({
-      ok: false,
-      status: 404,
-      json: async () => ({ detail: "fqid not found" }),
-    }));
-    await expect(apiGet("/catalog/scb/nope")).rejects.toMatchObject({
-      name: "ApiError",
-      status: 404,
-      message: "fqid not found",
-    });
-  });
-
-  it("surfaces the first msg of a FastAPI 422 validation-error list", async () => {
-    stubFetch(async () => ({
-      ok: false,
-      status: 422,
-      json: async () => ({
-        detail: [{ loc: ["query", "period"], msg: "bad period" }],
-      }),
-    }));
-    const err = await apiGet("/catalog/scb/lisa/kon").catch((e) => e);
-    expect(err).toBeInstanceOf(ApiError);
-    expect((err as ApiError).status).toBe(422);
-    expect((err as ApiError).message).toBe("bad period");
-  });
-
   it("surfaces the message of the Rust server's {error, meta} document", async () => {
     // Fails if messageFromBody stops reading `error.message` (the banner would
     // show the bare status line).
@@ -293,7 +266,11 @@ describe("validateProject", () => {
         },
       ],
     };
-    stubFetch(async () => ({ ok: true, status: 200, json: async () => body }));
+    stubFetch(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ data: body, meta: {} }),
+    }));
     const result = await validateProject({ schema_version: "2.0.0" });
     expect(result.ok).toBe(false);
     expect(result.issues).toHaveLength(1);
@@ -311,7 +288,7 @@ describe("validateProject", () => {
         return Promise.resolve({
           ok: true,
           status: 200,
-          json: async () => ({ ok: true, issues: [] }),
+          json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
         });
       }),
     );

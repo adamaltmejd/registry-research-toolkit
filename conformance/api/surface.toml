@@ -1,21 +1,20 @@
 # Surface inventory (RUST_RUNTIME_SPEC.md package 1.1a): every surface the Python
 # runtime exposes today, and where it goes. `conformance/test_api_surface.py` fails when
-# a route, `reg-meta` subcommand or imported `reg_meta` name lacks a row, or a row names
+# a `reg-meta` subcommand or imported `reg_meta` name lacks a row, or a row names
 # something that no longer exists. Reviewed at checkpoint 1; judgment calls say so in
-# `note`.
+# `note`. The FastAPI route rows went as each slice deleted its routes; package F
+# deleted the app.
 #
-# kind         route: an operation in the committed reg_webapp/backend/openapi.json,
-#                     id = "METHOD /path" as OpenAPI writes it (no `:path` converter).
-#              command: an `add_parser` in reg_meta/src/reg_meta/cli.py, id = the argv path.
+# kind         command: an `add_parser` in reg_meta/src/reg_meta/cli.py, id = the argv path.
 #              skill: a command the register-metadata-search skill documents
 #                     (plugins/microdata-tools-se/skills/register-metadata-search/SKILL.md),
 #                     id = its text as written there.
 #              import: a `reg_meta` name imported by any git-visible .py file outside
 #                     reg_meta/ (tests, scripts and tools included).
 #                     `from M import N` is "M.N"; `import M` is "M".
-# disposition  route, command, skill:
+# disposition  command, skill:
 #                retained  the same surface stays.
-#                replaced  route and command rows: a Rust operation covers it (HTTP and
+#                replaced  command rows: a Rust operation covers it (HTTP and
 #                          MCP, section 7); package 1.1 adds its name as `operation`, this
 #                          file does not choose names. Skill rows: `note` names the
 #                          replacement (the binary, `fetch`, MCP `tools/list`).
@@ -28,34 +27,14 @@
 # owner        the stage-3 slice that ports the surface (3a admission + search, 3b show /
 #              states / values, 3c schema / diff / coverage / coded, 3d chains and graph,
 #              3e order and project validation), or stage 4 / 5. For an import only the
-#              webapp or conformance uses, the slice whose route deletions remove its last
-#              importer; anything imported by a module several slices share (models.py,
-#              app wiring) goes in stage 4. Build-side imports are always stage 4.
+#              webapp or conformance uses, the slice whose deletions remove its last
+#              importer; otherwise stage 4. Build-side imports are always stage 4.
 # covered_by   the existing tests or conformance cases that exercise the surface today
 #              (paths; empty means none). For imports this is a proxy: the nearest test of
 #              the name's behavior, not of each consumer's use of it.
 # used_by      import rows: the top-level directories whose files import the name.
 
 # Routes
-
-[[row]]
-kind = "route"
-id = "POST /api/project/order"
-disposition = "replaced"
-operation = "order"
-owner = "3e"
-covered_by = ["conformance/cases/validate", "reg_webapp/backend/tests/test_project_order.py"]
-note = "The download keeps the exact manifest bytes (section 7)."
-
-[[row]]
-kind = "route"
-id = "POST /api/project/validate"
-disposition = "replaced"
-operation = "validate"
-owner = "3e"
-covered_by = ["conformance/cases/validate", "reg_webapp/backend/tests/test_project_validate.py"]
-
-# reg-meta subcommands
 
 [[row]]
 kind = "command"
@@ -205,7 +184,7 @@ id = "order"
 disposition = "replaced"
 operation = "order"
 owner = "3e"
-covered_by = ["conformance/cases/order", "conformance/test_order.py", "conformance/cases/validate"]
+covered_by = ["conformance/cases/order", "conformance/test_order.py", "conformance/cases/api/order-errors"]
 note = "`POST /api/project/order` and an MCP tool (section 7)."
 
 [[row]]
@@ -239,7 +218,7 @@ id = "validate"
 disposition = "replaced"
 operation = "validate"
 owner = "3e"
-covered_by = ["conformance/cases/validate", "conformance/test_validate.py"]
+covered_by = ["conformance/cases/api/validate-references-resolve", "conformance/cases/api/validate-unresolved-binding", "conformance/test_validate.py"]
 
 # Commands the register-metadata-search skill documents (listed by hand)
 
@@ -349,7 +328,7 @@ note = "Private-name import, which the repo rules forbid; it moves with its modu
 [[row]]
 kind = "import"
 id = "reg_meta.cli.run"
-used_by = ["conformance", "reg_webapp"]
+used_by = ["conformance"]
 disposition = "removed"
 owner = "4"
 covered_by = ["conformance/test_cli_scope.py", "conformance/test_validate.py"]
@@ -414,7 +393,7 @@ id = "reg_meta.db"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/test_boot.py"]
+covered_by = ["conformance/cases/selection"]
 
 [[row]]
 kind = "import"
@@ -632,7 +611,7 @@ note = "Private-name import, which the repo rules forbid; it moves with its modu
 [[row]]
 kind = "import"
 id = "reg_meta.errors.EXIT_CONFIG"
-used_by = ["conformance", "reg_meta_build", "reg_webapp"]
+used_by = ["conformance", "reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
@@ -649,28 +628,12 @@ note = "The build's error class and exit codes; the Rust reader has its own erro
 
 [[row]]
 kind = "import"
-id = "reg_meta.errors.EXIT_NO_MATCH"
-used_by = ["conformance", "reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
-
-[[row]]
-kind = "import"
 id = "reg_meta.errors.EXIT_OUTPUT"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
 note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.errors.EXIT_SUCCESS"
-used_by = ["conformance"]
-disposition = "removed"
-owner = "3e"
-covered_by = ["conformance/test_validate.py"]
 
 [[row]]
 kind = "import"
@@ -684,7 +647,7 @@ note = "The build's error class and exit codes; the Rust reader has its own erro
 [[row]]
 kind = "import"
 id = "reg_meta.errors.RegMetaError"
-used_by = ["conformance", "reg_meta_build", "reg_webapp", "scripts"]
+used_by = ["conformance", "reg_meta_build", "scripts"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
@@ -872,51 +835,19 @@ note = "Holdings inventory input, compiled into the artifact by holdings_compile
 
 [[row]]
 kind = "import"
-id = "reg_meta.order.OrderFinding"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.order.OrderManifest"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3e"
-covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.order.blocked_message"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3e"
-covered_by = ["conformance/cases/validate"]
-
-[[row]]
-kind = "import"
 id = "reg_meta.order.materialize_order"
-used_by = ["conformance", "reg_webapp"]
+used_by = ["conformance"]
 disposition = "removed"
 owner = "3e"
-covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.order.parse_project"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3e"
-covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
+covered_by = ["conformance/test_order.py", "conformance/test_artifact_sample.py"]
 
 [[row]]
 kind = "import"
 id = "reg_meta.order.project_from_raw"
-used_by = ["conformance", "reg_webapp"]
+used_by = ["conformance"]
 disposition = "removed"
 owner = "3e"
-covered_by = ["conformance/test_order.py", "reg_webapp/backend/tests/test_project_order.py"]
+covered_by = ["conformance/test_order.py", "conformance/test_artifact_sample.py"]
 
 [[row]]
 kind = "import"
@@ -980,22 +911,6 @@ disposition = "removed"
 owner = "4"
 covered_by = ["conformance/cases/api", "reg_meta/tests/test_search_ranking.py"]
 note = "The search core, which the Rust `search` operation replaced for the webapp. Conformance's reader and logical cases still call it. The build no longer imports it: English-name search coverage is the `api/search-english-name` case."
-
-[[row]]
-kind = "import"
-id = "reg_meta.semantic.validate_project"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3e"
-covered_by = ["conformance/test_validate.py", "conformance/cases/validate"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.semantic.validation_json"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "3e"
-covered_by = ["conformance/cases/validate"]
 
 [[row]]
 kind = "import"

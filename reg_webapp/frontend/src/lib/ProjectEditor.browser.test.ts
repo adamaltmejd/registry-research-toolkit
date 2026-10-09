@@ -102,7 +102,7 @@ beforeEach(() => {
     vi.fn(async () => ({
       ok: true,
       status: 200,
-      json: async () => ({ ok: true, issues: [] }),
+      json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
     })),
   );
 });
@@ -277,12 +277,18 @@ describe("ProjectEditor renders the ValidationPanel", () => {
       .mockResolvedValueOnce({
         ok: false,
         status: 400,
-        json: async () => ({ detail: "transient validation failure" }),
+        json: async () => ({
+          error: {
+            code: "internal_error",
+            message: "transient validation failure",
+          },
+          meta: {},
+        }),
       } as Response)
       .mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: async () => ({ ok: true, issues: [] }),
+        json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
       } as Response);
 
     await projectStore.validate();

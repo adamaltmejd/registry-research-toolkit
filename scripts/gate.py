@@ -38,9 +38,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "reg_webapp/frontend"
 CONFORMANCE = "uv run python -m pytest conformance -q -n auto"
+# A raised write limit: the suite and release admission replay many projects from one
+# address (conformance/test_mcp.py's burst case drops it to pin the default).
 SERVER_CMD = (
     "--server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog}"
-    " --stewards reg_webapp/stewards --port {port}'"
+    " --stewards reg_webapp/stewards --port {port} --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'"
 ALL = ("g0", "rust", "release", "flows", "frontend")
@@ -116,11 +118,8 @@ def flows() -> None:
 def frontend() -> None:
     for script in ("check", "lint", "test", "build", "gen:types"):
         run(["bun", "run", script], cwd=FRONTEND)
-    # A diff means the SPA's types drifted from the committed API contracts.
-    run(
-        "git diff --exit-code -- src/lib/api-types.ts src/lib/api-types-rust.ts",
-        cwd=FRONTEND,
-    )
+    # A diff means the SPA's types drifted from the committed API contract.
+    run("git diff --exit-code -- src/lib/api-types-rust.ts", cwd=FRONTEND)
 
 
 def regen() -> None:
@@ -154,7 +153,6 @@ def regen() -> None:
     )
     golden = ROOT / "conformance/cases/mcp/tools-list.json"
     golden.write_text(json.dumps(tools, indent=2) + "\n", encoding="utf-8")
-    run("uv run python reg_webapp/backend/scripts/gen_openapi.py")
     run("bun run gen:types", cwd=FRONTEND)
 
 
