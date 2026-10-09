@@ -1,0 +1,51 @@
+{
+  "description": "One SOS workbook with every recognized sheet structure. Generell information: two Version rows in the template section, then Datamängd and an unmapped 'Okänd uppgift' row. DCAT-AP: two Titel rows and an undefined attribute. Deldatamängder: DEL_A and a row with a label but no name. Variables: VAR_A with a fourth cell under no header, and a row with a label but no Variabelnamn. Kodlista_VAR_A: Kodverk, Variabelnamn and Bakgrund preamble rows, the header, a period row 2020, code 01 and a trailing row with only a description. Kodlista_RAW: no code-list header. Kvalitet_VAR_A: two rows and a merged A3:B3.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Test (TST)_webb.xlsx",
+    "sheets": {
+      "Generell information": [
+        [null, "Om metadatamallen", null],
+        [null, "Version", "1.0"],
+        [null, "Version", "2.0"],
+        [null, "Om datamängden version", null],
+        [null, "Datamängd", "Testregistret"],
+        [null, "Okänd uppgift", "bevaras"]
+      ],
+      "Metadata-Datamängd (DCAT-AP)": [
+        ["Attribut SoS-metadata", "Definition", "Svenska", "Engelska"],
+        ["Titel", "Definition ett", "Svensk titel ett", "English title one"],
+        ["Titel", "Definition två", "Svensk titel två", "English title two"],
+        ["Okänt attribut", "Fri definition", "Svenskt värde", "English value"]
+      ],
+      "Deldatamängder och datavyer": [
+        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"],
+        ["DEL_A", "Del A", 2001, 2020],
+        [null, "Etikett utan namn", 2010, 2015]
+      ],
+      "Metadata - Variabelnivå": [
+        ["Deldatamängdsnamn", "Variabelnamn", "Variabeletikett"],
+        ["DEL_A", "VAR_A", "Variabel A", "unheaded source cell"],
+        ["DEL_A", null, "Etikett utan variabelnamn"]
+      ],
+      "Kodlista_VAR_A": [
+        ["Kodverk", "Testkoder", null],
+        ["Variabelnamn", "VAR_A", null],
+        ["Bakgrund", "Bakgrundstext", null],
+        ["Tidsperiod", "Kod", "Beskrivning (kliniknamn)"],
+        ["2020", null, null],
+        [null, "01", "Klinik ett"],
+        [null, null, "Oförstådd efterrad"]
+      ],
+      "Kodlista_RAW": [
+        ["Sjukhuskatalog", "Region"],
+        ["Sjukhus ett", "Nord"]
+      ],
+      "Kvalitet_VAR_A": [
+        ["Rubrik", "Text"],
+        ["Aktualitet", "Årlig"],
+        ["Sammanslagen rubrik"]
+      ]
+    },
+    "merge": {"Kvalitet_VAR_A": ["A3:B3"]}
+  }
+}

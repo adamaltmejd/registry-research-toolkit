@@ -1,0 +1,11 @@
+{
+  "description": "The LISA fixture with Individ's header row moved down one row: A3:F3 emptied, the six headers written to A4:F4.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {
+      "Individ!A3": null, "Individ!B3": null, "Individ!C3": null, "Individ!D3": null, "Individ!E3": null, "Individ!F3": null,
+      "Individ!A4": "Kolumnnamn", "Individ!B4": "Beskrivning", "Individ!C4": "År", "Individ!D4": "Register", "Individ!E4": "Känslig1", "Individ!F4": "Grundregister"
+    }
+  }
+}

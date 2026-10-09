@@ -1,0 +1,6 @@
+{
+  "description": "A code list whose header is spelled ` Code ,LABEL` and whose one label is quoted, contains a comma and spans two lines.",
+  "files": {
+    "classifications/codes.csv": " Code ,LABEL\n01,\" first, label\nsecond line \"\n"
+  }
+}

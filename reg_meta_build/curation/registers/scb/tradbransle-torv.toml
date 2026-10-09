@@ -254,12 +254,12 @@ variable = "355.36"
 variant = "355.1229"
 column = "Kommun"
 periods = [["2021-01-01", "2021-12-31"]]
-reason = "Complete own active municipality lists agree on all 290 ordinary source code/label pairs. One exact supplied domain adds only explicitly labelled unknown values (1917,580,781 and, in 2021–2022, a blank code). Retain that supplied domain and all original alternatives; no union, recoding, zero-padding or invented classification membership."
+reason = "Complete own active municipality lists agree on all 290 ordinary source code/label pairs. One exact supplied domain adds only explicitly labelled unknown values (1917,580,781). Retain that supplied domain and all original alternatives; no union, recoding, zero-padding or invented classification membership."
 source = "Batch52-directfacts4-source-review.json; complete own native36 membership review and exact source-superset comparison."
-data_warning = "The source municipality domain adds non-standard unknown-value encodings alongside the official municipal codes. They remain distinct source codes; classification membership is verified separately. The blank 2021 source token has a blank label and its original facts remain unchanged."
-expected_evidence_sha256 = "1b67ec67428c89de30f3867dc5c730ff49a9cac61e3fb9e71ff0ba640d84caab"
+data_warning = "The source municipality domain adds non-standard unknown-value encodings alongside the official municipal codes. They remain distinct source codes; classification membership is verified separately."
+expected_evidence_sha256 = "b56d98da2a8e504885b27f2a90f7051dd637eacef3ec2ff0759f88c8921d333b"
 keep = "2021-01-01/ Län, kommuner och församlingar"
-keep_members_sha256 = "95e4421d6dbbdfd4d4c2ed47a9a572787dd0c392f8718612b880ebb20e3f3857"
+keep_members_sha256 = "926d119df006555641b7360dffe7bc0dbfbebfa45e8fdb65dbedcf9e422e7044"
 over = ["2021-01-01/ Län, kommuner och församlingar"]
 
 [[coding.choice]]
@@ -267,12 +267,12 @@ variable = "355.36"
 variant = "355.1229"
 column = "Kommun"
 periods = [["2022-01-01", "2022-12-31"]]
-reason = "Complete own active municipality lists agree on all 290 ordinary source code/label pairs. One exact supplied domain adds only explicitly labelled unknown values (1917,580,781 and, in 2021–2022, a blank code). Retain that supplied domain and all original alternatives; no union, recoding, zero-padding or invented classification membership."
+reason = "Complete own active municipality lists agree on all 290 ordinary source code/label pairs. One exact supplied domain adds only explicitly labelled unknown values (1917,580,781). Retain that supplied domain and all original alternatives; no union, recoding, zero-padding or invented classification membership."
 source = "Batch52-directfacts4-source-review.json; complete own native36 membership review and exact source-superset comparison."
-data_warning = "The source municipality domain adds non-standard unknown-value encodings alongside the official municipal codes. They remain distinct source codes; classification membership is verified separately. The blank 2021 source token has a blank label and its original facts remain unchanged."
-expected_evidence_sha256 = "1b67ec67428c89de30f3867dc5c730ff49a9cac61e3fb9e71ff0ba640d84caab"
+data_warning = "The source municipality domain adds non-standard unknown-value encodings alongside the official municipal codes. They remain distinct source codes; classification membership is verified separately."
+expected_evidence_sha256 = "b56d98da2a8e504885b27f2a90f7051dd637eacef3ec2ff0759f88c8921d333b"
 keep = "2022-01-01/ Län, kommuner och församlingar"
-keep_members_sha256 = "dbfa678fcf8ba800c16f32ce0f83b75a039b964be77d7efdf576dbcb518185a3"
+keep_members_sha256 = "2ffc8baf27bddda60be14b46712f7837d09c0a7c6e3eeefa5b979a27d8a99e16"
 over = ["2022-01-01/ Län, kommuner och församlingar"]
 
 [[coding.choice]]
@@ -280,10 +280,10 @@ variable = "355.36"
 variant = "355.1229"
 column = "Kommun"
 periods = [["2023-01-01", "2023-12-31"]]
-reason = "Complete own active municipality lists agree on all 290 ordinary source code/label pairs. One exact supplied domain adds only explicitly labelled unknown values (1917,580,781 and, in 2021–2022, a blank code). Retain that supplied domain and all original alternatives; no union, recoding, zero-padding or invented classification membership."
+reason = "Complete own active municipality lists agree on all 290 ordinary source code/label pairs. One exact supplied domain adds only explicitly labelled unknown values (1917,580,781). Retain that supplied domain and all original alternatives; no union, recoding, zero-padding or invented classification membership."
 source = "Batch52-directfacts4-source-review.json; complete own native36 membership review and exact source-superset comparison."
-data_warning = "The source municipality domain adds non-standard unknown-value encodings alongside the official municipal codes. They remain distinct source codes; classification membership is verified separately. The blank 2021 source token has a blank label and its original facts remain unchanged."
-expected_evidence_sha256 = "1b67ec67428c89de30f3867dc5c730ff49a9cac61e3fb9e71ff0ba640d84caab"
+data_warning = "The source municipality domain adds non-standard unknown-value encodings alongside the official municipal codes. They remain distinct source codes; classification membership is verified separately."
+expected_evidence_sha256 = "b56d98da2a8e504885b27f2a90f7051dd637eacef3ec2ff0759f88c8921d333b"
 keep = "2023-01-01 /Län, kommuner och församlingar"
 keep_members_sha256 = "fd6ba923d114d794d9a5f10a3ccd1c5431d90e362dd84893ec59ad071aa15e8f"
 over = ["2023-01-01 /Län, kommuner och församlingar"]

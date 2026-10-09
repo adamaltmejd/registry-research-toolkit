@@ -1,0 +1,150 @@
+{
+  "reader": "sos_parsed",
+  "replaces": "test_sos_evidence.py::test_all_current_sos_sheet_structures_retain_ordered_original_rows",
+  "fails_if": "the SOS parser drops, reorders or misclassifies an original row of a recognized sheet (a repeated key, an unmapped attribute, a nameless subset or variable row, a code-list preamble row, a merged quality cell), loses a cell's coordinate, header, field or language, or reports a recognized sheet as a parse issue",
+  "note": "Values from the replaced test and its fixture. The parsed variable and code row point at the same delivered rows as the sheet evidence (row 2 of the variable sheet, row 6 of Kodlista_VAR_A), which is the replaced test's evidence-equality claim. Kodlista_VAR_A's last row (a label without a code) is left unclaimed: whether a blank code is a code row is the blank-code cases' claim. Kodlista_RAW is also the survivor of test_sos_parser.py::test_synthetic_unrecognised_kodlista_preserves_raw_rows.",
+  "projections": [
+    {
+      "of": "source_sheets",
+      "rows": [
+        {
+          "kind": "general",
+          "sheet_name": "Generell information",
+          "rows": [
+            {"role": "section"},
+            {"role": "metadata", "source_evidence": {"cells": {"$once": [{"field_name": "template_version", "raw_value": "1.0"}]}}},
+            {"role": "metadata", "source_evidence": {"cells": {"$once": [{"field_name": "template_version", "raw_value": "2.0"}]}}},
+            {"role": "section"},
+            {"role": "metadata", "source_evidence": {"cells": {"$lacks": [{"field_name": "template_version"}]}}},
+            {
+              "role": "metadata",
+              "source_evidence": {
+                "cells": [
+                  {"field_name": null, "raw_value": null},
+                  {"field_name": "attribute", "raw_value": "Okänd uppgift"},
+                  {"field_name": "value", "raw_value": "bevaras"}
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "kind": "dcat",
+          "sheet_name": "Metadata-Datamängd (DCAT-AP)",
+          "rows": [
+            {"role": "header"},
+            {
+              "role": "attribute",
+              "source_evidence": {
+                "cells": [
+                  {"language": null},
+                  {"language": null},
+                  {"field_name": "title_sv", "language": "sv", "raw_value": "Svensk titel ett"},
+                  {"field_name": "title_en", "language": "en", "raw_value": "English title one"}
+                ]
+              }
+            },
+            {"role": "attribute", "source_evidence": {"cells": {"$once": [{"field_name": "title_sv", "raw_value": "Svensk titel två"}]}}},
+            {
+              "role": "attribute",
+              "source_evidence": {"cells": {"$contains": [{"field_name": "attribute"}, {"field_name": "value_sv"}, {"field_name": "value_en"}]}}
+            }
+          ]
+        },
+        {
+          "kind": "subsets",
+          "sheet_name": "Deldatamängder och datavyer",
+          "rows": [
+            {"role": "header"},
+            {"role": "subset"},
+            {"role": "raw", "source_evidence": {"cells": {"$once": [{"field_name": "label", "raw_value": "Etikett utan namn"}]}}}
+          ]
+        },
+        {
+          "kind": "variables",
+          "sheet_name": "Metadata - Variabelnivå",
+          "rows": [
+            {"role": "header"},
+            {
+              "role": "variable",
+              "source_evidence": {
+                "row_number": 2,
+                "cells": {"$last": {"header": "D", "field_name": null, "raw_value": "unheaded source cell"}}
+              }
+            },
+            {"role": "raw"}
+          ]
+        },
+        {
+          "kind": "codelist",
+          "sheet_name": "Kodlista_VAR_A",
+          "rows": [
+            {"role": "preamble"},
+            {"role": "preamble"},
+            {"role": "preamble"},
+            {"role": "header"},
+            {"role": "period_section", "source_evidence": {"cells": {"$once": [{"field_name": "tidsperiod", "raw_value": "2020"}]}}},
+            {"role": "code", "source_evidence": {"row_number": 6}},
+            {"$any": true}
+          ]
+        },
+        {
+          "kind": "documentation",
+          "sheet_name": "Kodlista_RAW",
+          "rows": [{"role": "raw"}, {"role": "raw"}]
+        },
+        {
+          "kind": "quality",
+          "sheet_name": "Kvalitet_VAR_A",
+          "rows": [
+            {"role": "quality"},
+            {"role": "quality", "source_evidence": {"cells": [{"raw_value": "Aktualitet"}, {"raw_value": "Årlig"}]}},
+            {
+              "role": "quality",
+              "source_evidence": {"cells": [{"coordinate": "A3", "raw_value": "Sammanslagen rubrik"}, {"coordinate": "B3", "raw_value": null}]}
+            }
+          ]
+        }
+      ]
+    },
+    {"of": "parse_issues", "rows": []},
+    {
+      "of": "variables",
+      "rows": [
+        {
+          "name": "VAR_A",
+          "source_evidence": {
+            "sheet_name": "Metadata - Variabelnivå",
+            "row_number": 2,
+            "cells": {"$last": {"header": "D", "field_name": null, "raw_value": "unheaded source cell"}}
+          }
+        }
+      ]
+    },
+    {
+      "of": "kodlistor",
+      "rows": [
+        {
+          "sheet_name": "Kodlista_VAR_A",
+          "rows": {"$once": [
+            {
+              "kod": "01",
+              "tidsperiod": "2020",
+              "source_tidsperiod": null,
+              "source_evidence": {
+                "sheet_name": "Kodlista_VAR_A",
+                "row_number": 6,
+                "cells": {"$once": [{"field_name": "beskrivning", "raw_value": "Klinik ett"}]}
+              }
+            }
+          ]}
+        },
+        {
+          "sheet_name": "Kodlista_RAW",
+          "rows": [],
+          "raw_rows": [["Sjukhuskatalog", "Region"], ["Sjukhus ett", "Nord"]]
+        }
+      ]
+    }
+  ]
+}

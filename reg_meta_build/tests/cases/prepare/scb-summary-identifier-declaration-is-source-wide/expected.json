@@ -1,0 +1,30 @@
+{
+  "reader": "scb_auxiliary",
+  "args": {"file": "Identifierare.csv"},
+  "replaces": [
+    "test_scb_auxiliary_records.py::test_identifier_declaration_has_source_wide_native_scope",
+    "test_scb_auxiliary_records.py::test_summary_stream_retains_order_and_physical_duplicates"
+  ],
+  "fails_if": "the SCB identifier reader scopes a VarID declaration to a register or variant, drops its native variable id, declares an availability, or reads the row as anything but an identifier claim",
+  "projections": [
+    {
+      "of": "",
+      "rows": [
+        {
+          "locators": [{"semantic_record_key": ["identifier", "6266"]}],
+          "subject": {
+            "register": {"status": "not_applicable"},
+            "variant": {"status": "not_applicable"},
+            "variable": {"native_id": 6266},
+            "native": {"register_id": null, "variable_id": 6266}
+          },
+          "fields": {
+            "identifier": {"status": "value", "value": true},
+            "availability": null,
+            "definition": {"value": "Definition"}
+          }
+        }
+      ]
+    }
+  ]
+}

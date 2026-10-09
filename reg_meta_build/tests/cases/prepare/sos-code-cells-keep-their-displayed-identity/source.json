@@ -1,0 +1,17 @@
+{
+  "description": "A minimal SOS workbook whose Kodlista_TEST holds one code per cell shape, each labelled x for 2024: the number 1 under format 000; 7 stored as the float 7.0 (as another producer writes it) under format 00; 7.5 under General; the text '  001 ' under the text format @; 7 under General.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Test (TST)_webb.xlsx",
+    "sheets": {
+      "Metadata - Variabelnivå": [["Variabelnamn", "Variabeletikett", "Data från"], ["TEST", "Etikett", 2001]],
+      "Kodlista_TEST": [
+        ["Tidsperiod", "Kod", "Beskrivning"],
+        ["2024", {"value": 1, "number_format": "000"}, "x"],
+        ["2024", {"value": 7, "number_format": "00", "stored": "7.0"}, "x"],
+        ["2024", {"value": 7.5, "number_format": "General"}, "x"],
+        ["2024", {"value": "  001 ", "number_format": "@"}, "x"],
+        ["2024", {"value": 7, "number_format": "General"}, "x"]
+      ]
+    }
+  }
+}

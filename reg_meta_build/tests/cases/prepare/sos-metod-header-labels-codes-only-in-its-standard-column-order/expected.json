@@ -1,0 +1,17 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_lists.py::test_metod_header_delivers_code_labels_without_reordered_inference",
+  "fails_if": "the SOS reader stops reading Behandlingsmetod as the label column of the standard header, or infers it as the label of a reordered header",
+  "projections": [
+    {
+      "of": "associations",
+      "where": {"descriptor_key": "sheet:Kodlista_Exact"},
+      "rows": [{"value": {"code": "1", "label": "IVF"}}]
+    },
+    {
+      "of": "associations",
+      "where": {"descriptor_key": "sheet:Kodlista_Reordered"},
+      "rows": [{"value": {"code": "1", "label": null}}]
+    }
+  ]
+}

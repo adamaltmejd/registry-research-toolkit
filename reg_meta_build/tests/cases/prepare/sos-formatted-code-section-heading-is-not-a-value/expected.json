@@ -1,0 +1,37 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_lists.py::test_formatted_code_section_heading_is_evidence_not_a_value",
+  "fails_if": "the SOS reader prepares a bold label-less heading as a code value, or reads a bold row with a label (or a label-less code row) as a section heading",
+  "projections": [
+    {
+      "of": "values",
+      "note": "The codes, in delivery order: the heading is not among them.",
+      "rows": [
+        {"value": {"code": "001"}},
+        {"value": {"code": "01-19"}},
+        {"value": {"code": "20"}}
+      ]
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Kodlista_HDIA"},
+      "rows": [
+        {
+          "rows": {
+            "$once": [
+              {
+                "role": "section",
+                "locator": {"physical_record": "row:3"},
+                "cells": [
+                  {"$any": true},
+                  {"raw_value": "Description of the following code digits"},
+                  {"$any": true}
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

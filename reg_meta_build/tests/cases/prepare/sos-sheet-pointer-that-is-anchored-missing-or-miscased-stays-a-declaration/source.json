@@ -1,0 +1,13 @@
+{
+  "description": "sos-source with HDIA's Länk kodverk cells F2 'Kodlista_Target!A1' (anchored at a cell), F3 'Kodlista_Missing!A1' (no such sheet) and F4 'kodlista_Target' (the sheet name in another case); Kodlista_Target (KOD, Beskrivning) names no member.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "cells": {
+      "Metadata - Variabelnivå!F2": "Kodlista_Target!A1",
+      "Metadata - Variabelnivå!F3": "Kodlista_Missing!A1",
+      "Metadata - Variabelnivå!F4": "kodlista_Target"
+    },
+    "sheets": {"Kodlista_Target": [["KOD", "Beskrivning"], ["1", "One"]]}
+  }
+}

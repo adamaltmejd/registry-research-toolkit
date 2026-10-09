@@ -1,0 +1,15 @@
+{
+  "reader": "lisa_workbook",
+  "replaces": [
+    "test_lisa_workbook_layout.py::test_lisa_reader_accepts_only_observed_unkeyed_context_rows[B816-changed footer-Individ!A816:F816]",
+    "test_lisa_workbook_layout.py::test_lisa_reader_accepts_only_observed_unkeyed_context_rows[B323-changed continuation-Individ!A323:F323]"
+  ],
+  "fails_if": "the LISA reader accepts any text in an observed context row (a footnote or continuation note) instead of exactly the observed cells, so changed provider text passes into worksheet context unreviewed",
+  "note": "The changed-continuation parametrization (Individ!B323) is the same exact-cells check over the observed context rows, run before any declaration is read; this footnote form is its survivor.",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "LisaWorkbookError",
+    "locator": "Individ!A816:F816",
+    "message_contains": ["unsupported LISA context structure"]
+  }
+}

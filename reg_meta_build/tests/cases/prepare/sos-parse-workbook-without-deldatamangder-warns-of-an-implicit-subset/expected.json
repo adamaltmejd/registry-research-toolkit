@@ -1,0 +1,14 @@
+{
+  "reader": "sos_parsed",
+  "replaces": "test_sos_parser.py::test_synthetic_register_without_deldatamangder_warns",
+  "fails_if": "the SOS parser invents a subset for a workbook without a Deldatamängder sheet, or parses it without telling parse-sos that the single subset is implicit",
+  "note": "The replaced test claimed a warning naming Deldatamängder; the projection has no substring claim, so the parser's warning text is pinned whole.",
+  "projections": [
+    {"of": "", "where": {"key": "deldatamangder"}, "rows": [{"key": "deldatamangder", "value": []}]},
+    {
+      "of": "",
+      "where": {"key": "warnings"},
+      "rows": [{"key": "warnings", "value": {"$once": ["missing Deldatamängder sheet (implicit single subset)"]}}]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "description": "Tabelldefinitioner.sql (cp1252) with an unterminated block comment after the table.",
+  "files": {
+    "SCB/Tabelldefinitioner.sql": {
+      "text": "CREATE TABLE [dbo].[Delivery](\r\n[A] [int]\r\n) ON [PRIMARY]\r\nGO\r\n/* unterminated",
+      "encoding": "cp1252"
+    }
+  }
+}

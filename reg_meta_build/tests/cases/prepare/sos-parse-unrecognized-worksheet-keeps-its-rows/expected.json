@@ -1,0 +1,19 @@
+{
+  "reader": "sos_parsed",
+  "replaces": "test_sos_code_lists.py::test_known_hidden_support_sheet_is_preserved_but_unknown_sheet_blocks",
+  "fails_if": "the SOS parser drops the rows of a worksheet it does not recognize, so the refusal in sos-unrecognized-worksheet-fails-preparation leaves no original evidence",
+  "projections": [
+    {
+      "of": "source_sheets",
+      "where": {"sheet_name": "New source structure"},
+      "rows": [
+        {
+          "rows": [
+            {"$any": true},
+            {"source_evidence": {"cells": [{"raw_value": "Ja"}, {"$any": true}]}}
+          ]
+        }
+      ]
+    }
+  ]
+}

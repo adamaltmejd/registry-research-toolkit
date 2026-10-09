@@ -1,0 +1,16 @@
+{
+  "description": "Timeseries.csv rows (Namn|Handelse|Beskrivning|Entitet|ID1|ID2|FilID) with a padded name, a quoted multi-line description with CRLF line ends, a padded ID1 ` 0007 `, ID2 delivered empty and FilID not delivered: one row per native event action (the five first rows) and per native entity kind, including the unsupported VS_Class and PopContext and an unknown one.",
+  "scb": {
+    "timeseries": [
+      " A  name |Avslutad|\" A paragraph\r\n\r\n  an indented line  \"|Register| 0007 |\"\"|",
+      " A  name |Tidsseriebrott|\" A paragraph\r\n\r\n  an indented line  \"|RegisterVariant| 0007 |\"\"|",
+      " A  name |Ersatt av|\" A paragraph\r\n\r\n  an indented line  \"|RegisterVersion| 0007 |\"\"|",
+      " A  name |Ersätter|\" A paragraph\r\n\r\n  an indented line  \"|Variabel| 0007 |\"\"|",
+      " A  name |Unknown action|\" A paragraph\r\n\r\n  an indented line  \"|AktuellVariabel| 0007 |\"\"|",
+      " A  name |Ersatt av|\" A paragraph\r\n\r\n  an indented line  \"|Population| 0007 |\"\"|",
+      " A  name |Ersatt av|\" A paragraph\r\n\r\n  an indented line  \"|VS_Class| 0007 |\"\"|",
+      " A  name |Ersatt av|\" A paragraph\r\n\r\n  an indented line  \"|PopContext| 0007 |\"\"|",
+      " A  name |Ersatt av|\" A paragraph\r\n\r\n  an indented line  \"|New entity| 0007 |\"\"|"
+    ]
+  }
+}

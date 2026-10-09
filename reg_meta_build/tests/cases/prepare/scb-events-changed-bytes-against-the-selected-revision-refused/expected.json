@@ -1,0 +1,14 @@
+{
+  "reader": "scb_events",
+  "args": {
+    "revision_from": "reviewed/Timeseries.csv"
+  },
+  "replaces": "test_scb_reference_records.py::test_event_reader_uses_accepted_raw_pin_and_retains_duplicates",
+  "fails_if": "the SCB events reader reads the accepted Timeseries.csv without checking its bytes against the selected revision's digest",
+  "note": "The replaced test declared a revision one byte longer than the file with the file's own digest, which pins the size check alone; no delivered bytes can differ only in size. Same-size bytes pin the digest check, the one a changed export can slip past.",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "ScbReferenceSourceError",
+    "locator": "Timeseries.csv differs from its declared revision"
+  }
+}

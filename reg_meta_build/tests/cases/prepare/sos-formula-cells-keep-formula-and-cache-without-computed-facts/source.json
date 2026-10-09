@@ -1,0 +1,15 @@
+{
+  "description": "sos-source with HDIA's label C2 a formula ='\"Computed label\"' whose delivered cache is 'Computed label', and Kodlista_HDIA replaced by Kodlista_HOSPITAL in the hospital-directory layout: one row SJUKHUS 1973-1980, Sjukhuskod 10010, an Aktuella formula whose delivered cache is a single space, and a Kommentar formula delivered without a cache.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "cells": {"Metadata - Variabelnivå!C2": {"value": "=\"Computed label\"", "cached": "Computed label"}},
+    "sheets": {
+      "Kodlista_HOSPITAL": [
+        ["Variabelnamn", "Från", "Till", "Sjukhuskod", "Region", "Sjukhusnamn", "Aktuella", "Kommentar"],
+        ["SJUKHUS", 1973, 1980, "10010", "Stockholm", "Sjukhus", {"value": "=IF(C2>1, \" \",\"JA\")", "cached": " "}, "=B2&\"\""]
+      ]
+    }
+  }
+}

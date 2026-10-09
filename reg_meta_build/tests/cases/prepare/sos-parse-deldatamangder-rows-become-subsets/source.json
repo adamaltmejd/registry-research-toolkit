@@ -1,0 +1,14 @@
+{
+  "description": "A minimal SOS workbook with a 'Deldatamängder och datavyer' sheet: PAR_OV Öppenvård 2001-2020 and PAR_SV Slutenvård 1987-2020, years as numbers.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Syntet (PAR)_webb.xlsx",
+    "sheets": {
+      "Deldatamängder och datavyer": [
+        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"],
+        ["PAR_OV", "Öppenvård", 2001, 2020],
+        ["PAR_SV", "Slutenvård", 1987, 2020]
+      ],
+      "Metadata - Variabelnivå": [["Variabelnamn"], ["TESTVAR"]]
+    }
+  }
+}

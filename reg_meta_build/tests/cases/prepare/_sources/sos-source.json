@@ -1,0 +1,26 @@
+{
+  "description": "A Socialstyrelsen metadata workbook in the Patientregistret shape, no DCAT-AP or Deldatamängder sheet. Variabelnivå rows: 2 HDIA; 3 the same row again; 4 HDIA with another label; 5 HDIA with Data från stored as text; 6 PARTIELL with a blank Data till and an internal link to the code sheet; 7 MALFORMED with an unparseable Data från; 8 UTAN_DEL with no Deldatamängdsnamn. Column L is a delivered blank Kopplingsvariabel. Kodlista_HDIA holds one code stored as the number 1 shown as 001.",
+  "workbook": {
+    "sheets": {
+      "Generell information": [
+        ["", "Om datamängden version", null],
+        ["", "Datamängd", "Patientregistret källa"],
+        ["", "Version", "2026:1"]
+      ],
+      "Metadata - Variabelnivå": [
+        ["Deldatamängdsnamn", "Variabelnamn", "Variabeletikett", "Variabelbeskrivning", "Värdemängd", "Länk kodverk", "Datatyp", "Data från", "Data till", "Specificera källa", "Eget källfält", "Kopplingsvariabel"],
+        ["PAR_OV", "HDIA", " Huvuddiagnos ", "Första raden\r\nandra raden  ", "Se kodlista", {"value": "https://example.test/classifications/ssyk", "hyperlink": "https://example.test/classifications/ssyk"}, "Heltal", 2001, 2020, "Patientregistret", "bevaras", null],
+        ["PAR_OV", "HDIA", " Huvuddiagnos ", "Första raden\r\nandra raden  ", "Se kodlista", {"value": "https://example.test/classifications/ssyk", "hyperlink": "https://example.test/classifications/ssyk"}, "Heltal", 2001, 2020, "Patientregistret", "bevaras", null],
+        ["PAR_OV", "HDIA", "Annan etikett", "Första raden\r\nandra raden  ", "Se kodlista", {"value": "https://example.test/classifications/ssyk", "hyperlink": "https://example.test/classifications/ssyk"}, "Heltal", 2001, 2020, "Patientregistret", "bevaras", null],
+        ["PAR_OV", "HDIA", " Huvuddiagnos ", "Första raden\r\nandra raden  ", "Se kodlista", {"value": "https://example.test/classifications/ssyk", "hyperlink": "https://example.test/classifications/ssyk"}, "Heltal", "2001", 2020, "Patientregistret", "bevaras", null],
+        ["PAR_OV", "PARTIELL", "Partiell", null, null, {"value": "Visad kodlista", "location": "'Kodlista_HDIA'!A1"}, "Sträng (text)", 2010, null, null, null, null],
+        ["PAR_OV", "MALFORMED", "Malformed", null, null, null, "Heltal", "+2001", "2020", null, null, null],
+        [null, "UTAN_DEL", "Utan deldatamängd", null, null, null, "Datum", null, null, null, null, null]
+      ],
+      "Kodlista_HDIA": [
+        ["Tidsperiod", "Kod", "Beskrivning"],
+        ["2001-2020", {"value": 1, "number_format": "000"}, "Kod ett"]
+      ]
+    }
+  }
+}

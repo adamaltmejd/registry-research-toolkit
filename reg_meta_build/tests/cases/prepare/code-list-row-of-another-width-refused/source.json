@@ -1,0 +1,6 @@
+{
+  "description": "A code list in the vardekod,vardebenamning layout whose one row has a code and no label cell.",
+  "files": {
+    "classifications/codes.csv": "vardekod,vardebenamning\n1\n"
+  }
+}

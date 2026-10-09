@@ -1,0 +1,7 @@
+{
+  "description": "sos-source unchanged: no DCAT-AP sheet (the LOVA shape), so the general sheet's Datamängd (Patientregistret källa) is the only name observation.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source"
+  }
+}

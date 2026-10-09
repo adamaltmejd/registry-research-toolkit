@@ -14,13 +14,7 @@ from pathlib import Path
 
 import openpyxl
 import pytest
-from _sos_fixtures import (
-    BU_SPEC_LINED,
-    BU_SPEC_ONE_LINE,
-    BU_SPEC_WRAPPED,
-    source_revision,
-    write_source_workbook,
-)
+from _sos_fixtures import source_revision, write_source_workbook
 from reg_meta_build.sources.sos import parse_register_file
 from reg_meta_build.sources.sos_records import clean_sos_source
 
@@ -31,14 +25,16 @@ INLINE_CASES = json.loads(
 )
 
 
-def test_bu_spec_fixture_cells_match_the_retained_source_evidence() -> None:
-    # These digests come from the retained BU source evidence, NOT from the fixture
-    # constants: the real workbook is gitignored, so this is what keeps the cells
-    # below byte-exact. A failure means a fixture drifted from the original cell —
-    # restore the cell rather than recomputing the digest.
+def test_bu_spec_cells_match_the_retained_source_evidence() -> None:
+    # The `bu-spec-*` cells are the three `SPEC` `Värdemängd` cells (G71/G83/G99) of
+    # `Metadata_Insatser till barn och unga (BU)_webb.xlsx`. These digests come from
+    # the retained BU source evidence, NOT from the corpus: the real workbook is
+    # gitignored, so this is what keeps the cells byte-exact. A failure means a cell
+    # drifted from the original — restore the cell rather than recomputing the digest.
+    cells = {case["id"]: case["cell"] for case in INLINE_CASES}
     assert [
-        hashlib.sha256(cell.encode()).hexdigest()
-        for cell in (BU_SPEC_LINED, BU_SPEC_WRAPPED, BU_SPEC_ONE_LINE)
+        hashlib.sha256(cells[name].encode()).hexdigest()
+        for name in ("bu-spec-lined", "bu-spec-wrapped", "bu-spec-one-line")
     ] == [
         "809e5e939201350001edb0483b236a5c896d7dec6cab6d0f75c48d9e314b91bf",
         "1b9ab9b4b525bb19b01d62fc47d83b04d177242d7d5b2ec8d8626cef652b0712",

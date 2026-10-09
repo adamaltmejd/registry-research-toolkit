@@ -1,0 +1,6 @@
+{
+  "description": "A code list in the vardekod,vardebenamning layout: code 01 with a padded label, the same row again, 01 with another label, 1 with the first label, a row of two empty cells, and a blank line.",
+  "files": {
+    "classifications/codes.csv": "vardekod,vardebenamning\n01, First label \n01, First label \n01,Another label\n1,First label\n,\n\n"
+  }
+}

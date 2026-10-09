@@ -1,0 +1,18 @@
+{
+  "reader": "scb_values",
+  "replaces": "test_scb_value_records.py::test_type_markers_are_descriptor_scoped_and_original_rows_remain",
+  "fails_if": "the SCB value reader treats a Tal or Beskrivande text code as a type marker outside the list whose version and level are that marker, or drops a marker row instead of keeping it as an association",
+  "projections": [
+    {
+      "of": "associations",
+      "rows": [
+        {"item_id": null, "descriptor": {"non_membership_codes": ["Tal"]}, "value": {"raw_cells": ["Tal", "Numeric declaration"]}},
+        {"descriptor": {"non_membership_codes": ["Beskrivande text"]}, "value": {"raw_cells": ["Beskrivande text", "Text declaration"]}},
+        {"descriptor": {"non_membership_codes": []}},
+        {"descriptor": {"non_membership_codes": ["Tal"]}},
+        {"descriptor": {"non_membership_codes": []}},
+        {"descriptor": {"non_membership_codes": []}}
+      ]
+    }
+  ]
+}

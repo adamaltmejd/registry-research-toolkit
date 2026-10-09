@@ -497,11 +497,21 @@ class ValueBindingSession:
             )
             members, inactive, non_membership = [], [], []
             set_aside = []
+            blank_codes = 0
             for association in associations:
+                value = self.session.value(association.value_key)
+                if value.code == "":
+                    # A delivered blank code is missing data and never a member,
+                    # labelled or not (maintainer decision 2026-10-09). It is no
+                    # unknown membership either, so it neither publishes nor
+                    # withholds the list. An undelivered code (None) stays a missing
+                    # code that withholds. The prepared association remains the
+                    # evidence.
+                    blank_codes += 1
+                    continue
                 if (
                     descriptor.non_membership_codes
-                    and self.session.value(association.value_key).code
-                    in descriptor.non_membership_codes
+                    and value.code in descriptor.non_membership_codes
                 ):
                     non_membership.append(association)
                     continue
@@ -594,7 +604,6 @@ class ValueBindingSession:
                 if member_scope is None:
                     inactive.append(association)
                     continue
-                value = self.session.value(association.value_key)
                 members.append(
                     CodeMembershipClaim(
                         value.code,
@@ -609,7 +618,7 @@ class ValueBindingSession:
             if set_aside:
                 set_aside.sort(key=lambda association: association.locator)
                 members.sort(key=lambda member: member.associations[0].locator)
-            if len(non_membership) != len(associations):
+            if len(non_membership) + blank_codes != len(associations):
                 claim = CodeListClaim(
                     claim_id,
                     scope,
@@ -652,7 +661,9 @@ class ValueBindingSession:
                     record.locators,
                     self.session.source.manifest.revision.revision_id,
                     descriptor_key,
-                    len(associations),
+                    # Skipped blank codes state nothing, so they are not part of the
+                    # list a marker certificate checks for completeness.
+                    len(associations) - blank_codes,
                     tuple(inactive),
                     tuple(non_membership),
                     tuple(set_aside),

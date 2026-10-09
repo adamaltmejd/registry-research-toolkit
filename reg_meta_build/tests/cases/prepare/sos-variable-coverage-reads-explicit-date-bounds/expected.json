@@ -1,0 +1,245 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[start0-end0-expected0]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[201402-201503-expected1]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[20140203-20150405-expected2]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[2014-02-03-2015-04-05-expected3]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[2020-02-03-2020-expected4]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[202002-2020-expected5]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[2020-20200203-expected6]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[2020-2020-expected7]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[20140203-None-expected8]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[20140230-20150405-None]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[20150405-20140203-None]",
+    "test_sos_variable_coverage.py::test_variable_coverage_preserves_explicit_date_bounds[=2001-2020-None]",
+    "test_sos_variable_coverage.py::test_blank_end_open_without_any_period_context"
+  ],
+  "fails_if": "the SOS reader widens or narrows a delivered Data från/Data till (a month to its first or last day, a year to a day), invents a bound for an impossible, reversed, formula or unparseable cell, closes a delivered blank end, or stops keeping the delivered coverage cells as written",
+  "note": "Each COV_ row carries one parameter of the replaced date-bound test (its Data från and Data till), named for its shape. A calendar cell's delivered text is its Python str(), as the replaced test read it.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_CALENDAR"}}},
+      "rows": [
+        {
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [{"start": "2014-02-03", "end": "2015-04-05"}]
+          },
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "2014-02-03 00:00:00"},
+              {"name": "Data till", "raw_value": "2015-04-05 00:00:00"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_MONTHS"}}},
+      "rows": [
+        {
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [{"start": "2014-02-01", "end": "2015-03-31"}]
+          },
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "201402"},
+              {"name": "Data till", "raw_value": "201503"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_DAYS"}}},
+      "rows": [
+        {
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [{"start": "2014-02-03", "end": "2015-04-05"}]
+          },
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "20140203"},
+              {"name": "Data till", "raw_value": "20150405"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_ISO_DAYS"}}},
+      "rows": [
+        {
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [{"start": "2014-02-03", "end": "2015-04-05"}]
+          },
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "2014-02-03"},
+              {"name": "Data till", "raw_value": "2015-04-05"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_DAY_TO_YEAR"}}},
+      "rows": [
+        {
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [{"start": "2020-02-03", "end": "2020-12-31"}]
+          },
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "2020-02-03"},
+              {"name": "Data till", "raw_value": "2020"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_MONTH_TO_YEAR"}}},
+      "rows": [
+        {
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [{"start": "2020-02-01", "end": "2020-12-31"}]
+          },
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "202002"},
+              {"name": "Data till", "raw_value": "2020"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_YEAR_TO_DAY"}}},
+      "rows": [
+        {
+          "edition_scope": {
+            "kind": "intervals",
+            "intervals": [{"start": "2020-01-01", "end": "2020-02-03"}]
+          },
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "2020"},
+              {"name": "Data till", "raw_value": "20200203"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_YEARS"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2020", "end": "2020"}]},
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "2020"},
+              {"name": "Data till", "raw_value": "2020"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_OPEN_DAY"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2014-02-03", "end": null}]},
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "20140203"},
+              {"name": "Data till", "raw_value": ""}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_IMPOSSIBLE_DAY"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "unknown"},
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "20140230"},
+              {"name": "Data till", "raw_value": "20150405"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_REVERSED"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "unknown"},
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "20150405"},
+              {"name": "Data till", "raw_value": "20140203"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_FORMULA"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "unknown"},
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "=2001"},
+              {"name": "Data till", "raw_value": "2020"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "COV_UNPARSED_END"}}},
+      "rows": [{"edition_scope": {"kind": "unknown"}}],
+      "note": "test_blank_end_open_without_any_period_context: a supplied Data till that does not parse stays unknown."
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "PARTIELL"}}},
+      "rows": [
+        {
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2010", "end": null}]},
+          "delivered_cells": {
+            "$contains": [
+              {"name": "Data från", "raw_value": "2010"},
+              {"name": "Data till", "raw_value": ""}
+            ]
+          }
+        }
+      ],
+      "note": "test_blank_end_open_without_any_period_context: a year start with a delivered blank Data till and no register or subset period reads open."
+    }
+  ]
+}

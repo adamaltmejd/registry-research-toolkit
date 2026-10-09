@@ -1,0 +1,64 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_code_lists.py::test_wrapped_inline_code_list_keeps_its_original_cell[BU_SPEC_LINED]",
+    "test_sos_code_lists.py::test_wrapped_inline_code_list_keeps_its_original_cell[BU_SPEC_WRAPPED]",
+    "test_sos_code_lists.py::test_wrapped_inline_code_list_keeps_its_original_cell[BU_SPEC_ONE_LINE]"
+  ],
+  "fails_if": "the SOS reader normalizes the delivered Värdemängd text it keeps as the representation's raw value or as the record's delivered cell, or drops the row's delivered cells from the inline value set it prepares",
+  "note": "The members each BU cell states are the bu-spec-* entries of cases/sos-inline-value-set.json (test_sos_adapter.py). This case keeps the other half of the replaced test: whatever the classifier decides, the delivered cell stays the evidence, on the record and on its inline descriptor.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:2"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "rows": [
+        {
+          "fields": {
+            "representation": {
+              "raw_value": "2 = brister i hemmilljön 2 § LVU\n3 = barnets/den ungas beteende (3 § LVU)                                                                                               4 = både miljö och beteende 2-3 §§ LVU. "
+            }
+          },
+          "delivered_cells": {
+            "$once": [
+              {
+                "name": "Värdemängd",
+                "raw_value": "2 = brister i hemmilljön 2 § LVU\n3 = barnets/den ungas beteende (3 § LVU)                                                                                               4 = både miljö och beteende 2-3 §§ LVU. "
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "descriptors",
+      "where": {
+        "value": {
+          "locators": [{"physical_table": "Metadata - Variabelnivå", "physical_record": "row:2"}]
+        }
+      },
+      "rows": [
+        {
+          "key": "inline:Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#1",
+          "value": {
+            "record_ids": [
+              "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#1"
+            ],
+            "unresolved_members": false,
+            "delivered_cells": {
+              "$once": [
+                {
+                  "name": "Värdemängd",
+                  "raw_value": "2 = brister i hemmilljön 2 § LVU\n3 = barnets/den ungas beteende (3 § LVU)                                                                                               4 = både miljö och beteende 2-3 §§ LVU. "
+                }
+              ],
+              "$length": 12
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

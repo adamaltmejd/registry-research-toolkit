@@ -1,0 +1,8 @@
+{
+  "description": "The LISA fixture with AmPolTyp's Känslig1 cell (Individ!E600) blanked. Individ årsoberoende has no Känslig1 column at all; Företag and Arbetsställe describe companies and workplaces, not persons.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {"Individ!E600": null}
+  }
+}

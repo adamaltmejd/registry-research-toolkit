@@ -1,0 +1,19 @@
+{
+  "reader": "sos_parsed",
+  "replaces": "test_sos_parser.py::test_variable_data_from_reads_integer_year_shapes_only",
+  "fails_if": "the SOS parser truncates a fractional year to an integer, or stops reading a year delivered as text, padded text or an integral float",
+  "note": "One row per parametrization, with the replaced test's expected years. openpyxl writes the float 1964.0 as `1964`, so the old float parameter delivered an integer; `stored` delivers the float form.",
+  "projections": [
+    {
+      "of": "variables",
+      "rows": [
+        {"name": "V1", "data_from": 1964},
+        {"name": "V2", "data_from": 1964},
+        {"name": "V3", "data_from": 1964},
+        {"name": "V4", "data_from": 1964},
+        {"name": "V5", "data_from": null},
+        {"name": "V6", "data_from": null}
+      ]
+    }
+  ]
+}

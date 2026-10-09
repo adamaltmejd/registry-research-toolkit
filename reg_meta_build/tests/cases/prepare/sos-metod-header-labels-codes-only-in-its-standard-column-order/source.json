@@ -1,0 +1,15 @@
+{
+  "description": "sos-source without Kodlista_HDIA, plus two code sheets with a Behandlingsmetod label column: Kodlista_Exact in the standard order (Variabelnamn, Tidsperiod, Kod, Behandlingsmetod) and Kodlista_Reordered (Kod, Behandlingsmetod, Tidsperiod), each with the code 1 labelled IVF.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_Exact": [
+        ["Variabelnamn", "Tidsperiod", "Kod", "Behandlingsmetod"],
+        ["HDIA", "2020-", "1", "IVF"]
+      ],
+      "Kodlista_Reordered": [["Kod", "Behandlingsmetod", "Tidsperiod"], ["1", "IVF", "2020-"]]
+    }
+  }
+}

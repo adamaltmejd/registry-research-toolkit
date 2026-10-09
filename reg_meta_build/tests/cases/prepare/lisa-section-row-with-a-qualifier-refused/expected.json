@@ -1,0 +1,15 @@
+{
+  "reader": "lisa_workbook",
+  "replaces": [
+    "test_lisa_workbook_layout.py::test_lisa_reader_rejects_changed_actual_layout_with_coordinates[section-qualifier-Individ!A5:F5]",
+    "test_lisa_workbook_layout.py::test_lisa_reader_rejects_changed_actual_layout_with_coordinates[change-section-Individ årsoberoende!A30]"
+  ],
+  "fails_if": "the LISA reader checks only a keyed text row's first cell, so a section heading with an added qualifier (or a renamed heading) passes as the observed layout",
+  "note": "The hardest form of the keyed-text-row check: the heading text is intact and only another cell of its row changed. The change-section parametrization (a renamed heading in Individ årsoberoende!A30) is the same check on the first cell, the easy twin.",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "LisaWorkbookError",
+    "locator": "Individ!A5:F5",
+    "message_contains": ["unsupported LISA section structure"]
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "reader": "code_list",
+  "replaces": "test_code_list_source_records.py::test_extended_code_csv_keeps_every_declared_field_and_conflicting_scope",
+  "fails_if": "the code-list reader drops the English label, parent code or validity cells, keeps the byte-order mark in the header, does not compose and fold the label, merges two rows that differ only in validity, or loses a raw cell",
+  "note": "Both rows clean to the code 001 and the label Blå etikett; their validity differs, so they are two payloads. Each delivered cell keeps its raw text.",
+  "projections": [
+    {
+      "of": "associations",
+      "rows": [
+        {
+          "value_key": "#1",
+          "delivered_cells": [
+            {
+              "name": "code",
+              "present": true,
+              "raw_value": " 001 ",
+              "interpreted_value": " 001 ",
+              "raw_type": "str",
+              "storage_type": "csv"
+            },
+            {
+              "name": "label",
+              "present": true,
+              "raw_value": " Blå   etikett ",
+              "interpreted_value": " Blå   etikett ",
+              "raw_type": "str",
+              "storage_type": "csv"
+            },
+            {
+              "name": "label_en",
+              "present": true,
+              "raw_value": " English  label ",
+              "interpreted_value": " English  label ",
+              "raw_type": "str",
+              "storage_type": "csv"
+            },
+            {
+              "name": "parent_code",
+              "present": true,
+              "raw_value": " 00 ",
+              "interpreted_value": " 00 ",
+              "raw_type": "str",
+              "storage_type": "csv"
+            },
+            {
+              "name": "valid_from",
+              "present": true,
+              "raw_value": "2020",
+              "interpreted_value": "2020",
+              "raw_type": "str",
+              "storage_type": "csv"
+            },
+            {
+              "name": "valid_to",
+              "present": true,
+              "raw_value": "",
+              "interpreted_value": "",
+              "raw_type": "str",
+              "storage_type": "csv"
+            }
+          ],
+          "value": {
+            "payload_key": "#1",
+            "code": "001",
+            "label": "Blå etikett",
+            "raw_cells": [
+              " 001 ",
+              " Blå   etikett ",
+              " English  label ",
+              " 00 ",
+              "2020",
+              ""
+            ],
+            "delivered_cells": [
+              {
+                "name": "code",
+                "present": true,
+                "raw_value": " 001 ",
+                "interpreted_value": " 001 ",
+                "raw_type": "str",
+                "storage_type": "csv"
+              },
+              {
+                "name": "label",
+                "present": true,
+                "raw_value": " Blå   etikett ",
+                "interpreted_value": " Blå   etikett ",
+                "raw_type": "str",
+                "storage_type": "csv"
+              },
+              {
+                "name": "label_en",
+                "present": true,
+                "raw_value": " English  label ",
+                "interpreted_value": " English  label ",
+                "raw_type": "str",
+                "storage_type": "csv"
+              },
+              {
+                "name": "parent_code",
+                "present": true,
+                "raw_value": " 00 ",
+                "interpreted_value": " 00 ",
+                "raw_type": "str",
+                "storage_type": "csv"
+              },
+              {
+                "name": "valid_from",
+                "present": true,
+                "raw_value": "2020",
+                "interpreted_value": "2020",
+                "raw_type": "str",
+                "storage_type": "csv"
+              },
+              {
+                "name": "valid_to",
+                "present": true,
+                "raw_value": "",
+                "interpreted_value": "",
+                "raw_type": "str",
+                "storage_type": "csv"
+              }
+            ],
+            "locators": [
+              {
+                "physical_file": "catalog/classifications/codes.csv"
+              }
+            ]
+          }
+        },
+        {
+          "value_key": "#2",
+          "value": {
+            "payload_key": "#2",
+            "code": "001",
+            "label": "Blå etikett",
+            "delivered_cells": {
+              "$last": {
+                "name": "valid_to",
+                "raw_value": "unknown"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "of": "values",
+      "rows": [
+        {
+          "$any": true
+        },
+        {
+          "$any": true
+        }
+      ]
+    }
+  ]
+}

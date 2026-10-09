@@ -1,0 +1,37 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_source_records.py::test_sos_workbook_flags_claim_identifier_from_kopplingsvariabel",
+    "test_sos_source_records.py::test_sos_flag_claims_form_without_unresolved_flag"
+  ],
+  "fails_if": "the SOS reader stops declaring every workbook variable sensitive, reads a delivered blank Kopplingsvariabel as an unknown identifier claim, or drops the claimed cell from the record's delivered cells",
+  "note": "Disclosure guard: SOS health and social-services microdata is sensitive whatever the workbook says. A blank Kopplingsvariabel is an explicit false identifier claim, a marker an explicit true one, and each claim stays traceable to its delivered cell. That such flags form without unresolved_flag is test_source_formation_facts.py::test_conditional_sensitivity_ratchets_up_without_changing_plain_values[True-False-True].",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_record": "row:2"}], "subject": {"member": {"name": "HDIA"}}},
+      "rows": [
+        {
+          "fields": {
+            "sensitivity": {"status": "value", "value": true},
+            "identifier": {"status": "value", "value": false}
+          },
+          "delivered_cells": {"$once": [{"name": "Kopplingsvariabel", "present": true, "raw_value": ""}]}
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "PARTIELL"}}},
+      "rows": [
+        {
+          "fields": {
+            "sensitivity": {"status": "value", "value": true},
+            "identifier": {"status": "value", "value": true, "raw_value": "X"}
+          },
+          "delivered_cells": {"$once": [{"name": "Kopplingsvariabel", "present": true, "raw_value": "X"}]}
+        }
+      ]
+    }
+  ]
+}

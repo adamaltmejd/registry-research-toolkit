@@ -257,8 +257,8 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
-expected_evidence_sha256 = "40c74db6cc6bc9395235f40c532d777b8ead3c508da6ebbfd4dcad0dda3059c1"
-expected_diagnostic_sha256 = "e0b0e71a591d66295b0562563ab8d5045f0f7d7040537b40375840ec409542e1"
+expected_evidence_sha256 = "081b2164f5e84f0a4c5e5c60bbb88b63c258da40a82942a001ed0ef594782953"
+expected_diagnostic_sha256 = "3651560b9a903340e2c5e9be22781df3df79e12b9f41c010d338c2ea033297b2"
 
 [[acknowledge]]
 code = "unknown_code_validity"
@@ -267,8 +267,8 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
-expected_evidence_sha256 = "40c74db6cc6bc9395235f40c532d777b8ead3c508da6ebbfd4dcad0dda3059c1"
-expected_diagnostic_sha256 = "ed14cb79f1fe3240bcbf11d716a8745b99ae34a07272e6f2f449b0317ee24e3b"
+expected_evidence_sha256 = "081b2164f5e84f0a4c5e5c60bbb88b63c258da40a82942a001ed0ef594782953"
+expected_diagnostic_sha256 = "634b63d9bedaaee6a94521bccba4192b6d38a497c3100245b787d33828c0a89c"
 
 [[acknowledge]]
 code = "unknown_code_validity"
@@ -277,8 +277,8 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
-expected_evidence_sha256 = "40c74db6cc6bc9395235f40c532d777b8ead3c508da6ebbfd4dcad0dda3059c1"
-expected_diagnostic_sha256 = "7d44133340d8333be58aa6805f64a6e79f2fda7518d3af317040d03b25d3f21c"
+expected_evidence_sha256 = "081b2164f5e84f0a4c5e5c60bbb88b63c258da40a82942a001ed0ef594782953"
+expected_diagnostic_sha256 = "d4933d3d0428552d0ece58f82d1e540e298f63c04b3d7ea1ffb979e4fa44dc48"
 
 [[acknowledge]]
 code = "unknown_code_membership"
@@ -289,5 +289,5 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
-expected_evidence_sha256 = "40c74db6cc6bc9395235f40c532d777b8ead3c508da6ebbfd4dcad0dda3059c1"
+expected_evidence_sha256 = "081b2164f5e84f0a4c5e5c60bbb88b63c258da40a82942a001ed0ef594782953"
 expected_diagnostic_sha256 = "a577bf947dcca20e82ff6cc9819fd5eb1f8f6b7646cbb0764024b317cb2543ef"

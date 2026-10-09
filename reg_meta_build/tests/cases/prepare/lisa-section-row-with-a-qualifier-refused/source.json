@@ -1,0 +1,8 @@
+{
+  "description": "The LISA fixture with 'Unexpected qualifier' in Individ!B5, beside the unchanged section heading 'Demografiska variabler' in A5.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {"Individ!B5": "Unexpected qualifier"}
+  }
+}

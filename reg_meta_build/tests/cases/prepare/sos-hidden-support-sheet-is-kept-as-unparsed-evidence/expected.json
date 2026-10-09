@@ -1,0 +1,31 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_lists.py::test_known_hidden_support_sheet_is_preserved_but_unknown_sheet_blocks",
+  "fails_if": "the SOS reader refuses the known support sheet, drops its rows, or reads its rows as code-list values",
+  "projections": [
+    {
+      "of": "tables",
+      "where": {"name": "Ej relevant_listor"},
+      "rows": [
+        {
+          "rows": [
+            {
+              "role": "unparsed",
+              "cells": [{"raw_value": "Binär"}, {"raw_value": "Datatyp"}]
+            },
+            {
+              "role": "unparsed",
+              "cells": [{"raw_value": "Ja"}, {"raw_value": "Heltal"}],
+              "locator": {"physical_cells": ["Ej relevant_listor!A2", "Ej relevant_listor!B2"]}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "of": "associations",
+      "note": "The one association is Kodlista_HDIA's code; the support sheet adds none.",
+      "rows": [{"descriptor_key": "sheet:Kodlista_HDIA"}]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_lists.py::test_code_patterns_and_adjacent_legend_stay_literal_and_separate",
+  "fails_if": "the SOS reader expands or normalizes a pattern code, reads the adjacent legend as code rows or member names, folds legend cells into a value, or drops the legend cells from the sheet evidence",
+  "projections": [
+    {
+      "of": "values",
+      "rows": [
+        {
+          "value": {
+            "code": "1XXXX",
+            "label": "missbildning i CNS",
+            "delivered_cells": {"$length": 2}
+          }
+        },
+        {
+          "value": {
+            "code": "11xxy",
+            "label": "Annan kategori",
+            "delivered_cells": {"$length": 2}
+          }
+        }
+      ]
+    },
+    {
+      "of": "associations",
+      "rows": [
+        {"descriptor_key": "sheet:Kodlista_Arbitrary", "member_references": []},
+        {"descriptor_key": "sheet:Kodlista_Arbitrary", "member_references": []}
+      ]
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Kodlista_Arbitrary"},
+      "rows": [
+        {
+          "rows": [
+            {"$any": true},
+            {
+              "cells": [
+                {"$any": true},
+                {"$any": true},
+                {"raw_value": "X: valfri siffra"},
+                {"$any": true},
+                {"$any": true}
+              ]
+            },
+            {"$any": true},
+            {
+              "cells": [
+                {"$any": true},
+                {"$any": true},
+                {"raw_value": "1"},
+                {"raw_value": "A"},
+                {"$any": true}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {"of": "declarations", "rows": []},
+    {"of": "validity", "rows": []}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "reader": "scb_records",
+  "replaces": "test_source_records.py::test_cleaning_keeps_projection_register_range_pooled",
+  "fails_if": "the SCB records reader resolves a forecast register's projection range (register 310) into pooled start and end years, as it does for a pooled delivery range, or drops its edition label",
+  "projections": [
+    {
+      "of": "",
+      "rows": [
+        {"record": {
+          "edition_scope": {"$exact": {"kind": "pooled", "intervals": [], "label": "2024-2070", "pooled_start": null, "pooled_end": null}},
+          "edition_period_scope": {"$exact": {"kind": "pooled", "intervals": [], "label": "2024-2070", "pooled_start": null, "pooled_end": null}},
+          "original_period_text": "2024-2070"
+        }}
+      ]
+    }
+  ]
+}

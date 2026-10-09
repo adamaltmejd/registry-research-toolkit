@@ -1,0 +1,24 @@
+{
+  "reader": "scb_records",
+  "replaces": "test_source_records.py::test_scb_unknown_measurement_unit_matches_exact_stripped_token",
+  "fails_if": "the SCB records reader matches the unknown-unit token Okänd case-insensitively or as a prefix, keeps a padded Okänd as a unit value, or drops the raw Mattenhet cell",
+  "projections": [
+    {
+      "of": "",
+      "rows": [
+        {"record": {
+          "fields": {"measurement_unit": {"$exact": {"status": "unknown", "value": null, "raw_value": " Okänd "}}},
+          "delivered_cells": {"$contains": [{"name": "Mattenhet", "raw_value": " Okänd ", "interpreted_value": " Okänd "}]}
+        }},
+        {"record": {
+          "fields": {"measurement_unit": {"$exact": {"status": "value", "value": "okänd", "raw_value": "okänd"}}},
+          "delivered_cells": {"$contains": [{"name": "Mattenhet", "raw_value": "okänd", "interpreted_value": "okänd"}]}
+        }},
+        {"record": {
+          "fields": {"measurement_unit": {"$exact": {"status": "value", "value": "Okänd enhet", "raw_value": "Okänd enhet"}}},
+          "delivered_cells": {"$contains": [{"name": "Mattenhet", "raw_value": "Okänd enhet", "interpreted_value": "Okänd enhet"}]}
+        }}
+      ]
+    }
+  ]
+}

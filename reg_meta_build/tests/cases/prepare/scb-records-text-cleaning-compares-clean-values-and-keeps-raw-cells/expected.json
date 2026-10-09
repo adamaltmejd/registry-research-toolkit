@@ -1,0 +1,41 @@
+{
+  "reader": "scb_records",
+  "replaces": [
+    "test_source_records.py::test_scb_text_cleaning_compares_clean_values_and_retains_original_evidence",
+    "test_source_records.py::test_scb_paragraph_cleaning_retains_layout_and_real_text_differences"
+  ],
+  "fails_if": "the SCB records reader compares a raw label (its padding, non-breaking space or doubled space) instead of the cleaned one, keeps a width's sign or leading zeros or reads a decimal width as an integer, flattens a description's line breaks, indentation or column alignment, folds two descriptions that differ in text, or drops a raw cell from a field or from the record's identity",
+  "note": "The replaced test spelled Å as A plus a combining ring (U+030A), which no cp1252 SCB export can deliver; the precomposed Å is the deliverable form. Folding the combining form is `test_normalization.py::test_labels_fold_whitespace_and_unicode_without_folding_spelling`. The clean values are the raw cells without padding, with every run of spaces one space; a description keeps its line structure with its line ends as LF and each line's trailing space dropped.",
+  "projections": [
+    {
+      "of": "",
+      "rows": [
+        {"record": {
+          "record_id": "scb-registerinformation:record:sha256:#1",
+          "fields": {
+            "name": {"$exact": {"status": "value", "value": "Års inkomst", "raw_value": " Års   inkomst "}},
+            "data_length": {"$exact": {"status": "value", "value": "4", "raw_value": "+0004"}}
+          },
+          "subject": {"member": {"name": "Års inkomst"}}
+        }},
+        {"record": {
+          "record_id": "scb-registerinformation:record:sha256:#3",
+          "fields": {
+            "name": {"status": "value", "value": "Års inkomst"},
+            "data_length": {"status": "value", "value": "4"}
+          },
+          "subject": {"member": {"name": "Års inkomst"}}
+        }},
+        {"record": {
+          "fields": {
+            "description": {"$exact": {"status": "value", "value": "Rubrik\n\n  - Kön\nA  B\tC", "raw_value": "Rubrik\r\n\r\n  - Kön  \r\nA  B\tC"}},
+            "data_length": {"status": "value", "value": "1,5"}
+          }
+        }},
+        {"record": {
+          "fields": {"description": {"status": "value", "value": "Rubrik\n\n  - Ålder\nA  B\tC"}}
+        }}
+      ]
+    }
+  ]
+}

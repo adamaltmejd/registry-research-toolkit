@@ -1,0 +1,8 @@
+{
+  "description": "sos-source with a linkage marker X in PARTIELL's Kopplingsvariabel cell (L6); HDIA's row 2 keeps the delivered blank.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "cells": {"Metadata - Variabelnivå!L6": "X"}
+  }
+}

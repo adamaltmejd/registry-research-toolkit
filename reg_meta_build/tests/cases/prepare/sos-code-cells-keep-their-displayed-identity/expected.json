@@ -1,0 +1,22 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_parser.py::test_code_cells_keep_their_displayed_identity",
+    "test_sos_parser.py::test_zero_padded_kod_round_trips_through_workbook"
+  ],
+  "fails_if": "the SOS reader drops the zero padding a 0-only number format displays (or stops reading a float-stored integral code under it), pads under any other format, renders a fractional code otherwise than as delivered, or keeps a text code's surrounding whitespace",
+  "note": "One code row per shape, with the replaced test's expected codes and displayed values (the code is the displayed value, and the Kod cell's interpreted value is that display). The 7.0 row's raw value is the spec's stored float, which shows the case reaches that producer form. The zero-padded twin (1 and 12 under 000) is the first row's rule.",
+  "projections": [
+    {
+      "of": "associations",
+      "where": {"descriptor_key": "sheet:Kodlista_TEST"},
+      "rows": [
+        {"value": {"code": "001"}, "delivered_cells": {"$once": [{"name": "Kod", "interpreted_value": "001", "number_format": "000"}]}},
+        {"value": {"code": "07"}, "delivered_cells": {"$once": [{"name": "Kod", "interpreted_value": "07", "raw_value": "7.0", "number_format": "00"}]}},
+        {"value": {"code": "7.5"}, "delivered_cells": {"$once": [{"name": "Kod", "interpreted_value": "7.5"}]}},
+        {"value": {"code": "001"}, "delivered_cells": {"$once": [{"name": "Kod", "interpreted_value": "001", "raw_value": "  001 "}]}},
+        {"value": {"code": "7"}, "delivered_cells": {"$once": [{"name": "Kod", "interpreted_value": "7"}]}}
+      ]
+    }
+  ]
+}

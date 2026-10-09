@@ -1,0 +1,20 @@
+{
+  "description": "A minimal SOS workbook whose DCAT-AP sheet (attribute, definition, Swedish, English) delivers Titel and Beskrivning in both languages, Tidsperiod, Utgivare, Ingångssida, Åtkomsträttigheter and Tillämplig lagstiftning in Swedish only, and an attribute the template does not define.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Syntet (PAR)_webb.xlsx",
+    "sheets": {
+      "Metadata-Datamängd (DCAT-AP)": [
+        ["Attribut SoS-metadata", "Definition", "Svenska", "Engelska"],
+        ["Titel", null, "Patientregistret-syntet", "Synthetic Patient Register"],
+        ["Beskrivning", null, "En syntetisk beskrivning", "A synthetic description"],
+        ["Tidsperiod", null, "1964-", null],
+        ["Utgivare", null, "Socialstyrelsen", null],
+        ["Ingångssida", null, "https://example.se/par", null],
+        ["Åtkomsträttigheter", null, "Begränsad åtkomst", null],
+        ["Tillämplig lagstiftning", null, "Lag om hälsodataregister", null],
+        ["Okänt attribut", null, "extra-värde", null]
+      ],
+      "Metadata - Variabelnivå": [["Variabelnamn"], ["TESTVAR"]]
+    }
+  }
+}

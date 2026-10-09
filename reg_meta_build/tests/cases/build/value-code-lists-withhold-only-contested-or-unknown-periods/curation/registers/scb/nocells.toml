@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "nocells"
+native_id = "18"
+[[variant]]
+native_id = "18.180"
+slug = "people"
+[[variable]]
+native_id = "18.1801"
+slug = "value"

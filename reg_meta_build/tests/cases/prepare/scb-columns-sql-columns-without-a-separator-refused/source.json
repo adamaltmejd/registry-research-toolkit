@@ -1,0 +1,9 @@
+{
+  "description": "Tabelldefinitioner.sql (cp1252) with two column definitions with no comma between them.",
+  "files": {
+    "SCB/Tabelldefinitioner.sql": {
+      "text": "CREATE TABLE [dbo].[Delivery](\r\n[A] [int] [B] [int]\r\n) ON [PRIMARY]\r\nGO\r\n",
+      "encoding": "cp1252"
+    }
+  }
+}

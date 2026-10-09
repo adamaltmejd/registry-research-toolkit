@@ -1,0 +1,22 @@
+{
+  "reader": "lisa_workbook",
+  "replaces": "test_lisa_workbook_layout.py::test_lisa_cleaning_uses_shared_text_rules_without_changing_code_spelling",
+  "fails_if": "the LISA reader stops composing and trimming the column name, collapses a description's line structure, stops reading a whitespace variant of 'I vissa fall' as sensitive, or keeps only the cleaned text instead of the delivered cell",
+  "note": "Values from the replaced test. The workbook XML reader turns CRLF into LF before the LISA reader sees the cell, so the raw description has LF line breaks.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_record": "row:600"}]},
+      "rows": [
+        {
+          "fields": {
+            "column_name": {"$exact": {"status": "value", "value": "Å_01", "raw_value": " Å_01 "}},
+            "description": {"$exact": {"status": "value", "value": "Åtgärd\n\n  - Förklaring", "raw_value": "Åtgärd\n\n  - Förklaring  "}},
+            "sensitivity": {"$exact": {"status": "value", "value": true, "raw_value": " I   vissa\tfall "}},
+            "base_register": {"value": "Arbets förmedlingen"}
+          }
+        }
+      ]
+    }
+  ]
+}

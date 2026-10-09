@@ -1,0 +1,90 @@
+{
+  "reader": "scb_join_keys",
+  "replaces": "test_scb_reference_records.py::test_join_key_reader_preserves_prose_duplicates_cells_and_unknowns",
+  "fails_if": "the join-key reader extracts a relationship from a description, merges a repeated table and column, flattens a description's paragraphs or indentation, drops a cell's hyperlink, reads a formula or a missing cell as a table or column value, or locates a row by anything but its cells",
+  "projections": [
+    {
+      "of": "declarations",
+      "rows": [
+        {
+          "table_name": {
+            "value": "Timeseries"
+          },
+          "column_name": {
+            "value": "ID1"
+          },
+          "description": {
+            "value": "Possibly related to Table.Key; no assertion"
+          },
+          "delivered_cells": [
+            {
+              "$any": true
+            },
+            {
+              "$any": true
+            },
+            {
+              "hyperlink_target": "https://example.invalid/evidence"
+            }
+          ],
+          "locator": {
+            "physical_cells": [
+              "Blad1!A2",
+              "Blad1!B2",
+              "Blad1!C2"
+            ]
+          }
+        },
+        {
+          "table_name": {
+            "value": "Timeseries"
+          },
+          "description": {
+            "value": "  Indented paragraph\n\n  second line"
+          }
+        },
+        {
+          "table_name": {
+            "status": "unknown"
+          },
+          "column_name": {
+            "status": "unknown"
+          },
+          "delivered_cells": [
+            {
+              "$any": true
+            },
+            {
+              "raw_value": "=A2",
+              "storage_type": "f"
+            },
+            {
+              "$any": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "rows": [
+        {
+          "rows": [
+            {
+              "role": "header"
+            },
+            {
+              "role": "declaration"
+            },
+            {
+              "role": "declaration"
+            },
+            {
+              "role": "declaration"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

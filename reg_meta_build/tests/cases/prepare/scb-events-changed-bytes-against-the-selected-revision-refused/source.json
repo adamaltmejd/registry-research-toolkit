@@ -1,0 +1,14 @@
+{
+  "description": "An accepted Timeseries.csv (ID2 8) whose selected revision was declared from other bytes of the same size (ID2 9), delivered beside it as `reviewed/Timeseries.csv` in the file's own cp1252 and CRLF form.",
+  "scb": {
+    "timeseries": [
+      "TESTREG|Ersätter||AktuellVariabel|0007|8|1"
+    ]
+  },
+  "files": {
+    "reviewed/Timeseries.csv": {
+      "text": "Namn|Handelse|Beskrivning|Entitet|ID1|ID2|FilID\r\nTESTREG|Ersätter||AktuellVariabel|0007|9|1\r\n",
+      "encoding": "cp1252"
+    }
+  }
+}

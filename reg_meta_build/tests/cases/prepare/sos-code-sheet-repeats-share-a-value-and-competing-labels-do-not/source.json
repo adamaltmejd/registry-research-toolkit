@@ -1,0 +1,7 @@
+{
+  "description": "sos-complete unchanged: Kodlista_HDIA has two Variabelnamn preamble rows (HDIA, ANNAN_VAR), a header, a 2010-2012 section row (row 4) and code rows 5-7: 001 Klinik ett twice, then 001 Annan klinik. Kodlista_RAW has no code-list header.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-complete"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_parser.py::test_variable_sheet_is_found_when_its_name_splits_the_token[Metadata - Variabel nivå]",
+    "test_sos_parser.py::test_variable_sheet_is_found_when_its_name_splits_the_token[Metadata - Variabel-nivå]"
+  ],
+  "fails_if": "the SOS parser stops ignoring spaces or hyphens inside a sheet name when it looks for the variable-level sheet, so a renamed sheet delivers no variables (or fails as missing)",
+  "note": "One name carries both parametrizations' separators. The expected variables are the sos-source rows 2-8 in order, as the replaced test compared them with the unrenamed workbook's.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"subject": {"variable": {"status": "value"}}},
+      "rows": [
+        {"locators": [{"physical_table": "Metadata - Variabel -nivå", "physical_record": "row:2"}], "subject": {"member": {"name": "HDIA"}}},
+        {"locators": [{"physical_record": "row:3"}], "subject": {"member": {"name": "HDIA"}}},
+        {"locators": [{"physical_record": "row:4"}], "subject": {"member": {"name": "HDIA"}}},
+        {"locators": [{"physical_record": "row:5"}], "subject": {"member": {"name": "HDIA"}}},
+        {"locators": [{"physical_record": "row:6"}], "subject": {"member": {"name": "PARTIELL"}}},
+        {"locators": [{"physical_record": "row:7"}], "subject": {"member": {"name": "MALFORMED"}}},
+        {"locators": [{"physical_record": "row:8"}], "subject": {"member": {"name": "UTAN_DEL"}}}
+      ]
+    }
+  ]
+}

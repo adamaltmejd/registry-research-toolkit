@@ -1,0 +1,63 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_code_lists.py::test_sheet_pointer_uses_exact_target_and_named_member_guard[Kodlista_Target-None-False-True]",
+    "test_sos_code_lists.py::test_sheet_pointer_uses_exact_target_and_named_member_guard[Kodlista_Target!-None-False-True]",
+    "test_sos_code_lists.py::test_sheet_pointer_record_and_descriptor_are_stable_under_sheet_order"
+  ],
+  "fails_if": "the SOS reader stops binding a member to the unnamed code sheet its Länk kodverk names exactly, keeps that pointer as a classification declaration, or lets the sheet order change the prepared records or the pointed-at descriptor",
+  "projections": [
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:2"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "rows": [
+        {
+          "fields": {"classification_declared": null},
+          "delivered_cells": {"$once": [{"name": "Länk kodverk", "raw_value": "Kodlista_Target"}]}
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:3"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "rows": [
+        {
+          "fields": {"classification_declared": null},
+          "delivered_cells": {"$once": [{"name": "Länk kodverk", "raw_value": "Kodlista_Target!"}]}
+        }
+      ]
+    },
+    {
+      "of": "descriptors",
+      "where": {"key": "sheet:Kodlista_Target"},
+      "rows": [
+        {
+          "value": {
+            "member_references": {"$contains": ["HDIA"]},
+            "member_hints": {
+              "$contains": [
+                {
+                  "role": "variable_pointer",
+                  "value": "HDIA",
+                  "locator": {"physical_record": "row:2"}
+                },
+                {
+                  "role": "variable_pointer",
+                  "value": "HDIA",
+                  "locator": {"physical_record": "row:3"}
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "agree": ["records", "descriptors.sheet:Kodlista_Target"]
+}

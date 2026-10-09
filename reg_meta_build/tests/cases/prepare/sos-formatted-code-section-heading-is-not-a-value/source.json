@@ -1,0 +1,22 @@
+{
+  "description": "sos-source with three rows appended to Kodlista_HDIA: row 3 a bold heading in the Kod column with no label; row 4 a bold literal range 01-19 with a label; row 5 the code 20 with no label.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "sheets": {
+      "Kodlista_HDIA": [
+        [
+          null,
+          {"value": "Description of the following code digits", "bold": true},
+          null
+        ],
+        [
+          {"value": null, "bold": true},
+          {"value": "01-19", "bold": true},
+          {"value": "Literal code range", "bold": true}
+        ],
+        [null, "20", null]
+      ]
+    }
+  }
+}

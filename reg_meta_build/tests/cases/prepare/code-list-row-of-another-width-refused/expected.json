@@ -1,0 +1,11 @@
+{
+  "reader": "code_list",
+  "replaces": "test_code_list_source_records.py::test_unknown_contract_or_row_width_fails[vardekod,vardebenamning\\n1\\n]",
+  "fails_if": "the code-list reader accepts a row with fewer (or more) cells than its header",
+  "note": "A row one cell short and rows with an extra cell (in the code,label and the extended layouts) reach the same guard.",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "CodeListSourceError",
+    "locator": "row 2 has 1 fields; expected 2"
+  }
+}

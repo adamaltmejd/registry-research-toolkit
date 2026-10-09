@@ -1,0 +1,7 @@
+{
+  "description": "The sos-source workbook in a Socialstyrelsen directory; the parse names the directory itself as its file.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source"
+  }
+}

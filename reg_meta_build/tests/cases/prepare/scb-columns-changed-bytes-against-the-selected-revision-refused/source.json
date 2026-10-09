@@ -1,0 +1,13 @@
+{
+  "description": "Tabelldefinitioner.sql declaring column B, whose selected revision was declared from the reviewed file of the same size declaring column A.",
+  "files": {
+    "SCB/Tabelldefinitioner.sql": {
+      "text": "CREATE TABLE [dbo].[Delivery](\r\n[B] [int]\r\n) ON [PRIMARY]\r\nGO\r\n",
+      "encoding": "cp1252"
+    },
+    "reviewed/Tabelldefinitioner.sql": {
+      "text": "CREATE TABLE [dbo].[Delivery](\r\n[A] [int]\r\n) ON [PRIMARY]\r\nGO\r\n",
+      "encoding": "cp1252"
+    }
+  }
+}

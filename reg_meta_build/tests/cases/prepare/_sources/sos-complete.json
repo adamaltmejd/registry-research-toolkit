@@ -1,0 +1,33 @@
+{
+  "description": "sos-source plus every common sheet: a DCAT-AP sheet with two Swedish/English title rows, an indented description and an unmapped attribute; a Deldatamängder row for PAR_OV; Kodlista_HDIA rewritten with two Variabelnamn preamble rows, a 2010-2012 period section and three code rows (001 twice with one label, 001 with a competing label); and Kodlista_RAW, a sheet with no code-list header.",
+  "workbook": {
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_HDIA": [
+        ["Variabelnamn", "HDIA"],
+        ["Variabelnamn", "ANNAN_VAR"],
+        ["Tidsperiod", "Kod", "Beskrivning (kliniknamn)"],
+        ["2010-2012", null, null],
+        [null, {"value": 1, "number_format": "000"}, "Klinik ett"],
+        [null, {"value": 1, "number_format": "000"}, "Klinik ett"],
+        [null, {"value": 1, "number_format": "000"}, "Annan klinik"]
+      ],
+      "Metadata-Datamängd (DCAT-AP)": [
+        ["Attribut", "Definition", "Svenska", "Engelska"],
+        ["Titel", null, "Första titeln", "First title"],
+        ["Titel", null, "Andra titeln", "Second title"],
+        ["Beskrivning", null, "  indragen rad\n    tabell  kolumn", null],
+        ["Okänt attribut", null, "Obehandlad uppgift", "Unmapped fact"]
+      ],
+      "Deldatamängder": [
+        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"],
+        ["PAR_OV", "Öppenvård", 1900, 2025]
+      ],
+      "Kodlista_RAW": [
+        ["Sjukhus", "Adress"],
+        ["Klinik", "Gatan 1"]
+      ]
+    }
+  }
+}

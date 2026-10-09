@@ -1,0 +1,6 @@
+{
+  "description": "Identifierare.csv whose one declaration has the VarID `bad`.",
+  "scb": {
+    "identifierare": ["bad|Workplace ID|Definition"]
+  }
+}

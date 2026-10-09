@@ -268,8 +268,12 @@ class SosRegister:
 # ---------------------------------------------------------------------------
 
 
-class SosParseError(Exception):
-    """Raised when the workbook cannot be read or is missing required sheets."""
+class SosParseError(ValueError):
+    """Raised when the workbook cannot be read or is missing required sheets.
+
+    A `ValueError`, so `prepare-input-bundle` and `prepare-sources` report it as
+    their configuration error, as they do every other unreadable selected input.
+    """
 
 
 # ---------------------------------------------------------------------------

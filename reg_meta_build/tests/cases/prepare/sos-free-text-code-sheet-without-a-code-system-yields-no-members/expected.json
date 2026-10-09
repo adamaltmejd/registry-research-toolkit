@@ -1,0 +1,31 @@
+{
+  "reader": "sos_workbook",
+  "fails_if": "the SOS code-sheet reader turns a blank-Kod row with a label into a code-list member (the rule #1274 first shipped, which made the 43 prose lines of the real PAR Kodlista_DIAGNOS into \"\" members), or stops reading a period-plus-prose row as a period section",
+  "note": "Real-seed finding on #1274 (wgs-restoration @ 1f2e6fdd): PAR's Kodlista_DIAGNOS declares no code system (B1 'Inget kodverk'), leaves Kod blank on every row and wraps a prose definition one line per row. No Socialstyrelsen workbook in the seed has a genuine labelled blank code, so the SOS reader keeps main's behaviour: a code row needs a code, a period row opens a section and the prose lines stay raw evidence. Expected values are read off the fixture under that rule.",
+  "projections": [
+    {
+      "of": "associations",
+      "where": {"descriptor_key": "sheet:Kodlista_HDIA"},
+      "rows": []
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Kodlista_HDIA"},
+      "rows": [
+        {
+          "rows": [
+            {"role": "declaration"},
+            {"role": "declaration"},
+            {"role": "declaration"},
+            {"role": "header"},
+            {"role": "section"},
+            {"role": "unparsed"},
+            {"role": "unparsed"},
+            {"role": "section"},
+            {"role": "unparsed"}
+          ]
+        }
+      ]
+    }
+  ]
+}

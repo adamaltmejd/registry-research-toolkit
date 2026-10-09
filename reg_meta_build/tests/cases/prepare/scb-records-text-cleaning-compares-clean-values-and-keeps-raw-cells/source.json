@@ -1,0 +1,11 @@
+{
+  "description": "One member delivered four times: Variabelnamn ` Års<NBSP>  inkomst ` with Datalängd `+0004`; the clean `Års inkomst` with Datalängd `4`; a quoted multi-line Variabelbeskrivning (CRLF line ends, an indented list item, a non-breaking space at a line end, aligned columns) with Datalängd `1,5`; and another description of the same layout that names another list item.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "varname": " Års   inkomst ", "data_length": "+0004"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "varname": "Års inkomst", "data_length": "4"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "vardesc": "\"Rubrik\r\n\r\n  - Kön  \r\nA  B\tC\"", "data_length": "1,5"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "vardesc": "\"Rubrik\n\n  - Ålder\nA  B\tC\""}
+    ]
+  }
+}
