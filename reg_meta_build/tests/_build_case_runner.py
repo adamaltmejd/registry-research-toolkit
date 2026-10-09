@@ -612,6 +612,7 @@ def _issue_row(event: dict) -> dict:
         "valid_from": event.get("valid_from"),
         "valid_to": event.get("valid_to"),
         "fields": event.get("fields") or [],
+        "withheld_output": event.get("withheld_output") or [],
     }
 
 
@@ -696,7 +697,7 @@ def _variables(outcome: Outcome) -> list[dict]:
     rows = outcome._sql(
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
         "s.delivery_column_name AS column, v.provider_key, v.description, "
-        "v.is_identifier, v.is_sensitive FROM variable v "
+        "v.is_identifier, v.is_sensitive, v.deprecated FROM variable v "
         "JOIN register r USING (register_id) "
         "LEFT JOIN variable_state s USING (variable_id)"
     )
@@ -1043,9 +1044,9 @@ FIELDS: dict[str, frozenset[str]] = {
     name: frozenset(fields.split())
     for name, fields in {
         "issues": "code severity subject case_id locator detail acknowledged_by "
-        "valid_from valid_to fields",
+        "valid_from valid_to fields withheld_output",
         "issue_refs": "code severity subject case_id locator detail acknowledged_by "
-        "valid_from valid_to fields source key ref",
+        "valid_from valid_to fields withheld_output source key ref",
         "cases": "case_id status",
         "uses": "source native_variable key column_name data_type name description "
         "use variable",
@@ -1055,7 +1056,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "description operational_definition source_register_text",
         "state_codes": "register variable variant column valid_from valid_to code label",
         "variables": "register variable column provider_key description "
-        "is_identifier is_sensitive",
+        "is_identifier is_sensitive deprecated",
         "variants": "register variant name panel_entity_key panel_time_key",
         "tags": "slug member",
         "aliases": "register variable variant column",

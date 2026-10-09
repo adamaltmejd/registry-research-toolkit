@@ -1,5 +1,5 @@
 {
-  "description": "Register 1 delivers VALUE; register 2 (OTHERREG) delivers twelve month columns Calendar<Month>.",
+  "description": "Register 1 delivers VALUE; register 2 (OTHERREG) delivers twelve month columns Calendar<Month> and one plain native variable OTHERVALUE (VarId 230).",
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
@@ -85,6 +85,13 @@
         "var_id": 222,
         "colname": "CalendarDec",
         "varname": "CalendarDec",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2301,
+        "var_id": 230,
+        "colname": "OTHERVALUE",
+        "varname": "OtherValue",
         "register": ["OTHERREG", 2, 20]
       }
     ]

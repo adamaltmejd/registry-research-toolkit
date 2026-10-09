@@ -1,0 +1,53 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": [
+        ["answer", "people", "2020-01-01", "ANSWER"]
+      ]
+    },
+    {
+      "table": "tags",
+      "fields": ["slug", "member"],
+      "rows": [
+        ["topic", "scb/sample/answer"]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "subject", "withheld_output"],
+      "rows": [
+        [
+          "ambiguous_named_identity",
+          "error",
+          "scb/sample/answer",
+          ["('variant_states', 'scb/sample/answer', 'firms')"]
+        ],
+        [
+          "ambiguous_named_identity",
+          "error",
+          "scb/sample/answer",
+          ["('succession_representation', 'scb/sample/answer', 'answer', 'firms')"]
+        ],
+        [
+          "unresolved_catalog_identity",
+          "error",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)",
+          ["variable"]
+        ]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "ambiguous_named_identity"},
+      "fields": ["key"],
+      "note": "Each withheld dependency cites only the uncovered firms row.",
+      "rows": [
+        [["register:1", "variant:20", "edition:2021", "variable:5", "member:21"]],
+        [["register:1", "variant:20", "edition:2021", "variable:5", "member:21"]]
+      ]
+    }
+  ]
+}
