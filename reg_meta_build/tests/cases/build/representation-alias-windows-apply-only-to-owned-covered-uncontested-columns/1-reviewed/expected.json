@@ -100,6 +100,17 @@
       "note": "SEARCHED's search alias OLD is published without its refused window. PARALLEL's search alias on first adds no second alias."
     },
     {
+      "table": "aliases",
+      "where": {"register": "contested"},
+      "fields": ["register", "variable", "column"],
+      "rows": [
+        ["contested", "rival", "OLD"],
+        ["contested", "value", "NEW"],
+        ["contested", "value", "OLD"]
+      ],
+      "note": "CONTESTED publishes only its state spellings (value's OLD in 2018 and NEW in 2019, rival's OLD in 2019, from the source set): the refused window adds no spelling and withholds no state. `variable_alias` also holds every state's column, so an alias on value's OLD with no window would not show here; its window would, and alias_windows has no CONTESTED row."
+    },
+    {
       "table": "cases",
       "where": {"case_id": "curation/registers/scb/parallel.toml#/enrichment.alias/1"},
       "fields": ["status"],
@@ -107,6 +118,15 @@
         ["applicable"]
       ],
       "note": "PARALLEL's search alias is evaluated and applied beside the existing window."
+    },
+    {
+      "table": "cases",
+      "where": {"case_id": "curation/registers/scb/contested.toml#/representation.alias_window/1"},
+      "fields": ["status"],
+      "rows": [
+        ["applicable"]
+      ],
+      "note": "CONTESTED's entry evaluates as applicable, as in the replaced test: the competing owner refuses its window when it is applied (conflicting_alias_window_owner above), not when its targets are checked."
     }
   ]
 }
