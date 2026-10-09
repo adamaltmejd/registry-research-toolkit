@@ -1,11 +1,12 @@
 {
-  "description": "One register per code-list shape. SCB: DUPS repeats 001 'Original label' on two items beside 001 'Another label'; NOCODE adds an undelivered code labelled 'Label' to its list; BLANK lists 0 'Label', a row delivering an empty code and an empty label, and an empty code labelled 'Uppgift saknas'; ALLBLANK lists only a row delivering an empty code and an empty label; NOCELLS lists 0 'Label' and a row whose code and label are both undelivered; VERSIONS delivers one CVID under two list versions with equal members. SOS (Kodregistret, COD): each variable's Kodlista_<NAME> sheet (and, for EQ and the RIV* variables, a second sheet Kodlista_<NAME>_B naming the same variable) states dated [period, code, label] rows. A blank period is a year-independent row.",
+  "description": "One register per code-list shape. SCB: DUPS repeats 001 'Original label' on two items beside 001 'Another label'; NOCODE adds an undelivered code labelled 'Label' to its list; BLANK lists 0 'Label', a row delivering an empty code and an empty label, and an empty code labelled 'Uppgift saknas'; ALLBLANK lists only a row delivering an empty code and an empty label; LBLANK lists only an empty code labelled 'Uppgift saknas'; NOCELLS lists 0 'Label' and a row whose code and label are both undelivered; VERSIONS delivers one CVID under two list versions with equal members. SOS (Kodregistret, COD): each variable's Kodlista_<NAME> sheet (and, for EQ and the RIV* variables, a second sheet Kodlista_<NAME>_B naming the same variable) states dated [period, code, label] rows. A blank period is a year-independent row.",
   "scb": {
     "registerinformation": [
       {"cvid": 13001, "var_id": 1301, "colname": "DUPS", "varname": "Dups", "register": ["DUPS", 13, 130]},
       {"cvid": 15001, "var_id": 1501, "colname": "NOCODE", "varname": "Nocode", "register": ["NOCODE", 15, 150]},
       {"cvid": 16001, "var_id": 1601, "colname": "BLANK", "varname": "Blank", "register": ["BLANK", 16, 160]},
       {"cvid": 17001, "var_id": 1701, "colname": "ALLBLANK", "varname": "Allblank", "register": ["ALLBLANK", 17, 170]},
+      {"cvid": 21001, "var_id": 2101, "colname": "LBLANK", "varname": "Lblank", "register": ["LBLANK", 21, 210]},
       {"cvid": 18001, "var_id": 1801, "colname": "NOCELLS", "varname": "Nocells", "register": ["NOCELLS", 18, 180]},
       {"cvid": 19001, "var_id": 1901, "colname": "VERSIONS", "varname": "Versions", "register": ["VERSIONS", 19, 190]}
     ],
@@ -19,6 +20,7 @@
       "b|1|\"\"|\"\"|16001|1602",
       "b|1|\"\"|Uppgift saknas|16001|1603",
       "a|1|\"\"|\"\"|17001|1701",
+      "l|1|\"\"|Uppgift saknas|21001|2101",
       "n|1|0|Label|18001|1801",
       "n|1|||18001|1802",
       "First edition|1|001|Label|19001|1901",
