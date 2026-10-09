@@ -304,26 +304,13 @@ def curation_error(code: str, message: str, remediation: str) -> RegMetaError:
     failure with actionable remediation — not an internal build bug (which is
     how a raw tomllib/ValueError would surface through the CLI's generic
     handler). Single factory so every curation surface reports identically."""
-    return printable_error(
-        RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code=code,
-            error_class="configuration",
-            message=message,
-            remediation=remediation,
-        )
+    return RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code=code,
+        error_class="configuration",
+        message=message,
+        remediation=remediation,
     )
-
-
-def printable_error[E: RegMetaError](error: E) -> E:
-    """``error`` with its message as ``args``, so ``str(error)`` and logging print it.
-
-    reg_meta's ``RegMetaError`` is a dataclass whose generated ``__init__`` never
-    calls ``Exception.__init__``, so ``args`` stays empty. Every build-side
-    ``RegMetaError`` goes through here instead of patching the reader package.
-    """
-    error.args = (error.message,)
-    return error
 
 
 @contextlib.contextmanager
@@ -338,7 +325,6 @@ def located(where: str) -> Iterator[None]:
         yield
     except RegMetaError as exc:
         exc.message = f"{where}: {exc.message}"
-        printable_error(exc)
         raise
 
 

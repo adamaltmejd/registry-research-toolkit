@@ -2859,7 +2859,7 @@ def _check_representation_replaced_by(
     # `str.lower` keys (relations.py): SQLite `LOWER()` is ASCII-only, so a Swedish
     # åäö header (e.g. `Ägare`) would compare unequal here yet resolve in the
     # materializer, falsely flagging the edge. `py_lower` is the shared
-    # delivery_column_name folding convention, registered in `reg_meta.db.open_db`
+    # delivery_column_name folding convention, registered in `db.open_db`
     # (the conn factory this validator runs on), so no local registration is needed.
 
     # A case-only same-column pair on one variable is still a self-loop.

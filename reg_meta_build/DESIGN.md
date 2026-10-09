@@ -5,18 +5,19 @@ and builds the SQLite catalogs queried by `reg_meta`. It also builds the separat
 `reg_meta_docs.db` document index. It is maintainer tooling, not a runtime dependency of
 the query package.
 
-The dependency direction is `reg_meta_build → reg_meta`. The query package owns the
-public catalog/schema constants and read models. The builder owns input handling,
-curation, materialization and validation. Cross-package constraints live in
+The builder imports nothing from `reg_meta`. It owns the catalog and docs schema
+constants, input handling, curation, materialization and validation; the Rust server
+reads what it writes. Cross-package constraints live in
 [../ARCHITECTURE.md](../ARCHITECTURE.md).
 
 The builder also depends on `reg-core-py` (`crates/reg-core-py`), the Python module of
 the Rust `reg-core` crate: the single home of the contracts the build shares with the
-Rust runtime ([../RUST_RUNTIME_SPEC.md](../RUST_RUNTIME_SPEC.md) section 5). It exposes
-`fold_search` today. It is a uv workspace member built by maturin, so `uv sync` needs a
-Rust toolchain on the maintainer machine and in CI; its uv `cache-keys` rebuild it after
-an edit to `crates/reg-core`, `crates/reg-core-py`, `Cargo.toml` or `Cargo.lock`. It is
-not on PyPI, so a published `reg_meta_build` wheel cannot resolve it.
+Rust runtime ([../RUST_RUNTIME_SPEC.md](../RUST_RUNTIME_SPEC.md) section 5): the FQID,
+slug and period grammar and the text folds. It is a uv workspace member built by
+maturin, so `uv sync` needs a Rust toolchain on the maintainer machine and in CI; its uv
+`cache-keys` rebuild it after an edit to `crates/reg-core`, `crates/reg-core-py`,
+`Cargo.toml` or `Cargo.lock`. It is not on PyPI, so a published `reg_meta_build` wheel
+cannot resolve it.
 
 The four-step pipeline below is the only `build-db` implementation. A diagnostic
 database is incomplete and cannot be activated by builder publication. Input declaration

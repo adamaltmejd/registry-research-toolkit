@@ -15,7 +15,7 @@ from reg_meta_build._curation import curation_error
 from reg_meta_build.source_curation import CodingDecision, SourceWarningDecision
 from reg_meta_build.source_intervals import occurrence_bounds
 
-from .fqid import Fqid, FqidKind, validate_slug
+from .slug_grammar import validate_slug
 from .source_evidence import SourceRecordRef, canonical_sha256
 
 if TYPE_CHECKING:
@@ -35,9 +35,8 @@ class _CatalogModel(BaseModel):
     `Resolved*` / `*Summary` / `*Ref` / edition / coverage / group / tag models
     the webapp consumes as response models (collapsing its 1:1 wrappers in a
     follow-up). Frozen preserves the immutability the prior `@dataclass(frozen=True)`
-    gave; `Fqid` fields ride the `Fqid.__get_pydantic_core_schema__` hook (wire =
-    the canonical FQID string). Constructed by KEYWORD (Pydantic takes no
-    positional args).
+    gave; FQID fields are canonical FQID strings checked with `parse_fqid`.
+    Constructed by KEYWORD (Pydantic takes no positional args).
 
     `populate_by_name` + `extra="forbid"` are hoisted here so the
     `register`-aliasing register-bearing models don't each repeat them, and so a
@@ -62,8 +61,8 @@ class DataWarning(_CatalogModel):
     """Retained source limitation or interpretation assumption, not an editorial notice."""
 
     warning_id: str = Field(pattern=r"^[0-9a-f]{64}$")
-    register_fqid: Fqid
-    variable_fqid: Fqid | None = None
+    register_fqid: str
+    variable_fqid: str | None = None
     variant: str | None = None
     delivery_column_name: str | None = None
     valid_from: str | None = None
@@ -82,12 +81,11 @@ class DataWarning(_CatalogModel):
 
     @model_validator(mode="after")
     def _scope_and_identity(self) -> Self:
-        if self.register_fqid.kind != FqidKind.REGISTER:
+        if parse_fqid(self.register_fqid).kind != "register":
             raise ValueError("data warning requires an actual register coordinate")
         if self.variable_fqid is not None and (
-            self.variable_fqid.kind != FqidKind.VARIABLE_BINDING
-            or self.variable_fqid.provider != self.register_fqid.provider
-            or self.variable_fqid.register != self.register_fqid.register
+            parse_fqid(self.variable_fqid).kind != "variable"
+            or self.variable_fqid.rsplit("/", 1)[0] != self.register_fqid
         ):
             raise ValueError("data warning variable must belong to its register")
         if self.variant is not None:
@@ -549,7 +547,7 @@ def write_data_warnings(
     }
     for value in sorted(warnings, key=lambda w: w.warning_id):
         warning = DataWarning.model_validate_json(value.model_dump_json())
-        register = warning.register_fqid
+        register = parse_fqid(warning.register_fqid)
         register_id = registers.get((register.provider, register.register))
         if register_id is None:
             raise _unwritten_owner(
@@ -557,7 +555,9 @@ def write_data_warnings(
             )
         variable_id = None
         if warning.variable_fqid is not None:
-            variable_id = variables.get((register_id, warning.variable_fqid.variable))
+            variable_id = variables.get(
+                (register_id, parse_fqid(warning.variable_fqid).variable)
+            )
             if variable_id is None:
                 payload = warning.model_dump(mode="json", exclude={"warning_id"})
                 payload.update(

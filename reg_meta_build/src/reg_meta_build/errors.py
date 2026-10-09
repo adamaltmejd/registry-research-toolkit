@@ -20,6 +20,11 @@ class RegMetaError(Exception):
     message: str
     remediation: str
 
+    # The dataclass `__init__` never calls `Exception.__init__`, so `args` stays
+    # empty; print the message (also after `_curation.located` prefixes it).
+    def __str__(self) -> str:
+        return self.message
+
     def to_dict(self) -> dict[str, str]:
         return {
             "code": self.code,

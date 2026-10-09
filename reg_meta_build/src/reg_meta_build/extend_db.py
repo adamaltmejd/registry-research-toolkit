@@ -19,7 +19,6 @@ from typing import Any
 
 from reg_core_py import GrammarError
 
-from ._curation import printable_error
 from .db import DB_FILENAME, get_manifest, open_built_db
 from .errors import EXIT_CONFIG, RegMetaError
 from .id import mint
@@ -48,14 +47,12 @@ class _ProviderGraph:
 
 
 def _cfg_error(message: str, remediation: str) -> RegMetaError:
-    return printable_error(
-        RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="extend_providers_invalid",
-            error_class="configuration",
-            message=message,
-            remediation=remediation,
-        )
+    return RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code="extend_providers_invalid",
+        error_class="configuration",
+        message=message,
+        remediation=remediation,
     )
 
 
@@ -69,16 +66,14 @@ def resolve_steward_providers_dir(providers_dir: Path | None, steward: str) -> P
         ).resolve()
     )
     if not resolved.is_dir():
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="extend_providers_dir_not_found",
-                error_class="configuration",
-                message=f"Steward providers directory not found: {resolved}",
-                remediation=(
-                    f"Author one curated-provider TOML per provider under {resolved}."
-                ),
-            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="extend_providers_dir_not_found",
+            error_class="configuration",
+            message=f"Steward providers directory not found: {resolved}",
+            remediation=(
+                f"Author one curated-provider TOML per provider under {resolved}."
+            ),
         )
     return resolved
 
@@ -226,32 +221,28 @@ def resolve_steward_slug_dir(
 
         global_dir = repo_slug_dir()
         if global_dir is None:
-            raise printable_error(
-                RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="extend_slug_dir_not_found",
-                    error_class="configuration",
-                    message=(
-                        "No repo checkout found for the "
-                        f"steward slug dir (fqid_slugs/{steward}/)."
-                    ),
-                    remediation=(
-                        "Run from a source checkout with committed steward slug pins."
-                    ),
-                )
-            )
-        resolved = global_dir.parent / "fqid_slugs" / steward
-    if not resolved.is_dir():
-        raise printable_error(
-            RegMetaError(
+            raise RegMetaError(
                 exit_code=EXIT_CONFIG,
                 code="extend_slug_dir_not_found",
                 error_class="configuration",
-                message=f"Steward slug dir not found: {resolved}",
+                message=(
+                    "No repo checkout found for the "
+                    f"steward slug dir (fqid_slugs/{steward}/)."
+                ),
                 remediation=(
-                    f"Create and commit the required pins in fqid_slugs/{steward}/."
+                    "Run from a source checkout with committed steward slug pins."
                 ),
             )
+        resolved = global_dir.parent / "fqid_slugs" / steward
+    if not resolved.is_dir():
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="extend_slug_dir_not_found",
+            error_class="configuration",
+            message=f"Steward slug dir not found: {resolved}",
+            remediation=(
+                f"Create and commit the required pins in fqid_slugs/{steward}/."
+            ),
         )
     return resolved
 
@@ -284,27 +275,23 @@ def extend_db(
     db_dir = db_dir.expanduser().resolve()
 
     if not base_db.is_file():
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="extend_base_db_not_found",
-                error_class="configuration",
-                message=f"Base global DB not found: {base_db}",
-                remediation="Pass --base-db pointing at a released reg_meta.db.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="extend_base_db_not_found",
+            error_class="configuration",
+            message=f"Base global DB not found: {base_db}",
+            remediation="Pass --base-db pointing at a released reg_meta.db.",
         )
     if base_db == (db_dir / DB_FILENAME):
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="extend_base_db_is_output",
-                error_class="configuration",
-                message=(
-                    f"--base-db {base_db} resolves to the output DB path; the base is "
-                    "read-only and must differ from the output."
-                ),
-                remediation="Point --db at a different output directory.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="extend_base_db_is_output",
+            error_class="configuration",
+            message=(
+                f"--base-db {base_db} resolves to the output DB path; the base is "
+                "read-only and must differ from the output."
+            ),
+            remediation="Point --db at a different output directory.",
         )
 
     from .artifact_identity import (
@@ -523,17 +510,15 @@ def extend_db(
             violations = list(conn.execute("PRAGMA foreign_key_check"))
             if violations:
                 sample = ", ".join(f"{v[0]}#{v[1]}" for v in violations[:5])
-                raise printable_error(
-                    RegMetaError(
-                        exit_code=EXIT_CONFIG,
-                        code="foreign_key_violation",
-                        error_class="configuration",
-                        message=(
-                            f"PRAGMA foreign_key_check returned {len(violations)} "
-                            f"violation(s) before commit. Sample: {sample}."
-                        ),
-                        remediation="Inspect the curated provider's register/variant references.",
-                    )
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="foreign_key_violation",
+                    error_class="configuration",
+                    message=(
+                        f"PRAGMA foreign_key_check returned {len(violations)} "
+                        f"violation(s) before commit. Sample: {sample}."
+                    ),
+                    remediation="Inspect the curated provider's register/variant references.",
                 )
             conn.commit()
             write_failed = False
@@ -552,15 +537,13 @@ def extend_db(
                 )
                 _progress(validation.format_report())
                 if not validation.passed:
-                    raise printable_error(
-                        RegMetaError(
-                            exit_code=EXIT_CONFIG,
-                            code="validation_failed",
-                            error_class="configuration",
-                            message="Compiled steward validation failed: "
-                            + "; ".join(validation.failures),
-                            remediation="Review the located build failure and regenerate from accepted inputs.",
-                        )
+                    raise RegMetaError(
+                        exit_code=EXIT_CONFIG,
+                        code="validation_failed",
+                        error_class="configuration",
+                        message="Compiled steward validation failed: "
+                        + "; ".join(validation.failures),
+                        remediation="Review the located build failure and regenerate from accepted inputs.",
                     )
                 committed_steward_slugs(steward, revision=revision)
         except BaseException:
