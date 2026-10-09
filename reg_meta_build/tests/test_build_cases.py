@@ -26,8 +26,11 @@ LOVA_TOML = Path(__file__).resolve().parents[1] / "curation/registers/sos/lova.t
 
 @pytest.mark.parametrize("case", case_dirs(), ids=lambda case: case.name)
 def test_build_case(case: Path, prepared_cache: PreparedCache, tmp_path: Path) -> None:
+    earlier: dict = {}
     for number, step in enumerate(case_steps(case)):
-        actual, expected = run_step(step, prepared_cache, tmp_path / str(number))
+        actual, expected = run_step(
+            step, prepared_cache, tmp_path / str(number), earlier
+        )
         assert actual == expected, step.relative_to(case.parent)
 
 

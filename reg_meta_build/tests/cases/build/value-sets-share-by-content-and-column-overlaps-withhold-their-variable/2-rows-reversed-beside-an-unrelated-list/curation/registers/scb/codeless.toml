@@ -1,0 +1,14 @@
+[register]
+provider = "scb"
+slug = "codeless"
+native_id = "2"
+[[variant]]
+native_id = "2.20"
+slug = "people"
+[[variable]]
+native_id = "2.5"
+slug = "income"
+[[identity.partition]]
+variable = "2.5"
+columns = { First = "2.5", first = "2.5" }
+columns_ref = "reviewed parallel source-native quantity"

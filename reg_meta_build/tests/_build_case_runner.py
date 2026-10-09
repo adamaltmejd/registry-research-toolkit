@@ -750,6 +750,41 @@ def _editions(outcome: Outcome) -> list[dict]:
     return rows
 
 
+def _value_sets(outcome: Outcome) -> list[dict]:
+    """Each stored value set: its id, its sorted members and the sorted FQIDs of the
+    variables whose states or alias windows carry it."""
+    sets: dict[int, dict] = {}
+    for row in outcome._sql(
+        "SELECT value_set_id, code, label FROM value_set "
+        "LEFT JOIN value_set_member USING (value_set_id) "
+        "LEFT JOIN value_code USING (code_id)"
+    ):
+        entry = sets.setdefault(
+            row["value_set_id"],
+            {"id": str(row["value_set_id"]), "members": [], "variables": set()},
+        )
+        if row["code"] is not None:
+            entry["members"].append([row["code"], row["label"]])
+    for row in outcome._sql(
+        "SELECT u.value_set_id, p.slug || '/' || r.slug || '/' || v.slug AS fqid "
+        "FROM (SELECT variable_id, value_set_id FROM variable_state "
+        "UNION SELECT variable_id, value_set_id FROM variable_alias_window) u "
+        "JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "WHERE u.value_set_id IS NOT NULL"
+    ):
+        sets[row["value_set_id"]]["variables"].add(row["fqid"])
+    return [
+        {
+            **entry,
+            "members": sorted(entry["members"]),
+            "variables": sorted(entry["variables"]),
+        }
+        for entry in sets.values()
+    ]
+
+
 def _stored(row_value, json_value):
     """A coordinate both the `data_warning` row and its `warning_json` hold: the
     value when they agree, else both, so a disagreement fails any case naming it."""
@@ -1090,6 +1125,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "JOIN value_code vc USING (code_id) JOIN variable v USING (variable_id) "
         "JOIN register r ON r.register_id = v.register_id"
     ),
+    "value_sets": _value_sets,
     "classifications": lambda o: o._sql(
         "SELECT c.slug, c.short_name, c.name, c.name_en, c.publisher, c.valid_from, "
         "c.valid_to, c.description, c.url, c.code_count, c.valid_code_count, "
@@ -1168,6 +1204,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "conformance_codes": "register variable column valid_from valid_to window "
         "classification code label member_kind sentinel_meaning scoped_windows",
         "code_index": "register variable code label mapping_count",
+        "value_sets": "id members variables",
         "classifications": "slug short_name name name_en publisher valid_from "
         "valid_to description url code_count valid_code_count supersedes",
         "classification_successions": "predecessor successor effective_year note",
@@ -1219,16 +1256,30 @@ def _cited_refs(outcome: Outcome, selector: dict) -> list[str]:
     ]
 
 
-def expected_rows(outcome: Outcome, spec: dict) -> list[list]:
-    """A projection's expected rows: literal, or the refs another projection cites.
+def expected_rows(
+    outcome: Outcome, spec: dict, earlier: dict[str, Outcome] | None = None
+) -> list[list]:
+    """A projection's expected rows: literal, the refs another projection cites, or
+    the same projection of an earlier step of the case.
 
     `{"refs_of": {"table": ..., "where": ...}}` states a relation instead of values:
     the projection's one `ref` field must list exactly the refs those rows cite. Both
     sides are read from the same build, so no source ref is written as a literal.
+    `{"step": "<earlier step>"}` expects the rows this projection (its table, `where`
+    and `fields`) reads from that step's build, so a value a case must not write as a
+    literal, such as a stored id, is still compared across builds.
     """
     rows = spec["rows"]
     if isinstance(rows, list):
         return rows
+    if rows.keys() == {"step"}:
+        if rows["step"] not in (earlier or {}):
+            raise ValueError(f"no earlier step {rows['step']!r} in projection {spec}")
+        found = project(earlier[rows["step"]], {**spec, "match": "exact"})["rows"]
+        if not found and spec.get("match") == "includes":
+            # Nothing to include would compare nothing.
+            raise ValueError(f"earlier step reads no rows for projection {spec}")
+        return found
     if rows.keys() != {"refs_of"} or spec["fields"] != ["ref"]:
         raise ValueError(f"unknown expected rows in projection {spec}")
     return [[ref] for ref in _cited_refs(outcome, rows["refs_of"])]
@@ -1357,8 +1408,17 @@ def _tree_bytes(path: Path) -> dict[str, bytes]:
     return files
 
 
-def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dict]:
-    """Run one case step; return ``(actual, expected)`` in the same shape."""
+def run_step(
+    step: Path,
+    cache: PreparedCache,
+    scratch: Path,
+    earlier: dict[str, Outcome] | None = None,
+) -> tuple[dict, dict]:
+    """Run one case step; return ``(actual, expected)`` in the same shape.
+
+    ``earlier`` maps the case's already-run step names to their builds. A step that
+    builds a catalog joins it, so a later step's `{"step": ...}` rows can read it.
+    """
     request = json.loads((step / "request.json").read_text(encoding="utf-8"))
     # A case states the product change that makes it fail, so a reviewer can check
     # that its oracle can fail at all (cases/build/README.md).
@@ -1429,10 +1489,12 @@ def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dic
         actual["status"] = result["status"]
     if "result" in expected:
         actual["result"] = _subset(result, expected["result"])
+    outcome = Outcome(result, report_events(report), output, built)
+    if earlier is not None and request.get("mode", "build") == "build":
+        earlier[step.name] = outcome
     if "projections" in expected:
-        outcome = Outcome(result, report_events(report), output, built)
         specs = [
-            {**spec, "rows": expected_rows(outcome, spec)}
+            {**spec, "rows": expected_rows(outcome, spec, earlier)}
             for spec in expected["projections"]
         ]
         actual["projections"] = [project(outcome, spec) for spec in specs]

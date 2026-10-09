@@ -1,0 +1,233 @@
+{
+  "description": "scb-sos-value-sets with every Registerinformation, Vardemangder and SOS code-list row reversed, the 2000 Shared list delivering 01 Participation twice (items 6010 and 6012), plus an unrelated SCB register OTHER (9) delivering Other list 0 Other in 2000.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "OTHER",
+        "cvid": 900,
+        "var_id": 9,
+        "varname": "Other",
+        "year": "2000",
+        "regver_id": 900,
+        "versionname": "2000",
+        "register": [
+          "OTHER",
+          9,
+          90
+        ]
+      },
+      {
+        "colname": "first",
+        "cvid": 401,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 420,
+        "versionname": "2020",
+        "register": [
+          "TWIN",
+          4,
+          40
+        ]
+      },
+      {
+        "colname": "First",
+        "cvid": 400,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 420,
+        "versionname": "2020",
+        "register": [
+          "TWIN",
+          4,
+          40
+        ]
+      },
+      {
+        "colname": "first",
+        "cvid": 201,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 220,
+        "versionname": "2020",
+        "register": [
+          "CODELESS",
+          2,
+          20
+        ]
+      },
+      {
+        "colname": "First",
+        "cvid": 200,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 220,
+        "versionname": "2020",
+        "register": [
+          "CODELESS",
+          2,
+          20
+        ]
+      },
+      {
+        "colname": "CODES",
+        "cvid": 804,
+        "var_id": 8,
+        "varname": "Codes",
+        "year": "2004",
+        "regver_id": 804,
+        "versionname": "2004",
+        "register": [
+          "CODES",
+          8,
+          80
+        ]
+      },
+      {
+        "colname": "CODES",
+        "cvid": 803,
+        "var_id": 8,
+        "varname": "Codes",
+        "year": "2003",
+        "regver_id": 803,
+        "versionname": "2003",
+        "register": [
+          "CODES",
+          8,
+          80
+        ]
+      },
+      {
+        "colname": "CODES",
+        "cvid": 802,
+        "var_id": 8,
+        "varname": "Codes",
+        "year": "2002",
+        "regver_id": 802,
+        "versionname": "2002",
+        "register": [
+          "CODES",
+          8,
+          80
+        ]
+      },
+      {
+        "colname": "CODES",
+        "cvid": 801,
+        "var_id": 8,
+        "varname": "Codes",
+        "year": "2001",
+        "regver_id": 801,
+        "versionname": "2001",
+        "register": [
+          "CODES",
+          8,
+          80
+        ]
+      },
+      {
+        "colname": "CODES",
+        "cvid": 800,
+        "var_id": 8,
+        "varname": "Codes",
+        "year": "2000",
+        "regver_id": 800,
+        "versionname": "2000",
+        "register": [
+          "CODES",
+          8,
+          80
+        ]
+      },
+      {
+        "colname": "SHARED",
+        "cvid": 602,
+        "var_id": 6,
+        "varname": "Shared",
+        "year": "2002",
+        "regver_id": 602,
+        "versionname": "2002",
+        "register": [
+          "SHARED",
+          6,
+          60
+        ]
+      },
+      {
+        "colname": "SHARED",
+        "cvid": 601,
+        "var_id": 6,
+        "varname": "Shared",
+        "year": "2000",
+        "regver_id": 600,
+        "versionname": "2000",
+        "register": [
+          "SHARED",
+          6,
+          60
+        ]
+      }
+    ],
+    "vardemangder": [
+      "Other list|1|0|Other|900|9000",
+      "Second list|1|01|Label|401|4010",
+      "First list|1|01|Label|400|4000",
+      "First list|1|01|Label|200|2001",
+      "Codes list|1|a|bc|804|8040",
+      "Codes list|1|ab|c|803|8030",
+      "Codes list|1|02|Employment|802|8021",
+      "Codes list|1|01|Participation|802|8020",
+      "Codes list|1|01|Revised label|801|8010",
+      "Codes list|1|01|Participation|800|8000",
+      "Shared list|1|02|Employment|602|6021",
+      "Shared list|1|01|Participation|602|6020",
+      "Shared list|1|02|Employment|601|6011",
+      "Shared list|1|01|Participation|601|6010",
+      "Shared list|1|01|Participation|601|6012"
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "SHR",
+      "title": "Delningsregistret",
+      "subsets": [
+        {
+          "name": "SHR_A",
+          "label": "Vy A",
+          "description": "Vy",
+          "data_from": 2002,
+          "data_to": 2002
+        }
+      ],
+      "variables": [
+        {
+          "name": "SHARED",
+          "deldatamangd": "SHR_A",
+          "label": "Shared",
+          "description": "Kod",
+          "value_set": "Se kodlista",
+          "external_classification": null,
+          "data_from": 2002,
+          "data_to": 2002
+        }
+      ],
+      "code_lists": {
+        "SHARED": [
+          [
+            "2002",
+            "02",
+            "Employment"
+          ],
+          [
+            "2002",
+            "01",
+            "Participation"
+          ]
+        ]
+      }
+    }
+  ]
+}
