@@ -22,7 +22,8 @@ lock, only if the run completed:
 A failed run is never stored; its directory is kept for diagnosis and reaped after
 6 hours. `--key` prints a key and its fields. `build --verify` rebuilds uncached and
 compares the database and decompressed event-ledger bytes with the stored entry (exit
-1 on a difference): the check that the key covers every input. For a prepare, run
+1 on a difference, which moves the entry out of reach of lookups and keeps it beside
+the rebuild for 6 hours): the check that the key covers every input. For a prepare, run
 `reg-meta-build prepare-sources` into a new directory and compare its
 `prepared_manifest_sha256` with the stored one.
 
@@ -34,9 +35,9 @@ SQLite versions. A prepare entry is an index record (prepared path and top-level
 manifest digest), not a copy of the 14 GB tree the maintainer commits to a local
 acceptance repository. A lookup runs the builder's own warm-build check
 (`open_prepared_catalog_sources`) against that repository's current HEAD; a hit
-returns HEAD as the acceptance commit. A tree not yet committed is reported as
-awaiting acceptance, without a rerun. Any other failed check drops the record and
-misses.
+returns HEAD as the acceptance commit. A tree not yet committed at HEAD, with its
+payload inventory complete, is reported as awaiting acceptance, without a rerun. Any
+other failed check drops the record and misses.
 
 Build key: the content of `reg_meta_build/src`, `reg_meta/src`, `reg_schema/src`,
 `crates/reg-core`, `crates/reg-core-py`, `Cargo.toml`, `Cargo.lock` and `uv.lock`; the
@@ -368,6 +369,27 @@ def prepare_fields(args: argparse.Namespace) -> dict:
     }
 
 
+def payload_complete(prepared: Path) -> bool:
+    """The `files/` inventory has exactly the manifest's paths and sizes.
+
+    The builder's own inventory check (`check_accepted_files`) compares against an
+    accepted commit, which an uncommitted tree does not have yet.
+    """
+    try:
+        listed = {
+            item["path"]: item["size"]
+            for item in json.loads((prepared / "manifest.json").read_text())["files"]
+        }
+    except OSError, ValueError, KeyError, TypeError:
+        return False
+    actual = {
+        path.relative_to(prepared).as_posix(): path.stat().st_size
+        for path in (prepared / "files").rglob("*")
+        if path.is_file()
+    }
+    return listed == actual
+
+
 def lookup_prepare(home: Path, key: str) -> dict | None:
     """The stored preparation as a hit result, or None on a miss. Exits when the
     stored tree is intact but not yet committed (a rerun would only repeat it)."""
@@ -397,6 +419,7 @@ def lookup_prepare(home: Path, key: str) -> dict | None:
         committed.returncode
         and manifest.is_file()
         and file_sha256(manifest) == record["manifest_sha256"]
+        and payload_complete(prepared)
     ):
         emit(
             {
@@ -462,6 +485,9 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         sys.exit("real-seed-cache: a miss needs a new --output-dir")
     output = Path(args.output_dir)
     with real_seed_lock():
+        # The inputs or checkout may have changed while this session waited.
+        fields = prepare_fields(args)
+        key = digest(fields)
         if hit := lookup_prepare(home, key):
             emit(hit)
             return 0
@@ -674,6 +700,10 @@ def cmd_build(args: argparse.Namespace) -> int:
         emit(build_result(home, record, hit=True))
         return 0
     with real_seed_lock():
+        # The inputs or checkout may have changed while this session waited;
+        # `build_fields` also reruns admission.
+        fields = build_fields(args)
+        key = digest(fields)
         if record := lookup_build(home, key):
             emit(build_result(home, record, hit=True))
             return 0
@@ -739,13 +769,22 @@ def verify_build(args: argparse.Namespace, home: Path, key: str, fields: dict) -
         "events": [stored["events"], events_sha256(run_dir / "report")],
     }
     identical = all(stored == rerun for stored, rerun in comparison.values())
+    quarantine = None
     if identical:
         shutil.rmtree(run_dir, ignore_errors=True)
+    else:
+        # Out of reach of lookups, kept for diagnosis; the staging prefix lets
+        # `evict` reap it after the grace period, counted from now.
+        quarantine = home / f"{STAGING_PREFIX}quarantine-{key}"
+        shutil.rmtree(quarantine, ignore_errors=True)
+        entry.rename(quarantine)
+        os.utime(quarantine)
     emit(
         {
             "identical": identical,
             **{f"{name}_sha256": pair for name, pair in comparison.items()},
             "run_dir": None if identical else str(run_dir),
+            "quarantined_entry": quarantine and str(quarantine),
         }
     )
     return 0 if identical else 1

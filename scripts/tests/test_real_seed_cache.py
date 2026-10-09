@@ -40,7 +40,9 @@ def option(name):
 
 report = Path(option("--report-dir"))
 report.mkdir()
-Path(option("--diagnostic-db-path")).write_bytes(b"catalog")
+Path(option("--diagnostic-db-path")).write_bytes(
+    b"drifted" if os.environ.get("STUB_DRIFT") == "1" else b"catalog"
+)
 with gzip.open(report / "events.jsonl.gz", "wt") as events:
     events.write('{"kind": "issue"}\\n')
 failed = os.environ.get("STUB_FAIL") == "1"
@@ -104,16 +106,18 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     # the stored entry (the repeat runs again), if the stored report still names the
     # staging directory, if a hit skips the build's admission checks (a changed
     # prepared checkout returns the old entry), if a hit skips the ledger (a truncated
-    # one is returned), or if the key leaves out the curation tree (the edited tree
-    # hits the old entry).
+    # one is returned), if a failed `--verify` leaves its entry reachable (the next
+    # build hits it), or if the key leaves out the curation tree (the edited tree hits
+    # the old entry).
     curation = tmp_path / "curation"
     (curation / "registers").mkdir(parents=True)
     (curation / "registers/a.toml").write_text("[register]\n")
 
-    def build(**flags) -> tuple[int, dict]:
+    def build(*extra: str, **flags) -> tuple[int, dict]:
         return _tool(
             tmp_path,
             "build",
+            *extra,
             "--prepared",
             str(tmp_path / "prepared"),
             "--input-commit",
@@ -149,9 +153,14 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     code, truncated = build()
     assert (code, truncated["hit"], _calls(tmp_path)) == (0, False, 3)
 
+    code, verified = build("--verify", drift=True)
+    assert (code, Path(verified["quarantined_entry"]).is_dir()) == (1, True)
+    assert build()[1]["hit"] is False
+    assert _calls(tmp_path) == 5
+
     (curation / "registers/a.toml").write_text("[register]\nname = 'edited'\n")
     code, edited = build()
-    assert (code, edited["hit"], _calls(tmp_path)) == (0, False, 4)
+    assert (code, edited["hit"], _calls(tmp_path)) == (0, False, 6)
     assert edited["key"] != again["key"]
 
 
