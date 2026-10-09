@@ -1,0 +1,192 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_parent_records.py::test_common_parent_metadata_preserves_languages_conflicts_and_raw_context",
+    "test_sos_parent_records.py::test_sos_register_name_prefers_dcat_title_over_dataset_label",
+    "test_sos_parent_records.py::test_sos_contact_cells_remain_evidence_without_parent_field"
+  ],
+  "fails_if": "the SOS reader folds the competing DCAT-AP titles or languages into one, collapses two title rows into one record identity, strips the indentation of a description, reads the general Datamängd as a competing register name, drops the cell a parent field came from, or drops an unmapped or contact cell from the sheet evidence",
+  "projections": [
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}, "variable": {"status": "value"}}
+      },
+      "note": "A parent record (no member) has no variable either: none with a variable value, none unknown.",
+      "rows": []
+    },
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}, "variable": {"status": "unknown"}}
+      },
+      "rows": []
+    },
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}},
+        "fields": {"name": {"status": {"$any": true}}}
+      },
+      "note": "A parent's name is a parent fact, never a record field.",
+      "rows": []
+    },
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}},
+        "language": "sv",
+        "parent_facts": [{"kind": "register", "fields": {"name": {"status": "value"}}}]
+      },
+      "note": "Two Swedish titles share the title key but stay two records (#1, #3; #2 is the shared revision). The name came from DCAT-AP column C (position 2).",
+      "rows": [
+        {
+          "record_id": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#1",
+          "locators": [
+            {
+              "semantic_record_key": [
+                "register:Patientregistret källa",
+                "metadata:dcat",
+                "subset:<not applicable>",
+                "fields:name",
+                "language:sv"
+              ],
+              "physical_cells": [
+                {"$any": true},
+                {"$any": true},
+                "Metadata-Datamängd (DCAT-AP)!C2",
+                {"$any": true}
+              ]
+            }
+          ],
+          "parent_facts": [
+            {
+              "fields": {"name": {"value": "Första titeln"}},
+              "field_cells": [{"field": "name", "positions": [2]}]
+            }
+          ]
+        },
+        {
+          "record_id": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#3",
+          "locators": [
+            {
+              "semantic_record_key": [
+                "register:Patientregistret källa",
+                "metadata:dcat",
+                "subset:<not applicable>",
+                "fields:name",
+                "language:sv"
+              ]
+            }
+          ],
+          "parent_facts": [{"fields": {"name": {"value": "Andra titeln"}}}]
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}},
+        "language": "en",
+        "parent_facts": [{"kind": "register", "fields": {"name": {"status": "value"}}}]
+      },
+      "rows": [
+        {"parent_facts": [{"fields": {"name": {"value": "First title"}}}]},
+        {"parent_facts": [{"fields": {"name": {"value": "Second title"}}}]}
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}},
+        "language": "sv",
+        "parent_facts": [{"fields": {"description": {"status": "value"}}}]
+      },
+      "rows": [
+        {
+          "parent_facts": [{"fields": {"description": {"value": "  indragen rad\n    tabell  kolumn"}}}]
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}},
+        "language": null,
+        "parent_facts": [{"kind": "register", "fields": {"dataset_label": {"status": "value"}}}]
+      },
+      "note": "The general Datamängd is the dataset label, read from Generell information column C (position 2).",
+      "rows": [
+        {
+          "locators": [
+            {
+              "physical_cells": [{"$any": true}, {"$any": true}, "Generell information!C2"]
+            }
+          ],
+          "parent_facts": [
+            {
+              "fields": {"name": null, "dataset_label": {"value": "Patientregistret källa"}},
+              "field_cells": [{"field": "dataset_label", "positions": [2]}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}},
+        "language": null,
+        "parent_facts": [{"kind": "register", "fields": {"name": {"status": {"$any": true}}}}]
+      },
+      "note": "No general-sheet observation competes for the register name.",
+      "rows": []
+    },
+    {
+      "of": "records",
+      "where": {
+        "subject": {"member": {"status": "not_applicable"}, "variant": {"name": "PAR_OV"}}
+      },
+      "note": "The subset's Data från is Deldatamängder column C (position 2).",
+      "rows": [
+        {
+          "edition_scope": {"intervals": [{"start": "1900", "end": {"$any": true}}]},
+          "locators": [
+            {
+              "physical_cells": [{"$any": true}, {"$any": true}, "Deldatamängder!C2", {"$any": true}]
+            }
+          ],
+          "parent_facts": [
+            {
+              "kind": "variant",
+              "field_cells": {"$contains": [{"field": "coverage_from", "positions": [2]}]}
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Metadata-Datamängd (DCAT-AP)"},
+      "rows": [
+        {
+          "rows": {
+            "$contains": [
+              {"cells": {"$contains": [{"raw_value": "Unmapped fact"}]}},
+              {"cells": {"$contains": [{"raw_value": "ReLa@x.se"}]}}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Generell information"},
+      "rows": [
+        {
+          "rows": {"$contains": [{"cells": {"$contains": [{"raw_value": "Rela@x.se"}]}}]}
+        }
+      ]
+    }
+  ]
+}

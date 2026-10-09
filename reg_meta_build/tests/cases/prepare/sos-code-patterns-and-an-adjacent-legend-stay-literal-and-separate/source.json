@@ -1,0 +1,16 @@
+{
+  "description": "sos-source without Kodlista_HDIA, plus Kodlista_Arbitrary: a KOD/Beskrivning code list with pattern codes (1XXXX, 11xxy) and, from column C, a symbol legend whose last row has no code.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_Arbitrary": [
+        ["KOD ", "Beskrivning", "Följande sympoler används", null, null],
+        ["1XXXX", "missbildning i CNS", "X: valfri siffra", null, null],
+        ["11xxy", "Annan kategori", "x: 1 unilateral", "Räknas ej", "Osäker"],
+        [null, null, 1, "A", "K"]
+      ]
+    }
+  }
+}

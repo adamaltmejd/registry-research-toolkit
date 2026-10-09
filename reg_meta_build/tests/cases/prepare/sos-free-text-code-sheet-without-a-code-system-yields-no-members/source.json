@@ -1,0 +1,21 @@
+{
+  "description": "sos-source with Kodlista_HDIA replaced by a free-text sheet modelled on the real PAR Kodlista_DIAGNOS: a Kodverk preamble saying 'Inget kodverk', a Variabelnamn and a Bakgrund preamble, the standard Tidsperiod/Kod/Beskrivning header, then a prose definition wrapped one line per row with every Kod blank: rows 6 (2001) and 9 (2008) open a period, rows 7, 8 and 10 continue the prose.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_HDIA": [
+        ["Kodverk", "Inget kodverk"],
+        ["Variabelnamn", "HDIA"],
+        ["Bakgrund"],
+        ["Tidsperiod", "Kod", "Beskrivning"],
+        [2001, null, "Samtliga diagnoser som haft relevans för vårdtillfället"],
+        [null, null, "kodas enligt \"Klassifikation av sjukdomar"],
+        [null, null, "och hälsoproblem 1997 med fortlöpande ändringar."],
+        [2008, null, "Avser huvuddiagnos (det tillstånd som är den"],
+        [null, null, "primära anledningen till vårdkontakten)."]
+      ]
+    }
+  }
+}

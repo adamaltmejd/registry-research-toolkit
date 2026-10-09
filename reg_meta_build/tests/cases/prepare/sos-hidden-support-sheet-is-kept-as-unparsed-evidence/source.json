@@ -1,0 +1,9 @@
+{
+  "description": "sos-source plus the very hidden dropdown sheet 'Ej relevant_listor' the maintained workbooks carry, holding two rows (Binär/Datatyp, Ja/Heltal).",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "sheets": {"Ej relevant_listor": [["Binär", "Datatyp"], ["Ja", "Heltal"]]},
+    "state": {"Ej relevant_listor": "veryHidden"}
+  }
+}

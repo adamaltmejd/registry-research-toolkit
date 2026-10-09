@@ -100,7 +100,7 @@
         ["canon", "twocol", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
         ["canon", "twocol", "2020-01-01", "two", "extended", 1, 0, 1, 0.0],
         ["canon", "duplab", "2020-01-01", "fix", "conforming", 2, 2, 0, 1.0],
-        ["canon", "blankb", "2020-01-01", "fix", "extended", 2, 1, 1, 0.5],
+        ["canon", "blankb", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
         ["lkf", "lkf", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
         ["pair", "pair", "2020-01-01", "fix", "conforming", 1, 1, 0, 1.0],
         ["multi", "multi", "2020-01-01", "alt", "conforming", 1, 1, 0, 1.0],
@@ -131,12 +131,11 @@
         ["sentmix", "sen", "99", "Unknown", "nonstandard", null],
         ["outcol", "fix", "outside", "Source label", "nonstandard", null],
         ["twocol", "two", "01", "Source label", "nonstandard", null],
-        ["blankb", "fix", "", "Literal source label", "nonstandard", null],
         ["sub", "fix", "99", "Unknown", "nonstandard", null],
         ["sub", "fix", "99", "Unknown", "nonstandard", null],
         ["sub", "alt", "99", "Unknown", "sentinel", null]
       ],
-      "note": "Each code outside its book, with the source's own label. EXT: '1' is not '01', and '9', '99' and '?' are not guessed to be sentinels of a book that names none; nor is BLANKB's labelled blank code '' (test_noncanonical_tokens_are_not_guessed_to_be_sentinels[]), which is checked like any other code. SENTMIX: only the exact curated code '00000' is a sentinel; '0' with the sentinel's meaning as its label is not. SUB: '99' is a source extension of 'fix' once per piece of the cut segment (Jan-Jun, Jul-Dec), and in Jul-Dec the [[coding.sentinel]] member of 'alt', which names no book sentinel meaning."
+      "note": "Each code outside its book, with the source's own label. EXT: '1' is not '01', and '9', '99' and '?' are not guessed to be sentinels of a book that names none. BLANKB (test_noncanonical_tokens_are_not_guessed_to_be_sentinels[]): its labelled blank code '' is never a member (maintainer decision 2026-10-09: a delivered blank code is missing data), so it is neither a sentinel nor a nonstandard code; it never reaches conformance, and BLANKB's 01 conforms alone. SENTMIX: only the exact curated code '00000' is a sentinel; '0' with the sentinel's meaning as its label is not. SUB: '99' is a source extension of 'fix' once per piece of the cut segment (Jan-Jun, Jul-Dec), and in Jul-Dec the [[coding.sentinel]] member of 'alt', which names no book sentinel meaning."
     },
     {
       "table": "state_codes",
@@ -176,12 +175,11 @@
       "where": {"variable": "members"},
       "fields": ["valid_from", "valid_to", "code", "label"],
       "rows": [
-        ["2020-01-01", "2020-12-31", "", "Uppgift saknas"],
         ["2020-01-01", "2020-12-31", "01", "Another label"],
         ["2020-01-01", "2020-12-31", "01", "Participation"],
         ["2020-01-01", "2020-12-31", "1", "Another code"]
       ],
-      "note": "test_resolved_writer_value_sets.py::test_documented_codes_do_not_require_known_physical_type, from a source list (canonical-SCB MEMBERS, no book): every distinct delivered (code, label) pair reaches the written value set once. The labelled blank '' 'Uppgift saknas' is a member (maintainer decision on blank codes); '01' and '1' stay distinct codes; '01' keeps both of its labels; the repeated '01' 'Participation' row is one member. The replaced test's leading-space code ' 01' cannot come from a source (every reader normalizes the code token at its read boundary, e.g. sources/code_lists.py `normalize_token`), so its storage distinctness stays a writer test in test_resolved_writer_value_sets.py."
+      "note": "test_resolved_writer_value_sets.py::test_documented_codes_do_not_require_known_physical_type, from a source list (canonical-SCB MEMBERS, no book): every distinct delivered (code, label) pair reaches the written value set once. The labelled blank '' 'Uppgift saknas' is not a member (maintainer decision 2026-10-09: a delivered blank code is missing data, never a member, and no unknown membership, so the list still publishes); '01' and '1' stay distinct codes; '01' keeps both of its labels; the repeated '01' 'Participation' row is one member. The replaced test's leading-space code ' 01' cannot come from a source (every reader normalizes the code token at its read boundary, e.g. sources/code_lists.py `normalize_token`), so its storage distinctness stays a writer test in test_resolved_writer_value_sets.py."
     },
     {
       "table": "issue_refs",
@@ -225,7 +223,6 @@
         ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:OUTCOL"]],
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:TWOCOL"]],
         ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:TWOCOL"]],
-        ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:BLANKB"]],
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:5", "variant:50", "edition:2020", "variable:501", "member:5001"]],
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:6", "variant:60", "edition:2020", "variable:601", "member:6020"]],
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:7", "variant:70", "edition:2020", "variable:701", "member:7001"]],

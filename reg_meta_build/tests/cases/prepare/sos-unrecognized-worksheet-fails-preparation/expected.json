@@ -1,0 +1,14 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_code_lists.py::test_known_hidden_support_sheet_is_preserved_but_unknown_sheet_blocks",
+    "test_sos_code_lists.py::test_source_cleaning_blocks_on_parser_failure_with_original_evidence_available"
+  ],
+  "fails_if": "the SOS reader prepares a workbook with a worksheet it does not recognize instead of refusing it, or stops naming the sheet in the refusal",
+  "note": "A parser issue blocks source cleaning; the unrecognized worksheet is the delivered shape that raises one. sos-parse-unrecognized-worksheet-keeps-its-rows shows the parse keeps the sheet's rows.",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "ValueError",
+    "locator": "New source structure: unrecognized worksheet"
+  }
+}

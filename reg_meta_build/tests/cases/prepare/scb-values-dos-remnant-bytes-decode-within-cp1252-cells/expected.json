@@ -1,0 +1,55 @@
+{
+  "reader": "scb_values",
+  "replaces": "test_scb_value_records.py::test_clean_scb_values_decodes_dos_remnant_bytes_within_cp1252_cells",
+  "fails_if": "the SCB value reader rejects or drops a byte undefined in cp1252, decodes a DOS remnant as anything but its cp850 character, or decodes the cells around a remnant (0x80 is the euro sign) as cp850 too",
+  "note": "In cp850 0x81 is ü, 0x8D ì, 0x90 É and 0x9D Ø; in cp1252 0x80 is €.",
+  "projections": [
+    {
+      "of": "associations",
+      "rows": [
+        {
+          "value": {
+            "code": "001",
+            "label": "ü"
+          }
+        },
+        {
+          "value": {
+            "code": "002",
+            "label": "ì"
+          }
+        },
+        {
+          "value": {
+            "code": "003",
+            "label": "É"
+          }
+        },
+        {
+          "value": {
+            "code": "004",
+            "label": "Ø"
+          }
+        },
+        {
+          "value": {
+            "code": "005",
+            "label": "MURCIÉLAGO"
+          }
+        },
+        {
+          "value": {
+            "code": "006",
+            "label": "€ Ø"
+          }
+        },
+        {
+          "value": {
+            "code": "007",
+            "label": "€"
+          }
+        }
+      ]
+    }
+  ]
+}

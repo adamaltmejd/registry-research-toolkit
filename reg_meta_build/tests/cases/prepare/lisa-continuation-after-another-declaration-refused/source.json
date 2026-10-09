@@ -1,0 +1,8 @@
+{
+  "description": "The LISA fixture with Individ!A322 renamed from KU2YrkStalln to Other: the unchanged continuation row 323 now follows another declaration.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {"Individ!A322": "Other"}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "reader": "lisa_workbook",
+  "replaces": "test_lisa_workbook_layout.py::test_lisa_reader_rejects_changed_actual_layout_with_coordinates[extra-column-expected 6 columns, got 7]",
+  "fails_if": "the LISA reader reads only its known columns and ignores an added one, so a new column's content is silently dropped",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "LisaWorkbookError",
+    "locator": "in Individ: expected 6 columns, got 7",
+    "message_contains": ["unsupported LISA column structure"]
+  }
+}

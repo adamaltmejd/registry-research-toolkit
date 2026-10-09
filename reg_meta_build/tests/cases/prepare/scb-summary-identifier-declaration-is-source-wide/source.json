@@ -1,0 +1,6 @@
+{
+  "description": "Identifierare.csv (VarID, Variabelnamn, Variabeldefinition) declaring the native variable 6266 an identifier.",
+  "scb": {
+    "identifierare": ["6266|Workplace ID|Definition"]
+  }
+}

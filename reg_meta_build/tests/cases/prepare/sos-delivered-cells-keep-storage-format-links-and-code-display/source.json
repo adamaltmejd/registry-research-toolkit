@@ -1,0 +1,7 @@
+{
+  "description": "The sos-source workbook as written: HDIA's row 2 has Data från stored as the number 2001, an external hyperlink in Länk kodverk (F2), an unmapped 'Eget källfält' column and a blank Kopplingsvariabel; PARTIELL's Länk kodverk links inside the workbook to 'Kodlista_HDIA'!A1; Kodlista_HDIA!B2 stores the code 1 shown as 001.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "reader": "code_list",
+  "args": {
+    "name": "declared-codes"
+  },
+  "replaces": [
+    "test_code_list_source_records.py::test_code_csv_preserves_zeros_duplicates_conflicts_and_blank_rows[vardekod,vardebenamning]",
+    "test_code_list_source_records.py::test_code_csv_preserves_zeros_duplicates_conflicts_and_blank_rows[code,label]"
+  ],
+  "fails_if": "the code-list reader folds the code 01 into 1, merges two labels of one code, drops a repeated row's locator, keeps a label's padding in its clean value or loses the raw cell, binds a row to a member, reads a blank line as a value or an empty-celled row as missing cells, or refuses the vardekod,vardebenamning layout",
+  "note": "Values are distinct raw rows: 01 with the padded label (rows 2 and 3), 01 with another label, 1, and the empty row. The code,label spelling of this layout is read by `code-list-quoted-multiline-label-and-header-spelling-are-evidence` and `code-list-header-only-list-observes-no-members`.",
+  "projections": [
+    {
+      "of": "associations",
+      "rows": [
+        {
+          "row_number": 2,
+          "member_id": null,
+          "value_key": "#1",
+          "value": {
+            "code": "01",
+            "label": "First label",
+            "raw_cells": [
+              "01",
+              " First label "
+            ],
+            "delivered_cells": [
+              {
+                "name": "vardekod"
+              },
+              {
+                "name": "vardebenamning"
+              }
+            ],
+            "locators": [
+              {
+                "physical_record": "row:2"
+              },
+              {
+                "physical_record": "row:3"
+              }
+            ]
+          }
+        },
+        {
+          "row_number": 3,
+          "member_id": null,
+          "value_key": "#1"
+        },
+        {
+          "row_number": 4,
+          "member_id": null,
+          "value_key": "#2",
+          "value": {
+            "code": "01",
+            "label": "Another label"
+          }
+        },
+        {
+          "row_number": 5,
+          "member_id": null,
+          "value": {
+            "code": "1",
+            "label": "First label"
+          }
+        },
+        {
+          "row_number": 6,
+          "member_id": null,
+          "value": {
+            "code": "",
+            "label": "",
+            "delivered_cells": [
+              {
+                "name": "vardekod",
+                "present": true,
+                "raw_value": ""
+              },
+              {
+                "name": "vardebenamning",
+                "present": true,
+                "raw_value": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "values",
+      "rows": [
+        {
+          "$any": true
+        },
+        {
+          "$any": true
+        },
+        {
+          "$any": true
+        },
+        {
+          "$any": true
+        }
+      ]
+    },
+    {
+      "of": "descriptors",
+      "rows": [
+        {
+          "key": "declared-codes",
+          "value": {
+            "raw_cells": [
+              "vardekod",
+              "vardebenamning"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "rows": [
+        {
+          "source": "classifications/codes.csv",
+          "rows": {
+            "$length": 7,
+            "$last": {
+              "role": "note"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

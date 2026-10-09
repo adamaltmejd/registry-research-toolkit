@@ -219,9 +219,16 @@ def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> Non
     assert all(
         item.record_usage == "none" for item in manifest.inputs if not item.present
     )
-    assert sum(item.counts.records for item in manifest.inputs) == len(
-        list(prepared.records.records)
-    )
+    records = list(prepared.records.records)
+    assert sum(item.counts.records for item in manifest.inputs) == len(records)
+    # Every input that supplies records reaches the prepared artifact: a role
+    # dispatched without its records (LISA has no build case) fails here even when
+    # its count is dropped with them.
+    assert {
+        item.revision.revision_id
+        for item in manifest.inputs
+        if item.revision is not None and item.record_usage != "none"
+    } <= {record.source_revision_id for record in records}
     assert sum(item.counts.tables for item in manifest.inputs) == len(
         list(prepared.records.iter_tables())
     )
@@ -471,6 +478,32 @@ def test_unsupported_or_incoherent_manifest_fails_before_opening_children(
     path.write_text(json.dumps(document))
     commit = accept_prepared(destination)
     with pytest.raises(ValueError, match="schema_version"):
+        open_prepared_catalog_sources(
+            destination,
+            expected_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+            input_commit=commit,
+        )
+
+
+def test_record_child_must_hold_the_selected_source_revisions(tmp_path: Path) -> None:
+    """Input: an accepted manifest whose `scb_records` input names a revision that
+    differs (publisher only, same revision ID) from the one its record child holds.
+
+    Expected: opening refuses with the record-child revision error. Fails if
+    `_check_children` (prepared_catalog.py) stops comparing the record child's
+    revisions with the manifest's selected inputs.
+    """
+    selection = _selection(tmp_path)
+    destination = tmp_path / "prepared" / "catalog"
+    prepare_catalog_sources(selection, destination)
+    path = destination / "manifest.json"
+    document = json.loads(path.read_text())
+    next(item for item in document["inputs"] if item["role"] == "scb_records")[
+        "revision"
+    ]["publisher"] = "Another publisher"
+    path.write_text(json.dumps(document))
+    commit = accept_prepared(destination)
+    with pytest.raises(PreparedCatalogError, match="record child revisions differ"):
         open_prepared_catalog_sources(
             destination,
             expected_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),

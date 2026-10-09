@@ -244,5 +244,35 @@
       ["8", "C"]
     ],
     "unresolved": false
+  },
+  {
+    "id": "bu-spec-lined",
+    "cell": "\n 2 = brister i hemmilljön 2 § LVU\n3 = barnets/den ungas beteende (3 § LVU)\n4 = både miljö och beteende 2-3 §§ LVU.",
+    "members": [
+      ["2", "brister i hemmilljön 2 § LVU"],
+      ["3", "barnets/den ungas beteende (3 § LVU)"],
+      ["4", "både miljö och beteende 2-3 §§ LVU."]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "bu-spec-wrapped",
+    "cell": "2 = brister i hemmilljön 2 § LVU\n3 = barnets/den ungas beteende (3 § LVU)                                                                                               4 = både miljö och beteende 2-3 §§ LVU. ",
+    "members": [
+      ["2", "brister i hemmilljön 2 § LVU"],
+      ["3", "barnets/den ungas beteende (3 § LVU)"],
+      ["4", "både miljö och beteende 2-3 §§ LVU."]
+    ],
+    "unresolved": false
+  },
+  {
+    "id": "bu-spec-one-line",
+    "cell": "2 = brister i hemmilljön 2 § LVU                                                                                                                                                                                                 3 = barnets/den ungas beteende (3 § LVU)                                                                                                                                                                                              4 = både miljö och beteende 2-3 §§ LVU.",
+    "members": [
+      ["2", "brister i hemmilljön 2 § LVU"],
+      ["3", "barnets/den ungas beteende (3 § LVU)"],
+      ["4", "både miljö och beteende 2-3 §§ LVU."]
+    ],
+    "unresolved": false
   }
 ]

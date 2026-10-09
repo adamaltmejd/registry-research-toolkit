@@ -1,0 +1,8 @@
+{
+  "description": "The LISA fixture with AmPolTyp's År cell Individ!C600 written as '1990 till 2024'.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {"Individ!C600": "1990 till 2024"}
+  }
+}

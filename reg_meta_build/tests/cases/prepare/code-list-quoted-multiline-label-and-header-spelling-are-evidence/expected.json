@@ -1,0 +1,39 @@
+{
+  "reader": "code_list",
+  "args": {
+    "name": " source list "
+  },
+  "replaces": "test_code_list_source_records.py::test_quoted_multiline_label_and_header_spelling_remain_evidence",
+  "fails_if": "the code-list reader refuses a padded or upper-case header spelling, keys the list by its unclean name or loses the raw name, splits a quoted label at its comma or line break, or keeps the label's line break and padding in its clean value",
+  "projections": [
+    {
+      "of": "descriptors",
+      "rows": [
+        {
+          "key": "source list",
+          "value": {
+            "name": " source list ",
+            "raw_cells": [
+              " Code ",
+              "LABEL"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "values",
+      "rows": [
+        {
+          "value": {
+            "raw_cells": [
+              "01",
+              " first, label\nsecond line "
+            ],
+            "label": "first, label second line"
+          }
+        }
+      ]
+    }
+  ]
+}

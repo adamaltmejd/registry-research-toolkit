@@ -1,0 +1,349 @@
+{
+  "reader": "scb_events",
+  "replaces": [
+    "test_scb_reference_records.py::test_event_action_decodes_without_reversing_or_parsing_native_tokens",
+    "test_scb_reference_records.py::test_event_entity_kind_keeps_unsupported_native_kinds_opaque"
+  ],
+  "fails_if": "the SCB events reader maps a native event action or entity kind to another neutral one (reversing Ersätter and Ersatt av, say), gives an unsupported native entity kind such as VS_Class a catalog meaning instead of keeping it opaque, parses or strips the ID tokens, reads a delivered empty ID2 or an undelivered FilID as the other, or flattens the description's paragraph break and indentation",
+  "note": "The neutral kinds are the replaced tests' parametrizations. The tokens stay the delivered cells; the name folds its spaces; the description keeps its lines, with LF line ends and each line's trailing spaces dropped.",
+  "projections": [
+    {
+      "of": "declarations",
+      "rows": [
+        {
+          "locator": {
+            "physical_record": "row:2"
+          },
+          "action": "retired",
+          "action_label": {
+            "raw_value": "Avslutad"
+          },
+          "entity_kind": "register",
+          "entity_label": {
+            "raw_value": "Register"
+          },
+          "first_token": {
+            "name": "ID1",
+            "present": true,
+            "raw_value": " 0007 ",
+            "interpreted_value": " 0007 "
+          },
+          "second_token": {
+            "name": "ID2",
+            "present": true,
+            "raw_value": ""
+          },
+          "document_token": {
+            "name": "FilID",
+            "present": false,
+            "raw_value": null
+          },
+          "name": {
+            "status": "value",
+            "value": "A name"
+          },
+          "description": {
+            "status": "value",
+            "value": " A paragraph\n\n  an indented line"
+          }
+        },
+        {
+          "locator": {
+            "physical_record": "row:3"
+          },
+          "action": "series_break",
+          "action_label": {
+            "raw_value": "Tidsseriebrott"
+          },
+          "entity_kind": "variant",
+          "entity_label": {
+            "raw_value": "RegisterVariant"
+          },
+          "first_token": {
+            "name": "ID1",
+            "present": true,
+            "raw_value": " 0007 ",
+            "interpreted_value": " 0007 "
+          },
+          "second_token": {
+            "name": "ID2",
+            "present": true,
+            "raw_value": ""
+          },
+          "document_token": {
+            "name": "FilID",
+            "present": false,
+            "raw_value": null
+          },
+          "name": {
+            "status": "value",
+            "value": "A name"
+          },
+          "description": {
+            "status": "value",
+            "value": " A paragraph\n\n  an indented line"
+          }
+        },
+        {
+          "locator": {
+            "physical_record": "row:4"
+          },
+          "action": "replaced_by",
+          "action_label": {
+            "raw_value": "Ersatt av"
+          },
+          "entity_kind": "edition",
+          "entity_label": {
+            "raw_value": "RegisterVersion"
+          },
+          "first_token": {
+            "name": "ID1",
+            "present": true,
+            "raw_value": " 0007 ",
+            "interpreted_value": " 0007 "
+          },
+          "second_token": {
+            "name": "ID2",
+            "present": true,
+            "raw_value": ""
+          },
+          "document_token": {
+            "name": "FilID",
+            "present": false,
+            "raw_value": null
+          },
+          "name": {
+            "status": "value",
+            "value": "A name"
+          },
+          "description": {
+            "status": "value",
+            "value": " A paragraph\n\n  an indented line"
+          }
+        },
+        {
+          "locator": {
+            "physical_record": "row:5"
+          },
+          "action": "replaces",
+          "action_label": {
+            "raw_value": "Ersätter"
+          },
+          "entity_kind": "variable",
+          "entity_label": {
+            "raw_value": "Variabel"
+          },
+          "first_token": {
+            "name": "ID1",
+            "present": true,
+            "raw_value": " 0007 ",
+            "interpreted_value": " 0007 "
+          },
+          "second_token": {
+            "name": "ID2",
+            "present": true,
+            "raw_value": ""
+          },
+          "document_token": {
+            "name": "FilID",
+            "present": false,
+            "raw_value": null
+          },
+          "name": {
+            "status": "value",
+            "value": "A name"
+          },
+          "description": {
+            "status": "value",
+            "value": " A paragraph\n\n  an indented line"
+          }
+        },
+        {
+          "locator": {
+            "physical_record": "row:6"
+          },
+          "action": "unknown",
+          "action_label": {
+            "raw_value": "Unknown action"
+          },
+          "entity_kind": "member",
+          "entity_label": {
+            "raw_value": "AktuellVariabel"
+          },
+          "first_token": {
+            "name": "ID1",
+            "present": true,
+            "raw_value": " 0007 ",
+            "interpreted_value": " 0007 "
+          },
+          "second_token": {
+            "name": "ID2",
+            "present": true,
+            "raw_value": ""
+          },
+          "document_token": {
+            "name": "FilID",
+            "present": false,
+            "raw_value": null
+          },
+          "name": {
+            "status": "value",
+            "value": "A name"
+          },
+          "description": {
+            "status": "value",
+            "value": " A paragraph\n\n  an indented line"
+          }
+        },
+        {
+          "locator": {
+            "physical_record": "row:7"
+          },
+          "action": "replaced_by",
+          "action_label": {
+            "raw_value": "Ersatt av"
+          },
+          "entity_kind": "population",
+          "entity_label": {
+            "raw_value": "Population"
+          },
+          "first_token": {
+            "name": "ID1",
+            "present": true,
+            "raw_value": " 0007 ",
+            "interpreted_value": " 0007 "
+          },
+          "second_token": {
+            "name": "ID2",
+            "present": true,
+            "raw_value": ""
+          },
+          "document_token": {
+            "name": "FilID",
+            "present": false,
+            "raw_value": null
+          },
+          "name": {
+            "status": "value",
+            "value": "A name"
+          },
+          "description": {
+            "status": "value",
+            "value": " A paragraph\n\n  an indented line"
+          }
+        },
+        {
+          "locator": {
+            "physical_record": "row:8"
+          },
+          "action": "replaced_by",
+          "action_label": {
+            "raw_value": "Ersatt av"
+          },
+          "entity_kind": "opaque",
+          "entity_label": {
+            "raw_value": "VS_Class"
+          },
+          "first_token": {
+            "name": "ID1",
+            "present": true,
+            "raw_value": " 0007 ",
+            "interpreted_value": " 0007 "
+          },
+          "second_token": {
+            "name": "ID2",
+            "present": true,
+            "raw_value": ""
+          },
+          "document_token": {
+            "name": "FilID",
+            "present": false,
+            "raw_value": null
+          },
+          "name": {
+            "status": "value",
+            "value": "A name"
+          },
+          "description": {
+            "status": "value",
+            "value": " A paragraph\n\n  an indented line"
+          }
+        },
+        {
+          "locator": {
+            "physical_record": "row:9"
+          },
+          "action": "replaced_by",
+          "action_label": {
+            "raw_value": "Ersatt av"
+          },
+          "entity_kind": "opaque",
+          "entity_label": {
+            "raw_value": "PopContext"
+          },
+          "first_token": {
+            "name": "ID1",
+            "present": true,
+            "raw_value": " 0007 ",
+            "interpreted_value": " 0007 "
+          },
+          "second_token": {
+            "name": "ID2",
+            "present": true,
+            "raw_value": ""
+          },
+          "document_token": {
+            "name": "FilID",
+            "present": false,
+            "raw_value": null
+          },
+          "name": {
+            "status": "value",
+            "value": "A name"
+          },
+          "description": {
+            "status": "value",
+            "value": " A paragraph\n\n  an indented line"
+          }
+        },
+        {
+          "locator": {
+            "physical_record": "row:10"
+          },
+          "action": "replaced_by",
+          "action_label": {
+            "raw_value": "Ersatt av"
+          },
+          "entity_kind": "opaque",
+          "entity_label": {
+            "raw_value": "New entity"
+          },
+          "first_token": {
+            "name": "ID1",
+            "present": true,
+            "raw_value": " 0007 ",
+            "interpreted_value": " 0007 "
+          },
+          "second_token": {
+            "name": "ID2",
+            "present": true,
+            "raw_value": ""
+          },
+          "document_token": {
+            "name": "FilID",
+            "present": false,
+            "raw_value": null
+          },
+          "name": {
+            "status": "value",
+            "value": "A name"
+          },
+          "description": {
+            "status": "value",
+            "value": " A paragraph\n\n  an indented line"
+          }
+        }
+      ]
+    }
+  ]
+}

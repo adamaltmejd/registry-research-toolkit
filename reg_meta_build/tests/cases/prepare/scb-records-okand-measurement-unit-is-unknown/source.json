@@ -1,0 +1,10 @@
+{
+  "description": "One member delivered with three Mattenhet cells: the padded token ` Okänd ` (unknown), the lower-case `okänd`, and the longer text `Okänd enhet`.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "unit": " Okänd "},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "unit": "okänd"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "unit": "Okänd enhet"}
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "reader": "scb_values",
+  "replaces": "test_scb_value_records.py::test_unknown_type_marker_shapes_fail_during_preparation[Tal-Other]",
+  "fails_if": "the SCB value reader recognizes a type marker from its version alone, without its level being the same marker, and so passes a code-equals-version row it has not verified",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "SnapshotError",
+    "locator": "row 2 has unsupported code/version shape",
+    "message_contains": [
+      "'Tal' at level 'Other'"
+    ]
+  }
+}

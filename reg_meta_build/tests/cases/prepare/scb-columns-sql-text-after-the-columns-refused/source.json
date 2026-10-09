@@ -1,0 +1,9 @@
+{
+  "description": "Tabelldefinitioner.sql (cp1252) with a column of type decimal(9,2): the reader's column grammar takes `[A] [decimal]` and leaves `(9,2) NULL` after it.",
+  "files": {
+    "SCB/Tabelldefinitioner.sql": {
+      "text": "CREATE TABLE [dbo].[Delivery](\r\n[A] [decimal](9,2) NULL\r\n) ON [PRIMARY]\r\nGO\r\n",
+      "encoding": "cp1252"
+    }
+  }
+}

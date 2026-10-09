@@ -1,0 +1,6 @@
+{
+  "description": "A code list whose second row has an unterminated quote.",
+  "files": {
+    "classifications/codes.csv": "code,label\n1,\"unterminated\n"
+  }
+}

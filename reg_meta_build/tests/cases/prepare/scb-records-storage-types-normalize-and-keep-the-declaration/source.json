@@ -1,0 +1,30 @@
+{
+  "description": "One member (CVID 1001, column VALUE, Datalängd 12) delivered once per declared SQL Server storage type, with padding and case variants, a Swedish declaration and an unrecognized one: only Datatyp differs between the rows.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "tinyint"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "smallint"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": " int "},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "integer"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "BIGINT"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "char"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "varchar"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "nchar"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": " NVARCHAR "},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "text"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "ntext"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "numeric"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "decimal"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "Decimal"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "float"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "real"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "money"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "bit"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "date"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "datetime"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "uniqueidentifier"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "Datum och klockslag"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "12", "data_type": "unrecognized declaration"}
+    ]
+  }
+}

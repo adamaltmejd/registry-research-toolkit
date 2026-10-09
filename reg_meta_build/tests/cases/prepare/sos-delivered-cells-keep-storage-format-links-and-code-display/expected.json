@@ -1,0 +1,72 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_source_records.py::test_parser_retains_xlsx_row_cells_and_code_display_provenance",
+  "fails_if": "the SOS reader drops a delivered cell's storage type, number format or hyperlink (external target or internal location), drops a column the template does not define, misplaces a cell's coordinate, or reads a code stored as 1 under format 000 as anything but 001",
+  "note": "Values from the replaced test and the sos-source fixture. Delivered cells and physical cells are parallel lists, so position ties each cell to its coordinate (Data från at H2, Länk kodverk at F2). A delivered cell carries its raw value as text and its raw Python type.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_record": "row:2"}], "subject": {"member": {"name": "HDIA"}}},
+      "rows": [
+        {
+          "locators": [
+            {
+              "physical_table": "Metadata - Variabelnivå",
+              "physical_cells": {
+                "$exact": [
+                  "Metadata - Variabelnivå!A2", "Metadata - Variabelnivå!B2", "Metadata - Variabelnivå!C2", "Metadata - Variabelnivå!D2",
+                  "Metadata - Variabelnivå!E2", "Metadata - Variabelnivå!F2", "Metadata - Variabelnivå!G2", "Metadata - Variabelnivå!H2",
+                  "Metadata - Variabelnivå!I2", "Metadata - Variabelnivå!J2", "Metadata - Variabelnivå!K2", "Metadata - Variabelnivå!L2"
+                ]
+              }
+            }
+          ],
+          "delivered_cells": [
+            {"name": "Deldatamängdsnamn"},
+            {"name": "Variabelnamn"},
+            {"name": "Variabeletikett"},
+            {"name": "Variabelbeskrivning"},
+            {"name": "Värdemängd"},
+            {
+              "name": "Länk kodverk",
+              "raw_value": "https://example.test/classifications/ssyk",
+              "raw_type": "str",
+              "storage_type": "s",
+              "number_format": "General",
+              "hyperlink_target": "https://example.test/classifications/ssyk"
+            },
+            {"name": "Datatyp"},
+            {"name": "Data från", "raw_value": "2001", "interpreted_value": "2001", "raw_type": "int", "storage_type": "n", "number_format": "General"},
+            {"name": "Data till"},
+            {"name": "Specificera källa"},
+            {"name": "Eget källfält", "raw_value": "bevaras"},
+            {"name": "Kopplingsvariabel"}
+          ]
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"subject": {"member": {"name": "PARTIELL"}}},
+      "rows": [
+        {
+          "delivered_cells": {
+            "$once": [{"name": "Länk kodverk", "raw_value": "Visad kodlista", "hyperlink_target": null, "hyperlink_location": "'Kodlista_HDIA'!A1"}]
+          }
+        }
+      ]
+    },
+    {
+      "of": "associations",
+      "where": {"descriptor_key": "sheet:Kodlista_HDIA"},
+      "rows": [
+        {
+          "value": {"code": "001", "locators": [{"physical_cells": {"$contains": ["Kodlista_HDIA!B2"]}}]},
+          "delivered_cells": {
+            "$once": [{"name": "Kod", "raw_value": "1", "raw_type": "int", "storage_type": "n", "number_format": "000", "interpreted_value": "001"}]
+          }
+        }
+      ]
+    }
+  ]
+}

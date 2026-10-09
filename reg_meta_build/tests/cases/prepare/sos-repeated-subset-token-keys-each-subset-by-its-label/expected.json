@@ -1,0 +1,50 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_parent_records.py::test_lova_repeated_subset_token_keys_labels_separately",
+  "fails_if": "the SOS reader keys two subset rows that repeat one Deldatamängdsnamn by the token alone, so they collapse into one subset, or names them without their labels",
+  "note": "The replaced test claimed the two record keys differ; with no alias for repeated text, this pins it as each key keeping the token and adding its own label (the subset-label element is the reader's form, not the replaced test's). Each subset is also named with its label. That the build then resolves them as two register variants without unknown_parent_name has no build case yet (reported as a gap).",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"parent_facts": {"$contains": [{"kind": "variant"}]}},
+      "rows": [
+        {
+          "locators": [
+            {
+              "physical_record": "row:2",
+              "semantic_record_key": {
+                "$contains": [
+                  "subset:LOVA",
+                  "subset-label:Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation"
+                ]
+              }
+            }
+          ],
+          "subject": {
+            "variant": {
+              "name": "LOVA / Legitimerade omsorgs- och vårdyrkesgruppers ekonomi och arbetsmarknadssituation"
+            }
+          }
+        },
+        {
+          "locators": [
+            {
+              "physical_record": "row:15",
+              "semantic_record_key": {
+                "$contains": [
+                  "subset:LOVA",
+                  "subset-label:Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus"
+                ]
+              }
+            }
+          ],
+          "subject": {
+            "variant": {
+              "name": "LOVA / Legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

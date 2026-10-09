@@ -1,0 +1,16 @@
+{
+  "reader": "sos_parsed",
+  "args": {"directory": "Socialstyrelsen"},
+  "replaces": [
+    "test_sos_parser.py::test_uppercase_xlsx_extension_picked_up_by_directory_parse",
+    "test_sos_parser.py::test_synthetic_parse_directory_skips_lock_files"
+  ],
+  "fails_if": "the directory parse matches only a lower-case .xlsx extension (silently skipping an .XLSX delivery), or parses an Office lock file and halts on it",
+  "note": "One register, the .XLSX workbook: its dataset name is sos-source's Datamängd cell. A lock file that were parsed would halt the directory parse with sos_parse_error.",
+  "projections": [
+    {
+      "of": "",
+      "rows": [{"dataset_name": "Patientregistret källa", "source_file": {"$any": true}}]
+    }
+  ]
+}

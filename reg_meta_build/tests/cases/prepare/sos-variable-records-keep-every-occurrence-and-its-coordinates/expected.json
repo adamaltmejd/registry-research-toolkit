@@ -1,0 +1,92 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_source_records.py::test_source_records_keep_occurrences_conflicts_and_native_sos_coordinates",
+  "fails_if": "the SOS reader collapses repeated variable rows into one record, gives a repeated row another identity, merges a competing label or a differently stored year into the first row's identity, invents a subset (such as _default) or a year range for a row that delivers none, or stops cleaning label, description, data type and years into fields beside their raw cells",
+  "note": "Values from the replaced test and the sos-source fixture. Identity is by digest alias: rows 2 and 3 share #1 (#2 is the source revision), every other row has its own. Row 5 differs from row 2 only in how Data från is stored, so the two rows claim the same fields except coverage_from's raw value; coverage_to and classification_declared follow the replaced test's coverage_from and text rules on the fixture cells. The physical file is the revision's artifact path (README: catalog/<bundle path>). Row 2's Länk kodverk and PARTIELL's internal link are sos-delivered-cells-keep-storage-format-links-and-code-display; sensitivity and identifier are sos-kopplingsvariabel-claims-the-identifier-and-every-variable-is-sensitive.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"subject": {"variable": {"status": "value"}}},
+      "rows": [
+        {
+          "record_id": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#1",
+          "locators": [
+            {
+              "semantic_record_key": ["register:Patientregistret källa", "deldatamangd:PAR_OV", "variable:HDIA"],
+              "physical_file": "catalog/Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+              "physical_table": "Metadata - Variabelnivå",
+              "physical_record": "row:2",
+              "physical_cells": {"$contains": ["Metadata - Variabelnivå!B2"]}
+            }
+          ],
+          "subject": {
+            "register": {"name": "Patientregistret källa"},
+            "variant": {"name": "PAR_OV"},
+            "variable": {"$exact": {"status": "value", "native_id": "HDIA", "name": "Huvuddiagnos"}},
+            "member": {"name": "HDIA"},
+            "native": {"$exact": {"register_id": null, "register_variant_id": null, "edition_id": null, "variable_id": null, "member_id": null}}
+          },
+          "fields": {
+            "column_name": {"$exact": {"status": "value", "value": "HDIA", "raw_value": "HDIA"}},
+            "name": {"$exact": {"status": "value", "value": "Huvuddiagnos", "raw_value": " Huvuddiagnos "}},
+            "description": {"$exact": {"status": "value", "value": "Första raden\nandra raden", "raw_value": "Första raden\nandra raden  "}},
+            "data_type": {"$exact": {"status": "value", "value": "integer", "raw_value": "Heltal"}},
+            "representation": {"$exact": {"status": "value", "value": "Se kodlista", "raw_value": "Se kodlista"}},
+            "source_attribution": {"$exact": {"status": "value", "value": "Patientregistret", "raw_value": "Patientregistret"}},
+            "classification_declared": {"$exact": {"status": "value", "value": "https://example.test/classifications/ssyk", "raw_value": "https://example.test/classifications/ssyk"}},
+            "reference_period": null,
+            "coverage_from": {"$exact": {"status": "value", "value": "2001", "raw_value": 2001}},
+            "coverage_to": {"$exact": {"status": "value", "value": "2020", "raw_value": 2020}}
+          },
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2001", "end": "2020"}]},
+          "edition_period_scope": {"kind": "not_applicable"},
+          "delivered_cells": {"$once": [{"name": "Data från", "raw_type": "int"}]}
+        },
+        {
+          "record_id": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#1",
+          "locators": [{"physical_record": "row:3"}]
+        },
+        {
+          "record_id": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#3",
+          "locators": [{"physical_record": "row:4"}],
+          "subject": {"variable": {"native_id": "HDIA", "name": "Annan etikett"}}
+        },
+        {
+          "record_id": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#4",
+          "locators": [{"physical_record": "row:5"}],
+          "fields": {
+            "column_name": {"$exact": {"status": "value", "value": "HDIA", "raw_value": "HDIA"}},
+            "name": {"$exact": {"status": "value", "value": "Huvuddiagnos", "raw_value": " Huvuddiagnos "}},
+            "description": {"$exact": {"status": "value", "value": "Första raden\nandra raden", "raw_value": "Första raden\nandra raden  "}},
+            "data_type": {"$exact": {"status": "value", "value": "integer", "raw_value": "Heltal"}},
+            "representation": {"$exact": {"status": "value", "value": "Se kodlista", "raw_value": "Se kodlista"}},
+            "source_attribution": {"$exact": {"status": "value", "value": "Patientregistret", "raw_value": "Patientregistret"}},
+            "classification_declared": {"$exact": {"status": "value", "value": "https://example.test/classifications/ssyk", "raw_value": "https://example.test/classifications/ssyk"}},
+            "reference_period": null,
+            "coverage_from": {"$exact": {"status": "value", "value": "2001", "raw_value": "2001"}},
+            "coverage_to": {"$exact": {"status": "value", "value": "2020", "raw_value": 2020}}
+          },
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2001", "end": "2020"}]},
+          "delivered_cells": {"$once": [{"name": "Data från", "raw_type": "str"}]}
+        },
+        {
+          "record_id": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#5",
+          "subject": {"member": {"name": "PARTIELL"}},
+          "edition_scope": {"kind": "intervals", "intervals": [{"start": "2010", "end": null}]}
+        },
+        {
+          "record_id": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#6",
+          "subject": {"member": {"name": "MALFORMED"}},
+          "edition_scope": {"kind": "unknown", "label": "Data från=+2001; Data till=2020"}
+        },
+        {
+          "record_id": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx:record:sha256:#7",
+          "locators": [{"semantic_record_key": {"$exact": ["register:Patientregistret källa", "deldatamangd:<unknown>", "variable:UTAN_DEL"]}}],
+          "subject": {"variant": {"status": "unknown"}, "variable": {"native_id": "UTAN_DEL"}},
+          "edition_scope": {"kind": "unknown"},
+          "delivered_cells": {"$once": [{"name": "Deldatamängdsnamn", "present": true, "raw_value": "", "interpreted_value": ""}]}
+        }
+      ]
+    }
+  ]
+}

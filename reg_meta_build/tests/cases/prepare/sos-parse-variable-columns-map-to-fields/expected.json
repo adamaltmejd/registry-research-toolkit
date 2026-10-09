@@ -1,0 +1,32 @@
+{
+  "reader": "sos_parsed",
+  "replaces": [
+    "test_sos_parser.py::test_synthetic_variable_fields_and_external_classification",
+    "test_sos_parser.py::test_synthetic_phantom_rows_do_not_inflate_variable_count"
+  ],
+  "fails_if": "the SOS parser stops mapping a variable-sheet header to its field (Objekttyp, a plain-text Länk kodverk, Datatyp, the year columns), or stops skipping blank formatted rows past the data, so they surface as variables or retained rows",
+  "note": "Values from the replaced tests. The phantom rows exist in the sheet XML (formatted empty cells), so the parser's row iterator meets them.",
+  "projections": [
+    {
+      "of": "variables",
+      "rows": [
+        {
+          "deldatamangd": "PAR_OV",
+          "name": "HDIA",
+          "label": "Huvuddiagnos",
+          "data_type": "Sträng (text)",
+          "object_type": "Vårdkontakt",
+          "external_classification": "ICD-10",
+          "data_from": 2001,
+          "data_to": 2020
+        },
+        {"name": "KON"}
+      ]
+    },
+    {
+      "of": "source_sheets",
+      "where": {"kind": "variables"},
+      "rows": [{"rows": [{"role": "header"}, {"role": "variable"}, {"role": "variable"}]}]
+    }
+  ]
+}

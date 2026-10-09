@@ -1,0 +1,67 @@
+{
+  "reader": "scb_records",
+  "replaces": [
+    "test_source_records.py::test_scb_observations_share_coordinates_and_stripped_fields_without_losing_cells",
+    "test_source_records.py::test_delivered_cells_distinguish_missing_from_supplied_empty"
+  ],
+  "fails_if": "the SCB records reader keeps a cell's padding in a field value or loses the raw padded cell, reads the population as the member's own coordinate rather than an edition parent fact, gives two columns of one native variable different variable coordinates, expands a pooled edition or parses an unknown one without reporting it, or reports an empty field as a delivered empty cell (or the reverse)",
+  "note": "Values are the fixture's cells without their padding; `data_type` is the storage class of ` numeric `. The first three rows share one native variable (VarId 1880); the repeated row keeps the first row's identity and the other column gets its own.",
+  "projections": [
+    {
+      "of": "",
+      "rows": [
+        {
+          "record": {
+            "record_id": "scb-registerinformation:record:sha256:#1",
+            "locators": [{"physical_record": "row:2"}],
+            "subject": {
+              "native": {"$exact": {"register_id": 34, "register_variant_id": 153, "edition_id": 204, "variable_id": 1880, "member_id": 9001}},
+              "register": {"name": "LISA"},
+              "variant": {"name": "Individer"},
+              "population": {"status": "unknown"},
+              "variable": {"$exact": {"status": "value", "native_id": 1880, "name": "Signal variable"}},
+              "member": {"native_id": 9001, "name": "Signal variable"}
+            },
+            "parent_facts": {"$contains": [{"kind": "population", "coordinate": {"name": "Population A"}}]},
+            "original_period_text": " 2001-2003 ",
+            "edition_scope": {"kind": "pooled"},
+            "fields": {
+              "name": {"$exact": {"status": "value", "value": "Signal variable", "raw_value": " Signal variable "}},
+              "definition": {"$exact": {"status": "value", "value": "Shared definition", "raw_value": " Shared definition "}},
+              "description": {"$exact": {"status": "value", "value": "Shared description", "raw_value": " Shared description "}},
+              "operational_definition": {"$exact": {"status": "value", "value": "E22", "raw_value": " E22 "}},
+              "source_attribution": {"$exact": {"status": "value", "value": "Source system", "raw_value": " Source system "}},
+              "measurement_unit": {"$exact": {"status": "value", "value": "count", "raw_value": " count "}},
+              "data_type": {"$exact": {"status": "value", "value": "decimal", "raw_value": " numeric "}},
+              "data_length": {"$exact": {"status": "value", "value": "0", "raw_value": "0"}}
+            },
+            "delivered_cells": {"$contains": [{"name": "Populationkommentar", "present": false, "raw_value": null, "interpreted_value": ""}]}
+          },
+          "issue": {"kind": "pooled_period"}
+        },
+        {
+          "record": {
+            "record_id": "scb-registerinformation:record:sha256:#1",
+            "locators": [{"physical_record": "row:3"}]
+          },
+          "issue": {"kind": "pooled_period"}
+        },
+        {
+          "record": {
+            "record_id": "scb-registerinformation:record:sha256:#3",
+            "locators": [{"physical_record": "row:4"}],
+            "subject": {"variable": {"$exact": {"status": "value", "native_id": 1880, "name": "Signal variable"}}}
+          },
+          "issue": {"kind": "pooled_period"}
+        },
+        {
+          "record": {
+            "edition_scope": {"kind": "unknown"},
+            "delivered_cells": {"$contains": [{"name": "Populationkommentar", "present": true, "raw_value": "", "interpreted_value": ""}]}
+          },
+          "issue": {"kind": "unparseable_period"}
+        }
+      ]
+    }
+  ]
+}

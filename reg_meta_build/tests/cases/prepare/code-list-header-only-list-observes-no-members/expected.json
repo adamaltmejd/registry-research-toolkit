@@ -1,0 +1,41 @@
+{
+  "reader": "code_list",
+  "replaces": "test_code_list_source_records.py::test_header_only_list_is_observed_without_inventing_members",
+  "fails_if": "the code-list reader invents a value or member for a list without rows, or drops the list itself",
+  "projections": [
+    {
+      "of": "values",
+      "rows": []
+    },
+    {
+      "of": "associations",
+      "rows": []
+    },
+    {
+      "of": "descriptors",
+      "rows": [
+        {
+          "key": "codes",
+          "value": {
+            "raw_cells": [
+              "code",
+              "label"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "rows": [
+        {
+          "rows": [
+            {
+              "role": "header"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

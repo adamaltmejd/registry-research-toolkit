@@ -1,0 +1,71 @@
+{
+  "reader": "scb_auxiliary",
+  "args": {"file": "UnikaRegisterOchVariabler.csv"},
+  "replaces": [
+    "test_scb_auxiliary_records.py::test_summary_keeps_independent_flags_and_does_not_infer_occurrences",
+    "test_scb_auxiliary_records.py::test_conflicting_summary_assertions_remain_separate_membership_evidence",
+    "test_scb_auxiliary_records.py::test_summary_stream_retains_order_and_physical_duplicates",
+    "test_scb_auxiliary_records.py::test_unknown_summary_flags_never_become_false",
+    "test_source_records.py::test_flag_declarations_preserve_explicit_booleans"
+  ],
+  "fails_if": "the SCB summary reader merges or drops a repeated summary row, ORs or merges a conflicting flag declaration into the first, puts a flag into the summary's semantic key, reads a native variable id, an availability or an occurrence period from a summary row, or reads a missing, empty or unrecognized Identitetsvariabel as false",
+  "note": "A summary row names its variable without a native id. `#2` is the source revision and `#3` the summary key: the flags stay outside it, so the conflicting row keeps the first row's key under another record id. Only 0 and 1 are flags; any other Identitetsvariabel is unknown, with its raw cell (null when not delivered).",
+  "projections": [
+    {
+      "of": "",
+      "rows": [
+        {
+          "record_id": "scb-unikaregisterochvariabler:record:sha256:#1",
+          "locators": [{"semantic_record_key": ["summary", "#3"], "physical_record": "row:2", "physical_cells": {"$last": "row:2:Identitetsvariabel"}}],
+          "subject": {
+            "register": {"native_id": null, "name": "TESTREG"},
+            "variable": {"name": "Name with padding"},
+            "native": {"variable_id": null}
+          },
+          "edition_scope": {"kind": "not_applicable"},
+          "edition_period_scope": {"kind": "not_applicable"},
+          "fields": {
+            "availability": null,
+            "coverage_from": {"value": "1990/91"},
+            "sensitivity": {"status": "value", "value": false},
+            "conditional_sensitivity": {"status": "value", "value": true},
+            "identifier": {"status": "value", "value": false}
+          },
+          "delivered_cells": {"$contains": [{"name": "Registernamn", "raw_value": "  TESTREG  "}]}
+        },
+        {
+          "record_id": "scb-unikaregisterochvariabler:record:sha256:#1",
+          "locators": [{"semantic_record_key": ["summary", "#3"], "physical_record": "row:3"}]
+        },
+        {
+          "record_id": "scb-unikaregisterochvariabler:record:sha256:#4",
+          "locators": [{"semantic_record_key": ["summary", "#3"], "physical_record": "row:4"}],
+          "fields": {
+            "sensitivity": {"status": "value", "value": true},
+            "conditional_sensitivity": {"status": "value", "value": true}
+          }
+        },
+        {
+          "fields": {"identifier": {"$exact": {"status": "unknown", "value": null, "raw_value": null}}},
+          "delivered_cells": {"$last": {"name": "Identitetsvariabel", "present": false, "raw_value": null}}
+        },
+        {
+          "fields": {"identifier": {"$exact": {"status": "unknown", "value": null, "raw_value": ""}}},
+          "delivered_cells": {"$last": {"name": "Identitetsvariabel", "present": true, "raw_value": ""}}
+        },
+        {
+          "fields": {"identifier": {"$exact": {"status": "unknown", "value": null, "raw_value": "Ja"}}},
+          "delivered_cells": {"$last": {"name": "Identitetsvariabel", "present": true, "raw_value": "Ja"}}
+        },
+        {
+          "fields": {"identifier": {"$exact": {"status": "unknown", "value": null, "raw_value": "unknown"}}},
+          "delivered_cells": {"$last": {"name": "Identitetsvariabel", "present": true, "raw_value": "unknown"}}
+        },
+        {
+          "fields": {"identifier": {"$exact": {"status": "unknown", "value": null, "raw_value": "2"}}},
+          "delivered_cells": {"$last": {"name": "Identitetsvariabel", "present": true, "raw_value": "2"}}
+        }
+      ]
+    }
+  ]
+}

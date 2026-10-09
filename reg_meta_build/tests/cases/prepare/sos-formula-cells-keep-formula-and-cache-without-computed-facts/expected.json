@@ -1,0 +1,50 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_source_records.py::test_formula_and_delivered_cache_survive_without_promoting_computed_facts",
+    "test_sos_source_records.py::test_absent_formula_cache_does_not_change_existing_source_payloads"
+  ],
+  "fails_if": "the SOS reader evaluates a formula or promotes its delivered cache to a fact (a known label or variable name), drops the formula text or a blank or absent cache from the delivered cell, or adds cache keys to a cell that has no formula (which would change every existing payload digest)",
+  "note": "Values from the replaced formula test. The model round trip it sat beside (test_absent_formula_cache_does_not_change_existing_source_payloads) is claimed here at the boundary: a cell without a formula has no cache keys, a cached single space stays (' ', str), and a formula delivered without a cache keeps ('', none). The lossless storage round trip is test_prepared_source_roundtrip.py.",
+  "projections": [
+    {
+      "of": "associations",
+      "where": {"descriptor_key": "sheet:Kodlista_HOSPITAL"},
+      "rows": [
+        {
+          "value": {"code": "10010"},
+          "delivered_cells": {
+            "$once": [
+              {
+                "name": "Aktuella",
+                "raw_value": "=IF(C2>1, \" \",\"JA\")",
+                "storage_type": "f",
+                "interpreted_value": "",
+                "cached_raw_value": " ",
+                "cached_raw_type": "str"
+              },
+              {"name": "Kommentar", "storage_type": "f", "cached_raw_value": "", "cached_raw_type": "none"},
+              {"name": "Sjukhuskod", "cached_raw_value": {"$absent": true}, "cached_raw_type": {"$absent": true}}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_record": "row:2"}], "subject": {"member": {"name": "HDIA"}}},
+      "rows": [
+        {
+          "fields": {"name": {"$exact": {"status": "unknown", "value": null, "raw_value": "=\"Computed label\""}}},
+          "subject": {"variable": {"name": null}},
+          "delivered_cells": {
+            "$once": [
+              {"name": "Variabeletikett", "storage_type": "f", "cached_raw_value": "Computed label", "cached_raw_type": "str"},
+              {"name": "Variabelnamn", "cached_raw_value": {"$absent": true}, "cached_raw_type": {"$absent": true}}
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

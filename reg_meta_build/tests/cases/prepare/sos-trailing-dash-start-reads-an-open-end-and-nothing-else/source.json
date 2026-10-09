@@ -1,0 +1,81 @@
+{
+  "description": "sos-source (no register period, no Deldatamängder sheet) with Variabelnivå rows appended (rows 9-13): DASH_OPEN starts 1999- with a blank end; DASH_WITH_END starts 1999- with the end 2020; DASH_COMPOUND, FREE_TEXT and TWO_YEARS deliver a compound range, free text and two years as the start, with a blank end.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "sheets": {
+      "Metadata - Variabelnivå": [
+        [
+          "PAR_OV",
+          "DASH_OPEN",
+          "Dash_Open",
+          null,
+          null,
+          null,
+          "Heltal",
+          "1999-",
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "PAR_OV",
+          "DASH_WITH_END",
+          "Dash_With_End",
+          null,
+          null,
+          null,
+          "Heltal",
+          "1999-",
+          2020,
+          null,
+          null,
+          null
+        ],
+        [
+          "PAR_OV",
+          "DASH_COMPOUND",
+          "Dash_Compound",
+          null,
+          null,
+          null,
+          "Heltal",
+          "1999-2003 samt 2007-",
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "PAR_OV",
+          "FREE_TEXT",
+          "Free_Text",
+          null,
+          null,
+          null,
+          "Heltal",
+          "Senaste tre år",
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "PAR_OV",
+          "TWO_YEARS",
+          "Two_Years",
+          null,
+          null,
+          null,
+          "Heltal",
+          "2011 och 2013",
+          null,
+          null,
+          null,
+          null
+        ]
+      ]
+    }
+  }
+}

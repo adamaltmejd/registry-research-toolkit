@@ -1,0 +1,77 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_code_declarations.py::test_derivation_keeps_named_literal_clauses_without_evaluation[headers0-values0]",
+    "test_sos_code_declarations.py::test_derivation_keeps_named_literal_clauses_without_evaluation[headers1-values1]"
+  ],
+  "fails_if": "the SOS reader evaluates, splits or normalizes a derivation clause, drops a blank clause, stops trimming the clause names from their headers, or prepares a derivation sheet as a code list or a validity window",
+  "projections": [
+    {
+      "of": "declarations",
+      "rows": [
+        {
+          "kind": "derivation",
+          "member_name": {"value": "RESULTAT"},
+          "supplied_period": {"value": "1973-"},
+          "clauses": [
+            {
+              "name": "Variabler",
+              "content": {
+                "raw_value": "SECFORE=1 eller SECAVSL=1",
+                "value": "SECFORE=1 eller SECAVSL=1"
+              }
+            },
+            {"name": "ICD 8", "content": {"raw_value": null, "value": null}},
+            {"name": "ICD 9", "content": {"raw_value": null, "value": null}},
+            {
+              "name": "ICD 10",
+              "content": {
+                "raw_value": "O82 (alla underdiagnoser)",
+                "value": "O82 (alla underdiagnoser)"
+              }
+            },
+            {
+              "name": "Åtgärdskoder 1963-1996",
+              "content": {"raw_value": "7010, 7030", "value": "7010, 7030"}
+            },
+            {
+              "name": "Åtgärdskoder 1997-",
+              "content": {
+                "raw_value": "MAH03/MAC23  (ersatt av MAC23 2007-12-31)",
+                "value": "MAH03/MAC23  (ersatt av MAC23 2007-12-31)"
+              }
+            }
+          ]
+        },
+        {
+          "kind": "derivation",
+          "member_name": {"value": "RESULTAT"},
+          "supplied_period": {"value": "1973-"},
+          "clauses": [
+            {
+              "name": "Variabler",
+              "content": {
+                "raw_value": "KON, BVIKT, GRDBS, BORDF2",
+                "value": "KON, BVIKT, GRDBS, BORDF2"
+              }
+            },
+            {
+              "name": "Villkor",
+              "content": {"raw_value": "GRVB mellan 22 och 45", "value": "GRVB mellan 22 och 45"}
+            },
+            {
+              "name": "Algoritm",
+              "content": {
+                "raw_value": "BVIKT < (-0.001 * GRDBS**4)\n  + 123",
+                "value": "BVIKT < (-0.001 * GRDBS**4)\n  + 123"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {"of": "values", "rows": []},
+    {"of": "associations", "rows": []},
+    {"of": "validity", "rows": []}
+  ]
+}

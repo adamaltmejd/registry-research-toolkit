@@ -1,0 +1,19 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_lists.py::test_empty_standard_header_keeps_binding_target",
+  "fails_if": "the SOS reader drops a code sheet that delivers no code rows, losing the member its preamble names, or invents a value for it",
+  "projections": [
+    {
+      "of": "descriptors",
+      "where": {"key": "sheet:Kodlista_Arbitrary"},
+      "rows": [{"value": {"member_references": ["HDIA"]}}]
+    },
+    {"of": "associations", "rows": []},
+    {"of": "values", "rows": []},
+    {
+      "of": "tables",
+      "where": {"name": "Kodlista_Arbitrary"},
+      "rows": [{"rows": [{"$any": true}, {"role": "header"}]}]
+    }
+  ]
+}

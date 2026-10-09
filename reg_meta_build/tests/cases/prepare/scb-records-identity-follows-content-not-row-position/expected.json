@@ -1,0 +1,68 @@
+{
+  "reader": "scb_records",
+  "replaces": [
+    "test_source_records.py::test_observation_identity_includes_payload_and_context_but_not_row_position",
+    "test_source_parent_facts_boundary.py::test_duplicate_rows_and_parent_conflicts_stay_distinct_located_occurrences",
+    "test_source_records.py::test_source_variable_coordinate_is_independent_and_checked_in_record_identity",
+    "test_source_records.py::test_hamn_fixture_yields_twenty_lossless_observations_for_ten_exact_members"
+  ],
+  "fails_if": "the SCB records reader drops or merges a repeated row, puts the row position into a record's identity so a repeated row gets its own, gives one identity to two rows that differ in one delivered cell (Datalängd, Populationnamn, Registersyfte or VarId), drops a delivered cell or the register's parent fact, or points a parent fact's Registersyfte at a cell of another row",
+  "note": "Every row is one observation, in delivery order. `#2` is the shared source revision. Registersyfte is the third Registerinformation column (index 2 of the fixture header), so the register parent fact's purpose maps to position 2 of each row's own physical cells. The repeated row keeps the first row's identity; each other row differs from the first in one delivered fact and gets its own. The Registersyfte-only row keeps the first row's variable fields, so its identity differs through the parent fact alone. The variable-only row keeps the first row's member (CVID 1001).",
+  "projections": [
+    {
+      "of": "",
+      "note": "Identity: the repeated row shares the first row's record id; every content change gets another.",
+      "rows": [
+        {"record": {
+          "record_id": "scb-registerinformation:record:sha256:#1",
+          "locators": [{"physical_record": "row:2", "physical_cells": {"$contains": ["Registerinformation.csv:row:2:Registersyfte"]}}],
+          "fields": {
+            "column_name": {"status": "value", "value": "VALUE"},
+            "name": {"status": "value", "value": "GenericVar"},
+            "definition": {"status": "value", "value": "A generic family label"},
+            "data_type": {"status": "value", "raw_value": "int"},
+            "data_length": {"status": "value", "value": "10"}
+          },
+          "parent_facts": {"$contains": [{"kind": "register", "fields": {"purpose": {"value": "Testning"}}, "field_cells": {"$contains": [{"field": "purpose", "positions": [2]}]}}]},
+          "subject": {"variable": {"native_id": 101}, "member": {"native_id": 1001}},
+          "delivered_cells": {"$length": 36}
+        }},
+        {"record": {
+          "record_id": "scb-registerinformation:record:sha256:#1",
+          "source_revision_id": "scb-registerinformation@sha256:#2",
+          "locators": [{"physical_record": "row:3", "physical_cells": {"$contains": ["Registerinformation.csv:row:3:Registersyfte"]}}],
+          "parent_facts": {"$contains": [{"kind": "register", "fields": {"purpose": {"value": "Testning"}}, "field_cells": {"$contains": [{"field": "purpose", "positions": [2]}]}}]},
+          "delivered_cells": {"$length": 36}
+        }},
+        {"record": {
+          "record_id": "scb-registerinformation:record:sha256:#3",
+          "locators": [{"physical_record": "row:4"}],
+          "fields": {"data_length": {"status": "value", "value": "11"}},
+          "delivered_cells": {"$length": 36}
+        }},
+        {"record": {
+          "record_id": "scb-registerinformation:record:sha256:#4",
+          "locators": [{"physical_record": "row:5"}],
+          "parent_facts": {"$contains": [{"kind": "population", "coordinate": {"name": "Another population"}}]}
+        }},
+        {"record": {
+          "record_id": "scb-registerinformation:record:sha256:#5",
+          "locators": [{"physical_record": "row:6", "physical_cells": {"$contains": ["Registerinformation.csv:row:6:Registersyfte"]}}],
+          "fields": {
+            "column_name": {"status": "value", "value": "VALUE"},
+            "name": {"status": "value", "value": "GenericVar"},
+            "definition": {"status": "value", "value": "A generic family label"},
+            "data_type": {"status": "value", "raw_value": "int"},
+            "data_length": {"status": "value", "value": "10"}
+          },
+          "parent_facts": {"$contains": [{"kind": "register", "fields": {"purpose": {"value": "Another purpose"}}, "field_cells": {"$contains": [{"field": "purpose", "positions": [2]}]}}]}
+        }},
+        {"record": {
+          "record_id": "scb-registerinformation:record:sha256:#6",
+          "locators": [{"physical_record": "row:7"}],
+          "subject": {"variable": {"status": "value", "native_id": 102}, "member": {"status": "value", "native_id": 1001}}
+        }}
+      ]
+    }
+  ]
+}

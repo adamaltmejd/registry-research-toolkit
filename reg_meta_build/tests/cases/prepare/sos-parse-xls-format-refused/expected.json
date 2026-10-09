@@ -1,0 +1,11 @@
+{
+  "reader": "sos_parsed",
+  "replaces": "test_sos_parser.py::test_unsupported_xls_format_wrapped_as_sos_parse_error",
+  "fails_if": "the SOS parser lets openpyxl's InvalidFileException escape for an .xls delivery, so parse-sos reports internal_error instead of its located parse error",
+  "error": {
+    "code": "sos_parse_error",
+    "type": "SosParseError",
+    "locator": "Metadata Test (TST)_webb.xls",
+    "message_contains": ["does not support this file format"]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "reader": "scb_values",
+  "replaces": "test_scb_value_records.py::test_normalized_payloads_keep_missing_distinct_from_supplied_empty",
+  "fails_if": "the SCB value reader reads an undelivered code, label, version, level or validity date as a delivered empty one (or the reverse), or drops the blank-code row 6 from the prepared associations",
+  "note": "Row 6 delivers a blank code, which is missing data and never a member (maintainer decision 2026-10-09); binding states no member for it, but preparation keeps it as evidence: the Vardemangder association count must still equal the snapshot's. Row 5's undelivered code stays a missing code. Both are pinned at the build boundary, cases/build/value-code-lists-withhold-only-contested-or-unknown-periods (BLANK, LBLANK, NOCELLS).",
+  "projections": [
+    {
+      "of": "associations",
+      "rows": [
+        {
+          "value": {
+            "code": null,
+            "label": null
+          },
+          "descriptor": {
+            "version": null
+          }
+        },
+        {
+          "value": {
+            "code": "",
+            "label": ""
+          },
+          "descriptor": {
+            "version": ""
+          }
+        }
+      ]
+    },
+    {
+      "of": "validity",
+      "rows": [
+        {
+          "valid_from": null
+        },
+        {
+          "valid_from": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_declarations.py::test_non_code_list_sheets_keep_evidence_without_binding_targets",
+  "fails_if": "the SOS reader prepares a recode or derivation sheet named Kodlista_ as a code list, drops its declaration, or drops its delivered row from the sheet evidence",
+  "projections": [
+    {
+      "of": "descriptors",
+      "note": "Only the real code list is a binding target.",
+      "rows": [{"key": "sheet:Kodlista_HDIA"}]
+    },
+    {
+      "of": "declarations",
+      "rows": [
+        {"locator": {"physical_table": "Kodlista_famsit"}},
+        {"locator": {"physical_table": "Kodlista_förlossningssätt"}},
+        {"locator": {"physical_table": "Kodlista_msga_mlga"}}
+      ]
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Kodlista_famsit"},
+      "rows": [
+        {
+          "rows": [
+            {"$any": true},
+            {
+              "cells": [
+                {"raw_value": "HDIA"},
+                {"raw_value": "1990/91-1994"},
+                {"raw_value": "02"},
+                {"raw_value": "3"},
+                {"raw_value": "Recoding"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Kodlista_förlossningssätt"},
+      "rows": [
+        {
+          "rows": [
+            {"$any": true},
+            {
+              "cells": [
+                {"raw_value": "HDIA"},
+                {"raw_value": "1973-"},
+                {"raw_value": "Delivery mode"},
+                {"raw_value": "A"},
+                {"raw_value": "B"},
+                {"raw_value": "C"},
+                {"raw_value": "D"},
+                {"raw_value": "E"},
+                {"raw_value": "F"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "where": {"name": "Kodlista_msga_mlga"},
+      "rows": [
+        {
+          "rows": [
+            {"$any": true},
+            {
+              "cells": [
+                {"raw_value": "HDIA"},
+                {"raw_value": "1973-"},
+                {"raw_value": "Growth"},
+                {"raw_value": "A"},
+                {"raw_value": "A > 0"},
+                {"raw_value": "A * 2"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

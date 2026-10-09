@@ -1,0 +1,38 @@
+{
+  "description": "sos-source (Kodlista_HDIA kept) plus three Kodlista_ sheets that are not code lists: a recode sheet (Kodlista_famsit), a delivery-mode derivation over ICD and procedure-code columns (Kodlista_förlossningssätt) and a growth-limit algorithm (Kodlista_msga_mlga), one HDIA row each.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "sheets": {
+      "Kodlista_famsit": [
+        ["Variabelnamn", "Tidsperiod", "Indata Kod", "Kodat till", "Beskrivning"],
+        ["HDIA", "1990/91-1994", "02", "3", "Recoding"]
+      ],
+      "Kodlista_förlossningssätt": [
+        [
+          "Variabelnamn",
+          "Tidsperiod",
+          "Beskrivning",
+          "Variabler",
+          "ICD 8",
+          "ICD 9",
+          "ICD 10",
+          "Åtgärdskoder 1963-1996",
+          "Åtgärdskoder 1997-"
+        ],
+        ["HDIA", "1973-", "Delivery mode", "A", "B", "C", "D", "E", "F"]
+      ],
+      "Kodlista_msga_mlga": [
+        [
+          "Variabelnamn",
+          "Tidsperiod",
+          "Beskrivning",
+          "Variabler",
+          "Villkor",
+          "Algoritm"
+        ],
+        ["HDIA", "1973-", "Growth", "A", "A > 0", "A * 2"]
+      ]
+    }
+  }
+}

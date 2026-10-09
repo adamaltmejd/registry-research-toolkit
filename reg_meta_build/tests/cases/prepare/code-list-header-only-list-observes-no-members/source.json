@@ -1,0 +1,6 @@
+{
+  "description": "A code list of only its header.",
+  "files": {
+    "classifications/codes.csv": "code,label\n"
+  }
+}

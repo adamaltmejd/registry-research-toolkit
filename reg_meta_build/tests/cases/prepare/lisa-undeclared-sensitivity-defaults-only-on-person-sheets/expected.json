@@ -1,0 +1,32 @@
+{
+  "reader": "lisa_workbook",
+  "replaces": "test_lisa.py::test_lisa_undeclared_sensitivity_defaults_only_for_person_tables",
+  "fails_if": "the LISA reader leaves an undeclared sensitivity unknown (or false) on a person sheet, or extends the person-sheet default to the Företag or Arbetsställe sheets",
+  "note": "Disclosure guard: person-level variables without a declaration are read as sensitive. The expected field is the old value_field(True): no delivered text, so the raw value is the default itself.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"fields": {"column_name": {"value": "AmPolTyp"}}},
+      "rows": [{"fields": {"sensitivity": {"$exact": {"status": "value", "value": true, "raw_value": true}}}}]
+    },
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_table": "Individ årsoberoende"}]},
+      "rows": [
+        {"fields": {"sensitivity": {"$exact": {"status": "value", "value": true, "raw_value": true}}}},
+        {"fields": {"sensitivity": {"$exact": {"status": "value", "value": true, "raw_value": true}}}},
+        {"fields": {"sensitivity": {"$exact": {"status": "value", "value": true, "raw_value": true}}}}
+      ]
+    },
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_table": "Företag"}]},
+      "rows": [{"fields": {"column_name": {"value": "ForetagKod"}, "sensitivity": null}}]
+    },
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_table": "Arbetsställe"}]},
+      "rows": [{"fields": {"column_name": {"value": "Ast_LoneSum"}, "sensitivity": null}}]
+    }
+  ]
+}

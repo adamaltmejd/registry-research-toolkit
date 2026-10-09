@@ -1,0 +1,41 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_declarations.py::test_crosswalk_retains_explicit_recode_direction_and_literal_period",
+  "fails_if": "the SOS reader folds a repeated crosswalk row, loses which operand is the input and which the output, reads the period text 1990/91-1994 as anything but its literal, drops the number type of the delivered output code, or prepares a recode sheet as a code list",
+  "note": "The declaration's revision is the workbook's own, as prepare declares it (README: dataset is the bundle path, upstream revision fixture).",
+  "projections": [
+    {
+      "of": "declarations",
+      "rows": [
+        {
+          "kind": "code_crosswalk",
+          "member_name": {"value": "FAMSIT"},
+          "supplied_period": {"value": "1990/91-1994"},
+          "section_period": null,
+          "operands": [
+            {
+              "role": "input",
+              "name": "Indata Kod",
+              "code": {"value": "02", "raw_value": "02"}
+            },
+            {
+              "role": "output",
+              "name": "Kodat till",
+              "code": {"value": "3", "raw_value": 3}
+            }
+          ],
+          "description": {"value": "Annan familjesituation"},
+          "locator": {"physical_record": "row:2"},
+          "delivered_cells": {"$length": 5},
+          "revision": {
+            "dataset": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+            "upstream_revision": "fixture"
+          }
+        },
+        {"kind": "code_crosswalk", "locator": {"physical_record": "row:3"}}
+      ]
+    },
+    {"of": "values", "rows": []},
+    {"of": "associations", "rows": []}
+  ]
+}

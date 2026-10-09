@@ -1,0 +1,10 @@
+{
+  "reader": "scb_column_types",
+  "replaces": "test_scb_reference_records.py::test_sql_cannot_silently_skip_unsupported_syntax[[A] [int] [B] [int]--]",
+  "fails_if": "the SQL column-type reader accepts two column definitions that no comma separates",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "ScbReferenceSourceError",
+    "locator": "unsupported SQL column syntax in 'Delivery'"
+  }
+}

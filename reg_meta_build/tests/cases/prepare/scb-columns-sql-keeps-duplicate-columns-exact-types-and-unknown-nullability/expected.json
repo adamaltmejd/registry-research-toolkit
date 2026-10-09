@@ -1,0 +1,86 @@
+{
+  "reader": "scb_column_types",
+  "replaces": "test_scb_reference_records.py::test_sql_retains_comments_duplicate_columns_exact_types_and_unspecified_nullability",
+  "fails_if": "the SQL column-type reader reads a CREATE TABLE inside a comment, merges or drops a repeated column, rewrites a declared type, loses a width's raw zero-padded text, reads an undeclared nullability or width as a value, or locates a column by anything but its character span in the delivered text",
+  "note": "The first column's span is characters 100:130 of the file: the comment is 68 characters and `CREATE TABLE [dbo].[Delivery](` plus CRLF is 32, and `[Kod] [varchar](0040) NOT NULL` is 30. The document row's one cell is the whole file text.",
+  "projections": [
+    {
+      "of": "declarations",
+      "rows": [
+        {
+          "table_name": {
+            "value": "Delivery"
+          },
+          "column_name": {
+            "value": "Kod"
+          },
+          "data_type": {
+            "value": "varchar"
+          },
+          "declared_width": {
+            "value": 40,
+            "raw_value": "0040"
+          },
+          "nullable": {
+            "value": false
+          },
+          "locator": {
+            "physical_record": "chars:100:130"
+          }
+        },
+        {
+          "table_name": {
+            "value": "Delivery"
+          },
+          "column_name": {
+            "value": "Kod"
+          },
+          "data_type": {
+            "value": "varchar"
+          },
+          "nullable": {
+            "value": true
+          }
+        },
+        {
+          "column_name": {
+            "value": "År"
+          },
+          "data_type": {
+            "value": "smallint"
+          },
+          "declared_width": {
+            "status": "unknown"
+          },
+          "nullable": {
+            "status": "unknown"
+          },
+          "delivered_cells": {
+            "$last": {
+              "name": "nullable",
+              "present": false
+            }
+          }
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "rows": [
+        {
+          "rows": [
+            {
+              "cells": [
+                {
+                  "raw_value": {
+                    "$exact": "/* Comment: CREATE TABLE [dbo].[Ignore]([X] [int]) ON [PRIMARY] */\r\nCREATE TABLE [dbo].[Delivery](\r\n[Kod] [varchar](0040) NOT NULL,\r\n[Kod] [varchar](0040) NULL,\r\n[År] [smallint]\r\n) ON [PRIMARY]\r\nGO\r\n"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

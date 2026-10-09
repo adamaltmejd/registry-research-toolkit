@@ -1,0 +1,21 @@
+{
+  "note": "A Tal descriptor that also lists a delivered blank code. The blank row is no member (maintainer decision 2026-10-09: a delivered blank code is missing data), so the descriptor is still a complete recognized marker. The documented certificate keeps its marker binding and publishes the enumerated 2020 codes.",
+  "fails_if": "`bind_occurrence_code_lists` (source_value_bindings.py) counts the skipped blank row in `ValueListBinding.association_count`, so `marker_binding_fingerprints` sees more associations than marker rows and certifies nothing: the certificate's `marker_bindings` placeholder cannot be rendered and the documented coding goes stale",
+  "sources": {
+    "description": "VALUE defined by a numbered enumeration in 2020 (member 1001), whose Tal descriptor lists the Tal marker row and a delivered blank code labelled 'Uppgift saknas'.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "vardef": "\"Which amount?\n1. Less than 500\n2. At least 500\""
+        }
+      ],
+      "vardemangder": [
+        "Tal|Tal|Tal|Some descriptionSCB\\SCBLEOT|1001|5900",
+        "Tal|Tal|\"\"|Uppgift saknas|1001|5901"
+      ]
+    }
+  }
+}

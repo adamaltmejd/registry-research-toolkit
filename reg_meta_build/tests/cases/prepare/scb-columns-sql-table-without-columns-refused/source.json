@@ -1,0 +1,9 @@
+{
+  "description": "Tabelldefinitioner.sql (cp1252) with a CREATE TABLE with an empty column list.",
+  "files": {
+    "SCB/Tabelldefinitioner.sql": {
+      "text": "CREATE TABLE [dbo].[Delivery](\r\n\r\n) ON [PRIMARY]\r\nGO\r\n",
+      "encoding": "cp1252"
+    }
+  }
+}

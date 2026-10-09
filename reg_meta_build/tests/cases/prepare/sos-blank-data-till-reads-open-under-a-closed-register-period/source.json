@@ -1,0 +1,39 @@
+{
+  "description": "sos-source with a closed register period (DCAT-AP Tidsperiod 2005-07-01-2024-12-31) and a Deldatamängder sheet: PAR_OV open (2005, blank end), PAR_SV closed (2005-2020). PARTIELL (row 6, PAR_OV) and the appended PARTIELL_SV (row 9, PAR_SV) each start 2010 with a blank end.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "sheets": {
+      "Metadata-Datamängd (DCAT-AP)": [
+        ["Attribut", "Definition", "Svenska", "Engelska"],
+        [
+          "Tidsperiod",
+          "Tidsmässig täckning",
+          "2005-07-01-2024-12-31",
+          "2005-07-01-2024-12-31"
+        ]
+      ],
+      "Deldatamängder": [
+        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"],
+        ["PAR_OV", "Öppenvård", 2005, null],
+        ["PAR_SV", "Slutenvård", 2005, 2020]
+      ],
+      "Metadata - Variabelnivå": [
+        [
+          "PAR_SV",
+          "PARTIELL_SV",
+          "Partiell_Sv",
+          null,
+          null,
+          null,
+          "Heltal",
+          2010,
+          null,
+          null,
+          null,
+          null
+        ]
+      ]
+    }
+  }
+}

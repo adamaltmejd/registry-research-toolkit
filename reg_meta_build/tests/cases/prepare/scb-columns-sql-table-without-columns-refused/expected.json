@@ -1,0 +1,10 @@
+{
+  "reader": "scb_column_types",
+  "replaces": "test_scb_reference_records.py::test_sql_cannot_silently_skip_unsupported_syntax[--]",
+  "fails_if": "the SQL column-type reader accepts a table that declares no columns",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "ScbReferenceSourceError",
+    "locator": "SQL table 'Delivery' declares no columns"
+  }
+}

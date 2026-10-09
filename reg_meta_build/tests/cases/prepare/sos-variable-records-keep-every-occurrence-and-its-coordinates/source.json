@@ -1,0 +1,7 @@
+{
+  "description": "The sos-source workbook as written. Variabelnivå rows: 2 HDIA; 3 the same row again; 4 HDIA with the label 'Annan etikett'; 5 HDIA with Data från stored as the text '2001'; 6 PARTIELL with a blank Data till; 7 MALFORMED with Data från '+2001'; 8 UTAN_DEL with no Deldatamängdsnamn and no years.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source"
+  }
+}

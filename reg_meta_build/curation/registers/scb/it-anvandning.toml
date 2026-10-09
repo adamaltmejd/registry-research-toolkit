@@ -8334,12 +8334,12 @@ variant = "258.557"
 column = "DatA1"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatA1"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [126]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15892.tillgang-internet-hemma"
@@ -8347,12 +8347,12 @@ variant = "258.557"
 column = "DatA2"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatA2"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [126, 127]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15893.internet-stationar-dator"
@@ -8360,12 +8360,12 @@ variant = "258.557"
 column = "DatA3A"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatA3A"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [99]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15894.internet-via-barbar-dator"
@@ -8373,12 +8373,12 @@ variant = "258.557"
 column = "DatA3B"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatA3B"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [97]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15900.anslutning-modem-isdn"
@@ -8386,12 +8386,12 @@ variant = "258.557"
 column = "DatA4A"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatA4A"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [102, 103]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15903.anslutning-gsm"
@@ -8399,12 +8399,12 @@ variant = "258.557"
 column = "DatA4D"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatA4D"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [102]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15912"
@@ -8412,12 +8412,12 @@ variant = "258.557"
 column = "DatB3B"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatB3B"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [31, 32]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15916"
@@ -8425,12 +8425,12 @@ variant = "258.557"
 column = "DatB3E"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatB3E"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [31]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15920.anvant-internet-hemma"
@@ -8438,12 +8438,12 @@ variant = "258.557"
 column = "DatC3A"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC3A"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [51]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15921.anvant-internet-pa-arbetsplats"
@@ -8451,12 +8451,12 @@ variant = "258.557"
 column = "DatC3B"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC3B"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [58]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15944.anvant-internet-annans-hem"
@@ -8464,12 +8464,12 @@ variant = "258.557"
 column = "DatC3D"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC3D"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [52]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15945.anvant-internet-hos-myndighet"
@@ -8477,12 +8477,12 @@ variant = "258.557"
 column = "DatC3E3"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC3E3"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [51, 52]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15947.anvant-internet-pa-internetcafe"
@@ -8490,12 +8490,12 @@ variant = "258.557"
 column = "DatC3E5"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC3E5"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [59, 60]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15948.anvant-internet-pa-hotspot"
@@ -8503,12 +8503,12 @@ variant = "258.557"
 column = "DatC3E6"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC3E6"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [58, 59]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15953.internet-barbar-tradlost"
@@ -8516,12 +8516,12 @@ variant = "258.557"
 column = "DatC4D"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC4D"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [26, 27]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15955.anvant-internet-for-e-post"
@@ -8529,12 +8529,12 @@ variant = "258.557"
 column = "DatC5A"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC5A"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [47]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15958.anvant-internet-sokvaror"
@@ -8542,12 +8542,12 @@ variant = "258.557"
 column = "DatC5D"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC5D"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [45, 46]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15959.anvant-internet-resor"
@@ -8555,12 +8555,12 @@ variant = "258.557"
 column = "DatC5E"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC5E"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [49, 50]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15962.anvant-nedladdning-programvara"
@@ -8568,12 +8568,12 @@ variant = "258.557"
 column = "DatC5H"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC5H"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [38]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15969.anvant-internet-salja-varor"
@@ -8581,12 +8581,12 @@ variant = "258.557"
 column = "DatC5N"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatC5N"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [43, 44]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.15998.nar-handlade-du-senast-via-internet"
@@ -8607,12 +8607,12 @@ variant = "258.557"
 column = "DatD2A"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatD2A"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [110]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.documented]]
 variable = "258.16011.kopt-nedladdad-film-musik"
@@ -8620,12 +8620,12 @@ variant = "258.557"
 column = "DatD3A"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "SCB IT-användning 2007: DatD3A"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [112, 113]
 reason = "Restore independently documented 2007 response membership on this exact native question only. Adjacent-year donor lists are not equivalent."
-source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Dictionary name says film eller musik; source name says film, musik; same full D3a operational question. Documented blank means inte tillfrågad; authored code is the empty string, never literal blank/blankt, zero, dot or NULL."
+source = "SCB IT0102_DO_2007, official 2007 variable dictionary. Exact source-name/definition match; literal memberships transcribed from its Värdemängd. Original raw source fields and periods retained. Dictionary name says film eller musik; source name says film, musik; same full D3a operational question. The documented blank (inte tillfrågad) is missing data, not a member."
 
 [[coding.uncoded]]
 variable = "258.241"
@@ -8933,12 +8933,12 @@ variant = "258.557"
 column = "DatC5M"
 periods = [["2007-01-01", "2007-12-31"]]
 version_label = "Använt Internetbank 2007"
-members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"], ["", "inte tillfrågad"]]
+members = [["1", "ja"], ["2", "nej"], ["8", "vet inte"], ["9", "inte svarat"]]
 document_url = "https://www.scb.se/contentassets/e990c2fbd1e14545804150efd6208bb9/it0102_do_2007.pdf"
 document_sha256 = "7e410cbc64a74760308fedb2d140d8c368ed0a62079084aed1286f711347bbc8"
 document_pages = [60, 61]
 reason = "Restore the complete stored2007 online-banking response domain from the exact-wave variable dictionary; preserve every original and subsequent response list."
-source = "SCB IT0102 SCBDOK2007 dictionary pages60–61: Använt Internetbank explicitly identifies questionC5m and private internet banking during the last three months. Supplied native15968 definition identifies private online banking during the same three months, physical2007DatC5M, and the approved IT75 native-question identity retains this alias. The dictionary supplies stored codes1/2/8/9 and empty=inte tillfrågad, including missing/filter categories; transcribe them literally. This is neither a generic binary-code assumption nor an extension of a later list; all later code/label changes and original associations remain unchanged."
+source = "SCB IT0102 SCBDOK2007 dictionary pages60–61: Använt Internetbank explicitly identifies questionC5m and private internet banking during the last three months. Supplied native15968 definition identifies private online banking during the same three months, physical2007DatC5M, and the approved IT75 native-question identity retains this alias. The dictionary supplies stored codes1/2/8/9, including missing/filter categories; transcribe them literally. Its empty=inte tillfrågad is missing data, not a member. This is neither a generic binary-code assumption nor an extension of a later list; all later code/label changes and original associations remain unchanged."
 
 [[coding.extend]]
 data_warning = "The SNI2007 code domain is assumed stable across years declaring SNI2007; historical storage width and missing-code encoding are not independently verified."

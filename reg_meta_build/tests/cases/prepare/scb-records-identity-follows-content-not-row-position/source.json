@@ -1,0 +1,13 @@
+{
+  "description": "One Registerinformation member row (Datalängd 10) delivered twice, then the same row with Datalängd 11, with another population, with another Registersyfte, and with another native variable for the same member (CVID).",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "10"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "10"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "11"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "10", "population_name": "Another population"},
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "data_length": "10", "cells": {"Registersyfte": "Another purpose"}},
+      {"cvid": 1001, "var_id": 102, "colname": "VALUE", "data_length": "10"}
+    ]
+  }
+}

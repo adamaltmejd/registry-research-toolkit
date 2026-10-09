@@ -1,0 +1,11 @@
+{
+  "reader": "scb_auxiliary",
+  "args": {"file": "Identifierare.csv"},
+  "replaces": "test_scb_auxiliary_records.py::test_bad_identifier_has_actionable_source_coordinate",
+  "fails_if": "the SCB identifier reader skips or keeps a declaration whose VarID is not a native id, or refuses it without naming the file, row and field",
+  "error": {
+    "code": "scb_native_id_invalid",
+    "type": "RegMetaError",
+    "locator": "Identifierare.csv at row 2, field VarID"
+  }
+}

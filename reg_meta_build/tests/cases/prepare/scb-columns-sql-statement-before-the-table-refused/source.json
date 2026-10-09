@@ -1,0 +1,9 @@
+{
+  "description": "Tabelldefinitioner.sql (cp1252) with a DROP TABLE statement before the CREATE TABLE.",
+  "files": {
+    "SCB/Tabelldefinitioner.sql": {
+      "text": "DROP TABLE [Other];\nCREATE TABLE [dbo].[Delivery](\r\n[A] [int]\r\n) ON [PRIMARY]\r\nGO\r\n",
+      "encoding": "cp1252"
+    }
+  }
+}

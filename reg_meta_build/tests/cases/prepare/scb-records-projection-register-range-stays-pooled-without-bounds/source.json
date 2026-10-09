@@ -1,0 +1,8 @@
+{
+  "description": "A member of the forecast register Befolkningsframskrivningar (register id 310) whose edition is named by its projection range `2024-2070`.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "versionname": "2024-2070", "register": ["Befolkningsframskrivningar", 310, 10]}
+    ]
+  }
+}

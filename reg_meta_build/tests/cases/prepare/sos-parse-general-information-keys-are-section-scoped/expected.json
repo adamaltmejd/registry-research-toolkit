@@ -1,0 +1,22 @@
+{
+  "reader": "sos_parsed",
+  "replaces": [
+    "test_sos_parser.py::test_synthetic_generell_fields",
+    "test_sos_parser.py::test_general_information_dates_read_calendar_cells_only"
+  ],
+  "fails_if": "the SOS parser reads a Generell information label without its section (a dataset Version as the template version, or the reverse), parses a text date as a date, or drops an unmapped key-value row",
+  "note": "Version and Datum each appear in both sections, so only the section tells the template's from the dataset's. The template Datum is text that looks like a date and stays unparsed. Values from the replaced tests.",
+  "projections": [
+    {"of": "", "where": {"key": "template_version"}, "rows": [{"key": "template_version", "value": "2.1"}]},
+    {"of": "", "where": {"key": "template_date"}, "rows": [{"key": "template_date", "value": null}]},
+    {"of": "", "where": {"key": "dataset_name"}, "rows": [{"key": "dataset_name", "value": "Patientregistret-syntet"}]},
+    {"of": "", "where": {"key": "dataset_version"}, "rows": [{"key": "dataset_version", "value": "2024:2"}]},
+    {"of": "", "where": {"key": "dataset_date"}, "rows": [{"key": "dataset_date", "value": "2026-03-26"}]},
+    {
+      "of": "source_sheets",
+      "where": {"kind": "general"},
+      "note": "The unmapped E-post row stays as delivered evidence.",
+      "rows": [{"rows": {"$once": [{"source_evidence": {"cells": {"$contains": [{"raw_value": "kontakt@example.se"}]}}}]}}]
+    }
+  ]
+}
