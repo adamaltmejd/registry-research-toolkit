@@ -1404,10 +1404,11 @@ provably exists but was not selected, known without forming it: the unselected s
 files' naming declares those registers, variants and variables (a naming-ambiguity name
 is a declared variable whose ownership is unresolved, which the complete build withholds
 with a cause), and the prepared store holds their observed register names and native
-IDs. A representation or state is proven as far as its declared variable and variant;
-the complete build checks its column and period. Such a reference (a `same_as` or
-succession edge, a group or tag member, a code/label pair, a source event or a source
-label) is withheld as one warning code, `deferred_out_of_slice_reference`;
+IDs. Only a register, variant or variable reference is deferred: compile keeps a group
+member in its group's register and a representation succession within one register, so
+an entry naming a representation outside the slice is skipped whole. Such a reference (a
+`same_as` or succession edge, a group or tag member, a code/label pair, a source event
+or a source label) is withheld as one warning code, `deferred_out_of_slice_reference`;
 `deferred_references` counts distinct references. A target no scope declares, including
 an undeclared variable in an existing unselected register, stays the complete build's
 error, and a source label matching no known register stays a literal label. Source
