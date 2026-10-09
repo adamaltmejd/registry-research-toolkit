@@ -19,5 +19,19 @@
         "2019-12-31"
       ]
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/delivery_column_name": [
+        "Valuetwo"
+      ],
+      "/data/items/*/valid_from": [
+        "2018-01-01"
+      ],
+      "/data/items/*/valid_to": [
+        "2018-12-31"
+      ]
+    }
   }
 ]

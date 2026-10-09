@@ -5,14 +5,13 @@
 import { vi } from "vitest";
 import { render } from "vitest-browser-svelte";
 import type {
-  ConceptGroupNodeData,
+  ConceptGroupShow,
   GraphState,
   RelationshipGraph,
-  StatesResponse,
   VariableGraphNode,
   VariableStateModel,
 } from "./api";
-import { getCatalogNode } from "./api";
+import { getStates } from "./api";
 import ConceptGroupView from "./ConceptGroupView.svelte";
 
 export const SEED = { regMetaVersion: "1.0.0", steward: "global" } as const;
@@ -30,6 +29,8 @@ export function gstate(over: Partial<GraphState>): GraphState {
     value_set_id: null,
     valid_from: "2010-01-01",
     valid_to: "2015-12-31",
+    variant_family: null,
+    variant_family_label: null,
     classification_slugs: [],
     ...over,
   };
@@ -68,18 +69,22 @@ export function graph(nodes: VariableGraphNode[]): RelationshipGraph {
   return { nodes, edges: [], focus_id: null };
 }
 
+/** A `concept_group` show node; `register` is the register FQID and `fqid` the
+ * group ref derived from it and `key` unless overridden. */
 export function node(
-  overrides: Partial<ConceptGroupNodeData> = {},
-): ConceptGroupNodeData {
+  overrides: Partial<ConceptGroupShow> = {},
+): ConceptGroupShow {
+  const register = overrides.register ?? "scb/rams";
+  const key = overrides.key ?? "ink";
   return {
-    kind: "concept-group",
-    provider: "scb",
-    register: "rams",
-    key: "ink",
+    kind: "concept_group",
+    fqid: `group/${register}/${key}`,
+    register,
+    key,
     label: "Inkomst",
     source: "token",
     axes: [{ name: "month", label: "month" }],
-    member: null,
+    tags: [],
     members: [
       {
         fqid: "scb/rams/inkjan",
@@ -95,7 +100,7 @@ export function node(
       },
     ],
     ...overrides,
-  } as unknown as ConceptGroupNodeData;
+  };
 }
 
 export function vstate(over: Partial<VariableStateModel>): VariableStateModel {
@@ -103,11 +108,20 @@ export function vstate(over: Partial<VariableStateModel>): VariableStateModel {
     warning_ids: [],
     state_id: "1",
     period_scope: "intervals",
+    period_token: null,
     variant: "individer",
     variant_label: null,
+    variant_family: null,
+    variant_family_label: null,
     register_variant_id: "1",
     valid_from: "2010-01-01",
     valid_to: "2015-12-31",
+    coding_window_from: null,
+    name: null,
+    definition: null,
+    description: null,
+    operational_definition: null,
+    measurement_unit: null,
     data_type: "int",
     data_length: null,
     delivery_column_name: null,
@@ -117,31 +131,28 @@ export function vstate(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,
+    value_set_summary: null,
     is_identifier: false,
     classifications: [],
     ...over,
   };
 }
 
-export function statesResponse(states: VariableStateModel[]): StatesResponse {
-  return { states } as unknown as StatesResponse;
-}
-
+/** The `states` facet a staged add resolves each picked member through: one
+ * state per listed delivery column, in the requested variant. */
 export function mockResolveColumns(
   columnsByFqid: Record<string, readonly string[]>,
 ): void {
-  vi.mocked(getCatalogNode).mockImplementation(async (fqid, params) => {
+  vi.mocked(getStates).mockImplementation(async (fqid, params) => {
     const columns = columnsByFqid[fqid] ?? [];
     const variant =
       typeof params?.variant === "string" ? params.variant : "individer";
-    return statesResponse(
-      columns.map((column, index) =>
-        vstate({
-          state_id: String(index + 1),
-          variant,
-          delivery_column_name: column,
-        }),
-      ),
+    return columns.map((column, index) =>
+      vstate({
+        state_id: String(index + 1),
+        variant,
+        delivery_column_name: column,
+      }),
     );
   });
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { type BindingNodeData, getDocsForVariable } from "./api";
+import { getDocsForVariable, type VariableShow } from "./api";
 import { asyncResource } from "./async.svelte";
 import { fqidSegments, showingOf } from "./catalog";
 import { parseInlineMarkdown } from "./inline_markdown";
@@ -18,7 +18,7 @@ import { parseInlineMarkdown } from "./inline_markdown";
 // is omitted when there's nothing usable to show — no docs index, no docs for
 // this register, or zero hits — but NOT while still loading or on error (we never
 // hide a section whose state is unknown, which would read as a confirmed absence).
-let { node }: { node: BindingNodeData } = $props();
+let { node }: { node: VariableShow } = $props();
 
 // The register FQID = the first two FQID segments (`scb/lisa/kon` → `scb/lisa`).
 const register = $derived(fqidSegments(node.fqid).slice(0, 2).join("/"));

@@ -29,6 +29,8 @@ function state(over: Partial<GraphState> = {}): GraphState {
     value_set_version_label: "",
     classification_slugs: [],
     delivery_column_name: "Col",
+    variant_family: null,
+    variant_family_label: null,
     ...over,
   };
 }

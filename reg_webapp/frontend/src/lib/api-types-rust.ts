@@ -244,6 +244,75 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/project/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description The order manifest of a `project_data.json` document (the JSON body; the `project` argument over MCP): per source and binding, each table and column that delivers it, clipped to where the binding is available (each clip listed), from the steward's holdings on a steward catalog and by canonical column on the global catalog. A project `validate` rejects structurally is `project_invalid`; any finding that leaves part of the request undeliverable blocks the whole order (`order_blocked`, with every finding). POST /api/project/order/manifest serves the same manifest as the exact `order.json` bytes. */
+        post: operations["order"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/order/manifest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description `order`'s manifest as the exact `order.json` bytes, an attachment. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            responses: {
+                /** @description The raw bytes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": unknown;
+                    };
+                };
+                /** @description An error in `api/errors.toml` */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: components["schemas"]["Error"];
+                            meta: components["schemas"]["Meta"];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/project/validate": {
         parameters: {
             query?: never;
@@ -405,6 +474,32 @@ export interface components {
             name?: string | null;
             short_name?: string | null;
         };
+        /** @description One code of a classification edition: today's `ClassificationCode`. */
+        ClassificationCode: {
+            code: string;
+            /** @description True for a canonical code, null when no canonical list exists. */
+            is_valid?: boolean | null;
+            label: string;
+            /**
+             * Format: int64
+             * @description The hierarchy depth; null when the classification is flat.
+             */
+            level?: number | null;
+        };
+        /**
+         * @description A delivered pair outside its declared book: today's
+         *     `ClassificationExtensionMember`.
+         */
+        ClassificationExtensionMember: {
+            code: string;
+            label: string;
+            /** @description `nonstandard` or `sentinel`. */
+            member_kind: string;
+            /** @description The certificates that make a source-local code a sentinel. */
+            scoped_sentinels: components["schemas"]["ScopedSentinel"][];
+            /** @description The book's curated meaning of a sentinel code. */
+            sentinel_meaning?: string | null;
+        };
         /** @description A curated group of classifications. */
         ClassificationGroup: {
             axes: components["schemas"]["Axis"][];
@@ -438,6 +533,16 @@ export interface components {
             fqid: string;
             groups: components["schemas"]["Group"][];
             name: string;
+        };
+        /**
+         * @description An availability clip: the binding asked for `requested_period` and is ordered
+         *     for `ordered_period`, where it is available.
+         */
+        ClipReport: {
+            ordered_period: string;
+            requested_period: string;
+            source: string;
+            variable: string;
         };
         CodeClassification: {
             fqid?: string | null;
@@ -550,7 +655,7 @@ export interface components {
          */
         Delivery: {
             column?: string | null;
-            coverage: components["schemas"]["Coverage"];
+            coverage: components["schemas"]["ShowCoverage"];
             /** @description `intervals`, or `year_independent` (no windows). */
             period_scope: string;
             variant: string;
@@ -773,6 +878,16 @@ export interface components {
             message: string;
             warning_kind: string;
         };
+        /** @description The project-side coordinate of an entry. */
+        LogicalCoordinate: {
+            provider: string;
+            register: string;
+            /** @description The canonical delivery column the slice resolved to. */
+            representation: string;
+            /** @description The binding's variable FQID. */
+            variable: string;
+            variant: string;
+        };
         Match: {
             fqid?: string | null;
             /**
@@ -790,7 +905,7 @@ export interface components {
         };
         /** @description A group member; two members of one variable differ by `delivery_column`. */
         Member: {
-            coverage?: components["schemas"]["Coverage"] | null;
+            coverage?: components["schemas"]["ShowCoverage"] | null;
             delivery_column?: string | null;
             facets: components["schemas"]["Facet"][];
             fqid: string;
@@ -813,6 +928,55 @@ export interface components {
             definition?: string | null;
             name: string;
         };
+        /** @description One resolved binding: what was asked for and what the steward delivers. */
+        OrderEntry: {
+            logical: components["schemas"]["LogicalCoordinate"];
+            physical: components["schemas"]["PhysicalCoordinate"];
+            /** @description The availability-clipped period this table serves. */
+            requested_period: string;
+            /** @description The project source's name. */
+            source: string;
+        };
+        /**
+         * @description The order manifest: machine-written here, machine-read by the steward-side
+         *     extract system, never hand-edited.
+         */
+        OrderManifest: {
+            /** @description Every availability clip, also when nothing blocked. */
+            clips: components["schemas"]["ClipReport"][];
+            /**
+             * @description One per resolved logical-to-physical binding, per source and binding in
+             *     declaration order, then by table, edition and column.
+             */
+            entries: components["schemas"]["OrderEntry"][];
+            provenance: components["schemas"]["OrderProvenance"];
+            /**
+             * Format: int32
+             * @description The manifest contract version, 1.
+             */
+            version: number;
+        };
+        /**
+         * @description Which project, against which catalog, for which deployment: the manifest is
+         *     self-contained offline.
+         */
+        OrderProvenance: {
+            /** @description `catalog` or `steward`. */
+            artifact_kind: string;
+            catalog_generation_id: string;
+            catalog_schema_version: string;
+            /**
+             * @description `steward_holdings` (a steward's compiled holdings grounded the entries) or
+             *     `global_fallback` (canonical resolution alone, blank `table`).
+             */
+            mode: string;
+            /** @description SHA-256 of the project's canonical JSON. */
+            project_hash: string;
+            project_name: string;
+            project_reg_meta_version: string;
+            project_schema_version: string;
+            steward: string;
+        };
         OwningVariable: {
             fqid?: string | null;
             name?: string | null;
@@ -826,6 +990,18 @@ export interface components {
             from: number;
             /** Format: int64 */
             to: number;
+        };
+        /**
+         * @description The steward-side coordinate of an entry; in the global fallback `table` is
+         *     blank, `column` the canonical column and `edition` the requested period.
+         */
+        PhysicalCoordinate: {
+            column: string;
+            /** @description The table's edition, rendered as a period. */
+            edition: string;
+            /** @description The table's disjoint-partition label; absent when it has none. */
+            partition?: string | null;
+            table: string;
         };
         Population: {
             comment?: string | null;
@@ -874,7 +1050,7 @@ export interface components {
             variants: components["schemas"]["Variant"][];
         };
         RegisterChild: {
-            coverage?: components["schemas"]["RegisterCoverage"] | null;
+            coverage?: components["schemas"]["ShowRegisterCoverage"] | null;
             fqid: string;
             name?: string | null;
             purpose?: string | null;
@@ -989,6 +1165,19 @@ export interface components {
          * @enum {string}
          */
         Scope: "holdings" | "reference";
+        /**
+         * @description A build-time certificate of a checked, finite source sentinel decision
+         *     (today's `ScopedSentinelEvidence`).
+         */
+        ScopedSentinel: {
+            classification_sha256: string;
+            delivery_column_name: string;
+            members: string[][];
+            provenance: string;
+            source_fingerprints: string[];
+            valid_from?: string | null;
+            valid_to?: string | null;
+        };
         /** @description `shape.SearchHit`. */
         SearchHit: {
             fqid?: string | null;
@@ -1076,6 +1265,26 @@ export interface components {
             /** @enum {string} */
             kind: "classification_family";
         });
+        /**
+         * @description The span a variable or column is delivered over: its earliest start and latest
+         *     finite end (null when unknown, or when `open_ended`), and the states (held
+         *     periods in holdings) behind it.
+         */
+        ShowCoverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            state_count: number;
+        };
+        /** @description A register's span: its variables and the earliest and latest of their states. */
+        ShowRegisterCoverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            variable_count: number;
+        };
         /** @description Browse-addressable (slugged) providers, registers and variables in the scope. */
         Sizes: {
             /** Format: int64 */
@@ -1193,6 +1402,16 @@ export interface components {
             successor_fqid: string | null;
         };
         /**
+         * @description A row of `values`: a classification's code, a state's delivered pair, or a
+         *     delivered pair outside a declared book.
+         */
+        ValueRow: components["schemas"]["ClassificationCode"] | components["schemas"]["ClassificationExtensionMember"] | components["schemas"]["ValueSetMember"];
+        /** @description One delivered (code, label) pair: today's `ValueSetMember`. */
+        ValueSetMember: {
+            code: string;
+            label: string;
+        };
+        /**
          * @description `value_set_summary`: a value set's code count and, when its codes are a dense
          *     integer run, its span.
          */
@@ -1201,7 +1420,7 @@ export interface components {
             integer_range?: components["schemas"]["IntegerRange"] | null;
         };
         ValuesPage: {
-            items: unknown[];
+            items: components["schemas"]["ValueRow"][];
             next_cursor?: string | null;
             /** @description The rows matching `q` in the whole set. */
             total: number;
@@ -1228,7 +1447,7 @@ export interface components {
             tags: components["schemas"]["Tag"][];
         };
         VariableChild: {
-            coverage?: components["schemas"]["Coverage"] | null;
+            coverage?: components["schemas"]["ShowCoverage"] | null;
             /** @description Every `(variant, column)` the variable is delivered under in scope. */
             deliveries: components["schemas"]["Delivery"][];
             fqid: string;
@@ -1722,6 +1941,45 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Lineage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    order: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["OrderManifest"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

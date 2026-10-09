@@ -1,5 +1,5 @@
 // Shared fixtures (axis + variable-state builders) for the split catalog unit tests:
-// catalog.{browse,picker,picker-filters,value-sets}.test.ts.
+// catalog.{browse,picker,picker-filters,resolve,value-sets}.test.ts.
 import type { VariableStateModel } from "./api";
 
 // #819: a group's axis is now `{name, label}`. Tests key on the stable name and
@@ -32,7 +32,15 @@ export function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_summary: null,
     is_identifier: false,
     classifications: [],
-
+    coding_window_from: null,
+    definition: null,
+    description: null,
+    measurement_unit: null,
+    name: null,
+    operational_definition: null,
+    period_token: null,
+    variant_family: null,
+    variant_family_label: null,
     ...over,
   };
 }

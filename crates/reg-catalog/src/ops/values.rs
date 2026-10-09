@@ -80,13 +80,13 @@ pub struct ClassificationCode {
 /// delivered pair outside a declared book.
 #[derive(Serialize, ToSchema)]
 #[serde(untagged)]
-pub enum Value {
+pub enum ValueRow {
     Code(ClassificationCode),
     Extension(ClassificationExtensionMember),
     Member(ValueSetMember),
 }
 
-impl Value {
+impl ValueRow {
     fn code_label(&self) -> (&str, &str) {
         match self {
             Self::Code(c) => (&c.code, &c.label),
@@ -98,7 +98,7 @@ impl Value {
 
 #[derive(Serialize, ToSchema)]
 pub struct ValuesPage {
-    items: Vec<Value>,
+    items: Vec<ValueRow>,
     next_cursor: Option<String>,
     /// The rows matching `q` in the whole set.
     total: usize,
@@ -177,7 +177,7 @@ pub fn values(server: &Server, scope: Scope, params: &Params) -> Result<serde_js
         scope
     ]);
     let context = hex(&Sha256::digest(context.to_string().as_bytes()));
-    let position = |row: &Value| row.code_label().0.to_owned();
+    let position = |row: &ValueRow| row.code_label().0.to_owned();
     let offset = match params.get("cursor") {
         None => 0,
         Some(c) => {
@@ -224,7 +224,7 @@ fn book<'a>(conn: &Connection, scope: Scope, value: &'a str) -> Result<Book<'a>,
     }
 }
 
-fn classification_codes(conn: &Connection, id: i64) -> Result<Vec<Value>, Error> {
+fn classification_codes(conn: &Connection, id: i64) -> Result<Vec<ValueRow>, Error> {
     let mut stmt = conn.prepare_cached(
         "SELECT vc.code, vc.label, cc.level, cc.is_valid FROM classification_code cc \
          JOIN value_code vc ON vc.code_id = cc.code_id WHERE cc.classification_id = ? \
@@ -232,7 +232,7 @@ fn classification_codes(conn: &Connection, id: i64) -> Result<Vec<Value>, Error>
     )?;
     let rows = stmt
         .query_map([id], |row| {
-            Ok(Value::Code(ClassificationCode {
+            Ok(ValueRow::Code(ClassificationCode {
                 code: row.get(0)?,
                 label: row.get(1)?,
                 level: row.get(2)?,
@@ -247,7 +247,7 @@ fn members(
     conn: &Connection,
     value_set_id: i64,
     canonical_in: Option<i64>,
-) -> Result<Vec<Value>, Error> {
+) -> Result<Vec<ValueRow>, Error> {
     // The delivered pairs, or with a book only those whose literal code it holds.
     let mut stmt = conn.prepare_cached(
         "SELECT vc.code, vc.label FROM value_set_member vsm JOIN value_code vc USING(code_id) \
@@ -258,7 +258,7 @@ fn members(
     )?;
     let rows = stmt
         .query_map(params![value_set_id, canonical_in], |row| {
-            Ok(Value::Member(ValueSetMember {
+            Ok(ValueRow::Member(ValueSetMember {
                 code: row.get(0)?,
                 label: row.get(1)?,
             }))
@@ -304,7 +304,7 @@ impl Coding<'_> {
         scope: Scope,
         book: Option<Book>,
         partition: &str,
-    ) -> Result<Vec<Value>, Error> {
+    ) -> Result<Vec<ValueRow>, Error> {
         // simplify: the variable's whole emitted history per request, as `states`
         // reads it (pinned v0.43.0, warm: about 2 ms for skolkod's 94 rows, 3 ms for
         // scb/rtb/kon's 521, the most of any variable); select the one state's rows if
@@ -367,7 +367,7 @@ impl Coding<'_> {
         Ok(extensions
             .into_iter()
             .filter(|m| kind.is_none_or(|k| m.member_kind == k))
-            .map(Value::Extension)
+            .map(ValueRow::Extension)
             .collect())
     }
 

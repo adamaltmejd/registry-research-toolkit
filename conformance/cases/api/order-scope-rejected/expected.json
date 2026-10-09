@@ -1,0 +1,29 @@
+[
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields": {
+        "parameter": "scope"
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields": {
+        "parameter": "scope"
+      }
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields": {
+        "parameter": "scope"
+      }
+    }
+  }
+]

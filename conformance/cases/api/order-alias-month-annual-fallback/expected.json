@@ -1,0 +1,23 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/clips": [],
+      "/data/entries/*/requested_period": [
+        "2018-01,2018-04"
+      ],
+      "/data/entries/*/physical/column": [
+        "LonFinkJan"
+      ],
+      "/data/provenance/mode": "global_fallback"
+    }
+  },
+  {
+    "status": 200,
+    "media_type": "application/json",
+    "headers": {
+      "content-disposition": "attachment; filename=\"order.json\""
+    },
+    "bytes": "order.json"
+  }
+]

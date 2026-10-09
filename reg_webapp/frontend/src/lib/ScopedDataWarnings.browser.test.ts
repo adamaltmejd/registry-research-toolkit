@@ -1,12 +1,12 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import { type DataWarningModel, getDataWarnings } from "./api";
+import { type DataWarningModel, getWarnings } from "./api";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 
 vi.mock("./api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./api")>()),
-  getDataWarnings: vi.fn(),
+  getWarnings: vi.fn(),
 }));
 
 const warning: DataWarningModel = {
@@ -25,11 +25,11 @@ const warning: DataWarningModel = {
 };
 
 beforeEach(() => {
-  vi.mocked(getDataWarnings).mockReset();
+  vi.mocked(getWarnings).mockReset();
 });
 
 it("requests the selected delivery and keeps register warnings separate", async () => {
-  vi.mocked(getDataWarnings).mockResolvedValue([
+  vi.mocked(getWarnings).mockResolvedValue([
     warning,
     {
       ...warning,
@@ -45,7 +45,7 @@ it("requests the selected delivery and keeps register warnings separate", async 
     representation: "KON",
   });
   await expect.element(page.getByText(warning.summary)).toBeVisible();
-  expect(getDataWarnings).toHaveBeenCalledWith("scb/lisa/kon", {
+  expect(getWarnings).toHaveBeenCalledWith("scb/lisa/kon", {
     period: "2020",
     variant: "personer",
     representation: "KON",
@@ -57,7 +57,7 @@ it("requests the selected delivery and keeps register warnings separate", async 
 });
 
 it("shows register limitations without duplicating individual variable warnings", async () => {
-  vi.mocked(getDataWarnings).mockResolvedValue([
+  vi.mocked(getWarnings).mockResolvedValue([
     warning,
     {
       ...warning,
@@ -67,7 +67,7 @@ it("shows register limitations without duplicating individual variable warnings"
     },
   ]);
   await render(ScopedDataWarnings, { fqid: "scb/lisa", registerOnly: true });
-  expect(getDataWarnings).toHaveBeenCalledWith("scb/lisa", {
+  expect(getWarnings).toHaveBeenCalledWith("scb/lisa", {
     period: null,
     variant: null,
     representation: null,
@@ -80,7 +80,7 @@ it("shows register limitations without duplicating individual variable warnings"
 });
 
 it("shows a failed warning request rather than implying no limitations", async () => {
-  vi.mocked(getDataWarnings).mockRejectedValue(new Error("offline"));
+  vi.mocked(getWarnings).mockRejectedValue(new Error("offline"));
   await render(ScopedDataWarnings, { fqid: "scb/lisa/kon" });
   await expect
     .element(page.getByRole("alert"))

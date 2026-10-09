@@ -3,38 +3,30 @@
 // / .register / .add-columns.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import type { CatalogNode } from "./api";
-import {
-  getCatalogNode,
-  getClassificationGroup,
-  getClassificationGroupGraph,
-  getRegisterVariants,
-  getRelatedDocuments,
-} from "./api";
+import type { RegisterShow } from "./api";
+import { getRelatedDocuments, getShow, getStates } from "./api";
 import {
   columnedRegisterNode,
   delivery,
-  lisaVariants,
   mockRegisterAndResolve,
+  registerShow,
   renderRegister,
   tickColumn,
+  withLisaVariants,
 } from "./catalog-node-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
-import { variant, variantsResponse } from "./variants-test-helpers";
 import { windowStore } from "./window.svelte";
 
-// CatalogNodeView fetches one node via `getCatalogNode(fqidPath)` and switches on
-// `kind`. Mock that single GET (mirrors ConceptGroupView's api-mock style); keep
+// CatalogNodeView reads one node via `getShow(fqidPath)` and switches on
+// `kind`. Mock that GET (mirrors ConceptGroupView's api-mock style); keep
 // the rest of api.ts real (the type exports + path helpers `catalog.ts` uses).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getClassificationGroup: vi.fn(),
-    getClassificationGroupGraph: vi.fn(),
-    getRegisterVariants: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getShow: vi.fn(),
+    getStates: vi.fn(),
     getRelatedDocuments: vi.fn(),
   };
 });
@@ -42,14 +34,12 @@ vi.mock("./api", async (importOriginal) => {
 // A #319 monthly family with a month missing: ONE column delivered in two
 // DISJOINT SUB-YEAR eras inside a single year. The cell prints years, so both eras
 // read "2018" — a label the list must say ONCE, and can never key itself by.
-function subYearErasRegisterNode(): CatalogNode {
-  return {
-    kind: "register",
+function subYearErasRegisterNode(): RegisterShow {
+  return registerShow({
     fqid: "scb/lonestrukturstatistik",
     name: "Lönestrukturstatistik",
     children: [
       {
-        kind: "binding",
         fqid: "scb/lonestrukturstatistik/lon",
         name: "Lön",
         deliveries: [
@@ -62,7 +52,7 @@ function subYearErasRegisterNode(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  });
 }
 
 // The shape a name-grain gate alone gets wrong (Y-104). `individer-15plus`
@@ -71,14 +61,10 @@ function subYearErasRegisterNode(): CatalogNode {
 // the NAME's eras across the two and `CDISP` reads as delivered to this day, which
 // is true of 16plus and false of 15plus, whose row reaches a late window only
 // through the successor.
-function renamedByOneVariantRegisterNode(): CatalogNode {
-  return {
-    kind: "register",
-    fqid: "scb/lisa",
-    name: "LISA",
+function renamedByOneVariantRegisterNode(): RegisterShow {
+  return registerShow({
     children: [
       {
-        kind: "binding",
         fqid: "scb/lisa/disp",
         name: "Disponibel inkomst",
         deliveries: [
@@ -88,21 +74,19 @@ function renamedByOneVariantRegisterNode(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  });
 }
 
 // The Y-104 shape: ONE column, delivered in DISJOINT eras. `Lan` on
 // civilståndsändringar was delivered in 1968, again in 1995–1996, and continuously
 // from 1998 — a history the MIN/MAX span "1968–" cannot tell from an unbroken one.
 // The wire carries the eras themselves now, so the list can show and match them.
-function interruptedColumnRegisterNode(): CatalogNode {
-  return {
-    kind: "register",
+function interruptedColumnRegisterNode(): RegisterShow {
+  return registerShow({
     fqid: "scb/civilstandsandringar",
     name: "Civilståndsändringar",
     children: [
       {
-        kind: "binding",
         fqid: "scb/civilstandsandringar/lan",
         name: "Län",
         deliveries: [
@@ -116,21 +100,19 @@ function interruptedColumnRegisterNode(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  });
 }
 
 // The Y-110 tail: FOUR disjoint eras, one more than `ERA_LABEL_LIMIT`. `Lan` is
 // delivered in 1968, again in 1972, again in 1995–1996, and continuously from
 // 1998 — enough eras that printing all four would push the row's NAME onto its
 // own line (the defect Y-110 fixes).
-function fourEraColumnRegisterNode(): CatalogNode {
-  return {
-    kind: "register",
+function fourEraColumnRegisterNode(): RegisterShow {
+  return registerShow({
     fqid: "scb/civilstandsandringar",
     name: "Civilståndsändringar",
     children: [
       {
-        kind: "binding",
         fqid: "scb/civilstandsandringar/lan",
         name: "Län",
         deliveries: [
@@ -145,7 +127,7 @@ function fourEraColumnRegisterNode(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  });
 }
 
 /** Two columns the years cannot fully date. `Fodelsear` was delivered from before
@@ -153,14 +135,12 @@ function fourEraColumnRegisterNode(): CatalogNode {
  * sentinel), and `LanAlias` is delivered in NO era at all — the boundless delivery
  * `VariableDelivery` documents: an alias spelling on a variant with no states of
  * its own, carrying an empty `windows` and a null coverage. */
-function undatedColumnRegisterNode(): CatalogNode {
-  return {
-    kind: "register",
+function undatedColumnRegisterNode(): RegisterShow {
+  return registerShow({
     fqid: "scb/civilstandsandringar",
     name: "Civilståndsändringar",
     children: [
       {
-        kind: "binding",
         fqid: "scb/civilstandsandringar/fodelsear",
         name: "Födelseår",
         deliveries: [
@@ -173,29 +153,18 @@ function undatedColumnRegisterNode(): CatalogNode {
         ],
       },
       {
-        kind: "binding",
         fqid: "scb/civilstandsandringar/lan",
         name: "Län",
         deliveries: [delivery("individer", "LanAlias")],
       },
     ],
-  } as unknown as CatalogNode;
+  });
 }
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getClassificationGroup).mockReset();
-  vi.mocked(getClassificationGroupGraph).mockReset();
-  vi.mocked(getRegisterVariants).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getStates).mockReset();
   vi.mocked(getRelatedDocuments).mockReset();
-  vi.mocked(getClassificationGroupGraph).mockResolvedValue({
-    nodes: [],
-    edges: [],
-    focus_id: null,
-  });
-  vi.mocked(getRegisterVariants).mockResolvedValue(
-    variantsResponse(variant("_default")),
-  );
   vi.mocked(getRelatedDocuments).mockResolvedValue([]);
   // Both stores are module singletons: clear the browse-time window fallback, then
   // open a fresh empty draft — the state a catalog page authors into. A fresh draft
@@ -494,8 +463,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
   });
 
   it("stages a retired name only under the variant still delivering it (Y-104)", async () => {
-    mockRegisterAndResolve(renamedByOneVariantRegisterNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    mockRegisterAndResolve(withLisaVariants(renamedByOneVariantRegisterNode()));
     // Inside 16plus's `CDISP`, and years after 15plus renamed it.
     windowStore.set({ from: 2015, to: 2020 });
 

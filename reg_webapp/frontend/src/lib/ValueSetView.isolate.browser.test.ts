@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import { getValueSetCodes } from "./api";
+import { getValues } from "./api";
 import ValueSetView from "./ValueSetView.svelte";
 import {
-  CODES,
   classState,
+  FQID,
   plainState,
+  serveValues,
   state,
 } from "./value-set-view-test-helpers";
 
@@ -20,46 +21,18 @@ import {
 // the same order the route does (filter the whole set, then page it).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getValueSetCodes: vi.fn() };
+  return { ...actual, getValues: vi.fn() };
 });
 
 beforeEach(() => {
-  vi.mocked(getValueSetCodes).mockReset();
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (
-      valueSetId,
-      {
-        state = null,
-        partition = "source_extensions",
-        q = "",
-        offset = 0,
-        limit = 200,
-      },
-    ) => {
-      const all = CODES.get(`${valueSetId}:${state ?? ""}:${partition}`) ?? [];
-      const needle = q.trim().toLowerCase();
-      const matched = all.filter(
-        (c) =>
-          c.code.toLowerCase().includes(needle) ||
-          c.label.toLowerCase().includes(needle),
-      );
-      return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        period_scope: "intervals",
-        q,
-        total: matched.length,
-        offset,
-        limit,
-        codes: matched.slice(offset, offset + limit),
-      };
-    },
-  );
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockImplementation(serveValues);
 });
 
 describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () => {
   it("per-row Isolate focuses one value set; '← All value sets' returns to the union", async () => {
     await render(ValueSetView, {
+      fqid: FQID,
       states: [classState, plainState],
       narrowed: false,
     });
@@ -82,6 +55,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // index 0 would wrongly isolate `classState` (= LKF 2007); keying on the
     // stable `vs.key` isolates the right one.
     await render(ValueSetView, {
+      fqid: FQID,
       states: [classState, plainState],
       narrowed: false,
     });
@@ -126,6 +100,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2012-12-31",
     });
     const { rerender } = await render(ValueSetView, {
+      fqid: FQID,
       states: [first, firstOther],
       narrowed: false,
       focusColumn: "COL",
@@ -191,6 +166,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "1995-12-31",
     });
     await render(ValueSetView, {
+      fqid: FQID,
       states: [inPeriodCol, outOfPeriodCol],
       // scopeStates covers ONLY the in-period value set.
       scopeStates: [inPeriodCol],
@@ -215,6 +191,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     const classCol = state({ ...classState, delivery_column_name: "CLASSCOL" });
     const plainCol = state({ ...plainState, delivery_column_name: "PLAINCOL" });
     await render(ValueSetView, {
+      fqid: FQID,
       states: [classCol, plainCol],
       narrowed: false,
       focusColumn: "NOPE",

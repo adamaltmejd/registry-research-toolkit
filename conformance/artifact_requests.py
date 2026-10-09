@@ -106,17 +106,21 @@ def require(condition, message):
         raise AssertionError(message)
 
 
-def search_client(request, directory):
+def server_client(request, directory):
     """An HTTP client on the Rust server (`--server-cmd`) for the artifact in
-    `directory`, which answers `/api/search`; the FastAPI app no longer does.
+    `directory`: it answers `/api/search`, `/api/catalog` and `/api/states` (the
+    FastAPI app no longer does) and `/api/project/order`.
 
     Without `--server-cmd` the test skips, except under `--run-release`: release
-    admission must not pass without its search traversal."""
+    admission must not pass without its browse and search traversals."""
     servers = request.getfixturevalue("http_servers")
     if servers is None:
         if request.config.getoption("--run-release"):
-            pytest.fail("Release admission searches the Rust server: pass --server-cmd")
-        pytest.skip("search runs against --server-cmd")
+            pytest.fail(
+                "Release admission browses and searches the Rust server: "
+                "pass --server-cmd"
+            )
+        pytest.skip("browse and search run against --server-cmd")
     with open_db(directory / "reg_meta.db") as conn:
         steward = get_manifest(conn).get("steward", "global")
     return servers.client(
@@ -313,23 +317,26 @@ def require_search_reaches(directory, search, capsys, query, scope, binding):
     return True
 
 
-def assert_sampled_agreement(artifact_dir, artifact_client, search, tmp_path, capsys):
+def assert_sampled_agreement(artifact_dir, artifact_client, server, tmp_path, capsys):
     """Observe the same adapter contracts for admitted and regression artifacts.
-    `search` is the Rust server's client (`search_client`)."""
+    `server` is the Rust server's client (`server_client`); `artifact_client`
+    answers the project routes."""
     with open_db(artifact_dir / "reg_meta.db") as conn:
         project = sample_project(conn)
         result = materialize_order(project_from_raw(project), conn)
     require(result.manifest is not None, "Sampled admitted binding did not materialize")
     fqid = project["sources"][0]["bindings"][0]["variable"]
     scope = "reference" if project["steward"] == "global" else "holdings"
-    browse = artifact_client.get("/api/catalog/" + fqid, params={"scope": scope})
+    browse = server.get("/api/catalog/" + fqid, params={"scope": scope})
     require(browse.status_code == 200, "Sampled binding missing from browse")
-    require(browse.json()["fqid"] == fqid, "Browse identity disagrees with sample")
-    query = browse.json()["name"]
-    params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
-    first_page = search.get("/api/search", params=params)
     require(
-        first_page.content == search.get("/api/search", params=params).content,
+        browse.json()["data"]["fqid"] == fqid, "Browse identity disagrees with sample"
+    )
+    query = browse.json()["data"]["name"]
+    params = {"q": query, "type": "variable", "limit": 100, "scope": scope}
+    first_page = server.get("/api/search", params=params)
+    require(
+        first_page.content == server.get("/api/search", params=params).content,
         "Repeated HTTP first page differs",
     )
     argv = [
@@ -352,7 +359,7 @@ def assert_sampled_agreement(artifact_dir, artifact_client, search, tmp_path, ca
     first = capsys.readouterr().out
     require(run(argv) == 0, "Repeated CLI sample search failed")
     require(capsys.readouterr().out == first, "Repeated CLI first page differs")
-    require_search_reaches(artifact_dir, search, capsys, query, scope, fqid)
+    require_search_reaches(artifact_dir, server, capsys, query, scope, fqid)
     validated = artifact_client.post("/api/project/validate", json=project)
     require(
         validated.status_code == 200 and validated.json()["ok"],

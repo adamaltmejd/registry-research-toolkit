@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
-from artifact_requests import assert_sampled_agreement, sample_project, search_client
+from artifact_requests import assert_sampled_agreement, sample_project, server_client
 from fastapi.testclient import TestClient
 from reader_artifacts import CASES, FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta.cli import run
@@ -47,10 +47,10 @@ def test_sampled_order_and_search_contracts(
         "REG_WEBAPP_STEWARDS_DIR",
         str(Path(__file__).resolve().parents[1] / "reg_webapp/stewards"),
     )
-    search = search_client(request, path.parent)
+    server = server_client(request, path.parent)
     with TestClient(create_app(rate_limit_per_minute=1000)) as client:
         if absent := expected.get("absent_from_first_search_page"):
-            response = search.get(
+            response = server.get(
                 "/api/search", params={"q": "Value", "type": "variable", "limit": 100}
             )
             assert response.status_code == 200
@@ -79,4 +79,4 @@ def test_sampled_order_and_search_contracts(
             page = json.loads(capsys.readouterr().out)
             assert page["has_more"]
             assert all(hit.get("fqid") != absent for hit in page["results"])
-        assert_sampled_agreement(path.parent, client, search, tmp_path, capsys)
+        assert_sampled_agreement(path.parent, client, server, tmp_path, capsys)

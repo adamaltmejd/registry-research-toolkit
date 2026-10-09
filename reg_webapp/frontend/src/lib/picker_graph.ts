@@ -543,7 +543,7 @@ export function clustersOf(
     const root = findRoot(parent, node.id);
     let cluster = byRoot.get(root);
     if (!cluster) {
-      cluster = { groupKey: node.group_key, label: null, nodes: [] };
+      cluster = { groupKey: node.group_key ?? null, label: null, nodes: [] };
       byRoot.set(root, cluster);
       order.push(root);
     } else if (cluster.groupKey == null && node.group_key != null) {

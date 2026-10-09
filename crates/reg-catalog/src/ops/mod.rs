@@ -2,8 +2,8 @@
 //! (`slice_3a.rs`, ...), and both transports are generated from the registrations: the
 //! HTTP routes and `/openapi.json` here and in `reg-meta`, and the MCP tools in
 //! `reg-meta`. Shared request pieces live in their own modules: refs (`refs.rs`) and
-//! cursors (`cursor.rs`). An operation with a [`Type::Project`] parameter is a POST
-//! that takes it as the JSON body; every other is a GET.
+//! cursors (`cursor.rs`). An operation or download with a [`Type::Project`] parameter
+//! is a POST that takes it as the JSON body; every other is a GET.
 
 pub mod body;
 mod coded;
@@ -12,6 +12,7 @@ mod cursor;
 mod docs;
 mod graph;
 mod lineage;
+mod order;
 mod refs;
 mod resolve;
 mod schema;
@@ -234,11 +235,24 @@ pub struct Download {
     pub run: Run<Raw>,
 }
 
+/// The parameter sent as the JSON body, which makes a route a POST.
+fn body(params: &'static [Param]) -> Option<&'static Param> {
+    params.iter().find(|p| matches!(p.ty, Type::Project))
+}
+
+impl Download {
+    /// The parameter sent as the JSON body, which makes the download a POST.
+    #[must_use]
+    pub fn body(&self) -> Option<&'static Param> {
+        body(self.params)
+    }
+}
+
 impl Operation {
     /// The parameter sent as the JSON body, which makes the operation a POST.
     #[must_use]
     pub fn body(&self) -> Option<&'static Param> {
-        self.params.iter().find(|p| matches!(p.ty, Type::Project))
+        body(self.params)
     }
 
     /// The parameters `route` takes: a parameter another of the operation's routes
@@ -269,7 +283,7 @@ pub fn all() -> impl Iterator<Item = &'static Operation> {
 
 /// Every registered download.
 pub fn downloads() -> impl Iterator<Item = &'static Download> {
-    slice_3b::DOWNLOADS.iter()
+    slice_3b::DOWNLOADS.iter().chain(slice_3e::DOWNLOADS)
 }
 
 /// Every MCP tool with its operations, in registration order.
@@ -558,6 +572,10 @@ fn operation_id(op: &Operation, route: &str) -> String {
 }
 
 /// The `OpenAPI` document of every registered operation.
+///
+/// # Panics
+///
+/// When two types register different schemas under one name.
 #[must_use]
 pub fn openapi(version: &str) -> OpenApi {
     let mut components = Components::new();
@@ -593,7 +611,20 @@ pub fn openapi(version: &str) -> OpenApi {
         let operation = operation
             .response("200", bytes)
             .response("default", error_response());
-        paths = paths.path(download.path, PathItem::new(HttpMethod::Get, operation));
+        let method = if download.body().is_some() {
+            HttpMethod::Post
+        } else {
+            HttpMethod::Get
+        };
+        paths = paths.path(download.path, PathItem::new(method, operation));
+    }
+    // Two types with one schema name would silently replace each other's schema
+    // (3c.3's `Coverage` once replaced `show`'s): refuse instead.
+    let mut named: BTreeMap<&str, &RefOr<Schema>> = BTreeMap::new();
+    for (name, schema) in &components {
+        if let Some(other) = named.insert(name, schema) {
+            assert!(other == schema, "two types share the schema name {name}");
+        }
     }
     OpenApiBuilder::new()
         .info(InfoBuilder::new().title("reg-meta").version(version))

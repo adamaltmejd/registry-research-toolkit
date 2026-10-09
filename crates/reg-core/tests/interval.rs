@@ -8,7 +8,7 @@ use std::fs;
 use std::path::PathBuf;
 
 use common::Rng;
-use reg_core::{Interval, Period, intersect, merge, next_iso_day, overlap, render};
+use reg_core::{Interval, Period, gaps, intersect, merge, next_iso_day, overlap, render};
 use serde_json::{Value, json};
 
 fn pair(v: &Value) -> Interval {
@@ -21,16 +21,19 @@ fn list(v: &Value) -> Vec<Interval> {
 }
 
 /// Each golden case is frozen Python's `reg_meta.inventory` answer (`_intersect`,
-/// `_merge`, `_overlap`, `_render`). Fails when the algebra stops joining
-/// day-adjacent intervals (a synthesized non-leap `02-29` end counting as February's
-/// end), keeps a containment or an empty intersection, or renders an interval as
-/// another spelling than the coarsest token or year-ended range.
+/// `_merge`, `_overlap`, `_render`) or `reg_meta.order` answer (`_gaps`). Fails when
+/// the algebra stops joining day-adjacent intervals (a synthesized non-leap `02-29`
+/// end counting as February's end), keeps a containment or an empty intersection,
+/// renders an interval as another spelling than the coarsest token or year-ended
+/// range, or leaves a phantom gap or misses a real one.
 ///
 /// To check the golden against frozen Python, from the repository root:
 /// `uv run python -c 'import json; from reg_meta.inventory import _intersect, _merge,
-/// _overlap, _render; ops = {"intersect": lambda c: _intersect(c["a"], c["b"]),
-/// "merge": lambda c: _merge(c["in"]), "overlap": lambda c: _overlap(c["a"],
-/// c["b"]), "render": lambda c: _render(c["in"])}; cases =
+/// _overlap, _render; from reg_meta.order import _gaps; ops = {"intersect": lambda
+/// c: _intersect(c["a"], c["b"]), "merge": lambda c: _merge(c["in"]), "overlap":
+/// lambda c: _overlap(c["a"], c["b"]), "render": lambda c: _render(c["in"]), "gaps":
+/// lambda c: _gaps(tuple(map(tuple, c["whole"])), list(map(tuple,
+/// c["covered"])))}; cases =
 /// json.load(open("crates/reg-core/tests/interval/golden.json")); print([c for c in
 /// cases if json.loads(json.dumps(ops[c["op"]](c))) != c["out"]])'` prints `[]`.
 /// Python renders a non-leap February as `YYYY-02-01..YYYY-02-28`, so no case holds
@@ -45,6 +48,7 @@ fn golden() {
             "merge" => json!(merge(list(&case["in"]))),
             "overlap" => json!(overlap(&list(&case["a"]), &list(&case["b"]))),
             "render" => json!(render(&list(&case["in"]))),
+            "gaps" => json!(gaps(&list(&case["whole"]), list(&case["covered"]))),
             op => panic!("unknown op {op}"),
         };
         assert_eq!(actual, case["out"], "{case}");
@@ -87,8 +91,8 @@ fn canonical(intervals: &[Interval]) -> bool {
 }
 
 // Fails if `merge` loses, adds or leaves touching days, is not idempotent, if
-// `overlap` or `intersect` keeps a day one side lacks or drops a shared one, or if
-// `render` spells a merged list as anything that does not parse back, piece by piece
+// `overlap` or `intersect` keeps a day one side lacks or drops a shared one, if `gaps`
+// keeps a covered day or drops an uncovered one, or if `render` spells a merged list as anything that does not parse back, piece by piece
 // through the period grammar, to exactly its intervals.
 #[test]
 fn algebra_properties() {
@@ -103,6 +107,7 @@ fn algebra_properties() {
         assert!(canonical(&ma), "{a:?} merged to {ma:?}");
         assert_eq!(merge(ma.clone()), ma);
         let shared = overlap(&ma, &mb);
+        let missing = gaps(&ma, b.clone());
         assert!(canonical(&merge(shared.clone())), "{shared:?}");
         for day in &days {
             assert_eq!(covers(&a, day), covers(&ma, day), "{day} in {a:?}");
@@ -110,6 +115,11 @@ fn algebra_properties() {
                 covers(&shared, day),
                 covers(&ma, day) && covers(&mb, day),
                 "{day}: {ma:?} and {mb:?}"
+            );
+            assert_eq!(
+                covers(&missing, day),
+                covers(&ma, day) && !covers(&mb, day),
+                "{day}: {ma:?} less {b:?}"
             );
         }
         if let (Some(x), Some(y)) = (a.first(), b.first()) {

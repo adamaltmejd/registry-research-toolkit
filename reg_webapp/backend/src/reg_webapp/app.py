@@ -3,13 +3,15 @@
 The lifespan opens the real reg_meta DB read-only via reg_meta's own helpers
 (``db_path_from_args`` + ``open_db``). ``open_db`` already opens ``mode=ro``
 AND runs ``_check_schema_compat`` (the load-bearing SCHEMA_VERSION gate vs the
-DB manifest) — we do NOT hardcode the path or reimplement the check. A5.1a
-needs only the manifest snapshot, so the boot connection is closed once it's
-read; the parsed manifest lives on ``app.state`` alongside the resolved
-``db_path``. A single ``sqlite3`` connection from this lifespan is NOT safe to
-query from FastAPI's sync-handler threadpool, so the catalog routes (A5.1b) open
-a FRESH read-only connection PER REQUEST from ``app.state.db_path`` instead of
-holding a long-lived shared one — see ``routes/catalog.py`` ``_catalog_conn``.
+DB manifest) — we do NOT hardcode the path or reimplement the check. The boot
+connection is closed once the manifest is read; the parsed manifest lives on
+``app.state`` alongside the resolved ``db_path``. A single ``sqlite3`` connection
+from this lifespan is NOT safe to query from FastAPI's sync-handler threadpool, so
+the project routes open a FRESH read-only connection PER REQUEST from
+``app.state.db_path`` (``project_validation.per_request_conn``).
+
+FastAPI serves no catalog route: the SPA's catalog pages read the Rust server
+(``reg-meta serve``).
 """
 
 from __future__ import annotations
@@ -19,7 +21,6 @@ from typing import TYPE_CHECKING, Any
 
 import reg_meta.db
 from fastapi import FastAPI
-from reg_meta.holdings import resolve_scope
 
 from . import __version__
 from .limits import (
@@ -27,8 +28,7 @@ from .limits import (
     BodySizeLimitMiddleware,
     RateLimitMiddleware,
 )
-from .middleware import ETagMiddleware
-from .routes import catalog, project
+from .routes import project
 from .stewards import load_steward
 
 if TYPE_CHECKING:
@@ -69,20 +69,16 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
                 f"{db_path}: REG_WEBAPP_STEWARD={steward.id!r} does not match "
                 f"artifact steward {artifact_steward!r} ({kind})"
             )
-        app.state.default_scope = resolve_scope(conn)
     finally:
         conn.close()
     app.state.manifest = manifest
     app.state.steward = steward
-    # The catalog routes open a FRESH read-only connection PER REQUEST from this
+    # The project routes open a FRESH read-only connection PER REQUEST from this
     # boot-resolved path (the connection model is locked: a shared sqlite3 conn
     # isn't safe across FastAPI's sync-handler threadpool). The schema was
     # already validated by open_db above, so the per-request open skips the
-    # re-check (check_schema=False) — see routes/catalog.py `_catalog_conn`.
+    # re-check (check_schema=False) — see project_validation.per_request_conn.
     app.state.db_path = db_path
-    # Provider coverage memo for this app's one artifact (routes/catalog.py
-    # `_provider_coverage`); discarded with the app.
-    app.state.provider_coverage = {}
     yield
 
 
@@ -104,19 +100,13 @@ def create_app(*, rate_limit_per_minute: int = RATE_LIMIT_PER_MINUTE) -> FastAPI
     )
     # Middleware ordering (Starlette executes add_middleware in REVERSE order —
     # last-added runs OUTERMOST / first on the way in). Cost protection (see
-    # DESIGN.md → Cost protection (limits.py)) must
-    # gate a write BEFORE the handler reads the body, so the cap + limiter run
-    # outermost. Adding the rate limiter LAST puts it outermost (it rejects an
-    # over-budget IP before the body is even buffered); the body cap next (it
-    # streams + counts the body before the handler reads it); the ETag middleware
-    # innermost (GET/HEAD-only — writes pass through it untouched, confirmed in
-    # middleware.py: `_CACHEABLE_METHODS == {"GET"}`).
-    app.add_middleware(ETagMiddleware)
+    # DESIGN.md → Cost protection (limits.py)) must gate a write BEFORE the handler
+    # reads the body: the rate limiter runs outermost (it rejects an over-budget IP
+    # before the body is even buffered), the body cap next (it streams + counts the
+    # body before the handler reads it).
     app.add_middleware(BodySizeLimitMiddleware)
     app.add_middleware(RateLimitMiddleware, per_minute=rate_limit_per_minute)
-    app.include_router(catalog.router)
-    # A5.2b-ii write surface: project validate/order. The ETag middleware skips
-    # these (method gate); the cap + limiter gate them.
+    # A5.2b-ii write surface: project validate/order, gated by the cap + limiter.
     app.include_router(project.router)
 
     return app

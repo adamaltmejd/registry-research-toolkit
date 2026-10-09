@@ -105,7 +105,7 @@ One line per finding, no hedging:
 - `dep:` a hand-rolled thing an installed dependency (Pydantic, FastAPI, Bits UI)
   already does. Name the feature.
 - `dup:` the same leaf in two modules, the failure mode CLAUDE.md names. Name the home
-  it belongs in (`_curation.py`, `db.py`, `query_input.py`, …).
+  it belongs in (`_curation.py`, `db.py`, …).
 - `shrink:` same logic, fewer lines, including a special case that a general fix to the
   mechanism removes. Show the form.
 - `guard:` a cut that touches a load-bearing guard (PII/MONA confinement, disclosure

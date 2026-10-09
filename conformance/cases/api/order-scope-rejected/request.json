@@ -1,0 +1,34 @@
+{
+  "note": "Twin of `http_scope/project-rejects`: fails if `order` accepts a `scope` (it takes none) instead of refusing it as an invalid parameter.",
+  "fixture": "reader",
+  "kind": "steward",
+  "requests": [
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "body": {},
+      "query": {
+        "scope": "reference"
+      }
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "body": {},
+      "query": {
+        "scope": "holdings"
+      }
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "body": {},
+      "query": {
+        "scope": ""
+      }
+    }
+  ]
+}

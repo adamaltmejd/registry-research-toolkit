@@ -165,10 +165,13 @@ async fn serve(server: Arc<Server>, addr: SocketAddr, public_host: Option<String
         }
     }
     for download in ops::downloads() {
-        app = app.route(
-            &axum_route(download.path),
-            get(move |state, path, query, headers| fetch(download, state, path, query, headers)),
-        );
+        let handler = if download.body().is_some() {
+            post(move |state, query, body| submit_download(download, state, query, body))
+                .layer(DefaultBodyLimit::max(body::MAX_BYTES))
+        } else {
+            get(move |state, path, query, headers| fetch(download, state, path, query, headers))
+        };
+        app = app.route(&axum_route(download.path), handler);
     }
     let app = app
         .with_state(Arc::clone(&server))
@@ -323,22 +326,62 @@ async fn submit(
     Query(query): Query<Vec<(String, String)>>,
     bytes: Result<Bytes, BytesRejection>,
 ) -> Response {
-    let parsed = match bytes {
-        Ok(bytes) => body::parse(&bytes),
+    let body = op.body().expect("a POST operation has a body");
+    let params = match posted(&server, body, route, query, bytes) {
+        Ok(params) => params,
+        Err(refused) => return *refused,
+    };
+    let answer = run(&server, op, op.route_params(route), params).await;
+    (answer.status, json(answer.body.to_string())).into_response()
+}
+
+/// One POST download over HTTP: its body as [`submit`] takes it, answered with the
+/// raw bytes and no cache validators, or `{error, meta}` with the code's status.
+async fn submit_download(
+    download: &'static Download,
+    State(server): State<Arc<Server>>,
+    Query(query): Query<Vec<(String, String)>>,
+    bytes: Result<Bytes, BytesRejection>,
+) -> Response {
+    let body = download.body().expect("a POST download has a body");
+    let params = match posted(&server, body, download.path, query, bytes) {
+        Ok(params) => params,
+        Err(refused) => return *refused,
+    };
+    let declared = download.params.iter().collect();
+    match call(&server, declared, download.run, params).await {
+        (_, Ok(raw)) => raw_response(download.media_type, raw),
+        (scope, Err(err)) => refusal(&server, scope, err),
+    }
+}
+
+/// A POST's request parameters: the query's, then its body, capped at
+/// [`body::MAX_BYTES`] and parsed strictly ([`body::parse`]), as the parameter
+/// `body`; or the response refusing the body (axum's own when it refuses before
+/// reading).
+fn posted(
+    server: &Server,
+    body: &Param,
+    route: &str,
+    query: Vec<(String, String)>,
+    bytes: Result<Bytes, BytesRejection>,
+) -> Result<Vec<(String, String)>, Box<Response>> {
+    let refused = |err| Box::new(refusal(server, server.catalog.default_scope(), err));
+    let project = match bytes {
+        Ok(bytes) => body::parse(&bytes).map_err(refused)?,
         Err(rejection) if rejection.status() == StatusCode::PAYLOAD_TOO_LARGE => {
-            Err(body::too_large())
+            return Err(refused(body::too_large()));
         }
-        Err(rejection) => return rejection.into_response(),
+        Err(rejection) => return Err(Box::new(rejection.into_response())),
     };
-    let answer = match parsed {
-        Ok(project) => {
-            let mut params = request_params(route, Vec::new(), query);
-            let name = op.body().expect("a POST operation has a body").name;
-            params.push((name.to_owned(), project.to_string()));
-            run(&server, op, op.route_params(route), params).await
-        }
-        Err(err) => Answer::new(&server, server.catalog.default_scope(), Err(err)),
-    };
+    let mut params = request_params(route, Vec::new(), query);
+    params.push((body.name.to_owned(), project.to_string()));
+    Ok(params)
+}
+
+/// `{error, meta}` with the code's status.
+fn refusal(server: &Server, scope: Scope, err: Error) -> Response {
+    let answer = Answer::new(server, scope, Err(err));
     (answer.status, json(answer.body.to_string())).into_response()
 }
 
@@ -368,10 +411,7 @@ async fn fetch(
             download.media_type,
             raw,
         ),
-        (scope, Err(err)) => {
-            let answer = Answer::new(&server, scope, Err(err));
-            (answer.status, json(answer.body.to_string())).into_response()
-        }
+        (scope, Err(err)) => refusal(&server, scope, err),
     }
 }
 
@@ -385,11 +425,7 @@ fn cached(
     media_type: &'static str,
     raw: Raw,
 ) -> Response {
-    let Raw {
-        bytes: body,
-        headers: extra,
-    } = raw;
-    let etag = etag(server, scope, &body);
+    let etag = etag(server, scope, &raw.bytes);
     let revalidated = request
         .get(header::IF_NONE_MATCH)
         .and_then(|value| value.to_str().ok())
@@ -397,12 +433,7 @@ fn cached(
     let mut response = if revalidated {
         StatusCode::NOT_MODIFIED.into_response()
     } else {
-        let mut response = ([(header::CONTENT_TYPE, media_type)], body).into_response();
-        for (name, value) in extra {
-            let value = HeaderValue::from_str(&value).expect("a header value");
-            response.headers_mut().insert(name, value);
-        }
-        response
+        raw_response(media_type, raw)
     };
     let validators = response.headers_mut();
     validators.insert(
@@ -413,6 +444,16 @@ fn cached(
         header::CACHE_CONTROL,
         HeaderValue::from_static(cache.header()),
     );
+    response
+}
+
+/// A 200 of `raw`'s bytes as `media_type`, with its extra headers.
+fn raw_response(media_type: &'static str, raw: Raw) -> Response {
+    let mut response = ([(header::CONTENT_TYPE, media_type)], raw.bytes).into_response();
+    for (name, value) in raw.headers {
+        let value = HeaderValue::from_str(&value).expect("a header value");
+        response.headers_mut().insert(name, value);
+    }
     response
 }
 

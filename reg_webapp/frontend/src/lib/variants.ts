@@ -17,11 +17,11 @@
  * table needs), while `foldVersions` walks a variant's version BODIES and is
  * called only by the route page.
  */
-import type { VariantsResponse } from "./api";
+import type { VariantModel } from "./api";
 import { labelSuffix, variantLabel } from "./catalog";
 
 /** One `register_variant` sub-resource row (reg_meta's `VariantSummary`). */
-export type Variant = VariantsResponse["variants"][number];
+export type Variant = VariantModel;
 /** One `register_version` row nested under a variant (#799). */
 export type Version = Variant["versions"][number];
 

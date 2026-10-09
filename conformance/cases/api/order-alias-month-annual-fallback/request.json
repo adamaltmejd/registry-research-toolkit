@@ -1,0 +1,63 @@
+{
+  "note": "Twin of the order step of `validate/alias-month-annual-fallback` (an alias-month request falls back to the annual claim): fails if `order` stops answering this project with these entries and clips, or the download stops serving the frozen Python CLI's `order.json` bytes.",
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "source",
+            "register_variant": "scb/example/annual",
+            "period": [
+              "2018-01",
+              "2018-04"
+            ],
+            "bindings": [
+              {
+                "variable": "scb/example/lonfink",
+                "type": "numeric",
+                "representation": "LonFinkJan"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "operation": "order",
+      "method": "POST",
+      "path": "/api/project/order/manifest",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "source",
+            "register_variant": "scb/example/annual",
+            "period": [
+              "2018-01",
+              "2018-04"
+            ],
+            "bindings": [
+              {
+                "variable": "scb/example/lonfink",
+                "type": "numeric",
+                "representation": "LonFinkJan"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

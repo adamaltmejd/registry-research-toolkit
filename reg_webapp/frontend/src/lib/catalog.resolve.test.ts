@@ -1,50 +1,21 @@
 // Unit tests for the SHARED binding-resolution path (catalog.resolveBindingAt) —
 // the single source of truth for the subject-page staged picker's resolve-once-at-
-// pick-time adds (the #991 write-once model). Mocks `./api`'s getCatalogNode so the
+// pick-time adds (the #991 write-once model). Mocks `./api`'s getStates so the
 // resolve branches (period-unset / no-states / derived / ambiguous) are covered
 // without a backend. Kept out of the PURE catalog.*.test.ts files so they need no
 // module mock.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { StatesResponse, VariableStateModel } from "./api";
-import { getCatalogNode } from "./api";
+import { getStates } from "./api";
 import { bindingFieldsFromResolution, resolveBindingAt } from "./catalog";
+import { state } from "./catalog-test-helpers";
 
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getCatalogNode: vi.fn() };
+  return { ...actual, getStates: vi.fn() };
 });
 
-function state(over: Partial<VariableStateModel>): VariableStateModel {
-  return {
-    warning_ids: [],
-    state_id: "1",
-    period_scope: "intervals",
-    variant: "v",
-    variant_label: null,
-    register_variant_id: "1",
-    valid_from: "2010-01-01",
-    valid_to: "2020-12-31",
-    data_type: null,
-    data_length: null,
-    delivery_column_name: null,
-    source_register_text: null,
-    provenance: null,
-    pooled: false,
-    value_set_version_label: "",
-    value_set_id: null,
-    value_set: null,
-    is_identifier: false,
-    classifications: [],
-    ...over,
-  };
-}
-
-function statesResponse(states: VariableStateModel[]): StatesResponse {
-  return { states } as unknown as StatesResponse;
-}
-
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getStates).mockReset();
 });
 
 describe("resolveBindingAt", () => {
@@ -62,7 +33,9 @@ describe("resolveBindingAt", () => {
         valid_to: "2020-12-31",
       }),
     ];
-    vi.mocked(getCatalogNode).mockResolvedValue(statesResponse(states));
+    // Fails if resolveBindingAt stops reading the `period` states facet or
+    // resolves co-existing columns to one type (RUST_RUNTIME_SPEC.md package C).
+    vi.mocked(getStates).mockResolvedValue(states);
     const r = await resolveBindingAt("scb/lisa/yrke", "2015", "v1");
     expect(r.kind).toBe("ambiguous");
     if (r.kind === "ambiguous") {

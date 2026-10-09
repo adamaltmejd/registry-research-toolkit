@@ -22,7 +22,6 @@
     ]
   },
   "observe": [
-    "findings",
-    "clips"
+    "findings"
   ]
 }

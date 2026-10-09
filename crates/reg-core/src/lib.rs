@@ -27,9 +27,9 @@ use case_folding::CASE_FOLDING;
 pub use case_folding::UNICODE_VERSION;
 pub use grammar::{
     Fqid, GrammarError, Period, PeriodToken, Term, is_slug, next_iso_day, period_token_for_bounds,
-    snap_month_end,
+    prev_iso_day, snap_month_end,
 };
-pub use interval::{Interval, intersect, merge, overlap, render};
+pub use interval::{Interval, gaps, intersect, merge, overlap, render};
 pub use structural::{q as quote, quoted_list, validate_structural};
 use unicode_normalization::UnicodeNormalization;
 use unicode_normalization::char::canonical_combining_class;

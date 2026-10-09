@@ -1,5 +1,4 @@
-//! `show`: the summary of any ref (`shape.Show`), from today's `CatalogNode` and group
-//! node models (`reg_webapp/routes/catalog.py`) without the parts the facet
+//! `show`: the summary of any ref (`shape.Show`), without the parts the facet
 //! operations serve (states, lineage, chains, codes, warnings).
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -11,7 +10,7 @@ use utoipa::ToSchema;
 
 mod browse;
 
-use browse::{Coverage, Delivery, RegisterCoverage};
+use browse::{Delivery, ShowCoverage, ShowRegisterCoverage};
 
 use super::refs::{self, Target, fqid};
 use super::{Params, Server};
@@ -60,7 +59,7 @@ pub struct RegisterChild {
     name: Option<String>,
     purpose: Option<String>,
     tags: Vec<Tag>,
-    coverage: Option<RegisterCoverage>,
+    coverage: Option<ShowRegisterCoverage>,
 }
 
 /// A register: its variables, concept groups and variants in scope.
@@ -80,7 +79,7 @@ pub struct VariableChild {
     fqid: String,
     name: Option<String>,
     /// Null in holdings for a variable with no held delivery.
-    coverage: Option<Coverage>,
+    coverage: Option<ShowCoverage>,
     /// Every `(variant, column)` the variable is delivered under in scope.
     deliveries: Vec<Delivery>,
 }
@@ -237,7 +236,7 @@ pub struct Member {
     /// Present on a group's own page only: the member's coverage, its column's
     /// for a representation member (empty when no state delivers the column).
     #[serde(skip_serializing_if = "Option::is_none")]
-    coverage: Option<Coverage>,
+    coverage: Option<ShowCoverage>,
 }
 
 #[derive(Clone, Serialize, ToSchema)]

@@ -204,11 +204,14 @@ export function triggerDownload(blob: Blob, filename: string): void {
   URL.revokeObjectURL(url);
 }
 
-// ── Typed endpoint helpers ─────────────────────────────────────────────────
-// Thin wrappers naming each browse endpoint's response type. The catch-all
-// (`getCatalogNode`) returns the discriminated `CatalogNode` union; A5.3a never
-// passes `?period`, so the `StatesResponse` arm (no `kind`) is out of scope here
-// — callers narrow on `kind` (see `lib/catalog.ts`).
+// ── Catalog surface (the Rust server, RUST_RUNTIME_SPEC.md package C) ──────────
+// Every catalog read answers `{data, meta}`; the helpers below return `data`.
+// `show` summarizes any ref (no ref is the catalog root); the heavy parts are
+// facets, each its own request: a variable's `states`, `warnings`, `lineage` and
+// relationship `graph`, and the `values` of a classification or of one state. A
+// retired FQID resolves to its terminal successor (the result carries the
+// canonical `fqid`, no redirect); a ref that a split makes ambiguous is a 409
+// `ambiguous_ref` whose message names the candidates.
 
 /** The Rust server's `context`: branding, artifact identity and headline counts. */
 export type Context = RustSchemas["Context"];
@@ -218,262 +221,269 @@ export type Steward = RustSchemas["Steward"];
 /** The headline catalog-size counts (#675) the landing page renders — slugged
  * (browse-addressable) providers, registers and variables in the read scope. */
 export type CatalogSizes = RustSchemas["Sizes"];
-export type RootResponse = Schemas["RootResponse"];
-export type VariantsResponse = Schemas["VariantsResponse"];
 
-/** The discriminated browse union the catch-all returns WITHOUT `?period`
- * (A5.3a). Each arm carries a `kind` literal. `ConceptGroupNode` (#617) is NOT
- * an arm: the group SUBJECT is served ONLY by the FIXED `/catalog/group/...`
- * route (its own response type, `ConceptGroupNodeData`), never by the catch-all,
- * so this union advertises exactly the kinds the catch-all can return. */
-export type CatalogNode =
-  | Schemas["ProviderResponse"]
-  | Schemas["RegisterResponse"]
-  | Schemas["BindingNode"]
-  | Schemas["ClassificationRootResponse"]
-  | Schemas["ClassificationNode"];
+/** `show`'s `kind`-tagged summary of a ref. */
+export type ShowNode = RustSchemas["Show"];
+export type RootShow = Extract<ShowNode, { kind: "root" }>;
+export type ProviderShow = Extract<ShowNode, { kind: "provider" }>;
+export type RegisterShow = Extract<ShowNode, { kind: "register" }>;
+/** A variable's shared metadata. Its states, warnings, lineage and succession
+ * chain are the `states`, `warnings`, `lineage` and `graph` facets. */
+export type VariableShow = Extract<ShowNode, { kind: "variable" }>;
+export type ClassificationRootShow = Extract<
+  ShowNode,
+  { kind: "classification_root" }
+>;
+/** A classification edition. Its codes are `values`, its edition chain `graph`
+ * (or its family's `editions`). */
+export type ClassificationShow = Extract<ShowNode, { kind: "classification" }>;
+/** A register's concept group as a browsable subject (#617): its members in scope,
+ * each with its own coverage. */
+export type ConceptGroupShow = Extract<ShowNode, { kind: "concept_group" }>;
+/** A curated classification umbrella (#756): catalog-global, members without
+ * coverage. */
+export type ClassificationGroupShow = Extract<
+  ShowNode,
+  { kind: "classification_group" }
+>;
+/** A derived one-dimensional classification succession family (#771). */
+export type ClassificationFamilyShow = Extract<
+  ShowNode,
+  { kind: "classification_family" }
+>;
+export type ClassificationSubjectShow =
+  | ClassificationGroupShow
+  | ClassificationFamilyShow;
 
-/** A binding child under a register node — a thin (fqid, name) entry, NOT the
- * embedded longitudinal record (that lives on the binding LEAF, `BindingNode`). */
-export type BindingChild = Schemas["BindingChild"];
+export type RootChild = RustSchemas["RootChild"];
+/** A provider's register, with its coverage in the read scope. */
+export type RegisterChild = RustSchemas["RegisterChild"];
+/** A register's variable, with every `(variant, column)` it is delivered under. */
+export type VariableChild = RustSchemas["VariableChild"];
 /** One `(variant, delivery column)` a register child is delivered under (Y-82),
- * with that pair's own window. The register page names the columns beside each
- * variable and filters the list on the variants. */
-export type VariableDeliveryModel = Schemas["VariableDelivery"];
+ * with that pair's own windows. */
+export type VariableDeliveryModel = RustSchemas["Delivery"];
+export type CoverageModel = RustSchemas["ShowCoverage"];
+export type RegisterCoverageModel = RustSchemas["ShowRegisterCoverage"];
+/** A register variant with its versions' prose (the `?variant=` browse axis). */
+export type VariantModel = RustSchemas["Variant"];
+export type TagModel = RustSchemas["Tag"];
+/** A concept or classification group as listed by its register, the
+ * classification root or a member classification — a presentation fold of
+ * near-identical rows whose members carry the real leaf FQIDs. */
+export type ConceptGroup = RustSchemas["Group"];
+/** A group member; two members of one variable differ by `delivery_column`.
+ * `coverage` is present on a group's own page only. */
+export type ConceptGroupMember = RustSchemas["Member"];
+/** One facet assignment on a group member (`axis`/`value`/`label`). */
+export type GroupFacetModel = RustSchemas["Facet"];
+/** One declared facet axis of a group (#819): the stable `name` (equal to a
+ * member's facet `axis`) and its display `label`. */
+export type GroupAxisModel = RustSchemas["Axis"];
+/** One edition of a classification succession family, in chain order, with
+ * `is_self`/`is_current` flags. */
+export type FamilyEdition = RustSchemas["FamilyEdition"];
+export type OwningVariable = RustSchemas["OwningVariable"];
+export type Derivation = RustSchemas["Derivation"];
 
-/** The binding-leaf node (3-seg) the catch-all returns WITHOUT a query — the
- * variable's full embedded longitudinal record (states + edges; see
- * reg_webapp/DESIGN.md → Catalog router structure). */
-export type BindingNodeData = Schemas["BindingNode"];
-export type VariableStateModel = Schemas["VariableState"];
-/** One bounded page of a value set's (code, label) membership — what the code
- * panel reads, since the binding leaf carries only each state's `value_set_id`
- * and `value_set_summary` (Y-46). */
-export type ValueSetCodesResponse = Schemas["ValueSetCodesResponse"];
-export type ValueSetMemberModel = Schemas["ValueSetMember"];
+/** One state of a variable (`states`), in the catalog page's light form:
+ * `value_set` is null and `value_set_summary` carries the counts; the codes are
+ * the `values` facet. `state_id` is a decimal-string storage id.
+ *
+ * `Required` because the server serializes every field of a state, an absent
+ * value as `null`, while the OpenAPI document marks each nullable field optional;
+ * the state readers compare bounds and columns against `null`. The same holds for
+ * `GraphState`. */
+export type VariableStateModel = Required<RustSchemas["State"]>;
+export type ValueSetSummaryModel = RustSchemas["ValueSetSummary"];
+export type DenseIntegerRangeModel = RustSchemas["IntegerRange"];
+export type DataWarningModel = RustSchemas["DataWarning"];
+
+/** One page of `values`, with `total` matches of `q` in the whole set. */
+export type ValuesPage = RustSchemas["ValuesPage"];
+export type ValueRow = RustSchemas["ValueRow"];
+export type ValueSetMemberModel = RustSchemas["ValueSetMember"];
 export type ClassificationExtensionMemberModel =
-  Schemas["ClassificationExtensionMember"];
-export type ValueSetSummaryModel = Schemas["ValueSetSummary"];
-export type DenseIntegerRangeModel = Schemas["DenseIntegerRange"];
-export type VariableRefModel = Schemas["VariableRef"];
-/** One edition in a variable's embedded FULL succession timeline (#582) — the
- * variable-grain dual of `ClassificationChainEdition`. The chain arrives
- * oldest-first, terminal last, with `is_self`/`is_current` flags and per-edition
- * `reason`/`effective_year`. A chain edition CAN be a dead/renamed predecessor
- * (#355/#411): a valid `fqid` (301-redirects to the current edition) but a null
- * `name` (no live row). `fqid` is null only on a malformed triple. The browse
- * panel renders the whole chain synchronously from these. */
-export type VariableEditionModel = Schemas["VariableEdition"];
-export type LineageEdgeModel = Schemas["LineageEdge"];
-export type LineageWarningModel = Schemas["LineageWarning"];
+  RustSchemas["ClassificationExtensionMember"];
+/** One code of a classification edition; `is_valid` is canonical (true) or
+ * unknown (null: no canonical list for the edition). */
+export type ClassificationCodeModel = RustSchemas["ClassificationCode"];
 
-/** A derived concept group (#303) on a register / classification-root node —
- * a PRESENTATION-ONLY fold of near-identical rows. Members carry the real leaf
- * FQIDs (the same entries also appear in `children`); the browse collapses the
- * member rows under the group and expands to a facet picker. */
-export type ConceptGroup = Schemas["ConceptGroupSummary"];
-export type ConceptGroupMember = Schemas["ConceptGroupMember"];
-/** One facet assignment on a group member (`axis`/`value`/`label`) — shared by
- * the browse `ConceptGroupMember` and the subject-page `ConceptGroupNodeMember`,
- * so facet helpers can read either member type. */
-export type GroupFacetModel = Schemas["GroupFacet"];
-/** One declared facet axis of a concept group (#819): the stable `name` (the
- * MATCH key — equal to a member's `GroupFacet.axis`) and its curator-authored
- * display `label`. Consumers match on `name`, render `label`. */
-export type GroupAxisModel = Schemas["GroupAxis"];
+/** A variable's lineage: its state-lineage `edges`, lineage `warnings`, and the
+ * same-named variables' `registers` provenance rows. */
+export type LineageModel = RustSchemas["Lineage"];
+export type LineageEdgeModel = RustSchemas["LineageEdge"];
+export type LineageWarningModel = RustSchemas["LineageWarning"];
 
-/** The concept group as a browsable SUBJECT (#617), returned by the fixed
- * `/catalog/group/<provider>/<register>/<key>` route — group identity +
- * members WITH per-member coverage + the echoed `?member=` focus hint. This is
- * the group route's OWN response type, NOT an arm of the catch-all `CatalogNode`
- * union. Distinct from the presentation-only `ConceptGroup` folded into a
- * register listing. */
-export type ConceptGroupNodeData = Schemas["ConceptGroupNode"];
-/** A member on the group SUBJECT node — the browse member plus its per-variable
- * study-window `coverage` (null for a stateless member). */
-export type ConceptGroupNodeMember = Schemas["ConceptGroupNodeMember"];
-/** The classification umbrella as a browsable SUBJECT (#756), returned by the
- * fixed `/catalog/group/class/<key>` route — the classification sibling of
- * `ConceptGroupNodeData`. Catalog-global (no provider/register), and its members
- * are plain `ConceptGroupMember`s (fqid + name + facets) with NO coverage:
- * classification umbrellas have no register scope or study-window. Its OWN
- * response type, NOT an arm of the catch-all `CatalogNode` union. */
-export type ClassificationGroupNodeData = Schemas["ClassificationGroupNode"];
-/** A derived one-dimensional classification succession family (#771), returned by
- * `/catalog/group/class/<key>` with `kind: "classification-family"`. */
-export type ClassificationFamilyNodeData = Schemas["ClassificationFamilyNode"];
-export type ClassificationGroupSubjectData =
-  | ClassificationGroupNodeData
-  | ClassificationFamilyNodeData;
-/** The concept group a binding belongs to (#616), as `(provider, register,
- * key)` — carried on `BindingNode.group` (null when ungrouped) so a member page
- * links to its group subject without a second fetch. */
-export type BindingGroupRef = Schemas["BindingGroupRef"];
-
-/** The catalog relationship-graph contract (#761) — a typed graph object the
- * renderer (#678) draws as-is: one node per variable (states as sub-structure,
- * grouped into representation-run cells) or classification edition, plus
- * `succession` edges. Representation-grain succession edges carry optional
- * source/target column and variant metadata (#888). An empty graph (`nodes: []`) is the "don't
- * render" signal (`nodes.length === 0`). `focus_id` is the requested node
- * (post-same_as), null for a group-addressed call. reg_meta owns topology +
- * predicates; this is just the wire shape. */
-export type RelationshipGraph = Schemas["RelationshipGraph"];
-/** A variable node in the relationship graph (#761/#678) — one per variable, its
- * `states` grouped into representation-run cells by the renderer; carries the
- * group facets + `same_as` aliases the renderer surfaces as per-node affordances. */
-export type VariableGraphNode = Schemas["VariableGraphNode"];
-/** A classification-edition node in the relationship graph (#761/#678) — a POINT
- * at `version_year` (not a validity interval); `is_current` marks the head edition. */
-export type ClassificationGraphNode = Schemas["ClassificationGraphNode"];
+/** The catalog relationship-graph contract (#761): one node per variable (states
+ * as sub-structure, grouped into representation-run cells) or classification
+ * edition, plus `succession` edges. An empty graph (`nodes: []`) is the "don't
+ * render" signal. `focus_id` is the requested node, null for a group ref. */
+export type RelationshipGraph = Omit<RustSchemas["Graph"], "nodes"> & {
+  nodes: GraphNode[];
+};
+export type VariableGraphNode = Omit<
+  Extract<RustSchemas["Node"], { kind: "variable" }>,
+  "states"
+> & { states: GraphState[] };
+/** A classification-edition node: a point at `version_year`; `is_current` marks
+ * the head edition. */
+export type ClassificationGraphNode = Extract<
+  RustSchemas["Node"],
+  { kind: "classification" }
+>;
 export type GraphNode = VariableGraphNode | ClassificationGraphNode;
-export type GraphEdge = Schemas["GraphEdge"];
-export type GraphState = Schemas["GraphState"];
+export type GraphEdge = RustSchemas["Edge"];
+export type GraphState = Required<RustSchemas["GraphState"]>;
 
-// The catch-all returns a `StatesResponse` (NOT a `kind`-tagged node) when a
-// binding leaf is queried with `?period` (the resolve_at subset), and a
-// SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished
-// from a browsable node by `isCatalogNode` at the fetch boundary.
-export type StatesResponse = Schemas["StatesResponse"];
-export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
-
-/** One edition in a classification's embedded succession timeline (#571) — the
- * chain arrives oldest-first, terminal last, with `is_self`/`is_current` flags.
- * Every edition is a live classification row (the build validator guarantees
- * succession editions are live), so `fqid` is null only when the slug is
- * missing/unresolvable, in which case it renders as plain text. The browse panel
- * renders the whole chain synchronously from these. */
-export type ClassificationChainEdition = Schemas["ClassificationEdition"];
-/** One code/label entry in a classification edition's value set (#609), embedded
- * on `ClassificationNodeData.codes`. `is_valid` is canonical (true) / unknown
- * (null — no canonical CSV for the edition). */
-export type ClassificationCodeModel = Schemas["ClassificationCode"];
-/** The resolved classification leaf the catch-all returns — carries its embedded
- * FULL succession chain (`edition_chain`, oldest first / terminal last), the
- * resolved edition's value-set `codes` (#609), and the curated umbrella
- * `dimensions` it belongs to (#609 niva ↔ aggregate cross-reference). */
-export type ClassificationNodeData = Schemas["ClassificationNode"];
-
-/** A browsable catalog node — every `CatalogNode` arm carries a `kind` literal;
- * the catch-all's other payloads (a `?period` `StatesResponse`, or a SUB-ENDPOINT
- * `VariantsResponse`/… on a `.../states` path) do NOT. Positive `"kind" in x`
- * check (negate it for "the non-node response"). Phrased as `isCatalogNode`
- * rather than `isStatesResponse` because a no-`kind` payload is NOT necessarily a
- * `StatesResponse` — only the binding-leaf `?period` resolve is. */
-export function isCatalogNode(
-  x: CatalogNode | StatesResponse,
-): x is CatalogNode {
-  return "kind" in x;
-}
-
-/** Percent-encode each FQID segment for use in a URL path (the server
- * re-validates the slug grammar per segment — see reg_webapp/DESIGN.md → FQID
- * path guard (catalog_fqid.py)). Split/join on `/` so the
- * path separators survive while reserved chars inside a segment are escaped.
+/** Percent-encode each FQID segment for use in a URL path. Split/join on `/` so
+ * the path separators survive while reserved chars inside a segment are escaped.
  * Shared with `catalog.catalogHref` so the SPA's link hrefs and the API paths
- * encode identically. (A no-op for today's ASCII slugs, but correct for any
- * input.) */
+ * encode identically. */
 export function encodeFqid(fqidPath: string): string {
   return fqidPath.split("/").map(encodeURIComponent).join("/");
 }
 
-/** The concept-group subject route, shared by SPA links and API fetches. `key`
- * rides the route tail, so encode it directly rather than joining it into an
- * FQID-shaped path where embedded `/` would become a separator. */
+/** The concept-group ref, `group/<provider>/<register>/<key>`. */
+export function conceptGroupRef(
+  provider: string,
+  register: string,
+  key: string,
+): string {
+  return `group/${provider}/${register}/${key}`;
+}
+
+/** The classification-group (or family) ref, `group/class/<key>`. */
+export function classificationGroupRef(key: string): string {
+  return `group/class/${key}`;
+}
+
+/** The concept-group subject route, shared by SPA links and API fetches. */
 export function conceptGroupPath(
   provider: string,
   register: string,
   key: string,
 ): string {
-  return `/catalog/group/${encodeURIComponent(provider)}/${encodeURIComponent(register)}/${encodeURIComponent(key)}`;
+  return `/catalog/${encodeFqid(conceptGroupRef(provider, register, key))}`;
 }
 
 /** The classification-group subject route (#756), shared by SPA links and API
- * fetches — the classification sibling of `conceptGroupPath`. The literal `class`
- * segment routes to the fixed classification-group route (no provider/register);
- * `key` rides the route tail, encoded directly. */
+ * fetches — the classification sibling of `conceptGroupPath`. */
 export function classificationGroupPath(key: string): string {
-  return `/catalog/group/class/${encodeURIComponent(key)}`;
+  return `/catalog/${encodeFqid(classificationGroupRef(key))}`;
+}
+
+/** GET a Rust-server read and return its `data`. */
+async function rustGet<T>(
+  path: string,
+  query?: URLSearchParams,
+  options?: { signal?: AbortSignal },
+): Promise<T> {
+  const suffix = query && query.size > 0 ? `?${query}` : "";
+  return (await apiGet<{ data: T }>(`${path}${suffix}`, options)).data;
 }
 
 /** The Rust server answers with `{data, meta}`; the SPA reads `data`. */
-export async function getContext(): Promise<Context> {
-  return (await apiGet<{ data: Context }>("/context")).data;
+export function getContext(): Promise<Context> {
+  return rustGet<Context>("/context");
 }
 
-export function getCatalogRoot(): Promise<RootResponse> {
-  return apiGet<RootResponse>("/catalog");
+/** `show` for `ref` (a FQID or group ref); no ref is the catalog root. */
+export function getShow(ref?: string): Promise<ShowNode> {
+  return rustGet<ShowNode>(ref ? `/catalog/${encodeFqid(ref)}` : "/catalog");
 }
 
-/** Resolve a catalog node by its FQID path (e.g. `scb/lisa/kon`). With `params`
- * (`?period` + the `?variant`/`?value_set_version` modifiers) a binding
- * leaf resolves to the `resolve_at` subset — a `StatesResponse` (no `kind`),
- * distinguished from a browsable node by `isCatalogNode`. A malformed
- * period/variant is the server's 422 (surfaced as an `ApiError`). */
-export function getCatalogNode(
-  fqidPath: string,
-  params?: ResolutionParams,
-): Promise<CatalogNode | StatesResponse> {
-  const query = params ? queryFromParams(params) : "";
-  const path = `/catalog/${encodeFqid(fqidPath)}${query ? `?${query}` : ""}`;
-  return apiGet<CatalogNode | StatesResponse>(path);
+/** The page size the SPA walks `states` with: the operation's maximum.
+ * simplify: sequential page walk; the largest history on the v0.43.0 pin
+ * (`scb/rtb/kon`, 521 states) is 3 requests. Fetch pages concurrently, or let the
+ * binding page render the first page while the rest load, if a variable passes
+ * about 1,000 states (5 pages) or the leaf's load time becomes noticeable. */
+const STATES_PAGE = 200;
+
+/** Read `period` the way the SPA writes it, over operations that take ONE period:
+ * `_default` (and no period) is the whole history, one read without `period`; a
+ * comma list (a source's disjoint windows) is one read per member, merged and
+ * deduplicated by `key`. Project validation accepts the list grammar, catalog
+ * reads one period each (RUST_RUNTIME_SPEC.md package C). */
+async function readPerPeriod<T>(
+  period: string | null | undefined,
+  read: (period: string | undefined) => Promise<T[]>,
+  key: (item: T) => string,
+): Promise<T[]> {
+  const periods: (string | undefined)[] =
+    !period || period === "_default"
+      ? [undefined]
+      : period.split(",").map((member) => member.trim());
+  // An empty member (`2018,`) would read without `period`, i.e. the whole history,
+  // and widen the answer; refuse it as the server refuses any malformed period.
+  if (periods.includes("")) {
+    const message = `Invalid period ${JSON.stringify(period)}: a list member is empty.`;
+    throw new ApiError(
+      422,
+      {
+        error: {
+          code: "invalid_period",
+          message,
+          fields: { parameter: "period" },
+        },
+      },
+      message,
+    );
+  }
+  if (periods.length === 1) {
+    return read(periods[0]);
+  }
+  const merged = new Map<string, T>();
+  for (const items of await Promise.all(periods.map(read))) {
+    for (const item of items) {
+      if (!merged.has(key(item))) {
+        merged.set(key(item), item);
+      }
+    }
+  }
+  return [...merged.values()];
 }
 
-/** List a register's variants (the `?variant=` browse axis). `register`
- * is the 2-seg register FQID `provider/register`. */
-export function getRegisterVariants(
-  register: string,
-): Promise<VariantsResponse> {
-  return apiGet<VariantsResponse>(`/catalog/${encodeFqid(register)}/variants`);
-}
-
-/** Resolve a concept group SUBJECT by `(provider, register, key)` (#617) — the
- * group with all members + per-member coverage. Each path segment is
- * percent-encoded (the server re-validates provider/register as slugs; the key
- * is a derivation key). `member` is the optional focus hint (a member leaf slug
- * to highlight), echoed back on the node only when it names a real member. A
- * 404 (unknown key / register) surfaces as an `ApiError`. */
-export function getConceptGroup(
-  provider: string,
-  register: string,
-  key: string,
-  member?: string,
-): Promise<ConceptGroupNodeData> {
-  const path = conceptGroupPath(provider, register, key);
-  const query = member ? `?member=${encodeURIComponent(member)}` : "";
-  return apiGet<ConceptGroupNodeData>(`${path}${query}`);
-}
-
-/** Resolve a classification umbrella SUBJECT by `key` (#756) — the group with all
- * members + facets. The classification sibling of `getConceptGroup`, but with no
- * provider/register or `?member=` focus hint (classification umbrellas are
- * catalog-global). A 404 (unknown key) surfaces as an `ApiError`. */
-export function getClassificationGroup(
-  key: string,
-): Promise<ClassificationGroupSubjectData> {
-  return apiGet<ClassificationGroupSubjectData>(classificationGroupPath(key));
-}
-
-// ── Binding sub-endpoints ───────────────────────────────────────────────────
-// The leaf now EMBEDS states / same_as / succession_chain (the FULL chain, #582) /
-// lineage, so the SPA fetches only the one it does NOT embed:
-// `/lineage_warnings`. It GETs `/catalog/{encodeFqid}/lineage_warnings`; the suffix
-// is greedy-matched ABOVE the catch-all server-side. (The `/predecessors` route
-// still exists server-side — the #411 inbound-succession surface — but the SPA no
-// longer fetches it: the embedded `succession_chain` already carries predecessors.)
-
-export function getBindingLineageWarnings(
-  fqidPath: string,
-): Promise<LineageWarningsResponse> {
-  return apiGet<LineageWarningsResponse>(
-    `/catalog/${encodeFqid(fqidPath)}/lineage_warnings`,
+/** A variable's states: its whole history, or with `period` (and the
+ * `variant`/`value_set_version` modifiers) the resolved subset; a period list
+ * unions its members' subsets. Walks every page; the server stops paging at depth
+ * 1000, so a longer history ends there. A malformed modifier is the server's 422
+ * (an `ApiError`). */
+export function getStates(
+  ref: string,
+  params: ResolutionParams = {},
+): Promise<VariableStateModel[]> {
+  return readPerPeriod(
+    params.period,
+    async (period) => {
+      const items: VariableStateModel[] = [];
+      let cursor: string | null | undefined;
+      do {
+        const query = new URLSearchParams(
+          queryFromParams({ ...params, period }),
+        );
+        query.set("limit", String(STATES_PAGE));
+        if (cursor) {
+          query.set("cursor", cursor);
+        }
+        const page = await rustGet<{
+          items: VariableStateModel[];
+          next_cursor?: string | null;
+        }>(`/states/${encodeFqid(ref)}`, query);
+        items.push(...page.items);
+        cursor = page.next_cursor;
+      } while (cursor);
+      return items;
+    },
+    (s) => `${s.state_id}|${s.delivery_column_name}|${s.valid_from}`,
   );
 }
 
-export type DataWarningModel = Schemas["DataWarning"];
-
-export function getDataWarnings(
-  fqidPath: string,
+/** A register's or variable's data warnings. `unassigned_only` keeps a
+ * register's warnings that name no variable; a period list unions its members'
+ * warnings, in `warning_id` order as the server orders one read. */
+export async function getWarnings(
+  ref: string,
   params: {
     unassigned_only?: boolean;
     period?: string | null;
@@ -481,22 +491,30 @@ export function getDataWarnings(
     representation?: string | null;
   } = {},
 ): Promise<DataWarningModel[]> {
-  const query = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    if (value) query.set(key, String(value));
-  }
-  return apiGet<DataWarningModel[]>(
-    `/catalog/${encodeFqid(fqidPath)}/data_warnings${query.size ? `?${query}` : ""}`,
+  const warnings = await readPerPeriod(
+    params.period,
+    (period) => {
+      const query = new URLSearchParams();
+      for (const [key, value] of Object.entries({ ...params, period })) {
+        if (value) query.set(key, String(value));
+      }
+      return rustGet<DataWarningModel[]>(`/warnings/${encodeFqid(ref)}`, query);
+    },
+    (w) => w.warning_id,
+  );
+  // Code-point order, as SQLite's binary collation orders one read.
+  return warnings.sort((a, b) =>
+    a.warning_id < b.warning_id ? -1 : a.warning_id > b.warning_id ? 1 : 0,
   );
 }
 
-/** One page of value set `valueSetId`'s codes. `state` switches the read to that
- * state's stored classification MISMATCH list (same code→label shape); the state
- * must carry this value set or the server 404s. `q` filters the WHOLE set before
- * the page window and `total` counts the matches, so paging never turns into
- * filtering one page. */
-export function getValueSetCodes(
-  valueSetId: string,
+/** One page of `values`: a classification's codes (`ref` a classification), or
+ * the value set of one `state` of the variable `ref`. With `classification`,
+ * `partition` picks that declared book's part of the state's codes; `column` with
+ * `alias_window_from` selects a coded alias window instead. `q` filters the whole
+ * set before the page and `total` counts the matches; `cursor` continues. */
+export function getValues(
+  ref: string,
   params: {
     state?: string | null;
     partition?: "canonical" | "source_extensions" | "nonstandard" | "sentinels";
@@ -504,72 +522,27 @@ export function getValueSetCodes(
     column?: string;
     alias_window_from?: string;
     q?: string;
-    offset?: number;
+    cursor?: string | null;
     limit?: number;
-  },
+  } = {},
   options?: { signal?: AbortSignal },
-): Promise<ValueSetCodesResponse> {
+): Promise<ValuesPage> {
   const query = new URLSearchParams();
-  if (params.state != null) {
-    query.set("state", String(params.state));
+  for (const [key, value] of Object.entries(params)) {
+    if (value != null && value !== "") query.set(key, String(value));
   }
-  if (params.column != null) query.set("column", params.column);
-  if (params.alias_window_from != null)
-    query.set("alias_window_from", params.alias_window_from);
-  if (params.classification) {
-    query.set("classification", params.classification);
-  }
-  if (params.partition) {
-    query.set("partition", params.partition);
-  }
-  if (params.q) {
-    query.set("q", params.q);
-  }
-  if (params.offset) {
-    query.set("offset", String(params.offset));
-  }
-  if (params.limit != null) {
-    query.set("limit", String(params.limit));
-  }
-  const suffix = query.size > 0 ? `?${query}` : "";
-  return apiGet<ValueSetCodesResponse>(
-    `/value-sets/${valueSetId}/codes${suffix}`,
-    options,
-  );
+  return rustGet<ValuesPage>(`/values/${encodeFqid(ref)}`, query, options);
 }
 
-/** The relationship graph for a catalog LEAF — a binding's variable OR a
- * classification edition (#761/#792); the server dispatches on FQID kind. The
- * typed graph the renderer (#678) draws over both leaf kinds. An empty graph
- * (`nodes: []`) means "don't render". A dead/renamed binding 301s server-side to
- * its terminal successor's `/graph`. */
-export function getBindingGraph(fqidPath: string): Promise<RelationshipGraph> {
-  return apiGet<RelationshipGraph>(`/catalog/${encodeFqid(fqidPath)}/graph`);
+/** The relationship graph of a variable, classification, concept group or
+ * classification group ref. */
+export function getGraph(ref: string): Promise<RelationshipGraph> {
+  return rustGet<RelationshipGraph>(`/graph/${encodeFqid(ref)}`);
 }
 
-/** The relationship graph for a register concept group SUBJECT (#761) — the
- * union of its member variables' graphs (`focus_id` null). A 404 (unknown key /
- * register) surfaces as an `ApiError`. The group page (#757) renders this; a
- * member page renders the SAME union via `getBindingGraph` with the member
- * highlighted (Fork B). */
-export function getConceptGroupGraph(
-  provider: string,
-  register: string,
-  key: string,
-): Promise<RelationshipGraph> {
-  return apiGet<RelationshipGraph>(
-    `${conceptGroupPath(provider, register, key)}/graph`,
-  );
-}
-
-/** The relationship graph for a classification umbrella group SUBJECT (#761) —
- * the union of its member editions' succession chains (`focus_id` null). The
- * classification sibling of `getConceptGroupGraph`. A 404 (unknown key) surfaces
- * as an `ApiError`. */
-export function getClassificationGroupGraph(
-  key: string,
-): Promise<RelationshipGraph> {
-  return apiGet<RelationshipGraph>(`${classificationGroupPath(key)}/graph`);
+/** A variable's lineage: edges, lineage warnings and per-register provenance. */
+export function getLineage(ref: string): Promise<LineageModel> {
+  return rustGet<LineageModel>(`/lineage/${encodeFqid(ref)}`);
 }
 
 // ── Project write surface (A5.2b-ii) ────────────────────────────────────────

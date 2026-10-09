@@ -1,0 +1,37 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/entries/*/logical/representation": [
+        "Valueold",
+        "Valuenew"
+      ],
+      "/data/entries/*/requested_period": [
+        "2018",
+        "2019"
+      ],
+      "/data/entries/*/physical/column": [
+        "Observed",
+        "Observed"
+      ],
+      "/data/entries/*/physical/table": [
+        "Annual2018",
+        "Annual2019"
+      ],
+      "/data/entries/*/physical/edition": [
+        "2018",
+        "2019"
+      ],
+      "/data/clips": [],
+      "/data/provenance/mode": "steward_holdings"
+    }
+  },
+  {
+    "status": 200,
+    "media_type": "application/json",
+    "headers": {
+      "content-disposition": "attachment; filename=\"order.json\""
+    },
+    "bytes": "order.json"
+  }
+]

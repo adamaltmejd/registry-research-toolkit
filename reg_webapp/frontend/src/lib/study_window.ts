@@ -12,7 +12,7 @@
  * plan judges a source by the same eras the picker offered its columns under.
  */
 
-import type { BindingChild } from "./api";
+import type { VariableChild } from "./api";
 import {
   addWindowBounds,
   deliveryWindows,
@@ -85,7 +85,7 @@ export function overlapRegisters(
 export function planWindowOverlap(
   sources: readonly SafeSource[],
   window: StudyWindow,
-  childrenByRegister: ReadonlyMap<string, readonly BindingChild[]>,
+  childrenByRegister: ReadonlyMap<string, readonly VariableChild[]>,
 ): OverlapPlan {
   const bounds = addWindowBounds(null, [window.from, window.to]);
   const plan: OverlapPlan = { changes: [], misses: [] };

@@ -3,8 +3,8 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import type { ConceptGroupNodeData, RelationshipGraph } from "./api";
-import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
+import type { ConceptGroupShow, RelationshipGraph } from "./api";
+import { getGraph, getShow, getStates } from "./api";
 import {
   graph,
   gstate,
@@ -21,19 +21,19 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
-    getConceptGroup: vi.fn(),
-    getConceptGroupGraph: vi.fn(),
+    getStates: vi.fn(),
+    getShow: vi.fn(),
+    getGraph: vi.fn(),
   };
 });
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getStates).mockReset();
   mockResolveColumns({});
-  vi.mocked(getConceptGroup).mockReset();
-  vi.mocked(getConceptGroupGraph).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getGraph).mockReset();
   // Default: an empty graph (overridden per case).
-  vi.mocked(getConceptGroupGraph).mockResolvedValue(graph([]));
+  vi.mocked(getGraph).mockResolvedValue(graph([]));
   router.navigate("/catalog/group/scb/rams/ink");
   windowStore.set(null);
   projectStore.newProject({
@@ -45,11 +45,11 @@ beforeEach(() => {
 describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   // ── Shared concept definition / description (#678) ───────────────────────────
   it("renders the shared definition/description ONCE at the group level, even though a sibling carries null", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getShow).mockResolvedValue(node());
     // The canonical member (inkjan) carries the shared concept text; the parallel
     // sibling (inkfeb) carries null — the dedup must NOT blank the block, and the
     // single distinct value renders exactly once at the group level.
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode(
           "scb/rams/inkjan",
@@ -116,11 +116,11 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   // misrepresent member text as concept text). The whole shared block is dropped; the
   // per-member text remains reachable on each member's leaf page.
   it("renders NO group-level def/desc when members carry MULTIPLE distinct values (#900)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
+    vi.mocked(getShow).mockResolvedValue(node());
     // The two members carry DIFFERENT definitions AND descriptions — the heterogeneous
     // curated-group shape (#900: disponibel-inkomst's ~14 near-duplicate per-member
     // rows). Members disagree → no single shared value → render nothing.
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode(
           "scb/rams/inkjan",
@@ -181,8 +181,8 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
   // members differ. This is what lets a researcher tell parallel siblings apart
   // (fordonsreg näringsgren: owner / previous-owner / 2nd-previous-owner).
   it("renders each member's operational_definition per band so parallel siblings are distinguishable (#892)", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(node());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(node());
+    vi.mocked(getGraph).mockResolvedValue(
       graph([
         vnode(
           "scb/rams/inkjan",
@@ -240,7 +240,7 @@ describe("ConceptGroupView per-column facet labels (#678 finding 4)", () => {
   // facets (the inclusive/exclusive disposable-income case): CDISP "Inkl.
   // kapitalvinst", CDISP5 "Exkl. kapitalvinst". The band is built per DISTINCT fqid,
   // so without the facet-per-column map the SECOND member's facet label is lost.
-  function twoFacetMembersOneFqid(): ConceptGroupNodeData {
+  function twoFacetMembersOneFqid(): ConceptGroupShow {
     return node({
       members: [
         {
@@ -270,7 +270,7 @@ describe("ConceptGroupView per-column facet labels (#678 finding 4)", () => {
           coverage: null,
         },
       ],
-    } as unknown as Partial<ConceptGroupNodeData>);
+    } as unknown as Partial<ConceptGroupShow>);
   }
 
   function dispinkGraph(): RelationshipGraph {
@@ -295,8 +295,8 @@ describe("ConceptGroupView per-column facet labels (#678 finding 4)", () => {
   }
 
   it("shows EACH column's human facet label, not just the technical column name", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(twoFacetMembersOneFqid());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(dispinkGraph());
+    vi.mocked(getShow).mockResolvedValue(twoFacetMembersOneFqid());
+    vi.mocked(getGraph).mockResolvedValue(dispinkGraph());
 
     await renderGroup();
 

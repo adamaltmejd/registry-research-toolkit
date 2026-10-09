@@ -1,14 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import { getValueSetCodes } from "./api";
+import { getValues } from "./api";
 import ValueSetView from "./ValueSetView.svelte";
 import {
-  CODES,
   classState,
   coding,
+  FQID,
   normalizedText,
   plainState,
+  serveValues,
   state,
 } from "./value-set-view-test-helpers";
 
@@ -22,41 +23,12 @@ import {
 // the same order the route does (filter the whole set, then page it).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getValueSetCodes: vi.fn() };
+  return { ...actual, getValues: vi.fn() };
 });
 
 beforeEach(() => {
-  vi.mocked(getValueSetCodes).mockReset();
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (
-      valueSetId,
-      {
-        state = null,
-        partition = "source_extensions",
-        q = "",
-        offset = 0,
-        limit = 200,
-      },
-    ) => {
-      const all = CODES.get(`${valueSetId}:${state ?? ""}:${partition}`) ?? [];
-      const needle = q.trim().toLowerCase();
-      const matched = all.filter(
-        (c) =>
-          c.code.toLowerCase().includes(needle) ||
-          c.label.toLowerCase().includes(needle),
-      );
-      return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        period_scope: "intervals",
-        q,
-        total: matched.length,
-        offset,
-        limit,
-        codes: matched.slice(offset, offset + limit),
-      };
-    },
-  );
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockImplementation(serveValues);
 });
 
 describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () => {
@@ -64,6 +36,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // The classification state carries codes too, so a code dump would show as a
     // second "Values (…)" disclosure beside the plain value set's.
     await render(ValueSetView, {
+      fqid: FQID,
       states: [
         state({
           ...classState,
@@ -90,6 +63,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       { stateId: "1", partition: "canonical" },
     );
     await render(ValueSetView, {
+      fqid: FQID,
       states: [
         state({
           ...classState,
@@ -139,10 +113,10 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       .toBeVisible();
     expect(
       vi
-        .mocked(getValueSetCodes)
+        .mocked(getValues)
         .mock.calls.some(
           ([, options]) =>
-            options.partition === "canonical" && options.state === "1",
+            options?.partition === "canonical" && options?.state === "1",
         ),
     ).toBe(true);
   });
@@ -165,6 +139,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       nonconforming_codes: [],
     };
     await render(ValueSetView, {
+      fqid: FQID,
       states: [
         state({
           ...classState,
@@ -271,11 +246,9 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     await expect.element(page.getByText("Later still")).toBeVisible();
     // Each list is read by ITS OWN state — no disclosure reads another's coding.
     const read = new Set(
-      vi
-        .mocked(getValueSetCodes)
-        .mock.calls.map(([id, opts]) => `${id}:${opts.state}`),
+      vi.mocked(getValues).mock.calls.map(([, opts]) => opts?.state),
     );
-    expect([...read].sort()).toEqual(["101:11", "102:12"]);
+    expect([...read].sort()).toEqual(["11", "12"]);
   });
 });
 
@@ -295,38 +268,53 @@ it("keeps every declared book and reads scoped special codes using exact large I
     overlap: 0.5,
     nonconforming_codes: [],
   };
-  vi.mocked(getValueSetCodes).mockImplementation(async (id, options) => ({
-    value_set_id: id,
-    state_id: options.state ?? null,
-    q: "",
+  // The server's answer by request: the coded 2013 window's own value set only
+  // when the read names the window (column + start), else the base state's set;
+  // the stored sentinels only for the book's ref (`class/sni2007`) — a bare slug
+  // resolves as a name and does not answer them.
+  const window = (options: Parameters<typeof getValues>[1]) =>
+    options?.state === stateId &&
+    options.column === "NgS1" &&
+    options.alias_window_from === "2013-01-01";
+  vi.mocked(getValues).mockImplementation(async (ref, options) => ({
+    next_cursor: null,
     total: 1,
-    offset: 0,
-    limit: 200,
-    codes:
-      options.state == null
-        ? [{ code: "0", label: "Original source label" }]
-        : [
-            {
-              code: "0",
-              label: "Original source label",
-              member_kind: "sentinel",
-              sentinel_meaning: null,
-              scoped_sentinels: [
+    items:
+      ref !== FQID
+        ? []
+        : options?.classification == null
+          ? [
+              window(options)
+                ? { code: "0", label: "Original source label" }
+                : { code: "9", label: "Base state label" },
+            ]
+          : options.classification !== "class/sni2007" ||
+              options.partition !== "sentinels" ||
+              !window(options)
+            ? []
+            : [
                 {
-                  valid_from: "2013-01-01",
-                  valid_to: "2013-12-31",
-                  delivery_column_name: "NgS1",
-                  classification_sha256: "a".repeat(64),
-                  source_fingerprints: ["b".repeat(64)],
-                  members: [["0", "No recorded industry"]],
-                  provenance:
-                    "Reviewed source coding for this column and period.",
+                  code: "0",
+                  label: "Original source label",
+                  member_kind: "sentinel",
+                  sentinel_meaning: null,
+                  scoped_sentinels: [
+                    {
+                      valid_from: "2013-01-01",
+                      valid_to: "2013-12-31",
+                      delivery_column_name: "NgS1",
+                      classification_sha256: "a".repeat(64),
+                      source_fingerprints: ["b".repeat(64)],
+                      members: [["0", "No recorded industry"]],
+                      provenance:
+                        "Reviewed source coding for this column and period.",
+                    },
+                  ],
                 },
               ],
-            },
-          ],
   }));
   await render(ValueSetView, {
+    fqid: FQID,
     states: [
       state({
         state_id: stateId,
@@ -358,22 +346,18 @@ it("keeps every declared book and reads scoped special codes using exact large I
   expect(
     document.querySelector('a[href="/catalog/class/sni2002"]'),
   ).not.toBeNull();
-  await page.getByText("Special source codes (1)").click();
+  // Fails if the coded window's value set is read without its column and window
+  // start (or with a rounded state id): the base state's codes would show instead.
+  await expect.element(page.getByText("Original source label")).toBeVisible();
   await expect
-    .element(page.getByText("Original source label").first())
-    .toBeVisible();
+    .element(page.getByText("Base state label"))
+    .not.toBeInTheDocument();
+  // Fails if the book is sent as a bare slug, which the server resolves as a
+  // name rather than as the classification's ref: no special codes would show.
+  await page.getByText("Special source codes (1)").click();
   await expect
     .element(page.getByText("No recorded industry", { exact: false }))
     .toBeVisible();
-  const request = vi.mocked(getValueSetCodes).mock.lastCall;
-  expect(request?.[0]).toBe(valueSetId);
-  expect(request?.[1]).toMatchObject({
-    state: stateId,
-    classification: "sni2007",
-    partition: "sentinels",
-    column: "NgS1",
-    alias_window_from: "2013-01-01",
-  });
   await page.getByRole("button", { name: "Source evidence" }).click();
   await expect
     .element(
@@ -418,6 +402,7 @@ it("limits conformance notices to the selected delivery while preserving histori
     valid_to: "1992-12-31",
   });
   await render(ValueSetView, {
+    fqid: FQID,
     states: [historical, selected],
     scopeStates: [selected],
     narrowed: true,

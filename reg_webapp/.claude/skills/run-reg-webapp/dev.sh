@@ -304,7 +304,7 @@ for _ in $(seq 1 30); do
 	if [ -n "$exited" ]; then
 		break # a server exited (e.g. a pinned port already in use) — fail fast
 	fi
-	if curl -sf -o /dev/null "http://localhost:$backend_port/api/catalog" 2>/dev/null &&
+	if curl -sf -o /dev/null "http://localhost:$backend_port/openapi.json" 2>/dev/null &&
 		curl -sf -o /dev/null "http://127.0.0.1:$rust_port/api/context" 2>/dev/null &&
 		curl -sf -o /dev/null "http://localhost:$frontend_port/" 2>/dev/null; then
 		ready=1
