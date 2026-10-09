@@ -22,6 +22,46 @@
         ["same_as", "scb/other/calendar", "scb/sample/value"],
         ["same_as", "scb/sample/value", "scb/other/calendar"]
       ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": "scb/other/calendar"},
+      "fields": ["code"],
+      "note": "An unreviewed family whose months share one definition forms without a diagnostic.",
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "where": {"variable": "calendar"},
+      "fields": ["provider_key", "definition"],
+      "note": "The family keeps the months' one common definition (the fixture's default) and its period-family provider key.",
+      "rows": [["period-family:other:calendar", "A generic family label"]]
+    },
+    {
+      "table": "states",
+      "where": {"variable": "calendar"},
+      "fields": ["valid_from", "valid_to", "definition"],
+      "rows": [["2020-01-01", "2020-12-31", "A generic family label"]]
+    },
+    {
+      "table": "alias_windows",
+      "where": {"variable": "calendar"},
+      "fields": ["column", "valid_from", "valid_to", "column_metadata", "definition"],
+      "note": "Each month column is one calendar-month window with shared metadata and no literal definition of its own. February 2020 ends on the 29th.",
+      "rows": [
+        ["CalendarJan", "2020-01-01", "2020-01-31", "shared", null],
+        ["CalendarFeb", "2020-02-01", "2020-02-29", "shared", null],
+        ["CalendarMar", "2020-03-01", "2020-03-31", "shared", null],
+        ["CalendarApr", "2020-04-01", "2020-04-30", "shared", null],
+        ["CalendarMaj", "2020-05-01", "2020-05-31", "shared", null],
+        ["CalendarJun", "2020-06-01", "2020-06-30", "shared", null],
+        ["CalendarJul", "2020-07-01", "2020-07-31", "shared", null],
+        ["CalendarAug", "2020-08-01", "2020-08-31", "shared", null],
+        ["CalendarSep", "2020-09-01", "2020-09-30", "shared", null],
+        ["CalendarOkt", "2020-10-01", "2020-10-31", "shared", null],
+        ["CalendarNov", "2020-11-01", "2020-11-30", "shared", null],
+        ["CalendarDec", "2020-12-01", "2020-12-31", "shared", null]
+      ]
     }
   ]
 }

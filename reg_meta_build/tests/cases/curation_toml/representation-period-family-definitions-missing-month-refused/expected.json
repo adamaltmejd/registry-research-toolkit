@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_period_family_merges.py::test_definition_map_requires_twelve_exact_positive_literals[missing_month]",
+  "note": "A map of months 01 to 11 is a subset of the twelve months. Beside representation-period-family-definitions-wrong-month-refused (twelve keys, one of them not a month): the two pin the two halves of the exact-month-set rule. The code and locator are the loader's located-error contract for a field validator.",
+  "fails_if": "the register loader checks only that every `expected_definitions` key is a month 01..12, so a map missing December loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[representation.period_family.expected_definitions]] entry 1",
+    "message_contains": [
+      "expected definitions require every exact month 01 through 12"
+    ]
+  }
+}

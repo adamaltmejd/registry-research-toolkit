@@ -1,0 +1,83 @@
+{
+  "projections": [
+    {
+      "table": "cases",
+      "fields": ["case_id", "status"],
+      "note": "Only the complete family compiles: the replaced test's two cases, both applicable; a stale entry compiles none. The ids are the entry locator plus the native variant id (30), the year and the case kind, the form compile_period_families mints (curation_compile.py:1152-1153).",
+      "rows": [
+        ["curation/registers/scb/checked.toml#/representation.period_family/1:30:2020:identity", "applicable"],
+        ["curation/registers/scb/checked.toml#/representation.period_family/1:30:2020:representations", "applicable"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator"],
+      "note": "Each incomplete or drifted family is one stale entry.",
+      "rows": [
+        ["curation/registers/scb/eleven.toml#/representation.period_family/1"],
+        ["curation/registers/scb/undated.toml#/representation.period_family/1"],
+        ["curation/registers/scb/changed.toml#/representation.period_family/1"],
+        ["curation/registers/scb/missing.toml#/representation.period_family/1"],
+        ["curation/registers/scb/newrec.toml#/representation.period_family/1"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "locator": "curation/registers/scb/undated.toml#/representation.period_family/1",
+        "detail": {"contains": "LonFinkJan"}
+      },
+      "fields": ["code"],
+      "note": "The undated entry names the month that has no annual year.",
+      "rows": [["stale_curation_entry"]]
+    },
+    {
+      "table": "variables",
+      "where": {"provider_key": {"contains": "period-family:"}},
+      "fields": ["register", "variable", "provider_key", "definition"],
+      "note": "Only the complete family is published: under its authored slug, not the stem, and with no common definition.",
+      "rows": [["checked", "lone-per-manad", "period-family:checked:lonfink", null]]
+    },
+    {
+      "table": "states",
+      "where": {"register": "checked"},
+      "fields": ["variable", "valid_from", "valid_to", "definition"],
+      "rows": [["lone-per-manad", "2020-01-01", "2020-12-31", null]]
+    },
+    {
+      "table": "alias_windows",
+      "where": {"register": "checked"},
+      "fields": ["column", "valid_from", "valid_to", "column_metadata", "definition", "measurement_unit"],
+      "note": "Each month column is one calendar-month window carrying its own literal definition and the delivered unit. February 2020 ends on the 29th.",
+      "rows": [
+        ["LonFinkJan", "2020-01-01", "2020-01-31", "per_column", "Salary paid in month 01; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkFeb", "2020-02-01", "2020-02-29", "per_column", "Salary paid in month 02; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkMar", "2020-03-01", "2020-03-31", "per_column", "Salary paid in month 03; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkApr", "2020-04-01", "2020-04-30", "per_column", "Salary paid in month 04; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkMaj", "2020-05-01", "2020-05-31", "per_column", "Salary paid in month 05; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkJun", "2020-06-01", "2020-06-30", "per_column", "Salary paid in month 06; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkJul", "2020-07-01", "2020-07-31", "per_column", "Salary paid in month 07; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkAug", "2020-08-01", "2020-08-31", "per_column", "Salary paid in month 08; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkSep", "2020-09-01", "2020-09-30", "per_column", "Salary paid in month 09; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkOkt", "2020-10-01", "2020-10-31", "per_column", "Salary paid in month 10; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkNov", "2020-11-01", "2020-11-30", "per_column", "Salary paid in month 11; annual business income / 12.", "Kronor (SEK)"],
+        ["LonFinkDec", "2020-12-01", "2020-12-31", "per_column", "Salary paid in month 12; annual business income / 12.", "Kronor (SEK)"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": "scb/checked/lone-per-manad"},
+      "fields": ["code", "severity"],
+      "note": "The differing month definitions are projected, not a conflicting variable fact.",
+      "rows": [["period_family_definition_projected", "warning"]]
+    },
+    {
+      "table": "search_text",
+      "where": {"definition": {"contains": ["business", "month 01;", "month 12;"]}},
+      "fields": ["register", "variable"],
+      "note": "The month definitions make the family findable by their text.",
+      "rows": [["checked", "lone-per-manad"]]
+    }
+  ]
+}
