@@ -1,0 +1,52 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "column"],
+      "rows": [["value", "people", "VALUE"]],
+      "note": "The replaced test's exact state list: value keeps only its people state."
+    },
+    {
+      "table": "variables",
+      "fields": ["register", "variable"],
+      "rows": [["sample", "value"]],
+      "note": "Neither the register nor the variable is withheld (contrast naming-scb-variant-without-a-variant-entry-withholds-the-register, step 1)."
+    },
+    {
+      "table": "variants",
+      "fields": ["variant"],
+      "rows": [["people"]],
+      "note": "The nameless others variant is not published."
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": ["unknown_parent_name", "withheld_variant_dependency"]},
+      "fields": ["code", "key"],
+      "rows": [
+        ["unknown_parent_name", ["register:1", "variant:20", "edition:2020", "variable:101", "member:1002"]],
+        ["withheld_variant_dependency", ["register:1", "variant:20", "edition:2020", "variable:101", "member:1002"]]
+      ],
+      "note": "The replaced test's refs == (second,): the cause and the withheld state each cite only the nameless variant's row, CVID 1002 from the spec."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "unknown_parent_name",
+          "withheld_variant_dependency",
+          "unnamed_delivered_variant",
+          "withheld_register_dependency",
+          "withheld_parent_naming",
+          "withheld_catalog_dependency"
+        ]
+      },
+      "fields": ["code", "severity", "subject"],
+      "rows": [
+        ["unknown_parent_name", "error", "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variant', 'native-int', 20)"],
+        ["withheld_variant_dependency", "error", "scb/sample/value"]
+      ],
+      "note": "One cause on variant 20 and one dependent withholding on value; no register-level or catalog-dependency withholding."
+    }
+  ]
+}
