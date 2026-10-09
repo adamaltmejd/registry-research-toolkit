@@ -650,16 +650,7 @@ pub(super) fn resolve_binding(
             .map(|(lo, hi, _)| (lo.clone(), hi.clone()))
             .collect(),
     );
-    // Columns whose slices overlap in time: parallel representations the binding must
-    // choose between. Distinct columns in disjoint windows are a sequential rename.
-    let mut coexisting = BTreeSet::new();
-    for (i, (a_lo, a_hi, a)) in slices.iter().enumerate() {
-        for (b_lo, b_hi, b) in &slices[i + 1..] {
-            if a != b && a_lo <= b_hi && b_lo <= a_hi {
-                coexisting.extend([a.as_str(), b.as_str()]);
-            }
-        }
-    }
+    let coexisting = coexisting(&slices);
     let finding = (!coexisting.is_empty()).then(|| Finding {
         code: "representation_ambiguous",
         message: format!(
@@ -677,6 +668,20 @@ pub(super) fn resolve_binding(
         slices,
         finding,
     })
+}
+
+/// The columns whose slices overlap in time: parallel representations the binding
+/// must choose between. Distinct columns in disjoint windows are a sequential rename.
+fn coexisting(slices: &[(String, String, String)]) -> BTreeSet<&str> {
+    let mut coexisting = BTreeSet::new();
+    for (i, (a_lo, a_hi, a)) in slices.iter().enumerate() {
+        for (b_lo, b_hi, b) in &slices[i + 1..] {
+            if a != b && a_lo <= b_hi && b_lo <= a_hi {
+                coexisting.extend([a.as_str(), b.as_str()]);
+            }
+        }
+    }
+    coexisting
 }
 
 /// The dated states `requested` reaches, each with the requested days it covers, in

@@ -327,11 +327,11 @@ async fn submit(
     bytes: Result<Bytes, BytesRejection>,
 ) -> Response {
     let body = op.body().expect("a POST operation has a body");
-    let answer = match posted(body, route, query, bytes) {
-        Ok(params) => run(&server, op, op.route_params(route), params).await,
-        Err(Ok(err)) => Answer::new(&server, server.catalog.default_scope(), Err(err)),
-        Err(Err(rejection)) => return rejection,
+    let params = match posted(&server, body, route, query, bytes) {
+        Ok(params) => params,
+        Err(refused) => return *refused,
     };
+    let answer = run(&server, op, op.route_params(route), params).await;
     (answer.status, json(answer.body.to_string())).into_response()
 }
 
@@ -344,48 +344,45 @@ async fn submit_download(
     bytes: Result<Bytes, BytesRejection>,
 ) -> Response {
     let body = download.body().expect("a POST download has a body");
-    let (scope, result) = match posted(body, download.path, query, bytes) {
-        Ok(params) => {
-            call(
-                &server,
-                download.params.iter().collect(),
-                download.run,
-                params,
-            )
-            .await
-        }
-        Err(Ok(err)) => (server.catalog.default_scope(), Err(err)),
-        Err(Err(rejection)) => return rejection,
+    let params = match posted(&server, body, download.path, query, bytes) {
+        Ok(params) => params,
+        Err(refused) => return *refused,
     };
-    match result {
-        Ok(raw) => raw_response(download.media_type, raw),
-        Err(err) => {
-            let answer = Answer::new(&server, scope, Err(err));
-            (answer.status, json(answer.body.to_string())).into_response()
-        }
+    let declared = download.params.iter().collect();
+    match call(&server, declared, download.run, params).await {
+        (_, Ok(raw)) => raw_response(download.media_type, raw),
+        (scope, Err(err)) => refusal(&server, scope, err),
     }
 }
 
 /// A POST's request parameters: the query's, then its body, capped at
 /// [`body::MAX_BYTES`] and parsed strictly ([`body::parse`]), as the parameter
-/// `body`. A body it refuses is an error document's error; one axum refuses before
-/// reading is axum's response.
+/// `body`; or the response refusing the body (axum's own when it refuses before
+/// reading).
 fn posted(
+    server: &Server,
     body: &Param,
     route: &str,
     query: Vec<(String, String)>,
     bytes: Result<Bytes, BytesRejection>,
-) -> Result<Vec<(String, String)>, Result<Error, Response>> {
+) -> Result<Vec<(String, String)>, Box<Response>> {
+    let refused = |err| Box::new(refusal(server, server.catalog.default_scope(), err));
     let project = match bytes {
-        Ok(bytes) => body::parse(&bytes).map_err(Ok)?,
+        Ok(bytes) => body::parse(&bytes).map_err(refused)?,
         Err(rejection) if rejection.status() == StatusCode::PAYLOAD_TOO_LARGE => {
-            return Err(Ok(body::too_large()));
+            return Err(refused(body::too_large()));
         }
-        Err(rejection) => return Err(Err(rejection.into_response())),
+        Err(rejection) => return Err(Box::new(rejection.into_response())),
     };
     let mut params = request_params(route, Vec::new(), query);
     params.push((body.name.to_owned(), project.to_string()));
     Ok(params)
+}
+
+/// `{error, meta}` with the code's status.
+fn refusal(server: &Server, scope: Scope, err: Error) -> Response {
+    let answer = Answer::new(server, scope, Err(err));
+    (answer.status, json(answer.body.to_string())).into_response()
 }
 
 /// One download over HTTP: the raw bytes with its media type, under the same
@@ -414,10 +411,7 @@ async fn fetch(
             download.media_type,
             raw,
         ),
-        (scope, Err(err)) => {
-            let answer = Answer::new(&server, scope, Err(err));
-            (answer.status, json(answer.body.to_string())).into_response()
-        }
+        (scope, Err(err)) => refusal(&server, scope, err),
     }
 }
 
