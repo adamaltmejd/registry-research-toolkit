@@ -26,7 +26,8 @@ self=${BASH_SOURCE[0]}
 
 # Completion markers live inside the gitignored .venv / node_modules and store a
 # FINGERPRINT of the dependency inputs (the resolved lockfiles). A piece is
-# "provisioned" only when its marker exists AND matches the current fingerprint —
+# "provisioned" only when its marker exists AND matches the current fingerprint
+# (and, for .venv, its editable installs point into this checkout) —
 # so a partial/interrupted install (no marker) OR a dependency change (marker
 # stale) both re-trigger the idempotent sync, while an in-sync checkout is a fast
 # skip (no uv/bun churn on every session).
@@ -40,7 +41,26 @@ fingerprint() { # $1 = lockfile; stable digest, or 'none' if absent (cksum is PO
 }
 
 venv_ok() { # $1 = root
-	[ -f "$1/$VENV_MARKER" ] && [ "$(cat "$1/$VENV_MARKER" 2>/dev/null)" = "$(fingerprint "$1/uv.lock")" ]
+	[ -f "$1/$VENV_MARKER" ] && [ "$(cat "$1/$VENV_MARKER" 2>/dev/null)" = "$(fingerprint "$1/uv.lock")" ] &&
+		editables_here "$1"
+}
+
+# The marker cannot see a venv another checkout's `uv run` re-synced (e.g. under an
+# inherited UV_PROJECT_ENVIRONMENT, #1337): its editable installs then run THAT
+# tree's source. Any editable .pth line outside this checkout makes the venv stale.
+editables_here() { # $1 = root
+	local phys pth line
+	phys=$(cd "$1" 2>/dev/null && pwd -P) || phys=$1
+	for pth in "$1"/.venv/lib/python*/site-packages/_editable_impl_*.pth; do
+		[ -f "$pth" ] || continue
+		while IFS= read -r line || [ -n "$line" ]; do
+			case $line in
+			"" | "$1"/* | "$phys"/*) ;;
+			*) return 1 ;;
+			esac
+		done <"$pth"
+	done
+	return 0
 }
 node_ok() { # $1 = root; vacuously ok when there is no frontend
 	[ ! -f "$1/reg_webapp/frontend/package.json" ] && return 0
