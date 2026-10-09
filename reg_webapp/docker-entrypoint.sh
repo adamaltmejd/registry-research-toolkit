@@ -67,7 +67,12 @@ curl -fsS --max-time "$MAX_TIME" "$BASE/mcp?$EDGE_V" \
     -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}' \
     | grep -q '"name":"search"' || fail "/mcp tools/list"
 
-# Gate passed. Hand the foreground to the server: clear the EXIT-kill trap, forward
+# Gate passed. Preload the DB pair into the page cache in the background, so later
+# requests never read cold pages from the throttled rootfs (~17 MB/s, ~80 s for the
+# 1.35 GB catalog; the VM is sized to hold it, fly.toml). Best effort.
+nice cat /opt/reg_meta/*.db >/dev/null 2>&1 &
+
+# Hand the foreground to the server: clear the EXIT-kill trap, forward
 # SIGINT/SIGTERM, and wait until it has exited so its exit code propagates (a trapped
 # signal makes `wait` return early while the server is still stopping).
 trap - EXIT
