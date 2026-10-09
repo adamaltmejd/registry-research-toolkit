@@ -67,6 +67,7 @@ the behavior in plain words. For example,
   | `coverage-`            | delivery the formed variables owe the catalog, written or explicitly withdrawn                                                                                                   |
   | `source-rows-`         | physical source rows the build refuses when it loads a scope                                                                                                                     |
   | `warning-`             | the data warnings a build publishes: the register, variable and state each one attaches to, and where its text comes from                                                        |
+  | `value-sets-`          | stored value sets: one per distinct membership, its id kept across builds, and the per-column state overlaps formation withholds                                                 |
 
 Later stages add their own prefixes to this table.
 
@@ -287,6 +288,7 @@ Every key is optional, and only the keys that are present get checked.
   | `relationships`              | built literal source relationship                                              | `kind`, `binding_status`, `source_dataset`, `owner` (variable slug), `endpoints` (bound variables)                                                                                                                                                                                                                                                                                                                                                                                            |
   | `evidence`                   | ledger disposition of prepared auxiliary evidence                              | `kind`, `disposition`                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
   | `source_issues`              | ledger support- and value-source issue (the evidence behind issues)            | `kind`, `severity`, `descriptor_key`, `physical_associations`, `refs`                                                                                                                                                                                                                                                                                                                                                                                                                         |
+  | `value_sets`                 | stored value set                                                               | `id` (its `value_set_id` as text), `members` (sorted `[code, label]`), `variables` (sorted `provider/register/variable` of the states and alias windows carrying it)                                                                                                                                                                                                                                                                                                                          |
 
 A `conformance_codes` row's `member_kind` is `nonstandard` or `sentinel`.
 `scoped_windows` lists, as `[valid_from, valid_to]`, the scoped sentinel certificates
@@ -319,6 +321,12 @@ projected refs must equal the refs that the selected rows of another table cite 
 on `issue_refs`, `refs` on `warnings` and `source_issues`), duplicates included. Both
 sides are read from the same build. Use it when the claim is that two outputs agree on
 their source records, so the case never has to write a semantic-record hash.
+
+In a later step, `"rows": {"step": "<earlier step>"}` expects the rows the same
+projection (its table, `where` and `fields`) reads from that earlier step's build, under
+this projection's `match`. Use it when the claim is that two builds agree, in particular
+on a value a case must never write as a literal, such as a `value_sets` `id`: the case
+states that an id survives a change to the input without knowing the id.
 
 Expected values are read from the test a case replaces, or from the source fixture or
 the spec. Never copy them from a run of the code under test. A new table or placeholder

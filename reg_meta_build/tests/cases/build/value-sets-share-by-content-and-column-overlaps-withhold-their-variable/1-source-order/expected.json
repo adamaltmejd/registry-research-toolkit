@@ -1,0 +1,77 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "subject"],
+      "rows": [
+        ["overlapping_codeless_codebearing_states", "scb/codeless/income"]
+      ],
+      "note": "test_formation_attributes_exactly_the_column_overlaps_the_writer_refuses[updates1-overlapping_codeless_codebearing_states]: CODELESS's First (a list) and first (none) overlap on one folded column in 2020. TWIN's pair is not an overlap error ([updates3-None])."
+    },
+    {
+      "table": "states",
+      "where": {"register": ["codeless", "twin"]},
+      "fields": ["register", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["twin", "First", "2020-01-01", "2020-12-31"],
+        ["twin", "first", "2020-01-01", "2020-12-31"]
+      ],
+      "note": "The overlap withholds CODELESS's variable, so it has no state. TWIN delivers one code list (01 Label) under two version labels (First list, Second list); that is one value set, not a conflict, so both columns are written ([updates3-None])."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": ["codes", "shared", "shr", "twin"]},
+      "fields": ["register", "column", "valid_from", "code", "label"],
+      "rows": [
+        ["codes", "CODES", "2000-01-01", "01", "Participation"],
+        ["codes", "CODES", "2001-01-01", "01", "Revised label"],
+        ["codes", "CODES", "2002-01-01", "01", "Participation"],
+        ["codes", "CODES", "2002-01-01", "02", "Employment"],
+        ["codes", "CODES", "2003-01-01", "ab", "c"],
+        ["codes", "CODES", "2004-01-01", "a", "bc"],
+        ["shared", "SHARED", "2000-01-01", "01", "Participation"],
+        ["shared", "SHARED", "2000-01-01", "02", "Employment"],
+        ["shared", "SHARED", "2002-01-01", "01", "Participation"],
+        ["shared", "SHARED", "2002-01-01", "02", "Employment"],
+        ["shr", "SHARED", "2002-01-01", "01", "Participation"],
+        ["shr", "SHARED", "2002-01-01", "02", "Employment"],
+        ["twin", "First", "2020-01-01", "01", "Label"],
+        ["twin", "first", "2020-01-01", "01", "Label"]
+      ],
+      "note": "test_distinct_memberships_and_changed_labels_remain_distinct: each CODES state carries exactly its own year's delivered membership, read from the source spec, including ab/c and a/bc, whose concatenated code and label bytes are equal."
+    },
+    {
+      "table": "code_index",
+      "where": {"register": ["codes", "shared", "shr", "twin"]},
+      "fields": ["register", "variable", "code", "label", "mapping_count"],
+      "rows": [
+        ["codes", "codes", "01", "Participation", 3],
+        ["codes", "codes", "01", "Revised label", 1],
+        ["codes", "codes", "02", "Employment", 3],
+        ["codes", "codes", "a", "bc", 1],
+        ["codes", "codes", "ab", "c", 1],
+        ["shared", "shared", "01", "Participation", 3],
+        ["shared", "shared", "02", "Employment", 3],
+        ["shr", "shared", "01", "Participation", 3],
+        ["shr", "shared", "02", "Employment", 3],
+        ["twin", "income", "01", "Label", 1]
+      ],
+      "note": "test_shared_memberships_have_stable_ids_and_deterministic_replay (code_variable_map and mapping_count): one row per (variable, code and label) a variable carries. Each count is the number of variables in the spec that deliver that code and label: 01 Participation and 02 Employment reach CODES (2002), SCB SHARED and SOS SHARED."
+    },
+    {
+      "table": "value_sets",
+      "fields": ["members", "variables"],
+      "rows": [
+        [[["01", "Label"]], ["scb/twin/income"]],
+        [[["01", "Participation"], ["02", "Employment"]], ["scb/codes/codes", "scb/shared/shared", "sos/shr/shared"]],
+        [[["01", "Participation"]], ["scb/codes/codes"]],
+        [[["01", "Revised label"]], ["scb/codes/codes"]],
+        [[["a", "bc"]], ["scb/codes/codes"]],
+        [[["ab", "c"]], ["scb/codes/codes"]]
+      ],
+      "note": "One stored value set per distinct membership. The 01 Participation + 02 Employment membership is one set shared by two years of SCB SHARED, SOS SHARED and CODES 2002 (old test: one value_set, two value_codes, two members, one value_set_id across states, across providers). A changed label, an added member and ab/c beside a/bc each stay a set of their own (old test: five distinct ids). TWIN's two version labels share one set."
+    }
+  ]
+}
