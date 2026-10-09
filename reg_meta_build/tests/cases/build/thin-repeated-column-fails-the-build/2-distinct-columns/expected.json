@@ -1,0 +1,30 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "register": "r"
+      },
+      "fields": [
+        "variable",
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "col",
+          "COL",
+          "2010-01-01",
+          "2018-12-31"
+        ],
+        [
+          "other",
+          "OTHER",
+          "2010-01-01",
+          "2018-12-31"
+        ]
+      ]
+    }
+  ]
+}

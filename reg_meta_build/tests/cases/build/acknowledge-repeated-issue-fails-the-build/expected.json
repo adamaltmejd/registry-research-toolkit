@@ -1,10 +1,10 @@
 {
   "error": {
-    "code": "pipeline_build_failed",
+    "code": "register_duplicate_entry",
     "exit_code": 10,
     "message_contains": [
-      "one issue is acknowledged twice",
-      "curation/registers/scb/sample.toml#/acknowledge/2"
+      "curation/registers/scb/sample.toml#/acknowledge/2: duplicate acknowledgement of the issue unresolved_catalog_identity",
+      "that curation/registers/scb/sample.toml#/acknowledge/1 already acknowledges"
     ]
   }
 }

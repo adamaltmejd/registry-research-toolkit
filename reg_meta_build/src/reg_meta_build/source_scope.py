@@ -12,6 +12,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from reg_meta_build._curation import curation_error
 from reg_meta_build.catalog_dependencies import variable_dependency_keys
 from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
 from reg_meta_build.curation_compile import compile_coding_register
@@ -177,15 +178,17 @@ def resolve_source_scope(
 ) -> ScopeResolution:
     """Resolve one complete scope without IO policy.
 
-    Two strict/diagnostic forks: the stale-partition withholding below, and
+    Two strict/diagnostic forks: the unmapped-key withholding below, and
     formation's per-column state overlaps, which a diagnostic build withholds.
 
     Missing mappings and unsupported decisions are implementation failures, with
-    one diagnostic exception: an unmapped key that is the unsplit base of a
-    non-applied partition case's exact split set, with every split key mapped,
-    is treated as an explicit None provider key (unresolved catalog identity), so
-    a stale partition decision withholds its family instead of aborting the
-    build. Strict mode still fails fast.
+    two diagnostic exceptions treated as an explicit None provider key (unresolved
+    catalog identity): an unmapped key that is the unsplit base of a non-applied
+    partition case's exact split set, with every split key mapped, so a stale
+    partition decision withholds its family instead of aborting the build; and a
+    partition split whose pin converted no naming, which withholds that split.
+    Strict mode still fails fast, the unconverted split with its located code
+    (naming_partition_unconverted).
 
     An explicit None provider key records an unresolved catalog identity; coding and
     other source decisions still run. Checked naming and parent facts determine
@@ -262,7 +265,13 @@ def resolve_source_scope(
             decision.expected_diagnostic_sha256,
         )
         if issue_key in held:
-            raise ValueError(f"one issue is acknowledged twice: {case.case_id}")
+            raise curation_error(
+                "register_duplicate_entry",
+                f"{case.case_id}: duplicate acknowledgement of the issue "
+                f"{decision.code} {decision.subject!r} that "
+                f"{held[issue_key][0].case_id} already acknowledges.",
+                "Keep one [[acknowledge]] entry for each issue.",
+            )
         held[issue_key] = case, decision, []
     guarded_diagnostics = {key[:-1] for key in held if key[-1] is not None}
 
@@ -689,17 +698,36 @@ def resolve_source_scope(
             sorted({record_ref(r) for o in occurrences for r in o.evidence}, key=repr)
         )
         if key not in provider_keys:
+            # A partition split whose pin converted no naming (an inactive generated
+            # pin, or one whose slug a reviewed owner already takes) is a curation
+            # outcome, not an implementation failure.
+            unconverted_split = len(key) > 2 and key[-2] == "accepted-partition"
             if not (
                 diagnostic
-                and any(
-                    all(
-                        len(split) > len(key) and split[: len(key)] == key
-                        for split in splits
+                and (
+                    unconverted_split
+                    or any(
+                        all(
+                            len(split) > len(key) and split[: len(key)] == key
+                            for split in splits
+                        )
+                        and all(
+                            provider_keys.get(split) is not None for split in splits
+                        )
+                        for splits in stale_splits
                     )
-                    and all(provider_keys.get(split) is not None for split in splits)
-                    for splits in stale_splits
                 )
             ):
+                if unconverted_split:
+                    raise curation_error(
+                        "naming_partition_unconverted",
+                        f"Partition split {key[-1]!r} of native variable "
+                        f"{key[:-2]!r} has no converted catalog naming, so its "
+                        "states cannot be formed.",
+                        "Pin the split with an authored [[variable]] entry "
+                        "(native_id and slug) in its register file, or remove the "
+                        "pin that partitions the variable.",
+                    )
                 raise ValueError(f"missing explicit provider key mapping: {key!r}")
             provider_key = None
         else:
@@ -1106,8 +1134,18 @@ def _attribute_unresolved_names(
                 f"ambiguous naming bridge is stale or belongs to another family: {key!r}"
             )
         if not unresolved.get(key):
-            raise ValueError(
-                f"ambiguous naming lacks an unresolved native identity: {key!r}"
+            # simplify: aborts a diagnostic build too. The same unmatched split
+            # beside an unresolved row is silently unused, so withholding only here
+            # would be asymmetric. Upgrade when the compile (`_partition_ambiguity`)
+            # reports an unmatched split itself, in both shapes.
+            entries = ", ".join(e.entry_id for e in ambiguity.entries)
+            raise curation_error(
+                "naming_split_unmatched",
+                f"Accepted split naming {entries} "
+                f"of native variable {key!r} matches no delivered column, and every "
+                "delivered column of the variable is already bound to a split.",
+                "Remove the unmatched split entry, or point it at a delivered "
+                "column spelling.",
             )
         assert family.register_key is not None
         register = register_fqids.get(family.register_key)
