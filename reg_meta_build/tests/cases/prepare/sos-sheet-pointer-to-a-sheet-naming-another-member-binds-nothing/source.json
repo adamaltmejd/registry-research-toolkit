@@ -1,0 +1,15 @@
+{
+  "description": "sos-source with HDIA's Länk kodverk cell F2 'Kodlista_Target'; Kodlista_Target names another member, SIBLING, in its Variabelnamn preamble row.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "cells": {"Metadata - Variabelnivå!F2": "Kodlista_Target"},
+    "sheets": {
+      "Kodlista_Target": [
+        ["Variabelnamn", "SIBLING"],
+        ["Tidsperiod", "Kod", "Beskrivning"],
+        ["2020", "1", "One"]
+      ]
+    }
+  }
+}

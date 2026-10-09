@@ -1,0 +1,8 @@
+{
+  "description": "The LISA fixture with the footnote text in Individ!B816 replaced by 'changed footer'.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {"Individ!B816": "changed footer"}
+  }
+}

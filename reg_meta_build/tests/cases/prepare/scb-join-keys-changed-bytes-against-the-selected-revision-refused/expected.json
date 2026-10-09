@@ -1,0 +1,14 @@
+{
+  "reader": "scb_join_keys",
+  "args": {
+    "file": "SCB/ID-kolumner.xlsx",
+    "revision_from": "reviewed/ID-kolumner.xlsx"
+  },
+  "replaces": "test_scb_reference_records.py::test_side_readers_require_exact_revision[read_scb_join_keys-_workbook]",
+  "fails_if": "the join-key reader reads a workbook without checking its bytes against the selected revision",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "ScbReferenceSourceError",
+    "locator": "source differs from its declared revision: catalog/SCB/ID-kolumner.xlsx"
+  }
+}

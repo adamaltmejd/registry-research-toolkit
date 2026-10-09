@@ -13,21 +13,23 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from reg_meta.fqid import FqidKind, parse as parse_fqid, validate_slug
+from reg_core_py import parse_fqid
 from reg_meta.inventory import ColumnMapping
+
+from .slug_grammar import validate_slug
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 def _register_coordinate(value: str) -> str:
-    if parse_fqid(value).kind != FqidKind.REGISTER:
+    if parse_fqid(value).kind != "register":
         raise ValueError("policy registers must be register FQIDs")
     return value
 
 
 def _provider_slug(value: str) -> str:
-    validate_slug(value, FqidKind.PROVIDER)
+    validate_slug(value, "provider")
     return value
 
 

@@ -1,0 +1,4 @@
+{
+  "description": "The LISA fixture workbook as written: Individ declares Känslig1 'I vissa fall' for KU2YrkStalln, 'Ja' for RekrBidr and 'Nej' for AmPolTyp.",
+  "workbook": {"file": "supplemental/scb-lisa-variable-availability/source.xlsx", "from": "lisa"}
+}

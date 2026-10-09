@@ -40,7 +40,7 @@ the behavior in plain words. For example,
   | `split-sos-`           | SOS `[[identity.split]]` and `[[identity.rename]]`                                                                                                                               |
   | `split-partition-`     | SCB `[[identity.partition]]`, `[[identity.column_owner]]` and `[[identity.unassigned]]`, and slices that reference them                                                          |
   | `errata-delivered-`    | `[[errata.delivered]]` additions                                                                                                                                                 |
-  | `errata-column-`       | `[[errata.column]]` placements, flags and steward storage types, and `[[errata.version]]` declared editions                                                                      |
+  | `errata-column-`       | `[[errata.column]]` placements, flags, prose, classification references and steward storage types, and `[[errata.version]]` declared editions                                    |
   | `errata-sos-`          | SOS `[[errata.data_type]]` and `[[errata.classification_reference]]`                                                                                                             |
   | `errata-field-`        | `[[errata.field]]` checked corrections of one source occurrence                                                                                                                  |
   | `errata-period-`       | `[[errata.occurrence_period]]` checked period corrections                                                                                                                        |

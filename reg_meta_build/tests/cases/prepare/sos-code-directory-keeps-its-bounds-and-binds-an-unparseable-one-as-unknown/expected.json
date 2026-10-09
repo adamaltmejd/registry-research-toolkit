@@ -1,0 +1,43 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_code_declarations.py::test_code_directory_retains_bounds_without_inventing_item_ids_or_end_dates",
+    "test_sos_code_declarations.py::test_nonstandard_code_sheet_keeps_unknown_validity_for_binding"
+  ],
+  "fails_if": "the SOS reader invents an end date or item id for a directory row, drops the blank Till cell or the comment from its evidence, stops binding a directory row whose Från does not parse, or reads that Från as a known window",
+  "projections": [
+    {
+      "of": "associations",
+      "rows": [
+        {
+          "descriptor_key": "sheet:Kodlista_Arbitrary",
+          "row_number": 2,
+          "supplied_period": null,
+          "section_period": null,
+          "member_hints": {"$contains": [{"value": "SJUKHUS"}]},
+          "delivered_cells": {"$last": {"raw_value": "Startade 202304"}},
+          "value": {
+            "code": "10011",
+            "label": "Sjukhus",
+            "locators": {"$contains": [{"physical_record": "row:2"}]}
+          }
+        },
+        {"descriptor_key": "sheet:Kodlista_Arbitrary", "value": {"code": "1"}}
+      ]
+    },
+    {
+      "of": "validity",
+      "rows": [
+        {
+          "valid_from": "2023",
+          "valid_to": null,
+          "item_id": null,
+          "row_number": 2,
+          "locators": [{"physical_record": "row:2"}],
+          "delivered_cells": {"$contains": [{"name": "Till", "present": true, "raw_type": "none"}]}
+        },
+        {"window": {"status": "unknown"}}
+      ]
+    }
+  ]
+}

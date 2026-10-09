@@ -1,0 +1,93 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "a"
+[[variable]]
+native_id = "1.NewOn"
+slug = "new-on"
+[[variable]]
+native_id = "1.NewOff"
+slug = "new-off"
+[[variable]]
+native_id = "1.NoFlag"
+slug = "no-flag"
+[[variable]]
+native_id = "1.NoId"
+slug = "no-id"
+[[variable]]
+native_id = "1.Held"
+slug = "held"
+
+[[errata.column]]
+variant = "people"
+column = "NewOn"
+name = "Authored name"
+definition = "Authored description"
+data_type = "integer"
+classification = "FIX"
+is_identifier = false
+is_sensitive = true
+versions = ["2020"]
+source = "scb-docs"
+evidence = "held"
+noted = "2026-09-25"
+
+[[errata.column]]
+variant = "people"
+column = "NewOff"
+name = "New off"
+definition = "Documented"
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+versions = ["2020"]
+source = "scb-docs"
+evidence = "held"
+noted = "2026-09-25"
+
+[[errata.column]]
+variant = "people"
+column = "NoFlag"
+name = "No flag"
+definition = "Documented"
+data_type = "integer"
+is_identifier = false
+versions = ["2020"]
+source = "scb-docs"
+evidence = "held"
+noted = "2026-09-25"
+
+[[errata.column]]
+variant = "people"
+column = "NoId"
+name = "No id"
+definition = "Documented"
+data_type = "integer"
+is_sensitive = true
+versions = ["2020"]
+source = "scb-docs"
+evidence = "held"
+noted = "2026-09-25"
+
+[[errata.column]]
+variant = "people"
+column = "Held"
+name = "Held"
+definition = "Documented"
+data_type = "integer"
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-09-25"
+
+[[enrichment.alias]]
+register = "scb/sample"
+variable = "no-flag"
+delivery_column = "FormerNoFlag"
+provenance = "delivery list"

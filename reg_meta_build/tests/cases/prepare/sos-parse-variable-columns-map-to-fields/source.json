@@ -1,0 +1,15 @@
+{
+  "description": "A minimal SOS workbook whose variable sheet carries the full column set (incl. Objekttyp and a plain-text Länk kodverk) for HDIA and KON, followed by two phantom rows: formatted but empty cells that extend the sheet's used range, as some deliveries do.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Syntet (PAR)_webb.xlsx",
+    "sheets": {
+      "Metadata - Variabelnivå": [
+        ["Deldatamängdsnamn", "Variabelnamn", "Variabeletikett", "Variabelbeskrivning", "Objekttyp", "Värdemängd", "Länk kodverk", "Datatyp", "Data från", "Data till"],
+        ["PAR_OV", "HDIA", "Huvuddiagnos", "Huvuddiagnoskod", "Vårdkontakt", "Se kodlista", "ICD-10", "Sträng (text)", 2001, 2020],
+        ["PAR_OV", "KON", "Kön", "Personens kön", "Person", null, null, "Heltal", 2001, 2020],
+        [{"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}],
+        [{"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}, {"value": null, "bold": true}]
+      ]
+    }
+  }
+}

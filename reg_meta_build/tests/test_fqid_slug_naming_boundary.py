@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _slugged_db import add_state, add_variable, build_slugged_db
-from reg_meta.fqid import validate_slug
+from reg_meta_build.slug_grammar import validate_slug
 
 from reg_meta_build.fqid_slugs import (
     populate_variable_slugs,

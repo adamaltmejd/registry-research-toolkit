@@ -1,14 +1,16 @@
 # Fly.io config for the reg_webapp `swecov` deployment (REFACTOR_SPEC.md §11).
 #
-# Deploy from the REPO ROOT — the Dockerfile needs the uv and Cargo workspaces as
-# build context (see reg_webapp/Dockerfile header):
+# Deploy from the REPO ROOT — the Dockerfile needs the Cargo workspace as build
+# context (see reg_webapp/Dockerfile header):
 #
 #   fly deploy . --config reg_webapp/fly.swecov.toml --ha=false \
-#     --build-arg REG_META_TAG=reg_meta/vX.Y.Z
+#     --build-arg REG_META_TAG=reg_meta/vX.Y.Z \
+#     --build-arg REG_META_DB_SHA256=<reg_meta_swecov.db.zst digest> \
+#     --build-arg REG_META_DOCS_SHA256=<reg_meta_docs.db.zst digest>
 #
-# The bake runs `reg-meta update --catalog swecov --tag REG_META_TAG`, which
-# fetches `reg_meta_swecov.db.zst` (plus the shared docs asset) from that
-# reg_meta/v* release and fails the build if the release lacks it. The image
+# The bake fetches `reg_meta_swecov.db.zst` (plus the shared docs asset) from that
+# reg_meta/v* release, verifies both digests, and fails the build if the release
+# lacks it. The image
 # serves it as `--catalog swecov`, with no public MCP host (decision 12: steward
 # catalogs are never served over hosted MCP).
 

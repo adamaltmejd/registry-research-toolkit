@@ -1,0 +1,48 @@
+{
+  "reader": "sos_workbook",
+  "replaces": [
+    "test_sos_code_lists.py::test_sheet_pointer_uses_exact_target_and_named_member_guard[Kodlista_Target!A1-HDIA-False-False]",
+    "test_sos_code_lists.py::test_sheet_pointer_uses_exact_target_and_named_member_guard[Kodlista_Target!-HDIA-False-False]"
+  ],
+  "fails_if": "the SOS reader keeps a pointer to a sheet that names the member as a classification declaration, or adds a variable-pointer reference beside the sheet's own member name",
+  "projections": [
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:2"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "rows": [
+        {
+          "fields": {"classification_declared": null},
+          "delivered_cells": {"$once": [{"name": "Länk kodverk", "raw_value": "Kodlista_Target!A1"}]}
+        }
+      ]
+    },
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:3"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "rows": [
+        {
+          "fields": {"classification_declared": null},
+          "delivered_cells": {"$once": [{"name": "Länk kodverk", "raw_value": "Kodlista_Target!"}]}
+        }
+      ]
+    },
+    {
+      "of": "descriptors",
+      "where": {"key": "sheet:Kodlista_Target"},
+      "rows": [
+        {
+          "value": {
+            "member_references": {"$contains": ["HDIA"]},
+            "member_hints": {"$lacks": [{"role": "variable_pointer"}]}
+          }
+        }
+      ]
+    }
+  ]
+}

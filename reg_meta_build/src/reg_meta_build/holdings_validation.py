@@ -6,12 +6,12 @@ import json
 import re
 from typing import TYPE_CHECKING
 
-from reg_meta.fqid import validate_slug
 from reg_meta.inventory import DeliveryInventory, InventoryTable, edition_bounds
 
 from .artifact_identity import GENERATION_KEYS, STEWARD_GENERATION_KEYS, generation_id
 from .holdings_accounting import DISPOSITIONS
 from .holdings_compile import canonical_inventory
+from .slug_grammar import validate_slug
 
 if TYPE_CHECKING:
     import sqlite3

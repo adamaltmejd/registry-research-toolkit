@@ -1,0 +1,11 @@
+{
+  "reader": "scb_column_types",
+  "replaces": "test_scb_reference_records.py::test_sql_cannot_silently_skip_unsupported_syntax[[A] [int]-DROP TABLE [Other];\\n-]",
+  "fails_if": "the SQL column-type reader skips a statement before a CREATE TABLE",
+  "note": "`DROP TABLE [Other];` and its LF are 20 characters, where the CREATE TABLE starts.",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "ScbReferenceSourceError",
+    "locator": "unsupported SQL before character 20"
+  }
+}

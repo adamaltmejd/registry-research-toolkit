@@ -1,0 +1,62 @@
+{
+  "description": "sos-source with an open register period (DCAT-AP Tidsperiod 2005-07-01-) and a Deldatamängder sheet: PAR_OV open (2005, blank end), PAR_SV closed (2005-2020). Appended Variabelnivå rows: PARTIELL_SV in the closed PAR_SV with a 2010 start and blank end (row 9); BLANK_START with neither bound (row 10); MALFORMED_END with a 2010 start and the end +2001 (row 11). HDIA (row 2, 2001-2020) and PARTIELL (row 6, 2010, blank end) are in the open PAR_OV.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "sheets": {
+      "Metadata-Datamängd (DCAT-AP)": [
+        ["Attribut", "Definition", "Svenska", "Engelska"],
+        ["Tidsperiod", "Tidsmässig täckning", "2005-07-01-", "2005-07-01-"]
+      ],
+      "Deldatamängder": [
+        ["Deldatamängdsnamn", "Deldatamängdsetikett", "Data från", "Data till"],
+        ["PAR_OV", "Öppenvård", 2005, null],
+        ["PAR_SV", "Slutenvård", 2005, 2020]
+      ],
+      "Metadata - Variabelnivå": [
+        [
+          "PAR_SV",
+          "PARTIELL_SV",
+          "Partiell_Sv",
+          null,
+          null,
+          null,
+          "Heltal",
+          2010,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "PAR_OV",
+          "BLANK_START",
+          "Blank_Start",
+          null,
+          null,
+          null,
+          "Heltal",
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "PAR_OV",
+          "MALFORMED_END",
+          "Malformed_End",
+          null,
+          null,
+          null,
+          "Heltal",
+          2010,
+          "+2001",
+          null,
+          null,
+          null
+        ]
+      ]
+    }
+  }
+}

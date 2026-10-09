@@ -1,0 +1,11 @@
+{
+  "reader": "scb_column_types",
+  "replaces": "test_scb_reference_records.py::test_sql_cannot_silently_skip_unsupported_syntax[[A] [int]--/* unterminated]",
+  "fails_if": "the SQL column-type reader skips text after the last table, such as an unterminated comment it reads as a comment to the end of the file, or another statement",
+  "note": "The hardest of the replaced test's after-the-tables inputs: a comment reader that runs to the end of the file accepts it. ALTER TABLE after the table reaches the same guard.",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "ScbReferenceSourceError",
+    "locator": "unsupported SQL outside the declared tables"
+  }
+}

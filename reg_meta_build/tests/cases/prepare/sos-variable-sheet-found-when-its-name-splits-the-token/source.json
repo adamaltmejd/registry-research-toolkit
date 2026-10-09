@@ -1,0 +1,8 @@
+{
+  "description": "sos-source with the variable sheet renamed 'Metadata - Variabel -nivå': a space and a hyphen split the 'Variabelnivå' token.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "rename": {"Metadata - Variabelnivå": "Metadata - Variabel -nivå"}
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "description": "sos-source as Medicinska födelseregistret, plus a 'Deldatamängder' sheet (name, label, description, Aggregeringsnivå) with one subset, MFR_BARN.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata MFR (MFR).xlsx",
+    "from": "sos-source",
+    "cells": {"Generell information!C2": "Medicinska födelseregistret"},
+    "sheets": {
+      "Deldatamängder": [
+        [
+          "Deldatamängdsnamn",
+          "Deldatamängdsetikett",
+          "Deldatamängdsbeskrivning",
+          "Aggregeringsnivå"
+        ],
+        ["MFR_BARN", "Barn", "Uppgifter om barn", "Individ"]
+      ]
+    }
+  }
+}

@@ -354,7 +354,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity"]
 reason = "The same exact physical source coordinate is assigned contradictory roles: school at sampling versus current school, or current school versus sampled principal area. Preserve all competing originals, coding and periods; withdraw only these unsupported semantic mappings. Positive noncollided histories stay mapped. No source role, school-to-principal-area equivalence or school domain is guessed."
 evidence = "Complete9native families160originals, actual160primary/43summary/6identifier support, recursive PersonNr prerequisites and whole-register physical review. Exact school-role operations establish the collisions; positive own source representations retain raw widths and code memberships. Batch52-Elevpaneler-physical-review.json and Batch52-elevpaneler-independent-representation-review.json. Standing retained-ambiguity/unavailable-domain policy; all guards pin full original facts and bound coding."
-expected_evidence_sha256 = "54fa99fe04422e1caeceab03453e7fffe508781de4e9c17972b88bc0c5e6a5a5"
+expected_evidence_sha256 = "2e6b17bc5eacc7562f9b7fc4b14013974b20be6a3d6e157c42559e1b86994305"
 expected_diagnostic_sha256 = "cd630f2615310b9c08de749895d34a59c9cef8d5dcb46b9cfe11f9375e453008"
 
 [[acknowledge]]
@@ -366,7 +366,7 @@ valid_from = "2013-01-01"
 valid_to = "2013-06-30"
 reason = "Retain contradictory source school-code domains without choosing or merging them. The 2013 Panel7 school lists are nonsupersets with 39 contrary memberships; Panel9 simultaneous sampled/current-school lists belong to two incompatible roles assigned to one physical column. Neither later directories nor the shared administrative heading settle these exact memberships."
 evidence = "Complete9native families160originals, actual160primary/43summary/6identifier support, recursive PersonNr prerequisites and whole-register physical review. Exact school-role operations establish the collisions; positive own source representations retain raw widths and code memberships. Batch52-Elevpaneler-physical-review.json and Batch52-elevpaneler-independent-representation-review.json. Standing retained-ambiguity/unavailable-domain policy; all guards pin full original facts and bound coding."
-expected_evidence_sha256 = "01430aa0c4dcb8404c146e21e6ec5c81ed7415340f930327c287916c96afedda"
+expected_evidence_sha256 = "d64593bd181942b6900f35ccbe66bf702d84fc3fa957ee4d526a1101c58cf6a4"
 expected_diagnostic_sha256 = "a9cdacaaec19874a0326825f4e5c102aeed85505de45c19ba6c974394af6d074"
 
 [[acknowledge]]
@@ -722,5 +722,5 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity"]
 reason = "The same exact physical source coordinate is assigned contradictory roles: school at sampling versus current school, or current school versus sampled principal area. Preserve all competing originals, coding and periods; withdraw only these unsupported semantic mappings. Positive noncollided histories stay mapped. No source role, school-to-principal-area equivalence or school domain is guessed."
 evidence = "Complete9native families160originals, actual160primary/43summary/6identifier support, recursive PersonNr prerequisites and whole-register physical review. Exact school-role operations establish the collisions; positive own source representations retain raw widths and code memberships. Batch52-Elevpaneler-physical-review.json and Batch52-elevpaneler-independent-representation-review.json. Standing retained-ambiguity/unavailable-domain policy; all guards pin full original facts and bound coding."
-expected_evidence_sha256 = "6b2e4d2060f25216d6cba0fb0be41626fde10a2bf7b32c5c40dc07bbbf1eba97"
+expected_evidence_sha256 = "651bf9bef30c7ee53437eab3b8daf56492a41e214cf62c5897a0afe36ba2d7d2"
 expected_diagnostic_sha256 = "68d090c6b69ad0641a492f74d37f0b8350498f23092b84ac76e09769f9468bf1"

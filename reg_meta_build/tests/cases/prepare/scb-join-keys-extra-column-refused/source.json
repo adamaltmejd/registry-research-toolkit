@@ -1,0 +1,34 @@
+{
+  "description": "ID-kolumner.xlsx with the one sheet Blad1: the header Tabell, ID-kolumn, Beskrivning; a padded table name with a linked description; the same table and column with an indented two-paragraph description; and a row with no table, the formula =A2 for its column and an empty description, its header extended with a fourth column Extra.",
+  "workbook": {
+    "file": "SCB/ID-kolumner.xlsx",
+    "sheets": {
+      "Blad1": [
+        [
+          "Tabell",
+          "ID-kolumn",
+          "Beskrivning",
+          "Extra"
+        ],
+        [
+          " Timeseries ",
+          "ID1",
+          {
+            "value": "Possibly related to Table.Key; no assertion",
+            "hyperlink": "https://example.invalid/evidence"
+          }
+        ],
+        [
+          " Timeseries ",
+          "ID1",
+          "  Indented paragraph\n\n  second line  "
+        ],
+        [
+          null,
+          "=A2",
+          ""
+        ]
+      ]
+    }
+  }
+}

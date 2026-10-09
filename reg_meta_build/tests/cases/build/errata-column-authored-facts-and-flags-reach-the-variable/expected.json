@@ -1,0 +1,71 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "where": {"variable": ["new-on", "new-off", "held", "no-flag", "no-id"]},
+      "fields": ["variable", "column", "is_sensitive"],
+      "rows": [
+        ["new-on", "NewOn", 1],
+        ["new-off", "NewOff", 0],
+        ["held", "Held", 0]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": ["scb/sample/new-on", "scb/sample/new-off", "scb/sample/held"]},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unresolved_flag"},
+      "fields": ["subject", "severity"],
+      "rows": [
+        ["scb/sample/no-flag", "error"],
+        ["scb/sample/no-id", "error"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"variable": "new-on"},
+      "fields": ["variable", "column", "name", "description"],
+      "rows": [
+        ["new-on", "NewOn", "Authored name", "Authored description"]
+      ],
+      "note": "the declaration's name and definition reach the state"
+    },
+    {
+      "table": "state_classifications",
+      "where": {"variable": ["new-on", "new-off", "held", "a"]},
+      "fields": ["variable", "column", "classification"],
+      "rows": [
+        ["new-on", "NewOn", "fix"]
+      ],
+      "note": "the declared classification binds its book on the declared column only"
+    },
+    {
+      "table": "states",
+      "where": {"variable": "a"},
+      "fields": ["variable", "column", "valid_from", "valid_to", "name", "definition"],
+      "rows": [
+        ["a", "A", "2020-01-01", "2020-12-31", "GenericVar", "A generic family label"]
+      ],
+      "note": "the delivered column the declarations are anchored on keeps its own facts"
+    },
+    {
+      "table": "issues",
+      "where": {"code": "withheld_alias_dependency"},
+      "fields": ["case_id", "severity"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/enrichment.alias/1", "error"]
+      ]
+    },
+    {
+      "table": "aliases",
+      "where": {"variable": "no-flag"},
+      "fields": ["column"],
+      "rows": []
+    }
+  ]
+}

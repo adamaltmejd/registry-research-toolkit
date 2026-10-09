@@ -9,6 +9,9 @@ slug = "people"
 native_id = "1.5"
 slug = "a"
 [[variable]]
+native_id = "1.6"
+slug = "b"
+[[variable]]
 native_id = "1.Pool"
 slug = "pool"
 [[variable]]

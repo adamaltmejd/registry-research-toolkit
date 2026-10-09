@@ -1,0 +1,31 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+steward_table_prefixes = ["CIS"]
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "v5"
+[[variable]]
+native_id = "1.6"
+slug = "v6"
+[[variable]]
+native_id = "1.99"
+slug = "v99"
+
+[[errata.delivered]]
+variant = "people"
+column = "VALUE"
+versions = ["2020"]
+evidence = "accepted delivery"
+noted = "2026-09-25"
+
+[[errata.delivered]]
+variant = "people"
+column = "PAIR"
+versions = ["2020"]
+evidence = "accepted delivery"
+noted = "2026-09-25"

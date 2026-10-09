@@ -1,0 +1,6 @@
+{
+  "description": "A code list whose header names the code and label columns in reverse order.",
+  "files": {
+    "classifications/codes.csv": "label,code\nA,1\n"
+  }
+}

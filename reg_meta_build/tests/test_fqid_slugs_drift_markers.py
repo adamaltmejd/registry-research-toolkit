@@ -12,7 +12,7 @@ from _slugged_db import (
     build_slugged_db,
 )
 from reg_meta.errors import RegMetaError
-from reg_meta.fqid import derive_variable_slug
+from reg_meta_build.slug_grammar import derive_variable_slug
 
 from reg_meta_build.fqid_slugs import (
     AUTO_FILE_SUFFIX,

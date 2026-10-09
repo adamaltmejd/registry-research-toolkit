@@ -1,0 +1,23 @@
+{
+  "description": "Vardemangder rows (version|level|code|label|CVID|item): code 007 of a padded list (`Version  A`, `Level  1`) with a padded label, its item not delivered, delivered empty (`\"\"`) and `0`; code 008 of another list labelled Å, then twice with the DOS remnant byte 0x8F (Å in cp850) for its label; code 009 labelled `Conflict A` with no CVID and `Conflict B` with an empty CVID, both item 5001; and code 000 with CVID 0 and item 0. VardemangderValidDates: item 5001 twice, item 999 with no start, item 0 with an empty start.",
+  "scb": {
+    "vardemangder": [
+      "Version  A|Level  1|007|Alpha  label|100|",
+      "Version  A|Level  1|007|Alpha label|100|\"\"",
+      "Version  A|Level  1|007|Alpha label|100|0",
+      "Alternate|Level 2|008|Å|100|000",
+      "Alternate|Level 2|008|DOS_LABEL|100|999",
+      "Alternate|Level 2|008|DOS_LABEL|100|999",
+      "Alternate|Level 2|009|Conflict A||5001",
+      "Alternate|Level 2|009|Conflict B|\"\"|5001",
+      "Alternate|Level 2|000|Leading zero|0|0"
+    ],
+    "valid_dates": [
+      "5001|2019-06-30|2020-02-29",
+      "5001|2019-06-30|2020-02-29",
+      "999||2021-03-04",
+      "0|\"\"|9999-12-31"
+    ],
+    "replace_bytes": {"Vardemangder.csv": {"DOS_LABEL": "\u008f"}}
+  }
+}

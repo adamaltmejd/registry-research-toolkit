@@ -1,0 +1,14 @@
+{
+  "description": "sos-source with HDIA's Länk kodverk cell F2 'Kodlista_Target!A1'; Kodlista_Target names HDIA in a Variabelnamn column of its code row, not in a preamble.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "cells": {"Metadata - Variabelnivå!F2": "Kodlista_Target!A1"},
+    "sheets": {
+      "Kodlista_Target": [
+        ["Variabelnamn", "Tidsperiod", "Kod", "Beskrivning"],
+        ["HDIA", "2020", "1", "One"]
+      ]
+    }
+  }
+}

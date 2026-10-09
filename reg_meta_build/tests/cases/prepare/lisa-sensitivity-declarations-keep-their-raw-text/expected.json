@@ -1,0 +1,23 @@
+{
+  "reader": "lisa_workbook",
+  "replaces": "test_lisa.py::test_lisa_sensitivity_declarations_keep_raw_evidence",
+  "fails_if": "the LISA reader reads the conditional Känslig1 answer 'I vissa fall' as not sensitive (or unknown), or drops the delivered answer text from the sensitivity field",
+  "note": "Disclosure guard: a conditional answer is read as sensitive. The formation half of the replaced test (a true sensitivity forms is_sensitive) is test_source_formation_facts.py::test_conditional_sensitivity_ratchets_up_without_changing_plain_values[True-False-True].",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_table": "Individ"}], "fields": {"column_name": {"value": "KU2YrkStalln"}}},
+      "rows": [{"fields": {"sensitivity": {"$exact": {"status": "value", "value": true, "raw_value": "I vissa fall"}}}}]
+    },
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_table": "Individ"}], "fields": {"column_name": {"value": "RekrBidr"}}},
+      "rows": [{"fields": {"sensitivity": {"$exact": {"status": "value", "value": true, "raw_value": "Ja"}}}}]
+    },
+    {
+      "of": "records",
+      "where": {"locators": [{"physical_table": "Individ"}], "fields": {"column_name": {"value": "AmPolTyp"}}},
+      "rows": [{"fields": {"sensitivity": {"$exact": {"status": "value", "value": false, "raw_value": "Nej"}}}}]
+    }
+  ]
+}

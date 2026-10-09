@@ -5,10 +5,13 @@ from __future__ import annotations
 import re
 from functools import cache
 
-from reg_meta.fqid import _YEAR, is_period, period_token_to_bounds
+from reg_core_py import is_period, period_bounds
 from reg_meta.queries import extract_year
 
 from ._curation import fold_column
+
+# A period-grammar year (1900-2099) as a regex fragment.
+YEAR_PATTERN = r"(?:19|20)\d{2}"
 
 # Term phrase -> HT/VT prefix, year on either side. `hosttermin`/`vartermin`
 # are NFKD-folded Swedish forms; compact `HT2024`/`VT 2024` is covered too.
@@ -28,14 +31,14 @@ _QUARTER_BOUND_RE = re.compile(r"\bkv(?:artal)?\s*([1-4])(?:\s*-\s*(?:kv\s*)?([1
 _HALF_BOUND_RE = re.compile(r"\b(forsta|andra)\s+halvar(?:et)?\s+(\d{4})\b")
 
 # School year `A/B` — `Läsåret 2012/2013`, or twice for `Läsåren A/B - C/D`.
-_SCHOOL_YEAR_RE = re.compile(rf"(?<!\d)({_YEAR})/({_YEAR})(?!\d)")
+_SCHOOL_YEAR_RE = re.compile(rf"(?<!\d)({YEAR_PATTERN})/({YEAR_PATTERN})(?!\d)")
 
 # Year range `A - B` / `A-B`, each endpoint optionally a full ISO date so the
 # `1961-01-01 -- 2025-12-31` shape lands here too (dashes are normalized to
 # ASCII before matching, so `––` reads as `--`).
 _ISO_TAIL = r"(?:-\d{2}-\d{2})?"
 _YEAR_RANGE_RE = re.compile(
-    rf"(?<!\d)({_YEAR}){_ISO_TAIL}\s*-{{1,3}}\s*({_YEAR}){_ISO_TAIL}(?!\d)"
+    rf"(?<!\d)({YEAR_PATTERN}){_ISO_TAIL}\s*-{{1,3}}\s*({YEAR_PATTERN}){_ISO_TAIL}(?!\d)"
 )
 
 # `fold_column` NFKD-decomposes then drops non-ASCII, which DELETES an en/em dash
@@ -55,7 +58,7 @@ def _fold_name(versionname: str) -> str:
 def _term_bounds(folded: str) -> list[tuple[int, tuple[str, str]]]:
     """Every HT/VT marker in a folded edition name as ``(year, (lo, hi))``.
 
-    Markers outside the period grammar are dropped — `period_token_to_bounds`
+    Markers outside the period grammar are dropped — `period_bounds`
     raises on `HT1850`, and a stray out-of-range term in a name like `HT 1850,
     version 2024` must not crash the build.
     """
@@ -65,7 +68,7 @@ def _term_bounds(folded: str) -> list[tuple[int, tuple[str, str]]]:
             year = int(m.group(1))
             token = f"{prefix}{year:04d}"
             if is_period(token):
-                out.append((year, period_token_to_bounds(token)))
+                out.append((year, period_bounds(token)))
     return out
 
 
@@ -93,14 +96,14 @@ def edition_bounds(versionname: str | None, year: int | None) -> tuple[str, str]
     for m in _QUARTER_BOUND_RE.finditer(s):
         for q in (m.group(1), m.group(2)):
             if q:
-                bounds.append(period_token_to_bounds(f"{ystr}-Q{q}"))
+                bounds.append(period_bounds(f"{ystr}-Q{q}"))
     for m in _HALF_BOUND_RE.finditer(s):
         if m.group(2) == ystr:
             half = "1" if m.group(1) == "forsta" else "2"
-            bounds.append(period_token_to_bounds(f"{ystr}-H{half}"))
+            bounds.append(period_bounds(f"{ystr}-H{half}"))
     if bounds:
         return min(lo for lo, _ in bounds), max(hi for _, hi in bounds)
-    return period_token_to_bounds(ystr)
+    return period_bounds(ystr)
 
 
 def _school_year_span(folded: str) -> tuple[str, str] | None:
@@ -115,8 +118,8 @@ def _school_year_span(folded: str) -> tuple[str, str] | None:
     if not pairs or any(b != a + 1 for a, b in pairs):
         return None
     return (
-        period_token_to_bounds(f"HT{pairs[0][0]:04d}")[0],
-        period_token_to_bounds(f"VT{pairs[-1][1]:04d}")[1],
+        period_bounds(f"HT{pairs[0][0]:04d}")[0],
+        period_bounds(f"VT{pairs[-1][1]:04d}")[1],
     )
 
 
@@ -152,8 +155,8 @@ def _year_range_span(folded: str) -> tuple[str, str] | None:
     if hi_year <= lo_year:
         return None
     return (
-        period_token_to_bounds(f"{lo_year:04d}")[0],
-        period_token_to_bounds(f"{hi_year:04d}")[1],
+        period_bounds(f"{lo_year:04d}")[0],
+        period_bounds(f"{hi_year:04d}")[1],
     )
 
 
@@ -190,7 +193,7 @@ def vintage_claim(versionname: str | None) -> tuple[tuple[int, str, str], ...]:
     # A parsed `year` implies a non-empty name, so `edition_bounds` does not
     # return None here — but a claim MUST exist for every observed year, so
     # don't couple that guarantee to it.
-    lo, hi = edition_bounds(versionname, year) or period_token_to_bounds(f"{year:04d}")
+    lo, hi = edition_bounds(versionname, year) or period_bounds(f"{year:04d}")
     return ((year, lo, hi),)
 
 
@@ -231,6 +234,6 @@ def edition_claims(versionname: str | None) -> tuple[tuple[int, str, str], ...]:
     lo_year, hi_year = int(lo[:4]), int(hi[:4])
     claims: list[tuple[int, str, str]] = []
     for y in range(lo_year, hi_year + 1):
-        y_lo, y_hi = period_token_to_bounds(f"{y:04d}")
+        y_lo, y_hi = period_bounds(f"{y:04d}")
         claims.append((y, lo if y == lo_year else y_lo, hi if y == hi_year else y_hi))
     return tuple(claims)

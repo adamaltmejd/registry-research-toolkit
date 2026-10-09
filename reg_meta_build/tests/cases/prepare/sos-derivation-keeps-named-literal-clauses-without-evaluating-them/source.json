@@ -1,0 +1,52 @@
+{
+  "description": "sos-source without Kodlista_HDIA, plus two derivation sheets defining RESULTAT from 1973-: Kodlista_Icd over ICD and procedure-code columns (one header 'ICD 9 ' with a trailing space, two blank clause cells, a double space inside a cell) and Kodlista_Algoritm with a condition and a multi-line algorithm.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "remove": ["Kodlista_HDIA"],
+    "sheets": {
+      "Kodlista_Icd": [
+        [
+          "Variabelnamn",
+          "Tidsperiod",
+          "Beskrivning",
+          "Variabler",
+          "ICD 8",
+          "ICD 9 ",
+          "ICD 10",
+          "Åtgärdskoder 1963-1996",
+          "Åtgärdskoder 1997-"
+        ],
+        [
+          "RESULTAT",
+          "1973-",
+          "Definition",
+          "SECFORE=1 eller SECAVSL=1",
+          null,
+          null,
+          "O82 (alla underdiagnoser)",
+          "7010, 7030",
+          "MAH03/MAC23  (ersatt av MAC23 2007-12-31)"
+        ]
+      ],
+      "Kodlista_Algoritm": [
+        [
+          "Variabelnamn",
+          "Tidsperiod",
+          "Beskrivning",
+          "Variabler",
+          "Villkor",
+          "Algoritm"
+        ],
+        [
+          "RESULTAT",
+          "1973-",
+          "Definition",
+          "KON, BVIKT, GRDBS, BORDF2",
+          "GRVB mellan 22 och 45",
+          "BVIKT < (-0.001 * GRDBS**4)\n  + 123"
+        ]
+      ]
+    }
+  }
+}

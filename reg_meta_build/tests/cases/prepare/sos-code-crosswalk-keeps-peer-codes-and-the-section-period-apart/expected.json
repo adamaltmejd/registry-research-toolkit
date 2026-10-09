@@ -1,0 +1,32 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_declarations.py::test_crosswalk_keeps_peer_namespaces_and_section_period_separate",
+  "fails_if": "the SOS reader gives peer code columns an input/output direction, copies the section period into a row's own period, invents a code for a blank peer cell, or prepares the crosswalk as a code list",
+  "projections": [
+    {
+      "of": "declarations",
+      "rows": [
+        {
+          "kind": "code_crosswalk",
+          "member_name": null,
+          "supplied_period": {"status": "unknown"},
+          "section_period": {"value": "1994-"},
+          "section_locator": {"physical_record": "row:3"},
+          "operands": [
+            {"role": "peer", "name": "SCBkod", "code": {"value": "16"}},
+            {"role": "peer", "name": "SiSkod", "code": {"value": "313"}}
+          ]
+        },
+        {
+          "kind": "code_crosswalk",
+          "supplied_period": {"value": "2000-2001"},
+          "section_period": {"value": "1994-"},
+          "operands": [{"name": "SCBkod", "code": {"status": "unknown"}}, {"$any": true}]
+        }
+      ]
+    },
+    {"of": "descriptors", "where": {"key": "sheet:Kodlista_Arbitrary"}, "rows": []},
+    {"of": "values", "rows": []},
+    {"of": "associations", "rows": []}
+  ]
+}

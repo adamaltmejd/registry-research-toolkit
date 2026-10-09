@@ -1,0 +1,10 @@
+{
+  "description": "One member delivered with three blank Kolumnnamn cells: a delivered empty cell (`\"\"`), an empty field (not delivered), and a single space.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "\"\""},
+      {"cvid": 1001, "var_id": 101, "colname": ""},
+      {"cvid": 1001, "var_id": 101, "colname": " "}
+    ]
+  }
+}

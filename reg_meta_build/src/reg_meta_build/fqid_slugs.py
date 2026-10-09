@@ -29,14 +29,10 @@ from itertools import combinations, groupby
 from typing import TYPE_CHECKING, Any, Literal, cast, get_args
 
 from reg_meta.errors import RegMetaError
-from reg_meta.fqid import (
-    FqidKind,
-    derive_variable_slug,
-    validate_slug,
-)
 
 from ._curation import curation_error, display_path, repo_curation_dir
 from .id import is_canonical_scb
+from .slug_grammar import derive_variable_slug, validate_slug
 
 if TYPE_CHECKING:
     import sqlite3
@@ -279,9 +275,7 @@ def _validate_entry_slug(
         )
     # The register_variant slug is a delivery coordinate that still
     # persists a real `_default` row for variant-less registers, so it keeps
-    # `allow_default`. No other slot allows `_default` or period-shaped slugs.
-    # `kind` is the slot label here — `validate_slug` only uses it for the error
-    # message (REGISTER_VARIANT left FqidKind in A2.6, so pass the string).
+    # `allow_default`. No other slot allows `_default`. `kind` is the slot label.
     try:
         validate_slug(slug, kind, allow_default=(kind == "register_variant"))
     except ValueError as exc:
@@ -620,7 +614,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
     """
     provider = _provider_from_path(path)
     try:
-        validate_slug(provider, FqidKind.PROVIDER)
+        validate_slug(provider, "provider")
     except ValueError as exc:
         raise curation_error(
             "slug_toml_invalid",

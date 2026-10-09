@@ -185,9 +185,9 @@ refactor.
 
 - **Library packages** (`reg_meta`, `reg_meta_build`):
   - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base; adopted #681,
-    2026-06-22, for the since-deleted FastAPI app); `reg_meta_build`
-    uses Pydantic v2 `_IRBase` models for the build-time IR core and
-    `@dataclass(frozen=True)` for local value types in feature modules.
+    2026-06-22, for the since-deleted FastAPI app); `reg_meta_build` uses Pydantic v2
+    `_IRBase` models for the build-time IR core and `@dataclass(frozen=True)` for local
+    value types in feature modules.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
     constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
     is read-mostly, single-backend; an ORM would add overhead with no benefit.
@@ -216,12 +216,12 @@ refactor.
 
 # Run (dev servers)
 
-- `reg_webapp` local dev (Rust server + Vite with an `/api` proxy): the `/run-reg-webapp`
-  skill (`reg_webapp/.claude/skills/run-reg-webapp/`) has the verified launch steps + a
-  Playwright driver for smoke/screenshots. `.claude/launch.json` registers a single
-  `reg-webapp` config for `preview_start` (its entry point is `dev.sh preview`, so
-  `autoPort` makes parallel sessions collision-free and the proxy is auto-wired); for
-  one-shot screenshots use `dev.sh smoke` / `dev.sh shot`.
+- `reg_webapp` local dev (Rust server + Vite with an `/api` proxy): the
+  `/run-reg-webapp` skill (`reg_webapp/.claude/skills/run-reg-webapp/`) has the verified
+  launch steps + a Playwright driver for smoke/screenshots. `.claude/launch.json`
+  registers a single `reg-webapp` config for `preview_start` (its entry point is
+  `dev.sh preview`, so `autoPort` makes parallel sessions collision-free and the proxy
+  is auto-wired); for one-shot screenshots use `dev.sh smoke` / `dev.sh shot`.
 - `reg_webapp` frontend work follows the design language in
   `reg_webapp/frontend/DESIGN.md`: author with the `reg-webapp-frontend-design` skill
   and judge the result with `reg-webapp-design-reviewer`.
@@ -241,6 +241,9 @@ refactor.
 - `uv run --no-project scripts/gate.py heavy -- <cmd>` — run any other heavy command (a
   parallel pytest, cargo, a derive) under the same lock, so parallel sessions don't
   overload the machine (never wrap a gate step: it already holds the lock)
+- `uv run --no-project scripts/gate.py real-seed -- <cmd>` — a real-seed
+  `reg-meta-build` run (prepare, build, extend, check-curation): one at a time
+  machine-wide, plus a heavy slot
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
 - `uvx --from panache-cli==3.9.0 panache format --check .` — markdown format check

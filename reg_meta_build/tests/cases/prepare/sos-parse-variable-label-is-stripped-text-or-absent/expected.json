@@ -1,0 +1,16 @@
+{
+  "reader": "sos_parsed",
+  "replaces": "test_sos_parser.py::test_variable_label_is_stripped_text_or_absent",
+  "fails_if": "the SOS parser keeps a label's surrounding whitespace, reads a whitespace-only label as a label, or drops a numeric label instead of reading its text",
+  "note": "One row per parametrization, with the replaced test's expected labels.",
+  "projections": [
+    {
+      "of": "variables",
+      "rows": [
+        {"name": "V1", "label": "Etikett"},
+        {"name": "V2", "label": null},
+        {"name": "V3", "label": "42"}
+      ]
+    }
+  ]
+}

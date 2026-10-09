@@ -1,0 +1,12 @@
+{
+  "reader": "code_list",
+  "args": {"file": "classifications/codes.csv", "revision_from": "reviewed/codes.csv"},
+  "replaces": "test_code_list_source_records.py::test_exact_revision_is_checked_before_parsing[code,label\n1,B\n]",
+  "fails_if": "the code-list reader checks only the selected revision's size, or parses a file before checking its bytes against the selected revision",
+  "note": "The hardest form: the changed file has the reviewed file's size, so only the content hash tells them apart. The longer replacement of the replaced test is the easy twin.",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "CodeListSourceError",
+    "locator": "differs from its declared revision"
+  }
+}

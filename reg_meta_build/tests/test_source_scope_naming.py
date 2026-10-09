@@ -1,4 +1,4 @@
-"""Ambiguous-name guards of complete-scope composition that no build reaches.
+"""An ambiguous-name guard of complete-scope composition that no build reaches.
 
 The reachable naming behavior (deprecation, ambiguous-name withholding, columnless
 remainders, provider keys beside a period family) is pinned by `cases/build/`.
@@ -103,21 +103,3 @@ def test_ambiguous_naming_bridge_requires_its_whole_original_family(change):
             naming_ambiguities=(pending,),
             provider_keys={native_variable_key(original): None},
         )
-
-
-def test_ambiguous_naming_cannot_hide_a_missing_conversion():
-    """Kept as a unit test by maintainer decision (#1267): no build reaches it,
-    because the pipeline derives a provider-key entry (None when unnamed) for
-    every native variable the scope delivers, so an ambiguous native family never
-    lacks one. (The same refusal is reachable for a converted partition key with
-    no provider key: a defect reported on the stage 7b-2 scope-naming PR, not
-    this guard.) Input: an ambiguity whose family has no provider-key entry.
-    Refusal: "missing explicit provider key". Fails if an ambiguity can stand in
-    for a missing conversion. Its former second leg (an ambiguity with no
-    unresolved native row) is reachable and is the build case
-    split-partition-unmatched-split-beside-fully-bound-literals-fails-the-build.
-    """
-    item = record()
-    pending = ambiguity((item,))
-    with pytest.raises(ValueError, match="missing explicit provider key"):
-        resolve((item,), naming_ambiguities=(pending,), provider_keys={})

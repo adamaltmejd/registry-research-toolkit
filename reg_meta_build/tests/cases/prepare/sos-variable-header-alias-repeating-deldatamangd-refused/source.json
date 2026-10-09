@@ -1,0 +1,8 @@
+{
+  "description": "sos-source with the Kopplingsvariabel header L1 replaced by 'Datavynamn' (BU's alias for the subset column, beside the delivered Deldatamängdsnamn in A1) and L2 'SECOND_VALUE'.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "cells": {"Metadata - Variabelnivå!L1": "Datavynamn", "Metadata - Variabelnivå!L2": "SECOND_VALUE"}
+  }
+}

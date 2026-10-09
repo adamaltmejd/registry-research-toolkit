@@ -1,0 +1,17 @@
+{
+  "description": "A minimal SOS workbook with one variable per Data från cell shape: V1 the number 1964, V2 the text '1964', V3 the text ' 1964 ', V4 1964 stored as the float 1964.0 (as another producer writes it), V5 the number 1964.5, V6 the text 'not a year'.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Test (TST)_webb.xlsx",
+    "sheets": {
+      "Metadata - Variabelnivå": [
+        ["Variabelnamn", "Variabeletikett", "Data från"],
+        ["V1", "Etikett", 1964],
+        ["V2", "Etikett", "1964"],
+        ["V3", "Etikett", " 1964 "],
+        ["V4", "Etikett", {"value": 1964, "stored": "1964.0"}],
+        ["V5", "Etikett", 1964.5],
+        ["V6", "Etikett", "not a year"]
+      ]
+    }
+  }
+}

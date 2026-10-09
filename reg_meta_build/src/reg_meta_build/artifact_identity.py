@@ -68,9 +68,8 @@ def generation_id(manifest: Mapping[str, str]) -> str:
 
 def committed_steward_slugs(steward: str, *, revision: str) -> Path:
     """Admit only ordinary tracked slug bytes from the clean builder checkout."""
-    from reg_meta.fqid import validate_slug
-
     from .input_snapshot import _git_bytes
+    from .slug_grammar import validate_slug
 
     validate_slug(steward, "steward")
     root = Path(__file__).resolve().parents[3]

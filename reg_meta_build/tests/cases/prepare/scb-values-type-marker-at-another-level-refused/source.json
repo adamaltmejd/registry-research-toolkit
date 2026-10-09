@@ -1,0 +1,12 @@
+{
+  "description": "A Vardemangder row whose version and code are the type marker Tal, at the level Other. The validity file is the fixture default (its rows name no listed item), as the replaced test delivered it.",
+  "scb": {
+    "vardemangder": [
+      "Tal|Other|Tal|Label|100|"
+    ],
+    "valid_dates": [
+      "5001|2000-01-01|2030-12-31",
+      "5003|2015-01-01|2030-12-31"
+    ]
+  }
+}

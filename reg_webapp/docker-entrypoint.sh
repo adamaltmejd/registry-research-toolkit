@@ -60,6 +60,9 @@ done
 # readiness deadline rather than the per-request one.
 curl -fsS --max-time "$READY_DEADLINE" -o /dev/null "$BASE/api/search?q=inkomst&$EDGE_V" \
     || fail "search"
+# The docs DB must be populated, not just admitted (#8): `lisa` is in every release.
+curl -fsS --max-time "$MAX_TIME" "$BASE/api/docs/search?q=lisa&limit=1&$EDGE_V" \
+    | grep -q '"filename":' || fail "docs search"
 curl -fsS --max-time "$MAX_TIME" "$BASE/mcp?$EDGE_V" \
     -H 'accept: application/json, text/event-stream' \
     -H 'content-type: application/json' \

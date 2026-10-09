@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from reg_meta.db import register_py_lower
+from reg_meta_build.db import register_py_lower
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

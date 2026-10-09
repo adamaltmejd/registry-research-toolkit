@@ -1,0 +1,10 @@
+{
+  "reader": "scb_join_keys",
+  "replaces": "test_scb_reference_records.py::test_join_key_unknown_workbook_contract_fails[options1]",
+  "fails_if": "the join-key reader reads a three-column sheet whose header is not Tabell, ID-kolumn, Beskrivning",
+  "error": {
+    "code": "source_preparation_failed",
+    "type": "ScbReferenceSourceError",
+    "locator": "unsupported ID-kolumner header"
+  }
+}

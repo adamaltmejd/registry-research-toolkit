@@ -1,0 +1,13 @@
+{
+  "description": "sos-source with HDIA's Länk kodverk cells naming the unanchored sheet Kodlista_Target (F2 'Kodlista_Target', F3 'Kodlista_Target!'); Kodlista_Target (KOD, Beskrivning) names no member. The variant moves Kodlista_Target to the front of the workbook.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "cells": {
+      "Metadata - Variabelnivå!F2": "Kodlista_Target",
+      "Metadata - Variabelnivå!F3": "Kodlista_Target!"
+    },
+    "sheets": {"Kodlista_Target": [["KOD", "Beskrivning"], ["1", "One"]]}
+  },
+  "variants": {"code-sheet-first": {"order": ["Kodlista_Target"]}}
+}

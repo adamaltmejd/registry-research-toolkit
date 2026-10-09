@@ -1,0 +1,10 @@
+{
+  "description": "sos-source with HDIA's row-2 Värdemängd cell (E2) replaced by the bu-spec-wrapped cell of cases/sos-inline-value-set.json: the real BU delivery's SPEC cell, three assignments split by a newline and a 95-space alignment run, with a trailing space.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-source",
+    "cells": {
+      "Metadata - Variabelnivå!E2": "2 = brister i hemmilljön 2 § LVU\n3 = barnets/den ungas beteende (3 § LVU)                                                                                               4 = både miljö och beteende 2-3 §§ LVU. "
+    }
+  }
+}

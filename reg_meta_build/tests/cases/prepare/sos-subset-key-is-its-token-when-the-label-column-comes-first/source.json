@@ -1,0 +1,15 @@
+{
+  "description": "sos-source as Dödsorsaksregistret, plus a 'Deldatamängder och datavyer' sheet with the label column before the name column and an Uppdateringsfrekvens column, two subsets: DORS (the register's own abbreviation) and COV_DORS_HERMES.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata DORS (DORS).xlsx",
+    "from": "sos-source",
+    "cells": {"Generell information!C2": "Dödsorsaksregistret"},
+    "sheets": {
+      "Deldatamängder och datavyer": [
+        ["Deldatamängdsetikett", "Deldatamängdsnamn", "Uppdateringsfrekvens"],
+        ["Dödsorsaker", "DORS", "Årligen"],
+        ["Covid-19 Hermes", "COV_DORS_HERMES", "Månadsvis"]
+      ]
+    }
+  }
+}

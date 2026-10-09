@@ -1,0 +1,25 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_parent_records.py::test_styrtabell_parent_keeps_both_lookup_signals",
+  "fails_if": "the SOS reader drops the Styrtabell label or the 'Ej relevant' aggregation level from the subset's parent fact, so the build cannot tell a lookup table from a subset",
+  "projections": [
+    {
+      "of": "records",
+      "where": {
+        "parent_facts": {"$contains": [{"kind": "variant", "variant": {"name": "PAR_OV"}}]}
+      },
+      "rows": [
+        {
+          "parent_facts": [
+            {
+              "fields": {
+                "name": {"value": "Styrtabell för diagnoser"},
+                "aggregation_level": {"value": "Ej relevant"}
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

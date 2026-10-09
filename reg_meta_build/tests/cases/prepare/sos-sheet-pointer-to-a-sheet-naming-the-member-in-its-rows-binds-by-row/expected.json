@@ -1,0 +1,30 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_code_lists.py::test_sheet_pointer_honors_target_named_in_code_rows",
+  "fails_if": "the SOS reader ignores the member a code row names when a pointer targets its sheet, keeping the pointer as a classification declaration or adding a variable-pointer reference",
+  "projections": [
+    {
+      "of": "records",
+      "where": {
+        "locators": [{"physical_record": "row:2"}],
+        "subject": {"member": {"name": "HDIA"}}
+      },
+      "rows": [
+        {
+          "fields": {"classification_declared": null},
+          "delivered_cells": {"$once": [{"name": "Länk kodverk", "raw_value": "Kodlista_Target!A1"}]}
+        }
+      ]
+    },
+    {
+      "of": "descriptors",
+      "where": {"key": "sheet:Kodlista_Target"},
+      "rows": [{"value": {"member_hints": {"$lacks": [{"role": "variable_pointer"}]}}}]
+    },
+    {
+      "of": "associations",
+      "where": {"descriptor_key": "sheet:Kodlista_Target"},
+      "rows": [{"member_references": {"$contains": ["HDIA"]}}]
+    }
+  ]
+}

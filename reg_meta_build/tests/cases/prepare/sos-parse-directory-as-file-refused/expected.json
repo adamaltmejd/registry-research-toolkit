@@ -1,0 +1,15 @@
+{
+  "reader": "sos_parsed",
+  "args": {"file": "Socialstyrelsen"},
+  "replaces": [
+    "test_sos_parser.py::test_directory_passed_as_file_rejected",
+    "test_sos_parser.py::test_missing_file_raises"
+  ],
+  "fails_if": "the SOS parser checks only that its path exists (or hands any path to openpyxl), so an existing directory, or a missing file, fails with an unlocated read error instead of the not-a-regular-file refusal",
+  "note": "The hardest form of the regular-file check: the path exists. The missing-file test was its easy twin (a missing path also fails inside openpyxl, so it passed without the check).",
+  "error": {
+    "code": "sos_parse_error",
+    "type": "SosParseError",
+    "locator": "Socialstyrelsen is not a regular file"
+  }
+}

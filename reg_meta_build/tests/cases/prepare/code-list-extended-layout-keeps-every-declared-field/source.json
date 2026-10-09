@@ -1,0 +1,6 @@
+{
+  "description": "A UTF-8 code list with a byte-order mark and CRLF line ends in the extended layout: code 001 with a padded label spelling å as a plus a combining ring and a non-breaking space, an English label, a parent code and validity from 2020 open-ended; then the same code and labels valid from 2021 to `unknown`.",
+  "files": {
+    "classifications/codes.csv": "﻿code,label,label_en,parent_code,valid_from,valid_to\r\n 001 , Blå   etikett , English  label , 00 ,2020,\r\n 001 , Blå   etikett , English  label , 00 ,2021,unknown\r\n"
+  }
+}

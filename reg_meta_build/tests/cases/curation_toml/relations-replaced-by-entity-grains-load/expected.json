@@ -11,56 +11,20 @@
   "loads": {
     "replaced_by": [
       {
-        "predecessor": {
-          "kind": "variable_binding",
-          "provider": "scb",
-          "register": "lisa",
-          "variable": "old",
-          "classification": null
-        },
-        "successor": {
-          "kind": "variable_binding",
-          "provider": "scb",
-          "register": "lisa",
-          "variable": "new",
-          "classification": null
-        },
+        "predecessor": "scb/lisa/old",
+        "successor": "scb/lisa/new",
         "effective_year": 2019,
         "note": "recut"
       },
       {
-        "predecessor": {
-          "kind": "register",
-          "provider": "sos",
-          "register": "old",
-          "variable": null,
-          "classification": null
-        },
-        "successor": {
-          "kind": "register",
-          "provider": "scb",
-          "register": "new",
-          "variable": null,
-          "classification": null
-        },
+        "predecessor": "sos/old",
+        "successor": "scb/new",
         "effective_year": null,
         "note": null
       },
       {
-        "predecessor": {
-          "kind": "classification",
-          "provider": null,
-          "register": null,
-          "variable": null,
-          "classification": "sun1996"
-        },
-        "successor": {
-          "kind": "classification",
-          "provider": null,
-          "register": null,
-          "variable": null,
-          "classification": "sun-niva2000"
-        },
+        "predecessor": "class/sun1996",
+        "successor": "class/sun-niva2000",
         "effective_year": 2000,
         "note": null
       }

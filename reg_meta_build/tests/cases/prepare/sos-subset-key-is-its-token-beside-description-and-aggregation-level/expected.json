@@ -1,0 +1,34 @@
+{
+  "reader": "sos_workbook",
+  "replaces": "test_sos_parent_records.py::test_other_sos_workbooks_keep_token_only_subset_keys[MFR-Medicinska f\\xf6delseregistret-Deldatam\\xe4ngder-headers1-rows1-aggregation_level,description,name]",
+  "fails_if": "the SOS reader keys a subset by anything but its token, or stops reading Deldatamängdsbeskrivning and Aggregeringsnivå as the subset's description and aggregation level",
+  "note": "native_parent_key (build-side) is formed from the variant fact's register and variant names claimed here.",
+  "projections": [
+    {
+      "of": "records",
+      "where": {"parent_facts": {"$contains": [{"kind": "variant"}]}},
+      "rows": [
+        {
+          "locators": [
+            {
+              "semantic_record_key": [
+                "register:Medicinska födelseregistret",
+                "metadata:subsets",
+                "subset:MFR_BARN",
+                "fields:aggregation_level,description,name",
+                "language:<not declared>"
+              ]
+            }
+          ],
+          "parent_facts": [
+            {
+              "kind": "variant",
+              "register": {"name": "Medicinska födelseregistret"},
+              "variant": {"name": "MFR_BARN"}
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

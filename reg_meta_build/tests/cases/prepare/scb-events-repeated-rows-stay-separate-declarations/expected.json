@@ -1,0 +1,56 @@
+{
+  "reader": "scb_events",
+  "replaces": "test_scb_reference_records.py::test_event_reader_uses_accepted_raw_pin_and_retains_duplicates",
+  "fails_if": "the SCB events reader merges or drops a repeated event row, gives the same event content two semantic keys, or leaves the header out of the evidence table",
+  "note": "`#1` and `#2` are the source revision id and artifact digest; `#3` is the event's content key, shared by both rows.",
+  "projections": [
+    {
+      "of": "declarations",
+      "rows": [
+        {
+          "locator": {
+            "semantic_record_key": [
+              "event",
+              "#3"
+            ],
+            "physical_record": "row:2"
+          }
+        },
+        {
+          "locator": {
+            "semantic_record_key": [
+              "event",
+              "#3"
+            ],
+            "physical_record": "row:3"
+          }
+        }
+      ]
+    },
+    {
+      "of": "tables",
+      "rows": [
+        {
+          "rows": [
+            {
+              "role": "header",
+              "locator": {
+                "physical_record": "row:1"
+              }
+            },
+            {
+              "locator": {
+                "physical_record": "row:2"
+              }
+            },
+            {
+              "locator": {
+                "physical_record": "row:3"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

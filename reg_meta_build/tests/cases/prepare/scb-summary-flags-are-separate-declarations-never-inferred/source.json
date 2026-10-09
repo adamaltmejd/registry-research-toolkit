@@ -1,0 +1,15 @@
+{
+  "description": "UnikaRegisterOchVariabler.csv rows (register, register title, variant, variant title, variable, column, first version, last version, KansligVariabel, KansligVariabelIbland, Identitetsvariabel): a padded summary row (not sensitive, conditionally sensitive, not an identifier) delivered twice, the same row declaring it sensitive, then the row with Identitetsvariabel not delivered, delivered empty (`\"\"`), `Ja`, `unknown` and `2`.",
+  "scb": {
+    "unika": [
+      "  TESTREG  |Test register|Individuals|Individual data|Name  with padding|Column|1990/91|2023|0|1|0",
+      "  TESTREG  |Test register|Individuals|Individual data|Name  with padding|Column|1990/91|2023|0|1|0",
+      "  TESTREG  |Test register|Individuals|Individual data|Name  with padding|Column|1990/91|2023|1|1|0",
+      "  TESTREG  |Test register|Individuals|Individual data|Name  with padding|Column|1990/91|2023|0|1|",
+      "  TESTREG  |Test register|Individuals|Individual data|Name  with padding|Column|1990/91|2023|0|1|\"\"",
+      "  TESTREG  |Test register|Individuals|Individual data|Name  with padding|Column|1990/91|2023|0|1|Ja",
+      "  TESTREG  |Test register|Individuals|Individual data|Name  with padding|Column|1990/91|2023|0|1|unknown",
+      "  TESTREG  |Test register|Individuals|Individual data|Name  with padding|Column|1990/91|2023|0|1|2"
+    ]
+  }
+}

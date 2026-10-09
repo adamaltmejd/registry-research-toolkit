@@ -1,0 +1,42 @@
+{
+  "reader": "scb_records",
+  "replaces": [
+    "test_source_records.py::test_edition_date_does_not_replace_declared_variable_reference_period[2025-12-31-2025-2025-12-31]",
+    "test_source_records.py::test_edition_date_does_not_replace_declared_variable_reference_period[1 jan 2010-2010-2010-01-01]",
+    "test_source_records.py::test_declared_reference_period_preserves_missing_and_empty_evidence"
+  ],
+  "fails_if": "the SCB records reader fills a variable's reference period from its edition date, parses the declared reference period into a scope, keeps its padding or non-breaking space in the value, reads a blank declaration as a value, or loses whether the blank cell was delivered empty or not delivered",
+  "note": "An edition named by a day is that day's year, and its period scope that day. The declared reference period is the cell with its spaces folded; a blank cell is unknown, keeping `\"\"` for a delivered empty cell and null for one not delivered.",
+  "projections": [
+    {
+      "of": "",
+      "rows": [
+        {"record": {
+          "edition_scope": {"intervals": [{"start": "2025"}]},
+          "edition_period_scope": {"intervals": [{"start": "2025-12-31"}]},
+          "original_period_text": "2025-12-31",
+          "fields": {"reference_period": {"$exact": {"status": "value", "value": "Under föregående kalenderår", "raw_value": " Under  föregående kalenderår "}}},
+          "reference_period_scope": {"$absent": true}
+        }},
+        {"record": {
+          "edition_scope": {"intervals": [{"start": "2010"}]},
+          "edition_period_scope": {"intervals": [{"start": "2010-01-01"}]},
+          "original_period_text": "1 jan 2010",
+          "fields": {"reference_period": {"$exact": {"status": "value", "value": "Under föregående kalenderår", "raw_value": " Under  föregående kalenderår "}}},
+          "reference_period_scope": {"$absent": true}
+        }},
+        {"record": {
+          "edition_scope": {"intervals": [{"start": "2025"}]},
+          "fields": {"reference_period": {"status": "unknown", "raw_value": ""}}
+        }},
+        {"record": {
+          "edition_scope": {"intervals": [{"start": "2010"}]},
+          "fields": {"reference_period": {"status": "unknown", "raw_value": ""}}
+        }},
+        {"record": {
+          "fields": {"reference_period": {"status": "unknown", "raw_value": null}}
+        }}
+      ]
+    }
+  ]
+}

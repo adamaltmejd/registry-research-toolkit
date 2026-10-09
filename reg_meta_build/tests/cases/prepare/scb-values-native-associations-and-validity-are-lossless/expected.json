@@ -1,0 +1,48 @@
+{
+  "reader": "scb_values",
+  "replaces": "test_scb_value_records.py::test_clean_scb_values_preserves_native_associations_and_validity",
+  "fails_if": "the SCB value reader drops or merges a repeated Vardemangder or validity row, reads an undelivered CVID, item or validity cell as empty (or the reverse), folds the code 000 or the item 0 into another, keeps a raw cell's padding in a code, label, version or level, loses the raw cell, decodes the DOS byte 0x8F as anything but Å, merges two labels of one code, splits one payload into two, or drops the snapshot's input commit from the provenance",
+  "note": "The clean code, label, version and level are the raw cells without padding and with each run of spaces one space; 0x8F is Å in cp850. Each distinct (code, label) payload and (version, level) list is one entry of `values` and `descriptors`, so the two rows of the DOS label share one payload, and the 000 row shares its list with the 008 rows. An association's locator is its `source_file` and `row_number`.",
+  "projections": [
+    {
+      "of": "provenance",
+      "where": {"key": "input_repository_commit"},
+      "note": "The accepted snapshot's input commit, a git digest.",
+      "rows": [{"key": "input_repository_commit", "value": "#1"}]
+    },
+    {
+      "of": "descriptors",
+      "note": "Two lists: the padded Version A list and the Alternate list (which lists they are is claimed on the associations).",
+      "rows": [{"$any": true}, {"$any": true}]
+    },
+    {
+      "of": "values",
+      "note": "Seven payloads: the associations name seven distinct (code, label) raw pairs, so each is one value and the repeated DOS row adds none.",
+      "rows": [{"$any": true}, {"$any": true}, {"$any": true}, {"$any": true}, {"$any": true}, {"$any": true}, {"$any": true}]
+    },
+    {
+      "of": "associations",
+      "rows": [
+        {"row_number": 2, "source_file": "Vardemangder.csv", "member_id": "100", "member_id_field": "CVID", "item_id": null, "value": {"code": "007", "label": "Alpha label", "raw_cells": ["007", "Alpha  label"]}, "descriptor": {"raw_cells": ["Version  A", "Level  1"], "version": "Version A", "level": "Level 1"}},
+        {"row_number": 3, "source_file": "Vardemangder.csv", "member_id": "100", "member_id_field": "CVID", "item_id": "", "value": {"code": "007", "label": "Alpha label", "raw_cells": ["007", "Alpha label"]}, "descriptor": {"raw_cells": ["Version  A", "Level  1"]}},
+        {"row_number": 4, "source_file": "Vardemangder.csv", "member_id": "100", "member_id_field": "CVID", "item_id": "0", "value": {"raw_cells": ["007", "Alpha label"]}, "descriptor": {"raw_cells": ["Version  A", "Level  1"]}},
+        {"row_number": 5, "source_file": "Vardemangder.csv", "member_id": "100", "member_id_field": "CVID", "item_id": "000", "value": {"code": "008", "label": "Å", "raw_cells": ["008", "Å"]}, "descriptor": {"raw_cells": ["Alternate", "Level 2"], "version": "Alternate", "level": "Level 2"}},
+        {"row_number": 6, "source_file": "Vardemangder.csv", "member_id": "100", "member_id_field": "CVID", "item_id": "999", "value": {"code": "008", "label": "Å", "raw_cells": ["008", "\u008f"]}, "descriptor": {"raw_cells": ["Alternate", "Level 2"]}},
+        {"row_number": 7, "source_file": "Vardemangder.csv", "member_id": "100", "member_id_field": "CVID", "item_id": "999", "value": {"code": "008", "label": "Å", "raw_cells": ["008", "\u008f"]}, "descriptor": {"raw_cells": ["Alternate", "Level 2"]}},
+        {"row_number": 8, "source_file": "Vardemangder.csv", "member_id": null, "member_id_field": "CVID", "item_id": "5001", "value": {"code": "009", "label": "Conflict A", "raw_cells": ["009", "Conflict A"]}, "descriptor": {"raw_cells": ["Alternate", "Level 2"]}},
+        {"row_number": 9, "source_file": "Vardemangder.csv", "member_id": "", "member_id_field": "CVID", "item_id": "5001", "value": {"code": "009", "label": "Conflict B", "raw_cells": ["009", "Conflict B"]}, "descriptor": {"raw_cells": ["Alternate", "Level 2"]}},
+        {"row_number": 10, "source_file": "Vardemangder.csv", "member_id": "0", "member_id_field": "CVID", "item_id": "0", "value": {"code": "000", "label": "Leading zero", "raw_cells": ["000", "Leading zero"]}, "descriptor": {"raw_cells": ["Alternate", "Level 2"]}}
+      ]
+    },
+    {
+      "of": "validity",
+      "note": "The item ids are the delivered ones: the code 000 is no item.",
+      "rows": [
+        {"row_number": 2, "source_file": "VardemangderValidDates.csv", "item_id": "5001", "raw_cells": ["5001", "2019-06-30", "2020-02-29"], "valid_from": "2019-06-30", "valid_to": "2020-02-29"},
+        {"row_number": 3, "source_file": "VardemangderValidDates.csv", "item_id": "5001", "raw_cells": ["5001", "2019-06-30", "2020-02-29"]},
+        {"row_number": 4, "source_file": "VardemangderValidDates.csv", "item_id": "999", "raw_cells": ["999", null, "2021-03-04"]},
+        {"row_number": 5, "source_file": "VardemangderValidDates.csv", "item_id": "0", "raw_cells": ["0", "", "9999-12-31"]}
+      ]
+    }
+  ]
+}

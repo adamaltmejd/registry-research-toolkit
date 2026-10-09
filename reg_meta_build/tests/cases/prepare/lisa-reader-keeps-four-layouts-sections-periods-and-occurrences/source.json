@@ -1,0 +1,7 @@
+{
+  "description": "The LISA fixture workbook as written (cases/lisa/layout.json plus the nine declarations of _lisa_fixtures.write_lisa_workbook): Individ rows 8 PersonNr, 44 RekrBidr ('2003-2008' and '2013' on two lines), 322 KU2YrkStalln with its continuation row 323, 600 AmPolTyp, then footnote rows 815-819; Individ årsoberoende PersonNr under each of its three sections (rows 6, 31, 35); Företag row 9 ForetagKod (2024 as a number); Arbetsställe row 7 Ast_LoneSum ('1990-2021 2024').",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa"
+  }
+}

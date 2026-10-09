@@ -1,0 +1,49 @@
+[register]
+provider = "scb"
+slug = "compose"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "answer"
+[[errata.field]]
+variable = "1.5"
+variant = "1.10"
+column = "OLD"
+edition = "2020"
+expected_fields = {{expected_fields key=member:101}}
+expected_period_text = {{period_text key=member:101}}
+expected_scope = {{edition_scope key=member:101}}
+expected_period = {{period_scope key=member:101}}
+evidence = "The delivered OLD column is VALUE."
+noted = "2026-10-09"
+field = "column_name"
+value = "VALUE"
+[[errata.field]]
+variable = "1.5"
+variant = "1.10"
+column = "OLD"
+edition = "2020"
+expected_fields = {{expected_fields key=member:101}}
+expected_period_text = {{period_text key=member:101}}
+expected_scope = {{edition_scope key=member:101}}
+expected_period = {{period_scope key=member:101}}
+evidence = "A second reviewer also reads the delivered OLD column as VALUE."
+noted = "2026-10-09"
+field = "column_name"
+value = "VALUE"
+[[errata.field]]
+variable = "1.5"
+variant = "1.10"
+column = "OLD"
+edition = "2020"
+expected_fields = {{expected_fields key=member:101 fields=prose}}
+expected_period_text = {{period_text key=member:101}}
+expected_scope = {{edition_scope key=member:101}}
+expected_period = {{period_scope key=member:101}}
+evidence = "The delivered description is corrected."
+noted = "2026-10-09"
+field = "description"
+value = "Corrected"

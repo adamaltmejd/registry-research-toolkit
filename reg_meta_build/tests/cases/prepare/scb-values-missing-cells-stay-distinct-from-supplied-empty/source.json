@@ -1,0 +1,13 @@
+{
+  "description": "Two Vardemangder rows whose version, level, code and label are not delivered (empty fields) and delivered empty (`\"\"`), with validity rows whose dates are likewise not delivered and delivered empty.",
+  "scb": {
+    "vardemangder": [
+      "||||100|5",
+      "\"\"|\"\"|\"\"|\"\"|100|6"
+    ],
+    "valid_dates": [
+      "5||",
+      "6|\"\"|\"\""
+    ]
+  }
+}

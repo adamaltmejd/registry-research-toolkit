@@ -197,13 +197,18 @@ supply no flags; conflicting flags are not combined with Boolean OR.
 
 SCB value preparation keeps descriptor/value dictionaries, ordered CVID/ItemId
 associations, validity declarations, disconnected identifiers and duplicates. Missing,
-empty and zero stay distinct. A descriptor label is not a global code-list ID. Exact
-validity dates are not truncated to years or silently repaired. An edition's explicit
-item associations establish membership across its finite scope when known global item
-dates would leave gaps. This is the accepted continuity assumption when no independent
-period information is supplied. Original item dates remain evidence and every widened
-association emits a warning. Supplied and section windows still restrict membership;
-unknown or conflicting validity, ambiguous joins and competing lists still withhold.
+empty and zero stay distinct. A delivered blank code is missing data and never a member,
+labelled or not (SCB's `["", "Uppgift saknas"]` included), as Socialstyrelsen code rows
+already treat it: binding keeps its association as evidence and states no member, so it
+neither publishes nor withholds the list. An undelivered code is structurally missing
+and stays unknown membership, which withholds. A descriptor label is not a global
+code-list ID. Exact validity dates are not truncated to years or silently repaired. An
+edition's explicit item associations establish membership across its finite scope when
+known global item dates would leave gaps. This is the accepted continuity assumption
+when no independent period information is supplied. Original item dates remain evidence
+and every widened association emits a warning. Supplied and section windows still
+restrict membership; unknown or conflicting validity, ambiguous joins and competing
+lists still withhold.
 
 The exact `Tal` and `Beskrivande text` rows whose code, version and level agree are type
 declarations, not enumerated codes. Cleaning records that distinction on the descriptor;
@@ -1513,10 +1518,12 @@ no classification, orphans of year projection with nothing to annotate. The excl
 hide rows from search only; `value_code` and `value_set` keep every row, and the
 reader's direct code match applies the same owner predicate.
 
-**Slug reservations.** Slug minting still rejects `_default`, `class`, period-shaped
-strings and the former FastAPI suffix words (`reg_meta.fqid`). The Rust routes put the
-operation before the ref, so the suffix words protect no route; whether the set shrinks
-is decided when the grammar moves to `reg-core` (package 4.3).
+**Slug reservations.** The slug grammar (with `class` reserved) is `reg-core`'s, reached
+through `reg-core-py`; `slug_grammar.validate_slug` adds the build's slot policy:
+`_default` only as the register_variant coordinate, and `variants` (variable slot) and
+`group` (provider slot), which SPA routes capture. The former FastAPI suffix words
+(`states`, `graph`, ...) protect no route (the Rust routes put the operation first) but
+stay reserved while `reg_meta`'s reader still refuses them; they go in package 4.9a.
 
 ## Inspection and verification
 

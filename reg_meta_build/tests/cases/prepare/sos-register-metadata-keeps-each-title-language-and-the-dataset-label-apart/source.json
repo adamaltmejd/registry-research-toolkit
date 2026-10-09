@@ -1,0 +1,11 @@
+{
+  "description": "sos-complete plus contact cells: an E-post row on Generell information (Rela@x.se) and a Kontaktuppgift row on the DCAT-AP sheet (ReLa@x.se). The general sheet's Datamängd (Patientregistret källa) differs from the two DCAT-AP Titel rows (Första/First titeln, Andra/Second titeln), the LSS/HSL/SOL shape.",
+  "workbook": {
+    "file": "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx",
+    "from": "sos-complete",
+    "sheets": {
+      "Generell information": [[null, "E-post", "Rela@x.se"]],
+      "Metadata-Datamängd (DCAT-AP)": [["Kontaktuppgift", null, "ReLa@x.se", null]]
+    }
+  }
+}
