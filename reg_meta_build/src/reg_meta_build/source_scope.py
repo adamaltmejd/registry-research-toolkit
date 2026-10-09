@@ -154,6 +154,7 @@ def resolve_source_scope(
     value_sessions: tuple[ValueBindingSession, ...],
     support: SourceSupportBindings,
     classifications: Mapping[str, ResolvedClassification],
+    withheld_classifications: Mapping[str, tuple[ResolutionDiagnostic, ...]] = {},
     classification_references: Mapping[str, str],
     classification_family_references: Mapping[str, tuple[str, ...]] = {},
     label_rules: Mapping[str, str] = {},
@@ -614,6 +615,7 @@ def resolve_source_scope(
             column_scopes=coding_evidence.effective_scopes or {},
             coding=original_coding,
             classifications=classifications,
+            withheld_classifications=withheld_classifications,
             value_bindings=enumerated_bindings,
         )
         compiled_cases.extend(new_cases)
@@ -738,6 +740,7 @@ def resolve_source_scope(
             ),
             matched_labels=matched_labels,
             duplicate_overrides=duplicate_overrides,
+            withheld_classifications=withheld_classifications,
         )
         representation = resolve_representation_cases(
             coding_evidence,

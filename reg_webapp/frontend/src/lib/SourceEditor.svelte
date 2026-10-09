@@ -63,7 +63,7 @@ const { sourceIndex, source, issues, providerQualified, studyWindow } = $props<{
   providerQualified: boolean;
   /** The project's own study window, or null when none is set — what this
    * source's period is MARKED against when the two differ. An authoring seed,
-   * never an inheritance (reg_schema/DESIGN.md): each source keeps its own
+   * never an inheritance (crates/reg-core/DESIGN.md): each source keeps its own
    * concrete period, so divergence is shown rather than hidden. */
   studyWindow: StudyWindow | null;
 }>();
@@ -707,7 +707,7 @@ function confirmRemove(): void {
       {/if}
 
       {#if studyWindow && windowRelation === "differs"}
-        <!-- The window is an authoring SEED, not an inheritance (reg_schema/DESIGN.md):
+        <!-- The window is an authoring SEED, not an inheritance (crates/reg-core/DESIGN.md):
              a source may deliberately cover more or less. So this MARKS the
              divergence rather than warning about it — whether the study window is
              actually left uncovered is a coverage note, and it has one. -->

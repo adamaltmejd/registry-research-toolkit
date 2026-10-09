@@ -5,6 +5,7 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import os
 import sqlite3
 from pathlib import Path
 
@@ -14,6 +15,8 @@ from _pipeline_catalog_support import (
     import_manifest as _manifest,
     report_issues as _issues,
 )
+from _resolved_catalog_support import resolved_variable
+from catalog_manifest import synthetic_manifest
 from reg_meta.db import DB_FILENAME
 from reg_meta.errors import EXIT_USAGE
 from reg_meta_build.cli import run
@@ -21,6 +24,7 @@ from reg_meta_build.pipeline import (
     build_catalog,
     check_curation,
 )
+from reg_meta_build.resolved_catalog import write_resolved_catalog
 
 # The checkout's tracked curation tree and its slug sibling, the defaults that
 # check-curation protects when --curation-dir is omitted.
@@ -439,6 +443,59 @@ def test_strict_corpus_failure_preserves_previous_catalog(
     assert summary["counts"].get("error", 0) == 0
     assert output.read_bytes() == b"previous catalog"
     assert not output.with_suffix(".db.prev").exists()
+
+
+# Publication over an existing catalog. build-db publishes only a strict full build,
+# which the synthetic sources cannot pass (the corpus floors above), so these drive
+# the writer that build calls: `write_resolved_catalog` stages in a temporary
+# directory beside the output and installs it through `publish_db`.
+
+
+def test_publication_keeps_exactly_the_replaced_generation(tmp_path: Path) -> None:
+    # Fails if publication stops linking the live catalog aside to `.prev`, stops
+    # evicting an older `.prev` (the link then raises FileExistsError), installs
+    # something other than the new catalog, or leaves its staging behind.
+    output = tmp_path / "reg_meta.db"
+    previous = output.with_name("reg_meta.db.prev")
+    output.write_bytes(b"gen-2")
+    previous.write_bytes(b"gen-1-old")
+    manifest = synthetic_manifest()
+    write_resolved_catalog((resolved_variable(),), output, manifest=manifest)
+    assert previous.read_bytes() == b"gen-2"
+    assert _manifest(output)["prepared_commit"] == manifest["prepared_commit"]
+    assert sorted(p.name for p in tmp_path.iterdir()) == [output.name, previous.name]
+
+
+@pytest.mark.parametrize("step", ["link", "replace"])
+def test_failed_publication_step_preserves_live_catalog(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, step: str
+) -> None:
+    # Y-52. Fails if publication moves the live catalog aside before its final replace
+    # (rotate-then-rename leaves the live name absent), replaces it before the
+    # backup link succeeded, or leaves its staging behind on failure. The failing
+    # filesystem is the mocked process boundary. It fails only the publication call
+    # (the `.prev` link, or the replace onto the live name), so no other step can
+    # raise in its place.
+    output = tmp_path / "reg_meta.db"
+    output.write_bytes(b"live generation")
+    prev = output.with_name("reg_meta.db.prev")
+    target = (prev if step == "link" else output).resolve()
+    real = getattr(os, step)
+
+    def fail_publication(src, dst, *args, **kwargs):
+        if Path(dst).resolve() == target:
+            raise OSError(f"injected {step} failure")
+        return real(src, dst, *args, **kwargs)
+
+    monkeypatch.setattr(os, step, fail_publication)
+    with pytest.raises(OSError, match=f"injected {step} failure"):
+        write_resolved_catalog(
+            (resolved_variable(),), output, manifest=synthetic_manifest()
+        )
+    assert output.read_bytes() == b"live generation"
+    # `.prev` is the weaker promise (publish_db's docstring): only the live catalog
+    # must survive, and no staging may remain.
+    assert {p.name for p in tmp_path.iterdir()} <= {output.name, prev.name}
 
 
 @pytest.mark.parametrize(

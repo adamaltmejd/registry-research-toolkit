@@ -1,0 +1,5 @@
+{
+  "fails_if": "`resolve_classification_successions` (catalog_dependencies.py) checks the succession graph only after withholding the edges that name emp2007, so a declared edge that closes a cycle through the withheld book is accepted and the diagnostic build completes",
+  "note": "The tree of step 1 plus a curated emp2020 -> emp2007 edge in relations.toml, which closes a cycle with the derived emp2007 -> emp2020 edge. A cycle stays fatal even when every edge on it is withheld: withholding prunes output, it does not excuse an invalid graph.",
+  "sources": "scb-fk-emp-editions"
+}

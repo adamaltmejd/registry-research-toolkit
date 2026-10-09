@@ -1,0 +1,60 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "valid_from", "column"],
+      "rows": [
+        ["answer", "people", "2020-01-01", "ANSWER"]
+      ]
+    },
+    {
+      "table": "tags",
+      "fields": ["slug", "member"],
+      "rows": [
+        ["topic", "scb/sample/answer"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "ambiguous_named_identity"},
+      "fields": ["severity", "subject", "withheld_output"],
+      "note": "The replaced test's exact withheld set, translated to firms and the literal ANSWER.",
+      "rows": [
+        [
+          "error",
+          "scb/sample/answer",
+          ["('variant_states', 'scb/sample/answer', 'firms')"]
+        ],
+        [
+          "error",
+          "scb/sample/answer",
+          ["('succession_representation', 'scb/sample/answer', 'answer', 'firms')"]
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code", "subject"],
+      "note": "No other issue: the rows the owner leaves (CVIDs 21 and 22) stay on the unresolved native family, and nothing names `third`.",
+      "rows": [
+        ["ambiguous_named_identity", "scb/sample/answer"],
+        ["ambiguous_named_identity", "scb/sample/answer"],
+        [
+          "unresolved_catalog_identity",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)"
+        ]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "ambiguous_named_identity"},
+      "fields": ["key"],
+      "note": "Each withheld dependency cites only the uncovered firms row.",
+      "rows": [
+        [["register:1", "variant:20", "edition:2021", "variable:5", "member:21"]],
+        [["register:1", "variant:20", "edition:2021", "variable:5", "member:21"]]
+      ]
+    }
+  ]
+}

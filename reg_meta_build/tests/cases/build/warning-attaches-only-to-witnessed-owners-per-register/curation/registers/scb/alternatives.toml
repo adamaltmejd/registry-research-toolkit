@@ -1,0 +1,34 @@
+[register]
+provider = "scb"
+slug = "alternatives"
+native_id = "3"
+[[variant]]
+native_id = "3.30"
+slug = "people"
+[[variable]]
+native_id = "3.301"
+slug = "income"
+[[identity.partition]]
+variable = "3.301"
+columns = { First = "3.301", Second = "3.301" }
+columns_ref = "reviewed physical alternatives"
+[[representation.parallel]]
+variable = "3.301"
+variant = "3.30"
+co_delivered = true
+column_metadata = "per_column"
+valid_from = "2020-01-01"
+valid_to = "2021-12-31"
+evidence = "Reviewed physical alternatives"
+noted = "2026-10-06"
+columns = [{column = "First", valid_from = "2020-01-01", valid_to = "2021-12-31", source_editions = ["2020", "2021"]}, {column = "Second", valid_from = "2020-01-01", valid_to = "2021-12-31", source_editions = ["2020", "2021"]}]
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/alternatives/income"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:3\", \"variant:30\", \"edition:3021\", \"variable:301\", \"member:3002\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "Accepted while the alternatives stay uncoded."
+evidence = "Synthetic fixture issue."

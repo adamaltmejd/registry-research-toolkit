@@ -1,0 +1,23 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variant]]
+native_id = "1.20"
+slug = "firms"
+[[variant]]
+native_id = "1.30"
+slug = "third"
+[[variable]]
+native_id = "1.5.reviewed"
+slug = "answer"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "ANSWER"
+owner = "1.5.reviewed"
+ref = "reviewed basis"
+source_editions = ["2020"]

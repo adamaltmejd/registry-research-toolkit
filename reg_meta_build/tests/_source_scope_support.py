@@ -11,8 +11,6 @@ from reg_meta_build.source_coordinates import (
     source_register_key,
 )
 from reg_meta_build.source_curation import (
-    AcknowledgeDecision,
-    CurationCase,
     PeerGuard,
 )
 from reg_meta_build.source_effects import (
@@ -169,24 +167,4 @@ def resolve(
         diagnostic=diagnostic,
         coding_registers=coding_registers,
         coding_scope=coding_scope,
-    )
-
-
-def acknowledge(issue, item):
-    register_key = source_register_key(item)
-    assert register_key is not None
-    return CurationCase(
-        case_id="acknowledged",
-        targets=(),
-        decision=AcknowledgeDecision(
-            code=issue.code,
-            subject=issue.subject,
-            refs=issue.refs,
-            fields=issue.fields,
-            valid_from=issue.valid_from,
-            valid_to=issue.valid_to,
-            register_key=register_key,
-            reason="Accepted while the source stays unresolved.",
-            evidence="Fixture diagnostic ledger.",
-        ),
     )
