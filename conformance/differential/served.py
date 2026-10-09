@@ -108,7 +108,10 @@ def _variables(conn, catalog: str, seed: int) -> list[tuple]:
     return out
 
 
-def _catalog_requests(conn, catalog: str, scopes: list[str], seed: int) -> list:
+def _catalog_requests(
+    conn, catalog: str, scopes: list[str], seed: int, shared: set[str]
+) -> list:
+    """``shared``: the global catalog's registers, when ``catalog`` is a steward's."""
     variables = _variables(conn, catalog, seed)
     groups = conn.execute(
         "SELECT 'group/' || p.slug || '/' || r.slug || '/' || g.group_key "
@@ -239,7 +242,14 @@ def _catalog_requests(conn, catalog: str, scopes: list[str], seed: int) -> list:
             walk = {"limit": LIMIT, **s}
             key = f"{scope}/{{}}/{register.fqid}"
             out.append(_get(key.format("coverage"), f"/api/coverage/{route}", s))
-            out.append(_get(key.format("schema"), f"/api/schema/{route}", walk, None))
+            # simplify: a steward catalog's reference schema of a register the global
+            # catalog also carries is not walked whole (the steward overlay inserts
+            # its own registers, and these walks were a third of the served arm's
+            # time); its sampled year still is. Walk them if a steward-only
+            # reference defect slips by.
+            if scope == "holdings" or register.fqid not in shared:
+                path = f"/api/schema/{route}"
+                out.append(_get(key.format("schema"), path, walk, None))
             if register.year is not None:
                 out.append(
                     _get(
@@ -487,6 +497,14 @@ def served_cases(
     try:
         clients = {}
         requests = {}
+        with closing(connect(originals["global"])) as conn:
+            global_registers = {
+                f
+                for (f,) in conn.execute(
+                    "SELECT p.slug || '/' || r.slug FROM register r "
+                    "JOIN provider p USING(provider_id)"
+                )
+            }
         for catalog in sorted(originals):
             for arm, servers, dirs in (
                 ("baseline", baseline, originals),
@@ -495,12 +513,13 @@ def served_cases(
                 env = {"REG_META_DB": str(dirs[catalog]), "REG_WEBAPP_STEWARD": catalog}
                 clients[catalog, arm] = servers.client(env)
             scopes = ["reference"] + (["holdings"] if catalog != "global" else [])
+            shared = global_registers if catalog != "global" else set()
             with (
                 closing(connect(originals[catalog])) as conn,
                 closing(connect(originals[catalog], "reg_meta_docs.db")) as docs,
             ):
                 requests[catalog] = (
-                    _catalog_requests(conn, catalog, scopes, seed)
+                    _catalog_requests(conn, catalog, scopes, seed, shared)
                     + _docs_requests(conn, docs, catalog)
                     + _project_requests(projects / catalog)
                 )
