@@ -72,3 +72,6 @@ native_id = {{naming_id kind=variable provider=sos register_key=val member_key=I
 [[variable]]
 slug = "idperiod"
 native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDPERIOD}}
+[[variable]]
+slug = "idday"
+native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDDAY}}

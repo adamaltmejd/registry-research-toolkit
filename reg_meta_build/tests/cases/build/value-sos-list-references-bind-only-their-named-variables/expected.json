@@ -34,7 +34,7 @@
         ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:REVERSED", "2020-01-01", "2020-12-31"],
         ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:IDINLINE", "2020-01-01", "2020-12-31"]
       ],
-      "note": "Every coding issue of the build, by the Variabelnivå row it cites. Variables absent here bind cleanly or have no list: EXPLICIT, CIVIL, CIVILNP, ANCHORED, both FIRST rows, SECOND, OUTSIDER, RESOLVED, both INLINE rows, DAY, MONTH, BLANK, IDPERIOD and OTH's EXPLICIT. UNRESOLVED states no claim, so it has no unknown_code_membership beside its own issue."
+      "note": "Every coding issue of the build, by the Variabelnivå row it cites. Variables absent here bind cleanly or have no list: EXPLICIT, CIVIL, CIVILNP, ANCHORED, both FIRST rows, SECOND, OUTSIDER, RESOLVED, both INLINE rows, DAY, MONTH, BLANK, IDPERIOD, IDDAY and OTH's EXPLICIT. UNRESOLVED states no claim, so it has no unknown_code_membership beside its own issue."
     },
     {
       "table": "source_issues",
@@ -97,26 +97,30 @@
     },
     {
       "table": "state_codes",
-      "where": {"register": "val", "variable": ["idinline", "idperiod"]},
+      "where": {"register": "val", "variable": ["idinline", "idperiod", "idday"]},
       "fields": ["variable", "valid_from", "valid_to", "code", "label"],
       "rows": [
         ["idinline", "2020-01-01", "2020-12-31", null, null],
         ["idperiod", "2019-01-01", "2019-12-31", "0", "Label"],
         ["idperiod", "2020-01-01", "2020-12-31", null, null],
-        ["idperiod", "2021-01-01", "2021-12-31", "0", "Label"]
+        ["idperiod", "2021-01-01", "2021-12-31", "0", "Label"],
+        ["idday", "2020-01-01", "2020-02-28", "A", "Alla"],
+        ["idday", "2020-02-29", "2020-03-01", null, null],
+        ["idday", "2020-03-02", "2020-12-31", "A", "Alla"]
       ],
-      "note": "Two linkage (identifier) variables. IDPERIOD: the unlabelled 2020 member of its Kodlista is dropped for that year only, without an issue, and 2019 and 2021 keep the list (the non-identifier form is 8a's NOLABEL, which reports unknown_code_membership for 2020). IDINLINE: an inline enumeration is the variable's own record, so the drop does not apply and its unlabelled codes stay unknown membership (issue above)."
+      "note": "Three linkage (identifier) variables. IDDAY: Kodlista_SJUKHUS lists A for the whole year and an unlabelled B only 2020-02-29..2020-03-01 (Från/Till), so the list is dropped for exactly those two days, without an issue, and A stays the value set on both sides; the drop does not widen to the calendar year. IDPERIOD: the unlabelled 2020 member of its Kodlista is dropped for that year only, without an issue, and 2019 and 2021 keep the list (the non-identifier form is 8a's NOLABEL, which reports unknown_code_membership for 2020). IDINLINE: an inline enumeration is the variable's own record, so the drop does not apply and its unlabelled codes stay unknown membership (issue above)."
     },
     {
       "table": "variables",
-      "where": {"register": "val", "variable": ["idinline", "idperiod", "resolved"]},
+      "where": {"register": "val", "variable": ["idinline", "idperiod", "idday", "resolved"]},
       "fields": ["variable", "is_identifier"],
       "rows": [
         ["idinline", 1],
         ["idperiod", 1],
+        ["idday", 1],
         ["resolved", 0]
       ],
-      "note": "A non-blank Kopplingsvariabel cell is what makes IDINLINE and IDPERIOD identifiers; every other variable's cell is blank."
+      "note": "A non-blank Kopplingsvariabel cell is what makes IDINLINE, IDPERIOD and IDDAY identifiers; every other variable's cell is blank."
     }
   ]
 }
