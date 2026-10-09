@@ -94,37 +94,60 @@ impl From<ValidationResult> for Validation {
 }
 
 pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value, Error> {
+    let result = match project(params)? {
+        Err(rejected) => rejected,
+        Ok(project) => {
+            let conn = server.catalog.connect()?;
+            let mut semantic = Semantic {
+                conn: &conn,
+                steward: server.catalog.is_steward(),
+                issues: Vec::new(),
+            };
+            for (i, source) in project.sources.iter().enumerate() {
+                semantic.source(&format!("/sources/{i}"), source)?;
+            }
+            ValidationResult {
+                issues: semantic.issues,
+            }
+        }
+    };
+    Ok(serde_json::to_value(Validation::from(result)).expect("Validation serializes"))
+}
+
+/// The `project` parameter as a project, or the issues that reject it without the
+/// catalog: the supported-version decision alone, else the structural validator's.
+/// `order` shares this door (today's `project_from_raw`).
+pub(super) fn project(params: &Params) -> Result<Result<ProjectData, ValidationResult>, Error> {
     // The transports hand the body over as JSON text: HTTP after refusing malformed
     // bytes, MCP from its object argument.
     let raw: Value = serde_json::from_str(params["project"])
         .ok()
         .filter(Value::is_object)
         .ok_or_else(|| Error::invalid_parameter("project"))?;
-    let result = if let Some(issue) = version_issue(&raw) {
+    if let Some(issue) = version_issue(&raw) {
         // Alone: every other check reads the document as the contract it rejects.
-        ValidationResult {
+        return Ok(Err(ValidationResult {
             issues: vec![issue],
-        }
-    } else {
-        match ProjectData::from_value(&raw) {
-            Err(structural) => structural,
-            Ok(project) => {
-                let conn = server.catalog.connect()?;
-                let mut semantic = Semantic {
-                    conn: &conn,
-                    steward: server.catalog.is_steward(),
-                    issues: Vec::new(),
-                };
-                for (i, source) in project.sources.iter().enumerate() {
-                    semantic.source(&format!("/sources/{i}"), source)?;
-                }
-                ValidationResult {
-                    issues: semantic.issues,
-                }
-            }
-        }
-    };
-    Ok(serde_json::to_value(Validation::from(result)).expect("Validation serializes"))
+        }));
+    }
+    Ok(ProjectData::from_value(&raw))
+}
+
+/// The representations the steward holds variable `id` in under `variant`, in
+/// tables of a known scope (today's `Holdings.columns`).
+pub(super) fn held_representations(
+    conn: &Connection,
+    id: i64,
+    variant: i64,
+) -> Result<BTreeSet<String>, Error> {
+    Ok(conn
+        .prepare_cached(
+            "SELECT DISTINCT hm.representation_canonical FROM holding_mapping hm \
+             JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
+             WHERE ht.scope != 'unknown' AND hm.variable_id = ? AND hm.variant_id = ?",
+        )?
+        .query_map([id, variant], |row| row.get(0))?
+        .collect::<rusqlite::Result<_>>()?)
 }
 
 struct Semantic<'a> {
@@ -338,7 +361,16 @@ impl Semantic<'_> {
         variant: i64,
         requested: Option<&[Interval]>,
     ) -> Result<Option<BTreeMap<String, String>>, Error> {
-        let resolution = resolve_binding(self.conn, source, binding, id, variant, requested)?;
+        let pin = binding.representation.as_deref();
+        let resolution = resolve_binding(
+            self.conn,
+            source,
+            binding,
+            pin,
+            id,
+            Some(variant),
+            requested,
+        )?;
         let variable = quote(&binding.variable);
         let at = &source.register_variant;
         let period = &resolution.requested_period;
@@ -353,9 +385,8 @@ impl Semantic<'_> {
                 ),
             );
         }
-        if let Some((code, message)) = resolution.finding {
+        if let Some(Finding { code, message, .. }) = resolution.finding {
             let code = match code {
-                "variable_unresolved" => "fqid_unresolved",
                 "binding_unavailable" => "period_outside_state_validity",
                 "representation_unknown" => "binding_representation_unknown",
                 "representation_ambiguous" => "binding_value_set_version_ambiguous",
@@ -425,15 +456,7 @@ impl Semantic<'_> {
         variant: i64,
         columns: Option<&BTreeMap<String, String>>,
     ) -> Result<(), Error> {
-        let held: BTreeSet<String> = self
-            .conn
-            .prepare_cached(
-                "SELECT DISTINCT hm.representation_canonical FROM holding_mapping hm \
-                 JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
-                 WHERE ht.scope != 'unknown' AND hm.variable_id = ? AND hm.variant_id = ?",
-            )?
-            .query_map([id, variant], |row| row.get(0))?
-            .collect::<rusqlite::Result<_>>()?;
+        let held = held_representations(self.conn, id, variant)?;
         let (variable, at) = (quote(&binding.variable), &source.register_variant);
         if held.is_empty() {
             let message = format!(
@@ -501,47 +524,66 @@ impl Semantic<'_> {
 
 /// A kept state: its representation, the requested days it is available for, and
 /// its value set and version label.
-struct Kept {
-    emitted: Emitted,
+pub(super) struct Kept {
+    pub(super) emitted: Emitted,
     intervals: Vec<Interval>,
     value_set: (Option<i64>, String),
 }
 
+/// A blocking finding of [`resolve_binding`]: today's order finding code, its
+/// message and the period it names.
+pub(super) struct Finding {
+    pub(super) code: &'static str,
+    pub(super) message: String,
+    pub(super) period: Option<String>,
+}
+
 /// What one binding resolves to inside its source's period (today's
 /// `BindingResolution`).
-struct Resolution {
+pub(super) struct Resolution {
     /// The request as rendered for messages; `_default` when year-independent.
-    requested_period: String,
+    pub(super) requested_period: String,
     /// The states the request reaches, narrowed to a pinned representation, in the
     /// resolver's order.
-    states: Vec<Kept>,
+    pub(super) states: Vec<Kept>,
+    /// The available request partitioned into `(lo, hi, delivery column)` windows of
+    /// constant representation, sorted; none when year-independent or blocked.
+    pub(super) slices: Vec<(String, String, String)>,
     /// Where the binding is available, rendered, when that is less than the request.
-    clip: Option<String>,
-    /// The blocking finding (today's order finding code) and its message.
-    finding: Option<(&'static str, String)>,
+    pub(super) clip: Option<String>,
+    pub(super) finding: Option<Finding>,
 }
 
 /// Resolve `binding` (the variable `id`, at the source's register variant
-/// `variant`) inside `requested` (`None`: year-independent).
-fn resolve_binding(
+/// `variant`, none when the source names no variant of the register) inside
+/// `requested` (`None`: year-independent), narrowed to `pin`, the representation
+/// the binding pins.
+pub(super) fn resolve_binding(
     conn: &Connection,
     source: &Source,
     binding: &Binding,
+    pin: Option<&str>,
     id: i64,
-    variant: i64,
+    variant: Option<i64>,
     requested: Option<&[Interval]>,
 ) -> Result<Resolution, Error> {
     let requested_period = requested.map_or_else(|| "_default".to_owned(), render);
-    let blocked = |code, message| Resolution {
+    let blocked = |code, message, period: Option<String>| Resolution {
         requested_period: requested_period.clone(),
         states: Vec::new(),
+        slices: Vec::new(),
         clip: None,
-        finding: Some((code, message)),
+        finding: Some(Finding {
+            code,
+            message,
+            period,
+        }),
     };
     let (variable, at) = (quote(&binding.variable), &source.register_variant);
-    let pin = binding.representation.as_deref();
     let Some(requested) = requested else {
-        return year_independent(conn, binding, id, variant, blocked);
+        return year_independent(conn, id, variant, pin, |code, message| {
+            blocked(code, message, Some("_default".into()))
+        });
     };
     let mut states = Vec::new();
     let mut by_column: BTreeMap<String, Vec<Interval>> = BTreeMap::new();
@@ -555,6 +597,7 @@ fn resolve_binding(
                     "column {variable} resolves to a state with no delivery column at {at}; \
                      an unresolved representation cannot be ordered"
                 ),
+                Some(render(&merge(overlaps))),
             ));
         };
         offered.insert(column.clone());
@@ -583,19 +626,21 @@ fn resolve_binding(
                     quote(pin),
                     quoted_list(offered.iter().map(String::as_str))
                 ),
+                Some(period.clone()),
             ),
             _ => blocked(
                 "binding_unavailable",
                 format!("column {variable} has no state covering {at} anywhere in {period}"),
+                Some(period.clone()),
             ),
         });
     }
-    let mut slices: Vec<(String, String, &str)> = by_column
+    let mut slices: Vec<(String, String, String)> = by_column
         .iter()
         .flat_map(|(column, intervals)| {
             merge(intervals.clone())
                 .into_iter()
-                .map(move |(lo, hi)| (lo, hi, column.as_str()))
+                .map(move |(lo, hi)| (lo, hi, column.clone()))
         })
         .collect();
     slices.sort_unstable();
@@ -611,23 +656,25 @@ fn resolve_binding(
     for (i, (a_lo, a_hi, a)) in slices.iter().enumerate() {
         for (b_lo, b_hi, b) in &slices[i + 1..] {
             if a != b && a_lo <= b_hi && b_lo <= a_hi {
-                coexisting.extend([*a, *b]);
+                coexisting.extend([a.as_str(), b.as_str()]);
             }
         }
     }
-    let finding = (!coexisting.is_empty()).then(|| {
-        let message = format!(
+    let finding = (!coexisting.is_empty()).then(|| Finding {
+        code: "representation_ambiguous",
+        message: format!(
             "column {variable} resolves to co-existing representations {} at {at}; pin one \
              with `representation` — a manifest never guesses",
             quoted_list(coexisting)
-        );
-        ("representation_ambiguous", message)
+        ),
+        period: Some(period.clone()),
     });
     Ok(Resolution {
         // The clip is reported even beside a finding, which is stated against it.
         clip: (availability != requested).then(|| render(&availability)),
         requested_period,
         states,
+        slices,
         finding,
     })
 }
@@ -639,10 +686,13 @@ fn resolve_binding(
 fn reach(
     conn: &Connection,
     id: i64,
-    variant: i64,
+    variant: Option<i64>,
     requested: &[Interval],
 ) -> Result<Vec<(Emitted, Vec<Interval>)>, Error> {
     let mut reached: Vec<(Emitted, Vec<Interval>)> = Vec::new();
+    let Some(variant) = variant else {
+        return Ok(reached);
+    };
     for segment in requested {
         let bounds = (segment.0.as_str(), segment.1.as_str());
         for e in emitted(conn, Scope::Reference, id, Some(variant), Some(bounds))? {
@@ -676,21 +726,23 @@ fn reach(
 /// validator refuses `_default` on a `_default` variant, so the variant is concrete.
 fn year_independent(
     conn: &Connection,
-    binding: &Binding,
     id: i64,
-    variant: i64,
+    variant: Option<i64>,
+    pin: Option<&str>,
     blocked: impl Fn(&'static str, String) -> Resolution,
 ) -> Result<Resolution, Error> {
-    let independent: Vec<Emitted> = emitted(conn, Scope::Reference, id, Some(variant), None)?
-        .into_iter()
-        .filter(|e| e.period_scope == "year_independent")
-        .collect();
+    let independent: Vec<Emitted> = match variant {
+        Some(variant) => emitted(conn, Scope::Reference, id, Some(variant), None)?
+            .into_iter()
+            .filter(|e| e.period_scope == "year_independent")
+            .collect(),
+        None => Vec::new(),
+    };
     if independent.iter().any(|e| e.delivery_column_name.is_none()) {
         let message = "year-independent state has no delivery column";
         return Ok(blocked("representation_unresolved", message.into()));
     }
     let offered = !independent.is_empty();
-    let pin = binding.representation.as_deref();
     let mut states = Vec::new();
     for e in independent {
         if pin.is_none_or(|pin| e.delivery_column_name.as_deref() == Some(pin)) {
@@ -730,6 +782,7 @@ fn year_independent(
     Ok(Resolution {
         requested_period: "_default".into(),
         states,
+        slices: Vec::new(),
         clip: None,
         finding: None,
     })

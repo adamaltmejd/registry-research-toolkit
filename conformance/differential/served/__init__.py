@@ -26,11 +26,13 @@ cases' result form (``exit``, ``stdout``, ``stderr``).
   coded-variables`` and ``resolve``.
 - ``validate``: ``validate`` on each generated project against the CLI baseline's
   ``validate``.
+- ``order``: the manifest download on each generated project against the CLI
+  baseline's ``order``.
 
 The families in ``CLI_BASELINE`` take ``baseline_cli`` besides, a future of the CLI
 arm's baseline results by case id, set once the CLI arms finish, so they compare with
-a CLI baseline case instead of running it again; ``validate`` also takes the directory
-of the generated projects.
+a CLI baseline case instead of running it again; ``validate`` and ``order`` also take
+the directory of the generated projects.
 """
 
 from __future__ import annotations
@@ -47,6 +49,7 @@ from conformance.differential.served import (
     coverage,
     docs,
     graph,
+    order,
     resolve,
     schema,
     search,
@@ -74,6 +77,7 @@ FAMILIES = (
     coded,
     resolve,
     validate,
+    order,
 )
 CLI_BASELINE = {docs, show, values, graph, schema, coverage, coded, resolve}
 # The production rate limit (30 writes per minute) does not bind GETs. Eight worker
@@ -143,9 +147,9 @@ def served_cases(
             for family in FAMILIES:
                 started = time.monotonic()
                 args = (base, cand, catalog, scopes, originals[catalog])
-                if family is validate:
+                if family in (validate, order):
                     # `__main__` writes the projects beside the servers' logs.
-                    found = validate.cases(
+                    found = family.cases(
                         *args, baseline_cli, log_dir.parent / "projects"
                     )
                 elif family in CLI_BASELINE:
