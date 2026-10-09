@@ -1,9 +1,9 @@
-"""G1: the pinned baseline reader against the checkout's reader, on the pinned artifacts.
+"""G1: the pinned release's reader against the checkout's, on the pinned artifacts.
 
     uv run python -m conformance.differential
 
-Fetches (once) the pinned artifacts and the baseline environment into the shared
-cache, derives a candidate copy of each artifact with the checkout's builder (once per
+Fetches (once) the pinned artifacts and builds the release tag's baseline (its Python
+environment and ``reg-meta`` binary) into the shared cache, derives a candidate copy of each artifact with the checkout's builder (once per
 base and builder source, so on a committed tree), generates the seeded cases from the
 originals, runs each case through both readers' ``reg-meta`` CLI JSON in parallel
 worker processes (the baseline on the release originals, the checkout on the candidate
@@ -22,9 +22,9 @@ volatile (``generated_at``, ``run.duration_ms``, ``database``) are never printed
 ``order`` and ``validate`` print their canonical bytes. Outputs are compared byte for
 byte.
 
-The operations the Rust server implements also run over HTTP (``served.py``): the
-checkout's ``reg-meta serve`` on the candidate copies against the baseline webapp on
-the release originals, compared the same way after mapping the baseline's responses.
+The served operations run over HTTP (``served.py``): the checkout's ``reg-meta serve``
+on the candidate copies against the release tag's on the originals, every request sent
+to both unchanged and compared the same way, as raw bytes.
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ import threading
 import time
 import tomllib
 from collections import Counter
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from conformance.differential import cache, cases, folds, served
@@ -182,87 +182,77 @@ def run(config: dict) -> int:
     report_dir = cache.cache_root() / "report"
     shutil.rmtree(report_dir, ignore_errors=True)
     all_cases = cases.generate(dirs, config, report_dir / "projects")
-    # The served cases run beside the CLI arms (G1 budget); a family that compares
-    # with a CLI baseline case waits for `baseline_cli`, set when the arms finish.
-    baseline_cli: Future[dict[str, dict]] = Future()
-    baseline_results: dict[str, dict] = {}
+    # The served cases run beside the CLI arms (G1 budget).
     with ThreadPoolExecutor(1) as served_pool:
         served_future = served_pool.submit(
             served.served_cases,
-            baseline_python,
+            cache.baseline_server(baseline_tree),
             baseline_tree / "reg_webapp" / "stewards",
             server,
             dirs,
             derived,
             report_dir / "servers",
-            baseline_cli,
+            report_dir / "projects",
+            config["seed"],
         )
-
-        # A failure in the CLI arms still releases the served thread, so the pool
-        # exit cannot hang on it.
-        try:
-            # Half the cores per arm; both arms run at once.
-            workers = max(1, (os.cpu_count() or 2) // 2)
-            arms = {
-                "baseline": (
-                    [str(baseline_python), "-I"],
-                    cache.isolated_env(),
-                    {},
-                ),
-                "checkout": (
-                    [sys.executable, "-P"],
-                    dict(os.environ),
-                    {str(dirs[c]): str(derived[c]) for c in dirs},
-                ),
-            }
-            done: queue.Queue = queue.Queue()
-            threads = []
-            for arm, (python, env, db_dirs) in arms.items():
-                todo: queue.Queue = queue.Queue()
-                # Holdings-scope cases hold the slowest reads; queue them first so they
-                # do not form the tail.
-                for case in sorted(all_cases, key=lambda c: "/holdings/" not in c.id):
-                    todo.put(case)
-                for _ in range(workers):
-                    t = threading.Thread(
-                        target=_worker,
-                        args=(python, env, db_dirs, todo, done, arm),
-                        daemon=True,
-                    )
-                    t.start()
-                    threads.append(t)
-
-            pending: dict[str, dict[str, dict]] = {}
-            differences: list[dict] = []
-            compared: Counter[str] = Counter()
-            seconds: Counter[str] = Counter()
-            finished = 0
-            while finished < len(threads):
-                arm, result = done.get()
-                if result is None:
-                    finished += 1
-                    continue
-                slot = pending.setdefault(result["id"], {})
-                slot[arm] = result
-                if arm == "baseline":
-                    baseline_results[result["id"]] = result
-                if len(slot) == 2:
-                    del pending[result["id"]]
-                    command = result["id"].split("/")[2]
-                    compared[command] += 1
-                    seconds[command] += slot["baseline"]["seconds"]
-                    diff = compare(result["id"], slot["baseline"], slot["checkout"])
-                    if diff is not None:
-                        differences.append(diff)
-            for case_id, slot in pending.items():
-                compared[case_id.split("/")[2]] += 1
-                differences.append(
-                    compare(case_id, slot.get("baseline"), slot.get("checkout"))
+        # Half the cores per arm; both arms run at once.
+        workers = max(1, (os.cpu_count() or 2) // 2)
+        arms = {
+            "baseline": (
+                [str(baseline_python), "-I"],
+                cache.isolated_env(),
+                {},
+            ),
+            "checkout": (
+                [sys.executable, "-P"],
+                dict(os.environ),
+                {str(dirs[c]): str(derived[c]) for c in dirs},
+            ),
+        }
+        done: queue.Queue = queue.Queue()
+        threads = []
+        for arm, (python, env, db_dirs) in arms.items():
+            todo: queue.Queue = queue.Queue()
+            # Holdings-scope cases hold the slowest reads; queue them first so they
+            # do not form the tail.
+            for case in sorted(all_cases, key=lambda c: "/holdings/" not in c.id):
+                todo.put(case)
+            for _ in range(workers):
+                t = threading.Thread(
+                    target=_worker,
+                    args=(python, env, db_dirs, todo, done, arm),
+                    daemon=True,
                 )
-            for t in threads:
-                t.join()
-        finally:
-            baseline_cli.set_result(baseline_results)
+                t.start()
+                threads.append(t)
+
+        pending: dict[str, dict[str, dict]] = {}
+        differences: list[dict] = []
+        compared: Counter[str] = Counter()
+        seconds: Counter[str] = Counter()
+        finished = 0
+        while finished < len(threads):
+            arm, result = done.get()
+            if result is None:
+                finished += 1
+                continue
+            slot = pending.setdefault(result["id"], {})
+            slot[arm] = result
+            if len(slot) == 2:
+                del pending[result["id"]]
+                command = result["id"].split("/")[2]
+                compared[command] += 1
+                seconds[command] += slot["baseline"]["seconds"]
+                diff = compare(result["id"], slot["baseline"], slot["checkout"])
+                if diff is not None:
+                    differences.append(diff)
+        for case_id, slot in pending.items():
+            compared[case_id.split("/")[2]] += 1
+            differences.append(
+                compare(case_id, slot.get("baseline"), slot.get("checkout"))
+            )
+        for t in threads:
+            t.join()
         fold_sweep = folds.sweep(baseline_python, dirs)
         for case_id, base, cand in served_future.result():
             compared[case_id.split("/")[2]] += 1
@@ -279,7 +269,6 @@ def run(config: dict) -> int:
     unexcepted = [d for d in differences if d["exception"] is None]
     wall = time.monotonic() - started
     report = {
-        "baseline_commit": pins.baseline_commit,
         "release_tag": pins.tag,
         "seed": config["seed"],
         "cases": sum(compared.values()),
@@ -299,10 +288,7 @@ def run(config: dict) -> int:
     report_path = report_dir / "report.json"
     report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
 
-    print(
-        f"G1 {pins.tag} | baseline {pins.baseline_commit[:12]} vs checkout | "
-        f"seed {config['seed']}"
-    )
+    print(f"G1 {pins.tag} | baseline {pins.tag} vs checkout | seed {config['seed']}")
     print(
         f"{report['cases']} cases compared in {report['wall_seconds']} s "
         f"({report['setup_seconds']} s fetching and deriving, {workers} workers "

@@ -1,5 +1,5 @@
 """The shared G1 cache: pinned release artifacts, their candidate copies, and the
-baseline environment.
+baseline build.
 
 Layout under the cache root (``$REG_META_G1_CACHE``, else
 ``$XDG_CACHE_HOME/reg-meta-g1``, else ``~/.cache/reg-meta-g1``)::
@@ -8,16 +8,19 @@ Layout under the cache root (``$REG_META_G1_CACHE``, else
     artifacts/<tag>/swecov/reg_meta.db       + reg_meta_docs.db -> ../global/...
     derived/<key>/global/reg_meta.db         + reg_meta_docs.db (indexed copy)
     derived/<key>/swecov/reg_meta.db         + reg_meta_docs.db -> ../global/...
-    baseline/<commit>/src/                   detached worktree of the commit + .venv
+    baseline/<tag>/src/                      detached worktree of the tag + .venv
+    baseline/<tag>/reg-meta                  the tag's release build of the server
 
 Each asset is streamed once: hashed against its pinned SHA-256 while it is
 decompressed, so no ``.zst`` is kept. A stamp beside the database records the
 verified asset digest and the file's size and mtime; a later run refetches when they
 no longer match (readers open the files immutable, so they never change).
 
-The baseline commit is the pinned release's reader: one detached worktree with its own
-locked environment (``uv sync``, where maturin builds ``reg-core-py``). It reads the
-release originals. A derived (candidate) copy is the checkout's ``reg-meta-build
+The baseline is the pinned release's own code: one detached worktree of the release tag
+with its locked environment (``uv sync``, where maturin builds ``reg-core-py``) for the
+Python CLI arm and the fold sweep, and its ``reg-meta`` binary (``cargo build
+--release``, the target directory deleted once the binary is copied out) for the served
+arm. It reads the release originals. A derived (candidate) copy is the checkout's ``reg-meta-build
 derive`` of an original; the checkout reads it. Its directory's ``<key>`` hashes the
 pinned asset digests and the derive source tree, so checkouts with different
 builders keep separate copies instead of re-deriving over one another's, and a
@@ -84,7 +87,6 @@ class Asset:
 
 @dataclass(frozen=True)
 class Pins:
-    baseline_commit: str
     tag: str
     catalogs: dict[str, Asset]
     docs: Asset
@@ -93,7 +95,6 @@ class Pins:
     def from_config(cls, config: dict) -> Pins:
         release = config["release"]
         return cls(
-            baseline_commit=config["baseline"]["commit"],
             tag=release["tag"],
             catalogs={
                 a["catalog"]: Asset(a["name"], a["sha256"]) for a in release["asset"]
@@ -443,23 +444,33 @@ def baseline_python(tree: Path) -> Path:
     return tree / ".venv" / "bin" / "python"
 
 
+def baseline_server(tree: Path) -> Path:
+    """The baseline ``reg-meta`` beside the tree ``ensure_baseline`` returns."""
+    return tree.parent / "reg-meta"
+
+
 def ensure_baseline(pins: Pins) -> Path:
-    """Return the baseline tree: a detached worktree of the pinned commit with the
-    commit's locked environment in ``.venv`` (``uv sync --frozen --no-dev``; maturin
-    builds ``reg-core-py`` from the commit's crates). It holds the baseline reader and
-    webapp and the webapp's steward branding.
+    """Return the baseline tree: a detached worktree of the release tag with its
+    locked environment in ``.venv`` (``uv sync --frozen --no-dev``; maturin builds
+    ``reg-core-py`` from the tag's crates) and, beside it, the tag's ``reg-meta``
+    (``baseline_server``). The tree also holds the tag's steward branding.
     """
     root = cache_root()
-    commit = pins.baseline_commit
-    _prune(root / "baseline", {commit})
-    home = root / "baseline" / commit
+    _prune(root / "baseline", {_tag_dir(pins.tag)})
+    home = root / "baseline" / _tag_dir(pins.tag)
     tree = home / "src"
     # Outside worktree cleanup can delete the tree and leave the marker.
     if (home / "installed").is_file() and tree.is_dir():
         return tree
+    try:
+        commit = _repo("rev-parse", "--verify", f"{pins.tag}^{{commit}}")
+    except subprocess.CalledProcessError:
+        raise RuntimeError(
+            f"tag {pins.tag} is not in this clone; fetch the tags from origin"
+        ) from None
     shutil.rmtree(home, ignore_errors=True)
     home.mkdir(parents=True)
-    sys.stderr.write(f"g1: installing the baseline at {commit}\n")
+    sys.stderr.write(f"g1: installing the baseline at {pins.tag} ({commit})\n")
     # Forget the worktrees whose directories were deleted (repo-wide: git drops every
     # registration whose directory is missing), so the add below cannot collide.
     _repo("worktree", "prune")
@@ -479,5 +490,16 @@ def ensure_baseline(pins: Pins) -> Path:
         env=isolated_env(),
         check=True,
     )
+    # An explicit target directory: a caller's CARGO_TARGET_DIR would build into
+    # (and over) the checkout's.
+    target = home / "target"
+    subprocess.run(
+        ["cargo", "build", "--quiet", "--locked", "--release", "-p", "reg-meta"]
+        + ["--target-dir", str(target)],
+        cwd=tree,
+        check=True,
+    )
+    shutil.copy2(target / "release" / "reg-meta", baseline_server(tree))
+    shutil.rmtree(target)
     (home / "installed").write_text(f"{commit}\n")
     return tree
