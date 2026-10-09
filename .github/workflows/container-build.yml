@@ -668,6 +668,28 @@ jobs:
           type=$(curl -sfS -o /dev/null -w '%{content_type}' "$api/file/scb/aes/$pdf")
           echo "related document: $type"
           [ "$type" = "application/pdf" ] || { echo "FATAL: related document is $type" >&2; exit 1; }
+      # Public catalog smoke (RUST_RUNTIME_SPEC.md package C): the catalog
+      # pages' reads answer through the edge from the Rust server — the root, a
+      # register, one of its variables and that variable's states, one of its
+      # concept groups and a classification. Fails when the worker stops
+      # routing /api/catalog or /api/states, or `show` or `states` stops
+      # answering a kind the SPA renders.
+      - name: Public catalog smoke
+        if: steps.head.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          api=https://catalog.swecov.se/api
+          get() { curl -sfS "$api/$1"; }
+          get catalog | jq -e '.data.kind == "root"'
+          register=$(get catalog/scb/lisa)
+          jq -e '.data.kind == "register"' <<<"$register"
+          variable=$(jq -er '.data.children[0].fqid' <<<"$register")
+          get "catalog/$variable" | jq -e '.data.kind == "variable"'
+          get "states/$variable?limit=1" | jq -e '.data.items | length == 1'
+          group=$(jq -er '.data.groups[0].fqid' <<<"$register")
+          get "catalog/$group" | jq -e '.data.kind == "concept_group"'
+          classification=$(get catalog/class | jq -er '.data.children[0].fqid')
+          get "catalog/$classification" | jq -e '.data.kind == "classification"'
 
   # Edge worker (SPA + /api passthrough) for data.swecov.se. Separate Worker
   # deployment from catalog.swecov.se so each origin can bump its own cache
