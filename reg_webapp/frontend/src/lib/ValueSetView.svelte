@@ -46,6 +46,7 @@ import ValueSetCodes from "./ValueSetCodes.svelte";
 //   length === 0 → a clean "no state delivered for this period" message (a valid
 //                  period outside every validity window — NOT an error).
 let {
+  fqid,
   states,
   narrowed,
   scopeStates = null,
@@ -56,6 +57,8 @@ let {
   commonDefinition = null,
   commonUnit = null,
 }: {
+  /** The variable whose states these are: the ref its codes are read by. */
+  fqid: string;
   states: VariableStateModel[];
   /** True when these are the `?period`-narrowed subset (drives empty wording). */
   narrowed: boolean;
@@ -340,6 +343,13 @@ function conformanceVariants(source: StateConformance): string[] {
  * already lists the state's variant, window and coding above it. */
 type ConformanceScope = { coding: string | null };
 
+// `values` reads a coding through a state that carries it (keyed by the variable
+// and a state, not by the coding's id): any state of the distinct value set
+// answers the same codes, so the first one stands in.
+function stateOf(vs: DistinctValueSet): string {
+  return states.find((s) => s.value_set_id === vs.valueSetId)?.state_id ?? "";
+}
+
 // The reader's toggle → `openPanels`; `openPanels` → the `open` attribute. An
 // attribute rather than `bind:open` because the key is an `{@const}` inside the
 // each block, and a binding's teardown reads that derived after the row is gone.
@@ -353,9 +363,10 @@ function trackDisclosure(key: string, event: Event): void {
      carry each coding's id and size, not its members, so the panel fetches its
      own bounded pages (and owns their loading / error / empty states) around the
      shared CodeList (#638 PR3). -->
-{#snippet valueSetTable(valueSetId: string, codeCount: number)}
+{#snippet valueSetTable(stateId: string, codeCount: number)}
   <ValueSetCodes
-    {valueSetId}
+    ref={fqid}
+    {stateId}
     {codeCount}
     filterLabel="Filter value set"
     filterPlaceholder="Filter value set…"
@@ -409,7 +420,7 @@ function trackDisclosure(key: string, event: Event): void {
         <details open={openPanels[canonicalKey] ?? false} ontoggle={(e) => trackDisclosure(canonicalKey, e)}>
           <summary>Matching source codes ({conf.matched_code_count})</summary>
           {#if openPanels[canonicalKey]}
-            <ValueSetCodes valueSetId={source.valueSetId} stateId={source.stateId}
+            <ValueSetCodes ref={fqid} stateId={source.stateId}
               classification={conf.declared_classification_slug} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition="canonical" codeCount={conf.matched_code_count}
               filterLabel="Filter matching source codes" filterPlaceholder="Filter matching source codes…" />
           {/if}
@@ -424,7 +435,7 @@ function trackDisclosure(key: string, event: Event): void {
           <details open={openPanels[panelKey] ?? false} ontoggle={(e) => trackDisclosure(panelKey, e)}>
             <summary>{section.label} ({section.count})</summary>
             {#if openPanels[panelKey]}
-              <ValueSetCodes valueSetId={source.valueSetId} stateId={source.stateId}
+              <ValueSetCodes ref={fqid} stateId={source.stateId}
                 classification={conf.declared_classification_slug} column={source.column} aliasWindowFrom={source.aliasWindowFrom} partition={section.partition}
                 codeCount={section.count} filterLabel={`Filter ${section.label.toLowerCase()}`}
                 filterPlaceholder={`Filter ${section.label.toLowerCase()}…`} />
@@ -531,7 +542,7 @@ function trackDisclosure(key: string, event: Event): void {
       {#if vs.summary.integer_range}
         {@render denseIntegerRange(vs.summary.integer_range, vs.summary.code_count)}
       {:else}
-        {@render valueSetTable(vs.valueSetId, vs.summary.code_count)}
+        {@render valueSetTable(stateOf(vs), vs.summary.code_count)}
       {/if}
     {/if}
   {/if}
@@ -578,7 +589,7 @@ function trackDisclosure(key: string, event: Event): void {
       {:else if vs.summary.code_count === 0}
         <!-- A known-empty coding: one sentence, and nothing to open for it. Still
              the shared panel's wording, so "empty" reads the same everywhere. -->
-        {@render valueSetTable(vs.valueSetId, 0)}
+        {@render valueSetTable(stateOf(vs), 0)}
       {:else}
         {@const panelKey = `codes:${vs.key}`}
         <details
@@ -588,7 +599,7 @@ function trackDisclosure(key: string, event: Event): void {
         >
           <summary>Values ({vs.summary.code_count})</summary>
           {#if openPanels[panelKey]}
-            {@render valueSetTable(vs.valueSetId, vs.summary.code_count)}
+            {@render valueSetTable(stateOf(vs), vs.summary.code_count)}
           {/if}
         </details>
       {/if}
@@ -673,7 +684,7 @@ function trackDisclosure(key: string, event: Event): void {
       {#if summary.integer_range}
         {@render denseIntegerRange(summary.integer_range, summary.code_count)}
       {:else}
-        {@render valueSetTable(s.value_set_id, summary.code_count)}
+        {@render valueSetTable(s.state_id, summary.code_count)}
       {/if}
     {/if}
   </div>

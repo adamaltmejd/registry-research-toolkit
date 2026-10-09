@@ -1,5 +1,5 @@
 <script lang="ts">
-import { type BindingNodeData, getBindingLineageWarnings } from "./api";
+import { getLineage, type VariableShow } from "./api";
 import { asyncResource } from "./async.svelte";
 import { catalogHref, formatWindow, windowTitle } from "./catalog";
 
@@ -7,14 +7,15 @@ import { catalogHref, formatWindow, windowTitle } from "./catalog";
 // relationship-graph payload (#761) does NOT carry, re-homed here off the retired
 // LineagePanels so they survive on the binding leaf with no regression:
 //
-//   PROVENANCE — `node.lineage[]` (consumer/source edges, embedded on the leaf):
-//                a validity window + source_fqid link per edge (fallback "source
-//                state #N"). Plus the variable's `source_register` (a composite
-//                register's underlying source), surfaced as a compact line when
-//                present. A LIST, not a node-link graph.
-//   WARNINGS   — fetched via `/lineage_warnings` (its OWN failure domain): each of
-//                loading / error / empty handled; omitted when empty; an error
-//                renders inline and NEVER blanks the leaf.
+//   PROVENANCE — the `lineage` read's consumer/source `edges`: a validity window
+//                + source_fqid link per edge (fallback "source state #N"),
+//                listed once the read lands. Plus the variable's
+//                `source_register_text` (a composite register's underlying
+//                source) from `node`, a compact line shown at once. A LIST, not
+//                a node-link graph.
+//   WARNINGS   — the same read's `warnings`. The read is ONE failure domain
+//                (edges + warnings); its loading / error render in the warnings
+//                section, inline, and NEVER blank the leaf.
 //
 // Succession is NOT here — it is a graph EDGE now (the picker graph mode).
 //
@@ -22,22 +23,20 @@ import { catalogHref, formatWindow, windowTitle } from "./catalog";
 // data OR (warnings) is still loading / errored — we never hide a section whose
 // state is unknown (that would read as a confirmed absence). When BOTH are empty,
 // render nothing.
-let { fqidPath, node }: { fqidPath: string; node: BindingNodeData } = $props();
+let { node }: { node: VariableShow } = $props();
 
-const warnings = asyncResource(() => getBindingLineageWarnings(fqidPath));
+const lineage = asyncResource(() => getLineage(node.fqid));
+const edges = $derived(lineage.data?.edges ?? []);
 
 // The composite-register provenance line: a curated `source_register_text` (the
-// human-readable source register) when present; else null. `source_register_id`
-// alone (no text) carries nothing to render, so the text is the gate.
+// human-readable source register) when present; else null.
 const sourceRegister = $derived(node.source_register_text ?? null);
 
-const showProvenance = $derived(
-  node.lineage.length > 0 || sourceRegister != null,
-);
+const showProvenance = $derived(edges.length > 0 || sourceRegister != null);
 const showWarnings = $derived(
-  warnings.loading ||
-    !!warnings.error ||
-    (warnings.data?.lineage_warnings.length ?? 0) > 0,
+  lineage.loading ||
+    !!lineage.error ||
+    (lineage.data?.warnings.length ?? 0) > 0,
 );
 const anySection = $derived(showProvenance || showWarnings);
 </script>
@@ -54,9 +53,9 @@ const anySection = $derived(showProvenance || showWarnings);
           {sourceRegister}
         </p>
       {/if}
-      {#if node.lineage.length > 0}
+      {#if edges.length > 0}
         <ul class="refs">
-          {#each node.lineage as edge (edge.consumer_state_id + ":" + edge.source_state_id)}
+          {#each edges as edge (edge.consumer_state_id + ":" + edge.source_state_id)}
             <li>
               <!-- #309: sentinel-free window display (raw ISO on the tooltip). -->
               <span
@@ -77,19 +76,19 @@ const anySection = $derived(showProvenance || showWarnings);
     </section>
   {/if}
 
-  <!-- LINEAGE WARNINGS — fetched (its own failure domain) -->
+  <!-- LINEAGE WARNINGS — and the lineage read's loading / error -->
   {#if showWarnings}
     <section aria-labelledby="lineage-warnings-heading">
       <h3 id="lineage-warnings-heading">Lineage warnings</h3>
-      {#if warnings.loading}
+      {#if lineage.loading}
         <p class="muted" aria-busy="true">Loading…</p>
-      {:else if warnings.error}
+      {:else if lineage.error}
         <p class="error" role="alert">
-          Failed to load lineage warnings: {warnings.error}
+          Failed to load lineage: {lineage.error}
         </p>
-      {:else if warnings.data}
+      {:else if lineage.data}
         <ul class="warnings">
-          {#each warnings.data.lineage_warnings as w (w.consumer_state_id + ":" + w.warning_kind)}
+          {#each lineage.data.warnings as w (w.consumer_state_id + ":" + w.warning_kind)}
             <li>
               <code class="warn-kind">{w.warning_kind}</code>
               <span>{w.message}</span>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getDataWarnings } from "./api";
+import { getWarnings } from "./api";
 import { asyncResource } from "./async.svelte";
 import DataWarnings from "./DataWarnings.svelte";
 import { Skeleton } from "./ui";
@@ -21,7 +21,7 @@ let {
 } = $props();
 const resource = asyncResource(() =>
   fqid
-    ? getDataWarnings(fqid, {
+    ? getWarnings(fqid, {
         period,
         variant,
         representation,

@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { components } from "./api-types";
+import type { DataWarningModel } from "./api";
 import { formatWindow } from "./catalog";
 import TechnicalDetails from "./TechnicalDetails.svelte";
 import { Panel, Tag } from "./ui";
@@ -9,7 +9,7 @@ let {
   title = "Data warnings",
   framed = true,
 }: {
-  warnings: components["schemas"]["DataWarning"][];
+  warnings: DataWarningModel[];
   title?: string;
   framed?: boolean;
 } = $props();

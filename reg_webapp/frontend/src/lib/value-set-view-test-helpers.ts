@@ -1,9 +1,44 @@
 // Shared fixtures for the ValueSetView browser test files (ValueSetView.browser.test.ts,
-// ValueSetView.{conformance,isolate,period}.browser.test.ts): the stubbed-read code
-// registry, the `coding` / `state` builders and the two-value-set kommun fixture.
-import type { ValueSetMemberModel, VariableStateModel } from "./api";
+// ValueSetView.{conformance,isolate,period}.browser.test.ts): the stubbed `values`
+// read and its code registry, the `coding` / `state` builders and the
+// two-value-set kommun fixture.
+import type {
+  getValues,
+  ValueSetMemberModel,
+  ValuesPage,
+  VariableStateModel,
+} from "./api";
+
+/** The variable the fixtures' states belong to: the ref their codes are read by. */
+export const FQID = "scb/lisa/kommun";
 
 export const CODES = new Map<string, ValueSetMemberModel[]>();
+/** Which coding each built state carries: `values` reads a coding through a
+ * state, so the stub maps the state back to the registry entry. */
+const STATE_VALUE_SETS = new Map<string, string>();
+
+/** The stubbed `values` read: filters the registered set, then windows it, in the
+ * order the operation does; the cursor is the next row's index. */
+export const serveValues: typeof getValues = async (_ref, params = {}) => {
+  const { state = null, classification, partition, q = "" } = params;
+  const valueSetId = state == null ? "" : (STATE_VALUE_SETS.get(state) ?? "");
+  const key = classification
+    ? `${valueSetId}:${state}:${partition ?? "source_extensions"}`
+    : `${valueSetId}::source_extensions`;
+  const needle = q.trim().toLowerCase();
+  const matched = (CODES.get(key) ?? []).filter(
+    (c) =>
+      c.code.toLowerCase().includes(needle) ||
+      c.label.toLowerCase().includes(needle),
+  );
+  const start = params.cursor ? Number(params.cursor) : 0;
+  const end = start + (params.limit ?? 200);
+  return {
+    items: matched.slice(start, end),
+    next_cursor: end < matched.length ? String(end) : null,
+    total: matched.length,
+  } satisfies ValuesPage;
+};
 
 /** Register a coding's members with the stubbed read and return the SUMMARY the
  * state carries in their place. `stateId` registers a state's stored
@@ -26,15 +61,23 @@ export function coding(
 
 // Minimal VariableStateModel — only the fields ValueSetView reads.
 export function state(over: Partial<VariableStateModel>): VariableStateModel {
-  return {
+  const built: VariableStateModel = {
     warning_ids: [],
     state_id: "1",
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
+    variant_family: null,
+    variant_family_label: null,
     register_variant_id: "1",
     valid_from: "2000-01-01",
     valid_to: "2000-12-31",
+    coding_window_from: null,
+    name: null,
+    definition: null,
+    description: null,
+    operational_definition: null,
+    measurement_unit: null,
     data_type: null,
     data_length: null,
     delivery_column_name: null,
@@ -47,10 +90,13 @@ export function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_summary: null,
     is_identifier: false,
     classifications: [],
-
     period_token: null,
     ...over,
   };
+  if (built.value_set_id != null) {
+    STATE_VALUE_SETS.set(built.state_id, built.value_set_id);
+  }
+  return built;
 }
 
 export function normalizedText(selector: string): string {

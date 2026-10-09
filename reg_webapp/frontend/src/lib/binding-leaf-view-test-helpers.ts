@@ -1,10 +1,6 @@
 // Shared fixtures for the BindingLeafView.*.browser.test.ts split (state/node
 // builders, picker states, SEED). Used by every BindingLeafView browser suite.
-import type {
-  BindingNodeData,
-  StatesResponse,
-  VariableStateModel,
-} from "./api";
+import type { VariableShow, VariableStateModel } from "./api";
 
 /** A minimal VariableStateModel — only the fields the add planner reads. */
 export function state(over: Partial<VariableStateModel>): VariableStateModel {
@@ -12,11 +8,20 @@ export function state(over: Partial<VariableStateModel>): VariableStateModel {
     warning_ids: [],
     state_id: "1",
     period_scope: "intervals",
+    period_token: null,
     variant: "v",
     variant_label: null,
+    variant_family: null,
+    variant_family_label: null,
     register_variant_id: "1",
     valid_from: "1992-01-01",
     valid_to: "9999-12-31",
+    coding_window_from: null,
+    name: null,
+    definition: null,
+    description: null,
+    operational_definition: null,
+    measurement_unit: null,
     data_type: null,
     data_length: null,
     delivery_column_name: null,
@@ -26,43 +31,43 @@ export function state(over: Partial<VariableStateModel>): VariableStateModel {
     value_set_version_label: "",
     value_set_id: null,
     value_set: null,
+    value_set_summary: null,
     is_identifier: false,
     classifications: [],
     ...over,
   };
 }
 
-/** A minimal BindingNode leaf carrying `states`; the embedded edge arms are empty
- * so only the picker under test renders. `over` lets a case add fields the #670
- * member-identity path reads (`fqid`, `name`, `group`). */
-export function node(
-  states: VariableStateModel[],
-  over: Partial<BindingNodeData> = {},
-): BindingNodeData {
+/** A minimal `variable` show: metadata only (its states are a separate prop).
+ * `over` lets a case add fields the #670 member-identity path reads (`fqid`,
+ * `name`, `group`). */
+export function node(over: Partial<VariableShow> = {}): VariableShow {
   return {
-    kind: "binding",
+    kind: "variable",
     fqid: "scb/lisa/kon",
     name: "Kön",
     definition: null,
     description: null,
     measurement_unit: null,
+    operational_definition: null,
     is_identifier: false,
     is_sensitive: false,
-    register_id: "1",
-    variable_id: "1",
-    source_register_id: null,
+    deprecated: false,
+    group: null,
     source_register_text: null,
-    states,
     same_as: [],
-    lineage: [],
-    succession_chain: [],
-    via_same_as: null,
+    tags: [],
     ...over,
-  } as unknown as BindingNodeData;
+  };
 }
 
-export function statesResponse(states: VariableStateModel[]): StatesResponse {
-  return { states } as unknown as StatesResponse;
+/** The leaf's `node` + whole-history `states` props, as CatalogNodeView passes
+ * them. */
+export function leaf(
+  states: VariableStateModel[],
+  over: Partial<VariableShow> = {},
+): { node: VariableShow; states: VariableStateModel[] } {
+  return { node: node(over), states };
 }
 
 /** One variant, no delivery column → the picker enumerates zero rows. */

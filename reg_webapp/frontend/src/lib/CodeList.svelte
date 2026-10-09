@@ -314,14 +314,23 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
 }
 </script>
 
-{#snippet codeRow(code: Code)}
-  <li class="code-row">
+{#snippet codeRow(code: Code, depth: number | null = null)}
+  <!-- `depth` is the row's own hierarchy level (paged lists only): a page cannot
+       group under parents it may not hold, so each levelled row carries its level
+       itself — `aria-level` for the accessibility tree, and the nested-list indent
+       step plus a hairline guide per level below the top. -->
+  <li
+    class="code-row"
+    class:levelled={depth != null && depth > 1}
+    aria-level={depth ?? undefined}
+    style:--code-depth={depth != null ? Math.max(depth - 1, 0) : undefined}
+  >
     <code class="code-key">{code.code}</code>
     <span class="code-label">{code.label}{#if code.member_kind === "sentinel"}
         {#if code.sentinel_meaning}<span class="sentinel-meaning">Special code: {code.sentinel_meaning}</span>{/if}
         {#each code.scoped_sentinels ?? [] as evidence}
           <span class="sentinel-meaning">Special code for <code>{evidence.delivery_column_name}</code>
-            {formatWindow(evidence.valid_from, evidence.valid_to) || "unknown period"}:
+            {formatWindow(evidence.valid_from ?? null, evidence.valid_to ?? null) || "unknown period"}:
             {evidence.members.filter(([member]) => member === code.code).map(([, meaning]) => meaning).join("; ")}
           </span>
           <Collapsible.Root><Collapsible.Trigger class="flat-toggle">Source evidence</Collapsible.Trigger><Collapsible.Content><p>{evidence.provenance}</p></Collapsible.Content></Collapsible.Root>
@@ -404,7 +413,7 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
       {:else}
         <ul class="codes">
           {#each layout.codes as code, i (i)}
-            {@render codeRow(code)}
+            {@render codeRow(code, paged ? codeLevel(code) : null)}
           {/each}
         </ul>
       {/if}
@@ -438,6 +447,16 @@ function groupedByBucketPrefix(list: Code[]): CodeLayout | null {
     align-items: baseline;
     gap: 0.6rem;
     padding: 0.2rem 0;
+  }
+  /* A paged row below its classification's top level: the `.nested-codes` indent
+     step once per level, with a hairline guide so the depth reads without the
+     parent row on screen. */
+  .code-row.levelled {
+    margin-inline-start: calc(
+      (var(--code-depth) - 1) * (0.45rem + var(--space-2))
+    );
+    padding-inline-start: calc(0.45rem + var(--space-2) - 1px);
+    border-inline-start: 1px solid var(--border);
   }
   .code-key {
     flex: 0 0 auto;

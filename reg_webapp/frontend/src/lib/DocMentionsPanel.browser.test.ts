@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { BindingNodeData, DocPage } from "./api";
+import type { DocPage, VariableShow } from "./api";
 import { getDocsForVariable } from "./api";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 
@@ -18,17 +18,18 @@ vi.mock("./api", async (importOriginal) => {
 
 // A binding leaf node. The panel only reads `node.fqid` and `node.name`, so the
 // other fields are empty/zero (mirrors how LineagePanels' test builds its node).
-function node(over: Partial<BindingNodeData> = {}): BindingNodeData {
+function node(over: Partial<VariableShow> = {}): VariableShow {
   return {
-    kind: "binding",
+    kind: "variable",
     fqid: "scb/lisa/kon",
     name: "Kön",
-    succession_chain: [],
-    lineage: [],
+    deprecated: false,
+    is_identifier: false,
+    is_sensitive: false,
     same_as: [],
-    states: [],
+    tags: [],
     ...over,
-  } as unknown as BindingNodeData;
+  };
 }
 
 // A docs page; cases override the fields under test.
@@ -296,11 +297,7 @@ describe("DocMentionsPanel (#402)", () => {
       node: node({
         fqid: "scb/lisa/naringsgren-storsta-agi-sni2007g",
         name: "Näringsgren, största förvärvskälla",
-        group: {
-          provider: "scb",
-          register: "lisa",
-          key: "naringsgren",
-        },
+        group: "group/scb/lisa/naringsgren",
       }),
     });
 

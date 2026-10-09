@@ -1,13 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import { getValueSetCodes } from "./api";
+import { getValues } from "./api";
 import ValueSetView from "./ValueSetView.svelte";
 import {
-  CODES,
   classState,
   coding,
+  FQID,
   plainState,
+  serveValues,
   state,
 } from "./value-set-view-test-helpers";
 
@@ -21,41 +22,12 @@ import {
 // the same order the route does (filter the whole set, then page it).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getValueSetCodes: vi.fn() };
+  return { ...actual, getValues: vi.fn() };
 });
 
 beforeEach(() => {
-  vi.mocked(getValueSetCodes).mockReset();
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (
-      valueSetId,
-      {
-        state = null,
-        partition = "source_extensions",
-        q = "",
-        offset = 0,
-        limit = 200,
-      },
-    ) => {
-      const all = CODES.get(`${valueSetId}:${state ?? ""}:${partition}`) ?? [];
-      const needle = q.trim().toLowerCase();
-      const matched = all.filter(
-        (c) =>
-          c.code.toLowerCase().includes(needle) ||
-          c.label.toLowerCase().includes(needle),
-      );
-      return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        period_scope: "intervals",
-        q,
-        total: matched.length,
-        offset,
-        limit,
-        codes: matched.slice(offset, offset + limit),
-      };
-    },
-  );
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockImplementation(serveValues);
 });
 
 describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () => {
@@ -69,6 +41,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2008-12-31",
     });
     await render(ValueSetView, {
+      fqid: FQID,
       states: [classState, inScopePlain, plainState],
       scopeStates: [classState, inScopePlain],
       narrowed: true,
@@ -103,6 +76,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2008-12-31",
     });
     await render(ValueSetView, {
+      fqid: FQID,
       states: [classState, inScopePlain, plainState],
       scopeStates: [classState, inScopePlain],
       narrowed: true,
@@ -116,7 +90,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
   });
 
   it("empty mode is unchanged (clean no-state message, not an error)", async () => {
-    await render(ValueSetView, { states: [], narrowed: true });
+    await render(ValueSetView, { fqid: FQID, states: [], narrowed: true });
     await expect
       .element(page.getByText("No state delivered for this period."))
       .toBeVisible();
@@ -139,6 +113,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2010-12-31",
     });
     await render(ValueSetView, {
+      fqid: FQID,
       states: [lone],
       scopeStates: [], // the period delivered ZERO of this variable's states
       narrowed: true,
@@ -172,6 +147,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2010-12-31",
     });
     await render(ValueSetView, {
+      fqid: FQID,
       states: [lone],
       scopeStates: [lone],
       narrowed: true,
@@ -196,6 +172,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_to: "2008-12-31",
     });
     await render(ValueSetView, {
+      fqid: FQID,
       states: [classState, inScopePlain, plainState],
       scopeStates: [classState, inScopePlain],
       narrowed: true,
