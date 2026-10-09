@@ -12,9 +12,9 @@
  *    A5.3c-ii inline field-highlighting seam (c-i only groups by level).
  * 2. The `KNOWN_CODES` registry: every stable validation code → a friendly label +
  *    the level it's typically raised at. Hand-maintained from the validator
- *    sources: structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md →
- *    Structural rules and issue codes), semantic (see reg_meta/DESIGN.md →
- *    Project semantic validation (semantic.py)) and the ORDER MATERIALIZER's findings
+ *    sources: structural (`reg_schema/structural.py`; see crates/reg-core/DESIGN.md →
+ *    Structural rules and issue codes), semantic (see crates/DESIGN.md →
+ *    Project semantic validation) and the ORDER MATERIALIZER's findings
  *    (`reg_meta/order.py`), which the panel renders through the same path. An
  *    UNKNOWN code degrades gracefully (the issue is still shown with its raw
  *    code + level).
@@ -114,9 +114,9 @@ export interface CodeInfo {
  * The stable validation-code registry. Hand-maintained from the validator sources —
  * new codes are ADDITIVE, so a code missing here is not a bug, it just
  * renders with its raw code (see `codeLabel`). Sourced from:
- * - structural (`reg_schema/structural.py`; see reg_schema/DESIGN.md → Structural rules and issue codes)
- * - semantic (`reg_meta/semantic.py`; see reg_meta/DESIGN.md → Project semantic validation (semantic.py))
- * - the order materializer's findings (`reg_meta/order.py`; see reg_meta/DESIGN.md → Order materializer and manifest)
+ * - structural (`reg_schema/structural.py`; see crates/reg-core/DESIGN.md → Structural rules and issue codes)
+ * - semantic (`reg_meta/semantic.py`; see crates/DESIGN.md → Project semantic validation)
+ * - the order materializer's findings (`reg_meta/order.py`; see crates/DESIGN.md → Order manifest)
  */
 export const KNOWN_CODES: Record<string, CodeInfo> = {
   // ── structural ────────────────────────────────────────────────────────────

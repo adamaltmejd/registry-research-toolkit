@@ -1,0 +1,43 @@
+{
+  "replaces": [
+    "test_source_effect_identity.py::test_existing_column_discriminators_convert_into_exact_guarded_partitions",
+    "test_source_effect_identity.py::test_unique_suffix_binds_while_unmatched_siblings_stay_unresolved"
+  ],
+  "note": "No [[identity.partition]]: the declared splits 1.5.answer-a and 1.5.answer-b name the native family's columns implicitly. CVID 20 delivers both columns as two literals of one source record. The blank-column CVID 22 and ANSWER_NEW (CVID 23), whose slug no split names, are support that no split takes (ANSWER_NEW is the replaced unique-suffix test's renamed sibling, with no pending split beside it). An independent [[errata.field]] renames CVID 20's ANSWER_A literal to ANSWER_B, the other split's column: the partition condition reads the original column, so the row stays answer-a and carries the corrected column. The replaced test's last leg (a new ANSWER_C member makes the converted partition stale) has no build form here: the build converts an implicit partition from the family it delivers, so a new member is converted with it; a pinned partition's drift is split-partition-native-stale-when-an-unreviewed-column-is-added.",
+  "fails_if": "the partition's `when` column condition is evaluated against the [[errata.field]]-corrected column instead of the original, so CVID 20's ANSWER_A row moves to answer-b (or neither split takes it); or the condition is ignored, so both splits claim both literals of the shared CVID 20 record and its identity is withheld as conflicting; or `convert_column_partitions` assigns a literal whose slug no split names to a declared split, so ANSWER_NEW leaves the native family",
+  "sources": {
+    "description": "Variable 5 delivers, all in 2020, ANSWER_A and ANSWER_B as two literals of one record (CVID 20), a blank column (CVID 22) and ANSWER_NEW (CVID 23).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER_A",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "ANSWER_B",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "ANSWER_NEW",
+          "cvid": 23,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        }
+      ]
+    }
+  }
+}

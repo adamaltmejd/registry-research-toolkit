@@ -1,0 +1,38 @@
+{
+  "replaces": [
+    "test_source_scope_naming.py::test_partial_name_keeps_supported_facts_and_only_names_observed_omissions"
+  ],
+  "note": "The live generated name 1.5.answer and the reviewed owner 1.5.reviewed share the slug `answer`; the owner takes ANSWER in people for 2020 only. So scb/sample/answer exists while the generated name stays ambiguous for the uncovered firms row (CVID 21): the partial-name branch. From the replaced test: the variable keeps its one supported state and its tag member; only the uncovered row's dependencies are withheld, each citing only that row: its variant's states and its succession representation for that variant (the replaced test's literals were variant people-3 and spelling `code`; here firms and `answer`). Its representation is not withheld because the supported people state already delivers the same literal ANSWER: with a differently cased literal (Answer) the build aborts instead (finding in the PR). The `third` variant delivers OTHER, a column the name never claimed, so nothing of `answer` is withheld for it, as the replaced test's unobserved variant 4. The replaced test's CatalogDependencies.check() assertion is internal and not carried over.",
+  "fails_if": "`_attribute_unresolved_names` (source_scope.py) withholds the whole variable whenever its name is ambiguous, ignoring that `(\"variable\", fqid)` is available, so `answer` loses its people state and tag member; or it names dependencies for rows outside the name's candidate columns, so the OTHER row in `third` adds an ambiguous_named_identity",
+  "sources": {
+    "description": "Variable 5 delivers ANSWER in people (variant 10) for 2020 (CVID 20) and in firms (variant 20) for 2021 (CVID 21), and OTHER in third (variant 30) for 2022 (CVID 22).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ANSWER",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 10]
+        },
+        {
+          "colname": "ANSWER",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": ["TEST", 1, 20]
+        },
+        {
+          "colname": "OTHER",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": ["TEST", 1, 30]
+        }
+      ]
+    }
+  }
+}

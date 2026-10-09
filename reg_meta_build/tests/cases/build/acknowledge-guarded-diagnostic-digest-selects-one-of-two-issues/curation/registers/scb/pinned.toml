@@ -1,0 +1,58 @@
+[register]
+provider = "scb"
+slug = "pinned"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "income"
+[[identity.partition]]
+variable = "1.5"
+columns = { First = "1.5", first = "1.5" }
+columns_ref = "reviewed parallel source-native quantity"
+[[representation.parallel]]
+variable = "1.5"
+variant = "1.10"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+evidence = "Reviewed parallel columns"
+noted = "2026-10-09"
+case_aliases = true
+coding_metadata = "per_column"
+column_metadata = "per_column"
+[[representation.parallel.columns]]
+column = "First"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2020"]
+expected_codings = {{source_codings key=member:600}}
+[[representation.parallel.columns]]
+column = "first"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2020"]
+expected_codings = {{source_codings key=member:601}}
+
+[[acknowledge]]
+code = "unsupported_representation_coding"
+subject = "scb/pinned/income"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:620\", \"variable:5\", \"member:600\"]}", "{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:620\", \"variable:5\", \"member:601\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+expected_diagnostic_sha256 = "d9ec580dadbb09ddaeeadf41373f2775f7ab369b2353288f4773f2018edee743"
+reason = "First's two lists disagree; its coding stays unavailable."
+evidence = "Synthetic fixture issue: the First literal."
+
+[[acknowledge]]
+code = "unsupported_representation_coding"
+subject = "scb/pinned/income"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:620\", \"variable:5\", \"member:600\"]}", "{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:620\", \"variable:5\", \"member:601\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+expected_diagnostic_sha256 = "feeede433da88ca82fe2426dab888e2109ff2e22fb754a4256bb3fa03ed0d72a"
+reason = "first's two lists disagree; its coding stays unavailable."
+evidence = "Synthetic fixture issue: the first literal."

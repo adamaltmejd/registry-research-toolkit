@@ -4855,6 +4855,7 @@ def compile_coding_register(
     column_scopes: Mapping[NativeKey, frozenset[TemporalScope]],
     coding: Mapping[NativeKey, tuple[CodeListClaim, ...]],
     classifications: Mapping[str, ResolvedClassification] | None = None,
+    withheld_classifications: Mapping[str, tuple[ResolutionDiagnostic, ...]] = {},
     value_bindings: Mapping[
         NativeKey, tuple[tuple[TemporalScope, ValueListBinding], ...]
     ]
@@ -4947,6 +4948,24 @@ def compile_coding_register(
                 )
                 used = covers_window(source_windows, start, end)
                 selection = None
+                if isinstance(entry, CodingSentinelEntry) and (
+                    causes := withheld_classifications.get(entry.classification)
+                ):
+                    diagnostics.append(
+                        ResolutionDiagnostic(
+                            code="withheld_catalog_dependency",
+                            severity="error",
+                            case_id=case_id,
+                            subject=entry.variable,
+                            detail=f"Classification {entry.classification!r} is "
+                            f"withheld ({', '.join(sorted({c.code for c in causes}))}); "
+                            f"{case_id} certifies sentinels of no published book.",
+                            valid_from=start,
+                            valid_to=end,
+                            withheld_output=(case_id,),
+                        )
+                    )
+                    continue
                 if isinstance(entry, CodingSentinelEntry):
                     if (
                         classifications is None

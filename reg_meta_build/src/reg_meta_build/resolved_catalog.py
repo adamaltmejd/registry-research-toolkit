@@ -68,7 +68,7 @@ from reg_meta_build.resolved_metadata import (
 from reg_meta_build.validate import column_state_overlap_failure, validate_built_db
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Collection, Iterable
 
 CURATION_TREE_SHA256_KEY = "curation_tree_sha256"
 
@@ -842,10 +842,15 @@ def _validate_catalog_metadata(
 def _prepare_classification_succession(
     classifications: tuple[ResolvedClassification, ...],
     edges: tuple[ResolvedClassificationSuccession, ...],
+    withheld: Collection[str] = (),
 ) -> tuple[tuple[ResolvedClassification, ...], dict[str, str]]:
-    """Validate the full graph and project its active storage back-pointers."""
+    """Validate the full graph and project its active storage back-pointers.
+
+    A `withheld` book is a known endpoint, so the graph through it is checked
+    before its edges are withheld; it is not in the returned order.
+    """
     by_slug = {item.slug: item for item in classifications}
-    graph = TopologicalSorter({slug: set() for slug in by_slug})
+    graph = TopologicalSorter({slug: set() for slug in (*by_slug, *withheld)})
     seen: set[tuple[str, str]] = set()
     predecessors: dict[str, str] = {}
     for edge in edges:
@@ -854,7 +859,7 @@ def _prepare_classification_succession(
             raise ValueError(f"duplicate classification succession relation: {pair}")
         seen.add(pair)
         for slug in pair:
-            if slug not in by_slug:
+            if slug not in by_slug and slug not in withheld:
                 raise ValueError(f"unknown classification succession endpoint: {slug}")
         graph.add(edge.successor, edge.predecessor)
         if (
@@ -873,7 +878,7 @@ def _prepare_classification_succession(
     ordered = []
     while graph.is_active():
         ready = sorted(graph.get_ready())
-        ordered.extend(by_slug[slug] for slug in ready)
+        ordered.extend(by_slug[slug] for slug in ready if slug in by_slug)
         graph.done(*ready)
     return tuple(ordered), predecessors
 

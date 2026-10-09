@@ -1,6 +1,6 @@
 //! The FQID and period grammars (`RUST_RUNTIME_SPEC.md` sections 5 and 7).
 //!
-//! FQIDs follow `reg_meta/DESIGN.md` "FQID grammar"; periods take the seven token forms
+//! FQIDs follow `crates/DESIGN.md` "FQID grammar"; periods take the seven token forms
 //! listed there plus a `from..to` range. Each grammar has exactly one spelling per
 //! value, so `Display` gives back the parsed string. The oracle is
 //! `conformance/cases/grammar/`.

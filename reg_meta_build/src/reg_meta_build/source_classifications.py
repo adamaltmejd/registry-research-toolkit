@@ -126,13 +126,19 @@ def resolve_classification_conformance(
 
 
 def resolve_canonical_codes(
-    values: Iterable[SourceValue], *, source: str, subject: str
+    values: Iterable[SourceValue],
+    *,
+    source: str,
+    subject: str,
+    book_refs: tuple[SourceRecordRef, ...] = (),
 ) -> CanonicalCodeResolution:
     """Retain agreed codes; withhold only incomplete or contradictory members.
 
     Duplicate dictionary payloads and physical rows do not choose a label. The
     prepared source retains those occurrences; the caller accounts for list
     associations separately from the distinct payload count returned here.
+    A book with no agreed member cites `book_refs` (its codebook declaration)
+    and every contested member, so even a codebook without rows is located.
     """
     payloads = {}
     by_code: dict[str | None, list[SourceValue]] = defaultdict(list)
@@ -196,6 +202,15 @@ def resolve_canonical_codes(
                 severity="error",
                 subject=subject,
                 detail="The selected source codebook supplies no unambiguous canonical members.",
+                refs=tuple(
+                    sorted(
+                        {
+                            *book_refs,
+                            *(ref for issue in diagnostics for ref in issue.refs),
+                        },
+                        key=repr,
+                    )
+                ),
                 fields=("coding",),
                 withheld_output=("classification", "classification_bindings"),
             )

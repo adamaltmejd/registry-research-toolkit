@@ -10,6 +10,7 @@ slug = "people"
 [[variable]]
 native_id = "1.101"
 slug = "curated"
+deprecated = true
 
 [[variable]]
 native_id = "1.103"

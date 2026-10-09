@@ -3,10 +3,10 @@
   "projections": [
     {
       "table": "variables",
-      "fields": ["variable", "column", "provider_key"],
+      "fields": ["variable", "column", "provider_key", "deprecated"],
       "rows": [
-        ["curated", "VALUE", "101"],
-        ["other", "OTHER", "102"]
+        ["curated", "VALUE", "101", 1],
+        ["other", "OTHER", "102", 0]
       ]
     },
     {
