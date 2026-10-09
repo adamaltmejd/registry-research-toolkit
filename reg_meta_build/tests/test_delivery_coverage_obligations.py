@@ -215,6 +215,37 @@ def test_negative_unit_claim_refuses_a_unit_backfilled_from_a_neighbouring_state
     )
 
 
+def test_checked_definition_claim_refuses_a_window_that_lost_its_literal_definition():
+    """Input: a checked month family's claim on Second's per-column window
+    definition, against the window written without it (as a defect in the alias
+    projection would write it). Expected: "literal definition changed" naming
+    people/Second. Fails if the definition claim is not compared with the
+    per-column window's definition. Read from the replaced
+    test_period_family_merges.py::test_checked_month_definitions_keep_literal_text_and_source_scopes.
+    """
+    text = "Salary paid in month 07; annual business income / 12."
+    obligation = replace(
+        _fact_obligation(column="Second", valid_from="2020-07-01"),
+        definition_claim=("value", text),
+    )
+
+    def written(definition):
+        window = _second_window(
+            column_metadata="per_column",
+            data_type="integer",
+            data_length="1",
+            definition=definition,
+        )
+        return _fact_variable(column="First", aliases=(window,))
+
+    _allowed((written(text),), (obligation,))
+    found = _refusal((written(None),), (obligation,), FACT)
+    assert (
+        "people/Second 2020-07-01..2020-12-31 claimed by fixture/key: "
+        "literal definition changed" in found.detail
+    )
+
+
 def test_alias_window_claim_is_checked_against_the_shared_state_behind_it():
     """Input: only Second's 2020-07..12 window is claimed, and the First state
     behind it is retyped to text. Expected: facts changed, naming people/Second.

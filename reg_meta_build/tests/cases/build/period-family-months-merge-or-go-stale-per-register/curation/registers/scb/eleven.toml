@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "eleven"
+native_id = "4"
+[[variant]]
+native_id = "4.40"
+slug = "people"
+[[representation.period_family]]
+register = "scb/eleven"
+family_stem = "lonfink"
+label = "Lön per månad"
+slug = "lonfink"

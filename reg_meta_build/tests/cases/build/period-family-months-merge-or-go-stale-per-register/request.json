@@ -1,0 +1,15 @@
+{
+  "replaces": [
+    "test_period_family_merges.py::test_compile_twelve_months_and_missing_month",
+    "test_period_family_merges.py::test_month_without_assignable_year_is_stale",
+    "test_period_family_merges.py::test_matrix_repr_wires_period_cases_into_selected_scope",
+    "test_period_family_merges.py::test_checked_month_units_are_captured_before_alias_projection",
+    "test_period_family_merges.py::test_checked_month_definitions_keep_literal_text_and_source_scopes",
+    "test_period_family_merges.py::test_month_definition_map_refuses_incomplete_or_drifted_family[changed]",
+    "test_period_family_merges.py::test_month_definition_map_refuses_incomplete_or_drifted_family[missing]",
+    "test_period_family_merges.py::test_month_definition_map_refuses_incomplete_or_drifted_family[new]"
+  ],
+  "note": "One register per claim, all in one build. checked: twelve month columns, each with its own definition matching the reviewed `expected_definitions` map and the unit Kronor (SEK), authored slug lone-per-manad beside the stem lonfink (the replaced tests' LISA family). eleven: January to November only, no map (the replaced 11-month compile). undated: January is delivered in the unparseable edition 'Födelseland', so it has no annual year (the replaced test's unknown edition scope). changed: January's definition differs from the map. missing: every definition matches the map, 2020 is complete and 2021 lacks December, so the reviewed entry is stale as a whole and the complete 2020 group is not published either (the replaced test had only the incomplete year; the complete sibling year is the harder form). newrec: twelve matching months plus January delivered again in a second 2020 edition with a different definition (the replaced test's extra record). Expected values are the replaced tests' assertions, the definitions and dates from the fixture; locators and case ids follow the `curation/...#/representation.period_family/<n>` form the replaced test pinned for the undated entry, with this case's file names, variant 3.30 and year 2020. The replaced unit-staleness leg compiles a case from one delivery and evaluates it against another; a build compiles and evaluates against the same delivery, so it is not reachable here.",
+  "fails_if": "`compile_period_families` (curation_compile.py) stops refusing an entry whose year group lacks a month, whose month has no annual year, or whose delivered definitions differ from the reviewed map (also for a second delivery of a month), or publishes the complete years of a reviewed entry whose other year lacks a month, so a stale entry publishes a family; or it ends a month window on a fixed day (February 2020 on the 28th), or names the family by its stem instead of the authored slug; or `form_native_variable` (source_formation.py) keeps one common definition, or reports conflicting_variable_fact, for a checked month family instead of leaving each literal definition on its alias window",
+  "sources": "scb-month-families"
+}
