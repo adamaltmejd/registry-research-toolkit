@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "storage"
+native_id = "6"
+[[variant]]
+native_id = "6.60"
+slug = "people"
+[[variable]]
+native_id = "6.601"
+slug = "value"
+[[variable]]
+native_id = "6.Stored"
+slug = "stored"
+
+[[errata.column]]
+data_warning = "Text storage is assumed; the historical storage type is not documented."
+variant = "people"
+column = "Stored"
+name = "Held column"
+definition = "Documented"
+data_type = "text"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-09-25"
+versions = ["2020"]
