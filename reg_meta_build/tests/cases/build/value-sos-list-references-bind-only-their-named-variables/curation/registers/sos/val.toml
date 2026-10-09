@@ -75,3 +75,7 @@ native_id = {{naming_id kind=variable provider=sos register_key=val member_key=I
 [[variable]]
 slug = "idday"
 native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDDAY}}
+
+[[variable]]
+slug = "idclamp"
+native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDCLAMP}}
