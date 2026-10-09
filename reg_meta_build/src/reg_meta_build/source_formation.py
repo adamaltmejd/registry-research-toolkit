@@ -848,7 +848,8 @@ def form_native_variable(
             return VariableFormation(None, tuple(diagnostics), records, (), ())
         # Case/diacritic twins are one physical column by the shared
         # column-identity key: formation proceeds on the most recent spelling
-        # while the raw spellings stay visible on the occurrence evidence.
+        # while the raw spellings stay visible on the occurrence evidence. An
+        # identity-checked occurrence is outside the fold and keeps its literal.
         spellings = sorted(columns)
         starts: dict[str, int] = {}
         for record in effective:
@@ -868,7 +869,8 @@ def form_native_variable(
             + ", ".join(spellings)
             + "); states use the most recent spelling ("
             + chosen_spelling
-            + ").",
+            + "), except a column whose identity curation assigns (a partition, "
+            "column owner or delivered addition), which keeps its own spelling.",
             ("column_name",),
             (),
             severity="warning",

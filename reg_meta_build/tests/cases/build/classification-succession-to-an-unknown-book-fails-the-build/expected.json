@@ -1,10 +1,10 @@
 {
   "error": {
-    "code": "pipeline_build_failed",
+    "code": "relations_invalid",
     "exit_code": 10,
     "message_contains": [
-      "classification succession names uncompiled book",
-      "class/sni1990 -> class/sni2000"
+      "curation/relations.toml [[edge]] type='replaced_by' class/sni1990 -> class/sni2000",
+      "classification succession names uncompiled book ['sni1990']"
     ]
   }
 }

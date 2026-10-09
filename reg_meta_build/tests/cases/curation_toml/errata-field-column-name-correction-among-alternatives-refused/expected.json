@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "Maintainer decision 12 (#1313 finding 4). A complete, edition-exact column rename whose expected_records list the original ANSWER row and a PHYSICAL alternative. Before this rule it loaded (the new literal is among the alternatives) and then could only go stale, because compile selects only rows still on the original column. The allowed twin is errata-field-column-name-correction-with-an-edition-loads: the same entry without expected_records.",
+  "fails_if": "`ErrataFieldEntry` stops refusing a `column_name` correction that lists `expected_records`, so a rename that compile can never apply loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "a column rename cannot select among alternatives"
+    ]
+  }
+}

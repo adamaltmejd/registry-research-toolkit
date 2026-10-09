@@ -82,9 +82,15 @@ if TYPE_CHECKING:
     from .tags import CuratedTag
 
 CLASSIFICATIONS_DIR = "classifications"
-_CODE = "classification_curation_invalid"
-# Register-file refusals, one code per rule family so a curator (and a test) can
-# tell an unknown key from an entry filed under the wrong register.
+# Classification-book and register-file refusals, one code per rule family so a
+# curator (and a test) can tell an unknown key from an entry filed under the
+# wrong register or a spelling claimed by two books.
+_CLASSIFICATION_UNREADABLE = "classification_toml_unreadable"
+_CLASSIFICATION_UNKNOWN_KEY = "classification_unknown_key"
+CLASSIFICATION_INVALID = "classification_entry_invalid"
+_CLASSIFICATION_PATH = "classification_path_mismatch"
+_CLASSIFICATION_DUPLICATE = "classification_duplicate"
+_CLASSIFICATION_FAMILY = "classification_family_invalid"
 _REGISTER_UNREADABLE = "register_toml_unreadable"
 _REGISTER_UNKNOWN_KEY = "register_unknown_key"
 _REGISTER_INVALID = "register_entry_invalid"
@@ -169,7 +175,9 @@ class ClassificationMetadata(_CurationModel):
     @classmethod
     def _sentinels(cls, value: object, info: ValidationInfo) -> object:
         return load_sentinel_codes(
-            value, classification=(info.context or {}).get("file", "?"), code=_CODE
+            value,
+            classification=(info.context or {}).get("file", "?"),
+            code=CLASSIFICATION_INVALID,
         )
 
 
@@ -655,6 +663,13 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
             )
         if expected.value == self.value:
             raise ValueError("the replacement must differ from the original text")
+        if self.field == "column_name" and self.expected_records is not None:
+            # Load requires the new column among the alternatives, but compile
+            # selects only rows still on the original column, so such an entry
+            # could only ever go stale.
+            raise ValueError(
+                "a column rename cannot select among alternatives; drop expected_records"
+            )
         if self.expected_records is not None:
             alternatives = tuple(
                 p for record in self.expected_records for p in record.alternatives
@@ -2019,7 +2034,9 @@ def _load_classification(path: Path, file: str) -> CuratedClassification:
         data = tomllib.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
         raise curation_error(
-            _CODE, f"Could not parse {file}: {exc}", "Fix the TOML syntax."
+            _CLASSIFICATION_UNREADABLE,
+            f"Could not parse {file}: {exc}",
+            "Fix the TOML syntax.",
         ) from exc
     try:
         entry = CuratedClassification.model_validate(data, context={"file": file})
@@ -2027,14 +2044,16 @@ def _load_classification(path: Path, file: str) -> CuratedClassification:
         error = exc.errors(include_url=False)[0]
         where = ".".join(str(part) for part in error["loc"])
         raise curation_error(
-            _CODE,
+            _CLASSIFICATION_UNKNOWN_KEY
+            if error["type"] == "extra_forbidden"
+            else CLASSIFICATION_INVALID,
             f"{file}: `{where}`: {error['msg']}.",
             "Write only the documented [classification] and [binding] keys "
             "(see reg_meta_build/CLASSIFICATIONS.md).",
         ) from exc
     if entry.classification.short_name != path.stem:
         raise curation_error(
-            _CODE,
+            _CLASSIFICATION_PATH,
             f"{file}: short_name {entry.classification.short_name!r} does not "
             "match the file name.",
             "Name each classification file <short_name>.toml.",
@@ -2050,8 +2069,8 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
     directory = root / CLASSIFICATIONS_DIR
     if not directory.is_dir():
         raise curation_error(
-            _CODE,
-            f"Classification curation directory {directory} not found.",
+            _CLASSIFICATION_PATH,
+            f"Classification curation directory {CLASSIFICATIONS_DIR}/ not found.",
             "Create curation/classifications/ with one <short_name>.toml per book.",
         )
     entries: list[CuratedClassification] = []
@@ -2060,7 +2079,7 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
         file = f"{CLASSIFICATIONS_DIR}/{path.name}"
         if path.suffix != ".toml" or not path.is_file():
             raise curation_error(
-                _CODE,
+                _CLASSIFICATION_PATH,
                 f"{file} is not a classification TOML file.",
                 "Keep only <short_name>.toml files in curation/classifications/.",
             )
@@ -2083,7 +2102,7 @@ def load_classifications(root: Path) -> tuple[CuratedClassification, ...]:
         for kind, value in claims:
             if (kind, value) in owners:
                 raise curation_error(
-                    _CODE,
+                    _CLASSIFICATION_DUPLICATE,
                     f"{file}: {kind} {value!r} is also declared in "
                     f"{owners[kind, value]}.",
                     f"Declare a {kind} once, in one classification file.",
@@ -2116,7 +2135,7 @@ def load_classification_families(
             )
         except ValidationError as exc:
             raise curation_error(
-                _CODE,
+                _CLASSIFICATION_FAMILY,
                 f"classifications/{members[0].short_name}.toml: "
                 f"invalid family {key!r}: {exc.errors(include_url=False)[0]['msg']}.",
                 "Curate at least two editions per family with unique aliases.",

@@ -13,10 +13,11 @@ from io import TextIOWrapper
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 from reg_meta_build._curation import (
     SEARCH_PINS_FILE,
+    curation_error,
     load_search_pins,
     printable_error,
 )
@@ -45,7 +46,7 @@ from reg_meta_build.curation_compile import (
     tree_sha256,
     validate_sentinels,
 )
-from reg_meta_build.curation_tree import load_curation_tree
+from reg_meta_build.curation_tree import CLASSIFICATION_INVALID, load_curation_tree
 from reg_meta_build.data_warnings import acknowledged_data_warnings, scope_data_warnings
 from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
@@ -998,18 +999,29 @@ def _run_pipeline(
                     withheld[("classification", slug)] = resolved.diagnostics
                     continue
                 metadata = dict(declaration.metadata)
-                book = ResolvedClassification.model_validate(
-                    {
-                        **metadata,
-                        "codes": resolved.codes,
-                        "sentinel_codes": validate_sentinels(
-                            metadata.pop("sentinel_codes", None),
-                            subject=str(declaration.metadata.get("slug")),
-                        ),
-                    }
-                )
-                if book.slug in books:
-                    raise ValueError("duplicate classification identity")
+                try:
+                    book = ResolvedClassification.model_validate(
+                        {
+                            **metadata,
+                            "codes": resolved.codes,
+                            "sentinel_codes": validate_sentinels(
+                                metadata.pop("sentinel_codes", None),
+                                subject=str(declaration.metadata.get("slug")),
+                            ),
+                        }
+                    )
+                except ValidationError as exc:
+                    # The book's own file decides its sentinels and bounds;
+                    # only here do they meet its canonical codes.
+                    raise curation_error(
+                        CLASSIFICATION_INVALID,
+                        f"classifications/{metadata['short_name']}.toml: "
+                        f"{exc.errors(include_url=False)[0]['msg']}",
+                        "Keep sentinel codes out of the book's canonical code "
+                        "set and valid_from at or before valid_to.",
+                    ) from exc
+                # `load_classifications` refuses a slug declared twice, so each
+                # compiled codebook names a distinct book.
                 books[book.slug] = book
                 event(
                     "codebook",

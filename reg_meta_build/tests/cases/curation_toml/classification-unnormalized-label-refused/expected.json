@@ -3,7 +3,7 @@
   "replaces": "test_curation_tree.py::test_unnormalized_label_fails",
   "fails_if": "load_classifications accepts a value-set label that is not in normalized form",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "classification_entry_invalid",
     "locator": "classifications/A.toml: `binding.value_set_labels`",
     "message_contains": [
       "'Bee'"
