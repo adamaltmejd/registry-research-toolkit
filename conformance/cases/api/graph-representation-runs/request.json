@@ -1,0 +1,9 @@
+{
+  "note": "Twin of reg_meta/tests/test_graph_runs.py's two readable-source cases: an annual state delivered as monthly alias columns is one run whose columns all survive, and a change of value-set version label, classification and column opens a run. Fails if the fold drops a window sharing its state, splits runs on a column change within one state, or misses a coding change.",
+  "fixture": "reader/graph-states",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "graph", "path": "/api/graph/scb/example/pay"},
+    {"operation": "graph", "path": "/api/graph/scb/example/sex"}
+  ]
+}

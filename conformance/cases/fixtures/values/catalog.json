@@ -1,0 +1,95 @@
+[
+  {
+    "register": {"provider": "scb", "slug": "example", "name": "Example"},
+    "slug": "yrke",
+    "provider_key": "1",
+    "name": "Yrke",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Yrke",
+        "data_type": "varchar",
+        "data_length": "2",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            ["1", "Chefer"],
+            ["11", "Politiker"],
+            ["2", "Specialister"],
+            ["21", "Ingenjörer"],
+            ["7", "Lokal kod"],
+            ["98", "Uppgift saknas"],
+            ["99", "Okänd"]
+          ]
+        },
+        "classification_links": [
+          {
+            "classification": "yrke",
+            "conformance": {
+              "declared_classification": "yrke",
+              "status": "extended",
+              "checked_codes": ["1", "11", "2", "21", "7", "98", "99"],
+              "nonconforming_members": [["7", "Lokal kod"]],
+              "sentinel_members": [["98", "Uppgift saknas"], ["99", "Okänd"]],
+              "scoped_sentinels": [
+                {
+                  "valid_from": "2018-01-01",
+                  "valid_to": "2018-12-31",
+                  "delivery_column_name": "Yrke",
+                  "classification_sha256": "523d1a0734471ed809b2142c766015e40dce05e0badb062310e186b80916cc44",
+                  "source_fingerprints": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
+                  "members": [["98", "Uppgift saknas"]],
+                  "provenance": "Source documentation, 2018"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2019-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Yrke",
+        "data_type": "varchar",
+        "data_length": "2",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ],
+    "aliases": [
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "delivery_column_name": "Yrke",
+        "windows": [
+          {
+            "valid_from": "2019-01-01",
+            "valid_to": "2019-06-30",
+            "coding_metadata": "per_column",
+            "value_set": {"members": [["1", "Chefer"], ["8", "Annan"]]},
+            "classification_links": [
+              {
+                "classification": "yrke",
+                "conformance": {
+                  "declared_classification": "yrke",
+                  "status": "extended",
+                  "checked_codes": ["1", "8"],
+                  "nonconforming_members": [["8", "Annan"]]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

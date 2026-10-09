@@ -1,0 +1,16 @@
+{
+  "note": "Coverage counts calendar years, so a register or variable delivered only year-independently has none: `not_found` naming the ref, as `get availability` refused it and as `diff` refuses a register with nothing to compare. Fails if an undated state is given a year or an empty coverage is answered as a 200.",
+  "fixture": "year-independent",
+  "requests": [
+    {
+      "operation": "coverage",
+      "path": "/api/coverage/scb/example",
+      "query": {"scope": "reference"}
+    },
+    {
+      "operation": "coverage",
+      "path": "/api/coverage/scb/example/value",
+      "query": {"scope": "holdings"}
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "note": "Twin of cli_scope/lineage-unheld-reference: an unheld variable has lineage in reference scope and none in the steward's default holdings scope. Fails if lineage ignores the read scope or reads provenance only for held variables under scope=reference.",
+  "fixture": "reader",
+  "requests": [
+    {"operation": "lineage", "path": "/api/lineage/sos/unheld/unheld"},
+    {
+      "operation": "lineage",
+      "path": "/api/lineage/sos/unheld/unheld",
+      "query": {"scope": "reference"}
+    }
+  ]
+}

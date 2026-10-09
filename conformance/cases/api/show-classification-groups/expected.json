@@ -33,7 +33,29 @@
         "kind": "classification_family",
         "fqid": "group/class/icd",
         "key": "icd",
-        "label": "ICD"
+        "label": "ICD",
+        "editions": [
+          {
+            "slug": "icd-9",
+            "fqid": "class/icd-9",
+            "name": "Diagnoses, edition 9",
+            "short_name": "ICD-9",
+            "effective_year": 1997,
+            "version_year": null,
+            "is_current": false,
+            "is_self": true
+          },
+          {
+            "slug": "icd-10",
+            "fqid": "class/icd-10",
+            "name": "Diagnoses, edition 10",
+            "short_name": "ICD-10",
+            "effective_year": null,
+            "version_year": null,
+            "is_current": true,
+            "is_self": false
+          }
+        ]
       }
     }
   },

@@ -1272,7 +1272,6 @@ in-flight list.
   | `rust-only fix:` G1 exceptions                                                                                                                            | stage 4 (D1)                                                                                        |
   | Derive calling the reader in place (`from reg_meta.catalog import Catalog` in derive; `reg_meta.queries.get_coded_variables` in `derive/schema.py`)       | stage 4 (moved into `reg_meta_build`)                                                               |
   | Two project validators and project-schema versions (`reg_schema`, `reg-core`)                                                                             | stage 4                                                                                             |
-  | Request-time terminal walk (search's `terminal()` reading the `classification_succession_as_of_year` manifest key) beside `succession_terminal`           | 3d.2                                                                                                |
   | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                               | stage 4 (proven twins earlier)                                                                      |
   | Frozen Python `same_as` BFS (`_resolve_*_via_same_as` in `catalog.py`), unreachable since the writer requires live `same_as` endpoints (3d.1); not ported | stage 4 (deleted with the Python runtime)                                                           |
   | `scripts/check_versions.sh` keeping the `reg-meta` crate and `reg_meta` versions equal                                                                    | stage 4                                                                                             |
@@ -1374,8 +1373,10 @@ fallback, warning clipping).
   `logical/{narrowed-state-token,narrowed-state-warnings,canonical-case-twin-state-warnings,warnings-*}`
   and `http_catalog/{states-and-deliveries,warnings}`; `variant` and `value_set_version`
   without `period`; MCP equivalence for `states`.
-- G1 (run in C): webapp baseline `/states` and the catch-all `?period` subset for the
-  variable samples and sampled periods; `/data_warnings` with each filter.
+- G1 (run in C): webapp baseline: the states the variable node embeds and the catch-all
+  `?period` subset for the variable samples and sampled periods (not `/states`: same
+  rows and order, but full hydration, while `states` serves the node's light one);
+  `/data_warnings` with each filter.
 - Paths: `crates/reg-catalog/src/ops/{slice_3b.rs,states.rs,warnings.rs}`,
   `conformance/cases/api/`, `conformance/test_mcp.py`,
   `conformance/differential/served/`, the generated files.
@@ -1460,6 +1461,14 @@ operations.
 - G1 (this package runs the slice's): CLI baseline `get availability` (without
   `target`/`target_type`), `get coded-variables` (excluded where the baseline orders
   differently) and `resolve`.
+- Owes 3c.2's deferred `rust-only fix:` exception for `schema-alias-windows`. The frozen
+  reference `get schema` expands only variables with a per-column window, so G1 reports
+  `*/reference/get-schema-*` for registers whose variables have only shared alias
+  windows. On the v0.43.0 pin these are
+  `scb/{innovation-foretag,it-anvandning,ekonomiskt-bistand,rams,lisa,hreg,bas}`, and in
+  SWECOV also `swedbank/konsumtion`, `inera/{bestallda-prover,samtal}`,
+  `tillvaxtverket/korttidsarbete` and `swecov/population`. Its `case` globs come from
+  the cases G1 actually reports.
 - Closes the slice: `covered_by` of the 3c command rows points at the `api` twins;
   proven twins among the CLI-era cases go (preamble).
 - Paths: as 3c.2 with `coverage.rs`, `coded.rs`, `resolve.rs`;
@@ -1510,10 +1519,13 @@ operations.
   held, as the frozen `resolve_terminal_successor` does. Search's terminal-centric
   `editions()` may be read from `classification_chain` (the anchor's rows up to its own
   position) only while no edition has two predecessors and a split's outbound edges
-  share one year; 3d.2 verifies this against the reader rather than assuming it. `show`
-  reads `classification_family`: its `editions` join the `classification_family` kind,
-  the classification root's `families` and a classification's `family` (3b.3 serves
-  their key and label), and its membership replaces 3b.3's slug-prefix family lookup.
+  share one year; 3d.2 verifies this against the reader rather than assuming it (result:
+  both pins satisfy it, but the builder admits a merge and
+  `api/search-classification-succession` has one, so `editions()` keeps its read-time
+  walk). `show` reads `classification_family`: its `editions` join the
+  `classification_family` kind, the classification root's `families` and a
+  classification's `family` (3b.3 serves their key and label), and its membership
+  replaces 3b.3's slug-prefix family lookup.
 - Cases: twins of `http_catalog/{reference-edges,whole-variable-group-graph}`,
   `cli_scope/lineage-unheld-reference` and
   `logical/{edges-unheld-owner,unheld-terminal-*}`; a split successor; a retired ref
@@ -1522,10 +1534,12 @@ operations.
 - G1 (run in C): webapp baseline for the three graph routes and `/lineage_warnings`; CLI
   baseline `get lineage`.
 - Paths:
-  `crates/reg-catalog/src/ops/{slice_3d.rs,graph.rs,lineage.rs,refs.rs,search/classification.rs}`,
+  `crates/reg-catalog/src/ops/{slice_3d.rs,graph.rs,lineage.rs,refs.rs,search/classification.rs,show.rs}`,
   `crates/reg-catalog/src/lib.rs` (`SCHEMA`), `conformance/cases/api/`,
-  `conformance/test_mcp.py`, `conformance/differential/`, the generated files.
-- Acceptance: full gate; 3a's search cases unchanged. Depends on: 3b.3, 3d.1.
+  `conformance/cases/fixtures/show/`, `conformance/test_mcp.py`,
+  `conformance/differential/`, the generated files.
+- Acceptance: full gate; 3a's search cases unchanged. Depends on: 3b.3, 3b.4 (graph's
+  variable nodes read its states leaf), 3d.1.
 
 **C Catalog-page cutover (3b and 3d).** Implements §13 decision 15 for every
 `/api/catalog*` and `/api/value-sets` route at once (D3).

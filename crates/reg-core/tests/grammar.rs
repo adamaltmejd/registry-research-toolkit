@@ -4,7 +4,9 @@
 use std::fs;
 use std::path::PathBuf;
 
-use reg_core::{Fqid, GrammarError, Period, PeriodToken, Term};
+use reg_core::{
+    Fqid, GrammarError, Period, PeriodToken, Term, next_iso_day, period_token_for_bounds,
+};
 use serde_json::{Value, json};
 
 fn read_cases(file: &str) -> Vec<Value> {
@@ -260,5 +262,51 @@ fn period_round_trips() {
             }
         };
         assert_eq!(period.to_string().parse(), Ok(period), "{period}");
+    }
+}
+
+// Fails if `period_token_for_bounds` stops inverting `iso_bounds`: a token whose own
+// bounds render as something else (a half year renders as its term, the one spelling
+// the reader emits).
+#[test]
+fn period_token_inverts_bounds() {
+    let mut rng = Rng(0x7012_E4B5);
+    for _ in 0..ROUND_TRIPS {
+        let year = rng.range(1900, 2099);
+        let token = rng.token(year);
+        let (lo, hi) = Period::Token(token).iso_bounds();
+        let expected = match token {
+            PeriodToken::Half { year, half: 1 } => format!("VT{year}"),
+            PeriodToken::Half { year, .. } => format!("HT{year}"),
+            other => other.to_string(),
+        };
+        assert_eq!(period_token_for_bounds(&lo, &hi), expected, "{token}");
+    }
+}
+
+// Fails if a window no token spans is rounded to one, a synthesized non-leap `02-29`
+// end stops counting as February's end, or the day after a month's end (or the
+// open-ended sentinel) is miscounted.
+#[test]
+fn period_token_edges_and_next_day() {
+    for (lo, hi, token) in [
+        ("2018-02-01", "2018-02-28", "2018-02"),
+        ("2018-02-01", "2018-02-29", "2018-02"),
+        ("2020-02-01", "2020-02-29", "2020-02"),
+        ("2018-03-01", "2018-04-15", "2018-03-01..2018-04-15"),
+        ("2018-01-01", "2019-12-31", "2018-01-01..2019-12-31"),
+        ("1850-01-01", "1850-12-31", "1850"),
+        ("1850-03-04", "1850-03-04", "1850-03-04..1850-03-04"),
+    ] {
+        assert_eq!(period_token_for_bounds(lo, hi), token, "{lo}..{hi}");
+    }
+    for (day, next) in [
+        ("2018-02-28", "2018-03-01"),
+        ("2018-02-29", "2018-03-01"),
+        ("2020-02-28", "2020-02-29"),
+        ("2018-12-31", "2019-01-01"),
+        ("9999-12-31", "9999-12-31"),
+    ] {
+        assert_eq!(next_iso_day(day), next, "{day}");
     }
 }

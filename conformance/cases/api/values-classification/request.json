@@ -1,0 +1,19 @@
+{
+  "note": "Fails if a classification's codes lose their level or validity, stop being ordered by code and label, if `q` stops matching code or label folded (case and diacritics, `%` literal) across the whole book before paging, if `total` stops counting every match, if the cursor stops continuing a `q` match on the next page, if a bare classification name stops resolving, or if a malformed cursor is accepted.",
+  "fixture": "values",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "values", "path": "/api/values/class/yrke"},
+    {"operation": "values", "path": "/api/values/class/yrke", "query": {"q": "1", "limit": 2}},
+    {
+      "operation": "values",
+      "path": "/api/values/class/yrke",
+      "query": {"q": "1", "limit": 2},
+      "cursor_from": [1, "/data/next_cursor"]
+    },
+    {"operation": "values", "path": "/api/values/class/yrke", "query": {"q": "LAKARE"}},
+    {"operation": "values", "path": "/api/values/class/yrke", "query": {"q": "%"}},
+    {"operation": "values", "path": "/api/values/Yrkesklassificering", "query": {"limit": 1}},
+    {"operation": "values", "path": "/api/values/class/yrke", "query": {"cursor": "zz"}}
+  ]
+}

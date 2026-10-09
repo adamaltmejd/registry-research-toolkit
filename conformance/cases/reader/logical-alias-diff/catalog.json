@@ -70,5 +70,59 @@
         ]
       }
     ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "typed",
+    "provider_key": "45",
+    "name": "Typed",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Typed",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ],
+    "aliases": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "delivery_column_name": "Typed",
+        "windows": [
+          {
+            "valid_from": "2018-01-01",
+            "valid_to": "2018-12-31"
+          },
+          {
+            "valid_from": "2019-01-01",
+            "valid_to": "2019-12-31",
+            "column_metadata": "per_column",
+            "data_type": "varchar",
+            "data_length": "20",
+            "definition": "Typed as text from 2019"
+          }
+        ]
+      }
+    ]
   }
 ]

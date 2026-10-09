@@ -1,0 +1,26 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/nodes/*/fqid": ["scb/example/value", "scb/example/reference", "scb/example/second"],
+      "/data/nodes/*/states/*/delivery_column_name": [["Value", "value"], [], ["Valuetwo"]],
+      "/data/nodes/*/states/*/variant": [["annual", "annual"], [], ["annual"]],
+      "/data/nodes/*/states/*/valid_from": [["2018-01-01", "2019-01-01"], [], ["2018-01-01"]],
+      "/data/nodes/*/states/*/valid_to": [["2018-12-31", "2019-12-31"], [], ["2019-12-31"]],
+      "/data/edges/*/source": ["scb/example/value", "scb/example/reference"],
+      "/data/edges/*/target": ["scb/example/reference", "scb/example/second"],
+      "/data/focus_id": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/nodes/*/fqid": ["scb/example/reference", "scb/example/value", "scb/example/second"],
+      "/data/nodes/*/states/*/delivery_column_name": [
+        ["Valuereference"],
+        ["Value", "value", "Secret", "Archived"],
+        ["Valuetwo", "Secondhidden"]
+      ]
+    }
+  }
+]

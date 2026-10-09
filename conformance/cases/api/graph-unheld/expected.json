@@ -1,0 +1,25 @@
+[
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/example/reference"}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/nodes/*/fqid": ["scb/example/value", "scb/example/reference"],
+      "/data/nodes/*/label": ["Value", "Value reference"],
+      "/data/nodes/*/states/*/delivery_column_name": [["Value", "value"], []],
+      "/data/edges/*/id": ["succession:scb/example/value->scb/example/reference"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/nodes/*/states/*/delivery_column_name": [
+        ["Value", "value", "Secret", "Valørarkiv"],
+        ["Valuereference"]
+      ],
+      "/meta/scope": "reference"
+    }
+  }
+]

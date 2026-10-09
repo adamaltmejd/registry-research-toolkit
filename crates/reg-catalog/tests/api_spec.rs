@@ -64,6 +64,10 @@ fn param_schema(ty: &str) -> Value {
         "scope" => json!({"$ref": "#/components/schemas/Scope"}),
         "string" | "ref" | "period" | "cursor" => json!({"type": "string"}),
         "limit" => json!({"type": "integer", "minimum": 1, "maximum": 200}),
+        "boolean" => json!({"type": "boolean"}),
+        "storage_id" => json!({"type": "string", "pattern": "^-?[0-9]+$"}),
+        // At most 200 values: the table's one array, `resolve`'s `columns`.
+        "string[]" => json!({"type": "array", "items": {"type": "string"}, "maxItems": 200}),
         _ => panic!("map parameter type {ty:?}"),
     }
 }

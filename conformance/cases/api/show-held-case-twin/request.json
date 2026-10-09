@@ -1,0 +1,14 @@
+{
+  "note": "Case-twin states (Value in 2018, value in 2019) held as one representation fuse into one delivery under one spelling, its two states counted and its adjacent years one window. Twin of coverage/case-twin. Fails if the twins split into two deliveries or the window breaks at the year boundary.",
+  "fixture": "reader/case-twins",
+  "requests": [
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb/example"
+    },
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb"
+    }
+  ]
+}

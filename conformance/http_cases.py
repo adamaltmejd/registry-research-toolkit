@@ -61,8 +61,11 @@ def artifact_env(path, kind):
 
 
 def fixture_source(request):
+    """A case's fixture: a source directory under `cases/fixtures`, else a name
+    `reader_artifacts` resolves (`reader`, `reader/<case>`, a builder holdings case)."""
     fixture = request.get("fixture", "compiled")
-    return fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
+    local = CASES / "fixtures" / fixture
+    return local if local.is_dir() else fixture
 
 
 def docs_source(request):
@@ -231,6 +234,9 @@ def run_http_requests(steps, clients=None):
             idx, pointer = step["cursor_from"]
             params["cursor"] = select_json(responses[idx]["body"], pointer)
             assert params["cursor"] is not None
+        # An identifier only an earlier response carries (a storage id).
+        for name, (idx, pointer) in step.get("query_from", {}).items():
+            params[name] = select_json(responses[idx]["body"], pointer)
         body = request_body(step)
         if "etag_from" in step:
             # A conditional read that revalidates an earlier step's response.

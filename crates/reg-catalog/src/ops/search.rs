@@ -22,7 +22,7 @@ use utoipa::ToSchema;
 use super::refs::{self, fqid};
 use super::{Params, Server, cursor};
 use crate::held::{self, Narrow};
-use crate::{Code, Error, Scope, hex};
+use crate::{Error, Scope, hex};
 use classification::{ClassificationHit, Edition, SuccessionHit};
 use code::{CodeClassification, CodeHit, CodeVariable};
 
@@ -34,9 +34,6 @@ pub const TYPES: &[&str] = &[
     "classification_code",
     "register_value",
 ];
-const MAX_QUERY_CHARS: usize = 200;
-const DEFAULT_LIMIT: usize = 50;
-const MAX_LIMIT: usize = 200;
 /// Paging stops at this depth (today's `_MAX_CURSOR_POSITION`).
 const DEPTH: usize = 1000;
 /// Each arm's bounded candidate prefix: one row past the depth.
@@ -229,34 +226,13 @@ type Key = (u8, i64, usize, usize);
 
 pub fn search(server: &Server, scope: Scope, params: &Params) -> Result<Value, Error> {
     let catalog = &server.catalog;
-    let q = params["q"];
-    if q.contains('\0') || q.chars().count() > MAX_QUERY_CHARS {
-        return Err(Error::invalid_parameter("q"));
-    }
+    let q = super::q(params)?;
     let ty = params.get("type").copied();
     if ty.is_some_and(|t| !TYPES.contains(&t)) {
         return Err(Error::invalid_parameter("type"));
     }
-    let limit = match params.get("limit") {
-        None => DEFAULT_LIMIT,
-        Some(v) => v
-            .parse()
-            .ok()
-            .filter(|n| (1..=MAX_LIMIT).contains(n))
-            .ok_or_else(|| Error::invalid_parameter("limit"))?,
-    };
-    let period = params
-        .get("period")
-        .map(|p| {
-            p.parse::<Period>().map_err(|err| {
-                Error::new(
-                    Code::InvalidPeriod,
-                    format!("Invalid period {p:?}: {err}."),
-                    vec!["period".into()],
-                )
-            })
-        })
-        .transpose()?;
+    let limit = super::limit(params)?;
+    let period = super::period(params, "period")?;
     let conn = catalog.connect()?;
     let register = params
         .get("register")

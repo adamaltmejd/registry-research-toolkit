@@ -1,0 +1,71 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/columns/*/status": [
+        "matched",
+        "no_match"
+      ],
+      "/data/columns/0/matches/*/fqid": [
+        "scb/bands/scb-value"
+      ]
+    }
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/candidates/*/fqid": [
+        "scb/bands",
+        "sos/bands"
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields/ref": "nonesuch"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_ref",
+      "/error/fields/ref": "scb/Bands"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "scope_unavailable"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/columns/199/column_name": "C199"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "columns"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "columns"
+    }
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "register"
+    }
+  }
+]

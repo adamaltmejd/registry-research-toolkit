@@ -186,11 +186,11 @@ pub struct ClassificationGroup {
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Group {
     fqid: String,
-    key: String,
-    label: String,
+    pub(super) key: String,
+    pub(super) label: String,
     source: String,
     axes: Vec<Axis>,
-    members: Vec<Member>,
+    pub(super) members: Vec<Member>,
     tags: Vec<Tag>,
 }
 
@@ -198,8 +198,27 @@ pub struct Group {
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Family {
     fqid: String,
-    key: String,
-    label: String,
+    pub(super) key: String,
+    pub(super) label: String,
+    /// Its editions in chain order.
+    pub(super) editions: Vec<FamilyEdition>,
+}
+
+/// An edition of a succession family.
+#[derive(Clone, Serialize, ToSchema)]
+pub struct FamilyEdition {
+    pub(super) slug: String,
+    fqid: String,
+    name: Option<String>,
+    short_name: Option<String>,
+    /// The year of the edge by which the edition is superseded on the chain.
+    effective_year: Option<i64>,
+    /// The edition's own vintage year.
+    version_year: Option<i64>,
+    /// Started and without an active successor at the policy year.
+    is_current: bool,
+    /// The edition the family's chain was read from.
+    is_self: bool,
 }
 
 #[derive(Clone, Serialize, ToSchema)]
@@ -211,9 +230,9 @@ pub struct Axis {
 /// A group member; two members of one variable differ by `delivery_column`.
 #[derive(Clone, Serialize, ToSchema)]
 pub struct Member {
-    fqid: String,
+    pub(super) fqid: String,
     name: Option<String>,
-    facets: Vec<Facet>,
+    pub(super) facets: Vec<Facet>,
     delivery_column: Option<String>,
     /// Present on a group's own page only: the member's coverage, its column's
     /// for a representation member (empty when no state delivers the column).
@@ -338,7 +357,6 @@ pub fn show(server: &Server, scope: Scope, params: &Params) -> Result<Value, Err
                 })
             } else {
                 let family = families(&conn)?
-                    .1
                     .into_iter()
                     .find(|f| f.key == key)
                     .ok_or_else(not_found)?;
@@ -349,7 +367,7 @@ pub fn show(server: &Server, scope: Scope, params: &Params) -> Result<Value, Err
     Ok(serde_json::to_value(show).expect("Show serializes"))
 }
 
-fn rows<T>(
+pub(super) fn rows<T>(
     conn: &Connection,
     sql: &str,
     params: impl rusqlite::Params,
@@ -553,7 +571,7 @@ fn register(
 /// scope, by key. Members order by their first facet value, FQID and column; a
 /// group's tags aggregate its members' tags. With `coverage_of` (the register's id,
 /// for a group's own page) each member carries its coverage, as today's group node.
-fn concept_groups(
+pub(super) fn concept_groups(
     conn: &Connection,
     scope: Scope,
     provider: &str,
@@ -743,7 +761,7 @@ fn panel_key(raw: Option<String>) -> Option<PanelKey> {
 /// Today's `_variant_families_for_register_id`: the register's variant succession
 /// components of two or more, each keyed by its first head (a variant without a
 /// successor) and labelled by `family_label`.
-fn variant_families(
+pub(super) fn variant_families(
     conn: &Connection,
     register_id: i64,
     provider: &str,
@@ -932,27 +950,11 @@ fn variable(conn: &Connection, scope: Scope, id: i64) -> Result<Variable, Error>
             ))
         },
     )?;
-    variable.same_as = rows(
-        conn,
-        "SELECT b_provider, b_register, b_variable FROM variable_same_as \
-         WHERE a_provider = ? AND a_register = ? AND a_variable = ? \
-         ORDER BY b_provider, b_register, b_variable",
-        [&p, &r, &v],
-        |row| Ok(fqid(&[row.get(0)?, row.get(1)?, row.get(2)?])),
-    )?
-    .into_iter()
-    .flatten()
-    .collect();
-    variable.group = conn
-        .query_row(
-            "SELECT DISTINCT g.group_key FROM concept_group_variable m \
-             JOIN concept_group g ON g.group_id = m.group_id \
-             WHERE m.variable_id = ? AND g.kind = 'variable' ORDER BY g.group_key",
-            [id],
-            |row| row.get::<_, String>(0),
-        )
-        .optional()?
-        .map(|key| format!("group/{p}/{r}/{key}"));
+    variable.same_as = same_as(conn, &[p.clone(), r.clone(), v])?
+        .into_iter()
+        .map(|(fqid, _)| fqid)
+        .collect();
+    variable.group = group_key(conn, id)?.map(|key| format!("group/{p}/{r}/{key}"));
     // Today's `tags_for_variable`: the variable's own tags, then the tags of its
     // group's members in scope as neutral memberships.
     let own = rows(
@@ -995,62 +997,88 @@ fn variable(conn: &Connection, scope: Scope, id: i64) -> Result<Variable, Error>
     Ok(variable)
 }
 
-/// The family labels by key (today's `_CLASSIFICATION_FAMILY_LABELS`, in its order).
-const FAMILY_LABELS: [(&str, &str); 4] = [
-    ("icd", "ICD"),
-    ("lkf", "LKF"),
-    ("sni", "SNI"),
-    ("ssyk", "SSYK"),
-];
-
-/// Today's `_classification_family_key`: the family a slug names, by prefix.
-fn family_key(slug: &str) -> Option<&'static str> {
-    FAMILY_LABELS.iter().map(|(key, _)| *key).find(|key| {
-        slug == *key
-            || slug.starts_with(&format!("{key}-"))
-            || slug
-                .strip_prefix(key)
-                .is_some_and(|rest| rest.starts_with(|c: char| c.is_ascii_digit()))
-    })
-}
-
-/// The succession families and the editions they stand for: the slugs in
-/// `classification_replaced_by` whose family key names one.
-///
-/// simplify: keys each edition by its own slug, where today's union-find keys a
-/// succession component by its least key; they differ only for a component mixing
-/// two families' slugs. 3d.2 replaces this with 3d.1's `classification_family`.
-fn families(conn: &Connection) -> Result<(BTreeSet<String>, Vec<Family>), Error> {
-    let editions: BTreeSet<String> = rows(
+/// The variables curated as the same variable as the one at `slugs`: each one's
+/// FQID and register slug.
+pub(super) fn same_as(conn: &Connection, slugs: &[String]) -> Result<Vec<(String, String)>, Error> {
+    Ok(rows(
         conn,
-        "SELECT predecessor_slug FROM classification_replaced_by \
-         UNION SELECT successor_slug FROM classification_replaced_by",
-        [],
-        |row| row.get(0),
+        "SELECT b_provider, b_register, b_variable FROM variable_same_as \
+         WHERE a_provider = ? AND a_register = ? AND a_variable = ? \
+         ORDER BY b_provider, b_register, b_variable",
+        [&slugs[0], &slugs[1], &slugs[2]],
+        |row| {
+            let register: String = row.get(1)?;
+            Ok(fqid(&[row.get(0)?, Some(register.clone()), row.get(2)?]).map(|f| (f, register)))
+        },
     )?
     .into_iter()
-    .filter(|slug: &String| family_key(slug).is_some())
-    .collect();
-    let keys: BTreeSet<&str> = editions.iter().filter_map(|s| family_key(s)).collect();
-    let families = FAMILY_LABELS
-        .iter()
-        .filter(|(key, _)| keys.contains(key))
-        .map(|(key, label)| family(key, label))
-        .collect();
-    Ok((editions, families))
+    .flatten()
+    .collect())
 }
 
-fn family(key: &str, label: &str) -> Family {
-    Family {
-        fqid: format!("group/class/{key}"),
-        key: key.to_owned(),
-        label: label.to_owned(),
+/// The key of a variable's concept group (the first by key).
+pub(super) fn group_key(conn: &Connection, id: i64) -> Result<Option<String>, Error> {
+    Ok(conn
+        .query_row(
+            "SELECT DISTINCT g.group_key FROM concept_group_variable m \
+             JOIN concept_group g ON g.group_id = m.group_id \
+             WHERE m.variable_id = ? AND g.kind = 'variable' ORDER BY g.group_key",
+            [id],
+            |row| row.get(0),
+        )
+        .optional()?)
+}
+
+/// The one-dimensional succession families (today's `list_classification_families`),
+/// by key, from the compiled `classification_family`.
+pub(super) fn families(conn: &Connection) -> Result<Vec<Family>, Error> {
+    let found = rows(
+        conn,
+        "SELECT f.family_key, f.family_label, f.slug, c.name, c.short_name, \
+         f.effective_year, c.valid_from, f.is_current, f.is_self \
+         FROM classification_family f LEFT JOIN classification c ON c.slug = f.slug \
+         ORDER BY f.family_key, f.position",
+        [],
+        |row| {
+            let slug: String = row.get(2)?;
+            Ok((
+                row.get::<_, String>(0)?,
+                row.get::<_, String>(1)?,
+                FamilyEdition {
+                    fqid: format!("class/{slug}"),
+                    slug,
+                    name: row.get(3)?,
+                    short_name: row.get(4)?,
+                    effective_year: row.get(5)?,
+                    version_year: row.get(6)?,
+                    is_current: row.get(7)?,
+                    is_self: row.get(8)?,
+                },
+            ))
+        },
+    )?;
+    let mut families: Vec<Family> = Vec::new();
+    for (key, label, edition) in found {
+        if families.last().is_none_or(|f| f.key != key) {
+            families.push(Family {
+                fqid: format!("group/class/{key}"),
+                key,
+                label,
+                editions: Vec::new(),
+            });
+        }
+        families
+            .last_mut()
+            .expect("a family")
+            .editions
+            .push(edition);
     }
+    Ok(families)
 }
 
 /// Today's `list_classification_groups`: the curated classification groups, by key,
 /// members by facet value then slug.
-fn classification_groups(conn: &Connection) -> Result<Vec<Group>, Error> {
+pub(super) fn classification_groups(conn: &Connection) -> Result<Vec<Group>, Error> {
     let found = rows(
         conn,
         "SELECT g.group_key, g.label, g.source, a.axis, a.label, c.slug, c.name, \
@@ -1107,7 +1135,11 @@ fn classification_groups(conn: &Connection) -> Result<Vec<Group>, Error> {
 /// Today's `classification_root`: the classifications nothing supersedes and no
 /// family stands for, by short name, with the groups and families.
 fn classification_root(conn: &Connection) -> Result<ClassificationRoot, Error> {
-    let (editions, families) = families(conn)?;
+    let families = families(conn)?;
+    let editions: BTreeSet<&str> = families
+        .iter()
+        .flat_map(|f| f.editions.iter().map(|e| e.slug.as_str()))
+        .collect();
     let children = rows(
         conn,
         "SELECT c.slug, c.short_name, c.name FROM classification c WHERE c.slug IS NOT NULL \
@@ -1117,7 +1149,7 @@ fn classification_root(conn: &Connection) -> Result<ClassificationRoot, Error> {
         |row| Ok((row.get::<_, String>(0)?, row.get(1)?, row.get(2)?)),
     )?
     .into_iter()
-    .filter(|(slug, ..)| !editions.contains(slug))
+    .filter(|(slug, ..)| !editions.contains(slug.as_str()))
     .map(|(slug, short_name, name)| ClassificationChild {
         fqid: format!("class/{slug}"),
         short_name,
@@ -1149,11 +1181,9 @@ fn classification(
         .into_iter()
         .filter(|g| g.members.iter().any(|m| m.fqid == fqid))
         .collect();
-    let (editions, _) = families(conn)?;
-    let family = family_key(slug)
-        .filter(|_| editions.contains(slug))
-        .and_then(|key| FAMILY_LABELS.iter().find(|(k, _)| *k == key))
-        .map(|(key, label)| self::family(key, label));
+    let family = families(conn)?
+        .into_iter()
+        .find(|f| f.editions.iter().any(|e| e.slug == slug));
     let derivation = |sql: &str| {
         rows(conn, sql, [slug], |row| {
             Ok(Derivation {

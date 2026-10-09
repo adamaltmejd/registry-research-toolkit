@@ -1,0 +1,9 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/nodes/*/fqid": ["scb/example/value", "scb/example/reference", "scb/example/second"],
+      "/data/focus_id": "scb/example/value"
+    }
+  }
+]

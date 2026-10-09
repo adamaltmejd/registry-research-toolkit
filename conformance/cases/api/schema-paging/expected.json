@@ -1,0 +1,25 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/items/*/fqid": ["scb/example/reference", "scb/example/second"]}
+  },
+  {
+    "status": 200,
+    "json": {"/data/items/*/fqid": ["scb/example/value"], "/data/next_cursor": null}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_cursor"}
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "stale_cursor",
+      "/error/fields/generation": "08fff2033e974305d9c2e4fee6d3c8df262955372a9fdbd4c9ba3a309812c07d"
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "limit"}
+  }
+]

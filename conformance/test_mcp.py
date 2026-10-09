@@ -55,6 +55,22 @@ EQUIVALENCE = {
         "docs-scope-unavailable",
     ),
     "show": ("show-provider", "show-bare-names"),
+    "states": ("states-paging", "states-errors", "states-stale-cursor"),
+    "values": (
+        "values-classification",
+        "values-state",
+        "values-errors",
+        "values-stale-cursor",
+    ),
+    "graph": ("graph-succession", "graph-unheld", "graph-errors"),
+    "lineage": ("lineage", "lineage-unheld-reference", "graph-errors"),
+    "schema": ("schema-paging", "schema-errors"),
+    "diff": ("diff-register", "diff-errors"),
+    "coverage": ("coverage-register", "coverage-errors"),
+    "coded_variables": ("coded-variables-order",),
+    # `resolve-columns` sends `columns` as a JSON array, `resolve-errors` 201 of them
+    # and a repeated scalar as an array.
+    "resolve": ("resolve-columns", "resolve-errors"),
 }
 READER = {"fixture": "reader"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.
@@ -137,6 +153,10 @@ def test_tool_matches_http(servers, operation):
             if "cursor_from" in step:
                 source, pointer = step["cursor_from"]
                 arguments["cursor"] = select_json(documents[source], pointer)
+            # The identifier comes from the HTTP response: its source step may be
+            # another operation's, which has no tool call here.
+            for name, (source, pointer) in step.get("query_from", {}).items():
+                arguments[name] = select_json(http[source]["body"], pointer)
             is_error, document = call(
                 clients[step.get("artifact")], tool["name"], arguments
             )
@@ -161,6 +181,24 @@ def test_tool_of_several_needs_an_operation(servers):
         ({"operation": "docs_get"}, "identifier"),
     ):
         is_error, document = call(client, "docs", arguments)
+        assert is_error
+        assert document["error"]["code"] == "invalid_parameter"
+        assert document["error"]["fields"] == {"parameter": parameter}
+
+
+def test_array_argument_only_for_an_array_parameter(servers):
+    # Fails when a tool call flattens an array for a parameter that is not
+    # `string[]` (`ref: ["…"]` resolved, `register: []` read as no filter) or
+    # accepts an empty array for one that is (`columns: []`), instead of refusing
+    # it with `invalid_parameter` naming the parameter. HTTP has no spelling of an
+    # empty array, so these have no `api` twin.
+    client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    for tool, arguments, parameter in (
+        ("resolve", {"register": [], "columns": ["Value"]}, "register"),
+        ("resolve", {"columns": []}, "columns"),
+        ("coverage", {"ref": ["scb/example"]}, "ref"),
+    ):
+        is_error, document = call(client, tool, arguments)
         assert is_error
         assert document["error"]["code"] == "invalid_parameter"
         assert document["error"]["fields"] == {"parameter": parameter}

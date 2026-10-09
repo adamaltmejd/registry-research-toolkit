@@ -1,0 +1,14 @@
+{
+  "note": "A year-independent held representation has no bounds and no windows, and the provider's coverage has null bounds. Twin of coverage/year-independent. Fails if an undated delivery is given bounds.",
+  "fixture": "year-independent",
+  "requests": [
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb/example"
+    },
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb"
+    }
+  ]
+}
