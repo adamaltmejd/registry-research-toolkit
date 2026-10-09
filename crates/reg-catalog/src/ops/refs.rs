@@ -14,6 +14,12 @@ const CLASS: &str = "class";
 /// The first segment of group refs.
 const GROUP: &str = "group";
 
+/// SQL for the SCB numeric variable id of the variable `v`, NULL for other
+/// providers (today's `_VAR_ID_EXPR`).
+pub(crate) const VAR_ID: &str = "CASE WHEN v.variable_id < 4611686018427387904 \
+    AND v.provider_key GLOB '[0-9]*' AND NOT v.provider_key GLOB '*[^0-9]*' \
+    THEN CAST(v.provider_key AS INTEGER) END";
+
 /// What a ref names, resolved in the read scope.
 pub(crate) enum Target {
     /// No ref: the catalog root.
@@ -54,6 +60,15 @@ pub(crate) fn not_found(value: &str) -> Error {
     Error::new(
         Code::NotFound,
         format!("Nothing named {value:?} in this scope."),
+        vec![value.into()],
+    )
+}
+
+/// `invalid_ref` for a ref that resolves to a kind the operation does not take.
+pub(crate) fn invalid_kind(value: &str) -> Error {
+    Error::new(
+        Code::InvalidRef,
+        format!("{value:?} is not a ref of a kind this operation takes."),
         vec![value.into()],
     )
 }

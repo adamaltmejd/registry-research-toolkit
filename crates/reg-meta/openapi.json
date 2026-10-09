@@ -137,6 +137,86 @@
         }
       }
     },
+    "/api/coded-variables": {
+      "get": {
+        "description": "The variables with coded value sets, by common name: each name's distinct codes over every coded state under it, its registers and its coded states, ordered by distinct codes (ties by name); pass `next_cursor` back as `cursor` for the next page.",
+        "operationId": "coded_variables",
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CodedPage"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/context": {
       "get": {
         "description": "The catalog's branding, identity and headline counts, for the SPA.",
@@ -165,6 +245,76 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/Context"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coverage/{ref}": {
+      "get": {
+        "description": "The calendar years a register or a variable (a FQID or a bare name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found.",
+        "operationId": "coverage",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Coverage"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -603,6 +753,88 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/Lineage"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resolve": {
+      "get": {
+        "description": "Delivered column names (data-file headers, 1 to 200 of them) to the variables delivering them, by exact case-insensitive match: one row per name, `matched` with its variables or `no_match`. `register` (a FQID or a name) keeps matches to one register. Not ref resolution: use `search` to discover names.",
+        "operationId": "resolve",
+        "parameters": [
+          {
+            "name": "columns",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 200
+            }
+          },
+          {
+            "name": "register",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Resolved"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -1555,6 +1787,54 @@
           }
         }
       },
+      "CodedPage": {
+        "type": "object",
+        "description": "`Page<CodedVariable>`.",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CodedVariable"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "CodedVariable": {
+        "type": "object",
+        "description": "The CLI's `get coded-variables` row: a common name's distinct codes over every\ncoded state under it, its registers and its coded states.",
+        "required": [
+          "variable_name",
+          "n_distinct_codes",
+          "n_registers",
+          "n_instances"
+        ],
+        "properties": {
+          "n_distinct_codes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "n_instances": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "n_registers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "variable_name": {
+            "type": "string"
+          }
+        }
+      },
       "ConceptGroup": {
         "type": "object",
         "description": "A register's concept group: its members in scope.",
@@ -1704,33 +1984,15 @@
         }
       },
       "Coverage": {
-        "type": "object",
-        "description": "The span a variable or column is delivered over: its earliest start and latest\nfinite end (null when unknown, or when `open_ended`), and the states (held\nperiods in holdings) behind it.",
-        "required": [
-          "open_ended",
-          "state_count"
-        ],
-        "properties": {
-          "coverage_from": {
-            "type": [
-              "string",
-              "null"
-            ]
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/RegisterCoverage"
           },
-          "coverage_to": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "open_ended": {
-            "type": "boolean"
-          },
-          "state_count": {
-            "type": "integer",
-            "format": "int64"
+          {
+            "$ref": "#/components/schemas/VariableCoverage"
           }
-        }
+        ],
+        "description": "A register's or a variable's coverage (the CLI's `get availability` data); the\nref's kind is in `fqid`."
       },
       "DataWarning": {
         "type": "object",
@@ -2530,6 +2792,44 @@
           }
         }
       },
+      "Match": {
+        "type": "object",
+        "required": [
+          "matched_column"
+        ],
+        "properties": {
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "matched_column": {
+            "type": "string",
+            "description": "The column's one spelling for the variable: a state's own, else the lowest\nalias spelling."
+          },
+          "register": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "var_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "SCB's numeric variable id; null for other providers."
+          },
+          "variable_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "Member": {
         "type": "object",
         "description": "A group member; two members of one variable differ by `delivery_column`.",
@@ -2914,33 +3214,86 @@
         }
       },
       "RegisterCoverage": {
-        "type": "object",
-        "description": "A register's span: its variables and the earliest and latest of their states.",
-        "required": [
-          "variable_count",
-          "open_ended"
-        ],
-        "properties": {
-          "coverage_from": {
-            "type": [
-              "string",
-              "null"
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Span"
           },
-          "coverage_to": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "open_ended": {
-            "type": "boolean"
-          },
-          "variable_count": {
-            "type": "integer",
-            "format": "int64"
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "register_name",
+              "variant_count",
+              "variants"
+            ],
+            "properties": {
+              "fqid": {
+                "type": "string"
+              },
+              "register_name": {
+                "type": "string"
+              },
+              "variant_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "variants": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/VariantYears"
+                },
+                "description": "The register variants with a year in scope, in build order."
+              }
+            }
           }
-        }
+        ]
+      },
+      "RegisterYears": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Span"
+          },
+          {
+            "type": "object",
+            "required": [
+              "register_name",
+              "aliases_by_year"
+            ],
+            "properties": {
+              "aliases_by_year": {
+                "type": "object",
+                "description": "Per year, the columns delivered in it, sorted.",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "propertyNames": {
+                  "type": "string"
+                }
+              },
+              "register": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "register_name": {
+                "type": "string"
+              },
+              "var_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "format": "int64",
+                "description": "SCB's numeric variable id; null for other providers."
+              }
+            }
+          }
+        ]
       },
       "RelatedDocument": {
         "type": "object",
@@ -2976,6 +3329,46 @@
           },
           "title": {
             "type": "string"
+          }
+        }
+      },
+      "Resolution": {
+        "type": "object",
+        "description": "A requested name: `matched` with its variables, or `no_match`.",
+        "required": [
+          "column_name",
+          "status",
+          "matches"
+        ],
+        "properties": {
+          "column_name": {
+            "type": "string"
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Match"
+            },
+            "description": "Ordered by register, provider key and variable; split siblings share a\n`var_id` and differ by `fqid`."
+          },
+          "status": {
+            "type": "string",
+            "description": "`matched` or `no_match`."
+          }
+        }
+      },
+      "Resolved": {
+        "type": "object",
+        "required": [
+          "columns"
+        ],
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Resolution"
+            },
+            "description": "One row per requested name, in request order."
           }
         }
       },
@@ -3741,6 +4134,44 @@
         },
         "additionalProperties": false
       },
+      "Span": {
+        "type": "object",
+        "description": "The years covered, their bounds and the years missing between the bounds.",
+        "required": [
+          "min_year",
+          "max_year",
+          "years",
+          "gaps"
+        ],
+        "properties": {
+          "gaps": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          "max_year": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "min_year": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          "years": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          }
+        }
+      },
       "State": {
         "type": "object",
         "description": "A state: today's `VariableState` under the catalog page's light hydration (its\ncodes are the `values` facet).",
@@ -4220,6 +4651,43 @@
           }
         }
       },
+      "VariableCoverage": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Span"
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "register_count",
+              "registers"
+            ],
+            "properties": {
+              "fqid": {
+                "type": "string"
+              },
+              "register_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "registers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RegisterYears"
+                },
+                "description": "The variable's register: one entry."
+              },
+              "variable_name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        ]
+      },
       "VariableNode": {
         "type": "object",
         "description": "A variable with its state history. A succession edition that is not live in\nscope is a bare node: no states, group or metadata.",
@@ -4412,6 +4880,33 @@
               "string",
               "null"
             ]
+          }
+        }
+      },
+      "VariantYears": {
+        "type": "object",
+        "required": [
+          "variant_name",
+          "years"
+        ],
+        "properties": {
+          "variant": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The variant's slug; null for the unslugged one."
+          },
+          "variant_name": {
+            "type": "string"
+          },
+          "years": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
           }
         }
       },

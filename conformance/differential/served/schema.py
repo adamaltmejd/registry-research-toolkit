@@ -20,50 +20,22 @@ configured seed (the CLI results do not carry their argv).
 from __future__ import annotations
 
 import json
-import tomllib
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
-from pathlib import Path
-from typing import TYPE_CHECKING
 from urllib.parse import quote
 
 from conformance.differential import cases as generator
-from conformance.differential.served.common import get
+from conformance.differential.served.common import (
+    cli_argv,
+    flag,
+    get,
+    matched_refs,
+    pages,
+)
 
-if TYPE_CHECKING:
-    import sqlite3
-
-SEED = tomllib.loads((Path(__file__).parents[1] / "config.toml").read_text())["seed"]
 # Requests in flight per server pair.
 PARALLEL = 16
-LIMIT = 200
 COMMANDS = ("get-schema-summary", "get-schema-year", "get-diff", "get-datacolumns")
-
-
-def _argv(originals: Path, catalog: str) -> dict[str, list[str]]:
-    """The CLI argv of this family's cases, by case id, as `cases.py` generates them."""
-    return {
-        case.id: case.argv
-        for case in generator.register_and_variable_cases(catalog, originals, SEED)
-        if case.id.split("/")[2] in COMMANDS
-    }
-
-
-def _flag(argv: list[str], name: str) -> str:
-    return argv[argv.index(name) + 1]
-
-
-def _pages(cand, path: str, params: dict) -> list[dict] | None:
-    """Every row of a paged answer, or None for a refusal."""
-    rows, cursor = [], None
-    while True:
-        answer = get(cand, path, params | {"limit": LIMIT, "cursor": cursor})
-        if answer["status"] != 200:
-            return None
-        rows += answer["body"]["data"]["items"]
-        cursor = answer["body"]["data"]["next_cursor"]
-        if cursor is None:
-            return rows
 
 
 def _row(variant: str | None, valid_from, valid_to, column: dict) -> list:
@@ -82,6 +54,12 @@ def _row(variant: str | None, valid_from, valid_to, column: dict) -> list:
         column["group"],
         column["group_label"],
     ]
+
+
+def _order(row: list) -> str:
+    """A row's sort key with its window last, so a window that differs between the
+    arms (holdings clips to the request; the CLI does not) keeps its row's place."""
+    return json.dumps([row[0], *row[3:], row[1], row[2]])
 
 
 def _schema_baseline(data: dict, register: str) -> list:
@@ -104,13 +82,13 @@ def _schema_baseline(data: dict, register: str) -> list:
                         mapped,
                     )
                 )
-    return sorted(rows, key=json.dumps)
+    return sorted(rows, key=_order)
 
 
 def _schema_candidate(rows: list[dict]) -> list:
     return sorted(
         (_row(r["variant"], r["valid_from"], r["valid_to"], r) for r in rows),
-        key=json.dumps,
+        key=_order,
     )
 
 
@@ -178,32 +156,14 @@ def _diff(data: dict, column=lambda c: c, change=lambda c: c) -> list:
     )
 
 
-def _datacolumns_refs(
-    conn: sqlite3.Connection, key: str, register: str, scope: str
-) -> list[str]:
-    """The FQIDs `get datacolumns <key> --register <register>` matches: by provider
-    key or name (split siblings share a key), held ones only in holdings."""
-    held = "" if scope == "reference" else " AND " + generator.HELD
-    return [
-        fqid
-        for (fqid,) in conn.execute(
-            "SELECT p.slug || '/' || r.slug || '/' || v.slug FROM variable v "
-            "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
-            "WHERE p.slug || '/' || r.slug = ? AND v.slug IS NOT NULL "
-            "AND (v.provider_key = ? OR lower(v.name) = lower(?))" + held,
-            (register, key, key),
-        )
-    ]
-
-
 def cases(
     base, cand, catalog, scopes, originals, baseline_cli
 ) -> list[tuple[str, dict, dict]]:
     # The CLI baseline is the oracle, and its cases fix the scopes.
     del base, scopes
-    argv = _argv(originals, catalog)
+    argv = cli_argv(originals, catalog, COMMANDS)
     datacolumns = {
-        case_id: (args[args.index("datacolumns") + 1], _flag(args, "--register"))
+        case_id: (args[args.index("datacolumns") + 1], flag(args, "--register"))
         for case_id, args in argv.items()
         if case_id.split("/")[2] == "get-datacolumns"
     }
@@ -213,7 +173,7 @@ def cases(
             conn.execute("SELECT register_variant_id, slug FROM register_variant")
         )
         refs = {
-            case_id: _datacolumns_refs(conn, key, register, case_id.split("/")[1])
+            case_id: matched_refs(conn, key, register, case_id.split("/")[1])
             for case_id, (key, register) in datacolumns.items()
         }
     results = baseline_cli.result()
@@ -228,7 +188,7 @@ def cases(
             with_refs = refs[f"{catalog}/{case_id}"]
             found: set[tuple] = set()
             for ref in with_refs:
-                rows = _pages(cand, "/api/schema/" + quote(ref), {"scope": scope})
+                rows = pages(cand, "/api/schema/" + quote(ref), {"scope": scope})
                 found |= {(r["variant"], r["column"]) for r in rows or []}
             fold = str.lower if scope == "holdings" else str
             expected = (
@@ -255,8 +215,8 @@ def cases(
         if command == "get-diff":
             params = {
                 "scope": scope,
-                "from": _flag(args, "--from"),
-                "to": _flag(args, "--to"),
+                "from": flag(args, "--from"),
+                "to": flag(args, "--to"),
             }
             answer = get(cand, f"/api/diff/{path}", params)
             expected = (
@@ -268,8 +228,8 @@ def cases(
             return case_id, expected, actual
         params = {"scope": scope}
         if command == "get-schema-year":
-            params["period"] = _flag(args, "--years")
-        rows = _pages(cand, f"/api/schema/{path}", params)
+            params["period"] = flag(args, "--years")
+        rows = pages(cand, f"/api/schema/{path}", params)
         expected = _schema_baseline(data, register) if ok else "error"
         actual = _schema_candidate(rows) if rows is not None else "error"
         return case_id, expected, actual

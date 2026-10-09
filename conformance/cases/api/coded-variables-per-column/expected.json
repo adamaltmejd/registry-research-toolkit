@@ -1,0 +1,10 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variable_name": ["Sex"],
+      "/data/items/*/n_distinct_codes": [4],
+      "/data/items/*/n_registers": [14]
+    }
+  }
+]

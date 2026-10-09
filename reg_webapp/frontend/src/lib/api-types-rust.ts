@@ -38,6 +38,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/coded-variables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The variables with coded value sets, by common name: each name's distinct codes over every coded state under it, its registers and its coded states, ordered by distinct codes (ties by name); pass `next_cursor` back as `cursor` for the next page. */
+        get: operations["coded_variables"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/context": {
         parameters: {
             query?: never;
@@ -47,6 +64,23 @@ export interface paths {
         };
         /** @description The catalog's branding, identity and headline counts, for the SPA. */
         get: operations["context"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coverage/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The calendar years a register or a variable (a FQID or a bare name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found. */
+        get: operations["coverage"];
         put?: never;
         post?: never;
         delete?: never;
@@ -185,6 +219,23 @@ export interface paths {
         };
         /** @description A variable's lineage: the source states feeding each of its states (`edges`), the build's lineage `warnings`, and, for every variable in scope with its name, its register's provenance role (`registers`). */
         get: operations["lineage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Delivered column names (data-file headers, 1 to 200 of them) to the variables delivering them, by exact case-insensitive match: one row per name, `matched` with its variables or `no_match`. `register` (a FQID or a name) keeps matches to one register. Not ref resolution: use `search` to discover names. */
+        get: operations["resolve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -364,6 +415,24 @@ export interface components {
             name?: string | null;
             register_name?: string | null;
         };
+        /** @description `Page<CodedVariable>`. */
+        CodedPage: {
+            items: components["schemas"]["CodedVariable"][];
+            next_cursor?: string | null;
+        };
+        /**
+         * @description The CLI's `get coded-variables` row: a common name's distinct codes over every
+         *     coded state under it, its registers and its coded states.
+         */
+        CodedVariable: {
+            /** Format: int64 */
+            n_distinct_codes: number;
+            /** Format: int64 */
+            n_instances: number;
+            /** Format: int64 */
+            n_registers: number;
+            variable_name: string;
+        };
         /** @description A register's concept group: its members in scope. */
         ConceptGroup: {
             axes: components["schemas"]["Axis"][];
@@ -410,17 +479,10 @@ export interface components {
             steward: components["schemas"]["Steward"];
         };
         /**
-         * @description The span a variable or column is delivered over: its earliest start and latest
-         *     finite end (null when unknown, or when `open_ended`), and the states (held
-         *     periods in holdings) behind it.
+         * @description A register's or a variable's coverage (the CLI's `get availability` data); the
+         *     ref's kind is in `fqid`.
          */
-        Coverage: {
-            coverage_from?: string | null;
-            coverage_to?: string | null;
-            open_ended: boolean;
-            /** Format: int64 */
-            state_count: number;
-        };
+        Coverage: components["schemas"]["RegisterCoverage"] | components["schemas"]["VariableCoverage"];
         /**
          * @description A retained source limitation or interpretation assumption: today's
          *     `DataWarning`, as the build stored it.
@@ -646,6 +708,21 @@ export interface components {
             message: string;
             warning_kind: string;
         };
+        Match: {
+            fqid?: string | null;
+            /**
+             * @description The column's one spelling for the variable: a state's own, else the lowest
+             *     alias spelling.
+             */
+            matched_column: string;
+            register?: string | null;
+            /**
+             * Format: int64
+             * @description SCB's numeric variable id; null for other providers.
+             */
+            var_id?: number | null;
+            variable_name?: string | null;
+        };
         /** @description A group member; two members of one variable differ by `delivery_column`. */
         Member: {
             coverage?: components["schemas"]["Coverage"] | null;
@@ -738,13 +815,25 @@ export interface components {
             purpose?: string | null;
             tags: components["schemas"]["Tag"][];
         };
-        /** @description A register's span: its variables and the earliest and latest of their states. */
-        RegisterCoverage: {
-            coverage_from?: string | null;
-            coverage_to?: string | null;
-            open_ended: boolean;
-            /** Format: int64 */
-            variable_count: number;
+        RegisterCoverage: components["schemas"]["Span"] & {
+            fqid: string;
+            register_name: string;
+            variant_count: number;
+            /** @description The register variants with a year in scope, in build order. */
+            variants: components["schemas"]["VariantYears"][];
+        };
+        RegisterYears: components["schemas"]["Span"] & {
+            /** @description Per year, the columns delivered in it, sorted. */
+            aliases_by_year: {
+                [key: string]: string[];
+            };
+            register?: string | null;
+            register_name: string;
+            /**
+             * Format: int64
+             * @description SCB's numeric variable id; null for other providers.
+             */
+            var_id?: number | null;
         };
         /** @description A related document's metadata; the download route serves its bytes. */
         RelatedDocument: {
@@ -756,6 +845,21 @@ export interface components {
             sha256: string;
             source_url: string;
             title: string;
+        };
+        /** @description A requested name: `matched` with its variables, or `no_match`. */
+        Resolution: {
+            column_name: string;
+            /**
+             * @description Ordered by register, provider key and variable; split siblings share a
+             *     `var_id` and differ by `fqid`.
+             */
+            matches: components["schemas"]["Match"][];
+            /** @description `matched` or `no_match`. */
+            status: string;
+        };
+        Resolved: {
+            /** @description One row per requested name, in request order. */
+            columns: components["schemas"]["Resolution"][];
         };
         /** @description The catalog root: the providers in scope and the classification root. */
         Root: {
@@ -921,6 +1025,15 @@ export interface components {
             semantic_record_key: string[];
             source: string;
         };
+        /** @description The years covered, their bounds and the years missing between the bounds. */
+        Span: {
+            gaps: number[];
+            /** Format: int32 */
+            max_year: number;
+            /** Format: int32 */
+            min_year: number;
+            years: number[];
+        };
         /**
          * @description A state: today's `VariableState` under the catalog page's light hydration (its
          *     codes are the `values` facet).
@@ -1039,6 +1152,13 @@ export interface components {
             fqid: string;
             name?: string | null;
         };
+        VariableCoverage: components["schemas"]["Span"] & {
+            fqid: string;
+            register_count: number;
+            /** @description The variable's register: one entry. */
+            registers: components["schemas"]["RegisterYears"][];
+            variable_name?: string | null;
+        };
         /**
          * @description A variable with its state history. A succession edition that is not live in
          *     scope is a bare node: no states, group or metadata.
@@ -1081,6 +1201,12 @@ export interface components {
             summary: components["schemas"]["Summary"];
             variant?: string | null;
             variant_name?: string | null;
+        };
+        VariantYears: {
+            /** @description The variant's slug; null for the unslugged one. */
+            variant?: string | null;
+            variant_name: string;
+            years: number[];
         };
         Version: {
             description?: string | null;
@@ -1178,6 +1304,45 @@ export interface operations {
             };
         };
     };
+    coded_variables: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["CodedPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
     context: {
         parameters: {
             query?: {
@@ -1197,6 +1362,45 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Context"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    coverage: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Coverage"];
                         meta: components["schemas"]["Meta"];
                     };
                 };
@@ -1395,6 +1599,45 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Lineage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    resolve: {
+        parameters: {
+            query: {
+                columns: string[];
+                register?: string;
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Resolved"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

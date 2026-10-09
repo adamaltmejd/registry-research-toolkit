@@ -1,0 +1,6 @@
+{
+  "note": "A variable's coverage: Avbrott is delivered 2010..2012 and again from 2016 with no end. The open-ended state counts only its opening year (as `get availability` did), so the years stop at 2016 and 2013..2015 are gaps; each year lists the column delivered in it. Fails if the open end is enumerated to its 9999 sentinel or dropped, a gap is missed, or the column per year is lost.",
+  "fixture": "semantic",
+  "kind": "catalog",
+  "requests": [{"operation": "coverage", "path": "/api/coverage/scb/example/avbrott"}]
+}

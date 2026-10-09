@@ -61,8 +61,11 @@ def artifact_env(path, kind):
 
 
 def fixture_source(request):
+    """A case's fixture: a source directory under `cases/fixtures`, else a name
+    `reader_artifacts` resolves (`reader`, `reader/<case>`, a builder holdings case)."""
     fixture = request.get("fixture", "compiled")
-    return fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
+    local = CASES / "fixtures" / fixture
+    return local if local.is_dir() else fixture
 
 
 def docs_source(request):

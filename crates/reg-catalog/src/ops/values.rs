@@ -126,7 +126,7 @@ pub fn values(server: &Server, scope: Scope, params: &Params) -> Result<serde_js
     let reference = params["ref"];
     let mut rows = match refs::resolve(&conn, scope, Some(reference))? {
         Target::Classification { id, .. } => {
-            if let Some(name) = STATE_PARAMS.iter().find(|n| params.contains_key(*n)) {
+            if let Some(name) = STATE_PARAMS.iter().find(|n| params.get(n).is_some()) {
                 return Err(Error::invalid_parameter(name));
             }
             classification_codes(&conn, id)?

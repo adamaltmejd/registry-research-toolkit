@@ -1,0 +1,31 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/fqid": "scb/example",
+      "/data/register_name": "Example",
+      "/data/min_year": 2010,
+      "/data/max_year": 2025,
+      "/data/years": [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+      "/data/gaps": [],
+      "/data/variant_count": 1,
+      "/data/variants/*/variant": ["annual"],
+      "/data/variants/*/years": [
+        [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/fqid": "scb/example",
+      "/data/min_year": 2018,
+      "/data/max_year": 2019,
+      "/data/years": [2018, 2019],
+      "/data/gaps": [],
+      "/data/variants/*/variant": ["annual"],
+      "/data/variants/*/years": [[2018, 2019]],
+      "/meta/scope": "holdings"
+    }
+  }
+]

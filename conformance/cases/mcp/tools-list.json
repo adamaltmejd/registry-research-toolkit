@@ -786,33 +786,15 @@
           "type": "object"
         },
         "Coverage": {
-          "description": "The span a variable or column is delivered over: its earliest start and latest\nfinite end (null when unknown, or when `open_ended`), and the states (held\nperiods in holdings) behind it.",
-          "properties": {
-            "coverage_from": {
-              "type": [
-                "string",
-                "null"
-              ]
+          "description": "A register's or a variable's coverage (the CLI's `get availability` data); the\nref's kind is in `fqid`.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/RegisterCoverage"
             },
-            "coverage_to": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "open_ended": {
-              "type": "boolean"
-            },
-            "state_count": {
-              "format": "int64",
-              "type": "integer"
+            {
+              "$ref": "#/$defs/VariableCoverage"
             }
-          },
-          "required": [
-            "open_ended",
-            "state_count"
-          ],
-          "type": "object"
+          ]
         },
         "Delivery": {
           "description": "One `(variant, delivery column)` a variable is delivered under, with its disjoint\nwindows by start and their span. `column` is null for a state SCB named no\ncolumn for.",
@@ -1317,33 +1299,86 @@
           "type": "object"
         },
         "RegisterCoverage": {
-          "description": "A register's span: its variables and the earliest and latest of their states.",
-          "properties": {
-            "coverage_from": {
-              "type": [
-                "string",
-                "null"
-              ]
+          "allOf": [
+            {
+              "$ref": "#/$defs/Span"
             },
-            "coverage_to": {
-              "type": [
-                "string",
-                "null"
-              ]
-            },
-            "open_ended": {
-              "type": "boolean"
-            },
-            "variable_count": {
-              "format": "int64",
-              "type": "integer"
+            {
+              "properties": {
+                "fqid": {
+                  "type": "string"
+                },
+                "register_name": {
+                  "type": "string"
+                },
+                "variant_count": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "variants": {
+                  "description": "The register variants with a year in scope, in build order.",
+                  "items": {
+                    "$ref": "#/$defs/VariantYears"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "fqid",
+                "register_name",
+                "variant_count",
+                "variants"
+              ],
+              "type": "object"
             }
-          },
-          "required": [
-            "variable_count",
-            "open_ended"
-          ],
-          "type": "object"
+          ]
+        },
+        "RegisterYears": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Span"
+            },
+            {
+              "properties": {
+                "aliases_by_year": {
+                  "additionalProperties": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array",
+                    "uniqueItems": true
+                  },
+                  "description": "Per year, the columns delivered in it, sorted.",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "register": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "register_name": {
+                  "type": "string"
+                },
+                "var_id": {
+                  "description": "SCB's numeric variable id; null for other providers.",
+                  "format": "int64",
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "register_name",
+                "aliases_by_year"
+              ],
+              "type": "object"
+            }
+          ]
         },
         "Root": {
           "description": "The catalog root: the providers in scope and the classification root.",
@@ -1612,6 +1647,44 @@
             }
           ]
         },
+        "Span": {
+          "description": "The years covered, their bounds and the years missing between the bounds.",
+          "properties": {
+            "gaps": {
+              "items": {
+                "format": "int32",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            "max_year": {
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "min_year": {
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "years": {
+              "items": {
+                "format": "int32",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "min_year",
+            "max_year",
+            "years",
+            "gaps"
+          ],
+          "type": "object"
+        },
         "Tag": {
           "description": "A tag membership: the tag and this member's rank, star and note.",
           "properties": {
@@ -1761,6 +1834,43 @@
           ],
           "type": "object"
         },
+        "VariableCoverage": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Span"
+            },
+            {
+              "properties": {
+                "fqid": {
+                  "type": "string"
+                },
+                "register_count": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "registers": {
+                  "description": "The variable's register: one entry.",
+                  "items": {
+                    "$ref": "#/$defs/RegisterYears"
+                  },
+                  "type": "array"
+                },
+                "variable_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "fqid",
+                "register_count",
+                "registers"
+              ],
+              "type": "object"
+            }
+          ]
+        },
         "Variant": {
           "description": "A register variant (the `variant` filter of `states`), with its versions' prose.",
           "properties": {
@@ -1834,6 +1944,33 @@
           "required": [
             "slug",
             "versions"
+          ],
+          "type": "object"
+        },
+        "VariantYears": {
+          "properties": {
+            "variant": {
+              "description": "The variant's slug; null for the unslugged one.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant_name": {
+              "type": "string"
+            },
+            "years": {
+              "items": {
+                "format": "int32",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "variant_name",
+            "years"
           ],
           "type": "object"
         },
@@ -2830,7 +2967,7 @@
   },
   {
     "name": "schema",
-    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `schema` (ref, period?, variant?, scope?, limit?, cursor?): The delivered columns of a register, or of one variable (a FQID or a bare name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page.\n- `diff` (ref, from, to, variant?, scope?): A register's columns between two periods, per variant: the variables added at `to`, removed since `from`, and changed in type, width or column (a variable compares by its first column in each period). Variants without changes are left out.",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `schema` (ref, period?, variant?, scope?, limit?, cursor?): The delivered columns of a register, or of one variable (a FQID or a bare name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page.\n- `diff` (ref, from, to, variant?, scope?): A register's columns between two periods, per variant: the variables added at `to`, removed since `from`, and changed in type, width or column (a variable compares by its first column in each period). Variants without changes are left out.\n- `coded_variables` (scope?, limit?, cursor?): The variables with coded value sets, by common name: each name's distinct codes over every coded state under it, its registers and its coded states, ordered by distinct codes (ties by name); pass `next_cursor` back as `cursor` for the next page.",
     "inputSchema": {
       "$defs": {
         "Scope": {
@@ -2857,7 +2994,8 @@
         "operation": {
           "enum": [
             "schema",
-            "diff"
+            "diff",
+            "coded_variables"
           ],
           "type": "string"
         },
@@ -2938,6 +3076,54 @@
           },
           "required": [
             "changes"
+          ],
+          "type": "object"
+        },
+        "CodedPage": {
+          "description": "`Page<CodedVariable>`.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/CodedVariable"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "type": "object"
+        },
+        "CodedVariable": {
+          "description": "The CLI's `get coded-variables` row: a common name's distinct codes over every\ncoded state under it, its registers and its coded states.",
+          "properties": {
+            "n_distinct_codes": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "n_instances": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "n_registers": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "variable_name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "variable_name",
+            "n_distinct_codes",
+            "n_registers",
+            "n_instances"
           ],
           "type": "object"
         },
@@ -3313,6 +3499,543 @@
           "properties": {
             "data": {
               "$ref": "#/$defs/Diff"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/CodedPage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "coverage",
+    "description": "The calendar years a register or a variable (a FQID or a bare name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found.",
+    "inputSchema": {
+      "$defs": {
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        }
+      },
+      "properties": {
+        "ref": {
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        }
+      },
+      "required": [
+        "ref"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Coverage": {
+          "description": "A register's or a variable's coverage (the CLI's `get availability` data); the\nref's kind is in `fqid`.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/RegisterCoverage"
+            },
+            {
+              "$ref": "#/$defs/VariableCoverage"
+            }
+          ]
+        },
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            },
+            "scope": {
+              "$ref": "#/$defs/Scope"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "scope"
+          ],
+          "type": "object"
+        },
+        "RegisterCoverage": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Span"
+            },
+            {
+              "properties": {
+                "fqid": {
+                  "type": "string"
+                },
+                "register_name": {
+                  "type": "string"
+                },
+                "variant_count": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "variants": {
+                  "description": "The register variants with a year in scope, in build order.",
+                  "items": {
+                    "$ref": "#/$defs/VariantYears"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "fqid",
+                "register_name",
+                "variant_count",
+                "variants"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "RegisterYears": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Span"
+            },
+            {
+              "properties": {
+                "aliases_by_year": {
+                  "additionalProperties": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array",
+                    "uniqueItems": true
+                  },
+                  "description": "Per year, the columns delivered in it, sorted.",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "register": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "register_name": {
+                  "type": "string"
+                },
+                "var_id": {
+                  "description": "SCB's numeric variable id; null for other providers.",
+                  "format": "int64",
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "register_name",
+                "aliases_by_year"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        },
+        "Span": {
+          "description": "The years covered, their bounds and the years missing between the bounds.",
+          "properties": {
+            "gaps": {
+              "items": {
+                "format": "int32",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            "max_year": {
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "min_year": {
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "years": {
+              "items": {
+                "format": "int32",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "min_year",
+            "max_year",
+            "years",
+            "gaps"
+          ],
+          "type": "object"
+        },
+        "VariableCoverage": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/Span"
+            },
+            {
+              "properties": {
+                "fqid": {
+                  "type": "string"
+                },
+                "register_count": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "registers": {
+                  "description": "The variable's register: one entry.",
+                  "items": {
+                    "$ref": "#/$defs/RegisterYears"
+                  },
+                  "type": "array"
+                },
+                "variable_name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "fqid",
+                "register_count",
+                "registers"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "VariantYears": {
+          "properties": {
+            "variant": {
+              "description": "The variant's slug; null for the unslugged one.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "variant_name": {
+              "type": "string"
+            },
+            "years": {
+              "items": {
+                "format": "int32",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "variant_name",
+            "years"
+          ],
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Coverage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "resolve",
+    "description": "Delivered column names (data-file headers, 1 to 200 of them) to the variables delivering them, by exact case-insensitive match: one row per name, `matched` with its variables or `no_match`. `register` (a FQID or a name) keeps matches to one register. Not ref resolution: use `search` to discover names.",
+    "inputSchema": {
+      "$defs": {
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        }
+      },
+      "properties": {
+        "columns": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 200,
+          "type": "array"
+        },
+        "register": {
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        }
+      },
+      "required": [
+        "columns"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Match": {
+          "properties": {
+            "fqid": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "matched_column": {
+              "description": "The column's one spelling for the variable: a state's own, else the lowest\nalias spelling.",
+              "type": "string"
+            },
+            "register": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "var_id": {
+              "description": "SCB's numeric variable id; null for other providers.",
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "variable_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "matched_column"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            },
+            "scope": {
+              "$ref": "#/$defs/Scope"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "scope"
+          ],
+          "type": "object"
+        },
+        "Resolution": {
+          "description": "A requested name: `matched` with its variables, or `no_match`.",
+          "properties": {
+            "column_name": {
+              "type": "string"
+            },
+            "matches": {
+              "description": "Ordered by register, provider key and variable; split siblings share a\n`var_id` and differ by `fqid`.",
+              "items": {
+                "$ref": "#/$defs/Match"
+              },
+              "type": "array"
+            },
+            "status": {
+              "description": "`matched` or `no_match`.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "column_name",
+            "status",
+            "matches"
+          ],
+          "type": "object"
+        },
+        "Resolved": {
+          "properties": {
+            "columns": {
+              "description": "One row per requested name, in request order.",
+              "items": {
+                "$ref": "#/$defs/Resolution"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "columns"
+          ],
+          "type": "object"
+        },
+        "Scope": {
+          "description": "The read scope (section 7); every read takes it.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Resolved"
             },
             "meta": {
               "$ref": "#/$defs/Meta"

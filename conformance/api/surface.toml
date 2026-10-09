@@ -283,7 +283,7 @@ id = "get availability"
 disposition = "replaced"
 operation = "coverage"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/availability-reference", "conformance/cases/cli_scope/availability-holdings"]
+covered_by = ["conformance/cases/api/coverage-register", "conformance/cases/api/coverage-variable", "conformance/cases/api/coverage-alias-windows"]
 note = "The coverage operation."
 
 [[row]]
@@ -301,7 +301,7 @@ id = "get coded-variables"
 disposition = "replaced"
 operation = "coded_variables"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/coded-variables-explicit-reference"]
+covered_by = ["conformance/cases/api/coded-variables-order", "conformance/cases/api/coded-variables-scope", "conformance/cases/api/coded-variables-per-column"]
 
 [[row]]
 kind = "command"
@@ -309,7 +309,7 @@ id = "get datacolumns"
 disposition = "replaced"
 operation = "schema"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/datacolumns-explicit-reference", "conformance/cases/cli_scope/datacolumns-unheld-explicit-reference"]
+covered_by = ["conformance/cases/api/schema-variable"]
 note = "Judgment: column aliases are delivered-schema facts, so they go with schema; a show facet in 3b would also fit."
 
 [[row]]
@@ -318,7 +318,7 @@ id = "get diff"
 disposition = "replaced"
 operation = "diff"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/diff-explicit-reference"]
+covered_by = ["conformance/cases/api/diff-register", "conformance/cases/api/diff-respelling", "conformance/cases/api/diff-alias-windows"]
 
 [[row]]
 kind = "command"
@@ -351,7 +351,7 @@ id = "get schema"
 disposition = "replaced"
 operation = "schema"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/schema-reference", "conformance/cases/cli_scope/schema-holdings", "reg_meta/tests/test_cli_get_schema.py"]
+covered_by = ["conformance/cases/api/schema-register", "conformance/cases/api/schema-alias-windows", "reg_meta/tests/test_cli_get_schema.py"]
 
 [[row]]
 kind = "command"
@@ -392,7 +392,7 @@ id = "resolve"
 disposition = "replaced"
 operation = "resolve"
 owner = "3c"
-covered_by = ["conformance/cases/cli_scope/resolve-explicit-reference", "reg_meta/tests/test_cli_resolve.py"]
+covered_by = ["conformance/cases/api/resolve-columns", "conformance/cases/api/resolve-errors", "reg_meta/tests/test_cli_resolve.py"]
 note = "Judgment: exact column-name to variable lookup over delivered aliases, beside datacolumns and schema. Not ref resolution, which is 3a's `ambiguous_ref`."
 
 [[row]]
@@ -616,7 +616,7 @@ id = "reg_meta.catalog.RegisterCoverage"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/test_coverage.py", "reg_webapp/backend/tests/test_coverage_payload.py"]
+covered_by = ["conformance/cases/api/show-held-disjoint-periods", "reg_webapp/backend/tests/test_coverage_payload.py"]
 
 [[row]]
 kind = "import"
@@ -664,7 +664,7 @@ id = "reg_meta.catalog.VariableCoverage"
 used_by = ["reg_webapp"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/test_coverage.py", "reg_webapp/backend/tests/test_coverage_payload.py"]
+covered_by = ["conformance/cases/api/show-held-disjoint-periods", "reg_webapp/backend/tests/test_coverage_payload.py"]
 
 [[row]]
 kind = "import"
@@ -1450,7 +1450,7 @@ id = "reg_meta.queries.get_coded_variables"
 used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/cases/cli_scope/coded-variables-explicit-reference"]
+covered_by = ["reg_meta_build/tests/test_validate_cases.py", "conformance/cases/api/coded-variables-scope"]
 note = "Derive's `coded_variable_stats` calls the reader's aggregate in place (section 4 bootstrap, package 3c.1); stage 4 moves it into reg_meta_build."
 
 [[row]]

@@ -1,0 +1,14 @@
+{
+  "note": "Two partition shards of the 2018 edition union into one window and one state. Twin of coverage/partition-union. Fails if shards count as two states or two windows.",
+  "fixture": "partitions",
+  "requests": [
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb/example"
+    },
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb"
+    }
+  ]
+}
