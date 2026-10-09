@@ -1208,13 +1208,13 @@ one-sided `until <year>` form when the start is unknown (#658).
   set often *is* a classification), so they render identically: `ValueSetView` (#905,
   superseding the retired `StatesView`) uses it for each distinct value set in the
   multi-state view (and for the single value set in the detail mode), and
-  `ClassificationCodesPanel` for the edition's codes. It owns a **size-dependent
-  filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD` codes — pointless for
-  a handful), a height-constrained scroll, and the **large-list collapse** (#1120):
-  levelled classification codes become drillable groups, prefix-shaped sets group by
-  visible code prefix, and genuinely flat sets show a bounded preview with an explicit
-  expand control. Classification conformance warnings render on the variable value-set
-  surface, not inside the shared code list.
+  `ClassificationCodesPanel` for the edition's codes, both through `ValueSetCodes`,
+  which reads the codes a server page at a time and owns the **size-dependent filter**
+  (a search box appears only at ≥ `CODE_FILTER_THRESHOLD` codes — pointless for a
+  handful). `CodeList` renders the loaded pages verbatim in a height-constrained scroll;
+  a levelled code indents by its depth below the shallowest level loaded, so a
+  classification that starts at level 2 renders flat. Classification conformance
+  warnings render on the variable value-set surface, not inside the shared code list.
 
   **V1 payload correction (decision 2026-07-14; not implemented at this head).** A
   classification or value-set detail response does not embed its complete code corpus.

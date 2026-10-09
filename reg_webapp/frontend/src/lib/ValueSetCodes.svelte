@@ -1,7 +1,7 @@
 <script lang="ts">
 import { getValues, type ValueRow } from "./api";
 import { asyncResource } from "./async.svelte";
-import CodeList, { CODE_FILTER_THRESHOLD } from "./CodeList.svelte";
+import CodeList from "./CodeList.svelte";
 import FilterInput from "./FilterInput.svelte";
 import { Button, Skeleton } from "./ui";
 
@@ -25,8 +25,8 @@ import { Button, Skeleton } from "./ui";
 //
 // PRESENTATION only — no navigation, no resolution state. Rendering stays the
 // shared CodeList so a value set, a classification's codes and a mismatch list
-// all look alike; CodeList renders these pages verbatim (`paged`) because the
-// filter and the bound both live here.
+// all look alike; CodeList renders these pages verbatim because the filter and
+// the bound both live here.
 
 interface Props {
   /** Whose codes to read: a variable FQID (with `stateId`) or a classification
@@ -64,6 +64,9 @@ let {
 
 // One request covers the ordinary coding; it is also the server's ceiling.
 const PAGE_SIZE = 200;
+// Below this many codes the filter box is hidden — per the maintainer: pointless
+// for a handful of items (a small classification or short value set).
+const CODE_FILTER_THRESHOLD = 5;
 // This filter runs on the server, over the whole set — so a burst of keystrokes
 // has to become ONE read, not one per character (SearchOmnibox's idiom).
 const FILTER_DEBOUNCE_MS = 200;
@@ -206,7 +209,7 @@ function retry(): void {
   {/if}
 
   {#if codes.length > 0}
-    <CodeList {codes} paged />
+    <CodeList {codes} />
   {/if}
 
   {#if resource.loading}

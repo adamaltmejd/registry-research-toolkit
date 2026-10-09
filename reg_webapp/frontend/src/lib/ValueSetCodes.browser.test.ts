@@ -372,4 +372,30 @@ describe("ValueSetCodes — the bounded code read", () => {
       expect.anything(),
     );
   });
+
+  it("renders a classification that starts below level 1 flat", async () => {
+    // Fails if the indent counts from level 1 instead of the shallowest loaded
+    // level: ICD-10-SE's codes are all level 2, so none of them is nested.
+    vi.mocked(getValues).mockResolvedValue({
+      items: [
+        { code: "A00", label: "Kolera", level: 2, is_valid: true },
+        { code: "A01", label: "Tyfoidfeber", level: 2, is_valid: true },
+      ],
+      next_cursor: null,
+      total: 2,
+    });
+    await render(ValueSetCodes, { ref: "class/icd-10-se", codeCount: null });
+
+    await expect.element(page.getByText("Tyfoidfeber")).toBeVisible();
+    const row = (label: string) =>
+      page.getByText(label).element().closest("li") as HTMLElement;
+    expect(row("Kolera").getAttribute("aria-level")).toBe("1");
+    expect(row("Tyfoidfeber").getAttribute("aria-level")).toBe("1");
+    const list = row("Kolera").closest("ul") as HTMLElement;
+    for (const label of ["Kolera", "Tyfoidfeber"]) {
+      expect(row(label).getBoundingClientRect().left).toBe(
+        list.getBoundingClientRect().left,
+      );
+    }
+  });
 });
