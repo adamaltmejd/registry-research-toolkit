@@ -207,3 +207,38 @@ def test_malformed_memberships_fail_shared_preflight_and_preserve_catalog(
         write_resolved_catalog((variable,), output, manifest=synthetic_manifest())
     assert output.read_bytes() == original
     assert sorted(p.name for p in tmp_path.iterdir()) == ["reg_meta.db"]
+
+
+def test_a_leading_space_code_stays_a_distinct_written_member(tmp_path: Path) -> None:
+    """A value set with `" 01"` and `"01"` (same label) is written as two members, and
+    the label search finds both codes.
+
+    No build reaches it: every source reader normalizes the code token at its read
+    boundary (`sources/code_lists.py` `normalize_token`, the SCB reader's trim), so a
+    leading-space code never reaches formation. The source-built members (a labelled
+    blank, two labels for one code, `01` beside `1`) are the `members` rows of
+    `cases/build/classification-bindings-conform-extend-or-stay-unbound-per-register`.
+    Fails if the resolved writer or `value_code` storage trims or folds codes, so the
+    two members collapse into one.
+    """
+    members = (("01", "Participation"), (" 01", "Participation"))
+    state = _state(2000).model_copy(
+        update={"value_set": ResolvedCodeSet(members=members)}
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(
+        (_variable().model_copy(update={"states": (state,)}),),
+        output,
+        manifest=synthetic_manifest(),
+    )
+    with closing(open_built_db(output)) as conn:
+        written = conn.execute(
+            "SELECT code, label FROM value_set_member JOIN value_code USING (code_id) "
+            "JOIN variable_state USING (value_set_id)"
+        ).fetchall()
+        hits = conn.execute(
+            "SELECT c.code FROM value_code_fts f JOIN value_code c ON c.code_id=f.rowid "
+            "WHERE value_code_fts MATCH 'Participation'"
+        ).fetchall()
+    assert sorted(tuple(row) for row in written) == sorted(members)
+    assert sorted(row["code"] for row in hits) == [" 01", "01"]

@@ -1,5 +1,5 @@
 {
-  "description": "SOS workbook VAL (Värderegistret, subsets VAL_A and VAL_B) with one variable per list-reference shape, and workbook OTH (Andraregistret) whose EXPLICIT has no list. Kodlista sheets are written literally: a `Variabelnamn` or `Används i variabeln` preamble names a variable, a `Variabelnamn` column names one per row, a Tidsperiod-only row opens a period section, and Kodlista_SJUKHUS uses the hospital layout whose Från/Till cells are row validity (dates, yyyymm or yyyy). IDINLINE and IDPERIOD carry a Kopplingsvariabel (linkage) mark; every other variable's cell is blank. Plus the SCB sample.",
+  "description": "SOS workbook VAL (Värderegistret, subsets VAL_A and VAL_B) with one variable per list-reference shape, and workbook OTH (Andraregistret) whose EXPLICIT has no list. Kodlista sheets are written literally: a `Variabelnamn` or `Används i variabeln` preamble names a variable, a `Variabelnamn` column names one per row, a Tidsperiod-only row opens a period section, and Kodlista_SJUKHUS uses the hospital layout whose Från/Till cells are row validity (dates, yyyymm or yyyy). FIRST is delivered again in VAL_B, a row no pointer names. IDINLINE and IDPERIOD carry a Kopplingsvariabel (linkage) mark; every other variable's cell is blank. Plus the SCB sample.",
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
@@ -20,6 +20,7 @@
         {"name": "CIVILNP", "deldatamangd": "VAL_A", "label": "Civilnp", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Kod"},
         {"name": "ANCHORED", "deldatamangd": "VAL_A", "label": "Anchored", "description": "Kod", "data_from": 2020, "data_to": 2020, "value_set": "Se Kodlista_Anchored!A1"},
         {"name": "FIRST", "deldatamangd": "VAL_A", "label": "First", "description": "Kod", "data_from": 2020, "data_to": 2020, "external_classification": "Se Kodlista_SHARED"},
+        {"name": "FIRST", "deldatamangd": "VAL_B", "label": "First", "description": "Kod", "data_from": 2020, "data_to": 2020},
         {"name": "SECOND", "deldatamangd": "VAL_A", "label": "Second", "description": "Kod", "data_from": 2020, "data_to": 2020, "external_classification": "Se Kodlista_SHARED"},
         {"name": "OUTSIDER", "deldatamangd": "VAL_A", "label": "Outsider", "description": "Kod", "data_from": 2020, "data_to": 2020},
         {"name": "AMBIGA", "deldatamangd": "VAL_A", "label": "Ambiga", "description": "Kod", "data_from": 2020, "data_to": 2020},

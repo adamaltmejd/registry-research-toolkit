@@ -34,7 +34,7 @@
         ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:REVERSED", "2020-01-01", "2020-12-31"],
         ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:IDINLINE", "2020-01-01", "2020-12-31"]
       ],
-      "note": "Every coding issue of the build, by the Variabelnivå row it cites. Variables absent here bind cleanly or have no list: EXPLICIT, CIVIL, CIVILNP, ANCHORED, FIRST, SECOND, OUTSIDER, RESOLVED, both INLINE rows, DAY, MONTH, BLANK, IDPERIOD and OTH's EXPLICIT. UNRESOLVED states no claim, so it has no unknown_code_membership beside its own issue."
+      "note": "Every coding issue of the build, by the Variabelnivå row it cites. Variables absent here bind cleanly or have no list: EXPLICIT, CIVIL, CIVILNP, ANCHORED, both FIRST rows, SECOND, OUTSIDER, RESOLVED, both INLINE rows, DAY, MONTH, BLANK, IDPERIOD and OTH's EXPLICIT. UNRESOLVED states no claim, so it has no unknown_code_membership beside its own issue."
     },
     {
       "table": "source_issues",
@@ -53,6 +53,7 @@
         ["civilnp", "val-a", null, null],
         ["anchored", "val-a", null, null],
         ["first", "val-a", "1", "Delad"],
+        ["first", "val-b", null, null],
         ["second", "val-a", "1", "Delad"],
         ["outsider", "val-a", null, null],
         ["ambiga", "val-a", null, null],
@@ -66,7 +67,7 @@
         ["inline", "val-b", null, null],
         ["cvalid", "val-a", null, null]
       ],
-      "note": "Each variable's one state (2020; CVALID 2010). CIVIL binds Kodlista_Civil, whose header spells the member `Civil`, only through its exact `Se Kodlista_Civil` pointer: CIVILNP (no pointer) and ANCHORED (a cell-anchored pointer) leave the same shape unbound. FIRST and SECOND each bind the shared list their own row points at; OUTSIDER does not. INLINE's enumeration binds only the VAL_A row that delivers it, not the VAL_B row of the same variable. A list naming two variables (AMBIG), a row naming another variable than its header (CONFLICT, whose older 2001-2002 list is inactive), and an enumeration whose members run together (UNRESOLVED) withhold the coding."
+      "note": "Each variable's one state (2020; CVALID 2010). CIVIL binds Kodlista_Civil, whose header spells the member `Civil`, only through its exact `Se Kodlista_Civil` pointer: CIVILNP (no pointer) and ANCHORED (a cell-anchored pointer) leave the same shape unbound. FIRST and SECOND each bind the shared list their own row points at; OUTSIDER does not, and neither does FIRST's VAL_B row: the same workbook and member name at another locator, which the pointer does not name (the replaced test's same-name-elsewhere record). INLINE's enumeration binds only the VAL_A row that delivers it, not the VAL_B row of the same variable. A list naming two variables (AMBIG), a row naming another variable than its header (CONFLICT, whose older 2001-2002 list is inactive), and an enumeration whose members run together (UNRESOLVED) withhold the coding."
     },
     {
       "table": "state_codes",
