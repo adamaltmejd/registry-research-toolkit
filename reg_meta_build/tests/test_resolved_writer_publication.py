@@ -27,6 +27,7 @@ from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
     ResolvedAlias,
     ResolvedAliasWindow,
+    ResolvedCodeSet,
     ResolvedEdition,
     ResolvedVariable,
     write_resolved_catalog,
@@ -43,6 +44,11 @@ def _changed(**update: object) -> ResolvedVariable:
 
 def _with_state(**update: object) -> ResolvedVariable:
     return _changed(states=(_state(2000).model_copy(update=update),))
+
+
+def _with_members(members: tuple) -> ResolvedVariable:
+    value_set = ResolvedCodeSet(members=(("01", "Label"),))
+    return _with_state(value_set=value_set.model_copy(update={"members": members}))
 
 
 def _year_independent(**update: object) -> ResolvedVariable:
@@ -159,6 +165,25 @@ INVALID_VARIABLES: dict[str, tuple[Callable[[], tuple[ResolvedVariable, ...]], s
         lambda: (_with_state(delivery_column_name=" AmPolTyp"),),
         "nonempty and trimmed",
     ),
+    # A value set is a nonempty set of (code, label) text pairs. Formation builds
+    # only valid ones; a copy bypasses the constructor, so the writer's own
+    # revalidation is the guard.
+    **{
+        f"value-set-{name}": (
+            lambda members=members: (_with_members(members),),
+            message,
+        )
+        for name, members, message in (
+            ("empty", (), r"value_set\.members\n.*at least 1 item"),
+            ("code-not-text", ((1, "Label"),), r"members\.0\.0\n.*valid string"),
+            ("label-missing", (("01", None),), r"members\.0\.1\n.*valid string"),
+            (
+                "member-not-a-pair",
+                (("01", "Label", "Extra"),),
+                r"members\.0\n.*at most 2 items",
+            ),
+        )
+    },
     "year-independent-with-start": (
         lambda: (_year_independent(valid_from="2000-01-01"),),
         "no calendar bounds",

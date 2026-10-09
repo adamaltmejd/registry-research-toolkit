@@ -1,0 +1,50 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "value_sets",
+      "fields": ["id", "members", "variables"],
+      "match": "includes",
+      "rows": {"step": "1-source-order"},
+      "note": "Every value set of step 1 is stored again under the same id, though every row arrives reversed, one member is delivered twice and an unrelated list sorts before all of them: a value set's id is its content, not its position."
+    },
+    {
+      "table": "value_sets",
+      "fields": ["members", "variables"],
+      "rows": [
+        [[["0", "Other"]], ["scb/other/other"]],
+        [[["01", "Label"]], ["scb/twin/income"]],
+        [[["01", "Participation"], ["02", "Employment"]], ["scb/codes/codes", "scb/shared/shared", "sos/shr/shared"]],
+        [[["01", "Participation"]], ["scb/codes/codes"]],
+        [[["01", "Revised label"]], ["scb/codes/codes"]],
+        [[["a", "bc"]], ["scb/codes/codes"]],
+        [[["ab", "c"]], ["scb/codes/codes"]]
+      ],
+      "note": "Step 1's sets plus OTHER's own; the twice-delivered 01 Participation stays one member of the shared set."
+    },
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "subject"],
+      "rows": {"step": "1-source-order"}
+    },
+    {
+      "table": "states",
+      "where": {"register": ["codeless", "twin"]},
+      "fields": ["register", "column", "valid_from", "valid_to"],
+      "rows": {"step": "1-source-order"}
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": ["codes", "shared", "shr", "twin"]},
+      "fields": ["register", "column", "valid_from", "code", "label"],
+      "rows": {"step": "1-source-order"}
+    },
+    {
+      "table": "code_index",
+      "where": {"register": ["codes", "shared", "shr", "twin"]},
+      "fields": ["register", "variable", "code", "label", "mapping_count"],
+      "rows": {"step": "1-source-order"}
+    }
+  ]
+}

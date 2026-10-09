@@ -1,0 +1,14 @@
+[register]
+provider = "scb"
+slug = "twin"
+native_id = "4"
+[[variant]]
+native_id = "4.40"
+slug = "people"
+[[variable]]
+native_id = "4.5"
+slug = "income"
+[[identity.partition]]
+variable = "4.5"
+columns = { First = "4.5", first = "4.5" }
+columns_ref = "reviewed parallel source-native quantity"
