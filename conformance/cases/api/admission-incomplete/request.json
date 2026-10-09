@@ -1,0 +1,17 @@
+{
+  "note": "Twin of selection/incomplete. Fails if the server admits an artifact whose manifest says catalog_completeness is not complete, instead of refusing to start with catalog_unpublishable.",
+  "fixture": "reader",
+  "kind": "catalog",
+  "serve": {
+    "catalog": "global"
+  },
+  "manifest": {
+    "catalog_completeness": "incomplete"
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

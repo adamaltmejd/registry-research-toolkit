@@ -1,4 +1,5 @@
 {
+  "note": "Twin of logical/folded-holdings and folded-reference among others. Fails if holdings search matches an unheld column, reference search drops an unheld or archived spelling, or a folded group lists its unheld member under holdings scope or drops it under reference scope.",
   "fixture": "reader/logical",
   "requests": [
     {
@@ -26,6 +27,26 @@
         "q": "Valø",
         "type": "variable",
         "scope": "reference"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "scope": "holdings",
+        "limit": 1
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Value",
+        "type": "variable",
+        "scope": "reference",
+        "limit": 1
       }
     }
   ]

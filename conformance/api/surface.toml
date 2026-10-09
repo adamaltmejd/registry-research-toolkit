@@ -54,7 +54,7 @@ id = "docs list"
 disposition = "replaced"
 operation = "docs_search"
 owner = "3b"
-covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/selection/docs-default-mismatch", "conformance/cases/api/docs-search"]
+covered_by = ["reg_meta/tests/test_doc_commands.py", "conformance/cases/api/docs-search", "conformance/cases/api/admission-catalog-mismatch"]
 note = "docs_search without `q` lists the docs by filename."
 
 [[row]]
@@ -89,7 +89,7 @@ id = "get classification"
 disposition = "replaced"
 operation = "show"
 owner = "3b"
-covered_by = ["conformance/cases/api/show-classification", "conformance/cases/api/show-classification-variables", "conformance/cases/api/values-classification", "conformance/cases/cli_scope/classification-variables-reference", "conformance/cases/cli_scope/classification-variables-holdings"]
+covered_by = ["conformance/cases/api/show-classification", "conformance/cases/api/show-classification-variables", "conformance/cases/api/values-classification"]
 note = "Judgment: show on a classification (summary, owning variables); its codes (`--codes`) are the values operation on the classification ref, and its edition succession chain is 3d."
 
 [[row]]
@@ -123,7 +123,7 @@ id = "get groups"
 disposition = "replaced"
 operation = "show"
 owner = "3b"
-covered_by = ["conformance/cases/api/show-groups", "conformance/cases/api/show-group-admission", "conformance/cases/cli_scope/groups-reference", "conformance/cases/cli_scope/groups-holdings"]
+covered_by = ["conformance/cases/api/show-groups", "conformance/cases/api/show-group-admission", "conformance/cases/api/show-register-scope"]
 note = "Show on a concept group (members and facets)."
 
 [[row]]
@@ -132,7 +132,7 @@ id = "get lineage"
 disposition = "replaced"
 operation = "lineage"
 owner = "3d"
-covered_by = ["conformance/cases/api/lineage", "conformance/cases/api/lineage-unheld-reference", "conformance/cases/cli_scope/lineage-unheld-reference"]
+covered_by = ["conformance/cases/api/lineage", "conformance/cases/api/lineage-unheld-reference"]
 
 [[row]]
 kind = "command"
@@ -140,7 +140,7 @@ id = "get register"
 disposition = "replaced"
 operation = "show"
 owner = "3b"
-covered_by = ["conformance/cases/api/show-register", "conformance/cases/api/show-register-scope", "conformance/cases/cli_scope/register-reference", "conformance/cases/cli_scope/register-holdings", "reg_meta/tests/test_cli_get.py"]
+covered_by = ["conformance/cases/api/show-register", "conformance/cases/api/show-register-scope", "reg_meta/tests/test_cli_get.py"]
 
 [[row]]
 kind = "command"
@@ -156,7 +156,7 @@ id = "get values"
 disposition = "replaced"
 operation = "values"
 owner = "3b"
-covered_by = ["conformance/cases/api/values-holdings", "conformance/cases/api/values-state", "conformance/cases/api/values-classification", "conformance/cases/cli_scope/values-explicit-reference", "reg_meta/tests/test_cli_get_values.py"]
+covered_by = ["conformance/cases/api/values-holdings", "conformance/cases/api/values-state", "conformance/cases/api/values-classification", "reg_meta/tests/test_cli_get_values.py"]
 
 [[row]]
 kind = "command"
@@ -164,7 +164,7 @@ id = "get varinfo"
 disposition = "replaced"
 operation = "show"
 owner = "3b"
-covered_by = ["conformance/cases/api/show-variable", "conformance/cases/api/show-bare-names-scope", "conformance/cases/cli_scope/varinfo-explicit-reference", "conformance/cases/cli_scope/varinfo-unheld-holdings", "reg_meta/tests/test_cli_get.py"]
+covered_by = ["conformance/cases/api/show-variable", "conformance/cases/api/show-bare-names-scope", "conformance/cases/api/states-held-warnings", "reg_meta/tests/test_cli_get.py"]
 
 [[row]]
 kind = "command"
@@ -198,14 +198,14 @@ id = "search"
 disposition = "replaced"
 operation = "search"
 owner = "3a"
-covered_by = ["conformance/cases/cli_scope/search-holdings-1", "conformance/cases/cli_scope/search-reference-2", "reg_meta/tests/test_cli_search.py"]
+covered_by = ["conformance/cases/api/search-paging", "conformance/cases/api/search-reference-paging", "reg_meta/tests/test_cli_search.py"]
 
 [[row]]
 kind = "command"
 id = "update"
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/cases/selection/empty-explicit-update", "conformance/cases/update", "reg_meta/tests/test_update.py"]
+covered_by = ["reg_meta/tests/test_update.py"]
 note = "No operation: replaced by the `reg-meta fetch` run mode (section 6), owned by stage 4 with local binary distribution (checkpoint 2, 2026-10-08), since nothing in 3a consumes it; the Docker bake moves to curl, SHA-256 and zstd (section 8). The Dockerfile, publish workflow and agent plugin keep using `update` until stage 4 drops the CLI."
 
 [[row]]
@@ -214,17 +214,17 @@ id = "validate"
 disposition = "replaced"
 operation = "validate"
 owner = "3e"
-covered_by = ["conformance/cases/api/validate-references-resolve", "conformance/cases/api/validate-unresolved-binding", "conformance/test_validate.py"]
+covered_by = ["conformance/cases/api/validate-references-resolve", "conformance/cases/api/validate-unresolved-binding", "conformance/cases/api/admission-db-not-found"]
 
 # reg_meta names imported outside reg_meta/
 
 [[row]]
 kind = "import"
 id = "reg_meta.catalog.Catalog"
-used_by = ["conformance", "reg_meta_build"]
+used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["conformance/test_reader.py", "conformance/test_logical.py", "reg_meta/tests/test_catalog_resolve.py"]
+covered_by = ["reg_meta/tests/test_catalog_resolve.py"]
 note = "Section 4: derive bootstraps from reader functions moved into reg_meta_build (packages 4.2 and 4.2b); no build source calls it. reg_meta_build's remaining importer is the test `test_fqid_slug_property_boundary.py`."
 
 [[row]]
@@ -233,7 +233,8 @@ id = "reg_meta.cli.run"
 used_by = ["conformance"]
 disposition = "removed"
 owner = "4"
-covered_by = ["conformance/test_cli_scope.py", "conformance/test_validate.py"]
+covered_by = []
+note = "Only the G1 differential baseline's CLI arms import it (conformance/differential/driver.py); they go with the CLI in 4.9a."
 
 [[row]]
 kind = "import"
@@ -246,38 +247,20 @@ note = "The artifact schema and its gate have one home, reg_meta_build (section 
 
 [[row]]
 kind = "import"
-id = "reg_meta.db.get_manifest"
-used_by = ["conformance"]
-disposition = "retained"
-owner = "4"
-covered_by = ["conformance/test_artifact.py"]
-note = "Build-side artifact IO (extend-db, validate_built_db, derive); conformance's artifact checks then import it from reg_meta_build."
-
-[[row]]
-kind = "import"
 id = "reg_meta.db.open_db"
-used_by = ["conformance", "reg_meta_build"]
+used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["conformance/test_artifact.py"]
-note = "Build-side artifact IO (extend-db, validate_built_db, derive); conformance's artifact checks then import it from reg_meta_build."
-
-[[row]]
-kind = "import"
-id = "reg_meta.errors.EXIT_CONFIG"
-used_by = ["conformance"]
-disposition = "retained"
-owner = "4"
-covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
-note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
+covered_by = ["reg_meta_build/tests/test_build_db.py"]
+note = "Build-side artifact IO (extend-db, validate_built_db, derive); conformance's artifact checks import it from reg_meta_build since 4.7."
 
 [[row]]
 kind = "import"
 id = "reg_meta.errors.RegMetaError"
-used_by = ["conformance", "reg_meta_build"]
+used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
-covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
+covered_by = ["reg_meta_build/tests/test_build_db_cli_outputs.py"]
 note = "The build's error class and exit codes; the Rust reader has its own error catalog (package 1.1)."
 
 [[row]]
@@ -300,31 +283,6 @@ note = "FQID and period grammar move to reg-core; the build reaches them through
 
 [[row]]
 kind = "import"
-id = "reg_meta.order.materialize_order"
-used_by = ["conformance"]
-disposition = "removed"
-owner = "3e"
-covered_by = ["conformance/test_order.py", "conformance/test_artifact_sample.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.order.project_from_raw"
-used_by = ["conformance"]
-disposition = "removed"
-owner = "3e"
-covered_by = ["conformance/test_order.py", "conformance/test_artifact_sample.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.queries"
-used_by = ["conformance"]
-disposition = "retained"
-owner = "4"
-covered_by = ["conformance/test_logical.py", "reg_meta_build/tests/test_source_inspection_cli.py"]
-note = "`source_interpreter_commit` hashes queries.py for `extract_year`; conformance's test_logical calls queries directly and becomes api cases."
-
-[[row]]
-kind = "import"
 id = "reg_meta.queries._fts_match_query"
 used_by = ["crates"]
 disposition = "removed"
@@ -344,25 +302,8 @@ note = "Private-name import, which the repo rules forbid, by the fold corpus gen
 [[row]]
 kind = "import"
 id = "reg_meta.queries.fold_search"
-used_by = ["conformance", "crates"]
+used_by = ["crates"]
 disposition = "removed"
 owner = "4"
 covered_by = ["conformance/cases/api/search-untyped-ranking", "conformance/cases/api/search-pin-normalization"]
-note = "The webapp search route's import goes in 3a with that route, unless checkpoint 1 decides the index is pre-folded, in which case reg-core-py provides `fold_search` to the build. The fold corpus generator and conformance/test_folds.py import it until stage 4, so the row is owned by stage 4."
-
-[[row]]
-kind = "import"
-id = "reg_meta.queries.search"
-used_by = ["conformance"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/api", "reg_meta/tests/test_search_ranking.py"]
-note = "The search core, which the Rust `search` operation replaced for the webapp. Conformance's reader and logical cases still call it. The build no longer imports it: English-name search coverage is the `api/search-english-name` case."
-
-[[row]]
-kind = "import"
-id = "reg_meta.update.run_update"
-used_by = ["conformance"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/update", "conformance/test_selection_update.py"]
+note = "The webapp search route's import goes in 3a with that route, unless checkpoint 1 decides the index is pre-folded, in which case reg-core-py provides `fold_search` to the build. The fold corpus generator imports it until stage 4, so the row is owned by stage 4."

@@ -1,0 +1,18 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "group"
+      ],
+      "/data/items/0/key": "payroll",
+      "/data/items/0/matched_count": 3,
+      "/data/items/0/members/*/fqid": [
+        "scb/example/payroll-jan",
+        "scb/example/payroll-feb",
+        "scb/example/payroll-mar"
+      ],
+      "/data/next_cursor": null
+    }
+  }
+]

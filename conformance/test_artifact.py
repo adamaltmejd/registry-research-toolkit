@@ -7,8 +7,7 @@ from __future__ import annotations
 
 import pytest
 from artifact_requests import require, sample_project, server_client
-from reg_meta.db import get_manifest, open_db
-from reg_meta.order import materialize_order, project_from_raw
+from reg_meta_build.db import get_manifest, open_db
 from reg_meta_build.validate import validate_built_db
 
 
@@ -37,34 +36,30 @@ def test_selected_artifact_passes_the_build_validator(artifact_dir, request):
 def test_unresolved_binding_refusal_is_located(artifact_dir, request):
     """A catalog supports global fallback, so an unresolved binding pins its
     located refusal, on the Rust server (`--server-cmd`). Steward refusals of
-    unheld bindings are pinned by test_acceptance_agreement; fixture boot cases
-    pin steward mismatch.
+    unheld bindings are pinned by test_acceptance_agreement; the `api` startup
+    cases pin steward mismatch.
 
     Fails when `order` or its download orders the project, refuses it as anything
-    but `order_blocked`, or locates its findings other than the frozen Python
-    materializer does (code, source, variable, period; messages are Rust's)."""
+    but `order_blocked`, or stops locating a `variable_unresolved` finding at the
+    binding's source and variable (`api/order-errors` pins the code)."""
     with open_db(artifact_dir / "reg_meta.db") as conn:
         if get_manifest(conn)["catalog_artifact_kind"] != "catalog":
             pytest.skip("steward refusals are pinned in test_acceptance_agreement")
         project = sample_project(conn)
-        project["sources"][0]["bindings"][0]["variable"] += "-conformance-missing"
-        result = materialize_order(project_from_raw(project), conn)
+    project["sources"][0]["bindings"][0]["variable"] += "-conformance-missing"
     client = server_client(request, artifact_dir)
     binding = project["sources"][0]["bindings"][0]["variable"]
     response = client.post("/api/project/order", json=project)
     require(response.status_code == 422, "HTTP refusal did not fail closed")
     error = response.json()["error"]
     require(error["code"] == "order_blocked", "Refusal is not order_blocked")
-    findings = error["fields"]["findings"]
     require(
-        any(f["variable"] == binding and f["source"] == "Sample" for f in findings),
-        "Order refusal lacks binding coordinates",
-    )
-    located = ("code", "source", "variable", "period")
-    require(
-        [tuple(f[k] for k in located) for f in findings]
-        == [tuple(getattr(f, k) for k in located) for f in result.findings],
-        "HTTP refusal findings disagree with the frozen materializer",
+        any(
+            (f["code"], f["source"], f["variable"])
+            == ("variable_unresolved", "Sample", binding)
+            for f in error["fields"]["findings"]
+        ),
+        "Order refusal lacks a located variable_unresolved finding",
     )
     download = client.post("/api/project/order/manifest", json=project)
     require(
