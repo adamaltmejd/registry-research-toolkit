@@ -8,16 +8,14 @@ counts, the artifact it writes, and its located `EXIT_CONFIG` refusals.
 
 from __future__ import annotations
 
-import json
+import shutil
 import sqlite3
 from contextlib import closing
 from pathlib import Path
 
 import pytest
 from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
-from reg_meta.catalog import DataWarning
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.source_evidence import canonical_sha256
 from reg_meta_build.extend_db import (
     extend_db,
 )
@@ -141,8 +139,8 @@ def _write_slug_dir(path: Path) -> None:
 
 # The session base: a published-shape catalog from the conformance reader fixtures,
 # one that carries a classification book (`classifications.json` there: SUN2020,
-# "Svensk utbildningsnomenklatur"). The cache stores it read-only, so each worker
-# overlays a private copy (`extend_db` cannot open a read-only base copy).
+# "Svensk utbildningsnomenklatur"). The cache stores it read-only; each worker
+# overlays a private copy so no test can touch the cached bytes.
 _BASE_FIXTURE = "reader/classification-editions"
 # A word of exactly one base book's name (SUN2020's, in the fixture's
 # classifications.json).
@@ -165,8 +163,6 @@ def _run(
     text: str = _BASE_TOML,
     *,
     skip_slugs: bool = False,
-    pre_rename_hook=None,
-    data_warnings: tuple[DataWarning, ...] = (),
 ) -> tuple[dict, Path]:
     providers_dir = _providers(tmp_path, text, name="out-providers")
     slug_dir = None
@@ -181,8 +177,6 @@ def _run(
         steward=_STEWARD,
         slug_dir=slug_dir,
         skip_slugs=skip_slugs,
-        pre_rename_hook=pre_rename_hook,
-        data_warnings=data_warnings,
         diagnostic=True,
     )
     return result, out / "reg_meta.db"
@@ -357,6 +351,13 @@ def test_base_rows_and_base_file_are_not_clobbered(
     tmp_path: Path, base_db: Path
 ) -> None:
     # Fails if the overlay rewrites or deletes a base row, or writes the base file.
+    # The base is read-only (mode 0444), as a released artifact often is, so this
+    # also fails if the staging copy keeps the base's mode (`shutil.copy2`) and
+    # SQLite cannot open it for writing.
+    released = tmp_path / "released"
+    released.mkdir()
+    base_db = Path(shutil.copyfile(base_db, released / base_db.name))
+    base_db.chmod(0o444)
     before_bytes = base_db.read_bytes()
     tables = (
         "provider",
@@ -669,79 +670,6 @@ def test_missing_or_empty_provider_directory_is_exit_config_through_extend_db(
         assert locator in exc.value.message
         assert str(providers) in exc.value.message
         assert not (tmp_path / "out" / "reg_meta.db").exists()
-
-
-def test_hook_failure_discards_staging_db(tmp_path: Path, base_db: Path) -> None:
-    # Fails if a failure after the overlay is written leaves the staging or the
-    # final database behind.
-    class HookError(RuntimeError):
-        pass
-
-    def fail(_path: Path) -> None:
-        raise HookError
-
-    with pytest.raises(HookError):
-        _run(tmp_path, base_db, skip_slugs=True, pre_rename_hook=fail)
-    assert not (tmp_path / "out" / "reg_meta.db").exists()
-    assert not (tmp_path / "out" / "reg_meta.db.tmp").exists()
-
-
-def _fixture_warning() -> DataWarning:
-    return DataWarning.model_validate_json(
-        (Path(__file__).parent / "cases/holdings/warning/warning.json").read_text()
-    )
-
-
-def _rescoped(warning: DataWarning, **fields: str) -> DataWarning:
-    """The warning with ``fields`` replaced and its identity re-minted."""
-    payload = warning.model_dump(mode="json", exclude={"warning_id"})
-    payload.update(fields)
-    return DataWarning.model_validate_json(
-        json.dumps({"warning_id": canonical_sha256(payload), **payload})
-    )
-
-
-def test_extension_writes_register_warnings_using_actual_private_ids(
-    tmp_path: Path, base_db: Path
-) -> None:
-    # Fails if extend_db drops a supplied register warning or binds it to an id
-    # other than the overlay register's minted one.
-    _, out = _run(tmp_path, base_db, data_warnings=(_fixture_warning(),))
-    with closing(sqlite3.connect(out)) as conn:
-        row = conn.execute(
-            "SELECT register_id, variable_id, register_variant_id, "
-            "delivery_column_name, valid_from, valid_to FROM data_warning"
-        ).fetchone()
-        assert tuple(row) == (_ids()["register"], None, None, None, None, None)
-        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
-
-
-@pytest.mark.parametrize(
-    "scope, refusal",
-    [
-        ({"register_fqid": f"{_BANK}/unwritten"}, "register is not written"),
-        (
-            {
-                "variable_fqid": f"{_BANK}/transaktioner/unwritten",
-                "variant": "transaktioner-default",
-                "delivery_column_name": "X",
-            },
-            "variable is not written",
-        ),
-    ],
-    ids=["register", "variable"],
-)
-def test_warning_for_an_unwritten_entity_is_refused_without_output(
-    tmp_path: Path, base_db: Path, scope: dict[str, str], refusal: str
-) -> None:
-    # Fails if extend_db writes a warning whose register or variable the overlay
-    # does not hold, or demotes the variable warning to its register: only the
-    # resolved writer demotes (test_resolved_writer_data_warnings.py).
-    warning = _rescoped(_fixture_warning(), **scope)
-    with pytest.raises(ValueError, match=refusal):
-        _run(tmp_path, base_db, data_warnings=(warning,))
-    assert not (tmp_path / "out" / "reg_meta.db").exists()
-    assert not (tmp_path / "out" / "reg_meta.db.tmp").exists()
 
 
 def test_diagnostic_extension_names_its_base_generation_and_claims_none(

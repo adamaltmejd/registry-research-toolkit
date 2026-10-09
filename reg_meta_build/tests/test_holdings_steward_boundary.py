@@ -14,8 +14,6 @@ from pathlib import Path
 import pytest
 from _prepared_fixtures import accept_prepared
 from catalog_manifest import synthetic_manifest
-from reg_meta.catalog import DataWarning
-from reg_meta_build.extend_db import extend_db
 from reg_meta_build.resolved_catalog import ResolvedVariable, write_resolved_catalog
 
 import reg_meta_build
@@ -214,36 +212,4 @@ def test_unaccounted_census_is_rejected_before_output_creation(
     assert (
         json.loads(result.stdout)["error"]["message"] == EXPECTED["unaccounted_error"]
     )
-    assert not output.exists()
-
-
-@pytest.mark.parametrize("supplement", REQUEST["supplemental_inputs"])
-def test_strict_extension_rejects_unpinned_supplements(
-    strict_builds: dict, supplement: str
-) -> None:
-    root, revision, digest = strict_builds["candidate"]
-    output = strict_builds["directory"] / f"rejected-{supplement}"
-    warnings = (
-        (
-            DataWarning.model_validate_json(
-                (CASE.parent / "warning/warning.json").read_text()
-            ),
-        )
-        if supplement == "data_warnings"
-        else ()
-    )
-    with pytest.raises(ValueError, match=EXPECTED["supplement_error"]):
-        extend_db(
-            base_db=strict_builds["base"],
-            providers_dir=None,
-            db_dir=output,
-            steward=REQUEST["steward"],
-            holdings_input=root,
-            input_commit=revision,
-            input_manifest_sha256=digest,
-            data_warnings=warnings,
-            pre_rename_hook=(lambda _: None)
-            if supplement == "pre_rename_hook"
-            else None,
-        )
     assert not output.exists()

@@ -1450,7 +1450,7 @@ def write_resolved_catalog(
                                 ),
                             )
             _write_search_pins(conn, search_pins, pin_rows)
-            write_data_warnings(conn, data_warnings, demote_missing_variables=True)
+            write_data_warnings(conn, data_warnings)
             write_resolved_metadata(conn, metadata_rows)
             conn.execute(
                 "INSERT INTO code_variable_map (code_id, variable_id) "

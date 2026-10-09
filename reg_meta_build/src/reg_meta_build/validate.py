@@ -31,7 +31,7 @@ Year projection correctness (two layers):
     freelist count means the post-drop VACUUM didn't reclaim them — staging bloat
     riding along in the shipped DB.
 
-A2.7: the validator runs on the POST-drop shipped DB (the `pre_rename_hook`),
+A2.7: the validator runs on the POST-drop shipped DB (the staging DB before rename),
 so it can no longer read `variable_instance`. Both projection checks resolve a
 `value_set_id` through `variable_state` (which has `variable_id`) instead of a
 cvid. The code-membership anchor re-homes onto `variable_state.valid_from`/
