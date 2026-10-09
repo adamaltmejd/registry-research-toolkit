@@ -1,0 +1,29 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "cases",
+      "fields": ["case_id", "status"],
+      "note": "Compile drops the stale entry, so no case is evaluated.",
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["subject", "code", "case_id", "locator", "detail"],
+      "note": "Exactly one error: compile's stale_curation_entry at the entry, subject its native variable. Equal derived dates do not make the respelled scope the supplied one.",
+      "rows": [
+        ["8646299464352216667.ALDER", "stale_curation_entry", "curation/registers/sos/syn.toml#/representation.delivery_metadata/1", "curation/registers/sos/syn.toml#/representation.delivery_metadata/1", "curation/registers/sos/syn.toml#/representation.delivery_metadata/1: exact complete source-column unit windows changed"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "syn"},
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "state_name", "name"],
+      "note": "The stale entry is dropped, not the variable: its one delivery needs no permission, so ALDER publishes from the source row alone.",
+      "rows": [
+        ["alder", "syn-a", "ALDER", "2005-01-01", "9999-12-31", "Ålder vid besök", "Ålder vid besök"]
+      ]
+    }
+  ]
+}

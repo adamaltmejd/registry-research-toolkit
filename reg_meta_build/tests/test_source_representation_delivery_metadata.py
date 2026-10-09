@@ -1,8 +1,10 @@
 """Delivery metadata: the checks no build reaches (delivery coverage of literal units
 and texts, and the runtime copies of the source-scope, window and applicability
-guards). The reachable behavior is the build case
-`representation-delivery-metadata-keeps-literal-units-and-texts` and the
-`representation-delivery-metadata-*` loader cases."""
+guards). The reachable behavior is the build cases
+`representation-delivery-metadata-keeps-literal-units-and-texts` and
+`representation-delivery-metadata-open-source-scope-applies-or-stales` (an open SOS
+source scope, applied and respelled) and the `representation-delivery-metadata-*`
+loader cases."""
 
 from __future__ import annotations
 
@@ -221,20 +223,27 @@ def test_delivery_coverage_refuses_a_changed_literal_unit_or_description():
 
 
 def test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption():
-    """An open supplied source scope (2020-) keeps its open end; a changed scope stales.
+    """The runtime copies of the delivery-metadata source-scope, window and target guards.
 
-    Input: one SCB record whose edition scope is the open interval `2020-`, and a
+    Input: one SCB record whose edition scope is set to the open interval `2020-`, and a
     delivery-metadata column over 2020-01-01..9999-12-31 that names that scope. Expected:
-    the column applies and the state ends 9999-12-31; the same column naming another open
+    the column applies and the state ends 9999-12-31 (the allowed twin of the runtime
+    refusals); `resolve_representation_cases` refuses the same column naming another open
     scope (2020-01-01-), or the record's effective scope changed to 2019- or 2020..2021,
-    is refused as `stale_delivery_metadata_scope`. Two more runtime guards on the
-    two-edition fixture: a column window ending 2020-12-31 resolves, but formation leaves
-    the 2021 name outside it (`conflicting_variable_fact` on `name`); and a target record
-    whose supplied name moved does not resolve (`target_projection_changed`).
-    No build reaches these: SCB delivers no open edition scope, and
-    `compile_delivery_metadata` refuses a changed source scope, a changed record or a
-    window that does not cover the record set before resolution (stale_curation_entry),
-    so these runtime checks are defense in depth.
+    as `stale_delivery_metadata_scope`. Two more runtime guards on the two-edition
+    fixture: a column window ending 2020-12-31 resolves, but formation leaves the 2021
+    name outside it (`conflicting_variable_fact` on `name`); and a target record whose
+    supplied name moved does not resolve (`target_projection_changed`).
+    The open scope itself reaches a build: SOS delivers open-ended variables, and
+    production curation authors exactly this shape (for example
+    `curation/registers/sos/lova.toml`). The build case
+    `representation-delivery-metadata-open-source-scope-applies-or-stales` applies the
+    exact open scope and stales the respelled one. It stales at compile:
+    `compile_delivery_metadata` refuses a changed source scope, a changed record set or a
+    window that is not the hull of the corrected occurrence bounds before resolution
+    (stale_curation_entry), and runtime effective scopes come from the same corrected
+    occurrences. So no build reaches the runtime checks pinned here; they are defense in
+    depth.
     The column-model refusals are the loader cases
     `representation-delivery-metadata-*-source-scope-refused` and
     `...-open-ended-window-without-source-scope-refused`; the allowed open scope is
