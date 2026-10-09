@@ -234,7 +234,7 @@ used_by = ["conformance", "reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_reader.py", "conformance/test_logical.py", "reg_meta/tests/test_catalog_resolve.py"]
-note = "Section 4: derive bootstraps from reader functions moved into reg_meta_build; package 4.2 moved the resolver rules `expanded_state` and `coded_variable_stats` read, and derive's browse and chains still call it today. Only what derive calls moves."
+note = "Section 4: derive bootstraps from reader functions moved into reg_meta_build (packages 4.2 and 4.2b); no build source calls it. reg_meta_build's remaining importer is the test `test_fqid_slug_property_boundary.py`."
 
 [[row]]
 kind = "import"
