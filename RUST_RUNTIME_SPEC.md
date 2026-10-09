@@ -1555,7 +1555,10 @@ operations.
   their backend tests, `http_catalog/*` and the catalog steps of `http_scope/*`; the 3b
   and 3d route rows of `surface.toml`, and the stage-4 import rows whose last importer
   goes (appendix, a plan revision). The 3b and 3d command rows' `covered_by` points at
-  the `api` twins.
+  the `api` twins. Done: `http_catalog/` and the catalog steps of `http_scope/` are
+  deleted; their behaviors are `api` cases, and the three left without a twin
+  (scope-not-leaking, `/variants` on a retired register, `same_as` under holdings) are
+  covered elsewhere.
 - Paths: `reg_webapp/frontend/`, `reg_webapp/backend/`,
   `reg_webapp/.claude/skills/run-reg-webapp/`,
   `conformance/{test_http,artifact_requests,test_acceptance_agreement}.py`,

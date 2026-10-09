@@ -6,5 +6,13 @@
   {
     "status": 200,
     "json": {"/data/members/*/delivery_column": ["Unknown", "Unknown2"]}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "group/scb/example/value-family"}
+  },
+  {
+    "status": 200,
+    "json": {"/data/focus_id": null}
   }
 ]

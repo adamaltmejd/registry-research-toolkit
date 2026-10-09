@@ -1,10 +1,17 @@
 {
+  "note": "The graph steps fail if graph draws an unheld group under holdings (the group path in graph.rs) instead of refusing it, or focuses a node for a group in reference.",
   "fixture": "unheld-group",
   "requests": [
     {"operation": "show", "path": "/api/catalog/group/scb/example/value-family"},
     {
       "operation": "show",
       "path": "/api/catalog/group/scb/example/value-family",
+      "query": {"scope": "reference"}
+    },
+    {"operation": "graph", "path": "/api/graph/group/scb/example/value-family"},
+    {
+      "operation": "graph",
+      "path": "/api/graph/group/scb/example/value-family",
       "query": {"scope": "reference"}
     }
   ]
