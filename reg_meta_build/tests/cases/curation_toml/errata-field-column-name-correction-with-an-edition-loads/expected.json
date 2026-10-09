@@ -1,0 +1,21 @@
+{
+  "loader": "register_files",
+  "match": "includes",
+  "note": "The allowed twin of errata-field-column-name-correction-among-alternatives-refused: a complete, edition-exact column rename with no expected_records loads.",
+  "fails_if": "the `[[errata.field]]` loader refuses every `column_name` correction instead of only one that lists `expected_records`",
+  "loads": [
+    {
+      "errata": {
+        "field": [
+          {
+            "field": "column_name",
+            "column": "ANSWER",
+            "edition": "2020",
+            "value": "PHYSICAL",
+            "expected_records": null
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,7 +1,11 @@
 {
   "error": {
-    "code": "pipeline_build_failed",
+    "code": "relations_invalid",
     "exit_code": 10,
-    "message_contains": ["cyclic classification succession relation"]
+    "message_contains": [
+      "curation/relations.toml [[edge]] type='replaced_by'",
+      "cyclic classification succession relation",
+      "class/emp2007, class/emp2020"
+    ]
   }
 }
