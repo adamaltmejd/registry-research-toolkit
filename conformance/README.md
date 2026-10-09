@@ -1,11 +1,12 @@
 # Conformance suite
 
-The case corpus has one home here. CLI JSON, public library return models, order
-manifests, HTTP responses, application boot and project validation are the boundaries.
-The library cases retain documented public contracts that have no equivalent adapter
-projection. Public naming alone is insufficient: cases compare domain outputs or located
-errors, not object internals or query implementation. Product adapters are not added
-solely for testing. No private product imports or internal patches are allowed.
+The case corpus has one home here. It runs against the Rust server (`reg-meta serve`):
+HTTP responses, order manifests, server startup and project validation are the
+boundaries. Cases compare domain outputs or located errors, not object internals or
+query implementation. Product adapters are not added solely for testing. No private
+product imports or internal patches are allowed; outside `differential/` (the G1
+harness, whose baseline arm still runs the pinned Python reader) nothing imports
+`reg_meta`.
 
 ```sh
 uv run python -m pytest conformance -q
@@ -39,23 +40,16 @@ provenance included), `order`'s `data` with that document, and a blocked case's
 `order_blocked` findings on both routes. An `api` step's body is `body` (JSON), a
 `content` string sent verbatim (encoded with its optional `encoding`) or
 `nested_arrays: N`, an object nesting N arrays deep. No volatile fields are removed from
-the comparisons. Keys and lists retain their order. Path placeholders in the selection
-oracle expand to the test filesystem before comparison. An HTTP response oracle may also
-pin raw bytes: `media_type` (the content type without parameters), `headers` (exact
-values by lower-case name) and `bytes` (a file in the case directory compared byte for
-byte).
+the comparisons. Keys and lists retain their order. An HTTP response oracle may also pin
+raw bytes: `media_type` (the content type without parameters), `headers` (exact values
+by lower-case name) and `bytes` (a file in the case directory compared byte for byte).
 
   | Surface directory | Boundary and request interpretation                                                |
   | ----------------- | ---------------------------------------------------------------------------------- |
-  | cli_scope         | CLI argv, optional second page, observe projection                                 |
   | order             | HTTP order and download (`--server-cmd`), `order.json` bytes, observe projection   |
-  | coverage          | Public coverage return models, provider/register                                   |
-  | logical           | Public query/catalog operation, args/kwargs and observe projection                 |
-  | reader            | Public listing/cursor/concept group return models; also source fixtures            |
-  | selection         | CLI artifact selection; implicit annual-series source                              |
-  | update            | Downloaded-artifact identity via CLI/update library; implicit annual-series source |
-  | boot              | App startup; implicit reader source, kind and manifest mutation                    |
-  | api               | HTTP request sequence and status/pointer oracle (`--server-cmd`)                   |
+  | api               | HTTP request sequence and status/pointer oracle, startup refusals (`--server-cmd`) |
+  | artifact_sample   | Sampled order entries/clips and search contracts on a readable source              |
+  | reader            | Readable sources, not independently executed cases                                 |
   | fixtures          | HTTP readable sources, not independently executed cases                            |
 
 ## Out-of-process runner
@@ -124,17 +118,16 @@ under `cases/fixtures` unless they name a reader source. The shared builder is
 `conformance/reader_artifacts.py`; package tests and dev servers use it too. The dev
 script retains its path and consumes these same sources.
 
-Two inherited standalone oracles retain their consumers:
-`selection/update-expected.json` compares path/environment update trials;
-`selection/doc-cursor-expected.json` is consumed by the package search CLI case in
-`reg_meta/tests/test_doc_commands.py`. That case has no request file: it builds the
-`reader` catalog artifact and a document database from `selection/docs`, then runs
+One inherited standalone oracle retains its consumer until `reg_meta/` goes (package
+4.9a): `selection/doc-cursor-expected.json` is consumed by the package search CLI case
+in `reg_meta/tests/test_doc_commands.py`, and `selection/docs` also feeds
+`reg_meta/tests/test_update.py`. That case has no request file: it builds the `reader`
+catalog artifact and a document database from `selection/docs`, then runs
 `reg-meta search` for "Value" over variable descriptions, unfolded, with limit 2, and
 follows `next_cursor` until `has_more` is false. The oracle pins the first page's result
 types (the document hit ahead of the variable), the catalog FQIDs across all pages in
 order with document rows excluded, and the last page's `has_more`. The source-backed
-case stays in its package; its fixture and oracle have one home here. Requests without
-explicit fixture keys retain the defaults above so all relocated bytes remain unchanged.
+case stays in its package; its fixture and oracle have one home here.
 
 ## API cases
 
@@ -153,7 +146,8 @@ additions:
   import date every case uses (a new generation); a step with `artifact: <name>` is sent
   to it. The stale-cursor case uses this.
 - A startup case sets `serve: {"catalog": <name>}` and optional `manifest` overrides,
-  which are written to `import_manifest` of a private copy after the build, and expects
+  which are written to `import_manifest` of a private copy after the build (or
+  `serve.db: "absent"`, which serves an empty directory instead), and expects
   `{"startup_error": {"code": ...}}`: the template, run with `{catalog}` set to that
   name, prints the error document as the last line of stderr and exits with the code's
   `exit` status in `api/errors.toml`, without listening.
@@ -171,29 +165,28 @@ additions:
 ## Artifact checks
 
 SQLite integrity, reader admission, deterministic search/order, sampled
-browse/search/validate agreement, CLI/HTTP/materializer order bytes, CLI/HTTP validation
-bytes, and located unheld/unresolved refusal run on both synthetic kinds by default (the
-unresolved refusal on the `--server-cmd` server, against the frozen materializer). A
-real run uses one admitted schema-9 artifact and also runs `validate_built_db`, the
-build's structural authority (foreign keys, manifest identity, holdings table/column
-accounting); synthetic artifacts already pass it when they are built. Real identifiers
-stay in memory and temporary test request files; failure messages omit them. Catalog
-artifacts support global-fallback orders; steward artifacts only order compiled holdings
-regardless of reference browsing.
+browse/search/validate agreement, order data against its download's bytes, and located
+unheld/unresolved refusal run on both synthetic kinds by default, all on the
+`--server-cmd` server. A real run uses one admitted schema-9 artifact and also runs
+`validate_built_db`, the build's structural authority (foreign keys, manifest identity,
+holdings table/column accounting); synthetic artifacts already pass it when they are
+built. Real identifiers stay in memory and temporary test request files; failure
+messages omit them. Catalog artifacts support global-fallback orders; steward artifacts
+only order compiled holdings regardless of reference browsing.
 
 Complete HTTP register-child membership is compared with an independently derived
-whole-variable admission set. CLI browse, search and order agreement uses a generation-
-seeded, stratified sample of up to 50 distinct bindings. The public point resolver
-selects applicable native spellings within independently derived physical mappings. CLI
-`get schema` exposes applicable delivery columns, so it cannot establish the whole
-variable-node census; name search also omits unnamed variables and has a bounded cursor.
-A sampled binding must appear in its CLI and HTTP name-search traversals unless that
-traversal consumed the whole 1,000-result depth ceiling and every consumed row matches
-the query exactly. Exact identity matches always lead the order, so only a name shared
-by more bindings than the ceiling holds can push one past it. Such a name is unreachable
-by contract, so the register-refined CLI search must find the binding instead. That
-proves reader reachability; HTTP search has no register refinement, and the catalog
-browse checks prove HTTP reachability. The receipt counts these refinements.
+whole-variable admission set. Browse, search, validation and order agreement uses a
+generation-seeded, stratified sample of up to 50 distinct bindings. The public point
+resolver (`states` at the binding's period and variant, reference scope) selects
+applicable native spellings within independently derived physical mappings. Name search
+omits unnamed variables and has a bounded cursor. A sampled binding must appear in its
+name-search traversal unless that traversal consumed the whole 1,000-result depth
+ceiling and every consumed row matches the query exactly. Exact identity matches always
+lead the order, so only a name shared by more bindings than the ceiling holds can push
+one past it. Such a name is unreachable by contract, so search narrowed to the binding's
+register must find it instead. A name longer than the 200-character `q` cap must be
+refused on `q`; the catalog browse checks prove its reachability. The receipt counts the
+refinements and refusals.
 
 `integration.yml` downloads the global catalog and SWECOV steward assets from the
 selected release, verifies each digest and admits its embedded manifest before running
@@ -217,8 +210,3 @@ the same comparison by default. Private identifiers never become repository fixt
 failure messages. Exhaustive canonical-representative resolution, pinned historical
 orders, reference dbdiff, performance, cold boot and rendered acceptance remain
 maintainer checks. This suite alone makes no release or deployment acceptance claim.
-
-The inherited `catalog_method`/`method` request fields name Python APIs. A later
-portability pass can replace those with language-neutral domain operation names and
-explicit input/output contracts. That is a separate corpus content review; this move
-preserves every existing request and expected byte.
