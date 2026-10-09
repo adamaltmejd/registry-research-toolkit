@@ -225,7 +225,7 @@ used_by = ["reg_meta_build"]
 disposition = "removed"
 owner = "4"
 covered_by = ["reg_meta_build/tests/test_source_inspection_cli.py"]
-note = "The source-inspection test fixture copies the whole package because `source_interpreter_commit` hashes `reg_meta.fqid` and `reg_meta.queries`; it goes when those modules move."
+note = "The source-inspection test fixture copies the whole package because `source_interpreter_commit` hashes `reg_meta.queries` (for `extract_year`); it goes when that module moves (4.4)."
 
 [[row]]
 kind = "import"
@@ -584,62 +584,8 @@ note = "The build's error class and exit codes; the Rust reader has its own erro
 
 [[row]]
 kind = "import"
-id = "reg_meta.fqid"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
-note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5). `source_interpreter_commit` hashes this module's file; it must pin the reg-core-py version instead."
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid.Fqid"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
-note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid.FqidError"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
-note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid.FqidKind"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
-note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid._YEAR"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_triage.py"]
-note = "Private-name import, which the repo rules forbid; it moves with its module. Judgment: use reg-core's year token, or inline the regex in edition_bounds and source_periods if reg-core exposes none."
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid.derive_variable_slug"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta_build/tests/test_fqid_slug_property_boundary.py"]
-note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
-
-[[row]]
-kind = "import"
 id = "reg_meta.fqid.is_period"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_webapp"]
 disposition = "replaced"
 owner = "4"
 covered_by = ["reg_webapp/backend/tests/test_period_grammar_parity.py", "reg_meta/tests/test_fqid.py"]
@@ -647,29 +593,11 @@ note = "FQID and period grammar move to reg-core; the build reaches them through
 
 [[row]]
 kind = "import"
-id = "reg_meta.fqid.parse"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
-note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
-
-[[row]]
-kind = "import"
 id = "reg_meta.fqid.period_token_to_bounds"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_webapp"]
 disposition = "replaced"
 owner = "4"
 covered_by = ["reg_webapp/backend/tests/test_period_grammar_parity.py", "reg_meta_build/tests/test_triage.py"]
-note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid.validate_slug"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
 note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
 
 [[row]]

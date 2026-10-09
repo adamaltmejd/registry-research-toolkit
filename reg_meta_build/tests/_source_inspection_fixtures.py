@@ -3,8 +3,9 @@
 `interpreter_checkout` gives `inspect-source-records` the clean tracked implementation
 its interpreter pin demands, without depending on the state of the developer's
 checkout: it copies the imported `reg_meta` and `reg_meta_build` packages (whichever
-copies this process imported) into a fresh Git repository with the monorepo layout,
-commits them, and runs the real CLI from there in a subprocess.
+copies this process imported) and the `reg-core`/`reg-core-py` crate sources into a
+fresh repository with the monorepo layout, commits them, and runs the real CLI from
+there in a subprocess.
 """
 
 from __future__ import annotations
@@ -72,9 +73,13 @@ class InterpreterCheckout:
         self.root = root
         build_src = root / "reg_meta_build" / "src"
         _copy_package(reg_meta_build, build_src / "reg_meta_build")
-        shutil.copyfile(
-            Path(__file__).resolve().parents[2] / "uv.lock", root / "uv.lock"
-        )
+        repo = Path(__file__).resolve().parents[2]
+        shutil.copyfile(repo / "uv.lock", root / "uv.lock")
+        # The interpreter pin also names the sources `reg_core_py` is built from.
+        for crate in ("reg-core", "reg-core-py"):
+            shutil.copytree(repo / "crates" / crate, root / "crates" / crate)
+        for manifest in ("Cargo.toml", "Cargo.lock"):
+            shutil.copyfile(repo / manifest, root / manifest)
         # A split checkout puts the loaded reg_meta dependency in a second repository.
         meta_root = root.parent / f"{root.name}-reg-meta" if split_reg_meta else root
         meta_src = meta_root / "reg_meta" / "src"

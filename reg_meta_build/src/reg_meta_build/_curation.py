@@ -594,14 +594,14 @@ class SearchPin(BaseModel):
 
     @model_validator(mode="after")
     def _fqids_of_type(self) -> SearchPin:
-        from reg_meta.fqid import FqidError, parse
+        from reg_core_py import GrammarError, parse_fqid
 
         if len(set(self.fqids)) != len(self.fqids):
             raise ValueError("duplicate `fqids`")
         for fqid in self.fqids:
             try:
-                kind = str(parse(fqid).kind)
-            except FqidError as exc:
+                kind = parse_fqid(fqid).kind
+            except GrammarError as exc:
                 raise ValueError(f"invalid fqid {fqid!r}: {exc}") from exc
             if kind != self.type:
                 raise ValueError(f"{fqid!r} is a {kind} FQID, not a {self.type}")

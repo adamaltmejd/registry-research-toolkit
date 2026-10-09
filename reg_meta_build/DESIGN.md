@@ -1513,10 +1513,12 @@ no classification, orphans of year projection with nothing to annotate. The excl
 hide rows from search only; `value_code` and `value_set` keep every row, and the
 reader's direct code match applies the same owner predicate.
 
-**Slug reservations.** Slug minting still rejects `_default`, `class`, period-shaped
-strings and the former FastAPI suffix words (`reg_meta.fqid`). The Rust routes put the
-operation before the ref, so the suffix words protect no route; whether the set shrinks
-is decided when the grammar moves to `reg-core` (package 4.3).
+**Slug reservations.** The slug grammar (with `class` reserved) is `reg-core`'s, reached
+through `reg-core-py`; `slug_grammar.validate_slug` adds the build's slot policy:
+`_default` only as the register_variant coordinate, and `variants` (variable slot) and
+`group` (provider slot), which SPA routes capture. The Rust routes put the operation
+before the ref, so the former FastAPI suffix words (`states`, `graph`, ...) protect no
+route and were dropped in package 4.3.
 
 ## Inspection and verification
 

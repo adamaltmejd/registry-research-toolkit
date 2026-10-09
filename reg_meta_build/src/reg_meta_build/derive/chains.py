@@ -6,8 +6,8 @@ from __future__ import annotations
 from graphlib import CycleError, TopologicalSorter
 from typing import TYPE_CHECKING
 
+from reg_core_py import parse_fqid
 from reg_meta.db import classification_succession_as_of_year
-from reg_meta.fqid import Fqid
 
 from reg_meta_build.derive.states import reader_catalog
 
@@ -17,14 +17,18 @@ if TYPE_CHECKING:
 
     from reg_meta_build.validate import ValidationResult
 
-# Each succession table, the FQID of a node from its key columns, and those keys.
-_SUCCESSION: tuple[tuple[str, Callable[..., Fqid], tuple[str, ...]], ...] = (
-    ("register_replaced_by", Fqid.register_fqid, ("provider", "register")),
-    ("variable_replaced_by", Fqid.binding_fqid, ("provider", "register", "variable")),
-    ("classification_replaced_by", Fqid.classification_fqid, ("slug",)),
+# Each succession table, the FQID prefix of its nodes, and their key columns.
+_SUCCESSION: tuple[tuple[str, str, tuple[str, ...]], ...] = (
+    ("register_replaced_by", "", ("provider", "register")),
+    ("variable_replaced_by", "", ("provider", "register", "variable")),
+    ("classification_replaced_by", "class/", ("slug",)),
 )
 
 _Successors = dict[tuple[str, ...], list[tuple[str, ...]]]
+
+
+def _fqid(prefix: str, key: tuple[str, ...]) -> str:
+    return str(parse_fqid(prefix + "/".join(key)))
 
 
 def _successors(
@@ -69,7 +73,7 @@ def succession_terminals(conn: sqlite3.Connection) -> list[tuple[str, str]]:
     """
     year = classification_succession_as_of_year(conn)
     rows: list[tuple[str, str]] = []
-    for table, fqid, keys in _SUCCESSION:
+    for table, prefix, keys in _SUCCESSION:
         successors = _successors(conn, table, keys, active_year=year)
         for start in successors:
             seen, current = {start}, start
@@ -77,7 +81,7 @@ def succession_terminals(conn: sqlite3.Connection) -> list[tuple[str, str]]:
                 current = nxt[0]
                 seen.add(current)
             if current != start:
-                rows.append((str(fqid(*start)), str(fqid(*current))))
+                rows.append((_fqid(prefix, start), _fqid(prefix, current)))
     return sorted(rows)
 
 
@@ -108,7 +112,7 @@ def classification_chains(
             )
             for anchor in slugs
             for position, edition in enumerate(
-                catalog.classification_chain(Fqid.classification_fqid(anchor))
+                catalog.classification_chain(f"class/{anchor}")
             )
         ]
 
@@ -167,7 +171,7 @@ def check_chains(
     """Succession is acyclic and the chain tables equal a recomputation."""
     result.section("[succession chains]")
     cyclic = False
-    for table, fqid, keys in _SUCCESSION:
+    for table, prefix, keys in _SUCCESSION:
         if table not in tables:
             continue  # its own check reports the missing table
         try:
@@ -177,7 +181,7 @@ def check_chains(
         except CycleError as exc:
             cyclic = True
             node = exc.args[1][0]
-            result.fail(f"{table} has a succession cycle through {fqid(*node)}")
+            result.fail(f"{table} has a succession cycle through {_fqid(prefix, node)}")
     if not cyclic:
         result.ok("succession tables are acyclic")
     for table, (compute, columns) in CHAIN_TABLES.items():

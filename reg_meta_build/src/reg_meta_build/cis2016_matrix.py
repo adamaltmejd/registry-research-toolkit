@@ -25,10 +25,10 @@ from pydantic import (
     ValidationError,
     model_validator,
 )
-from reg_meta.fqid import derive_variable_slug
 
 from ._curation import curation_error, display_path
 from .fqid_slugs import SlugEntry
+from .slug_grammar import derive_variable_slug
 from .source_coordinates import source_register_key
 from .source_curation import (
     CheckedFieldChange,

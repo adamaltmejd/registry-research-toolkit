@@ -15,6 +15,7 @@ import time
 from contextlib import closing, contextmanager
 from typing import TYPE_CHECKING
 
+from reg_core_py import fold_identity
 from reg_meta.db import (
     get_manifest,
     open_db as _open_catalog_db,
@@ -210,6 +211,16 @@ EXPECTED_HEADERS: dict[str, list[str]] = {
     ],
     "VardemangderValidDates.csv": ["ItemID", "ValidFrom", "ValidTo"],
 }
+
+
+def _py_lower(value: str | None) -> str | None:
+    return None if value is None else fold_identity(value)
+
+
+def register_py_lower(conn: sqlite3.Connection) -> None:
+    """Register `reg-core`'s `fold_identity` as the NULL-preserving SQL `py_lower`,
+    the `delivery_column_name` identity fold (SQLite's `LOWER()` is ASCII-only)."""
+    conn.create_function("py_lower", 1, _py_lower, deterministic=True)
 
 
 def _admits_older_minor(version: str | None) -> bool:
@@ -1497,7 +1508,7 @@ CREATE INDEX idx_variable_replaced_by_successor
 -- is the navigation-grade replacement for the order-bearing merge.
 --
 -- An endpoint is a variable-grain FQID `(provider, register, variable)` PLUS a
--- `*_column` segment — NO new FQID grammar (#843 keeps `reg_meta/fqid.py` and the
+-- `*_column` segment — NO new FQID grammar (#843 keeps the FQID grammar and the
 -- `replaced_by` grain set untouched); the column-ness rides these sibling fields,
 -- exactly like #819's `concept_group_variable.delivery_column_name`.
 --

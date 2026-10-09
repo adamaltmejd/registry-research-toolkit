@@ -2,7 +2,7 @@
   "loader": "slug_dir",
   "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_reserved_http_suffix_slug_rejected_in_variable",
   "fails_if": "the slug loader lets a variable be slugged `variants`",
-  "note": "The variable slot reserves the HTTP binding suffixes and also `variants`, the /{provider}/{register}/variants sub-resource that would shadow a 3-segment variable leaf.",
+  "note": "The variable slot reserves `variants`, the SPA's /catalog/{provider}/{register}/variants page, which would capture a 3-segment variable leaf.",
   "error": {
     "code": "slug_toml_invalid",
     "locator": "curation/registers/scb/lisa.toml [[variable]] entry 2",
