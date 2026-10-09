@@ -133,20 +133,20 @@ commit = "553ea622fdb3a5fd42a04c46920b6f7b9a5fe8d2"
 # The pinned release artifacts. `sha256` is the GitHub release asset digest (of the
 # `.zst`), checked while the asset streams into the cache.
 [release]
-tag = "reg_meta/v0.43.0"
+tag = "reg_meta/v0.44.0"
 
 [[release.asset]]
 catalog = "global"
 name = "reg_meta.db.zst"
-sha256 = "60acf6c8ee37ff5566f536af4337b876b4413899dc4d9a01c685499f513bd3c5"
+sha256 = "e8eb69576c95b5d658a5eb1e1608583bba9a090cf5c313c2f4bb27168cb06a7d"
 
 [[release.asset]]
 catalog = "swecov"
 name = "reg_meta_swecov.db.zst"
-sha256 = "67bc9cd8d07d897dc969d89b4fef4b012a128c6144fa2c65b6ff3742c71ee652"
+sha256 = "704e93060ff0a5b9f484109e292dcc3b00949fc61b50e1819a53ec3a0cfa5f75"
 
 # The docs database is optional enrichment for `search` and required by `docs`; it is
 # placed beside both catalogs so the two read the same documentation.
 [release.docs]
 name = "reg_meta_docs.db.zst"
-sha256 = "b110210901daa4e2a13e33a8574a6e2b52b43258f05bbbc6378255ddf7e75afe"
+sha256 = "85a1a6c883fca2ded5203c60c33d8657a438344c39ab088c0b01299a47721f57"
