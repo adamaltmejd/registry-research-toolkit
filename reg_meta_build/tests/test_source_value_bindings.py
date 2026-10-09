@@ -246,7 +246,7 @@ def test_edition_list_sets_aside_global_item_dates_for_explicit_membership(
     with open_value_bindings((partial_source,)) as sessions:
         bound = bind_code_lists(_record(), sessions, scope=partial)
     assert bound.bindings[0].item_validity_set_aside == rows
-    assert [member.code for member in bound.claims[0].members] == ["01", ""]
+    assert [member.code for member in bound.claims[0].members] == ["01", "02"]
     assert resolve_code_membership(bound.claims).issues == ()
     assert [member.validity for member in bound.claims[0].members] == [
         (partial_validity[0],),
@@ -399,7 +399,7 @@ def test_item_validity_set_aside_keeps_section_excluded_association_inactive(
     assert bound.issues == ()
     assert bound.bindings[0].inactive_associations == rows[:1]
     assert bound.bindings[0].item_validity_set_aside == rows[1:]
-    assert [member.code for member in bound.claims[0].members] == [""]
+    assert [member.code for member in bound.claims[0].members] == ["02"]
 
 
 @pytest.mark.parametrize("obstacle", ("unknown", "type_marker", "section", "row"))

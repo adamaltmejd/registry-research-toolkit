@@ -116,7 +116,7 @@ def prepare_value_sources(
     ),
     values: tuple[SourceValue, ...] = (
         SourceValue("a", "01", "One"),
-        SourceValue("b", "", "Blank"),
+        SourceValue("b", "02", "Two"),
     ),
     rows: tuple[SourceValueAssociation, ...] | None = None,
     validity: tuple[SourceValueValidity, ...] = (),
