@@ -1,0 +1,39 @@
+{
+  "note": "Step 1's sources and curation with the Registerinformation and Unika rows reversed, so the 2021 record (CVID 21) is the variant's first source row. Row order inside a source reaches the errata conversion: the variant's records arrive in delivery order. An undated (all_versions) [[errata.column]] anchors its evidence and its edition peer guard on one record of the variant. That anchor is the least ref, so the issues it raises cite the same ref as in step 1, and an [[acknowledge]] of them stays current when a delivery is only re-sorted. Found in #1332 (finding 1): with the first row as the anchor, the cited ref moved to edition:2021/variable:6/member:21. The expected projections are step 1's, copied.",
+  "fails_if": "`scb_errata.convert_column_entry` anchors an undated (all_versions or holdings_period) declaration on the variant's first source row (`records[0]`), or on any other delivery-order position, instead of the least ref, so the reversed rows make undated's unsupported_occurrence and no_supported_states cite the 2021 record (CVID 21) instead of the 2020 one",
+  "sources": {
+    "description": "Step 1 rows reversed: variable 6 delivers B in 2021 (CVID 21) first, then variable 5 delivers A in 2020 (CVID 20).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "B",
+          "cvid": 21,
+          "var_id": 6,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "TEST",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "TEST",
+            1,
+            2
+          ]
+        }
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|B|2021|2021|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|A|2020|2020|0|0|0"
+      ]
+    }
+  }
+}
