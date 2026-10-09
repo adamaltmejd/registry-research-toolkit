@@ -1,5 +1,0 @@
-{
-  "kind": "catalog",
-  "fixture": "semantic",
-  "requests": [{"path": "/api/catalog/scb"}]
-}

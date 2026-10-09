@@ -40,133 +40,6 @@
 
 [[row]]
 kind = "route"
-id = "GET /api/catalog"
-disposition = "replaced"
-operation = "show"
-owner = "3b"
-covered_by = ["conformance/cases/http_catalog/admission", "reg_webapp/backend/tests/test_catalog_tree.py"]
-note = "Scoped provider list plus the classification root: show on the catalog root."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/group/class/{key}"
-disposition = "replaced"
-operation = "show"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py", "reg_webapp/backend/tests/test_catalog_groups.py"]
-note = "Show on a classification umbrella group or succession family. Judgment: the family's chain itself is graph data (3d)."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/group/class/{key}/graph"
-disposition = "replaced"
-operation = "graph"
-owner = "3d"
-covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/group/{provider}/{register}/{key}"
-disposition = "replaced"
-operation = "show"
-owner = "3b"
-covered_by = ["conformance/cases/http_catalog/group-coverage", "conformance/cases/http_catalog/unheld-group", "reg_webapp/backend/tests/test_catalog_groups.py"]
-note = "Show on a register concept group."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/group/{provider}/{register}/{key}/graph"
-disposition = "replaced"
-operation = "graph"
-owner = "3d"
-covered_by = ["conformance/cases/http_catalog/whole-variable-group-graph", "conformance/cases/http_catalog/unheld-group"]
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{fqid}"
-disposition = "replaced"
-operation = "show"
-owner = "3b"
-covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_tree.py"]
-note = "Show for every ref kind. The `?period` states subset becomes the states operation's `period` filter."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{fqid}/data_warnings"
-disposition = "replaced"
-operation = "warnings"
-owner = "3b"
-covered_by = ["conformance/cases/http_catalog/warnings", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-note = "Judgment: warnings render on the register and binding pages, so they ship with show in 3b, as the filtered warnings operation."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{fqid}/dimensions"
-disposition = "removed"
-owner = "3d"
-covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-note = "The SPA stopped fetching it (#678); the graph carries group membership. Deleted with the 3d routes."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{fqid}/graph"
-disposition = "replaced"
-operation = "graph"
-owner = "3d"
-covered_by = ["conformance/cases/http_catalog/reference-edges", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{fqid}/lineage"
-disposition = "removed"
-owner = "3d"
-covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-note = "The SPA does not call it (the graph replaced the lineage panel). Agents keep lineage through the operation that replaces `get lineage`."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{fqid}/lineage_warnings"
-disposition = "replaced"
-operation = "lineage"
-owner = "3d"
-covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-note = "The SPA's lineage details fetch it."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{fqid}/predecessors"
-disposition = "removed"
-owner = "3d"
-covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-note = "The SPA stopped fetching it: the node's embedded succession chain and the graph carry predecessors."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{fqid}/states"
-disposition = "replaced"
-operation = "states"
-owner = "3b"
-covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{fqid}/successors"
-disposition = "removed"
-owner = "3d"
-covered_by = ["conformance/cases/http_catalog/reference-edges", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-note = "The SPA does not fetch it: the node's embedded succession chain and the graph carry successors."
-
-[[row]]
-kind = "route"
-id = "GET /api/catalog/{provider}/{register}/variants"
-disposition = "replaced"
-operation = "show"
-owner = "3b"
-covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "conformance/cases/http_catalog/redirects", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-note = "A register's variant list for the variant browser, a show facet."
-
-[[row]]
-kind = "route"
 id = "POST /api/project/order"
 disposition = "replaced"
 operation = "order"
@@ -181,15 +54,6 @@ disposition = "replaced"
 operation = "validate"
 owner = "3e"
 covered_by = ["conformance/cases/validate", "reg_webapp/backend/tests/test_project_validate.py"]
-
-[[row]]
-kind = "route"
-id = "GET /api/value-sets/{value_set_id}/codes"
-disposition = "replaced"
-operation = "values"
-owner = "3b"
-covered_by = ["reg_webapp/backend/tests/test_value_set_codes.py"]
-note = "The values operation; offset paging becomes cursor paging (section 7)."
 
 # reg-meta subcommands
 
@@ -250,7 +114,7 @@ id = "get classification"
 disposition = "replaced"
 operation = "show"
 owner = "3b"
-covered_by = ["conformance/cases/cli_scope/classification-variables-reference", "conformance/cases/cli_scope/classification-variables-holdings"]
+covered_by = ["conformance/cases/api/show-classification", "conformance/cases/api/show-classification-variables", "conformance/cases/api/values-classification", "conformance/cases/cli_scope/classification-variables-reference", "conformance/cases/cli_scope/classification-variables-holdings"]
 note = "Judgment: show on a classification (summary, owning variables); its codes (`--codes`) are the values operation on the classification ref, and its edition succession chain is 3d."
 
 [[row]]
@@ -284,7 +148,7 @@ id = "get groups"
 disposition = "replaced"
 operation = "show"
 owner = "3b"
-covered_by = ["conformance/cases/cli_scope/groups-reference", "conformance/cases/cli_scope/groups-holdings"]
+covered_by = ["conformance/cases/api/show-groups", "conformance/cases/api/show-group-admission", "conformance/cases/cli_scope/groups-reference", "conformance/cases/cli_scope/groups-holdings"]
 note = "Show on a concept group (members and facets)."
 
 [[row]]
@@ -293,7 +157,7 @@ id = "get lineage"
 disposition = "replaced"
 operation = "lineage"
 owner = "3d"
-covered_by = ["conformance/cases/cli_scope/lineage-unheld-reference"]
+covered_by = ["conformance/cases/api/lineage", "conformance/cases/api/lineage-unheld-reference", "conformance/cases/cli_scope/lineage-unheld-reference"]
 
 [[row]]
 kind = "command"
@@ -301,7 +165,7 @@ id = "get register"
 disposition = "replaced"
 operation = "show"
 owner = "3b"
-covered_by = ["conformance/cases/cli_scope/register-reference", "conformance/cases/cli_scope/register-holdings", "reg_meta/tests/test_cli_get.py"]
+covered_by = ["conformance/cases/api/show-register", "conformance/cases/api/show-register-scope", "conformance/cases/cli_scope/register-reference", "conformance/cases/cli_scope/register-holdings", "reg_meta/tests/test_cli_get.py"]
 
 [[row]]
 kind = "command"
@@ -317,7 +181,7 @@ id = "get values"
 disposition = "replaced"
 operation = "values"
 owner = "3b"
-covered_by = ["conformance/cases/cli_scope/values-explicit-reference", "reg_meta/tests/test_cli_get_values.py"]
+covered_by = ["conformance/cases/api/values-holdings", "conformance/cases/api/values-state", "conformance/cases/api/values-classification", "conformance/cases/cli_scope/values-explicit-reference", "reg_meta/tests/test_cli_get_values.py"]
 
 [[row]]
 kind = "command"
@@ -325,7 +189,7 @@ id = "get varinfo"
 disposition = "replaced"
 operation = "show"
 owner = "3b"
-covered_by = ["conformance/cases/cli_scope/varinfo-explicit-reference", "conformance/cases/cli_scope/varinfo-unheld-holdings", "reg_meta/tests/test_cli_get.py"]
+covered_by = ["conformance/cases/api/show-variable", "conformance/cases/api/show-bare-names-scope", "conformance/cases/cli_scope/varinfo-explicit-reference", "conformance/cases/cli_scope/varinfo-unheld-holdings", "reg_meta/tests/test_cli_get.py"]
 
 [[row]]
 kind = "command"
@@ -448,32 +312,8 @@ note = "The source-inspection test fixture copies the whole package because `sou
 
 [[row]]
 kind = "import"
-id = "reg_meta.ClassificationDerivedFromRef"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.ResolvedClassification"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.BindingGroupRef"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
-
-[[row]]
-kind = "import"
 id = "reg_meta.catalog.Catalog"
-used_by = ["conformance", "reg_meta_build", "reg_webapp"]
+used_by = ["conformance", "reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_reader.py", "conformance/test_logical.py", "reg_meta/tests/test_catalog_resolve.py"]
@@ -481,188 +321,12 @@ note = "Section 4: derive bootstraps from reader functions moved into reg_meta_b
 
 [[row]]
 kind = "import"
-id = "reg_meta.catalog.CatalogStorageId"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.ClassificationCode"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.ClassificationEdition"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.ClassificationExtensionMember"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.ConceptGroupMember"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.ConceptGroupSummary"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
-
-[[row]]
-kind = "import"
 id = "reg_meta.catalog.DataWarning"
 used_by = ["reg_meta_build", "reg_webapp"]
 disposition = "retained"
 owner = "4"
-covered_by = ["conformance/cases/http_catalog/warnings", "reg_meta_build/tests/test_resolved_writer_data_warnings.py"]
+covered_by = ["conformance/cases/api/warnings-filters", "reg_meta_build/tests/test_resolved_writer_data_warnings.py"]
 note = "The build writes data warnings; the model moves with the writer."
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.GroupAxis"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_catalog_concept_groups.py", "conformance/cases/http_catalog/concept-group-admission"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.LineageEdge"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.LineageWarning"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.Period"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_fqid_validation.py", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.RegisterCoverage"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/api/show-held-disjoint-periods", "reg_webapp/backend/tests/test_coverage_payload.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.ResolvedProvider"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_catalog/admission", "reg_webapp/backend/tests/test_catalog_tree.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.ResolvedRegister"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_catalog/admission", "reg_webapp/backend/tests/test_catalog_tree.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.ResolvedVariable"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.TagMembership"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_tags_catalog.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.ValueSetMember"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_value_set_codes.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.VariableCoverage"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/api/show-held-disjoint-periods", "reg_webapp/backend/tests/test_coverage_payload.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.VariableDelivery"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.VariableEdition"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.VariableRef"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_catalog/reference-edges"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.VariableState"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_meta/tests/test_catalog_states.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.catalog.VariantSummary"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_catalog/states-and-deliveries", "reg_webapp/backend/tests/test_catalog_subendpoints.py"]
 
 [[row]]
 kind = "import"
@@ -977,7 +641,7 @@ note = "The build's error class and exit codes; the Rust reader has its own erro
 [[row]]
 kind = "import"
 id = "reg_meta.errors.EXIT_NOT_FOUND"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
@@ -1011,7 +675,7 @@ covered_by = ["conformance/test_validate.py"]
 [[row]]
 kind = "import"
 id = "reg_meta.errors.EXIT_USAGE"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_meta_build"]
 disposition = "retained"
 owner = "4"
 covered_by = ["conformance/test_validate.py", "reg_meta_build/tests/test_build_db_cli_outputs.py"]
@@ -1037,24 +701,8 @@ note = "FQID and period grammar move to reg-core; the build reaches them through
 
 [[row]]
 kind = "import"
-id = "reg_meta.fqid.CLASSIFICATION_PREFIX"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid.DEFAULT_VARIANT_SLUG"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
-
-[[row]]
-kind = "import"
 id = "reg_meta.fqid.Fqid"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_meta_build"]
 disposition = "replaced"
 owner = "4"
 covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
@@ -1072,35 +720,11 @@ note = "FQID and period grammar move to reg-core; the build reaches them through
 [[row]]
 kind = "import"
 id = "reg_meta.fqid.FqidKind"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_meta_build"]
 disposition = "replaced"
 owner = "4"
 covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
 note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid.RESERVED_GROUP_SLUG"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_reserved_slugs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid.RESERVED_HTTP_SUFFIX_SLUGS"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_reserved_slugs.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.fqid.RESERVED_VARIANTS_SLUG"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_reserved_slugs.py"]
 
 [[row]]
 kind = "import"
@@ -1132,7 +756,7 @@ note = "FQID and period grammar move to reg-core; the build reaches them through
 [[row]]
 kind = "import"
 id = "reg_meta.fqid.parse"
-used_by = ["reg_meta_build", "reg_webapp"]
+used_by = ["reg_meta_build"]
 disposition = "replaced"
 owner = "4"
 covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
@@ -1155,30 +779,6 @@ disposition = "replaced"
 owner = "4"
 covered_by = ["reg_meta/tests/test_fqid.py", "reg_meta/tests/test_fqid_properties.py"]
 note = "FQID and period grammar move to reg-core; the build reaches them through reg-core-py (section 5)."
-
-[[row]]
-kind = "import"
-id = "reg_meta.graph.RelationshipGraph"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_meta/tests/test_graph_nodes.py", "conformance/cases/http_catalog/whole-variable-group-graph"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.holdings.ReadScope"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_scope", "conformance/test_cli_scope.py"]
-
-[[row]]
-kind = "import"
-id = "reg_meta.holdings.resolve_scope"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["conformance/cases/http_scope", "conformance/test_cli_scope.py"]
 
 [[row]]
 kind = "import"
@@ -1366,19 +966,11 @@ note = "Derive's `coded_variable_stats` calls the reader's aggregate in place (s
 [[row]]
 kind = "import"
 id = "reg_meta.queries.fold_search"
-used_by = ["conformance", "crates", "reg_webapp"]
+used_by = ["conformance", "crates"]
 disposition = "removed"
 owner = "4"
 covered_by = ["conformance/cases/api/search-untyped-ranking", "conformance/cases/api/search-pin-normalization"]
 note = "The webapp search route's import goes in 3a with that route, unless checkpoint 1 decides the index is pre-folded, in which case reg-core-py provides `fold_search` to the build. The fold corpus generator and conformance/test_folds.py import it until stage 4, so the row is owned by stage 4."
-
-[[row]]
-kind = "import"
-id = "reg_meta.queries.list_classifications"
-used_by = ["reg_webapp"]
-disposition = "removed"
-owner = "4"
-covered_by = ["reg_webapp/backend/tests/test_catalog_classifications.py"]
 
 [[row]]
 kind = "import"
