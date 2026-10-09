@@ -688,7 +688,7 @@ def _check_one_value_set_per_period(
     # fold stays null-safe: two NULL-column states still match column-wise (rare;
     # both code-less states are already excluded by the value_set_id guards) while
     # NULL stays distinct from any named column. Overlap is the closed-interval
-    # intersection (mirrors `catalog._states_in_bounds`).
+    # intersection (mirrors `derive.states._states_in_bounds`).
     rows = conn.execute(
         "SELECT v.register_id, v.slug, a.delivery_column_name, "
         "       a.valid_from, a.valid_to, a.value_set_id, "

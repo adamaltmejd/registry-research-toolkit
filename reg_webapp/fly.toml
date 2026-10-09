@@ -15,8 +15,8 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
 [build]
   # Resolved relative to this file (flyctl convention), i.e. reg_webapp/Dockerfile.
   dockerfile = "Dockerfile"
-  # REG_META_TAG (cache-bust knob for DATA-only reg_meta releases) can be
-  # pinned per-deploy: fly deploy ... --build-arg REG_META_TAG=reg_meta/vX.Y.Z
+  # A local `fly deploy` must pass the bake's build args: REG_META_TAG=reg_meta/vX.Y.Z
+  # and the REG_META_DB_SHA256 / REG_META_DOCS_SHA256 asset digests (Dockerfile header).
 
 [env]
   # The hosted MCP endpoint (RUST_RUNTIME_SPEC.md decision 12): `/mcp` admits this
