@@ -145,6 +145,48 @@ def test_data_warnings_persist_exact_ownership_without_inventing_scope(tmp_path:
         )
 
 
+def test_warning_naming_an_unwritten_variable_is_demoted_to_its_register(
+    tmp_path: Path,
+):
+    # Fails if the resolved writer refuses a warning whose variable it did not
+    # write, or stores it still scoped to that variable or under its old identity,
+    # instead of demoting it to its register. `extend_db` refuses the same warning
+    # (test_extend_db.py).
+    import json
+    from pathlib import Path
+
+    from reg_meta.catalog import DataWarning
+    from reg_meta.source_evidence import canonical_sha256
+
+    fixture = DataWarning.model_validate_json(
+        (Path(__file__).parent / "cases/holdings/warning/warning.json").read_text()
+    )
+    payload = fixture.model_dump(mode="json", exclude={"warning_id"})
+    payload.update(
+        register_fqid="scb/example",
+        variable_fqid="scb/example/unwritten",
+        variant="_default",
+        delivery_column_name="X",
+    )
+    missing = DataWarning.model_validate_json(
+        json.dumps({"warning_id": canonical_sha256(payload), **payload})
+    )
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(
+        (_variable(),), output, manifest=synthetic_manifest(), data_warnings=(missing,)
+    )
+    with closing(open_built_db(output)) as conn:
+        (raw,) = conn.execute("SELECT warning_json FROM data_warning").fetchone()
+    demoted = DataWarning.model_validate_json(raw)
+    assert demoted.register_fqid == missing.register_fqid
+    assert (
+        demoted.variable_fqid,
+        demoted.variant,
+        demoted.delivery_column_name,
+    ) == (None, None, None)
+    assert demoted.warning_id != missing.warning_id
+
+
 def test_warning_ownership_requires_complete_source_and_delivery_witnesses():
     from hashlib import sha256
     from types import SimpleNamespace
