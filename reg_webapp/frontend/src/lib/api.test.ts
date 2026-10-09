@@ -293,7 +293,11 @@ describe("validateProject", () => {
         },
       ],
     };
-    stubFetch(async () => ({ ok: true, status: 200, json: async () => body }));
+    stubFetch(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ data: body, meta: {} }),
+    }));
     const result = await validateProject({ schema_version: "2.0.0" });
     expect(result.ok).toBe(false);
     expect(result.issues).toHaveLength(1);
@@ -311,7 +315,7 @@ describe("validateProject", () => {
         return Promise.resolve({
           ok: true,
           status: 200,
-          json: async () => ({ ok: true, issues: [] }),
+          json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
         });
       }),
     );

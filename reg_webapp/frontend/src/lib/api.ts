@@ -109,10 +109,10 @@ export async function apiGet<T>(
 /**
  * POST `body` as JSON to `path` (relative to `/api`) and return the parsed JSON
  * typed as `T`. Throws `ApiError` on any NON-2xx response (parsing a JSON error
- * body when present). Used for `/project/validate`, where a non-2xx is a malformed
- * REQUEST (a 4xx from `read_raw_json_object` / the body cap) — NOT a validation
- * failure: a validation failure is a 200 with `ok:false`, which this RETURNS
- * (see `validateProject`).
+ * body when present). Used for `/project/validate`, where a non-2xx is a refused
+ * REQUEST (`malformed_request`, `payload_too_large`, `rate_limited`) — NOT a
+ * validation failure: a validation failure is a 200 with `ok:false`, which this
+ * RETURNS (see `validateProject`).
  */
 export async function apiPostJson<T>(path: string, body: unknown): Promise<T> {
   const resp = await fetch(`${API_BASE}${path}`, {
@@ -140,9 +140,9 @@ export async function apiPostJson<T>(path: string, body: unknown): Promise<T> {
  * POST `body` as JSON to `path` and trigger a browser file download of the 2xx
  * response blob. The filename is taken from the response's `Content-Disposition`
  * (`attachment; filename="..."`), falling back to `fallbackFilename`. A non-2xx is
- * an `ApiError` (the backend's 400/422 — a malformed request or an invalid spec
- * the download endpoint rejects, unlike `/validate`'s 200 diagnosis). Used for the
- * order manifest (`/project/order`).
+ * an `ApiError` (a refused request, or a project the download refuses to order,
+ * unlike `/validate`'s 200 diagnosis). Used for the order manifest
+ * (`/project/order/manifest`).
  *
  * The download is wired with a transient `<a download>` + `createObjectURL`,
  * revoked after the click — the standard no-dep blob-download pattern.
@@ -545,57 +545,65 @@ export function getLineage(ref: string): Promise<LineageModel> {
   return rustGet<LineageModel>(`/lineage/${encodeFqid(ref)}`);
 }
 
-// ── Project write surface (A5.2b-ii) ────────────────────────────────────────
-// The POST endpoints the authoring SPA drives (see reg_webapp/DESIGN.md →
-// Project-write surface (routes/project.py)). Each takes the WHOLE serialized
-// draft as a raw object. The OpenAPI request schema documents the canonical
-// CLOSED ProjectData contract, while this transport type stays deliberately raw:
-// malformed uploads (including unknown root keys) must reach the backend
-// unchanged so `/validate` can diagnose them.
+// ── Project surface (the Rust server, RUST_RUNTIME_SPEC.md package 3e.4) ─────
+// `validate` and `order` take the WHOLE serialized draft as the POST body, a raw
+// object: malformed uploads (including unknown root keys) must reach the server
+// unchanged so `validate` can diagnose them.
 
-export type ValidationResultModel = Schemas["ValidationResultModel"];
+/** `validate`'s result: `ok` when no issue is an error, and every issue in
+ * emission order. */
+export type ValidationResultModel = RustSchemas["Validation"];
 
-/** A serialized project_data.json draft posted to the write endpoints. This is a
- * raw diagnostic transport shape, not an extension surface: unknown keys are
- * invalid but must survive until the backend reports them. */
+/** A serialized project_data.json draft posted to the project operations. This is
+ * a raw diagnostic transport shape, not an extension surface: unknown keys are
+ * invalid but must survive until the server reports them. */
 export type ProjectDataBody = Record<string, unknown>;
 
 /**
- * POST a draft to `/api/project/validate` and RETURN the 200
- * `ValidationResultModel` (`{ok, issues}`). A validation FAILURE is a 200 with
+ * POST a draft to `/api/project/validate` and RETURN its `data`
+ * (`ValidationResultModel`, `{ok, issues}`). A validation FAILURE is a 200 with
  * `ok:false` — this NEVER throws on `ok:false`; the caller renders the issues.
- * Only a true 4xx (a malformed REQUEST — bad JSON / oversized body, from the
- * backend's `read_raw_json_object` / body cap) throws an `ApiError` (shown as a
- * banner, distinct from the issue list). No client-side structural
- * validator — the backend is canonical (see reg_webapp/DESIGN.md → Pydantic
- * boundary); the SPA mirrors codes for presentation.
+ * Only a refused REQUEST (`malformed_request`, `payload_too_large`,
+ * `rate_limited`) throws an `ApiError` (shown as a banner, distinct from the
+ * issue list). No client-side structural validator — the server is canonical;
+ * the SPA mirrors codes for presentation.
  */
-export function validateProject(
+export async function validateProject(
   draft: ProjectDataBody,
 ): Promise<ValidationResultModel> {
-  return apiPostJson<ValidationResultModel>("/project/validate", draft);
+  return (
+    await apiPostJson<{ data: ValidationResultModel }>(
+      "/project/validate",
+      draft,
+    )
+  ).data;
 }
 
-/** One blocking reason an order could not be materialized — reg_meta's own
- * `OrderFinding`, straight off the 422 body: the stable `code`, the message, and
- * the optional `source` / `variable` / `period` coordinates that say WHERE. */
-export type OrderFinding = Schemas["OrderFinding"];
+/** One reason an order is blocked: an entry of `order_blocked`'s
+ * `fields.findings` — the stable `code`, the message, and the `source` /
+ * `variable` / `period` coordinates that say WHERE (null when the finding is
+ * not located there). The error catalog types `fields` as an open object, so
+ * the shape is declared here, pinned by `conformance/cases/api/order-errors`
+ * and narrowed at the boundary by `orderFindingsFromError`. */
+export interface OrderFinding {
+  code: string;
+  message: string;
+  source?: string | null;
+  variable?: string | null;
+  period?: string | null;
+}
 
-/** The `/project/order` 422 body: the flattened `detail` line plus the findings
- * as DATA (`OrderBlockedModel`). */
-export type OrderBlocked = Schemas["OrderBlockedModel"];
-
-/** POST a draft to `/api/project/order` and download the materialized JSON order
- * manifest (`OrderManifest`, served verbatim so the SPA and the `reg-meta order`
- * CLI hand the steward byte-identical files). Anything that is NOT an order — an
- * invalid spec, or an order the materializer fail-closed on — is the backend's
- * 422 (an `ApiError` whose `body` is `OrderBlocked`), never a partial download. */
+/** POST a draft to `/api/project/order/manifest` and download the order
+ * manifest: the exact `order.json` bytes, the same document `order` answers.
+ * Anything that is NOT an order is an `ApiError`: `order_blocked` carrying its
+ * findings, or `project_invalid` for a document `validate` rejects structurally
+ * — never a partial download. */
 export function downloadOrderManifest(draft: ProjectDataBody): Promise<void> {
-  return apiPostForBlob("/project/order", draft, "order.json");
+  return apiPostForBlob("/project/order/manifest", draft, "order.json");
 }
 
-/** The typed findings carried by a caught `/project/order` failure, or `[]` for
- * anything else (a network error, the gate's finding-less 422, a non-JSON body).
+/** The findings carried by a caught `order_blocked` refusal, or `[]` for
+ * anything else (a network error, `project_invalid`, a non-JSON body).
  *
  * The narrowing is structural on purpose: this reads an `unknown` catch value at
  * the HTTP boundary, so it trusts only the shape it verifies — a malformed entry
@@ -605,11 +613,14 @@ export function orderFindingsFromError(e: unknown): OrderFinding[] {
   if (!(e instanceof ApiError)) {
     return [];
   }
-  const body = e.body;
-  if (!body || typeof body !== "object" || !("findings" in body)) {
+  const body = e.body as {
+    error?: { code?: unknown; fields?: { findings?: unknown } };
+  } | null;
+  const error = body?.error;
+  if (error?.code !== "order_blocked") {
     return [];
   }
-  const findings = (body as { findings: unknown }).findings;
+  const findings = error.fields?.findings;
   if (!Array.isArray(findings)) {
     return [];
   }

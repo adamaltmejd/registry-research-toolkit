@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from http_cases import CASES, assert_http_case
 
-SURFACES = ("http_scope", "validate")
+SURFACES = ("http_scope",)
 
 
 def pytest_generate_tests(metafunc):
