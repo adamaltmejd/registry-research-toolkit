@@ -23,6 +23,10 @@
             [
               "01",
               "Label"
+            ],
+            [
+              "09350",
+              "Okänt"
             ]
           ],
           [
@@ -68,6 +72,35 @@
         ]
       ],
       "note": "The backing state carries no value set."
+    },
+    {
+      "table": "conformance",
+      "where": {"register": "percolumn"},
+      "fields": ["column", "window", "classification", "status", "checked", "matched", "nonconforming"],
+      "rows": [
+        ["First", "alias", "codes-first", "extended", 2, 1, 1],
+        ["first", "alias", "codes-second", "conforming", 1, 1, 0]
+      ],
+      "note": "Each alias window is checked against its own book only; the backing state has none. First's 09350 is outside codes-first, certified as a sentinel for 2020, so First is extended."
+    },
+    {
+      "table": "conformance_codes",
+      "where": {"register": "percolumn"},
+      "fields": ["column", "window", "classification", "code", "label", "member_kind", "scoped_windows"],
+      "rows": [
+        ["First", "alias", "codes-first", "09350", "Okänt", "sentinel", [["2020-01-01", "2020-12-31"]]]
+      ]
+    },
+    {
+      "table": "code_index",
+      "where": {"register": "percolumn"},
+      "fields": ["variable", "code", "label", "mapping_count"],
+      "rows": [
+        ["income", "01", "Label", 2],
+        ["income", "02", "Label", 1],
+        ["income", "09350", "Okänt", 1]
+      ],
+      "note": "The reader's code-search index reaches the per-column codes through the alias windows alone, since the backing state has no value set. 01 Label is also CONTESTED's 2021 code, hence two variables."
     },
     {
       "table": "state_classifications",
@@ -166,13 +199,19 @@
           "2020-12-31"
         ],
         [
+          "sentinel_classification_codes",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 2, 'variable', 'native-int', 5, 'variant-key', 'scb-registerinformation', 'scb', 'register', 'native-int', 2, 'variant', 'native-int', 20, 'column', 'First')",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
           "unsupported_representation_coding",
           "scb/contested/income",
           "2020-01-01",
           "2020-12-31"
         ]
       ],
-      "note": "PERCOLUMN and FACTS build clean; CONTESTED reports its withheld list and the unsupported per-column domain."
+      "note": "PERCOLUMN reports only the sentinel warning for First's certified 09350, and FACTS builds clean; CONTESTED reports its withheld list and the unsupported per-column domain."
     }
   ]
 }

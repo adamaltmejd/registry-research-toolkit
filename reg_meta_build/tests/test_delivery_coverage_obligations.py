@@ -535,15 +535,21 @@ def test_year_independent_delivery_proof_compares_exact_column_facts_without_cal
         check_delivery_coverage((wrong_fact,), (claim,), withheld={})
 
 
-@pytest.mark.parametrize("damage", [None, "missing", "domain", "common", "classified"])
+@pytest.mark.parametrize(
+    "damage", [None, "missing", "domain", "common", "classified", "text"]
+)
 def test_per_column_alias_coding_preserves_exact_delivery_claims(damage):
     """Per-column coding windows must carry exactly their claimed value sets.
 
     Input: an undamaged pair (allowed); a window without a value set, a window
-    with the other column's domain, or a backing state that carries its own
+    with the other column's domain, a window whose source attribution differs
+    from its column's text claim, or a backing state that carries its own
     value set or classification. Refusal: "supported delivery facts changed".
-    Fails if per-column windows skip the coding claim or accept a classified
-    or coded backing state.
+    Fails if per-column windows skip the coding claim or the column-text claim
+    (operational definition and source attribution), or accept a classified
+    or coded backing state. No build reaches the text arm: formation writes
+    the claim from the window it forms (source_formation.py), so only a writer
+    or resolver change can make them disagree.
     """
     from dataclasses import replace
 
@@ -566,10 +572,18 @@ def test_per_column_alias_coding_preserves_exact_delivery_claims(damage):
             valid_from="2020-01-01",
             valid_to="2020-12-31",
             coding_metadata="per_column",
+            # Per-column metadata carries the window's own facts and text.
+            column_metadata="per_column",
+            data_type="integer",
+            data_length="1",
             value_set=domain,
             value_set_version_label=version,
+            source_register_text=text,
         )
-        for domain, version in ((first, "First question"), (second, "Second question"))
+        for domain, version, text in (
+            (first, "First question", "First source"),
+            (second, "Second question", "Second source"),
+        )
     )
     if damage in {"missing", "domain"}:
         windows = (
@@ -579,6 +593,11 @@ def test_per_column_alias_coding_preserves_exact_delivery_claims(damage):
                 if damage == "missing"
                 else {"value_set": first}
             ),
+        )
+    elif damage == "text":
+        windows = (
+            windows[0],
+            windows[1].model_copy(update={"source_register_text": "Another source"}),
         )
     elif damage == "common":
         state = state.model_copy(
@@ -607,10 +626,11 @@ def test_per_column_alias_coding_preserves_exact_delivery_claims(damage):
         replace(
             _fact_obligation(column=column, attributions=()),
             coding_claim=(domain, version),
+            column_text_claim=(None, text),
         )
-        for column, domain, version in (
-            ("First", first, "First question"),
-            ("Second", second, "Second question"),
+        for column, domain, version, text in (
+            ("First", first, "First question", "First source"),
+            ("Second", second, "Second question", "Second source"),
         )
     )
     if damage is None:

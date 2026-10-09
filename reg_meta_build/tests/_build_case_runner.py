@@ -790,15 +790,91 @@ def _alias_windows(outcome: Outcome) -> list[dict]:
     return rows
 
 
+_ALIAS_CONFORMANCE_SQL = (
+    "SELECT r.slug AS register, v.slug AS variable, "
+    "w.delivery_column_name AS column, w.valid_from, w.valid_to, "
+    "c.slug AS classification, a.conformance "
+    "FROM alias_window_classification a "
+    "JOIN variable_alias_window w USING "
+    "(variable_id, register_variant_id, delivery_column_name, valid_from) "
+    "JOIN classification c ON c.id = a.classification_id "
+    "JOIN variable v ON v.variable_id = a.variable_id "
+    "JOIN register r ON r.register_id = v.register_id "
+    "WHERE a.conformance IS NOT NULL"
+)
+
+
+def _alias_conformance(outcome: Outcome) -> list[tuple[dict, dict]]:
+    """Each alias window's book binding with its stored conformance evidence."""
+    return [
+        (
+            {key: row[key] for key in row.keys() - {"conformance"}},
+            json.loads(row["conformance"]),
+        )
+        for row in outcome._sql(_ALIAS_CONFORMANCE_SQL)
+    ]
+
+
+def _alias_extensions(evidence: dict) -> list[tuple[str, str, str]]:
+    return [
+        (code, label, kind)
+        for kind, key in (
+            ("nonstandard", "nonconforming_members"),
+            ("sentinel", "sentinel_members"),
+        )
+        for code, label in evidence[key]
+    ]
+
+
+def _conformance(outcome: Outcome) -> list[dict]:
+    """Each state's and alias window's conformance to one bound book.
+
+    An alias window stores its evidence as JSON; its counts are read the way the
+    reader counts them (distinct checked codes, distinct codes outside the book).
+    """
+    rows = [
+        {**row, "window": "state"}
+        for row in outcome._sql(
+            "SELECT r.slug AS register, v.slug AS variable, "
+            "s.delivery_column_name AS column, s.valid_from, s.valid_to, "
+            "c.slug AS classification, cc.status, cc.checked_code_count AS checked, "
+            "cc.matched_code_count AS matched, "
+            "cc.nonconforming_code_count AS nonconforming, cc.overlap "
+            "FROM classification_conformance cc "
+            "JOIN classification c ON c.id = cc.declared_classification_id "
+            "JOIN variable_state s ON s.state_id = cc.state_id "
+            "JOIN variable v ON v.variable_id = s.variable_id "
+            "JOIN register r ON r.register_id = v.register_id"
+        )
+    ]
+    for row, evidence in _alias_conformance(outcome):
+        checked = len(set(evidence["checked_codes"]))
+        outside = len({code for code, _, _ in _alias_extensions(evidence)})
+        rows.append(
+            {
+                **row,
+                "window": "alias",
+                "status": evidence["status"],
+                "checked": checked,
+                "matched": checked - outside,
+                "nonconforming": outside,
+                "overlap": (checked - outside) / checked if checked else 1.0,
+            }
+        )
+    return rows
+
+
 def _conformance_codes(outcome: Outcome) -> list[dict]:
-    """Each source member a state's book conformance records outside the book.
+    """Each source member a state's or alias window's book conformance records
+    outside the book.
 
     A scoped sentinel certificate is projected as its window only; its fingerprints
-    restate the code under test.
+    restate the code under test. An alias window stores no sentinel meaning.
     """
-    return [
+    rows = [
         {
             **{key: row[key] for key in row.keys() - {"scoped_sentinels"}},
+            "window": "state",
             "scoped_windows": [
                 [certificate["valid_from"], certificate["valid_to"]]
                 for certificate in json.loads(row["scoped_sentinels"])
@@ -817,6 +893,26 @@ def _conformance_codes(outcome: Outcome) -> list[dict]:
             "JOIN register r ON r.register_id = v.register_id"
         )
     ]
+    for row, evidence in _alias_conformance(outcome):
+        rows.extend(
+            {
+                **row,
+                "window": "alias",
+                "code": code,
+                "label": label,
+                "member_kind": kind,
+                "sentinel_meaning": None,
+                "scoped_windows": [
+                    [certificate["valid_from"], certificate["valid_to"]]
+                    for certificate in evidence["scoped_sentinels"]
+                    if [code, label] in certificate["members"]
+                ]
+                if kind == "sentinel"
+                else [],
+            }
+            for code, label, kind in _alias_extensions(evidence)
+        )
+    return rows
 
 
 _STATE_JOIN = (
@@ -900,19 +996,16 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "JOIN variable v ON v.variable_id = s.variable_id "
         "JOIN register r ON r.register_id = v.register_id"
     ),
-    "conformance": lambda o: o._sql(
-        "SELECT r.slug AS register, v.slug AS variable, "
-        "s.delivery_column_name AS column, s.valid_from, s.valid_to, "
-        "c.slug AS classification, cc.status, cc.checked_code_count AS checked, "
-        "cc.matched_code_count AS matched, "
-        "cc.nonconforming_code_count AS nonconforming, cc.overlap "
-        "FROM classification_conformance cc "
-        "JOIN classification c ON c.id = cc.declared_classification_id "
-        "JOIN variable_state s ON s.state_id = cc.state_id "
-        "JOIN variable v ON v.variable_id = s.variable_id "
+    "conformance": _conformance,
+    "conformance_codes": _conformance_codes,
+    # The reader's code-search index: each code a variable carries through a
+    # state's or an alias window's value set, with the code's variable count.
+    "code_index": lambda o: o._sql(
+        "SELECT r.slug AS register, v.slug AS variable, vc.code, vc.label, "
+        "vc.mapping_count FROM code_variable_map m "
+        "JOIN value_code vc USING (code_id) JOIN variable v USING (variable_id) "
         "JOIN register r ON r.register_id = v.register_id"
     ),
-    "conformance_codes": _conformance_codes,
     "classifications": lambda o: o._sql(
         "SELECT c.slug, c.short_name, c.name, c.name_en, c.publisher, c.valid_from, "
         "c.valid_to, c.description, c.url, c.code_count, c.valid_code_count, "
@@ -978,10 +1071,11 @@ FIELDS: dict[str, frozenset[str]] = {
         "edges": "type a b",
         "state_classifications": "register variable column valid_from valid_to "
         "classification provenance",
-        "conformance": "register variable column valid_from valid_to classification "
-        "status checked matched nonconforming overlap",
-        "conformance_codes": "register variable column valid_from valid_to "
+        "conformance": "register variable column valid_from valid_to window "
+        "classification status checked matched nonconforming overlap",
+        "conformance_codes": "register variable column valid_from valid_to window "
         "classification code label member_kind sentinel_meaning scoped_windows",
+        "code_index": "register variable code label mapping_count",
         "classifications": "slug short_name name name_en publisher valid_from "
         "valid_to description url code_count valid_code_count supersedes",
         "classification_successions": "predecessor successor effective_year note",

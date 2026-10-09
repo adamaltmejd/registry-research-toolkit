@@ -34,3 +34,13 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 source_editions = ["2020"]
 expected_codings = {{source_codings key=member:201}}
+
+[[coding.sentinel]]
+variable = "2.5"
+variant = "people"
+column = "First"
+periods = [["2020-01-01", "2020-12-31"]]
+classification = "codes-first"
+members = [["09350", "Okänt"]]
+reason = "Reviewed coding"
+source = "fixture"

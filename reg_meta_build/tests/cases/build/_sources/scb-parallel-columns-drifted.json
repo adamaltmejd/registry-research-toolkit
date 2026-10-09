@@ -1,5 +1,5 @@
 {
-  "description": "Variable 5 (Income) delivers the case-equivalent literal columns First and first as two members (CVIDs) of one 2020 edition in PERCOLUMN (register 2: 'First list' 01 for First, 'Second list' 02 for first), FACTS (3: no lists; First has operational definition 'First operation' and attribution 'Question 1', first has 'Second operation' and no attribution) and CONTESTED (5: First 'First list' 01; first has 'Second list' 02 Label and 'Rival list' 02 Rival; First again in 2021 with 'First list' 01). Books codes-first and codes-second bind 'First list' and 'Second list'. Drifted: PERCOLUMN's First list now holds 03 instead of 01.",
+  "description": "Variable 5 (Income) delivers the case-equivalent literal columns First and first as two members (CVIDs) of one 2020 edition in PERCOLUMN (register 2: 'First list' 01 and 09350 Okänt for First, 'Second list' 02 for first), FACTS (3: no lists; First has operational definition 'First operation' and attribution 'Question 1', first has 'Second operation' and no attribution) and CONTESTED (5: First 'First list' 01; first has 'Second list' 02 Label and 'Rival list' 02 Rival; First again in 2021 with 'First list' 01). Books codes-first and codes-second bind 'First list' and 'Second list'. Drifted: PERCOLUMN's First list now holds 03 instead of 01.",
   "scb": {
     "registerinformation": [
       {
@@ -99,6 +99,7 @@
     ],
     "vardemangder": [
       "First list|1|03|Label|200|2001",
+      "First list|1|09350|Okänt|200|2002",
       "Second list|1|02|Label|201|2011",
       "First list|1|01|Label|500|5001",
       "Second list|1|02|Label|501|5011",
