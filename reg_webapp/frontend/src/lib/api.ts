@@ -1,35 +1,29 @@
 /**
- * Tiny, dependency-free typed fetch wrapper for the reg_webapp backend (see
- * reg_webapp/DESIGN.md → Pydantic boundary: the SPA only talks HTTP/JSON to the
- * backend — no domain coupling).
+ * Tiny, dependency-free typed fetch wrapper for the Rust server (`reg-meta
+ * serve`): the SPA only talks HTTP/JSON to it — no domain coupling.
  *
  * Every response type is the codegen'd `components["schemas"][...]` from
- * `./api-types` (generated from the backend's committed `openapi.json`) or, for
- * the routes the Rust server answers, from `./api-types-rust` (generated from
- * `crates/reg-meta/openapi.json`), so the client carries the exact API contract
- * with no hand-maintained mirror.
+ * `./api-types-rust` (generated from `crates/reg-meta/openapi.json`), so the
+ * client carries the exact API contract with no hand-maintained mirror.
  */
-import type { components } from "./api-types";
 import type {
   components as RustComponents,
   operations as RustOperations,
 } from "./api-types-rust";
 import { queryFromParams, type ResolutionParams } from "./period";
 
-type Schemas = components["schemas"];
 type RustSchemas = RustComponents["schemas"];
 
 /** The `/api` base. Same-origin in production (Cloudflare fronts both the SPA
- * and the API); the Vite dev server proxies the routes ported to the Rust server
- * there and the rest of `/api` to the FastAPI backend (`vite.config.ts`). */
+ * and the API); the Vite dev server proxies it to the Rust server
+ * (`vite.config.ts`). */
 const API_BASE = "/api";
 
 /**
  * A non-2xx response, thrown by the GET helpers. `status` is the HTTP status;
  * `body` is the parsed JSON error body when present (the Rust server's
- * `{error, meta}`, FastAPI's `{detail: ...}` from `HTTPException`, and the
- * validation issue shapes elsewhere) or `null` when the body wasn't JSON; `message` is a human-readable
- * summary suitable for an error banner.
+ * `{error, meta}`) or `null` when the body wasn't JSON; `message` is a
+ * human-readable summary suitable for an error banner.
  */
 export class ApiError extends Error {
   readonly status: number;
@@ -43,28 +37,14 @@ export class ApiError extends Error {
   }
 }
 
-/** Pull a human-readable message out of a parsed error body. The Rust server's
- * error document is `{error: {message, ...}, meta}`; FastAPI's 4xx
- * `HTTPException` serializes as `{detail: string}`, and `detail` can also be a
- * list of validation errors (422). Falls back to the status line. */
+/** Pull a human-readable message out of a parsed error body: the Rust server's
+ * error document is `{error: {message, ...}, meta}`. Falls back to the status
+ * line. */
 function messageFromBody(status: number, body: unknown): string {
   if (body && typeof body === "object" && "error" in body) {
     const error = (body as { error: unknown }).error;
     if (error && typeof error === "object" && "message" in error) {
       return String((error as { message: unknown }).message);
-    }
-  }
-  if (body && typeof body === "object" && "detail" in body) {
-    const detail = (body as { detail: unknown }).detail;
-    if (typeof detail === "string") {
-      return detail;
-    }
-    if (Array.isArray(detail)) {
-      // FastAPI 422 validation-error list: surface the first message.
-      const first = detail[0];
-      if (first && typeof first === "object" && "msg" in first) {
-        return String((first as { msg: unknown }).msg);
-      }
     }
   }
   return `Request failed (HTTP ${status})`;

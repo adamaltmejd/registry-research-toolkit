@@ -34,35 +34,31 @@ pointer projections define the compared public result; errors also pin the exit/
 and located findings. Order cases run only against `--server-cmd`: the manifest
 download's bytes compare with the case's committed `order.json` (the frozen CLI's,
 provenance included), `order`'s `data` with that document, and a blocked case's
-`order_blocked` findings on both routes. Every validate and order step in the validate
-surface also runs through `reg-meta validate` or `reg-meta order`: a 200 compares bytes
-and exit code with the HTTP response, and a 400 (a malformed document, sent verbatim
-from a step's `content` string, encoded with its optional `encoding`, or built by
-`nested_arrays: N` as an object nesting N arrays deep) compares the CLI's exit 10
-envelope message with the HTTP `detail`. No volatile fields are removed from those
-comparisons. Keys and lists retain their order. Path placeholders in the selection
+`order_blocked` findings on both routes. An `api` step's body is `body` (JSON), a
+`content` string sent verbatim (encoded with its optional `encoding`) or
+`nested_arrays: N`, an object nesting N arrays deep. No volatile fields are removed from
+the comparisons. Keys and lists retain their order. Path placeholders in the selection
 oracle expand to the test filesystem before comparison. An HTTP response oracle may also
 pin raw bytes: `media_type` (the content type without parameters), `headers` (exact
 values by lower-case name) and `bytes` (a file in the case directory compared byte for
-byte), as `validate/gap-clipped` does for its order download.
+byte).
 
-  | Surface directory    | Boundary and request interpretation                                                |
-  | -------------------- | ---------------------------------------------------------------------------------- |
-  | cli_scope            | CLI argv, optional second page, observe projection                                 |
-  | order                | HTTP order and download (`--server-cmd`), `order.json` bytes, observe projection   |
-  | coverage             | Public coverage return models, provider/register                                   |
-  | logical              | Public query/catalog operation, args/kwargs and observe projection                 |
-  | reader               | Public listing/cursor/concept group return models; also source fixtures            |
-  | selection            | CLI artifact selection; implicit annual-series source                              |
-  | update               | Downloaded-artifact identity via CLI/update library; implicit annual-series source |
-  | boot                 | App startup; implicit reader source, kind and manifest mutation                    |
-  | http_scope, validate | HTTP request sequence and status/pointer oracle; implicit compiled source          |
-  | validate (also)      | CLI validate/order bytes or refusal against each HTTP project response             |
-  | fixtures             | HTTP readable sources, not independently executed cases                            |
+  | Surface directory | Boundary and request interpretation                                                |
+  | ----------------- | ---------------------------------------------------------------------------------- |
+  | cli_scope         | CLI argv, optional second page, observe projection                                 |
+  | order             | HTTP order and download (`--server-cmd`), `order.json` bytes, observe projection   |
+  | coverage          | Public coverage return models, provider/register                                   |
+  | logical           | Public query/catalog operation, args/kwargs and observe projection                 |
+  | reader            | Public listing/cursor/concept group return models; also source fixtures            |
+  | selection         | CLI artifact selection; implicit annual-series source                              |
+  | update            | Downloaded-artifact identity via CLI/update library; implicit annual-series source |
+  | boot              | App startup; implicit reader source, kind and manifest mutation                    |
+  | api               | HTTP request sequence and status/pointer oracle (`--server-cmd`)                   |
+  | fixtures          | HTTP readable sources, not independently executed cases                            |
 
 ## Out-of-process runner
 
-`--server-cmd` runs the HTTP surfaces above over a real socket instead of in-process. It
+`--server-cmd` runs the HTTP surfaces above over a real socket; without it they skip. It
 is a command template: `{db}` (the artifact directory), `{catalog}` (`global` or the
 artifact's steward) and `{port}` are substituted in each word. The runner starts one
 server per cached artifact from the repository root, with `REG_META_DB`,
@@ -70,22 +66,10 @@ server per cached artifact from the repository root, with `REG_META_DB`,
 `GET /openapi.json` answers (120 s at most), reuses it for every case on that artifact
 and stops it at session end. A server that exits before answering is retried on a fresh
 port, and a start that fails is not retried for later cases on that artifact. Its output
-goes to `servers*/server-N.log` under the pytest base temp. The FastAPI app under
-uvicorn, without the `api` cases (they target the new API, which FastAPI does not
-serve):
-
-```sh
-uv run python -m pytest conformance -q -k 'not [api/' --server-cmd='uv run python -c "import sys, uvicorn; from reg_webapp.app import create_app; uvicorn.run(create_app(rate_limit_per_minute=1000), port=int(sys.argv[1]))" {port}'
-```
-
-The app reads its artifact from the environment, so this template needs no `{db}`. It is
-not `uvicorn reg_webapp.app:create_app --factory` because the production write limit (30
-per minute per IP) would refuse the validate cases, all sent from loopback; the
-in-process runner uses the same raised limit. The `api` corpus (`cases/api/`) is
-collected only with `--server-cmd`. A case's `search_pins` names a pins file in its
-directory that the artifact build stores (fixtures have no pins otherwise); an expected
-`build_error` is that build's located refusal, and such a case sends no requests. Every
-other suite, boot cases included, is unchanged.
+goes to `servers*/server-N.log` under the pytest base temp. A case's `search_pins` names
+a pins file in its directory that the artifact build stores (fixtures have no pins
+otherwise); an expected `build_error` is that build's located refusal, and such a case
+sends no requests.
 
 The Rust server (`reg-meta serve`), on the whole suite, the `api` corpus and the MCP
 equivalence suite included (the Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part
@@ -106,7 +90,8 @@ cover every error `search` lists in `operations.toml`. `tools/list`, over HTTP a
 stdio, equals the golden `cases/mcp/tools-list.json`, and its names are the `tool` of
 each served operation. The server builds each tool's schemas from its OpenAPI entry, so
 a schema change shows as a reviewed diff of that file. The body cap and the rate limit
-on `/mcp` answer with their error documents; the burst runs on a server of its own.
+on `/mcp` answer with their error documents, and the drained bucket also refuses the
+address's project POSTs while its reads pass; the burst runs on a server of its own.
 `--mcp-cmd` is a command template (`{db}`, `{catalog}`) for one stdio session:
 initialize, list the tools and call `search`. Without `--server-cmd` the module skips;
 without `--mcp-cmd` the stdio session does.

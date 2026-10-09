@@ -8,11 +8,12 @@ description: Run, screenshot, and drive the reg_webapp dev setup (FastAPI backen
 # Run reg_webapp locally
 
 Three dev servers — a FastAPI backend, the Rust server (`reg-meta serve`), and Vite
-serving the SPA with an `/api` proxy that sends the routes ported to Rust
-(`/api/context`, `/api/search`, `/api/docs` and the catalog reads `/api/catalog`,
-`/api/states`, `/api/warnings`, `/api/values`, `/api/graph`, `/api/lineage`) to the Rust
-server and the rest (project) to the backend — plus a Playwright driver that loads the
-SPA, drills through the catalog, exercises the period slider, and screenshots each step.
+serving the SPA with an `/api` proxy that sends every route the SPA calls
+(`/api/context`, `/api/search`, `/api/docs`, the catalog reads `/api/catalog`,
+`/api/states`, `/api/warnings`, `/api/values`, `/api/graph`, `/api/lineage`, and
+`/api/project`) to the Rust server and the rest to the backend, which serves no route
+since package 3e.4 (package F removes it) — plus a Playwright driver that loads the SPA,
+drills through the catalog, exercises the period slider, and screenshots each step.
 `dev.sh` picks a FREE port for each server on every run, so nothing here is pinned to a
 port. The proxy split lives in `reg_webapp/frontend/vite.config.ts`; each later slice
 adds its routes there.
@@ -97,7 +98,7 @@ non-desktop shots get a `-<label>` suffix (e.g. `_catalog_scb_lisa-mobile.png`,
 `…-wide.png`, `…-414x896.png`) so they don't clobber the desktop shot.
 
 **Project flows (`flows`).** One command drives the whole project evidence set: eight
-scenarios — an empty project the backend blocks, an order request that fails in
+scenarios — an empty project the Rust server blocks, an order request that fails in
 transport and is retried, a validation request that fails and is retried, a draft
 authored from a catalog leaf (picked, reloaded, recovered, then extended by a further
 pick on a cold catalog entry), a pick made on that leaf with no period chosen (refused,
@@ -106,7 +107,7 @@ confirmation, a cancel keeps the draft, an Open raises the same one and a confir
 the file), one named source's period edited on its own /project card, and a keyboard
 researcher re-applying the catalog leaf's period from the year fields, from Apply and
 from a slider thumb — at 375×812, 768×1024, 1280×900 and 1920×1080 — 32 cases, each in a
-fresh browser context against the real backend, with one failing request injected per
+fresh browser context against the real servers, with one failing request injected per
 error scenario and none into the other five. It asserts the behavior (real 422 +
 `project_empty`, which retry the banner offers, a real `order.json` download whose
 manifest entry matches the synthetic catalog, the request counts behind a recovery, the
@@ -245,9 +246,9 @@ includes the Playwright browser project).
   `REG_WEBAPP_BACKEND_URL` and `REG_META_SERVER_URL`
   (`reg_webapp/frontend/vite.config.ts`) — `dev.sh` sets both automatically; they only
   matter if you start Vite by hand against other ports.
-- **Context, search, docs and every catalog read come from the Rust server.** Their
-  bodies are `{data, meta}`; the FastAPI backend serves none of them, so probe the
-  backend with `/openapi.json`.
+- **Every route the SPA calls comes from the Rust server**, the project operations
+  included. Their bodies are `{data, meta}` (a refusal `{error, meta}`); the FastAPI
+  backend serves none of them, so probe the backend with `/openapi.json`.
 - **Git worktrees are auto-provisioned.** A `SessionStart` hook
   (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable
   installs resolve to the worktree, not main) and `node_modules` — it runs `uv sync` +
