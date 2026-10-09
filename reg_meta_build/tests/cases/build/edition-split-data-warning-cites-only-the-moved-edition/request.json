@@ -1,9 +1,10 @@
 {
   "replaces": [
-    "test_curation_compile_editions.py::test_named_edition_split_rebinds_parents_and_is_order_independent[Range interpretation is unavailable]"
+    "test_curation_compile_editions.py::test_named_edition_split_rebinds_parents_and_is_order_independent[Range interpretation is unavailable]",
+    "test_resolved_writer_data_warnings.py::test_assumption_warns_on_added_physical_column_not_anchor_identity[fields3-source_availability_limitation]"
   ],
   "note": "The warning's ref is CVID 21's SCB semantic key, read off the fixture row: register 1, variant 2, edition (regver_id) 2, variable 5, member (CVID) 21.",
-  "fails_if": "`compile_edition_splits` drops the entry's `data_warning`, or cites every source edition of the variant (CVID 20 too) instead of the moved '2007-12-31' row",
+  "fails_if": "`compile_edition_splits` drops the entry's `data_warning`, or cites every source edition of the variant (CVID 20 too) instead of the moved '2007-12-31' row; or `scope_data_warnings` maps the availability field to another code than source_availability_limitation, or takes the warning's subject from anything but its curation case",
   "sources": {
     "description": "Variant 2 of register 1 delivers SHARED (variable 5) twice for 2007: edition '2007' (CVID 20, integer) and edition '2007-12-31' (CVID 21, string).",
     "scb": {

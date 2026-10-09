@@ -1,0 +1,4 @@
+[[edge]]
+type = "replaced_by"
+from = "class/emp2020"
+to = "class/emp2007"

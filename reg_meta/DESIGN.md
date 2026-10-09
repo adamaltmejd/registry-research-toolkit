@@ -1,5 +1,9 @@
 # Design: reg_meta
 
+Superseded: the still-true content moved to [../crates/DESIGN.md](../crates/DESIGN.md)
+and [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md); this file goes with the
+package.
+
 Design rationale and constraints for the query layer. For usage, see `reg-meta --help`.
 The object model lives below ("Two-level variable model"); for the per-provider source
 shapes it collapses (the SCB input-file layout, the SOS workbook layout) and the rest of

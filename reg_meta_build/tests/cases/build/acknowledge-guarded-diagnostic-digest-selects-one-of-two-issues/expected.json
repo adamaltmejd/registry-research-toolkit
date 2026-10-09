@@ -1,0 +1,37 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "acknowledged": {"unsupported_representation_coding": 2}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "unsupported_representation_coding", "detail": {"contains": "'First'"}},
+      "fields": ["subject", "severity", "acknowledged_by"],
+      "rows": [
+        ["scb/pinned/income", "warning", "curation/registers/scb/pinned.toml#/acknowledge/1"],
+        ["scb/unpinned/income", "error", null]
+      ],
+      "note": "The First literal's issue: PINNED's first entry pins its digest and acknowledges it; UNPINNED's issue stays an error."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unsupported_representation_coding", "detail": {"contains": "'first'"}},
+      "fields": ["subject", "severity", "acknowledged_by"],
+      "rows": [
+        ["scb/pinned/income", "warning", "curation/registers/scb/pinned.toml#/acknowledge/2"],
+        ["scb/unpinned/income", "error", null]
+      ],
+      "note": "The first literal's issue, on the same coordinates: only PINNED's second entry, which pins this issue's digest, acknowledges it."
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
+      "fields": ["code", "case_id"],
+      "rows": [
+        ["overbroad_curation_entry", "curation/registers/scb/unpinned.toml#/acknowledge/1"]
+      ],
+      "note": "UNPINNED's undigested entry matches both of its register's issues and is over-broad; PINNED's two guarded entries are neither stale nor over-broad."
+    }
+  ]
+}

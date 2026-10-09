@@ -75,9 +75,9 @@ automatically on every edit.
 
 The unifying research-intent artifact is **`project_data.json`** — written by the
 webapp, consumed by the shared materializer above and the planned MONA runner rebuild.
-Its schema and structural validator are `reg_schema`
-([`reg_schema/DESIGN.md`](reg_schema/DESIGN.md)). It deliberately does not encode
-physical filenames or SQL tables. Compiled physical holdings
+Its schema and structural validator are `reg-core`'s
+([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). It deliberately does not
+encode physical filenames or SQL tables. Compiled physical holdings
 (`table + edition → literal columns → zero-or-more explicit logical mappings`) join a
 project and query-time reg_meta resolution to produce one normalized, versioned JSON
 order manifest for web and CLI, with no per-steward export template. The materializer
@@ -142,8 +142,7 @@ webapp ships as a container image on `reg_webapp/v*`.
 - **`reg_meta → reg_schema`** — the order materializer and project semantic resolution
   consume `ProjectData`, so they live in `reg_meta` as shared domain code. Taking this
   edge was deliberate, rather than creating another package for them (2026-07-14,
-  #1137). Their thin-adapter contract is `reg_meta/DESIGN.md` → "Order materializer and
-  manifest".
+  #1137). Their contract is `crates/DESIGN.md` → "Order manifest".
 
 ### Accepted source revisions and catalog generations
 
@@ -208,7 +207,8 @@ mapping membership before counts, groups or pagination. Classifications, value s
 documents and lineage stay reference metadata. Query-time resolution intersects physical
 periods with applicable states; no resolved segments are compiled. Unknown-scope
 holdings remain physical evidence, cannot admit logical nodes and cannot be ordered. The
-public-surface rules and exceptions live in `reg_meta/DESIGN.md`.
+public-surface rules and exceptions live in `crates/DESIGN.md` → "Read scope and
+artifact admission".
 
 The reader and webapp open the selected artifact read-only and validate its identity.
 `REG_WEBAPP_STEWARD` must equal its manifest steward; unset/global selects the `catalog`
@@ -231,7 +231,7 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   hard MONA air-gap rule (no Pydantic + stdlib-only module-level imports) applied to
   `reg_monabundle`'s amalgamated bundle — that package is now archived; see
   `REFACTOR_SPEC.md`. Decided 2026-06-22 (#680 re-attribution, #681 adoption). See
-  `reg_schema/DESIGN.md` and `reg_meta_build/DESIGN.md`.
+  `crates/reg-core/DESIGN.md` and `reg_meta_build/DESIGN.md`.
 - **Build / runtime cleanly separated.** `reg_meta` (query) is small and pure;
   `reg_meta_build` is operator-side. A future port replaces query only; build stays
   Python.
@@ -425,9 +425,9 @@ git (the `MIGRATION_PLAN.md` tracker was retired once A5 shipped).
   | Old spec section                                                                                                        | New home                            |
   | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------- |
   | §1 background, §2/§3 product, §4 layout/deps, §9.3 REST, §11 changes, §12 invariants, §13 policy, §16 overview          | this file                           |
-  | §5 object model, FQID grammar, edge semantics, library API, glossary; §6.8.3 semantic rules; §15 step 12 order manifest | `reg_meta/DESIGN.md`                |
+  | §5 object model, FQID grammar, edge semantics, library API, glossary; §6.8.3 semantic rules; §15 step 12 order manifest | `crates/DESIGN.md`                  |
   | §4.4 IR/adapter, §5.3 slug curation, §5.4 immutability, §5.6 lineage, §5.7 triage, ID minting                           | `reg_meta_build/DESIGN.md`          |
-  | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                     | `reg_schema/DESIGN.md`              |
+  | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                     | `crates/reg-core/DESIGN.md`         |
   | §9 webapp                                                                                                               | `reg_webapp/DESIGN.md`              |
   | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                                 | `archive/mona-subsystem`            |
   | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–11, remaining §16     | `REFACTOR_SPEC.md` (remaining work) |

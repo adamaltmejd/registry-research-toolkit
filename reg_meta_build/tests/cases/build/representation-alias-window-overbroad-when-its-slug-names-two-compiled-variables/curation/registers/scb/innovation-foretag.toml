@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "innovation-foretag"
+native_id = "257"
+[[variant]]
+native_id = "257.553"
+slug = "_default"
+[[variable]]
+native_id = "257.15662"
+slug = "answer-sweden"
+[[representation.alias_window]]
+variable = "scb/innovation-foretag/answer-sweden"
+variant = "_default"
+column = "CO11"
+source_editions = ["2012 - 2014"]
+evidence = "The 2014 analysis table holds CO11."
+noted = "2026-10-09"
+[[representation.matrix]]
+source_mode = "documented_blank"
+evidence_file = "registers/scb/innovation-foretag/answers.json"
+selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2012 - 2014", regver_id = 7293, var_id = 15662, cvid = 400684 }
