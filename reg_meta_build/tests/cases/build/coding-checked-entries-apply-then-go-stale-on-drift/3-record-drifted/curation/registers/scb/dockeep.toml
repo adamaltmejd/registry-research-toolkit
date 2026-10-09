@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "dockeep"
+native_id = "42"
+[[variant]]
+native_id = "42.2"
+slug = "people"
+[[variable]]
+native_id = "42.5"
+slug = "value"
+
+[[coding.documented]]
+variable = "42.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+members = [["1", "One"]]
+version_label = "doc"
+source_authority = { revision = {{revision key=member:4200}}, locators = {{locators key=member:4200}}, records = {{expected_records key=member:4200}}, codings = {{source_codings key=member:4200}} }
+reason = "Reviewed coding"
+source = "fixture"

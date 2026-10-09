@@ -99,3 +99,11 @@ native_id = {{naming_id kind=variable provider=sos register_key=val member_key=C
 [[variable]]
 slug = "idmix"
 native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDMIX}}
+
+[[variable]]
+slug = "idclamps"
+native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDCLAMPS}}
+
+[[variable]]
+slug = "suffix"
+native_id = {{naming_id kind=variable provider=sos register_key=val member_key=SUFFIX}}
