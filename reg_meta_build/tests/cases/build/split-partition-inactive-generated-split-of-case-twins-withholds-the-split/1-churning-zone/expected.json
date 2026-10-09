@@ -1,0 +1,47 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "unresolved_catalog_identity"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "'accepted-partition', '1.5.kon'"
+        }
+      },
+      "fields": [
+        "code",
+        "severity",
+        "withheld_output"
+      ],
+      "rows": [
+        [
+          "unresolved_catalog_identity",
+          "error",
+          [
+            "variable"
+          ]
+        ]
+      ],
+      "note": "The one issue is on the split's key, the key step 2 names."
+    },
+    {
+      "table": "variables",
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "rows": []
+    }
+  ]
+}

@@ -1,7 +1,10 @@
 {
   "error": {
-    "code": "pipeline_build_failed",
+    "code": "naming_split_unmatched",
     "exit_code": 10,
-    "message_contains": ["ambiguous naming lacks an unresolved native identity"]
+    "message_contains": [
+      "curation/registers/scb/sample.toml#variable/1.5.other",
+      "matches no delivered column"
+    ]
   }
 }

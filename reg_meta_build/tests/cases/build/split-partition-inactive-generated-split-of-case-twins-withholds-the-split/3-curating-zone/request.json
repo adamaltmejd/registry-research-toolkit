@@ -1,6 +1,6 @@
 {
   "note": "The allowed twin: step 1's tree plus slug_state.toml with scb = \"curating\", so the generated pin is live. Both case twins bind to kon, as with the authored pin of split-partition-implicit-case-twins-in-different-years-bind-to-one-split.",
-  "fails_if": "`convert_naming` (source_naming.py) stops converting a generated pin when `freeze_state` (fqid_slugs.py) reads the zone as `curating` from slug_state.toml, or the partition compile (curation_compile.py) stops deriving the split's provider key from its converted pin, so this build aborts with step 1's refusal",
+  "fails_if": "`convert_naming` (source_naming.py) stops converting a generated pin when `freeze_state` (fqid_slugs.py) reads the zone as `curating` from slug_state.toml, or the partition compile (curation_compile.py) stops deriving the split's provider key from its converted pin, so this build withholds the split as step 1 does",
   "sources": {
     "description": "Variable 5 delivers column Kon in 2020 (CVID 20) and KON in 2021 (CVID 21).",
     "scb": {

@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "naming_partition_unconverted",
+    "exit_code": 10,
+    "message_contains": [
+      "Partition split '1.5.kon'",
+      "no converted catalog naming"
+    ]
+  }
+}
