@@ -12,8 +12,6 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta.source_evidence import canonical_sha256
-
 from reg_meta_build.catalog_dependencies import variable_dependency_keys
 from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
 from reg_meta_build.curation_compile import compile_coding_register
@@ -60,6 +58,8 @@ from reg_meta_build.source_value_bindings import (
     bind_copied_coding,
     bind_occurrence_code_lists,
 )
+
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Mapping

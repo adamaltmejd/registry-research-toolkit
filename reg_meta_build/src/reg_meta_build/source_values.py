@@ -16,7 +16,7 @@ from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from reg_meta.source_evidence import DeliveredCell, RecordLocator
+    from .source_evidence import DeliveredCell, RecordLocator
 
 
 type NormalizedValue = tuple[str | None, str | None]

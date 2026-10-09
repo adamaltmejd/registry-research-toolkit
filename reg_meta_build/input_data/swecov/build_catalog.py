@@ -50,8 +50,8 @@ from pydantic import (
     Field,
     model_validator,
 )
-from reg_meta.inventory import ColumnMapping, InventoryColumn, edition_bounds
 from reg_meta_build.holdings_census import census_rows
+from reg_meta_build.inventory import ColumnMapping, InventoryColumn, edition_bounds
 from reg_meta_build.swecov_policy import load_source_policy as _load_source_policy
 
 if TYPE_CHECKING:
@@ -1867,7 +1867,7 @@ def _inventory_period_records(
     A range/list is record coverage, not per-column availability; it remains
     unassessed. Distinct owners active together in one variant stay ambiguous.
     """
-    from reg_meta.inventory import _merge, edition_bounds
+    from reg_meta_build.inventory import _merge, edition_bounds
     from reg_meta_build.inventory_coverage import _covers
 
     if not isinstance(edition, (str, int)):
@@ -2623,8 +2623,8 @@ def cmd_inventory(args: argparse.Namespace) -> None:
             print(f"    {t}")
     print(f"  wrote worklist to {wl_path}")
 
-    from reg_meta.errors import RegMetaError
-    from reg_meta.inventory import load_inventory
+    from reg_meta_build.errors import RegMetaError
+    from reg_meta_build.inventory import load_inventory
 
     try:
         inv = load_inventory(dest)
@@ -2655,8 +2655,8 @@ def cmd_inventory(args: argparse.Namespace) -> None:
 
 
 def cmd_errata(args: argparse.Namespace) -> None:
-    from reg_meta.inventory import load_inventory
     from reg_meta_build.db import open_built_db
+    from reg_meta_build.inventory import load_inventory
     from reg_meta_build.inventory_coverage import (
         coverage_misses,
         errata_worklist,

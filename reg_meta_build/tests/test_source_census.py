@@ -14,7 +14,7 @@ from _csv_fixtures import (
     write_scb_input,
 )
 from _source_inspection_fixtures import InterpreterCheckout
-from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE
+from reg_meta_build.errors import EXIT_CONFIG, EXIT_USAGE
 from reg_meta_build.input_snapshot import (
     open_input_bundle,
 )

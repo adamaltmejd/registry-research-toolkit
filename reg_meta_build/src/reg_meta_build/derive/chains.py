@@ -7,7 +7,8 @@ from graphlib import CycleError, TopologicalSorter
 from typing import TYPE_CHECKING
 
 from reg_core_py import parse_fqid
-from reg_meta.db import classification_succession_as_of_year
+
+from reg_meta_build.db import classification_succession_as_of_year
 
 if TYPE_CHECKING:
     import sqlite3

@@ -15,7 +15,6 @@ from typing import TYPE_CHECKING, Any, Literal, cast
 
 from pydantic import TypeAdapter, ValidationError
 from reg_core_py import parse_fqid
-from reg_meta.source_evidence import canonical_sha256
 
 from ._curation import SentinelCode, curation_error, fold_column
 from ._resolved_common import covers_window, remaining_windows
@@ -121,6 +120,7 @@ from .source_curation import (
     evaluate_source_expectations,
 )
 from .source_effects import apply_occurrence_cases, record_ref
+from .source_evidence import canonical_sha256
 from .source_intervals import coding_scope_bounds, reconcile_source_fields, scope_bounds
 from .source_naming import (
     AcceptedNamingEntry,

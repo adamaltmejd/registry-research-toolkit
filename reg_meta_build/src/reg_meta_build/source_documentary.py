@@ -5,14 +5,6 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from typing import TYPE_CHECKING
 
-from reg_meta.documentary import (
-    DocumentaryRelationship,
-    DocumentaryVariableReference,
-    SourceCodeCrosswalkDeclaration,
-    SourceDerivationDeclaration,
-)
-from reg_meta.source_evidence import canonical_sha256
-
 from reg_meta_build.curation_tree import (
     DocumentaryBindingEntry,
     DocumentaryRetainedEntry,
@@ -21,6 +13,14 @@ from reg_meta_build.id import mint
 from reg_meta_build.prepared_catalog import ReferenceEvidence
 from reg_meta_build.resolved_metadata import RetainedDocumentaryRelationship
 from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
+
+from .documentary import (
+    DocumentaryRelationship,
+    DocumentaryVariableReference,
+    SourceCodeCrosswalkDeclaration,
+    SourceDerivationDeclaration,
+)
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from reg_meta_build.curation_tree import CurationTree, RegisterCuration

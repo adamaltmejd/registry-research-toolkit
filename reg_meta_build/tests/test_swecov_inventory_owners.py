@@ -22,8 +22,8 @@ from _swecov_fixtures import (
     inventory_worklist as _inventory_worklist,
     run_inventory as _run_inventory,
 )
-from reg_meta.inventory import load_inventory as load_delivery_inventory
 from reg_meta_build.derive.states import derive_states
+from reg_meta_build.inventory import load_inventory as load_delivery_inventory
 
 if TYPE_CHECKING:
     from pathlib import Path

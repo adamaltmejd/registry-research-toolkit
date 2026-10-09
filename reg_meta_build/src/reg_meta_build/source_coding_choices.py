@@ -13,8 +13,6 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal, cast
 
-from reg_meta.source_evidence import canonical_sha256
-
 from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.source_coding import (
     CodeListClaim,
@@ -43,6 +41,8 @@ from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
 from reg_meta_build.source_records import ScopeInterval, SourceFields, TemporalScope
 from reg_meta_build.source_value_bindings import _member_scope
+
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping

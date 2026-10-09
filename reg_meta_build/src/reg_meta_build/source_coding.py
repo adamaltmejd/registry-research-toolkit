@@ -16,10 +16,11 @@ from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
 from pydantic import ConfigDict, TypeAdapter
-from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_intervals import coding_scope_bounds
+
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable

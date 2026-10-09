@@ -36,8 +36,8 @@ def test_warning_with_a_changed_payload_under_its_old_identity_is_refused(
     import json
     from pathlib import Path
 
-    from reg_meta.catalog import DataWarning
-    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.data_warnings import DataWarning
+    from reg_meta_build.source_evidence import canonical_sha256
 
     fixture = DataWarning.model_validate_json(
         (Path(__file__).parent / "cases/holdings/warning/warning.json").read_text()
@@ -68,8 +68,8 @@ def test_warning_naming_an_unwritten_variable_is_demoted_to_its_register(
     import json
     from pathlib import Path
 
-    from reg_meta.catalog import DataWarning
-    from reg_meta.source_evidence import canonical_sha256
+    from reg_meta_build.data_warnings import DataWarning
+    from reg_meta_build.source_evidence import canonical_sha256
 
     fixture = DataWarning.model_validate_json(
         (Path(__file__).parent / "cases/holdings/warning/warning.json").read_text()

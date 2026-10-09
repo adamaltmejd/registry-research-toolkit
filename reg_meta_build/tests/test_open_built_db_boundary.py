@@ -10,8 +10,8 @@ import sqlite3
 import warnings
 from typing import TYPE_CHECKING
 
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.db import SCHEMA_VERSION, open_built_db
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 
 if TYPE_CHECKING:
     from pathlib import Path

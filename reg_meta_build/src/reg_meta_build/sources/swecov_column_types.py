@@ -8,17 +8,16 @@ import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta.source_evidence import (
-    DeliveredCell,
-    RecordLocator,
-    SourceField,
-    SourceRevision,
-)
-
 from reg_meta_build._curation import (
     data_type_class,
     fold_column,
     widen_data_type_classes,
+)
+from reg_meta_build.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceField,
+    SourceRevision,
 )
 from reg_meta_build.source_records import value_field
 from reg_meta_build.source_reference_records import (

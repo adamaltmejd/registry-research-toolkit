@@ -13,7 +13,6 @@ import subprocess
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.input_snapshot import (
     SCB_CSV_FILES,
     CatalogBundleSelection,
@@ -22,6 +21,7 @@ from reg_meta_build.input_snapshot import (
     prepare_input_bundle,
     prepare_snapshot,
 )
+from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 if TYPE_CHECKING:

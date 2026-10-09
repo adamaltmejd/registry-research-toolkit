@@ -12,7 +12,6 @@ from _source_formation_support import (
     form_family as _form,
     formation_record as _record,
 )
-from reg_meta.source_evidence import SourceField
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
 from reg_meta_build.source_coding import (
     CodeListClaim,
@@ -23,6 +22,7 @@ from reg_meta_build.source_coordinates import (
     native_column_key,
     native_variant_key,
 )
+from reg_meta_build.source_evidence import SourceField
 from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_occurrences import (
     AppliedCorrection,

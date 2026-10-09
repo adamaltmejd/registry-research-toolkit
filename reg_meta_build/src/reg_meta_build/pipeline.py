@@ -14,8 +14,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict
-from reg_meta.errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
-from reg_meta.source_evidence import canonical_sha256
 
 from reg_meta_build._curation import (
     SEARCH_PINS_FILE,
@@ -109,6 +107,9 @@ from reg_meta_build.sources.swecov_column_types import (
     index_steward_column_storage,
 )
 from reg_meta_build.validate import validate_built_db
+
+from .errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator

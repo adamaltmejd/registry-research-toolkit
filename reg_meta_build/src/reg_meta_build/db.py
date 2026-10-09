@@ -8,28 +8,25 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import sqlite3
 import struct
 import sys
 import time
 from contextlib import closing, contextmanager
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from reg_core_py import fold_identity
-from reg_meta.db import (
-    get_manifest,
-    open_db as _open_catalog_db,
-)
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
 from ._curation import printable_error
+from .errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
 SCHEMA_VERSION = "9.7.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
-    from pathlib import Path
 
     from .input_snapshot import (
         ScbSnapshotReader,
@@ -223,6 +220,257 @@ def register_py_lower(conn: sqlite3.Connection) -> None:
     conn.create_function("py_lower", 1, _py_lower, deterministic=True)
 
 
+CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY = "classification_succession_as_of_year"
+# Release-time policy for future-dated classification succession. Bump deliberately
+# when a new DB release should activate a future classification hand-off.
+CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
+
+DB_FILENAME = "reg_meta.db"
+
+
+def default_db_dir() -> Path:
+    """Default directory for the reg_meta database.
+
+    Resolution: $REG_META_DB > $XDG_DATA_HOME/reg_meta > platform default.
+    """
+    if env := os.environ.get("REG_META_DB"):
+        return Path(env).expanduser()
+    return data_dir()
+
+
+def data_dir() -> Path:
+    """Installation root, independent of an explicit REG_META_DB selection."""
+    if xdg := os.environ.get("XDG_DATA_HOME"):
+        return Path(xdg) / "reg_meta"
+    if sys.platform == "win32":
+        return Path(os.environ.get("LOCALAPPDATA", "~/AppData/Local")) / "reg_meta"
+    return Path.home() / ".local" / "share" / "reg_meta"
+
+
+def db_path_from_args(
+    db_arg: str | None,
+    filename: str = DB_FILENAME,
+    *,
+    catalog: str | None = None,
+) -> Path:
+    if db_arg is not None and catalog is not None:
+        raise RegMetaError(
+            exit_code=2,
+            code="usage_error",
+            error_class="usage",
+            message="--catalog and --db are mutually exclusive.",
+            remediation="Select one catalog name or database directory.",
+        )
+    if catalog is not None:
+        from .fqid import validate_slug
+
+        try:
+            validate_slug(catalog, "catalog")
+        except ValueError as exc:
+            raise RegMetaError(
+                exit_code=2,
+                code="usage_error",
+                error_class="usage",
+                message=f"Invalid catalog name {catalog!r}.",
+                remediation="Use a lowercase catalog slug, for example swecov or global.",
+            ) from exc
+        directory = data_dir() if catalog == "global" else data_dir() / catalog
+    else:
+        directory = Path(db_arg).expanduser() if db_arg else default_db_dir()
+    return directory.resolve() / filename
+
+
+def validate_catalog_selection(
+    conn: sqlite3.Connection, catalog: str | None = None
+) -> None:
+    """Admit publishable identity and, when named, require an exact selection."""
+    manifest = get_manifest(conn)
+    kind = manifest.get("catalog_artifact_kind")
+    valid = (
+        kind in {"catalog", "steward"}
+        and manifest.get("catalog_publishable") == "true"
+        and manifest.get("catalog_completeness") == "complete"
+        and re.fullmatch(r"[0-9a-f]{64}", manifest.get("generation_id", "")) is not None
+    )
+    if kind == "steward":
+        from .fqid import validate_slug
+
+        try:
+            validate_slug(manifest.get("steward", ""), "steward")
+        except ValueError:
+            valid = False
+    if not valid:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_unpublishable",
+            error_class="configuration",
+            message="Selected artifact lacks a publishable catalog identity and generation.",
+            remediation="Install a complete catalog with reg-meta update --catalog NAME.",
+        )
+    if catalog is not None and (
+        (catalog == "global" and kind != "catalog")
+        or (
+            catalog != "global"
+            and (kind != "steward" or manifest.get("steward") != catalog)
+        )
+    ):
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_mismatch",
+            error_class="configuration",
+            message=f"Selected catalog {catalog!r} disagrees with artifact kind {kind!r} and steward {manifest.get('steward')!r}.",
+            remediation="Select the artifact's catalog name or use its explicit directory.",
+        )
+
+
+def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
+    """Raise if the database schema is incompatible with the installed code.
+
+    Code with ``SCHEMA_VERSION = M.m.p`` requires a DB whose manifest records a
+    schema version with the same major M and minor >= m. A lower minor means
+    the code may reference columns that don't exist in the DB; different majors
+    are hard breaks. Patch differences are ignored.
+
+    Missing or unparseable ``schema_version`` is treated as incompatible — the
+    ``check_schema=False`` escape hatch exists for legitimate bypasses
+    (e.g. ``reg-meta info``, doc DB).
+    """
+    fix = "Run `reg-meta update` to get a compatible database."
+
+    try:
+        manifest = get_manifest(conn)
+    except sqlite3.Error as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Database manifest is missing or unreadable in {db_path}. "
+                f"Expected schema v{SCHEMA_VERSION} metadata."
+            ),
+            remediation=fix,
+        ) from exc
+
+    db_ver = manifest.get("schema_version")
+    try:
+        if not db_ver:
+            raise ValueError("missing schema_version")
+        db_parts = db_ver.split(".")
+        db_major, db_minor = int(db_parts[0]), int(db_parts[1])
+        code_parts = SCHEMA_VERSION.split(".")
+        code_major, code_minor = int(code_parts[0]), int(code_parts[1])
+    except (ValueError, IndexError) as exc:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Database schema version is missing or invalid in {db_path}: "
+                f"{db_ver!r}. This version of reg_meta expects schema v{SCHEMA_VERSION}."
+            ),
+            remediation=fix,
+        ) from exc
+
+    if db_major != code_major or db_minor < code_minor:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Database schema v{db_ver} ({db_path}) is incompatible "
+                f"with this version of reg_meta (expects schema v{SCHEMA_VERSION})."
+            ),
+            remediation=fix,
+        )
+
+
+_DB_NOT_FOUND_REMEDIATION = (
+    "Run `reg-meta update` to fetch the pre-built DB, "
+    "or see `reg-meta-build build-db --help` to build from pinned prepared sources."
+)
+
+
+def require_db_file(
+    db_path: Path,
+    *,
+    error_code: str = "db_not_found",
+    remediation: str = _DB_NOT_FOUND_REMEDIATION,
+) -> None:
+    """Fail (EXIT_CONFIG) when no DB file exists at ``db_path`` — a stat, not an
+    open, for a caller that must fail fast on a missing catalog before it has
+    decided to open one (``reg-meta validate``)."""
+    if not db_path.exists():
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code=error_code,
+            error_class="configuration",
+            message=f"Database not found: {db_path}",
+            remediation=remediation,
+        )
+
+
+def open_db(
+    db_path: Path,
+    *,
+    check_schema: bool = True,
+    catalog: str | None = None,
+    error_code: str = "db_not_found",
+    remediation: str = _DB_NOT_FOUND_REMEDIATION,
+) -> sqlite3.Connection:
+    require_db_file(db_path, error_code=error_code, remediation=remediation)
+    # `immutable=1` (read-only path only): the published DB assets ship in WAL
+    # journal mode, and a plain `mode=ro` open of a WAL DB still tries to create
+    # the `-wal`/`-shm` sidecars — which crashes ("attempt to write a readonly
+    # database") whenever the catalog dir isn't writable (non-root container user,
+    # read-only volume mount, shared install; see #283). `immutable=1` promises
+    # SQLite the file never changes, so it skips sidecar creation and all locking.
+    # Corollary: a stray `-wal` next to the file (crashed reader, third-party
+    # tool) is IGNORED, not replayed — silent staleness, not an error. Can't
+    # happen via our writers, which always install checkpointed base-only files.
+    #
+    # Locking trade-off (the gotcha): disabling locking means a reader racing an
+    # in-place writer is unprotected. Acceptable here because nothing writes this
+    # inode in place — `reg-meta update` installs via tmp-file + atomic rename
+    # (a reader holding the old inode keeps reading a consistent, now-unlinked
+    # file), and the only other writer, maintainer-local `reg-meta-build build-db`,
+    # ALSO writes a `.db.tmp` and replaces the default path with it
+    # (reg_meta_build.db.publish_db: one `Path.replace` onto the live name, after
+    # the replaced generation is hard-linked aside to `.prev`). No code path
+    # mutates the live inode under a reader, so the immutability contract holds.
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro&immutable=1", uri=True)
+    conn.row_factory = sqlite3.Row
+    register_py_lower(conn)
+    if check_schema:
+        try:
+            _check_schema_compat(conn, db_path)
+            validate_catalog_selection(conn, catalog)
+        except RegMetaError:
+            conn.close()
+            raise
+    return conn
+
+
+def get_manifest(conn: sqlite3.Connection) -> dict[str, str]:
+    rows = conn.execute("SELECT key, value FROM import_manifest").fetchall()
+    return {row["key"]: row["value"] for row in rows}
+
+
+def classification_succession_as_of_year(conn: sqlite3.Connection) -> int:
+    try:
+        row = conn.execute(
+            "SELECT value FROM import_manifest WHERE key = ?",
+            (CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,),
+        ).fetchone()
+    except sqlite3.Error:
+        return CLASSIFICATION_SUCCESSION_AS_OF_YEAR
+    if row is None:
+        return CLASSIFICATION_SUCCESSION_AS_OF_YEAR
+    try:
+        return int(row["value"] if isinstance(row, sqlite3.Row) else row[0])
+    except TypeError, ValueError, IndexError, KeyError:
+        return CLASSIFICATION_SUCCESSION_AS_OF_YEAR
+
+
 def _admits_older_minor(version: str | None) -> bool:
     try:
         major, minor = map(int, (version or "").split(".")[:2])
@@ -238,7 +486,7 @@ def open_built_db(db_path: Path, *, older_minor: bool = False) -> sqlite3.Connec
     `older_minor` admits the same major with a minor up to the builder's: the
     input gate of `derive`, which lifts an older base to this schema.
     """
-    conn = _open_catalog_db(db_path, check_schema=False)
+    conn = open_db(db_path, check_schema=False)
     try:
         try:
             version = get_manifest(conn).get("schema_version")

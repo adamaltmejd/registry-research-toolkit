@@ -74,9 +74,6 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
-# Reuse the inventory's interval grammar at the build-time diagnostic boundary.
-from reg_meta.inventory import _intersect, _merge, _render, edition_bounds
-
 # `_CURATED_PROVIDERS` is the build's own `(provider slug, input_data subdir)`
 # registry — the one `sources/curated.py` reads — so the surface this gate names
 # for a non-SCB miss is the file the build really takes that provider's windows
@@ -91,11 +88,14 @@ from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.fqid_slugs import _toml_str
 from reg_meta_build.scb_errata import _PROVIDER, ERRATA_COLUMN_SOURCE_LABEL
 
+# Reuse the inventory's interval grammar at the build-time diagnostic boundary.
+from .inventory import _intersect, _merge, _render, edition_bounds
+
 if TYPE_CHECKING:
     import sqlite3
     from collections.abc import Sequence
 
-    from reg_meta.inventory import DeliveryInventory, InventoryColumn
+    from .inventory import DeliveryInventory, InventoryColumn
 
 # An inclusive ISO `(lo, hi)` date interval — `reg_meta.inventory`'s currency.
 _Interval = tuple[str, str]

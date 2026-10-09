@@ -7,8 +7,6 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from reg_meta.source_evidence import canonical_sha256
-
 from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE, CatalogDependencies
 from reg_meta_build.resolved_metadata import (
     ResolvedLineageWarning,
@@ -22,6 +20,8 @@ from reg_meta_build.source_curation import (
     acknowledgement_hashes_sha256,
     settle_acknowledgements,
 )
+
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Mapping

@@ -397,10 +397,10 @@ def test_independent_register_only_attribution_retains_missing_endpoint_warning(
 
 def _guarded_ambiguous_lineage():
     from _source_scope_support import record
-    from reg_meta.source_evidence import canonical_sha256
     from reg_meta_build.catalog_lineage import lineage_acknowledgement_sha256
     from reg_meta_build.source_coordinates import source_register_key
     from reg_meta_build.source_curation import AcknowledgeDecision, CurationCase
+    from reg_meta_build.source_evidence import canonical_sha256
 
     variables, options = fixture(second_variant=True)
     options["variants"] += (
@@ -546,9 +546,9 @@ def test_scoped_lineage_acknowledgement_defers_only_positively_unselected_source
 
 
 def test_lineage_guard_retains_earlier_context_when_later_source_origin_differs():
-    from reg_meta.source_evidence import canonical_sha256
     from reg_meta_build.catalog_lineage import lineage_acknowledgement_sha256
     from reg_meta_build.resolved_metadata import ResolvedVariableSameAs
+    from reg_meta_build.source_evidence import canonical_sha256
 
     variables, options, case = _guarded_ambiguous_lineage()
     consumer, first = variables

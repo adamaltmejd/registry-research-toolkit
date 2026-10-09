@@ -17,7 +17,7 @@ from _curation_toml_boundary_support import (
     run_build_docs,
     write_register_doc,
 )
-from reg_meta.errors import EXIT_CONFIG
+from reg_meta_build.errors import EXIT_CONFIG
 
 if TYPE_CHECKING:
     from pathlib import Path

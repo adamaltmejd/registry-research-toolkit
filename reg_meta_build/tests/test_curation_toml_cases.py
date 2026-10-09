@@ -25,8 +25,6 @@ import pytest
 from _case_projection import MATCH_MODES, mismatch, unclaimed
 from pydantic import BaseModel
 from reg_core_py import Fqid
-from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.source_evidence import SourceRevision
 from reg_meta_build.cis2016_matrix import MatrixSelector, load_matrix
 from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.concept_groups import (
@@ -41,8 +39,10 @@ from reg_meta_build.curation_tree import (
     load_register_files,
 )
 from reg_meta_build.doc_db import load_related_documents
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.relations import load_relations
 from reg_meta_build.scb_errata import resolve_scb_errata
+from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.sources.curated_records import read_curated_source
 from reg_meta_build.tags import load_tags
 

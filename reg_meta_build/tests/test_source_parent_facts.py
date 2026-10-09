@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
-from reg_meta.source_evidence import SourceField, SourceRevision
 from reg_meta_build.source_curation import (
     parent_fact_projection,
 )
+from reg_meta_build.source_evidence import SourceField, SourceRevision
 from reg_meta_build.sources.scb_records import clean_scb_row
 
 if TYPE_CHECKING:

@@ -9,8 +9,7 @@ from calendar import monthrange
 from contextlib import closing
 from typing import TYPE_CHECKING
 
-from reg_meta.db import SCHEMA_VERSION
-from reg_meta_build.db import DDL, seed_providers
+from reg_meta_build.db import DDL, SCHEMA_VERSION, seed_providers
 
 if TYPE_CHECKING:
     from pathlib import Path

@@ -5,17 +5,17 @@ from __future__ import annotations
 import hashlib
 from typing import Literal
 
-from reg_meta.source_evidence import (
-    DeliveredCell,
-    RecordLocator,
-    SourceRevision,
-)
 from reg_meta_build.source_curation import (
     CodingDecision,
     FieldExpectation,
     RecordExpectation,
     RecordProjection,
     SourceRecordRef,
+)
+from reg_meta_build.source_evidence import (
+    DeliveredCell,
+    RecordLocator,
+    SourceRevision,
 )
 from reg_meta_build.source_records import (
     NativeCoordinates,

@@ -7,8 +7,8 @@ from typing import cast
 import pytest
 from _source_scope_support import record
 from pydantic import ValidationError
-from reg_meta.documentary import SourceCodeCrosswalkDeclaration
-from reg_meta.source_evidence import (
+from reg_meta_build.documentary import SourceCodeCrosswalkDeclaration
+from reg_meta_build.source_evidence import (
     DeliveredCell,
     RecordLocator,
     SourceField,

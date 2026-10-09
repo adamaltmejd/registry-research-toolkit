@@ -16,7 +16,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
-from reg_meta.source_evidence import SourceRevision
 
 from reg_meta_build._accepted_prepared import (
     check_accepted_files,
@@ -78,6 +77,8 @@ from reg_meta_build.sources.swecov_column_types import (
     SWECOV_COLUMN_TYPES_PATH,
     read_swecov_column_types,
 )
+
+from .source_evidence import SourceRevision
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
