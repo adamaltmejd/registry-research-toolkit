@@ -57,6 +57,10 @@
           "a"
         ],
         [
+          "d",
+          "b"
+        ],
+        [
           "example-codes",
           "older-codes"
         ],
@@ -93,7 +97,7 @@
           "sun2020-niva"
         ]
       ],
-      "note": "The single predecessor pointer projects only edges active as of the as-of year."
+      "note": "The single predecessor pointer projects only edges active as of the as-of year. An undated edge is active: d's only predecessor is b, by the undated b -> d edge."
     },
     {
       "table": "classification_successions",
@@ -113,6 +117,12 @@
         [
           "b",
           "current",
+          null,
+          "curated:slug_toml"
+        ],
+        [
+          "b",
+          "d",
           null,
           "curated:slug_toml"
         ],

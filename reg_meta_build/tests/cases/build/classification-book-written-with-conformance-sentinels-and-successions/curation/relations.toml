@@ -17,6 +17,11 @@ to = "class/current"
 
 [[edge]]
 type = "replaced_by"
+from = "class/b"
+to = "class/d"
+
+[[edge]]
+type = "replaced_by"
 from = "class/a"
 to = "class/current"
 effective_year = 2026

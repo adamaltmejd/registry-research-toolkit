@@ -1,5 +1,5 @@
 {
-  "description": "SCB TESTREG 2020: EXTENDED (101) and SENTINEL (102) carry the 'Example codes' list bound to book example-codes; SCOPED (103) carries 'Local list' with 09350 Okänt; TYPELESS (104) has no data type and a 2020 list, plus a 2022 delivery without one. Twelve books, five curated classification successions.",
+  "description": "SCB TESTREG 2020: EXTENDED (101) and SENTINEL (102) carry the 'Example codes' list bound to book example-codes; SCOPED (103) carries 'Local list' with 09350 Okänt; TYPELESS (104) has no data type and a 2020 list, plus a 2022 delivery without one. Thirteen books, six curated classification successions.",
   "scb": {
     "registerinformation": [
       {
@@ -100,6 +100,10 @@
       "01,One"
     ],
     "classifications/future.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/d.csv": [
       "code,label",
       "01,One"
     ]

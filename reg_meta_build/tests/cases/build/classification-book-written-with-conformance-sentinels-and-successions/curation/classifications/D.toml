@@ -1,0 +1,5 @@
+[classification]
+short_name = "D"
+slug = "d"
+name = "D"
+codes_file = "d.csv"
