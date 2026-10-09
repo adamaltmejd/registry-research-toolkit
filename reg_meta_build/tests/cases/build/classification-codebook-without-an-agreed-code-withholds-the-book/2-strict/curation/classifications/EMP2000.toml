@@ -1,0 +1,5 @@
+[classification]
+short_name = "EMP2000"
+slug = "emp2000"
+name = "EMP 2000"
+codes_file = "emp2000.csv"

@@ -10,3 +10,6 @@ register = "scb/other"
 family_stem = "calendar"
 label = "Calendar per month"
 slug = "calendar"
+[[variable]]
+native_id = "2.230"
+slug = "plain"

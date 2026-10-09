@@ -24,7 +24,7 @@ from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from ._curation import printable_error
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "9.6.0"
+SCHEMA_VERSION = "9.7.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -433,49 +433,26 @@ CREATE TABLE IF NOT EXISTS coded_variable_stats (
 # Display text comes from the base tables, never from these.
 SEARCH_INDEX_DDL = """\
 -- The source `variable_fts` folds, and the reader's display text for variable
--- hits. `variable_alias` stays the normalized source of truth; this view
--- contributes a search-only, deterministic aggregate of historical delivery column
--- names so the index covers the aliases without denormalizing `variable`.
-CREATE VIEW variable_search_text AS
-SELECT
-    v.variable_id,
-    v.register_id,
-    v.provider_key,
-    COALESCE(v.name, (
-        SELECT group_concat(name, char(10)) FROM (
-            SELECT name FROM variable_state WHERE variable_id = v.variable_id AND name IS NOT NULL
-            UNION
-            SELECT name FROM variable_alias_window WHERE variable_id = v.variable_id AND name IS NOT NULL
-            ORDER BY name
-        )
-    )) AS name,
-    COALESCE(v.definition, (
-        SELECT group_concat(definition, char(10)) FROM (
-            SELECT definition FROM variable_state WHERE variable_id = v.variable_id AND definition IS NOT NULL
-            UNION
-            SELECT definition FROM variable_alias_window WHERE variable_id = v.variable_id AND definition IS NOT NULL
-            ORDER BY definition
-        )
-    )) AS definition,
-    COALESCE(v.description, (
-        SELECT group_concat(description, char(10)) FROM (
-            SELECT description FROM variable_state WHERE variable_id = v.variable_id AND description IS NOT NULL
-            UNION
-            SELECT description FROM variable_alias_window WHERE variable_id = v.variable_id AND description IS NOT NULL
-            ORDER BY description
-        )
-    )) AS description,
-    v.operational_definition,
-    (
-        SELECT json_group_array(delivery_column_name)
-        FROM (
-            SELECT DISTINCT va.delivery_column_name
-            FROM variable_alias va
-            WHERE va.variable_id = v.variable_id
-            ORDER BY va.delivery_column_name
-        )
-    ) AS delivery_column_names
-FROM variable v;
+-- hits. `variable_alias` stays the normalized source of truth; this table holds a
+-- search-only, deterministic aggregate of historical delivery column names so the
+-- index covers the aliases without denormalizing `variable`. Materialized
+-- (search_index.py `VARIABLE_SEARCH_TEXT`), so a cold first search reads its hits'
+-- rows, not the scattered `variable_state` rows a view's fallbacks would.
+CREATE TABLE variable_search_text (
+    variable_id INTEGER PRIMARY KEY,
+    register_id INTEGER NOT NULL,
+    provider_key TEXT NOT NULL,
+    name TEXT,
+    definition TEXT,
+    description TEXT,
+    operational_definition TEXT,
+    -- JSON array of the variable's distinct delivery column names, sorted.
+    delivery_column_names TEXT NOT NULL
+);
+
+-- Code search: the LIKE prefix match on `code` is ASCII case-insensitive, so only
+-- a NOCASE index serves it; `idx_value_code_code` stays for exact BINARY lookups.
+CREATE INDEX idx_value_code_code_nocase ON value_code(code COLLATE NOCASE);
 
 CREATE VIRTUAL TABLE register_fts USING fts5(
     register_id UNINDEXED,
@@ -504,7 +481,7 @@ CREATE VIRTUAL TABLE classification_fts USING fts5(
 );
 
 -- value_code label search (#352): only `label`; `code` is matched through
--- idx_value_code_code (exact/prefix), since ~55% of codes are purely numeric.
+-- idx_value_code_code_nocase (exact/prefix), since ~55% of codes are purely numeric.
 -- Stoplisted and ownerless labels are left out, so this index has fewer rows than
 -- value_code; the leaf tables keep every row (search-only hiding).
 CREATE VIRTUAL TABLE value_code_fts USING fts5(

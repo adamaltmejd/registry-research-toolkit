@@ -9,3 +9,6 @@ INSERT INTO register_fts (rowid, register_id, name, purpose)
 VALUES (4611686018427387905, 4611686018427387905, 'lova', NULL);
 INSERT INTO variable_fts (rowid, register_id, provider_key, name, delivery_column_names)
 VALUES (4611686018427387907, 4611686018427387905, 'x', 'x', '[]');
+INSERT INTO variable_search_text
+    (variable_id, register_id, provider_key, name, delivery_column_names)
+VALUES (4611686018427387907, 4611686018427387905, 'X', 'X', '[]');

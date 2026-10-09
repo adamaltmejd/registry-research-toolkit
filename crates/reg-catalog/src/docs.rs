@@ -16,22 +16,24 @@ const DOC_DB_FILENAME: &str = "reg_meta_docs.db";
 pub struct Docs {
     path: PathBuf,
     generation: String,
+    mmap_size: i64,
 }
 
 impl Docs {
-    /// Admit `dir/reg_meta_docs.db`; `None` when there is none.
+    /// Admit `dir/reg_meta_docs.db`; `None` when there is none. `mmap_size` is as
+    /// `Catalog::open`'s.
     ///
     /// # Errors
     ///
     /// `doc_schema_incompatible` when its schema version is missing, unreadable or
     /// outside the gate, or it has no generation.
-    pub fn open(dir: &Path) -> Result<Option<Self>, Error> {
+    pub fn open(dir: &Path, mmap_size: i64) -> Result<Option<Self>, Error> {
         let path = dir.join(DOC_DB_FILENAME);
         if !path.is_file() {
             return Ok(None);
         }
         let meta = |key: &str| -> Option<String> {
-            connect(&path)
+            connect(&path, mmap_size)
                 .and_then(|conn| {
                     conn.query_row("SELECT value FROM doc_meta WHERE key = ?", [key], |row| {
                         row.get(0)
@@ -44,7 +46,11 @@ impl Docs {
         if version.as_deref().is_some_and(|v| admits(DOC_SCHEMA, v))
             && let Some(generation) = meta("generation")
         {
-            return Ok(Some(Self { path, generation }));
+            return Ok(Some(Self {
+                path,
+                generation,
+                mmap_size,
+            }));
         }
         Err(Error::new(
             Code::DocSchemaIncompatible,
@@ -71,6 +77,6 @@ impl Docs {
     ///
     /// `catalog_unavailable` when the admitted file cannot be opened.
     pub fn connect(&self) -> Result<Connection, Error> {
-        connect(&self.path).map_err(|err| unavailable(&self.path, &err))
+        connect(&self.path, self.mmap_size).map_err(|err| unavailable(&self.path, &err))
     }
 }

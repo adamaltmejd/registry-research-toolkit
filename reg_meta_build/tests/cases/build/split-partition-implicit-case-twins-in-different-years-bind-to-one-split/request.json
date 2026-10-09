@@ -1,11 +1,12 @@
 {
   "replaces": [
-    "test_curation_compile_partitions.py::test_implicit_partition_binds_non_co_delivered_case_twins"
+    "test_curation_compile_partitions.py::test_implicit_partition_binds_non_co_delivered_case_twins",
+    "test_source_effect_identity.py::test_naming_pin_does_not_establish_identity_for_distinct_column_spellings[Kön-Kon-2021-kon]"
   ],
-  "note": "No [[identity.partition]]: the declared split 1.5.kon names the native family's columns implicitly, and two spellings of one column that are never delivered together in one year fold onto it.",
-  "fails_if": "`convert_column_partitions` matches the split suffix against column names case-sensitively, or treats non-co-delivered case twins as competing literals, so KON (or Kon) stays on the unnamed native family",
+  "note": "No [[identity.partition]]: the declared split 1.5.kon names the native family's columns implicitly, and three spellings of one column that are never delivered together in one year fold onto it: Kon and KON differ by case, Kön by a diacritic (the replaced Kön/Kon test). The replaced Kön/Kon test is named for distinct spellings that do not bind, but its one surviving parameter asserts that they do.",
+  "fails_if": "`convert_column_partitions` matches the split suffix against column names case-sensitively, or treats non-co-delivered case twins as competing literals, so KON (or Kon) stays on the unnamed native family; or `fold_column` stops stripping diacritics (lowercase only), so Kön and Kon count as two literals and the whole kon split stays unresolved",
   "sources": {
-    "description": "Variable 5 delivers column Kon in 2020 (CVID 20) and KON in 2021 (CVID 21).",
+    "description": "Variable 5 delivers column Kon in 2020 (CVID 20), KON in 2021 (CVID 21) and Kön in 2022 (CVID 22).",
     "scb": {
       "registerinformation": [
         {
@@ -21,6 +22,13 @@
           "var_id": 5,
           "year": "2021",
           "regver_id": 2021
+        },
+        {
+          "colname": "Kön",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 2022
         }
       ]
     }

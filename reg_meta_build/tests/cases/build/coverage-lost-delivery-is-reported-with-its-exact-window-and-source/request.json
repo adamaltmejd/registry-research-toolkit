@@ -1,0 +1,37 @@
+{
+  "replaces": [
+    "test_source_scope_delivery_coverage.py::test_lost_delivery_coverage_is_refused_with_its_exact_window[column]",
+    "test_source_scope_delivery_coverage.py::test_a_search_only_alias_establishes_no_delivery_for_the_lost_window"
+  ],
+  "note": "The refusal side of `coverage-supported-claims-are-delivered-or-explicitly-withdrawn`, and the only build known to reach the lost-coverage guard. It rides on a formation defect: Kon and KON are case twins of one column, delivered in different editions, so formation folds them onto the most recent spelling, KON, and renames the claims. Their 2021 deliveries overlap, so `_disjoint_representations` withholds 2021 (unresolved_column_representation) and copies the surviving slices (source_formation.py:370); the rename at source_formation.py:1224 looks states up by `id()` and misses the copies, so Kon's 2019..2020 slice is written on its raw spelling while its claim moved to KON. That is the replaced [column] test's damage: the claimed window written on another column. Expected values follow from the fixture and the replaced tests' relational claims: the refusal names exactly the claim's window minus the withheld overlap (Kon's 2019-2021 edition minus 2021 = 2019-01-01..2020-12-31), the coordinate (`scb/sample/kon people/KON`, the chosen spelling) and the claiming record (CVID 19, edition 119). The windowless `[[enrichment.alias]]` on KON is the replaced alias test's search alias on the lost column; it attaches, and the loss is still reported. Once the rename follows the copied states, this build writes KON 2019..2020 and reports no loss, and the guard has no build witness again: the fix must then restore a slim [column] arm beside the ones test_source_scope_delivery_coverage.py keeps.",
+  "fails_if": "`check_delivery_coverage` (catalog_dependencies.py) matches a claim to written states by variable and variant without the physical column, so Kon's 2019..2020 state counts as KON delivery; or it counts a windowless search alias as delivery over every period, so the KON alias hides the loss; or `form_native_variable` stops taking the withheld 2021 overlap back from Kon's claim, so the reported window widens to 2019-01-01..2021-12-31; or it stops naming the claiming source record. This case also flips (no loss, KON 2019..2020 written) when formation's spelling fold is fixed to rename the copied slices, which is the intended fix of the defect it rides on",
+  "sources": {
+    "description": "Register 1 (TESTREG), variant 10, variable 5 delivers column Kon in a pooled 2019-2021 edition (CVID 19, edition 119) and its case twin KON in 2021 (CVID 21, edition 121) and 2022 (CVID 22, edition 122).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "Kon",
+          "cvid": 19,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 119,
+          "versionname": "2019-2021"
+        },
+        {
+          "colname": "KON",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 121
+        },
+        {
+          "colname": "KON",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 122
+        }
+      ]
+    }
+  }
+}

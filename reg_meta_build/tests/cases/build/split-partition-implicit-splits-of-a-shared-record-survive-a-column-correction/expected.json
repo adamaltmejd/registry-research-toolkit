@@ -1,0 +1,75 @@
+{
+  "projections": [
+    {
+      "table": "uses",
+      "where": {
+        "source": "scb-registerinformation"
+      },
+      "fields": [
+        "key",
+        "column_name",
+        "variable"
+      ],
+      "rows": [
+        [
+          "member:20",
+          "ANSWER_A",
+          "scb/sample/answer-a"
+        ],
+        [
+          "member:20",
+          "ANSWER_B",
+          "scb/sample/answer-b"
+        ],
+        [
+          "member:22",
+          null,
+          null
+        ],
+        [
+          "member:23",
+          "ANSWER_NEW",
+          null
+        ]
+      ],
+      "note": "Each delivered literal goes to the split its original column names; the blank and unmatched rows stay on the native family."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "sample"
+      },
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "rows": [
+        [
+          "answer-a",
+          "ANSWER_B"
+        ],
+        [
+          "answer-b",
+          "ANSWER_B"
+        ]
+      ],
+      "note": "answer-a keeps its identity and carries the corrected column."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "ambiguous_named_identity",
+          "conflicting_curation_effects",
+          "stale_curation_entry"
+        ]
+      },
+      "fields": [
+        "code",
+        "subject"
+      ],
+      "rows": [],
+      "note": "The column correction and the partition compose without a conflict."
+    }
+  ]
+}

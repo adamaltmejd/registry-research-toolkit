@@ -1,0 +1,89 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "subject"],
+      "where": {
+        "code": ["conflicting_classification_labels", "empty_canonical_classification"]
+      },
+      "note": "The contested code and its empty book, both located at emp2007, and the empty book nil, which has no rows to contest.",
+      "rows": [
+        ["conflicting_classification_labels", "error", "emp2007"],
+        ["empty_canonical_classification", "error", "emp2007"],
+        ["empty_canonical_classification", "error", "nil"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "empty_canonical_classification", "subject": "emp2007"},
+      "fields": ["ref"],
+      "match": "includes",
+      "note": "The empty book cites the contested codebook rows (beside its codebook header), so it can withhold its dependents.",
+      "rows": {
+        "refs_of": {
+          "table": "issue_refs",
+          "where": {"code": "conflicting_classification_labels"}
+        }
+      }
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "withheld_catalog_dependency",
+        "detail": {"contains": "its binding"}
+      },
+      "fields": ["severity", "fields", "valid_from", "valid_to"],
+      "note": "AMOUNT's declared EMP2007 binding and VALUE's 'Older list' label binding to emp2007 are each withheld for their one 2020 delivery.",
+      "rows": [
+        ["error", ["classification"], "2020-01-01", "2020-12-31"],
+        ["error", ["classification"], "2020-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": {"contains": "classification_succession"}},
+      "fields": ["code", "subject"],
+      "note": "Each derived chain edge through emp2007 is withheld, once per cause.",
+      "rows": [
+        ["withheld_catalog_dependency", "classification_succession:emp2000->emp2007"],
+        ["withheld_catalog_dependency", "classification_succession:emp2000->emp2007"],
+        ["withheld_catalog_dependency", "classification_succession:emp2007->emp2020"],
+        ["withheld_catalog_dependency", "classification_succession:emp2007->emp2020"]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "match": "set",
+      "note": "No other issue; VALUE's two value-set versions in one period withhold only its coding label (conflicting_coding_labels).",
+      "rows": [
+        ["conflicting_classification_labels"],
+        ["conflicting_coding_labels"],
+        ["empty_canonical_classification"],
+        ["withheld_catalog_dependency"]
+      ]
+    },
+    {
+      "table": "classifications",
+      "fields": ["slug"],
+      "rows": [["emp2000"], ["emp2020"]]
+    },
+    {
+      "table": "classification_successions",
+      "fields": ["predecessor", "successor"],
+      "rows": []
+    },
+    {
+      "table": "state_classifications",
+      "fields": ["variable", "classification"],
+      "note": "VALUE keeps its emp2020 binding beside the withheld emp2007 one.",
+      "rows": [["score", "emp2020"], ["value", "emp2020"]]
+    },
+    {
+      "table": "states",
+      "fields": ["register", "variable"],
+      "rows": [["sample", "value"], ["remote", "amount"], ["remote", "score"]]
+    }
+  ]
+}

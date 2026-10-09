@@ -1,12 +1,13 @@
 {
   "replaces": [
     "test_curation_partition_delivered_boundary.py::test_simultaneous_components_are_added_beside_the_blank_native_base",
-    "test_source_scope_naming.py::test_columnless_only_remainder_warns_with_original_refs"
+    "test_source_scope_naming.py::test_columnless_only_remainder_warns_with_original_refs",
+    "test_source_scope_naming.py::test_unknown_column_keeps_remainder_identity_error"
   ],
-  "note": "Each component gets its own 2021 addition; the blank row stays as evidence. The issue_refs projection comes from the scope naming test: a remainder whose occurrences all state no physical column is one warning (not an identity error) citing exactly those original rows, here the literal-blank 2021 member (CVID 30 in the fixture).",
-  "fails_if": "the `[[errata.delivered]]` compile stops recognising reviewed simultaneous partition components (`component_base_key` stays None), so each entry rewrites the one 2021 blank row instead of keeping it as evidence and adding its own occurrence; or `resolve_source_scope` stops special-casing an all-columnless remainder (the omitted_columnless_occurrence branch), so CVID 30 is reported as an unresolved_catalog_identity error",
+  "note": "Each component gets its own 2021 addition; the blank row stays as evidence. The issue_refs projection comes from the scope naming test: a remainder whose occurrences all state no physical column is one warning (not an identity error) citing exactly those original rows, here the literal-blank 2021 member (CVID 30 in the fixture). From the unknown-column test, its refusal twin: an unnamed variable whose occurrences mix a stated-absent column (CVID 40) with an unknown one (CVID 41) keeps the one unresolved_catalog_identity error, citing both rows, and gets no omitted_columnless_occurrence warning.",
+  "fails_if": "the `[[errata.delivered]]` compile stops recognising reviewed simultaneous partition components (`component_base_key` stays None), so each entry rewrites the one 2021 blank row instead of keeping it as evidence and adding its own occurrence; or `resolve_source_scope` stops special-casing an all-columnless remainder (the omitted_columnless_occurrence branch), so CVID 30 is reported as an unresolved_catalog_identity error; or that branch tests `any` occurrence (or skips unknown columns) instead of requiring every occurrence to state a negative column, so variable 6 is downgraded to an omitted_columnless_occurrence warning",
   "sources": {
-    "description": "Variable 5 delivers A, B and C in 2020 (CVIDs 20-22), and one literal blank member in 2021 (CVID 30).",
+    "description": "Variable 5 delivers A, B and C in 2020 (CVIDs 20-22), and one literal blank member in 2021 (CVID 30). Unnamed variable 6 delivers a literal blank member in 2020 (CVID 40) and a whitespace-only Kolumnnamn in 2021 (CVID 41), which is not literally blank, so its column is unknown rather than absent.",
     "scb": {
       "registerinformation": [
         {
@@ -37,6 +38,22 @@
           "colname": "\"\"",
           "cvid": 30,
           "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": "\"\"",
+          "cvid": 40,
+          "var_id": 6,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": ["TEST", 1, 2]
+        },
+        {
+          "colname": " ",
+          "cvid": 41,
+          "var_id": 6,
           "year": "2021",
           "regver_id": 2021,
           "register": ["TEST", 1, 2]

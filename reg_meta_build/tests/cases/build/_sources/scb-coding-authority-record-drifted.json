@@ -1,5 +1,5 @@
 {
-  "description": "scb-coding-authority-reviewed with Registerinformation rows drifted per register (code lists unchanged): CHOICE's description changes; EXTEND gains a 2022 row and ROWS a 2021 row (appended); ALTERNATIVES' second physical row's data_length becomes 11; ALPHA's name gains a 'Not ' prefix. DOCVALID 41 and DOCKEEP 42 each deliver 1 One whose item has two VardemangderValidDates rows: an unknown one (`bad|bad`) and 2000-01-01..2030-12-31, so the item's validity is unknown in 2020 whatever the second row says. Their rows are the reviewed ones.",
+  "description": "scb-coding-authority-reviewed with Registerinformation rows drifted per register (code lists unchanged): CHOICE's description changes; EXTEND gains a 2022 row and ROWS a 2021 row (appended); ALTERNATIVES' second physical row's data_length becomes 11; ALPHA's name gains a 'Not ' prefix. DOCVALID 41 and DOCKEEP 42 each deliver 1 One whose item has two VardemangderValidDates rows: an unknown one (`bad|bad`) and 2000-01-01..2030-12-31, so the item's validity is unknown in 2020 whatever the second row says. Their rows are the reviewed ones. WARNING 43's 2020 row (CVID 4300) is retyped varchar.",
   "scb": {
     "registerinformation": [
       {
@@ -668,6 +668,19 @@
           42,
           2
         ]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 4300,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 432020,
+        "register": [
+          "WARNING",
+          43,
+          2
+        ],
+        "data_type": "varchar"
       }
     ],
     "vardemangder": [
@@ -751,7 +764,8 @@
       "complete|1|16310|Erroneous|3800|3813",
       "binary|1|1|Label|4000|4011",
       "doc|1|1|One|4100|4111",
-      "doc|1|1|One|4200|4211"
+      "doc|1|1|One|4200|4211",
+      "list|1|1|One|4300|4301"
     ],
     "valid_dates": [
       "1101|2000-01-01|2030-12-31",
@@ -836,7 +850,8 @@
       "4111|bad|bad",
       "4111|2000-01-01|2030-12-31",
       "4211|bad|bad",
-      "4211|2000-01-01|2030-12-31"
+      "4211|2000-01-01|2030-12-31",
+      "4301|2000-01-01|2030-12-31"
     ]
   },
   "files": {

@@ -612,6 +612,7 @@ def _issue_row(event: dict) -> dict:
         "valid_from": event.get("valid_from"),
         "valid_to": event.get("valid_to"),
         "fields": event.get("fields") or [],
+        "withheld_output": event.get("withheld_output") or [],
     }
 
 
@@ -696,7 +697,7 @@ def _variables(outcome: Outcome) -> list[dict]:
     rows = outcome._sql(
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
         "s.delivery_column_name AS column, v.provider_key, v.description, "
-        "v.is_identifier, v.is_sensitive FROM variable v "
+        "v.is_identifier, v.is_sensitive, v.deprecated FROM variable v "
         "JOIN register r USING (register_id) "
         "LEFT JOIN variable_state s USING (variable_id)"
     )
@@ -721,28 +722,68 @@ def _concept_groups(outcome: Outcome) -> list[dict]:
     return [{"variables": sorted(slugs)} for slugs in groups.values()]
 
 
+def _stored(row_value, json_value):
+    """A coordinate both the `data_warning` row and its `warning_json` hold: the
+    value when they agree, else both, so a disagreement fails any case naming it."""
+    if row_value == json_value:
+        return row_value
+    return {"row": row_value, "json": json_value}
+
+
+def _sha256(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
 def _warnings(outcome: Outcome) -> list[dict]:
-    return [
-        {
-            "register": row["register"],
-            "variable": row["variable"],
-            "column": row["delivery_column_name"],
-            "valid_from": payload.get("valid_from"),
-            "valid_to": payload.get("valid_to"),
-            "code": payload["code"],
-            "variant": payload.get("variant"),
-            "detail": payload["detail"],
-            "summary": payload.get("summary"),
-            "fields": payload.get("fields"),
-            "refs": _refs(payload.get("refs")),
-        }
-        for row in outcome._sql(
-            "SELECT r.slug AS register, v.slug AS variable, w.delivery_column_name, "
-            "w.warning_json FROM data_warning w JOIN register r USING (register_id) "
-            "LEFT JOIN variable v ON v.variable_id = w.variable_id"
+    issue_hashes = {
+        (event["code"], str(event["subject"]), _sha256(event.get("detail") or ""))
+        for event in outcome.events
+        if event["kind"] == "issue"
+    }
+    rows = []
+    for row in outcome._sql(
+        "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
+        "w.delivery_column_name, w.valid_from, w.valid_to, w.warning_json "
+        "FROM data_warning w JOIN register r USING (register_id) "
+        "LEFT JOIN variable v ON v.variable_id = w.variable_id "
+        "LEFT JOIN register_variant rv "
+        "ON rv.register_variant_id = w.register_variant_id"
+    ):
+        payload = json.loads(row["warning_json"])
+        variable = payload.get("variable_fqid")
+        digest = payload["diagnostic_detail_sha256"]
+        rows.append(
+            {
+                "register": _stored(
+                    row["register"], payload["register_fqid"].split("/")[-1]
+                ),
+                "variable": _stored(
+                    row["variable"], variable.split("/")[-1] if variable else None
+                ),
+                "variant": _stored(row["variant"], payload.get("variant")),
+                "column": _stored(
+                    row["delivery_column_name"], payload.get("delivery_column_name")
+                ),
+                "valid_from": _stored(row["valid_from"], payload.get("valid_from")),
+                "valid_to": _stored(row["valid_to"], payload.get("valid_to")),
+                "code": payload["code"],
+                "severity": payload["severity"],
+                "detail": payload["detail"],
+                "summary": payload.get("summary"),
+                "detail_hash_of": "issue"
+                if (payload["code"], payload["source_subject"], digest) in issue_hashes
+                else "detail"
+                if _sha256(payload["detail"]) == digest
+                else None,
+                "fields": payload.get("fields"),
+                "refs": _refs(payload.get("refs")),
+                "withheld_output": payload.get("withheld_output"),
+                "acknowledged_by": payload.get("acknowledged_by"),
+                "source_subject": payload["source_subject"],
+                "case_id": payload.get("case_id"),
+            }
         )
-        for payload in (json.loads(row["warning_json"]),)
-    ]
+    return rows
 
 
 def _alias_windows(outcome: Outcome) -> list[dict]:
@@ -768,7 +809,7 @@ def _alias_windows(outcome: Outcome) -> list[dict]:
     for row in outcome._sql(
         f"SELECT {key}, r.slug AS register, v.slug AS variable, rv.slug AS variant, "
         "w.delivery_column_name AS column, w.valid_to, w.column_metadata, "
-        "w.coding_metadata, w.data_type, w.data_length, w.definition, "
+        "w.provenance, w.coding_metadata, w.data_type, w.data_length, w.definition, "
         "w.measurement_unit, w.name, w.description, w.operational_definition, "
         "w.source_register_text FROM variable_alias_window w JOIN variable v USING (variable_id) "
         "JOIN register r ON r.register_id = v.register_id "
@@ -1043,9 +1084,9 @@ FIELDS: dict[str, frozenset[str]] = {
     name: frozenset(fields.split())
     for name, fields in {
         "issues": "code severity subject case_id locator detail acknowledged_by "
-        "valid_from valid_to fields",
+        "valid_from valid_to fields withheld_output",
         "issue_refs": "code severity subject case_id locator detail acknowledged_by "
-        "valid_from valid_to fields source key ref",
+        "valid_from valid_to fields withheld_output source key ref",
         "cases": "case_id status",
         "uses": "source native_variable key column_name data_type name description "
         "use variable",
@@ -1055,17 +1096,18 @@ FIELDS: dict[str, frozenset[str]] = {
         "description operational_definition source_register_text",
         "state_codes": "register variable variant column valid_from valid_to code label",
         "variables": "register variable column provider_key description "
-        "is_identifier is_sensitive",
+        "is_identifier is_sensitive deprecated",
         "variants": "register variant name panel_entity_key panel_time_key",
         "tags": "slug member",
         "aliases": "register variable variant column",
-        "alias_windows": "register variable variant column valid_from valid_to "
+        "alias_windows": "register variable variant column valid_from valid_to provenance "
         "column_metadata coding_metadata data_type data_length definition "
         "measurement_unit name description operational_definition "
         "source_register_text codes classifications",
         "concept_groups": "variables",
-        "warnings": "register variable column valid_from valid_to code variant detail "
-        "summary fields refs",
+        "warnings": "register variable variant column valid_from valid_to code "
+        "severity detail summary detail_hash_of fields refs withheld_output "
+        "acknowledged_by source_subject case_id",
         "search_pins": "query type position entity",
         "manifest": "key value",
         "edges": "type a b",

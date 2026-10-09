@@ -1,0 +1,59 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["kon", "people", "Kon", "2019-01-01", "2020-12-31"],
+        ["kon", "people", "KON", "2022-01-01", "2022-12-31"]
+      ],
+      "note": "The damage: Kon's surviving 2019..2020 slice is written on its raw spelling, KON's on KON; the overlapping 2021 is withheld."
+    },
+    {
+      "table": "aliases",
+      "where": {"column": "KON"},
+      "fields": ["variable", "variant", "column"],
+      "rows": [["kon", "people", "KON"]],
+      "note": "Alias test: the windowless search alias on the lost column attaches."
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["unexplained_delivery_coverage_loss", "unresolved_column_representation"]},
+      "fields": ["code", "severity", "subject", "valid_from", "valid_to"],
+      "rows": [
+        [
+          "unexplained_delivery_coverage_loss",
+          "error",
+          "scb/sample/kon people/KON 2019-01-01..2020-12-31",
+          null,
+          null
+        ],
+        ["unresolved_column_representation", "error", "scb/sample/kon", "2021-01-01", "2021-12-31"]
+      ],
+      "note": "Exact window and coordinate: one loss for KON 2019..2020 (the claim minus the withheld overlap), beside the overlap's own withholding."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unexplained_delivery_coverage_loss",
+        "detail": {
+          "contains": [
+            "supported delivery coverage was lost",
+            "scb/sample/kon people/KON 2019-01-01..2020-12-31 claimed by scb-registerinformation/register:1/variant:10/edition:119/variable:5/member:19"
+          ]
+        }
+      },
+      "fields": ["code"],
+      "rows": [["unexplained_delivery_coverage_loss"]],
+      "note": "The [column] test's message claims: the refusal names the lost window, the coordinate and the claiming source record."
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "unexplained_delivery_coverage_loss"},
+      "fields": ["ref"],
+      "rows": [["scb-registerinformation#register:1/variant:10/edition:119/variable:5/member:19"]],
+      "note": "The loss cites only Kon's record (CVID 19), whose claim was lost."
+    }
+  ]
+}

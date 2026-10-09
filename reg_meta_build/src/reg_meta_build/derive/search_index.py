@@ -39,6 +39,50 @@ _VALUE_CODE_OWNED = (
     "WHERE cc.code_id = value_code.code_id))"
 )
 
+# The rows of `variable_search_text`, in its column order: a variable's own text, or
+# else its state and alias-window texts, distinct and sorted, one per line.
+# `validate_built_db` compares the stored rows with the same source.
+VARIABLE_SEARCH_TEXT = """\
+SELECT
+    v.variable_id,
+    v.register_id,
+    v.provider_key,
+    COALESCE(v.name, (
+        SELECT group_concat(name, char(10)) FROM (
+            SELECT name FROM variable_state WHERE variable_id = v.variable_id AND name IS NOT NULL
+            UNION
+            SELECT name FROM variable_alias_window WHERE variable_id = v.variable_id AND name IS NOT NULL
+            ORDER BY name
+        )
+    )) AS name,
+    COALESCE(v.definition, (
+        SELECT group_concat(definition, char(10)) FROM (
+            SELECT definition FROM variable_state WHERE variable_id = v.variable_id AND definition IS NOT NULL
+            UNION
+            SELECT definition FROM variable_alias_window WHERE variable_id = v.variable_id AND definition IS NOT NULL
+            ORDER BY definition
+        )
+    )) AS definition,
+    COALESCE(v.description, (
+        SELECT group_concat(description, char(10)) FROM (
+            SELECT description FROM variable_state WHERE variable_id = v.variable_id AND description IS NOT NULL
+            UNION
+            SELECT description FROM variable_alias_window WHERE variable_id = v.variable_id AND description IS NOT NULL
+            ORDER BY description
+        )
+    )) AS description,
+    v.operational_definition,
+    (
+        SELECT json_group_array(delivery_column_name)
+        FROM (
+            SELECT DISTINCT va.delivery_column_name
+            FROM variable_alias va
+            WHERE va.variable_id = v.variable_id
+            ORDER BY va.delivery_column_name
+        )
+    ) AS delivery_column_names
+FROM variable v"""
+
 # Each search index and the rows it holds: rowid, then its columns in declaration
 # order. `validate_built_db` compares the stored rows with the same source.
 SEARCH_INDEXES = {
@@ -68,8 +112,8 @@ def derive_search_indexes(conn: sqlite3.Connection) -> None:
     """Drop and refill the full-text indexes with `fold_search` text of the core graph.
 
     Dropping also replaces an older base's external-content indexes and their
-    `variable_fts_content` view, whose name the new index's shadow table takes.
-    Commits.
+    `variable_fts_content` view, whose name the new index's shadow table takes, and
+    its `variable_search_text` view with the table. Commits.
     """
     # simplify: a steward extension refolds the inherited value-code labels its
     # overlay never changes; skip value_code_fts there if derive misses its budget.
@@ -78,8 +122,14 @@ def derive_search_indexes(conn: sqlite3.Connection) -> None:
     for table in SEARCH_INDEXES:
         conn.execute(f"DROP TABLE IF EXISTS {table}")
     conn.execute("DROP VIEW IF EXISTS variable_fts_content")
-    conn.execute("DROP VIEW IF EXISTS variable_search_text")
+    # A view before 9.7, a table since; each DROP refuses the other kind.
+    for (kind,) in conn.execute(
+        "SELECT type FROM sqlite_master WHERE name = 'variable_search_text'"
+    ).fetchall():
+        conn.execute(f"DROP {kind.upper()} variable_search_text")
+    conn.execute("DROP INDEX IF EXISTS idx_value_code_code_nocase")
     conn.executescript(SEARCH_INDEX_DDL)
+    conn.execute(f"INSERT INTO variable_search_text {VARIABLE_SEARCH_TEXT} ORDER BY 1")
     for table, source in SEARCH_INDEXES.items():
         columns = ", ".join(
             row[1] for row in conn.execute(f"PRAGMA table_info({table})")

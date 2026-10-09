@@ -141,12 +141,14 @@ pub(super) fn arm(
     }
     if is_code_shaped(request.q) {
         let q = py_strip(request.q);
-        let mut args: Vec<Sql> = vec![q.to_owned().into(), format!("{}%", like_escape(q)).into()];
+        let mut args: Vec<Sql> = vec![format!("{}%", like_escape(q)).into()];
         args.extend(owner_args);
         args.push(q.to_owned().into());
+        // The prefix LIKE also holds every exact (NOCASE) match: both fold ASCII
+        // case only. A lone LIKE term lets idx_value_code_code_nocase serve it.
         let mut stmt = conn.prepare(&format!(
             "SELECT vc.code_id, vc.code, vc.label, vc.mapping_count, {code_system} \
-             FROM value_code vc WHERE (vc.code = ? COLLATE NOCASE OR vc.code LIKE ? ESCAPE '\\') \
+             FROM value_code vc WHERE vc.code LIKE ? ESCAPE '\\' \
              AND (vc.mapping_count > 0 OR {classified}){owner} \
              ORDER BY (vc.code = ? COLLATE NOCASE) DESC, length(vc.code), vc.code, vc.code_id \
              LIMIT {HORIZON}"
