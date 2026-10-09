@@ -1,0 +1,79 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "warnings",
+      "where": {"register": "acked"},
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "severity", "detail", "detail_hash_of", "fields", "withheld_output", "acknowledged_by", "source_subject", "case_id"],
+      "rows": [
+        ["value", "people", "VALUE", "2020-01-01", "2020-12-31", "conflicting_occurrence_facts", "warning", "Accepted while the source stays unresolved.", "issue", ["measurement_unit"], ["measurement_unit"], "curation/registers/scb/acked.toml#/acknowledge/1", "scb/acked/value", null]
+      ],
+      "note": "acked: the acknowledged 2020 conflict's refs belong to one variable and are delivered through the one state they overlap, so the warning carries that variable, variant, column and the issue's own period. Its detail is the reviewer's reason, not the diagnostic's detail, which it keeps only as a hash."
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "conflicting_occurrence_facts", "subject": "scb/acked/value"},
+      "fields": ["ref"],
+      "rows": {"refs_of": {"table": "warnings", "where": {"register": "acked"}}},
+      "note": "acked: the warning cites exactly the source records of the issue it publishes."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "conflicting_occurrence_facts", "subject": "scb/unacked/value"},
+      "fields": ["severity", "acknowledged_by"],
+      "rows": [["error", null]],
+      "note": "unacked: the same conflict, not acknowledged, stays in the report ledger."
+    },
+    {
+      "table": "warnings",
+      "where": {"register": "unacked"},
+      "fields": ["code"],
+      "rows": [],
+      "note": "unacked: an unacknowledged issue whose code is not a data-quality code publishes no warning (neither the conflict nor delivery_units_vary)."
+    },
+    {
+      "table": "warnings",
+      "where": {"register": "alternatives"},
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "detail", "detail_hash_of"],
+      "rows": [
+        ["income", null, null, "2021-01-01", "2021-12-31", "missing_coding_period", "Accepted while the alternatives stay uncoded.", "issue"]
+      ],
+      "note": "alternatives: member 3002 is delivered through First and Second, but the variable's 2021 state names only First, so the delivery witnesses do not match one state: the warning keeps its variable and period and names no variant or column."
+    },
+    {
+      "table": "warnings",
+      "where": {"register": "undated"},
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "detail", "detail_hash_of"],
+      "match": "set",
+      "rows": [
+        ["value", null, null, null, null, "unsupported_coding_scope", "The supplied evidence does not establish when this response domain applies. An unsupported period has not been inferred.", "issue"]
+      ],
+      "note": "undated: the unacknowledged data-quality issue about the range-less pooled list has an owner but no period, so its warning names the variable and no state. Its detail is the code's published text, not the diagnostic's internal detail."
+    },
+    {
+      "table": "warnings",
+      "where": {"register": "unowned"},
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "summary", "detail", "detail_hash_of", "acknowledged_by", "case_id"],
+      "rows": [
+        [null, null, null, null, null, "unresolved_catalog_identity", "The source variable identity could not be established", "The source facts are retained, but the evidence does not establish a unique catalog variable identity.", "issue", null, null]
+      ],
+      "note": "unowned: the unpinned variable 502 forms no catalog variable, so its identity issue's ref has no owner and the warning stays register-wide, with no invented variable, state or period."
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "unresolved_catalog_identity"},
+      "fields": ["ref"],
+      "rows": {"refs_of": {"table": "warnings", "where": {"register": "unowned"}}},
+      "note": "unowned: the register-wide warning still cites its issue's source record."
+    },
+    {
+      "table": "warnings",
+      "where": {"register": "storage"},
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "severity", "summary", "detail_hash_of", "fields", "refs", "acknowledged_by", "source_subject", "case_id"],
+      "rows": [
+        ["stored", "people", "Stored", "2020-01-01", "2020-12-31", "assumed_storage_type", "warning", "Text storage is assumed; the historical storage type is not documented.", "detail", ["data_type"], [], null, "curation/registers/scb/storage.toml#/errata.column/1", "curation/registers/scb/storage.toml#/errata.column/1"]
+      ],
+      "note": "storage: the [[errata.column]] data_warning is published as a storage-type assumption on the added column's own 2020 state, never on the delivered anchor VALUE. Its summary is the curated text, its subject and case are the entry, and it cites no source record because the added column has none."
+    }
+  ]
+}
