@@ -61,15 +61,15 @@
       ]
     },
     {
-      "note": "The prepared records keep their delivered column and description: corrections are not written back as source evidence (the old test: the record's own column_name keeps its delivered claim).",
+      "note": "The ledger attributes each delivered record to its variable; periods' record reaches none, because its occurrence is withheld.",
       "table": "uses",
       "where": {"key": ["member:101", "member:201", "member:301", "member:401"]},
-      "fields": ["key", "column_name", "description", "variable"],
+      "fields": ["key", "variable"],
       "rows": [
-        ["member:101", "OLD", "Original description", "scb/compose/answer"],
-        ["member:201", "OLD", "Original description", "scb/later/answer"],
-        ["member:301", "ANSWER", "Original description", null],
-        ["member:401", "ANSWER", "Original description", "scb/renamed/answer"]
+        ["member:101", "scb/compose/answer"],
+        ["member:201", "scb/later/answer"],
+        ["member:301", null],
+        ["member:401", "scb/renamed/answer"]
       ]
     }
   ]
