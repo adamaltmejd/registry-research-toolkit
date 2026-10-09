@@ -407,15 +407,6 @@ note = "Build-side artifact IO (extend-db, validate_built_db, derive); conforman
 
 [[row]]
 kind = "import"
-id = "reg_meta.db.register_py_lower"
-used_by = ["reg_meta_build"]
-disposition = "replaced"
-owner = "4"
-covered_by = ["reg_meta/tests/test_value_code_search.py", "reg_meta/tests/test_cli_resolve.py"]
-note = "`fold_identity` (section 5), registered as the SQLite function."
-
-[[row]]
-kind = "import"
 id = "reg_meta.doc_db"
 used_by = ["reg_webapp"]
 disposition = "removed"

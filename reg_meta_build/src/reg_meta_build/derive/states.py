@@ -21,7 +21,8 @@ from typing import TYPE_CHECKING, Literal
 # (package 4.2), unchanged, so the derived rows still equal what the reader emits;
 # `browse` and `chains` still call the reader through `reader_catalog`.
 from reg_meta.catalog import Catalog
-from reg_meta.db import register_py_lower
+
+from reg_meta_build.db import register_py_lower
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -119,7 +120,7 @@ def representative_columns(
     it under: the state's own spelling where a state names the column, else the
     lowest alias spelling by byte order. The single home of that rule — see
     DESIGN.md → One spelling per delivery column for why the readers owe each
-    other one spelling, and `reg_meta.db.register_py_lower` for the fold.
+    other one spelling, and `reg_meta_build.db.register_py_lower` for the fold.
 
     A `None` column (a state SCB named no delivery column for) has no spelling to
     pick and contributes nothing."""
