@@ -9,10 +9,10 @@ description: Run, screenshot, and drive the reg_webapp dev setup (FastAPI backen
 
 Three dev servers — a FastAPI backend, the Rust server (`reg-meta serve`), and Vite
 serving the SPA with an `/api` proxy that sends the routes ported to Rust (today
-`/api/context` and `/api/search`) to the Rust server and the rest to the backend — plus
-a Playwright driver that loads the SPA, drills through the catalog, exercises the period
-slider, and screenshots each step. `dev.sh` picks a FREE port for each server on every
-run, so nothing here is pinned to a port. The proxy split lives in
+`/api/context`, `/api/search` and `/api/docs`) to the Rust server and the rest to the
+backend — plus a Playwright driver that loads the SPA, drills through the catalog,
+exercises the period slider, and screenshots each step. `dev.sh` picks a FREE port for
+each server on every run, so nothing here is pinned to a port. The proxy split lives in
 `reg_webapp/frontend/vite.config.ts`; each later slice adds its routes there.
 
 This skill is a helper you invoke by its explicit repo path, not a skill the root loader
@@ -139,15 +139,14 @@ local verification invocation; the names allow focused verification. The repo ga
 **Deterministic UI verification (`--fixture-db`) — the default.** Pass `--fixture-db`
 before the mode and `dev.sh` serves a *synthetic* catalog: it runs
 `reg_webapp/backend/scripts/fixture_db.py` (the same builder the backend tests'
-`catalog_db` / `docs_db` fixtures use) into a temp directory, exports it as
-`REG_META_DB` for every server, and deletes it on exit. Content is fixed — no seed, no
-clock — so the DB pair is byte-identical run to run and a screenshot diff means a code
-change, not catalog drift. It is small but populated enough that every route the
-design-reviewer skill walks renders rows: `/`, `/catalog`, providers `fk` (register
-`midas`) and `scb` (`lisa` / `rams`), bindings like `/catalog/scb/lisa/kon` (value set,
-succession, lineage), the groups `/catalog/group/scb/rams/ink` and
-`/catalog/group/class/sun`, `/search?q=kon`, `/project`, and `/doc/Kon.md`. `smoke`
-drills it end to end.
+`catalog_db` fixture uses) into a temp directory, exports it as `REG_META_DB` for every
+server, and deletes it on exit. Content is fixed — no seed, no clock — so the DB pair is
+byte-identical run to run and a screenshot diff means a code change, not catalog drift.
+It is small but populated enough that every route the design-reviewer skill walks
+renders rows: `/`, `/catalog`, providers `fk` (register `midas`) and `scb` (`lisa` /
+`rams`), bindings like `/catalog/scb/lisa/kon` (value set, succession, lineage), the
+groups `/catalog/group/scb/rams/ink` and `/catalog/group/class/sun`, `/search?q=kon`,
+`/project`, and `/doc/Kon.md`. `smoke` drills it end to end.
 
 ```sh
 bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db          # interactive
@@ -244,9 +243,9 @@ includes the Playwright browser project).
   `REG_WEBAPP_BACKEND_URL` and `REG_META_SERVER_URL`
   (`reg_webapp/frontend/vite.config.ts`) — `dev.sh` sets both automatically; they only
   matter if you start Vite by hand against other ports.
-- **`/api/context` and `/api/search` come from the Rust server.** Their bodies are
-  `{data, meta}`; the FastAPI backend no longer serves them, so probe the backend with
-  `/api/catalog`.
+- **`/api/context`, `/api/search` and `/api/docs/*` come from the Rust server.** Their
+  bodies are `{data, meta}`; the FastAPI backend no longer serves them, so probe the
+  backend with `/api/catalog`.
 - **Git worktrees are auto-provisioned.** A `SessionStart` hook
   (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable
   installs resolve to the worktree, not main) and `node_modules` — it runs `uv sync` +

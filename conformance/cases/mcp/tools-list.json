@@ -2718,7 +2718,7 @@
   },
   {
     "name": "docs",
-    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `docs_get` (identifier, scope?): One documentation entry by variable name or filename (with or without `.md`): its register, tags and source, a 500-character `excerpt` and the full markdown `body`.\n- `docs_related` (ref, scope?): A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID or a bare name.",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `docs_search` (q?, register?, scope?, limit?, cursor?): Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or a bare name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches.\n- `docs_get` (identifier, scope?): One documentation entry by variable name or filename (with or without `.md`): its register, tags and source, a 500-character `excerpt` and the full markdown `body`.\n- `docs_related` (ref, scope?): A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID or a bare name.",
     "inputSchema": {
       "$defs": {
         "Scope": {
@@ -2731,17 +2731,32 @@
         }
       },
       "properties": {
+        "cursor": {
+          "type": "string"
+        },
         "identifier": {
           "type": "string"
         },
+        "limit": {
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
         "operation": {
           "enum": [
+            "docs_search",
             "docs_get",
             "docs_related"
           ],
           "type": "string"
         },
+        "q": {
+          "type": "string"
+        },
         "ref": {
+          "type": "string"
+        },
+        "register": {
           "type": "string"
         },
         "scope": {
@@ -2815,6 +2830,94 @@
             "display_name",
             "tags",
             "body"
+          ],
+          "type": "object"
+        },
+        "DocPage": {
+          "description": "`docs_search`'s page: its hits, the total they page through, and whether\n`register` has any documentation (false without `register`).",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/DocResult"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "register_ingested": {
+              "type": "boolean"
+            },
+            "total": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "items",
+            "total",
+            "register_ingested"
+          ],
+          "type": "object"
+        },
+        "DocResult": {
+          "description": "One documentation hit: today's `DocResult` without the webapp's per-route `fuzzy`\nflag.",
+          "properties": {
+            "display_name": {
+              "type": "string"
+            },
+            "filename": {
+              "type": "string"
+            },
+            "register": {
+              "type": "string"
+            },
+            "snippet": {
+              "description": "About 24 words of the plain text around the match, matched words in `**`; none\nwithout `q`.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_title": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source_url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "tags": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "variable": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "register",
+            "filename",
+            "display_name",
+            "tags"
           ],
           "type": "object"
         },
@@ -2913,6 +3016,21 @@
         }
       },
       "oneOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/DocPage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
         {
           "properties": {
             "data": {

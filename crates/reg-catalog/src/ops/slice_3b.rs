@@ -1,7 +1,7 @@
-//! Slice 3b's operations: `show`, `states`, `warnings`, `values`, `docs_get` and
-//! `docs_related`, and the related-document download.
+//! Slice 3b's operations: `show`, `states`, `warnings`, `values`, `docs_search`,
+//! `docs_get` and `docs_related`, and the related-document download.
 
-use super::docs::{self, DocDetail};
+use super::docs::{self, DocDetail, DocPage};
 use super::show::{Show, show};
 use super::states::{self, StatesPage};
 use super::values::{self, ValuesPage};
@@ -101,6 +101,27 @@ pub const OPERATIONS: &[Operation] = &[
         cache: Cache::Minute,
         run: values::values,
         result: component::<ValuesPage>,
+    },
+    Operation {
+        name: "docs_search",
+        paths: &["/api/docs/search"],
+        tool: Some("docs"),
+        description: "Search the documentation: with `q`, the entries whose title, \
+            variable or text match every word (as prefixes, case and diacritics \
+            ignored), best match first, each with a `snippet` marking the matched words \
+            in `**`; without `q`, every entry by filename. `register` (a register FQID \
+            or a bare name) keeps that register's entries; `register_ingested` says \
+            whether it has any. `total` counts the matches.",
+        params: &[
+            Param::optional("q", Type::String),
+            Param::optional("register", Type::Ref),
+            Param::optional("scope", Type::Scope),
+            Param::optional("limit", Type::Limit),
+            Param::optional("cursor", Type::Cursor),
+        ],
+        cache: Cache::Day,
+        run: docs::search,
+        result: component::<DocPage>,
     },
     Operation {
         name: "docs_get",

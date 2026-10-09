@@ -8,5 +8,6 @@
       "/error/fields/ref": "scb/Example"
     }
   },
+  {"status": 404, "json": {"/error/code": "docs_unavailable"}},
   {"status": 404, "json": {"/error/code": "docs_unavailable"}}
 ]

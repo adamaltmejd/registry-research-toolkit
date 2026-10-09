@@ -1340,7 +1340,7 @@ async function addSelected(): Promise<void> {
         variants={variantsResource.data}
         error={variantsResource.error}
       />
-      <RelatedDocumentsPanel register={leafSlug(node.fqid)} />
+      <RelatedDocumentsPanel register={node.fqid} />
     {:else if node.kind === "binding"}
       <!-- Pass the full node down: this no-query browse fetch already resolved
            the variable's metadata + embedded edges + default states. BindingLeafView

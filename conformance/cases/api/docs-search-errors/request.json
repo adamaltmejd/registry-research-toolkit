@@ -1,0 +1,29 @@
+{
+  "note": "Fails if docs_search stops validating its register ref (form, existence) or its query, or accepts a malformed cursor.",
+  "fixture": "reader",
+  "docs": "docs",
+  "requests": [
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "kon", "register": "scb/Example"}
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "kon", "register": "scb/nothing"}
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {
+        "q": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "kon", "cursor": "not-a-cursor"}
+    }
+  ]
+}

@@ -3,8 +3,8 @@ released catalog.
 
 Two consumers, one builder:
 
-- ``reg_webapp/backend/tests/conftest.py`` (the ``catalog_db`` / ``docs_db``
-  fixtures) — CI has no real reg_meta asset, so the backend tests point the app at
+- ``reg_webapp/backend/tests/conftest.py`` (the ``catalog_db``
+  fixture) — CI has no real reg_meta asset, so the backend tests point the app at
   this pair via ``REG_META_DB``;
 - ``dev.sh --fixture-db`` — the same pair, built into a temp dir, so ``smoke`` /
   ``shot`` / plain serve render a populated catalog inside a container where no
@@ -1190,10 +1190,10 @@ def _seed_same_as_alias_to_grouped(src: sqlite3.Connection) -> None:
 
 
 def build_docs_fixture_db(db_path: Path) -> None:
-    """Build a minimal `reg_meta_docs.db` for the #354 docs-endpoint tests:
+    """Build a minimal `reg_meta_docs.db` for the dev setup's docs pages (#354):
     two LISA docs (so register-scoping + register-coverage have content) with the
-    FTS index rebuilt and the `schema_version` meta `open_doc_db` gates on."""
-    from reg_meta_build.doc_db import DOC_DDL
+    docs build's folded index and `schema_version` (`index_docs`)."""
+    from reg_meta_build.doc_db import DOC_DDL, index_docs
 
     related_pdf = b"%PDF-1.4\n% related document fixture\n%%EOF\n"
     conn = sqlite3.connect(db_path)
@@ -1252,16 +1252,11 @@ def build_docs_fixture_db(db_path: Path) -> None:
                 related_pdf,
             ),
         )
-        conn.execute("INSERT INTO doc_fts(doc_fts) VALUES('rebuild')")
         conn.executemany(
             "INSERT INTO doc_meta(key, value) VALUES (?, ?)",
-            [
-                ("schema_version", reg_meta.doc_db.DOC_SCHEMA_VERSION),
-                ("doc_count", "2"),
-                ("related_document_count", "1"),
-            ],
+            [("doc_count", "2"), ("related_document_count", "1")],
         )
-        conn.commit()
+        index_docs(conn)
     finally:
         conn.close()
 

@@ -8,8 +8,9 @@ cases' result form (``exit``, ``stdout``, ``stderr``).
 
 - ``context``: the catalog's identity and counts per scope.
 - ``search``: each ``type``'s pages per scope and term.
-- ``docs``: ``docs_get`` per document, ``docs_related`` per register with documents,
-  and each related document's download.
+- ``docs``: ``docs_get`` per document, ``docs_search`` per document's variable and
+  against the CLI baseline's ``docs search``, ``docs list`` and ``docs get``,
+  ``docs_related`` per register with documents, and each related document's download.
 - ``show``: every catalog node kind per named scope, retired refs, and owning
   variables against the CLI baseline.
 - ``states``: ``states`` and ``warnings`` for sampled variables and their registers.
@@ -74,7 +75,7 @@ FAMILIES = (
     resolve,
     validate,
 )
-CLI_BASELINE = {show, values, graph, schema, coverage, coded, resolve}
+CLI_BASELINE = {docs, show, values, graph, schema, coverage, coded, resolve}
 # The production rate limit (30 writes per minute) does not bind GETs. Eight worker
 # processes, since one Python process serves one search at a time (G1 budget).
 BASELINE_APP = (

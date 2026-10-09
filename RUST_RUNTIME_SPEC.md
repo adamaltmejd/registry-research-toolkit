@@ -1275,7 +1275,6 @@ in-flight list.
   | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                               | stage 4 (proven twins earlier)                                                                      |
   | Frozen Python `same_as` BFS (`_resolve_*_via_same_as` in `catalog.py`), unreachable since the writer requires live `same_as` endpoints (3d.1); not ported | stage 4 (deleted with the Python runtime)                                                           |
   | `scripts/check_versions.sh` keeping the `reg-meta` crate and `reg_meta` versions equal                                                                    | stage 4                                                                                             |
-  | Docs DB symlinked unfolded into G1's candidate directories                                                                                                | 3b.6 (candidate copy refolded)                                                                      |
 
 #### Packages
 
@@ -1645,8 +1644,10 @@ the latest release; G1 runs on both pins and records each difference. `rust-only
 exceptions carry over (D1). The baseline commit cannot simply follow the pin: cutovers
 delete the webapp routes the served arm compares against (section 4, "Current pin"). R
 either moves the served comparisons onto the CLI baseline (the CLI-baseline pattern
-above) or keeps the webapp baseline commit separate from the artifact pin. Depends on:
-3c.3, C, F and the release.
+above) or keeps the webapp baseline commit separate from the artifact pin. The
+`docs-fold-search*` exceptions match by term position (`3[47]`, `7[47]`, 3b.6): R
+rechecks that those positions are still the terms `ß` and `ﬁlm`. Depends on: 3c.3, C, F
+and the release.
 
 #### Surface coverage (3b–3e rows)
 
