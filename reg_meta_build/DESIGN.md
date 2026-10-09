@@ -290,7 +290,10 @@ Raw archives can remain compressed outside Git. The lossless compact SCB snapsho
 original dictionaries, associations and ordering without versioning the wasteful
 expanded CSV representation. Other selected machine-readable artifacts are preserved in
 the input bundle with complete inventory and provenance. Reconstructing from cold
-storage and preparing a source update are explicit operations.
+storage and preparing a source update are explicit operations. SCB metadata arrives as
+manual exports: `mikrometadata.scb.se` has no stable public API (a session-bound
+WebSocket with no documented contract), and browser automation was ruled out as fragile
+and unrepeatable.
 
 `prepare-sources` cleans and validates once. `prepared_sources.py` interns repeated
 fields, original cells, coordinates and locators in an indexed SQLite store beside a

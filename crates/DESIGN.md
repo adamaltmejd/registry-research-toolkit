@@ -184,8 +184,12 @@ design note has the rules). The reader applies only what depends on the request.
 its `source_window` and `coded_window` rows that overlap the request, or the base when
 none does. Its overlapping `curated_window` rows are always added. A `base` row is
 always emitted. Without a requested period every row but `base_fallback` is emitted.
-This is what lets a monthly family answer `2024-03` with the March column, `2024` with
-all twelve, and a gap month with the annual state.
+Several representations at one period are normal, not an edge case: several variants
+deliver the variable, a range crosses a transition, or co-delivered value-set versions
+overlap (SNI92 and SNI2007 in a transition year). Reads return a list, and ambiguity is
+the caller's to narrow with a variant or representation, never an error. This is what
+lets a monthly family answer `2024-03` with the March column, `2024` with all twelve,
+and a gap month with the annual state.
 
 **Warning attribution.** A warning `w` applies to an emitted representation `e` with
 bounds `[lo, hi]`, after held and requested clipping, exactly when:
