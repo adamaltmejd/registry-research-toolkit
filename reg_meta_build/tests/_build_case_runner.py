@@ -158,7 +158,10 @@ def write_sources(spec: dict, source: Path) -> None:
             abbrev=register["abbrev"],
             title_sv=register["title"],
             description_sv=register.get("description"),
-            variables=tuple(SosVariable(**row) for row in register["variables"]),
+            variables=tuple(
+                SosVariable(**{k: v for k, v in row.items() if k != "linkage"})
+                for row in register["variables"]
+            ),
             deldatamangder=tuple(
                 SosSubset(**row) for row in register.get("subsets", ())
             ),
@@ -171,7 +174,12 @@ def write_sources(spec: dict, source: Path) -> None:
         # identifier" claim; without it every variable's flag is unknown and withheld.
         workbook = load_workbook(path)
         sheet = workbook["Metadata - Variabelnivå"]
-        sheet.cell(row=1, column=sheet.max_column + 1, value="Kopplingsvariabel")
+        linkage = sheet.max_column + 1
+        sheet.cell(row=1, column=linkage, value="Kopplingsvariabel")
+        # A variable's `linkage` text fills its cell: a declared linkage variable.
+        for row, variable in enumerate(register["variables"], start=2):
+            if variable.get("linkage"):
+                sheet.cell(row=row, column=linkage, value=variable["linkage"])
         # A delivered Kodlista names its variable in a `Variabelnamn` preamble row;
         # without it the build cannot bind the list (`unresolved_list_reference`).
         code_lists = {
@@ -603,6 +611,7 @@ def _issue_row(event: dict) -> dict:
         "acknowledged_by": event.get("acknowledged_by"),
         "valid_from": event.get("valid_from"),
         "valid_to": event.get("valid_to"),
+        "fields": event.get("fields") or [],
     }
 
 
@@ -736,6 +745,176 @@ def _warnings(outcome: Outcome) -> list[dict]:
     ]
 
 
+def _alias_windows(outcome: Outcome) -> list[dict]:
+    """Each alias window of a delivery column, with its per-column facts, the
+    members of its per-column value set and the books bound to it."""
+    key = "w.variable_id, w.register_variant_id, w.delivery_column_name, w.valid_from"
+    codes: dict[tuple, list[list[str]]] = {}
+    for row in outcome._sql(
+        f"SELECT {key}, c.code, c.label FROM variable_alias_window w "
+        "JOIN value_set_member m ON m.value_set_id = w.value_set_id "
+        "JOIN value_code c ON c.code_id = m.code_id"
+    ):
+        codes.setdefault(tuple(row.values())[:4], []).append(
+            [row["code"], row["label"]]
+        )
+    books: dict[tuple, list[str]] = {}
+    for row in outcome._sql(
+        f"SELECT {key}, c.slug FROM alias_window_classification w "
+        "JOIN classification c ON c.id = w.classification_id"
+    ):
+        books.setdefault(tuple(row.values())[:4], []).append(row["slug"])
+    rows = []
+    for row in outcome._sql(
+        f"SELECT {key}, r.slug AS register, v.slug AS variable, rv.slug AS variant, "
+        "w.delivery_column_name AS column, w.valid_to, w.column_metadata, "
+        "w.coding_metadata, w.data_type, w.data_length, w.definition, "
+        "w.measurement_unit, w.name, w.description, w.operational_definition, "
+        "w.source_register_text FROM variable_alias_window w JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN register_variant rv ON rv.register_variant_id = w.register_variant_id"
+    ):
+        ident = tuple(row.values())[:4]
+        row = {
+            k: v
+            for k, v in row.items()
+            if k not in {"variable_id", "register_variant_id", "delivery_column_name"}
+        }
+        rows.append(
+            {
+                **row,
+                "codes": sorted(codes.get(ident, [])),
+                "classifications": sorted(books.get(ident, [])),
+            }
+        )
+    return rows
+
+
+_ALIAS_CONFORMANCE_SQL = (
+    "SELECT r.slug AS register, v.slug AS variable, "
+    "w.delivery_column_name AS column, w.valid_from, w.valid_to, "
+    "c.slug AS classification, a.conformance "
+    "FROM alias_window_classification a "
+    "JOIN variable_alias_window w USING "
+    "(variable_id, register_variant_id, delivery_column_name, valid_from) "
+    "JOIN classification c ON c.id = a.classification_id "
+    "JOIN variable v ON v.variable_id = a.variable_id "
+    "JOIN register r ON r.register_id = v.register_id "
+    "WHERE a.conformance IS NOT NULL"
+)
+
+
+def _alias_conformance(outcome: Outcome) -> list[tuple[dict, dict]]:
+    """Each alias window's book binding with its stored conformance evidence."""
+    return [
+        (
+            {key: row[key] for key in row.keys() - {"conformance"}},
+            json.loads(row["conformance"]),
+        )
+        for row in outcome._sql(_ALIAS_CONFORMANCE_SQL)
+    ]
+
+
+def _alias_extensions(evidence: dict) -> list[tuple[str, str, str]]:
+    return [
+        (code, label, kind)
+        for kind, key in (
+            ("nonstandard", "nonconforming_members"),
+            ("sentinel", "sentinel_members"),
+        )
+        for code, label in evidence[key]
+    ]
+
+
+def _conformance(outcome: Outcome) -> list[dict]:
+    """Each state's and alias window's conformance to one bound book.
+
+    An alias window stores its evidence as JSON; its counts are read the way the
+    reader counts them (distinct checked codes, distinct codes outside the book).
+    """
+    rows = [
+        {**row, "window": "state"}
+        for row in outcome._sql(
+            "SELECT r.slug AS register, v.slug AS variable, "
+            "s.delivery_column_name AS column, s.valid_from, s.valid_to, "
+            "c.slug AS classification, cc.status, cc.checked_code_count AS checked, "
+            "cc.matched_code_count AS matched, "
+            "cc.nonconforming_code_count AS nonconforming, cc.overlap "
+            "FROM classification_conformance cc "
+            "JOIN classification c ON c.id = cc.declared_classification_id "
+            "JOIN variable_state s ON s.state_id = cc.state_id "
+            "JOIN variable v ON v.variable_id = s.variable_id "
+            "JOIN register r ON r.register_id = v.register_id"
+        )
+    ]
+    for row, evidence in _alias_conformance(outcome):
+        checked = len(set(evidence["checked_codes"]))
+        outside = len({code for code, _, _ in _alias_extensions(evidence)})
+        rows.append(
+            {
+                **row,
+                "window": "alias",
+                "status": evidence["status"],
+                "checked": checked,
+                "matched": checked - outside,
+                "nonconforming": outside,
+                "overlap": (checked - outside) / checked if checked else 1.0,
+            }
+        )
+    return rows
+
+
+def _conformance_codes(outcome: Outcome) -> list[dict]:
+    """Each source member a state's or alias window's book conformance records
+    outside the book.
+
+    A scoped sentinel certificate is projected as its window only; its fingerprints
+    restate the code under test. An alias window stores no sentinel meaning.
+    """
+    rows = [
+        {
+            **{key: row[key] for key in row.keys() - {"scoped_sentinels"}},
+            "window": "state",
+            "scoped_windows": [
+                [certificate["valid_from"], certificate["valid_to"]]
+                for certificate in json.loads(row["scoped_sentinels"])
+            ],
+        }
+        for row in outcome._sql(
+            "SELECT r.slug AS register, v.slug AS variable, "
+            "s.delivery_column_name AS column, s.valid_from, s.valid_to, "
+            "c.slug AS classification, vc.code, vc.label, cc.member_kind, "
+            "cc.sentinel_meaning, cc.scoped_sentinels "
+            "FROM classification_conformance_code cc "
+            "JOIN classification c ON c.id = cc.declared_classification_id "
+            "JOIN value_code vc ON vc.code_id = cc.code_id "
+            "JOIN variable_state s ON s.state_id = cc.state_id "
+            "JOIN variable v ON v.variable_id = s.variable_id "
+            "JOIN register r ON r.register_id = v.register_id"
+        )
+    ]
+    for row, evidence in _alias_conformance(outcome):
+        rows.extend(
+            {
+                **row,
+                "window": "alias",
+                "code": code,
+                "label": label,
+                "member_kind": kind,
+                "sentinel_meaning": None,
+                "scoped_windows": [
+                    [certificate["valid_from"], certificate["valid_to"]]
+                    for certificate in evidence["scoped_sentinels"]
+                    if [code, label] in certificate["members"]
+                ]
+                if kind == "sentinel"
+                else [],
+            }
+            for code, label, kind in _alias_extensions(evidence)
+        )
+    return rows
+
+
 _STATE_JOIN = (
     "FROM variable_state s JOIN variable v USING (variable_id) "
     "JOIN register r ON r.register_id = v.register_id "
@@ -754,7 +933,9 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "states": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
         "s.delivery_column_name AS column, s.valid_from, s.valid_to, s.data_type, "
-        "v.name, s.name AS state_name, s.provenance, s.pooled " + _STATE_JOIN
+        "v.name, s.name AS state_name, s.provenance, s.pooled, s.data_length, "
+        "s.definition, s.measurement_unit, s.description, s.operational_definition, "
+        "s.source_register_text " + _STATE_JOIN
     ),
     "state_codes": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
@@ -788,6 +969,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "JOIN register r ON r.register_id = v.register_id "
         "JOIN register_variant rv ON rv.register_variant_id = a.register_variant_id"
     ),
+    "alias_windows": _alias_windows,
     "concept_groups": _concept_groups,
     "warnings": _warnings,
     "search_pins": lambda o: o._sql(
@@ -805,13 +987,40 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "FROM variable_replaced_by"
     ),
     "state_classifications": lambda o: o._sql(
-        "SELECT s.delivery_column_name AS column, c.slug AS classification "
+        "SELECT r.slug AS register, v.slug AS variable, "
+        "s.delivery_column_name AS column, s.valid_from, s.valid_to, "
+        "c.slug AS classification, sc.provenance "
         "FROM state_classification sc "
         "JOIN classification c ON c.id = sc.classification_id "
-        "JOIN variable_state s ON s.state_id = sc.state_id"
+        "JOIN variable_state s ON s.state_id = sc.state_id "
+        "JOIN variable v ON v.variable_id = s.variable_id "
+        "JOIN register r ON r.register_id = v.register_id"
+    ),
+    "conformance": _conformance,
+    "conformance_codes": _conformance_codes,
+    # The reader's code-search index: each code a variable carries through a
+    # state's or an alias window's value set, with the code's variable count.
+    "code_index": lambda o: o._sql(
+        "SELECT r.slug AS register, v.slug AS variable, vc.code, vc.label, "
+        "vc.mapping_count FROM code_variable_map m "
+        "JOIN value_code vc USING (code_id) JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id"
     ),
     "classifications": lambda o: o._sql(
-        "SELECT slug, short_name, name, name_en FROM classification"
+        "SELECT c.slug, c.short_name, c.name, c.name_en, c.publisher, c.valid_from, "
+        "c.valid_to, c.description, c.url, c.code_count, c.valid_code_count, "
+        "p.slug AS supersedes FROM classification c "
+        "LEFT JOIN classification p ON p.id = c.supersedes_id"
+    ),
+    "classification_successions": lambda o: o._sql(
+        "SELECT predecessor_slug AS predecessor, successor_slug AS successor, "
+        "effective_year, note FROM classification_replaced_by"
+    ),
+    "classification_codes": lambda o: o._sql(
+        "SELECT c.slug, v.code, v.label, cc.level, cc.is_valid "
+        "FROM classification_code cc "
+        "JOIN classification c ON c.id = cc.classification_id "
+        "JOIN value_code v ON v.code_id = cc.code_id"
     ),
     "relationships": lambda o: o._sql(
         "SELECT kind, binding_status, source_dataset, v.slug AS owner, "
@@ -834,29 +1043,43 @@ FIELDS: dict[str, frozenset[str]] = {
     name: frozenset(fields.split())
     for name, fields in {
         "issues": "code severity subject case_id locator detail acknowledged_by "
-        "valid_from valid_to",
+        "valid_from valid_to fields",
         "issue_refs": "code severity subject case_id locator detail acknowledged_by "
-        "valid_from valid_to source key ref",
+        "valid_from valid_to fields source key ref",
         "cases": "case_id status",
         "uses": "source native_variable key column_name data_type name description "
         "use variable",
         "case_uses": "case_id source key use variable",
         "states": "register variable variant column valid_from valid_to data_type "
-        "name state_name provenance pooled",
+        "name state_name provenance pooled data_length definition measurement_unit "
+        "description operational_definition source_register_text",
         "state_codes": "register variable variant column valid_from valid_to code label",
         "variables": "register variable column provider_key description "
         "is_identifier is_sensitive",
         "variants": "register variant name panel_entity_key panel_time_key",
         "tags": "slug member",
         "aliases": "register variable variant column",
+        "alias_windows": "register variable variant column valid_from valid_to "
+        "column_metadata coding_metadata data_type data_length definition "
+        "measurement_unit name description operational_definition "
+        "source_register_text codes classifications",
         "concept_groups": "variables",
         "warnings": "register variable column valid_from valid_to code variant detail "
         "summary fields refs",
         "search_pins": "query type position entity",
         "manifest": "key value",
         "edges": "type a b",
-        "state_classifications": "column classification",
-        "classifications": "slug short_name name name_en",
+        "state_classifications": "register variable column valid_from valid_to "
+        "classification provenance",
+        "conformance": "register variable column valid_from valid_to window "
+        "classification status checked matched nonconforming overlap",
+        "conformance_codes": "register variable column valid_from valid_to window "
+        "classification code label member_kind sentinel_meaning scoped_windows",
+        "code_index": "register variable code label mapping_count",
+        "classifications": "slug short_name name name_en publisher valid_from "
+        "valid_to description url code_count valid_code_count supersedes",
+        "classification_successions": "predecessor successor effective_year note",
+        "classification_codes": "slug code label level is_valid",
         "relationships": "kind binding_status source_dataset owner endpoints",
         "evidence": "kind disposition",
         "source_issues": "kind severity descriptor_key physical_associations refs",

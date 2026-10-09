@@ -1,11 +1,12 @@
 {
+  "note": "Fails if the server admits a 1.2.0 docs database, whose doc_fts is unfolded: folded queries would find nothing in it.",
   "fixture": "reader",
   "docs": "docs",
   "serve": {
     "catalog": "swecov"
   },
   "doc_meta": {
-    "schema_version": "1.1.0"
+    "schema_version": "1.2.0"
   },
   "requests": [
     {

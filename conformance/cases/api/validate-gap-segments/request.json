@@ -1,0 +1,33 @@
+{
+  "note": "Twin of `validate/gap-segments`: fails if `validate` stops answering this project with 200 and these `ok` and issues (code, level, path, message, in emission order).",
+  "fixture": "reader/representation-change",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "swecov",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic rename",
+        "sources": [
+          {
+            "name": "source",
+            "register_variant": "scb/example/annual",
+            "period": [
+              2017,
+              2019
+            ],
+            "bindings": [
+              {
+                "variable": "scb/example/value",
+                "type": "numeric"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

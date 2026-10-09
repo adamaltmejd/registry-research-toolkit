@@ -2,13 +2,19 @@
 //! (`slice_3a.rs`, ...), and both transports are generated from the registrations: the
 //! HTTP routes and `/openapi.json` here and in `reg-meta`, and the MCP tools in
 //! `reg-meta`. Shared request pieces live in their own modules: refs (`refs.rs`) and
-//! cursors (`cursor.rs`).
+//! cursors (`cursor.rs`). An operation or download with a [`Type::Project`] parameter
+//! is a POST that takes it as the JSON body; every other is a GET.
 
+pub mod body;
+mod coded;
+mod coverage;
 mod cursor;
 mod docs;
 mod graph;
 mod lineage;
+mod order;
 mod refs;
+mod resolve;
 mod schema;
 mod search;
 mod show;
@@ -16,7 +22,9 @@ pub mod slice_3a;
 pub mod slice_3b;
 pub mod slice_3c;
 pub mod slice_3d;
+pub mod slice_3e;
 mod states;
+mod validate;
 mod values;
 mod warnings;
 
@@ -27,10 +35,11 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use utoipa::ToSchema;
 use utoipa::openapi::path::{OperationBuilder, ParameterBuilder, ParameterIn};
+use utoipa::openapi::request_body::RequestBodyBuilder;
 use utoipa::openapi::response::ResponseBuilder;
 use utoipa::openapi::{
-    ComponentsBuilder, ContentBuilder, HttpMethod, InfoBuilder, ObjectBuilder, OpenApi,
-    OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema, Type as Json,
+    ArrayBuilder, ComponentsBuilder, ContentBuilder, HttpMethod, InfoBuilder, ObjectBuilder,
+    OpenApi, OpenApiBuilder, PathItem, PathsBuilder, Ref, RefOr, Required, Schema, Type as Json,
 };
 
 use crate::{CONTRACT_VERSION, Catalog, Code, Docs, Error, Scope};
@@ -131,6 +140,12 @@ pub enum Type {
     /// A storage id, spelled as the decimal string results carry (ids pass 2^53).
     StorageId,
     Enum(&'static [&'static str]),
+    /// `string[]`: up to [`MAX_ITEMS`] strings, repeated keys over HTTP and a JSON
+    /// array over MCP.
+    Strings,
+    /// A `project_data.json` document: a POST's JSON body, handed to the operation as
+    /// its JSON text.
+    Project,
 }
 
 /// The `Cache-Control` tier of a 200 (today's three): identity reads revalidate every
@@ -154,8 +169,36 @@ impl Cache {
 }
 
 type Components = Vec<(String, RefOr<Schema>)>;
-/// An operation's validated parameters, `scope` excluded.
-pub type Params<'a> = BTreeMap<&'a str, &'a str>;
+/// An operation's validated parameters, `scope` excluded: each parameter's values in
+/// request order, one unless it is a [`Type::Strings`].
+#[derive(Default)]
+pub struct Params<'a> {
+    values: BTreeMap<&'a str, Vec<&'a str>>,
+}
+
+impl<'a> Params<'a> {
+    /// A parameter's value.
+    #[must_use]
+    pub fn get(&self, name: &str) -> Option<&&'a str> {
+        self.values.get(name).and_then(|values| values.first())
+    }
+
+    /// An array parameter's values; none when it is absent.
+    #[must_use]
+    pub fn list(&self, name: &str) -> &[&'a str] {
+        self.values.get(name).map_or(&[], Vec::as_slice)
+    }
+}
+
+/// A required parameter's value, which the transport has checked is present.
+impl<'a> std::ops::Index<&str> for Params<'a> {
+    type Output = &'a str;
+
+    fn index(&self, name: &str) -> &Self::Output {
+        self.get(name).expect("a required parameter")
+    }
+}
+
 /// The function that answers a route.
 pub type Run<T> = fn(&Server, Scope, &Params) -> Result<T, Error>;
 
@@ -192,7 +235,26 @@ pub struct Download {
     pub run: Run<Raw>,
 }
 
+/// The parameter sent as the JSON body, which makes a route a POST.
+fn body(params: &'static [Param]) -> Option<&'static Param> {
+    params.iter().find(|p| matches!(p.ty, Type::Project))
+}
+
+impl Download {
+    /// The parameter sent as the JSON body, which makes the download a POST.
+    #[must_use]
+    pub fn body(&self) -> Option<&'static Param> {
+        body(self.params)
+    }
+}
+
 impl Operation {
+    /// The parameter sent as the JSON body, which makes the operation a POST.
+    #[must_use]
+    pub fn body(&self) -> Option<&'static Param> {
+        body(self.params)
+    }
+
     /// The parameters `route` takes: a parameter another of the operation's routes
     /// names in its path is a path parameter only, so a route without it omits it
     /// (`GET /api/catalog` takes no `ref`).
@@ -216,11 +278,12 @@ pub fn all() -> impl Iterator<Item = &'static Operation> {
         .chain(slice_3b::OPERATIONS)
         .chain(slice_3c::OPERATIONS)
         .chain(slice_3d::OPERATIONS)
+        .chain(slice_3e::OPERATIONS)
 }
 
 /// Every registered download.
 pub fn downloads() -> impl Iterator<Item = &'static Download> {
-    slice_3b::DOWNLOADS.iter()
+    slice_3b::DOWNLOADS.iter().chain(slice_3e::DOWNLOADS)
 }
 
 /// Every MCP tool with its operations, in registration order.
@@ -248,23 +311,33 @@ pub fn call<T>(
 ) -> (Scope, Result<T, Error>) {
     let mut scope = server.catalog.default_scope();
     let result = (|| {
-        let mut params = BTreeMap::new();
+        let mut params = Params::default();
         for (name, value) in query {
-            // Unknown and repeated parameters are errors, never ignored.
-            if !declared.iter().any(|p| p.name == name)
-                || params.insert(name.as_str(), value.as_str()).is_some()
-            {
+            // Unknown and repeated parameters are errors, never ignored; a repeat is
+            // an array's next value.
+            let Some(param) = declared.iter().find(|p| p.name == name) else {
+                return Err(Error::invalid_parameter(name));
+            };
+            let values = params.values.entry(param.name).or_default();
+            values.push(value.as_str());
+            let most = if matches!(param.ty, Type::Strings) {
+                MAX_ITEMS
+            } else {
+                1
+            };
+            if values.len() > most {
                 return Err(Error::invalid_parameter(name));
             }
         }
         if let Some(missing) = declared
             .iter()
-            .find(|p| p.required && !params.contains_key(p.name))
+            .find(|p| p.required && !params.values.contains_key(p.name))
         {
             return Err(Error::invalid_parameter(missing.name));
         }
         if declared.iter().any(|p| p.name == "scope") {
-            scope = server.catalog.scope(params.remove("scope"))?;
+            let requested = params.values.remove("scope").map(|values| values[0]);
+            scope = server.catalog.scope(requested)?;
         }
         run(server, scope, &params)
     })();
@@ -274,6 +347,8 @@ pub fn call<T>(
 /// A page's `limit` when unset, and its largest accepted value (`Type::Limit`).
 const DEFAULT_LIMIT: usize = 50;
 const MAX_LIMIT: usize = 200;
+/// The most values an array parameter takes (`Type::Strings`).
+const MAX_ITEMS: usize = 200;
 
 /// `limit` (`operations.toml`): 1 to [`MAX_LIMIT`], default [`DEFAULT_LIMIT`].
 pub(crate) fn limit(params: &Params) -> Result<usize, Error> {
@@ -403,16 +478,24 @@ fn param_schema(ty: Type, components: &mut Components) -> RefOr<Schema> {
         Type::Enum(members) => string().enum_values(Some(members.iter().copied())).into(),
         Type::Boolean => ObjectBuilder::new().schema_type(Json::Boolean).into(),
         Type::StorageId => string().pattern(Some(STORAGE_ID)).into(),
+        Type::Strings => ArrayBuilder::new()
+            .items(string())
+            .max_items(Some(MAX_ITEMS))
+            .into(),
         Type::Limit => ObjectBuilder::new()
             .schema_type(Json::Integer)
             .minimum(Some(1))
             .maximum(Some(MAX_LIMIT))
             .into(),
+        Type::Project => ObjectBuilder::new()
+            .schema_type(Json::Object)
+            .description(Some("A project_data.json document"))
+            .into(),
     }
 }
 
 /// `route`'s parameters as `OpenAPI` parameters: in the path when the route names
-/// them, else in the query.
+/// them, else in the query; a body parameter as the request body.
 fn parameters(
     mut operation: OperationBuilder,
     route: &str,
@@ -420,6 +503,18 @@ fn parameters(
     components: &mut Components,
 ) -> OperationBuilder {
     for param in params {
+        if matches!(param.ty, Type::Project) {
+            let body = ContentBuilder::new()
+                .schema(Some(param_schema(param.ty, components)))
+                .build();
+            operation = operation.request_body(Some(
+                RequestBodyBuilder::new()
+                    .content("application/json", body)
+                    .required(Some(Required::True))
+                    .build(),
+            ));
+            continue;
+        }
         let located = if route.contains(&format!("{{{}}}", param.name)) {
             ParameterIn::Path
         } else {
@@ -477,6 +572,10 @@ fn operation_id(op: &Operation, route: &str) -> String {
 }
 
 /// The `OpenAPI` document of every registered operation.
+///
+/// # Panics
+///
+/// When two types register different schemas under one name.
 #[must_use]
 pub fn openapi(version: &str) -> OpenApi {
     let mut components = Components::new();
@@ -493,7 +592,12 @@ pub fn openapi(version: &str) -> OpenApi {
             let operation = operation
                 .response("200", envelope("data", data).description("Success"))
                 .response("default", error_response());
-            paths = paths.path(*route, PathItem::new(HttpMethod::Get, operation));
+            let method = if op.body().is_some() {
+                HttpMethod::Post
+            } else {
+                HttpMethod::Get
+            };
+            paths = paths.path(*route, PathItem::new(method, operation));
         }
     }
     // A download has no operation id of its own: it serves its operation's bytes.
@@ -507,7 +611,20 @@ pub fn openapi(version: &str) -> OpenApi {
         let operation = operation
             .response("200", bytes)
             .response("default", error_response());
-        paths = paths.path(download.path, PathItem::new(HttpMethod::Get, operation));
+        let method = if download.body().is_some() {
+            HttpMethod::Post
+        } else {
+            HttpMethod::Get
+        };
+        paths = paths.path(download.path, PathItem::new(method, operation));
+    }
+    // Two types with one schema name would silently replace each other's schema
+    // (3c.3's `Coverage` once replaced `show`'s): refuse instead.
+    let mut named: BTreeMap<&str, &RefOr<Schema>> = BTreeMap::new();
+    for (name, schema) in &components {
+        if let Some(other) = named.insert(name, schema) {
+            assert!(other == schema, "two types share the schema name {name}");
+        }
     }
     OpenApiBuilder::new()
         .info(InfoBuilder::new().title("reg-meta").version(version))

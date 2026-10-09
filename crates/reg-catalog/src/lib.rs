@@ -34,6 +34,17 @@ pub enum Scope {
     Reference,
 }
 
+impl Scope {
+    /// The scope's name, as derived tables key their per-scope rows.
+    #[must_use]
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Holdings => "holdings",
+            Self::Reference => "reference",
+        }
+    }
+}
+
 /// An admitted artifact: schema-compatible, publishable and, when named, the
 /// selected catalog.
 pub struct Catalog {
@@ -245,12 +256,17 @@ fn connect(path: &Path) -> rusqlite::Result<Connection> {
         }
     }
     uri.push_str("?mode=ro&immutable=1");
-    Connection::open_with_flags(
+    let conn = Connection::open_with_flags(
         uri,
         OpenFlags::SQLITE_OPEN_READ_ONLY
             | OpenFlags::SQLITE_OPEN_URI
             | OpenFlags::SQLITE_OPEN_NO_MUTEX,
-    )
+    )?;
+    // Memory-map the file (SQLite caps the size at its compile-time maximum, about
+    // 2 GiB): a connection per request otherwise reads every page through its own
+    // small cache, and concurrent requests spend most of their time in `pread`.
+    conn.pragma_update(None, "mmap_size", 1_i64 << 31)?;
+    Ok(conn)
 }
 
 /// Register the folds. Each maps SQL NULL to NULL; `fts_term(text, term)` is

@@ -1,0 +1,190 @@
+{
+  "description": "One SCB register per Vardemangder shape (register id N, variant N*10, var_id N*100+1, CVID N*1000+1, items N*100+k), each delivered for `year` or the named pooled/unknown edition. VardemangderValidDates rows are written out exactly; an item without a row is unlisted. Unika's Identitetsvariabel is 1 for idclean/idunk/idnolabel, blank for idjoin (whose identifier comes from Identifierare.csv) and for idblank (no Identifierare row, so its flag stays unknown), and 0 elsewhere; idnone has no Unika row at all. The Tal marker items 3601 and 3701 have an unknown ValidDates window (`bad|bad`). Canonical SCB registers rowvalid (1990) and named (2020) name their own lists row-list (02 Second, valid from 2008-11-19) and named-list (01 First), so each is the other's competitor if a declared name stops selecting its list (a canonical CSV no variable declares never enters the bundle); FK register fkreg names its delivered fk-list (FKVAR) and the canonical named-list (FKCANON). Associations reversed: the Vardemangder rows of each set-aside member (setaside 31001, partial 32001, pooledaside 33001, asideunk 39001, collide 045001 and 45001) come in reverse order; nothing else changes.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 35001,
+        "var_id": 3501,
+        "colname": "VALUE",
+        "varname": "Unkscope",
+        "year": "2020",
+        "register": ["UNKSCOPE", 35, 350],
+        "versionname": "okänd"
+      },
+      {
+        "cvid": 48001,
+        "var_id": 4801,
+        "colname": "VALUE",
+        "varname": "Rangeless",
+        "year": "2019",
+        "register": ["RANGELESS", 48, 480],
+        "versionname": "Höstterminen 2018, Höstterminen 2019"
+      },
+      {
+        "cvid": 31001,
+        "var_id": 3101,
+        "colname": "VALUE",
+        "varname": "Setaside",
+        "year": "1990",
+        "register": ["SETASIDE", 31, 310]
+      },
+      {
+        "cvid": 32001,
+        "var_id": 3201,
+        "colname": "VALUE",
+        "varname": "Partial",
+        "year": "2008",
+        "register": ["PARTIAL", 32, 320]
+      },
+      {
+        "cvid": 33001,
+        "var_id": 3301,
+        "colname": "VALUE",
+        "varname": "Pooledaside",
+        "year": "2014",
+        "register": ["POOLEDASIDE", 33, 330],
+        "versionname": "2010 - 2014"
+      },
+      {
+        "cvid": 34001,
+        "var_id": 3401,
+        "colname": "VALUE",
+        "varname": "Pooled",
+        "year": "2022",
+        "register": ["POOLED", 34, 340],
+        "versionname": "2020 - 2022"
+      },
+      {
+        "cvid": 36001,
+        "var_id": 3601,
+        "colname": "VALUE",
+        "varname": "Marker",
+        "year": "2020",
+        "register": ["MARKER", 36, 360]
+      },
+      {
+        "cvid": 37001,
+        "var_id": 3701,
+        "colname": "VALUE",
+        "varname": "Markermix",
+        "year": "2020",
+        "register": ["MARKERMIX", 37, 370]
+      },
+      {
+        "cvid": 38001,
+        "var_id": 3801,
+        "colname": "VALUE",
+        "varname": "Unkvalid",
+        "year": "2020",
+        "register": ["UNKVALID", 38, 380]
+      },
+      {
+        "cvid": 39001,
+        "var_id": 3901,
+        "colname": "VALUE",
+        "varname": "Asideunk",
+        "year": "1990",
+        "register": ["ASIDEUNK", 39, 390]
+      },
+      {
+        "cvid": 40001,
+        "var_id": 4001,
+        "colname": "VALUE",
+        "varname": "Unlisted",
+        "year": "2020",
+        "register": ["UNLISTED", 40, 400]
+      },
+      {
+        "cvid": 41001,
+        "var_id": 4101,
+        "colname": "VALUE",
+        "varname": "Idclean",
+        "year": "2020",
+        "register": ["IDCLEAN", 41, 410]
+      },
+      {
+        "cvid": 42001,
+        "var_id": 4201,
+        "colname": "VALUE",
+        "varname": "Idunk",
+        "year": "2020",
+        "register": ["IDUNK", 42, 420]
+      },
+      {
+        "cvid": 43001,
+        "var_id": 4301,
+        "colname": "VALUE",
+        "varname": "Idnolabel",
+        "year": "2020",
+        "register": ["IDNOLABEL", 43, 430]
+      },
+      {
+        "cvid": 44001,
+        "var_id": 4401,
+        "colname": "VALUE",
+        "varname": "Nolabel",
+        "year": "2020",
+        "register": ["NOLABEL", 44, 440]
+      },
+      {
+        "cvid": 45001,
+        "var_id": 4501,
+        "colname": "VALUE",
+        "varname": "Collide",
+        "year": "2020",
+        "register": ["COLLIDE", 45, 450]
+      },
+      {
+        "cvid": 46001,
+        "var_id": 4601,
+        "colname": "VALUE",
+        "varname": "Grouped",
+        "year": "2020",
+        "register": ["GROUPED", 46, 460]
+      },
+      {
+        "cvid": 47001,
+        "var_id": 4701,
+        "colname": "VALUE",
+        "varname": "Checked",
+        "year": "2020",
+        "register": ["CHECKED", 47, 470]
+      },
+      {
+        "cvid": 49001,
+        "var_id": 4901,
+        "colname": "VALUE",
+        "varname": "Idjoin",
+        "year": "2020",
+        "register": ["IDJOIN", 49, 490]
+      },
+      {
+        "cvid": 50001,
+        "var_id": 5001,
+        "colname": "VALUE",
+        "varname": "Idblank",
+        "year": "2020",
+        "register": ["IDBLANK", 50, 500]
+      },
+      {
+        "cvid": 51001,
+        "var_id": 5101,
+        "colname": "VALUE",
+        "varname": "Idnone",
+        "year": "2020",
+        "register": ["IDNONE", 51, 510]
+      }
+    ],
+    "vardemangder": ["v|1|01|One|35001|3501", "v|1|01|One|48001|4801", "v|1|02|Two|31001|3102", "v|1|01|One|31001|3101", "v|1|02|Two|32001|3202", "v|1|01|One|32001|3201", "v|1|02|Two|33001|3302", "v|1|01|One|33001|3301", "v|1|01|One|34001|3401", "Tal|Tal|Tal|Numeriskt värde|36001|3601", "Tal|Tal|Tal|Numeriskt värde|37001|3701", "Tal|Tal|02|Two|37001|3702", "v|1|01|One|38001|3801", "v|1|02|Two|39001|3902", "v|1|01|One|39001|3901", "v|1|01|One|40001|4001", "a|1|01|One|41001|4101", "b|1|01|One|41001|4102", "v|1|01|One|42001|4201", "v|1|01||43001|4301", "v|1|01||44001|4401", "second|1|02|Two|45001|4502", "first|1|01|One|045001|4501", "first|1|01|One|46001|4601", "first|1|01|One|46001|4601", "second|1|02|Two|46001|4602", "v|1|01|One|47001|4701", "v|1|01|One|49001|4901", "v|1|01|One|50001|5001", "v|1|01|One|51001|5101"],
+    "valid_dates": ["3501|2019-01-01|2023-12-31", "4801|2017-01-01|2023-12-31", "3101|2008-11-19|", "3102|2008-11-19|", "3201|2008-11-19|", "3202|2009-01-01|", "3301|2012-01-04|", "3302|2012-01-04|", "3401|2019-01-01|2023-12-31", "3601|bad|bad", "3701|bad|bad", "3702|2000-01-01|2030-12-31", "3801|bad|bad", "3901|2008-11-19|", "3902|bad|bad", "4101|bad|bad", "4102|2000-01-01|2030-12-31", "4201|bad|bad", "4301|2000-01-01|2030-12-31", "4401|2000-01-01|2030-12-31", "4501|2021-01-01|", "4502|2021-01-01|", "4601|bad|bad", "4602|bad|bad", "4701|2020-07-01|", "4901|bad|bad", "5001|bad|bad", "5101|bad|bad"],
+    "unika": ["UNKSCOPE|Testregistret|Individer|Individer|Unkscope|VALUE|2020|2020|0|0|0", "RANGELESS|Testregistret|Individer|Individer|Rangeless|VALUE|2019|2019|0|0|0", "SETASIDE|Testregistret|Individer|Individer|Setaside|VALUE|1990|1990|0|0|0", "PARTIAL|Testregistret|Individer|Individer|Partial|VALUE|2008|2008|0|0|0", "POOLEDASIDE|Testregistret|Individer|Individer|Pooledaside|VALUE|2014|2014|0|0|0", "POOLED|Testregistret|Individer|Individer|Pooled|VALUE|2022|2022|0|0|0", "MARKER|Testregistret|Individer|Individer|Marker|VALUE|2020|2020|0|0|0", "MARKERMIX|Testregistret|Individer|Individer|Markermix|VALUE|2020|2020|0|0|0", "UNKVALID|Testregistret|Individer|Individer|Unkvalid|VALUE|2020|2020|0|0|0", "ASIDEUNK|Testregistret|Individer|Individer|Asideunk|VALUE|1990|1990|0|0|0", "UNLISTED|Testregistret|Individer|Individer|Unlisted|VALUE|2020|2020|0|0|0", "IDCLEAN|Testregistret|Individer|Individer|Idclean|VALUE|2020|2020|0|0|1", "IDUNK|Testregistret|Individer|Individer|Idunk|VALUE|2020|2020|0|0|1", "IDNOLABEL|Testregistret|Individer|Individer|Idnolabel|VALUE|2020|2020|0|0|1", "NOLABEL|Testregistret|Individer|Individer|Nolabel|VALUE|2020|2020|0|0|0", "COLLIDE|Testregistret|Individer|Individer|Collide|VALUE|2020|2020|0|0|0", "GROUPED|Testregistret|Individer|Individer|Grouped|VALUE|2020|2020|0|0|0", "CHECKED|Testregistret|Individer|Individer|Checked|VALUE|2020|2020|0|0|0", "IDJOIN|Testregistret|Individer|Individer|Idjoin|VALUE|2020|2020|0|0|", "IDBLANK|Testregistret|Individer|Individer|Idblank|VALUE|2020|2020|0|0|"]
+  },
+  "files": {
+    "scb_canonical/scb_canonical.toml": "[[register]]\nkey = \"rowvalid\"\nname = \"Row validity\"\nvalid_from = \"1990-01-01\"\nvalid_to = \"1990-12-31\"\n[[register.variable]]\nname = \"Rowvalid\"\ncolumn = \"ROWVALID\"\ndata_type = \"text\"\nvalue_set = \"row-list\"\n\n[[register]]\nkey = \"named\"\nname = \"Named list\"\nvalid_from = \"2020-01-01\"\nvalid_to = \"2020-12-31\"\n[[register.variable]]\nname = \"Named\"\ncolumn = \"NAMED\"\ndata_type = \"text\"\nvalue_set = \"named-list\"\n\n",
+    "scb_canonical/row-list.csv": ["code,label,label_en,parent_code,valid_from,valid_to", "02,Second,,,2008-11-19,"],
+    "scb_canonical/named-list.csv": ["code,label", "01,First"],
+    "Forsakringskassan/fk.toml": ["[[register]]", "key = \"fkreg\"", "name = \"FK register\"", "valid_from = \"2020-01-01\"", "valid_to = \"2020-12-31\"", "[[register.variable]]", "name = \"Fkvar\"", "column = \"FKVAR\"", "data_type = \"text\"", "value_set = \"fk-list\"", "[[register.variable]]", "name = \"Fkcanon\"", "column = \"FKCANON\"", "data_type = \"text\"", "value_set = \"named-list\""],
+    "Forsakringskassan/fk-list.csv": ["code,label", "01,First"],
+    "SCB/Identifierare.csv": "VarID|Variabelnamn|Variabeldefinition\r\n4901|Idjoin|Identifierare\r\n"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "note": "Fails if a `_default` period stops resolving a binding to its variant's year-independent state, or a variant without one, or a pin no year-independent state delivers, stops being refused.",
+  "fixture": "states",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "source0",
+            "register_variant": "scb/example/fixed",
+            "period": "_default",
+            "bindings": [
+              {
+                "variable": "scb/example/kod",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "source1",
+            "register_variant": "scb/example/annual",
+            "period": "_default",
+            "bindings": [
+              {
+                "variable": "scb/example/kod",
+                "type": "categorical"
+              }
+            ]
+          },
+          {
+            "name": "source2",
+            "register_variant": "scb/example/fixed",
+            "period": "_default",
+            "bindings": [
+              {
+                "variable": "scb/example/kod",
+                "type": "categorical",
+                "representation": "Nope"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

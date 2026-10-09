@@ -1,0 +1,6 @@
+[
+  {"status": 200, "json": {"/data/items/*/filename": ["Kon.md"]}},
+  {"status": 409, "json": {"/error/code": "stale_cursor"}},
+  {"status": 409, "json": {"/error/code": "stale_cursor"}},
+  {"status": 422, "json": {"/error/code": "invalid_cursor"}}
+]

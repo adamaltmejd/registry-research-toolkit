@@ -1,0 +1,35 @@
+{
+  "note": "Pins a Rust-only fix, so do not re-sync it to `validate/pinned-february-only`: the non-leap February clip renders as its month token `2019-02`, where the frozen Python validator writes `2019-02-01..2019-02-28`. Fails if the clip stops being reported or that window stops rendering as its token.",
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "source",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": 2019
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/februari",
+                "type": "categorical",
+                "representation": "Februari"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,35 +1,29 @@
 /**
- * Tiny, dependency-free typed fetch wrapper for the reg_webapp backend (see
- * reg_webapp/DESIGN.md → Pydantic boundary: the SPA only talks HTTP/JSON to the
- * backend — no domain coupling).
+ * Tiny, dependency-free typed fetch wrapper for the Rust server (`reg-meta
+ * serve`): the SPA only talks HTTP/JSON to it — no domain coupling.
  *
  * Every response type is the codegen'd `components["schemas"][...]` from
- * `./api-types` (generated from the backend's committed `openapi.json`) or, for
- * the routes the Rust server answers, from `./api-types-rust` (generated from
- * `crates/reg-meta/openapi.json`), so the client carries the exact API contract
- * with no hand-maintained mirror.
+ * `./api-types-rust` (generated from `crates/reg-meta/openapi.json`), so the
+ * client carries the exact API contract with no hand-maintained mirror.
  */
-import type { components } from "./api-types";
 import type {
   components as RustComponents,
   operations as RustOperations,
 } from "./api-types-rust";
 import { queryFromParams, type ResolutionParams } from "./period";
 
-type Schemas = components["schemas"];
 type RustSchemas = RustComponents["schemas"];
 
 /** The `/api` base. Same-origin in production (Cloudflare fronts both the SPA
- * and the API); the Vite dev server proxies `/api/context` and `/api/search` to
- * the Rust server and the rest of `/api` to the FastAPI backend. */
+ * and the API); the Vite dev server proxies it to the Rust server
+ * (`vite.config.ts`). */
 const API_BASE = "/api";
 
 /**
  * A non-2xx response, thrown by the GET helpers. `status` is the HTTP status;
  * `body` is the parsed JSON error body when present (the Rust server's
- * `{error, meta}`, FastAPI's `{detail: ...}` from `HTTPException`, and the
- * validation issue shapes elsewhere) or `null` when the body wasn't JSON; `message` is a human-readable
- * summary suitable for an error banner.
+ * `{error, meta}`) or `null` when the body wasn't JSON; `message` is a
+ * human-readable summary suitable for an error banner.
  */
 export class ApiError extends Error {
   readonly status: number;
@@ -43,28 +37,14 @@ export class ApiError extends Error {
   }
 }
 
-/** Pull a human-readable message out of a parsed error body. The Rust server's
- * error document is `{error: {message, ...}, meta}`; FastAPI's 4xx
- * `HTTPException` serializes as `{detail: string}`, and `detail` can also be a
- * list of validation errors (422). Falls back to the status line. */
+/** Pull a human-readable message out of a parsed error body: the Rust server's
+ * error document is `{error: {message, ...}, meta}`. Falls back to the status
+ * line. */
 function messageFromBody(status: number, body: unknown): string {
   if (body && typeof body === "object" && "error" in body) {
     const error = (body as { error: unknown }).error;
     if (error && typeof error === "object" && "message" in error) {
       return String((error as { message: unknown }).message);
-    }
-  }
-  if (body && typeof body === "object" && "detail" in body) {
-    const detail = (body as { detail: unknown }).detail;
-    if (typeof detail === "string") {
-      return detail;
-    }
-    if (Array.isArray(detail)) {
-      // FastAPI 422 validation-error list: surface the first message.
-      const first = detail[0];
-      if (first && typeof first === "object" && "msg" in first) {
-        return String((first as { msg: unknown }).msg);
-      }
     }
   }
   return `Request failed (HTTP ${status})`;
@@ -109,10 +89,10 @@ export async function apiGet<T>(
 /**
  * POST `body` as JSON to `path` (relative to `/api`) and return the parsed JSON
  * typed as `T`. Throws `ApiError` on any NON-2xx response (parsing a JSON error
- * body when present). Used for `/project/validate`, where a non-2xx is a malformed
- * REQUEST (a 4xx from `read_raw_json_object` / the body cap) — NOT a validation
- * failure: a validation failure is a 200 with `ok:false`, which this RETURNS
- * (see `validateProject`).
+ * body when present). Used for `/project/validate`, where a non-2xx is a refused
+ * REQUEST (`malformed_request`, `payload_too_large`, `rate_limited`) — NOT a
+ * validation failure: a validation failure is a 200 with `ok:false`, which this
+ * RETURNS (see `validateProject`).
  */
 export async function apiPostJson<T>(path: string, body: unknown): Promise<T> {
   const resp = await fetch(`${API_BASE}${path}`, {
@@ -140,9 +120,9 @@ export async function apiPostJson<T>(path: string, body: unknown): Promise<T> {
  * POST `body` as JSON to `path` and trigger a browser file download of the 2xx
  * response blob. The filename is taken from the response's `Content-Disposition`
  * (`attachment; filename="..."`), falling back to `fallbackFilename`. A non-2xx is
- * an `ApiError` (the backend's 400/422 — a malformed request or an invalid spec
- * the download endpoint rejects, unlike `/validate`'s 200 diagnosis). Used for the
- * order manifest (`/project/order`).
+ * an `ApiError` (a refused request, or a project the download refuses to order,
+ * unlike `/validate`'s 200 diagnosis). Used for the order manifest
+ * (`/project/order/manifest`).
  *
  * The download is wired with a transient `<a download>` + `createObjectURL`,
  * revoked after the click — the standard no-dep blob-download pattern.
@@ -204,11 +184,14 @@ export function triggerDownload(blob: Blob, filename: string): void {
   URL.revokeObjectURL(url);
 }
 
-// ── Typed endpoint helpers ─────────────────────────────────────────────────
-// Thin wrappers naming each browse endpoint's response type. The catch-all
-// (`getCatalogNode`) returns the discriminated `CatalogNode` union; A5.3a never
-// passes `?period`, so the `StatesResponse` arm (no `kind`) is out of scope here
-// — callers narrow on `kind` (see `lib/catalog.ts`).
+// ── Catalog surface (the Rust server, RUST_RUNTIME_SPEC.md package C) ──────────
+// Every catalog read answers `{data, meta}`; the helpers below return `data`.
+// `show` summarizes any ref (no ref is the catalog root); the heavy parts are
+// facets, each its own request: a variable's `states`, `warnings`, `lineage` and
+// relationship `graph`, and the `values` of a classification or of one state. A
+// retired FQID resolves to its terminal successor (the result carries the
+// canonical `fqid`, no redirect); a ref that a split makes ambiguous is a 409
+// `ambiguous_ref` whose message names the candidates.
 
 /** The Rust server's `context`: branding, artifact identity and headline counts. */
 export type Context = RustSchemas["Context"];
@@ -218,262 +201,269 @@ export type Steward = RustSchemas["Steward"];
 /** The headline catalog-size counts (#675) the landing page renders — slugged
  * (browse-addressable) providers, registers and variables in the read scope. */
 export type CatalogSizes = RustSchemas["Sizes"];
-export type RootResponse = Schemas["RootResponse"];
-export type VariantsResponse = Schemas["VariantsResponse"];
 
-/** The discriminated browse union the catch-all returns WITHOUT `?period`
- * (A5.3a). Each arm carries a `kind` literal. `ConceptGroupNode` (#617) is NOT
- * an arm: the group SUBJECT is served ONLY by the FIXED `/catalog/group/...`
- * route (its own response type, `ConceptGroupNodeData`), never by the catch-all,
- * so this union advertises exactly the kinds the catch-all can return. */
-export type CatalogNode =
-  | Schemas["ProviderResponse"]
-  | Schemas["RegisterResponse"]
-  | Schemas["BindingNode"]
-  | Schemas["ClassificationRootResponse"]
-  | Schemas["ClassificationNode"];
+/** `show`'s `kind`-tagged summary of a ref. */
+export type ShowNode = RustSchemas["Show"];
+export type RootShow = Extract<ShowNode, { kind: "root" }>;
+export type ProviderShow = Extract<ShowNode, { kind: "provider" }>;
+export type RegisterShow = Extract<ShowNode, { kind: "register" }>;
+/** A variable's shared metadata. Its states, warnings, lineage and succession
+ * chain are the `states`, `warnings`, `lineage` and `graph` facets. */
+export type VariableShow = Extract<ShowNode, { kind: "variable" }>;
+export type ClassificationRootShow = Extract<
+  ShowNode,
+  { kind: "classification_root" }
+>;
+/** A classification edition. Its codes are `values`, its edition chain `graph`
+ * (or its family's `editions`). */
+export type ClassificationShow = Extract<ShowNode, { kind: "classification" }>;
+/** A register's concept group as a browsable subject (#617): its members in scope,
+ * each with its own coverage. */
+export type ConceptGroupShow = Extract<ShowNode, { kind: "concept_group" }>;
+/** A curated classification umbrella (#756): catalog-global, members without
+ * coverage. */
+export type ClassificationGroupShow = Extract<
+  ShowNode,
+  { kind: "classification_group" }
+>;
+/** A derived one-dimensional classification succession family (#771). */
+export type ClassificationFamilyShow = Extract<
+  ShowNode,
+  { kind: "classification_family" }
+>;
+export type ClassificationSubjectShow =
+  | ClassificationGroupShow
+  | ClassificationFamilyShow;
 
-/** A binding child under a register node — a thin (fqid, name) entry, NOT the
- * embedded longitudinal record (that lives on the binding LEAF, `BindingNode`). */
-export type BindingChild = Schemas["BindingChild"];
+export type RootChild = RustSchemas["RootChild"];
+/** A provider's register, with its coverage in the read scope. */
+export type RegisterChild = RustSchemas["RegisterChild"];
+/** A register's variable, with every `(variant, column)` it is delivered under. */
+export type VariableChild = RustSchemas["VariableChild"];
 /** One `(variant, delivery column)` a register child is delivered under (Y-82),
- * with that pair's own window. The register page names the columns beside each
- * variable and filters the list on the variants. */
-export type VariableDeliveryModel = Schemas["VariableDelivery"];
+ * with that pair's own windows. */
+export type VariableDeliveryModel = RustSchemas["Delivery"];
+export type CoverageModel = RustSchemas["ShowCoverage"];
+export type RegisterCoverageModel = RustSchemas["ShowRegisterCoverage"];
+/** A register variant with its versions' prose (the `?variant=` browse axis). */
+export type VariantModel = RustSchemas["Variant"];
+export type TagModel = RustSchemas["Tag"];
+/** A concept or classification group as listed by its register, the
+ * classification root or a member classification — a presentation fold of
+ * near-identical rows whose members carry the real leaf FQIDs. */
+export type ConceptGroup = RustSchemas["Group"];
+/** A group member; two members of one variable differ by `delivery_column`.
+ * `coverage` is present on a group's own page only. */
+export type ConceptGroupMember = RustSchemas["Member"];
+/** One facet assignment on a group member (`axis`/`value`/`label`). */
+export type GroupFacetModel = RustSchemas["Facet"];
+/** One declared facet axis of a group (#819): the stable `name` (equal to a
+ * member's facet `axis`) and its display `label`. */
+export type GroupAxisModel = RustSchemas["Axis"];
+/** One edition of a classification succession family, in chain order, with
+ * `is_self`/`is_current` flags. */
+export type FamilyEdition = RustSchemas["FamilyEdition"];
+export type OwningVariable = RustSchemas["OwningVariable"];
+export type Derivation = RustSchemas["Derivation"];
 
-/** The binding-leaf node (3-seg) the catch-all returns WITHOUT a query — the
- * variable's full embedded longitudinal record (states + edges; see
- * reg_webapp/DESIGN.md → Catalog router structure). */
-export type BindingNodeData = Schemas["BindingNode"];
-export type VariableStateModel = Schemas["VariableState"];
-/** One bounded page of a value set's (code, label) membership — what the code
- * panel reads, since the binding leaf carries only each state's `value_set_id`
- * and `value_set_summary` (Y-46). */
-export type ValueSetCodesResponse = Schemas["ValueSetCodesResponse"];
-export type ValueSetMemberModel = Schemas["ValueSetMember"];
+/** One state of a variable (`states`), in the catalog page's light form:
+ * `value_set` is null and `value_set_summary` carries the counts; the codes are
+ * the `values` facet. `state_id` is a decimal-string storage id.
+ *
+ * `Required` because the server serializes every field of a state, an absent
+ * value as `null`, while the OpenAPI document marks each nullable field optional;
+ * the state readers compare bounds and columns against `null`. The same holds for
+ * `GraphState`. */
+export type VariableStateModel = Required<RustSchemas["State"]>;
+export type ValueSetSummaryModel = RustSchemas["ValueSetSummary"];
+export type DenseIntegerRangeModel = RustSchemas["IntegerRange"];
+export type DataWarningModel = RustSchemas["DataWarning"];
+
+/** One page of `values`, with `total` matches of `q` in the whole set. */
+export type ValuesPage = RustSchemas["ValuesPage"];
+export type ValueRow = RustSchemas["ValueRow"];
+export type ValueSetMemberModel = RustSchemas["ValueSetMember"];
 export type ClassificationExtensionMemberModel =
-  Schemas["ClassificationExtensionMember"];
-export type ValueSetSummaryModel = Schemas["ValueSetSummary"];
-export type DenseIntegerRangeModel = Schemas["DenseIntegerRange"];
-export type VariableRefModel = Schemas["VariableRef"];
-/** One edition in a variable's embedded FULL succession timeline (#582) — the
- * variable-grain dual of `ClassificationChainEdition`. The chain arrives
- * oldest-first, terminal last, with `is_self`/`is_current` flags and per-edition
- * `reason`/`effective_year`. A chain edition CAN be a dead/renamed predecessor
- * (#355/#411): a valid `fqid` (301-redirects to the current edition) but a null
- * `name` (no live row). `fqid` is null only on a malformed triple. The browse
- * panel renders the whole chain synchronously from these. */
-export type VariableEditionModel = Schemas["VariableEdition"];
-export type LineageEdgeModel = Schemas["LineageEdge"];
-export type LineageWarningModel = Schemas["LineageWarning"];
+  RustSchemas["ClassificationExtensionMember"];
+/** One code of a classification edition; `is_valid` is canonical (true) or
+ * unknown (null: no canonical list for the edition). */
+export type ClassificationCodeModel = RustSchemas["ClassificationCode"];
 
-/** A derived concept group (#303) on a register / classification-root node —
- * a PRESENTATION-ONLY fold of near-identical rows. Members carry the real leaf
- * FQIDs (the same entries also appear in `children`); the browse collapses the
- * member rows under the group and expands to a facet picker. */
-export type ConceptGroup = Schemas["ConceptGroupSummary"];
-export type ConceptGroupMember = Schemas["ConceptGroupMember"];
-/** One facet assignment on a group member (`axis`/`value`/`label`) — shared by
- * the browse `ConceptGroupMember` and the subject-page `ConceptGroupNodeMember`,
- * so facet helpers can read either member type. */
-export type GroupFacetModel = Schemas["GroupFacet"];
-/** One declared facet axis of a concept group (#819): the stable `name` (the
- * MATCH key — equal to a member's `GroupFacet.axis`) and its curator-authored
- * display `label`. Consumers match on `name`, render `label`. */
-export type GroupAxisModel = Schemas["GroupAxis"];
+/** A variable's lineage: its state-lineage `edges`, lineage `warnings`, and the
+ * same-named variables' `registers` provenance rows. */
+export type LineageModel = RustSchemas["Lineage"];
+export type LineageEdgeModel = RustSchemas["LineageEdge"];
+export type LineageWarningModel = RustSchemas["LineageWarning"];
 
-/** The concept group as a browsable SUBJECT (#617), returned by the fixed
- * `/catalog/group/<provider>/<register>/<key>` route — group identity +
- * members WITH per-member coverage + the echoed `?member=` focus hint. This is
- * the group route's OWN response type, NOT an arm of the catch-all `CatalogNode`
- * union. Distinct from the presentation-only `ConceptGroup` folded into a
- * register listing. */
-export type ConceptGroupNodeData = Schemas["ConceptGroupNode"];
-/** A member on the group SUBJECT node — the browse member plus its per-variable
- * study-window `coverage` (null for a stateless member). */
-export type ConceptGroupNodeMember = Schemas["ConceptGroupNodeMember"];
-/** The classification umbrella as a browsable SUBJECT (#756), returned by the
- * fixed `/catalog/group/class/<key>` route — the classification sibling of
- * `ConceptGroupNodeData`. Catalog-global (no provider/register), and its members
- * are plain `ConceptGroupMember`s (fqid + name + facets) with NO coverage:
- * classification umbrellas have no register scope or study-window. Its OWN
- * response type, NOT an arm of the catch-all `CatalogNode` union. */
-export type ClassificationGroupNodeData = Schemas["ClassificationGroupNode"];
-/** A derived one-dimensional classification succession family (#771), returned by
- * `/catalog/group/class/<key>` with `kind: "classification-family"`. */
-export type ClassificationFamilyNodeData = Schemas["ClassificationFamilyNode"];
-export type ClassificationGroupSubjectData =
-  | ClassificationGroupNodeData
-  | ClassificationFamilyNodeData;
-/** The concept group a binding belongs to (#616), as `(provider, register,
- * key)` — carried on `BindingNode.group` (null when ungrouped) so a member page
- * links to its group subject without a second fetch. */
-export type BindingGroupRef = Schemas["BindingGroupRef"];
-
-/** The catalog relationship-graph contract (#761) — a typed graph object the
- * renderer (#678) draws as-is: one node per variable (states as sub-structure,
- * grouped into representation-run cells) or classification edition, plus
- * `succession` edges. Representation-grain succession edges carry optional
- * source/target column and variant metadata (#888). An empty graph (`nodes: []`) is the "don't
- * render" signal (`nodes.length === 0`). `focus_id` is the requested node
- * (post-same_as), null for a group-addressed call. reg_meta owns topology +
- * predicates; this is just the wire shape. */
-export type RelationshipGraph = Schemas["RelationshipGraph"];
-/** A variable node in the relationship graph (#761/#678) — one per variable, its
- * `states` grouped into representation-run cells by the renderer; carries the
- * group facets + `same_as` aliases the renderer surfaces as per-node affordances. */
-export type VariableGraphNode = Schemas["VariableGraphNode"];
-/** A classification-edition node in the relationship graph (#761/#678) — a POINT
- * at `version_year` (not a validity interval); `is_current` marks the head edition. */
-export type ClassificationGraphNode = Schemas["ClassificationGraphNode"];
+/** The catalog relationship-graph contract (#761): one node per variable (states
+ * as sub-structure, grouped into representation-run cells) or classification
+ * edition, plus `succession` edges. An empty graph (`nodes: []`) is the "don't
+ * render" signal. `focus_id` is the requested node, null for a group ref. */
+export type RelationshipGraph = Omit<RustSchemas["Graph"], "nodes"> & {
+  nodes: GraphNode[];
+};
+export type VariableGraphNode = Omit<
+  Extract<RustSchemas["Node"], { kind: "variable" }>,
+  "states"
+> & { states: GraphState[] };
+/** A classification-edition node: a point at `version_year`; `is_current` marks
+ * the head edition. */
+export type ClassificationGraphNode = Extract<
+  RustSchemas["Node"],
+  { kind: "classification" }
+>;
 export type GraphNode = VariableGraphNode | ClassificationGraphNode;
-export type GraphEdge = Schemas["GraphEdge"];
-export type GraphState = Schemas["GraphState"];
+export type GraphEdge = RustSchemas["Edge"];
+export type GraphState = Required<RustSchemas["GraphState"]>;
 
-// The catch-all returns a `StatesResponse` (NOT a `kind`-tagged node) when a
-// binding leaf is queried with `?period` (the resolve_at subset), and a
-// SUB-ENDPOINT path returns other no-`kind` envelopes — both are distinguished
-// from a browsable node by `isCatalogNode` at the fetch boundary.
-export type StatesResponse = Schemas["StatesResponse"];
-export type LineageWarningsResponse = Schemas["LineageWarningsResponse"];
-
-/** One edition in a classification's embedded succession timeline (#571) — the
- * chain arrives oldest-first, terminal last, with `is_self`/`is_current` flags.
- * Every edition is a live classification row (the build validator guarantees
- * succession editions are live), so `fqid` is null only when the slug is
- * missing/unresolvable, in which case it renders as plain text. The browse panel
- * renders the whole chain synchronously from these. */
-export type ClassificationChainEdition = Schemas["ClassificationEdition"];
-/** One code/label entry in a classification edition's value set (#609), embedded
- * on `ClassificationNodeData.codes`. `is_valid` is canonical (true) / unknown
- * (null — no canonical CSV for the edition). */
-export type ClassificationCodeModel = Schemas["ClassificationCode"];
-/** The resolved classification leaf the catch-all returns — carries its embedded
- * FULL succession chain (`edition_chain`, oldest first / terminal last), the
- * resolved edition's value-set `codes` (#609), and the curated umbrella
- * `dimensions` it belongs to (#609 niva ↔ aggregate cross-reference). */
-export type ClassificationNodeData = Schemas["ClassificationNode"];
-
-/** A browsable catalog node — every `CatalogNode` arm carries a `kind` literal;
- * the catch-all's other payloads (a `?period` `StatesResponse`, or a SUB-ENDPOINT
- * `VariantsResponse`/… on a `.../states` path) do NOT. Positive `"kind" in x`
- * check (negate it for "the non-node response"). Phrased as `isCatalogNode`
- * rather than `isStatesResponse` because a no-`kind` payload is NOT necessarily a
- * `StatesResponse` — only the binding-leaf `?period` resolve is. */
-export function isCatalogNode(
-  x: CatalogNode | StatesResponse,
-): x is CatalogNode {
-  return "kind" in x;
-}
-
-/** Percent-encode each FQID segment for use in a URL path (the server
- * re-validates the slug grammar per segment — see reg_webapp/DESIGN.md → FQID
- * path guard (catalog_fqid.py)). Split/join on `/` so the
- * path separators survive while reserved chars inside a segment are escaped.
+/** Percent-encode each FQID segment for use in a URL path. Split/join on `/` so
+ * the path separators survive while reserved chars inside a segment are escaped.
  * Shared with `catalog.catalogHref` so the SPA's link hrefs and the API paths
- * encode identically. (A no-op for today's ASCII slugs, but correct for any
- * input.) */
+ * encode identically. */
 export function encodeFqid(fqidPath: string): string {
   return fqidPath.split("/").map(encodeURIComponent).join("/");
 }
 
-/** The concept-group subject route, shared by SPA links and API fetches. `key`
- * rides the route tail, so encode it directly rather than joining it into an
- * FQID-shaped path where embedded `/` would become a separator. */
+/** The concept-group ref, `group/<provider>/<register>/<key>`. */
+export function conceptGroupRef(
+  provider: string,
+  register: string,
+  key: string,
+): string {
+  return `group/${provider}/${register}/${key}`;
+}
+
+/** The classification-group (or family) ref, `group/class/<key>`. */
+export function classificationGroupRef(key: string): string {
+  return `group/class/${key}`;
+}
+
+/** The concept-group subject route, shared by SPA links and API fetches. */
 export function conceptGroupPath(
   provider: string,
   register: string,
   key: string,
 ): string {
-  return `/catalog/group/${encodeURIComponent(provider)}/${encodeURIComponent(register)}/${encodeURIComponent(key)}`;
+  return `/catalog/${encodeFqid(conceptGroupRef(provider, register, key))}`;
 }
 
 /** The classification-group subject route (#756), shared by SPA links and API
- * fetches — the classification sibling of `conceptGroupPath`. The literal `class`
- * segment routes to the fixed classification-group route (no provider/register);
- * `key` rides the route tail, encoded directly. */
+ * fetches — the classification sibling of `conceptGroupPath`. */
 export function classificationGroupPath(key: string): string {
-  return `/catalog/group/class/${encodeURIComponent(key)}`;
+  return `/catalog/${encodeFqid(classificationGroupRef(key))}`;
+}
+
+/** GET a Rust-server read and return its `data`. */
+async function rustGet<T>(
+  path: string,
+  query?: URLSearchParams,
+  options?: { signal?: AbortSignal },
+): Promise<T> {
+  const suffix = query && query.size > 0 ? `?${query}` : "";
+  return (await apiGet<{ data: T }>(`${path}${suffix}`, options)).data;
 }
 
 /** The Rust server answers with `{data, meta}`; the SPA reads `data`. */
-export async function getContext(): Promise<Context> {
-  return (await apiGet<{ data: Context }>("/context")).data;
+export function getContext(): Promise<Context> {
+  return rustGet<Context>("/context");
 }
 
-export function getCatalogRoot(): Promise<RootResponse> {
-  return apiGet<RootResponse>("/catalog");
+/** `show` for `ref` (a FQID or group ref); no ref is the catalog root. */
+export function getShow(ref?: string): Promise<ShowNode> {
+  return rustGet<ShowNode>(ref ? `/catalog/${encodeFqid(ref)}` : "/catalog");
 }
 
-/** Resolve a catalog node by its FQID path (e.g. `scb/lisa/kon`). With `params`
- * (`?period` + the `?variant`/`?value_set_version` modifiers) a binding
- * leaf resolves to the `resolve_at` subset — a `StatesResponse` (no `kind`),
- * distinguished from a browsable node by `isCatalogNode`. A malformed
- * period/variant is the server's 422 (surfaced as an `ApiError`). */
-export function getCatalogNode(
-  fqidPath: string,
-  params?: ResolutionParams,
-): Promise<CatalogNode | StatesResponse> {
-  const query = params ? queryFromParams(params) : "";
-  const path = `/catalog/${encodeFqid(fqidPath)}${query ? `?${query}` : ""}`;
-  return apiGet<CatalogNode | StatesResponse>(path);
+/** The page size the SPA walks `states` with: the operation's maximum.
+ * simplify: sequential page walk; the largest history on the v0.43.0 pin
+ * (`scb/rtb/kon`, 521 states) is 3 requests. Fetch pages concurrently, or let the
+ * binding page render the first page while the rest load, if a variable passes
+ * about 1,000 states (5 pages) or the leaf's load time becomes noticeable. */
+const STATES_PAGE = 200;
+
+/** Read `period` the way the SPA writes it, over operations that take ONE period:
+ * `_default` (and no period) is the whole history, one read without `period`; a
+ * comma list (a source's disjoint windows) is one read per member, merged and
+ * deduplicated by `key`. Project validation accepts the list grammar, catalog
+ * reads one period each (RUST_RUNTIME_SPEC.md package C). */
+async function readPerPeriod<T>(
+  period: string | null | undefined,
+  read: (period: string | undefined) => Promise<T[]>,
+  key: (item: T) => string,
+): Promise<T[]> {
+  const periods: (string | undefined)[] =
+    !period || period === "_default"
+      ? [undefined]
+      : period.split(",").map((member) => member.trim());
+  // An empty member (`2018,`) would read without `period`, i.e. the whole history,
+  // and widen the answer; refuse it as the server refuses any malformed period.
+  if (periods.includes("")) {
+    const message = `Invalid period ${JSON.stringify(period)}: a list member is empty.`;
+    throw new ApiError(
+      422,
+      {
+        error: {
+          code: "invalid_period",
+          message,
+          fields: { parameter: "period" },
+        },
+      },
+      message,
+    );
+  }
+  if (periods.length === 1) {
+    return read(periods[0]);
+  }
+  const merged = new Map<string, T>();
+  for (const items of await Promise.all(periods.map(read))) {
+    for (const item of items) {
+      if (!merged.has(key(item))) {
+        merged.set(key(item), item);
+      }
+    }
+  }
+  return [...merged.values()];
 }
 
-/** List a register's variants (the `?variant=` browse axis). `register`
- * is the 2-seg register FQID `provider/register`. */
-export function getRegisterVariants(
-  register: string,
-): Promise<VariantsResponse> {
-  return apiGet<VariantsResponse>(`/catalog/${encodeFqid(register)}/variants`);
-}
-
-/** Resolve a concept group SUBJECT by `(provider, register, key)` (#617) — the
- * group with all members + per-member coverage. Each path segment is
- * percent-encoded (the server re-validates provider/register as slugs; the key
- * is a derivation key). `member` is the optional focus hint (a member leaf slug
- * to highlight), echoed back on the node only when it names a real member. A
- * 404 (unknown key / register) surfaces as an `ApiError`. */
-export function getConceptGroup(
-  provider: string,
-  register: string,
-  key: string,
-  member?: string,
-): Promise<ConceptGroupNodeData> {
-  const path = conceptGroupPath(provider, register, key);
-  const query = member ? `?member=${encodeURIComponent(member)}` : "";
-  return apiGet<ConceptGroupNodeData>(`${path}${query}`);
-}
-
-/** Resolve a classification umbrella SUBJECT by `key` (#756) — the group with all
- * members + facets. The classification sibling of `getConceptGroup`, but with no
- * provider/register or `?member=` focus hint (classification umbrellas are
- * catalog-global). A 404 (unknown key) surfaces as an `ApiError`. */
-export function getClassificationGroup(
-  key: string,
-): Promise<ClassificationGroupSubjectData> {
-  return apiGet<ClassificationGroupSubjectData>(classificationGroupPath(key));
-}
-
-// ── Binding sub-endpoints ───────────────────────────────────────────────────
-// The leaf now EMBEDS states / same_as / succession_chain (the FULL chain, #582) /
-// lineage, so the SPA fetches only the one it does NOT embed:
-// `/lineage_warnings`. It GETs `/catalog/{encodeFqid}/lineage_warnings`; the suffix
-// is greedy-matched ABOVE the catch-all server-side. (The `/predecessors` route
-// still exists server-side — the #411 inbound-succession surface — but the SPA no
-// longer fetches it: the embedded `succession_chain` already carries predecessors.)
-
-export function getBindingLineageWarnings(
-  fqidPath: string,
-): Promise<LineageWarningsResponse> {
-  return apiGet<LineageWarningsResponse>(
-    `/catalog/${encodeFqid(fqidPath)}/lineage_warnings`,
+/** A variable's states: its whole history, or with `period` (and the
+ * `variant`/`value_set_version` modifiers) the resolved subset; a period list
+ * unions its members' subsets. Walks every page; the server stops paging at depth
+ * 1000, so a longer history ends there. A malformed modifier is the server's 422
+ * (an `ApiError`). */
+export function getStates(
+  ref: string,
+  params: ResolutionParams = {},
+): Promise<VariableStateModel[]> {
+  return readPerPeriod(
+    params.period,
+    async (period) => {
+      const items: VariableStateModel[] = [];
+      let cursor: string | null | undefined;
+      do {
+        const query = new URLSearchParams(
+          queryFromParams({ ...params, period }),
+        );
+        query.set("limit", String(STATES_PAGE));
+        if (cursor) {
+          query.set("cursor", cursor);
+        }
+        const page = await rustGet<{
+          items: VariableStateModel[];
+          next_cursor?: string | null;
+        }>(`/states/${encodeFqid(ref)}`, query);
+        items.push(...page.items);
+        cursor = page.next_cursor;
+      } while (cursor);
+      return items;
+    },
+    (s) => `${s.state_id}|${s.delivery_column_name}|${s.valid_from}`,
   );
 }
 
-export type DataWarningModel = Schemas["DataWarning"];
-
-export function getDataWarnings(
-  fqidPath: string,
+/** A register's or variable's data warnings. `unassigned_only` keeps a
+ * register's warnings that name no variable; a period list unions its members'
+ * warnings, in `warning_id` order as the server orders one read. */
+export async function getWarnings(
+  ref: string,
   params: {
     unassigned_only?: boolean;
     period?: string | null;
@@ -481,22 +471,30 @@ export function getDataWarnings(
     representation?: string | null;
   } = {},
 ): Promise<DataWarningModel[]> {
-  const query = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    if (value) query.set(key, String(value));
-  }
-  return apiGet<DataWarningModel[]>(
-    `/catalog/${encodeFqid(fqidPath)}/data_warnings${query.size ? `?${query}` : ""}`,
+  const warnings = await readPerPeriod(
+    params.period,
+    (period) => {
+      const query = new URLSearchParams();
+      for (const [key, value] of Object.entries({ ...params, period })) {
+        if (value) query.set(key, String(value));
+      }
+      return rustGet<DataWarningModel[]>(`/warnings/${encodeFqid(ref)}`, query);
+    },
+    (w) => w.warning_id,
+  );
+  // Code-point order, as SQLite's binary collation orders one read.
+  return warnings.sort((a, b) =>
+    a.warning_id < b.warning_id ? -1 : a.warning_id > b.warning_id ? 1 : 0,
   );
 }
 
-/** One page of value set `valueSetId`'s codes. `state` switches the read to that
- * state's stored classification MISMATCH list (same code→label shape); the state
- * must carry this value set or the server 404s. `q` filters the WHOLE set before
- * the page window and `total` counts the matches, so paging never turns into
- * filtering one page. */
-export function getValueSetCodes(
-  valueSetId: string,
+/** One page of `values`: a classification's codes (`ref` a classification), or
+ * the value set of one `state` of the variable `ref`. With `classification`,
+ * `partition` picks that declared book's part of the state's codes; `column` with
+ * `alias_window_from` selects a coded alias window instead. `q` filters the whole
+ * set before the page and `total` counts the matches; `cursor` continues. */
+export function getValues(
+  ref: string,
   params: {
     state?: string | null;
     partition?: "canonical" | "source_extensions" | "nonstandard" | "sentinels";
@@ -504,125 +502,88 @@ export function getValueSetCodes(
     column?: string;
     alias_window_from?: string;
     q?: string;
-    offset?: number;
+    cursor?: string | null;
     limit?: number;
-  },
+  } = {},
   options?: { signal?: AbortSignal },
-): Promise<ValueSetCodesResponse> {
+): Promise<ValuesPage> {
   const query = new URLSearchParams();
-  if (params.state != null) {
-    query.set("state", String(params.state));
+  for (const [key, value] of Object.entries(params)) {
+    if (value != null && value !== "") query.set(key, String(value));
   }
-  if (params.column != null) query.set("column", params.column);
-  if (params.alias_window_from != null)
-    query.set("alias_window_from", params.alias_window_from);
-  if (params.classification) {
-    query.set("classification", params.classification);
-  }
-  if (params.partition) {
-    query.set("partition", params.partition);
-  }
-  if (params.q) {
-    query.set("q", params.q);
-  }
-  if (params.offset) {
-    query.set("offset", String(params.offset));
-  }
-  if (params.limit != null) {
-    query.set("limit", String(params.limit));
-  }
-  const suffix = query.size > 0 ? `?${query}` : "";
-  return apiGet<ValueSetCodesResponse>(
-    `/value-sets/${valueSetId}/codes${suffix}`,
-    options,
-  );
+  return rustGet<ValuesPage>(`/values/${encodeFqid(ref)}`, query, options);
 }
 
-/** The relationship graph for a catalog LEAF — a binding's variable OR a
- * classification edition (#761/#792); the server dispatches on FQID kind. The
- * typed graph the renderer (#678) draws over both leaf kinds. An empty graph
- * (`nodes: []`) means "don't render". A dead/renamed binding 301s server-side to
- * its terminal successor's `/graph`. */
-export function getBindingGraph(fqidPath: string): Promise<RelationshipGraph> {
-  return apiGet<RelationshipGraph>(`/catalog/${encodeFqid(fqidPath)}/graph`);
+/** The relationship graph of a variable, classification, concept group or
+ * classification group ref. */
+export function getGraph(ref: string): Promise<RelationshipGraph> {
+  return rustGet<RelationshipGraph>(`/graph/${encodeFqid(ref)}`);
 }
 
-/** The relationship graph for a register concept group SUBJECT (#761) — the
- * union of its member variables' graphs (`focus_id` null). A 404 (unknown key /
- * register) surfaces as an `ApiError`. The group page (#757) renders this; a
- * member page renders the SAME union via `getBindingGraph` with the member
- * highlighted (Fork B). */
-export function getConceptGroupGraph(
-  provider: string,
-  register: string,
-  key: string,
-): Promise<RelationshipGraph> {
-  return apiGet<RelationshipGraph>(
-    `${conceptGroupPath(provider, register, key)}/graph`,
-  );
+/** A variable's lineage: edges, lineage warnings and per-register provenance. */
+export function getLineage(ref: string): Promise<LineageModel> {
+  return rustGet<LineageModel>(`/lineage/${encodeFqid(ref)}`);
 }
 
-/** The relationship graph for a classification umbrella group SUBJECT (#761) —
- * the union of its member editions' succession chains (`focus_id` null). The
- * classification sibling of `getConceptGroupGraph`. A 404 (unknown key) surfaces
- * as an `ApiError`. */
-export function getClassificationGroupGraph(
-  key: string,
-): Promise<RelationshipGraph> {
-  return apiGet<RelationshipGraph>(`${classificationGroupPath(key)}/graph`);
-}
+// ── Project surface (the Rust server, RUST_RUNTIME_SPEC.md package 3e.4) ─────
+// `validate` and `order` take the WHOLE serialized draft as the POST body, a raw
+// object: malformed uploads (including unknown root keys) must reach the server
+// unchanged so `validate` can diagnose them.
 
-// ── Project write surface (A5.2b-ii) ────────────────────────────────────────
-// The POST endpoints the authoring SPA drives (see reg_webapp/DESIGN.md →
-// Project-write surface (routes/project.py)). Each takes the WHOLE serialized
-// draft as a raw object. The OpenAPI request schema documents the canonical
-// CLOSED ProjectData contract, while this transport type stays deliberately raw:
-// malformed uploads (including unknown root keys) must reach the backend
-// unchanged so `/validate` can diagnose them.
+/** `validate`'s result: `ok` when no issue is an error, and every issue in
+ * emission order. */
+export type ValidationResultModel = RustSchemas["Validation"];
 
-export type ValidationResultModel = Schemas["ValidationResultModel"];
-
-/** A serialized project_data.json draft posted to the write endpoints. This is a
- * raw diagnostic transport shape, not an extension surface: unknown keys are
- * invalid but must survive until the backend reports them. */
+/** A serialized project_data.json draft posted to the project operations. This is
+ * a raw diagnostic transport shape, not an extension surface: unknown keys are
+ * invalid but must survive until the server reports them. */
 export type ProjectDataBody = Record<string, unknown>;
 
 /**
- * POST a draft to `/api/project/validate` and RETURN the 200
- * `ValidationResultModel` (`{ok, issues}`). A validation FAILURE is a 200 with
+ * POST a draft to `/api/project/validate` and RETURN its `data`
+ * (`ValidationResultModel`, `{ok, issues}`). A validation FAILURE is a 200 with
  * `ok:false` — this NEVER throws on `ok:false`; the caller renders the issues.
- * Only a true 4xx (a malformed REQUEST — bad JSON / oversized body, from the
- * backend's `read_raw_json_object` / body cap) throws an `ApiError` (shown as a
- * banner, distinct from the issue list). No client-side structural
- * validator — the backend is canonical (see reg_webapp/DESIGN.md → Pydantic
- * boundary); the SPA mirrors codes for presentation.
+ * Only a refused REQUEST (`malformed_request`, `payload_too_large`,
+ * `rate_limited`) throws an `ApiError` (shown as a banner, distinct from the
+ * issue list). No client-side structural validator — the server is canonical;
+ * the SPA mirrors codes for presentation.
  */
-export function validateProject(
+export async function validateProject(
   draft: ProjectDataBody,
 ): Promise<ValidationResultModel> {
-  return apiPostJson<ValidationResultModel>("/project/validate", draft);
+  return (
+    await apiPostJson<{ data: ValidationResultModel }>(
+      "/project/validate",
+      draft,
+    )
+  ).data;
 }
 
-/** One blocking reason an order could not be materialized — reg_meta's own
- * `OrderFinding`, straight off the 422 body: the stable `code`, the message, and
- * the optional `source` / `variable` / `period` coordinates that say WHERE. */
-export type OrderFinding = Schemas["OrderFinding"];
+/** One reason an order is blocked: an entry of `order_blocked`'s
+ * `fields.findings` — the stable `code`, the message, and the `source` /
+ * `variable` / `period` coordinates that say WHERE (null when the finding is
+ * not located there). The error catalog types `fields` as an open object, so
+ * the shape is declared here, pinned by `conformance/cases/api/order-errors`
+ * and narrowed at the boundary by `orderFindingsFromError`. */
+export interface OrderFinding {
+  code: string;
+  message: string;
+  source?: string | null;
+  variable?: string | null;
+  period?: string | null;
+}
 
-/** The `/project/order` 422 body: the flattened `detail` line plus the findings
- * as DATA (`OrderBlockedModel`). */
-export type OrderBlocked = Schemas["OrderBlockedModel"];
-
-/** POST a draft to `/api/project/order` and download the materialized JSON order
- * manifest (`OrderManifest`, served verbatim so the SPA and the `reg-meta order`
- * CLI hand the steward byte-identical files). Anything that is NOT an order — an
- * invalid spec, or an order the materializer fail-closed on — is the backend's
- * 422 (an `ApiError` whose `body` is `OrderBlocked`), never a partial download. */
+/** POST a draft to `/api/project/order/manifest` and download the order
+ * manifest: the exact `order.json` bytes, the same document `order` answers.
+ * Anything that is NOT an order is an `ApiError`: `order_blocked` carrying its
+ * findings, or `project_invalid` for a document `validate` rejects structurally
+ * — never a partial download. */
 export function downloadOrderManifest(draft: ProjectDataBody): Promise<void> {
-  return apiPostForBlob("/project/order", draft, "order.json");
+  return apiPostForBlob("/project/order/manifest", draft, "order.json");
 }
 
-/** The typed findings carried by a caught `/project/order` failure, or `[]` for
- * anything else (a network error, the gate's finding-less 422, a non-JSON body).
+/** The findings carried by a caught `order_blocked` refusal, or `[]` for
+ * anything else (a network error, `project_invalid`, a non-JSON body).
  *
  * The narrowing is structural on purpose: this reads an `unknown` catch value at
  * the HTTP boundary, so it trusts only the shape it verifies — a malformed entry
@@ -632,11 +593,14 @@ export function orderFindingsFromError(e: unknown): OrderFinding[] {
   if (!(e instanceof ApiError)) {
     return [];
   }
-  const body = e.body;
-  if (!body || typeof body !== "object" || !("findings" in body)) {
+  const body = e.body as {
+    error?: { code?: unknown; fields?: { findings?: unknown } };
+  } | null;
+  const error = body?.error;
+  if (error?.code !== "order_blocked") {
     return [];
   }
-  const findings = (body as { findings: unknown }).findings;
+  const findings = error.fields?.findings;
   if (!Array.isArray(findings)) {
     return [];
   }
@@ -749,68 +713,83 @@ export async function search(
 }
 
 // ── Docs surface (#354/#394/#402/#742) ─────────────────────────────────────
-// `GET /api/docs/search?q=` returns a single documentation result group over the
-// docs FTS index; `GET /api/docs/doc/{identifier}` returns one doc's metadata +
-// source pointer + a BOUNDED excerpt (never the full body); `GET
-// /api/docs/for-variable?q=&register=` is the binding-leaf "mentioned in
-// documentation" hook (#402), and `GET /api/docs/related/{register}` +
-// `/api/docs/file/{register}/{filename}` are the related-document PDF surface
-// (#742). When the deployment ships no docs index, search/related endpoints
-// return `ingested:false` with empty results (NOT a 500), and doc/file endpoints
-// return 404 — the SPA degrades silently on search (failure isolation in
-// SearchView + DocMentionsPanel + RelatedDocumentsPanel) and shows a clear note on
-// the doc viewer.
+// The Rust server's docs operations, each `{data, meta}`: `docs_search`
+// (`GET /api/docs/search?q=&register=`, the binding-leaf "mentioned in
+// documentation" hook #402), `docs_get` (`GET /api/docs/doc/{identifier}`: one
+// doc's metadata, source pointer and a BOUNDED `excerpt`; the SPA never renders
+// its `body`) and `docs_related` (`GET /api/docs/related/{register FQID}`, with
+// the bytes at `/api/docs/file/{register FQID}/{filename}`, #742). A deployment
+// without a docs database answers `docs_unavailable` (404): the search and
+// related helpers return `null` for it, so the panels degrade silently, and the
+// doc viewer shows the error.
 // Snippets/excerpts are EXCERPTS, rendered as TEXT only (Svelte auto-escapes
-// `{value}`) — never `{@html}` (they may carry FTS highlight markers; the full
+// `{value}`) — never `{@html}` (they carry `**` highlight markers; the full
 // converted FTS document lives at the SCB source, not here).
 
-export type DocResult = Schemas["DocResult"];
-export type DocDetail = Schemas["DocDetail"];
-export type DocVariableMentions = Schemas["DocVariableMentions"];
-export type RelatedDocument = Schemas["RelatedDocument"];
-export type RelatedDocumentsResponse = Schemas["RelatedDocumentsResponse"];
+export type DocPage = RustSchemas["DocPage"];
+export type DocResult = RustSchemas["DocResult"];
+export type DocDetail = RustSchemas["DocDetail"];
+export type RelatedDocument = RustSchemas["RelatedDocument"];
 
-/** Resolve one doc by its `identifier` (a filename — a single path segment, so
- * `encodeURIComponent` the whole thing). 404 when the index is absent OR the doc
- * isn't found (the `detail` distinguishes them — surfaced via the resource error). */
-export function getDoc(identifier: string): Promise<DocDetail> {
-  return apiGet<DocDetail>(`/docs/doc/${encodeURIComponent(identifier)}`);
+/** A docs read's `data`, or `null` when the deployment ships no docs database. */
+async function docsData<T>(request: Promise<{ data: T }>): Promise<T | null> {
+  try {
+    return (await request).data;
+  } catch (e) {
+    if (
+      e instanceof ApiError &&
+      (e.body as { error?: { code?: unknown } } | null)?.error?.code ===
+        "docs_unavailable"
+    ) {
+      return null;
+    }
+    throw e;
+  }
 }
 
-/** The binding-leaf "mentioned in documentation" hook (#402): FUZZY
- * name/provider_key text matches for `q`, scoped to the bare `register` slug
- * (e.g. `"lisa"`, matched verbatim). Shares the search query + abort/timeout
- * plumbing (a ~12s client `TimeoutError` layered with the caller's teardown
- * `signal`); `limit` caps the results. An absent docs index returns
- * `ingested:false`, and a register with no ingested docs `register_ingested:false`
- * — neither is an error; the panel distinguishes both from "no mentions found"
- * (every `DocResult` is `fuzzy:true` — a heuristic match, NOT an authoritative
- * variable→doc link). */
+/** Resolve one doc by its `identifier` (a variable name or a filename — a single
+ * path segment, so `encodeURIComponent` the whole thing). A 404 (`not_found` or
+ * `docs_unavailable`) surfaces as an `ApiError` whose message says which. */
+export async function getDoc(identifier: string): Promise<DocDetail> {
+  return (
+    await apiGet<{ data: DocDetail }>(
+      `/docs/doc/${encodeURIComponent(identifier)}`,
+    )
+  ).data;
+}
+
+/** The binding-leaf "mentioned in documentation" hook (#402): text matches for
+ * `q` in the docs of the `register` FQID (e.g. `"scb/lisa"`). Shares the search
+ * query + abort/timeout plumbing (a ~12s client `TimeoutError` layered with the
+ * caller's teardown `signal`); `limit` caps the results. `null` when the
+ * deployment has no docs database; `register_ingested:false` when the register has
+ * no docs — the panel distinguishes both from "no mentions found". */
 export function getDocsForVariable(
   q: string,
-  options?: { register?: string; limit?: number; signal?: AbortSignal },
-): Promise<DocVariableMentions> {
-  return searchGet<DocVariableMentions>("/docs/for-variable", q, options);
+  options: { register: string; limit?: number; signal?: AbortSignal },
+): Promise<DocPage | null> {
+  return docsData(searchGet<{ data: DocPage }>("/docs/search", q, options));
 }
 
-/** List rehosted register-version PDFs for a bare register slug. An absent docs
- * DB returns `ingested:false`; a present DB with no curated rows returns
- * `documents:[]`. */
+/** The rehosted register-version PDFs of a register FQID; `null` when the
+ * deployment has no docs database. */
 export function getRelatedDocuments(
   register: string,
   options?: { signal?: AbortSignal },
-): Promise<RelatedDocumentsResponse> {
-  return apiGet<RelatedDocumentsResponse>(
-    `/docs/related/${encodeURIComponent(register)}`,
-    { signal: options?.signal },
+): Promise<RelatedDocument[] | null> {
+  return docsData(
+    apiGet<{ data: RelatedDocument[] }>(
+      `/docs/related/${encodeFqid(register)}`,
+      { signal: options?.signal },
+    ),
   );
 }
 
-/** Same-origin PDF URL for one related document. This is a browser `href`, not a
- * JSON fetch helper, so it includes the `/api` base. */
+/** Same-origin PDF URL for one related document of a register FQID. This is a
+ * browser `href`, not a JSON fetch helper, so it includes the `/api` base. */
 export function relatedDocumentFileHref(
   register: string,
   filename: string,
 ): string {
-  return `${API_BASE}/docs/file/${encodeURIComponent(register)}/${encodeURIComponent(filename)}`;
+  return `${API_BASE}/docs/file/${encodeFqid(register)}/${encodeURIComponent(filename)}`;
 }

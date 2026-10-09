@@ -1,0 +1,42 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/fqid": [
+        "scb/example/value"
+      ],
+      "/data/children/*/deliveries": [
+        [
+          {
+            "variant": "annual",
+            "column": "Value",
+            "period_scope": "year_independent",
+            "coverage": {
+              "coverage_from": null,
+              "coverage_to": null,
+              "open_ended": false,
+              "state_count": 1
+            },
+            "windows": []
+          }
+        ]
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/fqid": [
+        "scb/example"
+      ],
+      "/data/children/*/coverage": [
+        {
+          "variable_count": 1,
+          "coverage_from": null,
+          "coverage_to": null,
+          "open_ended": false
+        }
+      ]
+    }
+  }
+]

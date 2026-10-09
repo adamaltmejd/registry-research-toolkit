@@ -24,6 +24,7 @@ from http_cases import (
     artifact_env,
     cached_case_artifact,
     case_clients,
+    raw_body,
     run_http_requests,
     select_json,
 )
@@ -47,6 +48,13 @@ EQUIVALENCE = {
         "cursor-invalid",
         "cursor-stale",
     ),
+    "docs_search": (
+        "docs-search",
+        "docs-search-errors",
+        "docs-search-cursor",
+        "docs-search-ambiguous",
+        "docs-unavailable",
+    ),
     "docs_get": ("docs-get", "docs-unavailable", "docs-scope-unavailable"),
     "docs_related": (
         "docs-related",
@@ -66,6 +74,13 @@ EQUIVALENCE = {
     "lineage": ("lineage", "lineage-unheld-reference", "graph-errors"),
     "schema": ("schema-paging", "schema-errors"),
     "diff": ("diff-register", "diff-errors"),
+    "coverage": ("coverage-register", "coverage-errors"),
+    "coded_variables": ("coded-variables-order",),
+    # `resolve-columns` sends `columns` as a JSON array, `resolve-errors` 201 of them
+    # and a repeated scalar as an array.
+    "resolve": ("resolve-columns", "resolve-errors"),
+    "validate": ("validate-unavailable-everywhere", "validate-scope-rejected"),
+    "order": ("order-gap-clipped", "order-errors", "order-scope-rejected"),
 }
 READER = {"fixture": "reader"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.
@@ -121,8 +136,9 @@ def path_arguments(op, path):
 @pytest.mark.parametrize("operation", EQUIVALENCE)
 def test_tool_matches_http(servers, operation):
     # Fails when a tool call's document drifts from the HTTP body (envelope, meta,
-    # error fields, argument conversion, the `operation` argument of a tool of
-    # several), or when the cases stop covering an error.
+    # error fields, argument conversion, a POST body as an object argument, the
+    # `operation` argument of a tool of several), or when the cases stop covering an
+    # error.
     op = OPERATIONS[operation]
     (tool,) = (t for t in TOOLS if t["name"] == op["tool"])
     selector = (
@@ -130,6 +146,8 @@ def test_tool_matches_http(servers, operation):
         if "operation" in tool["inputSchema"]["properties"]
         else {}
     )
+    # A POST operation's body is its `project` argument.
+    body = next((p for p, t in op["params"].items() if t == "project"), None)
     codes = set()
     for name in EQUIVALENCE[operation]:
         case = CASES / "api" / name
@@ -140,11 +158,18 @@ def test_tool_matches_http(servers, operation):
         for index, step in enumerate(steps):
             path = path_arguments(op, step["path"])
             query = step.get("query", {})
-            # A download, and a parameter sent in both the path and the query, have
-            # no tool-call spelling.
-            if step["operation"] != operation or path is None or path.keys() & query:
+            # A download, a parameter sent in both the path and the query, and raw
+            # body bytes have no tool-call spelling.
+            if (
+                step["operation"] != operation
+                or path is None
+                or path.keys() & query
+                or raw_body(step) is not None
+            ):
                 continue
             arguments = selector | path | query
+            if body is not None:
+                arguments[body] = step["body"]
             if "cursor_from" in step:
                 source, pointer = step["cursor_from"]
                 arguments["cursor"] = select_json(documents[source], pointer)
@@ -162,7 +187,7 @@ def test_tool_matches_http(servers, operation):
             ), f"{name} step {index}"
             if is_error:
                 codes.add(document["error"]["code"])
-    assert codes == {"invalid_parameter", *op["errors"]}
+    assert codes == {"invalid_parameter", *op.get("errors", [])}
 
 
 def test_tool_of_several_needs_an_operation(servers):
@@ -176,6 +201,24 @@ def test_tool_of_several_needs_an_operation(servers):
         ({"operation": "docs_get"}, "identifier"),
     ):
         is_error, document = call(client, "docs", arguments)
+        assert is_error
+        assert document["error"]["code"] == "invalid_parameter"
+        assert document["error"]["fields"] == {"parameter": parameter}
+
+
+def test_array_argument_only_for_an_array_parameter(servers):
+    # Fails when a tool call flattens an array for a parameter that is not
+    # `string[]` (`ref: ["…"]` resolved, `register: []` read as no filter) or
+    # accepts an empty array for one that is (`columns: []`), instead of refusing
+    # it with `invalid_parameter` naming the parameter. HTTP has no spelling of an
+    # empty array, so these have no `api` twin.
+    client = servers.client(artifact_env(cached_case_artifact(READER), "steward"))
+    for tool, arguments, parameter in (
+        ("resolve", {"register": [], "columns": ["Value"]}, "register"),
+        ("resolve", {"columns": []}, "columns"),
+        ("coverage", {"ref": ["scb/example"]}, "ref"),
+    ):
+        is_error, document = call(client, tool, arguments)
         assert is_error
         assert document["error"]["code"] == "invalid_parameter"
         assert document["error"]["fields"] == {"parameter": parameter}
@@ -212,16 +255,19 @@ def test_body_over_the_cap_is_payload_too_large(servers):
 
 def test_burst_is_rate_limited(request, tmp_path):
     # Fails when `/mcp` stops limiting a client's burst, answers it without the error
-    # document, keys a request on a `CF-Connecting-IP` that lacks the edge token (each
-    # forged address would get a fresh bucket and the burst would never be refused),
-    # keys an edge client on its full IPv6 address instead of its /64 (rotating within
-    # the /64 would never be refused), or keys an edge request on its peer (every edge
+    # document, stops sharing the client's bucket with the project POSTs (the write
+    # rate limit FastAPI's `limits.py` kept, 3e.4) or limits a read, keys a request on
+    # a `CF-Connecting-IP` that lacks the edge token (each forged address would get a
+    # fresh bucket and the burst would never be refused), keys an edge client on its
+    # full IPv6 address instead of its /64 (rotating within the /64 would never be
+    # refused), or keys an edge request on its peer (every edge
     # client would share one bucket). A server of its own: a drained bucket would
-    # refuse the other MCP cases from this address.
+    # refuse the other MCP cases from this address. It runs at the production default:
+    # the suite's template raises `--write-limit` so its own cases are not refused.
     template = request.config.getoption("--server-cmd")
     if template is None:
         pytest.skip("MCP cases run against --server-cmd")
-    pool = ServerPool(template, tmp_path)
+    pool = ServerPool(re.sub(r" --write-limit \S+", "", template), tmp_path)
     env = artifact_env(cached_case_artifact(READER), "steward")
     try:
         client = pool.client(env | {"REG_META_EDGE_TOKEN": "edge-secret"})
@@ -245,6 +291,11 @@ def test_burst_is_rate_limited(request, tmp_path):
         assert response.status_code == 429
         assert response.headers["retry-after"] == "1"
         assert response.json()["error"]["fields"] == {"retry_after_seconds": 1}
+        validate = client.post("/api/project/validate", json={})
+        assert validate.status_code == 429
+        assert validate.headers["retry-after"] == "1"
+        assert validate.json()["error"]["code"] == "rate_limited"
+        assert client.get("/api/context").status_code == 200
         response = drain(lambda n: f"2001:db8::{n + 1:x}", "edge-secret")
         assert response.status_code == 429
         assert tools_list("2001:db8:0:1::1", "edge-secret").status_code == 200

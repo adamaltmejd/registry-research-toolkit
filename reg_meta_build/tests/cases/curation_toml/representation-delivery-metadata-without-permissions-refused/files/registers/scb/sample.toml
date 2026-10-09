@@ -1,0 +1,12 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[representation.delivery_metadata]]
+variable = "1.1"
+fields = []
+records = [{ ref = { source = "scb-registerinformation", semantic_record_key = ["register:1", "variant:10", "edition:120", "variable:1", "member:101"] }, alternatives = [{ fields = [{ name = "name", status = "value", value = "Income 2020" }] }] }]
+columns = [{ variant_key = ["scb-registerinformation", "scb", "register", "native-int", 1, "variant", "native-int", 10], column = "VALUE", valid_from = "2020-01-01", valid_to = "2020-12-31", expected_codings = [] }]
+evidence = "Exact supplied delivery texts"
+noted = "2026-10-08"

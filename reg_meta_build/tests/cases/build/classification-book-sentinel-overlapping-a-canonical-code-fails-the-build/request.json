@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_resolved_writer_classifications.py::test_sentinel_overlapping_canonical_code_is_refused"
+  ],
+  "note": "Book example-codes lists 001 both as a canonical code (its CSV) and as a curated sentinel. The allowed twin is book example-codes in classification-book-written-with-conformance-sentinels-and-successions, whose sentinel 99 is not canonical.",
+  "fails_if": "`ResolvedClassification._coherent` (resolved_catalog.py) stops refusing a sentinel code that is also in the book's canonical code set, so the book builds with 001 in both evidence sets",
+  "sources": "scb-classification-books"
+}

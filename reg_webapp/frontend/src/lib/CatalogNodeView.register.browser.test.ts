@@ -4,38 +4,30 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { CatalogNode } from "./api";
-import {
-  getCatalogNode,
-  getClassificationGroup,
-  getClassificationGroupGraph,
-  getRegisterVariants,
-  getRelatedDocuments,
-} from "./api";
+import type { RegisterShow } from "./api";
+import { getRelatedDocuments, getShow, getStates } from "./api";
 import CatalogNodeView from "./CatalogNodeView.svelte";
 import {
   clickVariantChip,
   columnedRegisterNode,
   delivery,
-  lisaVariants,
+  registerShow,
   splitColumnRegisterNode,
+  withLisaVariants,
 } from "./catalog-node-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
-import { variant, variantsResponse } from "./variants-test-helpers";
 import { windowStore } from "./window.svelte";
 
-// CatalogNodeView fetches one node via `getCatalogNode(fqidPath)` and switches on
-// `kind`. Mock that single GET (mirrors ConceptGroupView's api-mock style); keep
+// CatalogNodeView reads one node via `getShow(fqidPath)` and switches on
+// `kind`. Mock that GET (mirrors ConceptGroupView's api-mock style); keep
 // the rest of api.ts real (the type exports + path helpers `catalog.ts` uses).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getClassificationGroup: vi.fn(),
-    getClassificationGroupGraph: vi.fn(),
-    getRegisterVariants: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getShow: vi.fn(),
+    getStates: vi.fn(),
     getRelatedDocuments: vi.fn(),
   };
 });
@@ -44,20 +36,15 @@ vi.mock("./api", async (importOriginal) => {
 // `individer-15plus`, `arbetsstalle` is `arbetsstallen`, and the ungrouped
 // `foretag` is a variant of its own — so a lens can leave the group with two
 // members, with one, or with none.
-function splitVariantGroupRegisterNode(): CatalogNode {
-  return {
-    kind: "register",
-    fqid: "scb/lisa",
-    name: "LISA",
+function splitVariantGroupRegisterNode(): RegisterShow {
+  return registerShow({
     children: [
       {
-        kind: "binding",
         fqid: "scb/lisa/kon",
         name: "Kön",
         deliveries: [delivery("individer-15plus", "Kon", ["2018-01-01", null])],
       },
       {
-        kind: "binding",
         fqid: "scb/lisa/disp",
         name: "Disponibel inkomst",
         deliveries: [
@@ -65,7 +52,6 @@ function splitVariantGroupRegisterNode(): CatalogNode {
         ],
       },
       {
-        kind: "binding",
         fqid: "scb/lisa/arbetsstalle",
         name: "Arbetsställe",
         deliveries: [
@@ -73,7 +59,6 @@ function splitVariantGroupRegisterNode(): CatalogNode {
         ],
       },
       {
-        kind: "binding",
         fqid: "scb/lisa/foretag",
         name: "Företag",
         deliveries: [delivery("foretag", "ForetagNr", ["2005-01-01", null])],
@@ -81,9 +66,11 @@ function splitVariantGroupRegisterNode(): CatalogNode {
     ],
     groups: [
       {
+        fqid: "group/scb/lisa/inkomstbegrepp",
         key: "inkomstbegrepp",
         label: "Inkomstbegrepp",
         source: "token",
+        tags: [],
         axes: [{ name: "begrepp", label: "Begrepp" }],
         members: [
           {
@@ -106,7 +93,7 @@ function splitVariantGroupRegisterNode(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  });
 }
 
 // `splitColumnRegisterNode`'s `kon` + `disp` FOLDED into one concept-group row
@@ -115,14 +102,16 @@ function splitVariantGroupRegisterNode(): CatalogNode {
 // lens must narrow the group's members by `(fqid, delivery_column)` rather
 // than by FQID alone, or the representation the lensed variant does not
 // deliver stays in the group (Y-94).
-function splitVariantRepresentationGroupRegisterNode(): CatalogNode {
+function splitVariantRepresentationGroupRegisterNode(): RegisterShow {
   return {
-    ...(splitColumnRegisterNode() as unknown as Record<string, unknown>),
+    ...splitColumnRegisterNode(),
     groups: [
       {
+        fqid: "group/scb/lisa/inkomstbegrepp",
         key: "inkomstbegrepp",
         label: "Inkomstbegrepp",
         source: "token",
+        tags: [],
         axes: [{ name: "begrepp", label: "Begrepp" }],
         members: [
           {
@@ -145,19 +134,21 @@ function splitVariantRepresentationGroupRegisterNode(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  };
 }
 
 // The same register with `kon` + `disp` FOLDED into one concept-group row (#303).
 // The row stands in for its members, so the column filter has to reach through it.
-function groupedColumnRegisterNode(): CatalogNode {
+function groupedColumnRegisterNode(): RegisterShow {
   return {
-    ...(columnedRegisterNode(1) as unknown as Record<string, unknown>),
+    ...columnedRegisterNode(1),
     groups: [
       {
+        fqid: "group/scb/lisa/inkomstbegrepp",
         key: "inkomstbegrepp",
         label: "Inkomstbegrepp",
         source: "token",
+        tags: [],
         axes: [{ name: "begrepp", label: "Begrepp" }],
         members: [
           {
@@ -173,29 +164,14 @@ function groupedColumnRegisterNode(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  };
 }
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getClassificationGroup).mockReset();
-  vi.mocked(getClassificationGroupGraph).mockReset();
-  vi.mocked(getRegisterVariants).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getStates).mockReset();
   vi.mocked(getRelatedDocuments).mockReset();
-  vi.mocked(getClassificationGroupGraph).mockResolvedValue({
-    nodes: [],
-    edges: [],
-    focus_id: null,
-  });
-  vi.mocked(getRegisterVariants).mockResolvedValue(
-    variantsResponse(variant("_default")),
-  );
-  vi.mocked(getRelatedDocuments).mockResolvedValue({
-    kind: "related-documents",
-    ingested: true,
-    register: "lisa",
-    documents: [],
-  });
+  vi.mocked(getRelatedDocuments).mockResolvedValue([]);
   // Both stores are module singletons: clear the browse-time window fallback, then
   // open a fresh empty draft — the state a catalog page authors into. A fresh draft
   // seeds its window from that (now empty) fallback, so each case starts windowless.
@@ -224,7 +200,7 @@ function variableRows(container: Element): [string, string][] {
 
 describe("CatalogNodeView register arm", () => {
   it("names the delivery columns beside each variable, dated only where there are several (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(1));
+    vi.mocked(getShow).mockResolvedValue(columnedRegisterNode(1));
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -248,7 +224,7 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("filters on delivery column names, case-insensitively (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(1));
+    vi.mocked(getShow).mockResolvedValue(columnedRegisterNode(1));
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -272,8 +248,9 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("narrows the list to a selected variant's variables (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(2));
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    vi.mocked(getShow).mockResolvedValue(
+      withLisaVariants(columnedRegisterNode(2)),
+    );
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -314,8 +291,9 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("lifts the variant lens from the chip strip (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(2));
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    vi.mocked(getShow).mockResolvedValue(
+      withLisaVariants(columnedRegisterNode(2)),
+    );
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -349,8 +327,9 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("keeps keyboard focus on the chip strip and announces the lift (Y-94)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(2));
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    vi.mocked(getShow).mockResolvedValue(
+      withLisaVariants(columnedRegisterNode(2)),
+    );
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -382,8 +361,9 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("says the variant lens is also narrowing an empty result (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(2));
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    vi.mocked(getShow).mockResolvedValue(
+      withLisaVariants(columnedRegisterNode(2)),
+    );
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -415,8 +395,9 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("reads a variable's columns as the SELECTED variant delivers them (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(splitColumnRegisterNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    vi.mocked(getShow).mockResolvedValue(
+      withLisaVariants(splitColumnRegisterNode()),
+    );
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -459,10 +440,9 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("folds a group row over only the members the lens delivers (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      splitVariantGroupRegisterNode(),
+    vi.mocked(getShow).mockResolvedValue(
+      withLisaVariants(splitVariantGroupRegisterNode()),
     );
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -502,10 +482,9 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("drops a group row whose last delivered member the lens takes (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      splitVariantGroupRegisterNode(),
+    vi.mocked(getShow).mockResolvedValue(
+      withLisaVariants(splitVariantGroupRegisterNode()),
     );
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -538,10 +517,9 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("narrows a group's representation members by delivery column, not FQID alone (Y-94)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      splitVariantRepresentationGroupRegisterNode(),
+    vi.mocked(getShow).mockResolvedValue(
+      withLisaVariants(splitVariantRepresentationGroupRegisterNode()),
     );
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -581,7 +559,7 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("finds a FOLDED variable by its delivery column name (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(groupedColumnRegisterNode());
+    vi.mocked(getShow).mockResolvedValue(groupedColumnRegisterNode());
 
     const { container } = await render(CatalogNodeView, {
       fqidPath: "scb/lisa",
@@ -603,7 +581,7 @@ describe("CatalogNodeView register arm", () => {
   });
 
   it("shows no variant chips for a single-variant register (Y-82)", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(columnedRegisterNode(1));
+    vi.mocked(getShow).mockResolvedValue(columnedRegisterNode(1));
 
     await render(CatalogNodeView, {
       fqidPath: "scb/lisa",

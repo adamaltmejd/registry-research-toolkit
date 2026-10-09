@@ -1,0 +1,47 @@
+{
+  "note": "Fails if an inverted scalar `{from, to}` range (the structural layer accepts it) stops being `period_not_orderable` on that source alone, or its bindings (here an unknown value_set) are checked anyway, or the next source is skipped.",
+  "fixture": "semantic",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "source0",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": 2019,
+              "to": "2018-03"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical",
+                "value_set": "class/nosuchclass"
+              }
+            ]
+          },
+          {
+            "name": "source1",
+            "register_variant": "scb/example/annual",
+            "period": 2018,
+            "bindings": [
+              {
+                "variable": "scb/example/kon",
+                "type": "categorical",
+                "value_set": "class/nosuchclass"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

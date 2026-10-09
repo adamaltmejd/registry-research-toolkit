@@ -1,0 +1,12 @@
+{
+  "note": "`coverage`'s refusals: an ambiguous bare name lists its candidates, a ref of another kind (a provider) is invalid, holdings needs a steward artifact, an unknown register is not found and a parameter the operation lacks is refused. Fails if any of them answers a coverage or another code.",
+  "fixture": "show",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "coverage", "path": "/api/coverage/K%C3%B6n"},
+    {"operation": "coverage", "path": "/api/coverage/scb"},
+    {"operation": "coverage", "path": "/api/coverage/scb/alpha", "query": {"scope": "holdings"}},
+    {"operation": "coverage", "path": "/api/coverage/scb/missing"},
+    {"operation": "coverage", "path": "/api/coverage/scb/alpha", "query": {"period": "2018"}}
+  ]
+}

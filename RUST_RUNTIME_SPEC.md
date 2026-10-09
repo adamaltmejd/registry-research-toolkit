@@ -1260,11 +1260,8 @@ in-flight list.
 
   | Dual structure                                                                                                                                            | Deleted in                                                                                          |
   | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-  | Three-server dev setup (`dev.sh`: uvicorn, `reg-meta serve`, vite) and the per-route vite proxy                                                           | F                                                                                                   |
-  | Dual TS types (`api-types.ts`, `api-types-rust.ts`) and dual OpenAPI (`backend/openapi.json`, `crates/reg-meta/openapi.json`)                             | F                                                                                                   |
   | Three-axis schema guard (`scripts/schema_pending_bump.py`: Python main DB, doc DB, Rust minimum)                                                          | stage 4 (Rust axes only)                                                                            |
   | Python `SCHEMA_VERSION` bumped for tables only Rust reads                                                                                                 | stage 4                                                                                             |
-  | Release admission needing `--server-cmd` beside `test_http.py`'s in-process surfaces                                                                      | stage 4 (in-process surfaces end in 3e.4)                                                           |
   | Image DB bake through the Python `reg-meta update` (Dockerfile `regmeta-db` stage)                                                                        | stage 4 (curl, SHA-256, zstd)                                                                       |
   | G1's two arms: Python-vs-Python CLI cases and the `served` arm                                                                                            | stage 4                                                                                             |
   | `derived-generation-*` G1 exceptions                                                                                                                      | while the baseline reads the release originals and the checkout its derived copies (all of stage 3) |
@@ -1275,7 +1272,6 @@ in-flight list.
   | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                               | stage 4 (proven twins earlier)                                                                      |
   | Frozen Python `same_as` BFS (`_resolve_*_via_same_as` in `catalog.py`), unreachable since the writer requires live `same_as` endpoints (3d.1); not ported | stage 4 (deleted with the Python runtime)                                                           |
   | `scripts/check_versions.sh` keeping the `reg-meta` crate and `reg_meta` versions equal                                                                    | stage 4                                                                                             |
-  | Docs DB symlinked unfolded into G1's candidate directories                                                                                                | 3b.6 (candidate copy refolded)                                                                      |
 
 #### Packages
 
@@ -1556,7 +1552,10 @@ operations.
   their backend tests, `http_catalog/*` and the catalog steps of `http_scope/*`; the 3b
   and 3d route rows of `surface.toml`, and the stage-4 import rows whose last importer
   goes (appendix, a plan revision). The 3b and 3d command rows' `covered_by` points at
-  the `api` twins.
+  the `api` twins. Done: `http_catalog/` and the catalog steps of `http_scope/` are
+  deleted; their behaviors are `api` cases, and the three left without a twin
+  (scope-not-leaking, `/variants` on a retired register, `same_as` under holdings) are
+  covered elsewhere.
 - Paths: `reg_webapp/frontend/`, `reg_webapp/backend/`,
   `reg_webapp/.claude/skills/run-reg-webapp/`,
   `conformance/{test_http,artifact_requests,test_acceptance_agreement}.py`,
@@ -1645,8 +1644,10 @@ the latest release; G1 runs on both pins and records each difference. `rust-only
 exceptions carry over (D1). The baseline commit cannot simply follow the pin: cutovers
 delete the webapp routes the served arm compares against (section 4, "Current pin"). R
 either moves the served comparisons onto the CLI baseline (the CLI-baseline pattern
-above) or keeps the webapp baseline commit separate from the artifact pin. Depends on:
-3c.3, C, F and the release.
+above) or keeps the webapp baseline commit separate from the artifact pin. The
+`docs-fold-search*` exceptions match by term position (`3[47]`, `7[47]`, 3b.6): R
+rechecks that those positions are still the terms `ß` and `ﬁlm`. Depends on: 3c.3, C, F
+and the release.
 
 #### Surface coverage (3b–3e rows)
 
@@ -1654,44 +1655,44 @@ Every `surface.toml` row owned by 3b, 3c, 3d or 3e (54: 27, 6, 9, 12), with the 
 that ports it and the package whose deletion removes the row. Command rows stay until
 stage 4 deletes the CLI; their slice points `covered_by` at the `api` twins.
 
-  | Row                                                                                                                        | Owner | Ported by                 | Row deleted by |
-  | -------------------------------------------------------------------------------------------------------------------------- | ----- | ------------------------- | -------------- |
-  | GET /api/catalog                                                                                                           | 3b    | 3b.3                      | C              |
-  | GET /api/catalog/group/class/{key}                                                                                         | 3b    | 3b.3                      | C              |
-  | GET /api/catalog/group/{provider}/{register}/{key}                                                                         | 3b    | 3b.3                      | C              |
-  | GET /api/catalog/{fqid}                                                                                                    | 3b    | 3b.3 (period subset 3b.4) | C              |
-  | GET /api/catalog/{fqid}/data_warnings                                                                                      | 3b    | 3b.4                      | C              |
-  | GET /api/catalog/{fqid}/states                                                                                             | 3b    | 3b.4                      | C              |
-  | GET /api/catalog/{provider}/{register}/variants                                                                            | 3b    | 3b.3                      | C              |
-  | GET /api/value-sets/{value_set_id}/codes                                                                                   | 3b    | 3b.5                      | C              |
-  | GET /api/docs/doc/{identifier}                                                                                             | 3b    | 3b.2                      | 3b.6           |
-  | GET /api/docs/file/{register}/{filename}                                                                                   | 3b    | 3b.2                      | 3b.6           |
-  | GET /api/docs/related/{register}                                                                                           | 3b    | 3b.2                      | 3b.6           |
-  | GET /api/docs/for-variable                                                                                                 | 3b    | 3b.6                      | 3b.6           |
-  | GET /api/docs/search                                                                                                       | 3b    | 3b.6                      | 3b.6           |
-  | command docs get                                                                                                           | 3b    | 3b.2                      | stage 4        |
-  | command docs list / docs search                                                                                            | 3b    | 3b.6                      | stage 4        |
-  | command get classification                                                                                                 | 3b    | 3b.3 (`--codes` 3b.5)     | stage 4        |
-  | command get groups / get register / get varinfo                                                                            | 3b    | 3b.3 (states 3b.4)        | stage 4        |
-  | command get values                                                                                                         | 3b    | 3b.5                      | stage 4        |
-  | import reg_meta.doc_db.RelatedDocument                                                                                     | 3b    | 3b.2                      | 3b.6           |
-  | import reg_meta.doc_queries.{doc_get,doc_registers,doc_search,related_document_content,related_documents_for_register} (5) | 3b    | 3b.2, 3b.6                | 3b.6           |
-  | command get availability                                                                                                   | 3c    | 3c.3                      | stage 4        |
-  | command get coded-variables                                                                                                | 3c    | 3c.3                      | stage 4        |
-  | command get datacolumns / get diff / get schema                                                                            | 3c    | 3c.2                      | stage 4        |
-  | command resolve                                                                                                            | 3c    | 3c.3                      | stage 4        |
-  | GET /api/catalog/group/class/{key}/graph                                                                                   | 3d    | 3d.2                      | C              |
-  | GET /api/catalog/group/{provider}/{register}/{key}/graph                                                                   | 3d    | 3d.2                      | C              |
-  | GET /api/catalog/{fqid}/graph                                                                                              | 3d    | 3d.2                      | C              |
-  | GET /api/catalog/{fqid}/lineage_warnings                                                                                   | 3d    | 3d.2                      | C              |
-  | GET /api/catalog/{fqid}/{dimensions,lineage,predecessors,successors} (removed)                                             | 3d    | none                      | C              |
-  | command get lineage                                                                                                        | 3d    | 3d.2                      | stage 4        |
-  | POST /api/project/validate                                                                                                 | 3e    | 3e.2                      | 3e.4           |
-  | POST /api/project/order                                                                                                    | 3e    | 3e.3                      | 3e.4           |
-  | command validate / command order                                                                                           | 3e    | 3e.2 / 3e.3               | stage 4        |
-  | import reg_meta.errors.EXIT_SUCCESS                                                                                        | 3e    | 3e.2                      | 3e.4           |
-  | import reg_meta.order.{OrderManifest,blocked_message,materialize_order,parse_project,project_from_raw} (5)                 | 3e    | 3e.3                      | 3e.4           |
-  | import reg_meta.semantic.{validate_project,validation_json} (2)                                                            | 3e    | 3e.2                      | 3e.4           |
+  | Row                                                                                                                                    | Owner | Ported by                 | Row deleted by |
+  | -------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------------------------- | -------------- |
+  | GET /api/catalog                                                                                                                       | 3b    | 3b.3                      | C              |
+  | GET /api/catalog/group/class/{key}                                                                                                     | 3b    | 3b.3                      | C              |
+  | GET /api/catalog/group/{provider}/{register}/{key}                                                                                     | 3b    | 3b.3                      | C              |
+  | GET /api/catalog/{fqid}                                                                                                                | 3b    | 3b.3 (period subset 3b.4) | C              |
+  | GET /api/catalog/{fqid}/data_warnings                                                                                                  | 3b    | 3b.4                      | C              |
+  | GET /api/catalog/{fqid}/states                                                                                                         | 3b    | 3b.4                      | C              |
+  | GET /api/catalog/{provider}/{register}/variants                                                                                        | 3b    | 3b.3                      | C              |
+  | GET /api/value-sets/{value_set_id}/codes                                                                                               | 3b    | 3b.5                      | C              |
+  | GET /api/docs/doc/{identifier}                                                                                                         | 3b    | 3b.2                      | 3b.6           |
+  | GET /api/docs/file/{register}/{filename}                                                                                               | 3b    | 3b.2                      | 3b.6           |
+  | GET /api/docs/related/{register}                                                                                                       | 3b    | 3b.2                      | 3b.6           |
+  | GET /api/docs/for-variable                                                                                                             | 3b    | 3b.6                      | 3b.6           |
+  | GET /api/docs/search                                                                                                                   | 3b    | 3b.6                      | 3b.6           |
+  | command docs get                                                                                                                       | 3b    | 3b.2                      | stage 4        |
+  | command docs list / docs search                                                                                                        | 3b    | 3b.6                      | stage 4        |
+  | command get classification                                                                                                             | 3b    | 3b.3 (`--codes` 3b.5)     | stage 4        |
+  | command get groups / get register / get varinfo                                                                                        | 3b    | 3b.3 (states 3b.4)        | stage 4        |
+  | command get values                                                                                                                     | 3b    | 3b.5                      | stage 4        |
+  | import reg_meta.doc_db.RelatedDocument                                                                                                 | 3b    | 3b.2                      | 3b.6           |
+  | import reg_meta.doc_queries.{doc_get,doc_registers,doc_search,related_document_content,related_documents_for_register} (5)             | 3b    | 3b.2, 3b.6                | 3b.6           |
+  | command get availability                                                                                                               | 3c    | 3c.3                      | stage 4        |
+  | command get coded-variables                                                                                                            | 3c    | 3c.3                      | stage 4        |
+  | command get datacolumns / get diff / get schema                                                                                        | 3c    | 3c.2                      | stage 4        |
+  | command resolve                                                                                                                        | 3c    | 3c.3                      | stage 4        |
+  | GET /api/catalog/group/class/{key}/graph                                                                                               | 3d    | 3d.2                      | C              |
+  | GET /api/catalog/group/{provider}/{register}/{key}/graph                                                                               | 3d    | 3d.2                      | C              |
+  | GET /api/catalog/{fqid}/graph                                                                                                          | 3d    | 3d.2                      | C              |
+  | GET /api/catalog/{fqid}/lineage_warnings                                                                                               | 3d    | 3d.2                      | C              |
+  | GET /api/catalog/{fqid}/{dimensions,lineage,predecessors,successors} (removed)                                                         | 3d    | none                      | C              |
+  | command get lineage                                                                                                                    | 3d    | 3d.2                      | stage 4        |
+  | POST /api/project/validate                                                                                                             | 3e    | 3e.2                      | 3e.4           |
+  | POST /api/project/order                                                                                                                | 3e    | 3e.3                      | 3e.4           |
+  | command validate / command order                                                                                                       | 3e    | 3e.2 / 3e.3               | stage 4        |
+  | import reg_meta.errors.EXIT_SUCCESS                                                                                                    | 3e    | 3e.2                      | 3e.4           |
+  | import reg_meta.order.{OrderManifest,blocked_message,parse_project} (3); {materialize_order,project_from_raw} (2, conformance imports) | 3e    | 3e.3                      | 3e.4; stage 4  |
+  | import reg_meta.semantic.{validate_project,validation_json} (2)                                                                        | 3e    | 3e.2                      | 3e.4           |
 
 Plan revision for stage-4 rows. `surface.toml` deliberately assigns shared-model and app
 imports to stage 4. Under this plan their last importer outside `reg_meta` goes earlier,
@@ -1705,10 +1706,15 @@ so the deleting package removes the row mechanically (checkpoint 2):
   `reg_meta.fqid.{CLASSIFICATION_PREFIX,DEFAULT_VARIANT_SLUG,RESERVED_*}`, and the
   `reg_webapp` entry of `used_by` for
   `reg_meta.fqid.{Fqid,FqidError,FqidKind,parse,validate_slug,is_period}` and
-  `reg_meta.queries.fold_search`.
+  `reg_meta.queries.fold_search`. Also in C, because their last `reg_webapp` importer
+  went with the catalog routes (corrected in C; earlier text put them in F):
+  `reg_meta.holdings.{ReadScope,resolve_scope}` and the `reg_webapp` entry of `used_by`
+  for `reg_meta.errors.{EXIT_NOT_FOUND,EXIT_USAGE}`.
 - In 3e.4: `reg_meta.order.OrderFinding` (`routes/project.py`, `OrderBlockedModel`).
-- In F: the app-wiring rows (`reg_meta`, `reg_meta.db`, `reg_meta.doc_db`,
-  `reg_meta.holdings.*`, and the `reg_webapp` use of `reg_meta.errors.*`).
+- In F: none (corrected in F). `app.py`'s `reg_meta.db` was the last app-wiring import;
+  `reg_meta.db` and `reg_meta.doc_db` keep their rows because the dev fixture builder
+  (`reg_webapp/backend/scripts/fixture_db.py`) imports them, and `reg_meta` and the
+  other `reg_meta.holdings.*` and `reg_meta.errors.*` rows no longer list `reg_webapp`.
 
 #### Stage 3b–3e decisions (maintainer, 2026-10-08)
 

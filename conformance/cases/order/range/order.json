@@ -1,0 +1,33 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Value",
+        "variable": "scb/example/value",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Observed",
+        "edition": "2018..2020",
+        "table": "Range"
+      },
+      "requested_period": "2018..2019",
+      "source": "Example"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "83add424df6a26d3ca8c0fad67875eeb5bd95812bca81a97fdf808afac8b7299",
+    "catalog_schema_version": "9.6.0",
+    "mode": "steward_holdings",
+    "project_hash": "66ee56e44a1033a17f5a062f973dc9a5dbae119d389183824c18a67c962acd24",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

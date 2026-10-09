@@ -1,0 +1,11 @@
+[register]
+provider = "sos"
+slug = "oth"
+name = "Andraregistret"
+native_id = {{naming_id kind=register provider=sos register_key=oth}}
+[[variant]]
+slug = "oth-a"
+native_id = {{naming_id kind=register_variant provider=sos register_key=oth member_key=OTH_A}}
+[[variable]]
+slug = "explicit"
+native_id = {{naming_id kind=variable provider=sos register_key=oth member_key=EXPLICIT}}

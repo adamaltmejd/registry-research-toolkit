@@ -1,12 +1,9 @@
 <script lang="ts">
 import {
-  type BindingNodeData,
-  type CatalogNode,
-  getBindingGraph,
-  getCatalogNode,
-  isCatalogNode,
-  type StatesResponse,
+  getGraph,
+  getStates,
   type VariableGraphNode,
+  type VariableShow,
   type VariableStateModel,
 } from "./api";
 import { asyncResource, unmountedFlag } from "./async.svelte";
@@ -24,7 +21,6 @@ import {
   registerPrefixOf,
   windowTitle,
 } from "./catalog";
-import DataWarnings from "./DataWarnings.svelte";
 import DocMentionsPanel from "./DocMentionsPanel.svelte";
 import LineageDetails from "./LineageDetails.svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
@@ -57,21 +53,24 @@ import ValueSetView from "./ValueSetView.svelte";
 import { windowStore } from "./window.svelte";
 
 // The binding LEAF — the addressable variable, its resolution controls, the
-// states view, and the lineage panels. The FULL record (metadata + embedded
-// edges + the default states) is resolved ONCE by the parent (CatalogNodeView,
-// no query) and passed in as `node`, so it's ALWAYS present — a cold deep-link
-// to `…/kon?period=2020` renders the metadata + lineage immediately while the
-// states narrow.
+// states view, and the lineage panels. The variable's metadata (`node`) and its
+// whole state history (`states`) are loaded ONCE by the parent (CatalogNodeView,
+// no query) and passed in, so they're ALWAYS present — a cold deep-link to
+// `…/kon?period=2020` renders the metadata immediately while the states narrow.
+// The rest are facets this leaf reads itself, each its own failure domain: the
+// relationship graph, the data warnings and (LineageDetails) the lineage.
 //
 // Resolution state (`?period`/`?variant`/`?value_set_version`) lives in the URL
 // query (the single source of truth — see reg_webapp/DESIGN.md → Catalog router
 // structure), read off the router's reactive
 // `search` so changing it re-fetches WITHOUT a remount. WITH a `?period` we fetch
-// the resolve_at subset (a `StatesResponse`) to narrow the visible states; the
-// metadata + lineage (from `node`) are unaffected.
+// the resolved `states` subset to narrow the visible states; the metadata and
+// the full history are unaffected.
 let {
   fqidPath,
   node,
+  // Named `history` inside: `states` below is the derived set on show.
+  states: history,
   regMetaVersion,
   steward,
   windowMinYear,
@@ -80,7 +79,9 @@ let {
   enforcePeriodBounds = false,
 }: {
   fqidPath: string;
-  node: BindingNodeData;
+  node: VariableShow;
+  /** The variable's whole state history (the `states` read, no modifiers). */
+  states: VariableStateModel[];
   // C1: the deployment seed for an IMPLICIT "New project" when the store is
   // pristine (App → CatalogNodeView → here). Empty until /api/context resolves — an
   // implicit project created with an empty seed is NEVER re-seeded (it carries a
@@ -133,11 +134,11 @@ const focusColumn = $derived(codesFocus?.column ?? null);
 const focusVariant = $derived(codesFocus?.variant ?? null);
 
 // Fetch the narrowed states ONLY when a `?period` is active — otherwise the full
-// node's embedded states are shown (no redundant request; CatalogNodeView already
-// fetched the full node). SYNC `fn()` so the effect tracks the reactive `params`.
-const periodResource = asyncResource<CatalogNode | StatesResponse | null>(() =>
+// history is shown (no redundant request; CatalogNodeView already read it). SYNC
+// `fn()` so the effect tracks the reactive `params`.
+const periodResource = asyncResource<VariableStateModel[] | null>(() =>
   effectiveParams.period
-    ? getCatalogNode(fqidPath, effectiveParams)
+    ? getStates(node.fqid, effectiveParams)
     : Promise.resolve(null),
 );
 
@@ -145,26 +146,16 @@ const periodResource = asyncResource<CatalogNode | StatesResponse | null>(() =>
 // history still needs a PERIOD-ONLY scope for #744's outside-period disclosure.
 // Otherwise same-period rows for other variants/versions would be mislabeled as
 // outside the period instead of staying inline and greyed.
-const periodScopeResource = asyncResource<CatalogNode | StatesResponse | null>(
-  () =>
-    effectiveParams.period && hasResolutionModifier
-      ? getCatalogNode(fqidPath, { period: effectiveParams.period })
-      : Promise.resolve(null),
+const periodScopeResource = asyncResource<VariableStateModel[] | null>(() =>
+  effectiveParams.period && hasResolutionModifier
+    ? getStates(node.fqid, { period: effectiveParams.period })
+    : Promise.resolve(null),
 );
 
-const narrowedStates = $derived.by(() => {
-  const data = periodResource.data;
-  // A `?period` resolve returns a StatesResponse (the only non-node arm here);
-  // `!isCatalogNode` narrows `CatalogNode | StatesResponse` to it.
-  return data !== null && !isCatalogNode(data) ? data.states : null;
-});
-const periodScopeStates = $derived.by(() => {
-  if (!hasResolutionModifier) {
-    return null;
-  }
-  const data = periodScopeResource.data;
-  return data !== null && !isCatalogNode(data) ? data.states : null;
-});
+const narrowedStates = $derived(periodResource.data ?? null);
+const periodScopeStates = $derived(
+  hasResolutionModifier ? (periodScopeResource.data ?? null) : null,
+);
 
 // ANY error on the primary period resolve (a 422 bad-modifier, but also a 5xx / 502 /
 // network drop where `status` stays null) is surfaced inline — the metadata +
@@ -186,7 +177,7 @@ const scopeError = $derived(
 // full history separately so out-of-period value sets can be collapsed instead of
 // removed (#744).
 const resolvedStates = $derived.by(() =>
-  effectiveParams.period && !narrowedError ? narrowedStates : node.states,
+  effectiveParams.period && !narrowedError ? narrowedStates : history,
 );
 
 // States to show: loading while a period resolve is in flight; a single resolved
@@ -194,7 +185,7 @@ const resolvedStates = $derived.by(() =>
 // embedded history with `scopeStates` marking what is in-period (#744).
 const states = $derived.by(() => {
   if (!effectiveParams.period || narrowedError) {
-    return node.states;
+    return history;
   }
   if (
     narrowedStates === null ||
@@ -204,7 +195,7 @@ const states = $derived.by(() => {
   ) {
     return null;
   }
-  return narrowedStates.length === 1 ? narrowedStates : node.states;
+  return narrowedStates.length === 1 ? narrowedStates : history;
 });
 
 // Whether the visible states are period-narrowed (drives the "narrowed to X" note
@@ -230,7 +221,7 @@ const stateScope = $derived(
 // gets; the view carries no resolution state.
 //
 // CRUCIALLY gated on `!narrowedError` (mirroring `resolvedStates`/`states`): when the
-// `?period` resolve FAILS, `states` deliberately falls back to `node.states` (full
+// `?period` resolve FAILS, `states` deliberately falls back to `history` (full
 // history). A stale/typo `?variant` would then narrow that fallback to empty, defeating
 // the full-history fallback — so on a resolve error we skip the modifier narrowing and
 // let `valueSetStates`/`valueSetScope` equal the same full-history fallback the rest of
@@ -506,7 +497,7 @@ const curatedMatrixAnswers = $derived.by(() =>
 // ── The relationship-graph fetch (#678/#904) ────────────────────────────────
 // The leaf owns ONE `/graph` fetch (#761/#792): it feeds the picker graph mode AND the
 // #670 header identity (qualifier + group link), derived from the graph FOCUS node — no
-// separate `/dimensions` request. Read `fqidPath`
+// separate `/dimensions` request. Read `node.fqid`
 // synchronously inside `fn` so the resource refetches when the leaf changes (same
 // pattern as `periodResource`).
 //
@@ -514,7 +505,7 @@ const curatedMatrixAnswers = $derived.by(() =>
 // error / empty / timeout NEVER blanks the leaf — the picker falls back to the list, and
 // the header just omits the qualifier/link (both gate on a RESOLVED, non-empty graph;
 // additive).
-const graphResource = asyncResource(() => getBindingGraph(fqidPath));
+const graphResource = asyncResource(() => getGraph(node.fqid));
 const graph = $derived(graphResource.data);
 // The graph has RESOLVED (a settled fetch with a payload) — the gate the header
 // identity derivations wait on, mirroring the old `dimReady`. While in flight
@@ -587,10 +578,10 @@ const registerPrefix = $derived(registerPrefixOf(node.fqid));
 const seedReady = $derived(regMetaVersion !== "" && steward !== "");
 
 // #615: the subject's data-availability span (year-grain), derived from the
-// EMBEDDED full state history — the picker's slider draws it as the live track
+// full state history (the `states` prop) — the picker's slider draws it as the live track
 // and greys the not-delivered span. Computed client-side from already-present
 // data (no backend coverage field on the leaf node).
-const coverage = $derived(coverageFromStates(node.states));
+const coverage = $derived(coverageFromStates(history));
 
 // ── #678/#995 redesign: direct representation picker ────────────────────────
 // The add-to-project surface lists the variable's representations (one row per
@@ -599,7 +590,7 @@ const coverage = $derived(coverageFromStates(node.states));
 // The picker (RepresentationPicker) owns the row layout + selection; THIS host
 // owns the data (enumeration) and the store wiring (commit + confirmation).
 //
-// The rows enumerate over `node.states` (the full history) — NOT the
+// The rows enumerate over `history` (the full history) — NOT the
 // period-narrowed subset: the period window only DIMS out-of-window rows
 // (`pickerWindow`), every row stays selectable. `pickerRepresentations` is pure +
 // unit-tested.
@@ -616,7 +607,7 @@ const coverage = $derived(coverageFromStates(node.states));
  * variant/version-narrowed subset when a modifier is active). */
 const pickerStates = $derived(
   narrowStatesByModifier(
-    node.states,
+    history,
     params.variant ?? null,
     params.value_set_version ?? null,
   ),
@@ -747,12 +738,6 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     </p>
   {/if}
 
-  {#if node.via_same_as && node.via_same_as.length > 0}
-    <p class="muted via">
-      Resolved via <code>same_as</code>: {node.via_same_as.join(" → ")}
-    </p>
-  {/if}
-
   {#if node.tags && node.tags.length > 0}
     <div class="tag-strip" aria-label="Thematic tags">
       {#each node.tags as tag (tag.slug)}
@@ -789,7 +774,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 
 {#snippet picker()}
   <div class="data-warnings">
-    <DataWarnings warnings={node.warnings ?? []} />
+    <ScopedDataWarnings fqid={node.fqid} />
     <ScopedDataWarnings fqid={registerPrefixOf(node.fqid)} registerOnly />
   </div>
   <!-- #615: the period picker seeds from the global project window (windowStore)
@@ -910,6 +895,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
            `?codes=<variant>::<column>` → `focusColumn`/`focusVariant`, focusing the
            right (variant, column) coding. -->
       <ValueSetView
+        fqid={node.fqid}
         states={valueSetStates}
         narrowed={isNarrowed}
         scopeStates={valueSetScope}
@@ -935,7 +921,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   <!-- The two NON-graph affordances the #761 payload doesn't carry — provenance
        (lineage edges + source register) and the fetched lineage warnings — live
        here on the binding leaf. -->
-  <LineageDetails {fqidPath} {node} />
+  <LineageDetails {node} />
 {/snippet}
 
 {#snippet docs()}
@@ -1192,9 +1178,6 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 
 <style>
   .data-warnings { display: flex; flex-direction: column; gap: var(--space-4); }
-  .via code {
-    font-size: var(--text-mono);
-  }
   /* #670: the member-distinguishing qualifier + group context link, sitting just
      under the shared concept header. Two inline pieces separated by a thin
      divider so the qualifier (what locates this member) reads as primary and the

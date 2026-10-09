@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "ovr"
+native_id = "9"
+[[variant]]
+native_id = "9.90"
+slug = "people"
+[[variable]]
+native_id = "9.901"
+slug = "ovr"

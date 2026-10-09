@@ -3,8 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import AppShell from "./AppShell.svelte";
-import type { RootResponse } from "./api";
-import { getCatalogRoot } from "./api";
+import type { RootShow } from "./api";
+import { getShow } from "./api";
 import { DATA_BROWSER_LABEL } from "./catalog";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import { projectStore } from "./project_store.svelte";
@@ -15,20 +15,20 @@ import { link, router } from "./router.svelte";
 // the GET, leave types + helpers intact).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getCatalogRoot: vi.fn() };
+  return { ...actual, getShow: vi.fn() };
 });
 
 /** A catalog root whose children are providers — the contextual facet list the
  * shell renders in its `aria-label="Providers"` nav. */
-function rootResponse(...providers: string[]): RootResponse {
+function rootShow(...providers: string[]): RootShow {
   return {
     kind: "root",
     children: providers.map((fqid) => ({
-      kind: "provider",
+      kind: "provider" as const,
       fqid,
       name: fqid,
     })),
-  } as unknown as RootResponse;
+  };
 }
 
 /** The routed content the shell wraps — App passes its `<main>` switch in as the
@@ -52,7 +52,7 @@ function minimalProps() {
   };
 }
 
-// The shell routes through the real `router` singleton (only getCatalogRoot is
+// The shell routes through the real `router` singleton (only getShow is
 // mocked). Each case resets the URL + re-syncs the singleton before rendering;
 // the afterEach restores it so route state doesn't leak (mirrors SearchOmnibox).
 function setUrl(path: string): void {
@@ -65,8 +65,8 @@ beforeEach(() => {
   // The rail reads the root through the shared name cache, a session singleton:
   // a case that stubs a different answer must not be served the previous one.
   resetCatalogNames();
-  vi.mocked(getCatalogRoot).mockReset();
-  vi.mocked(getCatalogRoot).mockResolvedValue(rootResponse("scb", "sos"));
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getShow).mockResolvedValue(rootShow("scb", "sos"));
 });
 
 afterEach(() => {
@@ -110,7 +110,7 @@ describe("AppShell — provider facets", () => {
     // settled with nothing, which is the only thing a failed read leaves behind.
     // Y-80 moved that read into the name cache, so the error branch keys on
     // `value === null` rather than on an `asyncResource` error string.
-    vi.mocked(getCatalogRoot).mockRejectedValue(new Error("offline"));
+    vi.mocked(getShow).mockRejectedValue(new Error("offline"));
     await render(AppShell, minimalProps());
     await openDrawer();
 
@@ -173,8 +173,13 @@ describe("AppShell — project chip", () => {
         ok: true,
         status: 200,
         json: async () => ({
-          ok: true,
-          issues: [{ level: "warning", code: "w", path: "", message: "note" }],
+          data: {
+            ok: true,
+            issues: [
+              { level: "warning", code: "w", path: "", message: "note" },
+            ],
+          },
+          meta: {},
         }),
       })),
     );
@@ -227,7 +232,7 @@ describe("AppShell — project chip", () => {
       vi.fn(async () => ({
         ok: true,
         status: 200,
-        json: async () => ({ ok: true, issues: [] }),
+        json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
       })),
     );
     projectStore.newProject({

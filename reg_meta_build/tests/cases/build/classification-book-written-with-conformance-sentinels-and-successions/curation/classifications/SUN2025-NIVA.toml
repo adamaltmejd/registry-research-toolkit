@@ -1,0 +1,5 @@
+[classification]
+short_name = "SUN2025-NIVA"
+slug = "sun2025-niva"
+name = "SUN 2025 nivå"
+codes_file = "sun2025-niva.csv"

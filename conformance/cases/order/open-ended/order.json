@@ -1,0 +1,33 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Value",
+        "variable": "scb/example/value",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Value",
+        "edition": "2018..2020",
+        "table": ""
+      },
+      "requested_period": "2018..2020",
+      "source": "Example"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "catalog",
+    "catalog_generation_id": "d3829f11a01b8028e9899d928e8bae65f95bf2df3b76c911226fc04697758b56",
+    "catalog_schema_version": "9.6.0",
+    "mode": "global_fallback",
+    "project_hash": "e7e345ef8aed2c3dd57f167dc9839b6e8f0ae5d3b25644cd7ac0b290b1a43f1c",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "global"
+  },
+  "version": 1
+}

@@ -40,17 +40,6 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                 "fqid": output["fqid"],
                 "variants": [v["slug"] for v in output["variants"]],
             }
-        elif observe == "schema-columns":
-            versions = [
-                version
-                for variant in output["variants"]
-                for version in variant["versions"]
-            ]
-            actual = {
-                "columns": sorted({c["fqid"] for v in versions for c in v["columns"]}),
-                "windows": sorted({(v["valid_from"], v["valid_to"]) for v in versions}),
-            }
-            actual["windows"] = [list(window) for window in actual["windows"]]
         elif observe == "classification-variables":
             actual = {
                 "names": sorted(row["variable_name"] for row in output["variables"])
@@ -85,28 +74,6 @@ def test_scoped_cli_json(case: Path, tmp_path: Path, capsys) -> None:
                 ),
                 "years": sorted({state["year"] for state in output["instances"]}),
             }
-        elif observe == "logical-datacolumns":
-            actual = {
-                "columns": sorted({row["delivery_column_name"] for row in output})
-            }
-        elif observe == "logical-diff":
-            actual = {
-                "changed": sorted(
-                    {
-                        row["variable_name"]
-                        for variant in output["variants"]
-                        for row in variant["changed"]
-                    }
-                )
-            }
-        elif observe == "logical-coded-variables":
-            rows = sorted(output, key=lambda row: row["variable_name"])
-            actual = {
-                "names": [row["variable_name"] for row in rows],
-                "code_counts": [row["n_distinct_codes"] for row in rows],
-            }
-        elif observe == "logical-resolve":
-            actual = {"statuses": [row["status"] for row in output["columns"]]}
         elif observe == "search-page":
             actual = {
                 "names": [row["name"] for row in output["results"]],

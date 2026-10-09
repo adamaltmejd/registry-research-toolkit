@@ -1,0 +1,19 @@
+[register]
+provider = "sos"
+slug = "syn"
+name = "Syntetiskt register"
+native_id = "8646299464352216667"
+[[variant]]
+slug = "syn-a"
+native_id = "8646299464352216667.8787440101791605432"
+[[variable]]
+slug = "alder"
+native_id = "8646299464352216667.ALDER"
+
+[[representation.delivery_metadata]]
+variable = "8646299464352216667.ALDER"
+fields = ["name"]
+records = {{expected_records source=Socialstyrelsen/ member=ALDER}}
+columns = [{ variant_key = {{variant_key source=Socialstyrelsen/ member=ALDER}}, column = "ALDER", valid_from = "2005-01-01", valid_to = "9999-12-31", source_scope = {{edition_scope source=Socialstyrelsen/ member=ALDER}}, expected_codings = [] }]
+evidence = "Exact supplied delivery texts"
+noted = "2026-10-09"

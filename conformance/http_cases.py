@@ -1,9 +1,7 @@
 """Readable request/expected cases at the HTTP boundary.
 
-Cases run in-process through `TestClient` by default, or with `--server-cmd`
-over a real socket against one server process per cached artifact
-(`ServerPool`). Both clients are `httpx2.Client`s, so one request path serves
-both transports.
+Cases run with `--server-cmd` over a real socket against one server process per
+cached artifact (`ServerPool`).
 """
 
 from __future__ import annotations
@@ -21,9 +19,7 @@ from contextlib import closing, suppress
 from pathlib import Path
 
 import httpx2
-from fastapi.testclient import TestClient
 from reg_meta.errors import RegMetaError
-from reg_webapp.app import create_app
 
 CASES = Path(__file__).parent / "cases"
 READY_PATH = "/openapi.json"
@@ -61,8 +57,11 @@ def artifact_env(path, kind):
 
 
 def fixture_source(request):
+    """A case's fixture: a source directory under `cases/fixtures`, else a name
+    `reader_artifacts` resolves (`reader`, `reader/<case>`, a builder holdings case)."""
     fixture = request.get("fixture", "compiled")
-    return fixture if fixture.startswith("reader") else CASES / "fixtures" / fixture
+    local = CASES / "fixtures" / fixture
+    return local if local.is_dir() else fixture
 
 
 def docs_source(request):
@@ -87,40 +86,26 @@ def cached_case_artifact(request, case=None, identity=None):
     )
 
 
-def case_artifact(request, monkeypatch, case=None):
-    """Point the app at a case's cached, read-only artifact; return its path."""
-    kind = request.get("kind", "steward")
-    path = cached_case_artifact(request, case)
-    for name, value in artifact_env(path, kind).items():
-        monkeypatch.setenv(name, value)
-    return path
-
-
-def assert_http_case(case, tmp_path, monkeypatch, servers=None):
-    """Run a case in-process, or against `servers` (a `ServerPool`) when given.
+def assert_http_case(case, tmp_path, servers):
+    """Run a case against `servers` (a `ServerPool`).
 
     An expected `build_error` (`code`, `message`) is the artifact build's refusal;
     the case sends no requests."""
     request = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
     if "startup_error" in expected:
-        assert servers is not None, "startup cases need --server-cmd"
         assert_startup_refusal(request, expected["startup_error"], servers, tmp_path)
         return
     if "build_error" in expected:
         try:
-            case_artifact(request, monkeypatch, case)
+            cached_case_artifact(request, case)
         except RegMetaError as exc:
             assert {"code": exc.code, "message": exc.message} == expected["build_error"]
             return
         raise AssertionError("the artifact build was expected to fail")
-    case_artifact(request, monkeypatch, case)
-    if servers is not None:
-        responses = run_http_requests(
-            request["requests"], case_clients(request, case, servers)
-        )
-    else:
-        responses = run_http_requests(request["requests"])
+    responses = run_http_requests(
+        request["requests"], case_clients(request, case, servers)
+    )
     for response, oracle in zip(responses, expected, strict=True):
         assert response["status"] == oracle["status"]
         if "location" in oracle:
@@ -143,11 +128,19 @@ def assert_http_case(case, tmp_path, monkeypatch, servers=None):
 
 def case_clients(request, case, servers):
     """The `servers` clients of a case: its artifact's under `None`, each
-    `artifacts` entry's under its name."""
+    `artifacts` entry's under its name. An entry overrides the identity
+    (`identity`), the docs source (`docs`) or both."""
     kind = request.get("kind", "steward")
     clients = {
         name: servers.client(
-            artifact_env(cached_case_artifact(request, case, spec["identity"]), kind)
+            artifact_env(
+                cached_case_artifact(
+                    {**request, **({"docs": spec["docs"]} if "docs" in spec else {})},
+                    case,
+                    spec.get("identity"),
+                ),
+                kind,
+            )
         )
         for name, spec in request.get("artifacts", {}).items()
     }
@@ -215,14 +208,9 @@ def request_body(step):
     return {"json": step.get("body")}
 
 
-def run_http_requests(steps, clients=None):
+def run_http_requests(steps, clients):
     """Send the steps through `clients` (the case artifact's client under `None`,
-    each `artifacts` entry's under its name), or the app in this process."""
-    if clients is None:
-        with TestClient(
-            create_app(rate_limit_per_minute=1000), raise_server_exceptions=False
-        ) as app_client:
-            return run_http_requests(steps, {None: app_client})
+    each `artifacts` entry's under its name)."""
     responses = []
     for step in steps:
         client = clients[step.get("artifact")]

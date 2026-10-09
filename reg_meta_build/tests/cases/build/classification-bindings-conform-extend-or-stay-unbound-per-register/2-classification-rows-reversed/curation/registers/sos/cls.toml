@@ -1,0 +1,69 @@
+[register]
+provider = "sos"
+slug = "cls"
+name = "Klassregistret"
+native_id = {{naming_id kind=register provider=sos register_key=cls}}
+[[variant]]
+slug = "cls-a"
+native_id = {{naming_id kind=register_variant provider=sos register_key=cls member_key=CLS_A}}
+[[variable]]
+slug = "conf"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=CONF}}
+[[variable]]
+slug = "ext"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=EXT}}
+[[variable]]
+slug = "high"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=HIGH}}
+[[variable]]
+slug = "sentonly"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=SENTONLY}}
+[[variable]]
+slug = "sentmix"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=SENTMIX}}
+[[variable]]
+slug = "sentfree"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=SENTFREE}}
+[[variable]]
+slug = "gap"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=GAP}}
+[[variable]]
+slug = "unk"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=UNK}}
+[[variable]]
+slug = "unresurl"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=UNRESURL}}
+[[variable]]
+slug = "unresfrag"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=UNRESFRAG}}
+[[variable]]
+slug = "wheld"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=WHELD}}
+[[variable]]
+slug = "miss"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=MISS}}
+[[variable]]
+slug = "novar"
+native_id = {{naming_id kind=variable provider=sos register_key=cls member_key=NOVAR}}
+[[errata.field]]
+variable = {{naming_id kind=variable provider=sos register_key=cls member_key=WHELD}}
+variant = "CLS_A"
+column = "WHELD"
+expected_fields = {{expected_fields source=Socialstyrelsen/ key=variable:WHELD fields=name,definition,description,operational_definition,classification_declared,representation,data_type,coverage_from,coverage_to}}
+expected_scope = {{edition_scope source=Socialstyrelsen/ key=variable:WHELD}}
+expected_period = {{period_scope source=Socialstyrelsen/ key=variable:WHELD}}
+evidence = "One reviewer reads the delivery as TWO."
+noted = "2026-10-09"
+field = "classification_declared"
+value = "TWO"
+[[errata.field]]
+variable = {{naming_id kind=variable provider=sos register_key=cls member_key=WHELD}}
+variant = "CLS_A"
+column = "WHELD"
+expected_fields = {{expected_fields source=Socialstyrelsen/ key=variable:WHELD fields=name,definition,description,operational_definition,classification_declared,representation,data_type,coverage_from,coverage_to}}
+expected_scope = {{edition_scope source=Socialstyrelsen/ key=variable:WHELD}}
+expected_period = {{period_scope source=Socialstyrelsen/ key=variable:WHELD}}
+evidence = "Another reviewer reads the delivery as ALT."
+noted = "2026-10-09"
+field = "classification_declared"
+value = "ALT"

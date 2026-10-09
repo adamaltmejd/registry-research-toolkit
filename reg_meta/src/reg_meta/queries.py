@@ -457,8 +457,8 @@ def _fts_match_query(raw: str) -> str | None:
     semantics; the trailing ``*`` makes it a prefix match ("ink" → "inkomst").
     Tokens are space-joined (implicit AND). Embedded double quotes are doubled
     per FTS5 string-literal escaping. Nothing is folded here: the catalog indexes
-    hold `fold_search` text, so their callers pass `fold_search(raw)`; `doc_fts`
-    still folds with unicode61 and takes the raw query. Returns None when no
+    and `doc_fts` hold `fold_search` text, so their callers pass
+    `fold_search(raw)`. Returns None when no
     token carries an alphanumeric char (empty / whitespace / punctuation-only)."""
     terms = [f"{phrase}*" for phrase in _fts_quoted_tokens(raw)]
     return " ".join(terms) if terms else None

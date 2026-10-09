@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "pipeline_build_failed",
+    "exit_code": 10,
+    "message_contains": [
+      "classification succession names uncompiled book",
+      "class/sni1990 -> class/sni2000"
+    ]
+  }
+}

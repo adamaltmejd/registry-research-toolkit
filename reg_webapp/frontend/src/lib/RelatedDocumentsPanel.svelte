@@ -9,17 +9,17 @@ import { asyncResource } from "./async.svelte";
 // Rehosted register-version PDFs for a register page (#742/#967). This is
 // authoritative register-level source metadata, distinct from the fuzzy FTS
 // mentions in `DocMentionsPanel`, and must not be inherited by variable pages.
+// `register` is the register's FQID.
 let { register }: { register: string } = $props();
 
 const resource = asyncResource((signal) =>
   getRelatedDocuments(register, { signal }),
 );
 const data = $derived(resource.data);
-const documents = $derived(data?.documents ?? []);
+// `null` = the deployment has no docs database: omit the section, as for none.
+const documents = $derived(data ?? []);
 const show = $derived(
-  resource.loading ||
-    !!resource.error ||
-    (!!data && data.ingested && documents.length > 0),
+  resource.loading || !!resource.error || documents.length > 0,
 );
 
 function bytesLabel(bytes: number): string {

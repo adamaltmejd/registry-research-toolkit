@@ -1,0 +1,35 @@
+{
+  "note": "Twin of `validate/merged-monthly-family`: fails if `validate` stops answering this project with 200 and these `ok` and issues (code, level, path, message, in emission order).",
+  "kind": "catalog",
+  "fixture": "semantic",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic semantic",
+        "sources": [
+          {
+            "name": "source",
+            "register_variant": "scb/example/annual",
+            "period": {
+              "from": "2018-01",
+              "to": "2018-03"
+            },
+            "bindings": [
+              {
+                "variable": "scb/example/lonfink",
+                "type": "categorical",
+                "representation": "LonFinkMars"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Write the backend's synthetic catalog DB into a directory, for REG_META_DB.
+"""Write the synthetic dev catalog DB into a directory, for REG_META_DB.
 
-The browser flows need a real backend over real catalog data, and the repo
+The browser flows need real servers over real catalog data, and the repo
 already builds exactly that: ``backend/scripts/fixture_db.py`` (a slugged
-``scb/lisa`` + ``scb/rams`` DB with the boot manifest stamped) is the builder the
-``/api/catalog`` and ``/api/project/*`` suites resolve against, and the one
+``scb/lisa`` + ``scb/rams`` DB with the boot manifest stamped) is the builder
 ``dev.sh --fixture-db`` runs. It is imported from that script rather than rebuilt
-here, so the flows' catalog and the suite's can never drift.
+here, so the flows' catalog and the dev setup's can never drift.
 
     python3 reg_webapp/.claude/skills/run-reg-webapp/catalog_fixture_db.py <dir>
     REG_META_DB=<dir> bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows <out>

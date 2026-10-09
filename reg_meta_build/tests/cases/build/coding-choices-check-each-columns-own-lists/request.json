@@ -1,8 +1,9 @@
 {
   "replaces": [
-    "test_source_coding_choices_boundary.py::test_compact_choices_on_two_columns_check_each_columns_own_lists"
+    "test_source_coding_choices_boundary.py::test_compact_choices_on_two_columns_check_each_columns_own_lists",
+    "test_resolved_writer_value_sets.py::test_parallel_resolved_columns_keep_distinct_coding_states"
   ],
-  "fails_if": "`compile_coding_register` caches compact coding evidence per variable instead of per effective column, so the OTHER choice (keep2 over other2) is checked against VALUE's lists and goes stale",
+  "fails_if": "`compile_coding_register` caches compact coding evidence per variable instead of per effective column, so the OTHER choice (keep2 over other2) is checked against VALUE's lists and goes stale; or the writer keys a state without its value_set_version_label, so the two columns' states of one window collide on state_id and the build refuses",
   "sources": {
     "description": "VALUE (CVID 1001) and OTHER (CVID 1002) of variable 101, each under its own two competing lists.",
     "scb": {

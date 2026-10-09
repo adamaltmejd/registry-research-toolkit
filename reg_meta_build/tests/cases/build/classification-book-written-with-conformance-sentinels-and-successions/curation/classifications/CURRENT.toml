@@ -1,0 +1,5 @@
+[classification]
+short_name = "CURRENT"
+slug = "current"
+name = "Current"
+codes_file = "current.csv"

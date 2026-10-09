@@ -38,6 +38,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/coded-variables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The variables with coded value sets, by common name: each name's distinct codes over every coded state under it, its registers and its coded states, ordered by distinct codes (ties by name); pass `next_cursor` back as `cursor` for the next page. */
+        get: operations["coded_variables"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/context": {
         parameters: {
             query?: never;
@@ -47,6 +64,23 @@ export interface paths {
         };
         /** @description The catalog's branding, identity and headline counts, for the SPA. */
         get: operations["context"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coverage/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The calendar years a register or a variable (a FQID or a bare name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found. */
+        get: operations["coverage"];
         put?: never;
         post?: never;
         delete?: never;
@@ -159,6 +193,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/docs/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or a bare name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches. */
+        get: operations["docs_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/graph/{ref}": {
         parameters: {
             query?: never;
@@ -185,6 +236,109 @@ export interface paths {
         };
         /** @description A variable's lineage: the source states feeding each of its states (`edges`), the build's lineage `warnings`, and, for every variable in scope with its name, its register's provenance role (`registers`). */
         get: operations["lineage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description The order manifest of a `project_data.json` document (the JSON body; the `project` argument over MCP): per source and binding, each table and column that delivers it, clipped to where the binding is available (each clip listed), from the steward's holdings on a steward catalog and by canonical column on the global catalog. A project `validate` rejects structurally is `project_invalid`; any finding that leaves part of the request undeliverable blocks the whole order (`order_blocked`, with every finding). POST /api/project/order/manifest serves the same manifest as the exact `order.json` bytes. */
+        post: operations["order"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/order/manifest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description `order`'s manifest as the exact `order.json` bytes, an attachment. */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            responses: {
+                /** @description The raw bytes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": unknown;
+                    };
+                };
+                /** @description An error in `api/errors.toml` */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: components["schemas"]["Error"];
+                            meta: components["schemas"]["Meta"];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, with `ok` false when one is an error. A `schema_version` other than 3.0.0 is reported alone; then the document's structure, then each source's variant and period and each binding's variable, availability in the period (a narrower availability is an `info` clip), representation and value set, and on a steward catalog what the steward holds. An invalid project is a result, not an error. */
+        post: operations["validate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Delivered column names (data-file headers, 1 to 200 of them) to the variables delivering them, by exact case-insensitive match: one row per name, `matched` with its variables or `no_match`. `register` (a FQID or a name) keeps matches to one register. Not ref resolution: use `search` to discover names. */
+        get: operations["resolve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -320,6 +474,32 @@ export interface components {
             name?: string | null;
             short_name?: string | null;
         };
+        /** @description One code of a classification edition: today's `ClassificationCode`. */
+        ClassificationCode: {
+            code: string;
+            /** @description True for a canonical code, null when no canonical list exists. */
+            is_valid?: boolean | null;
+            label: string;
+            /**
+             * Format: int64
+             * @description The hierarchy depth; null when the classification is flat.
+             */
+            level?: number | null;
+        };
+        /**
+         * @description A delivered pair outside its declared book: today's
+         *     `ClassificationExtensionMember`.
+         */
+        ClassificationExtensionMember: {
+            code: string;
+            label: string;
+            /** @description `nonstandard` or `sentinel`. */
+            member_kind: string;
+            /** @description The certificates that make a source-local code a sentinel. */
+            scoped_sentinels: components["schemas"]["ScopedSentinel"][];
+            /** @description The book's curated meaning of a sentinel code. */
+            sentinel_meaning?: string | null;
+        };
         /** @description A curated group of classifications. */
         ClassificationGroup: {
             axes: components["schemas"]["Axis"][];
@@ -354,6 +534,16 @@ export interface components {
             groups: components["schemas"]["Group"][];
             name: string;
         };
+        /**
+         * @description An availability clip: the binding asked for `requested_period` and is ordered
+         *     for `ordered_period`, where it is available.
+         */
+        ClipReport: {
+            ordered_period: string;
+            requested_period: string;
+            source: string;
+            variable: string;
+        };
         CodeClassification: {
             fqid?: string | null;
             name?: string | null;
@@ -363,6 +553,24 @@ export interface components {
             fqid?: string | null;
             name?: string | null;
             register_name?: string | null;
+        };
+        /** @description `Page<CodedVariable>`. */
+        CodedPage: {
+            items: components["schemas"]["CodedVariable"][];
+            next_cursor?: string | null;
+        };
+        /**
+         * @description The CLI's `get coded-variables` row: a common name's distinct codes over every
+         *     coded state under it, its registers and its coded states.
+         */
+        CodedVariable: {
+            /** Format: int64 */
+            n_distinct_codes: number;
+            /** Format: int64 */
+            n_instances: number;
+            /** Format: int64 */
+            n_registers: number;
+            variable_name: string;
         };
         /** @description A register's concept group: its members in scope. */
         ConceptGroup: {
@@ -410,17 +618,10 @@ export interface components {
             steward: components["schemas"]["Steward"];
         };
         /**
-         * @description The span a variable or column is delivered over: its earliest start and latest
-         *     finite end (null when unknown, or when `open_ended`), and the states (held
-         *     periods in holdings) behind it.
+         * @description A register's or a variable's coverage (the CLI's `get availability` data); the
+         *     ref's kind is in `fqid`.
          */
-        Coverage: {
-            coverage_from?: string | null;
-            coverage_to?: string | null;
-            open_ended: boolean;
-            /** Format: int64 */
-            state_count: number;
-        };
+        Coverage: components["schemas"]["RegisterCoverage"] | components["schemas"]["VariableCoverage"];
         /**
          * @description A retained source limitation or interpretation assumption: today's
          *     `DataWarning`, as the build stored it.
@@ -454,7 +655,7 @@ export interface components {
          */
         Delivery: {
             column?: string | null;
-            coverage: components["schemas"]["Coverage"];
+            coverage: components["schemas"]["ShowCoverage"];
             /** @description `intervals`, or `year_independent` (no windows). */
             period_scope: string;
             variant: string;
@@ -494,6 +695,35 @@ export interface components {
             excerpt?: string | null;
             filename: string;
             register: string;
+            source?: string | null;
+            source_title?: string | null;
+            source_url?: string | null;
+            tags: string[];
+            variable?: string | null;
+        };
+        /**
+         * @description `docs_search`'s page: its hits, the total they page through, and whether
+         *     `register` has any documentation (false without `register`).
+         */
+        DocPage: {
+            items: components["schemas"]["DocResult"][];
+            next_cursor?: string | null;
+            register_ingested: boolean;
+            total: number;
+        };
+        /**
+         * @description One documentation hit: today's `DocResult` without the webapp's per-route `fuzzy`
+         *     flag.
+         */
+        DocResult: {
+            display_name: string;
+            filename: string;
+            register: string;
+            /**
+             * @description About 24 words of the plain text around the match, matched words in `**`; none
+             *     without `q`.
+             */
+            snippet?: string | null;
             source?: string | null;
             source_title?: string | null;
             source_url?: string | null;
@@ -616,6 +846,8 @@ export interface components {
             /** Format: int64 */
             min: number;
         };
+        /** @enum {string} */
+        IssueLevel: "error" | "warning" | "info";
         Lineage: {
             edges: components["schemas"]["LineageEdge"][];
             /**
@@ -646,9 +878,34 @@ export interface components {
             message: string;
             warning_kind: string;
         };
+        /** @description The project-side coordinate of an entry. */
+        LogicalCoordinate: {
+            provider: string;
+            register: string;
+            /** @description The canonical delivery column the slice resolved to. */
+            representation: string;
+            /** @description The binding's variable FQID. */
+            variable: string;
+            variant: string;
+        };
+        Match: {
+            fqid?: string | null;
+            /**
+             * @description The column's one spelling for the variable: a state's own, else the lowest
+             *     alias spelling.
+             */
+            matched_column: string;
+            register?: string | null;
+            /**
+             * Format: int64
+             * @description SCB's numeric variable id; null for other providers.
+             */
+            var_id?: number | null;
+            variable_name?: string | null;
+        };
         /** @description A group member; two members of one variable differ by `delivery_column`. */
         Member: {
-            coverage?: components["schemas"]["Coverage"] | null;
+            coverage?: components["schemas"]["ShowCoverage"] | null;
             delivery_column?: string | null;
             facets: components["schemas"]["Facet"][];
             fqid: string;
@@ -671,6 +928,55 @@ export interface components {
             definition?: string | null;
             name: string;
         };
+        /** @description One resolved binding: what was asked for and what the steward delivers. */
+        OrderEntry: {
+            logical: components["schemas"]["LogicalCoordinate"];
+            physical: components["schemas"]["PhysicalCoordinate"];
+            /** @description The availability-clipped period this table serves. */
+            requested_period: string;
+            /** @description The project source's name. */
+            source: string;
+        };
+        /**
+         * @description The order manifest: machine-written here, machine-read by the steward-side
+         *     extract system, never hand-edited.
+         */
+        OrderManifest: {
+            /** @description Every availability clip, also when nothing blocked. */
+            clips: components["schemas"]["ClipReport"][];
+            /**
+             * @description One per resolved logical-to-physical binding, per source and binding in
+             *     declaration order, then by table, edition and column.
+             */
+            entries: components["schemas"]["OrderEntry"][];
+            provenance: components["schemas"]["OrderProvenance"];
+            /**
+             * Format: int32
+             * @description The manifest contract version, 1.
+             */
+            version: number;
+        };
+        /**
+         * @description Which project, against which catalog, for which deployment: the manifest is
+         *     self-contained offline.
+         */
+        OrderProvenance: {
+            /** @description `catalog` or `steward`. */
+            artifact_kind: string;
+            catalog_generation_id: string;
+            catalog_schema_version: string;
+            /**
+             * @description `steward_holdings` (a steward's compiled holdings grounded the entries) or
+             *     `global_fallback` (canonical resolution alone, blank `table`).
+             */
+            mode: string;
+            /** @description SHA-256 of the project's canonical JSON. */
+            project_hash: string;
+            project_name: string;
+            project_reg_meta_version: string;
+            project_schema_version: string;
+            steward: string;
+        };
         OwningVariable: {
             fqid?: string | null;
             name?: string | null;
@@ -684,6 +990,18 @@ export interface components {
             from: number;
             /** Format: int64 */
             to: number;
+        };
+        /**
+         * @description The steward-side coordinate of an entry; in the global fallback `table` is
+         *     blank, `column` the canonical column and `edition` the requested period.
+         */
+        PhysicalCoordinate: {
+            column: string;
+            /** @description The table's edition, rendered as a period. */
+            edition: string;
+            /** @description The table's disjoint-partition label; absent when it has none. */
+            partition?: string | null;
+            table: string;
         };
         Population: {
             comment?: string | null;
@@ -732,19 +1050,31 @@ export interface components {
             variants: components["schemas"]["Variant"][];
         };
         RegisterChild: {
-            coverage?: components["schemas"]["RegisterCoverage"] | null;
+            coverage?: components["schemas"]["ShowRegisterCoverage"] | null;
             fqid: string;
             name?: string | null;
             purpose?: string | null;
             tags: components["schemas"]["Tag"][];
         };
-        /** @description A register's span: its variables and the earliest and latest of their states. */
-        RegisterCoverage: {
-            coverage_from?: string | null;
-            coverage_to?: string | null;
-            open_ended: boolean;
-            /** Format: int64 */
-            variable_count: number;
+        RegisterCoverage: components["schemas"]["Span"] & {
+            fqid: string;
+            register_name: string;
+            variant_count: number;
+            /** @description The register variants with a year in scope, in build order. */
+            variants: components["schemas"]["VariantYears"][];
+        };
+        RegisterYears: components["schemas"]["Span"] & {
+            /** @description Per year, the columns delivered in it, sorted. */
+            aliases_by_year: {
+                [key: string]: string[];
+            };
+            register?: string | null;
+            register_name: string;
+            /**
+             * Format: int64
+             * @description SCB's numeric variable id; null for other providers.
+             */
+            var_id?: number | null;
         };
         /** @description A related document's metadata; the download route serves its bytes. */
         RelatedDocument: {
@@ -756,6 +1086,21 @@ export interface components {
             sha256: string;
             source_url: string;
             title: string;
+        };
+        /** @description A requested name: `matched` with its variables, or `no_match`. */
+        Resolution: {
+            column_name: string;
+            /**
+             * @description Ordered by register, provider key and variable; split siblings share a
+             *     `var_id` and differ by `fqid`.
+             */
+            matches: components["schemas"]["Match"][];
+            /** @description `matched` or `no_match`. */
+            status: string;
+        };
+        Resolved: {
+            /** @description One row per requested name, in request order. */
+            columns: components["schemas"]["Resolution"][];
         };
         /** @description The catalog root: the providers in scope and the classification root. */
         Root: {
@@ -820,6 +1165,19 @@ export interface components {
          * @enum {string}
          */
         Scope: "holdings" | "reference";
+        /**
+         * @description A build-time certificate of a checked, finite source sentinel decision
+         *     (today's `ScopedSentinelEvidence`).
+         */
+        ScopedSentinel: {
+            classification_sha256: string;
+            delivery_column_name: string;
+            members: string[][];
+            provenance: string;
+            source_fingerprints: string[];
+            valid_from?: string | null;
+            valid_to?: string | null;
+        };
         /** @description `shape.SearchHit`. */
         SearchHit: {
             fqid?: string | null;
@@ -907,6 +1265,26 @@ export interface components {
             /** @enum {string} */
             kind: "classification_family";
         });
+        /**
+         * @description The span a variable or column is delivered over: its earliest start and latest
+         *     finite end (null when unknown, or when `open_ended`), and the states (held
+         *     periods in holdings) behind it.
+         */
+        ShowCoverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            state_count: number;
+        };
+        /** @description A register's span: its variables and the earliest and latest of their states. */
+        ShowRegisterCoverage: {
+            coverage_from?: string | null;
+            coverage_to?: string | null;
+            open_ended: boolean;
+            /** Format: int64 */
+            variable_count: number;
+        };
         /** @description Browse-addressable (slugged) providers, registers and variables in the scope. */
         Sizes: {
             /** Format: int64 */
@@ -920,6 +1298,15 @@ export interface components {
         SourceRecordRef: {
             semantic_record_key: string[];
             source: string;
+        };
+        /** @description The years covered, their bounds and the years missing between the bounds. */
+        Span: {
+            gaps: number[];
+            /** Format: int32 */
+            max_year: number;
+            /** Format: int32 */
+            min_year: number;
+            years: number[];
         };
         /**
          * @description A state: today's `VariableState` under the catalog page's light hydration (its
@@ -997,6 +1384,33 @@ export interface components {
             slug: string;
             starred: boolean;
         };
+        /** @description The validation result: `ok` when no issue is an error. */
+        Validation: {
+            /** @description In emission order: per source, its variant and period, then per binding. */
+            issues: components["schemas"]["ValidationIssue"][];
+            ok: boolean;
+        };
+        /** @description One finding about the document. */
+        ValidationIssue: {
+            /** @description A stable identifier, such as `period_outside_state_validity`. */
+            code: string;
+            level: components["schemas"]["IssueLevel"];
+            message: string;
+            /** @description An RFC 6901 JSON pointer into the document; empty for the whole document. */
+            path: string;
+            /** @description The successor a `variable_replaced` finding names; null otherwise. */
+            successor_fqid: string | null;
+        };
+        /**
+         * @description A row of `values`: a classification's code, a state's delivered pair, or a
+         *     delivered pair outside a declared book.
+         */
+        ValueRow: components["schemas"]["ClassificationCode"] | components["schemas"]["ClassificationExtensionMember"] | components["schemas"]["ValueSetMember"];
+        /** @description One delivered (code, label) pair: today's `ValueSetMember`. */
+        ValueSetMember: {
+            code: string;
+            label: string;
+        };
         /**
          * @description `value_set_summary`: a value set's code count and, when its codes are a dense
          *     integer run, its span.
@@ -1006,7 +1420,7 @@ export interface components {
             integer_range?: components["schemas"]["IntegerRange"] | null;
         };
         ValuesPage: {
-            items: unknown[];
+            items: components["schemas"]["ValueRow"][];
             next_cursor?: string | null;
             /** @description The rows matching `q` in the whole set. */
             total: number;
@@ -1033,11 +1447,18 @@ export interface components {
             tags: components["schemas"]["Tag"][];
         };
         VariableChild: {
-            coverage?: components["schemas"]["Coverage"] | null;
+            coverage?: components["schemas"]["ShowCoverage"] | null;
             /** @description Every `(variant, column)` the variable is delivered under in scope. */
             deliveries: components["schemas"]["Delivery"][];
             fqid: string;
             name?: string | null;
+        };
+        VariableCoverage: components["schemas"]["Span"] & {
+            fqid: string;
+            register_count: number;
+            /** @description The variable's register: one entry. */
+            registers: components["schemas"]["RegisterYears"][];
+            variable_name?: string | null;
         };
         /**
          * @description A variable with its state history. A succession edition that is not live in
@@ -1081,6 +1502,12 @@ export interface components {
             summary: components["schemas"]["Summary"];
             variant?: string | null;
             variant_name?: string | null;
+        };
+        VariantYears: {
+            /** @description The variant's slug; null for the unslugged one. */
+            variant?: string | null;
+            variant_name: string;
+            years: number[];
         };
         Version: {
             description?: string | null;
@@ -1178,6 +1605,45 @@ export interface operations {
             };
         };
     };
+    coded_variables: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["CodedPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
     context: {
         parameters: {
             query?: {
@@ -1197,6 +1663,45 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Context"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    coverage: {
+        parameters: {
+            query?: {
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Coverage"];
                         meta: components["schemas"]["Meta"];
                     };
                 };
@@ -1335,6 +1840,47 @@ export interface operations {
             };
         };
     };
+    docs_search: {
+        parameters: {
+            query?: {
+                q?: string;
+                register?: string;
+                scope?: components["schemas"]["Scope"];
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
     graph: {
         parameters: {
             query?: {
@@ -1395,6 +1941,123 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Lineage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    order: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["OrderManifest"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    validate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Validation"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    resolve: {
+        parameters: {
+            query: {
+                columns: string[];
+                register?: string;
+                scope?: components["schemas"]["Scope"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Resolved"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

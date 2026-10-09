@@ -1,0 +1,20 @@
+[register]
+provider = "scb"
+slug = "sub"
+native_id = "10"
+[[variant]]
+native_id = "10.100"
+slug = "people"
+[[variable]]
+native_id = "10.1001"
+slug = "sub"
+
+[[coding.sentinel]]
+variable = "10.1001"
+variant = "people"
+column = "SUB"
+periods = [["2020-07-01", "2020-12-31"]]
+classification = "alt"
+members = [["99", "Unknown"]]
+reason = "Reviewed coding"
+source = "fixture"

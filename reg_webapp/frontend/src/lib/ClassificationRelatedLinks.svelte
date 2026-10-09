@@ -1,17 +1,27 @@
 <script lang="ts">
-import type { ClassificationNodeData } from "./api";
+import type { ClassificationShow, Derivation } from "./api";
 import { catalogHref } from "./catalog";
 
-let { node }: { node: ClassificationNodeData } = $props();
+let { node }: { node: ClassificationShow } = $props();
 
 const hasDerivedRefs = $derived(
   (node.derived_from?.length ?? 0) > 0 || (node.derivatives?.length ?? 0) > 0,
 );
-
-function classRefHref(ref: { fqid: string | null; slug: string }): string {
-  return catalogHref(ref.fqid ?? `class/${ref.slug}`);
-}
 </script>
+
+<!-- A derivation names its classification by FQID; one outside the catalog (no
+     FQID) reads as text, with no link to follow. -->
+{#snippet derivation(ref: Derivation)}
+  {#if ref.fqid}
+    <a href={catalogHref(ref.fqid)}>{ref.short_name ?? ref.fqid}</a>
+  {:else}
+    <span class="ref-code">{ref.short_name}</span>
+  {/if}
+  <span class="ref-name">{ref.name}</span>
+  {#if ref.note}
+    <span class="ref-note">{ref.note}</span>
+  {/if}
+{/snippet}
 
 {#if hasDerivedRefs}
   <section
@@ -23,14 +33,8 @@ function classRefHref(ref: { fqid: string | null; slug: string }): string {
       <div class="derived-block">
         <p class="micro-label link-label">Derived from</p>
         <ul>
-          {#each node.derived_from as ref (ref.slug)}
-            <li>
-              <a href={classRefHref(ref)}>{ref.short_name}</a>
-              <span class="ref-name">{ref.name}</span>
-              {#if ref.note}
-                <span class="ref-note">{ref.note}</span>
-              {/if}
-            </li>
+          {#each node.derived_from as ref, i (ref.fqid ?? i)}
+            <li>{@render derivation(ref)}</li>
           {/each}
         </ul>
       </div>
@@ -39,14 +43,8 @@ function classRefHref(ref: { fqid: string | null; slug: string }): string {
       <div class="derived-block">
         <p class="micro-label link-label">Derived classifications</p>
         <ul>
-          {#each node.derivatives as ref (ref.slug)}
-            <li>
-              <a href={classRefHref(ref)}>{ref.short_name}</a>
-              <span class="ref-name">{ref.name}</span>
-              {#if ref.note}
-                <span class="ref-note">{ref.note}</span>
-              {/if}
-            </li>
+          {#each node.derivatives as ref, i (ref.fqid ?? i)}
+            <li>{@render derivation(ref)}</li>
           {/each}
         </ul>
       </div>
@@ -87,6 +85,9 @@ function classRefHref(ref: { fqid: string | null; slug: string }): string {
     grid-template-columns: max-content minmax(0, 1fr);
     gap: var(--space-1) var(--space-3);
     align-items: baseline;
+  }
+  .ref-code {
+    font-family: var(--font-mono);
   }
   .derived-links a {
     font-family: var(--font-mono);

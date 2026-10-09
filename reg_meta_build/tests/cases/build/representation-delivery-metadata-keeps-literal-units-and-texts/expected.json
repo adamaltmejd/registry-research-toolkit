@@ -1,0 +1,70 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["subject", "code", "case_id", "fields"],
+      "note": "Every error. units, texts and fixunit report none (the replaced tests assert no error). bare is the baseline: without an entry the two edition names conflict. overlap keeps its same-column unit conflict under a name permission. descriptions permits only descriptions, so its names still conflict and it forms no variable. coded's entry goes stale on the added list (stale_representation_coding at its entry, subject its native variable 6.6) and its names then conflict. fixname's checked name correction is not waived by the name permission.",
+      "rows": [
+        ["scb/overlap/income", "conflicting_occurrence_facts", null, ["measurement_unit"]],
+        ["scb/bare/income", "conflicting_variable_fact", null, ["name"]],
+        ["scb/bare/income", "unresolved_variable_name", null, ["name"]],
+        ["scb/descriptions/income", "conflicting_variable_fact", null, ["name"]],
+        ["scb/descriptions/income", "unresolved_variable_name", null, ["name"]],
+        ["('scb-registerinformation', 'scb', 'register', 'native-int', 6, 'variable', 'native-int', 6)", "stale_representation_coding", "curation/registers/scb/coded.toml#/representation.delivery_metadata/1", ["coding"]],
+        ["scb/coded/income", "conflicting_variable_fact", null, ["name"]],
+        ["scb/coded/income", "unresolved_variable_name", null, ["name"]],
+        ["scb/coded/income", "missing_coding_period", null, ["coding"]],
+        ["scb/fixname/income", "conflicting_variable_fact", null, ["name"]],
+        ["scb/fixname/income", "unresolved_variable_name", null, ["name"]]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["subject", "case_id"],
+      "note": "Every entry and both [[errata.field]] corrections compile against the reviewed rows.",
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {"code": "delivery_units_vary"},
+      "fields": ["subject"],
+      "note": "Every variable delivered in two units warns, including fixname and fixunit (the replaced correction test); texts and descriptions deliver one unit.",
+      "rows": [
+        ["scb/units/income"],
+        ["scb/bare/income"],
+        ["scb/overlap/income"],
+        ["scb/coded/income"],
+        ["scb/fixname/income"],
+        ["scb/fixunit/income"]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["register", "valid_from", "valid_to", "state_name", "measurement_unit", "description", "name"],
+      "note": "Each state keeps its own edition's literal unit, name and description; no variable takes a common name. overlap writes no unit for the contested 2020 state. fixunit's corrected 2020 unit is written.",
+      "rows": [
+        ["units", "2020-01-01", "2020-12-31", "Income 2020", "100-tal kronor", null, null],
+        ["units", "2021-01-01", "2021-12-31", "Income 2021", "Kronor (SEK)", null, null],
+        ["overlap", "2020-01-01", "2020-12-31", "Income 2020", null, null, "Income 2020"],
+        ["texts", "2020-01-01", "2020-12-31", "Visit", "Kronor (SEK)", "Visited facility", null],
+        ["texts", "2021-01-01", "2021-12-31", "Admission", "Kronor (SEK)", "Admitting facility", null],
+        ["fixunit", "2020-01-01", "2020-12-31", "Income 2020", "Checked source wording", null, null],
+        ["fixunit", "2021-01-01", "2021-12-31", "Income 2021", "Kronor (SEK)", null, null]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["register", "column", "description"],
+      "note": "texts takes no common description from either edition.",
+      "rows": [
+        ["units", "VALUE", null],
+        ["overlap", "VALUE", null],
+        ["texts", "VALUE", null],
+        ["fixunit", "VALUE", null]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+[classification]
+short_name = "EXAMPLE-CODES"
+slug = "example-codes"
+name = "Canonical example"
+codes_file = "example-codes.csv"
+sentinel_codes = [{code = "001", meaning = "stale entry"}]

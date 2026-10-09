@@ -1,9 +1,10 @@
 <script lang="ts">
 import {
-  type ConceptGroupNodeMember,
+  type ConceptGroupMember,
+  conceptGroupRef,
   type GroupFacetModel,
-  getConceptGroup,
-  getConceptGroupGraph,
+  getGraph,
+  getShow,
   type VariableGraphNode,
 } from "./api";
 import { asyncResource, unmountedFlag } from "./async.svelte";
@@ -84,12 +85,17 @@ let {
 const periodCeilingYear = $derived(windowMaxYear ?? new Date().getFullYear());
 
 // The `?member=` focus hint lives in the query (like `?period`), so refining it
-// doesn't remount this view. Read it reactively and pass it to the fetch (the
-// backend echoes it on the node only when it names a real member).
+// doesn't remount this view or refetch: it is matched client-side against the
+// members (a hint naming no member focuses nothing).
 const memberHint = $derived(router.getQueryParam("member"));
-const resource = asyncResource(() =>
-  getConceptGroup(provider, register, key, memberHint ?? undefined),
-);
+const groupRef = $derived(conceptGroupRef(provider, register, key));
+const resource = asyncResource(async () => {
+  const shown = await getShow(groupRef);
+  if (shown.kind !== "concept_group") {
+    throw new Error(`${groupRef} did not resolve to a concept group`);
+  }
+  return shown;
+});
 const node = $derived(resource.data);
 const nodeTags = $derived(node?.tags ?? []);
 
@@ -98,13 +104,11 @@ const nodeTags = $derived(node?.tags ?? []);
 // error / empty leaves a member's band with no rows (the band shows a quiet "no
 // representations") rather than blanking the page. `focus_id` is null (a
 // group-addressed call).
-const graphResource = asyncResource(() =>
-  getConceptGroupGraph(provider, register, key),
-);
+const graphResource = asyncResource(() => getGraph(groupRef));
 const graph = $derived(graphResource.data);
 
-// The register the group lives under — the breadcrumb target and a member's
-// shared ancestor (a group is always register-scoped).
+// The register the group lives under, for the not-found message (a group is
+// always register-scoped).
 const registerFqid = $derived(`${provider}/${register}`);
 
 function leafSlug(fqid: string): string {
@@ -166,11 +170,11 @@ const sharedDescription = $derived(sharedMemberMeta("description"));
 /** The in-this-group facet label for a member (e.g. "AGI · 2007 SNI edition"),
  * joined from its facets, or null when the member carries none (an ungrouped /
  * axis-less member — its name suffices). */
-function memberFacetLabel(member: ConceptGroupNodeMember): string | null {
+function memberFacetLabel(member: ConceptGroupMember): string | null {
   return member.facets.length > 0 ? facetLabelJoin(member.facets) : null;
 }
 
-function hasZeroStateCoverage(member: ConceptGroupNodeMember): boolean {
+function hasZeroStateCoverage(member: ConceptGroupMember): boolean {
   const coverage = member.coverage;
   return (
     member.delivery_column !== null &&
@@ -264,7 +268,7 @@ const showRowDimensionFilters = $derived(
 const foldSuccessionBands = true;
 
 const focusedMemberFqid = $derived.by((): string | null => {
-  const hint = node?.member;
+  const hint = memberHint;
   if (hint == null) {
     return null;
   }
@@ -386,7 +390,7 @@ const bands = $derived.by((): PickerBand[] => {
   // such member per fqid wins. Distinct from the per-column path below, which is keyed
   // by delivery_column and so only sees members WITH a column.
   const bandFacetsByFqid = new Map<string, GroupFacetModel[]>();
-  const membersByFqid = new Map<string, ConceptGroupNodeMember[]>();
+  const membersByFqid = new Map<string, ConceptGroupMember[]>();
   for (const member of node.members) {
     const membersForFqid = membersByFqid.get(member.fqid) ?? [];
     membersForFqid.push(member);
@@ -417,7 +421,7 @@ const bands = $derived.by((): PickerBand[] => {
   const { superseded, historyByHead } = successionFold;
 
   function bandForMember(
-    member: ConceptGroupNodeMember,
+    member: ConceptGroupMember,
     includeHistory: boolean,
   ): PickerBand {
     const allStates = nodesByFqid.get(member.fqid)?.states ?? [];
@@ -566,12 +570,11 @@ function pickerBandsIncludingHistory(source: PickerBand[]): PickerBand[] {
 const selectableBands = $derived(pickerBandsIncludingHistory(bands));
 
 /** The `band.key` (member fqid) the `?member=` focus hint names, for the picker's
- * deep-link highlight (#678). The backend echoes the VALIDATED member slug on
- * `node.member` (null when absent / unrecognized); the band key is the member fqid,
- * whose leaf slug is that slug — so match a band by `leafSlug(key) === node.member`.
- * Null when there's no (valid) hint, so the picker marks nothing. */
+ * deep-link highlight (#678). The hint is a member's leaf slug; the band key is the
+ * member fqid, so match a band by `leafSlug(key) === hint`. Null when there's no
+ * hint or it names no band, so the picker marks nothing. */
 const focusKey = $derived.by((): string | null => {
-  const hint = node?.member;
+  const hint = memberHint;
   if (hint == null) {
     return null;
   }
@@ -580,7 +583,7 @@ const focusKey = $derived.by((): string | null => {
 });
 
 // ── The time axis: `?period` (client-side lens, no refetch) ──────────────────
-// The PeriodPicker drives per-row DIMMING only — `getConceptGroup` takes no period,
+// The PeriodPicker drives per-row DIMMING only — the group fetch takes no period,
 // so the value triggers NO refetch; it just narrows the dim window (mirrors the
 // binding leaf's `pickerWindow`).
 const period = $derived(router.getQueryParam("period"));
@@ -655,7 +658,7 @@ const committedRows = $derived(
 
 /** Write `?period` to the group URL (preserving the pathname + any `?member=` focus
  * hint), which the reactive query picks up. A null period drops `?period`. NO
- * refetch — `getConceptGroup` takes no period; the value only drives the per-row
+ * refetch — the group fetch takes no period; the value only drives the per-row
  * dimming. */
 function writePeriod(next: string | null): void {
   const qs = new URLSearchParams();
@@ -788,7 +791,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
     <!-- The period availability lens sits ABOVE the column picker (both group + leaf):
          pick the period first, then the columns. Seeds from the project window, draws
          the members' union coverage span, and dims rows whose span doesn't overlap;
-         writes `?period` only (never the global window); `getConceptGroup` ignores it. -->
+         writes `?period` only (never the global window); the group fetch ignores it. -->
     <PeriodPicker
       period={boundedPickerPeriod}
       window={boundedProjectWindow}

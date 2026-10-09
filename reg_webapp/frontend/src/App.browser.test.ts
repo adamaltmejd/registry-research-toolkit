@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import App from "./App.svelte";
-import type { Context, RootResponse } from "./lib/api";
-import { getCatalogRoot, getContext, validateProject } from "./lib/api";
+import type { Context } from "./lib/api";
+import { getContext, getShow, validateProject } from "./lib/api";
 import type { ProjectData } from "./lib/project_data";
 import { projectStore, setPersistence } from "./lib/project_store.svelte";
 import { router } from "./lib/router.svelte";
@@ -12,7 +12,7 @@ vi.mock("./lib/api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./lib/api")>();
   return {
     ...actual,
-    getCatalogRoot: vi.fn(),
+    getShow: vi.fn(),
     getContext: vi.fn(),
     validateProject: vi.fn(),
   };
@@ -34,12 +34,9 @@ const context: Context = {
 beforeEach(() => {
   router.navigate("/");
   vi.mocked(getContext).mockReset();
-  vi.mocked(getCatalogRoot).mockReset();
+  vi.mocked(getShow).mockReset();
   vi.mocked(getContext).mockResolvedValue(context);
-  vi.mocked(getCatalogRoot).mockResolvedValue({
-    kind: "root",
-    children: [],
-  } as unknown as RootResponse);
+  vi.mocked(getShow).mockResolvedValue({ kind: "root", children: [] });
   vi.mocked(validateProject).mockReset();
   vi.mocked(validateProject).mockResolvedValue({ ok: true, issues: [] });
 });

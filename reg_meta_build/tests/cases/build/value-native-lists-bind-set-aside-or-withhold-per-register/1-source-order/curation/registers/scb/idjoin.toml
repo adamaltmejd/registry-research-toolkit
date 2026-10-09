@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "idjoin"
+native_id = "49"
+[[variant]]
+native_id = "49.490"
+slug = "people"
+[[variable]]
+native_id = "49.4901"
+slug = "value"

@@ -1,0 +1,30 @@
+[register]
+provider = "scb"
+slug = "fixname"
+native_id = "7"
+[[variant]]
+native_id = "7.10"
+slug = "people"
+[[variable]]
+native_id = "7.7"
+slug = "income"
+[[representation.delivery_metadata]]
+variable = "7.7"
+fields = ["name"]
+records = {{expected_records key=member:701,member:702}}
+columns = [{ variant_key = {{variant_key key=member:701}}, column = "VALUE", valid_from = "2020-01-01", valid_to = "2021-12-31", expected_codings = [] }]
+evidence = "Exact supplied delivery texts and units"
+noted = "2026-10-08"
+[[errata.field]]
+variable = "7.7"
+variant = "7.10"
+column = "VALUE"
+edition = "720"
+expected_fields = {{expected_fields key=member:701 fields=prose}}
+expected_period_text = {{period_text key=member:701}}
+expected_scope = {{edition_scope key=member:701}}
+expected_period = {{period_scope key=member:701}}
+evidence = "Independent supplied source correction"
+noted = "2026-10-08"
+field = "name"
+value = "Checked source wording"

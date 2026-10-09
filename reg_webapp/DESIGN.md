@@ -1,12 +1,13 @@
 # reg_webapp — design
 
-FastAPI backend + Svelte SPA. The backend serves the reg_meta catalog read-only and the
-project-authoring write surface (validate / order); the SPA is the researcher's
-authoring client. This file records the package-local design rationale. Cross-cutting
-topology (package tree, dependency graph, perf budgets, version policy, testing-strategy
-overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in
-`REFACTOR_SPEC.md`. The API contract itself is the committed `backend/openapi.json` (the
-reference); `models.py` + the route handlers are the response-shape reference.
+Svelte SPA on the Rust server (`reg-meta serve`), which answers every `/api` route: the
+catalog reads (context, search, docs, the catalog pages) and the project operations
+(validate / order). The SPA is the researcher's authoring client. There is no Python web
+server: `RUST_RUNTIME_SPEC.md` package F deleted the FastAPI app. This file records the
+package-local design rationale. Cross-cutting topology (package tree, dependency graph,
+perf budgets, version policy, testing-strategy overview) lives in the root
+`ARCHITECTURE.md`; remaining/unbuilt work lives in `REFACTOR_SPEC.md`. The API contract
+is `conformance/api/operations.toml` with its snapshot `crates/reg-meta/openapi.json`.
 
 **Compiled holdings.** `ARCHITECTURE.md` and `reg_meta/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog or steward artifact and delegates
@@ -18,329 +19,97 @@ clients can request reference or holdings scope explicitly.
 
 The data is public-ish registry metadata; there is **no server-side user-private state**
 (project files live in the browser, never on the server). "Auth" here is really cost
-protection, on two axes: read GETs are edge-cacheable + ETag- revalidated (cheap), and
-the actual-work POST endpoints carry an origin-side body-size cap + per-IP rate limit.
-Real auth is a v2+ concern, layered on only if a steward ever needs private data.
+protection, on two axes: read GETs are edge-cacheable + ETag-revalidated (cheap), and
+the actual-work POSTs carry an origin-side body-size cap + per-client rate limit (Cost
+protection, below). Real auth is a v2+ concern, layered on only if a steward ever needs
+private data.
 
 ## Layout
 
 ```text
 reg_webapp/
-  backend/                # uv workspace member (own pyproject, src-layout)
-    src/reg_webapp/        # FastAPI app, routes, models, stewards loader
-    scripts/gen_openapi.py # deterministic OpenAPI dumper
-    openapi.json           # committed snapshot (canonical API contract)
-    tests/                 # pytest, HTTP corpora and source-built artifacts
+  backend/                # uv workspace member: dev tooling only (until stage 4)
+    scripts/fixture_db.py  # the synthetic catalog + docs DB pair (dev.sh --fixture-db)
+    scripts/run_search_eval.py  # search relevance vs search_eval.toml
+    tests/                 # the period-grammar parity test
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
-    src/lib/api-types.ts   # codegen'd from ../backend/openapi.json
-  stewards/               # per-steward config (sibling of backend/frontend)
+    src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
+  stewards/               # per-steward branding, read by `reg-meta serve --stewards`
     global/steward.json    # identity only; no catalog → full universe
   DESIGN.md
 ```
 
-`stewards/` is a sibling of `backend/` and `frontend/`: a steward config is deployment
-data, not backend source. The loader resolves it relative to the module
-(`stewards.STEWARDS_DIR`) so it works regardless of cwd.
+`stewards/` is deployment data, not server source: `reg-meta serve --stewards DIR` reads
+`DIR/<catalog>/steward.json` and nothing else.
 
-## Boot seam (the reg_meta read-only DB)
+## Boot seam (artifact admission)
 
-The FastAPI lifespan opens reg_meta read-only through reg_meta's **own** helpers, never
-a hardcoded path:
+The Rust server admits its catalog at startup and refuses to serve otherwise
+(`Catalog::open` in `crates/reg-catalog`): the schema gate (`schema_incompatible`), the
+artifact identity (`catalog_unpublishable`), and the selected `--catalog` against the
+artifact's own name (`catalog_mismatch`; a steward artifact never serves as `global`).
+The `api` corpus pins each refusal (`conformance/cases/api/admission-*`). The branding
+comes from the admitted catalog's name, so a deployment cannot pair one steward's
+artifact with another's branding. The webapp ships no DDL and owns no `SCHEMA_VERSION`.
 
-```python
-db_path = reg_meta.db.db_path_from_args(None)  # REG_META_DB > XDG > platform
-conn = reg_meta.db.open_db(db_path)  # mode=ro + _check_schema_compat
-```
+## Catalog pages (the Rust server)
 
-`open_db` already opens `mode=ro` and runs `_check_schema_compat` — a real
-`SCHEMA_VERSION` assert vs the DB manifest. That is the **load-bearing** schema gate (a
-wrong major / too-old minor raises at startup;
-`conformance/cases/boot/schema-major-mismatch` covers it). The boot connection is closed
-once the manifest is read; the parsed manifest AND the resolved `db_path` are stashed on
-`app.state`. The lifespan holds **no** long-lived query connection — see the connection
-model below. The boot also loads the steward and builds its in-memory catalog index
-(below), stashing both on `app.state`.
+The SPA's catalog pages read the Rust server (`reg-meta serve`): `show`
+(`GET /api/catalog` for the root, `GET /api/catalog/{ref}` for every other node) and its
+facets `states`, `warnings`, `values`, `graph` and `lineage` (`GET /api/<facet>/{ref}`).
+Every response is `{data, meta}`; an error is `{error: {code, message, fields}, meta}`.
+The contract is `conformance/api/operations.toml`, the SPA's types are generated from
+`crates/reg-meta/openapi.json` into `frontend/src/lib/api-types-rust.ts`, and the
+"Catalog surface" section of `frontend/src/lib/api.ts` is the one place the SPA calls
+them. Locally the Vite dev proxy sends these paths to the Rust server. Ref and period
+grammar, scope, cursors and their located errors live in `crates/reg-catalog`; the SPA
+renders the error message rather than re-validating.
 
-The webapp reads reg_meta read-only and ships no DDL, so it owns no `SCHEMA_VERSION` —
-the only schema gate is `open_db`'s boot compat check against reg_meta's manifest.
+- **Route paths mirror `show`'s refs.** The page at `/catalog/<ref>` loads
+  `show(<ref>)`. The group pages `/catalog/group/<provider>/<register>/<key>` and
+  `/catalog/group/class/<key>` use the group refs `group/<provider>/<register>/<key>`
+  and `group/class/<key>`, so the SPA path and the API path are the same string. `show`
+  answers a `kind`-tagged node: `root`, `provider`, `register`, `variable`,
+  `classification_root`, `classification`, `concept_group`, `classification_group` or
+  `classification_family`.
+- **A retired ref resolves to its terminal successor, without a redirect.** `show`
+  answers the successor's node, and its `data.fqid` is the canonical FQID; the page uses
+  that FQID for every facet call. A split (more than one terminal) is `ambiguous_ref`
+  (409), shown in the page's error banner.
+- **The variable page fetches its facets separately.** `CatalogNodeView` loads the
+  variable's full state history (`states`) before it renders `BindingLeafView`. The leaf
+  then fetches the `?period` subset (`states` narrowed by `period`, `variant` and
+  `value_set_version`), its data warnings (`warnings`) and its relationship graph
+  (`graph`, which carries the succession chain); `LineageDetails` fetches `lineage`
+  (edges and warnings, one failure domain). Each facet is its own `asyncResource` with
+  the loading and error affordances of its neighbours, so one failed facet never blanks
+  the page.
+- **Register pages embed their variants.** A register's `show` carries `children` (each
+  with `coverage` and `deliveries`), `groups`, `tags` and `variants`. The variant
+  browser (`/catalog/<provider>/<register>/variants`) and the variant chips read that
+  embedded list; there is no separate variants call.
+- **Classification pages.** A classification's edition timeline is its `family`'s
+  `editions` when it belongs to a derived family (#1116), else its `graph`. Its codes
+  come from `values`; `dimensions` names the curated umbrella groups it belongs to.
 
-## Catalog connection model (per-request open)
+**States carry coding identity, not code membership (Y-46).** A state carries its
+window, variant, delivery column, `value_set_id`, `value_set_version_label` and
+conformance verdict, plus a `value_set_summary` (`code_count` and the dense-integer
+`integer_range`), never its members. Embedding codings per state made the
+`scb/rtb/forsamling` page 24 MB. Members come from `values`: a classification ref pages
+its codes; a variable ref with `state=<state_id>` pages that state's value set, and
+`classification` with `partition` (`source_extensions` by default, `canonical`,
+`nonstandard`, `sentinels`) or `column` with `alias_window_from` selects one part.
+Paging is by cursor; `q` filters the whole set before paging and `total` counts the
+matches. The SPA's code panel owns paging, the filter and its loading, error and empty
+states, and is mounted only where a code table is shown, so a closed disclosure issues
+no request. A state whose coding has `code_count` 0 says "This value set has no codes"
+in place, without a read: an empty coding and no coding are different facts. Inside the
+panel `CodeList` renders each page as given (a page is a window, so the viewer's own
+grouping is off), and typing is debounced into one read.
 
-The catalog routes (`routes/catalog.py`) open a **fresh read-only connection per
-request** from the boot-resolved `app.state.db_path`, via the `_catalog_conn`
-contextmanager used as a plain `with` block inside the sync handler body (NOT a FastAPI
-`Depends`). It `yield`s a `sqlite3.Connection` that the handler wraps in a `Catalog`,
-and `close()`s it in a `finally`. This is a deliberate decision, not an oversight:
-
-- A single shared `sqlite3` connection is **not** concurrency-safe across FastAPI's
-  sync-handler threadpool, even with `check_same_thread=False` — per-connection cursor
-  state races between threads. So no long-lived shared connection, no lock, and **not**
-  `check_same_thread=False`.
-- The per-request connection is owned by the handling thread (`sqlite3`'s default
-  `check_same_thread=True`), which is correct: one thread, one connection, opened and
-  closed within the request.
-- `open_db(db_path, check_schema=False)` skips the schema-compat re-check — the lifespan
-  already ran it at boot, so re-checking per request is wasted work, not safety. (The
-  read-only open is cheap; reg_meta's DB is read-mostly and single-backend.)
-
-## §16 FQID path guard (`catalog_fqid.py`)
-
-The `{fqid:path}` catch-all is guarded by a single chokepoint,
-`validate_fqid_path(raw_path)`, in its own module so it's unit-testable in isolation and
-reusable by the suffixed routes (`/states` etc.). It runs **before** any `Catalog` call
-— a malformed/traversal-shaped path returns **422 with zero SQL executed** (pinned by a
-trace-hook test that counts statements == 0).
-
-- Each `/`-split segment is validated by **delegating** to `reg_meta.fqid.validate_slug`
-  (no second copy of the slug regex — single source of truth). The only literal admitted
-  beyond the slug grammar is `class` (the classification-root sentinel; see
-  reg_meta/DESIGN.md → FQID grammar), and only at the **leading** position; in any other
-  slot `class` 422s like any reserved token. `_default` is **never** a catalog path
-  segment (variants are a register sub-resource, not an `/api/catalog/{fqid}` segment),
-  so it is rejected too.
-- Starlette URL-decodes the path before the handler, so `%2e%2e` / `%2f` / `%00` arrive
-  decoded and fail the per-segment check like any other non-slug char. (A raw `..` is
-  collapsed by HTTP clients before it reaches the server, so the raw-dotdot reject is
-  exercised at the unit layer; the app layer uses the percent-encoded forms.)
-- **No `@version` carve-out.** A binding leaf is a bare slug — the `@version`
-  value-set-version pin is **retired** (the value set is determined by the resolved
-  `(variable, variant, period)`, not pinned on the FQID), so `@` is just a non-slug
-  character that 422s like any other. Browse narrowing to one vintage is the read-only
-  `?value_set_version` query (below), not a path grammar.
-- The classification-root literal `class` (1 seg) is a reserved slug that
-  `validate_slug` rejects, so the handler special-cases it **before** `parse` → lists
-  **current/terminal** classifications only (via
-  `reg_meta.queries.list_classifications`, no new Catalog method). A classification
-  whose `superseded_by` is set — i.e. a successor edition exists — is dropped from the
-  children list; superseded editions are reached via the leaf's edition-chain panel or a
-  direct `class/<slug>` URL.
-
-## Catalog router structure
-
-Data-quality warnings are catalog evidence, separate from project validation errors.
-Register and binding responses embed their own warnings; the
-`/catalog/{fqid}/data_warnings` endpoint also supports period, variant and literal
-representation filtering. `unassigned_only=true` filters register limitations in SQL, so
-a leaf does not download every other variable’s warnings. The default remains the
-complete register warning read. Unassigned register limitations remain visible but do
-not acquire an inferred variable owner. The catalog shows warnings before column
-selection, with their delivery scope. The project reads warnings for its selected
-columns and source periods, showing register limitations separately. A failed warning
-request remains visible rather than implying the data has no limitations. Warnings use
-the existing status tags and panels; inside project source cards the same content
-renders inline. They are not serialized into `project_data.json`.
-
-Catalog routes live in one `routes/catalog.py` APIRouter, declaring `/catalog`, then the
-suffixed routes, then `/catalog/{fqid:path}` (the catch-all **last**). Starlette matches
-in **declaration order** and the `{fqid:path}` converter greedy-consumes any suffix, so
-the suffixed routes must declare ABOVE the catch-all or the catch-all swallows the
-suffix into `fqid` and the suffix handler never fires. Each suffixed route answering
-with its own shape over HTTP (`conformance/cases/http_catalog`,
-`test_catalog_subendpoints.py`) pins the order. The suffix tokens (and `variants`) are
-also **reserved in the variable slot** of the slug grammar (see reg_meta/DESIGN.md →
-FQID grammar) at build time, so a variable slugged `states` can't shadow a sub-endpoint.
-The validate→parse→Catalog-dispatch→Pydantic-map flow is factored into reusable helpers.
-
-The suffixed surface has one family declared above the catch-all: seven **binding-suffix
-routes** (`/states`, `/predecessors`, `/successors`, `/lineage`, `/lineage_warnings`,
-`/dimensions`, `/graph`), each mapping 1:1 to a `Catalog` accessor and returning a thin
-`{binding, <list>}` envelope so the SPA codegen sees one response type per endpoint.
-(`/graph` returns a `RelationshipGraph` — no `{binding, …}` wrapper — so its shape
-differs from the others, but the declaration position and slug-reservation rules are
-identical.) The `/related` route and `variable_related_to` edge surface were retired in
-#800. Plus one **register sub-resource** `/{provider}/{register}/variants` (a FIXED
-3-seg shape with a literal `variants` tail — explicit `{provider}`/`{register}`
-segments, NOT an `{fqid:path}` suffix). The binding-suffix routes are binding-only: a
-non-binding FQID raises reg_meta's `not_a_binding_fqid` (EXIT_USAGE) → **422** (a usage
-error, not a 500); an absent binding → 404. A register node's children include a
-`variants` reference (`VariantsRef`) so the variant browser has a stable slot in the
-discriminated union without the variant being an FQID.
-
-The `/variants` payload includes the variant's compact display metadata plus nested
-`versions` with register-version description/measurement prose and population/object
-type rows. The SPA renders that prose on its OWN route (`VariantBrowser` at
-`/catalog/<provider>/<register>/variants`, Y-79), not on the register page, which shows
-only a compact summary (`VariantsSummary`: one row per variant family with its name,
-concrete slugs and year span) over a link to it. `_default`-only and empty variant lists
-still suppress that whole summary section.
-
-Plus two **concept-group subject routes**, both declared above the catch-all:
-
-- `GET /catalog/group/{provider}/{register}/{key}` (#617/#616) — a FIXED 4-seg shape
-  with a literal `group` prefix and explicit `{provider}`/`{register}`/`{key}` segments,
-  NOT an `{fqid:path}` suffix. Returns a `ConceptGroupNode` (`kind: "concept-group"`)
-  with all group members, facets, and per-member coverage via `Catalog.concept_group`;
-  404 on an unknown key or register. `?member=<slug>` is an optional focus hint echoed
-  only when it names a real member — a bad hint is silently ignored, keeping the group
-  page first-class.
-
-- `GET /catalog/group/class/{key}` (#756/#1116) — a FIXED 3-seg shape (literal `group`,
-  literal `class`, `{key}`), the **classification-subject sibling** of the
-  register-scoped route above. Returns either a curated umbrella
-  `ClassificationGroupNode` (`kind: "classification-group"`) resolved via
-  `Catalog.classification_group(key)`, or a derived one-dimensional
-  `ClassificationFamilyNode` (`kind: "classification-family"`) resolved via
-  `Catalog.classification_family(key)`; 404 when neither exists. Has **no**
-  provider/register, **no** per-member coverage, and **no** `?member=` focus hint —
-  classification subjects are catalog-global, not scoped to a single register. This
-  route is declared **immediately above** the register-group route so the literal
-  `class` segment matches before `{provider}` is tried. A collision with the
-  register-group route is unconstructable: `class` is not a valid provider slug
-  (`Fqid.register_fqid` rejects it), so no real register-group URL can share this shape.
-  Classification-root browse rows link to this route (via `classGroupHref`) and render
-  through a dedicated `ClassificationGroupView` component.
-
-The `group` literal **is** reserved in the **provider slot** of the FQID grammar
-(`RESERVED_GROUP_SLUG`, see reg_meta/DESIGN.md → FQID grammar): because the
-register-group route puts `group` at a non-leading position, a provider named `group`
-would mint a binding-suffix URL `/catalog/group/<register>/<variable>/states` (5
-segments) that the earlier-declared 5-segment group route would capture
-(provider=`<register>`, register=`<variable>`, key=`states`) instead of the binding's
-`/states`. Reserving `group` in the provider slot makes that collision unconstructable.
-
-**Classification succession is embedded, not a sub-resource (#571/#578).** The
-classification leaf node carries the **full edition chain** inline as `edition_chain`
-(reg_meta's `ClassificationEdition`, embedded directly from
-`Catalog.classification_chain`), so the browse panel renders the entire succession
-timeline synchronously — no per-neighbor fetch. The server-side walk resolves a
-`classification_same_as` alias to its canonical edition, then walks the QUERIED
-edition's own path — forward to the terminal via the deterministic-first successor and
-backward to the root via the deterministic-first predecessor — ordering it oldest→newest
-BY TRAVERSAL (terminal/current last; the `effective_year` is display-only, so an
-undated/NULL edge no longer inverts the order), and marks each edition
-`is_current`/`is_self`. Anchoring on the queried path means a merge sibling on a
-DIFFERENT inbound branch is never included (#588). Every edition is a live
-`classification` row — the build validator guarantees succession editions are live (it
-fails on any `classification_replaced_by` edge whose endpoint has no live row), so
-`fqid` is None only on a malformed/unresolvable slug (rendered as plain text, not a
-link). The earlier immediate-neighbor routes (`/classification_predecessors`,
-`/classification_successors`) were retired — the embedded full chain subsumes them.
-(reg_meta's `Catalog.classification_predecessors` accessor remains public API; the chain
-walk reads the same edges.)
-
-At the current head, the classification leaf also embeds further payloads inline for
-synchronous SPA render: `codes` (reg_meta's `ClassificationCode`, embedded directly from
-`Catalog.classification_codes` — the resolved edition's canonical value-set codes and
-labels; omitted when empty), `dimensions` (#609; reg_meta's `ConceptGroupSummary`,
-embedded directly from `Catalog.classification_dimensions` — the curated umbrella
-group(s) the edition belongs to, reading `concept_group_classification`; omitted when
-empty), and `family` (#1116; a `ClassificationFamilyNode` for derived one-dimensional
-succession families such as ICD/SSYK/LKF/SNI; null when absent). The SPA uses
-`dimensions` / `family` to keep grouped classification FQIDs shareable while rendering
-the canonical group/family surface with the requested edition tab active. The active tab
-renders the resolved edition as a code/label panel (shared `CodeList` viewer — the same
-component used for the variable value set, with a size-dependent filter: the search box
-appears only when the set reaches the `CODE_FILTER_THRESHOLD`, hidden for small sets;
-large sets collapse into derived level/prefix groups or a bounded flat preview; #638 /
-#1120), and non-active tabs do not fetch their value sets until selected. The v1 payload
-correction under `CodeList` removes the synchronous full-code embedding while retaining
-bounded metadata and relationship data here.
-
-**Variable succession is embedded too (#582).** The binding leaf node carries the **full
-variable succession chain** inline as `succession_chain` (reg_meta's `VariableEdition`,
-embedded directly from `Catalog.variable_chain`) — the variable-grain dual of the
-classification `edition_chain`. The server-side walk same_as-canonicalizes the queried
-binding, then walks the QUERIED binding's own path over `variable_replaced_by` (forward
-to the terminal via the deterministic-first successor, backward to the root via the
-deterministic-first predecessor), ordering it oldest→newest BY TRAVERSAL
-(terminal/current last; `effective_year` is display-only, robust to undated edges), and
-marks each edition `is_current`/`is_self`; a merge sibling on a different inbound branch
-is not included (#588). Each edition also carries the transition `reason` (the edge's
-`beskrivning`) — unlike the classification grain, whose succession table has no reason
-column. UNLIKE classifications, a chain edition may be a **dead/renamed predecessor**
-with no live `variable` row — the #355/#411 renamed-slug model: variable succession
-tolerates dead predecessors by design, and there is NO `variable_replaced_by` validator
-forbidding it (the classification grain DOES have such a validator). A dead edition
-still carries a syntactically-valid binding `fqid` so a citation 301-redirects to the
-current edition, but its `name` is None (no live row); `fqid` is None only on a
-malformed/unresolvable triple. On the corpus today all 12 edges are live, but the model
-permits a dead predecessor. Also unlike classifications, embedding the chain does
-**NOT** retire the immediate-neighbor routes: the `/predecessors` / `/successors`
-sub-resources (and reg_meta's
-`Catalog.predecessors`/`successors`/`ResolvedVariable.replaced_by`) stay — they back the
-#411 permalink-redirect rails and are existing API surface. Only the binding node's
-embedded `replaced_by` field is superseded by `succession_chain`.
-
-**The `?period` query** on the catch-all. On a binding leaf, `?period=...` returns
-`{binding, states: [...]}` — the `resolve_at` subset, **uniform with `/states`** (so
-codegen sees one state-list type). The **#307 comma list form**
-(`?period=2005..2010,2015..2020`, an interrupted series — #340) resolves **per
-segment**, returning the compound-key-deduped union — keyed on
-`(state_id, delivery_column_name, valid_from)` since a merged monthly-family variable
-(#319) expands one annual state into 12 same-`state_id` per-month windows (keying on
-`state_id` alone would collapse 11 of them): `parse_period_query` splits the wire into
-segments and the handler calls `resolve_at` once per segment — `resolve_at` never sees
-the list form (keeps the list grammar out of the separately-released reg_meta). This
-browse read is its own, but it resolves the way the shared `order.resolve_binding` pass
-does and for the same reason: `resolve_at`'s monthly-family fallback is decided per
-query, so one segment's window must not suppress another segment's fallback (see Current
-semantic validation). `?variant` narrows to one variant; `?value_set_version` narrows to
-one vintage (a read-only browse filter matched against `value_set_version_label` by
-`resolve_at`, **not** a path pin). The period query is **ignored** on non-binding kinds
-(the register / provider / classification node resolves normally). An absent `?period`
-still returns the FULL embedded leaf.
-
-**The binding leaf carries coding IDENTITY, not code membership (Y-46).** Both binding
-reads — the no-period leaf and its `?period` subset — resolve with reg_meta's
-`with_codes=False, with_code_summary=True` (see reg_meta/DESIGN.md → Narrow reads).
-Every historical state is still there, with its window, variant, delivery column,
-`value_set_id`, `value_set_version_label` and stored conformance verdict; what is gone
-is each state's `value_set` members and its conformance `nonconforming_codes`, replaced
-by a `value_set_summary` (`code_count` + the dense-integer `integer_range`) computed
-once per distinct coding per request. The reason is arithmetic: `scb/rtb/forsamling`'s
-290 states share a handful of codings, and embedding those codings per state made the
-initial response 24 MB. The payload is now independent of code cardinality, and the only
-thing a consumer loses is what it could not render on arrival anyway.
-
-`GET /api/value-sets/{value_set_id}/codes` is the read that gives them back — the ONE
-bounded route this added, declared next to the catalog routes (it is not a `{fqid:path}`
-suffix, so ordering is not at stake). It answers ONE coding, `?offset`/`?limit`-windowed
-(default 200, max 1000, clamped not 422'd — the shared `clamp_limit`), in stable
-code/label order, with `total` counted over the WHOLE set. `?q=` filters BEFORE the
-window using `query_input.matches_filter` — the same matcher as the SPA's
-`foldText`/`matchesFilter`: both sides fold with `fold_search` (case fold, NFKD, drop
-combining marks, one space between words; the oracle is
-`conformance/cases/folds/fold_search.jsonl`), then a plain substring test with `%`/`_`
-literal, because SQLite's LIKE folds neither non-ASCII case nor diacritics and an "N of
-M" that disagreed with the in-browser filters would be a lie. `?state=` requires
-`?classification=<slug>` and reads that exact state's declared book.
-`?partition=canonical` returns only delivered source codes that occur in the book;
-`nonstandard` and `sentinels` return separate stored extensions. Special codes retain
-reviewed global meanings or scoped certificates; none becomes an official book code.
-Per-column codings also send `column` and the original `alias_window_from`, so clipped
-periods cannot borrow a sibling column's domain. Wrong state, coding, book or alias
-ownership returns 404; incomplete selectors return 422. Not steward-gated, and its ids
-are enumerable by design: value-set members and these stored mismatch lists are
-catalog-global reference data, on the same footing as the classification codes already
-served (→ Classification pass-through (decision 2)). Holding a binding is not what
-authorizes reading a coding, so the pass-through rests on that policy and not on an id
-being hard to guess. The SPA's `ValueSetCodes` panel owns the paging, the filter and the
-loading / error+retry / empty states, and is mounted only where a code table is actually
-shown — a closed disclosure issues no request. "Shown" means the state HAS a coding, not
-that the coding has members: a `value_set_id` with `code_count` 0 shows its size on the
-row and says "This value set has no codes" in place — no disclosure, since there is
-nothing to open, and no read, since the leaf already counted it. An empty coding and no
-coding at all are different facts, and a reader who cannot tell them apart is left
-guessing whether the page failed. Inside the panel the shared `CodeList` renders each
-page verbatim: a server page is a WINDOW, so the viewer's own filter and its large-list
-grouping are suppressed there — grouping a partial page would group the wrong thing, and
-a set that drills down on a classification page reads as a flat bounded list here.
-Typing is debounced into one read, because this filter scans the whole set server-side.
-`Catalog.resolve`, `/states` and the complete exports keep their full-membership
-semantics unchanged.
-
-Under the compiled contract a named steward runtime consumes its one self-identifying
-artifact. Boot validates schema, completeness, publishability and
-`REG_WEBAPP_STEWARD == import_manifest.steward`; unset/global requires a `catalog`
-artifact. It never loads inventory through `REG_WEBAPP_STEWARDS_DIR`. Unmapped physical
-columns remain in `holding_column` and admit no catalog coordinate. A missing
-field-specific reason remains unknown; the UI must not invent one from another edition's
-reviewed mapping.
-
-Storage IDs serialize as decimal strings, including nested reader models and local
-response envelopes. The browser never converts them to JavaScript numbers; comparisons
-use integer-safe ordering. Incoming code-list IDs are bounded to SQLite's signed 64-bit
-range before a query runs.
+Storage IDs, `state_id` included, are decimal strings on the wire. The browser never
+converts them to JavaScript numbers; comparisons use integer-safe ordering.
 
 `distinctValueSets` groups source domains by `value_set_id`, preserving first-seen
 order. A shared declared book does not make distinct source domains identical. Every
@@ -352,90 +121,25 @@ Known coverage and unknown bounds remain distinct. An exclusively year-independe
 selection hides the leaf's annual availability control while preserving the project's
 study window; these deliveries do not acquire invented observation years.
 
-**301 redirect for renamed/dead slugs (#355 PART 2; register grain added in #412;
-`?period` and sub-endpoints added in #411; classification grain added in #571).** When a
-request for a dead/renamed slug yields a genuine `fqid_not_found` 404, the route calls
-`Catalog.resolve_terminal_successor` before surfacing the 404. That method dispatches on
-FQID kind — binding FQIDs walk `variable_replaced_by`, register FQIDs walk
-`register_replaced_by`, classification FQIDs walk `classification_replaced_by` — so this
-single branch handles all grains with no kind-branching in the route. If the FQID has a
-successor chain, the handler returns an HTTP 301 to the canonical `/api/catalog/<path>`
-of the terminal successor (each path segment percent-encoded via `urllib.parse.quote`).
-A truly-unknown slug — no successor edge, or a PROVIDER FQID — re-raises the original
-404 unchanged.
+**Data warnings** are catalog evidence, separate from project validation errors. The
+`warnings` facet takes a register or variable ref and filters by period, variant and
+literal representation; `unassigned_only` keeps a register's limitations that name no
+variable, so a variable page does not download every other variable's warnings.
+Unassigned register limitations stay visible but do not acquire an inferred owner. The
+catalog shows warnings before column selection, with their delivery scope. The project
+reads warnings for its selected columns and source periods, showing register limitations
+separately. A failed warning request stays visible rather than implying the data has no
+limitations. Warnings use the existing status tags and panels; inside project source
+cards the same content renders inline. They are not serialized into `project_data.json`.
 
-The redirect covers all entry points into a dead binding slug (#411): the no-period
-catch-all node path, the `?period` branch (query string preserved, so `?period=2019` /
-`?variant` ride to the terminal), and all seven binding-suffix sub-endpoints (`/states`,
-`/predecessors`, `/successors`, `/lineage`, `/lineage_warnings`, `/dimensions`,
-`/graph`), which redirect to the **same suffix** on the terminal (e.g. a dead slug
-`/states` → terminal slug `/states`). The shared `_redirect_or_4xx` helper implements
-this policy for the `?period` branch and all sub-endpoints; the no-period node path has
-a sibling implementation at the `HTTPException` layer (keep the two in sync on any
-301→308 switch). Only a genuine `fqid_not_found` ever redirects — a usage 422 (e.g. an
-inverted `?period` range) and a build-invariant 500 are never turned into redirects. The
-301 is permanent and cache-eligible; the terminal resolution guarantees the redirect
-target stays stable under double renames (see
-`reg_meta/DESIGN.md → resolve_terminal_successor`).
-
-A dead/renamed **classification** slug still redirects via the catch-all node path: a
-`fqid_not_found` 404 on a classification FQID walks `classification_replaced_by` through
-`resolve_terminal_successor` (added in #571) to 301 to the terminal edition, same as the
-binding/register grains. (`classification_chain` itself tolerates dead slugs internally
-— the embedded chain renders even an old/retired edition's full timeline — but a
-citation of a slug with no live row AND no successor edge still 404s.)
-
-**Concept groups (#303).** The register and classification-root responses carry a
-`groups` list (reg_meta's `ConceptGroupSummary`, embedded directly — see
-reg_meta/DESIGN.md → Concept groups) ALONGSIDE the complete flat `children` list:
-grouped members appear in both, so the contract stays additive and group-unaware
-consumers keep working. The SPA folds client-side (`catalog.ts::foldGroupedRows`):
-grouped leaves hide under one `ConceptGroupRow`, a link to the group's subject page
-(#673 for register groups, #756 for classification umbrellas) carrying the label and the
+**Concept groups (#303).** Register and classification-root nodes carry a `groups` list
+beside the complete flat `children`: grouped members appear in both. The SPA folds
+client-side (`catalog.ts::foldGroupedRows`): grouped leaves hide under one
+`ConceptGroupRow`, a link to the group's subject page carrying the label and the
 distinct-member count; the members, their facets and picking live on that page.
 Ungrouped leaves render as before, and the type-to-filter matches a group on its
-label/key OR any member's name/FQID (`groupMatchesFilter`) so member searches still
-surface the folded group. `foldGroupedRows` tolerates a stale pre-`groups` edge-cached
-payload (#317) by degrading to the flat list.
-
-**`/lineage` shape.** Maps what reg_meta's `LineageEdge` carries (`consumer_state_id`,
-`source_state_id`, the validity intersection, `source_fqid`). A richer per-source-state
-shape (embedding each source state's variant / value_set / column) is a possible
-reg_meta enhancement — when `LineageEdge` grows those fields, the wrapper and
-`LineageResponse` widen; the endpoint contract (`lineage_edges`) is stable.
-
-### The §16 query allow-list (`period_param.py`)
-
-The second §16 chokepoint alongside `catalog_fqid.validate_fqid_path`. A thin
-**syntactic** allow-list parsing `?period` / `?variant` / `?value_set_version` into the
-polymorphic `reg_meta.catalog.Period` type **before any reg_meta lookup** — a malformed
-value (SQLi probe, traversal, NUL, percent-encoded slash) returns **422 with zero SQL
-AND zero connection opens** (wired as a pre-open `Depends`; reg_meta's `resolve_at` /
-`_period_bounds` is the SEMANTIC backstop). Single source of truth: the grammar is
-`reg_meta.fqid.is_period` / `validate_slug` — not re-encoded here. FastAPI-free so it's
-unit-testable in isolation.
-
-- **Period wire format**: int year (`2020` → `int`), period token (`HT2020` / `LA2020` /
-  `2020-Q3` / `2020-08` / `2018-12-31` → `str`), range (`<from>..<to>`, literal `..` →
-  `{"from","to"}` dict), `_default` sentinel, and the **#307 comma list**
-  (`2005..2010,2015..2020` → one segment per member via `parse_period_query`; #340). A
-  bare year maps to `int` (the documented year arm); every other token to `str`. List
-  members follow the scalar grammar — no empty members, `_default` whole-value-only;
-  order/overlap are deliberately NOT gated (the route's union is order-insensitive, and
-  the sorted/disjoint rule belongs to the AUTHORED `Source.period`, enforced by
-  reg_schema's structural validator).
-- **`?variant` ADMITS `_default`** (a real `register_variant` slug, see
-  reg_meta/DESIGN.md → Two-level variable model) UNLIKE the path guard (which rejects
-  `_default` because it's not a path segment). `?value_set_version` is the
-  `value_set_version_label` grammar and does NOT admit `_default`; the `_none` sentinel
-  selects the empty-label vintage (the empty string can't ride in a query without being
-  indistinguishable from absent).
-
-The connection model is the **LOCKED P1 guard**: every DB-backed route opens its sqlite
-connection INSIDE the sync handler body via `with _catalog_conn(request) as conn:` —
-NEVER a FastAPI generator `Depends` (which is entered on a different threadpool thread →
-cross-thread `ProgrammingError`). Each DB-backed route gets its OWN `ThreadPoolExecutor`
-concurrency smoke (the `TestClient` sequential default masks the bug).
+label/key or any member's name/FQID (`groupMatchesFilter`), so member searches still
+surface the folded group.
 
 ## Global catalog search (the Rust server, 3a.11)
 
@@ -487,123 +191,92 @@ continuation errors local to the section. Classification codes render in per-cod
 subsections, register-local value sets in their own section; a code's owning variables
 and classifications are its navigable targets.
 
-## Docs library endpoints (`routes/docs.py`)
+## Docs library (the Rust server's `docs` operations)
 
-`GET /api/docs/*` (#354/#742) exposes the prebuilt `reg_meta_docs.db` surfaces — already
-baked into the deployed container (the Dockerfile asserts it) but previously unopened by
-the webapp. It reuses reg_meta's read-only query layer (`doc_search` / `doc_get` /
-`doc_registers` / `related_documents_for_register` / `related_document_content`); no new
-query logic beyond plumbing + the response policy.
+`/api/docs/*` (#354/#742) is served by the Rust server since package 3b.6 (the vite dev
+proxy sends `/api/docs` there). The operations (`conformance/api/operations.toml`) read
+the prebuilt `reg_meta_docs.db` beside the catalog, each answering `{data, meta}`:
 
-- **Endpoints**: `GET /api/docs/search?q=&register=&limit=&offset=` (register-scoped
-  optional), `GET /api/docs/doc/{identifier}` (by variable name or filename),
-  `GET /api/docs/for-variable?q=&register=` (the "mentioned in documentation"
-  variable-leaf hook), `GET /api/docs/related/{register}` (metadata for rehosted
-  register-version PDFs), and `GET /api/docs/file/{register}/{filename}` (the PDF bytes
-  for an exact register-local filename).
-- **Policy — FTS excerpts, never full converted text**: the detail endpoint returns
-  metadata + a `source` pointer + a BOUNDED `excerpt` (first `_EXCERPT_CHARS` of the
-  cleaned body), and search returns the FTS `snippet`. The full converted body is NEVER
-  served (marker+Gemini conversion quality + republication exposure). `source` is the
-  SCB source-document identifier; `source_url` is the resolved SCB PDF link (populated
-  at doc-DB build from the curated `doc_sources.toml` map, #372), None when the source
-  is uncurated; `source_title` is the human-readable publication title (also None when
-  uncurated). Coverage is LISA-only today. The related-document PDF route is the
-  separate #739/#742 licensed rehost surface: it serves curated PDF bytes verbatim with
-  `Content-Type: application/pdf`, an inline filename disposition, and JSON metadata
-  carrying `source_url`, `license`, `fetched`, `sha256`, and `byte_size`.
-- **Coverage distinction encoded in the response**: coverage is LISA-only today.
-  `ingested` is False when the docs index is absent entirely; the variable hook's
-  `register_ingested` is False when *that register* has no ingested docs. The flag
-  distinction is real and preserved in the response — a caller can tell "no docs DB"
-  from "this register has no docs" — but the SPA omits the panel entirely in all empty
-  cases rather than rendering per-state copy (see `DocMentionsPanel` below). The
-  variable hook's results are flagged `fuzzy` (a name/provider_key text match, not an
-  authoritative variable→doc link).
-- **Optional DB / graceful degradation**: the docs DB is OPTIONAL. The boot seam
-  (`app._resolve_docs_db_path`) resolves + validates it once; on absence OR
-  schema-incompat it sets `app.state.docs_db_path = None` (never crashes — a broken docs
-  index must not take down the catalog API). Endpoints then return `ingested=False`
-  (search / for-variable / related metadata) or 404 "not ingested" (doc get / PDF file).
-  When present, the per-request open is `conn.docs_conn` (same threadpool-safe model as
-  `catalog_conn`, `check_schema=False`).
-- **Not folded into `/api/search` or global SearchView**: the docs index is a *separate
-  optional DB* and its `ingested` degradation doesn't map onto a ranked list, so folding
-  it into the omnibox search would couple `/api/search` to a second DB open on every
-  search request. `SearchView.svelte` does not call `/api/docs/search` or render a docs
-  section; the docs search endpoint remains available for doc-specific callers, while
-  the SPA entrypoint is through item pages. The `/api/docs/for-variable` leaf hook has
-  its own SPA consumer (#402): `BindingLeafView.svelte` renders a `DocMentionsPanel`
-  sibling of the lineage panels, firing a SEPARATE independent `asyncResource` at
-  `/api/docs/for-variable` — a distinct failure domain (a docs error, timeout, or absent
-  index never blanks the leaf). The panel omits the entire section when the response is
-  empty in any sense (`ingested:false`, `register_ingested:false`, or zero results),
-  mirroring the omit-when-empty behaviour of the picker graph mode and `LineageDetails`
-  (#612); loading and error states still render inline, so an in-flight or errored fetch
-  never reads as a confirmed absence. When results are present, fuzzy hits are labelled
-  as such; each hit links to the `/doc/<filename>` viewer and renders the FTS snippet
-  via a safe inline-emphasis subset (`**…**` → `<mark>` for matched-term highlight,
-  `*…*`/`_…_` → `<em>`) through auto-escaped Svelte interpolation — never `{@html}`,
-  still excerpt-only.
-- **Source documents on register pages (#742/#967)**: `CatalogNodeView.svelte` renders
-  `RelatedDocumentsPanel` on register pages only, using the bare register slug. These
-  are rehosted register/register-version source PDFs with provenance, not variable-level
-  evidence, so `BindingLeafView.svelte` must not inherit them onto every variable page.
-  It renders after the register's `VariantsSummary` so source PDFs stay at the end of
-  the register page. The panel is another independent docs failure domain: loading/error
-  render inline; absent docs DB, no curated rows, or an empty register result omits the
-  whole section. Each row links the title to `/api/docs/file/{register}/{filename}` and
-  shows `Källa: SCB · {license}` plus a source URL link.
+- `docs_search` (`GET /api/docs/search?q=&register=&limit=&cursor=`): with `q`, the
+  entries matching every word, best first, with an FTS `snippet`; without `q`, every
+  entry by filename. `register` is a register ref (FQID or bare name); the page carries
+  `total` and `register_ingested` (whether that register has docs). It absorbs the old
+  `/api/docs/for-variable` hook (`q` = the variable's name). The index holds
+  `fold_search` text (decision 16, folded by the docs build), and snippets come from the
+  stored body, so they keep case and diacritics.
+- `docs_get` (`GET /api/docs/doc/{identifier}`): metadata, source pointer, a BOUNDED
+  `excerpt` and the full markdown `body` for agents. The SPA renders only the excerpt
+  (marker+Gemini conversion quality + republication exposure).
+- `docs_related` (`GET /api/docs/related/{register ref}`) and its download
+  (`GET /api/docs/file/{register ref}/{filename}`): the curated #739/#742 rehost
+  surface, PDF bytes served verbatim with `Content-Type: application/pdf`, an inline
+  filename disposition, and JSON metadata carrying `source_url`, `license`, `fetched`,
+  `sha256` and `byte_size`.
+
+`source` is the SCB source-document identifier; `source_url` is the resolved SCB PDF
+link (populated at doc-DB build from the curated `doc_sources.toml` map, #372), null
+when the source is uncurated; `source_title` is the publication title. Coverage is
+LISA-only today.
+
+- **Optional DB**: a deployment without a docs database answers `docs_unavailable` (404)
+  on every docs operation; an incompatible one refuses server startup. The SPA's
+  `getDocsForVariable` and `getRelatedDocuments` map `docs_unavailable` to `null`, so
+  both panels treat it like "no docs" and omit their section.
+- **Not in global search**: `SearchView.svelte` does not call `/api/docs/search`; the
+  SPA reaches docs through item pages.
 - **Parsed documentation on variable pages (#402/#967)**: `BindingLeafView.svelte`
-  renders `DocMentionsPanel` in the `SubjectView` docs slot. These are fuzzy
-  variable-aware parsed-doc matches from `/api/docs/for-variable`, not authoritative
-  source-document links. Each row links to the parsed `/doc/{filename}` view and exposes
-  the full source PDF link when the docs index provides `source_url`.
-- **ETag/caching**: GET reads, so the `ETagMiddleware` covers them (query in the URL →
-  edge cache key, in the body → ETag) — no per-route caching code.
+  renders `DocMentionsPanel` in the `SubjectView` docs slot, firing a SEPARATE
+  `asyncResource` at `docs_search` with the variable's name and its register FQID — a
+  distinct failure domain (a docs error, timeout, or absent index never blanks the
+  leaf). The panel omits the entire section when there is nothing to show (no docs
+  database, `register_ingested:false`, or zero items); loading and error states render
+  inline, so an in-flight or errored fetch never reads as a confirmed absence. The hits
+  are fuzzy name matches, not authoritative variable→doc links, and the section caption
+  says so. Each hit links to the `/doc/<filename>` viewer and renders the snippet via a
+  safe inline-emphasis subset (`**…**` → `<mark>` for the matched term, `*…*`/`_…_` →
+  `<em>`) through auto-escaped Svelte interpolation — never `{@html}`.
+- **Source documents on register pages (#742/#967)**: `CatalogNodeView.svelte` renders
+  `RelatedDocumentsPanel` on register pages only, with the register FQID. These are
+  rehosted register-version source PDFs with provenance, not variable-level evidence, so
+  `BindingLeafView.svelte` must not inherit them. It renders after the register's
+  `VariantsSummary`. The panel is another independent docs failure domain: loading and
+  error render inline; no docs database or no curated rows omits the section. Each row
+  links the title to `/api/docs/file/{register FQID}/{filename}` and shows
+  `Källa: SCB · {license}` plus a source URL link.
+- **Caching**: the Rust server's cache tier for the docs operations is a day
+  (`public, max-age=86400, must-revalidate`): doc-library content is rebuild-stable.
 
 ## Coverage aggregates (#351)
 
-The catalog listing payloads carry an **additive** `coverage` object so a browse row
-shows its study-window span without resolving every state:
+The catalog listing nodes carry a `coverage` object so a browse row shows its
+study-window span without resolving every state:
 
-- **Register-children** (`/api/catalog/{provider}/{register}` binding nodes):
-  per-variable `coverage` — `coverage_from` (min `valid_from`), `coverage_to` (max
-  finite `valid_to`; None when `open_ended`), `open_ended`, `state_count` (>1 in a
-  window = a break worth surfacing).
-- **Provider-children** (`/api/catalog/{provider}` register nodes): per-register
-  `coverage` — `variable_count` (slugged variables) + the span over all their states.
+- **Register children** (a register's `show`): per-variable `coverage` — `coverage_from`
+  (min `valid_from`), `coverage_to` (max finite `valid_to`; null when `open_ended`),
+  `open_ended`, `state_count` (>1 in a window = a break worth surfacing).
+- **Provider children** (a provider's `show`): per-register `coverage` —
+  `variable_count` (slugged variables) + the span over all their states.
 
-In holdings scope, the shared reader computes coverage over mapped source variants and
+In holdings scope, the reader computes coverage over mapped source variants and
 canonical representations before aggregation. A partial-column hold cannot inherit the
-whole variable's coverage. Provider listings call `Catalog.provider_register_coverage`
-once per read scope and provider for the app's lifetime: the route memoizes that return
-model on `app.state`, because an app serves one immutable artifact per process and the
-holdings fusion behind it is the provider page's dominant cost. The memo holds reader
-return models, not responses, and at most one entry per admitted provider and scope.
-Register listings use `Catalog.register_variable_coverage`, `register_column_coverage`,
-and `register_unnamed_column_coverage`. The routes format those public return models
-rather than rebuilding membership. Unnamed coverage stays separate from named columns.
+whole variable's coverage. Unnamed coverage stays separate from named columns.
 
-Register-scoped concept-group subject pages also use `register_column_coverage` for
-representation members, but a missing per-column key is a known curated member with no
-`variable_state` row, not absent enrichment. Those members serialize the existing
-zero-state `VariableCoverage` shape (`state_count == 0`, null bounds, not open-ended)
-instead of `coverage = None`, so downstream period lenses can distinguish "never
-delivered" from "unknown".
+Members on a register-scoped concept group's own page carry per-column coverage too, but
+a missing per-column key is a known curated member with no `variable_state` row, not
+absent enrichment. Those members carry the zero-state coverage shape
+(`state_count == 0`, null bounds, not open-ended) instead of `coverage = None`, so
+downstream period lenses can distinguish "never delivered" from "unknown".
 
 **Query-time, not materialized — measured first** (the #351 design decision). The
-aggregates are grouped reads over `variable_state`, in reg_meta
-(`Catalog.register_variable_coverage`, `register_column_coverage`,
-`register_unnamed_column_coverage`, and `provider_register_coverage`). Measured on the
-real v0.11.0 DB: the worst register (scb/ulf, 7.3k variables) computes per-variable
-coverage in \~9 ms (\~60 ms end-to-end serializing all 7.3k binding nodes); the heaviest
-provider (scb, 238 registers) \~34 ms end-to-end. Both sit behind the ETag/edge cache,
-so build-time materialized columns (which would ride the batched Lane R schema bump) are
-NOT needed. The covering index `idx_variable_state_coverage` on
-`variable_state(variable_id, valid_from, valid_to)` (#371, the 5.4.0 schema cut) lets
-the grouped MIN/MAX span scan be satisfied index-only (no table b-tree lookup; EXPLAIN
-QUERY PLAN reports `USING COVERING INDEX`).
+aggregates are grouped reads over `variable_state` in the reader. Measured on reg_meta's
+Python reader against the real v0.11.0 DB: the worst register (scb/ulf, 7.3k variables)
+computes per-variable coverage in \~9 ms (\~60 ms end-to-end serializing all 7.3k
+binding nodes); the heaviest provider (scb, 238 registers) \~34 ms end-to-end. Both sit
+behind the ETag/edge cache, so build-time materialized columns (which would ride the
+batched Lane R schema bump) are NOT needed. The covering index
+`idx_variable_state_coverage` on `variable_state(variable_id, valid_from, valid_to)`
+(#371, the 5.4.0 schema cut) lets the grouped MIN/MAX span scan be satisfied index-only
+(no table b-tree lookup; EXPLAIN QUERY PLAN reports `USING COVERING INDEX`).
 
 - **Additive / payload-skew (#317)**: `coverage` is optional and the SPA doesn't read it
   yet — it must tolerate its presence AND absence. It's None on a node that wasn't
@@ -688,12 +361,9 @@ joins SQLite drives from `variable_state` and scans the WHOLE table instead of s
   deliveries too, so a narrowed list never shows — or matches on — a column that variant
   does not deliver. The chip set is read off the deliveries rather than the register's
   declared variants, so no chip can narrow the list to nothing.
-- A chip is NAMED from `GET {register}/variants`, which `CatalogNodeView` fetches once
-  and hands down to `VariantsSummary`: one page, one request, one spelling of a variant.
-  The strip holds a skeleton until that list lands rather than painting slugs and
-  swapping to names, which would re-flow it under the pointer; a FAILED load still
-  renders the chips under their slugs, because losing the lens costs more than a
-  machine-readable label. Chip order is by slug.
+- A chip is NAMED from the register's embedded `variants`, the same list
+  `VariantsSummary` renders: one spelling of a variant per page, and no second request.
+  Chip order is by slug.
 
 ### Adding columns from the register list (Y-83)
 
@@ -823,30 +493,21 @@ variable pages to add one column each.
 ## Context and catalog sizes (the Rust server, 3a.10)
 
 `GET /api/context` is answered by the Rust server (`reg-meta serve`, the `context`
-operation in `crates/reg-catalog/src/ops/slice_3a.rs`), not by this backend. One call
-returns the steward branding, schema version, import date, the steward's period span,
-the `reg_meta` version and the headline `sizes` (`{providers, registers, variables}` in
-the read scope), as `{data, meta}`; it replaces FastAPI's `/api/context` and
-`/api/stats` (`RUST_RUNTIME_SPEC.md` decision 15). App fetches it once and threads
-`steward` and `sizes` to Home, which makes no request of its own. The SPA's types for it
-are generated from the committed `crates/reg-meta/openapi.json` into
+operation in `crates/reg-catalog/src/ops/slice_3a.rs`). One call returns the steward
+branding, schema version, import date, the steward's period span, the `reg_meta` version
+and the headline `sizes` (`{providers, registers, variables}` in the read scope), as
+`{data, meta}`; it replaces FastAPI's `/api/context` and `/api/stats`
+(`RUST_RUNTIME_SPEC.md` decision 15). App fetches it once and threads `steward` and
+`sizes` to Home, which makes no request of its own. The SPA's types for it are generated
+from the committed `crates/reg-meta/openapi.json` into
 `frontend/src/lib/api-types-rust.ts` (a `cargo test` keeps the snapshot equal to the
 server). Locally, the Vite dev proxy sends `/api/context` to the Rust server and the
 rest of `/api` here.
 
-## ETag / Cache-Control (`etag.py` + `middleware.py`)
+## ETag / Cache-Control
 
-Every read endpoint (the `/api/catalog` root + catch-all, the 7 binding-suffix
-sub-endpoints and docs) carries an ETag derived from the full catalog generation,
-effective read scope, package version, steward identity, and response body and a
-per-route `Cache-Control` (`cache_control_for`) in two tiers: scope-sensitive reads
-(`/api/catalog/*`) keep `public, max-age=60, must-revalidate`; rebuild-stable
-doc-library reads (`/api/docs/*`) keep `public, max-age=86400, must-revalidate`. A
-matching `If-None-Match` yields a **304** with no body, but the current body-derived
-middleware still executes the route and serializes the response first: it saves
-transfer, not origin computation or latency. The pure logic lives in `etag.py`
-(`compute_etag` + `etag_matches` + `cache_control_for`); an ASGI middleware
-(`ETagMiddleware`) wires it DRY onto every GET read response.
+The Rust server sets the reads' ETags and `Cache-Control` (`crates/reg-catalog`); a POST
+answer (`validate`, `order`, the manifest download) carries no validator.
 
 **V1 early-revalidation correction (decision 2026-07-14; not implemented at this
 head).** App code, compiled catalog DB, steward branding configuration and paired docs
@@ -856,8 +517,7 @@ catalog `generation_id`. Loose delivery inventory is no longer an HTTP input. In
 read scope in the canonical request identity and caches/cursors. For known pure GET
 reads, derive the validator from that token plus steward and the canonical request
 identity, and satisfy a matching `If-None-Match` before route execution, DB work, or
-body serialization. Keep the current body-derived path as the conservative fallback for
-an unknown or mutable GET. This makes a 304 cheap without weakening exact representation
+body serialization. This makes a 304 cheap without weakening exact representation
 identity.
 
 Browser and shared-cache freshness are separate concerns. Keep a short browser window
@@ -868,34 +528,19 @@ without route execution. This complements rather than masks the bounded cold-que
 arbitrary first-time queries still have to meet the origin budget. #1135's bounded SQL
 path meets it, so no second in-process response cache is warranted.
 
-- **`reg_meta_version`** is the INSTALLED `reg_meta.__version__` (the v1.x Model A
-  package release), NOT the DB `schema_version` manifest. `steward_id` is
-  `app.state.steward.id`.
-- **Generation and read scope** participate even when the response body is unchanged. A
-  cursor and validator from one generation or scope cannot identify another.
-- **The body-hash** makes `If-None-Match` per-URL coherent — the `?period` / `?variant`
-  query is part of the URL, so it's already part of the cache key (different periods are
-  different ETags).
-- **`/api/context` revalidates always** (`Cache-Control: no-cache`, now set by the Rust
-  server): the SPA vintage footer reads it to assert a specific deploy version/date, so
-  a sub-24h-stale copy would *visibly lie* right after a deploy. Catalog and search
-  endpoints use `max-age=60` because both embed the #322 concept-group folds, which can
-  change at the same browser URL on redeploy. A long browser-fresh copy would surface
-  the old grouping to a returning user even though the edge generation changed. The
-  body-hash ETag avoids retransmitting unchanged bodies, and `public` keeps the CF edge
-  cacheable (the #220 probe survives); early validation is what removes repeated route
-  work. Only `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable
-  and a sub-day-stale list is acceptable there; the ETag still guarantees correctness on
+- **The Rust server's tiers**: `/api/context` revalidates always (`no-cache`): the SPA
+  vintage footer reads it to assert a specific deploy version/date, so a stale copy
+  would *visibly lie* right after a deploy. Catalog and search reads use `max-age=60`
+  because both embed the #322 concept-group folds, which can change at the same browser
+  URL on redeploy. `public` keeps the CF edge cacheable (the #220 probe survives).
+  `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable and a
+  sub-day-stale list is acceptable there; the ETag still guarantees correctness on
   revalidation. The edge worker (`reg_webapp/edge/`) defers to this origin's
   `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
   orthogonal to caching policy), so the per-route policy needs no edge change.
-- **Middleware skips WRITE endpoints** via a method gate: only `GET` reads are stamped,
-  so the POST endpoints pass through with no ETag. It also skips non-200 responses — an
-  error body isn't a cacheable representation, and handing the client a validator for a
-  transient error would be wrong.
-- We unit-test only the ETag / Cache-Control LOGIC + the 304 behavior. The **edge** side
-  (Cloudflare edge caching / DDoS shielding / edge rate-limits) is a deploy/maintainer
-  concern and not backend code. Remaining: edge config — see `REFACTOR_SPEC.md`.
+- The **edge** side (Cloudflare edge caching / DDoS shielding / edge rate-limits) is a
+  deploy/maintainer concern and not backend code. Remaining: edge config — see
+  `REFACTOR_SPEC.md`.
 
 ## Production performance baseline (2026-07-14)
 
@@ -948,11 +593,11 @@ steward. A mismatch fails with the DB path and `REG_WEBAPP_STEWARD` locator. Onl
 reconciliation, drift warnings, the in-memory index, and the runtime release gate are
 removed; builder publication validation owns those invariants.
 
-Catalog reads, and the Rust server's `context` and `search`, accept
-`?scope=holdings|reference`. Catalog artifacts default to reference and reject holdings;
-steward artifacts default to holdings and allow reference. Scope is applied inside the
-shared reader before hydration, grouping, ranking, counts, or pagination. The adapter
-consumes scoped pages directly. Finite curated pins are admitted through
+The Rust server's reads (the catalog pages' `show` and facets, `context`, `search`)
+accept `?scope=holdings|reference`. Catalog artifacts default to reference and reject
+holdings; steward artifacts default to holdings and allow reference. Scope is applied
+inside the shared reader before hydration, grouping, ranking, counts, or pagination. The
+adapter consumes scoped pages directly. Finite curated pins are admitted through
 `Catalog.exists` before ranking and pagination. Cursors bind both scope and the full
 artifact generation. Project endpoints reject any `scope` query parameter with a located
 422; browse scope cannot override the selected artifact's orderability.
@@ -961,8 +606,7 @@ Provider and register discovery requires a mapped binding. Variable discovery un
 mappings across source variants; states and deliveries retain their actual mapped
 variant and canonical representation. Concept-group membership and inherited tags are
 scoped by that same representation rule. Register and variable warnings are admitted
-with their subjects. A live unheld browse subject returns 404. A dead slug redirects
-only when its terminal successor is held, preserving the query string and suffix.
+with their subjects. A live unheld browse subject returns 404.
 
 Classifications, codes, value-set contents, same-as links, succession relationships,
 graph edges, and lineage remain reference evidence. The browse subject is scoped; a
@@ -976,61 +620,25 @@ bounds of known tables with an explicit mapping, then capped at the catalog impo
 It is a coarse UI slider bound, never a coverage or validity check. Catalog artifacts
 and holdings without dated periods return null.
 
-`REG_WEBAPP_STEWARDS_DIR` overrides the branding root for wheels and Docker images.
-SWECOV is the proving steward; extracting its branding and delivery pipeline into its
-own system remains separate from this runtime cut. No generic per-steward extension
-surface is introduced.
+The Docker image copies the branding root to `/opt/reg_webapp/stewards/` and passes it
+as `--stewards`. SWECOV is the proving steward; extracting its branding and delivery
+pipeline into its own system remains separate from this runtime cut. No generic
+per-steward extension surface is introduced.
 
 ## Pydantic boundary
 
-reg_webapp defines its **own** webapp-local Pydantic response models (`models.py`) for
-the catalog surface. As of #681 PR2 (2026-06-22), the webapp's `kind`-discriminated node
-models (`ProviderNode`, `RegisterNode`, `BindingNode`, `ClassificationNode`, the
-`*Response` composites, `ConceptGroupNode`, and the sub-endpoint envelopes) **embed
-reg_meta's frozen Pydantic leaf models directly** as field types — no per-leaf 1:1
-wrappers or mapper functions. The 16 per-leaf wrappers shipped before PR2 are deleted.
-The node models are **not** 1:1 wrappers: they carry the `kind` discriminator plus
-server-computed enrichment (`succession_chain`, per-member `coverage`, `via_same_as`)
-that has no counterpart in reg_meta. For `project_data`-related responses
-(`/api/project/*`) the webapp uses **`reg_schema` Pydantic models directly** — no
-wrapper layer, eliminating that drift surface. The **only** remaining 1:1 Pydantic
-wrapper is `ValidationResult`/`ValidationIssue` (reg_schema is a frozen dataclass
-consumed cross-runtime by the SPA, so the webapp wraps it 1:1 there).
-
-Each node model carries a `kind` `Literal` discriminator (`provider` / `register` /
-`binding` / `classification` / `classification-root` / `root` / `variants-ref` /
-`concept-group`). The catch-all (`GET /api/catalog/{fqid:path}`) returns a Pydantic
-discriminated union (`Field(discriminator="kind")`) over the five kinds it owns:
-`provider` / `register` / `binding` / `classification` / `classification-root`.
-`concept-group` is **not** a catch-all arm — it is the sole response type of the
-fixed-shape route `GET /api/catalog/group/{provider}/{register}/{key}` (declared above
-the catch-all; see § Routing above). The discriminated union drives `openapi-typescript`
-to emit a clean tagged union for the catch-all; `ConceptGroupNode` is a standalone
-schema used only by the group route. FQID fields serialize as plain `str` (`str(fqid)`),
-never nested models, so the codegen'd TS sees flat string fields. The binding **leaf**
-embeds the variable's FULL longitudinal record from one `Catalog.resolve` call (states,
-value sets, tag memberships, and the variable-grain `same_as` / `lineage` edges), plus
-the full variable `succession_chain` (#582, below). Register nodes likewise expose their
-tag memberships for compact thematic chips. `lineage_warnings` are **omitted** —
-`ResolvedVariable` doesn't carry them; they arrive via the `/lineage_warnings` endpoint.
-
-One gotcha: a `register` field on a `pydantic.BaseModel` shadows `BaseModel.register` (a
-method) and warns. The edge-ref models name the Python attribute `register_name` and
-`Field(alias="register")` it, so the wire/JSON key (and OpenAPI schema property) stays
-`register` while the warning is gone — the alias is also the canonical init param the
-mappers construct with.
+The webapp defines no Pydantic models of its own: every `/api` response is a Rust server
+document, typed for the SPA from `crates/reg-meta/openapi.json`.
 
 ## OpenAPI snapshot + TS codegen (the drift gate)
 
-`openapi.json` is committed and is the canonical contract. `gen_openapi.py` dumps
-`create_app().openapi()` with `sort_keys=True` + a trailing newline so the snapshot is
-byte-stable across machines. `app.openapi()` builds without the lifespan (no DB needed),
-so the dumper runs offline. The SPA codegens `src/lib/api-types.ts` from the snapshot
-via `openapi-typescript`. Two checks keep these in lockstep: `test_openapi_snapshot.py`
-(in the always-run `test` job) asserts the committed `openapi.json` equals a fresh
-render of the app, and the `reg-webapp-frontend` CI job regenerates `api-types.ts` from
-the committed snapshot and fails on any diff — so app, snapshot, TS types, and the
-committed tree must agree.
+`crates/reg-meta/openapi.json` is committed and is the canonical contract. The SPA
+codegens `src/lib/api-types-rust.ts` from it via `openapi-typescript`. Two checks keep
+these in lockstep: `cargo test -p reg-meta --test openapi_snapshot` asserts the
+committed snapshot equals the server's rendered document, and the frontend gate step
+(`scripts/gate.py frontend`, run by the `reg-webapp-frontend` CI job) regenerates the
+types from the snapshot and fails on any diff — so server, snapshot, TS types, and the
+committed tree must agree. `scripts/gate.py regen` refreshes both.
 
 ## Frontend toolchain
 
@@ -1044,8 +652,8 @@ the JS/CSS/HTML parts of `.svelte` but does **not** yet parse Svelte control-flo
   Biome can't see template-bound usage of `<script>` declarations and false-fires.
   **`svelte-check`** (the `check` script) is the authoritative type/template gate and
   does see template usage.
-- The codegen'd `src/lib/api-types.ts` is excluded from Biome entirely (codegen output,
-  never hand-formatted).
+- The codegen'd `src/lib/api-types-rust.ts` is excluded from Biome entirely (codegen
+  output, never hand-formatted).
 
 **UI behavior layer: Bits UI** (`bits-ui@2.19.1`, the Svelte-5-runes major) is the
 sanctioned headless-primitives library for a11y-critical widgets — comboboxes, menus,
@@ -1302,14 +910,14 @@ see the store description below.
 
 The SPA (`frontend/`) browses the catalog read-only with **path-based routing**: clean
 URLs mirror the API (`/catalog`, `/catalog/scb/lisa`, `/catalog/scb/lisa/kon`,
-`/catalog/scb/lisa/variants`, `/catalog/class/<slug>`). The register sub-resource keeps
-the API's own shape: a 3-seg path with a literal `variants` tail parses to the
-`variants` route (the token is reserved in the variable slot at build time, so no
-variable FQID can shadow it), never to a catalog node. The router is hand-rolled — no
-routing-library dep — in `src/lib/router.svelte.ts` (a `.svelte.ts` module so its
-reactive `$state` route compiles): it reads `window.location.pathname`, navigates via
-`history.pushState`, handles `popstate`, and intercepts internal `<a>` clicks (the
-`link` action) so navigation doesn't full-reload.
+`/catalog/scb/lisa/variants`, `/catalog/class/<slug>`). The variants page is the one
+SPA-only path, over the register's `show`: a 3-seg path with a literal `variants` tail
+parses to the `variants` route (the token is reserved in the variable slot at build
+time, so no variable FQID can shadow it), never to a catalog node. The router is
+hand-rolled — no routing-library dep — in `src/lib/router.svelte.ts` (a `.svelte.ts`
+module so its reactive `$state` route compiles): it reads `window.location.pathname`,
+navigates via `history.pushState`, handles `popstate`, and intercepts internal `<a>`
+clicks (the `link` action) so navigation doesn't full-reload.
 
 `route` is re-parsed — and so re-assigned — only when the **pathname** moves. A
 query-only navigation (Apply on a catalog leaf's period card) parses to the same route,
@@ -1331,8 +939,8 @@ invariant removes the spurious refetch, not the teardown.
   Edge workers below); see the comment atop `router.svelte.ts`.
 
 The fetch wrapper (`src/lib/api.ts`) types every response off
-`components["schemas"][...]` from the codegen'd `api-types.ts`, so the SPA and the
-backend contract can't drift. The catch-all returns the `kind`-discriminated
+`components["schemas"][...]` from the codegen'd `api-types-rust.ts`, so the SPA and the
+server contract can't drift. The catch-all returns the `kind`-discriminated
 `CatalogNode` union; components narrow on `kind` via `src/lib/catalog.ts` helpers
 (unit-tested).
 
@@ -1377,7 +985,7 @@ Per-kind mapping into the six sections:
 
   | Section       | Variable (`BindingLeafView`)                                                                                                                             | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                                                            |
   | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-  | description   | definition / description / unit `<dl>` + `via_same_as` note                                                                                              | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
+  | description   | definition / description / unit `<dl>`                                                                                                                   | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
   | picker        | `PeriodPicker` (time) + `RepresentationPicker` (list or graph/time-band) + add-to-project                                                                | `ClassificationEditionGraph` compact edition DAG (#906)          | `PeriodPicker` (availability lens) + `RepresentationPicker` (list or graph/time-band)                                                         |
   | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodesPanel` (`CodeList`)                          | —                                                                                                                                             |
   | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker                                                               | derived classification links; edition succession lives in picker | — (members live in the picker)                                                                                                                |
@@ -1546,13 +1154,13 @@ one-sided `until <year>` form when the start is unknown (#658).
   set often *is* a classification), so they render identically: `ValueSetView` (#905,
   superseding the retired `StatesView`) uses it for each distinct value set in the
   multi-state view (and for the single value set in the detail mode), and
-  `ClassificationCodesPanel` for the edition's codes. It owns a **size-dependent
-  filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD` codes — pointless for
-  a handful), a height-constrained scroll, and the **large-list collapse** (#1120):
-  levelled classification codes become drillable groups, prefix-shaped sets group by
-  visible code prefix, and genuinely flat sets show a bounded preview with an explicit
-  expand control. Classification conformance warnings render on the variable value-set
-  surface, not inside the shared code list.
+  `ClassificationCodesPanel` for the edition's codes, both through `ValueSetCodes`,
+  which reads the codes a server page at a time and owns the **size-dependent filter**
+  (a search box appears only at ≥ `CODE_FILTER_THRESHOLD` codes — pointless for a
+  handful). `CodeList` renders the loaded pages verbatim in a height-constrained scroll;
+  a levelled code indents by its depth below the shallowest level loaded, so a
+  classification that starts at level 2 renders flat. Classification conformance
+  warnings render on the variable value-set surface, not inside the shared code list.
 
   **V1 payload correction (decision 2026-07-14; not implemented at this head).** A
   classification or value-set detail response does not embed its complete code corpus.
@@ -1599,7 +1207,8 @@ leaf graph context but have no selectable picker row (for example no-column bind
 same_as-only context, or sibling/predecessor context on a leaf) render as unavailable
 context, not as checkboxes. The #908 dimension filter strip is shared by list and graph
 modes. `LineageDetails` carries the variable-only non-graph residue
-(`variable_state_lineage` provenance edges and `/lineage_warnings`).
+(`variable_state_lineage` provenance edges and lineage warnings, both from the `lineage`
+facet).
 
 ### Rejected alternatives + the viz-dependency trigger (#667 spike)
 
@@ -1643,21 +1252,19 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   the Python `reg-meta update` fetch until stage 4), a pinned Rust stage building
   `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate. The image serves
   the API and `/mcp` only; the edge workers serve the SPA, which `container-build.yml`'s
-  edge jobs build themselves. The FastAPI routes not yet ported to Rust (browse, project
-  authoring, orders) are unavailable in production until their slice ships (checkpoint
-  2: no users, so no proxy or fallback); the backend package stays for dev and tests
-  until stage 4.
+  edge jobs build themselves. Since 3e.4 the Rust server answers every route the SPA
+  calls; package F deleted the FastAPI app.
 - **Hosted MCP** (decision 12): `/mcp` on `catalog.swecov.se`. The global worker
   forwards `/mcp` (`ROUTE_MCP` in `wrangler.jsonc` only; the SWECOV worker does not,
   since a steward catalog is never served over hosted MCP), and `fly.toml` passes
   `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
-  `/mcp` rate-limits per client address (60 a minute, apart from the SPA's limits).
-  Behind Fly the peer is Fly's proxy, so the worker proves a request came through the
-  edge with a shared secret (`EDGE_TOKEN` on the worker, `REG_META_EDGE_TOKEN` on the
-  Fly app, sent as `x-edge-token`); only such a request is keyed on its
-  `CF-Connecting-IP`. Any other request, a direct-origin hit included, is keyed on its
-  peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret every edge
-  `/mcp` client shares the proxy's bucket. After each global edge deploy,
+  `/mcp` and the project POSTs share one rate limit per client address (60 a minute;
+  Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
+  request came through the edge with a shared secret (`EDGE_TOKEN` on the worker,
+  `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only such a request is
+  keyed on its `CF-Connecting-IP`. Any other request, a direct-origin hit included, is
+  keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret
+  every edge `/mcp` client shares the proxy's bucket. After each global edge deploy,
   `container-build.yml` sends `initialize`, `tools/list` and one `search` to the public
   `/mcp`.
 - **Apps**: `reg-webapp-global` serves `catalog.swecov.se`; `reg-webapp-swecov` serves
@@ -1848,96 +1455,70 @@ Older catalog-only fixtures continue to serve unrelated route tests. Real pinned
 artifacts are checked separately for order parity, latency, and rendered evidence;
 synthetic success is not a real-corpus or deployment claim.
 
-## Project-write surface (`routes/project.py`)
+## Project operations (the Rust server, 3e.4)
 
-Two POST endpoints: `/api/project/validate`, `/api/project/order`. Both read the body as
-a **raw JSON dict** (not a typed param) because `/validate` must accept malformed specs
-to diagnose them. Unknown top-level keys remain verbatim until the structural layer
-reports each as `unexpected_field`; they are never normalized or dropped by typed model
-construction first. OpenAPI documents the canonical closed `ProjectData` schema, while
-the SPA keeps a raw diagnostic transport type so malformed uploads can reach this
-boundary unchanged.
+The project editor POSTs the WHOLE serialized draft, a raw object, to two operations of
+the `order` MCP tool (`crates/reg-catalog/src/ops/slice_3e.rs`). The body is parsed
+strictly (`ops/body.rs`: one UTF-8 JSON object, no byte-order mark, no duplicate key at
+any depth, `serde_json`'s depth limit); anything else is `malformed_request` (400)
+before the operation runs. Unknown keys survive the parse, so `validate` reports each as
+`unexpected_field`. Neither operation takes a `scope`: a project is read in the
+artifact's own identity, and a `scope` parameter is `invalid_parameter`.
 
-- **`/validate` status discipline.** A spec that FAILS validation is a *successful
-  validation response* — **HTTP 200 with `ok=false` + the issues**. 4xx is reserved for
-  a malformed REQUEST (non-JSON, duplicate JSON keys, a too-deeply-nested or non-object
-  body, an oversized body). Apart from the size cap, that refusal is reg_meta's shared
-  `order.parse_project`, the same reader the CLI applies to a file, and the 400 `detail`
-  is its message. Everything after the body read is a thin adapter over reg_meta's
-  `semantic.validate_project` (supported version → structural → semantic, the
-  **concatenated** issue list; see `reg_meta/DESIGN.md` → Project semantic validation).
-  The adapter hands it `per_request_conn` as the opener, so the DB-free layers still run
-  first and a rejected body costs no DB hit. The 200 body is `semantic.validation_json`
-  VERBATIM (a raw `Response`, like `/order`), so the SPA and `reg-meta validate` read
-  byte-identical findings, pinned by the conformance corpus;
-  `response_model=ValidationResultModel` still publishes the typed contract.
-- **`/order`** materializes the JSON order manifest and serves it as an `order.json`
-  download (see below). Unlike `/validate`, it **gates** first: you cannot materialize
-  an order from an invalid spec → 422.
+- **`POST /api/project/validate`** answers `{data: {ok, issues}, meta}`. A project that
+  FAILS validation is a successful answer — **200 with `ok: false`** and every issue in
+  emission order (supported version → structural → semantic). A non-2xx is a refused
+  REQUEST (`malformed_request`, `payload_too_large`, `rate_limited`), which the SPA
+  banners apart from the issue list.
+- **`POST /api/project/order`** answers `{data: manifest, meta}`;
+  **`POST /api/project/order/manifest`** serves the same manifest as the exact
+  `order.json` bytes, `attachment; filename="order.json"`. The SPA's Download order.json
+  uses the download. Anything that is NOT an order is a 422 on both routes, never a
+  partial manifest: `project_invalid` for a document `validate` rejects structurally
+  (its issues in `fields.issues`), `order_blocked` when any finding leaves part of the
+  request undeliverable (every finding in `fields.findings`, each with its stable `code`
+  and its `source` / `variable` / `period` coordinates). Fail-closed is a contract, so
+  the findings ship as data: `orderFindingsFromError` narrows them at the HTTP boundary,
+  and the SPA renders each through the SAME per-finding path as a validation issue
+  (`ValidationPanel`; `validation.orderFindingPointer` resolves the materializer's
+  by-VALUE coordinates to the by-POSITION pointer `findingLocation` already locates a
+  card by). The finding shape is declared in `api.ts` (the error catalog types `fields`
+  as an open object) and pinned by `conformance/cases/api/order-errors`.
 
-**The order manifest.** The compiled contract uses a thin adapter over
-`reg_meta.order.materialize_order(project, conn)`. The adapter uses that signature
-directly. The pipeline and every fail-closed finding live in `reg_meta/DESIGN.md` →
-"Order materializer and manifest (`order.py`)". The adapter owns exactly three things:
-
-- **The selected artifact connection**, opened read-only for this request after boot
-  validates manifest identity. `catalog_artifact_kind` chooses global logical fallback
-  or compiled steward holdings. Missing steward holdings or identity mismatch fails;
-  browse scope never bypasses project provenance or physical coverage. No inventory
-  argument, `app.state.inventory`, loose TOML or inventory reconciliation survives.
-- **The download**: the 200 body is `OrderManifest.to_json()` VERBATIM (the handler
-  returns a raw `Response`, which FastAPI passes through without re-serializing), so the
-  SPA download and `reg-meta order` hand the steward byte-identical files, pinned by a
-  cross-adapter test. `response_model=` still publishes the reg_meta `OrderManifest` as
-  the typed contract for the OpenAPI snapshot and the SPA codegen, so this is NOT a
-  `response_model` carve-out.
-- **The "not an order" status**: 422, never a partial 200 — for an invalid spec
-  (`order.project_from_raw`, the gate both adapters share) and for a fail-closed blocked
-  order alike. The body is the typed `OrderBlockedModel`: a `detail` line
-  (`order.blocked_message`, the same text the CLI envelopes, kept because every 4xx here
-  carries one) **and `findings` — reg_meta's own `OrderFinding` models**, each with its
-  stable `code` and its `source` / `variable` / `period` coordinates. Fail-closed is a
-  CONTRACT, so it ships as data at the boundary this API validates JSON contracts at: a
-  flattened string would force every client to parse prose. `findings` is empty only for
-  a spec the gate rejected before the materializer saw it. The SPA renders each finding
-  through the SAME per-finding path as a validation issue (`ValidationPanel`;
-  `validation.orderFindingPointer` resolves the materializer's by-VALUE coordinates to
-  the by-POSITION pointer `findingLocation` already locates a card by).
-
-**Connection model = per-request open ON ONE THREAD** (the locked cross-thread guard).
-`/validate` and `/order` are `async` only to read the body off the wire; the blocking
-work (structural parse + per-binding sqlite resolution) is offloaded via
-`run_in_threadpool`, and the reg_meta connection opens on **that** worker thread inside
-a `with`-block — NEVER a generator `Depends` (which can run on a different AnyIO thread
-→ `sqlite3.ProgrammingError`).
+The order pipeline and its findings are `ops/order.rs` (today's
+`reg_meta.order.materialize_order`; see `reg_meta/DESIGN.md` → Order materializer and
+manifest): steward holdings on a steward artifact, canonical columns on the global one.
 
 ## Semantic validation
 
-The reg_meta-backed semantic layer, its rules and its issue codes live in shared
-`reg_meta` project code: see `reg_meta/DESIGN.md` → Project semantic validation
-(`semantic.py`). `/validate` (above) is one of its two thin adapters; the other is
-`reg-meta validate`.
+The semantic layer, its rules and its issue codes are `ops/validate.rs`, ported from
+`reg_meta`'s frozen `semantic.py` (`reg_meta/DESIGN.md` → Project semantic validation),
+whose CLI adapter `reg-meta validate` G1 compares it with.
 
-## Cost protection (`limits.py`)
+## Cost protection (`crates/reg-meta/src/limit.rs`)
 
-Two stdlib-only ASGI middlewares (no `slowapi` dep) gate ONLY the write methods (POST);
-read GETs flow through untouched (they have the cheaper edge-cache + ETag axis). These
-are **origin-side** guards — Cloudflare fronts production with the same budgets at the
-edge (remaining — see `REFACTOR_SPEC.md`); these catch direct origin hits that bypass
-the edge.
+Every POST (the project operations and the manifest download) and `/mcp` sit behind the
+same two origin-side guards; GET reads are not limited (they have the cheaper edge-cache
 
-- **`BodySizeLimitMiddleware`** — a **streaming** byte-count guard that 413s a body
-  exceeding `MAX_BODY_BYTES` (1 MB). It counts bytes as they arrive rather than trusting
-  `Content-Length` (absent on chunked transfers, and spoofable), so an oversized
-  chunked/under-declared body is still caught even if the handler never reads it. 1 MB
-  is far above any plausible `project_data.json`.
-- **`RateLimitMiddleware`** — an in-memory per-IP token bucket (`request.client.host`,
-  \~`RATE_LIMIT_PER_MINUTE` req/min/IP → 429). **IP-only** by design: a session token
-  would bucket per-browser (helpful behind NAT) but adds a fingerprinting surface for
-  anonymous public data — layer it in only if a steward needs it. A missing client host
-  buckets under one shared key (fail closed). Buckets are per-process (lost on restart,
-  not shared across replicas) — sufficient as the origin backstop behind the edge
-  limiter; a shared store (Redis) is a scale-out concern, not v1.
++ ETag axis). Cloudflare fronts production with its own edge budgets; these catch direct
+  origin hits that bypass the edge.
+
+- **Rate limit** — one in-memory token bucket per client address, shared by `/mcp` and
+  the POSTs: 60 tokens, refilled one a second, then `rate_limited` (429,
+  `Retry-After: 1`). `serve --write-limit N` changes the 60, for verification runs (the
+  conformance suite, release admission, G1) that replay many projects from one address;
+  a deployment keeps the default. The client is the edge's `CF-Connecting-IP` when the
+  request carries the edge token (`REG_META_EDGE_TOKEN`), otherwise the peer, and an
+  IPv6 address counts as its /64. **Address-only** by design: a session token would
+  bucket per browser (helpful behind NAT) but adds a fingerprinting surface for
+  anonymous public data. Buckets are per process (lost on restart, not shared across
+  replicas), which suffices as the origin backstop behind the edge. The SPA's debounced
+  validation and its downloads stay far inside the budget (the `flows` run replays every
+  scenario from one address under it). A deployment whose worker sends no edge token
+  keys every client on Fly's proxy, so all of them share one bucket.
+- **Body cap** — `payload_too_large` (413) over 1 MiB, counted as the body streams in
+  (axum's `DefaultBodyLimit`), never trusting `Content-Length`. 1 MiB is far above any
+  plausible `project_data.json`.
 
 ## Browse-only authoring: the data-order cart model (#991, #992/#993)
 
@@ -2278,52 +1859,39 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
 
 ## API surface
 
-The committed `backend/openapi.json` is the canonical contract; this table is the
-orientation map. All endpoints are under `/api/`; read GETs are edge-cacheable, write
-POSTs are not. Catalog browse paths use FQID segments directly.
+The Rust server (`reg-meta serve`; contract `conformance/api/operations.toml`, snapshot
+`crates/reg-meta/openapi.json`) answers every `/api` route. This table is the
+orientation map. Read GETs are edge-cacheable, write POSTs are not.
 
-  | Method | Path                                             | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-  | ------ | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | GET    | `/api/context`                                   | The Rust server's `context`: branding, build info, period span, catalog sizes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-  | GET    | `/api/catalog`                                   | Top-level: every provider the steward exposes + the `class` root.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-  | GET    | `/api/search`                                    | The Rust server's `search`: one ranked list per call (`?type=` keeps one arm), `{items, next_cursor}`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-  | GET    | `/api/docs/search`                               | Docs FTS search (excerpts + source pointer), optional `?register=`; `ingested=false` when no docs index.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-  | GET    | `/api/docs/doc/{identifier}`                     | One doc by variable/filename — metadata + source pointer + bounded excerpt (never full body).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-  | GET    | `/api/docs/for-variable`                         | Parsed-document hook: fuzzy name/`provider_key` matches + `register_ingested` coverage flag.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-  | GET    | `/api/catalog/{fqid}`                            | Single endpoint for every hierarchy node (`kind`-discriminated). On a binding leaf, embeds the variable's full longitudinal record (every state's identity, window and coding REFERENCE + a cardinality-independent `value_set_summary` — members come from `/api/value-sets/{id}/codes`, Y-46) + its full variable `succession_chain` (#582). At the current head a classification leaf embeds its succession chain, complete value-set `codes`, curated `dimensions`, and optional derived `family` (#1116); the v1 `CodeList` payload correction removes the complete codes in favor of bounded metadata/buckets plus the dedicated code-page/export paths. Optional `?period` / `?variant` / `?value_set_version` narrow a binding leaf to a `{binding, states}` subset (uniform with `/states`). A dead/renamed binding, register, or classification slug with a successor 301-redirects to its terminal successor (kind-dispatched — #355 PART 2, #412, #571); `?period` branch and sub-endpoints also redirect (#411). |
-  | GET    | `/api/value-sets/{value_set_id}/codes`           | One coding's `(code, label)` members, one bounded page at a time (`?offset`/`?limit`, default 200/max 1000, clamped). `?q=` filters the COMPLETE set before the window (browser-identical case/diacritic folding); `total` is the filtered total. `?state=` reads that state's stored classification-mismatch list instead, 404ing unless the state carries the value set. (Y-46)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-  | GET    | `/api/catalog/{provider}/{register}/variants`    | The register's variant browser.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-  | GET    | `/api/catalog/group/{provider}/{register}/{key}` | The concept group as a browsable subject (all members; `?member=` focus). (#617/#616)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-  | GET    | `/api/catalog/group/class/{key}`                 | The classification subject route: curated umbrella group (`ClassificationGroupNode`) or derived one-dimensional succession family (`ClassificationFamilyNode`). (#756/#1116)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-  | GET    | `/api/catalog/{fqid}/states`                     | Full state history for a binding. Dead/renamed binding 301s to `/states` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-  | GET    | `/api/catalog/{fqid}/predecessors`               | Inbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/predecessors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-  | GET    | `/api/catalog/{fqid}/successors`                 | Outbound `variable_replaced_by` edges. Dead/renamed binding 301s to `/successors` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-  | GET    | `/api/catalog/{fqid}/lineage`                    | Materialized `variable_state_lineage` edges (consumer ← source). Dead/renamed binding 301s to `/lineage` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-  | GET    | `/api/catalog/{fqid}/lineage_warnings`           | Linker-emitted lineage coverage warnings. Dead/renamed binding 301s to `/lineage_warnings` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-  | GET    | `/api/catalog/{fqid}/dimensions`                 | Concept-group dimension memberships containing this variable (the variant facet groups: level/population/rank/…). Dead/renamed binding 301s to `/dimensions` on its terminal successor (#411).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-  | POST   | `/api/project/validate`                          | Three-layer validation; 200 + `ok` + issues.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-  | POST   | `/api/project/order`                             | The materialized JSON order manifest, downloaded as `order.json`; 422 (`OrderBlockedModel`: `detail` + typed `findings`) when the result is not an order.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+  | Method | Path                                 | Server | Purpose                                                                                                                   |
+  | ------ | ------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------- |
+  | GET    | `/api/context`                       | Rust   | `context`: branding, build info, period span, catalog sizes.                                                              |
+  | GET    | `/api/search`                        | Rust   | `search`: one ranked list per call (`?type=` keeps one arm), `{items, next_cursor}`.                                      |
+  | GET    | `/api/catalog`, `/api/catalog/{ref}` | Rust   | `show`: the root, or any node by ref (`kind`-tagged); a retired ref answers its terminal successor.                       |
+  | GET    | `/api/states/{ref}`                  | Rust   | A variable's states, cursor-paged; `period`, `variant`, `value_set_version` narrow.                                       |
+  | GET    | `/api/warnings/{ref}`                | Rust   | A register's or variable's data warnings; `period`, `variant`, `representation`, `unassigned_only` filter.                |
+  | GET    | `/api/values/{ref}`                  | Rust   | A classification's codes, or a variable state's value set (`state=`), cursor-paged; `q` filters, `total`.                 |
+  | GET    | `/api/graph/{ref}`                   | Rust   | The relationship graph of a variable, classification or group, succession included.                                       |
+  | GET    | `/api/lineage/{ref}`                 | Rust   | A variable's lineage edges, lineage warnings and source registers.                                                        |
+  | GET    | `/api/docs/search`                   | Rust   | `docs_search`: docs matching `q` (or every doc), optional `?register=`, `{items, next_cursor, total, register_ingested}`. |
+  | GET    | `/api/docs/doc/{identifier}`         | Rust   | `docs_get`: one doc by variable/filename — metadata, source pointer, excerpt, body.                                       |
+  | GET    | `/api/docs/related/{ref}`            | Rust   | `docs_related`: metadata of the register's rehosted source PDFs.                                                          |
+  | GET    | `/api/docs/file/{ref}/{filename}`    | Rust   | One rehosted source PDF's bytes.                                                                                          |
+  | POST   | `/api/project/validate`              | Rust   | `validate`: 200 + `ok` + issues, an invalid project included.                                                             |
+  | POST   | `/api/project/order`                 | Rust   | `order`: the manifest; 422 `project_invalid` or `order_blocked` (with every finding) when not an order.                   |
+  | POST   | `/api/project/order/manifest`        | Rust   | The same manifest as the exact `order.json` bytes, an attachment (the SPA's download).                                    |
 
 Global FTS search shipped as `GET /api/search` (#350) and moved to the Rust server in
-3a.11; the docs library shipped as `/api/docs/*` (#354).
+3a.11; the docs library shipped as `/api/docs/*` (#354) and moved to the Rust server in
+3b.6 (with `/api/docs/related/{ref}` and its file download).
 
-## §16 input-validation gates (security boundary)
+## Input-validation gates (security boundary)
 
-Two chokepoints reject hostile input **before** any DB lookup, each pinned by a
-parametrized test asserting 422 **and zero SQL executed** (a SQLite trace hook counts
-statements == 0):
-
-- **`?period` canonicalization** (`period_param.py`) — the raw query is parsed into a
-  typed `Period` against an allow-list of the canonical period forms before any reg_meta
-  lookup. SQLi probes / traversal / NUL / URL-encoded slashes aren't period tokens, so
-  they 422 and never touch SQL.
-- **FQID route-segment validation** (`catalog_fqid.py`) — each `{fqid:path}` segment
-  must match the slug grammar (or the leading `class` literal). The grammar excludes
-  `.`, `..`, `%`, `\`, and any non-structural `/`, so canonical FQIDs cannot encode path
-  traversal; Starlette URL-decodes first, so `%2e%2e` / `%2f` / `%00` fail the
-  per-segment check. **`@version` is a 422, not a pin:** `scb/lisa/naringsgren@sni2007`
-  is now an explicit *negative* case (the pin is retired), alongside
-  `scb/lisa/naringsgren@bad/slug` and `…@@x`.
+Hostile input on the catalog and docs reads (a malformed ref, a traversal-shaped path, a
+bad period, variant or query) is refused by the Rust server with a located error; the
+grammars and refusals are pinned in `conformance/cases/api`. A project body is parsed
+strictly (`ops/body.rs`, Project operations above), and a `scope` parameter on a project
+operation is refused as `invalid_parameter`.
 
 ## Forward-looking open UX notes
 

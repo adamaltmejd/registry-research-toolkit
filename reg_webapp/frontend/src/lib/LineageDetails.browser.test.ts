@@ -1,55 +1,51 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { BindingNodeData, LineageWarningsResponse } from "./api";
-import { getBindingLineageWarnings } from "./api";
+import type { LineageModel, VariableShow } from "./api";
+import { getLineage } from "./api";
 import LineageDetails from "./LineageDetails.svelte";
 
 // LineageDetails (#678) re-homes the two NON-graph affordances off the retired
-// LineagePanels: PROVENANCE (the embedded `lineage[]` edges + the variable's
-// source register) and the FETCHED lineage warnings. Succession is NOT
-// here — it's a graph edge now (the picker graph mode). These port the relevant cases:
-// omit-when-empty, the provenance list, the source-register line, the warnings
-// loading/error/empty/data states, and failure isolation.
+// LineagePanels: PROVENANCE (the `lineage` read's edges + the variable's source
+// register) and the lineage warnings from the same read. Succession is NOT here —
+// it's a graph edge now (the picker graph mode). These cover: omit-when-empty,
+// the provenance list, the source-register line, the warnings section, and the
+// read's one failure domain.
 
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getBindingLineageWarnings: vi.fn() };
+  return { ...actual, getLineage: vi.fn() };
 });
 
-function node(over: Partial<BindingNodeData> = {}): BindingNodeData {
+function node(over: Partial<VariableShow> = {}): VariableShow {
   return {
-    kind: "binding",
+    kind: "variable",
     fqid: "scb/lisa/kon",
     name: "Kön",
-    lineage: [],
-    source_register_id: null,
+    deprecated: false,
+    is_identifier: false,
+    is_sensitive: false,
     source_register_text: null,
-    states: [],
-    succession_chain: [],
     same_as: [],
+    tags: [],
     ...over,
-  } as unknown as BindingNodeData;
+  };
+}
+
+function lineage(over: Partial<LineageModel> = {}): LineageModel {
+  return { edges: [], warnings: [], registers: [], ...over };
 }
 
 beforeEach(() => {
-  vi.mocked(getBindingLineageWarnings).mockReset();
-  // Default: the fetched warnings arm resolves EMPTY.
-  vi.mocked(getBindingLineageWarnings).mockResolvedValue({
-    lineage_warnings: [],
-  } as unknown as LineageWarningsResponse);
+  vi.mocked(getLineage).mockReset();
+  // Default: the lineage read resolves EMPTY.
+  vi.mocked(getLineage).mockResolvedValue(lineage());
 });
 
 describe("LineageDetails — omit-when-empty (#678)", () => {
   it("renders nothing when provenance + warnings are empty", async () => {
-    const screen = await render(LineageDetails, {
-      fqidPath: "scb/lisa/kon",
-      node: node(),
-    });
+    const screen = await render(LineageDetails, { node: node() });
 
-    await expect
-      .element(page.getByText("No provenance or lineage warnings."))
-      .not.toBeInTheDocument();
     for (const heading of ["Provenance", "Lineage warnings"]) {
       await expect
         .element(page.getByRole("heading", { name: heading }))
@@ -60,22 +56,24 @@ describe("LineageDetails — omit-when-empty (#678)", () => {
 });
 
 describe("LineageDetails — provenance", () => {
-  it("renders the consumer/source lineage edges with a window + source link", async () => {
-    await render(LineageDetails, {
-      fqidPath: "scb/lisa/kon",
-      node: node({
-        lineage: [
+  it("renders the read's consumer/source edges with a window + source link", async () => {
+    // Fails if the edges stop coming from the variable's `lineage` read.
+    vi.mocked(getLineage).mockResolvedValue(
+      lineage({
+        edges: [
           {
-            consumer_state_id: 1,
-            source_state_id: 2,
+            consumer_state_id: "1",
+            source_state_id: "2",
             valid_from: "2005-01-01",
             valid_to: "2010-12-31",
             source_fqid: "scb/rtb/kon",
           },
-        ] as unknown as BindingNodeData["lineage"],
+        ],
       }),
-    });
+    );
+    await render(LineageDetails, { node: node() });
 
+    expect(getLineage).toHaveBeenCalledWith("scb/lisa/kon");
     await expect
       .element(page.getByRole("heading", { name: "Provenance" }))
       .toBeVisible();
@@ -86,26 +84,25 @@ describe("LineageDetails — provenance", () => {
   });
 
   it("falls back to 'source state #N' when a lineage edge has no source_fqid", async () => {
-    await render(LineageDetails, {
-      fqidPath: "scb/lisa/kon",
-      node: node({
-        lineage: [
+    vi.mocked(getLineage).mockResolvedValue(
+      lineage({
+        edges: [
           {
-            consumer_state_id: 1,
-            source_state_id: 7,
+            consumer_state_id: "1",
+            source_state_id: "7",
             valid_from: "2005-01-01",
             valid_to: "2010-12-31",
             source_fqid: null,
           },
-        ] as unknown as BindingNodeData["lineage"],
+        ],
       }),
-    });
+    );
+    await render(LineageDetails, { node: node() });
     await expect.element(page.getByText("source state #7")).toBeVisible();
   });
 
   it("surfaces the variable's source register as a compact line", async () => {
     await render(LineageDetails, {
-      fqidPath: "scb/lisa/kon",
       node: node({ source_register_text: "Registret över totalbefolkningen" }),
     });
     await expect
@@ -118,19 +115,21 @@ describe("LineageDetails — provenance", () => {
   });
 });
 
-describe("LineageDetails — warnings (own failure domain)", () => {
-  it("renders the warnings section when the fetched arm returns warnings", async () => {
-    vi.mocked(getBindingLineageWarnings).mockResolvedValue({
-      lineage_warnings: [
-        {
-          consumer_state_id: 1,
-          warning_kind: "source_gap",
-          message: "No source state covers 2015.",
-        },
-      ],
-    } as unknown as LineageWarningsResponse);
+describe("LineageDetails — warnings (the read's failure domain)", () => {
+  it("renders the warnings section when the read returns warnings", async () => {
+    vi.mocked(getLineage).mockResolvedValue(
+      lineage({
+        warnings: [
+          {
+            consumer_state_id: "1",
+            warning_kind: "no_source_state",
+            message: "No source state covers 2015.",
+          },
+        ],
+      }),
+    );
 
-    await render(LineageDetails, { fqidPath: "scb/lisa/kon", node: node() });
+    await render(LineageDetails, { node: node() });
 
     await expect
       .element(page.getByRole("heading", { name: "Lineage warnings" }))
@@ -140,23 +139,23 @@ describe("LineageDetails — warnings (own failure domain)", () => {
       .toBeVisible();
   });
 
-  it("keeps the warnings section visible (no compact line) when the fetch errors", async () => {
-    // The dangerous false negative: an ERRORED fetched arm must keep its section
-    // visible (with the error) — never collapse into the compact "no links" line,
-    // which would read as a confirmed absence.
-    vi.mocked(getBindingLineageWarnings).mockRejectedValue(
-      new Error("backend down"),
-    );
-    await render(LineageDetails, { fqidPath: "scb/lisa/kon", node: node() });
+  it("keeps the warnings section visible with the error when the read fails", async () => {
+    // The dangerous false negative: an ERRORED read must keep its section visible
+    // (with the error) — never collapse to nothing, which would read as a
+    // confirmed absence. The source-register line from `node` still renders.
+    vi.mocked(getLineage).mockRejectedValue(new Error("backend down"));
+    await render(LineageDetails, {
+      node: node({ source_register_text: "Registret över totalbefolkningen" }),
+    });
 
     await expect
-      .element(page.getByText(/Failed to load lineage warnings/))
+      .element(page.getByText(/Failed to load lineage:.*backend down/))
       .toBeVisible();
     await expect
       .element(page.getByRole("heading", { name: "Lineage warnings" }))
       .toBeVisible();
     await expect
-      .element(page.getByText("No provenance or lineage warnings."))
-      .not.toBeInTheDocument();
+      .element(page.getByText("Registret över totalbefolkningen"))
+      .toBeVisible();
   });
 });

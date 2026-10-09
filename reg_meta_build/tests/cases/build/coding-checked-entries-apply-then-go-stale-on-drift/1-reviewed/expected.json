@@ -154,6 +154,20 @@
           "Missing"
         ],
         [
+          "dockeep",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "One"
+        ],
+        [
+          "docvalid",
+          "2020-01-01",
+          "2020-12-31",
+          "1",
+          "One"
+        ],
+        [
           "extend",
           "2020-01-01",
           "2020-12-31",
@@ -441,7 +455,7 @@
           null
         ]
       ],
-      "note": "Each 2020 state carries the replaced test's selected members, or the null row where its entry is stale. A sentinel keeps the source list on both halves of its split."
+      "note": "Each 2020 state carries the replaced test's selected members, or the null row where its entry is stale. A sentinel keeps the source list on both halves of its split. docvalid and dockeep carry their documented 1 One over a list whose item validity is unknown."
     },
     {
       "table": "state_codes",

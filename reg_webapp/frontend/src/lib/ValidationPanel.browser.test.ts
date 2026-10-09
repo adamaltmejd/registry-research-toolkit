@@ -47,6 +47,7 @@ const DRIFT_RESULT = {
       path: "/sources/0/bindings/0/variable",
       message:
         "column 'scb/lisa/adeldag' spans 2 states across a transition within period 2015..2020",
+      successor_fqid: null,
     },
   ],
 };
@@ -115,6 +116,7 @@ describe("ValidationPanel — researcher-language findings", () => {
             code: "empty_bindings",
             path: "/sources/0/bindings",
             message: "source has no bindings",
+            successor_fqid: null,
           },
         ],
       },
@@ -176,6 +178,7 @@ describe("ValidationPanel — researcher-language findings", () => {
             code: "missing_required_field",
             path: "/name",
             message: "missing required field 'name'",
+            successor_fqid: null,
           },
         ],
       },
@@ -255,6 +258,7 @@ describe("ValidationPanel — researcher-language findings", () => {
             path: "/sources/0/bindings/0/period",
             message:
               "column 'scb/lisa/adeldag' requested 2005..2010,2015..2020, ordered 2015..2020",
+            successor_fqid: null,
           },
         ],
       },
@@ -504,6 +508,7 @@ describe("ValidationPanel — researcher-language findings", () => {
             code: "fqid_unresolved",
             path: "/sources/0/bindings/0/variable",
             message: "FQID does not resolve against this reg_meta build",
+            successor_fqid: null,
           },
         ],
       },

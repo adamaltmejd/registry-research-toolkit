@@ -38,6 +38,8 @@ export function graphState(over: Partial<GraphState> = {}): GraphState {
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
+    variant_family: null,
+    variant_family_label: null,
     representation_run_id: 1,
     valid_from: "2000-01-01",
     valid_to: "2010-12-31",

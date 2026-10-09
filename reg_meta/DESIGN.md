@@ -160,9 +160,11 @@ not match `Kön` on those arms. Arms over ASCII identifiers (the group's `group_
 result row carries its navigable `fqid`.
 
 The docs index (`doc_queries.doc_search`, a separate `reg_meta_docs.db` FTS index) uses
-the same `_fts_match_query` builder, so a raw doc query is operator-safe and
-prefix-matched too. It is not pre-folded: it passes the raw query, and `unicode61` folds
-both sides there (`snippet()` positions would shift under folding).
+the same `_fts_match_query` builder over `fold_search(q)`, so a doc query is
+operator-safe, prefix-matched and folded like the catalog's. Since doc schema 1.3.0 the
+docs build stores `fold_search` text in `doc_fts`, an external-content index over `doc`:
+`snippet()` maps the index's token positions onto the stored body, so snippets keep case
+and diacritics (`reg_meta_build/DESIGN.md`, "Document database").
 
 ## Register lookup strategy
 
@@ -456,9 +458,9 @@ reservation:
 
 `validate_slug` enforces both; `derive_variable_slug` delegates to it, so a column
 literally named e.g. "States" or "Variants" degrades to `None` (triggering the
-name/last-resort fallback) rather than minting a shadow slug. The reserved set is pinned
-to the live catalog route list by a drift guard in
-`reg_webapp/backend/tests/test_boot.py`.
+name/last-resort fallback) rather than minting a shadow slug. The reserved set's drift
+guard against the FastAPI catalog routes went with those routes (package C); stage 4
+decides whether the set shrinks.
 
 **Open — curator review cadence on rename.** Slugs are derived from the latest
 delivery-column alias. If a provider renames a column between editions and the curator
@@ -1362,17 +1364,18 @@ each re-type live here too, beside the materializer:
   fail-closed path is byte-identical across adapters too, not just a produced manifest.
   It is a PRESENTATION of `OrderResult.findings`, never the record of them: the findings
   are already typed models, and an adapter whose transport can carry structure carries
-  the models (the webapp's 422 body does — see `reg_webapp/DESIGN.md` → The order
-  manifest), with this line as the human summary beside them.
+  them (the Rust server's `order_blocked` error does, in `fields.findings`), with this
+  line as the human summary beside them.
 
-The adapters themselves are `reg_webapp`'s `POST /api/project/order` (see
-`reg_webapp/DESIGN.md` → Project-write surface) and `reg-meta order <project.json>`,
-which writes `to_json()` verbatim to stdout or `--output` — never through the CLI
-envelope or `--format`, because canonical serialization IS the artifact. `--inventory`
-is deleted. Both adapters select physical steward order or global logical fallback from
-the opened artifact's manifest. `ORDER_MANIFEST_VERSION` stays 1 under the in-definition
-rule. Generation provenance intentionally changes the envelope; compare unchanged
-normalized entries, clips and finding order byte-for-byte, not old whole-manifest bytes.
+The adapter is `reg-meta order <project.json>` (the webapp's `POST /api/project/order`
+moved to the Rust server in `RUST_RUNTIME_SPEC.md` package 3e.4, which G1 compares with
+this CLI), which writes `to_json()` verbatim to stdout or `--output` — never through the
+CLI envelope or `--format`, because canonical serialization IS the artifact.
+`--inventory` is deleted. Both adapters select physical steward order or global logical
+fallback from the opened artifact's manifest. `ORDER_MANIFEST_VERSION` stays 1 under the
+in-definition rule. Generation provenance intentionally changes the envelope; compare
+unchanged normalized entries, clips and finding order byte-for-byte, not old
+whole-manifest bytes.
 
 **Deferred (ratified 2026-09-02): companion tables.** Steward deliveries carry
 reference/crosswalk tables that are useful — sometimes essential — beside certain
@@ -1429,19 +1432,18 @@ otherwise each re-type, so they stay thin and byte-identical:
   unreachable) is one defensive `invalid_field` issue, never a crash. `connect` is the
   adapter's opener for the selected artifact, called only once the DB-free layers have
   passed, so a rejected body costs no DB hit; the adapter decides HOW it opens (the
-  webapp's thread-confined per-request open, the CLI's catalog selection).
-- `validation_json(result)` is the canonical serialization both adapters emit VERBATIM:
+  CLI's catalog selection).
+- `validation_json(result)` is the canonical serialization the CLI emits VERBATIM:
   `{issues, ok}` with sorted keys, two-space indent, UTF-8 and a trailing newline (the
   `OrderManifest.to_json` conventions). An absent `successor_fqid` is an explicit
   `null`, the wire shape the SPA's codegen'd type reads.
 
-The adapters are `reg_webapp`'s `POST /api/project/validate` (HTTP 200 for any diagnosed
-project, 4xx only for a malformed request; see `reg_webapp/DESIGN.md` → Project-write
-surface) and `reg-meta validate <project.json>`, which writes the same bytes to stdout
-or `--output` and exits 0 with no error-level issue, 17 with one (the blocked-order
-code; the findings are written either way) and 10 for an unreadable file. The
-conformance corpus runs every `cases/validate` case through both and compares the bytes;
-the sampled artifact agreement does the same on admitted real artifacts.
+The adapter is `reg-meta validate <project.json>` (the webapp's
+`POST /api/project/validate` moved to the Rust server in `RUST_RUNTIME_SPEC.md` package
+3e.4, which G1 compares with this CLI), which writes these bytes to stdout or `--output`
+and exits 0 with no error-level issue, 17 with one (the blocked-order code; the findings
+are written either way) and 10 for an unreadable file. The sampled artifact agreement
+compares its result with the Rust server's on admitted real artifacts.
 
 Rules, walking each source's `register_variant` + every binding:
 

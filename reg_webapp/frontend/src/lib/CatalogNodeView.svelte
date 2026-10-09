@@ -1,14 +1,13 @@
 <script lang="ts">
 import {
-  type BindingChild,
-  type ClassificationFamilyNodeData,
-  type ClassificationNodeData,
+  type ClassificationRootShow,
   type ConceptGroup,
-  getCatalogNode,
-  getRegisterVariants,
-  isCatalogNode,
+  getShow,
+  getStates,
+  type ShowNode,
+  type VariableChild,
   type VariableDeliveryModel,
-  type VariantsResponse,
+  type VariableStateModel,
 } from "./api";
 import { asyncResource } from "./async.svelte";
 import BindingLeafView from "./BindingLeafView.svelte";
@@ -29,7 +28,6 @@ import {
   groupFilterKeys,
   groupHref,
   leafSlug,
-  narrowCatalogNode,
   narrowGroupsToMembers,
   nodeLabel,
   OPEN_ENDED_VALID_TO,
@@ -42,11 +40,11 @@ import {
   windowsOverlapWindow,
   YEARLESS_VALID_FROM,
 } from "./catalog";
-import DataWarnings from "./DataWarnings.svelte";
 import FilterInput from "./FilterInput.svelte";
 import { clampYearWindow, yearWindowLabel } from "./period";
 import { projectStore } from "./project_store.svelte";
 import RelatedDocumentsPanel from "./RelatedDocumentsPanel.svelte";
+import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import StagedAddStatus from "./StagedAddStatus.svelte";
 import {
   ADD_WINDOW_REQUIRED_MESSAGE,
@@ -137,11 +135,14 @@ const variableColumns: Column<VariableBrowseRow>[] = [
   { key: "columns", label: "Delivery column", mono: true },
 ];
 
+type ClassificationChild = ClassificationRootShow["children"][number];
+type ClassificationFamily = ClassificationRootShow["families"][number];
+
 type ClassificationBrowseRow =
   | {
       id: string;
       kind: "family";
-      family: ClassificationFamilyNodeData;
+      family: ClassificationFamily;
       label: string;
       href: string;
       shortName: string;
@@ -169,7 +170,7 @@ const classificationColumns: Column<ClassificationBrowseRow>[] = [
 ];
 
 function variableBrowseRows(
-  rows: GroupedRow<BindingChild>[],
+  rows: GroupedRow<VariableChild>[],
   registerFqid: string,
   columnsByFqid: Map<string, DeliveryColumn[]>,
 ): VariableBrowseRow[] {
@@ -204,11 +205,11 @@ function variableBrowseRows(
  * rather than built per column, because a #902 rename is ONE row two names lead
  * to, and the tick, the "In project" marker and the add all read that row. */
 function deliveryColumns(
-  child: BindingChild,
+  child: VariableChild,
   rows: readonly PickerRepresentation[],
 ): DeliveryColumn[] {
   const byName = new Map<string, VariableDeliveryModel[]>();
-  for (const delivery of child.deliveries ?? []) {
+  for (const delivery of child.deliveries) {
     if (delivery.column == null) {
       continue;
     }
@@ -345,8 +346,8 @@ function eraFoldLabel(hidden: readonly string[]): string {
 }
 
 function classificationBrowseRows(
-  rows: GroupedRow<ClassificationNodeData>[],
-  families: ClassificationFamilyNodeData[],
+  rows: GroupedRow<ClassificationChild>[],
+  families: ClassificationFamily[],
 ): ClassificationBrowseRow[] {
   const familyRows: ClassificationBrowseRow[] = families.map((family) => ({
     id: `family:${family.key}`,
@@ -372,14 +373,14 @@ function classificationBrowseRows(
             id: row.item.fqid,
             kind: "leaf",
             fqid: row.item.fqid,
-            label: row.item.name,
-            shortName: row.item.short_name,
+            label: row.item.name ?? row.item.fqid,
+            shortName: row.item.short_name ?? "",
           },
   );
   return [...familyRows, ...itemRows];
 }
 
-function familyCurrentLabel(family: ClassificationFamilyNodeData): string {
+function familyCurrentLabel(family: ClassificationFamily): string {
   const current = family.editions.filter((edition) => edition.is_current);
   if (current.length === 1) {
     return current[0]?.slug ?? "";
@@ -398,13 +399,10 @@ function registerRowId(row: RegisterRow): string {
   return row.fqid;
 }
 
-// Fetches and renders one catalog node by FQID path, switching on the `kind`
-// discriminator. The provider/register/classification browse fetch is a plain
-// (no-query) resolve; a binding leaf delegates to `BindingLeafView`, which owns
-// the period/variant resolution + states + lineage (A5.3b). The browse fetch
-// here never passes `?period`, so this catch-all response is always a `kind`-
-// tagged node (the `StatesResponse` arm — a no-`kind` resolve_at subset — is
-// only reachable WITH a query, so it's filtered to `null` and never rendered).
+// Fetches and renders one catalog node by ref (`show`), switching on its `kind`.
+// A variable delegates to `BindingLeafView`, which owns the period/variant
+// resolution, warnings, graph and lineage (A5.3b); this view hands it the node and
+// the variable's whole state history, read before the leaf renders.
 let {
   fqidPath,
   regMetaVersion,
@@ -433,30 +431,28 @@ let {
   enforcePeriodBounds?: boolean;
 } = $props();
 
-const resource = asyncResource(() => getCatalogNode(fqidPath));
-// A browsable path resolves to a `kind`-tagged CatalogNode. A SUB-ENDPOINT path
-// (e.g. a deep-link to `.../states`) hits that endpoint and returns a no-`kind`
-// StatesResponse — narrow it OUT of `node` (so the kind-switch type-checks) and
-// flag it as `notBrowsable` so we render a clear message instead of a blank
-// page. (`.../variants` is its own SPA route now, Y-79, so it never lands here.)
-const node = $derived(narrowCatalogNode(resource.data));
-const notBrowsable = $derived(
-  resource.data !== null && !isCatalogNode(resource.data),
+// One resource for both reads, so the page's single loading/error surface covers
+// the variable's states too: the leaf renders from its whole history, and a
+// failed states read is the page's error like a failed `show`. The states are read
+// by the node's CANONICAL fqid (a retired ref resolves to its successor).
+const resource = asyncResource(
+  async (): Promise<{
+    node: ShowNode;
+    states: VariableStateModel[];
+  }> => {
+    const node = await getShow(fqidPath);
+    const states = node.kind === "variable" ? await getStates(node.fqid) : [];
+    return { node, states };
+  },
 );
+const node = $derived(resource.data?.node ?? null);
+const states = $derived(resource.data?.states ?? []);
 const classificationSubjectKey = $derived.by((): string | null => {
   if (node?.kind !== "classification") {
     return null;
   }
-  return node.family?.key ?? node.dimensions?.[0]?.key ?? null;
+  return node.family?.key ?? node.dimensions[0]?.key ?? null;
 });
-
-function classificationTabFocusFqid(node: ClassificationNodeData): string {
-  return (
-    node.edition_chain?.find(
-      (edition) => edition.is_self && edition.fqid != null,
-    )?.fqid ?? node.fqid
-  );
-}
 
 // In-memory type-to-filter over the current node's child list (a provider's 238
 // registers / a register's 740 bindings render flat otherwise). Reset on
@@ -535,37 +531,25 @@ const registerGroups = $derived(
   node && node.kind === "register" ? node.groups : undefined,
 );
 
-// The register's variants, fetched ONCE for the page and handed to the Variants
-// section below as well: the chips must spell a variant the way that section
-// does, and two fetches of one list is two chances to drift. Every other node
-// kind resolves to null without a request.
-const variantsResource = asyncResource(
-  (): Promise<VariantsResponse | null> =>
-    node && node.kind === "register"
-      ? getRegisterVariants(node.fqid)
-      : Promise.resolve(null),
+// The register's variants ride its node, and the Variants section below reads the
+// same list: the chips must spell a variant the way that section does.
+const registerVariantList = $derived(
+  node && node.kind === "register" ? node.variants : [],
 );
 /** How a variant is SPELLED on its chip: its catalog name — the word the Variants
- * section uses. The slug is the fallback, for the moment before that list lands
- * and for a slug this list does not name. */
+ * section uses. The slug is the fallback, for a slug this list does not name. */
 const variantNames = $derived(
-  new Map(
-    (variantsResource.data?.variants ?? []).map((v) => [
-      v.slug,
-      variantLabel(v),
-    ]),
-  ),
+  new Map(registerVariantList.map((v) => [v.slug, variantLabel(v)])),
 );
 
 // The variants that deliver at least one of this register's variables — the chip
 // set, read off the children rather than the register's variant list so a chip
 // can never narrow the list to nothing. A register delivered by ONE variant has
-// no variant axis to filter on, so it shows no chips. Ordered by SLUG, which is
-// stable across the variant fetch: naming a chip must not move it.
+// no variant axis to filter on, so it shows no chips. Ordered by SLUG.
 const registerVariants = $derived.by(() => {
   const seen = new Set<string>();
   for (const child of registerChildren) {
-    for (const delivery of child.deliveries ?? []) {
+    for (const delivery of child.deliveries) {
       seen.add(delivery.variant);
     }
   }
@@ -581,9 +565,9 @@ const lensedChildren = $derived.by(() => {
   if (selectedVariants.size === 0) {
     return registerChildren;
   }
-  const kept: BindingChild[] = [];
+  const kept: VariableChild[] = [];
   for (const child of registerChildren) {
-    const deliveries = (child.deliveries ?? []).filter((d) =>
+    const deliveries = child.deliveries.filter((d) =>
       selectedVariants.has(d.variant),
     );
     if (deliveries.length > 0) {
@@ -602,7 +586,7 @@ const rowsByFqid = $derived(
   new Map(
     lensedChildren.map((child) => [
       child.fqid,
-      deliveryColumnRows(child.deliveries ?? []),
+      deliveryColumnRows(child.deliveries),
     ]),
   ),
 );
@@ -1083,7 +1067,7 @@ async function addSelected(): Promise<void> {
       )}
       <h2>{nodeLabel(node)}</h2>
       {#if node.purpose}<p class="purpose-text">{node.purpose}</p>{/if}
-      <DataWarnings warnings={(node.warnings ?? []).filter(warning => !warning.variable_fqid)} title="Unassigned register data warnings" />
+      <ScopedDataWarnings fqid={node.fqid} registerOnly />
       {#if node.tags && node.tags.length > 0}
         <div class="tag-strip" aria-label="Thematic tags">
           {#each node.tags as tag (tag.slug)}
@@ -1102,28 +1086,16 @@ async function addSelected(): Promise<void> {
           <div class="variant-filters">
             <fieldset class="variant-filter" bind:this={variantChipsEl}>
               <legend><span class="micro-label">Variant</span></legend>
-              {#if variantsResource.loading}
-                <!-- A chip can only be NAMED once the variant list lands. Painting
-                     the slug first and swapping to the name re-flows the strip
-                     under the pointer, so hold its shape instead. On a FAILED
-                     load the chips render their slugs and the lens keeps working
-                     — losing the filter would cost more than a machine-readable
-                     label, and the Variants section below reports the failure. -->
-                <div class="filter-options" aria-busy="true">
-                  <Skeleton width="16rem" />
-                </div>
-              {:else}
-                <div class="filter-options">
-                  {#each registerVariants as variant (variant)}
-                    <FilterChip
-                      selected={selectedVariants.has(variant)}
-                      onToggle={() => toggleVariant(variant)}
-                    >
-                      {variantNames.get(variant) ?? variant}
-                    </FilterChip>
-                  {/each}
-                </div>
-              {/if}
+              <div class="filter-options">
+                {#each registerVariants as variant (variant)}
+                  <FilterChip
+                    selected={selectedVariants.has(variant)}
+                    onToggle={() => toggleVariant(variant)}
+                  >
+                    {variantNames.get(variant) ?? variant}
+                  </FilterChip>
+                {/each}
+              </div>
             </fieldset>
             <!-- The live region is mounted WITH the strip and left empty until a
                  chip is on: a region inserted together with its first text is not
@@ -1335,21 +1307,17 @@ async function addSelected(): Promise<void> {
           <EmptyState title="No variables." />
         </Panel>
       {/if}
-      <VariantsSummary
-        registerFqid={node.fqid}
-        variants={variantsResource.data}
-        error={variantsResource.error}
-      />
-      <RelatedDocumentsPanel register={leafSlug(node.fqid)} />
-    {:else if node.kind === "binding"}
-      <!-- Pass the full node down: this no-query browse fetch already resolved
-           the variable's metadata + embedded edges + default states. BindingLeafView
-           renders those from `node` (always present — so a cold deep-link with
-           `?period` isn't blank) and fetches only the period-NARROWED states from
-           the URL query, reactive without a remount. -->
+      <VariantsSummary registerFqid={node.fqid} variants={node.variants} />
+      <RelatedDocumentsPanel register={node.fqid} />
+    {:else if node.kind === "variable"}
+      <!-- Pass the node and its whole state history down: BindingLeafView renders
+           those (always present — so a cold deep-link with `?period` isn't blank)
+           and fetches the period-NARROWED states, warnings, graph and lineage
+           itself, reactive to the URL query without a remount. -->
       <BindingLeafView
         {fqidPath}
         {node}
+        {states}
         {regMetaVersion}
         {steward}
         {windowMinYear}
@@ -1357,7 +1325,7 @@ async function addSelected(): Promise<void> {
         {enforcePeriodBounds}
         {vintageYear}
       />
-    {:else if node.kind === "classification-root"}
+    {:else if node.kind === "classification_root"}
       <!-- #516 umbrella folding: e.g. group:sun renders as ONE group row
            expanding to its dimension members; #771 one-dimensional succession
            families render as stable family rows; remaining ungrouped
@@ -1365,7 +1333,7 @@ async function addSelected(): Promise<void> {
            and every edition represented by a family row — those editions are
            reached via a leaf/family edition-chain panel. -->
       {@const clsRows = foldGroupedRows(node.children, node.groups)}
-      {@const familyNodes = node.families ?? []}
+      {@const familyNodes = node.families}
       <h2>{nodeLabel(node)}</h2>
       {#if clsRows.length > 0 || familyNodes.length > 0}
         {@const classificationRows = classificationBrowseRows(clsRows, familyNodes)}
@@ -1415,7 +1383,7 @@ async function addSelected(): Promise<void> {
              standalone leaf view. -->
         <ClassificationGroupView
           key={classificationSubjectKey}
-          activeFqid={classificationTabFocusFqid(node)}
+          activeFqid={node.fqid}
           initialActiveNode={node}
         />
       {:else}
@@ -1423,15 +1391,14 @@ async function addSelected(): Promise<void> {
              SubjectView shell, same as the binding leaf + concept group. -->
         <ClassificationLeafView {node} />
       {/if}
+    {:else}
+      <!-- The router sends the root and group refs to their own views, so a kind
+           landing here is a routing mistake: say so rather than render nothing. -->
+      <p class="error" role="alert">
+        This page cannot show a <code>{node.kind}</code> node: <code>{fqidPath}</code>
+      </p>
     {/if}
   </article>
-{:else if notBrowsable}
-  <!-- A no-`kind` response: a deep-link to a SUB-ENDPOINT path (e.g.
-       `.../states`) hits that endpoint and returns a StatesResponse, not a
-       browsable node. Render a clear message instead of a blank page. -->
-  <p class="error" role="alert">
-    <code>{fqidPath}</code> isn't a browsable catalog node.
-  </p>
 {/if}
 
 <style>

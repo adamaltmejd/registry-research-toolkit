@@ -1,0 +1,17 @@
+[register]
+provider = "scb"
+slug = "coded"
+native_id = "6"
+[[variant]]
+native_id = "6.10"
+slug = "people"
+[[variable]]
+native_id = "6.6"
+slug = "income"
+[[representation.delivery_metadata]]
+variable = "6.6"
+fields = ["name"]
+records = {{expected_records key=member:601,member:602}}
+columns = [{ variant_key = {{variant_key key=member:601}}, column = "VALUE", valid_from = "2020-01-01", valid_to = "2021-12-31", expected_codings = [] }]
+evidence = "Exact supplied delivery texts and units"
+noted = "2026-10-08"

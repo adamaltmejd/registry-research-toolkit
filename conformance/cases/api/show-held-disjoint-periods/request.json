@@ -1,0 +1,14 @@
+{
+  "note": "A table held for 2018 and 2020..2021 gives two windows with the 2019 gap between them, and the provider's coverage spans both. Twin of coverage/disjoint-periods. Fails if the gap is filled or a period dropped.",
+  "fixture": "list",
+  "requests": [
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb/example"
+    },
+    {
+      "operation": "show",
+      "path": "/api/catalog/scb"
+    }
+  ]
+}

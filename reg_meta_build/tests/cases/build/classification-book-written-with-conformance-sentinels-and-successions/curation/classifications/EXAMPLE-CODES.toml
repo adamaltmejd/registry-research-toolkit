@@ -1,0 +1,14 @@
+[classification]
+short_name = "EXAMPLE-CODES"
+slug = "example-codes"
+name = "Canonical example"
+codes_file = "example-codes.csv"
+name_en = "Example"
+publisher = "Publisher"
+valid_from = 2000
+valid_to = 2020
+description = "Codebook description"
+url = "https://example.invalid/codebook"
+sentinel_codes = [{code = "99", meaning = "Not applicable"}]
+[binding]
+value_set_labels = ["Example codes"]

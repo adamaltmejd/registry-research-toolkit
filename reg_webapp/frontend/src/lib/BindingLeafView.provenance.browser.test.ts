@@ -2,19 +2,18 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import {
-  getBindingGraph,
-  getBindingLineageWarnings,
-  getCatalogNode,
   getDocsForVariable,
-  getValueSetCodes,
+  getGraph,
+  getLineage,
+  getStates,
+  getValues,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import {
-  node,
+  leaf,
   pickerStates,
   SEED,
   state,
-  statesResponse,
 } from "./binding-leaf-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
@@ -26,12 +25,12 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getBindingGraph: vi.fn(),
-    getBindingLineageWarnings: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getStates: vi.fn(),
+    getGraph: vi.fn(),
+    getLineage: vi.fn(),
     getDocsForVariable: vi.fn(),
-    getValueSetCodes: vi.fn(),
+    getValues: vi.fn(),
   };
 });
 
@@ -73,56 +72,41 @@ function matrixProvenance(
 }
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+  vi.mocked(getStates).mockReset();
+  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
     const variant =
       typeof params?.variant === "string" ? params.variant : undefined;
-    return statesResponse(
-      pickerStates.filter(
-        (s) => variant === undefined || s.variant === variant,
-      ),
+    return pickerStates.filter(
+      (s) => variant === undefined || s.variant === variant,
     );
   });
   // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
   // itself and the header derives no qualifier. Member-identity cases override it.
-  vi.mocked(getBindingGraph).mockReset();
-  vi.mocked(getBindingGraph).mockResolvedValue({
+  vi.mocked(getGraph).mockReset();
+  vi.mocked(getGraph).mockResolvedValue({
     nodes: [],
     edges: [],
     focus_id: null,
   } as never);
-  vi.mocked(getBindingLineageWarnings).mockReset();
-  vi.mocked(getBindingLineageWarnings).mockResolvedValue({
-    binding: "scb/lisa/kon",
-    lineage_warnings: [],
-  } as never);
-  vi.mocked(getValueSetCodes).mockReset();
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (valueSetId, { state = null, q = "", offset = 0, limit = 200 }) => {
-      const codes =
-        valueSetId === "814"
-          ? [
-              { code: "0", label: "Nej" },
-              { code: "1", label: "Ja" },
-            ]
-          : [];
-      return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        period_scope: "intervals",
-        q,
-        total: codes.length,
-        offset,
-        limit,
-        codes: codes.slice(offset, offset + limit),
-      };
-    },
-  );
+  vi.mocked(getLineage).mockReset();
+  vi.mocked(getLineage).mockResolvedValue({
+    edges: [],
+    warnings: [],
+    registers: [],
+  });
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockResolvedValue({
+    items: [],
+    next_cursor: null,
+    total: 0,
+  });
   vi.mocked(getDocsForVariable).mockReset();
   vi.mocked(getDocsForVariable).mockResolvedValue({
-    results: [],
-    total_count: 0,
-  } as never);
+    items: [],
+    next_cursor: null,
+    total: 0,
+    register_ingested: true,
+  });
   // No `?period` — the embedded states drive the plan.
   window.history.pushState({}, "", "/__reset__");
   router.navigate("/catalog/scb/lisa/kon");
@@ -141,7 +125,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       "Question 18 of the 2014–2016 questionnaire; mappings use the separately labelled CIS2016 concordance column on pages 23–27.";
     await render(BindingLeafView, {
       fqidPath: "scb/innovation-foretag/co11",
-      node: node(
+      ...leaf(
         [
           state({
             state_id: "20",
@@ -237,7 +221,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     await render(BindingLeafView, {
       fqidPath:
         "scb/innovation-foretag/cis2014-cooperation-group-enterprises-sweden",
-      node: node(
+      ...leaf(
         [
           state({
             state_id: "50",
@@ -317,13 +301,11 @@ describe("BindingLeafView representation picker (#678)", () => {
       valid_to: "2016-12-31",
       provenance: matrixProvenance("group-foreign", "CO12", 25),
     });
-    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+    vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
       const periodStates = [selected, selectedPeer, otherVariant];
-      return statesResponse(
-        params?.variant === "_default"
-          ? periodStates.filter((item) => item.variant === "_default")
-          : periodStates,
-      );
+      return params?.variant === "_default"
+        ? periodStates.filter((item) => item.variant === "_default")
+        : periodStates;
     });
     router.navigate(
       "/catalog/scb/innovation-foretag/co11?period=2014..2016&variant=_default",
@@ -331,13 +313,15 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await render(BindingLeafView, {
       fqidPath: "scb/innovation-foretag/co11",
-      node: node([selected, selectedPeer, otherPeriod, otherVariant]),
+      ...leaf([selected, selectedPeer, otherPeriod, otherVariant], {
+        fqid: "scb/innovation-foretag/co11",
+      }),
       ...SEED,
       vintageYear: 2024,
     });
 
     await vi.waitFor(() =>
-      expect(getCatalogNode).toHaveBeenCalledWith(
+      expect(getStates).toHaveBeenCalledWith(
         "scb/innovation-foretag/co11",
         expect.objectContaining({
           period: "2014..2016",
@@ -369,7 +353,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("omits unknown, malformed, or unsafe curated provenance without crashing", async () => {
     await render(BindingLeafView, {
       fqidPath: "scb/innovation-foretag/co11",
-      node: node([
+      ...leaf([
         state({
           state_id: "40",
           delivery_column_name: "CO11",
@@ -418,7 +402,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("marks resolution-only gaps as inferred and unattributed", async () => {
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([
+      ...leaf([
         state({
           state_id: "2",
           variant: "individer",

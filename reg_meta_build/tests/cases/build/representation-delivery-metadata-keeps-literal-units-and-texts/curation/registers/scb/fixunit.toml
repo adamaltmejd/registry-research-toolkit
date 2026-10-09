@@ -1,0 +1,30 @@
+[register]
+provider = "scb"
+slug = "fixunit"
+native_id = "8"
+[[variant]]
+native_id = "8.10"
+slug = "people"
+[[variable]]
+native_id = "8.8"
+slug = "income"
+[[representation.delivery_metadata]]
+variable = "8.8"
+fields = ["name"]
+records = {{expected_records key=member:801,member:802}}
+columns = [{ variant_key = {{variant_key key=member:801}}, column = "VALUE", valid_from = "2020-01-01", valid_to = "2021-12-31", expected_codings = [] }]
+evidence = "Exact supplied delivery texts and units"
+noted = "2026-10-08"
+[[errata.field]]
+variable = "8.8"
+variant = "8.10"
+column = "VALUE"
+edition = "820"
+expected_fields = {{expected_fields key=member:801 fields=name,definition,description,operational_definition,coverage_from,coverage_to,classification_declared,representation,data_type,measurement_unit}}
+expected_period_text = {{period_text key=member:801}}
+expected_scope = {{edition_scope key=member:801}}
+expected_period = {{period_scope key=member:801}}
+evidence = "Independent supplied source correction"
+noted = "2026-10-08"
+field = "measurement_unit"
+value = "Checked source wording"

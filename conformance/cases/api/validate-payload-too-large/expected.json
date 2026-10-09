@@ -1,0 +1,11 @@
+[
+  {
+    "status": 413,
+    "json": {
+      "/error/code": "payload_too_large",
+      "/error/fields": {
+        "limit_bytes": 1048576
+      }
+    }
+  }
+]

@@ -11,7 +11,8 @@ Rust runtime and compiled-catalog refactor.
 - `reg_meta_build` (CLI `reg-meta-build`) — build the reg_meta SQLite DBs from SCB
   exports (maintainer-only).
 - `reg_schema` (library) — `project_data.json` schema and structural validator.
-- `reg_webapp` — FastAPI backend + Svelte SPA: catalog browse + project authoring.
+- `reg_webapp` — Svelte SPA over the Rust server (`reg-meta serve`): catalog browse +
+  project authoring.
 
 The `reg_monabundle` (MONA bundle build + runtime + PII scanner) and `mock_data_wizard`
 (local mock-data generation) packages have been archived to branch
@@ -68,8 +69,8 @@ maintenance, not line count) on every change. Two repo-specific notes:
   adapter/route legitimately needs a new module, but a small format-agnostic leaf inside
   it (a validator, a write loop, a clamp gate) gets re-pasted instead of hoisted. Before
   writing a leaf, check whether an internal capability already does it
-  (`reg_meta_build`'s `_curation.py` and `db.py`, `reg_webapp`'s `query_input.py` are
-  typical homes). Extend it; don't re-type it.
+  (`reg_meta_build`'s `_curation.py` and `db.py` are typical homes). Extend it; don't
+  re-type it.
 - **The ladder cuts both ways.** This repo *under*-uses libraries as often as it
   over-builds (e.g. `reg_meta_build` hand-rolls TOML validators though it already ships
   Pydantic for its build-time IR). "Installed dep solves it → use it" binds as hard as
@@ -87,6 +88,13 @@ simplification reads as intent and a deferral can't silently rot.
 
 # Testing policy
 
+Most changes need no new test. Verify by running the existing suite or the real
+pipeline; a check run once is not a permanent test. Add or extend a test only when you
+can name the behavior it pins, a credible regression that makes it fail, and why no
+existing boundary case already catches that failure. Two kinds are defects on sight:
+**tautological** tests (the expected value comes from the code under test) and
+**change-detector** tests (they break on a refactor that changes no boundary).
+
 Tests pin **contracts and behavior**, never implementation. The toolkit is a
 deterministic compiler (`reg_meta_build`) that feeds an immutable artifact to stateless
 readers (`reg_meta`, `reg_webapp`), so nearly every behavior is observable at a boundary
@@ -99,37 +107,30 @@ skill applies them to a change and to a sweep.
   server from a boundary and observes its output. A unit test is the exception: allowed
   only where it pins behavior a boundary case cannot reach well (a grammar, interval
   algebra, a pure fold), stated as input → expected output, and it must survive a
-  rewrite of the code behind it. A test that breaks on a refactor that changes no
-  boundary is the defect, not the refactor.
+  rewrite of the code behind it.
 - **Assert only at a named boundary**: built-artifact content, CLI JSON, library return
   models, HTTP responses, `project_data.json` validation results, order-manifest bytes,
   curation-TOML load or located failure, the FQID and period grammars. Anything else is
-  reached through one of those, not tested on its own. Repository tooling under
+  reached through one of those, not tested on its own; conformance cases use only public
+  contracts (`ARCHITECTURE.md` → "Testing strategy"). No private-name imports
+  (`from x import _helper`) and no patching of internal modules; mock only process
+  boundaries: network, clock, filesystem, subprocess. Repository tooling under
   `scripts/tests` and `.claude/hooks/tests` asserts that tool's own contract (skill
   discovery, a lint's verdict, a hook's exit code and message).
-- **Conformance uses public contracts.** Cases may exercise CLI JSON, HTTP responses,
-  order manifests, or documented public library return-model contracts. A public
-  function name alone does not establish a contract: assert observable domain results or
-  located errors, never object internals, call graphs or query implementation. Do not
-  add product adapters solely to expose a test seam. Keep requests and expected results
-  readable as data; Python-specific operation names can be revised in a separate
-  portability pass after a byte-identical relocation.
-- **No private-name imports in tests** (`from x import _helper`) and no patching of
-  internal modules. Mock only process boundaries: network, clock, filesystem,
-  subprocess.
 - **Oracles are data.** Expected behavior lives in golden corpora and snapshot files
   (`input → expected`) readable without Python. Changing an expected file is a content
-  decision reviewed in the diff; never regenerate goldens to make a run pass without
-  reading what changed and saying why in the commit.
+  decision reviewed in the diff, with the reason in the commit. Never weaken, regenerate
+  or delete a test only to get a passing run.
 - **Fixtures come from readable source** (TOML/JSON/CSV run through the real pipeline),
   never from Python literals of database rows. The synthetic artifact is the unit.
-- **About one test per stated behavior, at its hardest case**: a second run, reordered
-  input, an interval edge, a refusal beside its allowed twin. Not the first case that
-  passes. Named by behavior; no test file over 800 lines, split by contract surface.
-- **Expected values come from outside the code under test**: a golden, the source
-  fixture, the spec, or agreement between two adapters. Never its own output or a copy
-  of its logic.
-- **Every test can fail.** A new or changed test's comment names the product change that
+- **At most one case per behavior, at its hardest case, and only where no existing case
+  covers it**: a second run, reordered input, an interval edge, a refusal beside its
+  allowed twin. Not the first case that passes. Named by behavior; no test file over 800
+  lines, split by contract surface.
+- **Expected values come from outside the code under test**, or the test is
+  tautological: a golden, the source fixture, the spec, or agreement between two
+  adapters. Derive them from the spec or fixture before implementing.
+- **Every test can fail.** A new or changed test's comment names the regression that
   makes it fail. A refusal asserts the located error code, not only that something
   failed. A contract is asserted once, at the outermost boundary that reaches it; a twin
   is deleted.
@@ -140,11 +141,14 @@ skill applies them to a change and to a sweep.
   Hypothesis for grammars and interval algebra.
 - **Structural validation has one authority.** `validate_built_db` owns artifact
   invariants; tests run it on the synthetic artifact, they do not re-derive its checks.
-- **Bug fix = a regression case in the owning corpus**, extending its behavior's test,
-  not a new assertion block in a helper test.
+- **A bug fix adds a regression case to the owning corpus only when no existing case
+  fails on the pre-fix code**: extend or strengthen that behavior's case rather than a
+  helper test. The new or strengthened case must fail on the pre-fix code.
 - **Within budget.** Each package's suite stays inside its time budget in
   `ARCHITECTURE.md` → "Tiers". A check that costs more than its behavior is worth moves
   to a slower tier (real-seed or release gate) or goes.
+- **Report what ran.** Name the checks you ran and the ones you did not; never claim an
+  unrun check passed.
 - **Frontend follows the same rule**: assert on rendered DOM, the accessibility tree and
   the codegen'd API types, not component internals. No screenshot regression. A
   UI-specific regime is a separate, later decision.
@@ -180,8 +184,8 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 refactor.
 
 - **Library packages** (`reg_meta`, `reg_meta_build`):
-  - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base) so FastAPI can
-    consume its catalog models directly (adopted #681, 2026-06-22); `reg_meta_build`
+  - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base; adopted #681,
+    2026-06-22, for the since-deleted FastAPI app); `reg_meta_build`
     uses Pydantic v2 `_IRBase` models for the build-time IR core and
     `@dataclass(frozen=True)` for local value types in feature modules.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
@@ -190,17 +194,15 @@ refactor.
   - CLI: argparse. No click/typer.
 - **`reg_schema`** (authoring/validation surface): Pydantic v2. Reasons: (1) it's the
   canonical structural validator for `project_data.json` — Pydantic's declarative
-  field/model validators are the right tool; (2) FastAPI in `reg_webapp/backend/`
-  consumes `reg_schema` models directly as response models, killing the 1:1 wrapper
-  drift surface; (3) `model_json_schema()` gives the SPA's TypeScript codegen a free,
-  always-correct schema source. See `reg_schema/DESIGN.md`.
-- **Web backend** (`reg_webapp/backend/`): FastAPI + Pydantic REST. `reg_schema`
-  Pydantic models are response models directly (no wrapper layer). `reg_meta`'s frozen
-  Pydantic catalog models are consumed directly — the webapp's `kind`-discriminated node
-  models embed them as field types (collapsed in #681). The only remaining 1:1 wrapper
-  is reg_schema's `ValidationResult`/`ValidationIssue`.
+  field/model validators are the right tool; (2) `model_json_schema()` gives a free,
+  always-correct schema source. Frozen until stage 4 of `RUST_RUNTIME_SPEC.md` (the Rust
+  server validates projects). See `reg_schema/DESIGN.md`.
+- **Web server**: the Rust `reg-meta serve` (`crates/reg-meta/`) answers every `/api`
+  route and `/mcp`; there is no Python web backend (`RUST_RUNTIME_SPEC.md` package F
+  deleted the FastAPI app). `reg_webapp/backend/` keeps only dev tooling: the synthetic
+  fixture DB, the search eval and the period-grammar parity test.
 - **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed.
-  TS types codegen'd from FastAPI's `openapi.json`.
+  TS types codegen'd from the Rust server's `crates/reg-meta/openapi.json`.
 - **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into Apple Container
   (macOS) or Podman (Linux) tests; `@pytest.mark.release` opts into real-artifact tests.
   Build/parse coverage is fully synthetic (no gitignored real SCB/SOS data) and runs the
@@ -214,7 +216,7 @@ refactor.
 
 # Run (dev servers)
 
-- `reg_webapp` local dev (FastAPI + Vite with an `/api` proxy): the `/run-reg-webapp`
+- `reg_webapp` local dev (Rust server + Vite with an `/api` proxy): the `/run-reg-webapp`
   skill (`reg_webapp/.claude/skills/run-reg-webapp/`) has the verified launch steps + a
   Playwright driver for smoke/screenshots. `.claude/launch.json` registers a single
   `reg-webapp` config for `preview_start` (its entry point is `dev.sh preview`, so
@@ -247,7 +249,7 @@ refactor.
 - `uv run python -m pytest conformance -q` — source-built conformance corpus and
   session-built catalog/steward artifact checks
 - `cargo build --workspace`, then
-  `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q`
+  `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q`
   — conformance checks on an admitted real artifact; all three flags required (search
   runs against the Rust server, and a missing `--server-cmd` fails), bad artifacts fail
   admission (fixture-bound goldens still use synthetic sources)

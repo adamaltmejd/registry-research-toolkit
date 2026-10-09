@@ -2,8 +2,8 @@
 // Siblings: ConceptGroupView{,.selection,.labels,.navigation,.filters,.succession}.browser.test.ts.
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ConceptGroupNodeData, RelationshipGraph } from "./api";
-import { getCatalogNode, getConceptGroup, getConceptGroupGraph } from "./api";
+import type { ConceptGroupShow, RelationshipGraph } from "./api";
+import { getGraph, getShow, getStates } from "./api";
 import {
   graph,
   gstate,
@@ -20,19 +20,19 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getCatalogNode: vi.fn(),
-    getConceptGroup: vi.fn(),
-    getConceptGroupGraph: vi.fn(),
+    getStates: vi.fn(),
+    getShow: vi.fn(),
+    getGraph: vi.fn(),
   };
 });
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
+  vi.mocked(getStates).mockReset();
   mockResolveColumns({});
-  vi.mocked(getConceptGroup).mockReset();
-  vi.mocked(getConceptGroupGraph).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getGraph).mockReset();
   // Default: an empty graph (overridden per case).
-  vi.mocked(getConceptGroupGraph).mockResolvedValue(graph([]));
+  vi.mocked(getGraph).mockResolvedValue(graph([]));
   router.navigate("/catalog/group/scb/rams/ink");
   windowStore.set(null);
   projectStore.newProject({
@@ -43,8 +43,8 @@ beforeEach(() => {
 
 describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
   function dimensionNode(
-    overrides: Partial<ConceptGroupNodeData> = {},
-  ): ConceptGroupNodeData {
+    overrides: Partial<ConceptGroupShow> = {},
+  ): ConceptGroupShow {
     return node({
       key: "dimensioned",
       label: "Dimensioned group",
@@ -64,7 +64,7 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
         },
       ],
       ...overrides,
-    } as unknown as Partial<ConceptGroupNodeData>);
+    } as unknown as Partial<ConceptGroupShow>);
   }
 
   function dimensionGraph(): RelationshipGraph {
@@ -100,8 +100,8 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
   }
 
   it("keeps row-level Variant/Coding filters on non-LISA concept groups", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(dimensionNode());
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
+    vi.mocked(getShow).mockResolvedValue(dimensionNode());
+    vi.mocked(getGraph).mockResolvedValue(dimensionGraph());
 
     await renderGroup({
       provider: "scb",
@@ -114,8 +114,8 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
 
   /** The `person-orgnr` shape: no curated axes at all. */
   function axisLessNode(
-    overrides: Partial<ConceptGroupNodeData> = {},
-  ): ConceptGroupNodeData {
+    overrides: Partial<ConceptGroupShow> = {},
+  ): ConceptGroupShow {
     return dimensionNode({
       axes: [],
       members: [
@@ -129,10 +129,8 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
   it("keeps them on a CURATED group with no axes either (Y-78)", async () => {
     // Suppression is for curated groups whose declared axes ARE the browse facets;
     // with no axes declared there is nothing authoritative to defer to.
-    vi.mocked(getConceptGroup).mockResolvedValue(
-      axisLessNode({ source: "curated" }),
-    );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
+    vi.mocked(getShow).mockResolvedValue(axisLessNode({ source: "curated" }));
+    vi.mocked(getGraph).mockResolvedValue(dimensionGraph());
 
     await renderGroup({
       provider: "scb",
@@ -144,12 +142,12 @@ describe("ConceptGroupView picker dimension filters (#908/#931)", () => {
   });
 
   it("shows only declared axes on curated group pages", async () => {
-    vi.mocked(getConceptGroup).mockResolvedValue(
+    vi.mocked(getShow).mockResolvedValue(
       dimensionNode({
         source: "curated",
       }),
     );
-    vi.mocked(getConceptGroupGraph).mockResolvedValue(dimensionGraph());
+    vi.mocked(getGraph).mockResolvedValue(dimensionGraph());
 
     await renderGroup({
       provider: "scb",

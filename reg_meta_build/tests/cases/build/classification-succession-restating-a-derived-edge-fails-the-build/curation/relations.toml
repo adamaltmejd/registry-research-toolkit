@@ -1,0 +1,4 @@
+[[edge]]
+type = "replaced_by"
+from = "class/sni2000"
+to = "class/sni2020"

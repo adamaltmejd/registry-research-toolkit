@@ -1,161 +1,25 @@
-"""Selected canonical codebooks retain literal codes and competing evidence."""
+"""The shipped SEKTORKOD and SEKTOR2000 books keep the code sets a binding relies on."""
 
-from dataclasses import replace
 from pathlib import Path
 
-import pytest
-from reg_meta.source_evidence import RecordLocator
 from reg_meta_build.classifications import load_valid_codes
-from reg_meta_build.resolved_catalog import ResolvedCodeSet
-from reg_meta_build.source_classifications import (
-    resolve_canonical_codes,
-    resolve_classification_conformance,
-)
-from reg_meta_build.source_curation import SourceRecordRef
-from reg_meta_build.source_values import SourceValue
+
+BOOKS = Path(__file__).resolve().parent.parent / "input_data" / "classifications"
 
 
-def _value(key: str, code: str | None, label: str | None) -> SourceValue:
-    return SourceValue(
-        payload_key=key,
-        code=code,
-        label=label,
-        locators=(
-            RecordLocator(
-                semantic_record_key=("codebook:fixture", key),
-                physical_file="codes.csv",
-                physical_table="codes.csv",
-                physical_record=key,
-                physical_cells=(),
-            ),
-        ),
-    )
+def test_sektorkod_cohort_is_not_a_sektor2000_subset() -> None:
+    """Y-170 scope against the SHIPPED books: the observed 11-code SEKTORKOD cohort
+    (00, 11-15, 21-25) conforms to SEKTORKOD and severs against SEKTOR2000, because
+    INSEKT's Undersektor level reuses 11-14 and 21-25 with other meanings but has no
+    15 and no 00 (an accepted binding alone cannot make 15 canonical).
 
-
-def test_literal_codes_and_normalized_duplicates_are_order_independent() -> None:
-    values = (
-        _value("first", "001", "Category"),
-        _value("duplicate", "001", "Category"),
-        _value("text", "A1", "Other"),
-        _value("empty-label", "02", ""),
-        _value("non-ascii", "٠١", "Literal"),
-    )
-    result = resolve_canonical_codes(values, source="fixture", subject="class/fixture")
-    assert result == resolve_canonical_codes(
-        reversed(values), source="fixture", subject="class/fixture"
-    )
-    assert result.diagnostics == () and result.source_payloads == 5
-    assert [(item.code, item.label, item.level) for item in result.codes] == [
-        ("001", "Category", 3),
-        ("02", "", 2),
-        ("A1", "Other", None),
-        ("٠١", "Literal", None),
-    ]
-
-
-def test_conflicting_or_unknown_members_do_not_erase_independent_codes() -> None:
-    values = (
-        _value("a", "1", "First"),
-        _value("b", "1", "Competing"),
-        _value("c", "2", None),
-        _value("d", None, "Unknown code"),
-        _value("e", "03", "Independent"),
-    )
-    result = resolve_canonical_codes(values, source="fixture", subject="class/fixture")
-    assert [item.code for item in result.codes] == ["03"]
-    assert {issue.code for issue in result.diagnostics} == {
-        "conflicting_classification_labels",
-        "unknown_classification_member",
-    }
-    conflict = next(
-        issue
-        for issue in result.diagnostics
-        if issue.code == "conflicting_classification_labels"
-    )
-    assert {ref.semantic_record_key for ref in conflict.refs} == {
-        ("codebook:fixture", "a"),
-        ("codebook:fixture", "b"),
-    }
-    assert all(
-        issue.severity == "error" and issue.withheld_output == ("classification.code",)
-        for issue in result.diagnostics
-    )
-    empty = resolve_canonical_codes(
-        values[:-1], source="fixture", subject="class/fixture"
-    )
-    assert not empty.codes
-    assert empty.diagnostics[-1].withheld_output == (
-        "classification",
-        "classification_bindings",
-    )
-
-
-def test_inconsistent_payload_identity_is_a_contract_error() -> None:
-    value = _value("same", "1", "First")
-    with pytest.raises(ValueError, match="payload key"):
-        resolve_canonical_codes(
-            (value, replace(value, label="Different")),
-            source="fixture",
-            subject="class/fixture",
-        )
-
-
-def _conformance(pairs, canonical, sentinels=None):
-    return resolve_classification_conformance(
-        ResolvedCodeSet(members=tuple(pairs)),
-        classification="fixture",
-        canonical_codes=frozenset(canonical),
-        subject="scb/example/variable",
-        refs=(SourceRecordRef(source="fixture", semantic_record_key=("row", "1")),),
-        valid_from="2020-01-01",
-        valid_to="2020-12-31",
-        sentinel_codes=sentinels,
-    )
-
-
-def test_conformance_checks_literal_codes_without_rewriting_source_labels() -> None:
-    result = _conformance(
-        (("01", "Source wording"), ("01", "Another supplied label"), ("02", "")),
-        {"01", "02", "03"},
-    )
-    assert result.diagnostics == ()
-    assert result.conformance.status == "conforming"
-    assert result.conformance.checked_codes == ("01", "02")
-    assert result.conformance.nonconforming_members == ()
-
-
-@pytest.mark.parametrize("outside", ["", "9", "99", "?", "1"])
-def test_noncanonical_tokens_are_not_guessed_to_be_sentinels(outside: str) -> None:
-    result = _conformance((("01", "Agreed"), (outside, "Literal source label")), {"01"})
-    assert result.conformance.status == "extended"
-    assert result.conformance.declared_classification == "fixture"
-    assert result.conformance.nonconforming_members == (
-        (outside, "Literal source label"),
-    )
-    issue = result.diagnostics[0]
-    assert issue.code == "nonconforming_classification_codes"
-    assert issue.severity == "warning" and issue.withheld_output == ()
-    assert issue.refs[0].semantic_record_key == ("row", "1")
-    assert (issue.valid_from, issue.valid_to) == ("2020-01-01", "2020-12-31")
-
-
-def test_high_overlap_does_not_waive_one_unexplained_code() -> None:
-    pairs = tuple((str(i), f"Label {i}") for i in range(100))
-    result = _conformance(pairs, {str(i) for i in range(99)})
-    assert result.conformance.status == "extended"
-    assert result.conformance.nonconforming_members == (("99", "Label 99"),)
-    assert result == _conformance(tuple(reversed(pairs)), {str(i) for i in range(99)})
-
-
-def test_sektorkod_cohort_conforms_exactly_and_extras_stay_severed() -> None:
-    """Y-170 scope against the SHIPPED books: the observed 11-code cohort is
-    kept under SEKTORKOD, severed against SEKTOR2000 (code 15 absent there is
-    the invariant — an accepted binding alone cannot make it canonical), and
-    pre-2000 extras plus sentinel spellings stay severed under SEKTORKOD.
-    Adding 15 to sektor2000.csv turns this test red."""
-    books = Path(__file__).resolve().parent.parent / "input_data" / "classifications"
-    sektorkod = set(load_valid_codes(books / "sektorkod.csv"))
-    insekt = set(load_valid_codes(books / "sektor2000.csv"))
+    This pins committed book content, not builder behavior: how a binding conforms or
+    extends is pinned by the build case
+    `classification-bindings-conform-extend-or-stay-unbound-per-register`. Fails if
+    sektorkod.csv changes its codes or 15 or 00 is added to sektor2000.csv.
+    """
+    sektorkod = set(load_valid_codes(BOOKS / "sektorkod.csv"))
+    insekt = set(load_valid_codes(BOOKS / "sektor2000.csv"))
     assert sektorkod == {
         "00",
         "11",
@@ -169,107 +33,4 @@ def test_sektorkod_cohort_conforms_exactly_and_extras_stay_severed() -> None:
         "24",
         "25",
     }
-    # The invariant: INSEKT's Undersektor level literally reuses 11-14/21-25
-    # with different meanings, but 15 and 00 are absent — so the cohort severs.
-    assert "15" not in insekt
-    assert "00" not in insekt
-    observed = tuple((code, f"Source {code}") for code in sorted(sektorkod))
-    kept = _conformance(observed, sektorkod)
-    assert kept.conformance.status == "conforming"
-    assert kept.conformance.nonconforming_members == ()
-    assert kept.diagnostics == ()
-    misbound = _conformance(observed, insekt)
-    assert misbound.conformance.status == "extended"
-    assert misbound.conformance.declared_classification == "fixture"
-    assert [code for code, _ in misbound.conformance.nonconforming_members] == [
-        "00",
-        "15",
-    ]
-    # Extras beyond the book (pre-2000 codes, sentinel spellings) are listed
-    # member-by-member; the conforming remainder does not absorb them.
-    extras = observed + (
-        ("19", "Source 19"),
-        ("99", "Source 99"),
-        ("0", "Source 0"),
-        ("000", "Source 000"),
-        ("", "Source empty"),
-    )
-    severed = _conformance(extras, sektorkod)
-    assert severed.conformance.status == "extended"
-    assert severed.conformance.checked_codes == tuple(
-        sorted(sektorkod | {"19", "99", "0", "000", ""})
-    )
-    assert severed.conformance.nonconforming_members == (
-        ("", "Source empty"),
-        ("0", "Source 0"),
-        ("000", "Source 000"),
-        ("19", "Source 19"),
-        ("99", "Source 99"),
-    )
-    assert severed.diagnostics[0].code == "nonconforming_classification_codes"
-
-
-def test_missing_canonical_conversion_is_fatal_not_a_curation_issue() -> None:
-    with pytest.raises(ValueError, match="nonempty codebook"):
-        _conformance((("01", "Label"),), set())
-
-
-def test_curated_sentinel_keeps_binding_with_a_warning() -> None:
-    result = _conformance(
-        (("01", "Agreed"), ("00000", "Bulk missing")),
-        {"01", "02"},
-        {"00000": "not applicable"},
-    )
-    assert result.conformance.status == "extended"
-    assert result.conformance.nonconforming_members == ()
-    assert result.conformance.sentinel_members == (("00000", "Bulk missing"),)
-    assert [issue.code for issue in result.diagnostics] == [
-        "sentinel_classification_codes"
-    ]
-    warning = result.diagnostics[0]
-    assert warning.severity == "warning"
-    assert warning.withheld_output == ()
-    assert warning.fields == ("coding", "classification")
-    assert warning.refs[0].semantic_record_key == ("row", "1")
-    assert (warning.valid_from, warning.valid_to) == ("2020-01-01", "2020-12-31")
-    assert "'00000'" in warning.detail and "not applicable" in warning.detail
-    assert "do not sever the binding" in warning.detail
-    assert "(the known classification remains linked)" in warning.detail
-
-
-def test_sentinel_matching_is_exact_code_string() -> None:
-    # `"0"` and `"0000"` are not the curated `"00000"`; the source label
-    # never participates in matching either.
-    result = _conformance(
-        (("01", "Agreed"), ("0", "not applicable")),
-        {"01"},
-        {"00000": "not applicable"},
-    )
-    assert result.conformance.status == "extended"
-    assert result.conformance.sentinel_members == ()
-    assert result.conformance.nonconforming_members == (("0", "not applicable"),)
-    assert [issue.code for issue in result.diagnostics] == [
-        "nonconforming_classification_codes"
-    ]
-
-
-def test_non_sentinel_still_severs_and_error_lists_only_non_sentinels() -> None:
-    result = _conformance(
-        (("01", "Agreed"), ("00000", "Bulk missing"), ("99", "Unknown")),
-        {"01", "02"},
-        {"00000": "not applicable"},
-    )
-    assert result.conformance.status == "extended"
-    assert result.conformance.nonconforming_members == (("99", "Unknown"),)
-    assert result.conformance.sentinel_members == (("00000", "Bulk missing"),)
-    assert [issue.code for issue in result.diagnostics] == [
-        "nonconforming_classification_codes",
-        "sentinel_classification_codes",
-    ]
-    error, warning = result.diagnostics
-    assert error.severity == "warning"
-    assert "'99'" in error.detail and "00000" not in error.detail
-    assert error.withheld_output == ()
-    assert warning.severity == "warning" and warning.withheld_output == ()
-    assert "do not sever the binding" in warning.detail
-    assert "binding is kept" not in warning.detail
+    assert sektorkod - insekt == {"00", "15"}

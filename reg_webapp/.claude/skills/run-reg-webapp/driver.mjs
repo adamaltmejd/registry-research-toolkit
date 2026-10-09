@@ -214,7 +214,7 @@ const FLOW_VIEWPORTS = [
   VIEWPORTS.wide,
 ];
 const VALIDATE_PATH = "/api/project/validate";
-const ORDER_PATH = "/api/project/order";
+const ORDER_PATH = "/api/project/order/manifest";
 
 /** Is this a POST of `path`? (Requests, and a response's own request.) */
 function posts(request, path) {
@@ -241,12 +241,13 @@ function periodApplied(page, wire) {
 
 /** Hold every `?period` resolve open until the returned `release()` lets it
  * through. Nothing is faked — the real request is forwarded, just late — so a
- * case can act WHILE one is genuinely in flight; against a localhost backend that
+ * case can act WHILE one is genuinely in flight; against a localhost server that
  * answers in single-digit milliseconds there is otherwise no in-flight moment to
  * act in. Gated on a promise rather than a timer: the overlap is then a fact
  * rather than a race the clock usually wins, and it costs no wall time. */
 async function holdPeriodResolve(page) {
-  const pattern = /\/api\/catalog\/.*period=/;
+  // The binding page's `?period` subset is the Rust server's `states` facet.
+  const pattern = /\/api\/states\/.*period=/;
   let open;
   const held = new Promise((resolve) => {
     open = resolve;
@@ -456,10 +457,11 @@ async function blockedOrderCase(page, counts, shoot) {
   await ui.download.click();
   const response = await blocked;
   check(response.status() === 422, `expected 422 from /order, got ${response.status()}`);
-  const body = await response.json();
+  const { error } = await response.json();
   check(
-    body.findings.some((f) => f.code === "project_empty"),
-    `expected a project_empty finding, got ${JSON.stringify(body.findings)}`,
+    error.code === "order_blocked" &&
+      error.fields.findings.some((f) => f.code === "project_empty"),
+    `expected order_blocked with a project_empty finding, got ${JSON.stringify(error)}`,
   );
 
   const findings = ui.panel.getByRole("group", { name: /^Blocking findings/ });
@@ -1107,8 +1109,8 @@ try {
     mkdirSync(outDir, { recursive: true });
     // The project the two recovery scenarios open, and the manifest it must
     // produce, are DERIVED from the deployment the flows run against — never
-    // pinned to a stale capture. Shapes: reg_webapp/backend/tests/
-    // test_project_order.py (a valid global-fallback project + its entry).
+    // pinned to a stale capture. Shapes: conformance/cases/api/order-* (a valid
+    // global-fallback project + its entry).
     // Playwright's APIRequestContext, not bun's global fetch. This is still an
     // out-of-page HTTP client (it does not run in the renderer), but it resolves
     // `localhost` the way the browser does; bun picks ::1 with no fallback while

@@ -36,9 +36,9 @@ class TestSupportedSchemaVersion:
 
     Synthetic fixtures only: `raw_project`, the same well-shaped finite-period
     project the CLI cases order, with `schema_version` as the sole variable. The
-    webapp's `/validate` and `/order` reuse this decision
-    (`order.schema_version_issue`), so the fixtures that reject here reject there
-    — pinned in `reg_webapp/backend/tests/test_project_order.py`.
+    Rust server's `validate` and `order` make the same decision, pinned in
+    `conformance/cases/api/order-errors` and
+    `conformance/cases/api/validate-unsupported-schema-version`.
     """
 
     @pytest.mark.parametrize(
@@ -97,9 +97,8 @@ class TestCliAdapter:
     the manifest's own canonical bytes reach stdout/`--output` UNCHANGED (never
     the CLI envelope, never `--format`), and each failure gets a stable exit
     code from the existing error classes. The materializer's rules are pinned by
-    the classes above; the byte-identity with the FastAPI adapter is pinned in
-    `reg_webapp/backend/tests/test_project_order.py` (only there do both
-    adapters exist).
+    the classes above; the Rust server's download is pinned against the frozen
+    CLI's committed bytes by `conformance/test_order.py` over `cases/order`.
     """
 
     @staticmethod

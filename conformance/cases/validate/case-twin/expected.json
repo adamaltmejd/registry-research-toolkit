@@ -1,9 +1,0 @@
-[
-  {
-    "status": 200,
-    "json": {
-      "/ok": true,
-      "/issues/*/code": []
-    }
-  }
-]

@@ -1,0 +1,14 @@
+[
+  {
+    "status": 400,
+    "json": {
+      "/error/code": "malformed_request"
+    }
+  },
+  {
+    "status": 400,
+    "json": {
+      "/error/code": "malformed_request"
+    }
+  }
+]

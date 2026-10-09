@@ -1,0 +1,7 @@
+[classification]
+short_name = "CODES-FIRST"
+slug = "codes-first"
+name = "CODES-FIRST"
+codes_file = "codes-first.csv"
+[binding]
+value_set_labels = ["First list"]

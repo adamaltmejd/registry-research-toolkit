@@ -1,0 +1,12 @@
+{
+  "note": "A register's coverage per scope: every year a state of one of its variables spans, per register variant. Reference reads all four variables' 2010..2025 states; holdings reads only what the steward holds, the 2018 and 2019 tables. Twin of cli_scope/availability-reference and availability-holdings. Fails if holdings reads unheld states or periods, a year inside the span is reported as a gap, or the variants lose their years.",
+  "fixture": "reader",
+  "requests": [
+    {
+      "operation": "coverage",
+      "path": "/api/coverage/scb/example",
+      "query": {"scope": "reference"}
+    },
+    {"operation": "coverage", "path": "/api/coverage/scb/example"}
+  ]
+}

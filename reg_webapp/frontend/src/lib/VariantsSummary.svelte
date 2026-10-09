@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { VariantsResponse } from "./api";
+import type { VariantModel } from "./api";
 import { variantsHref } from "./catalog";
 import { type Column, DataTable } from "./ui";
 import { groupVariants } from "./variants";
@@ -19,18 +19,15 @@ import { groupVariants } from "./variants";
 // real variant renders the FULL list — `_default` is NOT filtered out of a mixed
 // list (out of scope).
 //
-// Presentational: `CatalogNodeView` owns the fetch (Y-82). The register page's
-// variant chips name their variants out of the same list, and one page must not
-// GET it twice — nor risk two spellings of one variant.
+// Presentational: the variants ride the register's `show` node, and the register
+// page's variant chips name their variants out of the same list, so one variant
+// never has two spellings.
 const {
   registerFqid,
   variants,
-  error = null,
 }: {
   registerFqid: string;
-  /** The register's variants, or null while the page's fetch is in flight. */
-  variants: VariantsResponse | null;
-  error?: string | null;
+  variants: VariantModel[];
 } = $props();
 
 interface VariantRow {
@@ -47,11 +44,9 @@ const columns: Column<VariantRow>[] = [
   { key: "years", label: "Years", mono: true, align: "end" },
 ];
 
-const hasRealVariant = $derived(
-  variants?.variants.some((v) => v.slug !== "_default") ?? false,
-);
+const hasRealVariant = $derived(variants.some((v) => v.slug !== "_default"));
 const rows = $derived(
-  groupVariants(variants?.variants ?? []).map((group) => ({
+  groupVariants(variants).map((group) => ({
     name: group.label,
     slugs: group.segments.map((segment) => segment.variant.slug),
     years: group.span,
@@ -60,32 +55,26 @@ const rows = $derived(
 </script>
 
 <!-- #673/M4: render the section ONLY when there's a real (non-`_default`)
-     variant, or an error. While loading, render nothing (the variants are a
-     secondary affordance — no "Loading variants…" flash); a register with no
-     real variant (empty list OR `_default`-only) renders nothing at all (no
-     section, no heading, no "No variants." text). -->
-{#if error || hasRealVariant}
+     variant; a register with no real variant (empty list OR `_default`-only)
+     renders nothing at all (no section, no heading, no "No variants." text). -->
+{#if hasRealVariant}
   <section class="variants" aria-labelledby="variants-heading">
     <h3 id="variants-heading">Variants</h3>
-    {#if error}
-      <p class="error" role="alert">Failed to load variants: {error}</p>
-    {:else}
-      <DataTable framed {columns} {rows}>
-        {#snippet cell(row, column)}
-          {#if column.key === "name"}
-            <span class="name">{row.name}</span>
-            {#each row.slugs as slug (slug)}
-              <code class="slug">{slug}</code>
-            {/each}
-          {:else}
-            {row.years}
-          {/if}
-        {/snippet}
-      </DataTable>
-      <p class="details">
-        <a href={variantsHref(registerFqid)}>All variant details</a>
-      </p>
-    {/if}
+    <DataTable framed {columns} {rows}>
+      {#snippet cell(row, column)}
+        {#if column.key === "name"}
+          <span class="name">{row.name}</span>
+          {#each row.slugs as slug (slug)}
+            <code class="slug">{slug}</code>
+          {/each}
+        {:else}
+          {row.years}
+        {/if}
+      {/snippet}
+    </DataTable>
+    <p class="details">
+      <a href={variantsHref(registerFqid)}>All variant details</a>
+    </p>
   </section>
 {/if}
 

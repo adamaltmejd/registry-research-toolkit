@@ -24,7 +24,7 @@ const OPEN_ENDED_TO: &str = "9999-12-31";
 /// finite end (null when unknown, or when `open_ended`), and the states (held
 /// periods in holdings) behind it.
 #[derive(Clone, Serialize, ToSchema)]
-pub struct Coverage {
+pub struct ShowCoverage {
     #[serde(rename = "coverage_from")]
     from: Option<String>,
     #[serde(rename = "coverage_to")]
@@ -33,7 +33,7 @@ pub struct Coverage {
     state_count: i64,
 }
 
-impl Coverage {
+impl ShowCoverage {
     /// Today's `_coverage_bounds` over a `(MIN(valid_from), MAX(valid_to))`.
     fn new(from: Option<String>, to: Option<String>, state_count: i64) -> Self {
         let open_ended = to.as_deref() == Some(OPEN_ENDED_TO);
@@ -59,7 +59,7 @@ impl Coverage {
 
 /// A register's span: its variables and the earliest and latest of their states.
 #[derive(Serialize, ToSchema)]
-pub struct RegisterCoverage {
+pub struct ShowRegisterCoverage {
     variable_count: i64,
     coverage_from: Option<String>,
     coverage_to: Option<String>,
@@ -75,7 +75,7 @@ pub struct Delivery {
     column: Option<String>,
     /// `intervals`, or `year_independent` (no windows).
     period_scope: String,
-    coverage: Coverage,
+    coverage: ShowCoverage,
     windows: Vec<Window>,
 }
 
@@ -83,13 +83,6 @@ pub struct Delivery {
 pub struct Window {
     valid_from: String,
     valid_to: String,
-}
-
-fn scope_name(scope: Scope) -> &'static str {
-    match scope {
-        Scope::Reference => "reference",
-        Scope::Holdings => "holdings",
-    }
 }
 
 /// A register's deliveries in scope, by variable id, each variable's in today's
@@ -106,7 +99,7 @@ pub(super) fn deliveries(
          JOIN variable v USING(variable_id) \
          JOIN delivery_window dw ON dw.browse_delivery_id = bd.browse_delivery_id \
          WHERE bd.scope = ?1 AND v.register_id = ?2 ORDER BY 1, 2",
-        (scope_name(scope), register_id),
+        (scope.as_str(), register_id),
         |row| {
             Ok((
                 row.get::<_, i64>(0)?,
@@ -126,7 +119,7 @@ pub(super) fn deliveries(
          JOIN variable v USING(variable_id) \
          JOIN register_variant rv ON rv.register_variant_id = bd.register_variant_id \
          WHERE bd.scope = ?1 AND v.register_id = ?2 ORDER BY bd.browse_delivery_id",
-        (scope_name(scope), register_id),
+        (scope.as_str(), register_id),
         |row| {
             Ok((
                 row.get::<_, i64>(0)?,
@@ -142,7 +135,7 @@ pub(super) fn deliveries(
     for (id, variable_id, variant, column, period_scope, state_count) in found {
         let windows = windows.remove(&id).unwrap_or_default();
         // The windows are disjoint and ordered, so the last ends latest.
-        let coverage = Coverage::new(
+        let coverage = ShowCoverage::new(
             windows.first().map(|w| w.valid_from.clone()),
             windows.last().map(|w| w.valid_to.clone()),
             state_count,
@@ -165,11 +158,11 @@ pub(super) fn variable_coverage(
     scope: Scope,
     register_id: i64,
     deliveries: &BTreeMap<i64, Vec<Delivery>>,
-) -> Result<BTreeMap<i64, Coverage>, Error> {
+) -> Result<BTreeMap<i64, ShowCoverage>, Error> {
     if scope == Scope::Holdings {
         return Ok(deliveries
             .iter()
-            .map(|(id, offered)| (*id, Coverage::of(offered.iter())))
+            .map(|(id, offered)| (*id, ShowCoverage::of(offered.iter())))
             .collect());
     }
     Ok(rows(
@@ -181,7 +174,7 @@ pub(super) fn variable_coverage(
         |row| {
             Ok((
                 row.get(0)?,
-                Coverage::new(row.get(1)?, row.get(2)?, row.get(3)?),
+                ShowCoverage::new(row.get(1)?, row.get(2)?, row.get(3)?),
             ))
         },
     )?
@@ -199,7 +192,7 @@ fn column_coverage(
     scope: Scope,
     register_id: i64,
     deliveries: &BTreeMap<i64, Vec<Delivery>>,
-) -> Result<BTreeMap<(i64, String), Coverage>, Error> {
+) -> Result<BTreeMap<(i64, String), ShowCoverage>, Error> {
     let mut out = BTreeMap::new();
     if scope == Scope::Holdings {
         for (id, offered) in deliveries {
@@ -208,7 +201,7 @@ fn column_coverage(
             columns.sort_unstable();
             columns.dedup();
             for column in columns {
-                let coverage = Coverage::of(
+                let coverage = ShowCoverage::of(
                     offered
                         .iter()
                         .filter(|d| d.column.as_deref() == Some(column)),
@@ -247,7 +240,7 @@ fn column_coverage(
     out.extend(
         spans
             .into_iter()
-            .map(|(key, (from, to, count))| (key, Coverage::new(from, to, count))),
+            .map(|(key, (from, to, count))| (key, ShowCoverage::new(from, to, count))),
     );
     Ok(out)
 }
@@ -257,8 +250,8 @@ type Span = (Option<String>, Option<String>, i64);
 
 /// The coverage of a register's group members, as today's group node zips it.
 pub(super) struct MemberCoverage {
-    variables: BTreeMap<i64, Coverage>,
-    columns: BTreeMap<(i64, String), Coverage>,
+    variables: BTreeMap<i64, ShowCoverage>,
+    columns: BTreeMap<(i64, String), ShowCoverage>,
 }
 
 impl MemberCoverage {
@@ -273,13 +266,13 @@ impl MemberCoverage {
     /// A whole-variable member's variable coverage; a representation member's
     /// column's, or an empty one when no state delivers its column (the column is
     /// known never delivered, not delivered through its siblings).
-    pub(super) fn of(&self, variable_id: i64, column: Option<&str>) -> Option<Coverage> {
+    pub(super) fn of(&self, variable_id: i64, column: Option<&str>) -> Option<ShowCoverage> {
         match column {
             Some(column) => Some(
                 self.columns
                     .get(&(variable_id, reg_core::fold_identity(column)))
                     .cloned()
-                    .unwrap_or_else(|| Coverage::new(None, None, 0)),
+                    .unwrap_or_else(|| ShowCoverage::new(None, None, 0)),
             ),
             None => self.variables.get(&variable_id).cloned(),
         }
@@ -293,7 +286,7 @@ pub(super) fn register_coverage(
     conn: &Connection,
     scope: Scope,
     provider_id: i64,
-) -> Result<BTreeMap<i64, RegisterCoverage>, Error> {
+) -> Result<BTreeMap<i64, ShowRegisterCoverage>, Error> {
     let sql = match scope {
         Scope::Holdings => {
             "SELECT r.register_id, COUNT(DISTINCT bd.variable_id), MIN(dw.valid_from), \
@@ -313,10 +306,10 @@ pub(super) fn register_coverage(
         }
     };
     Ok(rows(conn, sql, [provider_id], |row| {
-        let span = Coverage::new(row.get(2)?, row.get(3)?, 0);
+        let span = ShowCoverage::new(row.get(2)?, row.get(3)?, 0);
         Ok((
             row.get(0)?,
-            RegisterCoverage {
+            ShowRegisterCoverage {
                 variable_count: row.get(1)?,
                 coverage_from: span.from,
                 coverage_to: span.to,

@@ -3,40 +3,32 @@
 // Siblings: CatalogNodeView.browser / .register / .add-eras.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
-import type { CatalogNode } from "./api";
-import {
-  getCatalogNode,
-  getClassificationGroup,
-  getClassificationGroupGraph,
-  getRegisterVariants,
-  getRelatedDocuments,
-} from "./api";
+import type { RegisterShow } from "./api";
+import { getRelatedDocuments, getShow, getStates } from "./api";
 import {
   clickVariantChip,
   columnedRegisterNode,
   delivery,
-  lisaVariants,
   mockRegisterAndResolve,
+  registerShow,
   renderRegister,
   splitColumnRegisterNode,
   tickColumn,
+  withLisaVariants,
 } from "./catalog-node-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
-import { variant, variantsResponse } from "./variants-test-helpers";
 import { windowStore } from "./window.svelte";
 
-// CatalogNodeView fetches one node via `getCatalogNode(fqidPath)` and switches on
-// `kind`. Mock that single GET (mirrors ConceptGroupView's api-mock style); keep
+// CatalogNodeView reads one node via `getShow(fqidPath)` and switches on
+// `kind`. Mock that GET (mirrors ConceptGroupView's api-mock style); keep
 // the rest of api.ts real (the type exports + path helpers `catalog.ts` uses).
 vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getClassificationGroup: vi.fn(),
-    getClassificationGroupGraph: vi.fn(),
-    getRegisterVariants: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getShow: vi.fn(),
+    getStates: vi.fn(),
     getRelatedDocuments: vi.fn(),
   };
 });
@@ -46,14 +38,10 @@ vi.mock("./api", async (importOriginal) => {
 // both exist in both variants, so matching a row by name alone would stage each under
 // the other's variant as well. The eras differ, so the committed source periods say
 // which column went where.
-function crossedColumnRegisterNode(): CatalogNode {
-  return {
-    kind: "register",
-    fqid: "scb/lisa",
-    name: "LISA",
+function crossedColumnRegisterNode(): RegisterShow {
+  return registerShow({
     children: [
       {
-        kind: "binding",
         fqid: "scb/lisa/kon",
         name: "Kön",
         deliveries: [
@@ -64,46 +52,28 @@ function crossedColumnRegisterNode(): CatalogNode {
         ],
       },
     ],
-  } as unknown as CatalogNode;
+  });
 }
 
 // A register node with MANY ungrouped leaves — enough rows to overflow the test
 // viewport vertically (Y-97), the way LISA's ~740-variable list does for a real
-// researcher. No `deliveries`, like `registerNode()` above: the sticky-bar proof
-// doesn't tick anything, only scrolls past it.
-function manyLeavesRegisterNode(count: number): CatalogNode {
-  return {
-    kind: "register",
-    fqid: "scb/lisa",
-    name: "LISA",
+// researcher. Empty `deliveries`: the sticky-bar proof doesn't tick anything,
+// only scrolls past it.
+function manyLeavesRegisterNode(count: number): RegisterShow {
+  return registerShow({
     children: Array.from({ length: count }, (_, i) => ({
-      kind: "binding",
       fqid: `scb/lisa/v${i}`,
       name: `Variable ${i}`,
+      deliveries: [],
     })),
-  } as unknown as CatalogNode;
+  });
 }
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getClassificationGroup).mockReset();
-  vi.mocked(getClassificationGroupGraph).mockReset();
-  vi.mocked(getRegisterVariants).mockReset();
+  vi.mocked(getShow).mockReset();
+  vi.mocked(getStates).mockReset();
   vi.mocked(getRelatedDocuments).mockReset();
-  vi.mocked(getClassificationGroupGraph).mockResolvedValue({
-    nodes: [],
-    edges: [],
-    focus_id: null,
-  });
-  vi.mocked(getRegisterVariants).mockResolvedValue(
-    variantsResponse(variant("_default")),
-  );
-  vi.mocked(getRelatedDocuments).mockResolvedValue({
-    kind: "related-documents",
-    ingested: true,
-    register: "lisa",
-    documents: [],
-  });
+  vi.mocked(getRelatedDocuments).mockResolvedValue([]);
   // Both stores are module singletons: clear the browse-time window fallback, then
   // open a fresh empty draft — the state a catalog page authors into. A fresh draft
   // seeds its window from that (now empty) fallback, so each case starts windowless.
@@ -244,8 +214,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     // A SECOND register_variant (`arbetsstallen`), carrying no source yet: a
     // pick on `Kon`'s own `individer-15plus` would inherit that source's period
     // instead of refusing, which would test nothing.
-    mockRegisterAndResolve(columnedRegisterNode(2));
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    mockRegisterAndResolve(withLisaVariants(columnedRegisterNode(2)));
     windowStore.set({ from: 2018, to: 2023 });
 
     await renderRegister();
@@ -270,8 +239,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
   });
 
   it("stages what the variant lens shows, one add per delivering variant", async () => {
-    mockRegisterAndResolve(splitColumnRegisterNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    mockRegisterAndResolve(withLisaVariants(splitColumnRegisterNode()));
     windowStore.set({ from: 2018, to: 2023 });
 
     await renderRegister();
@@ -290,8 +258,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
   });
 
   it("stages only the lensed variant of a column two variants deliver", async () => {
-    mockRegisterAndResolve(splitColumnRegisterNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    mockRegisterAndResolve(withLisaVariants(splitColumnRegisterNode()));
     windowStore.set({ from: 2018, to: 2023 });
 
     await renderRegister();
@@ -311,8 +278,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
   });
 
   it("drops a tick from the batch while the lens shows only a variant it excluded", async () => {
-    mockRegisterAndResolve(splitColumnRegisterNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    mockRegisterAndResolve(withLisaVariants(splitColumnRegisterNode()));
     windowStore.set({ from: 2018, to: 2023 });
 
     await renderRegister();
@@ -346,8 +312,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
   });
 
   it("re-ticking a column under a moved lens captures the variant now on screen", async () => {
-    mockRegisterAndResolve(splitColumnRegisterNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    mockRegisterAndResolve(withLisaVariants(splitColumnRegisterNode()));
     windowStore.set({ from: 2018, to: 2023 });
 
     await renderRegister();
@@ -372,8 +337,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
   });
 
   it("stages each column under the variants ITS OWN tick was made under", async () => {
-    mockRegisterAndResolve(crossedColumnRegisterNode());
-    vi.mocked(getRegisterVariants).mockResolvedValue(lisaVariants());
+    mockRegisterAndResolve(withLisaVariants(crossedColumnRegisterNode()));
     windowStore.set({ from: 1990, to: 2023 });
 
     await renderRegister();
@@ -541,7 +505,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
 describe("CatalogNodeView register arm: sticky add bar (Y-97)", () => {
   it("keeps the add bar pinned to the viewport bottom after scrolling through a long list", async () => {
     await page.viewport(1280, 800);
-    vi.mocked(getCatalogNode).mockResolvedValue(manyLeavesRegisterNode(60));
+    vi.mocked(getShow).mockResolvedValue(manyLeavesRegisterNode(60));
 
     await renderRegister();
     await expect.element(page.getByText("Variable 0")).toBeVisible();

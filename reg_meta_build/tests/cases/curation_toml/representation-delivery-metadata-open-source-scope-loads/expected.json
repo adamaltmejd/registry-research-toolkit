@@ -1,0 +1,33 @@
+{
+  "loader": "register_files",
+  "match": "includes",
+  "replaces": "test_source_representation_delivery_metadata.py::test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption",
+  "fails_if": "the register loader stops reading an omitted TOML interval end as open (`end = null`), so a column whose supplied source scope is the open `2020-` interval no longer loads with its 2020-01-01..9999-12-31 window",
+  "note": "The allowed twin of `representation-delivery-metadata-window-shorter-than-the-open-source-scope-refused` and `...-open-ended-window-without-source-scope-refused`: the replaced test's open column, written in TOML.",
+  "loads": [
+    {
+      "representation": {
+        "delivery_metadata": [
+          {
+            "columns": [
+              {
+                "column": "VALUE",
+                "valid_from": "2020-01-01",
+                "valid_to": "9999-12-31",
+                "source_scope": {
+                  "kind": "intervals",
+                  "intervals": [
+                    {
+                      "start": "2020",
+                      "end": null
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "description": "SCB TESTREG 2020: EXTENDED (101) and SENTINEL (102) carry the 'Example codes' list bound to book example-codes; SCOPED (103) carries 'Local list' with 09350 Okänt; TYPELESS (104) has no data type and a 2020 list, plus a 2022 delivery without one. Thirteen books, six curated classification successions.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 1001,
+        "var_id": 101,
+        "colname": "EXTENDED",
+        "varname": "EXTENDED"
+      },
+      {
+        "cvid": 1002,
+        "var_id": 102,
+        "colname": "SENTINEL",
+        "varname": "SENTINEL"
+      },
+      {
+        "cvid": 1003,
+        "var_id": 103,
+        "colname": "SCOPED",
+        "varname": "SCOPED"
+      },
+      {
+        "cvid": 1004,
+        "var_id": 104,
+        "colname": "TYPELESS",
+        "varname": "TYPELESS",
+        "data_type": "",
+        "data_length": ""
+      },
+      {
+        "cvid": 1005,
+        "var_id": 104,
+        "colname": "TYPELESS",
+        "varname": "TYPELESS",
+        "data_type": "",
+        "data_length": "",
+        "year": "2022",
+        "regver_id": 112
+      }
+    ],
+    "vardemangder": [
+      "Example codes|1|001|Observed label|1001|10011",
+      "Example codes|1|missing|Unlisted label|1001|10012",
+      "Example codes|1|999|Unspecified|1001|10013",
+      "Example codes|1|001|Source label|1002|10021",
+      "Example codes|1|98|Substantive extra|1002|10022",
+      "Example codes|1|99|Source wording|1002|10023",
+      "Local list|1|001|Source label|1003|10031",
+      "Local list|1|09350|Okänt|1003|10032",
+      "Participation list|1|01|Participation|1004|10041",
+      "Participation list|1|1|Another code|1004|10042",
+      "Participation list|1|01|Participation|1004|10043"
+    ]
+  },
+  "files": {
+    "classifications/example-codes.csv": [
+      "code,label",
+      "001,Canonical one",
+      "002,Canonical two"
+    ],
+    "classifications/older-codes.csv": [
+      "code,label",
+      "001,Canonical one"
+    ],
+    "classifications/sun1996.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/sun2000-niva.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/sun2020-niva.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/sun2025-niva.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/sni2000.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/sni2020.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/a.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/b.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/current.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/future.csv": [
+      "code,label",
+      "01,One"
+    ],
+    "classifications/d.csv": [
+      "code,label",
+      "01,One"
+    ]
+  }
+}

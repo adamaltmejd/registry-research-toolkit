@@ -1,0 +1,146 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": [
+          "unknown_code_validity",
+          "unknown_code_membership",
+          "conflicting_code_validity",
+          "conflicting_code_memberships",
+          "empty_active_coding",
+          "ambiguous_list_member_references",
+          "conflicting_list_member_references",
+          "unresolved_member_list",
+          "unresolved_list_reference",
+          "declared_value_list_not_found"
+        ]
+      },
+      "fields": ["code", "ref", "valid_from", "valid_to"],
+      "rows": [
+        ["ambiguous_list_member_references", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:AMBIGA", null, null],
+        ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:AMBIGA", "2020-01-01", "2020-12-31"],
+        ["ambiguous_list_member_references", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:AMBIGB", null, null],
+        ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:AMBIGB", "2020-01-01", "2020-12-31"],
+        ["conflicting_list_member_references", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:CONFLICT", null, null],
+        ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:CONFLICT", "2020-01-01", "2020-12-31"],
+        ["unresolved_member_list", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:UNRESOLVED", null, null],
+        ["conflicting_code_validity", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:CVALID", null, null],
+        ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:CVALID", "2010-01-01", "2010-12-31"],
+        ["unknown_code_validity", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:BADDATE", null, null],
+        ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:BADDATE", "2020-01-01", "2020-12-31"],
+        ["unknown_code_validity", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:REVERSED", null, null],
+        ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:REVERSED", "2020-01-01", "2020-12-31"],
+        ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:IDINLINE", "2020-01-01", "2020-12-31"],
+        ["unknown_code_membership", "Socialstyrelsen/Metadata Värderegistret (VAL)_webb.xlsx#register:Värderegistret/deldatamangd:VAL_A/variable:IDMIX", "2020-01-01", "2020-12-31"]
+      ],
+      "note": "Every coding issue of the build, by the Variabelnivå row it cites. Variables absent here bind cleanly or have no list: both EXPLICIT rows of VAL, CIVIL, CIVILNP, ANCHORED, CIVILOP, CIVILCP, CIVILH, CIVILHS, CIVILR, both FIRST rows, SECOND, OUTSIDER, RESOLVED, both INLINE rows, DAY, MONTH, BLANK, IDPERIOD, IDDAY, IDCLAMP, IDCLAMPS, SUFFIX and OTH's EXPLICIT. UNRESOLVED states no claim, so it has no unknown_code_membership beside its own issue."
+    },
+    {
+      "table": "source_issues",
+      "where": {"kind": "value_source_issue"},
+      "fields": ["descriptor_key"],
+      "rows": [
+        ["sheet:Kodlista_SUFFIX"]
+      ],
+      "note": "Kodlista_SUFFIX names no variable (no preamble, no Variabelnamn column), so it is an unresolved_list_reference even though its sheet name matches variable SUFFIX: a sheet suffix is a hint, never a binding (SUFFIX has no value set, below). Kodlista_SHARED also names no variable itself but is bound through FIRST's and SECOND's pointers, so it is not one."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "val", "variable": ["explicit", "civil", "civilnp", "anchored", "civilop", "civilcp", "civilh", "civilhs", "civilr", "first", "second", "outsider", "ambiga", "ambigb", "conflict", "unresolved", "resolved", "inline", "cvalid", "suffix"]},
+      "fields": ["variable", "variant", "code", "label"],
+      "rows": [
+        ["explicit", "val-a", "1", "Ett"],
+        ["explicit", "val-b", "1", "Ett"],
+        ["civil", "val-a", "1", "Ogift"],
+        ["civilnp", "val-a", null, null],
+        ["anchored", "val-a", null, null],
+        ["civilop", "val-a", null, null],
+        ["civilcp", "val-a", null, null],
+        ["civilh", "val-a", null, null],
+        ["civilhs", "val-a", null, null],
+        ["civilr", "val-a", null, null],
+        ["first", "val-a", "1", "Delad"],
+        ["first", "val-b", null, null],
+        ["second", "val-a", "1", "Delad"],
+        ["outsider", "val-a", null, null],
+        ["ambiga", "val-a", null, null],
+        ["ambigb", "val-a", null, null],
+        ["conflict", "val-a", null, null],
+        ["unresolved", "val-a", null, null],
+        ["resolved", "val-a", "1", "Ja"],
+        ["resolved", "val-a", "2", "Nej"],
+        ["inline", "val-a", "1", "Ett"],
+        ["inline", "val-a", "2", "Två"],
+        ["inline", "val-b", null, null],
+        ["cvalid", "val-a", null, null],
+        ["suffix", "val-a", null, null]
+      ],
+      "note": "Each variable's one state (2020; CVALID 2010). Kodlista_EXPLICIT names EXPLICIT, so it binds both VAL rows of that variable (VAL_A and VAL_B), not only the first; Kodlista_SUFFIX names no variable, and its matching sheet name does not bind SUFFIX. CIVIL binds Kodlista_Civil, whose header spells the member `Civil`, only through its exact `Se Kodlista_Civil` pointer: CIVILNP (no pointer) and ANCHORED (a cell-anchored pointer) leave the same shape unbound. With an exact pointer, every other guard still holds the case-differing header back (the replaced test's drift legs): CIVILOP points at Kodlista_Civil, not its own Kodlista_Civilop; CIVILCP's pointer `Se kodlista_Civilcp` differs from its sheet in case; Kodlista_Civilh's header names `Annan`; Kodlista_Civilhs names a second variable (`Sibling`); Kodlista_Civilr's row names `SIBLING`. None of them reports an issue. FIRST and SECOND each bind the shared list their own row points at; OUTSIDER does not, and neither does FIRST's VAL_B row: the same workbook and member name at another locator, which the pointer does not name (the replaced test's same-name-elsewhere record). INLINE's enumeration binds only the VAL_A row that delivers it, not the VAL_B row of the same variable. A list naming two variables (AMBIG), a row naming another variable than its header (CONFLICT, whose older 2001-2002 list is inactive), and an enumeration whose members run together (UNRESOLVED) withhold the coding."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "oth"},
+      "fields": ["variable", "code"],
+      "rows": [["explicit", null]],
+      "note": "Kodlista_EXPLICIT in the VAL workbook names EXPLICIT; OTH's EXPLICIT is another workbook's record and gets no list."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "val", "variable": ["day", "month", "baddate", "reversed", "blank"]},
+      "fields": ["variable", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["day", "2020-01-01", "2020-02-28", "A", "Alla"],
+        ["day", "2020-02-29", "2020-03-01", "A", "Alla"],
+        ["day", "2020-02-29", "2020-03-01", "B", "Skottdag"],
+        ["day", "2020-03-02", "2020-12-31", "A", "Alla"],
+        ["month", "2020-01-01", "2020-01-31", "A", "Alla"],
+        ["month", "2020-02-01", "2020-02-29", "A", "Alla"],
+        ["month", "2020-02-01", "2020-02-29", "B", "Februari"],
+        ["month", "2020-03-01", "2020-12-31", "A", "Alla"],
+        ["baddate", "2020-01-01", "2020-12-31", null, null],
+        ["reversed", "2020-01-01", "2020-12-31", null, null],
+        ["blank", "2020-01-01", "2020-12-31", "A", "Alla"]
+      ],
+      "note": "test_value_bounds_keep_day_precision_and_invalid_bounds_unknown, one variable per bound pair of Kodlista_SJUKHUS's Från/Till cells: a leap-day window keeps its days (DAY), a compact yyyymm bound is that whole month (MONTH), an impossible date (2019-02-29) and reversed years (2021..2020) are unknown validity and withhold the list (BADDATE, REVERSED), and a row with both cells empty leaves the member unrestricted (BLANK). BLANK's empty cells give its row no validity at all, so it never reaches `value_window`'s blank-bound branch; the open-ended VardemangderValidDates rows of value-native-lists-bind-set-aside-or-withhold-per-register (`3101|2008-11-19|`) do."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": "val", "variable": ["idinline", "idperiod", "idday", "idclamp", "idclamps", "idmix"]},
+      "fields": ["variable", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["idinline", "2020-01-01", "2020-12-31", null, null],
+        ["idperiod", "2019-01-01", "2019-12-31", "0", "Label"],
+        ["idperiod", "2020-01-01", "2020-12-31", null, null],
+        ["idperiod", "2021-01-01", "2021-12-31", "0", "Label"],
+        ["idday", "2020-01-01", "2020-02-28", "A", "Alla"],
+        ["idday", "2020-02-29", "2020-03-01", null, null],
+        ["idday", "2020-03-02", "2020-12-31", "A", "Alla"],
+        ["idclamp", "2019-01-01", "2019-12-31", "0", "Alla"],
+        ["idclamp", "2020-01-01", "2020-12-31", null, null],
+        ["idclamp", "2021-01-01", "2021-12-31", "0", "Alla"],
+        ["idclamps", "2019-01-01", "2019-12-31", "0", "Alla"],
+        ["idclamps", "2020-01-01", "2020-12-31", null, null],
+        ["idclamps", "2021-01-01", "2021-12-31", "0", "Alla"],
+        ["idmix", "2020-01-01", "2020-12-31", null, null]
+      ],
+      "note": "Linkage (identifier) variables. IDCLAMP: Kodlista_IDCLAMP lists 0 for 2019-2021, then opens a 2020 period section whose member 1 has a malformed row period (Okänd), so its validity is unknown; the identifier clamps that unknown assertion to the known 2020 section, drops the list for 2020 only, without an issue, and 2019 and 2021 keep 0. IDCLAMPS is the other way round: Kodlista_IDCLAMPS opens a malformed (Okänd) period section, so its member 1 has unknown validity, and gives that member a known 2020 row period; the identifier clamps to the row period, with the same outcome as IDCLAMP (the replaced test clamped to the row's supplied window). IDDAY: Kodlista_SJUKHUS lists A for the whole year and an unlabelled B only 2020-02-29..2020-03-01 (Från/Till), so the list is dropped for exactly those two days, without an issue, and A stays the value set on both sides; the drop does not widen to the calendar year. IDPERIOD: the unlabelled 2020 member of its Kodlista is dropped for that year only, without an issue, and 2019 and 2021 keep the list (the non-identifier form is 8a's NOLABEL, which reports unknown_code_membership for 2020). IDINLINE: an inline enumeration is the variable's own record, so the drop does not apply and its unlabelled codes stay unknown membership (issue above). IDMIX: one column delivered as two Variabelnivå rows of VAL_A, the first marked Ja (an identifier record) and the second with a formula Kopplingsvariabel cell (`=1`, no claim, so an unknown flag). Both rows name Kodlista_IDMIX, whose 1 has no label. The identifier record drops the list; its peer keeps its own claim, so the column reports unknown_code_membership (issue above) and its value set stays withheld. The variable resolves as an identifier (True beside no claim)."
+    },
+    {
+      "table": "variables",
+      "where": {"register": "val", "variable": ["idinline", "idperiod", "idday", "idclamp", "idclamps", "idmix", "resolved"]},
+      "fields": ["variable", "is_identifier"],
+      "rows": [
+        ["idinline", 1],
+        ["idperiod", 1],
+        ["idday", 1],
+        ["idclamp", 1],
+        ["idclamps", 1],
+        ["idmix", 1],
+        ["resolved", 0]
+      ],
+      "note": "A non-blank Kopplingsvariabel cell is what makes IDINLINE, IDPERIOD, IDDAY, IDCLAMP and IDCLAMPS identifiers; every other variable's cell is blank."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_source_representation_coding.py::test_per_column_coding_source_domain_drift_fails_closed"
+  ],
+  "note": "Authored from the reviewed sources; PERCOLUMN's First list now delivers 03 instead of 01. FACTS and CONTESTED are unchanged controls.",
+  "fails_if": "`resolve_representation_cases` (source_representations.py) stops comparing a per-column entry's `expected_codings` with the column's current code-list fingerprints, so PERCOLUMN applies with the drifted 03 list",
+  "sources": "scb-parallel-columns-drifted",
+  "authored_from": "scb-parallel-columns-reviewed"
+}

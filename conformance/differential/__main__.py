@@ -112,7 +112,8 @@ def compare(case_id: str, base: dict | None, cand: dict | None) -> dict | None:
 def _excepted(diff: dict, exceptions: list[dict]) -> str | None:
     """Name of the exception covering every differing path of ``diff``, if any."""
     for exc in exceptions:
-        if not fnmatch.fnmatchcase(diff["id"], exc["case"]):
+        globs = exc["case"] if isinstance(exc["case"], list) else [exc["case"]]
+        if not any(fnmatch.fnmatchcase(diff["id"], glob) for glob in globs):
             continue
         prefixes = exc.get("paths", [""])
         if diff["fields"] == ["stdout"] and all(
@@ -175,7 +176,7 @@ def run(config: dict) -> int:
     baseline_tree = cache.ensure_baseline(pins)
     baseline_python = cache.baseline_python(baseline_tree)
     dirs = cache.ensure_artifacts(pins)
-    derived = cache.ensure_derived(pins, dirs)
+    derived = cache.ensure_derived(pins, dirs, cache.derive_source())
     server = cache.ensure_server()
     setup_seconds = time.monotonic() - started
     report_dir = cache.cache_root() / "report"

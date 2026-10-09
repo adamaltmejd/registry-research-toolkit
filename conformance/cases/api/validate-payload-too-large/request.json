@@ -1,0 +1,13 @@
+{
+  "note": "Fails if a body over the 1 MiB write cap is read instead of refused with `payload_too_large`.",
+  "fixture": "semantic",
+  "kind": "catalog",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "nested_arrays": 600000
+    }
+  ]
+}

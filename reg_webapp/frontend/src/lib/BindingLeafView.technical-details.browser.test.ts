@@ -1,22 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { BindingNodeData } from "./api";
 import {
-  getBindingGraph,
-  getBindingLineageWarnings,
-  getCatalogNode,
   getDocsForVariable,
-  getValueSetCodes,
+  getGraph,
+  getLineage,
+  getStates,
+  getValues,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import {
-  node,
+  leaf,
   pickerStates,
   SEED,
   single,
   state,
-  statesResponse,
 } from "./binding-leaf-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
@@ -28,12 +26,12 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getBindingGraph: vi.fn(),
-    getBindingLineageWarnings: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getStates: vi.fn(),
+    getGraph: vi.fn(),
+    getLineage: vi.fn(),
     getDocsForVariable: vi.fn(),
-    getValueSetCodes: vi.fn(),
+    getValues: vi.fn(),
   };
 });
 
@@ -48,56 +46,41 @@ const singleWithStructural = [
 ];
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+  vi.mocked(getStates).mockReset();
+  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
     const variant =
       typeof params?.variant === "string" ? params.variant : undefined;
-    return statesResponse(
-      pickerStates.filter(
-        (s) => variant === undefined || s.variant === variant,
-      ),
+    return pickerStates.filter(
+      (s) => variant === undefined || s.variant === variant,
     );
   });
   // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
   // itself and the header derives no qualifier. Member-identity cases override it.
-  vi.mocked(getBindingGraph).mockReset();
-  vi.mocked(getBindingGraph).mockResolvedValue({
+  vi.mocked(getGraph).mockReset();
+  vi.mocked(getGraph).mockResolvedValue({
     nodes: [],
     edges: [],
     focus_id: null,
   } as never);
-  vi.mocked(getBindingLineageWarnings).mockReset();
-  vi.mocked(getBindingLineageWarnings).mockResolvedValue({
-    binding: "scb/lisa/kon",
-    lineage_warnings: [],
-  } as never);
-  vi.mocked(getValueSetCodes).mockReset();
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (valueSetId, { state = null, q = "", offset = 0, limit = 200 }) => {
-      const codes =
-        valueSetId === "814"
-          ? [
-              { code: "0", label: "Nej" },
-              { code: "1", label: "Ja" },
-            ]
-          : [];
-      return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        period_scope: "intervals",
-        q,
-        total: codes.length,
-        offset,
-        limit,
-        codes: codes.slice(offset, offset + limit),
-      };
-    },
-  );
+  vi.mocked(getLineage).mockReset();
+  vi.mocked(getLineage).mockResolvedValue({
+    edges: [],
+    warnings: [],
+    registers: [],
+  });
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockResolvedValue({
+    items: [],
+    next_cursor: null,
+    total: 0,
+  });
   vi.mocked(getDocsForVariable).mockReset();
   vi.mocked(getDocsForVariable).mockResolvedValue({
-    results: [],
-    total_count: 0,
-  } as never);
+    items: [],
+    next_cursor: null,
+    total: 0,
+    register_ingested: true,
+  });
   // No `?period` — the embedded states drive the plan.
   window.history.pushState({}, "", "/__reset__");
   router.navigate("/catalog/scb/lisa/kon");
@@ -112,7 +95,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("renders thematic tag chips and recommendation notes", async () => {
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(single, {
+      ...leaf(single, {
         tags: [
           {
             slug: "income",
@@ -122,7 +105,7 @@ describe("BindingLeafView representation picker (#678)", () => {
             note: "primary fixture measure",
           },
         ],
-      } as Partial<BindingNodeData>),
+      }),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -138,7 +121,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("demotes a single state's Data type / Delivery column into the bottom 'Technical details' disclosure (#1038)", async () => {
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(singleWithStructural),
+      ...leaf(singleWithStructural),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -175,7 +158,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     const evidence = "The steward holds Kon for 2020; SCB's metadata omits it.";
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([
+      ...leaf([
         state({
           state_id: "1",
           variant: "individer",
@@ -224,7 +207,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     const evidence = "The steward holds the autumn delivery SCB omitted.";
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([
+      ...leaf([
         state({
           state_id: "2",
           variant: "individer",
@@ -274,7 +257,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     const autumnEvidence = "The steward holds the autumn AliasB delivery.";
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([
+      ...leaf([
         state({
           state_id: "2",
           variant: "individer",
@@ -326,7 +309,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     const autumnEvidence = "The steward holds the autumn AliasB delivery.";
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([
+      ...leaf([
         state({
           state_id: "2",
           variant: "individer",

@@ -3,20 +3,20 @@ import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { GraphState, RelationshipGraph, VariableGraphNode } from "./api";
 import {
-  getBindingGraph,
-  getBindingLineageWarnings,
-  getCatalogNode,
   getDocsForVariable,
-  getValueSetCodes,
+  getGraph,
+  getLineage,
+  getStates,
+  getValues,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import {
+  leaf,
   node,
   pickerStates,
   SEED,
   single,
   state,
-  statesResponse,
 } from "./binding-leaf-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { router } from "./router.svelte";
@@ -28,12 +28,12 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getBindingGraph: vi.fn(),
-    getBindingLineageWarnings: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getStates: vi.fn(),
+    getGraph: vi.fn(),
+    getLineage: vi.fn(),
     getDocsForVariable: vi.fn(),
-    getValueSetCodes: vi.fn(),
+    getValues: vi.fn(),
   };
 });
 
@@ -43,6 +43,8 @@ function gstate(over: Partial<GraphState>): GraphState {
     period_scope: "intervals",
     variant: "v",
     variant_label: null,
+    variant_family: null,
+    variant_family_label: null,
     representation_run_id: 1,
     valid_from: "2000-01-01",
     valid_to: "2020-12-31",
@@ -80,56 +82,41 @@ function graph(
 }
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+  vi.mocked(getStates).mockReset();
+  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
     const variant =
       typeof params?.variant === "string" ? params.variant : undefined;
-    return statesResponse(
-      pickerStates.filter(
-        (s) => variant === undefined || s.variant === variant,
-      ),
+    return pickerStates.filter(
+      (s) => variant === undefined || s.variant === variant,
     );
   });
   // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
   // itself and the header derives no qualifier. Member-identity cases override it.
-  vi.mocked(getBindingGraph).mockReset();
-  vi.mocked(getBindingGraph).mockResolvedValue({
+  vi.mocked(getGraph).mockReset();
+  vi.mocked(getGraph).mockResolvedValue({
     nodes: [],
     edges: [],
     focus_id: null,
   } as never);
-  vi.mocked(getBindingLineageWarnings).mockReset();
-  vi.mocked(getBindingLineageWarnings).mockResolvedValue({
-    binding: "scb/lisa/kon",
-    lineage_warnings: [],
-  } as never);
-  vi.mocked(getValueSetCodes).mockReset();
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (valueSetId, { state = null, q = "", offset = 0, limit = 200 }) => {
-      const codes =
-        valueSetId === "814"
-          ? [
-              { code: "0", label: "Nej" },
-              { code: "1", label: "Ja" },
-            ]
-          : [];
-      return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        period_scope: "intervals",
-        q,
-        total: codes.length,
-        offset,
-        limit,
-        codes: codes.slice(offset, offset + limit),
-      };
-    },
-  );
+  vi.mocked(getLineage).mockReset();
+  vi.mocked(getLineage).mockResolvedValue({
+    edges: [],
+    warnings: [],
+    registers: [],
+  });
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockResolvedValue({
+    items: [],
+    next_cursor: null,
+    total: 0,
+  });
   vi.mocked(getDocsForVariable).mockReset();
   vi.mocked(getDocsForVariable).mockResolvedValue({
-    results: [],
-    total_count: 0,
-  } as never);
+    items: [],
+    next_cursor: null,
+    total: 0,
+    register_ingested: true,
+  });
   // No `?period` — the embedded states drive the plan.
   window.history.pushState({}, "", "/__reset__");
   router.navigate("/catalog/scb/lisa/kon");
@@ -142,7 +129,7 @@ beforeEach(() => {
 
 describe("BindingLeafView representation picker (#678)", () => {
   it("mounts the picker graph when no delivery-column rows are selectable", async () => {
-    vi.mocked(getBindingGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes: [
         {
           kind: "variable",
@@ -201,7 +188,7 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(single),
+      ...leaf(single),
       ...SEED,
       vintageYear: 2024,
     });
@@ -240,7 +227,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       ],
       same_as: [],
     }));
-    vi.mocked(getBindingGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes,
       edges: [
         {
@@ -257,13 +244,13 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(single),
+      ...leaf(single),
       ...SEED,
       vintageYear: 2024,
     });
 
     await vi.waitFor(() => {
-      expect(getBindingGraph).toHaveBeenCalledTimes(1);
+      expect(getGraph).toHaveBeenCalledTimes(1);
       if (!document.querySelector(".member-identity .qualifier")) {
         throw new Error("graph-derived member identity not rendered");
       }
@@ -274,7 +261,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("renders same_as-only graph context after the standalone graph removal", async () => {
-    vi.mocked(getBindingGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes: [
         {
           kind: "variable",
@@ -297,7 +284,7 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(single),
+      ...leaf(single),
       ...SEED,
       vintageYear: 2024,
     });
@@ -317,7 +304,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("renders edge-less no-column graph runs after the standalone graph removal", async () => {
-    vi.mocked(getBindingGraph).mockResolvedValue({
+    vi.mocked(getGraph).mockResolvedValue({
       nodes: [
         {
           kind: "variable",
@@ -355,7 +342,7 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(single),
+      ...leaf(single),
       ...SEED,
       vintageYear: 2024,
     });
@@ -415,11 +402,11 @@ describe("BindingLeafView representation picker (#678)", () => {
       label: null,
       effective_year: 2005,
     });
-    vi.mocked(getBindingGraph).mockResolvedValue(openEnded as never);
+    vi.mocked(getGraph).mockResolvedValue(openEnded as never);
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node([
+      ...leaf([
         state({
           valid_from: "2000-01-01",
           valid_to: "9999-12-31",
@@ -450,10 +437,10 @@ describe("BindingLeafView representation picker (#678)", () => {
 describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
   const groupedFqid = "scb/lisa/naringsgren-storsta-agi-sni2007g";
   const groupedKey = "naringsgren";
-  const groupedNode = node(single, {
+  const groupedNode = node({
     fqid: groupedFqid,
     name: "Näringsgren, största förvärvskälla",
-    group: { provider: "scb", register: "lisa", key: groupedKey },
+    group: `group/scb/lisa/${groupedKey}`,
   });
 
   /** A graph whose focus variable carries the member facets + group label. */
@@ -474,7 +461,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
   }
 
   it("renders the member qualifier (facets) and a 'member of ⟨label⟩' link with the correct href", async () => {
-    vi.mocked(getBindingGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       focusGraph({
         facets: [
           { axis: "kalla", value: "storsta", label: "Största" },
@@ -488,6 +475,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
+      states: single,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -518,13 +506,14 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     // RESOLVED canonical target. The facet-less slug qualifier must read the focus
     // node's own (canonical) fqid so the alias page and the canonical page show the
     // SAME technical identifier (#670 Codex-P2 parity).
-    vi.mocked(getBindingGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       focusGraph({ fqid: "scb/rams/inkjan", facets: [] }) as never,
     );
 
     await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
+      states: single,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -544,7 +533,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
   });
 
   it("a grouped facet-less focus with one delivery column shows original column casing", async () => {
-    vi.mocked(getBindingGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       focusGraph({
         facets: [],
         states: [gstate({ delivery_column_name: "ProdGrpKod" })],
@@ -554,6 +543,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
+      states: single,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -571,11 +561,12 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
   });
 
   it("renders no identity row while the graph is loading (no transient slug flicker)", async () => {
-    vi.mocked(getBindingGraph).mockReturnValue(new Promise(() => {}));
+    vi.mocked(getGraph).mockReturnValue(new Promise(() => {}));
 
     await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
+      states: single,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -596,7 +587,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
   it("an ungrouped variable renders neither qualifier nor group link", async () => {
     // A resolved focus node with no group: were it treated as grouped, the leaf
     // slug "kon" would render as the facet-less qualifier.
-    vi.mocked(getBindingGraph).mockResolvedValue(
+    vi.mocked(getGraph).mockResolvedValue(
       focusGraph({
         fqid: "scb/lisa/kon",
         label: "Kön",
@@ -607,7 +598,7 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
     );
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(single),
+      ...leaf(single),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -626,11 +617,12 @@ describe("BindingLeafView member identity from graph focus (#670/#678)", () => {
   it("degrades gracefully when the graph fetch errors (header survives, no qualifier/link)", async () => {
     // The graph fetch is an independent failure domain: an error must NOT blank the
     // leaf — the header (node.name) still renders, the qualifier/link omitted.
-    vi.mocked(getBindingGraph).mockRejectedValue(new Error("graph down"));
+    vi.mocked(getGraph).mockRejectedValue(new Error("graph down"));
 
     await render(BindingLeafView, {
       fqidPath: groupedFqid,
       node: groupedNode,
+      states: single,
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,

@@ -93,7 +93,6 @@ jobs:
             edge:
               - "reg_webapp/frontend/**"
               - "reg_webapp/edge/**"
-              - "reg_webapp/backend/openapi.json"
               - "crates/reg-meta/openapi.json"
               - ".github/workflows/container-build.yml"
 
@@ -653,6 +652,62 @@ jobs:
           rpc tools/list '{}' | jq -e '[.result.tools[].name] | index("search")'
           rpc tools/call '{"name": "search", "arguments": {"q": "inkomst", "limit": 1}}' \
             | jq -e '.result.isError == false'
+      # Public docs smoke (RUST_RUNTIME_SPEC.md package 3b.6): the docs pages'
+      # operations answer through the edge — a search hit, that hit's document, and
+      # AES's first related PDF. Fails when the deployed image lacks a compatible
+      # docs database (`docs_unavailable`) or a docs route stops answering.
+      - name: Public docs smoke
+        if: steps.head.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          api=https://catalog.swecov.se/api/docs
+          filename=$(curl -sfS "$api/search?q=inkomst&limit=1" | jq -er '.data.items[0].filename')
+          curl -sfS "$api/doc/$(jq -rn --arg f "$filename" '$f | @uri')" | jq -e --arg f "$filename" '.data.filename == $f'
+          pdf=$(curl -sfS "$api/related/scb/aes" | jq -er '.data[0].filename | @uri')
+          type=$(curl -sfS -o /dev/null -w '%{content_type}' "$api/file/scb/aes/$pdf")
+          echo "related document: $type"
+          [ "$type" = "application/pdf" ] || { echo "FATAL: related document is $type" >&2; exit 1; }
+      # Public catalog smoke (RUST_RUNTIME_SPEC.md package C): the catalog
+      # pages' reads answer through the edge from the Rust server — the root, a
+      # register, one of its variables and that variable's states, one of its
+      # concept groups and a classification. Fails when the worker stops
+      # routing /api/catalog or /api/states, or `show` or `states` stops
+      # answering a kind the SPA renders.
+      - name: Public catalog smoke
+        if: steps.head.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          api=https://catalog.swecov.se/api
+          get() { curl -sfS "$api/$1"; }
+          get catalog | jq -e '.data.kind == "root"'
+          register=$(get catalog/scb/lisa)
+          jq -e '.data.kind == "register"' <<<"$register"
+          variable=$(jq -er '.data.children[0].fqid' <<<"$register")
+          get "catalog/$variable" | jq -e '.data.kind == "variable"'
+          get "states/$variable?limit=1" | jq -e '.data.items | length == 1'
+          group=$(jq -er '.data.groups[0].fqid' <<<"$register")
+          get "catalog/$group" | jq -e '.data.kind == "concept_group"'
+          classification=$(get catalog/class | jq -er '.data.children[0].fqid')
+          get "catalog/$classification" | jq -e '.data.kind == "classification"'
+      # Public project smoke (RUST_RUNTIME_SPEC.md package 3e.4): the project
+      # editor's POSTs answer through the edge from the Rust server — an empty
+      # project validates clean, and its order download is refused with the
+      # located `order_blocked` document. Fails when the worker stops routing
+      # /api/project, the write limit or the body parse refuses a plain request,
+      # or either operation stops answering its document.
+      - name: Public project smoke
+        if: steps.head.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          api=https://catalog.swecov.se/api/project
+          project='{"schema_version": "3.0.0", "steward": "global", "reg_meta_version": "5.1.0", "name": "smoke", "sources": []}'
+          post() { curl -sS -o "$2" -w '%{http_code}' -H 'content-type: application/json' -d "$project" "$api/$1"; }
+          code=$(post validate validated.json)
+          [ "$code" = 200 ] || { echo "FATAL: validate answered $code" >&2; cat validated.json >&2; exit 1; }
+          jq -e '.data.ok == true' validated.json
+          code=$(post order/manifest ordered.json)
+          [ "$code" = 422 ] || { echo "FATAL: the empty order answered $code" >&2; cat ordered.json >&2; exit 1; }
+          jq -e '.error.code == "order_blocked" and any(.error.fields.findings[]; .code == "project_empty")' ordered.json
 
   # Edge worker (SPA + /api passthrough) for data.swecov.se. Separate Worker
   # deployment from catalog.swecov.se so each origin can bump its own cache

@@ -8,7 +8,7 @@ MONA](https://www.scb.se/mona).
   | [`reg_meta`](reg_meta/)             | Search and query SCB registry metadata (CLI `reg-meta`)                 |
   | [`reg_meta_build`](reg_meta_build/) | Build the `reg_meta` metadata DBs from agency exports (maintainer-only) |
   | [`reg_schema`](reg_schema/)         | `project_data.json` schema and structural validator                     |
-  | [`reg_webapp`](reg_webapp/)         | Web app (FastAPI + Svelte): catalog browse + project authoring          |
+  | [`reg_webapp`](reg_webapp/)         | Web app (Rust server + Svelte): catalog browse + project authoring      |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
 

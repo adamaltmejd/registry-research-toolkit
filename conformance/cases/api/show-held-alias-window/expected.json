@@ -1,0 +1,47 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/fqid": [
+        "scb/example/value"
+      ],
+      "/data/children/*/deliveries": [
+        [
+          {
+            "variant": "annual",
+            "column": "Alias",
+            "period_scope": "intervals",
+            "coverage": {
+              "coverage_from": "2018-01-01",
+              "coverage_to": "2018-12-31",
+              "open_ended": false,
+              "state_count": 1
+            },
+            "windows": [
+              {
+                "valid_from": "2018-01-01",
+                "valid_to": "2018-12-31"
+              }
+            ]
+          }
+        ]
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/fqid": [
+        "scb/example"
+      ],
+      "/data/children/*/coverage": [
+        {
+          "variable_count": 1,
+          "coverage_from": "2018-01-01",
+          "coverage_to": "2018-12-31",
+          "open_ended": false
+        }
+      ]
+    }
+  }
+]

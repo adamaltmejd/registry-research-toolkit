@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "asideunk"
+native_id = "39"
+[[variant]]
+native_id = "39.390"
+slug = "people"
+[[variable]]
+native_id = "39.3901"
+slug = "value"

@@ -2,19 +2,19 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import {
-  getBindingGraph,
-  getBindingLineageWarnings,
-  getCatalogNode,
   getDocsForVariable,
-  getValueSetCodes,
+  getGraph,
+  getLineage,
+  getStates,
+  getValues,
+  getWarnings,
 } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import {
-  node,
+  leaf,
   pickerStates,
   SEED,
   state,
-  statesResponse,
 } from "./binding-leaf-view-test-helpers";
 import { expectStagedAddColumnVisible } from "./picker-test-helpers";
 import { projectStore } from "./project_store.svelte";
@@ -38,12 +38,12 @@ vi.mock("./api", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./api")>();
   return {
     ...actual,
-    getDataWarnings: vi.fn().mockResolvedValue([]),
-    getCatalogNode: vi.fn(),
-    getBindingGraph: vi.fn(),
-    getBindingLineageWarnings: vi.fn(),
+    getWarnings: vi.fn().mockResolvedValue([]),
+    getStates: vi.fn(),
+    getGraph: vi.fn(),
+    getLineage: vi.fn(),
     getDocsForVariable: vi.fn(),
-    getValueSetCodes: vi.fn(),
+    getValues: vi.fn(),
   };
 });
 
@@ -87,56 +87,41 @@ const openEndedStates = [
 ];
 
 beforeEach(() => {
-  vi.mocked(getCatalogNode).mockReset();
-  vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+  vi.mocked(getStates).mockReset();
+  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
     const variant =
       typeof params?.variant === "string" ? params.variant : undefined;
-    return statesResponse(
-      pickerStates.filter(
-        (s) => variant === undefined || s.variant === variant,
-      ),
+    return pickerStates.filter(
+      (s) => variant === undefined || s.variant === variant,
     );
   });
   // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
   // itself and the header derives no qualifier. Member-identity cases override it.
-  vi.mocked(getBindingGraph).mockReset();
-  vi.mocked(getBindingGraph).mockResolvedValue({
+  vi.mocked(getGraph).mockReset();
+  vi.mocked(getGraph).mockResolvedValue({
     nodes: [],
     edges: [],
     focus_id: null,
   } as never);
-  vi.mocked(getBindingLineageWarnings).mockReset();
-  vi.mocked(getBindingLineageWarnings).mockResolvedValue({
-    binding: "scb/lisa/kon",
-    lineage_warnings: [],
-  } as never);
-  vi.mocked(getValueSetCodes).mockReset();
-  vi.mocked(getValueSetCodes).mockImplementation(
-    async (valueSetId, { state = null, q = "", offset = 0, limit = 200 }) => {
-      const codes =
-        valueSetId === "814"
-          ? [
-              { code: "0", label: "Nej" },
-              { code: "1", label: "Ja" },
-            ]
-          : [];
-      return {
-        value_set_id: String(valueSetId),
-        state_id: state,
-        period_scope: "intervals",
-        q,
-        total: codes.length,
-        offset,
-        limit,
-        codes: codes.slice(offset, offset + limit),
-      };
-    },
-  );
+  vi.mocked(getLineage).mockReset();
+  vi.mocked(getLineage).mockResolvedValue({
+    edges: [],
+    warnings: [],
+    registers: [],
+  });
+  vi.mocked(getValues).mockReset();
+  vi.mocked(getValues).mockResolvedValue({
+    items: [],
+    next_cursor: null,
+    total: 0,
+  });
   vi.mocked(getDocsForVariable).mockReset();
   vi.mocked(getDocsForVariable).mockResolvedValue({
-    results: [],
-    total_count: 0,
-  } as never);
+    items: [],
+    next_cursor: null,
+    total: 0,
+    register_ingested: true,
+  });
   // No `?period` — the embedded states drive the plan.
   window.history.pushState({}, "", "/__reset__");
   router.navigate("/catalog/scb/lisa/kon");
@@ -151,7 +136,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("selecting rows + Apply commits the right staged diff", async () => {
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(pickerStates),
+      ...leaf(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -200,7 +185,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     try {
       const view = await render(BindingLeafView, {
         fqidPath: "scb/lisa/kon",
-        node: node(pickerStates),
+        ...leaf(pickerStates),
         regMetaVersion: SEED.regMetaVersion,
         steward: SEED.steward,
         windowMinYear: SEED.windowMinYear,
@@ -227,19 +212,17 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("applying one folded variant-family row adds each concrete era source", async () => {
-    vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+    vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
       const variant =
         typeof params?.variant === "string" ? params.variant : undefined;
-      return statesResponse(
-        foldedVariantStates.filter(
-          (s) => variant === undefined || s.variant === variant,
-        ),
+      return foldedVariantStates.filter(
+        (s) => variant === undefined || s.variant === variant,
       );
     });
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(foldedVariantStates),
+      ...leaf(foldedVariantStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -298,19 +281,17 @@ describe("BindingLeafView representation picker (#678)", () => {
         },
       ],
     });
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      statesResponse([
-        state({
-          variant: "individer",
-          delivery_column_name: "Kon",
-          data_type: "int",
-        }),
-      ]),
-    );
+    vi.mocked(getStates).mockResolvedValue([
+      state({
+        variant: "individer",
+        delivery_column_name: "Kon",
+        data_type: "int",
+      }),
+    ]);
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(pickerStates),
+      ...leaf(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -340,18 +321,16 @@ describe("BindingLeafView representation picker (#678)", () => {
   });
 
   it("clears the previous applied confirmation when a new staged diff starts", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      statesResponse([
-        state({
-          variant: "individer",
-          delivery_column_name: "Kon",
-          data_type: "int",
-        }),
-      ]),
-    );
+    vi.mocked(getStates).mockResolvedValue([
+      state({
+        variant: "individer",
+        delivery_column_name: "Kon",
+        data_type: "int",
+      }),
+    ]);
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(pickerStates),
+      ...leaf(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -378,27 +357,27 @@ describe("BindingLeafView representation picker (#678)", () => {
       throw new Error("resolve fetch not started");
     };
     const resolveStarted = new Promise<void>((resolve) => {
-      vi.mocked(getCatalogNode).mockImplementation(async (_fqid, params) => {
+      vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
         if (params?.period === "2010..2015") {
           resolve();
           await new Promise<void>((done) => {
             resolveFetch = done;
           });
-          return statesResponse([
+          return [
             state({
               variant: "individer",
               delivery_column_name: "Kon",
               data_type: "int",
             }),
-          ]);
+          ];
         }
-        return statesResponse(pickerStates);
+        return pickerStates;
       });
     });
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(pickerStates),
+      ...leaf(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -439,7 +418,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     });
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(pickerStates),
+      ...leaf(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -470,7 +449,7 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(pickerStates),
+      ...leaf(pickerStates),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: SEED.windowMinYear,
@@ -496,13 +475,11 @@ describe("BindingLeafView representation picker (#678)", () => {
   // authoring `period: ""` plus the `type: ""` the resolve cannot derive — a source
   // the API rejects, autosaved before /project is ever opened.
   it("refuses a pick that resolves no finite period, leaving the draft unchanged", async () => {
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      statesResponse(openEndedStates),
-    );
+    vi.mocked(getStates).mockResolvedValue(openEndedStates);
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(openEndedStates),
+      ...leaf(openEndedStates),
       ...SEED,
       vintageYear: 2024,
     });
@@ -536,13 +513,11 @@ describe("BindingLeafView representation picker (#678)", () => {
     // Unchecking the column (like the picker's Reset) empties the staged diff, so
     // the refusal has nothing left to describe — it must go with it rather than sit
     // on the page as a warning about a pick that no longer exists.
-    vi.mocked(getCatalogNode).mockResolvedValue(
-      statesResponse(openEndedStates),
-    );
+    vi.mocked(getStates).mockResolvedValue(openEndedStates);
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(openEndedStates),
+      ...leaf(openEndedStates),
       ...SEED,
       vintageYear: 2024,
     });
@@ -571,12 +546,12 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "2026-12-31",
       }),
     ];
-    vi.mocked(getCatalogNode).mockResolvedValue(statesResponse(longSpan));
+    vi.mocked(getStates).mockResolvedValue(longSpan);
     windowStore.set({ from: 1960, to: 2026 });
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(longSpan),
+      ...leaf(longSpan),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: 2000,
@@ -612,12 +587,12 @@ describe("BindingLeafView representation picker (#678)", () => {
         valid_to: "2026-12-31",
       }),
     ];
-    vi.mocked(getCatalogNode).mockResolvedValue(statesResponse(longSpan));
+    vi.mocked(getStates).mockResolvedValue(longSpan);
     router.navigate("/catalog/scb/lisa/kon?period=1960..2026");
 
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(longSpan),
+      ...leaf(longSpan),
       regMetaVersion: SEED.regMetaVersion,
       steward: SEED.steward,
       windowMinYear: 2000,
@@ -635,7 +610,7 @@ describe("BindingLeafView representation picker (#678)", () => {
   it("Apply stays seed-gated (disabled) even when a row is staged, until the seed is present", async () => {
     await render(BindingLeafView, {
       fqidPath: "scb/lisa/kon",
-      node: node(pickerStates),
+      ...leaf(pickerStates),
       regMetaVersion: "",
       steward: "",
       windowMinYear: SEED.windowMinYear,
@@ -648,5 +623,43 @@ describe("BindingLeafView representation picker (#678)", () => {
     await page.getByRole("checkbox", { name: /Kon/ }).click();
     const add = page.getByRole("button", { name: "Add to project" });
     await expect.element(add).toBeDisabled();
+  });
+});
+
+describe("BindingLeafView data warnings", () => {
+  it("renders the variable's own warnings from its warnings read", async () => {
+    // Fails if the leaf stops reading the variable's data warnings (they are no
+    // longer embedded in the variable's `show`).
+    vi.mocked(getWarnings).mockImplementation(async (ref) =>
+      ref === "scb/lisa/kon"
+        ? [
+            {
+              warning_id: "b".repeat(64),
+              register_fqid: "scb/lisa",
+              variable_fqid: "scb/lisa/kon",
+              code: "missing_coding_period",
+              severity: "warning",
+              summary: "Response codes unavailable.",
+              detail: "No source dictionary supplied.",
+              diagnostic_detail_sha256: "d".repeat(64),
+              source_subject: "original",
+              fields: [],
+              refs: [],
+              withheld_output: [],
+            },
+          ]
+        : [],
+    );
+
+    await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      ...leaf(pickerStates),
+      ...SEED,
+      vintageYear: 2024,
+    });
+
+    await expect
+      .element(page.getByText("Response codes unavailable."))
+      .toBeVisible();
   });
 });

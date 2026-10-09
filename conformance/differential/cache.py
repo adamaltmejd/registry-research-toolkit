@@ -5,9 +5,9 @@ Layout under the cache root (``$REG_META_G1_CACHE``, else
 ``$XDG_CACHE_HOME/reg-meta-g1``, else ``~/.cache/reg-meta-g1``)::
 
     artifacts/<tag>/global/reg_meta.db       + reg_meta_docs.db
-    artifacts/<tag>/global/derived/          reg_meta.db + reg_meta_docs.db -> ..
     artifacts/<tag>/swecov/reg_meta.db       + reg_meta_docs.db -> ../global/...
-    artifacts/<tag>/swecov/derived/
+    derived/<key>/global/reg_meta.db         + reg_meta_docs.db (indexed copy)
+    derived/<key>/swecov/reg_meta.db         + reg_meta_docs.db -> ../global/...
     baseline/<commit>/src/                   detached worktree of the commit + .venv
 
 Each asset is streamed once: hashed against its pinned SHA-256 while it is
@@ -18,11 +18,14 @@ no longer match (readers open the files immutable, so they never change).
 The baseline commit is the pinned release's reader: one detached worktree with its own
 locked environment (``uv sync``, where maturin builds ``reg-core-py``). It reads the
 release originals. A derived (candidate) copy is the checkout's ``reg-meta-build
-derive`` of an original, stamped with a key over the original's asset digest and the
-builder source tree plus its output SHA-256; the checkout reads it. It is remade when
-its key changes. Anything not pinned is deleted, so the cache never holds more than
-the pinned set. Callers hold ``locked`` for a whole run, which serializes runs from
-concurrent worktrees (they share the report directory and the CPU budget).
+derive`` of an original; the checkout reads it. Its directory's ``<key>`` hashes the
+pinned asset digests and the derive source tree, so checkouts with different
+builders keep separate copies instead of re-deriving over one another's, and a
+finished set is renamed into place whole. The most recently used ``KEEP`` keys stay.
+Every other artifact or baseline that is not pinned is deleted, so the cache never
+holds more than the pinned set. Callers hold ``locked`` for a whole run, which
+serializes runs from concurrent worktrees (they share the report directory and the
+CPU budget).
 """
 
 from __future__ import annotations
@@ -35,9 +38,10 @@ import shutil
 import sqlite3
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -51,6 +55,13 @@ DB_FILENAME = "reg_meta.db"
 DOC_DB_FILENAME = "reg_meta_docs.db"
 STAMP_SUFFIX = ".pin.json"
 CHUNK = 1 << 20
+# Derived keys kept: two branches alternating G1 runs re-derive neither (a key is
+# ~2.6 GB of the tight disk).
+KEEP = 2
+STAGING_PREFIX = ".staging-"
+# A staging directory older than this belongs to a build that died (a derive takes
+# minutes).
+STAGING_RETENTION_SECONDS = 6 * 3600
 REPO_ROOT = Path(__file__).resolve().parents[2]
 # What a derived copy depends on: the builder, the reader code derive moved, the
 # locked dependencies, and the Rust sources of `reg-core-py` (its uv `cache-keys`).
@@ -164,7 +175,7 @@ def _download(tag: str, asset: Asset, dest: Path) -> None:
     _write_stamp(dest, asset)
 
 
-def _write_stamp(dest: Path, asset: Asset, **provenance: str) -> None:
+def _write_stamp(dest: Path, asset: Asset) -> None:
     st = dest.stat()
     _stamp_path(dest).write_text(
         json.dumps(
@@ -173,7 +184,6 @@ def _write_stamp(dest: Path, asset: Asset, **provenance: str) -> None:
                 "asset_sha256": asset.sha256,
                 "size": st.st_size,
                 "mtime_ns": st.st_mtime_ns,
-                **provenance,
             },
             indent=2,
         )
@@ -203,6 +213,15 @@ def ensure_artifacts(pins: Pins) -> dict[str, Path]:
     docs: Path | None = None
     for catalog, asset in sorted(pins.catalogs.items()):
         directory = base / catalog
+        # Candidate copies live under `derived/`, keyed by source tree.
+        _prune(
+            directory,
+            {
+                name + suffix
+                for name in (DB_FILENAME, DOC_DB_FILENAME)
+                for suffix in ("", STAMP_SUFFIX)
+            },
+        )
         db = directory / DB_FILENAME
         if not _stamp_ok(db, asset):
             _download(pins.tag, asset, db)
@@ -231,33 +250,70 @@ def _file_sha256(path: Path) -> str:
         return hashlib.file_digest(handle, "sha256").hexdigest()
 
 
-def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
-    """Return ``{catalog: <directory>/derived}``, each holding the checkout's derived
-    copy of the catalog, stamped with its key (the original's asset digest and the
-    builder sources) and provenance: the copy's ``builder_commit`` and SHA-256.
+def derive_source() -> str:
+    """The checkout's derive inputs (``DERIVE_SOURCES``) as committed tree ids.
 
     Derive stamps the builder commit into each copy and refuses a tree with tracked
-    changes, so G1 runs on a committed tree. Stale copies derive at once: derive
-    parallelizes only its resolver phase, so deriving the catalogs together overlaps
-    their serial index and validation phases (the G1 budget).
+    changes, so G1 runs on a committed tree.
     """
     if _repo("status", "--porcelain", "--untracked-files=no"):
         raise RuntimeError("G1 derives with the committed builder; commit first")
-    source = _repo("rev-parse", *(f"HEAD:{path}" for path in DERIVE_SOURCES))
-    keys = {
-        catalog: Asset(
-            "derive", hashlib.sha256(f"{asset.sha256}\n{source}".encode()).hexdigest()
-        )
-        for catalog, asset in pins.catalogs.items()
-    }
+    return _repo("rev-parse", *(f"HEAD:{path}" for path in DERIVE_SOURCES))
+
+
+def ensure_derived(pins: Pins, dirs: dict[str, Path], source: str) -> dict[str, Path]:
+    """Return ``{catalog: derived/<key>/<catalog>}``, each holding the checkout's
+    derived copy of the catalog beside the candidate docs copy.
+
+    ``key`` hashes the pinned assets and ``source`` (``derive_source``), so each
+    source tree owns its directory and never writes another's. A missing key is
+    built in a private staging directory and renamed into place, so no reader sees a
+    partial copy and concurrent builders of one key keep the first rename. Each
+    copy's stamp records its provenance: the ``builder_commit`` and SHA-256. The
+    ``KEEP`` most recently used keys stay; older ones are deleted (disk is tight).
+    """
+    home = cache_root() / "derived"
+    home.mkdir(parents=True, exist_ok=True)
+    key = hashlib.sha256(
+        json.dumps(
+            {
+                "catalogs": {c: a.sha256 for c, a in sorted(pins.catalogs.items())},
+                "docs": pins.docs.sha256,
+                "source": source,
+            },
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
+    entry = home / key
+    if not entry.is_dir():
+        staging = Path(tempfile.mkdtemp(prefix=STAGING_PREFIX, dir=home))
+        try:
+            _derive(dirs, staging)
+            try:
+                staging.rename(entry)
+            except OSError:
+                # Another builder of this key renamed first; keep its copy.
+                if not entry.is_dir():
+                    raise
+        finally:
+            shutil.rmtree(staging, ignore_errors=True)
+    os.utime(entry)
+    _evict(home, entry)
+    return {catalog: entry / catalog for catalog in dirs}
+
+
+def _derive(dirs: dict[str, Path], staging: Path) -> None:
+    """Derive every catalog into ``staging/<catalog>``, then the docs copy.
+
+    Derive parallelizes only its resolver phase, so deriving the catalogs together
+    overlaps their serial index and validation phases (the G1 budget).
+    """
     started = time.monotonic()
     procs: dict[str, tuple[Path, subprocess.Popen]] = {}
     for catalog, directory in sorted(dirs.items()):
-        out = directory / "derived" / DB_FILENAME
-        if _stamp_ok(out, keys[catalog]):
-            continue
+        out = staging / catalog / DB_FILENAME
+        out.parent.mkdir()
         sys.stderr.write(f"g1: deriving the candidate copy of {catalog}\n")
-        _stamp_path(out).unlink(missing_ok=True)
         procs[catalog] = (
             out,
             subprocess.Popen(
@@ -282,8 +338,6 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
     for catalog, (out, proc) in procs.items():
         # Derive prints one JSON envelope, so reading the pipes in turn cannot block.
         stdout = proc.communicate()[0]
-        # The atomic publish keeps the replaced copy aside; disk is tight.
-        out.with_name(out.name + ".prev").unlink(missing_ok=True)
         if proc.returncode:
             failures.append(f"derive {catalog} failed: {stdout}")
             continue
@@ -294,19 +348,69 @@ def ensure_derived(pins: Pins, dirs: dict[str, Path]) -> dict[str, Path]:
             ).fetchone()
         finally:
             conn.close()
-        _write_stamp(
-            out, keys[catalog], builder_commit=commit, output_sha256=_file_sha256(out)
-        )
+        _write_provenance(out, builder_commit=commit)
     if failures:
         raise RuntimeError("\n".join(failures))
-    if procs:
-        seconds = time.monotonic() - started
-        sys.stderr.write(f"g1: derived the candidate copies in {seconds:.1f} s\n")
-    for directory in dirs.values():
-        docs = directory / "derived" / DOC_DB_FILENAME
-        if not docs.is_symlink():
-            docs.symlink_to(Path("..") / DOC_DB_FILENAME)
-    return {catalog: directory / "derived" for catalog, directory in dirs.items()}
+    seconds = time.monotonic() - started
+    sys.stderr.write(f"g1: derived the candidate copies in {seconds:.1f} s\n")
+    _index_docs(dirs, staging)
+
+
+def _index_docs(dirs: dict[str, Path], staging: Path) -> None:
+    """The candidate docs copy: the checkout's docs build index step
+    (``index_docs``) run over a copy of the pinned docs database, kept beside the
+    first catalog and linked from the others'. The step takes well under a second,
+    so it needs no derive path of its own.
+    """
+    sys.stderr.write("g1: indexing the candidate docs copy\n")
+    first, *rest = sorted(dirs)
+    out = staging / first / DOC_DB_FILENAME
+    shutil.copyfile(dirs[first] / DOC_DB_FILENAME, out)
+    subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import sqlite3, sys; from reg_meta_build.doc_db import index_docs; "
+            "conn = sqlite3.connect(sys.argv[1]); index_docs(conn); conn.close()",
+            str(out),
+        ],
+        # As derive: never index with a perturbed tree under the committed key.
+        env=isolated_env(),
+        check=True,
+    )
+    _write_provenance(out)
+    for catalog in rest:
+        (staging / catalog / DOC_DB_FILENAME).symlink_to(
+            Path("..") / first / DOC_DB_FILENAME
+        )
+
+
+def _write_provenance(path: Path, **provenance: str) -> None:
+    _stamp_path(path).write_text(
+        json.dumps({**provenance, "output_sha256": _file_sha256(path)}, indent=2) + "\n"
+    )
+
+
+def _evict(home: Path, current: Path) -> None:
+    """Delete all but the ``KEEP`` most recently used keys (``current`` always
+    stays), and the staging directories of builds that died."""
+    mtimes = {}
+    for p in home.iterdir():
+        # A concurrent builder can rename its staging directory away meanwhile.
+        with suppress(FileNotFoundError):
+            mtimes[p] = p.stat().st_mtime
+    keys = sorted(
+        (p for p in mtimes if not p.name.startswith(STAGING_PREFIX)),
+        key=mtimes.__getitem__,
+        reverse=True,
+    )
+    cutoff = time.time() - STAGING_RETENTION_SECONDS
+    stale = [p for p in keys[KEEP:] if p != current] + [
+        p for p in mtimes if p.name.startswith(STAGING_PREFIX) and mtimes[p] < cutoff
+    ]
+    for path in stale:
+        sys.stderr.write(f"g1: removing {path}\n")
+        shutil.rmtree(path, ignore_errors=True)
 
 
 def ensure_server() -> Path:

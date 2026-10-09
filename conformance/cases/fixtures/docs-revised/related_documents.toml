@@ -1,0 +1,2 @@
+# The docs fixture without three of its documents: a docs-only rebuild beside an
+# unchanged catalog (api/docs-search-cursor). No related documents.

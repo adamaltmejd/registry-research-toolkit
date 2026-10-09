@@ -2,15 +2,10 @@ import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import VariantsSummary from "./VariantsSummary.svelte";
-import {
-  datedVersions,
-  variant,
-  variantsResponse,
-} from "./variants-test-helpers";
+import { datedVersions, variant } from "./variants-test-helpers";
 
-// Presentational since Y-82 — `CatalogNodeView` fetches the list once for the page
-// (its variant chips name their variants out of it) and hands it down, so these
-// render with the response as a prop instead of mocking the GET.
+// Presentational: the variants ride the register's `show` node, which
+// `CatalogNodeView` hands down, so these render with the list as a prop.
 
 /** The slug lines of every row, in render order. */
 function slugsOf(container: HTMLElement): string[] {
@@ -21,7 +16,7 @@ function slugsOf(container: HTMLElement): string[] {
 
 describe("VariantsSummary — one row per variant family (Y-79)", () => {
   it("folds a family into one row with its slugs, span and a link to the page", async () => {
-    const variants = variantsResponse(
+    const variants = [
       // Slug order out of the catalog puts the successor first.
       variant("individer-15plus", {
         name: "Individer, 15 år och äldre",
@@ -39,7 +34,7 @@ describe("VariantsSummary — one row per variant family (Y-79)", () => {
         name: "Arbetsställen",
         versions: datedVersions(2005, 2023),
       }),
-    );
+    ];
 
     const { container } = await render(VariantsSummary, {
       registerFqid: "scb/lisa",
@@ -64,18 +59,6 @@ describe("VariantsSummary — one row per variant family (Y-79)", () => {
       .element(page.getByRole("link", { name: "All variant details" }))
       .toHaveAttribute("href", "/catalog/scb/lisa/variants");
   });
-
-  it("surfaces a failed load as an alert", async () => {
-    await render(VariantsSummary, {
-      registerFqid: "scb/lisa",
-      variants: null,
-      error: "Error: boom",
-    });
-
-    await expect
-      .element(page.getByRole("alert"))
-      .toHaveTextContent("Failed to load variants: Error: boom");
-  });
 });
 
 describe("VariantsSummary — hide the section without a real variant (#673/M4)", () => {
@@ -86,7 +69,7 @@ describe("VariantsSummary — hide the section without a real variant (#673/M4)"
     // no link to a page with nothing on it.
     const { container } = await render(VariantsSummary, {
       registerFqid: "scb/sol",
-      variants: variantsResponse(variant("_default")),
+      variants: [variant("_default")],
     });
 
     expect(
@@ -104,10 +87,10 @@ describe("VariantsSummary — hide the section without a real variant (#673/M4)"
     // one — only the all-_default/empty cases suppress the section.
     const { container } = await render(VariantsSummary, {
       registerFqid: "scb/lisa",
-      variants: variantsResponse(
+      variants: [
         variant("individer", { name: "Individer" }),
         variant("_default"),
-      ),
+      ],
     });
 
     await expect

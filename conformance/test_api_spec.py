@@ -13,6 +13,8 @@ import tomllib
 from pathlib import Path
 
 import pytest
+from http_cases import fixture_source
+from reader_artifacts import fixture_source as reader_fixture_source
 
 ROOT = Path(__file__).resolve().parents[1]
 API = ROOT / "conformance/api"
@@ -48,15 +50,7 @@ def test_replaced_routes_and_commands_name_an_operation():
 def test_api_case_is_well_formed(case):
     request = json.loads((case / "request.json").read_text(encoding="utf-8"))
     expected = json.loads((case / "expected.json").read_text(encoding="utf-8"))
-    fixture = request.get("fixture", "compiled")
-    source = (
-        "reader/fixture"
-        if fixture == "reader"
-        else fixture
-        if fixture.startswith("reader/")
-        else f"fixtures/{fixture}"
-    )
-    assert (CASES / source).is_dir(), fixture
+    assert reader_fixture_source(fixture_source(request)).is_dir(), request["fixture"]
     assert all(step["operation"] in OPS for step in request["requests"])
     oracles = [expected] if isinstance(expected, dict) else expected
     codes = {

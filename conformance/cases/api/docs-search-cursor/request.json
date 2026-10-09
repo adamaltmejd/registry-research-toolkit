@@ -1,0 +1,40 @@
+{
+  "note": "Fails if a docs cursor outlives its catalog generation or its docs generation (a docs-only rebuild beside the same catalog), or continues another query.",
+  "fixture": "reader",
+  "docs": "docs",
+  "artifacts": {
+    "regenerated": {
+      "identity": {
+        "curation_tree_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    },
+    "redocumented": {"docs": "docs-revised"}
+  },
+  "requests": [
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "KÖN", "limit": 1}
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "KÖN", "limit": 1},
+      "artifact": "regenerated",
+      "cursor_from": [0, "/data/next_cursor"]
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "KÖN", "limit": 1},
+      "artifact": "redocumented",
+      "cursor_from": [0, "/data/next_cursor"]
+    },
+    {
+      "operation": "docs_search",
+      "path": "/api/docs/search",
+      "query": {"q": "kontant", "limit": 1},
+      "cursor_from": [0, "/data/next_cursor"]
+    }
+  ]
+}

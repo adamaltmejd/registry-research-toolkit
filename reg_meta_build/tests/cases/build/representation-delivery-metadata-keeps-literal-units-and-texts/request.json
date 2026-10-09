@@ -1,0 +1,518 @@
+{
+  "replaces": [
+    "test_source_representation_delivery_metadata.py::test_checked_delivery_metadata_retain_literals_and_coverage",
+    "test_source_representation_delivery_metadata.py::test_checked_delivery_metadata_do_not_resolve_same_column_conflicts",
+    "test_source_representation_delivery_metadata.py::test_checked_delivery_metadata_reject_changed_coding",
+    "test_source_representation_delivery_metadata.py::test_checked_delivery_text_keeps_source_names_without_common_winner[False]",
+    "test_source_representation_delivery_metadata.py::test_checked_delivery_text_keeps_source_names_without_common_winner[True]",
+    "test_source_representation_delivery_metadata.py::test_delivery_metadata_keeps_unrelated_checked_field_corrections[name]",
+    "test_source_representation_delivery_metadata.py::test_delivery_metadata_keeps_unrelated_checked_field_corrections[measurement_unit]"
+  ],
+  "fails_if": "`resolve_representation_cases` (source_representations.py) stops passing an applied entry's field permission to formation, so units and texts keep conflicting names and form no variable; or formation copies one edition's unit or text onto the other state; or it lets a name permission settle overlap's same-column unit conflict (no conflicting_occurrence_facts, a written unit); or it stops comparing an entry's expected codings with the built coding, so coded applies without stale_representation_coding; or a checked [[errata.field]] name correction is waived by the name permission (fixname forms a variable)",
+  "note": "One SCB register per claim; register N delivers column VALUE as variable N (CVIDs N01 and N02, editions N20 and N21). Each `[[representation.delivery_metadata]]` entry permits the listed source texts over both of its records and the column window 2020-01-01..2021-12-31 (overlap: 2020 only). units: 2020 'Income 2020' in '100-tal kronor', 2021 'Income 2021' in 'Kronor (SEK)', names permitted. bare: the same rows without an entry, the baseline. overlap: both rows in 2020 with the two units. texts: 2020 'Visit'/'Visited facility', 2021 'Admission'/'Admitting facility', one unit, names and descriptions permitted. descriptions: the same rows, only descriptions permitted. coded: the units rows, authored without a code list and built with one Vardemangder list on CVID 601 (2020 only). fixname and fixunit: the units rows plus an `[[errata.field]]` on CVID N01 setting the name or the unit to 'Checked source wording'. Expected values are the replaced tests' assertions restated per register; rows the replaced tests did not assert are derived from the fixture: a variable whose two editions keep different names forms no variable (unresolved_variable_name), two different units in one variable warn delivery_units_vary, and coded's list covers only 2020 (missing_coding_period for 2021).",
+  "sources": {
+    "description": "The reviewed registers; CVID 601 (CODED, 2020) gains a Vardemangder list.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 101,
+          "var_id": 1,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 120,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "UNITS",
+            1,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 102,
+          "var_id": 1,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 121,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "UNITS",
+            1,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 201,
+          "var_id": 2,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 220,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "BARE",
+            2,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 202,
+          "var_id": 2,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 221,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "BARE",
+            2,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 301,
+          "var_id": 3,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 320,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "OVERLAP",
+            3,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 302,
+          "var_id": 3,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 320,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "OVERLAP",
+            3,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 401,
+          "var_id": 4,
+          "varname": "Visit",
+          "year": "2020",
+          "regver_id": 420,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "TEXTS",
+            4,
+            10
+          ],
+          "vardesc": "Visited facility"
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 402,
+          "var_id": 4,
+          "varname": "Admission",
+          "year": "2021",
+          "regver_id": 421,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "TEXTS",
+            4,
+            10
+          ],
+          "vardesc": "Admitting facility"
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 501,
+          "var_id": 5,
+          "varname": "Visit",
+          "year": "2020",
+          "regver_id": 520,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "DESCRIPTIONS",
+            5,
+            10
+          ],
+          "vardesc": "Visited facility"
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 502,
+          "var_id": 5,
+          "varname": "Admission",
+          "year": "2021",
+          "regver_id": 521,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "DESCRIPTIONS",
+            5,
+            10
+          ],
+          "vardesc": "Admitting facility"
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 601,
+          "var_id": 6,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 620,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "CODED",
+            6,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 602,
+          "var_id": 6,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 621,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "CODED",
+            6,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 701,
+          "var_id": 7,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 720,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "FIXNAME",
+            7,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 702,
+          "var_id": 7,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 721,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "FIXNAME",
+            7,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 801,
+          "var_id": 8,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 820,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "FIXUNIT",
+            8,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 802,
+          "var_id": 8,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 821,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "FIXUNIT",
+            8,
+            10
+          ]
+        }
+      ],
+      "vardemangder": [
+        "Inkomstklass|1|1|Low|601|6001"
+      ]
+    }
+  },
+  "authored_from": {
+    "description": "Delivery-metadata registers, as reviewed: no code lists.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 101,
+          "var_id": 1,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 120,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "UNITS",
+            1,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 102,
+          "var_id": 1,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 121,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "UNITS",
+            1,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 201,
+          "var_id": 2,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 220,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "BARE",
+            2,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 202,
+          "var_id": 2,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 221,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "BARE",
+            2,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 301,
+          "var_id": 3,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 320,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "OVERLAP",
+            3,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 302,
+          "var_id": 3,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 320,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "OVERLAP",
+            3,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 401,
+          "var_id": 4,
+          "varname": "Visit",
+          "year": "2020",
+          "regver_id": 420,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "TEXTS",
+            4,
+            10
+          ],
+          "vardesc": "Visited facility"
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 402,
+          "var_id": 4,
+          "varname": "Admission",
+          "year": "2021",
+          "regver_id": 421,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "TEXTS",
+            4,
+            10
+          ],
+          "vardesc": "Admitting facility"
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 501,
+          "var_id": 5,
+          "varname": "Visit",
+          "year": "2020",
+          "regver_id": 520,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "DESCRIPTIONS",
+            5,
+            10
+          ],
+          "vardesc": "Visited facility"
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 502,
+          "var_id": 5,
+          "varname": "Admission",
+          "year": "2021",
+          "regver_id": 521,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "DESCRIPTIONS",
+            5,
+            10
+          ],
+          "vardesc": "Admitting facility"
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 601,
+          "var_id": 6,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 620,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "CODED",
+            6,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 602,
+          "var_id": 6,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 621,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "CODED",
+            6,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 701,
+          "var_id": 7,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 720,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "FIXNAME",
+            7,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 702,
+          "var_id": 7,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 721,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "FIXNAME",
+            7,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 801,
+          "var_id": 8,
+          "varname": "Income 2020",
+          "year": "2020",
+          "regver_id": 820,
+          "vardef": "Source supplied income definition",
+          "unit": "100-tal kronor",
+          "register": [
+            "FIXUNIT",
+            8,
+            10
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 802,
+          "var_id": 8,
+          "varname": "Income 2021",
+          "year": "2021",
+          "regver_id": 821,
+          "vardef": "Source supplied income definition",
+          "unit": "Kronor (SEK)",
+          "register": [
+            "FIXUNIT",
+            8,
+            10
+          ]
+        }
+      ]
+    }
+  }
+}

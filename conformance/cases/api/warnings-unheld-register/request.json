@@ -1,0 +1,7 @@
+{
+  "note": "Fails if warnings answers for an unheld register under holdings instead of refusing it. On the compiled fixture, the one with an unheld register; warnings-errors' fixture has none.",
+  "fixture": "compiled",
+  "requests": [
+    {"operation": "warnings", "path": "/api/warnings/fk/unheld"}
+  ]
+}

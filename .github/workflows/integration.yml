@@ -167,4 +167,4 @@ jobs:
         run: |
           uv run python -m pytest conformance --run-release \
             --artifact-dir="${{ steps.release-db.outputs.db_dir }}" \
-            --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port}' -q
+            --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q

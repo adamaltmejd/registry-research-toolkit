@@ -1,0 +1,120 @@
+{
+  "description": "Variable 5 (Income) delivers the case-equivalent literal columns First and first as two members (CVIDs) of one 2020 edition in PERCOLUMN (register 2: 'First list' 01 and 09350 Okänt for First, 'Second list' 02 for first), FACTS (3: no lists; First has operational definition 'First operation' and attribution 'Question 1', first has 'Second operation' and no attribution) and CONTESTED (5: First 'First list' 01; first has 'Second list' 02 Label and 'Rival list' 02 Rival; First again in 2021 with 'First list' 01). Books codes-first and codes-second bind 'First list' and 'Second list'. Drifted: PERCOLUMN's First list now holds 03 instead of 01.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "First",
+        "cvid": 200,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 220,
+        "register": [
+          "PERCOLUMN",
+          2,
+          20
+        ]
+      },
+      {
+        "colname": "first",
+        "cvid": 201,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 220,
+        "register": [
+          "PERCOLUMN",
+          2,
+          20
+        ]
+      },
+      {
+        "colname": "First",
+        "cvid": 300,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 320,
+        "register": [
+          "FACTS",
+          3,
+          30
+        ],
+        "varopdef": "First operation",
+        "varsource": "Question 1"
+      },
+      {
+        "colname": "first",
+        "cvid": 301,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 320,
+        "register": [
+          "FACTS",
+          3,
+          30
+        ],
+        "varopdef": "Second operation"
+      },
+      {
+        "colname": "First",
+        "cvid": 500,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 520,
+        "register": [
+          "CONTESTED",
+          5,
+          50
+        ]
+      },
+      {
+        "colname": "first",
+        "cvid": 501,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "regver_id": 520,
+        "register": [
+          "CONTESTED",
+          5,
+          50
+        ]
+      },
+      {
+        "colname": "First",
+        "cvid": 502,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2021",
+        "regver_id": 521,
+        "register": [
+          "CONTESTED",
+          5,
+          50
+        ]
+      }
+    ],
+    "vardemangder": [
+      "First list|1|03|Label|200|2001",
+      "First list|1|09350|Okänt|200|2002",
+      "Second list|1|02|Label|201|2011",
+      "First list|1|01|Label|500|5001",
+      "Second list|1|02|Label|501|5011",
+      "Rival list|1|02|Rival|501|5012",
+      "First list|1|01|Label|502|5021"
+    ]
+  },
+  "files": {
+    "classifications/codes-first.csv": [
+      "code,label",
+      "01,Canonical"
+    ],
+    "classifications/codes-second.csv": [
+      "code,label",
+      "02,Canonical"
+    ]
+  }
+}

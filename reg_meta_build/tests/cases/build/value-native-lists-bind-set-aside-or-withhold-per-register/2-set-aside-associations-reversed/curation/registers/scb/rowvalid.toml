@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "rowvalid"
+native_id = "3561109764752934007"
+[[variant]]
+slug = "default"
+native_id = "3561109764752934007.4298521870710579458"
+[[variable]]
+slug = "value"
+native_id = "3561109764752934007.ROWVALID"
