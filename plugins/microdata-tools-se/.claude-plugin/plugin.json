@@ -1,7 +1,7 @@
 {
   "name": "microdata-tools-se",
-  "description": "Tooling for working with Swedish administrative register microdata — metadata search via reg-meta.",
-  "version": "0.1.1",
+  "description": "Tooling for working with Swedish administrative register microdata — register metadata search through the hosted catalog MCP server.",
+  "version": "0.2.0",
   "author": {
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se"
@@ -9,5 +9,11 @@
   "homepage": "https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/microdata-tools-se",
   "repository": "https://github.com/adamaltmejd/registry-research-toolkit",
   "license": "MIT",
-  "keywords": ["sweden", "microdata", "registry", "scb", "mona", "reg-meta", "statistics", "research"]
+  "keywords": ["sweden", "microdata", "registry", "scb", "mona", "mcp", "statistics", "research"],
+  "mcpServers": {
+    "catalog": {
+      "type": "http",
+      "url": "https://catalog.swecov.se/mcp"
+    }
+  }
 }
