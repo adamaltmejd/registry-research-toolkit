@@ -10,6 +10,16 @@
       ]
     },
     {
+      "table": "issues",
+      "where": {"code": "withheld_catalog_dependency"},
+      "fields": ["subject"],
+      "note": "Exactly these two dependents are withheld; value's people panel key, par/PAR_A and the group itself publish.",
+      "rows": [
+        ["scb/sample/others:panel_entity_key"],
+        ["variable_group:scb/sample/columns:member:scb/sample/par:PAR_B"]
+      ]
+    },
+    {
       "table": "issue_refs",
       "where": {"code": "withheld_catalog_dependency", "subject": {"contains": "panel_entity_key"}},
       "fields": ["subject", "key"],
