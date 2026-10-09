@@ -10,6 +10,9 @@
   representation's spelling and ``schema`` the delivered one; one is a case twin of
   the other, so holdings compares them folded.
 
+A steward catalog's reference ``get-schema-summary`` whose baseline answer equals the
+global catalog's case of the same register is not walked again (G1 budget).
+
 Rows compare as sorted lists of the fields both arms carry: storage ids are not part of
 the API, and the CLI emits the window-only fields (operational definition, source text,
 definition, unit) only on expanded rows. A refusal compares as ``error``. The sampled
@@ -234,6 +237,40 @@ def cases(
         actual = _schema_candidate(rows) if rows is not None else "error"
         return case_id, expected, actual
 
-    ids = sorted(case_id.split("/", 1)[1] for case_id in argv)
+    def twin(case_id: str) -> bool:
+        """A steward catalog's reference ``get schema --summary`` whose baseline
+        answer equals the global catalog's for the same register (the SCB registers
+        both carry): the global walk compares the same rows."""
+        scope, command, *_ = case_id.split("/")
+        if catalog == "global" or scope != "reference":
+            return False
+        mine = results.get(f"{catalog}/{case_id}")
+        other = results.get(f"global/{case_id}")
+        return (
+            command == "get-schema-summary"
+            and mine is not None
+            and other is not None
+            and all(mine[k] == other[k] for k in ("exit", "stdout", "stderr"))
+        )
+
+    # simplify: a twin is not walked, so the server's reference `schema` on the
+    # steward file goes uncompared for the registers it shares unchanged with the
+    # global file (the steward's own registers and holdings still walk); compare a
+    # twin's first page if a steward-only reference defect ever slips through.
+    ids = [i for i in (c.split("/", 1)[1] for c in argv) if not twin(i)]
+    if catalog != "global":
+        print(
+            f"served {catalog} schema: {len(argv) - len(ids)} reference summaries "
+            "not walked, equal to the global catalog's",
+            flush=True,
+        )
+
+    def size(case_id: str) -> int:
+        found = results.get(f"{catalog}/{case_id}")
+        return len(found["stdout"]) if found else 0
+
+    # A walk's pages run one after another, so the longest walks (by the baseline
+    # answer's size) start first instead of forming the tail.
+    ids.sort(key=lambda i: (-size(i), i))
     with ThreadPoolExecutor(PARALLEL) as pool:
-        return list(pool.map(run, ids))
+        return sorted(pool.map(run, ids), key=lambda case: case[0])
