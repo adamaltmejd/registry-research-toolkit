@@ -696,8 +696,8 @@ def _variables(outcome: Outcome) -> list[dict]:
     """Each built variable's distinct delivery columns; one null row when it has none."""
     rows = outcome._sql(
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
-        "s.delivery_column_name AS column, v.provider_key, v.description, "
-        "v.is_identifier, v.is_sensitive, v.deprecated FROM variable v "
+        "s.delivery_column_name AS column, v.provider_key, v.definition, "
+        "v.description, v.is_identifier, v.is_sensitive, v.deprecated FROM variable v "
         "JOIN register r USING (register_id) "
         "LEFT JOIN variable_state s USING (variable_id)"
     )
@@ -1016,6 +1016,12 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "search_pins": lambda o: o._sql(
         "SELECT key AS query, type, position, entity FROM search_pin"
     ),
+    # The unfolded text `variable_fts` indexes, one row per built variable.
+    "search_text": lambda o: o._sql(
+        "SELECT r.slug AS register, v.slug AS variable, t.name, t.definition, "
+        "t.description FROM variable_search_text t JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id"
+    ),
     "manifest": lambda o: o._sql("SELECT key, value FROM import_manifest"),
     "edges": lambda o: o._sql(
         "SELECT 'same_as' AS type, "
@@ -1095,7 +1101,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "name state_name provenance pooled data_length definition measurement_unit "
         "description operational_definition source_register_text",
         "state_codes": "register variable variant column valid_from valid_to code label",
-        "variables": "register variable column provider_key description "
+        "variables": "register variable column provider_key definition description "
         "is_identifier is_sensitive deprecated",
         "variants": "register variant name panel_entity_key panel_time_key",
         "tags": "slug member",
@@ -1109,6 +1115,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "severity detail summary detail_hash_of fields refs withheld_output "
         "acknowledged_by source_subject case_id",
         "search_pins": "query type position entity",
+        "search_text": "register variable name definition description",
         "manifest": "key value",
         "edges": "type a b",
         "state_classifications": "register variable column valid_from valid_to "

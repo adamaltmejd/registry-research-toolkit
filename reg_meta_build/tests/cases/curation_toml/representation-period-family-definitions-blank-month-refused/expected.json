@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_period_family_merges.py::test_definition_map_requires_twelve_exact_positive_literals[blank]",
+  "note": "Every month is present, but December's reviewed definition is empty, which no delivered literal definition can equal. The code and locator are the loader's located-error contract for a field validator.",
+  "fails_if": "the register loader stops requiring each `expected_definitions` text to be nonempty and trimmed, so a blank December definition loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[representation.period_family.expected_definitions]] entry 1",
+    "message_contains": [
+      "must be nonempty and trimmed"
+    ]
+  }
+}
