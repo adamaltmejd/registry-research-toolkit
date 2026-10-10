@@ -429,7 +429,7 @@ def open_db(
     #
     # Locking trade-off (the gotcha): disabling locking means a reader racing an
     # in-place writer is unprotected. Acceptable here because nothing writes this
-    # inode in place — `reg-meta update` installs via tmp-file + atomic rename
+    # inode in place — an installed release DB is replaced whole, never edited
     # (a reader holding the old inode keeps reading a consistent, now-unlinked
     # file), and the only other writer, maintainer-local `reg-meta-build build-db`,
     # ALSO writes a `.db.tmp` and replaces the default path with it

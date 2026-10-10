@@ -1366,7 +1366,7 @@ def cmd_grafts(args: argparse.Namespace) -> None:
 #  (Skatteverket's schemes, Tillväxtverket's delivery models) accretes one
 #  variant per entry, each naming its own delivery — entries share a register
 #  only where they DELIVER that one register's variables, so deliveries with
-#  disjoint schemas are separate registers (reg_meta/DESIGN.md → "Why the
+#  disjoint schemas are separate registers (crates/DESIGN.md → "The
 #  variant is a coordinate, not an identity level"). Exactly one entry names a
 #  given (provider, register, variant) — a second is fatal in `cmd_flavor`.
 _FLAVOR_DISPOSITION = _POLICY.disposition()
@@ -2018,8 +2018,8 @@ def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
 
 # --- inventory: emit the delivery inventory (reality ∩ policy) ---------------
 #
-# The physical delivery-topology contract (reg_meta/DESIGN.md → Inventory TOML authoring
-# contract; curation rules in reg_meta_build/DESIGN.md → Holdings curation rules): one
+# The physical delivery-topology contract (reg_meta_build/DESIGN.md → Inventory TOML;
+# curation rules in reg_meta_build/DESIGN.md → Holdings curation rules): one
 # `[[table]]` per CURRENT physical table on MONA, one explicit finite edition, literal
 # columns, and zero-or-more (register_variant, variable, representation) mappings per
 # column. Reality is the holdings CSV (the maintainer's own re-extractable listing of
@@ -2039,7 +2039,7 @@ def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
 #                                     providers, grafted holdings)
 #
 # The emitted `inventory.toml` is a local builder input, validated through
-# `reg_meta.inventory.load_inventory` — its one-to-one conflicts are the
+# `reg_meta_build.inventory.load_inventory` — its one-to-one conflicts are the
 # maintainer's supersession worklist, and the build stays red until every
 # conflict has an overlay disposition. Overlay entries naming tables no longer
 # in the CSV are flagged stale.

@@ -28,8 +28,8 @@ together, reading actual files rather than a saved version list:
 - Frontend `package.json`, `bun.lock`, `bunfig.toml`, including peer constraints and npm
   aliases such as the native TypeScript checker.
 - Runtime/tool/image pins in `.github/workflows/`, `.pre-commit-config.yaml`,
-  `reg_webapp/Dockerfile` and integration test Dockerfiles. Include related version
-  references in agent guidance/skills.
+  `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
+  dependencies. Include related version references in agent guidance/skills.
 
 Verify current stable versions and compatibility from package registries and upstream
 release documentation. Distinguish latest stable, latest compatible and a requested LTS
@@ -54,10 +54,9 @@ and avoid unrelated lockfile churn.
 
 Update all homes of a selected runtime together. Frontend tool launchers may resolve
 `node` differently in CI and production. Check the actual runtime and shared libraries
-in each affected environment. Test a changed image early with its actual runtime: Apple
-Container (macOS) or Podman (Linux) for package integration; Docker for production
-publishing/deployment, before expensive review. Keep task-owned images/containers
-identifiable; no shared-cache pruning.
+in each affected environment. Test a changed image early with its actual runtime (Docker
+for production publishing/deployment), before expensive review. Keep task-owned
+images/containers identifiable; no shared-cache pruning.
 
 Fix resulting API, typing, build and test incompatibilities directly. Extend focused
 regression tests for behavior changes and preserve the repository's
@@ -70,10 +69,8 @@ Run focused checks during repair. On the resulting candidate, execute the releva
 existing checks once; read their current commands and checker pins from AGENTS.md, CI,
 and hooks instead of duplicating version pins in this skill:
 
-- Python: frozen installation, lint/format/types, version consistency and the relevant
-  full test suite. Keep the hard native container packaging checks; source coherence
-  uses `--install-mode workspace`. Registry availability is a distinct release check and
-  cannot be inferred from a local sibling-wheel install.
+- Python and Rust: frozen installation, lint/format/types and the relevant full test
+  suite (`scripts/gate.py all` covers both).
 - Frontend: lint, Svelte/TypeScript checking, tests, production build and generated
   API-type drift check when its dependency/runtime stack changes.
 - Images/toolchains: build affected stages and exercise the existing affected gate

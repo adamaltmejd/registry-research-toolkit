@@ -9,9 +9,8 @@ references non-existent variant"). See DESIGN.md → IR + adapter architecture.
 Build-time only. **Never imported by `reg_meta` runtime, by the webapp,
 or by any future MONA-side runner** — those surfaces stick to stdlib
 dataclasses (CLAUDE.md "Stack" /
-DESIGN.md → IR + adapter architecture). The Pydantic-on-IR carve-out
-matches `reg_schema`'s existing carve-out: build-time validation
-where it pays for itself, dataclasses everywhere else.
+DESIGN.md → IR + adapter architecture). The Pydantic-on-IR carve-out is
+build-time validation where it pays for itself, dataclasses everywhere else.
 
 The materializer is provider-blind: it consumes an IR stream and writes
 the universal SQLite catalog. Provider-specific oddities are normalized

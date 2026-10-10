@@ -25,8 +25,8 @@ export type Variant = VariantModel;
 /** One `register_version` row nested under a variant (#799). */
 export type Version = Variant["versions"][number];
 
-/** A 1900–2099 year not embedded in a longer digit run — reg_meta's
- * `extract_year` regex (`queries.py`), mirrored so the SPA folds on the same
+/** A 1900–2099 year not embedded in a longer digit run — reg_meta_build's
+ * `extract_year` regex (`edition_bounds.py`), mirrored so the SPA folds on the same
  * notion of a year the DB build derives its delivery windows from. (Distinct
  * from `period.ts`'s year fragment, which anchors a whole wire token; this one
  * reads a year OUT of delivered prose.) */
@@ -185,9 +185,8 @@ export function foldVersions(versions: readonly Version[]): VersionBlock[] {
 /** Whether a version says anything a reader could compare. A delivery carrying
  * only a name is still a delivery — someone looking for "2019" must find it —
  * so it gets its own (bodyless) block; what it can't do is fold, in either
- * direction. reg_meta drops text-less population/object_type rows outright
- * (`_has_text`, `catalog.py`), but there the row IS the text; here the row is
- * the delivery. */
+ * direction. The catalog drops text-less population/object_type rows outright,
+ * but there the row IS the text; here the row is the delivery. */
 function hasText(version: Version): boolean {
   return (
     !!version.description?.trim() ||

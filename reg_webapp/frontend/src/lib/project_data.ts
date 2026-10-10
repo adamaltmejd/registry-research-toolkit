@@ -11,7 +11,7 @@
  * reg_webapp/DESIGN.md → Pydantic boundary). These
  * helpers only construct + immutably edit the shape the SPA posts to
  * `/api/project/validate` / `/order`. The field names mirror
- * `reg_schema/src/reg_schema/project_data.py` (see crates/reg-core/DESIGN.md → Two
+ * `crates/reg-core/src/project.rs` (see crates/reg-core/DESIGN.md → Two
  * layers: types and validator).
  *
  * OpenAPI codegen documents the closed canonical request model, but the SPA cannot
@@ -51,7 +51,7 @@ export type PeriodSegment =
 export type Period = PeriodSegment | PeriodSegment[];
 
 /** The optional global study window (the "project window", #611 → Period model).
- * A plain year-int pair matching reg_schema's `StudyWindow` wire shape (#613:
+ * A plain year-int pair matching reg-core's `StudyWindow` wire shape (#613:
  * `{from, to}` int years, `to >= from`). NOT the full `Period` grammar — the
  * window is year-granular by design; per-page deviation keeps the rich grammar.
  * Absent = full history (backward-compatible — existing specs serialize
@@ -88,7 +88,7 @@ export interface ProjectData {
   [key: string]: unknown;
 }
 
-/** The Model A `schema_version` a NEW draft is seeded with (reg_schema 3.0.0). */
+/** The Model A `schema_version` a NEW draft is seeded with (reg-core 3.0.0). */
 export const MODEL_A_SCHEMA_VERSION = "3.0.0";
 
 /** Seed for a new project (from `/api/context`): the canonical reg_meta release
@@ -234,7 +234,7 @@ function sourcesArray(draft: ProjectData): Source[] {
 }
 
 // ── Source-name prefill (#312) ──────────────────────────────────────────────
-// Source names are panel-key join handles (reg_schema panels join on source
+// Source names are panel-key join handles (reg-core panels join on source
 // name), so a prefill must be unique among the draft's sources. The prefill is
 // advisory: it only ever replaces an empty name — never a user-entered name; the
 // catalog add's create path (`newSource` in the store) is its single caller.

@@ -43,7 +43,7 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     // `scb/lisa/forvink-ers-aktiv` (ForvErs, 1990..2021) and `scb/lisa/forvink-ers`
     // (ForvErs, 2022..2023) are the same LISA column across editions, added to ONE
     // source. Both bindings come from the real pick-time derivation, so neither
-    // carries the `display_name` that reg_schema's period-blind per-source
+    // carries the `display_name` that reg-core's period-blind per-source
     // `display_name_collision` would have collided.
     projectStore.newProject(SEED);
     const pick = (variable: string, period: StagedAdd["period"]): StagedAdd =>

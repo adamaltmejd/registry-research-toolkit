@@ -154,15 +154,16 @@ Use it to verify *layout and interaction*, not catalog realism: the fixture has 
 handful of rows, so density/overflow questions want a real or scratch DB instead.
 
 **Alternative: a released or custom `REG_META_DB`.** Without `--fixture-db`, `dev.sh`
-renders against whatever DB `reg_meta` resolves and inherits the caller's `REG_META_DB`
-(a *directory*), which wins over the installed default (see Prerequisites). So a change
+renders against the default DB path and inherits the caller's `REG_META_DB` (a
+*directory*), which wins over the installed default (see Prerequisites). So a change
 whose rendering depends on DB content not yet in the installed/released DB — a
 `build-db` / curation change — is verified by building a scratch DB and pointing the dev
 server at it; **no release required**:
 
 ```sh
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-verify.XXXXXX")"
-reg-meta-build --db "$db_dir" build-db --input-dir <seed>
+reg-meta-build --db "$db_dir" build-db --prepared <accepted-prepared> \
+  --input-commit <sha> --input-manifest-sha256 <sha256> --report-dir "$db_dir/report"
 REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>
 ```
 

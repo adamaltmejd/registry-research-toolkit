@@ -24,7 +24,7 @@ def _sql_text(text: str) -> str:
 # value_code_fts leaves out stoplisted labels (db.py) and, since #478, ownerless
 # codes: `mapping_count = 0` means no variable owner, and classification-owned
 # codes stay searchable through `classification_code`. This mirrors the reader's
-# owner definition in reg_meta/queries.py `_code_owner_annotations_batch`, which
+# owner definition (`crates/reg-catalog/src/ops/search/code.rs`), which
 # the unscoped value arm cannot apply before its page is cut.
 _VALUE_CODE_LISTED = (
     f"label NOT IN ({', '.join(map(_sql_text, sorted(_VALUE_CODE_STOPLIST_EXACT)))})"

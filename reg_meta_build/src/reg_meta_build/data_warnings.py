@@ -43,11 +43,8 @@ class _CatalogModel(BaseModel):
     typo'd kwarg fails loudly (restoring the prior `@dataclass`'s fail-fast).
     `serialize_by_alias` makes a direct `model_dump()` / `model_dump_json()` emit
     the public wire key (`register`, not the internal `register_name` attr the
-    `BaseModel.register`-method clash forced; #681) — keeping a library/CLI dump
-    aligned with the FastAPI response path, which already serializes `by_alias`.
-    Harmless on the alias-free models. Mirrors reg_schema's `_Model` shape
-    (frozen + extra-forbid + populate_by_name) — a separate base by design:
-    reg_meta must NOT depend on reg_schema."""
+    `BaseModel.register`-method clash forced; #681). Harmless on the alias-free
+    models."""
 
     model_config = ConfigDict(
         frozen=True,

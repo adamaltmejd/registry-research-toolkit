@@ -5,8 +5,8 @@ Adds this directory to ``sys.path`` so the bare-name helper modules
 imported by individual tests.
 
 This directory deliberately has no ``__init__.py``: pytest's rootdir-relative
-module discovery breaks when ``reg_meta/tests/`` and ``reg_meta_build/tests/``
-both register as proper packages. Keep it that way.
+module discovery breaks when ``reg_meta_build/tests/`` and another test tree both
+register as proper packages. Keep it that way.
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 # deadline) still applies on CI. Loaded here, before any test module is imported,
 # because a module's `@settings(...)` resolves its unset fields against the profile
 # active at import time. `load_profile` is process-global: a run that also collects
-# reg_meta/tests gives its property tests this profile too.
+# another tree gives its property tests this profile too.
 settings.register_profile("fast", settings.default, max_examples=15)
 settings.register_profile("thorough", settings.default)
 settings.load_profile(os.environ.get("HYPOTHESIS_PROFILE") or "fast")

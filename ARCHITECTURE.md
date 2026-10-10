@@ -8,9 +8,9 @@ refactor, [`RUST_RUNTIME_SPEC.md`](RUST_RUNTIME_SPEC.md).
 
 This document is the durable home for what used to be §1–§4, §9.3, §11–§13, and the §16
 overview of the now-dissolved Model A refactor spec. The Model A migration (the
-two-level catalog, the FQID grammar, the IR/adapter build, `reg_schema` v2, the webapp +
-SPA) shipped; its design rationale now lives in the package DESIGN.md files this
-document points to.
+two-level catalog, the FQID grammar, the IR/adapter build, the `project_data.json` v2
+schema, the webapp + SPA) shipped; its design rationale now lives in the package
+DESIGN.md files this document points to.
 
 ## Domain
 
@@ -46,8 +46,7 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
 The central multi-tenancy axis. Some research organizations re-license registry data
 from their own warehouses instead of each project going through SCB directly:
 
-- **global** — the full multi-agency catalog `reg_meta` indexes; orders go to the
-  relevant agency.
+- **global** — the full multi-agency catalog; orders go to the relevant agency.
 - **ifau** — the subset in IFAU's warehouse.
 - **swecov** — the subset in the SWECOV research program.
 
@@ -63,14 +62,8 @@ delivery authoring remains outside it. See
 
 A web application (Rust server + Svelte SPA), designed for three steward-scoped flavours
 off one image, that lets researchers browse a catalog, author a per-project variable
-list, and export it as a data order. The human SPA and agent/CLI are equal v1 product
-surfaces: `POST /api/project/order` and `reg-meta order` are both thin adapters over the
-same `reg_meta.order.materialize_order`, and `POST /api/project/validate` and
-`reg-meta validate` over the same `reg_meta.semantic.validate_project`; each pair is
-pinned byte-identical by cross-adapter conformance tests. `reg-meta order` fails closed
-on any bad input, exit 10 for an unreadable/invalid project or catalog configuration and
-exit 17 for an order blocked by materialization findings; `reg-meta validate` writes its
-findings either way and exits 17 when one is an error. The SPA validates the draft
+list, and export it as a data order. The HTTP API (which the SPA uses) and the MCP tools
+are equal surfaces over the same `reg-catalog` operations. The SPA validates the draft
 automatically on every edit.
 
 The unifying research-intent artifact is **`project_data.json`** — written by the
@@ -79,8 +72,8 @@ Its schema and structural validator are `reg-core`'s
 ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). It deliberately does not
 encode physical filenames or SQL tables. Compiled physical holdings
 (`table + edition → literal columns → zero-or-more explicit logical mappings`) join a
-project and query-time reg_meta resolution to produce one normalized, versioned JSON
-order manifest for web and CLI, with no per-steward export template. The materializer
+project and query-time catalog resolution to produce one normalized, versioned JSON
+order manifest for web and MCP, with no per-steward export template. The materializer
 reads the selected compiled artifact for `global`/`swecov`; inventory remains a builder
 input.
 
@@ -91,17 +84,23 @@ over base registers, executed only inside MONA) is deliberately out of scope.
 
 ## Package layout
 
-Monorepo, four Python packages + one webapp, all sharing the `reg_*` prefix. CLI
-binaries match package names (`reg-meta`, `reg-meta-build`); no short aliases for v1.
+Monorepo: one Python build package, the Rust runtime crates and one webapp. CLI binaries
+are `reg-meta` (the runtime) and `reg-meta-build` (the builder); no short aliases for
+v1.
 
 ```text
 registry-research-toolkit/
-  reg_meta/         # catalog query lib + CLI (binary: reg-meta)
-  reg_meta_build/   # catalog DB builder (binary: reg-meta-build)
-  reg_schema/       # project_data.json schema + structural validator
+  reg_meta_build/   # catalog DB builder, Python (binary: reg-meta-build)
+  crates/
+    reg-core/       # project_data.json contract + structural validator, grammars
+    reg-catalog/    # catalog reader and its operations
+    reg-meta/       # binary: `serve` (HTTP API + /mcp) and `mcp` (stdio)
+    reg-core-py/    # PyO3 bindings of reg-core for the builder
+  conformance/      # cross-adapter contract corpus, run against the Rust server
+  plugins/          # the microdata-tools-se agent plugin (hosted MCP)
   reg_webapp/
-    backend/        # dev tooling only: fixture DB, search eval, period parity test
     frontend/       # Svelte 5 + Vite (bun)
+    edge/           # edge worker serving the SPA
     stewards/
       global/       # steward.json only (full universe)
       swecov/       # steward.json (compiled holdings artifact)
@@ -115,34 +114,27 @@ registry-research-toolkit/
 Dependency graph (acyclic):
 
 ```text
-reg_meta_build → reg_meta
-reg_meta       → reg_schema
-reg_webapp     → reg_meta, reg_schema
-reg_schema     → (none)
+reg-meta       → reg-catalog → reg-core
+reg-core-py    → reg-core
+reg_meta_build → reg-core-py
+reg_webapp     → reg-meta (HTTP, through the codegen'd OpenAPI types)
 ```
 
-`reg_meta` and `reg_schema` release to PyPI on their own tags (`reg_meta/v*`,
-`reg_schema/v*`). `reg_meta_build` is tagged (`reg_meta_build/v*`) but not published: it
-depends on the workspace-only `reg-core-py` and runs from a maintainer checkout. The
-webapp ships as a container image on `reg_webapp/v*`.
+Nothing is published to PyPI. The runtime releases on `reg_meta/v*` tags: the `reg-meta`
+crate version, the DB assets and the `reg-meta` binaries (`RUST_RUNTIME_SPEC.md` package
+4.12). `reg_meta_build` is tagged (`reg_meta_build/v*`) but not published: it depends on
+the workspace-only `reg-core-py` and runs from a maintainer checkout. The webapp ships
+as a container image built from the newest `reg_meta/v*` release's assets.
 
 ### Why this split
 
-- **`reg_meta` vs `reg_meta_build`** — different deps (query needs only stdlib
-  `sqlite3`; build needs CSV/Excel parsers), cadence, and operators. The built SQLite
-  DBs (`reg_meta.db` plus the smaller `reg_meta_docs.db`) are too large to ship inside
-  the wheel and are distributed as `.zst`-compressed **GitHub release artifacts** on
-  `reg_meta/v*` tags; `reg-meta update` fetches the matching version into
-  `$XDG_DATA_HOME/reg_meta/`. Mirrors the build/runtime separation a future Go/Rust port
-  of the query layer would need.
-- **`reg_schema` standalone** — the `project_data.json` schema has many consumers
-  (webapp authors it, future exporters and the planned MONA runner rebuild read it).
-  Tiny, focused, no `reg_meta` dep: the schema uses string IDs and leaves resolution to
-  the consumer.
-- **`reg_meta → reg_schema`** — the order materializer and project semantic resolution
-  consume `ProjectData`, so they live in `reg_meta` as shared domain code. Taking this
-  edge was deliberate, rather than creating another package for them (2026-07-14,
-  #1137). Their contract is `crates/DESIGN.md` → "Order manifest".
+- **Runtime vs builder** — the Rust runtime reads; the Python builder writes. They have
+  different deps, cadence and operators, and share only the artifact contract and
+  `reg-core` (through `reg-core-py`). The built SQLite DBs (`reg_meta.db` plus the
+  smaller `reg_meta_docs.db`) are distributed as `.zst`-compressed **GitHub release
+  artifacts** on `reg_meta/v*` tags, fetched with `curl`, SHA-256 verification and
+  `zstd`. See [`crates/DESIGN.md`](crates/DESIGN.md) for the runtime and
+  [`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md) for the project contract.
 
 ### Accepted source revisions and catalog generations
 
@@ -157,7 +149,7 @@ prepared-source pins, and every build records a digest of the curation it used. 
 `reg_meta_build/DESIGN.md` for the contracts, the update workflow and what is still
 transitional.
 
-`reg_meta` and `reg_webapp` consume only the activated SQLite generation; they never
+The runtime and `reg_webapp` consume only the activated SQLite generation; they never
 read the input repository or recompute authority. Diagnostic builds write a separate
 nonpublishable database with unresolved discrepancies and withheld output. They cannot
 replace the active catalog. When correction detail is exposed, it remains collapsed into
@@ -236,18 +228,8 @@ artifacts and accepted inputs unchanged.
 These are hygiene that keeps options open, enforced in CI where noted. Package-local
 mechanisms are documented in the owning DESIGN.md and only summarized here.
 
-- **No Pydantic rule (historical; now retired).** `reg_meta` adopted Pydantic for its
-  catalog return surface in #681 (2026-06-22); the earlier no-Pydantic preference was a
-  soft import-ergonomics call, not a MONA constraint (`reg_meta` is absent from
-  MONA-side code). `reg_schema` is Pydantic (canonical validator + webapp response-model
-  source); the build-side IR in `reg_meta_build` is Pydantic but build-time-only. The
-  hard MONA air-gap rule (no Pydantic + stdlib-only module-level imports) applied to
-  `reg_monabundle`'s amalgamated bundle — that package is now archived; see
-  `REFACTOR_SPEC.md`. Decided 2026-06-22 (#680 re-attribution, #681 adoption). See
-  `crates/reg-core/DESIGN.md` and `reg_meta_build/DESIGN.md`.
-- **Build / runtime cleanly separated.** `reg_meta` (query) is small and pure;
-  `reg_meta_build` is operator-side. A future port replaces query only; build stays
-  Python.
+- **Build / runtime cleanly separated.** The Rust runtime (`crates/`) only reads the
+  artifact; `reg_meta_build` is operator-side, stays Python and is the only writer.
 - **Stateless server.** No process-local caches that change behavior across requests;
   the catalog DB is opened read-only.
 - **OpenAPI is the canonical contract.** `crates/reg-meta/openapi.json` is committed and
@@ -265,17 +247,12 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   cold-origin evidence. Classification/value-set initial responses must be bounded by
   bucket/page limits rather than total code cardinality, and cold/repeat rendered routes
   target CLS < 0.1. The 200-column load-test fixture is committed
-  (`reg_schema/test_corpus/load_test_200col/`), but the load-test harness and CI perf
-  gate are remaining work (see `REFACTOR_SPEC.md`).
-- **Cross-package version compatibility.** `reg_webapp` **floor-pins** its runtime deps
-  (`reg-meta>=…`, `reg-schema>=…`), not exact pins: the packages resolve via
-  `[tool.uv.sources]` in the workspace, and exact pins would force monorepo-wide
-  lockstep without enabling out-of-workspace builds. `reg_meta_build` releases
-  independently (it produces the DB asset `reg_meta` fetches). Schema breakage is
-  signalled by `project_data.json`'s `schema_version` (major 2+ = Model A — 3 since the
-  whole-history `Source.period` sentinel was removed; bare `_default` now selects
-  year-independent data only at a concrete variant). Per the compatibility policy below,
-  v1 ships no migration shims.
+  (`crates/reg-core/tests/project/corpus/load_test_200col/`), but the load-test harness
+  and CI perf gate are remaining work (see `REFACTOR_SPEC.md`).
+- **Project schema version.** Schema breakage is signalled by `project_data.json`'s
+  `schema_version` (major 2+ = Model A — 3 since the whole-history `Source.period`
+  sentinel was removed; bare `_default` now selects year-independent data only at a
+  concrete variant). Per the compatibility policy below, v1 ships no migration shims.
 
 ## API style
 
@@ -298,9 +275,8 @@ oracle each one uses, and the three cost tiers tests run in.
   | Boundary                                 | Oracle (data, not code)                                                                                 | Status  |
   | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------- |
   | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                      | shipped |
-  | Artifact → CLI JSON / library models     | golden `request → response` cases over the synthetic artifact                                           | partial |
-  | Artifact → HTTP                          | `openapi.json` snapshot + TestClient goldens over the fixture DB                                        | shipped |
-  | `project_data.json` → validation result  | `reg_schema/test_corpus/` run by Python and TS consumers                                                | shipped |
+  | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB    | shipped |
+  | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                | shipped |
   | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                             | shipped |
   | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                              | shipped |
   | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                            | shipped |
@@ -326,9 +302,9 @@ after a byte-identical relocation.
 ### Tiers
 
 1. **Package suite (budgeted, every change).** Contract tests over synthetic fixtures
-   built from readable source, property tests, golden corpora: the default
-   `pytest -m "not integration"` and `bun run test`. Run narrowed by package while
-   iterating. Each package stays inside its budget below.
+   built from readable source, property tests, golden corpora: the default `pytest`,
+   `cargo test --workspace` and `bun run test`. Run narrowed by package while iterating.
+   Each package stays inside its budget below.
 2. **Push / CI.** `ci.yml` runs the Python suites as a `test` matrix, one leg per root
    `testpaths` entry, each with `timeout-minutes` at its CI budget below. The `rust`
    job's 3-minute timeout is the `crates/` budget, and it also covers the gate's `rust`
@@ -336,10 +312,9 @@ after a byte-identical relocation.
    suite against the Rust server, release admission on the synthetic steward artifact).
    The `hook-tests` job runs the Claude Code hook tests (`.claude/hooks/tests`, plain
    bash) with a 2-minute timeout. The `reg-webapp-frontend` job has a 6-minute timeout
-   and includes the codegen drift check; the OpenAPI snapshot is a backend case. A job
-   that exceeds its budget fails. The Playwright drivers (`dev.sh smoke`, the gate's
-   `flows` step) are local checks, not CI jobs. `@pytest.mark.integration` adds the
-   container-backed tests, which are not budgeted here.
+   and includes the codegen drift check; the OpenAPI snapshot is a `crates/reg-meta`
+   test. A job that exceeds its budget fails. The Playwright drivers (`dev.sh smoke`,
+   the gate's `flows` step) are local checks, not CI jobs.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;
@@ -348,11 +323,10 @@ after a byte-identical relocation.
    silently skip. The artifact checks compare manifest accounting, sampled
    browse/search/validate agreement, repeated search/order bytes, CLI/HTTP order
    identity and located refusal. CI runs them against both published global catalog and
-   SWECOV steward assets in independent `integration.yml` jobs, alongside the native
-   registry-install gate. Published schema drift is a release-drift failure.
-   Accepted-private-input census additionally requires explicit
-   `--holdings-input=/path/to/accepted-candidate`; mismatched commit/manifest, dirty
-   input, missing members and wrong paths fail admission. Full HTTP variable-node
+   SWECOV steward assets in independent `integration.yml` jobs. Published schema drift
+   is a release-drift failure. Accepted-private-input census additionally requires
+   explicit `--holdings-input=/path/to/accepted-candidate`; mismatched commit/manifest,
+   dirty input, missing members and wrong paths fail admission. Full HTTP variable-node
    admission comparison and deterministic stratified CLI/HTTP binding agreement derive
    requests from the artifact. CLI delivery schemas expose a different membership grain.
    Pinned historical baseline acceptance, exhaustive representative resolution,
@@ -364,26 +338,22 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
 `ci.yml` on `ubuntu-latest`, including setup. A suite over budget is a finding for the
 `test-audit` skill, not a reason to raise the number.
 
-  | Suite                                         | Local | CI job | Rationale                                                                                                                                                     |
-  | --------------------------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `reg_meta_build/tests`                        | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.                           |
-  | `conformance`                                 | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                                                       |
-  | `reg_meta/tests`                              | 15 s  | 3 min  | Stateless reader: CLI JSON and grammar cases over one session-built synthetic artifact.                                                                       |
-  | `reg_webapp/backend/tests`                    | 10 s  | 3 min  | Only what conformance cannot reach: boot, the project routes and the `openapi.json` snapshot, over a TestClient.                                              |
-  | `reg_schema/tests`                            | 4 s   | 2 min  | One validator over `reg_schema/test_corpus/`, pure and in-process.                                                                                            |
-  | `scripts/tests`                               | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints, the opt-in marker gate); a few nested pytest runs dominate.                                             |
-  | `.claude/hooks/tests`                         | 5 s   | 2 min  | Exit-code and message contracts of the Claude Code hooks (deny payloads, bootstrap idempotence); plain bash with stubbed `uv`/`bun`.                          |
-  | `crates/` (`cargo test --workspace`)          | 10 s  | 3 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                                              |
-  | Rust conformance run (`scripts/gate.py rust`) | 30 s  | 3 min  | The whole conformance suite against the Rust server; it grows as slices port operations while the Python suites shrink. Shares the `rust` job with `crates/`. |
-  | frontend (`bun run test`)                     | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds.                          |
+  | Suite                                         | Local | CI job | Rationale                                                                                                                            |
+  | --------------------------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+  | `reg_meta_build/tests`                        | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
+  | `conformance`                                 | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                              |
+  | `scripts/tests`                               | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints, the opt-in marker gate); a few nested pytest runs dominate.                    |
+  | `.claude/hooks/tests`                         | 5 s   | 2 min  | Exit-code and message contracts of the Claude Code hooks (deny payloads, bootstrap idempotence); plain bash with stubbed `uv`/`bun`. |
+  | `crates/` (`cargo test --workspace`)          | 10 s  | 3 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
+  | Rust conformance run (`scripts/gate.py rust`) | 30 s  | 3 min  | The whole conformance suite against the Rust server; Shares the `rust` job with `crates/`.                                           |
+  | frontend (`bun run test`)                     | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
 
 G0 of `RUST_RUNTIME_SPEC.md` §4 runs conformance, the touched packages and
-`cargo test --workspace`. The reader-side rows, conformance and `crates/` sum to 59 s,
-so any change touching reader-side packages fits G0's 60 s. From slice 3a G0 also runs
-the Rust HTTP run (§10: `scripts/gate.py rust`, the whole suite against the Rust server,
-out of process) within its own 30 s row above. G1 (under 5 min) and G2 run on real
-artifacts in tier 3 and are not package budgets. `reg_meta_build` stays Python and is
-outside G0.
+`cargo test --workspace`. The runtime-side rows, conformance and `crates/`, sum to 30 s,
+so any change touching the runtime fits G0's 60 s. From slice 3a G0 also runs the Rust
+HTTP run (§10: `scripts/gate.py rust`, the whole suite against the Rust server, out of
+process) within its own 30 s row above. G1 (under 5 min) and G2 run on real artifacts in
+tier 3 and are not package budgets. `reg_meta_build` stays Python and is outside G0.
 
 ### Conformance suite
 
@@ -403,7 +373,7 @@ no volatile fields are removed, and key/list order remains observable. Existing 
 accounting covers tables and columns; no manifest count contract yet exists for
 mappings, periods or unmapped reasons. Catalog artifacts permit global fallback orders;
 steward reference visibility does not grant orderability. The existing
-`reg_schema/test_corpus/` stays in place for its Python and TS consumers.
+`crates/reg-core/tests/project/corpus/` serves its Rust and TS consumers.
 
 The corpus depends on public contracts rather than private Python internals. Private
 imports/internal patches and oversized test modules are gated by repo lints with no
@@ -445,8 +415,7 @@ git (the `MIGRATION_PLAN.md` tracker was retired once A5 shipped).
   | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                                 | `archive/mona-subsystem`            |
   | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–11, remaining §16     | `REFACTOR_SPEC.md` (remaining work) |
 
-Shared literal source evidence types belong to `reg_meta`: the consumer must be able to
-validate documentary catalog relationships without importing the builder.
-`reg_meta_build` owns occurrence formation and reconciliation and imports those strict
-evidence types directly. Documentary owner/operand links are metadata, not state
-availability, equivalence, lineage or executable transformation edges.
+Shared literal source evidence types live in `reg_meta_build` (`source_evidence.py`);
+the Rust reader reads the documentary relationships from the artifact. Documentary
+owner/operand links are metadata, not state availability, equivalence, lineage or
+executable transformation edges.
