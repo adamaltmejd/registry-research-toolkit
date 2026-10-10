@@ -230,7 +230,7 @@ pub(super) fn annotate(
          JOIN provider p ON p.provider_id = r.provider_id \
          WHERE cvm.code_id IN (SELECT value FROM json_each(?)){in_register}), \
          ranked AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY code_id ORDER BY n, \
-         variable_slug, provider_slug, register_slug, variable_id) AS rn FROM owners) \
+         variable_slug, provider_slug, register_slug) AS rn FROM owners) \
          SELECT code_id, provider_slug, register_slug, variable_slug, name, register_name \
          FROM ranked WHERE rn <= {OWNERS} ORDER BY code_id, rn"
     ))?;

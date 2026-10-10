@@ -284,9 +284,10 @@ def _seed_first_provider_register(
         (vid,),
     )
     src.execute(
-        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
-        "valid_to, data_type, delivery_column_name) "
-        "VALUES (?, 30, '2018-01-01', '9999-12-31', 'int', 'SjukpenningDagar')",
+        "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
+        "valid_from, valid_to, data_type, delivery_column_name) "
+        "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 30, "
+        "'2018-01-01', '9999-12-31', 'int', 'SjukpenningDagar')",
         (vid,),
     )
 

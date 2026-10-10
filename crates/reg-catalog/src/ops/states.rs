@@ -51,6 +51,17 @@ impl Emitted {
     }
 }
 
+/// SQL order keys for one state's `expanded_state` rows (alias `e`): its base row,
+/// then its windows in the resolver's order, source and coded before curated, each
+/// by key start and column (`derive/states.py`). A window's key is unique within its
+/// state, so the keys are total there; `expanded_state_id` is never an order key.
+pub(crate) fn within_state(e: &str) -> String {
+    format!(
+        "{e}.kind NOT IN ('base', 'base_fallback'), {e}.kind = 'curated_window', \
+         {e}.window_valid_from, {e}.delivery_column_name"
+    )
+}
+
 /// The representations of `variable_id` a request emits, in today's reader order
 /// (`Catalog.states`, `Catalog.resolve_at`), held-clipped in holdings scope.
 ///
@@ -68,15 +79,17 @@ pub(crate) fn emitted(
 ) -> Result<Vec<Emitted>, Error> {
     // Per state in today's chronological order; its base row first, then its
     // windows in the resolver's order (source before curated).
-    let mut stmt = conn.prepare_cached(
+    // A variable's states are unique by (variant, valid_from, version label).
+    let mut stmt = conn.prepare_cached(&format!(
         "SELECT e.expanded_state_id, e.state_id, e.register_variant_id, e.kind, \
          e.delivery_column_name, e.canonical_column, s.period_scope, e.valid_from, \
          e.valid_to, e.window_valid_from \
          FROM expanded_state e JOIN variable_state s ON s.state_id = e.state_id \
+         JOIN register_variant rv ON rv.register_variant_id = e.register_variant_id \
          WHERE e.variable_id = ?1 AND (?2 IS NULL OR e.register_variant_id = ?2) \
-         ORDER BY s.valid_from, s.valid_to, s.value_set_version_label, \
-         s.register_variant_id, s.state_id, e.expanded_state_id",
-    )?;
+         ORDER BY s.valid_from, s.valid_to, s.value_set_version_label, rv.slug, {}",
+        within_state("e")
+    ))?;
     let rows = stmt
         .query_map(params![variable_id, variant], |row| {
             Ok(Emitted {

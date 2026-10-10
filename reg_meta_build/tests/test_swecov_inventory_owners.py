@@ -49,8 +49,8 @@ def test_inventory_uses_the_declared_owner_covering_its_exact_year(
                 (variable, owner, owner, owner),
             )
             conn.execute(
-                "INSERT INTO variable_state(variable_id,register_variant_id,valid_from,"
-                "valid_to,delivery_column_name) VALUES (?,902,?,?,'InstKod10')",
+                "INSERT INTO variable_state(state_id, variable_id,register_variant_id,valid_from,"
+                "valid_to,delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?,902,?,?,'InstKod10')",
                 (variable, start, end),
             )
     steward = _run_inventory(tmp_path, db, "", f"T{year}", ["InstKod10"])
@@ -79,9 +79,9 @@ def _owner_db(
             for window in windows:
                 start, end = window or (None, None)
                 conn.execute(
-                    "INSERT INTO variable_state(variable_id,register_variant_id,"
+                    "INSERT INTO variable_state(state_id, variable_id,register_variant_id,"
                     "period_scope,valid_from,valid_to,delivery_column_name) "
-                    "VALUES (?,902,?,?,?,'Column')",
+                    "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?,902,?,?,?,'Column')",
                     (
                         variable_id,
                         "intervals" if window else "year_independent",
@@ -232,9 +232,9 @@ def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(
     conn = sqlite3.connect(db)
     conn.execute("DELETE FROM variable_state WHERE variable_id=904")
     conn.executemany(
-        "INSERT INTO variable_state (variable_id, register_variant_id, "
+        "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
         "valid_from, valid_to, data_type, delivery_column_name) "
-        "VALUES (904, 902, ?, ?, 'varchar', ?)",
+        "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 904, 902, ?, ?, 'varchar', ?)",
         [
             ("2018-01-01", "2018-12-31", "Earlier"),
             ("2019-01-01", "2019-06-30", "Current"),
@@ -486,9 +486,9 @@ def test_inventory_does_not_fold_case_spellings_across_variants_or_owners(
                 "name, slug) VALUES (905, 901, 'Andra', 'andra')"
             )
             conn.execute(
-                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
                 "valid_from, valid_to, data_type, delivery_column_name) "
-                "VALUES (904, 905, '0001-01-01', '9999-12-31', 'varchar', 'T_KOLUMN')"
+                "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 904, 905, '0001-01-01', '9999-12-31', 'varchar', 'T_KOLUMN')"
             )
             table = "T2019"
             overlay = (
@@ -505,9 +505,9 @@ def test_inventory_does_not_fold_case_spellings_across_variants_or_owners(
                 "name) VALUES (910, 901, 'annan', 'annan', 'Annan')"
             )
             conn.execute(
-                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
                 "valid_from, valid_to, data_type, delivery_column_name) "
-                "VALUES (910, 902, '2020-01-01', '2020-12-31', 'varchar', 'T_KOLUMN')"
+                "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 910, 902, '2020-01-01', '2020-12-31', 'varchar', 'T_KOLUMN')"
             )
             table = "T_pooled"
             overlay = (

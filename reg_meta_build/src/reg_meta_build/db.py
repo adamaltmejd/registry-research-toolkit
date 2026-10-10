@@ -856,8 +856,11 @@ CREATE TABLE variable (
     -- per provider. The natural key is (register_id, slug); `provider_key`
     -- (SCB `str(var_id)`; SOS the merged variable name) is demoted from the PK
     -- to a NON-unique join hint — a triage split puts several
-    -- variables under one source key.
-    variable_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- variables under one source key. Internal: dense (1..n) in (provider,
+    -- register, slug) order (#1296 2b), so it carries no provider band and no
+    -- reader orders or breaks ties on it. An extend-db overlay appends its
+    -- minted (high-band) ids after the dense range.
+    variable_id INTEGER PRIMARY KEY,
     register_id INTEGER NOT NULL REFERENCES register(register_id),
     -- SCB str(var_id), TEXT so SOS can key by merged variable name.
     -- NON-unique join hint, not a key: the build-time `variable_instance.var_id`
@@ -1008,7 +1011,12 @@ CREATE TABLE variable_alias_build (
 -- sentinel. Explicit year-independent states carry NULL bounds and no pooled
 -- flag; they have physical delivery scope, not calendar availability.
 CREATE TABLE variable_state (
-    state_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- The public state identity, minted from the state's coordinates. Not the
+    -- rowid: rows are written in (variable_id, variant, chronological) order, so
+    -- a variable's states share pages (#1296 2b). A rowid table rather than
+    -- WITHOUT ROWID, because a row carries the state's prose and an index b-tree
+    -- spills rows over ~1 KB to overflow pages where a table b-tree does not.
+    state_id INTEGER NOT NULL UNIQUE,
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
     period_scope TEXT NOT NULL DEFAULT 'intervals' CHECK (period_scope IN ('intervals', 'year_independent')),
@@ -2272,6 +2280,9 @@ def _insert_core_graph_from_ir(
     # `provider_key` is the NON-unique join hint. `slug` inserts NULL (the
     # populate_variable_slugs UPDATE pass fills it). `source_label` is the
     # resolved source-register display label (IRVariable.source_label).
+    # simplify: overlay variable ids stay minted (high band), appended after the
+    # global build's dense range (#1296 2b); densify them if a steward overlay's
+    # cold reads are measured slow.
     conn.executemany(
         "INSERT INTO variable "
         "(variable_id, register_id, provider_key, slug, name, definition, "

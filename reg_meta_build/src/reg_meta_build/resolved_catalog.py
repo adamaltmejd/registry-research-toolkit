@@ -1247,9 +1247,23 @@ def write_resolved_catalog(
     classifications, classification_predecessors = _prepare_classification_succession(
         classifications, classification_successions
     )
+    # Internal and dense (1..n) in (provider, register, slug) order, so a
+    # register's variables and their states share pages (#1296 2b). Readers
+    # never order or break ties on it.
+    variable_ids = {
+        key: variable_id
+        for variable_id, key in enumerate(
+            sorted(
+                (v.register_ref.provider, v.register_ref.slug, v.slug)
+                for v in variables
+            ),
+            start=1,
+        )
+    }
     metadata_rows = prepare_resolved_metadata(
         ResolvedMetadata() if metadata is None else metadata,
         variables,
+        variable_ids,
         registers,
         variants,
         classifications,
@@ -1382,9 +1396,7 @@ def write_resolved_catalog(
                     variable.register_ref.provider,
                     variable.register_ref.slug,
                 )
-                variable_id = _storage_id(
-                    provider, "variable", register_slug, variable.slug
-                )
+                variable_id = variable_ids[provider, register_slug, variable.slug]
                 conn.execute(
                     "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
                     "name, definition, description, operational_definition, measurement_unit, "
