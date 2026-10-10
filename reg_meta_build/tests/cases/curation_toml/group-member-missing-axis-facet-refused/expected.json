@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "note": "The second member covers the sex axis but not the unit axis. Allowed twin: group-member-shapes-load, whose multi-axis members list their coords in different orders but cover both axes.",
+  "fails_if": "the register loader lets a [[group]] member omit a facet on one of the group's declared axes",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "group 'grid'",
+      "member must supply one facet per declared axis"
+    ]
+  }
+}

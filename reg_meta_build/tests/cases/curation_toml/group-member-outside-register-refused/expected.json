@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "note": "Members are register-relative variable slugs, and the loader prefixes the group's own register, so the only way a member can name another register is a path-shaped slug ('other/b'). That makes 'scb/test/other/b', which the variable FQID grammar refuses; the writer model's separate 'member belongs to another register' check cannot be reached from a register file. Allowed twin: group-member-shapes-load.",
+  "fails_if": "the register loader stops checking each [[group]] member against the variable FQID grammar, so a path-shaped member that reaches outside the group's register loads and the build later fails unlocated",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "group 'reach' members[2].variable",
+      "scb/test/other/b"
+    ]
+  }
+}

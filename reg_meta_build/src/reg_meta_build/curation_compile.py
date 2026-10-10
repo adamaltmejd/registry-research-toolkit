@@ -51,15 +51,12 @@ from .resolved_metadata import (
     ResolvedClassificationGroup,
     ResolvedGroupAxis,
     ResolvedGroupClassification,
-    ResolvedGroupFacet,
-    ResolvedGroupVariable,
     ResolvedMetadata,
     ResolvedRepresentationRef,
     ResolvedRepresentationSuccession,
     ResolvedSuccession,
     ResolvedTag,
     ResolvedTagMember,
-    ResolvedVariableGroup,
     ResolvedVariableSameAs,
     ResolvedVariantRef,
     ResolvedVariantSuccession,
@@ -308,61 +305,7 @@ def compile_declared_metadata(
         for index, group in enumerate(register.group, 1):
             if not _edge_registers((group.register_fqid,), selected):
                 unmatched.append(f"{register.source_file}#/group/{index}")
-            axes = (
-                tuple(
-                    ResolvedGroupAxis(axis=axis.axis, ordinal=i, label=axis.label)
-                    for i, axis in enumerate(group.axes)
-                )
-                if group.axes is not None
-                else (
-                    (ResolvedGroupAxis(axis=group.axis, ordinal=0, label=group.axis),)
-                    if group.axis is not None
-                    else ()
-                )
-            )
-            members = []
-            for member in group.members:
-                coords = (
-                    member.coords
-                    if member.coords is not None
-                    else (
-                        [
-                            {
-                                "axis": axes[0].axis,
-                                "value": member.value,
-                                "label": member.label,
-                            }
-                        ]
-                        if len(axes) == 1 and member.value is not None
-                        else []
-                    )
-                )
-                members.append(
-                    ResolvedGroupVariable(
-                        variable=f"{group.register_fqid}/{member.variable}",
-                        delivery_column_name=member.delivery_column,
-                        facets=tuple(
-                            ResolvedGroupFacet.model_validate(
-                                coord.model_dump()
-                                if hasattr(coord, "model_dump")
-                                else coord
-                            )
-                            for coord in coords
-                        ),
-                    )
-                )
-            groups.append(
-                ResolvedVariableGroup.model_validate(
-                    {
-                        "register": group.register_fqid,
-                        "key": group.key,
-                        "label": group.label,
-                        "source": "curated",
-                        "axes": axes,
-                        "members": tuple(members),
-                    }
-                )
-            )
+            groups.append(group.resolved())
     class_groups = []
     for group in tree.classification_groups.classification_group:
         for member in group.members:

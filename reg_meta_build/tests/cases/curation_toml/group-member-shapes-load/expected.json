@@ -1,0 +1,6 @@
+{
+  "loader": "register_files",
+  "note": "The allowed twin of the in-group refusals (group-*-refused): an umbrella with exactly two members and no axis key, a one-axis group with flat value/label members, and a two-axis group naming one variable twice by distinct delivery columns, with its coords listed in different orders. The register loader validates each group as the build writes it, and every form here passes.",
+  "fails_if": "the register loader's [[group]] validation refuses a valid shape: an axis-less umbrella without `axes = []`, flat one-axis members, or one variable at two delivery columns with reordered coords",
+  "loads": true
+}
