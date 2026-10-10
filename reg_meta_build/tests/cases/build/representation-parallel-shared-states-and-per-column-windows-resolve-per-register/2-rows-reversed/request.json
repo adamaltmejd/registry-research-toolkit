@@ -4,6 +4,6 @@
     "test_source_representations.py::test_shared_state_keeps_metadata_period_and_query_selects_precise_column"
   ],
   "note": "Step 1's delivery with every Registerinformation row in reverse order, so each register's Second row now precedes its First row (the old tests' reversed records and occurrences). The build must not depend on that order: its issues, states and windows equal step 1's.",
-  "fails_if": "`form_representations` (source_representations.py) takes the shared state's storage label, or a fact, from the first member it is handed rather than the first column by name, or resolves a conflicting overlap by delivery order, so the reversed delivery changes a state's column, provenance or definition, a window or an issue",
+  "fails_if": "the build lets delivery order reach the shared state: `resolve_occurrence_intervals` (source_intervals.py) and `form_native_variable` (source_formation.py) iterate a variant's columns in delivery order instead of sorted by name, and `form_representations` (source_representations.py) takes the storage label from the first represented state instead of the first column by name, so the reversed delivery stores the shared states under Second. The label rule changed with only one of the two sorts removed still yields step 1's rows (probed)",
   "sources": "scb-parallel-columns-per-register-reversed"
 }
