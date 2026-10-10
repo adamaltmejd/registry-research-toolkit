@@ -440,7 +440,10 @@ Finite `[[representation.parallel]]` declarations may use `case_aliases = true` 
 case-equivalent column spellings under one source-native identity with equal nonblank
 names and definitions. This requires per-column metadata and makes no co-delivery claim;
 source members may export either spelling. Literal metadata, source coding, windows and
-replay membership remain guarded. Other literal changes need their own identity
+replay membership remain guarded. The entry's required `expected_evidence_sha256` pins
+its members: it covers every member of either spelling in the declared editions, so a
+new member delivered under a declared spelling stales the entry (`stale_curation_entry`)
+instead of joining the shared state. Other literal changes need their own identity
 evidence.
 
 SOS `[[identity.split]]` can partition a complete native family by literal supplied

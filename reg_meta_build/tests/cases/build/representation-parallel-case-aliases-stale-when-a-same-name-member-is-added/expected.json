@@ -1,0 +1,64 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator",
+        "detail"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/representation.parallel/1",
+          "curation/registers/scb/sample.toml#/representation.parallel/1: declared column originals changed since review (expected_evidence_sha256)"
+        ]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "key"
+      ],
+      "rows": [
+        [["register:1", "variant:10", "edition:110", "variable:1", "member:100"]],
+        [["register:1", "variant:10", "edition:110", "variable:1", "member:101"]],
+        [["register:1", "variant:10", "edition:110", "variable:1", "member:102"]]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": [
+        "code",
+        "subject"
+      ],
+      "match": "includes",
+      "rows": [
+        [
+          "unresolved_column_representation",
+          "scb/sample/income"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income",
+        "provenance": {
+          "contains": "#/representation.parallel/1"
+        }
+      },
+      "fields": [
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "note": "The stale entry reconciles nothing, so no income state carries its provenance. In the allowed twin representation-parallel-case-aliases-keep-distinct-members the entry binds both members with no issue.",
+      "rows": []
+    }
+  ]
+}
