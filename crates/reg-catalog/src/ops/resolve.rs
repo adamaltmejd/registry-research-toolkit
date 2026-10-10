@@ -75,7 +75,7 @@ pub fn resolve(server: &Server, scope: Scope, params: &Params) -> Result<Value, 
          JOIN provider p ON p.provider_id = r.provider_id \
          WHERE (?2 IS NULL OR v.register_id = ?2) AND {} \
          GROUP BY a.lower, v.variable_id \
-         ORDER BY a.lower, v.register_id, v.provider_key, v.variable_id",
+         ORDER BY a.lower, p.slug, r.slug, v.slug",
         held::variable(
             scope,
             "a.variable_id",

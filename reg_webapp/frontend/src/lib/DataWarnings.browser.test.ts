@@ -13,7 +13,6 @@ const warning: DataWarningModel = {
   summary: "The stored response codes are unavailable for this delivery.",
   detail: "Source question categories do not establish the stored encoding.",
   diagnostic_detail_sha256: "d".repeat(64),
-  source_subject: "source record",
   fields: [],
   refs: [],
   withheld_output: ["value_set"],

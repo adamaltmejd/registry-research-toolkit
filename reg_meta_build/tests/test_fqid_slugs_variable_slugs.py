@@ -316,9 +316,9 @@ class TestPopulateVariableSlugs(PopulateVariableSlugsHelpers):
         ).fetchone()[0]
         conn.execute(
             "INSERT INTO variable_state "
-            "(variable_id, register_variant_id, valid_from, valid_to, "
+            "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
             "data_type, delivery_column_name) "
-            "VALUES (?, 10, '2019-01-01', '9999-12-31', 'int', 'Kon')",
+            "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 10, '2019-01-01', '9999-12-31', 'int', 'Kon')",
             (vid,),
         )
         conn.commit()

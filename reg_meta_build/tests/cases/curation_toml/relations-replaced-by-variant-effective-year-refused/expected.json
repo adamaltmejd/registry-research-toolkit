@@ -1,0 +1,12 @@
+{
+  "loader": "relations",
+  "fails_if": "load_relations accepts and drops an `effective_year` or `note` on a variant replaced_by edge",
+  "note": "variant_replaced_by stores endpoints only (4.10), so a variant edge's year or note is refused rather than silently dropped. The endpoints-only twin is relations-replaced-by-register-variant-endpoints-load.",
+  "error": {
+    "code": "relations_invalid",
+    "locator": "relations [[edge]] type='replaced_by'",
+    "message_contains": [
+      "does not accept `effective_year` or `note`"
+    ]
+  }
+}

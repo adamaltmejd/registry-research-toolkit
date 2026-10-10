@@ -456,21 +456,27 @@ fn register_tags(conn: &Connection, register_id: i64) -> Result<Vec<Tag>, Error>
     )
 }
 
+/// SQL for the FQID of the tag member `tm`'s variable, the sixth column
+/// [`aggregate_tags`] reads.
+const TAG_MEMBER: &str = "(SELECT p.slug || '/' || r.slug || '/' || v.slug FROM variable v \
+    JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
+    WHERE v.variable_id = tm.variable_id)";
+
 /// Today's `_aggregate_tag_memberships`: one tag per slug over member-grain rows
-/// `(slug, label, rank, starred, note, member variable id)`, at its lowest rank,
+/// `(slug, label, rank, starred, note, member FQID)`, at its lowest rank,
 /// starred when any member is, with the note of its strongest membership (a starred
-/// note, then any note; then by rank, member and slug).
+/// note, then any note; then by rank, member FQID and slug).
 fn aggregate_tags(
     conn: &Connection,
     sql: &str,
     params: impl rusqlite::Params,
 ) -> Result<Vec<Tag>, Error> {
-    type NoteKey = (u8, i64, i64, String);
+    type NoteKey = (u8, i64, Option<String>, String);
     let members = rows(conn, sql, params, |row| {
-        Ok((tag(row)?, row.get::<_, i64>(5)?))
+        Ok((tag(row)?, row.get::<_, Option<String>>(5)?))
     })?;
     let has_note = |t: &Tag| t.note.as_deref().is_some_and(|n| !n.is_empty());
-    let note_key = |t: &Tag, member: i64| -> NoteKey {
+    let note_key = |t: &Tag, member: Option<String>| -> NoteKey {
         let bucket = match (t.starred, has_note(t)) {
             (true, true) => 0,
             (_, true) => 1,
@@ -688,9 +694,9 @@ fn variable_tags(conn: &Connection, ids: &BTreeSet<i64>) -> Result<Vec<Tag>, Err
     aggregate_tags(
         conn,
         &format!(
-            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note, tm.variable_id \
+            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note, {TAG_MEMBER} \
              FROM tag_member tm JOIN tag t USING(tag_id) WHERE tm.variable_id IN ({list}) \
-             ORDER BY tm.rank, t.slug, tm.variable_id"
+             ORDER BY tm.rank, t.slug, 6"
         ),
         [],
     )
@@ -966,14 +972,14 @@ fn variable(conn: &Connection, scope: Scope, id: i64) -> Result<Variable, Error>
     let inherited = aggregate_tags(
         conn,
         &format!(
-            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note, tm.variable_id \
+            "SELECT DISTINCT t.slug, t.label, tm.rank, tm.starred, tm.note, {TAG_MEMBER} \
              FROM concept_group_variable target_member \
              JOIN concept_group_variable group_member \
              ON group_member.group_id = target_member.group_id \
              JOIN tag_member tm ON tm.variable_id = group_member.variable_id \
              JOIN tag t ON t.tag_id = tm.tag_id \
              WHERE target_member.variable_id = ? AND {} AND {} \
-             ORDER BY tm.rank, t.slug, tm.variable_id",
+             ORDER BY tm.rank, t.slug, 6",
             member_in_scope(scope, "group_member"),
             member_in_scope(scope, "target_member"),
         ),

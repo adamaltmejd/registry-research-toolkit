@@ -2,6 +2,8 @@
   "description": "scb-lineage-identity-and-dates with its Registerinformation rows in reverse order.",
   "scb": {
     "registerinformation": [
+      {"cvid": 7002, "var_id": 701, "colname": "SWITCH", "year": "2001", "regver_id": 710, "register": ["Switch register (SWT)", 7, 71], "cells": {"Registervariantnamn": "Other"}},
+      {"cvid": 7001, "var_id": 701, "colname": "SWITCH", "year": "2000", "regver_id": 700, "register": ["Switch register (SWT)", 7, 70], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 6002, "var_id": 601, "colname": "EARLIER", "year": "1999", "regver_id": 610, "register": ["Earlier register (ERL)", 6, 61], "cells": {"Registervariantnamn": "Other"}},
       {"cvid": 6001, "var_id": 601, "colname": "EARLIER", "year": "1999", "regver_id": 600, "register": ["Earlier register (ERL)", 6, 60], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 5002, "var_id": 501, "colname": "HISTORICAL", "year": "1999", "regver_id": 510, "register": ["Historical register (HST)", 5, 51], "cells": {"Registervariantnamn": "Other"}},
@@ -9,6 +11,8 @@
       {"cvid": 4001, "var_id": 401, "colname": "DISJOINT", "year": "2001", "regver_id": 400, "register": ["Disjoint register (DSJ)", 4, 40], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 3001, "var_id": 301, "colname": "UNLINKED", "year": "2000", "regver_id": 300, "register": ["Unlinked register (UNL)", 3, 30], "cells": {"Registervariantnamn": "People"}},
       {"cvid": 2001, "var_id": 201, "colname": "VALUE", "year": "2000", "versionname": "1999-2001", "regver_id": 200, "register": ["Original register (ORIG)", 2, 20], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 1007, "var_id": 106, "colname": "SWITCH", "year": "2001", "register": ["EXAMPLE", 1, 10], "varsource": "Switch register (SWT)"},
+      {"cvid": 1006, "var_id": 106, "colname": "SWITCH", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Switch register (SWT)"},
       {"cvid": 1005, "var_id": 105, "colname": "EARLIER", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Earlier register (ERL)"},
       {"cvid": 1004, "var_id": 104, "colname": "HISTORICAL", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Historical register (HST)"},
       {"cvid": 1003, "var_id": 103, "colname": "DISJOINT", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Disjoint register (DSJ) : People"},

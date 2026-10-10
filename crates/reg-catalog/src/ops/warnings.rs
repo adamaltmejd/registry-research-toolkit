@@ -13,10 +13,9 @@ use super::refs::{self, Target};
 use super::{Components, Params, Server, component};
 use crate::{Code, Error, Scope};
 
-/// A retained source limitation or interpretation assumption: today's
-/// `DataWarning`, as the build stored it.
-#[derive(Serialize, Deserialize, ToSchema)]
-#[serde(deny_unknown_fields)]
+/// A retained source limitation or interpretation assumption: the builder's
+/// `DataWarning`, reconstructed from its `data_warning` row.
+#[derive(Serialize, ToSchema)]
 pub struct DataWarning {
     /// SHA-256 of the rest of the warning.
     warning_id: String,
@@ -32,7 +31,18 @@ pub struct DataWarning {
     summary: String,
     detail: String,
     diagnostic_detail_sha256: String,
-    source_subject: String,
+    fields: Vec<String>,
+    refs: Vec<SourceRecordRef>,
+    withheld_output: Vec<String>,
+    acknowledged_by: Option<String>,
+    case_id: Option<String>,
+}
+
+/// The `evidence_json` of a `data_warning` row: the fields without a column.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Evidence {
+    diagnostic_detail_sha256: String,
     fields: Vec<String>,
     refs: Vec<SourceRecordRef>,
     withheld_output: Vec<String>,
@@ -136,24 +146,54 @@ pub fn warnings(server: &Server, scope: Scope, params: &Params) -> Result<Value,
         ));
     }
     let sql = format!(
-        "SELECT w.warning_json FROM data_warning w WHERE {} ORDER BY w.warning_id",
+        "{SELECT} WHERE {} ORDER BY w.warning_id",
         clauses.join(" AND ")
     );
     let mut stmt = conn.prepare(&sql)?;
     let found = stmt
-        .query_map(args.as_slice(), |row| row.get::<_, String>(0))?
-        .map(|json| {
-            let json = json?;
-            serde_json::from_str(&json).map_err(|err| {
-                Error::new(
-                    Code::InternalError,
-                    format!("Unreadable data warning: {err}"),
-                    vec![],
-                )
-            })
-        })
-        .collect::<Result<Vec<DataWarning>, Error>>()?;
+        .query_map(args.as_slice(), stored)?
+        .collect::<rusqlite::Result<Vec<DataWarning>>>()?;
     Ok(serde_json::to_value(found).expect("warnings serialize"))
+}
+
+/// A `data_warning` row joined to what rebuilds its warning: the owner FQIDs and
+/// variant slug from their IDs, and the shared summary and detail text.
+const SELECT: &str = "SELECT lower(hex(w.warning_id)), p.slug || '/' || r.slug, v.slug, \
+     rv.slug, w.delivery_column_name, w.valid_from, w.valid_to, w.code, w.severity, \
+     st.text, dt.text, w.evidence_json FROM data_warning w \
+     JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
+     LEFT JOIN variable v ON v.variable_id = w.variable_id \
+     LEFT JOIN register_variant rv ON rv.register_variant_id = w.register_variant_id \
+     JOIN data_warning_text st ON st.text_id = w.summary_id \
+     JOIN data_warning_text dt ON dt.text_id = w.detail_id";
+
+/// The warning a `SELECT` row stores.
+fn stored(row: &rusqlite::Row) -> rusqlite::Result<DataWarning> {
+    let register_fqid: String = row.get(1)?;
+    let variable: Option<String> = row.get(2)?;
+    let evidence: String = row.get(11)?;
+    let evidence: Evidence = serde_json::from_str(&evidence).map_err(|err| {
+        rusqlite::Error::FromSqlConversionFailure(11, rusqlite::types::Type::Text, err.into())
+    })?;
+    Ok(DataWarning {
+        warning_id: row.get(0)?,
+        variable_fqid: variable.map(|v| format!("{register_fqid}/{v}")),
+        register_fqid,
+        variant: row.get(3)?,
+        delivery_column_name: row.get(4)?,
+        valid_from: row.get(5)?,
+        valid_to: row.get(6)?,
+        code: row.get(7)?,
+        severity: row.get(8)?,
+        summary: row.get(9)?,
+        detail: row.get(10)?,
+        diagnostic_detail_sha256: evidence.diagnostic_detail_sha256,
+        fields: evidence.fields,
+        refs: evidence.refs,
+        withheld_output: evidence.withheld_output,
+        acknowledged_by: evidence.acknowledged_by,
+        case_id: evidence.case_id,
+    })
 }
 
 /// Today's held-mapping predicate: a variable's warning is held at its variant and

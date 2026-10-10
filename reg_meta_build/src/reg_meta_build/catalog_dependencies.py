@@ -1289,14 +1289,6 @@ def resolve_metadata_dependencies(
             "variable_same_as",
             lambda e, o: [entity(e.a, o), entity(e.b, o)],
         ),
-        "classification_same_as": selected(
-            metadata.classification_same_as,
-            "classification_same_as",
-            lambda e, o: [
-                dependencies.require(("classification", end.classification), output=o)
-                for end in (e.a, e.b)
-            ],
-        ),
         "successions": successions,
         "historical_predecessors": tuple(
             h

@@ -57,6 +57,7 @@ from reg_core_py import fold_search
 
 from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.artifact_identity import search_pins_sha256
+from reg_meta_build.data_warnings import BUILD_ONLY_CODES, stored_data_warnings
 from reg_meta_build.db import (
     _PROVIDER_SEED,
     _VALID_TO_SENTINEL,
@@ -72,12 +73,11 @@ from reg_meta_build.derive.search_index import (
     register_fold_search,
 )
 from reg_meta_build.derive.states import check_states
-from reg_meta_build.id import _MINT_BIT, is_canonical_scb
+from reg_meta_build.id import _MINT_BIT
 from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
     _variable_vintage_stream_key,
 )
-from reg_meta_build.scb_errata import ERRATA_COLUMN_SOURCE_LABEL
 
 from .db import classification_succession_as_of_year, open_db
 from .errors import RegMetaError
@@ -240,7 +240,6 @@ def validate_built_db(
         if flavored:
             _check_entity_key_vars_curated(conn, result, tables, slug_dir)
         _check_minted_id_bands(conn, result, tables, flavored=flavored)
-        _check_errata_column_band(conn, result, tables)
         # No SOS-specific code_variable_map coverage check: code_variable_map IS
         # the DISTINCT projection of `variable_state ⨝ value_set_member`, and SOS
         # writes variable_state directly (no scratch intermediary like SCB's
@@ -266,6 +265,7 @@ def validate_built_db(
         check_chains(conn, result, tables)
         check_coded(conn, result, tables)
         _check_search_pins(conn, result, tables)
+        _check_data_warnings(conn, result, tables)
         result.section("[compiled holdings]")
         from .holdings_validation import validate_compiled_holdings
 
@@ -323,6 +323,8 @@ def _check_schema_shape(
         *CHAIN_TABLES,
         "coded_variable_stats",
         "search_pin",
+        "data_warning",
+        "data_warning_text",
     ):
         if required in tables:
             result.ok(f"{required} present")
@@ -1363,14 +1365,15 @@ def _check_minted_id_bands(
     *,
     flavored: bool = False,
 ) -> None:
-    """A4.3b: every minted-provider id (register -> ... -> variable_state) is in
+    """A4.3b: every minted-provider id (register, variant, state) is in
     the band [2^62, 2^63); every SCB-provider id is below 2^62.
 
     Catches an adapter that forgot to `mint()` (its id would land in the SCB low
     band and risk an id collision) and, symmetrically, an SCB id that overflowed
     into the minted band. value_set/value_code/code_variable_map.code_id are
-    EXCLUDED — they are content-addressed, autoincrement, PROVIDER-SHARED, so
-    they belong to neither band. Self-skips when no minted rows are present (the
+    EXCLUDED — they are content-addressed or dense, PROVIDER-SHARED, so they
+    belong to neither band. `variable_id` is EXCLUDED too: the builder numbers it
+    densely (#1296 2b), so a collision is impossible by construction. Self-skips when no minted rows are present (the
     SCB-only fixture / `--providers=scb` build), so it only bites on a combined
     build.
 
@@ -1399,11 +1402,6 @@ def _check_minted_id_bands(
             "register_variant",
             "SELECT rv.register_variant_id AS id, r.provider_id "
             "FROM register_variant rv JOIN register r USING (register_id)",
-        ),
-        (
-            "variable",
-            "SELECT v.variable_id AS id, r.provider_id "
-            "FROM variable v JOIN register r USING (register_id)",
         ),
         (
             "variable_state",
@@ -1466,45 +1464,6 @@ def _check_minted_id_bands(
             result.ok("no non-SCB rows — minted-id band check trivially holds")
         else:
             result.ok("all SCB ids < 2^62 and all non-SCB ids >= 2^62")
-
-
-def _check_errata_column_band(
-    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
-) -> None:
-    """Y-116: every `source_label='scb-errata'` variable (a `curation/registers/scb/<slug>.toml`
-    `[[errata.column]]`) holds a `variable_id` in the reserved canonical-SCB sub-band
-    `[2^61, 2^62)`.
-
-    The canonical analog of `_check_minted_id_bands`' minted-band guard: the
-    errata pass mints these with `mint_canonical_scb`. (The generic band check
-    already proves the id is `< 2^62` because the row is on the `scb` provider;
-    this additionally proves it is `>= 2^61`, i.e. it can't collide with a real
-    source-derived SCB id.) `variable_id` ONLY: the entry's STATES are the
-    coalescer's, built from the synthetic source rows like any other delivery, so
-    they carry ordinary sequential `state_id`s. Self-skips when no such rows are
-    present (every build whose errata declare no column)."""
-    result.section("[bands: errata-column sub-band]")
-    if "variable" not in tables:
-        result.ok("variable table absent — errata-column band check skipped")
-        return
-    ids = [
-        r[0]
-        for r in conn.execute(
-            "SELECT variable_id FROM variable WHERE source_label = ?",
-            (ERRATA_COLUMN_SOURCE_LABEL,),
-        )
-    ]
-    if not ids:
-        result.ok("no errata-column rows — band check trivially holds")
-        return
-    bad = sum(1 for variable_id in ids if not is_canonical_scb(variable_id))
-    if bad:
-        result.fail(
-            f"{bad} errata-column variable_id(s) outside the canonical-SCB "
-            "sub-band [2^61, 2^62) — un-minted?"
-        )
-    else:
-        result.ok(f"all {len(ids)} errata-column id(s) in the sub-band [2^61, 2^62)")
 
 
 # A4.3b sanity bands for the combined build. The 13 SOS workbooks merge (by
@@ -1655,6 +1614,34 @@ def _check_search_pins(
         result.fail("manifest search_pins_sha256 does not hash the search_pin rows")
     if len(result.failures) == failures:
         result.ok(f"search_pin consistent ({len(rows):,} rows)")
+
+
+def _check_data_warnings(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Each ``data_warning`` row reconstructs a valid warning whose content hashes to
+    its ``warning_id``, and no build-only code reaches the catalog."""
+    result.section("[data_warning]")
+    if not {"data_warning", "data_warning_text"} <= tables:
+        return  # _check_schema_shape already failed.
+    try:
+        warnings = stored_data_warnings(conn)
+    except ValueError as exc:
+        result.fail(f"data_warning row does not reconstruct: {exc}")
+        return
+    # The reconstruction inner-joins owner and text rows, so a dangling id would
+    # drop a row from it rather than fail it.
+    (stored,) = conn.execute("SELECT COUNT(*) FROM data_warning").fetchone()
+    if stored != len(warnings):
+        result.fail(
+            f"{stored - len(warnings)} data_warning rows do not reconstruct "
+            "(dangling owner or text id)"
+        )
+        return
+    if leaked := sorted({w.code for w in warnings} & BUILD_ONLY_CODES):
+        result.fail(f"build-only warning codes in the catalog: {', '.join(leaked)}")
+        return
+    result.ok(f"data_warning consistent ({len(warnings):,} rows)")
 
 
 def _check_tags(

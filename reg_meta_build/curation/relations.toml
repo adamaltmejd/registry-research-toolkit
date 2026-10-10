@@ -92,8 +92,6 @@ from = "scb/lisa"
 from_variant = "individer-16plus"
 to = "scb/lisa"
 to_variant = "individer-15plus"
-effective_year = 2010
-note = "LISA individual-frame variant changed from 16+ to 15+"
 
 # ── LISA näringsgren: SNI coding succession + KU → AGI source switch (#375/#931) ──
 #    The browser groups every LISA näringsgren variable under one concept group; SNI
@@ -5051,11 +5049,11 @@ b = "scb/slr/sun"
 note = "curated:#737 utbildningens nivå och inriktning (sun)"
 # Result: 61 components, 232 edges, 179 variables (max component 7 FQIDs, well under the _SAME_AS_MAX_COMPONENT cap).
 
-# Reciprocal ULF event rows agree on the widened frame; retain the additional deidentification note.
+# Reciprocal ULF event rows agree on the widened frame: "Urvalsramen utökades med
+# äldre personer 75-84 år." 1975-1977 års registerversioner är avidentifierade.
 [[edge]]
 type = "replaced_by"
 from = "scb/ulf"
 from_variant = "individer-16-74-ar-ulf"
 to = "scb/ulf"
 to_variant = "individer-16-84-ar-ulf"
-note = "Urvalsramen utökades med äldre personer 75-84 år.\n\n1975-1977 års registerversioner är avidentifierade"

@@ -126,7 +126,7 @@ def test_occurrence_resolution_ignores_input_order(
 
     Fails if a reconciled fact keeps the first-seen value (a unit pair resolving to
     whichever spelling came first, or the documented-type provenance joined unsorted),
-    or if a cut, a pooled merge or a withheld segment depends on arrival order.
+    or if a cut or a withheld segment depends on arrival order.
     """
     shuffled = tuple(data.draw(st.permutations(records)))
     assert _canonical(shuffled) == _canonical(records)

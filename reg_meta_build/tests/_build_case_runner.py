@@ -820,56 +820,36 @@ def _value_sets(outcome: Outcome) -> list[dict]:
     ]
 
 
-def _stored(row_value, json_value):
-    """A coordinate both the `data_warning` row and its `warning_json` hold: the
-    value when they agree, else both, so a disagreement fails any case naming it."""
-    if row_value == json_value:
-        return row_value
-    return {"row": row_value, "json": json_value}
-
-
 def _sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def _warnings(outcome: Outcome) -> list[dict]:
+def _warning_rows(outcome: Outcome, warnings: list[dict]) -> list[dict]:
+    """Warnings in the `DataWarning` shape, projected with their coordinates as slugs
+    and `detail_hash_of` naming what `diagnostic_detail_sha256` hashes."""
     issue_hashes = {
-        (event["code"], str(event["subject"]), _sha256(event.get("detail") or ""))
+        (event["code"], _sha256(event.get("detail") or ""))
         for event in outcome.events
         if event["kind"] == "issue"
     }
     rows = []
-    for row in outcome._sql(
-        "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
-        "w.delivery_column_name, w.valid_from, w.valid_to, w.warning_json "
-        "FROM data_warning w JOIN register r USING (register_id) "
-        "LEFT JOIN variable v ON v.variable_id = w.variable_id "
-        "LEFT JOIN register_variant rv "
-        "ON rv.register_variant_id = w.register_variant_id"
-    ):
-        payload = json.loads(row["warning_json"])
+    for payload in warnings:
         variable = payload.get("variable_fqid")
         digest = payload["diagnostic_detail_sha256"]
         rows.append(
             {
-                "register": _stored(
-                    row["register"], payload["register_fqid"].split("/")[-1]
-                ),
-                "variable": _stored(
-                    row["variable"], variable.split("/")[-1] if variable else None
-                ),
-                "variant": _stored(row["variant"], payload.get("variant")),
-                "column": _stored(
-                    row["delivery_column_name"], payload.get("delivery_column_name")
-                ),
-                "valid_from": _stored(row["valid_from"], payload.get("valid_from")),
-                "valid_to": _stored(row["valid_to"], payload.get("valid_to")),
+                "register": payload["register_fqid"].split("/")[-1],
+                "variable": variable.split("/")[-1] if variable else None,
+                "variant": payload.get("variant"),
+                "column": payload.get("delivery_column_name"),
+                "valid_from": payload.get("valid_from"),
+                "valid_to": payload.get("valid_to"),
                 "code": payload["code"],
                 "severity": payload["severity"],
                 "detail": payload["detail"],
                 "summary": payload.get("summary"),
                 "detail_hash_of": "issue"
-                if (payload["code"], payload["source_subject"], digest) in issue_hashes
+                if (payload["code"], digest) in issue_hashes
                 else "detail"
                 if _sha256(payload["detail"]) == digest
                 else None,
@@ -877,11 +857,40 @@ def _warnings(outcome: Outcome) -> list[dict]:
                 "refs": _refs(payload.get("refs")),
                 "withheld_output": payload.get("withheld_output"),
                 "acknowledged_by": payload.get("acknowledged_by"),
-                "source_subject": payload["source_subject"],
                 "case_id": payload.get("case_id"),
             }
         )
     return rows
+
+
+def _warnings(outcome: Outcome) -> list[dict]:
+    return _warning_rows(
+        outcome,
+        [
+            row | json.loads(row["evidence_json"])
+            for row in outcome._sql(
+                "SELECT p.slug || '/' || r.slug AS register_fqid, "
+                "p.slug || '/' || r.slug || '/' || v.slug AS variable_fqid, "
+                "rv.slug AS variant, w.delivery_column_name, w.valid_from, "
+                "w.valid_to, w.code, w.severity, st.text AS summary, "
+                "dt.text AS detail, w.evidence_json FROM data_warning w "
+                "JOIN register r USING (register_id) "
+                "JOIN provider p USING (provider_id) "
+                "LEFT JOIN variable v ON v.variable_id = w.variable_id "
+                "LEFT JOIN register_variant rv "
+                "ON rv.register_variant_id = w.register_variant_id "
+                "JOIN data_warning_text st ON st.text_id = w.summary_id "
+                "JOIN data_warning_text dt ON dt.text_id = w.detail_id"
+            )
+        ],
+    )
+
+
+def _report_warnings(outcome: Outcome) -> list[dict]:
+    return _warning_rows(
+        outcome,
+        [event for event in outcome.events if event["kind"] == "data_warning"],
+    )
 
 
 def _alias_windows(outcome: Outcome) -> list[dict]:
@@ -1069,6 +1078,8 @@ _STATE_COORDINATES = (
 _REGISTER = "{0}_provider || '/' || {0}_register"
 _VARIABLE = "{0}_provider || '/' || {0}_register || '/' || {0}_variable"
 _SUCCESSION_FACTS = "effective_year, note, beskrivning AS description"
+# The register grain stores no `note`; the variant grain stores endpoints only.
+_REGISTER_SUCCESSION_FACTS = "effective_year, NULL AS note, beskrivning AS description"
 _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "issues": _issues,
     "issue_refs": _issue_refs,
@@ -1131,6 +1142,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     ),
     "group_members": _group_members,
     "warnings": _warnings,
+    "report_warnings": _report_warnings,
     "search_pins": lambda o: o._sql(
         "SELECT key AS query, type, position, entity FROM search_pin"
     ),
@@ -1162,12 +1174,13 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         f"{_REGISTER.format('successor')} AS successor, NULL AS predecessor_variant, "
         "NULL AS successor_variant, NULL AS predecessor_column, "
         "NULL AS successor_column, NULL AS variant, "
-        f"{_SUCCESSION_FACTS} FROM register_replaced_by UNION ALL SELECT 'variable', "
+        f"{_REGISTER_SUCCESSION_FACTS} FROM register_replaced_by "
+        "UNION ALL SELECT 'variable', "
         f"{_VARIABLE.format('predecessor')}, {_VARIABLE.format('successor')}, "
         f"NULL, NULL, NULL, NULL, NULL, {_SUCCESSION_FACTS} FROM variable_replaced_by "
         f"UNION ALL SELECT 'variant', {_REGISTER.format('predecessor')}, "
         f"{_REGISTER.format('successor')}, predecessor_variant, successor_variant, "
-        f"NULL, NULL, NULL, {_SUCCESSION_FACTS} FROM variant_replaced_by "
+        "NULL, NULL, NULL, NULL, NULL, NULL FROM variant_replaced_by "
         f"UNION ALL SELECT 'representation', {_VARIABLE.format('predecessor')}, "
         f"{_VARIABLE.format('successor')}, NULL, NULL, predecessor_column, "
         f"successor_column, variant, {_SUCCESSION_FACTS} "
@@ -1176,21 +1189,6 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "classification_derivations": lambda o: o._sql(
         "SELECT derived_slug AS derived, source_slug AS source, note "
         "FROM classification_derived_from"
-    ),
-    "timeseries_events": lambda o: o._sql(
-        "SELECT namn AS name, handelse AS event, beskrivning AS description, "
-        "entitet AS entity, id1 AS first_token, id2 AS second_token, "
-        "fil_id AS file_token FROM timeseries_event"
-    ),
-    "source_columns": lambda o: o._sql(
-        "SELECT table_name, column_name, sql_type, nullable FROM source_column_type"
-    ),
-    "join_keys": lambda o: o._sql(
-        "SELECT table_name, column_name, description FROM source_join_key"
-    ),
-    "identifiers": lambda o: o._sql(
-        "SELECT var_id AS native_variable, variabelnamn AS name, "
-        "variabeldefinition AS definition FROM identifier_semantics"
     ),
     "lineage": lambda o: o._sql(
         "SELECT c.register, c.variable, c.variant, c.column, "
@@ -1244,9 +1242,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "JOIN value_code v ON v.code_id = cc.code_id"
     ),
     "relationships": lambda o: o._sql(
-        "SELECT kind, binding_status, source_dataset, v.slug AS owner, "
-        "(SELECT COUNT(*) FROM source_relationship_variable e "
-        "WHERE e.relationship_id = r.relationship_id) AS endpoints "
+        "SELECT kind, binding_status, source_dataset, v.slug AS owner "
         "FROM source_relationship r "
         "LEFT JOIN variable v ON v.variable_id = r.owner_variable_id"
     ),
@@ -1296,7 +1292,10 @@ FIELDS: dict[str, frozenset[str]] = {
         "group_members": "group_key register variable column facets",
         "warnings": "register variable variant column valid_from valid_to code "
         "severity detail summary detail_hash_of fields refs withheld_output "
-        "acknowledged_by source_subject case_id",
+        "acknowledged_by case_id",
+        "report_warnings": "register variable variant column valid_from valid_to "
+        "code severity detail summary detail_hash_of fields refs withheld_output "
+        "acknowledged_by case_id",
         "search_pins": "query type position entity",
         "search_text": "register variable name definition description "
         "delivery_column_names",
@@ -1306,11 +1305,6 @@ FIELDS: dict[str, frozenset[str]] = {
         "successor_variant predecessor_column successor_column variant "
         "effective_year note description",
         "classification_derivations": "derived source note",
-        "timeseries_events": "name event description entity first_token "
-        "second_token file_token",
-        "source_columns": "table_name column_name sql_type nullable",
-        "join_keys": "table_name column_name description",
-        "identifiers": "native_variable name definition",
         "lineage": "register variable variant column source_register "
         "source_variable source_variant source_column valid_from valid_to",
         "lineage_warnings": "register variable variant column valid_from valid_to "
@@ -1327,7 +1321,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "valid_to description url code_count valid_code_count supersedes",
         "classification_successions": "predecessor successor effective_year note",
         "classification_codes": "slug code label level is_valid",
-        "relationships": "kind binding_status source_dataset owner endpoints",
+        "relationships": "kind binding_status source_dataset owner",
         "evidence": "kind disposition",
         "source_issues": "kind severity descriptor_key physical_associations refs",
     }.items()

@@ -165,20 +165,6 @@ INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | Non
         r"source_columns\.0\.nullable\n.*valid boolean",
         None,
     ),
-    "classification-same-as-to-itself": (
-        lambda: _with(
-            "classification_same_as",
-            _first("classification_same_as").model_copy(
-                update={
-                    "b": _first("classification_same_as").b.model_copy(
-                        update={"classification": "first-codes"}
-                    )
-                }
-            ),
-        ),
-        "classification same_as needs distinct global classifications",
-        None,
-    ),
     # Both endpoint states cover 2000; the edge runs into 2001.
     "lineage-wider-than-its-endpoint-states": (
         lambda: _with(

@@ -11,13 +11,12 @@
     "summary": "Fixture limitation",
     "detail": "Read the fixture source contract.",
     "diagnostic_detail_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "source_subject": "Fixture",
     "fields": [],
     "refs": [],
     "withheld_output": [],
     "acknowledged_by": null,
     "case_id": null,
-    "warning_id": "1c4e4839456e92c09b23355aa4ee3ac2c3ef376558e99d4d7da2f78605995725"
+    "warning_id": "39dc38bf874567a7ce0fc9e1fd2f635cddf4871cd139b175fe7ded8d3becb13d"
   },
   {
     "register_fqid": "scb/example",
@@ -31,13 +30,12 @@
     "summary": "Fixture limitation",
     "detail": "Read the fixture source contract.",
     "diagnostic_detail_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "source_subject": "Fixture",
     "fields": [],
     "refs": [],
     "withheld_output": [],
     "acknowledged_by": null,
     "case_id": null,
-    "warning_id": "f28e90edef4712b90f1e8e4dcf7262203492f5f01306e10a34d1efcbcbec40af"
+    "warning_id": "5a76850754dd57c067d60f6bc409c1d2dc779feeb21f2e771dc48c29291a573b"
   },
   {
     "register_fqid": "scb/example",
@@ -51,13 +49,12 @@
     "summary": "Fixture limitation",
     "detail": "Read the fixture source contract.",
     "diagnostic_detail_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "source_subject": "Fixture",
     "fields": [],
     "refs": [],
     "withheld_output": [],
     "acknowledged_by": null,
     "case_id": null,
-    "warning_id": "b17f479dddd2ff2ccdc329a4d56b093b2b1348338b88985bcae79895eef568ed"
+    "warning_id": "a772b6a723350686f5b0156e4e8eade8b25d1167a95e70e33e31323c455c8d2e"
   },
   {
     "register_fqid": "scb/example",
@@ -71,12 +68,11 @@
     "summary": "Fixture limitation",
     "detail": "Read the fixture source contract.",
     "diagnostic_detail_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "source_subject": "Fixture",
     "fields": [],
     "refs": [],
     "withheld_output": [],
     "acknowledged_by": null,
     "case_id": null,
-    "warning_id": "b14ab4691bdaf267329d809f236a0caba8a5f1f4aa9d2a15812d77a12f09a76f"
+    "warning_id": "c8d8e7104d91bbea9162f6ca89d16d3ce81fa01d4cc964e60a98001403af1768"
   }
 ]
