@@ -1,0 +1,19 @@
+[register]
+provider = "scb"
+slug = "gap"
+native_id = "2"
+[[variant]]
+native_id = "2.22"
+slug = "duplicate"
+[[variant]]
+native_id = "2.21"
+slug = "other"
+[[variant]]
+native_id = "2.20"
+slug = "people"
+[[variable]]
+native_id = "2.202"
+slug = "filler"
+[[variable]]
+native_id = "2.201"
+slug = "gap"

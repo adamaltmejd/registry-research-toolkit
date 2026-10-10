@@ -1,0 +1,34 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "unresolved_lineage_ambiguous_source_variant", "valid_from": "2000-01-01"},
+      "fields": ["subject", "severity", "acknowledged_by"],
+      "rows": [
+        ["scb/example/exact", "warning", "curation/registers/scb/example.toml#/acknowledge/1"],
+        ["scb/example/original", "error", null],
+        ["scb/example/added", "warning", "curation/registers/scb/example.toml#/acknowledge/3"],
+        ["scb/example/changed", "error", null],
+        ["scb/example/linked", "error", null],
+        ["scb/example/two-origins", "error", null]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["subject", "withheld_output"],
+      "rows": [
+        ["scb/example/original", ["curation/registers/scb/example.toml#/acknowledge/2"]],
+        ["scb/example/changed", ["curation/registers/scb/example.toml#/acknowledge/4"]],
+        ["scb/example/linked", ["curation/registers/scb/example.toml#/acknowledge/5"]],
+        ["scb/example/two-origins", ["curation/registers/scb/example.toml#/acknowledge/6"]]
+      ]
+    },
+    {
+      "table": "lineage",
+      "fields": ["variable"],
+      "rows": []
+    }
+  ]
+}

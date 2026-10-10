@@ -1,0 +1,16 @@
+[[edge]]
+type = "same_as"
+a = "scb/example/earlier"
+b = "scb/earlier/earlier"
+[[edge]]
+type = "same_as"
+a = "scb/example/historical"
+b = "scb/historical/historical"
+[[edge]]
+type = "same_as"
+a = "scb/example/disjoint"
+b = "scb/disjoint/disjoint"
+[[edge]]
+type = "same_as"
+a = "scb/example/value"
+b = "scb/origin/value"
