@@ -506,12 +506,21 @@ struct Hydrate<'a> {
 
 impl<'a> Hydrate<'a> {
     fn new(conn: &'a Connection, variable_id: i64) -> Result<Self, Error> {
+        let (register_id, provider, register): (i64, Option<String>, Option<String>) = conn
+            .query_row(
+                "SELECT r.register_id, p.slug, r.slug FROM variable v \
+                 JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
+                 WHERE v.variable_id = ?",
+                [variable_id],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )?;
         let warnings = conn
             .prepare(
-                "SELECT warning_id, register_variant_id, delivery_column_name, valid_from, \
-                 valid_to FROM data_warning WHERE variable_id = ? ORDER BY warning_id",
+                "SELECT lower(hex(warning_id)), register_variant_id, delivery_column_name, \
+                 valid_from, valid_to FROM data_warning \
+                 WHERE register_id = ? AND variable_id = ? ORDER BY warning_id",
             )?
-            .query_map([variable_id], |row| {
+            .query_map([register_id, variable_id], |row| {
                 Ok(Warning {
                     id: row.get(0)?,
                     variant: row.get(1)?,
@@ -521,14 +530,6 @@ impl<'a> Hydrate<'a> {
                 })
             })?
             .collect::<rusqlite::Result<_>>()?;
-        let (register_id, provider, register): (i64, Option<String>, Option<String>) = conn
-            .query_row(
-                "SELECT r.register_id, p.slug, r.slug FROM variable v \
-                 JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
-                 WHERE v.variable_id = ?",
-                [variable_id],
-                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
-            )?;
         let families = match (provider, register) {
             (Some(provider), Some(register)) => {
                 variant_families(conn, register_id, &provider, &register)?

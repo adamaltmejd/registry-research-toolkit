@@ -1826,20 +1826,36 @@ CREATE TABLE variable_state_lineage_warning (
 );
 CREATE INDEX idx_variable_state_lineage_warning_consumer ON variable_state_lineage_warning(consumer_state_id);
 
+-- User-facing data warnings only; build-only codes (`data_warnings.BUILD_ONLY_CODES`)
+-- stay in the build report. Each row holds its coordinates once: the reader derives
+-- the register and variable FQIDs and the variant slug from the ID columns, and the
+-- repeated summary and detail text lives in `data_warning_text`. `warning_id` is the
+-- SHA-256 of the reconstructed warning, as 32 raw bytes. Rows are inserted in
+-- (register_id, variable_id, warning_id) order, so the rowid clusters a register's
+-- and a variable's warnings on adjacent pages.
+CREATE TABLE data_warning_text (
+    text_id INTEGER PRIMARY KEY,
+    text    TEXT NOT NULL UNIQUE
+);
+
 CREATE TABLE data_warning (
-    warning_id TEXT PRIMARY KEY,
+    warning_id BLOB NOT NULL UNIQUE CHECK(length(warning_id) = 32),
     register_id INTEGER NOT NULL REFERENCES register(register_id),
     variable_id INTEGER REFERENCES variable(variable_id),
     register_variant_id INTEGER REFERENCES register_variant(register_variant_id),
     delivery_column_name TEXT,
     valid_from TEXT,
     valid_to TEXT,
-    warning_json TEXT NOT NULL CHECK(json_valid(warning_json)),
+    code TEXT NOT NULL,
+    severity TEXT NOT NULL CHECK(severity IN ('warning', 'error')),
+    summary_id INTEGER NOT NULL REFERENCES data_warning_text(text_id),
+    detail_id INTEGER NOT NULL REFERENCES data_warning_text(text_id),
+    -- diagnostic_detail_sha256, fields, refs, withheld_output, acknowledged_by, case_id
+    evidence_json TEXT NOT NULL CHECK(json_valid(evidence_json)),
     CHECK(register_variant_id IS NULL OR variable_id IS NOT NULL),
     CHECK(valid_from IS NULL OR valid_to IS NULL OR valid_from <= valid_to)
 );
 CREATE INDEX idx_data_warning_register ON data_warning(register_id, variable_id);
-CREATE INDEX idx_data_warning_variable ON data_warning(variable_id, valid_from, valid_to);
 
 -- Import metadata
 CREATE TABLE holding_table (

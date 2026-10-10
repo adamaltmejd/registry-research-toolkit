@@ -623,8 +623,8 @@ export interface components {
          */
         Coverage: components["schemas"]["RegisterCoverage"] | components["schemas"]["VariableCoverage"];
         /**
-         * @description A retained source limitation or interpretation assumption: today's
-         *     `DataWarning`, as the build stored it.
+         * @description A retained source limitation or interpretation assumption: the builder's
+         *     `DataWarning`, reconstructed from its `data_warning` row.
          */
         DataWarning: {
             acknowledged_by?: string | null;
@@ -638,7 +638,6 @@ export interface components {
             register_fqid: string;
             /** @description `warning` or `error`. */
             severity: string;
-            source_subject: string;
             summary: string;
             valid_from?: string | null;
             valid_to?: string | null;

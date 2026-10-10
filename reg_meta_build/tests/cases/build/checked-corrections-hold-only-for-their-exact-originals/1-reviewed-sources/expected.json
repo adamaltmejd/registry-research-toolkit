@@ -125,7 +125,7 @@
       ]
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {"register": "par", "code": "source_identity_assumption"},
       "fields": ["variable", "variant", "valid_from", "summary"],
       "rows": [

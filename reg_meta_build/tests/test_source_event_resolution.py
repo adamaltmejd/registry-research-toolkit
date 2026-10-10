@@ -7,7 +7,6 @@ from dataclasses import replace
 import pytest
 from _csv_fixtures import SCB_REVISION
 from _source_scope_support import record, resolve
-from catalog_manifest import synthetic_manifest
 from reg_meta_build.errors import RegMetaError
 from reg_meta_build.resolved_catalog import ResolvedRegister
 from reg_meta_build.resolved_metadata import ResolvedMetadata, ResolvedSuccession
@@ -202,14 +201,8 @@ def _missing_endpoint_acknowledgement():
     return event, originals, scope, uses, case
 
 
-def test_exact_missing_event_acknowledgement_keeps_originals_and_withheld_edge(
-    tmp_path,
-):
-    import json
-    import sqlite3
-
+def test_exact_missing_event_acknowledgement_keeps_originals_and_withheld_edge():
     from reg_meta_build.data_warnings import acknowledged_data_warnings
-    from reg_meta_build.resolved_catalog import write_resolved_catalog
 
     event, originals, scope, uses, case = _missing_endpoint_acknowledgement()
     bindings = SourceEventBindings(
@@ -234,20 +227,6 @@ def test_exact_missing_event_acknowledgement_keeps_originals_and_withheld_edge(
     assert warning.variable_fqid is None and warning.variant is None
     assert warning.detail == case.decision.reason
     assert warning.refs == issue.refs
-    output = tmp_path / "catalog.db"
-    write_resolved_catalog(
-        (),
-        output,
-        manifest=synthetic_manifest(),
-        diagnostic=True,
-        parent_registers=tuple(bindings.guarded_registers.values()),
-        data_warnings=(warning,),
-    )
-    with sqlite3.connect(f"file:{output}?mode=ro", uri=True) as conn:
-        (stored,) = conn.execute("SELECT warning_json FROM data_warning").fetchone()
-        assert json.loads(stored) == json.loads(warning.model_dump_json())
-        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
-        assert conn.execute("SELECT COUNT(*) FROM register_variant").fetchone() == (0,)
 
 
 @pytest.mark.parametrize(

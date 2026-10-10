@@ -222,18 +222,21 @@ one state. None of this asserts that two source editions are statistically compa
 
 ## Data warnings
 
-Source limitations and explicit interpretation assumptions are catalog data. A warning
-keeps its severity, summary, explanation, diagnostic SHA-256, source references,
-acknowledgement and supplied delivery bounds; its id is the SHA-256 of its canonical
-content. Full diagnostic text stays in the build ledger. A warning attaches to a state
-only when its source references positively witness the state's coordinates and dates;
-unknown and year-independent states never acquire dated warnings through an invented
-interval.
+User-facing source limitations and explicit interpretation assumptions are catalog data;
+build-side bookkeeping codes (identity and lineage resolution, set-aside validity,
+curator rationale) stay in the build report only. A warning keeps its severity, summary,
+explanation, diagnostic SHA-256, source references, acknowledgement and supplied
+delivery bounds; its id is the SHA-256 of its canonical content. Full diagnostic text
+stays in the build ledger. A warning attaches to a state only when its source references
+positively witness the state's coordinates and dates; unknown and year-independent
+states never acquire dated warnings through an invented interval.
 
 Registers and variables expose complete warnings. States carry `warning_ids`, so long
-text is not repeated across annual states. Warnings inform interpretation; they never
-change source values or block selection. Builder accounting such as "temporally
-unassessed" range editions is not a warning.
+text is not repeated across annual states. A `data_warning` row stores each coordinate
+once, as an ID column, shares summary and detail text through `data_warning_text`, and
+is clustered by (register, variable); the reader rebuilds the warning from the row.
+Warnings inform interpretation; they never change source values or block selection.
+Builder accounting such as "temporally unassessed" range editions is not a warning.
 
 ## Read scope and artifact admission
 
