@@ -170,7 +170,7 @@ describe("validate (200 ok:false vs 4xx split + stale-response guard)", () => {
     );
     projectStore.newProject(SEED);
     const pending = projectStore.validate();
-    // Edit mid-flight → setDraft swaps the draft + clears validation.
+    // Edit mid-flight → replaceDraft swaps the draft + clears validation.
     projectStore.updateField("name", "edited mid-flight");
     expect(projectStore.validation).toBeNull();
     // The stale GREEN response now arrives — it must NOT resurrect validation.
@@ -520,7 +520,7 @@ describe("a blocked order", () => {
     );
     projectStore.newProject(SEED);
     const pending = projectStore.downloadOrder();
-    // Edit mid-flight → setDraft swaps the draft object + bumps the generation.
+    // Edit mid-flight → replaceDraft swaps the draft object + bumps the generation.
     projectStore.updateField("name", "edited mid-flight");
 
     resolveFetch({

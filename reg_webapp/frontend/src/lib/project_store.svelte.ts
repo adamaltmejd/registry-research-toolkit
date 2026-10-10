@@ -318,12 +318,13 @@ const canDownloadOrder = $derived(
  * same step as `draft`. */
 let draftRejected = $state(false);
 
-/** THE draft replacement — every edit, New, Open and the restore. Bumps the
- * generation (a response for the previous draft is stale) and runs reg-core's
- * `check_project` synchronously, outside the debounce and the in-flight gate: a
- * rejection is the validation at once (and supersedes a request error, which
- * described an earlier draft); an accepted draft's validation is cleared until its
- * debounced `/validate` answers. */
+/** THE draft replacement — every edit (the mutators below all funnel through here,
+ * so `dirty` and `validatedClean` recompute on each), New, Open and the restore.
+ * Bumps the generation (a response for the previous draft is stale) and runs
+ * reg-core's `check_project` synchronously, outside the debounce and the in-flight
+ * gate: a rejection is the validation at once (and supersedes a request error,
+ * which described an earlier draft); an accepted draft's validation is cleared
+ * until its debounced `/validate` answers. */
 function replaceDraft(next: RawDraft): void {
   const local = checkProject(JSON.stringify(next));
   draft = next;
@@ -333,12 +334,6 @@ function replaceDraft(next: RawDraft): void {
   if (draftRejected) {
     setRequestError(null);
   }
-}
-
-/** Replace the draft after an edit. The mutators below all funnel through here so
- * `dirty` and `validatedClean` recompute on every edit. */
-function setDraft(next: RawDraft): void {
-  replaceDraft(next);
 }
 
 /** Load `next` as the whole current project — the ONE wholesale replacement both
@@ -799,7 +794,7 @@ export const projectStore = {
   ): void {
     if (draft != null) {
       const next = updateField(draft, key, value);
-      setDraft(next);
+      replaceDraft(next);
       // `K extends keyof ProjectData` admits `"sources"`. A wholesale `sources`
       // replacement must rebuild the mirror or it desyncs from the new array —
       // keep them consistent.
@@ -810,13 +805,13 @@ export const projectStore = {
   },
   removeSource(index: number): void {
     if (draft != null) {
-      setDraft(removeSource(draft, index));
+      replaceDraft(removeSource(draft, index));
       sourceIds = sourceIds.filter((_, i) => i !== index);
     }
   },
   removeBinding(sourceIndex: number, bindingIndex: number): void {
     if (draft != null) {
-      setDraft(removeBinding(draft, sourceIndex, bindingIndex));
+      replaceDraft(removeBinding(draft, sourceIndex, bindingIndex));
       sourceIds = sourceIds.map((s, i) =>
         i === sourceIndex
           ? { ...s, bindings: s.bindings.filter((_, j) => j !== bindingIndex) }
@@ -956,7 +951,7 @@ export const projectStore = {
     const structural =
       (diff.adds?.length ?? 0) > 0 || (diff.removes?.length ?? 0) > 0;
     const ids = structural ? buildIds(next) : null;
-    setDraft(next);
+    replaceDraft(next);
     if (ids !== null) {
       sourceIds = ids;
     }
