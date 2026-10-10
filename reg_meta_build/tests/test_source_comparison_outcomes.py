@@ -1,10 +1,8 @@
 """The availability comparison as a pure fold over hand-built source records.
 
-`compare_availability_records` also reaches statuses no delivered source can produce:
-both readers record every occurrence as available (`sources/lisa.py` and
-`sources/scb_records.py` set `availability` to true), so a negative or unknown
-availability, and with it `conflict`, exists only here. The bundle-driven claims are
-the `inspect-source-records` CLI cases (`cases/cli/inspect-source-records/`).
+The bundle-driven claims are the `inspect-source-records` CLI cases
+(`cases/cli/inspect-source-records/`); this fold keeps the individual-table
+assumption (SCB variant 153), which those cases do not reach.
 """
 
 from __future__ import annotations
@@ -31,7 +29,6 @@ def _record(
     key: str,
     column: str | None,
     year: int,
-    availability: SourceField | None = None,
     variant_id: int = 153,
     variable_id: int = 1,
     member_id: int = 1,
@@ -80,7 +77,7 @@ def _record(
         ),
         edition_period_scope=TemporalScope(kind="not_applicable"),
         fields=SourceFields(
-            availability=availability or value_field(True),
+            availability=value_field(True),
             column_name=(
                 value_field(column)
                 if column is not None
@@ -90,7 +87,10 @@ def _record(
     )
 
 
-def test_compact_comparison_retains_witnesses_conflicts_ids_and_spelling() -> None:
+def test_compact_comparison_retains_witnesses_ids_and_spelling() -> None:
+    # Fails if the individual table stops mapping to SCB variant 153, the same
+    # spelling in variant 1335 stops surfacing as a source-only observation, or a
+    # different `_MiDAS` suffix counts as the `_LISA` column's counterpart.
     revision = SourceRevision.create(
         dataset="fixture",
         publisher="SCB",
@@ -110,25 +110,9 @@ def test_compact_comparison_retains_witnesses_conflicts_ids_and_spelling() -> No
         ),
         _record(
             revision,
-            key="negative",
-            column="Negative",
-            year=2020,
-            availability=SourceField(status="negative"),
-            workbook_table="individual",
-        ),
-        _record(
-            revision,
             key="suffix",
             column="Thing_LISA",
             year=2020,
-            workbook_table="individual",
-        ),
-        _record(
-            revision,
-            key="unknown-availability",
-            column="Unknown",
-            year=2020,
-            availability=SourceField(status="unknown", raw_value="Okänt"),
             workbook_table="individual",
         ),
     )
@@ -152,24 +136,10 @@ def test_compact_comparison_retains_witnesses_conflicts_ids_and_spelling() -> No
         ),
         _record(
             revision,
-            key="positive",
-            column="Negative",
-            year=2020,
-            member_id=12,
-        ),
-        _record(
-            revision,
             key="distinct-suffix",
             column="Thing_MiDAS",
             year=2020,
             member_id=13,
-        ),
-        _record(
-            revision,
-            key="known-availability",
-            column="Unknown",
-            year=2020,
-            member_id=14,
         ),
     )
 
@@ -190,8 +160,6 @@ def test_compact_comparison_retains_witnesses_conflicts_ids_and_spelling() -> No
         outcome.status == "source_only_observation" and outcome.variable_ids == (999,)
         for outcome in outcomes
     )
-    assert by_column["Negative"].status == "conflict"
-    assert by_column["Unknown"].status == "unknown_applicability"
     assert by_column["Thing_LISA"].status == "unobserved_counterpart"
     assert not by_column["Thing_LISA"].scb_record_ids
     assert all(outcome.assumption_ids for outcome in outcomes)
