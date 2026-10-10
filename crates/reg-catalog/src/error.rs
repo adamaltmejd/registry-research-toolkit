@@ -86,16 +86,6 @@ codes! {
         "Select the artifact's own catalog name, or another artifact.";
     DocSchemaIncompatible "doc_schema_incompatible" "unavailable" 0 10 []
         "Install a documentation database with a supported schema version.";
-    ReleaseNotFound "release_not_found" "unavailable" 0 10 []
-        "Check the release tag.";
-    DownloadFailed "download_failed" "network" 0 25 []
-        "Check the network connection and retry.";
-    NoDbInRelease "no_db_in_release" "unavailable" 0 10 ["asset"]
-        "Choose a release that carries the asset.";
-    IncompatibleDbAsset "incompatible_db_asset" "unavailable" 0 10 ["asset"]
-        "Choose a release with a supported schema version.";
-    ChecksumMismatch "checksum_mismatch" "network" 0 25 ["asset"]
-        "Retry the download; the asset did not match its published SHA-256.";
 }
 
 /// The error document `{code, class, message, remediation, fields}` (section 7).

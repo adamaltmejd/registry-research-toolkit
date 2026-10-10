@@ -178,6 +178,12 @@ def run(config: dict) -> int:
             where = ", ".join(diff["paths"][:3]) or ", ".join(diff["fields"])
             print(f"  {diff['id']}: {where}")
     print(f"report: {report_path}")
+    if not compared:
+        # A broken case discovery compares nothing and would otherwise pass.
+        print(
+            "G1 failed: 0 cases compared; case discovery found nothing", file=sys.stderr
+        )
+        return 1
     return 1 if unexcepted else 0
 
 
