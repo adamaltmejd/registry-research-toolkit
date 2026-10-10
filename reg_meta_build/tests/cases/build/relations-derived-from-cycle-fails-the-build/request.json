@@ -2,7 +2,7 @@
   "replaces": [
     "test_resolved_metadata_contracts.py::test_cycles_are_rejected_without_publishing[derivation]"
   ],
-  "note": "The curation of classification-derivation-between-declared-books-is-written (sni2020 derived from sni2000) plus the reverse derived_from edge, sni2000 from sni2020. Each edge loads on its own; together they close a two-book loop, as the old test's first-codes/second-codes pair did. From the old test: the refusal is a `cycle` code (today replaced_by_cycle, whose message calls the derivation graph a replaced_by succession: a wording finding) and no catalog is written. The allowed twin is that case.",
-  "fails_if": "`validate_metadata_structure` (resolved_metadata.py) drops the `classification derivation` graph from the graphs it passes to `reject_replaced_by_cycles`, so the build writes both derived_from edges",
+  "note": "The curation of classification-derivation-between-declared-books-is-written (sni2020 derived from sni2000) plus the reverse derived_from edge, sni2000 from sni2020. Each edge loads on its own; together they close a two-book loop, as the old test's first-codes/second-codes pair did. From the old test: the refusal is a `cycle` code and no catalog is written. The code and message name the derivation graph (derived_from_cycle), not a replaced_by succession. The allowed twin is that case.",
+  "fails_if": "`validate_metadata_structure` (resolved_metadata.py) drops the `classification derivation` graph from the graphs it passes to `reject_cycles`, so the build writes both derived_from edges; or reports the loop as a replaced_by succession cycle",
   "sources": "scb-classification-books"
 }

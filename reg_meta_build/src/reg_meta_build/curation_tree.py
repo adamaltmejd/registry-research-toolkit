@@ -2471,6 +2471,12 @@ _UNIQUE_TARGETS: tuple[tuple[type, Callable[[Any], object], str, str], ...] = (
         "partition map for family",
         "Keep one ownership map per native family.",
     ),
+    (
+        RegisterGroupEntry,
+        lambda row: row.key,
+        "group key",
+        "Keep each [[group]] key once per register.",
+    ),
 )
 
 
@@ -2545,6 +2551,20 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
                         remediation,
                     )
                 targets.add(target)
+    # A variable belongs to at most one concept group. Every member of a group is
+    # in the group's own register, so one file holds all its claims.
+    group_owners: dict[str, str] = {}
+    for index, group in enumerate(entry.group, start=1):
+        for variable in dict.fromkeys(member.variable for member in group.members):
+            owner = group_owners.setdefault(variable, group.key)
+            if owner != group.key:
+                raise curation_error(
+                    _REGISTER_DUPLICATE_ENTRY,
+                    f"{file} [[group]] entry {index}: variable {variable!r} of "
+                    f"group {group.key!r} already belongs to group {owner!r}.",
+                    "List each variable in one [[group]]; a variable belongs to "
+                    "at most one concept group.",
+                )
     return entry
 
 

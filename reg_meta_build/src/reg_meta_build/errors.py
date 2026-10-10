@@ -32,3 +32,26 @@ class RegMetaError(Exception):
             "message": self.message,
             "remediation": self.remediation,
         }
+
+
+class SourceFormatError(RegMetaError, ValueError):
+    """A selected delivery breaks one rule of its reader's format contract.
+
+    The code names the rule and the message names the file and the place in it. It
+    stays a ``ValueError``, so callers that catch a reader's failures as one still
+    do, while `prepare-sources`, `prepare-input-bundle` and `parse-sos` report its
+    own code instead of their generic wrapper code.
+    """
+
+    def __init__(self, message: str, *, code: str) -> None:
+        super().__init__(
+            exit_code=EXIT_CONFIG,
+            code=code,
+            error_class="configuration",
+            message=message,
+            remediation=(
+                "Inspect the delivery at the place the message names. Restore the "
+                "reviewed file if it changed by mistake; if the source format "
+                "changed, repair its reader, then prepare a new candidate."
+            ),
+        )

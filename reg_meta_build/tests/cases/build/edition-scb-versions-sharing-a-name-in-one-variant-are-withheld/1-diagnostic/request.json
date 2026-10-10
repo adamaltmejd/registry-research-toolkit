@@ -1,0 +1,5 @@
+{
+  "fails_if": "`resolve_parents` stops refusing two native editions of one variant that share a name: it keeps both (the writer then aborts the build with the bare `duplicate resolved edition`), or keeps the first one a source order reaches, or withholds the distinctly named 2021 edition beside them",
+  "note": "SCB delivers register versions 1 and 2 of variant 10 under the one name '2020'. The catalog keys an edition by its variant and name, so the two cannot both be stored, and no source order may choose which one keeps the name. Until the located-errors fix the writer aborted the build with the bare ValueError `duplicate resolved edition` (pipeline_build_failed), even in diagnostic mode. A diagnostic build now withholds both editions with one duplicate_edition_name error citing both delivered rows; version 3 ('2021') and the variables the versions deliver are unaffected, because a variable's states do not depend on the edition record. Step 2 is the strict build.",
+  "sources": "scb-editions-sharing-a-name"
+}

@@ -809,7 +809,7 @@ def _reject_same_as_cycles(edges: list[tuple[Any, Any]], *, label: str) -> None:
     per curated pair (the both-directions duplication happens only at DB insert,
     NOT here) — so a node revisited during DFS means the curated edges genuinely
     close a loop, not the harmless reciprocal of an A->B / B->A mirror pair. A node
-    is the FQID key tuple. Pure + DB-free; mirrors `reject_replaced_by_cycles`."""
+    is the FQID key tuple. Pure + DB-free; mirrors `reject_cycles`."""
     if not edges:
         return
     adj: dict[Any, list[Any]] = {}
@@ -889,19 +889,49 @@ def _reject_oversized_components(edges: list[tuple[Any, Any]], *, label: str) ->
 # ---------------------------------------------------------------------------
 
 
-def reject_replaced_by_cycles(edges: list[tuple[Any, Any]]) -> None:
-    """Reject directed cycles in a `replaced_by` succession graph.
+# The directed relations that must be acyclic, each with its own located code
+# (`<relation>_cycle`), the phrase naming its graph and how to break a loop.
+_CYCLE_RELATIONS: dict[str, tuple[str, str]] = {
+    "replaced_by": (
+        "relations replaced_by forms a succession cycle",
+        "A succession chain must be acyclic (it needs a terminal successor); "
+        "remove the edge that closes the loop.",
+    ),
+    "derived_from": (
+        "relations derived_from forms a derivation cycle",
+        "A classification cannot derive from itself; remove the derived_from "
+        "edge that closes the loop.",
+    ),
+    "lineage": (
+        "state lineage forms a cycle",
+        "Lineage follows each delivered source-register label through the "
+        "accepted same_as identity, so registers that name each other as the "
+        "source of one variable loop. Remove the same_as edge that joins the "
+        "looping variables.",
+    ),
+}
 
-    `edges` is a list of `(predecessor_node, successor_node)` pairs; a node is any
-    hashable key (the build passes the FQID slug tuple — register node
-    `(provider, register)`, variable node `(provider, register, variable)`). A
-    cyclic succession graph has no terminal successor, so the webapp's
-    successors()/predecessors() walks would contradict each other.
+
+def reject_cycles(
+    edges: list[tuple[Any, Any]],
+    *,
+    relation: Literal["replaced_by", "derived_from", "lineage"] = "replaced_by",
+) -> None:
+    """Reject directed cycles in one acyclic relation graph.
+
+    `edges` is a list of `(from_node, to_node)` pairs; a node is any hashable key
+    (the build passes the FQID slug tuple — register node `(provider, register)`,
+    variable node `(provider, register, variable)` — a classification slug or a
+    state reference key). A cyclic succession graph has no terminal successor, so
+    the webapp's successors()/predecessors() walks would contradict each other; a
+    derivation or lineage loop makes a thing its own origin. `relation` names the
+    graph in the refusal and picks its code, `<relation>_cycle`.
 
     Pure + DB-free so it's testable in isolation. The build runs it on the
     COMBINED per-grain graph (event-derived edges + curated edges to insert) — a
     curated edge can close a cycle with an event-derived one, which a curated-only
     view can't see."""
+    phrase, remediation = _CYCLE_RELATIONS[relation]
     if not edges:
         return
     adj: dict[Any, list[Any]] = {}
@@ -925,11 +955,9 @@ def reject_replaced_by_cycles(edges: list[tuple[Any, Any]]) -> None:
                     cycle.append(cur)
                 cycle.append(nxt)
                 raise curation_error(
-                    "replaced_by_cycle",
-                    "relations replaced_by forms a succession cycle: "
-                    f"{' -> '.join(repr(n) for n in reversed(cycle))}.",
-                    "A succession chain must be acyclic (it needs a terminal "
-                    "successor); remove the edge that closes the loop.",
+                    f"{relation}_cycle",
+                    f"{phrase}: {' -> '.join(repr(n) for n in reversed(cycle))}.",
+                    remediation,
                 )
             if color[nxt] == 0:
                 parent[nxt] = node
@@ -1009,7 +1037,7 @@ def reject_nonmonotone_representation_cycles(
 
     `edges` is a list of `(predecessor_node, successor_node, effective_year)`; a
     node is the full representation key `(provider, register, variable, column,
-    variant)`. UNLIKE the topological `reject_replaced_by_cycles` (used for the
+    variant)`. UNLIKE the topological `reject_cycles` (used for the
     entity grains, which must be strictly acyclic), a representation succession MAY
     be cyclic when scoped to one variant and the cycle is a time-monotone
     round-trip: a column left and LATER returned (FRIDA's firm key
@@ -1041,7 +1069,7 @@ def reject_nonmonotone_representation_cycles(
 
     A NON-cyclic graph (e.g. RTB's single variable-level edge) has only trivial SCCs
     and passes unchanged. Pure + DB-free so it's testable in isolation, like
-    `reject_replaced_by_cycles`."""
+    `reject_cycles`."""
     if not edges:
         return
     # adjacency keeps the year on each forward edge so a detected cycle can be

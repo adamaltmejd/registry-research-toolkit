@@ -209,9 +209,11 @@ content must not.
 The prepare readers' refusals are reported as `prepare-sources` reports them: a located
 `RegMetaError` keeps its own code, a `ValueError` or `OSError` becomes
 `source_preparation_failed` (exit 10), and anything else reaches the command's top level
-as `internal_error` (exit 30). `sos_parsed` reports as `parse-sos` does: a
-`SosParseError` is `sos_parse_error` (exit 10). No case claims `internal_error`: a
-refusal that reaches it is a defect.
+as `internal_error` (exit 30). A reader's format refusal is a `SourceFormatError` (the
+reader's own error classes derive from it), so it keeps the code of the rule it breaks.
+`sos_parsed` reports as `parse-sos` does: a located refusal keeps its own code and
+nothing is wrapped. No case claims `internal_error`: a refusal that reaches it is a
+defect.
 
 ## Readers
 

@@ -92,7 +92,7 @@ from .source_inspection import (
     source_interpreter_commit,
     write_scb_observation_census,
 )
-from .sources.sos import SosParseError, parse_directory, parse_register_file
+from .sources.sos import parse_directory, parse_register_file
 from .succession_candidates import (
     infer_succession_candidates,
     render_succession_toml,
@@ -1751,27 +1751,19 @@ def _cmd_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     path = Path(args.path).expanduser().resolve()
 
-    try:
-        if path.is_dir():
-            results = parse_directory(path)
-        elif path.is_file():
-            results = [parse_register_file(path)]
-        else:
-            raise RegMetaError(
-                exit_code=EXIT_NOT_FOUND,
-                code="path_not_found",
-                error_class="input",
-                message=f"{path} is neither a file nor a directory",
-                remediation="Pass a .xlsx file or a directory containing them.",
-            )
-    except SosParseError as exc:
+    # A SosParseError is a located refusal and keeps its own code.
+    if path.is_dir():
+        results = parse_directory(path)
+    elif path.is_file():
+        results = [parse_register_file(path)]
+    else:
         raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="sos_parse_error",
+            exit_code=EXIT_NOT_FOUND,
+            code="path_not_found",
             error_class="input",
-            message=str(exc),
-            remediation="Verify the file is a valid Socialstyrelsen metadata workbook.",
-        ) from exc
+            message=f"{path} is neither a file nor a directory",
+            remediation="Pass a .xlsx file or a directory containing them.",
+        )
 
     def _to_plain(obj: Any) -> Any:
         if dataclasses.is_dataclass(obj) and not isinstance(obj, type):

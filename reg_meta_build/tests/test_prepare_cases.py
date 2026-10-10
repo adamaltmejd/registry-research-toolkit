@@ -48,11 +48,7 @@ from reg_meta_build.sources.scb_reference_records import (
     read_scb_join_keys,
 )
 from reg_meta_build.sources.scb_values import clean_scb_values
-from reg_meta_build.sources.sos import (
-    SosParseError,
-    parse_directory,
-    parse_register_file,
-)
+from reg_meta_build.sources.sos import parse_directory, parse_register_file
 from reg_meta_build.sources.sos_records import clean_sos_source
 from test_curation_toml_cases import to_json
 
@@ -315,11 +311,10 @@ def _prepare_refusal(exc: Exception) -> tuple[str, int]:
 
 
 def _parse_sos_refusal(exc: Exception) -> tuple[str, int]:
-    """The code and exit code `parse-sos` reports (`cli._cmd_parse_sos`)."""
+    """The code and exit code `parse-sos` reports (`cli._cmd_parse_sos`): a located
+    refusal, `SosParseError` included, keeps its own; nothing is wrapped."""
     if isinstance(exc, RegMetaError):
         return exc.code, exc.exit_code
-    if isinstance(exc, SosParseError):
-        return "sos_parse_error", EXIT_CONFIG
     return "internal_error", _EXIT_INTERNAL
 
 

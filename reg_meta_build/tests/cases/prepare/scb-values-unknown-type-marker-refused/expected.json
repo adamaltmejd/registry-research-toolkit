@@ -3,8 +3,8 @@
   "replaces": "test_scb_value_records.py::test_unknown_type_marker_shapes_fail_during_preparation[New marker-New marker]",
   "fails_if": "the SCB value reader treats any code that equals its version and level as a type marker, not only the known markers Tal and Beskrivande text",
   "error": {
-    "code": "source_preparation_failed",
-    "type": "SnapshotError",
+    "code": "scb_value_shape_unsupported",
+    "type": "SourceFormatError",
     "locator": "row 2 has unsupported code/version shape",
     "message_contains": [
       "'New marker' at level 'New marker'"

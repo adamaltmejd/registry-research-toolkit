@@ -50,7 +50,7 @@ from reg_meta_build.source_values import (
     SourceValueWindow,
     exact_sheet_pointer,
 )
-from reg_meta_build.sources.sos import _classify_value_set_text
+from reg_meta_build.sources.sos import SosParseError, _classify_value_set_text
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Mapping
@@ -747,7 +747,10 @@ def clean_sos_source(
         detail = "; ".join(
             f"{issue.sheet_name}: {issue.detail}" for issue in register.parse_issues
         )
-        raise ValueError(f"SOS source cleaning blocked by parser failures: {detail}")
+        raise SosParseError(
+            f"SOS source cleaning blocked by parser failures: {detail}",
+            code="sos_worksheet_unsupported",
+        )
     if not register.source_sheets:
         raise ValueError("SOS source cleaning requires original sheet evidence")
     descriptors: dict[str, SourceValueDescriptor] = {}
