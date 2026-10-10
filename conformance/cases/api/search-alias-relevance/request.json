@@ -1,0 +1,24 @@
+{
+  "note": "Twin of test_search_ranking.py::test_delivery_alias_identity_participates_in_relevance_order and test_search_scope.py::test_multi_token_query_requires_every_token. `unrelated` matches `exact` only through its delivery column `EXACT`; the two `Exact topic` variables match by name prefix. Fails if a delivery-column identity stops counting as an exact match ahead of name-prefix hits, or if a multi-token query admits a variable that matches only one token (`unrelated` for `exact topic`). The fixture has no groups, so folding is a no-op.",
+  "kind": "catalog",
+  "fixture": "reader/search-alias-relevance",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "exact",
+        "type": "variable",
+        "limit": 3
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "exact topic",
+        "type": "variable"
+      }
+    }
+  ]
+}

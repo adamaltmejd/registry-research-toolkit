@@ -116,13 +116,9 @@ under `cases/fixtures` unless they name a reader source. The shared builder is
 `conformance/reader_artifacts.py`; package tests and the dev server's steward catalog
 (`dev.sh --fixture-db` with `REG_WEBAPP_STEWARD`) use it too.
 
-Ten reader sources have no consumer yet and await porting to `api` cases (follow-up
-4.9c, listed with the behaviors to pin in the 4.9a pull request): `cli-code-shape`,
-`cli-display-limits`, `search-alias-relevance`, `search-code-exclusion`,
-`search-exact-admission`, `search-exact-holdings`, `search-identity-swamp`,
-`search-identity-swamp-code`, `search-punctuation-label` and `search-relevance`. The
-retired Python reader's package tests pinned search ranking and display behavior on
-them.
+A reader source whose `request.json` names a `filler` binding and a `copies` count is
+built with that binding replicated (`replicate_filler`), so a case can rank past a full
+candidate prefix without committing a thousand-row catalog.
 
 ## API cases
 

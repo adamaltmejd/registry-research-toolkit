@@ -1,0 +1,21 @@
+{
+  "note": "Twin of test_search_scope.py::test_punctuation_only_query_matches_no_authored_label. The curated group label `Inkomst -- brutto/netto` contains `--` literally; search-no-token pins the same contract on a fixture with no such label. Fails if a query with no letter or digit reaches the label arm (a literal substring match on `--`) instead of returning no items.",
+  "kind": "catalog",
+  "fixture": "reader/search-punctuation-label",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Inkomst"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "--"
+      }
+    }
+  ]
+}
