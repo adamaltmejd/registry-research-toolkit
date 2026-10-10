@@ -179,12 +179,7 @@ class SourceFields(_SourceModel):
                         "availability values must be true; use negative status for "
                         "explicit nonavailability"
                     )
-            elif field_name == "sensitivity":
-                if type(value) is not bool and value != "conditional":
-                    raise ValueError(
-                        "sensitivity must carry a boolean or the conditional marker"
-                    )
-            elif field_name in {"identifier", "conditional_sensitivity"}:
+            elif field_name in {"identifier", "sensitivity", "conditional_sensitivity"}:
                 if type(value) is not bool:
                     raise ValueError(f"{field_name} must carry a boolean")
             elif not isinstance(value, str):

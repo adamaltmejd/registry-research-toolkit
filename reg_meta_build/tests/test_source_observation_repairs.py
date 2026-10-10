@@ -323,11 +323,6 @@ def test_source_fields_distinguish_missing_unknown_negative_and_sensitivity() ->
     assert sensitivity.status == "value"
     with pytest.raises(ValidationError, match="negative is supported only"):
         SourceFields(sensitivity=negative)
-    assert SourceFields(
-        sensitivity=value_field("conditional", raw="I vissa fall")
-    ).sensitivity == SourceField(
-        status="value", value="conditional", raw_value="I vissa fall"
-    )
     with pytest.raises(ValidationError, match="use negative status"):
         SourceFields(availability=value_field(False))
 

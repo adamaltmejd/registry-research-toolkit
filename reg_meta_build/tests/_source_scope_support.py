@@ -140,8 +140,6 @@ def resolve(
     coding_scope=None,
 ):
     support = SourceSupportBindings((), ())
-    for item in records:
-        support.observe(item)
     support.seal()
     return resolve_source_scope(
         records,

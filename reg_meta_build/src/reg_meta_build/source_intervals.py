@@ -65,7 +65,6 @@ class SourceSegment:
 @dataclass(frozen=True)
 class OccurrenceResolution:
     segments: tuple[SourceSegment, ...]
-    negative_segments: tuple[SourceSegment, ...]
     issues: tuple[OccurrenceIssue, ...]
     unsupported_occurrences: tuple[SourceRecord, ...]
 
@@ -173,8 +172,7 @@ def _segment_pooled(effective: tuple[EffectiveOccurrence, ...]) -> bool:
 
 # Y-209: the state-grain facts deciding whether adjacent pooled cuts describe
 # one continuous pooled coverage. These are exactly the reconciled facts
-# formation carries onto the state, plus the population and coding evidence
-# that shape it.
+# formation carries onto the state, plus the coding evidence that shapes it.
 _POOLED_MERGE_FIELDS = (
     "name",
     "description",
@@ -220,18 +218,11 @@ def _ordered_union[T](first: tuple[T, ...], second: tuple[T, ...]) -> tuple[T, .
 
 def _pooled_merge_key(
     segment: SourceSegment,
-) -> tuple[
-    tuple[SourceField | None, ...],
-    frozenset,
-    frozenset,
-]:
-    """Identity for the Y-209 merge: reconciled state-grain facts, population,
-    and value-set/coding evidence."""
+) -> tuple[tuple[SourceField | None, ...], frozenset]:
+    """Identity for the Y-209 merge: reconciled state-grain facts and
+    value-set/coding evidence."""
     return (
         tuple(getattr(segment.fields, name) for name in _POOLED_MERGE_FIELDS),
-        frozenset(
-            occurrence.population_key for occurrence in segment.effective_occurrences
-        ),
         frozenset(
             (record.source, record.locators[0].semantic_record_key)
             for occurrence in segment.effective_occurrences
@@ -300,8 +291,8 @@ def reconcile_source_fields(
     storage_capped = False
     field_sources = (*(record.fields for record in records), *support)
     for name in SourceFields.model_fields:
-        # Sensitivity only ratchets up: a sensitive or conditional claim from any
-        # record or its support makes the field sensitive. No claim lowers it.
+        # Sensitivity only ratchets up: a sensitive claim from any record or its
+        # support makes the field sensitive. No claim lowers it.
         observations = tuple(
             value
             for fields in field_sources
@@ -319,7 +310,7 @@ def reconcile_source_fields(
         if (
             name == "sensitivity"
             and not explicitly_withheld
-            and (("value", True) in values or ("value", "conditional") in values)
+            and ("value", True) in values
         ):
             resolved[name] = SourceField(status="value", value=True)
         elif (
@@ -407,7 +398,6 @@ def reconcile_source_fields(
                 and isinstance(value, str)
                 and value.isascii()
                 and value.isdecimal()
-                and (value == "0" or not value.startswith("0"))
                 for status, value in values
             )
             and (data_type := resolved.get("data_type")) is not None
@@ -453,27 +443,13 @@ def _reconciled_segment(
     storage: Mapping[str, StewardColumnStorage] | None,
     *,
     period_scope: Literal["intervals", "year_independent"] = "intervals",
-) -> tuple[SourceSegment | None, tuple[OccurrenceIssue, ...]]:
+) -> tuple[SourceSegment, tuple[OccurrenceIssue, ...]]:
     issues: list[OccurrenceIssue] = []
     occurrences = tuple(record for item in winners for record in item.evidence)
     fields, conflicts = reconcile_source_fields(
         winners,
         storage=storage.get(fold_column(column)) if storage is not None else None,
     )
-    populations = {
-        record.population_key for record in winners if record.population_key is not None
-    }
-    if len(populations) > 1:
-        issues.append(
-            OccurrenceIssue(
-                "conflicting_occurrence_population",
-                ("subject.population",),
-                occurrences,
-                lower,
-                upper,
-                ("column_segment",),
-            )
-        )
     diagnostic_conflicts = tuple(
         name for name in conflicts if name not in _ABSORBED_OCCURRENCE_CONFLICT_FIELDS
     )
@@ -485,15 +461,13 @@ def _reconciled_segment(
                 occurrences,
                 lower,
                 upper,
-                ("column_segment",)
-                if "availability" in diagnostic_conflicts
-                else diagnostic_conflicts,
+                diagnostic_conflicts,
             )
         )
+    # Every reader states availability as true, and resolution leaves unsupported
+    # any occurrence without it, so the winners always agree on it.
     availability = fields.availability
-    assert availability is not None
-    if availability.status == "unknown" or len(populations) > 1:
-        return None, tuple(issues)
+    assert availability is not None and availability.status == "value"
     return SourceSegment(
         lower,
         upper,
@@ -519,15 +493,14 @@ def resolve_occurrence_intervals(
     occurrence covers; where an explicit occurrence covers the span, pooled
     evidence is filtered out before field reconciliation so the explicit facts
     win outright); pooled scopes without a range, and unknown scopes, stay
-    unplaced. Adjacent pooled cuts whose reconciled facts, population, and
-    coding evidence agree re-join into one pooled segment over their combined
+    unplaced. Adjacent pooled cuts whose reconciled facts and coding evidence
+    agree re-join into one pooled segment over their combined
     window (Y-209). Unplaced occurrences stay in the result and block
     strict publication. An occurrence whose column claim is negative (a delivered
     blank column: the member has no physical column) is omitted on purpose and
     reported as an `omitted_columnless_occurrence` warning; formation aggregates
     one warning per variable. Competing fields other than sensitivity become unknown
-    on their intersection; sensitivity ratchets to true for a true or conditional claim.
-    Positive versus negative availability withholds that column segment entirely.
+    on their intersection; sensitivity ratchets to true for a true claim.
     Unknown optional observations do not contradict a supplied concrete fact.
     """
     by_column: dict[str, list[tuple[int, int, int]]] = defaultdict(list)
@@ -606,7 +579,6 @@ def resolve_occurrence_intervals(
         )
 
     segments = []
-    negative_segments = []
     for column, members in sorted(independent.items()):
         if column in scoped_columns:
             occurrences = tuple(
@@ -631,14 +603,7 @@ def resolve_occurrence_intervals(
             tuple(members), column, None, None, storage, period_scope="year_independent"
         )
         issues.extend(segment_issues)
-        if segment is not None:
-            if (
-                segment.fields.availability is not None
-                and segment.fields.availability.status == "negative"
-            ):
-                negative_segments.append(segment)
-            else:
-                segments.append(segment)
+        segments.append(segment)
     for column, periods in sorted(by_column.items()):
         column_segments: list[SourceSegment] = []
         changes: dict[int, list[tuple[int, int]]] = defaultdict(list)
@@ -674,15 +639,6 @@ def resolve_occurrence_intervals(
                 winners, column, lower, upper, storage
             )
             issues.extend(segment_issues)
-            if segment is not None:
-                if (
-                    segment.fields.availability is not None
-                    and segment.fields.availability.status == "negative"
-                ):
-                    negative_segments.append(segment)
-                else:
-                    column_segments.append(segment)
+            column_segments.append(segment)
         segments.extend(_merge_adjacent_pooled(column_segments))
-    return OccurrenceResolution(
-        tuple(segments), tuple(negative_segments), tuple(issues), tuple(unsupported)
-    )
+    return OccurrenceResolution(tuple(segments), tuple(issues), tuple(unsupported))
