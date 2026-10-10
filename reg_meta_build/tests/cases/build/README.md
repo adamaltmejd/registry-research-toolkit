@@ -70,7 +70,7 @@ the behavior in plain words. For example,
   | `value-sets-`          | stored value sets: one per distinct membership, its id kept across builds, and the per-column state overlaps formation withholds                                                 |
   | `lineage-`             | source register attribution from a delivered source label, and the state lineage edges, lineage warnings and `[[acknowledge]]` entries it resolves                               |
   | `formation-`           | variables formed from delivered rows: facts versus state texts, units, Unika flags, a native quantity kept across column renames or refused, and case-twin folds                 |
-  | `occurrence-`          | overlapping source occurrences resolved into states: cuts at exact period bounds, reconciled types, lengths, units and texts, steward storage, unplaced or columnless members    |
+  | `occurrence-`          | overlapping occurrences resolved into states: exact period cuts, pooled editions, reconciled types, lengths, units, texts, steward storage, unplaced or columnless members       |
 
 Later stages add their own prefixes to this table.
 
