@@ -53,7 +53,6 @@ from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import ValidationError
 from reg_core_py import fold_search
 
 from reg_meta_build._resolved_common import remaining_windows
@@ -326,6 +325,8 @@ def _check_schema_shape(
         *CHAIN_TABLES,
         "coded_variable_stats",
         "search_pin",
+        "data_warning",
+        "data_warning_text",
     ):
         if required in tables:
             result.ok(f"{required} present")
@@ -1666,12 +1667,12 @@ def _check_data_warnings(
     """Each ``data_warning`` row reconstructs a valid warning whose content hashes to
     its ``warning_id``, and no build-only code reaches the catalog."""
     result.section("[data_warning]")
-    if "data_warning" not in tables:
+    if not {"data_warning", "data_warning_text"} <= tables:
         return  # _check_schema_shape already failed.
     try:
         warnings = stored_data_warnings(conn)
-    except ValidationError as exc:
-        result.fail(f"data_warning row disagrees with its identity: {exc}")
+    except ValueError as exc:
+        result.fail(f"data_warning row does not reconstruct: {exc}")
         return
     # The reconstruction inner-joins owner and text rows, so a dangling id would
     # drop a row from it rather than fail it.

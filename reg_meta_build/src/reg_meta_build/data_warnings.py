@@ -8,7 +8,14 @@ from datetime import date
 from hashlib import sha256
 from typing import TYPE_CHECKING, Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    TypeAdapter,
+    ValidationError,
+    model_validator,
+)
 from reg_core_py import parse_fqid
 
 from reg_meta_build.source_curation import CodingDecision, SourceWarningDecision
@@ -507,14 +514,16 @@ def scope_data_warnings(
     return tuple(warnings[k] for k in sorted(warnings))
 
 
-_EVIDENCE = (
-    "diagnostic_detail_sha256",
-    "fields",
-    "refs",
-    "withheld_output",
-    "acknowledged_by",
-    "case_id",
-)
+class _Evidence(_CatalogModel):
+    """A `data_warning` row's `evidence_json`: exactly the warning fields without a
+    column, so stored evidence can never stand in for a column-owned field."""
+
+    diagnostic_detail_sha256: str
+    fields: tuple[str, ...]
+    refs: tuple[SourceRecordRef, ...]
+    withheld_output: tuple[str, ...]
+    acknowledged_by: str | None
+    case_id: str | None
 
 
 def write_data_warnings(
@@ -585,7 +594,9 @@ def write_data_warnings(
                 texts[warning.summary],
                 texts[warning.detail],
                 json.dumps(
-                    warning.model_dump(mode="json", include=set(_EVIDENCE)),
+                    warning.model_dump(
+                        mode="json", include=set(_Evidence.model_fields)
+                    ),
                     ensure_ascii=False,
                     sort_keys=True,
                     separators=(",", ":"),
@@ -602,51 +613,58 @@ def write_data_warnings(
 
 def stored_data_warnings(conn: sqlite3.Connection) -> list[DataWarning]:
     """Every stored warning, reconstructed from its columns; validating each one
-    re-derives `warning_id` from the reconstructed content."""
-    return [
-        DataWarning.model_validate_json(
-            json.dumps(
-                {
-                    "warning_id": warning_id,
-                    "register_fqid": register_fqid,
-                    "variable_fqid": f"{register_fqid}/{variable}"
-                    if variable is not None
-                    else None,
-                    "variant": variant,
-                    "delivery_column_name": column,
-                    "valid_from": valid_from,
-                    "valid_to": valid_to,
-                    "code": code,
-                    "severity": severity,
-                    "summary": summary,
-                    "detail": detail,
-                    **json.loads(evidence),
-                }
+    re-derives `warning_id` from the reconstructed content. A row whose evidence or
+    content is invalid raises `ValueError` naming its `warning_id`."""
+    warnings = []
+    for (
+        warning_id,
+        register_fqid,
+        variable,
+        variant,
+        column,
+        valid_from,
+        valid_to,
+        code,
+        severity,
+        summary,
+        detail,
+        evidence,
+    ) in conn.execute(
+        "SELECT lower(hex(w.warning_id)), p.slug || '/' || r.slug, v.slug, "
+        "rv.slug, w.delivery_column_name, w.valid_from, w.valid_to, w.code, "
+        "w.severity, st.text, dt.text, w.evidence_json FROM data_warning w "
+        "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
+        "LEFT JOIN variable v ON v.variable_id = w.variable_id "
+        "LEFT JOIN register_variant rv "
+        "ON rv.register_variant_id = w.register_variant_id "
+        "JOIN data_warning_text st ON st.text_id = w.summary_id "
+        "JOIN data_warning_text dt ON dt.text_id = w.detail_id "
+        "ORDER BY w.rowid"
+    ):
+        try:
+            stored = _Evidence.model_validate_json(evidence)
+            warnings.append(
+                DataWarning.model_validate_json(
+                    json.dumps(
+                        {
+                            **stored.model_dump(mode="json"),
+                            "warning_id": warning_id,
+                            "register_fqid": register_fqid,
+                            "variable_fqid": f"{register_fqid}/{variable}"
+                            if variable is not None
+                            else None,
+                            "variant": variant,
+                            "delivery_column_name": column,
+                            "valid_from": valid_from,
+                            "valid_to": valid_to,
+                            "code": code,
+                            "severity": severity,
+                            "summary": summary,
+                            "detail": detail,
+                        }
+                    )
+                )
             )
-        )
-        for (
-            warning_id,
-            register_fqid,
-            variable,
-            variant,
-            column,
-            valid_from,
-            valid_to,
-            code,
-            severity,
-            summary,
-            detail,
-            evidence,
-        ) in conn.execute(
-            "SELECT lower(hex(w.warning_id)), p.slug || '/' || r.slug, v.slug, "
-            "rv.slug, w.delivery_column_name, w.valid_from, w.valid_to, w.code, "
-            "w.severity, st.text, dt.text, w.evidence_json FROM data_warning w "
-            "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
-            "LEFT JOIN variable v ON v.variable_id = w.variable_id "
-            "LEFT JOIN register_variant rv "
-            "ON rv.register_variant_id = w.register_variant_id "
-            "JOIN data_warning_text st ON st.text_id = w.summary_id "
-            "JOIN data_warning_text dt ON dt.text_id = w.detail_id "
-            "ORDER BY w.rowid"
-        )
-    ]
+        except ValidationError as exc:
+            raise ValueError(f"data_warning {warning_id}: {exc}") from exc
+    return warnings
