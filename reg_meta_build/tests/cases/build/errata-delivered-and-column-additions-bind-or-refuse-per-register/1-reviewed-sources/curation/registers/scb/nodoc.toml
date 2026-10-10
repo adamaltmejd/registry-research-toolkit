@@ -16,5 +16,6 @@ slug = "v6"
 variant = "people"
 column = "A"
 versions = ["2021"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "accepted delivery"
 noted = "2026-09-25"

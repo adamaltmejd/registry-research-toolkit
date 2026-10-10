@@ -1,0 +1,34 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/errata.delivered/1"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "column": "A"
+      },
+      "fields": [
+        "variable",
+        "valid_from"
+      ],
+      "rows": [
+        [
+          "a",
+          "2020-01-01"
+        ]
+      ]
+    }
+  ]
+}

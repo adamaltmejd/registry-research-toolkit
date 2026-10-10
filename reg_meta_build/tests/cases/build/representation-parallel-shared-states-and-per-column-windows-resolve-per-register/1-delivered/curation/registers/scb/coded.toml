@@ -17,6 +17,7 @@ variable = "4.4"
 variant = "4.40"
 valid_from = "2020-01-01"
 valid_to = "2021-12-31"
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=4 key=member:400,member:401}}
 evidence = "Reviewed co-delivered columns"
 noted = "2026-10-10"
 co_delivered = true

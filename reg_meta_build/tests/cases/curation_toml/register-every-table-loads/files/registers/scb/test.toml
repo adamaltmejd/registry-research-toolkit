@@ -13,6 +13,7 @@ slug = "stock"
 variant = "v"
 column = "C"
 versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "source"
 noted = "2026-09-24"
 
@@ -20,6 +21,7 @@ noted = "2026-09-24"
 variant = "v"
 column = "VALUE"
 versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Steward holdings"
 noted = "2026-09-12"
 native_variable_id = 39310

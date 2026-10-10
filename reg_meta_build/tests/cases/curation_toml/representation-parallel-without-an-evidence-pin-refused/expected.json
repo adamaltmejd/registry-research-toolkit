@@ -1,0 +1,10 @@
+{
+  "loader": "register_files",
+  "fails_if": "`ParallelRepresentationEntry.expected_evidence_sha256` becomes optional, so a [[representation.parallel]] entry that pins no source evidence loads and keeps sharing metadata after one column's facts change",
+  "note": "The parallel twin of maintainer decision 13. The entry is otherwise valid: First over 2020-2022 and Second over 2022-2024 cover the shared 2022 window, which is their intersection. The allowed twin is every build case with a [[representation.parallel]] entry, which carries the pin; its stale twin is the build case representation-parallel-stale-when-a-column-data-length-changes.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[representation.parallel.expected_evidence_sha256]] entry 1",
+    "message_contains": ["Field required"]
+  }
+}

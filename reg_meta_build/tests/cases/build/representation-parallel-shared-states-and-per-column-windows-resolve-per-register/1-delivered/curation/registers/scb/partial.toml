@@ -17,6 +17,7 @@ variable = "7.7"
 variant = "7.70"
 valid_from = "2022-01-01"
 valid_to = "2022-12-31"
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=7 key=member:700,member:701,member:702}}
 evidence = "Reviewed parallel columns"
 noted = "2026-10-10"
 [[representation.parallel.columns]]
@@ -34,6 +35,7 @@ variable = "7.7"
 variant = "7.70"
 valid_from = "2022-07-01"
 valid_to = "2022-12-31"
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=7 key=member:700,member:702}}
 evidence = "Competing finite interpretation"
 noted = "2026-10-10"
 [[representation.parallel.columns]]

@@ -15,6 +15,7 @@ slug = "individer-16plus"
 variant = "individer-15plus"
 column = "Kon"
 versions = ["2010"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = """First paragraph.
 
 Second paragraph."""

@@ -13,6 +13,7 @@ slug = "value"
 variant = "people"
 column = "VALUE"
 versions = ["2008 - 2010", "2010 - 2012"]
+expected_evidence_sha256 = {{evidence_sha256 read=built source=scb-registerinformation register=21 key=member:2101,member:2102,member:2103,member:2104}}
 evidence = "accepted delivery"
 noted = "2026-09-28"
 

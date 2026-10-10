@@ -473,17 +473,25 @@ literal edition name. For a name the period parser cannot interpret, its documen
 parser can interpret, makes the entry stale. No register coverage or nearby edition
 supplies an inferred period, and other unparseable names remain unsupported.
 `[[errata.delivered]]` carries `variant`, literal `column`, existing `versions`,
-`evidence`, `noted`, and optional `upstream` and `native_variable_id`; it adds omitted
-rows for a column documented elsewhere on the variant and names edition tokens verbatim.
-The native-variable anchor selects one documented identity when the same column literal
-belongs to multiple variables in the variant's history. An anchor must occur under that
-column; without one, the column must identify exactly one variable across the complete
-variant history. `[[errata.column]]` carries the variable identity (`name` and
-`definition`), a source and evidence, plus either named versions, bounded
-`holdings_period`, or the legacy undated `all_versions = true`; it mints a variable for
-a column SCB documents nowhere on that variant. Its identity is `(register, column)`, so
-two variants of one register use the same variable identity. `source` records the
-evidence class; it does not change the materialized rows.
+`expected_evidence_sha256`, `evidence`, `noted`, and optional `upstream` and
+`native_variable_id`; it adds omitted rows for a column documented elsewhere on the
+variant and names edition tokens verbatim. The native-variable anchor selects one
+documented identity when the same column literal belongs to multiple variables in the
+variant's history. An anchor must occur under that column; without one, the column must
+identify exactly one variable across the complete variant history. The required evidence
+digest (`acknowledgement_evidence_sha256`) covers the full originals the entry relies
+on: every documented row of the column, the native rows it rewrites or keeps beside its
+additions, and, for an additional physical column, the complete native family. It leaves
+out the edition support, which for a declared edition is the whole variant. A changed
+digest makes the entry stale, so a drifted sibling definition is reviewed again rather
+than cloned. Until evidence digests are narrowed, each original's digest includes its
+delivery's source revision, so any change to that delivery stales the entry.
+`[[errata.column]]` carries the variable identity (`name` and `definition`), a source
+and evidence, plus either named versions, bounded `holdings_period`, or the legacy
+undated `all_versions = true`; it mints a variable for a column SCB documents nowhere on
+that variant. Its identity is `(register, column)`, so two variants of one register use
+the same variable identity. `source` records the evidence class; it does not change the
+materialized rows.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
 document this column anywhere on this variant? One column/variant omission is exactly
@@ -1041,9 +1049,14 @@ peers and captures their original fields, periods and coding references, then em
 existing parallel-column decision only for that intersection. Original pooled source
 windows remain unchanged, including the outer periods owned by each column. This surface
 accepts one literal column per source edition; same-edition competing columns require
-separate evidence and are not inferred from a shared native identifier. Later source
-drift stales the checked case. Metadata and coding conflicts still pass through the
-existing reconciliation diagnostics.
+separate evidence and are not inferred from a shared native identifier. A required
+`expected_evidence_sha256` (`acknowledgement_evidence_sha256`) pins the full originals
+of every member of the declared columns in their declared editions, so later source
+drift, such as one column's changed data length, stales the entry rather than being
+reconciled into the shared state. Until evidence digests are narrowed, that digest
+includes the delivery's source revision, so any change to the delivery stales the entry.
+Metadata and coding conflicts still pass through the existing reconciliation
+diagnostics.
 
 Same-edition co-delivery remains refused by default. A reviewed `co_delivered = true`
 entry requires per-column metadata, one positive stable native question name and

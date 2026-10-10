@@ -30,5 +30,6 @@ noted = "2026-09-27"
 variant = "people"
 column = "A"
 versions = ["2021"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=11 key=member:1101}}
 evidence = "accepted delivery"
 noted = "2026-09-25"

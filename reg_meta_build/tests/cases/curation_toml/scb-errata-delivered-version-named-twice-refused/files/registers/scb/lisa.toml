@@ -15,5 +15,6 @@ slug = "individer-16plus"
 variant = "individer-15plus"
 column = "DispInkKE"
 versions = ["2010", "2011", "2010"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds the column in those years"
 noted = "2026-09-11"

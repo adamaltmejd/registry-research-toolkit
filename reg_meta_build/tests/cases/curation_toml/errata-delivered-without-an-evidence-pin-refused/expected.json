@@ -1,0 +1,10 @@
+{
+  "loader": "register_files",
+  "fails_if": "`ErrataDeliveredEntry.expected_evidence_sha256` becomes optional, so a [[errata.delivered]] entry that pins no source evidence loads and keeps applying after its documented column's definition drifts",
+  "note": "Maintainer decision 13: every delivered entry pins the full originals it relies on. The entry is otherwise the minimal loadable one (variant, column, versions, evidence, noted). The allowed twin is every build case with an [[errata.delivered]] entry, which carries the pin; its stale twin is errata-delivered-stale-when-the-documented-definition-drifts.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[errata.delivered.expected_evidence_sha256]] entry 1",
+    "message_contains": ["Field required"]
+  }
+}

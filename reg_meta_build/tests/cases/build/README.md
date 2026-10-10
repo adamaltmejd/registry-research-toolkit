@@ -207,6 +207,7 @@ comma-separated value lists alternatives. An argument value cannot contain a spa
 
 - `source` is a prefix of the source name, for example `scb-registerinformation` or
   `Socialstyrelsen/`.
+- `register` is the native register id: an SCB register id.
 - `key` is the last semantic record key part: SCB `member:<cvid>`, SOS
   `variable:<name>`.
 - `column` is the delivered column name. An empty value selects a blank column.
@@ -216,6 +217,11 @@ comma-separated value lists alternatives. An argument value cannot contain a spa
 
 `fields=` picks the captured fields: `all` (the default), `prose` (name, definition,
 description, operational definition), or a comma-separated list.
+
+`read=built` renders one placeholder from the built `sources` instead of
+`authored_from`: an entry the curator re-reviewed after the drift, beside one they did
+not. Evidence digests cover the whole delivery's source revision, so a digest read from
+the reviewed delivery goes stale on any change to that delivery.
 
 ## `expected.json`
 

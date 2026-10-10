@@ -178,6 +178,8 @@ def test_errata_worklist_splits_version_missing_from_column_missing(
             "variant": "_default",
             "column": "T_kolumn",
             "versions": ["2020", "2021"],
+            "expected_evidence_sha256": "TODO: acknowledgement_evidence_sha256 of "
+            "the documented column and target rows",
             **todo,
         }
     ]
