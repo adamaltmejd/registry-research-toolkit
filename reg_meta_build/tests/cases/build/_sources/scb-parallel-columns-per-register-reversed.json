@@ -1,0 +1,365 @@
+{
+  "description": "Variable R.R (Income) of register R (variant R0 or R00 for CLASSIFIED), one register per claim. Co-delivered: one member per edition (CVID R00, R01, ...) delivers both literals First and Second. STORETEXT (1): 2020, First varchar 200, Second varchar 18. STORENUM (2): 2020, First decimal 53, Second int 0. STOREUNTYPED (3): 2020, First with a blank Datatyp and Datalängd, Second int 0. CODED (4): First varchar 200 and Second varchar 18 in 2020 (list Before: 01) and 2021 (list After: 02). CLASSIFIED (10): 2020, both int 1, list 'Shared list' 01, the label book BOOK-2002 binds. Pooled: First (CVID R00) over edition 2020-2022, Second (CVID R01) over 2022-2024, so 2022 is shared: TWICE (5), MIXED (6), SIBLING (8: Second's Variabeldefinition is 'Different definition'), MISSING (9). PARTIAL (7): First over 2020-2022 (CVID 700), Second over the month-range editions 2022-01 - 2022-06 (CVID 701) and 2022-07 - 2024-12 (CVID 702). Every other field takes the var_row defaults (int, length 1).",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "Second",
+        "cvid": 1000,
+        "var_id": 10,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 1010,
+        "register": [
+          "CLASSIFIED",
+          10,
+          100
+        ],
+        "data_type": "int",
+        "data_length": "1"
+      },
+      {
+        "colname": "First",
+        "cvid": 1000,
+        "var_id": 10,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 1010,
+        "register": [
+          "CLASSIFIED",
+          10,
+          100
+        ],
+        "data_type": "int",
+        "data_length": "1"
+      },
+      {
+        "colname": "Second",
+        "cvid": 901,
+        "var_id": 9,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022-2024",
+        "regver_id": 911,
+        "register": [
+          "MISSING",
+          9,
+          90
+        ]
+      },
+      {
+        "colname": "First",
+        "cvid": 900,
+        "var_id": 9,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 910,
+        "register": [
+          "MISSING",
+          9,
+          90
+        ]
+      },
+      {
+        "colname": "Second",
+        "cvid": 801,
+        "var_id": 8,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022-2024",
+        "regver_id": 811,
+        "register": [
+          "SIBLING",
+          8,
+          80
+        ],
+        "vardef": "Different definition"
+      },
+      {
+        "colname": "First",
+        "cvid": 800,
+        "var_id": 8,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 810,
+        "register": [
+          "SIBLING",
+          8,
+          80
+        ]
+      },
+      {
+        "colname": "Second",
+        "cvid": 702,
+        "var_id": 7,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022-07 - 2024-12",
+        "regver_id": 712,
+        "register": [
+          "PARTIAL",
+          7,
+          70
+        ]
+      },
+      {
+        "colname": "Second",
+        "cvid": 701,
+        "var_id": 7,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022-01 - 2022-06",
+        "regver_id": 711,
+        "register": [
+          "PARTIAL",
+          7,
+          70
+        ]
+      },
+      {
+        "colname": "First",
+        "cvid": 700,
+        "var_id": 7,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 710,
+        "register": [
+          "PARTIAL",
+          7,
+          70
+        ]
+      },
+      {
+        "colname": "Second",
+        "cvid": 601,
+        "var_id": 6,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022-2024",
+        "regver_id": 611,
+        "register": [
+          "MIXED",
+          6,
+          60
+        ]
+      },
+      {
+        "colname": "First",
+        "cvid": 600,
+        "var_id": 6,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 610,
+        "register": [
+          "MIXED",
+          6,
+          60
+        ]
+      },
+      {
+        "colname": "Second",
+        "cvid": 501,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2022",
+        "versionname": "2022-2024",
+        "regver_id": 511,
+        "register": [
+          "TWICE",
+          5,
+          50
+        ]
+      },
+      {
+        "colname": "First",
+        "cvid": 500,
+        "var_id": 5,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 510,
+        "register": [
+          "TWICE",
+          5,
+          50
+        ]
+      },
+      {
+        "colname": "Second",
+        "cvid": 401,
+        "var_id": 4,
+        "varname": "Income",
+        "year": "2021",
+        "versionname": "2021",
+        "regver_id": 411,
+        "register": [
+          "CODED",
+          4,
+          40
+        ],
+        "data_type": "varchar",
+        "data_length": "18"
+      },
+      {
+        "colname": "First",
+        "cvid": 401,
+        "var_id": 4,
+        "varname": "Income",
+        "year": "2021",
+        "versionname": "2021",
+        "regver_id": 411,
+        "register": [
+          "CODED",
+          4,
+          40
+        ],
+        "data_type": "varchar",
+        "data_length": "200"
+      },
+      {
+        "colname": "Second",
+        "cvid": 400,
+        "var_id": 4,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 410,
+        "register": [
+          "CODED",
+          4,
+          40
+        ],
+        "data_type": "varchar",
+        "data_length": "18"
+      },
+      {
+        "colname": "First",
+        "cvid": 400,
+        "var_id": 4,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 410,
+        "register": [
+          "CODED",
+          4,
+          40
+        ],
+        "data_type": "varchar",
+        "data_length": "200"
+      },
+      {
+        "colname": "Second",
+        "cvid": 300,
+        "var_id": 3,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 310,
+        "register": [
+          "STOREUNTYPED",
+          3,
+          30
+        ],
+        "data_type": "int",
+        "data_length": "0"
+      },
+      {
+        "colname": "First",
+        "cvid": 300,
+        "var_id": 3,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 310,
+        "register": [
+          "STOREUNTYPED",
+          3,
+          30
+        ],
+        "data_type": "",
+        "data_length": ""
+      },
+      {
+        "colname": "Second",
+        "cvid": 200,
+        "var_id": 2,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 210,
+        "register": [
+          "STORENUM",
+          2,
+          20
+        ],
+        "data_type": "int",
+        "data_length": "0"
+      },
+      {
+        "colname": "First",
+        "cvid": 200,
+        "var_id": 2,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 210,
+        "register": [
+          "STORENUM",
+          2,
+          20
+        ],
+        "data_type": "decimal",
+        "data_length": "53"
+      },
+      {
+        "colname": "Second",
+        "cvid": 100,
+        "var_id": 1,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 110,
+        "register": [
+          "STORETEXT",
+          1,
+          10
+        ],
+        "data_type": "varchar",
+        "data_length": "18"
+      },
+      {
+        "colname": "First",
+        "cvid": 100,
+        "var_id": 1,
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020",
+        "regver_id": 110,
+        "register": [
+          "STORETEXT",
+          1,
+          10
+        ],
+        "data_type": "varchar",
+        "data_length": "200"
+      }
+    ],
+    "vardemangder": [
+      "Before|1|01|Label|400|4001",
+      "After|1|02|Label|401|4011",
+      "Shared list|1|01|Label|1000|10001"
+    ]
+  },
+  "files": {
+    "classifications/book-2002.csv": [
+      "code,label",
+      "01,Canonical"
+    ]
+  }
+}
