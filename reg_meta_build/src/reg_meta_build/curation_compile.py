@@ -5186,10 +5186,9 @@ def compile_coding_register(
                         )
                         or (
                             authority.raw_codings is not None
-                            and tuple(sorted(authority.raw_codings))
-                            != tuple(
-                                sorted({evidence_sha256(claim) for claim in claims})
-                            )
+                            # Distinct claims, compared as sets on both sides.
+                            and set(authority.raw_codings)
+                            != {evidence_sha256(claim) for claim in claims}
                         )
                         or tuple(sorted(authority.codings))
                         != copied_coding_fingerprints(claims)
@@ -5257,7 +5256,9 @@ def compile_coding_register(
                             "expected_raw_codings": tuple(
                                 sorted(set(compact_evidence[column][1]))
                                 if compact
-                                else sorted(entry.source_authority.raw_codings or ())
+                                else sorted(
+                                    set(entry.source_authority.raw_codings or ())
+                                )
                                 if entry.source_authority is not None
                                 else ()
                             )

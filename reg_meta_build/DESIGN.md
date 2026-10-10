@@ -615,15 +615,16 @@ cells, semantic keys, file and table names, and content-addressed value and desc
 keys. It drops what only says where and in which delivery a fact arrived (the delivery
 revision, which a nested revision collapses to its dataset, row numbers, physical record
 and cell coordinates) and the derived record and claim ids. Collections gathered from
-several rows (a record's locators, table rows, list members, their associations and
-validity rows) compare as multisets: order is immaterial, multiplicity is not. Cells,
-derivation clauses and operands keep their order, which positions address. A new
-delivery or a row re-sort therefore stales only the entries whose own records or lists
-changed. A code-list claim id names its list's dataset rather than its revision, so an
-`expected_diagnostic_sha256` over a coding diagnostic, whose detail lists claim ids,
-also survives an unrelated delivery. Explicit pins stay explicit: a coding
-`source_authority` still names its source revision and physical row locators, and a
-`[[coding.support]]` association or a documentary row names its physical row.
+several rows (a record's locators, list members, their associations and validity rows)
+compare as multisets: order is immaterial, multiplicity is not. Cells, derivation
+clauses and operands keep the order positions address, and an evidence table keeps its
+row order, which places a row under its section. A new delivery or a row re-sort
+therefore stales only the entries whose own records or lists changed. A code-list claim
+id names its list's dataset rather than its revision, so an `expected_diagnostic_sha256`
+over a coding diagnostic, whose detail lists claim ids, also survives an unrelated
+delivery. Explicit pins stay explicit: a coding `source_authority` still names its
+source revision and physical row locators, and a `[[coding.support]]` association or a
+documentary row names its physical row.
 
 Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision is
 window-grained. The compiler checks each window against that column's complete source
@@ -2016,9 +2017,9 @@ without adding state or coding edges.
 
 `documentary.retained` is the exact guarded disposition for a supplied declaration whose
 catalog endpoints are not established. Full declaration and physical-table digests
-retain raw cells, provenance, periods and row multiplicity, but not row order or the
-delivery revision. An admitted source/register scope is required, but no variable owner
-or code namespace is invented. The builder-only resolved record persists under
+retain raw cells, provenance, periods, row order and multiplicity, but not the delivery
+revision. An admitted source/register scope is required, but no variable owner or code
+namespace is invented. The builder-only resolved record persists under
 `retained_unattached` with a null owner and no endpoint rows; its reviewed reason
 becomes a register data warning. Missing, changed or duplicated evidence still fails
 compilation. Builder schema `8.0.0` admits this explicit status; reader models remain

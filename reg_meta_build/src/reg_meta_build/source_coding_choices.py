@@ -604,7 +604,9 @@ def compile_coding_selection(
             expected_source_codings=tuple(documented.source_authority.codings)
             if documented.source_authority is not None
             else None,
-            expected_raw_codings=tuple(sorted(documented.source_authority.raw_codings))
+            expected_raw_codings=tuple(
+                sorted(set(documented.source_authority.raw_codings))
+            )
             if documented.source_authority is not None
             and documented.source_authority.raw_codings is not None
             else None,

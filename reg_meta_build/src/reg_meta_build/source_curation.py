@@ -223,6 +223,15 @@ class RecordExpectation(_CurationModel):
     ref: SourceRecordRef
     alternatives: tuple[RecordProjection, ...]
 
+    @field_validator("alternatives")
+    @classmethod
+    def _ordered_alternatives(
+        cls, alternatives: tuple[RecordProjection, ...]
+    ) -> tuple[RecordProjection, ...]:
+        # A set of alternatives: authored order is never evidence, so a projection
+        # change that reorders tokens cannot stale an otherwise identical guard.
+        return tuple(sorted(alternatives, key=_model_token))
+
     @model_validator(mode="after")
     def _finite_consistent_alternatives(
         self, info: ValidationInfo
@@ -1905,9 +1914,7 @@ def capture_expectations(
         token = canonical_sha256(projection.model_dump(mode="json"))
         grouped[record_ref(record)][token] = projection
     return tuple(
-        RecordExpectation(
-            ref=ref, alternatives=tuple(items[key] for key in sorted(items))
-        )
+        RecordExpectation(ref=ref, alternatives=tuple(items.values()))
         for ref, items in sorted(
             grouped.items(),
             key=lambda item: (item[0].source, item[0].semantic_record_key),

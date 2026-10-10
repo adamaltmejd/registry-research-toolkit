@@ -71,13 +71,13 @@ _DELIVERY_POSITION = frozenset(
     }
 )
 # Collections gathered from several physical rows, in delivered row order: a re-sort
-# reorders them, so they compare as multisets. Every other list (cells in column
-# order, derivation clauses and operands addressed by position) keeps its order.
+# reorders them, so they compare as multisets. Every other list keeps its order:
+# cells in column order, derivation clauses and operands addressed by position, and
+# an evidence table's rows, whose order places a row under its section.
 _ROW_ORDERED = frozenset(
     {
         "locators",
         "record_locators",
-        "rows",
         "members",
         "associations",
         "validity",
@@ -111,7 +111,8 @@ def _evidence_content(value: Any) -> Any:
         for key, item in value.items():
             if key in _DELIVERY_POSITION:
                 continue
-            if key == "revision" and isinstance(item, dict):
+            if key == "revision" and isinstance(item, dict) and "revision_id" in item:
+                # A nested SourceRevision: its dataset, not the delivery.
                 content[key] = item["dataset"]
             elif key in _ROW_ORDERED and isinstance(item, list):
                 content[key] = sorted(

@@ -324,6 +324,7 @@ def test_documentary_json_rejects_invalid_storage_identifiers(wire_id):
         "payload",
         "clause_order",
         "peer",
+        "row_order",
         "endpoint",
         "ownership",
         "missing",
@@ -332,7 +333,9 @@ def test_documentary_json_rejects_invalid_storage_identifiers(wire_id):
 )
 def test_complete_payload_peer_endpoint_and_ownership_guards_fail_closed(change):
     # clause_order fails if the payload digest compares derivation clauses as a
-    # multiset: anchors address clauses by position (`clause_index`).
+    # multiset: anchors address clauses by position (`clause_index`). row_order fails
+    # if the table digest compares rows as a multiset: a row's order places it under
+    # its section (an SOS sheet's section rows).
     setup = _setup()
     _tree, d, t, records, _names = setup
     kwargs = {}
@@ -344,6 +347,19 @@ def test_complete_payload_peer_endpoint_and_ownership_guards_fail_closed(change)
         kwargs["declarations"] = (d.model_copy(update={"clauses": d.clauses[::-1]}),)
     elif change == "peer":
         kwargs["tables"] = (t.model_copy(update={"rows": (*t.rows, t.rows[0])}),)
+    elif change == "row_order":
+        # Reviewed with a section row above the declaration; delivered with it below.
+        section = SourceEvidenceRow(
+            locator=t.rows[0].locator.model_copy(update={"physical_record": "row:1"}),
+            role="section",
+            cells=t.rows[0].cells[:1],
+        )
+        entry = _tree.registers[0].documentary.binding[0]
+        reviewed = t.model_copy(update={"rows": (section, *t.rows)})
+        _tree.registers[0].documentary.binding = [
+            entry.model_copy(update={"table_sha256": evidence_sha256(reviewed)})
+        ]
+        kwargs["tables"] = (t.model_copy(update={"rows": (*t.rows, section)}),)
     elif change == "endpoint":
         kwargs["records"] = (
             records[0],

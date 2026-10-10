@@ -3,7 +3,7 @@
   "replaces": [
     "test_curation_compile_owner_alternatives.py::test_column_owner_alternatives_require_complete_exclusive_guards"
   ],
-  "fails_if": "the register loader accepts `expected_records` whose alternatives do not capture every source field, the subject, scopes, parents and code-set references",
+  "fails_if": "the register loader accepts `expected_records` whose alternatives do not capture every source field, the subject, scopes and parents",
   "error": {
     "code": "register_entry_invalid",
     "locator": "curation/registers/scb/sample.toml [[identity.column_owner]] entry 1",

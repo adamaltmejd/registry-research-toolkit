@@ -1,0 +1,52 @@
+{
+  "loader": "register_files",
+  "match": "includes",
+  "note": "One [[errata.field]] name correction whose expected_records name one member with two complete original alternatives (column ANSWER named GenericVar, and PHYSICAL named 'Physical name', which supplies the replacement). This file authors them ANSWER first; its twin errata-field-record-alternatives-reversed-load-in-the-same-order authors them in the other order. Both load the alternatives in one canonical order (by projection token, the order `capture_expectations` emits), so the two `loads` projections are identical: authored order is never evidence, and a projection change that reorders tokens (the dropped code-set references did) cannot stale an entry whose originals are unchanged. The order shown is the canonical one; the claim is that both cases show the same.",
+  "fails_if": "`RecordExpectation` (source_curation.py) keeps the authored order of `alternatives` instead of sorting them by projection token, so this file and its twin load the alternatives in different orders and compiled guards compare them unequal to the captured originals",
+  "loads": [
+    {
+      "errata": {
+        "field": [
+          {
+            "field": "name",
+            "value": "Physical name",
+            "expected_records": [
+              {
+                "alternatives": [
+                  {
+                    "fields": {
+                      "$contains": [
+                        {
+                          "name": "column_name",
+                          "value": "PHYSICAL"
+                        },
+                        {
+                          "name": "name",
+                          "value": "Physical name"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "fields": {
+                      "$contains": [
+                        {
+                          "name": "column_name",
+                          "value": "ANSWER"
+                        },
+                        {
+                          "name": "name",
+                          "value": "GenericVar"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
