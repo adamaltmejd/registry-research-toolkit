@@ -1,0 +1,113 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject", "valid_from", "valid_to"],
+      "note": "Every issue of the build. MIXED and PARTIAL withhold exactly their conflicting overlap; MISSING's 2022 lacks Second, which the omission (its own period, 2022-2024) took away; the untyped column is the only unknown type. No unexplained_delivery_* issue: every withheld or sibling-assigned window is explained, the old allowed check_delivery_coverage calls.",
+      "rows": [
+        ["conflicting_representation_decisions", "scb/mixed/income", "2022-01-01", "2022-12-31"],
+        ["conflicting_representation_decisions", "scb/partial/income", "2022-07-01", "2022-12-31"],
+        ["conflicting_variable_fact", "scb/sibling/income", null, null],
+        ["curated_state_omission", "scb/missing/income", "2022-01-01", "2024-12-31"],
+        ["missing_representation_metadata", "scb/missing/income", "2022-01-01", "2022-12-31"],
+        ["unknown_data_type", "scb/storeuntyped/income", "2020-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["register", "column", "valid_from", "valid_to"],
+      "note": "One shared state per shared window, stored under the first column by name (the old deterministic storage label), never one per column. Outside 2022 each pooled original keeps its own state. MIXED and MISSING write no 2022 state; PARTIAL keeps only the part of 2022 no competing entry claims.",
+      "rows": [
+        ["storetext", "First", "2020-01-01", "2020-12-31"],
+        ["storenum", "First", "2020-01-01", "2020-12-31"],
+        ["storeuntyped", "First", "2020-01-01", "2020-12-31"],
+        ["coded", "First", "2020-01-01", "2020-12-31"],
+        ["coded", "First", "2021-01-01", "2021-12-31"],
+        ["classified", "First", "2020-01-01", "2020-12-31"],
+        ["twice", "First", "2020-01-01", "2021-12-31"],
+        ["twice", "First", "2022-01-01", "2022-12-31"],
+        ["twice", "Second", "2023-01-01", "2024-12-31"],
+        ["mixed", "First", "2020-01-01", "2021-12-31"],
+        ["mixed", "Second", "2023-01-01", "2024-12-31"],
+        ["partial", "First", "2020-01-01", "2021-12-31"],
+        ["partial", "First", "2022-01-01", "2022-06-30"],
+        ["partial", "Second", "2023-01-01", "2024-12-31"],
+        ["sibling", "First", "2020-01-01", "2021-12-31"],
+        ["sibling", "First", "2022-01-01", "2022-12-31"],
+        ["sibling", "Second", "2023-01-01", "2024-12-31"],
+        ["missing", "First", "2020-01-01", "2021-12-31"]
+      ]
+    },
+    {
+      "table": "alias_windows",
+      "fields": ["register", "column", "valid_from", "valid_to", "column_metadata", "data_type", "data_length", "provenance"],
+      "note": "Each per-column window carries its own column's delivered type and length (the old parameters: text 200 / 18, decimal 53 / integer 0, unknown / integer 0); CODED keeps them on both sides of its cut. A shared window carries no facts of its own. Every parallel window has null provenance: the reader tells a structural representation window from a curated additive one by it.",
+      "rows": [
+        ["storetext", "First", "2020-01-01", "2020-12-31", "per_column", "text", "200", null],
+        ["storetext", "Second", "2020-01-01", "2020-12-31", "per_column", "text", "18", null],
+        ["storenum", "First", "2020-01-01", "2020-12-31", "per_column", "decimal", "53", null],
+        ["storenum", "Second", "2020-01-01", "2020-12-31", "per_column", "integer", "0", null],
+        ["storeuntyped", "First", "2020-01-01", "2020-12-31", "per_column", null, null, null],
+        ["storeuntyped", "Second", "2020-01-01", "2020-12-31", "per_column", "integer", "0", null],
+        ["coded", "First", "2020-01-01", "2020-12-31", "per_column", "text", "200", null],
+        ["coded", "First", "2021-01-01", "2021-12-31", "per_column", "text", "200", null],
+        ["coded", "Second", "2020-01-01", "2020-12-31", "per_column", "text", "18", null],
+        ["coded", "Second", "2021-01-01", "2021-12-31", "per_column", "text", "18", null],
+        ["classified", "First", "2020-01-01", "2020-12-31", "per_column", "integer", "1", null],
+        ["classified", "Second", "2020-01-01", "2020-12-31", "per_column", "integer", "1", null],
+        ["twice", "First", "2022-01-01", "2022-12-31", "shared", null, null, null],
+        ["twice", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null],
+        ["partial", "First", "2022-01-01", "2022-06-30", "shared", null, null, null],
+        ["partial", "Second", "2022-01-01", "2022-06-30", "shared", null, null, null],
+        ["sibling", "First", "2022-01-01", "2022-12-31", "shared", null, null, null],
+        ["sibling", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "twice",
+        "provenance": {"contains": [
+          "curation/registers/scb/twice.toml#/representation.parallel/1: Reviewed parallel columns",
+          "curation/registers/scb/twice.toml#/representation.parallel/2: Second review of the same columns"
+        ]}
+      },
+      "fields": ["valid_from", "valid_to"],
+      "note": "The composed state names both entries, each with its evidence.",
+      "rows": [["2022-01-01", "2022-12-31"]]
+    },
+    {
+      "table": "states",
+      "where": {"register": "sibling"},
+      "fields": ["valid_from", "definition"],
+      "note": "The shared state takes neither sibling's definition; each original outside 2022 keeps its own.",
+      "rows": [
+        ["2020-01-01", "A generic family label"],
+        ["2022-01-01", null],
+        ["2023-01-01", "Different definition"]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {"register": "sibling"},
+      "fields": ["column", "definition"],
+      "rows": [["First", null], ["Second", null]]
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": ["coded", "classified"]},
+      "fields": ["register", "valid_from", "code"],
+      "rows": [
+        ["coded", "2020-01-01", "01"],
+        ["coded", "2021-01-01", "02"],
+        ["classified", "2020-01-01", "01"]
+      ]
+    },
+    {
+      "table": "state_classifications",
+      "fields": ["register", "valid_from", "classification"],
+      "note": "The agreed list keeps its book on the shared state.",
+      "rows": [["classified", "2020-01-01", "book-2002"]]
+    }
+  ]
+}

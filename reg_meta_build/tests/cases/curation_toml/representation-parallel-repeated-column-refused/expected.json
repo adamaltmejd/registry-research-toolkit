@@ -1,0 +1,11 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_representations.py::test_representation_contract_requires_exact_finite_cover[duplicate]",
+  "fails_if": "the `[[representation.parallel]]` entry model stops refusing a column literal listed twice, so First over 2020-2022 and First again over 2022-2024 load as two parallel columns",
+  "note": "The replaced test renamed the second column of the runtime decision to First; here the repeated literal is the authored form, and each of its two windows is otherwise valid (they cover the shared 2022 window, which is their intersection), so only the uniqueness rule refuses it. The allowed twin is the build case representation-parallel-pooled-columns-keep-their-original-bounds, whose second column is Second over the same window.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[representation.parallel]] entry 1",
+    "message_contains": ["parallel columns must be unique"]
+  }
+}

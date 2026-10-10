@@ -215,6 +215,27 @@ def test_negative_unit_claim_refuses_a_unit_backfilled_from_a_neighbouring_state
     )
 
 
+def test_literal_description_claim_refuses_a_description_borrowed_from_a_sibling():
+    """Input: a delivery-metadata claim on the state's literal description, against
+    the state written with another edition's description (as a defect copying a
+    sibling's text would write it). Expected: "literal delivery description
+    changed". Fails if the description claim is not compared with the written
+    state. Read from the replaced
+    test_source_representation_delivery_metadata.py::test_delivery_coverage_refuses_a_changed_literal_unit_or_description
+    (its unit arm is test_negative_unit_claim_refuses_a_unit_backfilled_from_a_neighbouring_state).
+    """
+    obligation = replace(
+        _fact_obligation(), description_claim=("value", "Visited facility")
+    )
+    _allowed((_fact_variable(description="Visited facility"),), (obligation,))
+    found = _refusal(
+        (_fact_variable(description="Borrowed sibling description"),),
+        (obligation,),
+        FACT,
+    )
+    assert "literal delivery description changed" in found.detail
+
+
 def test_checked_definition_claim_refuses_a_window_that_lost_its_literal_definition():
     """Input: a checked month family's claim on Second's per-column window
     definition, against the window written without it (as a defect in the alias

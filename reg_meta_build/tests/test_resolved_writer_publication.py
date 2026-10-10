@@ -525,10 +525,9 @@ _ABSENT = "scb/example/absent"
 
 # Metadata that names what the catalog does not write. A build never hands the writer
 # such an edge: `resolve_metadata_dependencies` withholds or refuses each dangling
-# reference first (`catalog_dependency_missing`, pinned by the build cases
-# `dependency-withheld-variable-prunes-its-dependents` and
-# `relations-same-as-component-above-the-cap-fails-the-build`), so these checks are
-# defense in depth. A classification reference keeps the reserved `_default` slug
+# reference first (`catalog_dependency_missing`, pinned by the steps of the build case
+# `dependency-withheld-variable-prunes-its-dependents`), so these checks are defense
+# in depth. A classification reference keeps the reserved `_default` slug
 # out of the catalog; no build produces a classification same_as edge at all.
 INVALID_METADATA: dict[
     str, tuple[Callable[[], tuple[tuple[ResolvedVariable, ...], dict[str, Any]]], str]

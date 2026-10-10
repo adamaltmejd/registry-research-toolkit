@@ -1,0 +1,11 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_representations.py::test_representation_contract_requires_exact_finite_cover[gap]",
+  "fails_if": "the `[[representation.parallel]]` entry model stops requiring every column window to cover the shared window, so First ending 2022-06-30 leaves the second half of the shared 2022 window with no First and the entry loads (or is refused only by the intersection rule)",
+  "note": "The replaced test cut one column window short so the columns left a gap in the decision window. In TOML each column is a source window that must cover the shared window; First ends 2022-06-30 inside the shared 2022 window, while Second and the shared window are the allowed twin's (the build case representation-parallel-pooled-columns-keep-their-original-bounds).",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[representation.parallel]] entry 1",
+    "message_contains": ["every source column must cover the shared window"]
+  }
+}
