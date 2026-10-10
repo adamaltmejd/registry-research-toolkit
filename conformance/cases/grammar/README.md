@@ -1,9 +1,10 @@
 # Grammar corpus
 
 The oracle for the FQID and period grammars of `RUST_RUNTIME_SPEC.md` sections 5 and 7,
-read by `crates/reg-core/tests/grammar.rs` (`cargo test --workspace`). Both files are
-hand-written from the grammar in `crates/DESIGN.md` → "FQID grammar", not generated from
-an implementation.
+read by `crates/reg-core/tests/grammar.rs` (`cargo test --workspace`) and, the period
+files, by the SPA's unit suite through `reg-core-wasm`
+(`reg_webapp/frontend/src/lib/reg_core.test.ts`). The files are hand-written from the
+grammar in `crates/DESIGN.md` → "FQID grammar", not generated from an implementation.
 
 ## Format
 
@@ -42,4 +43,25 @@ Refusals are `invalid_period`. `out` is a token or a range; years are 1900–209
   `from` is not after the last day of `to`
 
 Each accepted case also carries `years: [lo, hi]`, the calendar years the period
-touches: a month or day covers its year, and `LA2019` touches 2019 and 2020.
+touches: a month or day covers its year, and `LA2019` touches 2019 and 2020. Each
+accepted case also carries `bounds: [lo, hi]`, the first and last day the period covers
+as ISO dates: `2019-02` is `2019-02-01` to `2019-02-28`.
+
+### `source_period.jsonl`
+
+A `project_data.json` `Source.period` against the SPA's wire. Each case has:
+
+- `period`: the `Source.period` JSON value.
+- `from_wire` (optional): a `?period` wire that shapes into `period`. Shaping does not
+  validate: comma-separated members become a list (unless one is blank), `from..to` a
+  range, a grammar year an int; other text stays a trimmed string.
+- `wire`: the `?period` wire of `period`, or `null` when it has none (a blank value or
+  endpoint, an empty list, a list member holding a comma, or not a period's shape).
+- `error: "invalid_period"` when the period's structural check, or its range order,
+  refuses it; otherwise `intervals`, the days it requests (merged; `null` for the
+  year-independent `"_default"`), and `years`, their calendar-year spans, `null` unless
+  every endpoint is a year.
+- `render` (with non-null `intervals`): the period spelling of `intervals`, as the
+  interval algebra writes it.
+
+`crates/reg-core/tests/grammar.rs` and the SPA (through `reg-core-wasm`) both run it.

@@ -21,13 +21,11 @@ import {
 } from "./api";
 import {
   type Coverage,
-  periodRangeEndpoints,
-  periodTokenBounds,
-  periodTokenForBounds,
-  periodWireBounds,
+  datedIntervals,
   VALUE_SET_VERSION_NONE,
 } from "./period";
 import type { DraftBinding, ProjectBinding } from "./project_data";
+import { renderIntervals, sourcePeriodFromWire } from "./reg_core";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
 
@@ -1075,31 +1073,19 @@ export interface PickerVariantSegment {
 
 /** The WIRE segment for ONE inclusive ISO window, or null when a bound is a sentinel
  * (open-ended `9999-12-31` / unknown-start `0001-01-01`) — an unbounded side has no
- * in-grammar token. Emits the EXACT span, not a year-rounded one:
- * `periodTokenForBounds` renders the coarsest token that round-trips to these exact
- * bounds — a full year → the bare year, but a SUB-ANNUAL span
- * (`2020-01-01`..`2020-01-31` → `2020-01`, a quarter → `YYYY-Q[1-4]`, a single day →
- * the day) keeps its grain so the committed source covers only the column's real
- * window, not the whole year (which would pull in sibling columns for the rest of
- * the year — #678 fix). A window no single token covers is the explicit `lo..hi`
- * range. */
+ * in-grammar token. Emits the EXACT span, not a year-rounded one (reg-core's
+ * `render`): the coarsest token whose days are exactly these — a full year → the
+ * bare year, but a SUB-ANNUAL span (`2020-01-01`..`2020-01-31` → `2020-01`, a
+ * quarter → `YYYY-Q[1-4]`, a single day → the day) keeps its grain so the committed
+ * source covers only the column's real window, not the whole year (which would pull
+ * in sibling columns for the rest of the year — #678 fix). A window no single token
+ * covers is a range whose year-aligned endpoints are bare years
+ * (`2010..2020`, `2019..2020-06-30`). */
 function windowWireSegment(from: string, to: string): string | null {
   if (from === YEARLESS_VALID_FROM || to === OPEN_ENDED_VALID_TO) {
     return null;
   }
-  const token = periodTokenForBounds(from, to);
-  // A multi-year span comes back as the explicit ISO range `lo..hi`; collapse
-  // YEAR-ALIGNED endpoints to bare years (`2010-01-01..2020-12-31` → `2010..2020`)
-  // so a whole-year multi-year span stays a clean year range. A sub-annual endpoint
-  // (not Jan-1 / Dec-31 aligned) is preserved exactly — never widened to its year.
-  const range = periodRangeEndpoints(token);
-  if (range) {
-    const [lo, hi] = range;
-    const loYear = lo.endsWith("-01-01") ? lo.slice(0, 4) : lo;
-    const hiYear = hi.endsWith("-12-31") ? hi.slice(0, 4) : hi;
-    return `${loYear}..${hiYear}`;
-  }
-  return token;
+  return renderIntervals([[from, to]]);
 }
 
 /** The WIRE period for a representation row's DISJOINT delivery windows, or null
@@ -1170,23 +1156,20 @@ export function deliveryWindows(
 
 /** The inclusive ISO bounds to clamp a picker row's span to on Add, given the active
  * `?period` wire and the year-grain dim window (#678). The `?period` wins at its REAL
- * grain (`periodWireBounds` — so a sub-annual `2020-Q1` stays `2020-01-01..2020-03-31`
- * rather than collapsing to the outer year, the #678 finding); else the year-grain
- * dim window expanded to `[lo-01-01, hi-12-31]`; else null (no clamp — full-span add).
- * Pure — unit-tested. */
+ * grain (the first and last day reg-core places it on — so a sub-annual `2020-Q1`
+ * stays `2020-01-01..2020-03-31` rather than collapsing to the outer year, the #678
+ * finding); else the year-grain dim window's days; else null (no clamp — full-span
+ * add). A `?period` reg-core refuses falls through to the window. Pure — unit-tested. */
 export function addWindowBounds(
   period: string | null | undefined,
   window: [number, number] | null,
 ): { from: string; to: string } | null {
-  if (period) {
-    const bounds = periodWireBounds(period);
-    if (bounds) {
-      return bounds;
-    }
-  }
-  return window
-    ? { from: `${window[0]}-01-01`, to: `${window[1]}-12-31` }
-    : null;
+  const days =
+    (period ? datedIntervals(sourcePeriodFromWire(period)) : null) ??
+    (window ? datedIntervals({ from: window[0], to: window[1] }) : null);
+  const first = days?.[0];
+  const last = days?.at(-1);
+  return first && last ? { from: first[0], to: last[1] } : null;
 }
 
 /** The wire period to COMMIT for a selected picker row, given the active period
@@ -2382,35 +2365,24 @@ export function clusterBands<T>(
 /** The active period window the picker DIMS against, as an inclusive year pair
  * `[lo, hi]`, or `null` when there is no active window (every row reads as
  * in-window). Precedence mirrors the leaf's resolution: an active `?period` wire
- * wins (parsed to its outer year span — a single token via `periodTokenBounds`,
- * a `lo..hi` range via its endpoints, a `a,b` comma-union via the min/max of its
- * parts); else the global `ProjectStudyWindow` (already year ints). A `?period` that
- * doesn't parse to any bound (e.g. `_default`) falls back to the window, then to
- * null. simplify: year-grain overlap is deliberate — the dim is an at-a-glance
- * relevance cue, not the hard period gate (selection works on any row). */
+ * wins (its outer year span: the years of the first and last day reg-core places it
+ * on, a `a,b` comma-union included); else the global `ProjectStudyWindow` (already
+ * year ints). A `?period` with no days (`_default`, or one reg-core refuses) falls
+ * back to the window, then to null. simplify: year-grain overlap is deliberate — the
+ * dim is an at-a-glance relevance cue, not the hard period gate (selection works on
+ * any row). */
 export function pickerWindowYears(
   periodWire: string | null | undefined,
   window: { from: number; to: number } | null,
 ): [number, number] | null {
-  if (periodWire) {
-    let lo: number | null = null;
-    let hi: number | null = null;
-    for (const part of periodWire.split(",")) {
-      const endpoints = periodRangeEndpoints(part) ?? [
-        part.trim(),
-        part.trim(),
-      ];
-      const loBounds = periodTokenBounds(endpoints[0]);
-      const hiBounds = periodTokenBounds(endpoints[1]);
-      const partLo = loBounds ? yearOf(loBounds.from) : null;
-      const partHi = hiBounds ? yearOf(hiBounds.to) : null;
-      if (partLo !== null) {
-        lo = lo === null ? partLo : Math.min(lo, partLo);
-      }
-      if (partHi !== null) {
-        hi = hi === null ? partHi : Math.max(hi, partHi);
-      }
-    }
+  const days = periodWire
+    ? datedIntervals(sourcePeriodFromWire(periodWire))
+    : null;
+  const first = days?.[0];
+  const last = days?.at(-1);
+  if (first && last) {
+    const lo = yearOf(first[0]);
+    const hi = yearOf(last[1]);
     if (lo !== null && hi !== null) {
       return [lo, hi];
     }

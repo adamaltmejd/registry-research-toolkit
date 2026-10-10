@@ -389,7 +389,7 @@ describe("SourceEditor source period (Y-81)", () => {
 // ── Y-101: a multi-segment source period, one From/To row per segment ───────
 //
 // A source whose period is a #307 comma list (`2015..2017,2019..2020` —
-// `mergePeriods`' own output for two disjoint picks on one register variant) used
+// `periodCoverageUnion`'s output for two disjoint picks on one register variant) used
 // to render read-only. Every segment here is a plain year or a uniform-year
 // range, so it is authored the same way a single range is: one row per segment,
 // "Add years", a per-row "Remove", ONE Apply.

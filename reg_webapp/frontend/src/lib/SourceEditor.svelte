@@ -5,8 +5,6 @@ import { fqidSegments, sourceCardHeading } from "./catalog";
 import { sourceNames } from "./catalog_names.svelte";
 import {
   normalizePeriodRows,
-  periodFromWire,
-  periodToWire,
   periodWindowRelation,
   resolveYearEntry,
   yearSegmentsFromWire,
@@ -27,6 +25,7 @@ import {
   projectStore,
   type SourcePeriodEditTarget,
 } from "./project_store.svelte";
+import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import {
   Button,
@@ -127,9 +126,9 @@ const bindingsMalformed = $derived(sourceBindingsMalformed(source));
 const sourceName = $derived(safeSourceName(source) || "(unnamed source)");
 
 const period = $derived(safeSourcePeriod(source) as ProjectSourcePeriod);
-// The stored period as its WIRE string (list-period aware — `periodToWire` already
+// The stored period as its WIRE string (list-period aware — `sourcePeriodToWire` already
 // joins list segments); null when the source carries none or an unshapeable one.
-const periodWire = $derived(periodToWire(period));
+const periodWire = $derived(sourcePeriodToWire(period));
 
 // The coordinate rows, rendered through the shared KeyValue primitive
 // (#804) — same metadata-row styling ProjectEditor uses. The provider heads them
@@ -305,7 +304,7 @@ const proposedWire = $derived.by(() => {
   if (normalized === null || !("period" in normalized)) {
     return null;
   }
-  const wire = periodToWire(normalized.period);
+  const wire = sourcePeriodToWire(normalized.period);
   return wire === periodWire ? null : wire;
 });
 
@@ -416,7 +415,7 @@ async function applyPeriod(): Promise<void> {
     }
     writeRefused = !projectStore.applySourcePeriodEdit({
       ...target,
-      period: periodFromWire(wire),
+      period: sourcePeriodFromWire(wire),
     });
     appliedWindows = writeRefused ? null : written;
     rows = null;

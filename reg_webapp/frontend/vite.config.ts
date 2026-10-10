@@ -80,7 +80,8 @@ export default defineConfig({
         // Unit tests read cross-package oracles, which Vite refuses outside the
         // allowed roots (default: this package): the server fold's corpus
         // (catalog.fold.test.ts), reg-core's structural corpus (reg_core.test.ts,
-        // validation.test.ts) and the server's unsupported-version case
+        // validation.test.ts), the server's unsupported-version case, the period
+        // grammar corpora and the interval algebra's golden cases
         // (reg_core.test.ts). Allow those directories, not the whole repo. A
         // single-file entry does not work here: Vite compares it against the id
         // with its `?raw` query attached.
@@ -90,7 +91,9 @@ export default defineConfig({
               ".",
               "../../conformance/cases/folds",
               "../../conformance/cases/api/validate-unsupported-schema-version",
+              "../../conformance/cases/grammar",
               "../../crates/reg-core/tests/project/corpus",
+              "../../crates/reg-core/tests/interval",
             ],
           },
         },

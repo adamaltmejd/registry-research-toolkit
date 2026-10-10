@@ -90,11 +90,13 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       adds: [add("scb/hst/v1", "scb/hst/kon", "HT2020")],
     });
     // A second add with a DIFFERENT token extends the source period so the saved
-    // source still covers every binding that was resolved for it.
+    // source still covers every binding that was resolved for it. HT2020 and
+    // VT2021 are day-adjacent, so their days are one school year (reg-core's
+    // merge and render).
     projectStore.applyStagedDiff({
       adds: [add("scb/hst/v1", "scb/hst/alder", "VT2021")],
     });
-    expect(storedProject()?.sources[0].period).toEqual(["HT2020", "VT2021"]);
+    expect(storedProject()?.sources[0].period).toBe("LA2020");
   });
 
   it("preserves every same-batch token add window in the committed source period", () => {
@@ -110,11 +112,12 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     });
 
     expect(storedProject()?.sources).toHaveLength(1);
-    expect(storedProject()?.sources[0].period).toEqual([
-      "2020-Q1",
-      "2020-Q2",
-      "2020-Q3",
-    ]);
+    // Three day-adjacent quarters are one interval; no token spans it, so it
+    // renders as a range with its year-aligned start a bare year.
+    expect(storedProject()?.sources[0].period).toEqual({
+      from: 2020,
+      to: "2020-09-30",
+    });
     expect(storedProject()?.sources[0].bindings.map((b) => b.variable)).toEqual(
       ["scb/hst/kon", "scb/hst/alder", "scb/hst/inkomst"],
     );
