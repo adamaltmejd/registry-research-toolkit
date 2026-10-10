@@ -5,8 +5,9 @@ The tool runs as its CLI. Its process boundaries are stubbed: the real-seed
 never reached it; it writes a minimal resolved bundle for `build-db --resolved-out` and
 places one with `materialize-db`), the project-environment probe
 (`$REG_REAL_SEED_PYTHON`, which reports a content digest of the curation tree, a fixed
-resolve-code fingerprint and, on request, a failed admission) and `rustc` (on `PATH`).
-The keyed code is real source.
+resolve-code fingerprint and, on request, a failed admission; the prepare case runs
+the real probe on a copied builder instead) and `rustc` (on `PATH`). The keyed code is
+real source.
 """
 
 from __future__ import annotations
@@ -103,7 +104,11 @@ print(json.dumps(facts))
 
 
 def _tool(
-    tmp_path: Path, *args: str, tool: Path = SCRIPTS / "real_seed_cache.py", **flags
+    tmp_path: Path,
+    *args: str,
+    tool: Path = SCRIPTS / "real_seed_cache.py",
+    environ: dict[str, str] | None = None,
+    **flags,
 ) -> tuple[int, dict]:
     (tmp_path / "builder.py").write_text(BUILDER)
     (tmp_path / "probe.py").write_text(PROBE)
@@ -120,6 +125,7 @@ def _tool(
         "REG_REAL_SEED_PYTHON": f"{sys.executable} {tmp_path / 'probe.py'}",
         "STUB_LOG": str(tmp_path / "calls.jsonl"),
         **{f"STUB_{name.upper()}": "1" for name, on in flags.items() if on},
+        **(environ or {}),
     }
     proc = subprocess.run(
         [sys.executable, str(tool), *args],
@@ -280,6 +286,12 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
             "d" * 64,
             "--key",
             tool=tree / "scripts/real_seed_cache.py",
+            # The real probe, importing the copied builder: its import walk is the
+            # one the key uses.
+            environ={
+                "REG_REAL_SEED_PYTHON": sys.executable,
+                "PYTHONPATH": str(tree / "reg_meta_build/src"),
+            },
         )
 
     package = tree / "reg_meta_build/src/reg_meta_build"

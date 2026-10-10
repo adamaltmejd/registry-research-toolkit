@@ -82,8 +82,8 @@ there is no migration between format versions, and a bundle from other resolve c
 rebuilt, not read. The builder enforces this itself.
 `resolve_code.resolve_code_sha256()` fingerprints the content of every `reg_meta_build`
 source file in the static import closure of `reg_meta_build.pipeline` (function-local
-imports included, `TYPE_CHECKING` bodies excluded, the walk of
-`scripts/real_seed_cache.py`), the non-Python files beside them, every file of the
+imports included, `TYPE_CHECKING` bodies excluded; `import_closure`, which the real-seed
+cache's prepare key also walks), the non-Python files beside them, every file of the
 imported `reg_core_py` package (its extension included) and the Python version. A build
 records it before resolving, and `materialize-db` recomputes it before reading any
 payload. A replay by other resolve code would place stale resolutions under the current
