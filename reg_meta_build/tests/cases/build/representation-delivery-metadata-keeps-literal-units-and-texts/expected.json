@@ -109,9 +109,9 @@
       "table": "editions",
       "where": {"register": ["units", "bare"]},
       "fields": ["register", "variant", "name", "description", "measurement_information", "documentation_status", "first_approved_at", "last_approved_at", "populations", "object_types"],
-      "note": "Each edition keeps its Registerversion prose, its population and its object type, all `var_row` defaults: `Version <year>`, `Godkänd`, approval dates on the year's bounds, `Hela befolkningen`/`Alla personer` dated `<year>-12-31`, `Person`/`Fysisk person`. A blank mätinformation and a blank population comment are written as null. bare forms no variable and still keeps both editions.",
+      "note": "Each edition keeps its Registerversion prose, its population and its object type, all `var_row` defaults: `Version <year>`, `Godkänd`, approval dates on the year's bounds, `Hela befolkningen`/`Alla personer` dated `<year>-12-31`, `Person`/`Fysisk person`. units' 2020 population keeps CVID 101's comment 'Scope note'; a blank mätinformation and a blank population comment are written as null. bare forms no variable and still keeps both editions.",
       "rows": [
-        ["units", "people", "2020", "Version 2020", null, "Godkänd", "2020-01-01", "2020-12-31", [["Hela befolkningen", "Alla personer", null, "2020-12-31"]], [["Person", "Fysisk person"]]],
+        ["units", "people", "2020", "Version 2020", null, "Godkänd", "2020-01-01", "2020-12-31", [["Hela befolkningen", "Alla personer", "Scope note", "2020-12-31"]], [["Person", "Fysisk person"]]],
         ["units", "people", "2021", "Version 2021", null, "Godkänd", "2021-01-01", "2021-12-31", [["Hela befolkningen", "Alla personer", null, "2021-12-31"]], [["Person", "Fysisk person"]]],
         ["bare", "people", "2020", "Version 2020", null, "Godkänd", "2020-01-01", "2020-12-31", [["Hela befolkningen", "Alla personer", null, "2020-12-31"]], [["Person", "Fysisk person"]]],
         ["bare", "people", "2021", "Version 2021", null, "Godkänd", "2021-01-01", "2021-12-31", [["Hela befolkningen", "Alla personer", null, "2021-12-31"]], [["Person", "Fysisk person"]]]
