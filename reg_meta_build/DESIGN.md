@@ -82,18 +82,19 @@ there is no migration between format versions, and a bundle from other resolve c
 rebuilt, not read. The builder enforces this itself.
 `resolve_code.resolve_code_sha256()` fingerprints the content of every `reg_meta_build`
 source file in the static import closure of `reg_meta_build.pipeline` (function-local
-imports included, `TYPE_CHECKING` bodies excluded, the walk of
-`scripts/real_seed_cache.py`), the non-Python files beside them, every file of the
-imported `reg_core_py` package (its extension included) and the Python version. A build
-records it before resolving, and `materialize-db` recomputes it before reading any
-payload. A replay by other resolve code would place stale resolutions under the current
-builder commit, so it is refused. The walk must not reach the writer modules
-(`materialize`, `db`, `derive`, `validate`, `artifact_identity`); the fingerprint raises
-if it does, so a writer-only change keeps reusing bundles. Loading refuses, each with a
-located error code: a `bundle.json` that fails strict validation
-(`resolved_bundle_invalid`); other resolve code (`resolved_bundle_code_mismatch`); a
-requested mode or register selection other than the bundle's
-(`resolved_bundle_mode_mismatch`); a strict bundle with resolution errors
+imports included, `TYPE_CHECKING` bodies excluded; `import_closure`, which the real-seed
+cache's prepare key also walks), the non-Python files beside them, every file of the
+imported `reg_core_py` package (its extension included) and the Python version. A
+`__version__` value is normalized away: a release bumps it and no resolution reads it,
+so a release build keeps its candidate's bundle. A build records it before resolving,
+and `materialize-db` recomputes it before reading any payload. A replay by other resolve
+code would place stale resolutions under the current builder commit, so it is refused.
+The walk must not reach the writer modules (`materialize`, `db`, `derive`, `validate`,
+`artifact_identity`); the fingerprint raises if it does, so a writer-only change keeps
+reusing bundles. Loading refuses, each with a located error code: a `bundle.json` that
+fails strict validation (`resolved_bundle_invalid`); other resolve code
+(`resolved_bundle_code_mismatch`); a requested mode or register selection other than the
+bundle's (`resolved_bundle_mode_mismatch`); a strict bundle with resolution errors
 (`resolved_bundle_blocked`), the same publication guard as a strict build; a payload
 whose size or SHA-256 differs (`resolved_bundle_digest_mismatch`); any pickled global
 that is not a Pydantic model defined in a `reg_meta_build` module

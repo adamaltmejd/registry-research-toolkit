@@ -36,8 +36,9 @@ every key also holds `rustc -V`, run from the repository root.
 
 Prepare key: the raw bundle commit, `catalog-bundle.json` digest and the bundle's path
 in its repository (the manifest records it); the content of every file in the code
-boundary (`prepare_code_files`: a static import walk, `uv.lock`, and the native
-extension sources because a walked module imports `reg_core_py`); the Python, SQLite
+boundary (`prepare_code_files`: the builder's own static import walk, which the probe
+runs, `uv.lock`, and the native extension sources because a walked module imports
+`reg_core_py`); the Python, SQLite
 and Rust toolchain versions. A prepare entry is an index record (prepared path and
 top-level manifest digest), not a copy of the 14 GB tree the maintainer commits to a
 local acceptance repository. A lookup runs the builder's own warm-build check
@@ -64,7 +65,8 @@ entries stay, and so does any entry used within 6 hours.
 Resolve key: the builder's own `resolve_code_sha256` (`reg_meta_build.resolve_code`:
 the static import closure of `pipeline`, the `reg_core_py` package files and the
 Python version, reported by the probe), `uv.lock` (third-party versions, which that
-fingerprint leaves out), the `curation_tree_sha256`, the prepared commit and manifest
+fingerprint leaves out; `resolve_lock_sha256` leaves out the workspace members' own
+versions), the `curation_tree_sha256`, the prepared commit and manifest
 digest, the mode, the `--registers` scopes as a sorted set, and the Python, SQLite and
 Rust toolchain versions; never HEAD (`materialize-db` stamps the running commit). A
 resolve entry holds the `bundle` a full miss wrote with `build-db --resolved-out`; it
@@ -92,7 +94,6 @@ Stdlib only, like `gate.py`.
 from __future__ import annotations
 
 import argparse
-import ast
 import functools
 import gzip
 import hashlib
@@ -106,7 +107,6 @@ import tempfile
 import tomllib
 import zlib
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from gate import real_seed_lock
 from keyed_cache import (
@@ -121,9 +121,6 @@ from keyed_cache import (
     staged,
     tree_digest,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = ".real-seed-cache"
@@ -150,8 +147,10 @@ RESOLVE_RECORDED = (
 # `materialize-db`'s refusals of a bundle it will not place (stale code, damaged or
 # invalid payload, another mode): the entry is dropped and the build runs in full.
 BUNDLE_REFUSAL_PREFIX = "resolved_bundle_"
-# The workspace packages the prepare walk follows; it refuses any other one it reaches.
-PACKAGES = {"reg_meta_build": "reg_meta_build/src"}
+# The source root of the one workspace package the prepare walk follows (the
+# builder's `resolve_code.import_closure` walks only `reg_meta_build`); the key
+# refuses any other workspace package the walk reaches.
+PACKAGE_SOURCE = "reg_meta_build/src"
 # The prepare key's code boundary, as roots of a static import walk
 # (`prepare_code_files`): the preparation entry point, and the modules the CLI's
 # `prepare-sources` handler and its output-confinement check import from.
@@ -177,7 +176,9 @@ PREPARE_ENTRY_FILES = ("reg_meta_build/src/reg_meta_build/cli.py",)
 # What this stdlib-only script needs from the project environment: the interpreter
 # and SQLite the builder runs on, the builder's own curation digest (the value a
 # build records as `curation_tree_sha256`), the builder's resolve-code fingerprint
-# (the value a resolved bundle records), the builder's warm-build check of an
+# (the value a resolved bundle records), the builder's own import walk from the
+# prepare roots (the files it reaches and the other packages it imports), the
+# builder's warm-build check of an
 # accepted prepared tree at its repository's HEAD, and the admission checks a build
 # runs before it resolves anything (the same check of the prepared pins and, for a
 # publishable build, the clean builder source).
@@ -211,6 +212,23 @@ if request.get("resolve_code"):
         # refuse the same way.
         facts["probe_error"] = {
             "code": "probe_resolve_code_failed",
+            "message": f"{type(exc).__name__}: {exc}",
+        }
+if request.get("prepare_roots"):
+    from reg_meta_build.resolve_code import code_files, import_closure
+    try:
+        modules, imports = import_closure(
+            Path(request["source_root"]), request["prepare_roots"]
+        )
+        facts["prepare_code"] = {
+            "files": sorted(
+                p.relative_to(root).as_posix() for p in code_files(modules.values())
+            ),
+            "imports": sorted(imports),
+        }
+    except Exception as exc:
+        facts["probe_error"] = {
+            "code": "probe_prepare_code_failed",
             "message": f"{type(exc).__name__}: {exc}",
         }
 if request.get("prepared"):
@@ -374,105 +392,29 @@ def workspace_packages() -> frozenset[str]:
     )
 
 
-def _module_file(module: str) -> Path | None:
-    """The workspace file of `module`, or None for a stdlib or third-party module
-    (`uv.lock` and the runtime versions key those)."""
-    top = module.split(".")[0]
-    if top not in PACKAGES:
-        if top in workspace_packages():
-            sys.exit(
-                f"real-seed-cache: the prepare walk reaches {module}, in workspace "
-                f"package {top} that PACKAGES does not key; add it"
-            )
-        return None
-    base = ROOT / PACKAGES[top] / Path(*module.split("."))
-    if (base / "__init__.py").is_file():
-        return base / "__init__.py"
-    return base.with_suffix(".py") if base.with_suffix(".py").is_file() else None
+def prepare_code_files(walk: dict) -> list[str]:
+    """The repo-relative files `prepare-sources` runs, generously, from the probe's
+    `prepare_code`.
 
-
-def _imports(tree: ast.Module) -> Iterator[ast.Import | ast.ImportFrom]:
-    """Every import statement, function-local ones included; the bodies of
-    `if TYPE_CHECKING:` blocks are skipped (they never run)."""
-    stack: list[ast.AST] = [tree]
-    while stack:
-        node = stack.pop()
-        if isinstance(node, ast.If) and (
-            getattr(node.test, "id", None) == "TYPE_CHECKING"
-            or getattr(node.test, "attr", None) == "TYPE_CHECKING"
-        ):
-            stack.extend(node.orelse)
-            continue
-        if isinstance(node, (ast.Import, ast.ImportFrom)):
-            yield node
-        stack.extend(ast.iter_child_nodes(node))
-
-
-def _imports_dynamically(tree: ast.Module) -> bool:
-    return any(
-        isinstance(node, ast.Call)
-        and (
-            getattr(node.func, "id", None) in {"import_module", "__import__"}
-            or getattr(node.func, "attr", None) == "import_module"
-        )
-        for node in ast.walk(tree)
-    )
-
-
-def prepare_code_files() -> list[str]:
-    """The repo-relative files `prepare-sources` runs, generously.
-
-    Walks every import from `PREPARE_ROOTS` through the workspace packages, including
-    function-local imports, whether or not the prepare path reaches them. A module
-    that imports by name at run time (`import_module`) pulls in its whole package.
-    Data files beside any walked module count, as do the native extension sources
-    when a walked module imports `reg_core_py`, and `uv.lock` always.
+    The builder's own import walk (`resolve_code.import_closure`) follows every
+    import from `PREPARE_ROOTS` through `reg_meta_build`, including function-local
+    imports, whether or not the prepare path reaches them. A module that imports by
+    name at run time (`import_module`) pulls in its whole package. Data files beside
+    any walked module count, as do the native extension sources when a walked module
+    imports `reg_core_py`, and `uv.lock` always.
     """
-    if missing := [m for m in PREPARE_ROOTS if _module_file(m) is None]:
-        sys.exit(f"real-seed-cache: prepare walk root missing, update it: {missing}")
-    seen: dict[str, Path] = {}
-    native = False
-    pending = list(PREPARE_ROOTS)
-    while pending:
-        module = pending.pop()
-        if module in seen or (path := _module_file(module)) is None:
-            continue
-        seen[module] = path
-        parts = module.split(".")
-        pending += [".".join(parts[:i]) for i in range(1, len(parts))]
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-        package = module if path.name == "__init__.py" else module.rpartition(".")[0]
-        if _imports_dynamically(tree):
-            root = ROOT / PACKAGES[parts[0]]
-            pending += [
-                ".".join(p.relative_to(root).with_suffix("").parts).removesuffix(
-                    ".__init__"
-                )
-                for p in path.parent.rglob("*.py")
-            ]
-        for node in _imports(tree):
-            if isinstance(node, ast.Import):
-                targets = [alias.name for alias in node.names]
-            else:
-                base = package.split(".")[: len(package.split(".")) - node.level + 1]
-                target = (
-                    ".".join([*base, *([node.module] if node.module else [])])
-                    if node.level
-                    else node.module or ""
-                )
-                targets = [target, *(f"{target}.{a.name}" for a in node.names)]
-            native |= any(t.split(".")[0] == "reg_core_py" for t in targets)
-            pending += targets
-    files = {path.relative_to(ROOT).as_posix() for path in seen.values()}
-    directories = {path.parent.relative_to(ROOT).as_posix() for path in seen.values()}
-    files.update(
-        path
-        for path in repo_files(directories)
-        if path.rpartition("/")[0] in directories and not path.endswith(".py")
-    )
+    if unkeyed := sorted(set(walk["imports"]) & workspace_packages()):
+        sys.exit(
+            f"real-seed-cache: the prepare walk reaches workspace packages {unkeyed} "
+            "that it does not key; extend the walk to them"
+        )
+    # A walked module git ignores stays listed, so `code_digests` refuses it; ignored
+    # data beside a module is junk, never keyed.
+    files = {path for path in walk["files"] if path.endswith(".py")}
+    files |= repo_files(walk["files"])
     files.update(PREPARE_ENTRY_FILES)
     files.add("uv.lock")
-    if native:
+    if "reg_core_py" in walk["imports"]:
         files.update(NATIVE_SOURCES)
     return sorted(files)
 
@@ -481,13 +423,16 @@ def prepare_code_files() -> list[str]:
 
 
 def prepare_fields(args: argparse.Namespace) -> dict:
+    facts = probe(source_root=str(ROOT / PACKAGE_SOURCE), prepare_roots=PREPARE_ROOTS)
+    if error := facts.pop("probe_error", None):
+        sys.exit(f"real-seed-cache: {error['code']}: {error['message']}")
     return {
         "step": "prepare",
         "bundle_commit": args.input_commit,
         "bundle_manifest_sha256": args.input_manifest_sha256,
         "bundle_path": git(Path(args.input_bundle), "rev-parse", "--show-prefix"),
-        "code": code_digests(prepare_code_files()),
-        "runtime": {**probe(), "rustc": rustc_version()},
+        "code": code_digests(prepare_code_files(facts.pop("prepare_code"))),
+        "runtime": {**facts, "rustc": rustc_version()},
     }
 
 
@@ -648,6 +593,24 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 # -- build -------------------------------------------------------------------------
 
 
+def resolve_lock_sha256() -> str:
+    """`uv.lock` as the resolve key holds it: every third-party pin, without the
+    workspace members' own versions.
+
+    A release bumps a member's version (and `reg_meta_build`'s `__version__`, which
+    the builder's fingerprint normalizes), and no resolution reads it, so the
+    release build keeps reusing the bundle its candidate resolved. The build key
+    still holds the raw file. `Cargo.lock`, which a `reg_meta` release bumps, is not
+    in this key: the fingerprint holds the compiled `reg_core_py` instead.
+    """
+    lock = tomllib.loads((ROOT / "uv.lock").read_text())
+    members = set(lock["manifest"]["members"])
+    for package in lock["package"]:
+        if package["name"] in members:
+            del package["version"]
+    return digest(lock)
+
+
 def build_code(args: argparse.Namespace) -> dict:
     """The builder code a build runs. A publishable build also records the
     checkout's commit in the database, so that commit is keyed too."""
@@ -699,7 +662,7 @@ def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
         "step": "resolve",
         **shared,
         "resolve_code_sha256": resolve_code,
-        "uv_lock": code["code"]["uv.lock"],
+        "uv_lock": resolve_lock_sha256(),
     }
     return {"step": "build", **shared, **code}, resolve
 

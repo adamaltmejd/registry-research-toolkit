@@ -5,8 +5,9 @@ The tool runs as its CLI. Its process boundaries are stubbed: the real-seed
 never reached it; it writes a minimal resolved bundle for `build-db --resolved-out` and
 places one with `materialize-db`), the project-environment probe
 (`$REG_REAL_SEED_PYTHON`, which reports a content digest of the curation tree, a fixed
-resolve-code fingerprint and, on request, a failed admission) and `rustc` (on `PATH`).
-The keyed code is real source.
+resolve-code fingerprint and, on request, a failed admission; the prepare case runs
+the real probe on a copied builder instead) and `rustc` (on `PATH`). The keyed code is
+real source.
 """
 
 from __future__ import annotations
@@ -103,7 +104,11 @@ print(json.dumps(facts))
 
 
 def _tool(
-    tmp_path: Path, *args: str, tool: Path = SCRIPTS / "real_seed_cache.py", **flags
+    tmp_path: Path,
+    *args: str,
+    tool: Path = SCRIPTS / "real_seed_cache.py",
+    environ: dict[str, str] | None = None,
+    **flags,
 ) -> tuple[int, dict]:
     (tmp_path / "builder.py").write_text(BUILDER)
     (tmp_path / "probe.py").write_text(PROBE)
@@ -120,6 +125,7 @@ def _tool(
         "REG_REAL_SEED_PYTHON": f"{sys.executable} {tmp_path / 'probe.py'}",
         "STUB_LOG": str(tmp_path / "calls.jsonl"),
         **{f"STUB_{name.upper()}": "1" for name, on in flags.items() if on},
+        **(environ or {}),
     }
     proc = subprocess.run(
         [sys.executable, str(tool), *args],
@@ -237,12 +243,9 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     assert edited["key"] != again["key"]
 
 
-def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
-    # Fails if the prepare key stops covering code prepare runs (an edit to a source
-    # adapter, or to a new module not yet committed, would hit a stale preparation),
-    # grows to cover resolution code (every resolution change would repeat a 1-2 h
-    # preparation) or ignored junk beside a module, or if the walk silently skips a
-    # workspace package it does not key. Edits a copied, committed tree.
+def _copied_tree(tmp_path: Path) -> Path:
+    """The keyed sources and the tool in a new git tree, staged, with an extra
+    workspace member `reg_extra` the keys do not cover."""
     tree = tmp_path / "tree"
     ignore = shutil.ignore_patterns("__pycache__", "target")
     for path in ("reg_meta_build/src", "crates/reg-core", "crates/reg-core-py"):
@@ -259,6 +262,55 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
     (tree / "reg_extra/src/reg_extra/__init__.py").touch()
     subprocess.run(["git", "init", "-q", str(tree)], check=True)
     subprocess.run(["git", "-C", str(tree), "add", "-A"], check=True)
+    return tree
+
+
+def test_resolve_key_ignores_release_version_bumps_only(tmp_path: Path) -> None:
+    # Fails if the resolve key holds a workspace member's own version (a release
+    # bump would miss the bundle its candidate resolved) or drops a third-party pin
+    # (a dependency change would place a stale resolution), or if the build key
+    # stops holding the raw lock (the release build would hit the candidate's entry).
+    tree = _copied_tree(tmp_path)
+    lock = tree / "uv.lock"
+
+    def keys() -> tuple[str, str]:
+        code, out = _tool(
+            tmp_path,
+            "build",
+            "--key",
+            "--prepared",
+            str(tmp_path / "prepared"),
+            "--input-commit",
+            "a" * 40,
+            "--input-manifest-sha256",
+            "b" * 64,
+            "--diagnostic",
+            tool=tree / "scripts/real_seed_cache.py",
+        )
+        assert code == 0, out
+        return out["key"], out["resolve_key"]
+
+    build, resolve = keys()
+    text = lock.read_text()
+    member = 'name = "reg-meta-build"\nversion = "'
+    lock.write_text(text.replace(member, member + "9"))
+    bumped_build, bumped_resolve = keys()
+    third_party = 'name = "openpyxl"\nversion = "'
+    lock.write_text(text.replace(third_party, third_party + "9"))
+    assert (bumped_build != build, bumped_resolve, keys()[1] != resolve) == (
+        True,
+        resolve,
+        True,
+    )
+
+
+def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
+    # Fails if the prepare key stops covering code prepare runs (an edit to a source
+    # adapter, or to a new module not yet committed, would hit a stale preparation),
+    # grows to cover resolution code (every resolution change would repeat a 1-2 h
+    # preparation) or ignored junk beside a module, or if the walk silently skips a
+    # workspace package it does not key. Edits a copied, committed tree.
+    tree = _copied_tree(tmp_path)
     bundle = tmp_path / "repo/bundle"
     bundle.mkdir(parents=True)
     subprocess.run(["git", "init", "-q", str(tmp_path / "repo")], check=True)
@@ -280,6 +332,12 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
             "d" * 64,
             "--key",
             tool=tree / "scripts/real_seed_cache.py",
+            # The real probe, importing the copied builder: its import walk is the
+            # one the key uses.
+            environ={
+                "REG_REAL_SEED_PYTHON": sys.executable,
+                "PYTHONPATH": str(tree / "reg_meta_build/src"),
+            },
         )
 
     package = tree / "reg_meta_build/src/reg_meta_build"
