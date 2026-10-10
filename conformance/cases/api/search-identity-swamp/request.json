@@ -1,5 +1,5 @@
 {
-  "note": "Twin of test_search_ranking.py::test_exact_identity_matches_lead_however_many_share_the_name (#1180). 51 classifications are named exactly `C12` (owning only `C120`); `zz-discriminative`, named `Grupperat`, repeats `C12` in its description and owns `C12`, so it is the best match without an identity match. More than 50 identity matches switch prefix promotion off. Fails if every exact match stops leading over both cursor pages, or if the cursor drops or repeats a page boundary row. The Python oracle compared the 51 as a set, so `members` pins them across both pages with no repeats, not their order.",
+  "note": "Twin of test_search_ranking.py::test_exact_identity_matches_lead_however_many_share_the_name (#1180). 51 classifications are named exactly `C12` (owning only `C120`); `zz-discriminative`, named `Grupperat`, repeats `C12` in its description and owns `C12`, so it is the best match without an identity match. More than 50 identity matches switch prefix promotion off. Fails if every exact match stops leading over both cursor pages, or if the cursor drops or repeats a page boundary row. The Python oracle compared the 51 as a set, so `members` pins all 52 rows of both pages with no repeats, and only `Grupperat`'s place after the 51 is ordered.",
   "kind": "catalog",
   "fixture": "reader/search-identity-swamp",
   "requests": [

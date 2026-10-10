@@ -53,8 +53,7 @@ def test_api_case_is_well_formed(case):
     for index, oracle in enumerate(oracles):
         if "members" in oracle:
             members = oracle["members"]
-            assert set(members) == {"steps", "pointer", "range", "equals"}, members
+            assert set(members) == {"steps", "pointer", "equals"}, members
             # Evaluated with this step's oracle, so only earlier steps are answered.
             assert all(0 <= step <= index for step in members["steps"]), members
-            start, end = members["range"]
-            assert len(set(members["equals"])) == len(members["equals"]) == end - start
+            assert len(set(members["equals"])) == len(members["equals"]), members

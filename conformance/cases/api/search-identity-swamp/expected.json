@@ -14,10 +14,6 @@
         1
       ],
       "pointer": "/data/items/*/fqid",
-      "range": [
-        0,
-        51
-      ],
       "equals": [
         "class/generic-00",
         "class/generic-01",
@@ -69,7 +65,8 @@
         "class/generic-47",
         "class/generic-48",
         "class/generic-49",
-        "class/generic-50"
+        "class/generic-50",
+        "class/zz-discriminative"
       ]
     }
   }
