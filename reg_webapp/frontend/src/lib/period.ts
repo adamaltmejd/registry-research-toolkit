@@ -11,7 +11,11 @@
  * stays here is view state and year-integer arithmetic over reg-core's answers.
  */
 
-import type { ProjectSourcePeriod, ProjectStudyWindow } from "./project_data";
+import type {
+  ProjectPeriodSegment,
+  ProjectSourcePeriod,
+  ProjectStudyWindow,
+} from "./project_data";
 import {
   type Interval,
   mergeIntervals,
@@ -129,12 +133,14 @@ export function normalizePeriodRows(
 /** Extend a source's period to cover an incoming one as well (#992: a source is
  * keyed by `register_variant` alone, so a second add of the same variant extends
  * its period). The union of the days both request, through reg-core: merged
- * (overlapping and day-adjacent days join), rendered and shaped back
- * (`2005..2010,2015..2020`; `2019-Q1` and `2019-Q2` become `VT2019`). An add the
- * existing period already covers leaves a non-year period as written. An unset
- * side yields the other; when either side has no days the SPA can place
- * (`_default`, or a period reg-core refuses) the incoming period wins — the
- * user's most recent explicit choice. */
+ * (overlapping and day-adjacent days join). When both periods are years only the
+ * union is rendered whole (`2005..2010,2015..2020`, a string year becoming an
+ * int). Otherwise a segment whose days survive the merge unchanged keeps the
+ * spelling it was written in (`2020-H1` plus `2022` is `2020-H1,2022`), and only
+ * an interval the merge created or changed is rendered (`2019-Q1` and `2019-Q2`
+ * become `VT2019`). An unset side yields the other; when either side has no days
+ * the SPA can place (`_default`, or a period reg-core refuses) the incoming
+ * period wins — the user's most recent explicit choice. */
 export function periodCoverageUnion(
   existing: ProjectSourcePeriod,
   incoming: ProjectSourcePeriod,
@@ -151,10 +157,26 @@ export function periodCoverageUnion(
     return incoming;
   }
   const merged = mergeIntervals([...have, ...add]);
-  if (sourcePeriodYears(existing) === null && sameIntervals(merged, have)) {
-    return existing;
+  if (
+    sourcePeriodYears(existing) !== null &&
+    sourcePeriodYears(incoming) !== null
+  ) {
+    return coveragePeriod(merged);
   }
-  return coveragePeriod(merged);
+  // Each segment of an accepted period is itself a period with one interval.
+  const written = [existing, incoming].flatMap((period) =>
+    (Array.isArray(period) ? period : [period]).map((segment) => ({
+      segment,
+      days: datedIntervals(segment),
+    })),
+  );
+  const segments = merged.map(
+    (interval) =>
+      written.find(
+        ({ days }) => days !== null && sameIntervals(days, [interval]),
+      )?.segment ?? coveragePeriod([interval]),
+  ) as ProjectPeriodSegment[];
+  return segments.length === 1 ? segments[0] : segments;
 }
 
 // ── Query-string builder ─────────────────────────────────────────────────────
