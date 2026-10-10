@@ -1,0 +1,10 @@
+{
+  "note": "Fails if day-adjacent states with identical facts stop merging into one state (2018 and 2019 state the same list, so one state 2018-2019), if a state merges with a neighbour whose value set differs (2020 adds a code and stays its own state), if the merged state stops keeping its earliest segment's ID (the ID minted from the 2018 coordinates, scb/example/lan/annual/2018-01-01, answers its list), or if the absorbed 2019 segment's ID still resolves instead of not_found. The IDs are the builder's state mint of the fixture coordinates (#1296 2d).",
+  "fixture": "merged-states",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "states", "path": "/api/states/scb/example/lan"},
+    {"operation": "values", "path": "/api/values/scb/example/lan", "query": {"state": "4117305741879892967"}},
+    {"operation": "values", "path": "/api/values/scb/example/lan", "query": {"state": "2542042442440425880"}}
+  ]
+}

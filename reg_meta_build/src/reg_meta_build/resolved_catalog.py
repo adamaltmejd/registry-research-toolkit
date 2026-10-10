@@ -10,6 +10,7 @@ import json
 import sqlite3
 from collections import defaultdict
 from contextlib import closing
+from datetime import date
 from graphlib import CycleError, TopologicalSorter
 from itertools import combinations
 from pathlib import Path
@@ -459,6 +460,63 @@ class ResolvedAlias(_ResolvedModel):
         return self
 
 
+# Every state fact except its window: two day-adjacent states that agree on all of
+# them are one delivery state.
+_STATE_WINDOW = frozenset({"valid_from", "valid_to"})
+
+
+def _state_facts(state: ResolvedState) -> tuple[object, ...]:
+    return tuple(
+        getattr(state, name)
+        for name in type(state).model_fields
+        if name not in _STATE_WINDOW
+    )
+
+
+def merge_adjacent_states(
+    states: tuple[ResolvedState, ...],
+) -> tuple[ResolvedState, ...]:
+    """Merge day-adjacent dated states whose resolved facts are identical (#1296 2d).
+
+    Occurrence resolution and coding cut a column wherever the set of active
+    source editions or code lists changes, so consecutive editions that state
+    the same facts arrive as separate states. A run of such states on one
+    variant and delivery column, each starting the day after the previous one
+    ends, is one state over the run's hull: same value set and version label,
+    classification links, data type and length, text fields, provenance and
+    pooled flag. Population is a variant fact (LISA carries one per variant,
+    every other reader none), so one variant never mixes two. A gap, or any
+    differing fact, keeps states apart; windows and coverage are unchanged.
+    The merged state keeps its earliest segment's `valid_from` and so its
+    `state_id`; the absorbed segments' IDs stop resolving. Year-independent
+    states have no neighbours and pass through.
+    """
+    merged: list[ResolvedState | None] = list(states)
+    by_column: dict[tuple[str, str], list[int]] = defaultdict(list)
+    for index, state in enumerate(states):
+        if state.period_scope == "intervals":
+            by_column[state.variant.slug, state.delivery_column_name].append(index)
+    for indices in by_column.values():
+        head: int | None = None
+        for index in sorted(indices, key=lambda i: states[i].valid_from or ""):
+            state = states[index]
+            current = merged[head] if head is not None else None
+            if (
+                current is not None
+                and current.valid_to is not None
+                and state.valid_from is not None
+                and date.fromisoformat(current.valid_to).toordinal() + 1
+                == date.fromisoformat(state.valid_from).toordinal()
+                and _state_facts(current) == _state_facts(state)
+            ):
+                assert head is not None
+                merged[head] = current.model_copy(update={"valid_to": state.valid_to})
+                merged[index] = None
+            else:
+                head = index
+    return tuple(state for state in merged if state is not None)
+
+
 class ResolvedVariable(_ResolvedModel):
     register_ref: ResolvedRegister = Field(alias="register")
     slug: str
@@ -483,6 +541,16 @@ class ResolvedVariable(_ResolvedModel):
     @classmethod
     def _name(cls, value: str | None) -> str | None:
         return _require_trimmed(value) if value is not None else None
+
+    @field_validator("states")
+    @classmethod
+    def _merged_states(
+        cls, value: tuple[ResolvedState, ...]
+    ) -> tuple[ResolvedState, ...]:
+        # Every producer (formation, committed fixtures) and every revalidation
+        # passes here, so lineage, warnings, coverage and the writer all see the
+        # merged states.
+        return merge_adjacent_states(value)
 
     @model_validator(mode="after")
     def _resolved_identity_and_states(self) -> Self:

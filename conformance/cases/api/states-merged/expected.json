@@ -1,0 +1,21 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/state_id": ["4117305741879892967", "3264361673061615869"],
+      "/data/items/*/valid_from": ["2018-01-01", "2020-01-01"],
+      "/data/items/*/valid_to": ["2019-12-31", "2020-12-31"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [{"code": "01", "label": "Stockholms län"}, {"code": "03", "label": "Uppsala län"}],
+      "/data/total": 2
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "2542042442440425880"}
+  }
+]

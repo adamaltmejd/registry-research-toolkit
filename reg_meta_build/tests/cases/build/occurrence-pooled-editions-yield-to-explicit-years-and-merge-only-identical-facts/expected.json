@@ -13,19 +13,19 @@
     },
     {
       "table": "states",
-      "where": {"variable": ["annual-wins", "annual-full", "adjacent"]},
+      "where": {"variable": ["annual-wins", "annual-full", "adjacent", "gap"]},
       "fields": ["variable", "valid_from", "valid_to", "pooled"],
       "rows": [
         ["annual-wins", "2012-01-01", "2012-12-31", true],
         ["annual-wins", "2013-01-01", "2013-12-31", false],
         ["annual-wins", "2014-01-01", "2014-12-31", true],
-        ["annual-full", "2012-01-01", "2012-12-31", false],
-        ["annual-full", "2013-01-01", "2013-12-31", false],
-        ["annual-full", "2014-01-01", "2014-12-31", false],
+        ["annual-full", "2012-01-01", "2014-12-31", false],
         ["adjacent", "2012-01-01", "2014-12-31", true],
-        ["adjacent", "2015-01-01", "2015-12-31", false]
+        ["adjacent", "2015-01-01", "2015-12-31", false],
+        ["gap", "2012-01-01", "2012-12-31", false],
+        ["gap", "2014-01-01", "2014-12-31", false]
       ],
-      "note": "test_explicit_annual_coverage_wins_over_pooled: the explicit 2013 cuts the pooled range and is not marked pooled. test_fully_annual_covered_pooled_range_forms_no_pooled_state: three explicit years leave no pooled state. test_pooled_segment_adjacent_to_explicit_does_not_merge: the pooled 2012-2014 and the explicit 2015 stay two states."
+      "note": "test_explicit_annual_coverage_wins_over_pooled: the explicit 2013 cuts the pooled range and is not marked pooled. test_fully_annual_covered_pooled_range_forms_no_pooled_state: three explicit years leave no pooled state; with identical facts they are one unpooled state over 2012-2014 (#1296 2d). test_pooled_segment_adjacent_to_explicit_does_not_merge: the pooled 2012-2014 and the explicit 2015 stay two states. gap: identical facts in 2012 and 2014 stay two states, since 2013 is not delivered."
     },
     {
       "table": "states",

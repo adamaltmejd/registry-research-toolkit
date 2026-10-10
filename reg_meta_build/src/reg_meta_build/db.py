@@ -956,11 +956,8 @@ CREATE TABLE variable_instance (
     data_length TEXT,
     value_set_version_label TEXT,
     vardemangdsniva TEXT,
-    -- #892: per-cvid carrier for SCB's `VariabelOperationell_definition`. The
-    -- ingest pass writes it here (the per-cvid grain is the right carrier — it
-    -- distinguishes parallel columns of one var_id), then `_coalesce_variable_states`
-    -- aggregates it to each OWNING (post-split-sibling) `variable.operational_definition`
-    -- via the same ground-truth `variable_id` stamp that routes aliases. Dropped
+    -- #892: per-cvid carrier for SCB's `VariabelOperationell_definition` (the
+    -- per-cvid grain distinguishes parallel columns of one var_id). Dropped
     -- with this build-time-only table before ship.
     operational_definition TEXT,
     -- Raw per-cvid source attribution. SCB may use the operational-definition
@@ -976,21 +973,8 @@ CREATE TABLE variable_instance (
     -- excluded by year projection). No reverse index — every consumer reaches
     -- here from the cvid PK side, so the forward path is already optimal.
     value_set_id INTEGER REFERENCES value_set(value_set_id),
-    -- The cvid's OWNING `variable_id` — GROUND TRUTH, stamped by
-    -- `_coalesce_variable_states` AFTER triage (NULL until then). A2.2
-    -- triage can split one source `var_id` into sibling variables that SHARE
-    -- the `(register_id, var_id)` provider key, so `var_id` alone can't name the
-    -- owning variable; but the coalescer builds each `variable_state` FROM these
-    -- cvids and therefore KNOWS the exact cvid→sibling assignment, which it
-    -- records here. `SCBAdapter._emit_variable_aliases` (→ IRVariableAlias →
-    -- materializer) and `_backfill_state_classifications` read it to attribute
-    -- each cvid's delivery columns / classification to the right sibling — no
-    -- post-hoc column-tie heuristic, no skip. No FK: build-time-only (dropped
-    -- with the table, before `PRAGMA foreign_key_check`) and values valid by
-    -- construction. No CREATE-time index: the column is NULL until triage. Once
-    -- stamped, the coalescer creates a transient `variable_id, cvid` scratch index
-    -- for sibling-routed post-stamp readers. Distinct from the natural-key note
-    -- below — that's about the absent `(register_id, var_id)` → `variable` FK.
+    -- The cvid's owning `variable_id`. No FK: build-time-only (dropped with
+    -- the table, before `PRAGMA foreign_key_check`).
     variable_id INTEGER
     -- A2.1.5: no FK on the `(register_id, var_id)` natural key to `variable` —
     -- it moved to the synthetic `variable_id` PK + register-unique `slug`, so
@@ -1014,26 +998,15 @@ CREATE TABLE variable_alias_build (
     PRIMARY KEY (cvid, delivery_column_name)
 );
 
--- Per-era shape of a variable (see crates/DESIGN.md → Two-level variable model). One row per coalesced
--- `(register_id, register_variant_id, var_id, data_type, data_length, value_set_id,
--- value_set_version_label, grain)` tuple over `variable_instance`; populated
--- by `_coalesce_variable_states` after CSV import. A2.5/A2.6 flipped the
--- resolver onto this table (keyed by `variable_id`); A2.7 drops the now-unused
--- `variable_instance` after the coalescer + downstream build passes consume it.
--- A2.1.5 re-parented this onto the synthetic `variable_id` FK (was FK
--- `(register_id, var_id)` in A2.1) and made `register_variant_id` an explicit
--- delivery coordinate; the coalescer resolves each group's `variable_id` from
--- `(register_id, var_id)` via the promoted `variable` table.
+-- Per-era shape of a variable (see crates/DESIGN.md → Two-level variable model). One row
+-- per resolved delivery state, written by `write_resolved_catalog`. Day-adjacent
+-- states on one variant and delivery column whose facts are all identical are one
+-- row over their hull (`merge_adjacent_states`, #1296 2d); a gap or any differing
+-- fact keeps rows apart.
 --
 -- Interval states carry two full ISO dates, including the existing open-end
 -- sentinel. Explicit year-independent states carry NULL bounds and no pooled
 -- flag; they have physical delivery scope, not calendar availability.
---
--- A `grain` column is intentionally absent — pre-triage rows that differ
--- only on SCB's `vardemangdsniva` are kept distinct in the coalescer's
--- in-memory group key so A2.2 can later promote them into sibling slugs,
--- but grain itself never lands in the universal schema (it becomes part
--- of the variable slug when a split fires).
 CREATE TABLE variable_state (
     state_id INTEGER PRIMARY KEY AUTOINCREMENT,
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
@@ -1077,7 +1050,7 @@ CREATE TABLE variable_state (
     value_set_version_label TEXT NOT NULL DEFAULT '',
     -- Full-date contract: ten-character ISO 8601 strings only. Length check
     -- is a cheap structural guard; a stricter regex isn't worth the runtime
-    -- cost because the coalescer is the only writer.
+    -- cost because the resolved writer validates every date first.
     CHECK (
         (period_scope = 'intervals' AND valid_from IS NOT NULL AND valid_to IS NOT NULL
          AND length(valid_from) = 10 AND length(valid_to) = 10 AND valid_to >= valid_from)
@@ -1089,29 +1062,10 @@ CREATE INDEX idx_variable_state_variable
 CREATE INDEX idx_variable_state_register_variant
     ON variable_state(register_variant_id);
 -- State-uniqueness index — UNIQUE(variable_id, register_variant_id,
--- valid_from, value_set_version_label). A4.3b moved it into the base DDL (was
--- created by `_coalesce_variable_states` after SCB triage). Rationale: it is a
--- structural invariant of the universal `variable_state` shape, not an SCB
--- artifact — two adapters (SCB coalescer, SOS reinsert) each CREATE-ing it is a
--- footgun, and with it in the DDL from table creation BOTH the SCB coalescer's
--- post-triage bulk INSERT and the materializer's `_reinsert_core_graph_from_ir`
--- get the loud-collision guarantee with no per-adapter coordination.
---   The invariant only holds POST-triage: `_coalesce_variable_states` emits one
--- PRE-TRIAGE row per (… data_type, data_length, value_set_id,
--- value_set_version_label, grain) group, so a same-year variable with multiple
--- grains / codings / shapes produces several rows that share (variable_id,
--- register_variant_id, valid_from) and carry value_set_version_label = '' — they
--- collide before A2.2 triage folds them (→ value_set_version_label-discriminated
--- states), splits them (→ sibling variable_ids), or collapses drift. SCB triage
--- writes its rows POST-fold/split (collision-free), and SOS emits one state per
--- distinct windowed (variable, variant, valid_from, version_label), so both feed
--- the index collision-free; a CREATE-time collision would surface a residual
--- triage/era bug loudly. value_set_version_label stays NOT NULL DEFAULT '' so the
--- index bites in the common single-version case. Byte-identity: SQLite stores
--- the CREATE text verbatim in sqlite_master.sql, so this statement is kept on a
--- single line to match the exact text the A4.3a SCB coalescer submitted (a
--- reflowed multi-line form is a real dbdiff schema diff even though the index is
--- semantically identical). Confirmed exit-0 vs the A4.3a baseline.
+-- valid_from, value_set_version_label): the coordinates `state_id` is minted from,
+-- so a collision is a resolution bug surfaced loudly. A merged state keeps its
+-- earliest segment's `valid_from` and so its ID. value_set_version_label stays
+-- NOT NULL DEFAULT '' so the index bites in the common single-version case.
 CREATE UNIQUE INDEX idx_variable_state_unique ON variable_state(variable_id, register_variant_id, valid_from, value_set_version_label) WHERE period_scope = 'intervals';
 CREATE UNIQUE INDEX idx_variable_state_independent_unique ON variable_state(variable_id, register_variant_id, value_set_version_label) WHERE period_scope = 'year_independent';
 CREATE INDEX idx_variable_state_value_set

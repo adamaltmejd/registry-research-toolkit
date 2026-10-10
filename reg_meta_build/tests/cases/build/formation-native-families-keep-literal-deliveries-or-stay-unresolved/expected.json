@@ -139,13 +139,11 @@
         ["h56", "people", "H56", "2020-01-01", "2020-12-31", 0],
         ["h56", "people", "H5_6", "2021-01-01", "2021-12-31", 0],
         ["case", "people", "v0115", "2004-01-01", "2004-12-31", 0],
-        ["case", "people", "V0115", "2005-01-01", "2005-12-31", 0],
-        ["case", "people", "V0115", "2006-01-01", "2006-12-31", 0],
+        ["case", "people", "V0115", "2005-01-01", "2006-12-31", 0],
         ["dia", "people", "Kön", "2020-01-01", "2020-12-31", 0],
         ["dia", "people", "Kon", "2021-01-01", "2021-12-31", 0],
         ["checked", "people", "X0115", "2002-01-01", "2002-12-31", 0],
-        ["checked", "people", "x0115", "2004-01-01", "2004-12-31", 0],
-        ["checked", "people", "x0115", "2005-01-01", "2005-12-31", 0],
+        ["checked", "people", "x0115", "2004-01-01", "2005-12-31", 0],
         ["gaturest", "people", "GatuRest", "1999-01-01", "1999-12-31", 0],
         ["gaturest", "people", "Gaturest", "2005-01-01", "2005-12-31", 0],
         ["gaturest", "second", "GatuRest", "2010-01-01", "2010-12-31", 0],
@@ -155,7 +153,7 @@
         ["pooled", "people", "POOLED", "2012-01-01", "2014-12-31", 1],
         ["pooled-coded", "people", "POOLED_CODED", "2020-01-01", "2022-12-31", 1]
       ],
-      "note": "Retained quantities keep each literal delivery column (seq, blk, h56 from the spelling-similarity test, case and dia keep their case and diacritic spellings rather than folding). checked: the 2002 addition keeps X0115 while the unchecked twins take the most recent spelling x0115. FDB: both spellings of gaturest keep their literals across both variants, PGaturest is its own owner. pooled and pooled-coded: one state over the pooled range, marked pooled."
+      "note": "Retained quantities keep each literal delivery column (seq, blk, h56 from the spelling-similarity test, case and dia keep their case and diacritic spellings rather than folding). checked: the 2002 addition keeps X0115 while the unchecked twins take the most recent spelling x0115. FDB: both spellings of gaturest keep their literals across both variants, PGaturest is its own owner. pooled and pooled-coded: one state over the pooled range, marked pooled. Day-adjacent years of one column with identical facts are one state (case V0115 2005-2006, checked x0115 2004-2005; #1296 2d)."
     },
     {
       "table": "states",

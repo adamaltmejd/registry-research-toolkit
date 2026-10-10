@@ -60,6 +60,15 @@ provider-documented interval and otherwise names an errata correction (with its 
 and exact source editions), a steward row, or `inferred:resolution-gap`. It stays at
 state grain so one corrected edition never relabels a neighboring window.
 
+A state is as long as its facts allow (#1296 2d). Resolution cuts a column wherever the
+set of active source editions or code lists changes, and the builder then merges a run
+of day-adjacent states on one variant and delivery column whose facts are all identical
+(value set and version label, classification links, data type and length, texts,
+provenance, pooled flag; population is a variant fact) into one state over the run. A
+gap or any differing fact keeps states apart, so windows and coverage are unchanged. The
+merged state keeps its earliest segment's `valid_from` and so its `state_id`; the IDs of
+the segments it absorbed no longer resolve.
+
 **The variant is a coordinate, not an identity level.** A variant (SCB
 `registervariant`, SOS `deldatamängd`) is a delivery coordinate. "Kön in LISA" is one
 variable however many variants deliver it; the same variable in variant A or B, or in
