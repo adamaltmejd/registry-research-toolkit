@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PickerRepresentation } from "./catalog";
-import type { ProjectData } from "./project_data";
+import type { RawDraft } from "./project_data";
 import {
   committedPickerRows,
   finalAddPeriodWires,
@@ -85,7 +85,7 @@ describe("committedPickerRows", () => {
   it("matches folded rename rows when a project pins a retired delivery column", () => {
     const r = row();
     const b = band([r]);
-    const draft: ProjectData = {
+    const draft: RawDraft = {
       schema_version: "2.0.0",
       reg_meta_version: "reg_meta/v1.0.0",
       steward: "global",
@@ -144,7 +144,7 @@ describe("committedPickerRows", () => {
       ],
     });
     const b = band([r]);
-    const draft: ProjectData = {
+    const draft: RawDraft = {
       schema_version: "2.0.0",
       reg_meta_version: "reg_meta/v1.0.0",
       steward: "global",
@@ -226,7 +226,7 @@ describe("committedPickerRows", () => {
       ],
     });
     const b = band([r]);
-    const draft: ProjectData = {
+    const draft: RawDraft = {
       schema_version: "2.0.0",
       reg_meta_version: "reg_meta/v1.0.0",
       steward: "global",
@@ -297,7 +297,7 @@ describe("committedPickerRows", () => {
       ],
     });
     const b = band([r]);
-    const draft: ProjectData = {
+    const draft: RawDraft = {
       schema_version: "2.0.0",
       reg_meta_version: "reg_meta/v1.0.0",
       steward: "global",
@@ -349,7 +349,7 @@ describe("committedPickerRows", () => {
       }),
     ];
     const b = band(rows);
-    const draft: ProjectData = {
+    const draft: RawDraft = {
       schema_version: "2.0.0",
       reg_meta_version: "reg_meta/v1.0.0",
       steward: "global",
@@ -408,7 +408,7 @@ describe("committedPickerRows", () => {
       }),
     ];
     const b = band(rows);
-    const draft: ProjectData = {
+    const draft: RawDraft = {
       schema_version: "2.0.0",
       reg_meta_version: "reg_meta/v1.0.0",
       steward: "global",

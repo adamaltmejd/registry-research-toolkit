@@ -1602,7 +1602,12 @@ while malformed `sources[]` slots normalize to `null` for rendering/validation-d
 and remain counted so `/sources/{i}` anchors line up with backend issue paths. Store
 mutators that inspect source fields use the same accessors over the raw slots, so an
 untouched malformed slot is preserved until the user deletes it or replaces the source
-array through an explicit structural edit.
+array through an explicit structural edit. The draft is typed `RawDraft`
+(`Record<string, unknown>`); the values the SPA writes into it are typed with the
+`Project*` schemas, which `reg-core`'s `openapi` feature publishes in `openapi.json` (no
+hand-written project types). The accepted model is never written back, so string panel
+members, unknown keys and invalid enums survive. One deliberate gap: an add whose column
+type did not resolve writes `type: ""` (`DraftBinding`) for the server to report.
 
 The commit primitive is `applyStagedDiff({adds, removes, periodChange})` — the
 browse-and-stage flow accumulates a user's picks/removes as a diff and commits it in

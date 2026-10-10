@@ -11,6 +11,7 @@ import type {
   operations as RustOperations,
 } from "./api-types-rust";
 import { queryFromParams, type ResolutionParams } from "./period";
+import type { RawDraft } from "./project_data";
 
 type RustSchemas = RustComponents["schemas"];
 
@@ -534,11 +535,6 @@ export function getLineage(ref: string): Promise<LineageModel> {
  * emission order. */
 export type ValidationResultModel = RustSchemas["Validation"];
 
-/** A serialized project_data.json draft posted to the project operations. This is
- * a raw diagnostic transport shape, not an extension surface: unknown keys are
- * invalid but must survive until the server reports them. */
-export type ProjectDataBody = Record<string, unknown>;
-
 /**
  * POST a draft to `/api/project/validate` and RETURN its `data`
  * (`ValidationResultModel`, `{ok, issues}`). A validation FAILURE is a 200 with
@@ -549,7 +545,7 @@ export type ProjectDataBody = Record<string, unknown>;
  * the SPA mirrors codes for presentation.
  */
 export async function validateProject(
-  draft: ProjectDataBody,
+  draft: RawDraft,
 ): Promise<ValidationResultModel> {
   return (
     await apiPostJson<{ data: ValidationResultModel }>(
@@ -563,22 +559,16 @@ export async function validateProject(
  * `fields.findings` — the stable `code`, the message, and the `source` /
  * `variable` / `period` coordinates that say WHERE (null when the finding is
  * not located there). The error catalog types `fields` as an open object, so
- * the shape is declared here, pinned by `conformance/cases/api/order-errors`
- * and narrowed at the boundary by `orderFindingsFromError`. */
-export interface OrderFinding {
-  code: string;
-  message: string;
-  source?: string | null;
-  variable?: string | null;
-  period?: string | null;
-}
+ * the server publishes this schema on its own; narrowed at the boundary by
+ * `orderFindingsFromError`. */
+export type OrderBlocking = RustSchemas["OrderBlocking"];
 
 /** POST a draft to `/api/project/order/manifest` and download the order
  * manifest: the exact `order.json` bytes, the same document `order` answers.
  * Anything that is NOT an order is an `ApiError`: `order_blocked` carrying its
  * findings, or `project_invalid` for a document `validate` rejects structurally
  * — never a partial download. */
-export function downloadOrderManifest(draft: ProjectDataBody): Promise<void> {
+export function downloadOrderManifest(draft: RawDraft): Promise<void> {
   return apiPostForBlob("/project/order/manifest", draft, "order.json");
 }
 
@@ -589,7 +579,7 @@ export function downloadOrderManifest(draft: ProjectDataBody): Promise<void> {
  * the HTTP boundary, so it trusts only the shape it verifies — a malformed entry
  * drops rather than reaching the renderer with `undefined` fields.
  */
-export function orderFindingsFromError(e: unknown): OrderFinding[] {
+export function orderFindingsFromError(e: unknown): OrderBlocking[] {
   if (!(e instanceof ApiError)) {
     return [];
   }
@@ -605,11 +595,11 @@ export function orderFindingsFromError(e: unknown): OrderFinding[] {
     return [];
   }
   return findings.filter(
-    (f): f is OrderFinding =>
+    (f): f is OrderBlocking =>
       f != null &&
       typeof f === "object" &&
-      typeof (f as OrderFinding).code === "string" &&
-      typeof (f as OrderFinding).message === "string",
+      typeof (f as OrderBlocking).code === "string" &&
+      typeof (f as OrderBlocking).message === "string",
   );
 }
 

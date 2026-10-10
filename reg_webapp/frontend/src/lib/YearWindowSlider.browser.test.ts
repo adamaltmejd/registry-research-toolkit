@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-svelte";
-import type { StudyWindow } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 import YearWindowSlider from "./YearWindowSlider.svelte";
 
 // The header dual-thumb year slider (#611 → Period model). Self-contained: bounds
@@ -72,7 +72,7 @@ describe("YearWindowSlider", () => {
   });
 
   it("moving the From thumb commits the new window", async () => {
-    const onchange = vi.fn<(next: StudyWindow) => void>();
+    const onchange = vi.fn<(next: ProjectStudyWindow) => void>();
     const screen = await render(YearWindowSlider, {
       min: 1960,
       max: 2026,
@@ -87,7 +87,7 @@ describe("YearWindowSlider", () => {
   // ── #629 item 2: live display on input, commit only on change ───────────────
 
   it("updates the live readout on every input tick but does NOT commit until release", async () => {
-    const onchange = vi.fn<(next: StudyWindow) => void>();
+    const onchange = vi.fn<(next: ProjectStudyWindow) => void>();
     const screen = await render(YearWindowSlider, {
       min: 1960,
       max: 2026,

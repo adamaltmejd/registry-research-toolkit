@@ -5,8 +5,9 @@ import type { ComponentProps } from "svelte";
 import { vi } from "vitest";
 import { render } from "vitest-browser-svelte";
 import { getShow, getStates, type ShowNode } from "./api";
-import type { Period, Source } from "./project_data";
+import type { ProjectSource, ProjectSourcePeriod } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import SourceEditor from "./SourceEditor.svelte";
 
 /** The catalog root as a deployment serving `providers` (the shell's facet list,
@@ -100,7 +101,7 @@ export function stubCatalog(
  * multi-provider deployment, a standing validation error — says so and nothing
  * else. */
 export function renderCard(
-  source: Source,
+  source: ProjectSource,
   overrides: Partial<ComponentProps<typeof SourceEditor>> = {},
 ) {
   return render(SourceEditor, {
@@ -116,7 +117,7 @@ export function renderCard(
 /** A one-column LISA Arbetsställen source IN THE DRAFT — the store's staleness
  * guard re-reads the draft, so a card edited against a detached object would be
  * refused every time. Returns the slot to render. */
-export function seedSource(period: Period): Source {
+export function seedSource(period: ProjectSourcePeriod): ProjectSource {
   projectStore.applyStagedDiff({
     adds: [
       {
@@ -126,5 +127,5 @@ export function seedSource(period: Period): Source {
       },
     ],
   });
-  return projectStore.draft?.sources?.[0] as Source;
+  return storedProject()?.sources?.[0] as ProjectSource;
 }

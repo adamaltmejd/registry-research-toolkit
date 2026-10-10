@@ -15,6 +15,7 @@ import {
   vnode,
 } from "./concept-group-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -126,7 +127,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .click();
 
     await expect.element(page.getByText(/\+2 columns/)).toBeVisible();
-    expect(projectStore.draft?.sources).toEqual(
+    expect(storedProject()?.sources).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           register_variant: "scb/rams/individer",
@@ -171,7 +172,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
         ),
       )
       .toBeVisible();
-    expect(projectStore.draft?.sources).toHaveLength(0);
+    expect(storedProject()?.sources).toHaveLength(0);
     await expect.element(page.getByText(/^Applied/)).not.toBeInTheDocument();
 
     // Recoverable the same two ways as the leaf's: resolving the group retires the
@@ -204,7 +205,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources[0]).toEqual(
+    expect(storedProject()?.sources[0]).toEqual(
       expect.objectContaining({
         period: { from: 2012, to: 2014 },
         bindings: [
@@ -251,7 +252,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources[0]).toEqual(
+    expect(storedProject()?.sources[0]).toEqual(
       expect.objectContaining({
         period: { from: 2000, to: 2010 },
       }),
@@ -295,7 +296,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .click();
     await expect.element(page.getByText(/\+2 columns/)).toBeVisible();
     const variables =
-      projectStore.draft?.sources.flatMap((s) =>
+      storedProject()?.sources.flatMap((s) =>
         s.bindings.map((b) => b.variable),
       ) ?? [];
     expect(variables).toEqual(["scb/rams/inkjan", "scb/rams/inkjan"]);
@@ -371,7 +372,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources[0]).toEqual(
+    expect(storedProject()?.sources[0]).toEqual(
       expect.objectContaining({
         register_variant: "scb/rams/individer",
         // Exact binding object: a pick writes the resolved type + the pinned
@@ -429,7 +430,7 @@ describe("ConceptGroupView (#617 + #678 compact column list)", () => {
       .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources[0]?.bindings[0]).toEqual({
+    expect(storedProject()?.sources[0]?.bindings[0]).toEqual({
       variable: "scb/rams/solo",
       type: "numeric",
       representation: null,

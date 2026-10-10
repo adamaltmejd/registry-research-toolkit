@@ -7,8 +7,9 @@ import BindingEditor from "./BindingEditor.svelte";
 import { bindingFieldsFromResolution } from "./catalog";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import { state } from "./catalog-test-helpers";
-import type { Binding } from "./project_data";
+import type { DraftBinding, ProjectBinding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 
 // #991/#993: BindingEditor is the READ-ONLY cart column row — it DISPLAYS the
 // delivery column ordered (and the variable it came from) and offers delete only.
@@ -47,7 +48,7 @@ function columnState(
 
 /** The row under test, always at the source's (`v1`, 2020) — the coordinate the
  * owning card passes down. */
-function renderRow(binding: Binding, period: string | null = "2020") {
+function renderRow(binding: DraftBinding, period: string | null = "2020") {
   return render(BindingEditor, {
     sourceIndex: 0,
     bindingIndex: 0,
@@ -92,7 +93,8 @@ beforeEach(() => {
 
 describe("BindingEditor read-only cart row", () => {
   it("leads with the pinned delivery column and links the FQID to the catalog", async () => {
-    const binding = projectStore.draft?.sources?.[0].bindings?.[0] as Binding;
+    const binding = storedProject()?.sources?.[0]
+      .bindings?.[0] as ProjectBinding;
     await renderRow(binding);
 
     // The pinned representation IS the delivery column name — it leads the row…
@@ -122,7 +124,7 @@ describe("BindingEditor read-only cart row", () => {
       type: "categorical",
       display_name: "Sex",
       representation: "Kon",
-    } as unknown as Binding;
+    } as unknown as ProjectBinding;
     await renderRow(binding);
 
     await expect.element(page.getByText("Sex", { exact: true })).toBeVisible();
@@ -189,7 +191,7 @@ describe("BindingEditor read-only cart row", () => {
   });
 
   it("shows the '(no variable)' fallback, unlinked, for a binding without a variable", async () => {
-    const binding = { type: "opaque" } as unknown as Binding;
+    const binding = { type: "opaque" } as unknown as ProjectBinding;
     await renderRow(binding);
 
     await expect.element(page.getByText("(no variable)")).toBeVisible();
@@ -213,7 +215,8 @@ describe("BindingEditor read-only cart row", () => {
         },
       ],
     });
-    const binding = projectStore.draft?.sources?.[0].bindings?.[0] as Binding;
+    const binding = storedProject()?.sources?.[0]
+      .bindings?.[0] as ProjectBinding;
     await renderRow(binding);
 
     await page.getByRole("button", { name: "Remove column" }).click();
@@ -221,7 +224,7 @@ describe("BindingEditor read-only cart row", () => {
     expect(page.getByRole("alertdialog").query()).toBeNull();
     // The store dropped binding 0 (kon); adeldag survives.
     expect(
-      projectStore.draft?.sources?.[0].bindings?.map((b) => b.variable),
+      storedProject()?.sources?.[0].bindings?.map((b) => b.variable),
     ).toEqual(["scb/lisa/adeldag"]);
   });
 });

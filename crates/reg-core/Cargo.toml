@@ -12,6 +12,12 @@ sha2 = "0.11.0"
 # `unicode_version` test pins them together.
 unicode-normalization = "0.1.25"
 unicode-properties = { version = "0.1.4", default-features = false, features = ["general-category"] }
+utoipa = { version = "6.0.0", optional = true }
+
+[features]
+# The project types' OpenAPI schemas, which `reg-catalog` publishes so the SPA's
+# types are generated from them.
+openapi = ["dep:utoipa"]
 
 [lints]
 workspace = true

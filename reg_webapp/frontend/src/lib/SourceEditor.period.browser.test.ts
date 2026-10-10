@@ -3,8 +3,9 @@ import { page } from "vitest/browser";
 import { getShow, getStates } from "./api";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import { state } from "./catalog-test-helpers";
-import type { Source } from "./project_data";
+import type { ProjectSource } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import {
   renderCard,
   seedSource,
@@ -67,12 +68,12 @@ describe("SourceEditor source period (Y-81)", () => {
       .toBeVisible();
     // The span moved; the column list and the source itself did not — a period-only
     // diff, never unioned with anything staged.
-    expect(projectStore.draft?.sources?.[0]?.period).toEqual({
+    expect(storedProject()?.sources?.[0]?.period).toEqual({
       from: 1990,
       to: 2020,
     });
-    expect(projectStore.draft?.sources?.[0]?.bindings).toHaveLength(1);
-    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(storedProject()?.sources?.[0]?.bindings).toHaveLength(1);
+    expect(storedProject()?.sources).toHaveLength(1);
   });
 
   it("refuses years that name no range, saying which field is at fault", async () => {
@@ -87,7 +88,7 @@ describe("SourceEditor source period (Y-81)", () => {
       .toBeVisible();
     // The refusal wrote nothing, and the years stay as typed so the researcher can
     // see what was refused.
-    expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
+    expect(storedProject()?.sources?.[0]?.period).toBe(2020);
     await expect
       .element(page.getByRole("textbox", { name: "From" }))
       .toHaveValue("2030");
@@ -101,7 +102,7 @@ describe("SourceEditor source period (Y-81)", () => {
       register_variant: "scb/lisa/arbetsstallen",
       period: { from: 2005, to: 2020 },
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(source, { studyWindow: { from: 2005, to: 2020 } });
 
     await expect
@@ -120,7 +121,7 @@ describe("SourceEditor source period (Y-81)", () => {
       register_variant: "scb/lisa/arbetsstallen",
       period: { from: 2020, to: 2020 },
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(source, { studyWindow: { from: 2020, to: 2020 } });
 
     await expect
@@ -151,8 +152,8 @@ describe("SourceEditor source period (Y-81)", () => {
       .element(page.getByRole("alert"))
       .toMatchTextContent(/This source changed while you were editing/);
     // The competing write stands; the refused edit wrote nothing over it.
-    expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
-    expect(projectStore.draft?.sources?.[0]?.bindings).toHaveLength(2);
+    expect(storedProject()?.sources?.[0]?.period).toBe(2020);
+    expect(storedProject()?.sources?.[0]?.bindings).toHaveLength(2);
   });
 
   // The draft lifecycle is APPLICATION-owned and its restore is ASYNCHRONOUS, so
@@ -181,7 +182,7 @@ describe("SourceEditor source period (Y-81)", () => {
         .toBeVisible();
       await expect.element(from).toHaveAttribute("readonly");
       await expect.element(apply).toHaveAttribute("aria-disabled", "true");
-      expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
+      expect(storedProject()?.sources?.[0]?.period).toBe(2020);
       expect(page.getByText(/Period set to/).query()).toBeNull();
 
       // …and once the gate opens it lands, checked against the settled draft, with
@@ -190,7 +191,7 @@ describe("SourceEditor source period (Y-81)", () => {
       await expect
         .element(page.getByText("Period set to 1990–2020."))
         .toBeVisible();
-      expect(projectStore.draft?.sources?.[0]?.period).toEqual({
+      expect(storedProject()?.sources?.[0]?.period).toEqual({
         from: 1990,
         to: 2020,
       });
@@ -231,7 +232,7 @@ describe("SourceEditor source period (Y-81)", () => {
       await expect
         .element(page.getByText("Period set to 1990–2020."))
         .toBeVisible();
-      expect(projectStore.draft?.sources?.[0]?.period).toEqual({
+      expect(storedProject()?.sources?.[0]?.period).toEqual({
         from: 1990,
         to: 2020,
       });
@@ -271,13 +272,13 @@ describe("SourceEditor source period (Y-81)", () => {
       register_variant: "scb/lisa/v1",
       period: 2020,
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     const lisaLonfink = {
       name: "lisa-lonfink",
       register_variant: "scb/lisa/v1",
       period: 2018,
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(lisaCore, { sourceIndex: 0 });
     await renderCard(lisaLonfink, { sourceIndex: 1 });
 
@@ -332,7 +333,7 @@ describe("SourceEditor source period (Y-81)", () => {
       release();
 
       await new Promise((r) => setTimeout(r, 100));
-      expect(projectStore.draft?.sources?.[0]?.period).toBe(2020);
+      expect(storedProject()?.sources?.[0]?.period).toBe(2020);
     } finally {
       restoring.mockRestore();
     }
@@ -347,7 +348,7 @@ describe("SourceEditor source period (Y-81)", () => {
       register_variant: "scb/lisa/arbetsstallen",
       period: "HT2018",
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(source);
 
     await expect.element(page.getByText("HT2018")).toBeVisible();
@@ -368,7 +369,7 @@ describe("SourceEditor source period (Y-81)", () => {
       register_variant: "scb/lisa/arbetsstallen",
       period: { from: 1990, to: 2020 },
       bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-    } as Source;
+    } as ProjectSource;
     // Only the resolve at the card's own variant and period, in wire form, names
     // the column; any other coordinate resolves to nothing, so the row would keep
     // its bare FQID.
@@ -417,7 +418,7 @@ describe("SourceEditor source period list segments (Y-101)", () => {
     await expect
       .element(page.getByText("Period set to 2015–2017, 2019–2022."))
       .toBeVisible();
-    expect(projectStore.draft?.sources?.[0]?.period).toEqual([
+    expect(storedProject()?.sources?.[0]?.period).toEqual([
       { from: 2015, to: 2017 },
       { from: 2019, to: 2022 },
     ]);
@@ -441,7 +442,7 @@ describe("SourceEditor source period list segments (Y-101)", () => {
     await page.getByRole("button", { name: /Apply period/ }).click();
 
     await expect.element(page.getByText(/Period set to/)).toBeVisible();
-    expect(projectStore.draft?.sources?.[0]?.period).toEqual([
+    expect(storedProject()?.sources?.[0]?.period).toEqual([
       2020,
       { from: 2022, to: 2023 },
     ]);
@@ -467,7 +468,7 @@ describe("SourceEditor source period list segments (Y-101)", () => {
       .toHaveValue("2019");
     await page.getByRole("button", { name: /Apply period/ }).click();
 
-    expect(projectStore.draft?.sources?.[0]?.period).toEqual({
+    expect(storedProject()?.sources?.[0]?.period).toEqual({
       from: 2019,
       to: 2020,
     });
@@ -487,7 +488,7 @@ describe("SourceEditor source period list segments (Y-101)", () => {
       .element(page.getByText(/2015–2018 and 2017–2020 overlap/))
       .toBeVisible();
     // Refused: the stored list is untouched.
-    expect(projectStore.draft?.sources?.[0]?.period).toEqual([
+    expect(storedProject()?.sources?.[0]?.period).toEqual([
       { from: 2015, to: 2018 },
       { from: 2019, to: 2020 },
     ]);
@@ -505,7 +506,7 @@ describe("SourceEditor source period list segments (Y-101)", () => {
           { from: 2018, to: 2020 },
         ],
         bindings: [],
-      } as unknown as Source,
+      } as unknown as ProjectSource,
       { studyWindow: { from: 2015, to: 2020 } },
     );
     expect(page.getByText(/Differs from study window/).query()).toBeNull();
@@ -521,7 +522,7 @@ describe("SourceEditor source period list segments (Y-101)", () => {
         { from: 2019, to: 2020 },
       ],
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     const holed = await renderCard(spanning, {
       studyWindow: { from: 2015, to: 2020 },
     });

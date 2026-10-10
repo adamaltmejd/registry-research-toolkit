@@ -4,8 +4,8 @@ import { describe, expect, it } from "vitest";
 import regCoreProject from "../../../../crates/reg-core/src/project.rs?raw";
 import {
   newProjectData,
+  type ProjectSource,
   regMetaReleaseTag,
-  type Source,
   uniqueSourceName,
 } from "./project_data";
 
@@ -13,7 +13,7 @@ const SEED = { reg_meta_version: "reg_meta/v1.0.0", steward: "global" };
 
 /** A well-formed source fixture (the pure edits no longer include an `addSource`
  * skeleton constructor — the store's catalog-add path builds sources now). */
-function source(over: Partial<Source> = {}): Source {
+function source(over: Partial<ProjectSource> = {}): ProjectSource {
   return { name: "", register_variant: "", period: "", bindings: [], ...over };
 }
 
@@ -44,7 +44,7 @@ describe("regMetaReleaseTag", () => {
 });
 
 describe("source-name prefill helpers (#312)", () => {
-  const src = (name: string): Source => source({ name });
+  const src = (name: string): ProjectSource => source({ name });
 
   it("uniqueSourceName suffixes _2, _3 … on collision (case-sensitive)", () => {
     expect(uniqueSourceName([src("RTB")], "LISA", 1)).toBe("LISA");

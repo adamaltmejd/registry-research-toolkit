@@ -2,8 +2,9 @@
 //! manifest download.
 
 use super::order::{self, Manifest};
-use super::validate::{Validation, validate};
+use super::validate::validate;
 use super::{Cache, Download, Operation, Param, Type, component};
+use reg_core::ValidationResult;
 
 pub const OPERATIONS: &[Operation] = &[
     Operation {
@@ -22,7 +23,7 @@ pub const OPERATIONS: &[Operation] = &[
         // method if a cached POST ever appears.
         cache: Cache::Revalidate,
         run: validate,
-        result: component::<Validation>,
+        result: component::<ValidationResult>,
     },
     Operation {
         name: "order",

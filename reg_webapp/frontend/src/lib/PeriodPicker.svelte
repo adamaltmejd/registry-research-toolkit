@@ -12,7 +12,7 @@ import {
   yearWindowRepresentable,
   yearWindowToWire,
 } from "./period";
-import type { StudyWindow } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 import { Button } from "./ui";
 
 // WINDOW-ANCHORED period selection (#615): a year-grain availability slider
@@ -45,7 +45,7 @@ let {
   /** The active `?period` from the URL (null = full history). */
   period: string | null;
   /** The global project window (#614), or null = none set. */
-  window?: StudyWindow | null;
+  window?: ProjectStudyWindow | null;
   /** The subject's data-availability span, or null = unknown. */
   coverage?: Coverage | null;
   /** The outer floor for the year slider; steward deployments may narrow it. */
@@ -104,17 +104,17 @@ const boundedCoverage = $derived.by<Coverage | null>(() => {
   return bounded;
 });
 
-const periodWindow = $derived<StudyWindow | null>(
+const periodWindow = $derived<ProjectStudyWindow | null>(
   yearWindowFromWire(boundedPeriod),
 );
 
-const boundedWindow = $derived<StudyWindow | null>(
+const boundedWindow = $derived<ProjectStudyWindow | null>(
   window === null || !enforcePeriodBounds
     ? window
     : clampYearWindow(window, windowMinYear, ceilingYear),
 );
 
-const boundedPeriodWindow = $derived<StudyWindow | null>(
+const boundedPeriodWindow = $derived<ProjectStudyWindow | null>(
   periodWindow === null || !enforcePeriodBounds
     ? periodWindow
     : clampYearWindow(periodWindow, windowMinYear, ceilingYear),
@@ -122,7 +122,7 @@ const boundedPeriodWindow = $derived<StudyWindow | null>(
 
 /** The year window the slider treats as the active selection: a
  * year-representable `?period` wins; else the project window; else null. */
-const activeYearSelection = $derived<StudyWindow | null>(
+const activeYearSelection = $derived<ProjectStudyWindow | null>(
   boundedPeriodWindow ?? boundedWindow,
 );
 
@@ -154,7 +154,7 @@ const sliderBounds = $derived.by(() => {
 
 /** Thumb seed precedence (#671): explicit year `?period` > window∩coverage >
  * coverage > window > full bounds. */
-const seededSelection = $derived<StudyWindow>(
+const seededSelection = $derived<ProjectStudyWindow>(
   boundedPeriodWindow ??
     intersectCoverageWindow(
       boundedCoverage,
@@ -180,7 +180,7 @@ const coverageBand = $derived(
  * exact fields' refusal, and the re-arm below — is what preserves the coverage /
  * steward-bound / vintage constraints. The fields are a second way to author the
  * same selection, not a way around it. */
-const selectableYears = $derived<StudyWindow>(
+const selectableYears = $derived<ProjectStudyWindow>(
   coverageBand ?? { from: sliderBounds.min, to: sliderBounds.max },
 );
 
@@ -189,12 +189,12 @@ const selectableYears = $derived<StudyWindow>(
 // submits the seeded default). Re-armed by the effect below; read for the wire
 // only through `sliderSelection`, so Apply can never send a value the user was
 // not shown.
-let pending = $state<StudyWindow | null>(null);
+let pending = $state<ProjectStudyWindow | null>(null);
 
 /** The clamped selection shown to the user — the readout, the thumbs and the
  * fields all follow it, and Apply submits it: the pending value while one is
  * live, else the seeded default. */
-const sliderSelection = $derived<StudyWindow>(
+const sliderSelection = $derived<ProjectStudyWindow>(
   clampYearWindow(
     pending ?? seededSelection,
     sliderBounds.min,
@@ -222,10 +222,10 @@ const userChosen = $derived(periodWindow !== null || pending !== null);
  * renders from it. */
 let armedSeed: {
   period: string | null;
-  active: StudyWindow | null;
+  active: ProjectStudyWindow | null;
   ceiling: number;
-  seed: StudyWindow;
-  selectable: StudyWindow;
+  seed: ProjectStudyWindow;
+  selectable: ProjectStudyWindow;
 } | null = null;
 
 $effect(() => {

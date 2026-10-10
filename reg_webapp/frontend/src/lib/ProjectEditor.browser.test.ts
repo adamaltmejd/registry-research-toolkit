@@ -4,8 +4,9 @@ import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import ProjectEditor from "./ProjectEditor.svelte";
 import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelte";
-import type { ProjectData } from "./project_data";
+import type { RawDraft } from "./project_data";
 import { projectStore, setPersistence } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 
 vi.mock("./api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./api")>()),
@@ -60,7 +61,7 @@ const NULL_SLOT = JSON.stringify({
 function openFile(json: string): void {
   const parsed = projectStore.parseProjectText(json);
   expect(parsed).not.toBeNull();
-  projectStore.loadProject(parsed as ProjectData);
+  projectStore.loadProject(parsed as RawDraft);
 }
 
 /** The cart under test. Every case renders it with the same deployment props —
@@ -183,7 +184,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
 
     // The malformed value is preserved verbatim on the draft (serialize/validate
     // still see it — the SPA is not the structural validator).
-    expect(projectStore.draft?.sources as unknown).toBe("not-an-array");
+    expect(storedProject()?.sources as unknown).toBe("not-an-array");
   });
 
   it("renders a null source slot as a degraded card without crashing, keeping the valid source and the slot count", async () => {
@@ -214,7 +215,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
 
     // The null slot is preserved verbatim on the draft (serialize/validate still
     // see it — the SPA is not the structural validator, and the load is verbatim).
-    expect((projectStore.draft?.sources as unknown[])?.[0]).toBeNull();
+    expect((storedProject()?.sources as unknown[])?.[0]).toBeNull();
   });
 });
 
@@ -242,9 +243,10 @@ describe("ProjectEditor stable keys (middle-remove keeps the right survivors)", 
       .click();
 
     // The store dropped the middle source; the two survivors keep their coordinates.
-    expect(projectStore.draft?.sources?.map((s) => s.register_variant)).toEqual(
-      ["scb/lisa/v1", "scb/uht/v1"],
-    );
+    expect(storedProject()?.sources?.map((s) => s.register_variant)).toEqual([
+      "scb/lisa/v1",
+      "scb/uht/v1",
+    ]);
     await expect
       .element(page.getByText("scb/lisa/v1", { exact: true }))
       .toBeVisible();
@@ -441,7 +443,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
       .click();
 
     expect(projectStore.draft?.name).toBe("");
-    expect(projectStore.draft?.sources).toEqual([]);
+    expect(storedProject()?.sources).toEqual([]);
     await expect
       .element(page.getByRole("heading", { name: /Untitled project/ }))
       .toBeVisible();
@@ -620,9 +622,9 @@ describe("ProjectEditor — what a reload recovers after a replacement decision"
     // The autosaved draft IS the reload's recovery copy, so the two decisions are
     // only really answered here. Note the draft is autosaved and still DIRTY: the
     // recovery copy is not the durable download, and the policy covers it.
-    const saved: ProjectData[] = [];
+    const saved: RawDraft[] = [];
     setPersistence({
-      save: (_key: string, autosaved: ProjectData) => {
+      save: (_key: string, autosaved: RawDraft) => {
         saved.push(autosaved);
         return Promise.resolve();
       },

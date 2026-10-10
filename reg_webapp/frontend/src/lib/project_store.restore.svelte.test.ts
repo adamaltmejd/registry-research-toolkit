@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { newProjectData, type ProjectData } from "./project_data";
+import { newProjectData, type RawDraft } from "./project_data";
 import {
   initDraftLifecycle,
   projectStore,
@@ -19,7 +19,7 @@ const SEED = {
 
 /** A draft as it would come back off IndexedDB, named so the assertions can tell
  * it apart from a freshly created one. */
-function savedDraft(name: string): ProjectData {
+function savedDraft(name: string): RawDraft {
   const draft = newProjectData(SEED);
   draft.name = name;
   return draft;
@@ -77,7 +77,7 @@ describe("draft restore + the authoring gate", () => {
     // A restore that settles only on `release` — the in-flight read a cold entry
     // races against.
     const { promise: loaded, resolve: release } =
-      Promise.withResolvers<ProjectData | null>();
+      Promise.withResolvers<RawDraft | null>();
     setPersistence({ save: () => Promise.resolve(), load: () => loaded });
     const stop = $effect.root(() => {
       initDraftLifecycle();
@@ -100,7 +100,7 @@ describe("draft restore + the authoring gate", () => {
     // The IndexedDB impl degrades to `null` itself, but the gate is now awaited
     // before every catalog Add: a load that REJECTS must still settle, or the
     // researcher's next pick never commits.
-    const saves: ProjectData[] = [];
+    const saves: RawDraft[] = [];
     setPersistence({
       save: (_key, draft) => {
         saves.push(draft);

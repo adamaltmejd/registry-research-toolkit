@@ -22,7 +22,7 @@
  * is pristine).
  */
 
-import type { StudyWindow } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 
 /** The localStorage key for the no-draft fallback window. Namespaced so it
@@ -33,7 +33,7 @@ const STORAGE_KEY = "reg_webapp:project_window";
  * absent / malformed / not two finite integers with `to >= from`. Never throws:
  * a corrupt value (hand-edited storage, an older shape) reads as "no window"
  * rather than white-screening a module-init read. */
-function parseStored(raw: string | null): StudyWindow | null {
+function parseStored(raw: string | null): ProjectStudyWindow | null {
   if (raw === null) {
     return null;
   }
@@ -59,7 +59,7 @@ function parseStored(raw: string | null): StudyWindow | null {
 
 /** Read the no-draft fallback window off `localStorage` (null on any failure —
  * a privacy-mode `localStorage` getter can throw). */
-function readStored(): StudyWindow | null {
+function readStored(): ProjectStudyWindow | null {
   try {
     return parseStored(localStorage.getItem(STORAGE_KEY));
   } catch {
@@ -72,15 +72,15 @@ class WindowStore {
    * getter even while no draft is active. Seeded once from storage at module
    * init; thereafter this rune IS the live fallback value (we write storage AND
    * this together). */
-  #fallback = $state<StudyWindow | null>(readStored());
+  #fallback = $state<ProjectStudyWindow | null>(readStored());
 
   /** The active window: the draft's `window` when a draft exists (its absence
    * reads as `null`), else the localStorage fallback. A `$derived` so consumers
    * that read `windowStore.value` re-run when EITHER the draft changes
    * (projectStore.draft is reactive) or the fallback is written. */
-  readonly value = $derived<StudyWindow | null>(
+  readonly value = $derived<ProjectStudyWindow | null>(
     projectStore.draft != null
-      ? (projectStore.draft.window ?? null)
+      ? ((projectStore.draft.window as ProjectStudyWindow | undefined) ?? null)
       : this.#fallback,
   );
 
@@ -89,18 +89,18 @@ class WindowStore {
    * draft-creation path (#629 item 3) reads the fallback HERE to seed a fresh
    * draft's `window` — keeping `localStorage` reachable only through this store
    * (never reached into directly from project_store). */
-  get fallback(): StudyWindow | null {
+  get fallback(): ProjectStudyWindow | null {
     return this.#fallback;
   }
 
   /** Set (or clear, with `null`) the active window through the single write
    * path. With a draft active it mutates `draft.window` (→ dirty → autosave);
    * with no draft it writes the localStorage fallback. */
-  set(next: StudyWindow | null): void {
+  set(next: ProjectStudyWindow | null): void {
     if (projectStore.draft != null) {
       // Mutate the draft. `updateField("window", undefined)` omits the key
       // (additive — an unset window serializes as absent), matching the optional
-      // `StudyWindow` shape; a value writes it. Reuses the store's dirty +
+      // `ProjectStudyWindow` shape; a value writes it. Reuses the store's dirty +
       // debounced-autosave path — no separate persistence here.
       projectStore.updateField("window", next ?? undefined);
       return;

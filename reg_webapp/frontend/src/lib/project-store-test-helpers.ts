@@ -1,5 +1,6 @@
-// Shared fixtures for the project_store unit tests (project_store.svelte.test.ts,
-// project_store.staged.svelte.test.ts): the seed, a resolved staged add, and Open.
+// Shared fixtures for the project_store tests: the seed, a resolved staged add,
+// Open, and the draft read for assertions. Pure: import from any test.
+import type { ProjectData } from "./project_data";
 import { projectStore, type StagedAdd } from "./project_store.svelte";
 
 export const SEED = {
@@ -32,4 +33,11 @@ export function openFile(json: string): void {
   if (parsed != null) {
     projectStore.loadProject(parsed);
   }
+}
+
+/** The draft read as the canonical document, for asserting what a write produced.
+ * A test-only cast: the draft itself is raw (`RawDraft`), and a test that loads a
+ * malformed file reads the malformed value through it unchanged. */
+export function storedProject(): ProjectData | null {
+  return projectStore.draft as ProjectData | null;
 }

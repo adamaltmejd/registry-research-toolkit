@@ -22,7 +22,7 @@
 
 import { untrack } from "svelte";
 import DualThumbTrack from "./DualThumbTrack.svelte";
-import type { StudyWindow } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 
 interface Props {
   // The slider bounds (inclusive). `min` is a fixed floor (a sensible earliest
@@ -30,11 +30,11 @@ interface Props {
   min: number;
   max: number;
   // The active window, or null = no window set (full history).
-  window: StudyWindow | null;
+  window: ProjectStudyWindow | null;
   // Commit a new window (clamped to [min, max], from <= to). Fired on RELEASE
   // (native `change`), not per live `input` tick. Never emits null — clearing
   // back to full history goes through `onclear`.
-  onchange: (next: StudyWindow) => void;
+  onchange: (next: ProjectStudyWindow) => void;
   // Reset the window to full history (the header maps this to `set(null)` so
   // `isFullHistory` becomes reachable again after any interaction — #629 item 1).
   onclear: () => void;

@@ -29,10 +29,10 @@ import {
   yearWindowLabel,
 } from "./period";
 import {
-  type Period,
-  type PeriodSegment,
+  type ProjectPeriodSegment,
+  type ProjectSourcePeriod,
+  type ProjectStudyWindow,
   type SafeSource,
-  type StudyWindow,
   safeSourceBindings,
   safeSourceName,
   safeSourcePeriod,
@@ -320,7 +320,9 @@ export interface WindowCoverageHint {
   catalogLabel?: string;
 }
 
-function comparablePeriodSegment(segment: unknown): PeriodSegment | null {
+function comparablePeriodSegment(
+  segment: unknown,
+): ProjectPeriodSegment | null {
   if (typeof segment === "number" || typeof segment === "string") {
     return segment;
   }
@@ -341,9 +343,9 @@ function comparablePeriodSegment(segment: unknown): PeriodSegment | null {
   return null;
 }
 
-function comparablePeriod(period: unknown): Period | null {
+function comparablePeriod(period: unknown): ProjectSourcePeriod | null {
   if (Array.isArray(period)) {
-    const segments: PeriodSegment[] = [];
+    const segments: ProjectPeriodSegment[] = [];
     for (const segment of period) {
       const comparable = comparablePeriodSegment(segment);
       if (comparable == null) {
@@ -358,8 +360,8 @@ function comparablePeriod(period: unknown): Period | null {
 
 function windowCoverageMessage(
   label: string,
-  gaps: readonly StudyWindow[],
-  window: StudyWindow,
+  gaps: readonly ProjectStudyWindow[],
+  window: ProjectStudyWindow,
 ): string | null {
   if (gaps.length === 0) {
     return null;
@@ -368,18 +370,18 @@ function windowCoverageMessage(
   return `${label} does not cover ${missing} within your study window ${window.from}..${window.to}.`;
 }
 
-function formatYearRange(window: StudyWindow): string {
+function formatYearRange(window: ProjectStudyWindow): string {
   return window.from === window.to
     ? String(window.from)
     : `${window.from}..${window.to}`;
 }
 
 function uncoveredStudyWindowIntervals(
-  intervals: readonly StudyWindow[],
-  window: StudyWindow,
-): StudyWindow[] {
+  intervals: readonly ProjectStudyWindow[],
+  window: ProjectStudyWindow,
+): ProjectStudyWindow[] {
   let cursor = window.from;
-  const gaps: StudyWindow[] = [];
+  const gaps: ProjectStudyWindow[] = [];
   for (const interval of intervals) {
     if (interval.to < cursor) {
       continue;
@@ -406,7 +408,7 @@ function uncoveredStudyWindowIntervals(
  * gently points the user back to the register page to stage an extension. Token
  * periods are skipped because mixed-grain coverage is not safely comparable. */
 export function windowCoverageHints(
-  window: StudyWindow | null,
+  window: ProjectStudyWindow | null,
   sources: readonly SafeSource[],
 ): WindowCoverageHint[] {
   if (window === null) {
@@ -467,7 +469,7 @@ export interface WindowDisjointFinding {
  * enforced. Located through `findingLocation`, so the panel renders it with the
  * same locate + catalog links a validation issue gets. */
 export function windowDisjointFindings(
-  window: StudyWindow | null,
+  window: ProjectStudyWindow | null,
   sources: readonly SafeSource[],
 ): WindowDisjointFinding[] {
   if (window === null) {
@@ -479,7 +481,7 @@ export function windowDisjointFindings(
     if (periodWindowRelation(period, window) !== "disjoint") {
       continue;
     }
-    const years = periodLabel(period as Period) ?? "";
+    const years = periodLabel(period as ProjectSourcePeriod) ?? "";
     findings.push({
       message: `Its period ${years} has no years inside the study window ${yearWindowLabel(window)}. Change the period to overlap the window, or remove the source.`,
       location: findingLocation(jsonPointer(["sources", index]), sources),
