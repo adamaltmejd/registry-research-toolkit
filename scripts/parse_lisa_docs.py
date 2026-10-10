@@ -60,7 +60,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 REPO = Path(__file__).resolve().parent.parent
-OUT_DIR = REPO / "reg_meta" / "docs" / "lisa"
+OUT_DIR = REPO / "reg_meta_build" / "docs" / "lisa"
 
 # Footer pattern from pymupdf4llm output
 FOOTER_RE = re.compile(
@@ -1260,7 +1260,7 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
     # A2.7: `variable_alias` is variable_id-keyed now (was cvid-keyed), and
     # `variable_instance` / `register_version` are dropped before ship. Join
     # straight to `variable` then `register` — the register-level join is
-    # enough for "all LISA columns". Mirrors reg_meta.queries.get_datacolumns.
+    # enough for "all LISA columns".
     cur = conn.execute("""
         SELECT DISTINCT va.delivery_column_name
         FROM variable_alias va

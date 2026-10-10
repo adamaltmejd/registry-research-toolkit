@@ -1,9 +1,8 @@
 """reg-meta-build CLI entrypoint.
 
 Build pipeline for the reg_meta SQLite databases (main + docs) plus the
-slug TOML maintenance subcommands. The query CLI lives in `reg_meta`;
-this binary is the maintainer-side tool that produces the artifacts
-those queries read from.
+slug TOML maintenance subcommands. This binary is the maintainer-side
+tool that produces the artifacts the Rust runtime (`crates/`) reads.
 """
 
 from __future__ import annotations
