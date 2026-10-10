@@ -1,0 +1,28 @@
+[register]
+provider = "scb"
+slug = "r"
+native_id = "2551880528178387958"
+[[variant]]
+slug = "default"
+native_id = "2551880528178387958.3516338883078974362"
+[[variable]]
+slug = "col"
+native_id = "2551880528178387958.COL"
+
+[[representation.parallel]]
+variable = "2551880528178387958.COL"
+variant = "2551880528178387958.3516338883078974362"
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+evidence = "COL2 is never delivered, so the entry is stale"
+noted = "2026-09-30"
+[[representation.parallel.columns]]
+column = "COL"
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+source_editions = ["2010"]
+[[representation.parallel.columns]]
+column = "COL2"
+valid_from = "2010-01-01"
+valid_to = "2010-12-31"
+source_editions = ["2010"]

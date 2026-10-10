@@ -116,7 +116,9 @@ def _source_bindings(
             or "classification_declared" in occurrence.withheld_fields
         ):
             code = "unknown_classification_declaration"
-        elif field.status == "value":
+        else:
+            # SourceFields refuses a negative classification declaration, so the
+            # declaration is a value here.
             if not isinstance(field.value, str) or not field.value:
                 raise ValueError("a classification reference must be nonempty text")
             if references is None:
@@ -552,7 +554,7 @@ def apply_classification_cases(
                 decision.classification,
                 tuple(t.ref for t in (*case.targets, *case.support)),
                 (f"{case.case_id}: {decision.reason}\n{decision.provenance}",),
-                inline_only=decision.binding_scope == "inline_coding",
+                inline_only=True,
                 sentinel_members=decision.sentinel_members,
                 sentinel_certificate=certificate,
             )
@@ -636,24 +638,13 @@ def apply_classification_cases(
                     key=repr,
                 )
             )
-            classes = {d.classification for d in active if not d.unresolved}
-            if None in classes and len(classes) > 1:
-                diagnostics.append(
-                    ResolutionDiagnostic(
-                        code="conflicting_classification_decisions",
-                        severity="error",
-                        subject=repr(key),
-                        detail="A positive classification declaration contradicts an explicit negative declaration; neither is selected.",
-                        refs=refs,
-                        fields=("classification",),
-                        valid_from=start,
-                        valid_to=end,
-                        withheld_output=("state.classification",),
-                    )
-                )
-            if any(d.unresolved for d in active) or (
-                None in classes and len(classes) > 1
-            ):
+            # Only an unresolved binding lacks a book.
+            classes = {
+                d.classification
+                for d in active
+                if not d.unresolved and d.classification is not None
+            }
+            if any(d.unresolved for d in active):
                 if prior:
                     segments.append(segment)
                 continue
@@ -663,7 +654,7 @@ def apply_classification_cases(
                         code="multiple_classifications_declared",
                         severity="warning",
                         subject=repr(key),
-                        detail=f"Source declarations name multiple books {sorted(c for c in classes if c is not None)!r}; each association is retained independently. No winning edition or equivalence between books is asserted.",
+                        detail=f"Source declarations name multiple books {sorted(classes)!r}; each association is retained independently. No winning edition or equivalence between books is asserted.",
                         refs=refs,
                         fields=("classification",),
                         valid_from=start,
@@ -671,12 +662,12 @@ def apply_classification_cases(
                     )
                 )
             links = []
-            for slug in sorted(c for c in classes if c is not None):
+            for slug in sorted(classes):
                 book_bindings = [
                     binding for binding in active if binding.classification == slug
                 ]
                 conformance = None
-                if slug is not None and segment.code_set is not None:
+                if segment.code_set is not None:
                     if slug not in canonical:
                         canonical[slug] = frozenset(
                             c.code for c in classifications[slug].codes
