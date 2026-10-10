@@ -1,0 +1,50 @@
+{
+  "note": "Step 1's sources and curation with the Registerinformation rows reversed, so every variable's 2021 row comes first and each unit pair's `other` unit is delivered before its `published` one: the old unit test's second order (`records[::-1]`). Row order inside a source reaches field reconciliation, so the expected projections are step 1's.",
+  "fails_if": "field reconciliation keeps the first unit it reads instead of the exact pair's published member, so the reversed delivery publishes `kr` for u1 (or any formation fact in step 1 comes to depend on source row order)",
+  "sources": {
+    "description": "Step 1's rows in reverse order.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 7103, "var_id": 71, "colname": "NEW", "varname": "Checked identity", "year": "2021", "regver_id": 121},
+        {"cvid": 7102, "var_id": 71, "colname": "NEW", "varname": "Checked identity", "year": "2020", "regver_id": 120},
+        {"cvid": 7101, "var_id": 71, "colname": "OLD", "varname": "Checked identity", "year": "2020", "regver_id": 120},
+        {"cvid": 6202, "var_id": 62, "colname": "COMPSRC", "varname": "Competing source attributions", "year": "2020", "regver_id": 120, "varsource": "Second text"},
+        {"cvid": 6201, "var_id": 62, "colname": "COMPSRC", "varname": "Competing source attributions", "year": "2020", "regver_id": 120, "varsource": "First text"},
+        {"cvid": 6102, "var_id": 61, "colname": "COMPOP", "varname": "Competing operational definitions", "year": "2020", "regver_id": 120, "varopdef": "Second text"},
+        {"cvid": 6101, "var_id": 61, "colname": "COMPOP", "varname": "Competing operational definitions", "year": "2020", "regver_id": 120, "varopdef": "First text"},
+        {"cvid": 5102, "var_id": 51, "colname": "STABLE", "varname": "Stable texts", "year": "2021", "regver_id": 121, "varopdef": "One definition", "varsource": "Fr171"},
+        {"cvid": 5101, "var_id": 51, "colname": "STABLE", "varname": "Stable texts", "year": "2020", "regver_id": 120, "varopdef": "One definition", "varsource": "Fr171"},
+        {"cvid": 4102, "var_id": 41, "colname": "VARIANT", "varname": "Texts by variant", "year": "2020", "regver_id": 130, "varopdef": "Household wording", "varsource": "Fr128e", "register": ["TESTREG", 1, 11], "cells": {"Registervariantnamn": "Hushåll", "Registervariantrubrik": "Hushåll"}},
+        {"cvid": 4101, "var_id": 41, "colname": "VARIANT", "varname": "Texts by variant", "year": "2020", "regver_id": 120, "varopdef": "Person wording", "varsource": "Fr171"},
+        {"cvid": 3102, "var_id": 31, "colname": "PERIOD", "varname": "Texts by period", "year": "2021", "regver_id": 121, "varopdef": "Derived-variable definition", "varsource": "Fr128e"},
+        {"cvid": 3101, "var_id": 31, "colname": "PERIOD", "varname": "Texts by period", "year": "2020", "regver_id": 120, "varopdef": "Introductory question text", "varsource": "Fr171"},
+        {"cvid": 3002, "var_id": 30, "colname": "U10", "varname": "Unit pair 10", "year": "2021", "regver_id": 121, "unit": "År"},
+        {"cvid": 3001, "var_id": 30, "colname": "U10", "varname": "Unit pair 10", "year": "2020", "regver_id": 120, "unit": "Årtal"},
+        {"cvid": 2902, "var_id": 29, "colname": "U9", "varname": "Unit pair 9", "year": "2021", "regver_id": 121, "unit": "Antal"},
+        {"cvid": 2901, "var_id": 29, "colname": "U9", "varname": "Unit pair 9", "year": "2020", "regver_id": 120, "unit": "Dagar"},
+        {"cvid": 2802, "var_id": 28, "colname": "U8", "varname": "Unit pair 8", "year": "2021", "regver_id": 121, "unit": "Antal"},
+        {"cvid": 2801, "var_id": 28, "colname": "U8", "varname": "Unit pair 8", "year": "2020", "regver_id": 120, "unit": "Antal barn"},
+        {"cvid": 2702, "var_id": 27, "colname": "U7", "varname": "Unit pair 7", "year": "2021", "regver_id": 121, "unit": "Minuter"},
+        {"cvid": 2701, "var_id": 27, "colname": "U7", "varname": "Unit pair 7", "year": "2020", "regver_id": 120, "unit": "Antal minuter"},
+        {"cvid": 2602, "var_id": 26, "colname": "U6", "varname": "Unit pair 6", "year": "2021", "regver_id": 121, "unit": "Veckor"},
+        {"cvid": 2601, "var_id": 26, "colname": "U6", "varname": "Unit pair 6", "year": "2020", "regver_id": 120, "unit": "Antal veckor"},
+        {"cvid": 2502, "var_id": 25, "colname": "U5", "varname": "Unit pair 5", "year": "2021", "regver_id": 121, "unit": "Månad"},
+        {"cvid": 2501, "var_id": 25, "colname": "U5", "varname": "Unit pair 5", "year": "2020", "regver_id": 120, "unit": "Månader"},
+        {"cvid": 2402, "var_id": 24, "colname": "U4", "varname": "Unit pair 4", "year": "2021", "regver_id": 121, "unit": "Månader"},
+        {"cvid": 2401, "var_id": 24, "colname": "U4", "varname": "Unit pair 4", "year": "2020", "regver_id": 120, "unit": "Antal månader"},
+        {"cvid": 2302, "var_id": 23, "colname": "U3", "varname": "Unit pair 3", "year": "2021", "regver_id": 121, "unit": "kronor"},
+        {"cvid": 2301, "var_id": 23, "colname": "U3", "varname": "Unit pair 3", "year": "2020", "regver_id": 120, "unit": "Kronor (SEK)"},
+        {"cvid": 2202, "var_id": 22, "colname": "U2", "varname": "Unit pair 2", "year": "2021", "regver_id": 121, "unit": "kronor"},
+        {"cvid": 2201, "var_id": 22, "colname": "U2", "varname": "Unit pair 2", "year": "2020", "regver_id": 120, "unit": "Kronor"},
+        {"cvid": 2102, "var_id": 21, "colname": "U1", "varname": "Unit pair 1", "year": "2021", "regver_id": 121, "unit": "kr"},
+        {"cvid": 2101, "var_id": 21, "colname": "U1", "varname": "Unit pair 1", "year": "2020", "regver_id": 120, "unit": "SEK"},
+        {"cvid": 1302, "var_id": 13, "colname": "DESC", "varname": "Description conflict", "year": "2021", "regver_id": 121, "vardesc": "Conflicting text"},
+        {"cvid": 1301, "var_id": 13, "colname": "DESC", "varname": "Description conflict", "year": "2020", "regver_id": 120, "vardesc": "First text"},
+        {"cvid": 1202, "var_id": 12, "colname": "NAME", "varname": "Conflicting text", "year": "2021", "regver_id": 121},
+        {"cvid": 1201, "var_id": 12, "colname": "NAME", "varname": "First text", "year": "2020", "regver_id": 120},
+        {"cvid": 1102, "var_id": 11, "colname": "DEF", "varname": "Definition conflict", "year": "2021", "regver_id": 121, "vardef": "Conflicting definition"},
+        {"cvid": 1101, "var_id": 11, "colname": "DEF", "varname": "Definition conflict", "year": "2020", "regver_id": 120, "vardef": "Source definition"}
+      ]
+    }
+  }
+}

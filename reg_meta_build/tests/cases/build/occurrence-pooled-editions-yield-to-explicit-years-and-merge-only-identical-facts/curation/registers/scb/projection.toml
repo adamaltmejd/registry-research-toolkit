@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "projection"
+native_id = "310"
+[[variant]]
+native_id = "310.3100"
+slug = "people"
+[[variable]]
+native_id = "310.501"
+slug = "proj"
