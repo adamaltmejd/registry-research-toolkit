@@ -70,7 +70,6 @@ from .scb_errata import (
 )
 from .slug_grammar import derive_variable_slug
 from .source_coding import (
-    coding_source_sha256,
     copied_coding_fingerprints,
     resolve_code_membership,
 )
@@ -117,7 +116,7 @@ from .source_curation import (
     evaluate_source_expectations,
 )
 from .source_effects import apply_occurrence_cases, record_ref
-from .source_evidence import canonical_sha256
+from .source_evidence import canonical_sha256, evidence_sha256
 from .source_intervals import coding_scope_bounds, reconcile_source_fields, scope_bounds
 from .source_naming import (
     AcceptedNamingEntry,
@@ -751,7 +750,6 @@ def convert_column_partitions(
         records,
         fields=tuple(dict.fromkeys(("column_name", *guard_fields))),
         parents=bool(guard_fields),
-        coding=bool(guard_fields),
     )
     guard = PeerGuard(
         guard_id=f"accepted-partitions:{first.source}:{source_id}",
@@ -950,7 +948,6 @@ def _scoped_column_owners(
                         matched,
                         fields=tuple(SourceFields.model_fields),
                         parents=True,
-                        coding=True,
                     )
                 )
             )
@@ -1117,7 +1114,6 @@ def compile_period_families(
                     "name",
                     "description",
                 ),
-                coding=True,
                 parents=True,
             )
             guards = _matrix_repr_guards(members, identity_id)
@@ -1706,7 +1702,6 @@ def compile_parallel_representations(
         targets = capture_expectations(
             originals,
             fields=tuple(SourceFields.model_fields),
-            coding=True,
             parents=use_effective,
         )
         guard = PeerGuard(
@@ -1745,7 +1740,6 @@ def compile_parallel_representations(
                     correction_support,
                     fields=tuple(SourceFields.model_fields),
                     parents=True,
-                    coding=True,
                 )
                 if use_effective
                 else (),
@@ -1913,7 +1907,7 @@ def compile_alias_windows(
                 )
             )
             continue
-        expected = capture_expectations(selected, fields=("column_name",), coding=True)
+        expected = capture_expectations(selected, fields=("column_name",))
         cases.append(
             CurationCase(
                 case_id=ref,
@@ -2457,7 +2451,6 @@ def compile_partitions(
                 if sos_splits and sos_splits[0][1].by == "description"
                 else ("column_name", "name", "data_type"),
                 parents=guarded_sos_split,
-                coding=guarded_sos_split,
             )
             guard = PeerGuard(
                 guard_id=f"accepted-partitions:{source}:{source_id}",
@@ -3183,12 +3176,6 @@ def compile_deferred_partitions(
                         else ("column_name",)
                     ),
                     parents=source_id in split_ids
-                    or any(
-                        entry.expected_fields
-                        or entry.expected_evidence_sha256 is not None
-                        for _, entry in scoped_entries
-                    ),
-                    coding=source_id in split_ids
                     or any(
                         entry.expected_fields
                         or entry.expected_evidence_sha256 is not None
@@ -4280,7 +4267,6 @@ def compile_edition_splits(
                 selected,
                 fields=tuple(SourceFields.model_fields),
                 parents=True,
-                coding=True,
             )
             first = records[0]
             cases[scope_key].append(
@@ -4805,7 +4791,7 @@ def _compile_thin_register(
                 )
             )
         expectations = capture_expectations(
-            (record,), fields=tuple(SourceFields.model_fields), coding=True
+            (record,), fields=tuple(SourceFields.model_fields)
         )
         data_warning = next(
             (
@@ -5047,7 +5033,7 @@ def compile_coding_register(
                         full_originals = tuple(
                             record for record in originals if record_ref(record) in refs
                         )
-                        raw_codings = tuple(coding_source_sha256(c) for c in claims)
+                        raw_codings = tuple(evidence_sha256(c) for c in claims)
                         compact_evidence[column] = (
                             full_originals,
                             raw_codings,
@@ -5058,7 +5044,6 @@ def compile_coding_register(
                                 full_originals,
                                 fields=tuple(SourceFields.model_fields),
                                 parents=True,
-                                coding=True,
                             ),
                         )
                     if compact_evidence[column][2] != evidence_digest:
@@ -5087,7 +5072,6 @@ def compile_coding_register(
                         authority_records,
                         fields=tuple(SourceFields.model_fields),
                         parents=True,
-                        coding=True,
                     )
                     enumeration_matches = (
                         isinstance(entry, CodingDocumentedEntry)
@@ -5136,12 +5120,9 @@ def compile_coding_register(
                         )
                         or (
                             authority.raw_codings is not None
-                            and tuple(sorted(authority.raw_codings))
-                            != tuple(
-                                sorted(
-                                    {coding_source_sha256(claim) for claim in claims}
-                                )
-                            )
+                            # Distinct claims, compared as sets on both sides.
+                            and set(authority.raw_codings)
+                            != {evidence_sha256(claim) for claim in claims}
                         )
                         or tuple(sorted(authority.codings))
                         != copied_coding_fingerprints(claims)
@@ -5209,7 +5190,9 @@ def compile_coding_register(
                             "expected_raw_codings": tuple(
                                 sorted(set(compact_evidence[column][1]))
                                 if compact
-                                else sorted(entry.source_authority.raw_codings or ())
+                                else sorted(
+                                    set(entry.source_authority.raw_codings or ())
+                                )
                                 if entry.source_authority is not None
                                 else ()
                             )
@@ -5239,7 +5222,6 @@ def compile_coding_register(
                     fields=tuple(SourceFields.model_fields)
                     if kind in {"documented", "uncoded", "sentinel", "support"}
                     else ("column_name",),
-                    coding=kind in {"documented", "sentinel", "support"},
                 )
                 if (
                     isinstance(
@@ -5480,7 +5462,7 @@ def _occurrence_correction_matches(
         return False
     if isinstance(entry, ErrataFieldEntry) and entry.expected_records is not None:
         return tuple(entry.expected_records) == capture_expectations(
-            selected, fields=tuple(SourceFields.model_fields), parents=True, coding=True
+            selected, fields=tuple(SourceFields.model_fields), parents=True
         )
     expected = {field.name: field for field in entry.expected_fields}
     return all(
@@ -5635,7 +5617,6 @@ def compile_occurrence_corrections(
                         == capture_expectations(
                             authority_records,
                             fields=tuple(SourceFields.model_fields),
-                            coding=True,
                             parents=True,
                         )
                         and entry.expected_evidence_sha256
@@ -5721,7 +5702,6 @@ def compile_occurrence_corrections(
                             and projection.edition_scope is not None
                             and projection.edition_period_scope is not None
                             and projection.parent_facts is not None
-                            and projection.code_set_references is not None
                             for expected in entry.authority
                             for projection in expected.alternatives
                         )
@@ -5862,7 +5842,6 @@ def compile_occurrence_corrections(
                                 if record_ref(record) in chosen_refs
                             ),
                             fields=entry_guarded_fields,
-                            coding=True,
                             parents=True,
                         ),
                         support=capture_expectations(
@@ -5874,7 +5853,6 @@ def compile_occurrence_corrections(
                                 if record_ref(record) not in chosen_refs
                             ),
                             fields=entry_guarded_fields,
-                            coding=True,
                             parents=(
                                 isinstance(entry, ErrataSupportEntry)
                                 and entry.kind == "nonphysical_projection"
@@ -6532,7 +6510,6 @@ def compile_errata(
                             guarded,
                             fields=tuple(SourceFields.model_fields),
                             parents=True,
-                            coding=True,
                         )
                         refs = {t.ref for t in targets}
                         assert {t.ref for t in converted.targets} <= refs

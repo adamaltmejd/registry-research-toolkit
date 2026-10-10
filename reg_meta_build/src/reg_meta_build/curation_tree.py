@@ -514,7 +514,6 @@ def _complete_original_expectations(records: list[RecordExpectation]) -> bool:
         and projection.edition_scope is not None
         and projection.edition_period_scope is not None
         and projection.parent_facts is not None
-        and projection.code_set_references is not None
         for record in records
         for projection in record.alternatives
     )
@@ -691,7 +690,6 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
                     or p.edition_scope is None
                     or p.edition_period_scope is None
                     or p.parent_facts is None
-                    or p.code_set_references is None
                     for p in (*alternatives, *authority)
                 )
                 or not any(
@@ -1751,7 +1749,6 @@ class PreparedCodingAuthority(_CurationModel):
                     or alternative.edition_scope is None
                     or alternative.edition_period_scope is None
                     or alternative.parent_facts is None
-                    or alternative.code_set_references is None
                 ):
                     raise ValueError(
                         "source authority requires complete original facts and scopes"

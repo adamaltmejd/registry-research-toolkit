@@ -1,0 +1,59 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "acknowledged": {"unresolved_lineage_ambiguous_source_variant": 6}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"subject": {"contains": "scb/example/"}},
+      "fields": ["code", "severity", "subject", "valid_from", "acknowledged_by"],
+      "rows": [
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/exact", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/1"],
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/original", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/2"],
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/added", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/3"],
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/changed", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/4"],
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/linked", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/5"],
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/two-origins", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/6"],
+        ["unresolved_lineage_ambiguous_source_variant", "error", "scb/example/two-origins", "2001-01-01", null]
+      ]
+    },
+    {
+      "table": "lineage",
+      "fields": ["variable"],
+      "rows": []
+    },
+    {
+      "table": "lineage_warnings",
+      "fields": ["variable", "valid_from", "kind"],
+      "rows": [
+        ["exact", "2000-01-01", "ambiguous_source_variant"],
+        ["original", "2000-01-01", "ambiguous_source_variant"],
+        ["added", "2000-01-01", "ambiguous_source_variant"],
+        ["changed", "2000-01-01", "ambiguous_source_variant"],
+        ["linked", "2000-01-01", "ambiguous_source_variant"],
+        ["two-origins", "2000-01-01", "ambiguous_source_variant"],
+        ["two-origins", "2001-01-01", "ambiguous_source_variant"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "example", "variable": ["exact", "two-origins"]},
+      "fields": ["variable", "valid_from", "source_register_text"],
+      "rows": [
+        ["exact", "2000-01-01", "Exact register (EXA) : People"],
+        ["two-origins", "2000-01-01", "First origin (FST) : People"],
+        ["two-origins", "2001-01-01", "Second origin (SND) : People"]
+      ]
+    },
+    {
+      "table": "report_warnings",
+      "where": {"acknowledged_by": ["curation/registers/scb/example.toml#/acknowledge/1", "curation/registers/scb/example.toml#/acknowledge/6"]},
+      "fields": ["register", "variable", "valid_from", "valid_to", "code", "acknowledged_by", "detail"],
+      "rows": [
+        ["example", null, "2000-01-01", "2000-12-31", "unresolved_lineage_ambiguous_source_variant", "curation/registers/scb/example.toml#/acknowledge/1", "The literal source variant label People names two admitted variants of the exact register."],
+        ["example", null, "2000-01-01", "2000-12-31", "unresolved_lineage_ambiguous_source_variant", "curation/registers/scb/example.toml#/acknowledge/6", "The 2000 label People names two admitted variants of the first origin."]
+      ]
+    }
+  ]
+}

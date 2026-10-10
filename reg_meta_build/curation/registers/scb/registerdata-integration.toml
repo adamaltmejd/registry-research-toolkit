@@ -41,7 +41,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "396.1573"
 columns = { Ald1 = "396.1573.ald1", Ald2 = "396.1573.ald2", Ald3 = "396.1573.ald3", Ald4 = "396.1573.ald4" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "ec338c8c2413748b47cdafc0cbe183893db5db576f20ab394bb3af63f41d31b0"
+expected_evidence_sha256 = "68ba9f7af984f7919769ef9c024791eb5f41f4cc4715f50f2d7f3243cc6fa147"
 
 [[variable]]
 native_id = "396.1573.ald1"

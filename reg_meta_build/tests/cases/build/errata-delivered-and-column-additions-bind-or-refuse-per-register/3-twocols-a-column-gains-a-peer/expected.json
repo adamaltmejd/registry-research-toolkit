@@ -1,0 +1,68 @@
+{
+  "projections": [
+    {
+      "note": "Only A's choice is stale for its reviewed period; both errata entries apply.",
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "curation/registers/scb/twocols.toml#"
+        }
+      },
+      "fields": [
+        "code",
+        "locator"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/twocols.toml#/coding.choice/1/period/1"
+        ]
+      ]
+    },
+    {
+      "note": "A's 2010 conflict comes back; B's choice still settles B's.",
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "scb/twocols/"
+        },
+        "code": "conflicting_code_memberships"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "2010-01-01",
+          "2010-12-31"
+        ]
+      ]
+    },
+    {
+      "note": "A publishes no 2010 value set; B keeps its 'later' list as in step 1.",
+      "table": "state_codes",
+      "where": {
+        "register": "twocols",
+        "valid_from": "2010-01-01"
+      },
+      "fields": [
+        "column",
+        "valid_to",
+        "code"
+      ],
+      "rows": [
+        [
+          "A",
+          "2010-12-31",
+          null
+        ],
+        [
+          "B",
+          "2010-12-31",
+          "1"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "description": "scb-partition-families after these drifts: UA_ONE's definition changed (5); OA_REMOVE CVID 111 is no longer delivered (11); a third OB_ADD original, CVID 123, is delivered (12); TXT_A's description changed (15); TXT_B's list relabelled code 1 `Changed label` (16).",
+  "description": "scb-partition-families after these drifts: UA_ONE's definition changed (5); OA_REMOVE CVID 111 is no longer delivered (11); a third OB_ADD original, CVID 123, is delivered (12); TXT_A's description changed (15); TXT_B's list relabelled code 1 `Changed label` (16). OC_FIELD CVID 131's operational definition changed (13); variant 13's description changed, a parent fact of OD_PARENT 201/202 (20) and TXT_D 221 (22); OE_KEEP (21) and TXT_E (23) are unchanged.",
   "scb": {
     "registerinformation": [
       {
@@ -206,12 +206,101 @@
         "year": "2020",
         "regver_id": 2020,
         "vardesc": "Sibling description"
+      },
+      {
+        "colname": "OC_FIELD",
+        "cvid": 131,
+        "var_id": 13,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Derived amount, revised"
+      },
+      {
+        "colname": "OC_FIELD",
+        "cvid": 132,
+        "var_id": 13,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "OD_PARENT",
+        "cvid": 201,
+        "var_id": 20,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          13
+        ],
+        "varopdef": "Derived amount",
+        "cells": {
+          "Registervariantbeskrivning": "Described again after review"
+        }
+      },
+      {
+        "colname": "OD_PARENT",
+        "cvid": 202,
+        "var_id": 20,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          13
+        ],
+        "varopdef": "Sum of components",
+        "cells": {
+          "Registervariantbeskrivning": "Described again after review"
+        }
+      },
+      {
+        "colname": "OE_KEEP",
+        "cvid": 211,
+        "var_id": 21,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "OE_KEEP",
+        "cvid": 212,
+        "var_id": 21,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "TXT_D",
+        "cvid": 221,
+        "var_id": 22,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          13
+        ],
+        "cells": {
+          "Registervariantbeskrivning": "Described again after review"
+        }
+      },
+      {
+        "colname": "TXT_E",
+        "cvid": 231,
+        "var_id": 23,
+        "year": "2020",
+        "regver_id": 2020
       }
     ],
     "vardemangder": [
       "Reference classification|1|1|Description|151|7151",
       "Reference classification|1|1|Changed label|161|7161",
-      "Reference classification|1|1|Description|171|7171"
+      "Reference classification|1|1|Description|171|7171",
+      "Reference classification|1|1|Description|221|7221",
+      "Reference classification|1|1|Description|231|7231",
+      "Reference classification|1|2|Other|231|7232"
     ]
   }
 }

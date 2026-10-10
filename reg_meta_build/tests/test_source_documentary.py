@@ -29,12 +29,13 @@ from reg_meta_build.resolved_catalog import (
 )
 from reg_meta_build.resolved_metadata import ResolvedMetadata
 from reg_meta_build.source_coordinates import native_variable_key
+from reg_meta_build.source_curation import acknowledgement_evidence_sha256
 from reg_meta_build.source_documentary import compile_documentary_bindings
 from reg_meta_build.source_evidence import (
     DeliveredCell,
     RecordLocator,
     SourceRevision,
-    canonical_sha256,
+    evidence_sha256,
 )
 from reg_meta_build.source_records import (
     SourceEvidenceRow,
@@ -112,9 +113,7 @@ def _setup(kind="derivation"):
                 "clause_index": 0,
                 "token": "2",
                 "variable": "scb/example/operand",
-                "originals_sha256": canonical_sha256(
-                    [records[1].model_dump(mode="json")]
-                ),
+                "originals_sha256": acknowledgement_evidence_sha256([records[1]]),
             }
         ]
         unresolved = [
@@ -160,9 +159,9 @@ def _setup(kind="derivation"):
         row="row:2",
         member="1",
         owner="scb/example/owner",
-        payload_sha256=canonical_sha256(declaration.model_dump(mode="json")),
-        table_sha256=canonical_sha256(table.model_dump(mode="json")),
-        owner_originals_sha256=canonical_sha256([records[0].model_dump(mode="json")]),
+        payload_sha256=evidence_sha256(declaration),
+        table_sha256=evidence_sha256(table),
+        owner_originals_sha256=acknowledgement_evidence_sha256([records[0]]),
         anchors=anchors,
         unresolved=unresolved,
         evidence="exact source evidence",
@@ -320,9 +319,23 @@ def test_documentary_json_rejects_invalid_storage_identifiers(wire_id):
 
 
 @pytest.mark.parametrize(
-    "change", ["payload", "peer", "endpoint", "ownership", "missing", "duplicate"]
+    "change",
+    [
+        "payload",
+        "clause_order",
+        "peer",
+        "row_order",
+        "endpoint",
+        "ownership",
+        "missing",
+        "duplicate",
+    ],
 )
 def test_complete_payload_peer_endpoint_and_ownership_guards_fail_closed(change):
+    # clause_order fails if the payload digest compares derivation clauses as a
+    # multiset: anchors address clauses by position (`clause_index`). row_order fails
+    # if the table digest compares rows as a multiset: a row's order places it under
+    # its section (an SOS sheet's section rows).
     setup = _setup()
     _tree, d, t, records, _names = setup
     kwargs = {}
@@ -330,8 +343,23 @@ def test_complete_payload_peer_endpoint_and_ownership_guards_fail_closed(change)
         kwargs["declarations"] = (
             d.model_copy(update={"member_name": value_field("other")}),
         )
+    elif change == "clause_order":
+        kwargs["declarations"] = (d.model_copy(update={"clauses": d.clauses[::-1]}),)
     elif change == "peer":
         kwargs["tables"] = (t.model_copy(update={"rows": (*t.rows, t.rows[0])}),)
+    elif change == "row_order":
+        # Reviewed with a section row above the declaration; delivered with it below.
+        section = SourceEvidenceRow(
+            locator=t.rows[0].locator.model_copy(update={"physical_record": "row:1"}),
+            role="section",
+            cells=t.rows[0].cells[:1],
+        )
+        entry = _tree.registers[0].documentary.binding[0]
+        reviewed = t.model_copy(update={"rows": (section, *t.rows)})
+        _tree.registers[0].documentary.binding = [
+            entry.model_copy(update={"table_sha256": evidence_sha256(reviewed)})
+        ]
+        kwargs["tables"] = (t.model_copy(update={"rows": (*t.rows, section)}),)
     elif change == "endpoint":
         kwargs["records"] = (
             records[0],
@@ -395,9 +423,7 @@ def test_owner_name_and_negative_native_guards_remain_checked_with_matching_payl
     assert not relations and "no longer has owner" in issues[0].detail
     changed = declaration.model_copy(update={"member_name": value_field("other")})
     tree.registers[0].documentary.binding = [
-        entry.model_copy(
-            update={"payload_sha256": canonical_sha256(changed.model_dump(mode="json"))}
-        )
+        entry.model_copy(update={"payload_sha256": evidence_sha256(changed)})
     ]
     relations, issues = _compile(setup, declarations=(changed,))
     assert not relations and "supplied owner name" in issues[0].detail
@@ -406,7 +432,7 @@ def test_owner_name_and_negative_native_guards_remain_checked_with_matching_payl
             update={
                 "negative_native_guards": [
                     DocumentaryEndpointGuard(
-                        native="2", originals_sha256=canonical_sha256([])
+                        native="2", originals_sha256=acknowledgement_evidence_sha256([])
                     )
                 ]
             }
@@ -431,8 +457,8 @@ def _retained_setup():
             source="fixture",
             table="literal",
             row="row:2",
-            payload_sha256=canonical_sha256(declaration.model_dump(mode="json")),
-            table_sha256=canonical_sha256(table.model_dump(mode="json")),
+            payload_sha256=evidence_sha256(declaration),
+            table_sha256=evidence_sha256(table),
             reason="Neither code namespace has an established variable endpoint.",
             evidence="Complete literal table reviewed.",
             noted="2026-10-02",

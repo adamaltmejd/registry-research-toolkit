@@ -1,5 +1,5 @@
 {
-  "description": "One register (TESTREG 1) whose native families each carry one partition, owner, enrichment or uncoded claim. All rows are 2020 (edition 2020) in variant 10 unless named. 5: UA_ONE 51, UA_TWO 52. 6: PA_OWNED 61, PA_LEFT 62. 7: KEPT 71, IM_LEFT 72. 8: MAP_ONE 81, MAP_LEFT 82. 9: ED_A 2020 (91) and 2021 (92). 10: ED_B 2020 (101) and 2021 (102). 11/12: OA_REMOVE 111/112, OB_ADD 121/122, two same-literal originals each with different operational definitions. 14: PP_OTHER 141, PP_ID 142 (variant 11), 143, 144 (variant 12). 15/16/17: TXT_A 151, TXT_B 161, TXT_C 171, each with an attached list `Reference classification` (code 1, `Description`). 18: EN_A and EN_B under one record (181). 19: SB_A and SB_B under one record (191); SB_B carries the source description `Sibling description`.",
+  "description": "One register (TESTREG 1) whose native families each carry one partition, owner, enrichment or uncoded claim. All rows are 2020 (edition 2020) in variant 10 unless named. 5: UA_ONE 51, UA_TWO 52. 6: PA_OWNED 61, PA_LEFT 62. 7: KEPT 71, IM_LEFT 72. 8: MAP_ONE 81, MAP_LEFT 82. 9: ED_A 2020 (91) and 2021 (92). 10: ED_B 2020 (101) and 2021 (102). 11/12: OA_REMOVE 111/112, OB_ADD 121/122, two same-literal originals each with different operational definitions. 14: PP_OTHER 141, PP_ID 142 (variant 11), 143, 144 (variant 12). 15/16/17: TXT_A 151, TXT_B 161, TXT_C 171, each with an attached list `Reference classification` (code 1, `Description`). 18: EN_A and EN_B under one record (181). 19: SB_A and SB_B under one record (191); SB_B carries the source description `Sibling description`. 13: OC_FIELD 131/132, 20: OD_PARENT 201/202 in variant 13, 21: OE_KEEP 211/212, each two same-literal originals with different operational definitions. 22: TXT_D 221 in variant 13, 23: TXT_E 231, each with an attached list `Reference classification` (code 1, `Description`); TXT_E's list also delivers code 2 `Other` in a second row, so a re-sort reorders its members.",
   "scb": {
     "registerinformation": [
       {
@@ -205,12 +205,92 @@
         "year": "2020",
         "regver_id": 2020,
         "vardesc": "Sibling description"
+      },
+      {
+        "colname": "OC_FIELD",
+        "cvid": 131,
+        "var_id": 13,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "OC_FIELD",
+        "cvid": 132,
+        "var_id": 13,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "OD_PARENT",
+        "cvid": 201,
+        "var_id": 20,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          13
+        ],
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "OD_PARENT",
+        "cvid": 202,
+        "var_id": 20,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          13
+        ],
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "OE_KEEP",
+        "cvid": 211,
+        "var_id": 21,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "OE_KEEP",
+        "cvid": 212,
+        "var_id": 21,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "TXT_D",
+        "cvid": 221,
+        "var_id": 22,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          13
+        ]
+      },
+      {
+        "colname": "TXT_E",
+        "cvid": 231,
+        "var_id": 23,
+        "year": "2020",
+        "regver_id": 2020
       }
     ],
     "vardemangder": [
       "Reference classification|1|1|Description|151|7151",
       "Reference classification|1|1|Description|161|7161",
-      "Reference classification|1|1|Description|171|7171"
+      "Reference classification|1|1|Description|171|7171",
+      "Reference classification|1|1|Description|221|7221",
+      "Reference classification|1|1|Description|231|7231",
+      "Reference classification|1|2|Other|231|7232"
     ]
   }
 }

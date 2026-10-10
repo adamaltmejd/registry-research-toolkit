@@ -6447,7 +6447,7 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "412a6597dc521145db3b27e18db809b0c78d78322596f524c399ba99bc39162c"
+expected_evidence_sha256 = "d462f7d2a3df8c5db745e5f8c86b05a247b9e8fe955702d818961162954bfa86"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -6458,7 +6458,7 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "34dc79b2440071416b221fb460afbe6dd08b1505c32a9c0b7ede53bfb4d031ea"
+expected_evidence_sha256 = "95c18c0c5e00341ad7bb2dd9adcffa98ee33592195dc2d7022dbe81a9eab73ff"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -6469,7 +6469,7 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "7412acb916a560a299f52a9182508d5e7eccdc62674ff5416dfdcc5411d18d89"
+expected_evidence_sha256 = "085632f0eafc61dc461084ba1c0c4f13e366176360bc0936ea7d541e051de0bf"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -6480,7 +6480,7 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "361f9caee1383cef6689806d0c1535a25187df4030b2418f03c544377e802aba"
+expected_evidence_sha256 = "1026dfd8afac88129390a3e5eba28d36b7dc0efdad1f2adc5b2d05df780037b9"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -6491,7 +6491,7 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "5a438e84152027ebe322c6d411b1f159750ad6d5d3d071faba667b7728febcd5"
+expected_evidence_sha256 = "3180595fe3554fe46e8d5f5e6516c3f22c51bbc8b81720f203ff240f42a34d11"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -6502,49 +6502,49 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The1993 source identifies this ranked school-region field but explicitly states that code explanations are unavailable. Retain its original field and all source facts; the response domain stays unavailable rather than borrowing a different year or region dictionary."
 evidence = "Standing maintainer-authorized missing-domain preservation policy, applied only to this exact1993 source window. Complete own-native family and actual source support reviewed; no coding continuity or stored encoding is inferred. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
-expected_evidence_sha256 = "dc4cf66f5137c5acc436357f33e8e6aa701aeed28b3434a15a553ce82f0e5b2a"
+expected_evidence_sha256 = "f87432ca6f0d92bb7f7d3e920aa6d459e10699bd7f918497fcf678c8fd70bd13"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "260.104"
 columns = { ISKENH = "260.104.iskenh", SKOLA1 = "260.104.skola1", SKOLA2 = "260.104.skola2", SKOLA3 = "260.104.skola3", SKOLA4 = "260.104.skola4", SKOLA5 = "260.104.skola5", SKOLA6 = "260.104.skola6", SkolKod = "260.104.skolkod", Skol_Ar9 = "260.104.skol-ar9", Skolkod = "260.104.skolkod", Skolkod_Ak9 = "260.104.skolkod-ak9", Vy_Skolkod = "260.104.vy-skolkod" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "59c5f415c51249d945b4236126e0dbf5be6a77c28352b9c749cd6524ee9d75ec"
+expected_evidence_sha256 = "e5527135b6d55250d175d9c31bd95117c755f8d6ecc1f06eee598379405d8961"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "260.36734"
 columns = { JMFT1 = "260.36734.jmft1", JMFT2 = "260.36734.jmft2", JMFT3 = "260.36734.jmft3", JMFT4 = "260.36734.jmft4", JMFT5 = "260.36734.jmft5", JMFT6 = "260.36734.jmft6", JmfTal = "260.36734.jmftal", U_JTal = "260.36734.u-jtal", U_Jtal = "260.36734.u-jtal" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "9b522ec8927200469f2614e1e80a7456ecb7a9cbab3d3406c12080b35da83656"
+expected_evidence_sha256 = "c057f1e484bb94ea55f622731bd396fa6105283160d385e29406590b701413e2"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "260.1536"
 columns = { GREN1 = "260.1536.gren1", GREN2 = "260.1536.gren2", GREN3 = "260.1536.gren3", GREN4 = "260.1536.gren4", GREN5 = "260.1536.gren5", GREN6 = "260.1536.gren6", IGREN = "260.1536.igren", StvKod = "260.1536.stvkod", StvKod_Ans = "260.1536.stvkod-ans", StvKod_HT = "260.1536.stvkod-ht", StvKod_Utb = "260.1536.stvkod-utb", U_STV = "260.1536.u-stv", U_Stv = "260.1536.u-stv" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "ac21274e7aee6080419655c7811d89c9612f51d4873f4c153197752f9e9629b7"
+expected_evidence_sha256 = "46b09fbb33e6b2f42035d3d5e255a8735e1e2750ff24aea93e5091dd8fd77735"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "260.35158"
 columns = { GRUPP1 = "260.35158.grupp1", GRUPP2 = "260.35158.grupp2", GRUPP3 = "260.35158.grupp3", GRUPP4 = "260.35158.grupp4", GRUPP5 = "260.35158.grupp5", GRUPP6 = "260.35158.grupp6", SGRUPP1 = "260.35158.sgrupp1", SGRUPP2 = "260.35158.sgrupp2", SGRUPP3 = "260.35158.sgrupp3", SGRUPP4 = "260.35158.sgrupp4", SGRUPP5 = "260.35158.sgrupp5", SGRUPP6 = "260.35158.sgrupp6", SGrupp = "260.35158.sgrupp", Sgrupp = "260.35158.sgrupp", U_SGrupp = "260.35158.u-sgrupp", U_Sgrupp = "260.35158.u-sgrupp" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "fbaf0e9efa2033242e80c5309954a49da3bb7d17badd1399f319aaa3ea749459"
+expected_evidence_sha256 = "5188b8d387886018250a7e5ca0b98f8b53eceede15913c31074c4fd6a231d761"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "260.38272"
 columns = { VERKSAMH1 = "260.38272.verksamh1", VERKSAMH2 = "260.38272.verksamh2", VERKSAMH3 = "260.38272.verksamh3", VERKSAMH4 = "260.38272.verksamh4", VERKSAMH5 = "260.38272.verksamh5", VERKSAMH6 = "260.38272.verksamh6" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "8145589905570572d223a2c83623decab80236fe5549499fa44c6005be4a3ed8"
+expected_evidence_sha256 = "8b0a20ebcda2e2d72101df12e428e5c1368a2a17752a0fb7bd29c66e6fcd37a4"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "260.36625"
 columns = { BEH1 = "260.36625.beh1", BEH2 = "260.36625.beh2", BEH3 = "260.36625.beh3", BEH4 = "260.36625.beh4", BEH5 = "260.36625.beh5", BEH6 = "260.36625.beh6" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "6010e9d6a3b156a002eded7539102e589736f7d75050fc9f912ab96b03877823"
+expected_evidence_sha256 = "9a799bb97c28c3e0da46177cb7366b9d34bc90d353ccb8c723e68c71920fb01c"
 
 [[variable]]
 native_id = "260.104.iskenh"

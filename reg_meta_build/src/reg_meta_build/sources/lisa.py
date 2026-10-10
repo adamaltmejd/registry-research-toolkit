@@ -450,7 +450,6 @@ def _attach_context(
         edition_period_scope=record.edition_period_scope,
         fields=record.fields,
         language=record.language,
-        code_set_references=record.code_set_references,
         original_period_text=record.original_period_text,
         context=updated_context,
         delivered_cells=record.delivered_cells,

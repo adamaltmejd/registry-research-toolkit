@@ -38,6 +38,15 @@
         ],
         [
           "curation/registers/scb/sample.toml#/coding.uncoded/2/period/1"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/identity.column_owner/8"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/identity.column_owner/9"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/coding.uncoded/4/period/1"
         ]
       ]
     },
@@ -76,6 +85,12 @@
         ],
         [
           "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 14)"
+        ],
+        [
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 13)"
+        ],
+        [
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 20)"
         ]
       ]
     },
@@ -409,6 +424,98 @@
         "summary"
       ],
       "rows": []
+    },
+    {
+      "table": "uses",
+      "where": {
+        "column_name": [
+          "OC_FIELD",
+          "OD_PARENT",
+          "OE_KEEP"
+        ]
+      },
+      "fields": [
+        "key",
+        "column_name",
+        "variable"
+      ],
+      "rows": [
+        [
+          "member:131",
+          "OC_FIELD",
+          null
+        ],
+        [
+          "member:132",
+          "OC_FIELD",
+          null
+        ],
+        [
+          "member:201",
+          "OD_PARENT",
+          null
+        ],
+        [
+          "member:202",
+          "OD_PARENT",
+          null
+        ],
+        [
+          "member:211",
+          "OE_KEEP",
+          "scb/sample/kept-owner"
+        ],
+        [
+          "member:212",
+          "OE_KEEP",
+          "scb/sample/kept-owner"
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "column": [
+          "TXT_D",
+          "TXT_E"
+        ]
+      },
+      "fields": [
+        "column",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "TXT_D",
+          "1",
+          "Description"
+        ],
+        [
+          "TXT_E",
+          null,
+          null
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "column": [
+          "TXT_D",
+          "TXT_E"
+        ]
+      },
+      "fields": [
+        "variable",
+        "summary"
+      ],
+      "rows": [
+        [
+          "text-e",
+          "The attached numeric book is reference evidence, not the text response domain."
+        ]
+      ]
     }
   ]
 }

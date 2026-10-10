@@ -11,6 +11,9 @@ slug = "movers"
 [[variant]]
 native_id = "1.12"
 slug = "workers"
+[[variant]]
+native_id = "1.13"
+slug = "described"
 # 5: an unassigned family withholds its declared native naming.
 [[variable]]
 native_id = "1.5"
@@ -215,3 +218,68 @@ register = "scb/sample"
 variable = "c"
 description = "Accepted prose"
 provenance = "delivery list"
+
+# 13, 20, 21: digest-only owners (column_owner 8-10) whose own original changes a
+# field (13) or a parent fact (20), or stays unchanged (21).
+[[variable]]
+native_id = "1.13.field"
+slug = "field-owner"
+[[identity.column_owner]]
+variable = "1.13"
+variant = "1.10"
+column = "OC_FIELD"
+owner = "1.13.field"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 variable=13}}
+[[variable]]
+native_id = "1.20.parent"
+slug = "parent-owner"
+[[identity.column_owner]]
+variable = "1.20"
+variant = "1.13"
+column = "OD_PARENT"
+owner = "1.20.parent"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 variable=20}}
+[[variable]]
+native_id = "1.21.kept"
+slug = "kept-owner"
+[[identity.column_owner]]
+variable = "1.21"
+variant = "1.10"
+column = "OE_KEEP"
+owner = "1.21.kept"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 variable=21}}
+
+# 22, 23: guarded stored text roles (coding.uncoded 4, 5) whose original's parent
+# fact changes (22) or that stays unchanged (23).
+[[variable]]
+native_id = "1.22"
+slug = "text-d"
+[[variable]]
+native_id = "1.23"
+slug = "text-e"
+[[coding.uncoded]]
+variable = "1.22"
+variant = "described"
+column = "TXT_D"
+periods = [["2020-01-01", "2020-12-31"]]
+stored_role = "label"
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:221}}
+reason = "The reviewed source documents a stored text component."
+source = "Exact original source and reference-book review"
+data_warning = "The attached numeric book is reference evidence, not the text response domain."
+[[coding.uncoded]]
+variable = "1.23"
+variant = "people"
+column = "TXT_E"
+periods = [["2020-01-01", "2020-12-31"]]
+stored_role = "label"
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:231}}
+reason = "The reviewed source documents a stored text component."
+source = "Exact original source and reference-book review"
+data_warning = "The attached numeric book is reference evidence, not the text response domain."

@@ -7,7 +7,7 @@ import json
 import re
 from typing import Any, Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
 
 _HASH_RE = re.compile(r"[0-9a-f]{64}\Z")
 FieldState = Literal["value", "unknown", "negative"]
@@ -51,6 +51,79 @@ def canonical_json(value: Any) -> str:
 
 def canonical_sha256(value: Any) -> str:
     return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
+
+
+_EVIDENCE_JSON = TypeAdapter(object, config=ConfigDict(ser_json_inf_nan="constants"))
+# Where and in which delivery a fact arrived: a new delivery or a row re-sort
+# changes these without changing what a record says. Record and claim ids are
+# derived: a record id hashes facts its record repeats, a claim id names its list.
+# Semantic keys, file and table names, content-addressed value and descriptor
+# keys, and delivered cells stay in the digest.
+_DELIVERY_POSITION = frozenset(
+    {
+        "source_revision_id",
+        "value_revision_id",
+        "row_number",
+        "physical_record",
+        "physical_cells",
+        "record_id",
+        "claim_id",
+    }
+)
+# Collections gathered from several physical rows, in delivered row order: a re-sort
+# reorders them, so they compare as multisets. Every other list keeps its order:
+# cells in column order, derivation clauses and operands addressed by position, and
+# an evidence table's rows, whose order places a row under its section.
+_ROW_ORDERED = frozenset(
+    {
+        "locators",
+        "record_locators",
+        "members",
+        "associations",
+        "validity",
+        "inactive_associations",
+        "non_membership_associations",
+        "item_validity_set_aside",
+    }
+)
+
+
+def evidence_sha256(value: Any) -> str:
+    """Pin delivered evidence by its own content, not by the delivery around it.
+
+    Curation guards hash the records (or code-list claims, declarations, tables) they
+    rely on. The whole-delivery revision, row positions and the identities derived
+    from them are dropped, and a nested source revision collapses to its dataset, so
+    a new delivery or a row re-sort leaves every guard whose own records are unchanged
+    fresh. Objects gathered from several rows form a multiset: their order is
+    immaterial, their multiplicity is not.
+    """
+    return canonical_sha256(
+        _evidence_content(
+            _EVIDENCE_JSON.dump_python(value, mode="json", warnings="error")
+        )
+    )
+
+
+def _evidence_content(value: Any) -> Any:
+    if isinstance(value, dict):
+        content = {}
+        for key, item in value.items():
+            if key in _DELIVERY_POSITION:
+                continue
+            if key == "revision" and isinstance(item, dict) and "revision_id" in item:
+                # A nested SourceRevision: its dataset, not the delivery.
+                content[key] = item["dataset"]
+            elif key in _ROW_ORDERED and isinstance(item, list):
+                content[key] = sorted(
+                    (_evidence_content(entry) for entry in item), key=canonical_json
+                )
+            else:
+                content[key] = _evidence_content(item)
+        return content
+    if isinstance(value, list):
+        return [_evidence_content(item) for item in value]
+    return value
 
 
 class SourceRevision(_SourceModel):

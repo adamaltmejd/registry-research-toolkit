@@ -156,49 +156,49 @@ slug = "redovisningsmanad-producteo"
 variable = "142.48271"
 columns = { "Kraftvärme, industri SE2" = "142.48271.elomrade-2", "Kraftvärme, industri SE3" = "142.48271.elomrade-3", "Kraftvärme, industri SE4" = "142.48271.elomrade-4", "Kraftvärme, industri SE1" = "142.48271.elomrade-1" }
 columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "d8e12f591065048971d89530e7ebcc3dee70ea68af08b7c3f4e3ecbb6bdae3af"
+expected_evidence_sha256 = "89869fd6ba66dd69591b19185f0622a3c4d6a9d461d8147b50fe0c83853a1210"
 
 [[identity.partition]]
 variable = "142.48272"
 columns = { "Kraftvärme, fjärrvärme SE2" = "142.48272.elomrade-2", "Kraftvärme, fjärrvärme SE3" = "142.48272.elomrade-3", "Kraftvärme, fjärrvärme SE4" = "142.48272.elomrade-4", "Kraftvärme, fjärrvärme SE1" = "142.48272.elomrade-1" }
 columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "df704847afe2fb10ac032c4eb2f3d5d3232d72045e17d68efee44c80e7c2ea3d"
+expected_evidence_sha256 = "21d2b6358eff9ecaf8262c972586327feebcdd530efc348a1ce29c63f9000f7b"
 
 [[identity.partition]]
 variable = "142.48268"
 columns = { "SolarEO2" = "142.48268.elomrade-2", "SolarEO3" = "142.48268.elomrade-3", "SolarEO4" = "142.48268.elomrade-4", "SolarEO1" = "142.48268.elomrade-1" }
 columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "2e5682e134d2f030dfc59068bbb5198028795d963a184c8e858c72b8233e365b"
+expected_evidence_sha256 = "a30c44b8845f5594f7ea5d2c04808f3847e4f88c1db1f9ccb4c2cb6c07d89b04"
 
 [[identity.partition]]
 variable = "142.48265"
 columns = { "HydroEO2" = "142.48265.elomrade-2", "HydroEO3" = "142.48265.elomrade-3", "HydroEO4" = "142.48265.elomrade-4", "HydroEO1" = "142.48265.elomrade-1" }
 columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "2d2a71945dbf05fde0b6fdbdbf7e508c9aab08e3bb7251c45222d7ba44be5d6d"
+expected_evidence_sha256 = "575b320ab9e995c7289314efb0face3d1faf59d69139aed257e26aba53b7dc8d"
 
 [[identity.partition]]
 variable = "142.48267"
 columns = { "WindEO2" = "142.48267.elomrade-2", "WindEO3" = "142.48267.elomrade-3", "WindEO4" = "142.48267.elomrade-4", "WindEO1" = "142.48267.elomrade-1" }
 columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "37731698b5b34a1cb44ffb6f138a7353a97d811299735529432094583f6cd512"
+expected_evidence_sha256 = "6685c9f87ebcce1e3ffba816103c4abc576d0dbd549a94a5311c4985ce1fb915"
 
 [[identity.partition]]
 variable = "142.48274"
 columns = { "Gasturbinkraft SE3" = "142.48274.elomrade-3", "Gasturbinkraft SE4" = "142.48274.elomrade-4" }
 columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "9b161799e4899b6f1022c7063c2b745d963586e5b17e3d12647f7b710c3d6231"
+expected_evidence_sha256 = "0f0e5336803ea0b7b0b587267f897dc7122635b3ce8af30f404d913709e27c11"
 
 [[identity.partition]]
 variable = "142.48273"
 columns = { "Kondenskraft SE3" = "142.48273.elomrade-3", "Kondenskraft SE4" = "142.48273.elomrade-4" }
 columns_ref = "The exact own source operational definition positively states each electricity area. Preserve distinct SE1–SE4 measured populations, production methods, source periods and raw physical columns; do not combine their values. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "7f8ffcf71d5597c4d1eaa0641ac0da33cd1ffee71834564d75dd265ddca0fc10"
+expected_evidence_sha256 = "49101a6ae42c34fa4eb349f5479566a7d91697402615c7479b4b8912d99f8d6a"
 
 [[identity.partition]]
 variable = "142.7578"
 columns = { "Period" = "142.7578", "ProductEO" = "142.7578" }
 columns_ref = "The complete own source native name, definition and year/month unit define reporting month for both literal fields. Preserve all source types and per-column measurement acquisition contexts. No concrete storage format or value equivalence is inferred."
-expected_evidence_sha256 = "28d0fddc86c2c34c6324ed3c3462c89c37975a44e91e2b6fe0b807ab98697e1b"
+expected_evidence_sha256 = "ea092f7ba510dc93794c0992bc28a6567549a6cfaec5bb27f0a7f8c242c1bb69"
 
 [[identity.column_owner]]
 data_warning = "The source describes ProductEO as reporting month and gives year/month units, but supplies decimal storage with no concrete month encoding. This is a separately supplied physical field, with a different source-member identity from Period. Keep its literal column, type and acquisition context; storage interpretation, value equivalence and its relationship to Period are unproved."
@@ -229,7 +229,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
 evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "63cffd9083c3a835df62dab8303b3b784c2414114025c6b276d3983a96b80866"
+expected_evidence_sha256 = "268b6c5eaa1b879a15313b5922b10c91c963e72d50bf0cb9ac9566ec517b7bff"
 expected_diagnostic_sha256 = "7a8c4a09bc5f83998dd66991342b3d5c814b2fc35638347da48461d0ef02596a"
 
 [[acknowledge]]
@@ -241,7 +241,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
 evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "0b4133d44e5d2a6dc7689b1b90395edfdb7f3edbac4979d1c2023d5266c72ed3"
+expected_evidence_sha256 = "1b73fbacc99ae008d56b9bcf46b6dc6f03bcc1fba25aeb0531ebe849e465f676"
 expected_diagnostic_sha256 = "ebb77932011aa7f29419657c5ed60d31ca83841c17d22a62fe03cb58f53a15eb"
 
 [[acknowledge]]
@@ -253,7 +253,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
 evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "37d554f32f474bc3b49f2b4dffd7a6e2dd014552b0ffc5a8fe44300777a71802"
+expected_evidence_sha256 = "b81bbddc11c9b801eaaf4ed33435951d07f4e47d1023c8d0156d0e6ff2709e8a"
 expected_diagnostic_sha256 = "5637aa40a6486f90ac58b915836c07b87d69c7b1176c9b1eba0663100612b339"
 
 [[acknowledge]]
@@ -265,7 +265,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
 evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "d277b92487a21d894ec078a442a1ef8c195a649c9875a72c5372e2970f14e877"
+expected_evidence_sha256 = "807d856b696658079954e01e251457e304f220268d3c60dddd2fe9e0143d2272"
 expected_diagnostic_sha256 = "e288513d3a27bf6231a05f82e556134bbd6ea425c6b6710931944a79f465efb6"
 
 [[acknowledge]]
@@ -277,7 +277,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
 evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "be28847a17028da7bb907e8c8018218abae111ffc15228ec649876fc8179d5f1"
+expected_evidence_sha256 = "4f71a5971580568380b82e60aba619fd8a6a81415da861d6cc41771722eae823"
 expected_diagnostic_sha256 = "646052b6628c61c755b83db1f5742168a126f5d6a13977c939797edfd5077e63"
 
 [[acknowledge]]
@@ -289,7 +289,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
 evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "6384db636abcdd3cc5afd5446a243dc84220e259789ce5b0f7ed6f19d43e36e4"
+expected_evidence_sha256 = "edaf1505ee64bc9102aa70ecca0262c31f9f6dfe1f39eab89bc41e25dac5bcff"
 expected_diagnostic_sha256 = "6100209916ee44a462c15d87471f7a23e5c1e378f36df4c317005bed22c8e993"
 
 [[acknowledge]]
@@ -301,7 +301,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
 evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "b7b17fea123a1464f4d315ba8242548427072c5b1e4a4ead6dac7fa93ea7d380"
+expected_evidence_sha256 = "5d9f15c1dc0a09fdf3b76dcf2ab23baf1ac3d455696f6a799f2207371e38f7c6"
 expected_diagnostic_sha256 = "1e8c7a4fe74ad3d0f20ea1fe849afeed8c73557a4a0ebceae1430089dd0d43f7"
 
 [[acknowledge]]
@@ -313,7 +313,7 @@ valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
 evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "557518686b695620acae4cf77a41a464d7d6506df2be9a402a27547c5f10815e"
+expected_evidence_sha256 = "3fa949b6d524e2e2b524a66cfb8235fdf1036e77cc20bcf6beeda7746a352624"
 expected_diagnostic_sha256 = "ed079709aaaa25ebcb0538ef821a8caaaa8c63b481e54f3665f1d6543e22b98a"
 
 [[acknowledge]]
@@ -325,5 +325,5 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied source does not establish the code domain for this exact Ng window. Historical operational text varies between SNI2002, an SCB-assigned control number and unspecified meaning. Retain the native quantity and all original fields, but leave these values unavailable; do not borrow the separately coded Ng2007 domain or infer a historical classification/encoding."
 evidence = "Maintainer-approved exact unavailable-domain policy. Complete MANEL1641 family, actual support and all native Ng/Ng2007 associations retained, with no historical SNI continuity assumed. Batch52-MANEL-source-positive-proof.json."
-expected_evidence_sha256 = "2ab00b5cfaa9358290207e3c21c0add8e213e64ccf81332376313ff41f3205b6"
+expected_evidence_sha256 = "a9aa59baedc33a3bc479019f7577f639819eae1f1cfa9fb3790222a5a01e1d59"
 expected_diagnostic_sha256 = "61f0204f5165a2fa0e54c7e58dcd2b08a12ec1b12a303726bf086e8f5664b3d9"

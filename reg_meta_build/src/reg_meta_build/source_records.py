@@ -7,7 +7,6 @@ from typing import Literal, Self
 from pydantic import Field, field_validator, model_validator
 
 from .source_evidence import (
-    _HASH_RE,
     DeliveredCell,
     FieldScalar,
     RecordLocator,
@@ -280,25 +279,6 @@ class SourceParentObservation(_SourceModel):
         return self
 
 
-class CodeSetReference(_SourceModel):
-    reference_id: str
-    content_sha256: str
-    physical_locator: str
-
-    @model_validator(mode="after")
-    def _non_empty(self) -> Self:
-        if not self.reference_id or not self.physical_locator:
-            raise ValueError("code-set reference coordinates must be non-empty")
-        return self
-
-    @field_validator("content_sha256")
-    @classmethod
-    def _valid_hash(cls, value: str) -> str:
-        if not _HASH_RE.fullmatch(value):
-            raise ValueError("code-set content identity must be a SHA-256 value")
-        return value
-
-
 class SourceEvidenceRow(_SourceModel):
     locator: RecordLocator
     role: Literal["header", "section", "declaration", "data", "unparsed", "note"]
@@ -323,7 +303,6 @@ class SourceRecord(_SourceModel):
     fields: SourceFields
     parent_facts: tuple[SourceParentObservation, ...] = ()
     language: Literal["sv", "en"] | None = None
-    code_set_references: tuple[CodeSetReference, ...] = ()
     original_period_text: str | None = None
     context: tuple[str, ...] = ()
     delivered_cells: tuple[DeliveredCell, ...] = ()
@@ -338,7 +317,6 @@ class SourceRecord(_SourceModel):
         edition_period_scope: TemporalScope,
         fields: SourceFields,
         language: Literal["sv", "en"] | None,
-        code_set_references: tuple[CodeSetReference, ...],
         original_period_text: str | None,
         context: tuple[str, ...],
         delivered_cells: tuple[DeliveredCell, ...],
@@ -356,13 +334,6 @@ class SourceRecord(_SourceModel):
                     parent.model_dump(mode="json") for parent in parent_facts
                 ],
                 "language": language,
-                "code_set_references": [
-                    {
-                        "reference_id": reference.reference_id,
-                        "content_sha256": reference.content_sha256,
-                    }
-                    for reference in code_set_references
-                ],
                 "original_period_text": original_period_text,
                 "context": context,
                 "delivered_cells": [
@@ -383,7 +354,6 @@ class SourceRecord(_SourceModel):
         edition_period_scope: TemporalScope,
         fields: SourceFields,
         language: Literal["sv", "en"] | None = None,
-        code_set_references: tuple[CodeSetReference, ...] = (),
         original_period_text: str | None = None,
         context: tuple[str, ...] = (),
         delivered_cells: tuple[DeliveredCell, ...] = (),
@@ -399,7 +369,6 @@ class SourceRecord(_SourceModel):
             edition_period_scope=edition_period_scope,
             fields=fields,
             language=language,
-            code_set_references=code_set_references,
             original_period_text=original_period_text,
             context=context,
             delivered_cells=delivered_cells,
@@ -416,7 +385,6 @@ class SourceRecord(_SourceModel):
             fields=fields,
             parent_facts=parent_facts,
             language=language,
-            code_set_references=code_set_references,
             original_period_text=original_period_text,
             context=context,
             delivered_cells=delivered_cells,
@@ -467,7 +435,6 @@ class SourceRecord(_SourceModel):
             edition_period_scope=self.edition_period_scope,
             fields=self.fields,
             language=self.language,
-            code_set_references=self.code_set_references,
             original_period_text=self.original_period_text,
             context=self.context,
             delivered_cells=self.delivered_cells,
@@ -516,7 +483,6 @@ def value_field(value: FieldScalar, *, raw: FieldScalar | None = None) -> Source
 
 
 __all__ = [
-    "CodeSetReference",
     "NativeCoordinates",
     "ScopeInterval",
     "SourceCoordinate",

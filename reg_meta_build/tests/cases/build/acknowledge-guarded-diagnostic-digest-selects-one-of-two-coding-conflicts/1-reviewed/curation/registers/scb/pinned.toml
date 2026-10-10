@@ -1,0 +1,36 @@
+[register]
+provider = "scb"
+slug = "pinned"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "income"
+[[identity.partition]]
+variable = "1.5"
+columns = { A = "1.5", B = "1.5" }
+columns_ref = "reviewed two-literal source-native income"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/pinned/income"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:820\", \"variable:5\", \"member:800\"]}", "{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:820\", \"variable:5\", \"member:801\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+expected_diagnostic_sha256 = "21e5893ca61f35c7c61db751496dde479817df60c93a186910ce4ff053e8ce0c"
+reason = "One literal's two lists disagree (the issue whose detail sorts first); its coding stays unavailable."
+evidence = "Synthetic fixture issue."
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/pinned/income"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:820\", \"variable:5\", \"member:800\"]}", "{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:820\", \"variable:5\", \"member:801\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+expected_diagnostic_sha256 = "77b4f4ea77a504a8163deda4376ac14d3dc7974dbe3d63d44224d0a58b5f57dc"
+reason = "The other literal's two lists disagree; its coding stays unavailable."
+evidence = "Synthetic fixture issue."

@@ -185,7 +185,7 @@ code = "unknown_support_key"
 subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 164)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"78f50a7b514af613a140f6822a42e8ca98afad51958f5af809e6385e7aa86fae\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"f45b854ddb8de165cee08e245ed91900647eddbeb697af0d20d90180ebf16b89\"]}"]
-expected_evidence_sha256 = "48ccdb9333b6fd800220bd261c836b9b3592429137178b3e3ee397f976d3dffc"
+expected_evidence_sha256 = "45b0d27aa715d0158544d16847ebc5895a956c6e6161870898467ce16c309ed3"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
 
@@ -232,7 +232,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "eb4def2fe0c65f48f1faf4606310e0db58f3d3b483f43fab036eb165c5c09456"
+expected_evidence_sha256 = "84f11a090bc12b15ad1af00262d8c6f498fc856dcc1c1e9ce491c2b12e3084b8"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -243,7 +243,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "83f45aa3516b84b3c87afa2162e6faf405bb3320dc1b789c812b6b3b1e4b027b"
+expected_evidence_sha256 = "f9d02bc616f6f9f6382f79b34287934847158e654991afb9f5e0f6c5469d811e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -254,7 +254,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "0242312a6c2b0ea45b43c7a6928a2a99f087537be126a8a9ace810bfca1e6939"
+expected_evidence_sha256 = "dec080bacc2bc2101641f52beadfa658fcc1e8633cd02ae0fda493485ad553ad"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -265,7 +265,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "3f04eaa1560f20d095c8ddf39e8cd9883df47c5700395343390cde1edcf2f649"
+expected_evidence_sha256 = "74225f9228bffb88e0f013657fa0af72b960426942668091561248b4480253e9"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -276,7 +276,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "b577515ccdbdc1a6ce4bfde75f2c55d73dcbb5aed07e76aeb16b800e27c62d91"
+expected_evidence_sha256 = "1a7faadc3f5372bc823fe974a5be0117560fbfa74cb53d5f02ab339cf637a18e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -287,7 +287,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "3833dc50d58ef53047b34bec81a1f2657c0a247c7e49ca324b25f1f0c1d0358e"
+expected_evidence_sha256 = "fba772dfb033105dba71c4770b6fad1e16860780f940e5f1d841bfb8b25d4486"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -298,7 +298,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "59f5c240c95be21712bedffdd8fc80259f8368505a891b7c9f3ed83d630789b6"
+expected_evidence_sha256 = "aa0b49ca556768483053ceae5a7131540fba07ad0534bea92f2ffaf62237ab0f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -309,7 +309,7 @@ valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "3e8bddfe0073d41cb54494cdc8ec3e4497d3ff757ade0ef8ed8ee119c748b528"
+expected_evidence_sha256 = "62ab9f4fee43bcaf2e382b8a0bc901e0cc33e833212579a0ba8606397604e01e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -320,7 +320,7 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "ae4f014ad07f3203005b2574d4a33381fb34884044eff9b42b3f37bf27634c31"
+expected_evidence_sha256 = "bcfa4cf0198e338bc73594644d7895ac45dd826bd9d5852547b12ecf68c0a646"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -331,7 +331,7 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "7d6438093999f9cac10619fe271039e4208ddf5ce7ff8dd5638eee985bcb4be9"
+expected_evidence_sha256 = "34912d2d7c6eab678613cfbce46b20cd62dd38a792a57692aca4d37d57671053"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -342,7 +342,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "41f32043229107102b09f546d2ca1f45d1071e4540dcb7137267d1c1f26f3af4"
+expected_evidence_sha256 = "c7831592024e4412342026491cc4475da4246089ded069cba4d4e9c9babab476"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -353,7 +353,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "c6880038b38c77a346aae0649b3da9e6163e71982c93b700042b1132b16de062"
+expected_evidence_sha256 = "91517afb11af9adc543a830dda2ad6be22081a643119830dda219e484d0f80cc"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -364,7 +364,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact wave/year has two explicitly associated source lists with contrary political-block labels for the same ordinary codes. Preserve both originals and associations and leave the ambiguous response domain unavailable; no preferred political grouping or historical recoding is inferred."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "991dc1c7a8ebb0f77f4084bdced0d4df0f84aba853efabda44263b045c18b175"
+expected_evidence_sha256 = "51f1513be979f496cf7c9485c0499aa6d3e8b9440256c74bb6d63e9abec81ce6"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -375,7 +375,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact wave/year has two explicitly associated source lists with contrary political-block labels for the same ordinary codes. Preserve both originals and associations and leave the ambiguous response domain unavailable; no preferred political grouping or historical recoding is inferred."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "a6cd7bfe8b4e54c199a1015a4ae4e258fd9e95eb4b8deebe79c85aec0e9f30de"
+expected_evidence_sha256 = "ff22e4951e784c86a929c909e853592c38d06076f11d802152964a3a8a68a36a"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -386,7 +386,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact wave/year has two explicitly associated source lists with contrary political-block labels for the same ordinary codes. Preserve both originals and associations and leave the ambiguous response domain unavailable; no preferred political grouping or historical recoding is inferred."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "53241de67030648fb8f1c66984cc0275e5484b069d9dec2558e07858ae7d46ca"
+expected_evidence_sha256 = "66a66bd1ef2d95352cd84a65dd7139ed21f17950828abfc39d2f5229aea35505"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -397,7 +397,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact wave/year has two explicitly associated source lists with contrary political-block labels for the same ordinary codes. Preserve both originals and associations and leave the ambiguous response domain unavailable; no preferred political grouping or historical recoding is inferred."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "eebb4630734ccb6e12a6257889e02527b8bd0cfe8223f14c35e152b13072136a"
+expected_evidence_sha256 = "af476e0ffa98c007f554a5aaf6f3a3fd73cf2f6f6dffd644b8497641463722d9"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -408,7 +408,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "6f7eb55c552a413bc0386d570b8b41e16e0753f669e8570aadfda85ff695d1cc"
+expected_evidence_sha256 = "a83b1e2407c629cc99de923032fb5c226535397d6f70857015c0c1ee5435caed"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -419,7 +419,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "084aafdcbfcbe8696301c669a4ff67709489f23220dbff88c51336b8f051d50e"
+expected_evidence_sha256 = "039f4e3e7ab069b45c5046ea19d6bf20880d4a848fb82242a4d002633bb81555"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -430,7 +430,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "This exact source survey-wave window lacks a coding association establishing its stored response values. The complete own native family has no direct coding references. Preserve its original definition, fields, dates and source evidence; leave the response domain unavailable rather than borrowing another wave or neighboring field."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "2e0bbde61319631a4ec441a75150d13a39d3c24a1ac9ecadb88da81e68763aca"
+expected_evidence_sha256 = "48efaa2b19dec0a8f1221819287322a66ecc7188b045ce958243297aa66391ea"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -441,7 +441,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact wave/year has two explicitly associated source lists with contrary political-block labels for the same ordinary codes. Preserve both originals and associations and leave the ambiguous response domain unavailable; no preferred political grouping or historical recoding is inferred."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "3922eb09cde6f1c901cb33803e894c203d8accdd10ec768112c8402aba2449e7"
+expected_evidence_sha256 = "efd323c9df3e18e4b899bd821811897d41a7708306b9c772fb5f737cbe705954"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -452,7 +452,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact wave/year has two explicitly associated source lists with contrary political-block labels for the same ordinary codes. Preserve both originals and associations and leave the ambiguous response domain unavailable; no preferred political grouping or historical recoding is inferred."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "f2f01f65c431d50a97cc394ce5316961cfe8f52b0f66e841b3251c01173e8a7e"
+expected_evidence_sha256 = "8e54974e142bdd49cac9189aa07f9f5ddb8f96be3d80937f946c188a8f191256"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -463,4 +463,4 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact wave/year has two explicitly associated source lists with contrary political-block labels for the same ordinary codes. Preserve both originals and associations and leave the ambiguous response domain unavailable; no preferred political grouping or historical recoding is inferred."
 evidence = "Accepted complete PSU register, actual same-register source support, source-defined May/November editions and applicable pinned canonical books. Full physical-source and bound-coding evidence retained. Review/proof: Batch50-PSU-wave-context-source-proof.json."
-expected_evidence_sha256 = "b19f6f690e0ea359f1a2aec4f4b679717adc47a7f6ba1ebdf396a5261230c8e9"
+expected_evidence_sha256 = "e79923aeac8f36a90da1024c7ad93c3a571eddc51de1392214e420370a30d036"

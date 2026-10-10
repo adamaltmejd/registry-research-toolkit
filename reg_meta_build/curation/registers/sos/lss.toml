@@ -318,4 +318,4 @@ refs = ["{\"source\":\"Socialstyrelsen/Metadata_Insatser enligt lagen om stöd o
 fields = ["classification_declared"]
 reason = "The source declares a regional classification link but supplies no fixed availability window for this exact occurrence. Preserve the declared URL and all original facts; keep its classification evidence unbound at this unavailable scope. No date, extraction epoch, historical codebook vintage or verified membership is inferred. Both original availability bounds are blank."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
-expected_evidence_sha256 = "8be386ea64236cd1e8deb0aa5c17f6e08d8f0f6b5c738075627210cdfaa58b97"
+expected_evidence_sha256 = "74467df44e11cf9497715d2ececc5b0f7dc5e95e6c642073cbb17a9afe6fc072"

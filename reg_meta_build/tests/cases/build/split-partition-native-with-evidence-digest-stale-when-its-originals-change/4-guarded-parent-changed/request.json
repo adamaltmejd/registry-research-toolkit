@@ -1,0 +1,12 @@
+{
+  "replaces": [
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_pins_complete_originals_on_fresh_compile[parent]"
+  ],
+  "note": "A guarded original's parent fact changed: BASE's NEW row (CVID 102) describes its edition (121) differently. The replaced test's [parent] variant (a parent fact of the first original); base is reported stale and quantity is withheld. Expected values are the pre-narrowing step 2 oracle (the stale base partition and no base variables), which a change to a guarded original keeps.",
+  "fails_if": "the partition digest stops covering the parent facts of each guarded original, so base's partition still applies after its NEW original's edition description changed",
+  "sources": "scb-native-partitions-guarded-parent-changed",
+  "authored_from": "scb-native-partitions-reviewed",
+  "registers": [
+    "1"
+  ]
+}

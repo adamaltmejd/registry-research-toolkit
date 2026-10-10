@@ -22,7 +22,6 @@ from reg_meta_build.source_coding import (
     CodingSegment,
     coding_content_sha256,
     coding_observation_fingerprints,
-    coding_source_sha256,
     copied_coding_fingerprints,
     resolve_code_membership,
 )
@@ -42,7 +41,7 @@ from reg_meta_build.source_intervals import coding_scope_bounds
 from reg_meta_build.source_records import ScopeInterval, SourceFields, TemporalScope
 from reg_meta_build.source_value_bindings import _member_scope
 
-from .source_evidence import canonical_sha256
+from .source_evidence import canonical_sha256, evidence_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Mapping
@@ -282,7 +281,7 @@ def _supported_association(
     start: str,
     end: str,
 ) -> tuple[CodingResolution | None, str | None]:
-    if tuple(sorted({coding_source_sha256(claim) for claim in claims})) != tuple(
+    if tuple(sorted({evidence_sha256(claim) for claim in claims})) != tuple(
         sorted(selection.expected_source_codings)
     ):
         return None, "support_coding_evidence_changed"
@@ -291,7 +290,7 @@ def _supported_association(
     for ci, claim in enumerate(claims):
         for mi, member in enumerate(claim.members):
             for ai, association in enumerate(member.associations):
-                receipt = coding_source_sha256(association)
+                receipt = evidence_sha256(association)
                 if (
                     (member.code, member.label) == (selection.code, selection.label)
                     and association.locator == selection.association
@@ -605,7 +604,9 @@ def compile_coding_selection(
             expected_source_codings=tuple(documented.source_authority.codings)
             if documented.source_authority is not None
             else None,
-            expected_raw_codings=tuple(sorted(documented.source_authority.raw_codings))
+            expected_raw_codings=tuple(
+                sorted(set(documented.source_authority.raw_codings))
+            )
             if documented.source_authority is not None
             and documented.source_authority.raw_codings is not None
             else None,
@@ -752,7 +753,7 @@ def _selection(
         getattr(selection, "expected_raw_codings", None) is not None
         and raw_codings is None
     ):
-        raw_codings = tuple(coding_source_sha256(claim) for claim in claims)
+        raw_codings = tuple(evidence_sha256(claim) for claim in claims)
     if isinstance(selection, SupportedCodingAssociation):
         return _supported_association(
             selection, claims, decision.valid_from, decision.valid_to
@@ -951,12 +952,9 @@ def apply_coding_choices(
             ) and any(
                 alternative.edition_scope is None
                 or alternative.edition_period_scope is None
-                or alternative.code_set_references is None
                 for alternative in target.alternatives
             ):
-                raise ValueError(
-                    "documented coding requires checked source scopes and coding references"
-                )
+                raise ValueError("documented coding requires checked source scopes")
             if target.ref not in guarded:
                 raise ValueError("coding decisions require guarded original membership")
     evaluations = evaluate_cases(ordered, records)
@@ -1091,7 +1089,7 @@ def apply_coding_choices(
             if getattr(decision.selection, "expected_raw_codings", None) is not None:
                 if decision.column_key not in raw_coding_cache:
                     raw_coding_cache[decision.column_key] = tuple(
-                        coding_source_sha256(claim) for claim in claims
+                        evidence_sha256(claim) for claim in claims
                     )
                 raw_codings = raw_coding_cache[decision.column_key]
             selected, problem = _selection(decision, claims, raw_codings=raw_codings)

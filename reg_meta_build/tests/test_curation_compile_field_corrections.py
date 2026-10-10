@@ -71,7 +71,6 @@ def test_field_correction_accepts_guarded_source_alternatives_without_losing_ori
                 (source, peer),
                 fields=tuple(SourceFields.model_fields),
                 parents=True,
-                coding=True,
             )
         ),
     )
@@ -146,7 +145,6 @@ def test_source_attribution_correction_requires_complete_originals_and_preserves
             (source, peer),
             fields=tuple(SourceFields.model_fields),
             parents=True,
-            coding=True,
         )
     )
     entry = ErrataFieldEntry(

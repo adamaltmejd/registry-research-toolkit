@@ -4,26 +4,23 @@ The fold's reachable shapes (dated SOS Kodlista periods, SCB Vardemangder lists)
 build cases: `cases/build/value-code-lists-withhold-only-contested-or-unknown-periods`.
 What stays here is LISA-only interval algebra (year-independent occurrences and
 occurrences of disjoint intervals: no build-case source delivers LISA), the fold's
-fail-fast identity guard, and the encoding the committed `raw_codings` digests were
-written with.
+fail-fast identity guard, and the content the committed `raw_codings` digests pin.
 """
 
 from __future__ import annotations
 
-import json
-from dataclasses import asdict, replace
+from dataclasses import replace
 
 import pytest
 from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
-    coding_source_sha256,
     resolve_code_membership,
 )
 from reg_meta_build.source_evidence import (
     DeliveredCell,
     RecordLocator,
-    canonical_sha256,
+    evidence_sha256,
 )
 from reg_meta_build.source_records import ScopeInterval, TemporalScope
 from reg_meta_build.source_values import (
@@ -56,20 +53,21 @@ def _claim(
     return CodeListClaim(identity, scope or _scope(), members)
 
 
-def test_coding_source_hash_keeps_the_committed_ordered_json_encoding() -> None:
+def test_coding_evidence_digest_pins_content_and_duplicates_not_row_positions() -> None:
     """Input: a claim with duplicated associations, cached cells and validity rows.
-    Output: `coding_source_sha256` equals the canonical hash of the stdlib
-    `json.dumps(asdict(...))` payload the committed `raw_codings` digests
-    (`curation/registers/sos/dors.toml`, `scb/lisa.toml`, ...) were written with, and
-    it changes when members are reordered or a duplicate is dropped.
+    Output: its `evidence_sha256` (the committed `raw_codings` digests,
+    `curation/registers/sos/dors.toml`, `scb/lisa.toml`, ...) is unchanged when the
+    same rows arrive re-sorted, at other row numbers, under another claim id, and it
+    changes when a duplicate is dropped or a delivered cell changes.
 
-    No boundary reaches it: build cases render their digests with this same function,
-    and `test_committed_curation.py` only loads the committed literals; the real-seed
-    strict build is their only other check. The expected payload is a second,
-    independent encoder (stdlib json), not this function's output.
+    No boundary reaches the nested association, hint and validity shapes: build cases
+    render their digests with this same function, and `test_committed_curation.py`
+    only loads the committed literals. Expected values are relations between two
+    inputs, not this function's output.
 
-    Fails if the serializer changes the encoding (field order, number or None
-    handling, nested model dumps) or stops pinning member order and duplicates.
+    Fails if the digest pins row order, row numbers, physical cells or the
+    revision-bearing claim id (any new delivery would stale every raw coding pin), or
+    stops pinning duplicates and delivered content.
     """
     locator = RecordLocator(
         semantic_record_key=("member:01",),
@@ -120,15 +118,34 @@ def test_coding_source_hash_keeps_the_committed_ordered_json_encoding() -> None:
         version_label="Original version",
         drop_unknown_membership=True,
     )
-    for value in (association, claim):
-        legacy_payload = json.loads(
-            json.dumps(asdict(value), default=lambda item: item.model_dump(mode="json"))
-        )
-        assert coding_source_sha256(value) == canonical_sha256(legacy_payload)
-    reordered = replace(claim, members=claim.members[1:] + claim.members[:1])
-    assert coding_source_sha256(reordered) != coding_source_sha256(claim)
+    moved_locator = locator.model_copy(
+        update={"physical_record": "7", "physical_cells": ("A7", "B7")}
+    )
+    moved_association = replace(
+        association,
+        row_number=7,
+        member_hints=(SourceMemberHint("row", "Åäö", moved_locator),),
+        section_locator=moved_locator,
+    )
+    moved_member = replace(
+        member,
+        associations=(moved_association, moved_association),
+        validity=(replace(validity, row_number=9, locators=(moved_locator,)),),
+    )
+    resorted = replace(
+        claim,
+        claim_id="claim-from-another-delivery",
+        members=(moved_member, *claim.members[1:3], moved_member)[::-1],
+    )
+    assert evidence_sha256(moved_association) == evidence_sha256(association)
+    assert evidence_sha256(resorted) == evidence_sha256(claim)
     deduplicated = replace(claim, members=claim.members[:-1])
-    assert coding_source_sha256(deduplicated) != coding_source_sha256(claim)
+    assert evidence_sha256(deduplicated) != evidence_sha256(claim)
+    recoded = replace(
+        association,
+        delivered_cells=(cell, cell.model_copy(update={"raw_value": "002"})),
+    )
+    assert evidence_sha256(recoded) != evidence_sha256(association)
 
 
 def test_member_validity_splits_at_exact_days_across_a_leap_day() -> None:

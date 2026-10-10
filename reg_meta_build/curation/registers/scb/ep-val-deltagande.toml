@@ -213,7 +213,7 @@ valid_from = "2019-01-01"
 valid_to = "2019-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "7e973d731b9e271804a19dbb1900ef0e17ec9e4f0d673bd78b901637c0ae0480"
+expected_evidence_sha256 = "839730b7883e962af986c652a6ea916617ed96b23b0001bafd4ad84ac012f35e"
 expected_diagnostic_sha256 = "be83333f2745fe6acb81c860b5aa75b0ab109246a0a5763a349667022adb9953"
 
 [[identity.partition]]
@@ -221,7 +221,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "245.8534"
 columns = { Kgruppnamn = "245.8534.kgruppnamn", Kgruppnamn2011 = "245.8534.kgruppnamn2011", Kgruppnr = "245.8534.kgruppnr", Kgruppnr2011 = "245.8534.kgruppnr2011", Kommungrupp_2017_namn = "245.8534.kommungrupp-2017-namn", Kommungrupp_klartext = "245.8534.kommungrupp-klartext" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "f4562be5ef01dd16f6c7548527342be8c372f082e80b8803482d319ccefe79ed"
+expected_evidence_sha256 = "1a126a56e6a4565ca58c3d7505e5f1487c483bc3b575cb7e49537edde8b3b456"
 
 [[variable]]
 native_id = "245.8534.kgruppnamn2011"
