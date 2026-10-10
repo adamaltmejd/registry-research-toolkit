@@ -515,10 +515,11 @@ main through its deploys.
 If the `integration` job is red, read the step that failed:
 
 - **Asset resolution or digest** — an asset is missing, duplicated, or its recorded and
-  actual SHA-256 disagree. Fix the release (step 8) and re-run.
+  actual SHA-256 disagree. Upload an asset that is missing (step 8); a duplicated or
+  wrong one means a new patch release (Error recovery).
 - **Artifact conformance** — an incompatible, incomplete, nonpublishable, or mismatched
-  artifact, or a conformance case the asset fails. Repair the build or selected asset;
-  never resurrect loose runtime inventory as a workaround.
+  artifact, or a conformance case the asset fails. Repair the build or selected input
+  and cut a new patch release; never resurrect loose runtime inventory as a workaround.
 
 Re-validate with `gh workflow run integration.yml --ref main` (then watch that
 dispatched run). Do **not** re-release a working version over a stale check.
@@ -563,8 +564,8 @@ safe.
 - If `build-db` or `build-docs` fails: fix the issue before publishing. The draft
   release exists but `--draft=false` must not run until all three assets are valid.
 - If `gh release upload` fails on a draft: retry the upload. The draft and tag are fine.
-- **Once a release is published, do not delete or re-cut it.** Deploys and the G1
-  baseline may already reference the tag. Fix downstream failures in place (a deploy
-  failure, a stale artifact check), replace a broken asset on the release, or cut a new
-  patch version if the released code is wrong.
+- **Once a release is published, do not delete, re-cut or re-upload its assets.**
+  Deploys and the G1 baseline pin the tag and its asset digests. Fix downstream failures
+  in place (a deploy failure, a stale artifact check), or cut a new patch version if the
+  released code or assets are wrong.
 - Never force-push or amend commits already on main.
