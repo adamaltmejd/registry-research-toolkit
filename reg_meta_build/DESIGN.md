@@ -842,9 +842,31 @@ scope that carries no range stays unresolvable (an unsupported occurrence, as be
 Coding membership on a pooled edition is bound over the whole pooled range (Y-207). The
 marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0)
 through `ResolvedState`/`IRVariableState` into the DB, and `validate_built_db` fails a
-build whose pooled-marked window overlaps an unmarked window on one column. Adjacent
-pooled segments on one column whose reconciled state-grain facts and coding evidence
-agree merge into one pooled state over their combined window (Y-209).
+build whose pooled-marked window overlaps an unmarked window on one column.
+
+Occurrence resolution and coding cut a column at every change in the active editions or
+code lists, so one state per cut would repeat identical facts edition by edition. One
+rule, `merge_adjacent_states` in `resolved_catalog.py`, runs whenever a
+`ResolvedVariable` is validated: day-adjacent dated states on one variant and delivery
+column whose resolved facts are all identical merge into one state over their hull
+(#1296 2d). The facts compared are every `ResolvedState` field but the window: value set
+and version label, classification links (with their conformance), data type and length,
+texts, provenance and the pooled flag; population is a variant fact, so one variant
+never mixes two. It compares resolved facts, not evidence identity, so two editions that
+state the same thing merge; adjacent pooled cuts of overlapping pooled editions (Y-209)
+are one case of it. A gap, a pooled state beside an explicit one, or any differing fact
+keeps states apart. Each value-set version is its own lane: states of one variant and
+version never overlap, so the lane sorted by start fixes the result, and a state of
+another version overlapping the lane never interrupts it; the output does not depend on
+input order. The merged state keeps its earliest segment's `valid_from`, hence its
+`state_id`; absorbed segments' IDs stop resolving (pre-v1). It runs after formation and
+representation slicing, so lineage, warnings, coverage and the writer all see the merged
+states; data warnings attach to a state by window overlap at read time, so a warning on
+an absorbed segment attaches to the merged state. A merged consumer state can span a
+change of source variant (2018 through one, 2019 through another); lineage resolves it
+period by period, one edge per source state, and reports an ambiguous source variant
+only where two source variants deliver on one day of the consumer window
+(`_contested_variants` in `catalog_lineage.py`).
 
 Operational definitions and source references are state-grain. Separate resolved periods
 and variants each keep their own exact text and provenance, so differing texts across

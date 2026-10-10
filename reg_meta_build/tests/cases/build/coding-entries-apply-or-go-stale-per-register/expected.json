@@ -607,12 +607,12 @@
       "rows": [
         [
           "2019-01-01",
-          "2019-12-31",
+          "2020-12-31",
           null,
           null
         ]
       ],
-      "note": "extendtwice: the stale extension leaves the 2019 target without a value set."
+      "note": "extendtwice: the stale extension leaves the 2019 target without a value set, so it merges with the uncoded 2020 beside it into one state (#1296 2d)."
     },
     {
       "table": "state_codes",

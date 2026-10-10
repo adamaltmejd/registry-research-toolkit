@@ -41,15 +41,12 @@
         ["1982-01-01", "1988-12-31", null, null],
         ["1989-01-01", "1989-12-31", "1", "Till hemmet"],
         ["1989-01-01", "1989-12-31", "2", "Till annan adress"],
-        ["1990-01-01", "1990-12-31", "1", "Till hemmet"],
-        ["1990-01-01", "1990-12-31", "2", "Till annan adress"],
-        ["1990-01-01", "1990-12-31", "3", "Ej utskriven vid 28 dygn"],
-        ["1991-01-01", "1998-12-31", "1", "Till hemmet"],
-        ["1991-01-01", "1998-12-31", "2", "Till annan adress"],
-        ["1991-01-01", "1998-12-31", "3", "Ej utskriven vid 28 dygn"],
+        ["1990-01-01", "1998-12-31", "1", "Till hemmet"],
+        ["1990-01-01", "1998-12-31", "2", "Till annan adress"],
+        ["1990-01-01", "1998-12-31", "3", "Ej utskriven vid 28 dygn"],
         ["1999-01-01", "2000-12-31", "1", "Ej hemskriven vid 28 dagar"]
       ],
-      "note": "test_butsatt_source_blocks_withhold_the_1982_to_1988_overlap: one sheet relabels code 2 (Till barnklinik / Till annan adress) over 1982-1988, so only those years are withheld; the 1990 state ends 1990-12-31 with exactly codes 1-3. The other rows follow from the sheet's blocks."
+      "note": "test_butsatt_source_blocks_withhold_the_1982_to_1988_overlap: one sheet relabels code 2 (Till barnklinik / Till annan adress) over 1982-1988, so only those years are withheld; 1990 carries exactly codes 1-3. The other rows follow from the sheet's blocks. The 1990 and 1991-1998 blocks state the same list, so their states merge into one 1990-1998 state (#1296 2d)."
     },
     {
       "table": "state_codes",

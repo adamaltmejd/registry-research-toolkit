@@ -6,6 +6,9 @@ native_id = "1"
 native_id = "1.10"
 slug = "people"
 [[variable]]
+native_id = "1.106"
+slug = "switch"
+[[variable]]
 native_id = "1.105"
 slug = "earlier"
 [[variable]]
