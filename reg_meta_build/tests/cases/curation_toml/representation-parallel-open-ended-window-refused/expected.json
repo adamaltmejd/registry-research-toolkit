@@ -1,0 +1,11 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_representations.py::test_representation_contract_requires_exact_finite_cover[future]",
+  "fails_if": "`FiniteCurationWindow` (source_curation.py) stops refusing a year-9999 bound, so the shared window running to 9999-12-31 is refused only as not covered by its columns (or loads)",
+  "note": "As in the replaced test, only the shared window's end moves to 9999-12-31; the columns are the allowed twin's (the build case representation-parallel-pooled-columns-keep-their-original-bounds). The finite-window rule refuses it before the coverage rule.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[representation.parallel]] entry 1",
+    "message_contains": ["curation windows require finite ISO date bounds"]
+  }
+}

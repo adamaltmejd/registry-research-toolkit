@@ -49,7 +49,7 @@ from _sos_fixtures import (
     SosVariable,
     write_sos_input,
 )
-from openpyxl import load_workbook
+from openpyxl import Workbook, load_workbook
 from reader_artifacts import build_inputs_digest, generation_dir
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.pipeline import build_catalog, check_curation
@@ -147,6 +147,17 @@ def write_sources(spec: dict, source: Path) -> None:
         + (("unika",) if unika is not None else ())
         + (("vardemangder", "valid_dates") if values else ()),
     )
+    if "join_keys" in scb:
+        # ID-kolumner.xlsx: one worksheet of `Tabell | ID-kolumn | Beskrivning` rows.
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["Tabell", "ID-kolumn", "Beskrivning"])
+        for row in scb["join_keys"]:
+            sheet.append(row)
+        path = source / "SCB/ID-kolumner.xlsx"
+        workbook.properties.created = workbook.properties.modified = _XLSX_EPOCH
+        workbook.save(path)
+        _fix_zip_times(path)
     for relative, text in spec.get("files", {}).items():
         path = source / relative
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -696,8 +707,9 @@ def _variables(outcome: Outcome) -> list[dict]:
     """Each built variable's distinct delivery columns; one null row when it has none."""
     rows = outcome._sql(
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
-        "s.delivery_column_name AS column, v.provider_key, v.definition, "
-        "v.description, v.is_identifier, v.is_sensitive, v.deprecated, "
+        "s.delivery_column_name AS column, v.provider_key, v.name, v.definition, "
+        "v.description, v.measurement_unit, v.operational_definition, "
+        "v.is_identifier, v.is_sensitive, v.deprecated, "
         "sr.slug AS source_register, v.source_label, v.source_register_text "
         "FROM variable v JOIN register r USING (register_id) "
         "LEFT JOIN register sr ON sr.register_id = v.source_register_id "
@@ -722,6 +734,55 @@ def _concept_groups(outcome: Outcome) -> list[dict]:
     ):
         groups.setdefault(row["group_id"], []).append(row["slug"])
     return [{"variables": sorted(slugs)} for slugs in groups.values()]
+
+
+def _group_members(outcome: Outcome) -> list[dict]:
+    """Each concept-group member with its literal column and its facets."""
+    facets: dict[int, list[list]] = {}
+    for row in outcome._sql(
+        "SELECT member_id, axis, value, label FROM concept_group_variable_facet"
+    ):
+        facets.setdefault(row["member_id"], []).append(
+            [row["axis"], row["value"], row["label"]]
+        )
+    rows = outcome._sql(
+        "SELECT m.member_id, g.group_key, r.slug AS register, "
+        "v.slug AS variable, m.delivery_column_name AS column "
+        "FROM concept_group_variable m JOIN concept_group g USING (group_id) "
+        "JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id"
+    )
+    for row in rows:
+        row["facets"] = sorted(facets.get(row.pop("member_id"), []))
+    return rows
+
+
+def _editions(outcome: Outcome) -> list[dict]:
+    """Each register version with its prose, populations and object types."""
+    populations: dict[int, list[list]] = {}
+    for row in outcome._sql(
+        "SELECT regver_id, name, definition, comment, date_range FROM population"
+    ):
+        populations.setdefault(row.pop("regver_id"), []).append(list(row.values()))
+    objects: dict[int, list[list]] = {}
+    for row in outcome._sql("SELECT regver_id, name, definition FROM object_type"):
+        objects.setdefault(row.pop("regver_id"), []).append(list(row.values()))
+    rows = outcome._sql(
+        "SELECT e.regver_id, r.slug AS register, rv.slug AS variant, "
+        "e.registerversionnamn AS name, "
+        "e.registerversionbeskrivning AS description, "
+        "e.registerversionmatinformation AS measurement_information, "
+        "e.registerversion_docstaus AS documentation_status, "
+        "e.registerversion_forstagodkannandedatum AS first_approved_at, "
+        "e.registerversion_senastgodkanddatum AS last_approved_at "
+        "FROM register_version e JOIN register_variant rv USING "
+        "(register_variant_id) JOIN register r USING (register_id)"
+    )
+    for row in rows:
+        edition = row.pop("regver_id")
+        row["populations"] = _sorted(populations.get(edition, []))
+        row["object_types"] = _sorted(objects.get(edition, []))
+    return rows
 
 
 def _value_sets(outcome: Outcome) -> list[dict]:
@@ -1003,6 +1064,11 @@ _STATE_COORDINATES = (
     "SELECT s.state_id, r.slug AS register, v.slug AS variable, rv.slug AS variant, "
     "s.delivery_column_name AS column, s.valid_from, s.valid_to " + _STATE_JOIN
 )
+# A succession endpoint's register or variable FQID, from a `{side}_provider`,
+# `{side}_register` (and `{side}_variable`) column triple.
+_REGISTER = "{0}_provider || '/' || {0}_register"
+_VARIABLE = "{0}_provider || '/' || {0}_register || '/' || {0}_variable"
+_SUCCESSION_FACTS = "effective_year, note, beskrivning AS description"
 _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "issues": _issues,
     "issue_refs": _issue_refs,
@@ -1018,7 +1084,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "s.delivery_column_name AS column, s.valid_from, s.valid_to, s.data_type, "
         "v.name, s.name AS state_name, s.provenance, s.pooled, s.data_length, "
         "s.definition, s.measurement_unit, s.description, s.operational_definition, "
-        "s.source_register_text " + _STATE_JOIN
+        "s.source_register_text, s.value_set_version_label " + _STATE_JOIN
     ),
     "state_codes": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
@@ -1030,9 +1096,14 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "variables": _variables,
     "variants": lambda o: o._sql(
         "SELECT r.slug AS register, rv.slug AS variant, rv.name, "
-        "rv.panel_entity_key, rv.panel_time_key "
+        "rv.panel_entity_key, rv.panel_time_key, rv.panel_time_grain, "
+        "rv.description, rv.display_group "
         "FROM register_variant rv JOIN register r USING (register_id)"
     ),
+    "registers": lambda o: o._sql(
+        "SELECT slug AS register, name, purpose FROM register"
+    ),
+    "editions": _editions,
     # One row per tag member as its FQID; a tag without members is one null row.
     "tags": lambda o: o._sql(
         "SELECT t.slug, CASE WHEN m.variable_id IS NOT NULL THEN "
@@ -1054,16 +1125,25 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     ),
     "alias_windows": _alias_windows,
     "concept_groups": _concept_groups,
+    "group_axes": lambda o: o._sql(
+        "SELECT g.group_key, a.axis, a.ordinal, a.label FROM concept_group_axis a "
+        "JOIN concept_group g USING (group_id)"
+    ),
+    "group_members": _group_members,
     "warnings": _warnings,
     "search_pins": lambda o: o._sql(
         "SELECT key AS query, type, position, entity FROM search_pin"
     ),
     # The unfolded text `variable_fts` indexes, one row per built variable.
-    "search_text": lambda o: o._sql(
-        "SELECT r.slug AS register, v.slug AS variable, t.name, t.definition, "
-        "t.description FROM variable_search_text t JOIN variable v USING (variable_id) "
-        "JOIN register r ON r.register_id = v.register_id"
-    ),
+    "search_text": lambda o: [
+        {**row, "delivery_column_names": json.loads(row["delivery_column_names"])}
+        for row in o._sql(
+            "SELECT r.slug AS register, v.slug AS variable, t.name, t.definition, "
+            "t.description, t.delivery_column_names FROM variable_search_text t "
+            "JOIN variable v USING (variable_id) "
+            "JOIN register r ON r.register_id = v.register_id"
+        )
+    ],
     "manifest": lambda o: o._sql("SELECT key, value FROM import_manifest"),
     "edges": lambda o: o._sql(
         "SELECT 'same_as' AS type, "
@@ -1074,6 +1154,43 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "|| predecessor_variable, "
         "successor_provider || '/' || successor_register || '/' || successor_variable "
         "FROM variable_replaced_by"
+    ),
+    # Every replaced_by edge below the classification grain, in one row shape.
+    "successions": lambda o: o._sql(
+        "SELECT 'register' AS grain, "
+        f"{_REGISTER.format('predecessor')} AS predecessor, "
+        f"{_REGISTER.format('successor')} AS successor, NULL AS predecessor_variant, "
+        "NULL AS successor_variant, NULL AS predecessor_column, "
+        "NULL AS successor_column, NULL AS variant, "
+        f"{_SUCCESSION_FACTS} FROM register_replaced_by UNION ALL SELECT 'variable', "
+        f"{_VARIABLE.format('predecessor')}, {_VARIABLE.format('successor')}, "
+        f"NULL, NULL, NULL, NULL, NULL, {_SUCCESSION_FACTS} FROM variable_replaced_by "
+        f"UNION ALL SELECT 'variant', {_REGISTER.format('predecessor')}, "
+        f"{_REGISTER.format('successor')}, predecessor_variant, successor_variant, "
+        f"NULL, NULL, NULL, {_SUCCESSION_FACTS} FROM variant_replaced_by "
+        f"UNION ALL SELECT 'representation', {_VARIABLE.format('predecessor')}, "
+        f"{_VARIABLE.format('successor')}, NULL, NULL, predecessor_column, "
+        f"successor_column, variant, {_SUCCESSION_FACTS} "
+        "FROM representation_replaced_by"
+    ),
+    "classification_derivations": lambda o: o._sql(
+        "SELECT derived_slug AS derived, source_slug AS source, note "
+        "FROM classification_derived_from"
+    ),
+    "timeseries_events": lambda o: o._sql(
+        "SELECT namn AS name, handelse AS event, beskrivning AS description, "
+        "entitet AS entity, id1 AS first_token, id2 AS second_token, "
+        "fil_id AS file_token FROM timeseries_event"
+    ),
+    "source_columns": lambda o: o._sql(
+        "SELECT table_name, column_name, sql_type, nullable FROM source_column_type"
+    ),
+    "join_keys": lambda o: o._sql(
+        "SELECT table_name, column_name, description FROM source_join_key"
+    ),
+    "identifiers": lambda o: o._sql(
+        "SELECT var_id AS native_variable, variabelnamn AS name, "
+        "variabeldefinition AS definition FROM identifier_semantics"
     ),
     "lineage": lambda o: o._sql(
         "SELECT c.register, c.variable, c.variant, c.column, "
@@ -1156,12 +1273,18 @@ FIELDS: dict[str, frozenset[str]] = {
         "case_uses": "case_id source key use variable",
         "states": "register variable variant column valid_from valid_to data_type "
         "name state_name provenance pooled data_length definition measurement_unit "
-        "description operational_definition source_register_text",
+        "description operational_definition source_register_text "
+        "value_set_version_label",
         "state_codes": "register variable variant column valid_from valid_to code label",
-        "variables": "register variable column provider_key definition description "
-        "is_identifier is_sensitive deprecated source_register source_label "
-        "source_register_text",
-        "variants": "register variant name panel_entity_key panel_time_key",
+        "variables": "register variable column provider_key name definition "
+        "description measurement_unit operational_definition is_identifier "
+        "is_sensitive deprecated source_register source_label source_register_text",
+        "variants": "register variant name panel_entity_key panel_time_key "
+        "panel_time_grain description display_group",
+        "registers": "register name purpose",
+        "editions": "register variant name description measurement_information "
+        "documentation_status first_approved_at last_approved_at populations "
+        "object_types",
         "tags": "slug member",
         "aliases": "register variable variant column",
         "alias_windows": "register variable variant column valid_from valid_to provenance "
@@ -1169,13 +1292,25 @@ FIELDS: dict[str, frozenset[str]] = {
         "measurement_unit name description operational_definition "
         "source_register_text codes classifications",
         "concept_groups": "variables",
+        "group_axes": "group_key axis ordinal label",
+        "group_members": "group_key register variable column facets",
         "warnings": "register variable variant column valid_from valid_to code "
         "severity detail summary detail_hash_of fields refs withheld_output "
         "acknowledged_by source_subject case_id",
         "search_pins": "query type position entity",
-        "search_text": "register variable name definition description",
+        "search_text": "register variable name definition description "
+        "delivery_column_names",
         "manifest": "key value",
         "edges": "type a b",
+        "successions": "grain predecessor successor predecessor_variant "
+        "successor_variant predecessor_column successor_column variant "
+        "effective_year note description",
+        "classification_derivations": "derived source note",
+        "timeseries_events": "name event description entity first_token "
+        "second_token file_token",
+        "source_columns": "table_name column_name sql_type nullable",
+        "join_keys": "table_name column_name description",
+        "identifiers": "native_variable name definition",
         "lineage": "register variable variant column source_register "
         "source_variable source_variant source_column valid_from valid_to",
         "lineage_warnings": "register variable variant column valid_from valid_to "

@@ -81,11 +81,12 @@ def _text(fields: SourceFields, name: str) -> str | None:
 
 
 def _fact_claim(field: SourceField | None) -> tuple[str, str | None] | None:
-    """Carry the occurrence fact as tri-state: value, negative, or no claim."""
+    """Carry the occurrence fact as a value claim, or no claim when unknown.
+
+    `SourceFields` refuses a negative on every field this reads.
+    """
     if field is None or field.status == "unknown":
         return None
-    if field.status == "negative":
-        return ("negative", None)
     assert isinstance(field.value, str)
     return ("value", field.value)
 

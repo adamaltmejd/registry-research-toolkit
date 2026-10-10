@@ -1,0 +1,35 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "timeseries_events",
+      "fields": ["name", "event", "entity", "first_token", "second_token", "file_token"],
+      "rows": [
+        ["Raw name", "Ersatt av", "Variabel", "0001", null, null],
+        ["Raw name", "Ersatt av", "Variabel", "0001", null, null],
+        ["Raw name", "Ersatt av", "Variabel", null, null, null]
+      ]
+    },
+    {
+      "table": "source_columns",
+      "fields": ["table_name", "column_name", "sql_type", "nullable"],
+      "rows": [
+        ["RawTable", "LopNr", "varchar(12)", 0]
+      ]
+    },
+    {
+      "table": "join_keys",
+      "fields": ["table_name", "column_name", "description"],
+      "rows": [
+        ["RawTable", "LopNr", "Source key"]
+      ]
+    },
+    {
+      "table": "identifiers",
+      "fields": ["native_variable", "name", "definition"],
+      "rows": [
+        [44, "Native key", null]
+      ]
+    }
+  ]
+}

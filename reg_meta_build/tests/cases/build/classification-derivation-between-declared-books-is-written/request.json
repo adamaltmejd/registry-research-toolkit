@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_resolved_metadata_writes.py::test_all_explicit_metadata_surfaces_are_written_without_derivation"
+  ],
+  "note": "The allowed twin of classification-derivation-from-an-unknown-book-fails-the-build: the same curation, with the derived_from edge between two declared books (sni2020 derived from sni2000). From the old test: one classification_derived_from row carrying the edge's note (old: third-codes from first-codes, 'Specialization').",
+  "fails_if": "`compile_declared_metadata` refuses or drops a derived_from edge between two compiled books, or `prepare_resolved_metadata` writes it without its note or with its endpoints swapped",
+  "sources": "scb-classification-books"
+}

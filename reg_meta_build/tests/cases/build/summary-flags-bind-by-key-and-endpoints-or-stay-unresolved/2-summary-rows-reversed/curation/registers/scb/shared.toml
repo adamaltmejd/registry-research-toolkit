@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "shared"
+native_id = "4"
+[[variant]]
+native_id = "4.40"
+slug = "people"
+[[variable]]
+native_id = "4.401"
+slug = "first"
+[[variable]]
+native_id = "4.402"
+slug = "second"

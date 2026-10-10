@@ -25,8 +25,12 @@ from reg_meta_build.pipeline import (
     check_curation,
 )
 from reg_meta_build.resolved_catalog import (
+    ResolvedAlias,
+    ResolvedAliasWindow,
     ResolvedCodeSet,
-    ResolvedVariable,
+    ResolvedEdition,
+    ResolvedObjectType,
+    ResolvedPopulation,
     write_resolved_catalog,
 )
 
@@ -296,41 +300,63 @@ def test_rerun_is_byte_identical(catalog: CatalogFixture, tmp_path: Path) -> Non
 
 
 def test_catalog_bytes_do_not_depend_on_writer_input_order(tmp_path: Path) -> None:
-    # Fails if the writer stores registers, variables, states or manifest entries in
-    # the order it receives them (drops a sort before an insert), or stops sorting and
-    # deduplicating a value set's members, so one resolved catalog handed over in
-    # another order, or with a member repeated, changes the artifact's bytes or is
-    # refused. A rebuild replays one order, a build hands the writer members already
-    # sorted and unique, and the build cases' reversed-row steps compare projections,
-    # which ignore order; this is the byte-level witness.
+    # Fails if the writer inserts rows in input order (registers, variables, states,
+    # aliases and their windows, editions, populations, object types, the manifest)
+    # or stops sorting and deduplicating value-set members. A build hands the writer
+    # sorted, unique members, populations and object types, and the build cases'
+    # reversed-row steps compare order-blind projections: this is the byte witness.
     members = (("01", "Participation"), ("02", "Employment"))
-
-    def coded(variable: ResolvedVariable, states, given) -> ResolvedVariable:
-        value_set = ResolvedCodeSet(members=given)
-        return variable.model_copy(
-            update={
-                "states": tuple(
-                    s.model_copy(update={"value_set": value_set}) for s in states
-                )
-            }
+    windows = tuple(
+        ResolvedAliasWindow(valid_from=f"{year}-01-01", valid_to=f"{year}-12-31")
+        for year in (2000, 2002)
+    )
+    variant = resolved_variable().states[0].variant
+    # Each state's column, a parallel column with two windows and a search alias.
+    aliases = tuple(
+        ResolvedAlias(variant=variant, delivery_column_name=column, windows=spans)
+        for column, spans in (
+            ("AmPolTyp", windows[:1]),
+            ("AmPolTypUpdated", windows[1:]),
+            ("ParallelColumn", windows),
+            ("Search", ()),
         )
+    )
+    populations = tuple(ResolvedPopulation(name=n) for n in ("People", "Another"))
+    object_types = (ResolvedObjectType(name="Person"), ResolvedObjectType(name="Car"))
 
-    variables = tuple(
-        coded(v, v.states, members)
-        for v in (resolved_variable(), resolved_variable("sos"))
-    )
+    def write(output: Path, manifest: dict[str, str], *, step: int) -> None:
+        # step -1 hands every sequence over reversed, and the members also twice.
+        value_set = ResolvedCodeSet(members=members[::step] + members * (step < 0))
+        variables = tuple(
+            v.model_copy(
+                update={
+                    "states": tuple(
+                        s.model_copy(update={"value_set": value_set})
+                        for s in v.states[::step]
+                    ),
+                    "aliases": tuple(
+                        a.model_copy(update={"windows": a.windows[::step]})
+                        for a in aliases[::step]
+                    ),
+                }
+            )
+            for v in (resolved_variable(), resolved_variable("sos"))[::step]
+        )
+        editions = tuple(
+            ResolvedEdition(
+                register=v.register_ref,
+                variant=variant,
+                name="2000",
+                populations=populations[::step],
+                object_types=object_types[::step],
+            )
+            for v in variables
+        )
+        write_resolved_catalog(variables, output, manifest=manifest, editions=editions)
+
     first, reordered = tmp_path / "first.db", tmp_path / "reordered.db"
-    write_resolved_catalog(
-        variables, first, manifest=synthetic_manifest() | {"z": "last", "a": "first"}
-    )
-    write_resolved_catalog(
-        tuple(
-            coded(v, reversed(v.states), (*reversed(members), *members))
-            for v in reversed(variables)
-        ),
-        reordered,
-        manifest=synthetic_manifest() | {"a": "first", "z": "last"},
-    )
+    write(first, synthetic_manifest() | {"z": "last", "a": "first"}, step=1)
+    write(reordered, synthetic_manifest() | {"a": "first", "z": "last"}, step=-1)
     assert reordered.read_bytes() == first.read_bytes()
 
 

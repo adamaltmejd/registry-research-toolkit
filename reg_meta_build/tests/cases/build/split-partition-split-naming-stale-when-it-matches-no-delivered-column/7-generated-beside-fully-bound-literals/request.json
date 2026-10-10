@@ -1,0 +1,32 @@
+{
+  "note": "Step 1's source and authored splits, with the unmatched 1.5.other pinned only in the generated sample.auto.toml, in a curating zone so the generated layer is live. A generated pin is written on first sight and never recomputed, so it may outlive what it matched (fqid_slugs.py): it stays silently unused, with no stale row and no abort, while the authored pin of step 1 goes stale. The real seed's one unmatched split pin, innovation-foretag.auto.toml's 257.15662.x, has this shape.",
+  "fails_if": "`compile_partitions` (curation_compile.py) reports an unmatched generated (`.auto.toml`) split pin as a stale entry like an authored one, or the compile mints an ambiguity for it again so the source-scope invariant aborts the build",
+  "sources": {
+    "description": "Variable 5 delivers Kon in 2020 (CVID 20), KON in 2021 (CVID 21) and LEFT in 2021 (CVID 22).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "Kon",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "KON",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021
+        },
+        {
+          "colname": "LEFT",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021
+        }
+      ]
+    }
+  }
+}

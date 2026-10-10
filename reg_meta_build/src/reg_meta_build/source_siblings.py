@@ -92,11 +92,6 @@ def resolve_sibling_pairs(
     for occurrence in occurrences:
         if occurrence.use != "catalog" or "identity" in occurrence.withheld_fields:
             continue
-        availability = occurrence.fields.availability
-        if "availability" in occurrence.withheld_fields or (
-            availability is not None and availability.status == "negative"
-        ):
-            continue
         if (
             occurrence.variable_key is not None
             and occurrence.variable_key not in identities

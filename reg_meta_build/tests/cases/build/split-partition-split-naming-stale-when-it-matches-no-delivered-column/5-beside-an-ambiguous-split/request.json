@@ -1,0 +1,25 @@
+{
+  "note": "The source of split-partition-implicit-case-twins-delivered-together-stay-unresolved (Kon and KON in one year, so 1.5.kon binds neither and stays an ambiguous named identity) plus the unmatched 1.5.other. The family still has an ambiguity to attribute, yet the unmatched pin goes stale beside it: matching is decided per split, not per family.",
+  "fails_if": "`compile_partitions` (curation_compile.py) reports unmatched split pins only when the family has no ambiguous split left, so 1.5.other is silently unused beside the ambiguous kon; or `_partition_ambiguity` drops the ambiguous kon together with the unmatched pin, so kon is no longer reported ambiguous",
+  "sources": {
+    "description": "Variable 5 delivers Kon (CVID 20) and KON (CVID 21) together in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "Kon",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "KON",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        }
+      ]
+    }
+  }
+}

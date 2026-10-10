@@ -798,17 +798,18 @@ A literal source year 9999 is not dated evidence.
 ### Occurrences and coding
 
 Occurrence reconciliation forms exact nonoverlapping column intervals. Conflicting
-optional fields become unknown only over their overlap. Conflicting availability or
-population withholds the unsafe segment. Missing periods/columns remain explicit issues.
-A delivered literally blank column (raw `""`) is not a missing fact: SCB states the
-member has no physical column (aggregate-statistics registers), so the reader carries it
-as an explicit negative column claim and reconciliation omits the occurrence on purpose,
-reporting it once as an `omitted_columnless_occurrence` warning. A variable whose every
-occurrence is columnless is not materialized; its `no_supported_states` outcome is a
-warning for this cause alone. A columnless-only remainder left after checked splits
-likewise warns and is omitted. An undelivered cell, or a delivered cell that is not
-literally blank, stays unknown and keeps the error path. A gap between supported periods
-stays a gap.
+optional fields become unknown only over their overlap. Every reader states availability
+as true, so availability never conflicts; LISA alone carries a population, one per sheet
+and so one per variant, so populations never conflict either. Missing periods/columns
+remain explicit issues. A delivered literally blank column (raw `""`) is not a missing
+fact: SCB states the member has no physical column (aggregate-statistics registers), so
+the reader carries it as an explicit negative column claim and reconciliation omits the
+occurrence on purpose, reporting it once as an `omitted_columnless_occurrence` warning.
+A variable whose every occurrence is columnless is not materialized; its
+`no_supported_states` outcome is a warning for this cause alone. A columnless-only
+remainder left after checked splits likewise warns and is omitted. An undelivered cell,
+or a delivered cell that is not literally blank, stays unknown and keeps the error path.
+A gap between supported periods stays a gap.
 
 Pooled multi-year editions form one marked state (Y-202). A pooled scope carries its
 whole-range bounds from cleaning — the edition's exact interval or its whole-year claim
@@ -823,8 +824,8 @@ Coding membership on a pooled edition is bound over the whole pooled range (Y-20
 marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0)
 through `ResolvedState`/`IRVariableState` into the DB, and `validate_built_db` fails a
 build whose pooled-marked window overlaps an unmarked window on one column. Adjacent
-pooled segments on one column whose reconciled state-grain facts, population, and coding
-evidence agree merge into one pooled state over their combined window (Y-209).
+pooled segments on one column whose reconciled state-grain facts and coding evidence
+agree merge into one pooled state over their combined window (Y-209).
 
 Operational definitions and source references are state-grain. Separate resolved periods
 and variants each keep their own exact text and provenance, so differing texts across
@@ -851,8 +852,7 @@ Checked coding decisions pin all competing observations in a finite column inter
 They may select an existing complete list, accept an uncoded period or omit a state. A
 separately checked witness can supply a constant complete coding over another period
 only when an existing decision explicitly authorizes that extension. Changed target or
-witness evidence invalidates it. Omitted states retain their evidence and do not become
-negative availability claims.
+witness evidence invalidates it. Omitted states retain their evidence.
 
 Under the reviewed explicit-link policy, a checked choice can select a supplied complete
 superset when every positively linked code is retained and shared code labels agree.
@@ -1063,17 +1063,18 @@ owner.
 
 An explicit `column_metadata = "per_column"` retains physical type, width, operational
 definition and source attribution on each checked representation window. Each literal
-column is reconciled independently; a conflict within that column remains unknown and
-diagnosed. The shared state retains only agreed facts and never selects a metadata
-donor. The existing `variable_alias_window` carries the mode and these literal fields,
-and selected-column reads project them, including nulls, onto that representation. An
-absent source attribution never inherits a sibling's questionnaire reference. Coverage
-checks compare the source claim with the same column's written window. Names retain the
-shared reconciliation contract; literal definitions require the guarded authoring below.
-Units are delivery facts with a common summary only when they agree; coding has its
-independent mode below. The default `shared` mode retains its existing behavior. Source
-SQL widths and precision remain literal metadata; this mode neither converts them nor
-asserts comparability.
+column is reconciled independently; a conflict within that column is already unknown and
+diagnosed (`conflicting_occurrence_facts`) by source reconciliation, which leaves each
+column one state per period. The shared state retains only agreed facts and never
+selects a metadata donor. The existing `variable_alias_window` carries the mode and
+these literal fields, and selected-column reads project them, including nulls, onto that
+representation. An absent source attribution never inherits a sibling's questionnaire
+reference. Coverage checks compare the source claim with the same column's written
+window. Names retain the shared reconciliation contract; literal definitions require the
+guarded authoring below. Units are delivery facts with a common summary only when they
+agree; coding has its independent mode below. The default `shared` mode retains its
+existing behavior. Source SQL widths and precision remain literal metadata; this mode
+neither converts them nor asserts comparability.
 
 A calendar-month period family may supply an exact `expected_definitions` map for all
 months `01` through `12`. Every original definition must match its month before any
@@ -1171,18 +1172,18 @@ claim the written state must equal, a negative claim the written state must leav
 absent, or no claim, which is never compared. When an alias window delivers an
 obligation's window, the shared states behind the alias must cover that overlap; a slice
 with no written state behind it is refused. A conflicting representation fact clears the
-claim to none. Genuine source gaps, negative availability, unknown scopes, and pooled
-scopes without a carried range claim no delivery in the first place. A range-carrying
-pooled scope claims its whole range as one obligation, discharged by its one marked
-state. A variable — or one of its variants — that the dependency ledger withholds
-outright, with source evidence, answers for its own claim through that entry, whichever
-stage recorded it, and for nothing past that exact coordinate: an exact source-linked
-blocker stays a curation blocker without covering a sibling. Anything else missing is an
-engineering defect, not a curation question: the build names the source records and the
-exact missing window. A strict build stops before any output is placed; a diagnostic
-build records the miss as an error diagnostic and still completes with a nonpublishable
-database. A missing optional field or an unrelated diagnostic is no permission to drop
-the state it belongs to.
+claim to none. Genuine source gaps, unknown scopes, and pooled scopes without a carried
+range claim no delivery in the first place. A range-carrying pooled scope claims its
+whole range as one obligation, discharged by its one marked state. A variable — or one
+of its variants — that the dependency ledger withholds outright, with source evidence,
+answers for its own claim through that entry, whichever stage recorded it, and for
+nothing past that exact coordinate: an exact source-linked blocker stays a curation
+blocker without covering a sibling. Anything else missing is an engineering defect, not
+a curation question: the build names the source records and the exact missing window. A
+strict build stops before any output is placed; a diagnostic build records the miss as
+an error diagnostic and still completes with a nonpublishable database. A missing
+optional field or an unrelated diagnostic is no permission to drop the state it belongs
+to.
 
 ### Groups, relations and dependent output
 

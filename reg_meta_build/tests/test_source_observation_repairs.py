@@ -19,7 +19,6 @@ from _csv_fixtures import (
 )
 from _lisa_fixtures import write_lisa_workbook
 from _source_inspection_fixtures import field_text
-from pydantic import ValidationError
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.input_snapshot import (
     LisaWorkbookSelection,
@@ -33,7 +32,7 @@ from reg_meta_build.source_inspection import (
     write_scb_observation_census,
 )
 from reg_meta_build.source_periods import source_scopes
-from reg_meta_build.source_records import SourceFields, TemporalScope, value_field
+from reg_meta_build.source_records import TemporalScope, value_field
 from reg_meta_build.sources.scb_records import LISA_REGISTER_ID, iter_scb_observations
 
 if TYPE_CHECKING:
@@ -307,29 +306,6 @@ def test_temporal_group_crosses_edition_specific_cvids_without_expanding_pool(
     assert completion.counts.unproved_temporal_groups == 1
     assert completion.counts.unproved_temporal_cvids == 2
     assert completion.affected_memberships.unproved_temporal_cvids == (8101, 8102)
-
-
-def test_source_fields_distinguish_missing_unknown_negative_and_sensitivity() -> None:
-    missing = SourceFields()
-    unknown = SourceField(status="unknown", raw_value="")
-    negative = SourceField(status="negative", raw_value="Nej")
-
-    assert missing.column_name is None
-    assert unknown.status == "unknown"
-    assert negative.status == "negative"
-    assert SourceFields(availability=negative).availability == negative
-    sensitivity = SourceFields(sensitivity=value_field(False)).sensitivity
-    assert sensitivity is not None
-    assert sensitivity.status == "value"
-    with pytest.raises(ValidationError, match="negative is supported only"):
-        SourceFields(sensitivity=negative)
-    assert SourceFields(
-        sensitivity=value_field("conditional", raw="I vissa fall")
-    ).sensitivity == SourceField(
-        status="value", value="conditional", raw_value="I vissa fall"
-    )
-    with pytest.raises(ValidationError, match="use negative status"):
-        SourceFields(availability=value_field(False))
 
 
 def test_raw_scb_reader_preserves_native_instances_fields_and_period_limits(

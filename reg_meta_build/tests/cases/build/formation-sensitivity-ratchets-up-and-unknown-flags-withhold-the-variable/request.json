@@ -1,0 +1,38 @@
+{
+  "replaces": [
+    "test_source_formation_facts.py::test_conditional_sensitivity_ratchets_up_without_changing_plain_values[False-True-True]",
+    "test_source_formation_facts.py::test_conditional_sensitivity_ratchets_up_without_changing_plain_values[True-True-True]",
+    "test_source_formation_facts.py::test_conditional_sensitivity_ratchets_up_without_changing_plain_values[None-True-True]",
+    "test_source_formation_facts.py::test_conditional_sensitivity_ratchets_up_without_changing_plain_values[False-False-False]",
+    "test_source_formation_facts.py::test_conditional_sensitivity_ratchets_up_without_changing_plain_values[True-False-True]",
+    "test_source_formation_facts.py::test_conditional_false_alone_does_not_supply_sensitivity",
+    "test_source_formation_facts.py::test_unknown_conditional_declaration_ratchets_to_sensitive",
+    "test_source_formation_facts.py::test_unknown_flags_withhold_unsupported_entity_without_defaulting_false"
+  ],
+  "note": "Disclosure guard, raw-source side: sensitivity comes from the SCB Unika summary and only ratchets up (reg_meta_build/DESIGN.md, 'Strict and diagnostic builds'). Before this case no build case delivered a sensitive or sometimes-sensitive Unika cell; errata-column-authored-facts-and-flags-reach-the-variable and matrix-blank-answers-carry-the-authored-sensitive-flag pin the authored side. One variable per replaced flag combination, each its own column with its own summary row (KansligVariabel | KansligVariabelIbland | Identitetsvariabel, identifier 0 throughout as in the old tests): the column name spells the combination (S = KansligVariabel, C = KansligVariabelIbland; 0 or 1, X a blank cell, U the cell 'unclear'). Expected values are the old tests' `expected` column and assertions: [False-True-True] s0c1 1, [True-True-True] s1c1 1, [None-True-True] sxc1 1, [False-False-False] s0c0 0, [True-False-True] s1c0 1, all with `result.diagnostics == ()`; the conditional-false test's withheld variable and `unresolved_flag` on ('is_sensitive',) is sxc0; the unknown-conditional test (plain False, conditional SourceField(status='unknown', raw_value='unclear')) is s0cu, sensitive; the unknown-flags test (`flags=SourceFields()`, no declaration at all) is nosum, which has no summary row: withheld, `unresolved_flag` on ('is_sensitive', 'is_identifier'). Setup differences: the old [None-True-True] and conditional-false tests pass no sensitivity declaration at all; Unika always carries the KansligVariabel column, so a build can only deliver it blank, which reads as an unknown declaration, and formation treats an unknown plain claim as no claim (source_formation.py, `flag_values`). The unknown-flags test's interval assertion (`len(result.intervals[0].segments) == 1`) is a formation intermediate no boundary reads and is dropped.",
+  "fails_if": "`form_native_variable` stops ratcheting is_sensitive to true on a conditional claim that is not an explicit false (for example the `conditional.status != \"value\" or conditional.value is not False` test becomes `conditional.value is True`, so s0cu is built non-sensitive), lets a conditional false lower or supply the plain claim (s1c0 built 0, or sxc0 built 0), defaults an unknown flag to false instead of withholding the variable (sxc0 or nosum built), the Unika reader stops reading KansligVariabel or KansligVariabelIbland, or the writer stops writing `variable.is_sensitive`",
+  "sources": {
+    "description": "SCB register TESTREG (variant 10, edition 2020) delivers eight variables, one column each. Each but NOSUM has one Unika summary row whose plain and conditional sensitivity cells spell the column name; NOSUM has none.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 101, "var_id": 1, "colname": "S0C1", "varname": "Plain false, conditional true"},
+        {"cvid": 102, "var_id": 2, "colname": "S1C1", "varname": "Plain true, conditional true"},
+        {"cvid": 103, "var_id": 3, "colname": "SXC1", "varname": "Plain blank, conditional true"},
+        {"cvid": 104, "var_id": 4, "colname": "S0C0", "varname": "Plain false, conditional false"},
+        {"cvid": 105, "var_id": 5, "colname": "S1C0", "varname": "Plain true, conditional false"},
+        {"cvid": 106, "var_id": 6, "colname": "SXC0", "varname": "Plain blank, conditional false"},
+        {"cvid": 107, "var_id": 7, "colname": "S0CU", "varname": "Plain false, conditional unclear"},
+        {"cvid": 108, "var_id": 8, "colname": "NOSUM", "varname": "No summary row"}
+      ],
+      "unika": [
+        "TESTREG|Testregistret|Individer|Individer|Plain false, conditional true|S0C1|2020|2020|0|1|0",
+        "TESTREG|Testregistret|Individer|Individer|Plain true, conditional true|S1C1|2020|2020|1|1|0",
+        "TESTREG|Testregistret|Individer|Individer|Plain blank, conditional true|SXC1|2020|2020||1|0",
+        "TESTREG|Testregistret|Individer|Individer|Plain false, conditional false|S0C0|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Plain true, conditional false|S1C0|2020|2020|1|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Plain blank, conditional false|SXC0|2020|2020||0|0",
+        "TESTREG|Testregistret|Individer|Individer|Plain false, conditional unclear|S0CU|2020|2020|0|unclear|0"
+      ]
+    }
+  }
+}

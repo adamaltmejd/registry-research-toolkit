@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_resolved_metadata_contracts.py::test_variant_scoped_temporal_round_trip_is_explicit_and_validated"
+  ],
+  "note": "Step 1's round trip with the return edge moved to 2020, the year of the outbound edge (old: the reverse edge's effective_year set to the forward edge's). From the old test: two edges of one variant-scoped loop that share a year are no explicit round trip, so the build refuses with a `cycle` code (replaced_by_cycle) and writes no catalog.",
+  "fails_if": "`reject_nonmonotone_representation_cycles` (relations.py) stops refusing a variant-scoped loop whose edges share an effective year, or `validate_metadata_structure` (resolved_metadata.py) stops passing it the scoped representation edges",
+  "sources": "scb-withheld-key-and-gone"
+}
