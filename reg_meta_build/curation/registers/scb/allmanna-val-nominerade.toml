@@ -209,7 +209,7 @@ variable = "239.14775.ri-valkretskod"
 variant = "239.466"
 column_metadata = "per_column"
 columns = [{ valid_from = "1998-01-01", valid_to = "1998-12-31", column = "RI_valkretskod", source_editions = ["1998"] }, { valid_from = "1998-01-01", valid_to = "1998-12-31", column = "riksdagsvalkrets", source_editions = ["1998"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2bf12196ef4cdb7cbe2e9482b78bcee164b3e16aa049381496cf137fe59440a8"
 evidence = "The same exact1998 source record is already explicitly projected to both physical constituency-code names by maintained checked delivery curation. Source definition positively identifies a code; both representations retain their own literal names and metadata and any own list. No equality of observed values or extension of a domain is asserted. All original raw fields and exact projection are guarded. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 
@@ -221,6 +221,6 @@ variable = "239.16239.ko-valkretskod"
 variant = "239.477"
 column_metadata = "per_column"
 columns = [{ valid_from = "1998-01-01", valid_to = "1998-12-31", column = "KO_valkretskod", source_editions = ["1998"] }, { valid_from = "1998-01-01", valid_to = "1998-12-31", column = "kommunvalkrets", source_editions = ["1998"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "41285861b4a962f94d1501b2f56f8ddf6e3d583bec9b669286fa8ae5b0956f9c"
 evidence = "The same exact1998 source record is already explicitly projected to both physical constituency-code names by maintained checked delivery curation. Source definition positively identifies a code; both representations retain their own literal names and metadata and any own list. No equality of observed values or extension of a domain is asserted. All original raw fields and exact projection are guarded. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"

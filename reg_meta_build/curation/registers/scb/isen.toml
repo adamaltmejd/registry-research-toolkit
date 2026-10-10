@@ -6362,7 +6362,7 @@ variant = "132.178"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2010-01-01", valid_to = "2010-12-31", column = "BText", source_editions = ["2010"] }, { valid_from = "2010-01-01", valid_to = "2010-12-31", column = "BTEXT", source_editions = ["2010"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a2403338617e78a7f0e07fcccdd06ee2adb5b909ea1a3b64430cc384ae708bfd"
 evidence = "Exact same native source member declares both BText and BTEXT with identical substantive fields in this edition. Retain both literal physical forms under their known native klartext quantity, with per-column metadata. No field dropped, code value merged or suffix meaning inferred. Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 
@@ -6375,7 +6375,7 @@ variant = "132.178"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2011-01-01", valid_to = "2011-12-31", column = "BText", source_editions = ["2011"] }, { valid_from = "2011-01-01", valid_to = "2011-12-31", column = "BTEXT", source_editions = ["2011"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "dcf8f31f21c71549401a89575ee652aee177a18d63bed3c245611f8120285d76"
 evidence = "Exact same native source member declares both BText and BTEXT with identical substantive fields in this edition. Retain both literal physical forms under their known native klartext quantity, with per-column metadata. No field dropped, code value merged or suffix meaning inferred. Batch51-ISEN25-source-proof.json."
 noted = "2026-10-02"
 

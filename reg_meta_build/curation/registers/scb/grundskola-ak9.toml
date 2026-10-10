@@ -758,7 +758,7 @@ variant = "189.265"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2003-07-01", valid_to = "2004-06-30", column = "MeritVarde", source_editions = ["Läsåret 2003/2004"] }, { valid_from = "2003-07-01", valid_to = "2004-06-30", column = "Meritvarde", source_editions = ["Läsåret 2003/2004"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "242a48ffa536febc59d160e98ca9ec4d140333b46fc0915f25e69c78f6cea168"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -771,6 +771,6 @@ variant = "189.265"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2004-07-01", valid_to = "2005-06-30", column = "MeritVarde", source_editions = ["Läsåret 2004/2005"] }, { valid_from = "2004-07-01", valid_to = "2005-06-30", column = "Meritvarde", source_editions = ["Läsåret 2004/2005"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ca268b1f8386b28c7c3fd6c5276bbbc837f338decda6877b27b181e13af271a3"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"

@@ -652,7 +652,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutAdFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderadfar", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2a54b4b8aa8eec2281f108d60954bea75c742ea6ad241fdf4544c240a34bcbed"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -666,7 +666,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutAdMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderadmor", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "c79dbce5453f76dd4890e33de98374bfc562f8644ebb9ac52643dbefef46426d"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -680,7 +680,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbiofar", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "25b2915e0b47f87eaa121a972b9905a230a6143347e604db1211fb58f488e1a1"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -694,7 +694,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbiomor", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9dfeeef9edb89428800891fb9d5d5a39b3a3dd9e8ff72ea005f2dc57d35c2d29"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -708,7 +708,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbofar", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "085d8a94add1690a55b464e19ed263a73eb174109a11328c35ad57122012337e"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -722,7 +722,7 @@ variant = "333.1079"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbofar", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "85735b4eb63b82399dd6f88264ce7e7b6a1cc42c3d418fcd13ae7c472270a81d"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -736,7 +736,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbomor", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8ebb4f880803ec412ef2457aa528b78779de732233f9e57ceea9c299d288bade"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -750,7 +750,7 @@ variant = "333.1079"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbomor", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "06489e62cf9f2e7d4556c144247411bbd58b5c126b6eb9421b381a74b089568f"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 

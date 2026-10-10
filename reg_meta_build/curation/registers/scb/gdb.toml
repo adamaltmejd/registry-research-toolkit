@@ -8,7 +8,7 @@ variant = "adresser-fastigheter"
 column = "Kommun"
 versions = ["2024-01-01"]
 upstream = "omitted-column-in-version"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "22860395006c491834d4e749d000e5f189cd2cff7b5d8659bdb76bb50afdc758"
 evidence = "SWECOV holds Kommun in GDB_Skolor2024 for edition 2024; SCB documents Kommun (VarId 36) in every adresser-fastigheter version 2018-01-01..2023-01-01 and none after."
 noted = "2026-09-12"
 
@@ -175,7 +175,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2007-01-01", valid_to = "2007-01-01", column = "RIDADRPL", source_editions = ["2007-01-01"] }, { valid_from = "2007-01-01", valid_to = "2007-01-01", column = "RNPADRPL", source_editions = ["2007-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "960ca93a27521c154bc6d915781ffa16feaefa1148ee58ec1a08d970b75fb057"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -187,7 +187,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2008-01-01", valid_to = "2008-01-01", column = "RIDADRPL", source_editions = ["2008-01-01"] }, { valid_from = "2008-01-01", valid_to = "2008-01-01", column = "RNPADRPL", source_editions = ["2008-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "c75908300a67b00eb436ee6fcedb38617be07c8a53e0f257d266b034f4e25dc5"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -199,7 +199,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-01-01", column = "RIDADRPL", source_editions = ["2009-01-01"] }, { valid_from = "2009-01-01", valid_to = "2009-01-01", column = "RNPADRPL", source_editions = ["2009-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "49c17dd550c9aad09f52baa0b08817761b1ba9fed1f0d88e0dd81c0756a9d95d"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -211,7 +211,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2010-01-01", valid_to = "2010-01-01", column = "RIDADRPL", source_editions = ["2010-01-01"] }, { valid_from = "2010-01-01", valid_to = "2010-01-01", column = "RNPADRPL", source_editions = ["2010-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ea69be0a0daece959c878cfd84a99c3f600f0503762ee15bb6592363551cc191"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -223,7 +223,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2011-01-01", valid_to = "2011-01-01", column = "RIDADRPL", source_editions = ["2011-01-01"] }, { valid_from = "2011-01-01", valid_to = "2011-01-01", column = "RNPADRPL", source_editions = ["2011-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "71f515c55d5a6a424cd0d4f78215357db20ef0f7f9b1700076aa126836536fde"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -235,7 +235,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2012-01-01", valid_to = "2012-01-01", column = "RIDADRPL", source_editions = ["2012-01-01"] }, { valid_from = "2012-01-01", valid_to = "2012-01-01", column = "RNPADRPL", source_editions = ["2012-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ac39f36052085af114c63f9edb7d6294c4617a54527c1890455edd5122591ed4"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -247,7 +247,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2013-01-01", valid_to = "2013-01-01", column = "RIDADRPL", source_editions = ["2013-01-01"] }, { valid_from = "2013-01-01", valid_to = "2013-01-01", column = "RNPADRPL", source_editions = ["2013-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "84e16433f96f3a1f43c5a4fcc55f2a76ba30a3ab07de74025b7a556724909148"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -259,7 +259,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-01-01", column = "RIDADRPL", source_editions = ["2014-01-01"] }, { valid_from = "2014-01-01", valid_to = "2014-01-01", column = "RNPADRPL", source_editions = ["2014-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a235542429e406c8c88e760e67f415b799e9e3171293d3f4bff5a244d2c96873"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -271,7 +271,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-01-01", column = "RIDADRPL", source_editions = ["2015-01-01"] }, { valid_from = "2015-01-01", valid_to = "2015-01-01", column = "RNPADRPL", source_editions = ["2015-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2563eba5ea019600a7a8e75183d358b20f7f7db61571eb54788b98057c0e35c9"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -283,7 +283,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2016-01-01", valid_to = "2016-01-01", column = "RIDADRPL", source_editions = ["2016-01-01"] }, { valid_from = "2016-01-01", valid_to = "2016-01-01", column = "RNPADRPL", source_editions = ["2016-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "c7babfd539a80f7abeeb83d34e0a3b375a79f35d00fb5510f65a0d21712a29b4"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 
@@ -295,7 +295,7 @@ variable = "70.19653"
 variant = "70.249"
 column_metadata = "per_column"
 columns = [{ valid_from = "2017-01-01", valid_to = "2017-01-01", column = "RIDADRPL", source_editions = ["2017-01-01"] }, { valid_from = "2017-01-01", valid_to = "2017-01-01", column = "RNPADRPL", source_editions = ["2017-01-01"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "da36fa7e5f9246ca0fcc181532d15ad16cf9bb1c30a272d7d9a1eaf185d83863"
 evidence = "Exact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 noted = "2026-10-02"
 

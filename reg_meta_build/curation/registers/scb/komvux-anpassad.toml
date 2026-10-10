@@ -467,7 +467,7 @@ variant = "250.499"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2024-01-01", valid_to = "2024-12-31", column = "KomGrupp23", expected_codings = ["86fc9cea9a77df5a3f899298cce113ee691aab72c0196df5bdc2d59361435c79"], source_editions = ["2024"] }, { valid_from = "2024-01-01", valid_to = "2024-06-30", column = "Komgrupp23", expected_codings = ["884df545e8152b7797afb3251e3f69b00ed6524ca5a7b10f55373424f61c152e"], source_editions = ["2024 vårterminen"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "00ad08b812f30ec70afbed767cb50e7a3c575f3c4b475f40c570eb64165cac27"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -480,6 +480,6 @@ variant = "250.499"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2024-01-01", valid_to = "2024-12-31", column = "KomGrupp23", expected_codings = ["86fc9cea9a77df5a3f899298cce113ee691aab72c0196df5bdc2d59361435c79"], source_editions = ["2024"] }, { valid_from = "2024-07-01", valid_to = "2024-12-31", column = "Komgrupp23", expected_codings = ["4184eb2f7367accf8f5862561c272ffb003759c0ad43de7a3bc5220400e97e24"], source_editions = ["2024 höstterminen"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7e61813bfcf0d0e51d6966248f4a2962594282ebb139e0fc38e8d1de941e4240"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"

@@ -8001,7 +8001,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0314", valid_from = "1998-01-01", valid_to = "1998-12-31", source_editions = ["1998"], expected_codings = ["6f6df3a359130cc159acc5980c6ab74d17cf5fccd3bacf83c012d19f4e782065"] }, { column = "UT3513", valid_from = "1998-01-01", valid_to = "1998-12-31", source_editions = ["1998"], expected_codings = ["6f6df3a359130cc159acc5980c6ab74d17cf5fccd3bacf83c012d19f4e782065"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6c328debabf29b748ca3d86541879db960ae4e27fe9aeec1814045caacc15481"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8014,7 +8014,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0314", valid_from = "1999-01-01", valid_to = "1999-12-31", source_editions = ["1999"], expected_codings = ["69a5488215a9942af66d6a31d84b3f26437e36a2341b7c21c3a6b7fb535e2d2a"] }, { column = "UT3513", valid_from = "1999-01-01", valid_to = "1999-12-31", source_editions = ["1999"], expected_codings = ["69a5488215a9942af66d6a31d84b3f26437e36a2341b7c21c3a6b7fb535e2d2a"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "4778f5118bd46108c0ce8c0e4d7bab17b46d64b71f5754eb4b72910f96733297"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8027,7 +8027,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0637", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }, { column = "HA0643", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "4665d3ae61bb65323c42eedabec6d4a55c29a85dc789f2aa81e6ebb0bf2b759e"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8040,7 +8040,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0638", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }, { column = "HA0644", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "85cb68b339297f0ace853cf0054c8e597b4822f0aa6350371dd6176b4b500286"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8053,7 +8053,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0639", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }, { column = "HA0645", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "d8f3bcf10ffab23cf14ebdadc34e3f99a68afdb0549b84019a0d9f016fe3d31a"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8066,7 +8066,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0640", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }, { column = "HA0646", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a44d039b7ad9c80bbd80b897118e6b742860c9af3dcbdb3c902ee76340dba419"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8079,7 +8079,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0641", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }, { column = "HA0647", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e89390e6460b8e38bc0700afe059679a6de660e0ee499bcc2d2deb71a705a042"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8092,7 +8092,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0642", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }, { column = "HA0648", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5c241864016292a078481d5707d93e18f6bb3601fdf9cab5439e0df94d46607e", "c63d09e5afa2897e820df7dcf4202d5d929d66c4cb0c8f06b22a32603cf7c21b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "cb52a9335f534dc6baafcbd6609737bca06e24b31abfb8fdcda20959e5f61d6b"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8105,7 +8105,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0100", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["5723d035ad083431fd629f0370aa99e5c47f35f3b3b6ebe16c3484bc612b32c1", "6057639c574ffc79331fc5afcc870fca85404f87a1b9a86bc54fe8ae3b126a21"] }, { column = "HA0740", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["5723d035ad083431fd629f0370aa99e5c47f35f3b3b6ebe16c3484bc612b32c1", "6057639c574ffc79331fc5afcc870fca85404f87a1b9a86bc54fe8ae3b126a21"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8171e3f3e9a2c9862d73296cab638c8e7510b3648f6a6dfe17193245cce51cce"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8118,7 +8118,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0372", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["00801487d2876438ae62337fae7b6e78ef8fb13474af27d16db3185ca23548cc"] }, { column = "SY0422", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["00801487d2876438ae62337fae7b6e78ef8fb13474af27d16db3185ca23548cc"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "236939487431f7b461e9866f637f6dfc74eaa65f5eb8611aef6fc7b117c1401e"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8131,7 +8131,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0372", valid_from = "1995-01-01", valid_to = "1995-12-31", source_editions = ["1995"], expected_codings = ["c242fedb3b509caec0ebbf3340993f2a75fb3a2c60afd9577d4ed8f3b071413b"] }, { column = "SY0422", valid_from = "1995-01-01", valid_to = "1995-12-31", source_editions = ["1995"], expected_codings = ["c242fedb3b509caec0ebbf3340993f2a75fb3a2c60afd9577d4ed8f3b071413b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b06e51b97b4e8fa5ee48dff9ea1f4460209ca82308b48bd42094f0e2d494f6bc"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8144,7 +8144,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0372", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["258277a228ab50dfaad0a9bd3348acb3a1cede1a6d6db857a2e04768c6d7b1f1"] }, { column = "SY0422", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["258277a228ab50dfaad0a9bd3348acb3a1cede1a6d6db857a2e04768c6d7b1f1"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8dab9ceada779383193de88bd5d360ffb5dec074ddd12a88388f917635707173"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8157,7 +8157,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0372", valid_from = "1994-01-01", valid_to = "1994-12-31", source_editions = ["1994"], expected_codings = ["e0a5bcbc17f0fed819db2d189980622a793b6bb46863b5843ab32f7a41f7b8d7"] }, { column = "SY0422", valid_from = "1994-01-01", valid_to = "1994-12-31", source_editions = ["1994"], expected_codings = ["e0a5bcbc17f0fed819db2d189980622a793b6bb46863b5843ab32f7a41f7b8d7"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "1aea86a5ad8b227b083383e7b7bc998785309269953310f189a3f076dcc309ab"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8170,7 +8170,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0372", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["8c0583df779d7811fa3b45cf22c22a894e22265ee583710a88975ffbeff7f063"] }, { column = "SY0422", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["8c0583df779d7811fa3b45cf22c22a894e22265ee583710a88975ffbeff7f063"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28118a4debd30099a365c0df6b21abe17bba9eba602c3257757e50d2f83333b7"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8183,7 +8183,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0372", valid_from = "1975-01-01", valid_to = "1975-12-31", source_editions = ["1975"], expected_codings = ["9a5639e8013bf4fd6988c8b9aa74ae807d1dbb77374a9f1319d56b6b0c86cd79"] }, { column = "SY0422", valid_from = "1975-01-01", valid_to = "1975-12-31", source_editions = ["1975"], expected_codings = ["9a5639e8013bf4fd6988c8b9aa74ae807d1dbb77374a9f1319d56b6b0c86cd79"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e5a03e65137b12a4517c5414ea0b770223b71cb94f4adb039c22f8e7cda3027d"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8196,7 +8196,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0372", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["0e82d2d23cfc0ad1d580f3d19496435170156adc4366f3816039544b4cd719ef"] }, { column = "SY0422", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["0e82d2d23cfc0ad1d580f3d19496435170156adc4366f3816039544b4cd719ef"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6ca2a3f553ae3963994fe828b5dcd56f2843a94b39187f97e5f22d8eb36e00d0"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8209,7 +8209,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0372", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["2125ff1eba9bd472d49230cd10ee91e5259675a14527b370e0f212eea0a38d8b"] }, { column = "SY0422", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["2125ff1eba9bd472d49230cd10ee91e5259675a14527b370e0f212eea0a38d8b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a0490c8869e72ab5fd292deda7615deb4fb5c32e8373ad55e4350ed13d4d3d91"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8222,7 +8222,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0311", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["a0af24ce168008dc3bf3da422f8705f5b4ecdb11ea07c7703d8b09513b05c02a"] }, { column = "UT3510", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["a0af24ce168008dc3bf3da422f8705f5b4ecdb11ea07c7703d8b09513b05c02a"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "712ab1f0e0523b66f05cb523a0754f82892240e555c782c80634677244c6a6e8"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8235,7 +8235,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0311", valid_from = "1998-01-01", valid_to = "1998-12-31", source_editions = ["1998"], expected_codings = ["48b3b04681306e8a764eb77eab86cfc0a7fe4555a798aa73bd71fb731723baef"] }, { column = "UT3510", valid_from = "1998-01-01", valid_to = "1998-12-31", source_editions = ["1998"], expected_codings = ["48b3b04681306e8a764eb77eab86cfc0a7fe4555a798aa73bd71fb731723baef"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e1797503a837cfa1d3ab471711679f8303d7f5c67292480d19ab6cb08ba3ae47"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8248,7 +8248,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0311", valid_from = "1999-01-01", valid_to = "1999-12-31", source_editions = ["1999"], expected_codings = ["07abf22692aed1ebbd69fefaca184e01c255d326f3901e698d6f947370e08da8"] }, { column = "UT3510", valid_from = "1999-01-01", valid_to = "1999-12-31", source_editions = ["1999"], expected_codings = ["07abf22692aed1ebbd69fefaca184e01c255d326f3901e698d6f947370e08da8"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "62ab07c0011b86f14321a296ab5bbd37aa9773ccab08197ae3da8c1c5505c87e"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8261,7 +8261,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0311", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["233b5a89e934fe774b1b5666c8903827cf7126b5ce8e51fd1e3b2667461acf25"] }, { column = "UT3510", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["233b5a89e934fe774b1b5666c8903827cf7126b5ce8e51fd1e3b2667461acf25"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7fc1404fe4f4b7d57f7dad91486293b1511f139d75c707876ffc5cba8eeb31f5"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8274,7 +8274,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0313", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["aec880a52d891c26199c156c7c20a2fb39862536b9f6e6cd9970333e5cdd1441"] }, { column = "UT3512", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["aec880a52d891c26199c156c7c20a2fb39862536b9f6e6cd9970333e5cdd1441"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "0a0d49e78d43daa8ae76c9faafb7701a20d87be9de2a60e2d9c18abbae8adbb2"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8287,7 +8287,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0313", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["ecd0e91b887700f1f48a3a048b086661eae38fc1774a3d916a28b88c39118c32"] }, { column = "UT3512", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["ecd0e91b887700f1f48a3a048b086661eae38fc1774a3d916a28b88c39118c32"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "c52f0e99b539e2188db05c35c870961e91ff11e88cb5da67ae9a1f32a9e3e61f"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8300,7 +8300,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0312", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["0ab4e528e95edddc055ba7dd7467a0a0013da0e76f795ee7bb8d093da2856ca2"] }, { column = "UT3511", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["0ab4e528e95edddc055ba7dd7467a0a0013da0e76f795ee7bb8d093da2856ca2"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "76f14cd6d8c6b76cd48e9d08445442938eece74c9fd5e0be6041d1e516ff3efa"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8313,7 +8313,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0312", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["2c687275bb573030552f64a70d089a6b3a673ee9d2428d2857f30217fb87cb28"] }, { column = "UT3511", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["2c687275bb573030552f64a70d089a6b3a673ee9d2428d2857f30217fb87cb28"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ee802b25e83cec0caa4a2e46ddf5fff7b709087a7fb7d839299fe7b0cc2a423a"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8326,7 +8326,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "IN0113", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["afd25b2f9e7aa3de61a07c2ae8f303174fcd14321ead588cefd5ff106db6a7c4"] }, { column = "IN0123", valid_from = "1996-01-01", valid_to = "1996-12-31", source_editions = ["1996"], expected_codings = ["afd25b2f9e7aa3de61a07c2ae8f303174fcd14321ead588cefd5ff106db6a7c4"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "668c1cfe9d381a4531eb8289db8105d01880b17594dbdf617e1ed2ed06c1ff84"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8339,7 +8339,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "IN0113", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["4503ddc6dae63b307d77d5255a4742a41d5cd0a3ca62bdb6d854cd197450ea21"] }, { column = "IN0123", valid_from = "1997-01-01", valid_to = "1997-12-31", source_editions = ["1997"], expected_codings = ["4503ddc6dae63b307d77d5255a4742a41d5cd0a3ca62bdb6d854cd197450ea21"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "05ac507f525cbb88241ad9b740c0b5f6c960d2158918bef0f0e7f3fd2b1860d4"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8352,7 +8352,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0030", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["913ea5102107228c51a2ea76d659c2a05272fde7255babf3e72efdc008afb2d5", "bf3a45e5115d93721b9391ee82e6b2f5afe3fcfc9d4ecad12a41982bf539bf1c"] }, { column = "SY0031", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["913ea5102107228c51a2ea76d659c2a05272fde7255babf3e72efdc008afb2d5", "bf3a45e5115d93721b9391ee82e6b2f5afe3fcfc9d4ecad12a41982bf539bf1c"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "dd199a29832d4b04cee8f7f6d0a36383c90677b1f4f125ca42e43c87532ad7f8"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8365,7 +8365,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "TK0081", valid_from = "1999-01-01", valid_to = "1999-12-31", source_editions = ["1999"], expected_codings = ["033bb18ed25cf3470ed4eb6ff3ea62a5c1adef6400018e4863914ac3e14fefb2"] }, { column = "TK0089", valid_from = "1999-01-01", valid_to = "1999-12-31", source_editions = ["1999"], expected_codings = ["033bb18ed25cf3470ed4eb6ff3ea62a5c1adef6400018e4863914ac3e14fefb2"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "64371decfe6735393b4f83144c370b2f04c07f59398addf4c7d8d7693bcfe733"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8378,7 +8378,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0020", valid_from = "1993-01-01", valid_to = "1993-12-31", source_editions = ["1993"], expected_codings = ["2b9a7f9ab68b0fd0189ef289d67dfe60d563245bff8c9815a4489ae75990c099", "5b39b9b83e8c4950240abb943241415862c52dfcb7e40b2e638e5e880d3ae45b"] }, { column = "UT0030", valid_from = "1993-01-01", valid_to = "1993-12-31", source_editions = ["1993"], expected_codings = ["2b9a7f9ab68b0fd0189ef289d67dfe60d563245bff8c9815a4489ae75990c099", "5b39b9b83e8c4950240abb943241415862c52dfcb7e40b2e638e5e880d3ae45b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "fd1dc399c7fcc94b7a0be13714ab82611e88ed88c1784b749a3c12a7211e1fa6"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8391,7 +8391,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0020", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["13389a7c2b9af6efee316ba12db4312d50a645e95201141728403519ca11df44", "3213e1420c8162248461a5c8d0e1409951da62957009cb3a231fc68c13f4da2b"] }, { column = "UT0030", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["13389a7c2b9af6efee316ba12db4312d50a645e95201141728403519ca11df44", "3213e1420c8162248461a5c8d0e1409951da62957009cb3a231fc68c13f4da2b"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "1311799313ec0a18b94e9336394b303795b1b1571da92e175425f38d9f378b96"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8404,7 +8404,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0020", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["6c5b04fb11e10af9cc3ebc476c0efb9edcd744e93b102b078d9510dda4a018a8", "b2d084595cc080b7770e6db21b38c7998ef7868c26ab6e67ae96207aeaf9f01a"] }, { column = "UT0030", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["6c5b04fb11e10af9cc3ebc476c0efb9edcd744e93b102b078d9510dda4a018a8", "b2d084595cc080b7770e6db21b38c7998ef7868c26ab6e67ae96207aeaf9f01a"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f131cbdd57c504875c033a6cc580e878c8c52dc073e0aa79c5628b1687934e2e"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8417,7 +8417,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0020", valid_from = "2004-01-01", valid_to = "2004-12-31", source_editions = ["2004"], expected_codings = ["35a7445affc1a015973993daecddd5b1fd09eb8523887f8fe9b9bfe09e912e54", "de11478791fabc205f932a40b794c57ca42cae9a85da9a366fa22c89fec0f72d"] }, { column = "HA0024", valid_from = "2004-01-01", valid_to = "2004-12-31", source_editions = ["2004"], expected_codings = ["35a7445affc1a015973993daecddd5b1fd09eb8523887f8fe9b9bfe09e912e54", "de11478791fabc205f932a40b794c57ca42cae9a85da9a366fa22c89fec0f72d"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9822b6ad23fdb4825fd4bcd8383799cb5b0017d47c9779f572b7577ad75c4b72"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8430,7 +8430,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT2350", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["079c7beae370054b09eae15aeac93102b33d702b36d6aac3f2c86dc414a21667", "43f8c133c071c0683b491c632e4627db9b9389285bb5a751c8d8b3860838ef53"] }, { column = "UT2360", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["079c7beae370054b09eae15aeac93102b33d702b36d6aac3f2c86dc414a21667", "43f8c133c071c0683b491c632e4627db9b9389285bb5a751c8d8b3860838ef53"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9013e9d6219a4007c26e610f1c72ff53e9abbcb91a72a49732b4334dbe2dede4"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8443,7 +8443,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "TK0083", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["de3b8edd2ae273575b0e2d503467190a1205eaa40bb70604f733b6203979b22f", "ff9b56cc5c2bc125c478bb18f27a76016e0db60a67697e696603e9a867d11978"] }, { column = "TK0183", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["de3b8edd2ae273575b0e2d503467190a1205eaa40bb70604f733b6203979b22f", "ff9b56cc5c2bc125c478bb18f27a76016e0db60a67697e696603e9a867d11978"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e3ee7bb65d95664e0880c3ea7b55c27d729368a085bab96bc7162ca565e5df17"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8456,7 +8456,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ column = "AT0562", valid_from = "1995-01-01", valid_to = "1995-12-31", source_editions = ["1995"] }, { column = "AT0662", valid_from = "1995-01-01", valid_to = "1995-12-31", source_editions = ["1995"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ca151085a4a24a6165e4cb87708683002f8266a4bc24a337c25bf4077101c8eb"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8469,7 +8469,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SM0069", valid_from = "2004-01-01", valid_to = "2004-12-31", source_editions = ["2004"], expected_codings = ["35a7445affc1a015973993daecddd5b1fd09eb8523887f8fe9b9bfe09e912e54"] }, { column = "SY0069", valid_from = "2004-01-01", valid_to = "2004-12-31", source_editions = ["2004"], expected_codings = ["35a7445affc1a015973993daecddd5b1fd09eb8523887f8fe9b9bfe09e912e54"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "fc420daa0a78617488eaa8a348ad967ab0c36f4d1025ba363ed7cda3ca87110f"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8482,7 +8482,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SM0069", valid_from = "2003-01-01", valid_to = "2003-12-31", source_editions = ["2003"], expected_codings = ["cd8180f5755ab324ae4ad3c0fd99e5880feb301bbc26d69d12a6e5aa0b9e4672"] }, { column = "SY0069", valid_from = "2003-01-01", valid_to = "2003-12-31", source_editions = ["2003"], expected_codings = ["cd8180f5755ab324ae4ad3c0fd99e5880feb301bbc26d69d12a6e5aa0b9e4672"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "bf66d52e1a2b12caaec24c96330f18a929140f1f8f51500f1d21ca9efb6d6f6c"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8495,7 +8495,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "TK0094", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["42696a77864b621f742fc840c555947ce04b4abb0ec53b6bd138238c5b9359ef", "993c223496d037e5b9fd38c9e6232598823db0123f238a33875ba712f11bf049"] }, { column = "TK0194", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["42696a77864b621f742fc840c555947ce04b4abb0ec53b6bd138238c5b9359ef", "993c223496d037e5b9fd38c9e6232598823db0123f238a33875ba712f11bf049"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b89f8d4ecd0768aacea8142eb7c795d9a4ce7f7386205ce690d5e0aaa483e02f"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8508,7 +8508,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "TK0095", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["42696a77864b621f742fc840c555947ce04b4abb0ec53b6bd138238c5b9359ef", "993c223496d037e5b9fd38c9e6232598823db0123f238a33875ba712f11bf049"] }, { column = "TK0195", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["42696a77864b621f742fc840c555947ce04b4abb0ec53b6bd138238c5b9359ef", "993c223496d037e5b9fd38c9e6232598823db0123f238a33875ba712f11bf049"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "0c8d62298aac09724435513d2c29cb4866227306caaba536df8f0d41405415de"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8521,7 +8521,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "AT0571", valid_from = "1995-01-01", valid_to = "1995-12-31", source_editions = ["1995"], expected_codings = ["fba5d7357d544fdc1992204148b9e87bf311bb48a0a6f67a68627dc60be2f679"] }, { column = "AT0671", valid_from = "1995-01-01", valid_to = "1995-12-31", source_editions = ["1995"], expected_codings = ["fba5d7357d544fdc1992204148b9e87bf311bb48a0a6f67a68627dc60be2f679"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6cf232289deedfb9c97d86bfc26d183affcf93573b724a1818fb98caea598e1e"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8534,7 +8534,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "AT0571", valid_from = "1994-01-01", valid_to = "1994-12-31", source_editions = ["1994"], expected_codings = ["9cb8dc922fedac5b245a8349bc634e46daf3afee13f58e25a5a703a2d3c50041"] }, { column = "AT0671", valid_from = "1994-01-01", valid_to = "1994-12-31", source_editions = ["1994"], expected_codings = ["9cb8dc922fedac5b245a8349bc634e46daf3afee13f58e25a5a703a2d3c50041"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e3f47a5ee987423c413fb4820d3b8b3069d3c8f35b79c27999c1aa0da365532a"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8547,7 +8547,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0355", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["a6eb178c4bb3cb7540ee8e0e9591499fa09cbd864e1b8cb99d5371d7025f217e"] }, { column = "HA1355", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["a6eb178c4bb3cb7540ee8e0e9591499fa09cbd864e1b8cb99d5371d7025f217e"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2f5f72ea5acdfe39ab35b8156c1d0057a49cfa2529e9c778576d89615dc829e3"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8560,7 +8560,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2226", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }, { column = "FU2326", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8cd5e31ca16c2d7eda6832c1f6df84a16f0df8e4fd43c590597f2e12aae44338"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8573,7 +8573,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2226", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }, { column = "FU2326", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "81db893eb8a80eab8ae0adcf207d67017ac07eeadf166aaa51e1b6c31ba6a16b"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8586,7 +8586,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2236", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }, { column = "FU2336", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "5f523bff19d884fa394c44b42fba861ab36ca9addd940a8b1569178c96667160"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8599,7 +8599,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2236", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }, { column = "FU2336", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8e24ee8114e2498a91b1d4e1d2cec81ea4b54e02ae1d27f44170834c9a5dd26b"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8612,7 +8612,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2246", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }, { column = "FU2346", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "689a9e79feab2ac44e5690c4119f5148da644725e8ca519254992997f03e74cd"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8625,7 +8625,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2246", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }, { column = "FU2346", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ae6bf69b07bf062fd1c848886258c467db54e1c77e874a1d77c06c4d3acf7100"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8638,7 +8638,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2256", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }, { column = "FU2356", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ff8e5ba3331f16081bbd78612e89ef9bfc427fa25ef2cf594a7054a61186aa22"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8651,7 +8651,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2256", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }, { column = "FU2356", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "946634f11db22b9a4af394ed33ee5cf4030128606c2d7f330c458f9ca551cc64"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8664,7 +8664,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2266", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }, { column = "FU2366", valid_from = "2000-01-01", valid_to = "2000-12-31", source_editions = ["2000"], expected_codings = ["ecbbd8fe4ba685578f1edefa73ac801be743511abe9c9cbf4e2dc8143abf5d2a"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6d3eadc83b6e84f3a05c6a9615d515b5270f9361ed28ae82cf9d190399656e2d"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8677,7 +8677,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "FU2266", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }, { column = "FU2366", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"], expected_codings = ["bb2fff19ca75da4e68180b1d3ab9f88f6626e18bef39661daeac4b935c9551a0"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "d989eaf509d24b1c11573d24ce9b7722a5f913d600784f543052e106de5ff4a6"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8690,7 +8690,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ column = "FU1484", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"] }, { column = "FU1485", valid_from = "2001-01-01", valid_to = "2001-12-31", source_editions = ["2001"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a84a0215bf13073762c6667b3b6b138278f695b91877b389a3bcab893454c9e5"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8703,7 +8703,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0315", valid_from = "1998-01-01", valid_to = "1998-12-31", source_editions = ["1998"], expected_codings = ["064a6d63aa5be35cee8b7ceed66be0241fdcf62da7c31e7f90f462f6a8106a2d"] }, { column = "UT3514", valid_from = "1998-01-01", valid_to = "1998-12-31", source_editions = ["1998"], expected_codings = ["064a6d63aa5be35cee8b7ceed66be0241fdcf62da7c31e7f90f462f6a8106a2d"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2d82bb07820f4e1a3cf2ab42ad64326f97e3bae1d8d9678ae6bd208a1a683c83"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8716,7 +8716,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "UT0315", valid_from = "1999-01-01", valid_to = "1999-12-31", source_editions = ["1999"], expected_codings = ["746593c6559aeb98a311315387fdad51e0dd66a1de7176e4c553ec4fb45269dd"] }, { column = "UT3514", valid_from = "1999-01-01", valid_to = "1999-12-31", source_editions = ["1999"], expected_codings = ["746593c6559aeb98a311315387fdad51e0dd66a1de7176e4c553ec4fb45269dd"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b76695657972a662e809fe7cb0e4e00b1671eb538dc4c9d7baa21bf868e6ffea"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8729,7 +8729,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0326", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["5723d035ad083431fd629f0370aa99e5c47f35f3b3b6ebe16c3484bc612b32c1", "b5e0c36e4599154ba83d9fbb83b6af839b84164b9a618b2e5f3037b35b1be5ad"] }, { column = "MA0220", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["5723d035ad083431fd629f0370aa99e5c47f35f3b3b6ebe16c3484bc612b32c1", "b5e0c36e4599154ba83d9fbb83b6af839b84164b9a618b2e5f3037b35b1be5ad"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f712c42034228015574377fc336214f0c8f9297459fbe985d93904f6375ea304"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8742,7 +8742,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0322", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["50377047b17fa47e5b0a1991d675be4c1658c1d8b3ad1836afe6c9382618e077", "5723d035ad083431fd629f0370aa99e5c47f35f3b3b6ebe16c3484bc612b32c1"] }, { column = "MA0216", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["50377047b17fa47e5b0a1991d675be4c1658c1d8b3ad1836afe6c9382618e077", "5723d035ad083431fd629f0370aa99e5c47f35f3b3b6ebe16c3484bc612b32c1"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "d1a58f1ad043b176a0af9185b50d1bbfb0800d0cb2ba15ba78a28b698d93e698"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8755,7 +8755,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0373", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["76063d455efdc407f32ce62845435b030b5924e5a088bf9e269263cbf4aadb9b", "ededcab68cfcf64991980a561d4b512430535bef477ca3be9170224b377d6467"] }, { column = "SY0423", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"], expected_codings = ["76063d455efdc407f32ce62845435b030b5924e5a088bf9e269263cbf4aadb9b", "ededcab68cfcf64991980a561d4b512430535bef477ca3be9170224b377d6467"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "4eebd9fe8bf5e4d9ac3a70e28832be17a6a22d125b1ccceca39f3f88129d7bfe"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8768,7 +8768,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0373", valid_from = "1975-01-01", valid_to = "1975-12-31", source_editions = ["1975"], expected_codings = ["2310e89e24365856b3001fab38f400e61382766db986bb9e12599137d7a14be1", "23498f56a1f9f704daecf1e55b66809e5939fda05f9ec94ac3ecb9fabca8e9e4"] }, { column = "SY0423", valid_from = "1975-01-01", valid_to = "1975-12-31", source_editions = ["1975"], expected_codings = ["2310e89e24365856b3001fab38f400e61382766db986bb9e12599137d7a14be1", "23498f56a1f9f704daecf1e55b66809e5939fda05f9ec94ac3ecb9fabca8e9e4"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ba5147eeee2a654478a12f07b6067ee989c3dd1d51e6da0be958483702e5a8b0"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8781,7 +8781,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0373", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["2ee5aa05daef8045b4a64c46493577d67a5412767926dfb40969a71f6af7721c", "42696a77864b621f742fc840c555947ce04b4abb0ec53b6bd138238c5b9359ef"] }, { column = "SY0423", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["2ee5aa05daef8045b4a64c46493577d67a5412767926dfb40969a71f6af7721c", "42696a77864b621f742fc840c555947ce04b4abb0ec53b6bd138238c5b9359ef"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "144305d74220259ddc84a53d497e56b017c8f21a7023e6721eb8d5cc7c65c03a"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8794,7 +8794,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0373", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5b2f772b889407bf2410a85ba1bf8172e550808b54544cfc8eab712a07c6116d", "a0677cde6c1683c43ccddd1e934890547ffb45bb841cf6f806543eb6720440d1"] }, { column = "SY0423", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["5b2f772b889407bf2410a85ba1bf8172e550808b54544cfc8eab712a07c6116d", "a0677cde6c1683c43ccddd1e934890547ffb45bb841cf6f806543eb6720440d1"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2d86f5871937cf27e1374cfa7be0c257b197a3bf108dda0383c3dc2ad35f8900"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8807,7 +8807,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "TR0056", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["b2ee4106ea35ba18abbee58bba113ab8936840368c729a20b8fdf65d889952dc"] }, { column = "TR0057", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"], expected_codings = ["b2ee4106ea35ba18abbee58bba113ab8936840368c729a20b8fdf65d889952dc"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6abd0876cab2919bae6822001e7cd8ce96a777f87db7c2702e5d653a0f568af0"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8820,7 +8820,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ column = "KI1119", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"] }, { column = "KM1119", valid_from = "1976-01-01", valid_to = "1976-12-31", source_editions = ["1976"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "38c365e15312bb66f977eba34e8fef40c3798d3efb11057cadc036bdac13e816"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8833,7 +8833,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ column = "KI1119", valid_from = "1975-01-01", valid_to = "1975-12-31", source_editions = ["1975"] }, { column = "KM1119", valid_from = "1975-01-01", valid_to = "1975-12-31", source_editions = ["1975"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "110c605857d0397bfc20d05663b1db2b9228cc08d45f856a208dbeaa3037287a"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8846,7 +8846,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ column = "KI1119", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"] }, { column = "KM1119", valid_from = "1978-01-01", valid_to = "1978-12-31", source_editions = ["1978"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "866057da49d035b0ebcd163d6dbdd7ef6a79622eeb5697692e9440953a188ac8"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8859,7 +8859,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ column = "KI1119", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"] }, { column = "KM1119", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ebee9cb07c54de4085ddff2ddd3584b925bcaa521945f097d4cfaa3b8c167ef8"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8872,7 +8872,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "HA0426", valid_from = "1977-01-01", valid_to = "1977-12-31", source_editions = ["1977"], expected_codings = ["616f74e9581a42f0d30f24dc70b51a750a6f34e1e1e21caf39ed0bd8b6c3e1eb"] }, { column = "HA0429", valid_from = "1977-01-01", valid_to = "1977-12-31", source_editions = ["1977"], expected_codings = ["616f74e9581a42f0d30f24dc70b51a750a6f34e1e1e21caf39ed0bd8b6c3e1eb"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "0bdb382c00bd0a203c7323504ba981e951db63fac15c354bb87c3d113d2da064"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8885,7 +8885,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0087", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }, { column = "SY0093", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "aecd16d357d6a572406c9aa3b5ad0b89a9d5d7a9981d707bfb54b0783d6d6967"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8898,7 +8898,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0088", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }, { column = "SY0094", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "30907bbcac1514128c3b2007c16d33ab7856ff84d10cbbabfe9c03764786af58"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8911,7 +8911,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0089", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }, { column = "SY0095", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "927ed49e35485a12f0af452adde1b4de562a8dfbf5a5d98f5e6320710d3a78f7"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8924,7 +8924,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0090", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }, { column = "SY0096", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "adbf49fadbe19ac613238785baf5c42d4027ca1aff52096896ea63b27942d2e4"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 
@@ -8937,7 +8937,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ column = "SY0091", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }, { column = "SY0097", valid_from = "1979-01-01", valid_to = "1979-12-31", source_editions = ["1979"], expected_codings = ["a5862a25fec8af3c742f9db78fbafe639e4328939a0592280e2680a8b312caae"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a857836f6d5527fadc4431d3672d49fc72c9dde0a217e761d7ac735d9bdbb086"
 evidence = "Every participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 noted = "2026-10-02"
 

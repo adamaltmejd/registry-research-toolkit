@@ -53,7 +53,7 @@ variant = "sokande-grund-avancerad"
 column = "Kurskod"
 versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Höstterminen 2016", "Vårterminen 2017", "Höstterminen 2017", "Vårterminen 2018", "Höstterminen 2018", "Vårterminen 2019", "Höstterminen 2019", "Vårterminen 2020", "Höstterminen 2020", "Vårterminen 2021", "Höstterminen 2021", "Vårterminen 2022", "Höstterminen 2022", "Vårterminen 2023", "Höstterminen 2023", "Vårterminen 2024", "Höstterminen 2024"]
 upstream = "omitted-column-in-version"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "0d9cc775f260996a199b3e7a05cabf735d04fdb7b3ad1e169945d834b580d26a"
 evidence = "SWECOV holds Kurskod in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
 noted = "2026-09-12"
 
@@ -62,7 +62,7 @@ variant = "sokande-grund-avancerad"
 column = "LInr"
 versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Höstterminen 2016", "Vårterminen 2017", "Höstterminen 2017", "Vårterminen 2018", "Höstterminen 2018", "Vårterminen 2019", "Höstterminen 2019", "Vårterminen 2020", "Höstterminen 2020", "Vårterminen 2021", "Höstterminen 2021", "Vårterminen 2022", "Höstterminen 2022", "Vårterminen 2023", "Höstterminen 2023", "Vårterminen 2024", "Höstterminen 2024"]
 upstream = "omitted-column-in-version"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "3a52e5f14cf273bd336c4ffaf309d6b3c3b26ca49413c75c1affce0591622d11"
 evidence = "SWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
 noted = "2026-09-12"
 
@@ -71,7 +71,7 @@ variant = "sokande-grund-avancerad"
 column = "LProg"
 versions = ["Vårterminen 2015", "Höstterminen 2015", "Vårterminen 2016", "Höstterminen 2016", "Vårterminen 2017", "Höstterminen 2017", "Vårterminen 2018", "Höstterminen 2018", "Vårterminen 2019", "Höstterminen 2019", "Vårterminen 2020", "Höstterminen 2020", "Vårterminen 2021", "Höstterminen 2021", "Vårterminen 2022", "Höstterminen 2022", "Vårterminen 2023", "Höstterminen 2023", "Vårterminen 2024", "Höstterminen 2024"]
 upstream = "omitted-column-in-version"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7d21521cb0b26aebb20ce60462ff589b60ba9d88d6e3af34cead8f9316819bdc"
 evidence = "SWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
 noted = "2026-09-12"
 
@@ -89,7 +89,7 @@ variant = "sokande-grund-avancerad"
 column = "PersonNr"
 versions = ["Vårterminen 2015", "Höstterminen 2015"]
 upstream = "omitted-column-in-version"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7a4abb34a2fc753691480928a6d995eddea2b1d8f3b09dd280738bd846d953b5"
 evidence = "SWECOV holds PersonNr in Hreg_Sok_2015_2022 (edition 2015..2021); SCB's Registerinformation export documents the Vårterminen 2015 and Höstterminen 2015 versions of sokande-grund-avancerad without a PersonNr column and carries it from Vårterminen 2016 onwards."
 noted = "2026-09-12"
 
@@ -1333,7 +1333,7 @@ variable = "47.38118.medverkande-hogskola"
 variant = "47.1390"
 valid_from = "2008-01-01"
 valid_to = "2008-12-31"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ad67f6315e2e56981cb64fef7f6a95e88fa16628a2ccb60450da585084ab735d"
 evidence = "Accepted prepared SCB export native 47.38118: both columns explicitly identify a university participating in a doctoral school, with identical operational translation from external university name codes to SCB internal codes. Both original names, definitions, type text, length 3 and complete supplied university coding and validity agree. Admit the two literal representations only in their exact pooled-edition intersection; retain the full original 2001–2008 and 2008–2022 scopes, all coding associations and provenance."
 noted = "2026-09-30"
 [[representation.parallel.columns]]

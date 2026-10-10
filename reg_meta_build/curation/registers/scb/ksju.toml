@@ -1288,7 +1288,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "cfarnr", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "idnr", source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "78d6ff6b526e877c9ae96fc9a7b4caccf1e0436a9e55e0eda7f0b699e84dbe41"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1301,7 +1301,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "storan", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "storanks", source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b009b75b1ec022a7db81cb221e24b5637aa38f600083524d4ead83edf85e839c"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1314,7 +1314,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "StoraN", source_editions = ["2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "storan", source_editions = ["2017"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "94dae53b1b588a795cbe924b5834f8afd4c1cb508677c5b8f7a1acfdc3903e3e"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1327,7 +1327,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "ngrp", expected_codings = ["adb286ab13bf2a5c1b3616ac1cf25a63698f5a3bf9c14b218f068df3d6545f92"], source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "snigrupp", expected_codings = ["adb286ab13bf2a5c1b3616ac1cf25a63698f5a3bf9c14b218f068df3d6545f92"], source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "0cf8eb0a43426dc74240eebf21710af4c00694db44950035e7f015acdfb9569d"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1340,7 +1340,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2007-01-01", valid_to = "2007-12-31", column = "ngrp", expected_codings = ["777619e014e9716e2148678c3db998bc29321e635ca4f295973b8d502f447e8f"], source_editions = ["2007"] }, { valid_from = "2007-01-01", valid_to = "2007-12-31", column = "snigrupp", expected_codings = ["777619e014e9716e2148678c3db998bc29321e635ca4f295973b8d502f447e8f"], source_editions = ["2007"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "901bb3771a3f94a071ff8ed171e09bba616891dd93e10b423c7a6a145673a542"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1353,7 +1353,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2008-01-01", valid_to = "2008-12-31", column = "ngrp", expected_codings = ["007921eb5420427e9c96501d4f2f11d42a07c6765df8ee6ea97bd42772735a15"], source_editions = ["2008"] }, { valid_from = "2008-01-01", valid_to = "2008-12-31", column = "snigrupp", expected_codings = ["007921eb5420427e9c96501d4f2f11d42a07c6765df8ee6ea97bd42772735a15"], source_editions = ["2008"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ea7fd68f4bb0d566a99330d90def337aa1c4da0e0f952b753015c73005181b66"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1366,7 +1366,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "ngrp", expected_codings = ["864f32e005ad26dea96863225cea0aee8f0357d487e7d8943cab4c292a52ef18"], source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "snigrupp", expected_codings = ["864f32e005ad26dea96863225cea0aee8f0357d487e7d8943cab4c292a52ef18"], source_editions = ["2009"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "d7e4451350950bef9275e48e82df45d76352e7d282921eb4d0ae987ec621ed90"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1379,7 +1379,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2011-01-01", valid_to = "2011-03-31", column = "ngrp", expected_codings = ["af7d8b07833595833a00b1c358a99c4d22aadd1bde0da960a92eb8f005d5f04c"], source_editions = ["2011 kv1"] }, { valid_from = "2011-01-01", valid_to = "2011-03-31", column = "snigrupp", expected_codings = ["af7d8b07833595833a00b1c358a99c4d22aadd1bde0da960a92eb8f005d5f04c"], source_editions = ["2011 kv1"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "3738d08712f02cdfd37b5afd4fb62248805a286430c71a0ae753ef7962515566"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1392,7 +1392,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "FALLID", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Id", source_editions = ["2015"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "49027ad1bb2a5560262e2ff51c64b8b8ef22e662baf7779a0ef0f86a3f90c40f"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1405,7 +1405,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "lillanks", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "lillanrfv", source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e2cfa9e48f779a273f20c7eafc06ac103f43b8d3dce3a3ef9bff721f861f4695"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1418,7 +1418,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2007-01-01", valid_to = "2007-12-31", column = "lillanks", source_editions = ["2007"] }, { valid_from = "2007-01-01", valid_to = "2007-12-31", column = "lillanrfv", source_editions = ["2007"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "1bd47f441bde7083548778095a085ee7add6e121c084e10949d55f013f0a98ab"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1431,7 +1431,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2008-01-01", valid_to = "2008-12-31", column = "lillanks", source_editions = ["2008"] }, { valid_from = "2008-01-01", valid_to = "2008-12-31", column = "lillanrfv", source_editions = ["2008"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9b85e633ce4130f1c6e2d66f4a3efdad9e2fba4fd6918641bfd704843a4d166c"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1444,7 +1444,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "lillanks", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "lillanrfv", source_editions = ["2009"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7b1094a7c626eab3dd9b819e3c05cd072a1a9d81241130dca5c340a215b8b5b7"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1457,7 +1457,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2010-01-01", valid_to = "2010-12-31", column = "lillanks", source_editions = ["2010"] }, { valid_from = "2010-01-01", valid_to = "2010-12-31", column = "lillanrfv", source_editions = ["2010"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f76202346198c4e30eb1934ecd2f83a8d5277e579caca88539754c8a0740405f"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1470,7 +1470,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2011-01-01", valid_to = "2011-03-31", column = "lillanks", source_editions = ["2011 kv1"] }, { valid_from = "2011-01-01", valid_to = "2011-03-31", column = "lillanrfv", source_editions = ["2011 kv1"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "99373225d48b76fe9ccbd14a742893be9ec8dc38b2e7316244d95745470232a0"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1483,7 +1483,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "Lillan", source_editions = ["2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "lillan", source_editions = ["2017"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a02dc99598e0adc941d2a19c0d64aa8a687d8cd72eed3d706ac13b3bab13d6d3"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1496,7 +1496,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "SGrupp", expected_codings = ["dab129653b3bd3a319f3e5ccebcf08c12293edc7134273439013ab531f1b83da"], source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "Stkl", expected_codings = ["dab129653b3bd3a319f3e5ccebcf08c12293edc7134273439013ab531f1b83da"], source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "0144d31fb0d8cdd3c61feb3612c8e60c8b5132f93c1f23e9eb4dba974b76058a"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1509,7 +1509,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "StrataKS", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "strata", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "stratum", source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f5a9b5bd867a3fef9f6f0046d0840bfad9906910b2f49d8e15fc863a6bc708e8"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1522,7 +1522,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2007-01-01", valid_to = "2007-12-31", column = "strata", source_editions = ["2007"] }, { valid_from = "2007-01-01", valid_to = "2007-12-31", column = "stratum", source_editions = ["2007"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "cd477d738222ec263a7e23d82251c6dfc4d811d0c326017449116d69bdc638ed"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1535,7 +1535,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2008-01-01", valid_to = "2008-12-31", column = "strata", source_editions = ["2008"] }, { valid_from = "2008-01-01", valid_to = "2008-12-31", column = "stratum", source_editions = ["2008"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2f52c5b223db32abfd8b76b1fece5b43b0a89c70826faf0c59c3a0c7a45f2078"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1548,7 +1548,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "strata", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "stratum", source_editions = ["2009"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "5bdb123875afc328474f95e15ddcbec2a02ff0b84ed0545fdd2209ea7f60f0d5"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1561,7 +1561,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2010-01-01", valid_to = "2010-12-31", column = "strata", source_editions = ["2010"] }, { valid_from = "2010-01-01", valid_to = "2010-12-31", column = "stratum", source_editions = ["2010"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ef22df47b6ab088dd1c45f2efca975a0fea72c4558383e51227b12092d1fd68d"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1574,7 +1574,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2011-01-01", valid_to = "2011-03-31", column = "strata", source_editions = ["2011 kv1"] }, { valid_from = "2011-01-01", valid_to = "2011-03-31", column = "stratum", source_editions = ["2011 kv1"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ddb8757a28728381c2eae729be7f7a22d9e0dc12d2327a8ed32df119d0e8c4dc"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1587,7 +1587,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "nsvar", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "nsvarrfv", source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "458913f51b0911518a6d3a5de047357d8e486ca00ba0a7988e297cbccabe3a3d"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1600,7 +1600,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "manad", expected_codings = ["ab843e8108808d2654e88c5b1e305118ed3f6e032aa9e24c8b1f5622a59efa5b"], source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "matmanad", expected_codings = ["ab843e8108808d2654e88c5b1e305118ed3f6e032aa9e24c8b1f5622a59efa5b"], source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7cba2b92427cda415251df6d2b74a438c77a393da30a90bc589efdefd84c24c2"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1613,7 +1613,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2007-01-01", valid_to = "2007-12-31", column = "manad", expected_codings = ["d405aa7b52f846364d5b45ad38b6bcc865fe71c01f9519a32d44c4f8e30eb430"], source_editions = ["2007"] }, { valid_from = "2007-01-01", valid_to = "2007-12-31", column = "matmanad", expected_codings = ["d405aa7b52f846364d5b45ad38b6bcc865fe71c01f9519a32d44c4f8e30eb430"], source_editions = ["2007"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "437bc4f2262e02082e964ad3419ca39fbbc4d418376025f3834086ce5b7bc189"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1626,7 +1626,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2008-01-01", valid_to = "2008-12-31", column = "manad", expected_codings = ["49aaacdab96b2152aefa3a184b55d8e6886fbd6e2d768175b2db9f70cdff8873"], source_editions = ["2008"] }, { valid_from = "2008-01-01", valid_to = "2008-12-31", column = "matmanad", expected_codings = ["49aaacdab96b2152aefa3a184b55d8e6886fbd6e2d768175b2db9f70cdff8873"], source_editions = ["2008"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e7d8b34b7bc356d21bd8f87ec46112bbb62e1fb05777e24232f18b75356591b0"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1639,7 +1639,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "manad", expected_codings = ["fce45f3f1ed9e95ee6ec411c47b1d158d3cd0a185a2545e3896bb1909d343b95"], source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "matmanad", expected_codings = ["fce45f3f1ed9e95ee6ec411c47b1d158d3cd0a185a2545e3896bb1909d343b95"], source_editions = ["2009"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "36adabd05c337379144ecb00f2caf4fd11b65003ec96c85fd112e45220b72de5"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1652,7 +1652,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2010-01-01", valid_to = "2010-12-31", column = "manad", expected_codings = ["d224e532a2d749b324f8310c2826b7cc59a2f4c1051e70d5d2f506fcfbd5b446"], source_editions = ["2010"] }, { valid_from = "2010-01-01", valid_to = "2010-12-31", column = "matmanad", expected_codings = ["d224e532a2d749b324f8310c2826b7cc59a2f4c1051e70d5d2f506fcfbd5b446"], source_editions = ["2010"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "95b435ee43693ed3209428a2a43f0a474bd34ff5fc9d98b9a637e275824e360f"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1665,7 +1665,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2011-01-01", valid_to = "2011-03-31", column = "manad", expected_codings = ["6a401a5fc6ed5fdd2a8d3c3066e032414f97b6cc6f0a811d71af12d2709a8a41"], source_editions = ["2011 kv1"] }, { valid_from = "2011-01-01", valid_to = "2011-03-31", column = "matmanad", expected_codings = ["6a401a5fc6ed5fdd2a8d3c3066e032414f97b6cc6f0a811d71af12d2709a8a41"], source_editions = ["2011 kv1"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "dfb06c8bcc99779e18c44c7b48e475ede213a295c4153fadea05e5d1b708b090"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1678,7 +1678,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "AnstAE", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "SyssA", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "syssa98", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "syssa98u", source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "164e6bd70f143a0a9938b38f03c16c472da744505793307469fc68f02ed578df"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1691,7 +1691,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2007-01-01", valid_to = "2007-12-31", column = "AnstAE", source_editions = ["2007"] }, { valid_from = "2007-01-01", valid_to = "2007-12-31", column = "syssa98", source_editions = ["2007"] }, { valid_from = "2007-01-01", valid_to = "2007-12-31", column = "syssa98u", source_editions = ["2007"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "23435fe937a9376a8b7b0b84308412c7d5cfde0c3f0fb92fae099c067fd9a4d4"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1704,7 +1704,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2008-01-01", valid_to = "2008-12-31", column = "AnstAE", source_editions = ["2008"] }, { valid_from = "2008-01-01", valid_to = "2008-12-31", column = "syssa98", source_editions = ["2008"] }, { valid_from = "2008-01-01", valid_to = "2008-12-31", column = "syssa98u", source_editions = ["2008"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9b17541f769d6f509d2fdf09d5f1ccd8fd54a7685295e5a2c8af6b8ecae1d6aa"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1717,7 +1717,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "AnstAE", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "SYSSF", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "anstJe", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "syssa98", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "syssa98u", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "syssf98", source_editions = ["2009"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "efe7fa40f5de3932410703597c114032e8bcc7f2cb1488ddb530f77cef2dffd7"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1730,7 +1730,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2010-01-01", valid_to = "2010-12-31", column = "AnstAE", source_editions = ["2010"] }, { valid_from = "2010-01-01", valid_to = "2010-12-31", column = "SYSSF", source_editions = ["2010"] }, { valid_from = "2010-01-01", valid_to = "2010-12-31", column = "anstJe", source_editions = ["2010"] }, { valid_from = "2010-01-01", valid_to = "2010-12-31", column = "syssa98", source_editions = ["2010"] }, { valid_from = "2010-01-01", valid_to = "2010-12-31", column = "syssa98u", source_editions = ["2010"] }, { valid_from = "2010-01-01", valid_to = "2010-12-31", column = "syssf98", source_editions = ["2010"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f0f69f841fb948bae543045ef7d6b4697c4c54b49afa3e11d2e3664657a03c95"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1743,7 +1743,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2011-01-01", valid_to = "2011-03-31", column = "AnstAE", source_editions = ["2011 kv1"] }, { valid_from = "2011-01-01", valid_to = "2011-03-31", column = "SYSSF", source_editions = ["2011 kv1"] }, { valid_from = "2011-01-01", valid_to = "2011-03-31", column = "anstJe", source_editions = ["2011 kv1"] }, { valid_from = "2011-01-01", valid_to = "2011-03-31", column = "syssa98", source_editions = ["2011 kv1"] }, { valid_from = "2011-01-01", valid_to = "2011-03-31", column = "syssa98u", source_editions = ["2011 kv1"] }, { valid_from = "2011-01-01", valid_to = "2011-03-31", column = "syssf98", source_editions = ["2011 kv1"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "3a09ba1e7e425522d63b8a4147f04f67be3518c0c5ef06e859bda904c60981f7"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1756,7 +1756,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "SYSSF", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "anstJe", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "syssf98", source_editions = ["2006"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "0c4e162d536dc48fe7247d6a146df88e838bc239f0844f6c9aac01636fb01e5c"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1769,7 +1769,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2007-01-01", valid_to = "2007-12-31", column = "SYSSF", source_editions = ["2007"] }, { valid_from = "2007-01-01", valid_to = "2007-12-31", column = "anstJe", source_editions = ["2007"] }, { valid_from = "2007-01-01", valid_to = "2007-12-31", column = "syssf98", source_editions = ["2007"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "745b94e95bb541e15eb74932082022e0bcd8c435eda4694c07db91be4615caf1"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
@@ -1782,7 +1782,7 @@ variant = "195.275"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2008-01-01", valid_to = "2008-12-31", column = "SYSSF", source_editions = ["2008"] }, { valid_from = "2008-01-01", valid_to = "2008-12-31", column = "anstJe", source_editions = ["2008"] }, { valid_from = "2008-01-01", valid_to = "2008-12-31", column = "syssf98", source_editions = ["2008"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "cfbb4801a0edd44dd07405d2be73e28fbb0739167ee9e67c5c0fce6a8d9687c9"
 evidence = "Complete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
 noted = "2026-10-02"
 
