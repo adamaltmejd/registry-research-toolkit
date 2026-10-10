@@ -22,7 +22,7 @@ from reg_core_py import fold_identity
 from .errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "9.7.0"
+SCHEMA_VERSION = "10.0.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -776,8 +776,8 @@ CREATE TABLE provider (
 -- FQID slug columns (`slug` on register / register_variant / classification)
 -- are nullable in 3.1. Curated values land in step 1c; the build refuses to
 -- compile with NULL slugs from then on. The `_default` placeholder for
--- variant-less registers is synthesized at FQID-resolve time (catalog.py),
--- never persisted. See crates/DESIGN.md → FQID grammar and DESIGN.md → Slug curation.
+-- variant-less registers is never persisted: the Rust reader matches it to the
+-- NULL-slug variant (crates/reg-catalog/src/ops/schema.rs). See crates/DESIGN.md → FQID grammar and DESIGN.md → Slug curation.
 CREATE TABLE register (
     register_id INTEGER PRIMARY KEY,
     provider_id INTEGER NOT NULL REFERENCES provider(provider_id),
