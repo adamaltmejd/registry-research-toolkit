@@ -14,9 +14,10 @@ const CLASS: &str = "class";
 /// The first segment of group refs.
 const GROUP: &str = "group";
 
-/// SQL for the SCB numeric variable id of the variable `v`, NULL for other
-/// providers (today's `_VAR_ID_EXPR`).
-pub(crate) const VAR_ID: &str = "CASE WHEN v.variable_id < 4611686018427387904 \
+/// SQL for the SCB numeric variable id of the variable `v` (provider `p`), NULL
+/// for other providers (today's `_VAR_ID_EXPR`). The provider is read from `p`:
+/// `variable_id` is dense and carries no provider band (#1296 2b).
+pub(crate) const VAR_ID: &str = "CASE WHEN p.slug = 'scb' \
     AND v.provider_key GLOB '[0-9]*' AND NOT v.provider_key GLOB '*[^0-9]*' \
     THEN CAST(v.provider_key AS INTEGER) END";
 
@@ -430,7 +431,7 @@ pub(crate) fn register(conn: &Connection, scope: Scope, value: &str) -> Result<R
     let sql = format!(
         "SELECT r.register_id, p.slug, r.slug, r.name FROM register r \
          JOIN provider p USING(provider_id) \
-         WHERE fold_identity(r.name) = fold_identity(?) AND {in_scope} ORDER BY r.register_id"
+         WHERE fold_identity(r.name) = fold_identity(?) AND {in_scope} ORDER BY p.slug, r.slug"
     );
     let mut stmt = conn.prepare(&sql)?;
     let found: Vec<(i64, Option<String>, Option<String>, String)> = stmt

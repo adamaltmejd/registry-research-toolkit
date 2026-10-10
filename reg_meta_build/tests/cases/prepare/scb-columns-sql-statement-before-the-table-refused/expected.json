@@ -4,7 +4,7 @@
   "fails_if": "the SQL column-type reader skips a statement before a CREATE TABLE",
   "note": "`DROP TABLE [Other];` and its LF are 20 characters, where the CREATE TABLE starts.",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "scb_column_types_unsupported",
     "type": "ScbReferenceSourceError",
     "locator": "unsupported SQL before character 20"
   }

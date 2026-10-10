@@ -104,7 +104,7 @@
         [
           "rows",
           "2020-01-01",
-          "2020-12-31",
+          "2021-12-31",
           null,
           null
         ],
@@ -167,7 +167,7 @@
       ]
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {
         "code": [
           "sentinel_classification_codes",
@@ -236,7 +236,7 @@
       "note": "warning, with its 2020 row retyped varchar (the replaced [type] leg): the [[coding.warning]] is a stale_curation_entry error (the replaced test: diagnostics [(stale_curation_entry, error)], evaluation stale)."
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {
         "register": "warning"
       },

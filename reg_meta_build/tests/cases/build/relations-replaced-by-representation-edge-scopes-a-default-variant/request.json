@@ -1,0 +1,23 @@
+{
+  "note": "SYD has no Deldatamängder sheet, so the build synthesizes its one variant `_default` and delivers every SYD column there (route-sos-places-token-variables-in-the-default-or-every-routed-subset). A variant-scoped representation edge in such a register can only name `_default`: COL is replaced by NEU in 2010 within `_default`. Variant references already keep the reserved slug (relations-replaced-by-edges-are-written-at-their-own-grain); before this case the representation edge's scope refused it, and the build aborted with an unlocated pipeline_build_failed. The expected row is the edge as authored: every curated edge's note is `curated:slug_toml` and the edge's own note is its description.",
+  "fails_if": "`ResolvedRepresentationSuccession` (resolved_metadata.py) validates its variant scope as a plain slug instead of a register_variant slug, so it refuses `_default` and the build fails instead of writing the edge",
+  "sources": {
+    "description": "SOS register SYD, with no Deldatamängder sheet, delivers COL and NEU in TOKEN over 2005-2015.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "SYD",
+        "title": "Variantlöst",
+        "subsets": [],
+        "variables": [
+          {"name": "COL", "deldatamangd": "TOKEN", "label": "Col", "description": null, "data_type": "Sträng (text)", "data_from": 2005, "data_to": 2015, "value_set": null, "external_classification": null},
+          {"name": "NEU", "deldatamangd": "TOKEN", "label": "Neu", "description": null, "data_type": "Sträng (text)", "data_from": 2005, "data_to": 2015, "value_set": null, "external_classification": null}
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "note": "Step 1's tree and source, built strict for the sample register: it ends `blocked` on the two located collisions.",
+  "fails_if": "`convert_naming` (source_naming.py) stops returning its refused declarations, so the strict build aborts with `catalog_dependency_missing` instead of ending `blocked` on the located `naming_slug_collision`",
+  "sources": {
+    "description": "SCB register 1 (variant 10) delivers VALUE (var_id 101), ONE (102) and OTHER (103) in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "varname": "ValueVar"
+        },
+        {
+          "cvid": 1002,
+          "var_id": 102,
+          "colname": "ONE",
+          "varname": "OneVar"
+        },
+        {
+          "cvid": 1003,
+          "var_id": 103,
+          "colname": "OTHER",
+          "varname": "OtherVar"
+        }
+      ]
+    }
+  },
+  "registers": [
+    "1"
+  ],
+  "diagnostic": false
+}

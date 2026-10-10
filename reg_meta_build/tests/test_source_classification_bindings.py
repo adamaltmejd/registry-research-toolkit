@@ -120,7 +120,6 @@ def _setup(*, code="01"):
             expected_codings=coding_expectations(claims, "2020-01-01", "2020-12-31"),
             classification="fixture",
             expected_classification="0" * 64,
-            binding_scope="declared",
             reason="Existing accepted classification declaration",
             provenance="accepted fixture",
         ),
@@ -181,7 +180,6 @@ def _scoped_sentinel_case(setup, *, start="2020-01-01", end="2020-12-31"):
                         books["fixture"].model_dump(mode="json")
                     ),
                     "sentinel_members": (("99", "Source label"),),
-                    "binding_scope": "inline_coding",
                 }
             ),
         }

@@ -51,6 +51,17 @@ impl Emitted {
     }
 }
 
+/// SQL order keys for one state's `expanded_state` rows (alias `e`): its base row,
+/// then its windows in the resolver's order, source and coded before curated, each
+/// by key start and column (`derive/states.py`). A window's key is unique within its
+/// state, so the keys are total there; `expanded_state_id` is never an order key.
+pub(crate) fn within_state(e: &str) -> String {
+    format!(
+        "{e}.kind NOT IN ('base', 'base_fallback'), {e}.kind = 'curated_window', \
+         {e}.window_valid_from, {e}.delivery_column_name"
+    )
+}
+
 /// The representations of `variable_id` a request emits, in today's reader order
 /// (`Catalog.states`, `Catalog.resolve_at`), held-clipped in holdings scope.
 ///
@@ -68,15 +79,17 @@ pub(crate) fn emitted(
 ) -> Result<Vec<Emitted>, Error> {
     // Per state in today's chronological order; its base row first, then its
     // windows in the resolver's order (source before curated).
-    let mut stmt = conn.prepare_cached(
+    // A variable's states are unique by (variant, valid_from, version label).
+    let mut stmt = conn.prepare_cached(&format!(
         "SELECT e.expanded_state_id, e.state_id, e.register_variant_id, e.kind, \
          e.delivery_column_name, e.canonical_column, s.period_scope, e.valid_from, \
          e.valid_to, e.window_valid_from \
          FROM expanded_state e JOIN variable_state s ON s.state_id = e.state_id \
+         JOIN register_variant rv ON rv.register_variant_id = e.register_variant_id \
          WHERE e.variable_id = ?1 AND (?2 IS NULL OR e.register_variant_id = ?2) \
-         ORDER BY s.valid_from, s.valid_to, s.value_set_version_label, \
-         s.register_variant_id, s.state_id, e.expanded_state_id",
-    )?;
+         ORDER BY s.valid_from, s.valid_to, s.value_set_version_label, rv.slug, {}",
+        within_state("e")
+    ))?;
     let rows = stmt
         .query_map(params![variable_id, variant], |row| {
             Ok(Emitted {
@@ -506,12 +519,21 @@ struct Hydrate<'a> {
 
 impl<'a> Hydrate<'a> {
     fn new(conn: &'a Connection, variable_id: i64) -> Result<Self, Error> {
+        let (register_id, provider, register): (i64, Option<String>, Option<String>) = conn
+            .query_row(
+                "SELECT r.register_id, p.slug, r.slug FROM variable v \
+                 JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
+                 WHERE v.variable_id = ?",
+                [variable_id],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )?;
         let warnings = conn
             .prepare(
-                "SELECT warning_id, register_variant_id, delivery_column_name, valid_from, \
-                 valid_to FROM data_warning WHERE variable_id = ? ORDER BY warning_id",
+                "SELECT lower(hex(warning_id)), register_variant_id, delivery_column_name, \
+                 valid_from, valid_to FROM data_warning \
+                 WHERE register_id = ? AND variable_id = ? ORDER BY warning_id",
             )?
-            .query_map([variable_id], |row| {
+            .query_map([register_id, variable_id], |row| {
                 Ok(Warning {
                     id: row.get(0)?,
                     variant: row.get(1)?,
@@ -521,14 +543,6 @@ impl<'a> Hydrate<'a> {
                 })
             })?
             .collect::<rusqlite::Result<_>>()?;
-        let (register_id, provider, register): (i64, Option<String>, Option<String>) = conn
-            .query_row(
-                "SELECT r.register_id, p.slug, r.slug FROM variable v \
-                 JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
-                 WHERE v.variable_id = ?",
-                [variable_id],
-                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
-            )?;
         let families = match (provider, register) {
             (Some(provider), Some(register)) => {
                 variant_families(conn, register_id, &provider, &register)?

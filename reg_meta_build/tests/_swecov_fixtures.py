@@ -124,9 +124,9 @@ def write_flavored_db(db_path: Path) -> Path:
             (variable_id, slug, slug, columns[0]),
         )
         conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from,"
+            "INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from,"
             " valid_to, data_type, delivery_column_name) "
-            "VALUES (?, 902, '0001-01-01', '9999-12-31', 'varchar', ?)",
+            "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 902, '0001-01-01', '9999-12-31', 'varchar', ?)",
             (variable_id, columns[0]),
         )
         alias_rows = [(variable_id, column) for column in columns]

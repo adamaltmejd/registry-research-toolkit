@@ -62,14 +62,13 @@
       "table": "states",
       "where": {"variable": ["period", "variant", "stable"]},
       "fields": ["variable", "variant", "valid_from", "valid_to", "operational_definition", "source_register_text"],
-      "note": "Each state keeps its own delivery's texts, per period and per variant.",
+      "note": "Each state keeps its own delivery's texts, per period and per variant. stable's 2020 and 2021 deliveries state the same texts, so they are one state (#1296 2d); period's differing texts keep its years apart.",
       "rows": [
         ["period", "people", "2020-01-01", "2020-12-31", "Introductory question text", "Fr171"],
         ["period", "people", "2021-01-01", "2021-12-31", "Derived-variable definition", "Fr128e"],
         ["variant", "people", "2020-01-01", "2020-12-31", "Person wording", "Fr171"],
         ["variant", "households", "2020-01-01", "2020-12-31", "Household wording", "Fr128e"],
-        ["stable", "people", "2020-01-01", "2020-12-31", "One definition", "Fr171"],
-        ["stable", "people", "2021-01-01", "2021-12-31", "One definition", "Fr171"]
+        ["stable", "people", "2020-01-01", "2021-12-31", "One definition", "Fr171"]
       ]
     },
     {

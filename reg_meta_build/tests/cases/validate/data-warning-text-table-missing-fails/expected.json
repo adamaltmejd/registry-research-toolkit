@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "data_warning_text missing"
+  ]
+}

@@ -3,7 +3,7 @@
   "replaces": "test_lisa_workbook_layout.py::test_lisa_reader_rejects_changed_actual_layout_with_coordinates[shift-header-Individ!A3:F3]",
   "fails_if": "the LISA reader searches for the header row instead of requiring it at row 3, or stops locating a header refusal at its cell range",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "lisa_layout_unsupported",
     "type": "LisaWorkbookError",
     "locator": "Individ!A3:F3",
     "message_contains": ["unsupported LISA header"]

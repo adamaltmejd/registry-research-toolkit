@@ -18,7 +18,7 @@
       ]
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "fields": ["register", "variable", "code", "detail"],
       "rows": [
         ["sample", null, "unresolved_catalog_identity", "Accepted while the source stays unresolved."]

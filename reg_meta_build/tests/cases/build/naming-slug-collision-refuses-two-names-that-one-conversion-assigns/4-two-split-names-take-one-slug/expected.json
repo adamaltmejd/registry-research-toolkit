@@ -1,0 +1,41 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": ["naming_slug_collision", "unresolved_catalog_identity", "withheld_catalog_dependency"]
+      },
+      "fields": ["code", "severity", "subject", "case_id", "locator"],
+      "rows": [
+        ["naming_slug_collision", "error", "kon", "curation/registers/scb/sample.toml#variable/1.5.kon", "curation/registers/scb/sample.toml#variable/1.5.kon"],
+        ["naming_slug_collision", "error", "kon", "curation/registers/scb/sample.toml#variable/1.7.kon", "curation/registers/scb/sample.toml#variable/1.7.kon"],
+        ["unresolved_catalog_identity", "error", "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5, 'accepted-partition', '1.5.kon')", null, null],
+        ["unresolved_catalog_identity", "error", "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 7, 'accepted-partition', '1.7.kon')", null, null],
+        ["withheld_catalog_dependency", "error", "tag:topic:member:scb/sample/kon", null, null],
+        ["withheld_catalog_dependency", "error", "tag:topic:member:scb/sample/kon", null, null]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "withheld_catalog_dependency"},
+      "fields": ["ref"],
+      "match": "set",
+      "rows": {
+        "refs_of": {"table": "issue_refs", "where": {"code": "unresolved_catalog_identity"}}
+      }
+    },
+    {
+      "table": "tags",
+      "fields": ["slug", "member"],
+      "rows": [
+        ["topic", null]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable"],
+      "rows": []
+    }
+  ]
+}

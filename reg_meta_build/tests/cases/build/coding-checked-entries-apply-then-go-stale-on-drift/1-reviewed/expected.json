@@ -575,7 +575,7 @@
       "note": "Neither effective occurrence raises a coding issue (the old `not diagnostics`)."
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {
         "code": [
           "sentinel_classification_codes",
@@ -664,7 +664,7 @@
       "note": "A documented state's provenance names the PDF, its digest and page; pdfconflict's non-overlapping first half keeps its first entry's. The filter matches the entries' own authored URL, digest and page, not generated prose."
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {
         "register": "warning"
       },

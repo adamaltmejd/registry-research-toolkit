@@ -23,6 +23,14 @@
       {
         "code": "R5",
         "label": "Rankval five"
+      },
+      {
+        "code": "R7",
+        "label": "Rankval tie"
+      },
+      {
+        "code": "R70",
+        "label": "Rankval tie"
       }
     ]
   },

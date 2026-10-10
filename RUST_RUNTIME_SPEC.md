@@ -1794,10 +1794,12 @@ What still depends on Python, by package:
 - Paths: `reg_meta_build/src/reg_meta_build/{derive/,validate}.py`,
   `reg_meta_build/input_data/swecov/build_catalog.py`, the tests they touch,
   `surface.toml`.
-- Acceptance: full gate; derived copies of both pinned artifacts byte-identical to
-  main's (SHA-256) and the SWECOV inventory output byte-identical; G1 (run in 4.2) 0
-  differences.
-- Escalate: any derived byte difference. Depends on: 4.1.
+- Acceptance: full gate; derived copies of both pinned artifacts content-identical to
+  main's (every table and the schema match; only the `builder_commit` and
+  `generation_id` manifest keys may differ) and the SWECOV inventory output
+  byte-identical; G1 (run in 4.2) 0 differences.
+- Escalate: any derived content difference beyond those two manifest keys. Depends on:
+  4.1.
 
 **4.3 FQID, period grammar and `fold_identity` through `reg-core-py`.** Implements
 section 5.
@@ -1945,14 +1947,26 @@ items from #1296 item 3 are optional: each joins the sub-package that owns its t
 is listed in that PR. Depends on: 4.9a; 4.10b–e also wait for test-audit's
 `reg_meta_build` test rewrite to finish (#1296). 4.1–4.9 do not wait for it.
 
-- **4.10a Major bump and unread tables.** Builder `SCHEMA_VERSION` 10.0.0, Rust `SCHEMA`
-  `(10, 0)`, `FIXTURE_SCHEMA_VERSION` follows. Drop artifact tables and views that the
-  Rust reader, derive and `validate_built_db` all leave unread (known: the always-empty
-  `classification_same_as`, 3d.1), each confirmed against the artifact DDL in
-  `reg_meta_build/db.py`. Regenerate the version-carrying goldens (the set #1305
-  touched). Paths: `reg_meta_build/src/reg_meta_build/{db,validate,derive/}`,
+- **4.10a Major bump.** Builder `SCHEMA_VERSION` 10.0.0, Rust `SCHEMA` `(10, 0)`,
+  `FIXTURE_SCHEMA_VERSION` follows; the version-carrying goldens regenerated (the set
+  #1305 touched). It also carries the February period end deferred from 4.4b (the
+  builder and the holdings accounting end a February period on its real last day, as
+  reg-core does) and repoints the stale `register` DDL comment from the deleted
+  `catalog.py` to the Rust reader. Paths: `reg_meta_build/src/reg_meta_build/db.py`,
   `crates/reg-catalog/src/lib.rs`, the goldens. Acceptance: full gate; byte-identical
-  rebuild. Escalate: dropping anything the PR does not list.
+  rebuild.
+- **4.10 drops: unread artifact tables and columns.** Drops what the Rust reader, derive
+  and `validate_built_db` all leave unread, each confirmed by grep over `crates/`,
+  `derive/`, `validate.py`, `reg_webapp/` and `scripts/`: the tables
+  `classification_same_as` (always empty, 3d.1), `identifier_semantics`,
+  `timeseries_event`, `source_column_type`, `source_join_key` and
+  `source_relationship_variable`; the columns `tag.description`,
+  `register_replaced_by.note` and `variant_replaced_by`'s `effective_year`, `note` and
+  `beskrivning`. Kept: `source_relationship` (the README contract) and
+  `variable_replaced_by.note` (`validate_built_db` selects the vintage-lift edges by
+  it). Paths: the artifact DDL in `reg_meta_build/db.py`, its writer and models, the
+  curation loaders, the cases that pinned the dropped tables. Acceptance: full gate;
+  byte-identical rebuild. Escalate: dropping anything the PR does not list.
 - **4.10b Dense `code_id`** (#1296 2a): renumbered densely in (label, code) order;
   reader tie-breaks move to (code, label). Paths: the builder's ID assignment,
   `crates/reg-catalog/src/ops/search/`, the goldens whose order changes. Acceptance:
@@ -1978,8 +1992,10 @@ is listed in that PR. Depends on: 4.9a; 4.10b–e also wait for test-audit's
 **4.11 Re-pin G1 to 10.0.0.** Implements the section 4 re-pin: the artifact pin and the
 baseline binary both move to the 10.0.0 tag; the differences between the old and new
 pins are recorded as the maintainer's G2 found them. Paths:
-`conformance/differential/config.toml`, section 4. Acceptance: G1 0 differences. Depends
-on: the 10.0.0 release.
+`conformance/differential/config.toml`, section 4. It also deletes the pre-4.4
+`asset_doc` fallback in `.github/workflows/container-build.yml` (its `simplify:`
+marker), since the 10.0.0 tag carries `reg_meta_build`'s `doc_db.py`. Acceptance: G1 0
+differences. Depends on: the 10.0.0 release.
 
 **4.12 Release binaries** (D3). A matrix workflow on `reg_meta/v*` builds `reg-meta` for
 macOS arm64 and Linux x86_64 and uploads them with SHA-256 checksums. The plugin README

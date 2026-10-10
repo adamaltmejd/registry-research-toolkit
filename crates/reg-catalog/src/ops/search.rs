@@ -508,7 +508,7 @@ fn register_arm(
          JOIN provider p ON p.provider_id = r.provider_id \
          WHERE register_fts MATCH ? AND NOT EXISTS (SELECT 1 FROM search_pin sp \
          WHERE sp.key = ? AND sp.type = 'register' AND sp.entity = p.slug || '/' || r.slug)\
-         {filters} ORDER BY rf.rank, rf.register_id LIMIT {HORIZON}"
+         {filters} ORDER BY rf.rank, p.slug, r.slug LIMIT {HORIZON}"
     );
     let mut stmt = conn.prepare(&sql)?;
     let rows = stmt
@@ -578,13 +578,14 @@ fn variable_arm(
         }
     }
     // Exact-name admission (#1180): variables whose name or held delivery column
-    // folds to the query are ordered ahead of the bound.
+    // folds to the query are ordered ahead of the bound; ties break on the FQID.
     let sql = format!(
         "WITH exact(variable_id) AS (SELECT v.variable_id FROM variable_fts vf \
-         JOIN variable v ON v.variable_id = vf.rowid WHERE variable_fts MATCH ?1 \
+         JOIN variable v ON v.variable_id = vf.rowid JOIN register r USING(register_id) \
+         JOIN provider p USING(provider_id) WHERE variable_fts MATCH ?1 \
          AND (fold_search(v.name) = ?2 OR EXISTS (SELECT 1 FROM variable_alias va \
          WHERE va.variable_id = v.variable_id AND fold_search(va.delivery_column_name) = ?2 \
-         AND {exact_held})) ORDER BY v.variable_id LIMIT {HORIZON}) \
+         AND {exact_held})) ORDER BY p.slug, r.slug, v.slug LIMIT {HORIZON}) \
          SELECT vf.register_id, vf.rowid, vt.name, vt.definition, vt.description, \
          vt.operational_definition, bm25(variable_fts, 0.2, 0.2, 6.0, 4.0, 2.0, 1.0, 0.4), \
          r.name, p.slug, r.slug, v.slug \
@@ -593,7 +594,8 @@ fn variable_arm(
          JOIN variable v ON v.variable_id = vf.rowid \
          JOIN variable_search_text vt ON vt.variable_id = vf.rowid \
          WHERE variable_fts MATCH ?1 AND {held}{filters} \
-         ORDER BY vf.rowid NOT IN (SELECT variable_id FROM exact), 7, vf.rowid LIMIT {HORIZON}",
+         ORDER BY vf.rowid NOT IN (SELECT variable_id FROM exact), 7, p.slug, r.slug, v.slug \
+         LIMIT {HORIZON}",
         exact_held = alias_held("va"),
         held = held::variable(
             scope,
@@ -673,9 +675,10 @@ fn label_hits(
     let sql = format!(
         "SELECT {GROUP_COLUMNS} FROM concept_group g \
          LEFT JOIN register r ON r.register_id = g.register_id \
+         LEFT JOIN provider p ON p.provider_id = r.provider_id \
          WHERE (fold_identity(g.label) LIKE fold_identity(?1) ESCAPE '\\' \
          OR g.group_key LIKE ?1 ESCAPE '\\') AND g.kind = ?2{filters} \
-         ORDER BY g.kind, g.group_key, g.group_id LIMIT {HORIZON}"
+         ORDER BY g.kind, g.group_key, p.slug, r.slug LIMIT {HORIZON}"
     );
     let mut stmt = conn.prepare(&sql)?;
     let rows = stmt
@@ -946,12 +949,12 @@ fn matched_columns(
 }
 
 /// Sort an arm's rows into today's order: display score descending, then rank, then
-/// the identity string (today's `_search_display_score` sort, per `type`).
+/// the tie key (today's `_search_display_score` sort, per `type`).
 fn rank(q: &str, hits: Vec<Hit>) -> Vec<Hit> {
     let folded = fold_search(q);
     let scores: Vec<i64> = hits.iter().map(|h| identity_score(&folded, h)).collect();
     let promote = scores.iter().filter(|&&s| s > 0).count() <= MAX_PROMOTED;
-    let mut keyed: Vec<(i64, f64, String, Hit)> = hits
+    let mut keyed: Vec<(i64, f64, (String, String), Hit)> = hits
         .into_iter()
         .zip(scores)
         .map(|(hit, score)| {
@@ -962,7 +965,7 @@ fn rank(q: &str, hits: Vec<Hit>) -> Vec<Hit> {
             } else {
                 0
             };
-            (-display, hit.rank(), identity(&hit), hit)
+            (-display, hit.rank(), tie_key(&hit), hit)
         })
         .collect();
     keyed.sort_by(|a, b| {
@@ -1189,8 +1192,17 @@ fn fqid_leaf(value: &str) -> Option<&str> {
     Some(leaf(value)).filter(|l| !l.is_empty())
 }
 
-/// The deterministic final tie-breaker of an arm, and what a typed cursor records of
-/// the row before the page (today's `_search_result_identity`).
+/// The deterministic final tie-breaker of an arm: a code's (code, label) as a tuple,
+/// so code `1` sorts before `10`; any other hit's identity.
+fn tie_key(hit: &Hit) -> (String, String) {
+    match hit {
+        Hit::Code(c) => (c.code.clone(), c.label.clone()),
+        _ => (identity(hit), String::new()),
+    }
+}
+
+/// What a typed cursor records of the row before the page (today's
+/// `_search_result_identity`), and every non-code hit's tie key.
 fn identity(hit: &Hit) -> String {
     match hit {
         Hit::Register(RegisterHit {
@@ -1220,7 +1232,8 @@ fn identity(hit: &Hit) -> String {
             "classification_succession:{}",
             s.fqid.as_deref().unwrap_or("None")
         ),
-        Hit::Code(c) => format!("code:{}:{}:{}", c.id, c.code, c.label),
+        // JSON, so a `:` inside a code or label cannot make two codes collide.
+        Hit::Code(c) => format!("code:{}", json!([c.code, c.label])),
     }
 }
 

@@ -2,19 +2,26 @@
   "status": "diagnostic_complete",
   "projections": [
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {"register": "acked"},
-      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "severity", "detail", "detail_hash_of", "fields", "withheld_output", "acknowledged_by", "source_subject", "case_id"],
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "severity", "detail", "detail_hash_of", "fields", "withheld_output", "acknowledged_by", "case_id"],
       "rows": [
-        ["value", "people", "VALUE", "2020-01-01", "2020-12-31", "conflicting_occurrence_facts", "warning", "Accepted while the source stays unresolved.", "issue", ["measurement_unit"], ["measurement_unit"], "curation/registers/scb/acked.toml#/acknowledge/1", "scb/acked/value", null]
+        ["value", "people", "VALUE", "2020-01-01", "2020-12-31", "conflicting_occurrence_facts", "warning", "Accepted while the source stays unresolved.", "issue", ["measurement_unit"], ["measurement_unit"], "curation/registers/scb/acked.toml#/acknowledge/1", null]
       ],
       "note": "acked: the acknowledged 2020 conflict's refs belong to one variable and are delivered through the one state they overlap, so the warning carries that variable, variant, column and the issue's own period. Its detail is the reviewer's reason, not the diagnostic's detail, which it keeps only as a hash."
+    },
+    {
+      "table": "warnings",
+      "where": {"register": ["acked", "unowned"]},
+      "fields": ["code"],
+      "rows": [],
+      "note": "acked, unowned: conflicting_occurrence_facts and unresolved_catalog_identity are build-only codes, so the build report keeps both warnings and the catalog neither."
     },
     {
       "table": "issue_refs",
       "where": {"code": "conflicting_occurrence_facts", "subject": "scb/acked/value"},
       "fields": ["ref"],
-      "rows": {"refs_of": {"table": "warnings", "where": {"register": "acked"}}},
+      "rows": {"refs_of": {"table": "report_warnings", "where": {"register": "acked"}}},
       "note": "acked: the warning cites exactly the source records of the issue it publishes."
     },
     {
@@ -51,7 +58,7 @@
       "note": "undated: the unacknowledged data-quality issue about the range-less pooled list has an owner but no period, so its warning names the variable and no state. Its detail is the code's published text, not the diagnostic's internal detail."
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {"register": "unowned"},
       "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "summary", "detail", "detail_hash_of", "acknowledged_by", "case_id"],
       "rows": [
@@ -63,17 +70,17 @@
       "table": "issue_refs",
       "where": {"code": "unresolved_catalog_identity"},
       "fields": ["ref"],
-      "rows": {"refs_of": {"table": "warnings", "where": {"register": "unowned"}}},
+      "rows": {"refs_of": {"table": "report_warnings", "where": {"register": "unowned"}}},
       "note": "unowned: the register-wide warning still cites its issue's source record."
     },
     {
       "table": "warnings",
       "where": {"register": "storage"},
-      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "severity", "summary", "detail_hash_of", "fields", "refs", "acknowledged_by", "source_subject", "case_id"],
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "severity", "summary", "detail_hash_of", "fields", "refs", "acknowledged_by", "case_id"],
       "rows": [
-        ["stored", "people", "Stored", "2020-01-01", "2020-12-31", "assumed_storage_type", "warning", "Text storage is assumed; the historical storage type is not documented.", "detail", ["data_type"], [], null, "curation/registers/scb/storage.toml#/errata.column/1", "curation/registers/scb/storage.toml#/errata.column/1"]
+        ["stored", "people", "Stored", "2020-01-01", "2020-12-31", "assumed_storage_type", "warning", "Text storage is assumed; the historical storage type is not documented.", "detail", ["data_type"], [], null, "curation/registers/scb/storage.toml#/errata.column/1"]
       ],
-      "note": "storage: the [[errata.column]] data_warning is published as a storage-type assumption on the added column's own 2020 state, never on the delivered anchor VALUE. Its summary is the curated text, its subject and case are the entry, and it cites no source record because the added column has none."
+      "note": "storage: the [[errata.column]] data_warning is published as a storage-type assumption on the added column's own 2020 state, never on the delivered anchor VALUE. Its summary is the curated text, its case is the entry, and it cites no source record because the added column has none."
     }
   ]
 }

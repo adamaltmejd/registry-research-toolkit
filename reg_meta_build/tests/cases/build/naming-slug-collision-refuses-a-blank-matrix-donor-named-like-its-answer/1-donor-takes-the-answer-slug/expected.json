@@ -1,0 +1,19 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject", "case_id", "locator"],
+      "rows": [
+        ["naming_slug_collision", "answer-sweden", "curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014:sweden", "curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014"],
+        ["naming_slug_collision", "answer-sweden", "curation/registers/scb/innovation-foretag.toml#variable/257.15662", "curation/registers/scb/innovation-foretag.toml#variable/257.15662"],
+        ["unresolved_catalog_identity", "('scb-registerinformation', 'scb', 'register', 'native-int', 257, 'accepted-matrix', 'curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014', 'sweden')", null, null]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key"],
+      "rows": [["answer-abroad", "15662"]]
+    }
+  ]
+}

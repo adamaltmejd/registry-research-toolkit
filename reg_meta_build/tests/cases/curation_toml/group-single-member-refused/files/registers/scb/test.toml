@@ -1,0 +1,11 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[group]]
+register = "scb/test"
+key = "solo"
+label = "Solo"
+axes = []
+members = [{ variable = "a" }]

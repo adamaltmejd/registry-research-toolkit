@@ -1,0 +1,7 @@
+{
+  "fails_if": "a strict build stops counting duplicate_edition_name as an error, so it places a catalog without the two '2020' editions instead of stopping blocked, or aborts on the duplicate again instead of reaching the normal issue path",
+  "note": "The same tree as step 1, built strict over register 1 (a register list keeps a strict build from needing a publishable, clean checkout): the error-level issue blocks the build and nothing is placed.",
+  "sources": "scb-editions-sharing-a-name",
+  "registers": ["1"],
+  "diagnostic": false
+}

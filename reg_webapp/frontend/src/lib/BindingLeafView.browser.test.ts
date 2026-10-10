@@ -642,7 +642,6 @@ describe("BindingLeafView data warnings", () => {
               summary: "Response codes unavailable.",
               detail: "No source dictionary supplied.",
               diagnostic_detail_sha256: "d".repeat(64),
-              source_subject: "original",
               fields: [],
               refs: [],
               withheld_output: [],

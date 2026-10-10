@@ -243,6 +243,11 @@ def _merge_adjacent_pooled(segments: list[SourceSegment]) -> list[SourceSegment]
     Adjacent means the next segment starts the day after the previous ends.
     An explicit segment never merges — neither with a pooled
     neighbor nor across it — and differing facts stay separate, as before.
+
+    `merge_adjacent_states` (resolved_catalog.py) later joins the same states,
+    but coding reports its issues (`missing_coding_period`) per segment before
+    then; this merge keeps those issues on the pooled window that curation
+    acknowledges rather than one per cut.
     """
     merged: list[SourceSegment] = []
     for segment in segments:
