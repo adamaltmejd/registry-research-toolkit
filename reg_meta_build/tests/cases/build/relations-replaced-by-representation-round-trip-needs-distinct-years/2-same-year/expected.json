@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "replaced_by_cycle",
+    "message_contains": ["NON-monotone representation succession cycle", "years [2020, 2020]"]
+  }
+}

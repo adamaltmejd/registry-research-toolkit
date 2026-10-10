@@ -49,7 +49,7 @@ from _sos_fixtures import (
     SosVariable,
     write_sos_input,
 )
-from openpyxl import load_workbook
+from openpyxl import Workbook, load_workbook
 from reader_artifacts import build_inputs_digest, generation_dir
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.pipeline import build_catalog, check_curation
@@ -147,6 +147,17 @@ def write_sources(spec: dict, source: Path) -> None:
         + (("unika",) if unika is not None else ())
         + (("vardemangder", "valid_dates") if values else ()),
     )
+    if "join_keys" in scb:
+        # ID-kolumner.xlsx: one worksheet of `Tabell | ID-kolumn | Beskrivning` rows.
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.append(["Tabell", "ID-kolumn", "Beskrivning"])
+        for row in scb["join_keys"]:
+            sheet.append(row)
+        path = source / "SCB/ID-kolumner.xlsx"
+        workbook.properties.created = workbook.properties.modified = _XLSX_EPOCH
+        workbook.save(path)
+        _fix_zip_times(path)
     for relative, text in spec.get("files", {}).items():
         path = source / relative
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -725,6 +736,27 @@ def _concept_groups(outcome: Outcome) -> list[dict]:
     return [{"variables": sorted(slugs)} for slugs in groups.values()]
 
 
+def _group_members(outcome: Outcome) -> list[dict]:
+    """Each concept-group member with its literal column and its facets."""
+    facets: dict[int, list[list]] = {}
+    for row in outcome._sql(
+        "SELECT member_id, axis, value, label FROM concept_group_variable_facet"
+    ):
+        facets.setdefault(row["member_id"], []).append(
+            [row["axis"], row["value"], row["label"]]
+        )
+    rows = outcome._sql(
+        "SELECT m.member_id, g.group_key, r.slug AS register, "
+        "v.slug AS variable, m.delivery_column_name AS column "
+        "FROM concept_group_variable m JOIN concept_group g USING (group_id) "
+        "JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id"
+    )
+    for row in rows:
+        row["facets"] = sorted(facets.get(row.pop("member_id"), []))
+    return rows
+
+
 def _editions(outcome: Outcome) -> list[dict]:
     """Each register version with its prose, populations and object types."""
     populations: dict[int, list[list]] = {}
@@ -1032,6 +1064,11 @@ _STATE_COORDINATES = (
     "SELECT s.state_id, r.slug AS register, v.slug AS variable, rv.slug AS variant, "
     "s.delivery_column_name AS column, s.valid_from, s.valid_to " + _STATE_JOIN
 )
+# A succession endpoint's register or variable FQID, from a `{side}_provider`,
+# `{side}_register` (and `{side}_variable`) column triple.
+_REGISTER = "{0}_provider || '/' || {0}_register"
+_VARIABLE = "{0}_provider || '/' || {0}_register || '/' || {0}_variable"
+_SUCCESSION_FACTS = "effective_year, note, beskrivning AS description"
 _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "issues": _issues,
     "issue_refs": _issue_refs,
@@ -1088,6 +1125,11 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     ),
     "alias_windows": _alias_windows,
     "concept_groups": _concept_groups,
+    "group_axes": lambda o: o._sql(
+        "SELECT g.group_key, a.axis, a.ordinal, a.label FROM concept_group_axis a "
+        "JOIN concept_group g USING (group_id)"
+    ),
+    "group_members": _group_members,
     "warnings": _warnings,
     "search_pins": lambda o: o._sql(
         "SELECT key AS query, type, position, entity FROM search_pin"
@@ -1112,6 +1154,43 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "|| predecessor_variable, "
         "successor_provider || '/' || successor_register || '/' || successor_variable "
         "FROM variable_replaced_by"
+    ),
+    # Every replaced_by edge below the classification grain, in one row shape.
+    "successions": lambda o: o._sql(
+        "SELECT 'register' AS grain, "
+        f"{_REGISTER.format('predecessor')} AS predecessor, "
+        f"{_REGISTER.format('successor')} AS successor, NULL AS predecessor_variant, "
+        "NULL AS successor_variant, NULL AS predecessor_column, "
+        "NULL AS successor_column, NULL AS variant, "
+        f"{_SUCCESSION_FACTS} FROM register_replaced_by UNION ALL SELECT 'variable', "
+        f"{_VARIABLE.format('predecessor')}, {_VARIABLE.format('successor')}, "
+        f"NULL, NULL, NULL, NULL, NULL, {_SUCCESSION_FACTS} FROM variable_replaced_by "
+        f"UNION ALL SELECT 'variant', {_REGISTER.format('predecessor')}, "
+        f"{_REGISTER.format('successor')}, predecessor_variant, successor_variant, "
+        f"NULL, NULL, NULL, {_SUCCESSION_FACTS} FROM variant_replaced_by "
+        f"UNION ALL SELECT 'representation', {_VARIABLE.format('predecessor')}, "
+        f"{_VARIABLE.format('successor')}, NULL, NULL, predecessor_column, "
+        f"successor_column, variant, {_SUCCESSION_FACTS} "
+        "FROM representation_replaced_by"
+    ),
+    "classification_derivations": lambda o: o._sql(
+        "SELECT derived_slug AS derived, source_slug AS source, note "
+        "FROM classification_derived_from"
+    ),
+    "timeseries_events": lambda o: o._sql(
+        "SELECT namn AS name, handelse AS event, beskrivning AS description, "
+        "entitet AS entity, id1 AS first_token, id2 AS second_token, "
+        "fil_id AS file_token FROM timeseries_event"
+    ),
+    "source_columns": lambda o: o._sql(
+        "SELECT table_name, column_name, sql_type, nullable FROM source_column_type"
+    ),
+    "join_keys": lambda o: o._sql(
+        "SELECT table_name, column_name, description FROM source_join_key"
+    ),
+    "identifiers": lambda o: o._sql(
+        "SELECT var_id AS native_variable, variabelnamn AS name, "
+        "variabeldefinition AS definition FROM identifier_semantics"
     ),
     "lineage": lambda o: o._sql(
         "SELECT c.register, c.variable, c.variant, c.column, "
@@ -1213,6 +1292,8 @@ FIELDS: dict[str, frozenset[str]] = {
         "measurement_unit name description operational_definition "
         "source_register_text codes classifications",
         "concept_groups": "variables",
+        "group_axes": "group_key axis ordinal label",
+        "group_members": "group_key register variable column facets",
         "warnings": "register variable variant column valid_from valid_to code "
         "severity detail summary detail_hash_of fields refs withheld_output "
         "acknowledged_by source_subject case_id",
@@ -1221,6 +1302,15 @@ FIELDS: dict[str, frozenset[str]] = {
         "delivery_column_names",
         "manifest": "key value",
         "edges": "type a b",
+        "successions": "grain predecessor successor predecessor_variant "
+        "successor_variant predecessor_column successor_column variant "
+        "effective_year note description",
+        "classification_derivations": "derived source note",
+        "timeseries_events": "name event description entity first_token "
+        "second_token file_token",
+        "source_columns": "table_name column_name sql_type nullable",
+        "join_keys": "table_name column_name description",
+        "identifiers": "native_variable name definition",
         "lineage": "register variable variant column source_register "
         "source_variable source_variant source_column valid_from valid_to",
         "lineage_warnings": "register variable variant column valid_from valid_to "

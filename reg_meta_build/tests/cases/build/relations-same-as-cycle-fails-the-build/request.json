@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_resolved_metadata_contracts.py::test_cycles_are_rejected_without_publishing[same_as]"
+  ],
+  "note": "relations.toml declares value -> two, two -> else and else -> value: three distinct pairs that each load, and whose as-declared graph closes a loop. The old test wrote a one-edge self-loop (one -> one) straight to the writer; a build cannot carry it, because the relations loader refuses a self-edge first (curation_toml case relations-same-as-self-edge-refused). The triangle is the loop a build does reach. From the old test: the refusal is a `cycle` code (relations_same_as_cycle) and no catalog is written. The allowed twin, an acyclic same_as component, is relations-same-as-component-at-the-32-fqid-cap-builds.",
+  "fails_if": "`validate_metadata_structure` (resolved_metadata.py) stops calling `_reject_same_as_cycles` on the declared variable same_as graph, or that function stops treating a node revisited on the DFS stack as a loop, so the build completes with the triangle",
+  "sources": "scb-withheld-key-and-gone"
+}

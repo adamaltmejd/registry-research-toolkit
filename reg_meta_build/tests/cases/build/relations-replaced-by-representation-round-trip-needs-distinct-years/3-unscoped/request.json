@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_resolved_metadata_contracts.py::test_cycles_are_rejected_without_publishing[representation]"
+  ],
+  "note": "Step 1's round trip without a variant scope, still in 2020 and 2021 (old: the support module's representation edge with variant None, and its reverse in 2001). From the old test: an unscoped representation loop is refused whatever its years, with a `cycle` code (replaced_by_cycle), and no catalog is written. Distinct years excuse only a variant-scoped loop (step 1).",
+  "fails_if": "`validate_metadata_structure` (resolved_metadata.py) routes unscoped representation edges to `reject_nonmonotone_representation_cycles` instead of the topological `reject_replaced_by_cycles`, so distinct years excuse an unscoped loop and the build completes",
+  "sources": "scb-withheld-key-and-gone"
+}

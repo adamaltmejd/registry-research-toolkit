@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_resolved_metadata_contracts.py::test_variant_scoped_temporal_round_trip_is_explicit_and_validated"
+  ],
+  "note": "Two variant-scoped representation replaced_by edges in variant people: value's column VALUE -> two's column TWO in 2020, and back in 2021. The old test's round trip ran between two spellings of one variable (OldColumn -> oneColumn, effective 2000 and 2001); this source delivers no variable under two spellings, and the cycle rule keys every endpoint as (variable, folded column, variant) alike. From the old test: a round trip whose edges have distinct effective years is explicit, so the build writes both edges (old: 2 representation_replaced_by rows). Steps 2 and 3 are its refused twins.",
+  "fails_if": "`reject_nonmonotone_representation_cycles` (relations.py) refuses every variant-scoped round trip, ignoring the effective years, or the writer drops a representation edge's variant scope or year",
+  "sources": "scb-withheld-key-and-gone"
+}
