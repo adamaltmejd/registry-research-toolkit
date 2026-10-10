@@ -540,6 +540,7 @@ def source_interpreter_commit() -> str:
             package / "input_snapshot.py",
             package / "cli.py",
             package / "db.py",
+            package / "source_files.py",
             package / "edition_bounds.py",
             package / "source_evidence.py",
             package / "_curation.py",

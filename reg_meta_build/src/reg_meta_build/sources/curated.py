@@ -14,7 +14,6 @@ from typing import TYPE_CHECKING
 from reg_core_py import GrammarError, period_bounds
 
 from reg_meta_build._curation import curation_error, require_bool
-from reg_meta_build.db import _file_sha256
 from reg_meta_build.id import mint
 from reg_meta_build.ir import (
     IRRegister,
@@ -24,6 +23,7 @@ from reg_meta_build.ir import (
     IRVariableState,
     IRVariant,
 )
+from reg_meta_build.source_files import _file_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

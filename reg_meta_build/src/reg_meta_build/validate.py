@@ -55,15 +55,15 @@ from typing import TYPE_CHECKING, Literal
 
 from reg_core_py import fold_search
 
-from reg_meta_build._resolved_common import remaining_windows
-from reg_meta_build.artifact_identity import search_pins_sha256
-from reg_meta_build.data_warnings import BUILD_ONLY_CODES, stored_data_warnings
-from reg_meta_build.db import (
+from reg_meta_build._resolved_common import (
     _PROVIDER_SEED,
-    _VALID_TO_SENTINEL,
     PROVIDER_ID_SCB,
     PROVIDER_ID_SOS,
+    remaining_windows,
 )
+from reg_meta_build.artifact_identity import search_pins_sha256
+from reg_meta_build.data_warnings import BUILD_ONLY_CODES, stored_data_warnings
+from reg_meta_build.db import _VALID_TO_SENTINEL
 from reg_meta_build.derive.browse import check_browse
 from reg_meta_build.derive.chains import CHAIN_TABLES, check_chains
 from reg_meta_build.derive.schema import check_coded

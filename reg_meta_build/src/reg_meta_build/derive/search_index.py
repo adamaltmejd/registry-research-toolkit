@@ -10,8 +10,8 @@ from reg_meta_build.db import (
     _VALUE_CODE_STOPLIST_EXACT,
     _VALUE_CODE_STOPLIST_PREFIXES,
     SEARCH_INDEX_DDL,
-    _progress,
 )
+from reg_meta_build.source_files import _progress
 
 if TYPE_CHECKING:
     import sqlite3

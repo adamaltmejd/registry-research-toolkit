@@ -263,13 +263,13 @@ def extend_db(
     """Build strict accepted holdings or an explicit metadata-only diagnostic."""
     from .db import (
         _insert_core_graph_from_ir,
-        _progress,
         _unlink_wal_sidecars,
         publish_db,
     )
     from .derive import DERIVED_TABLES, derive, derive_holdings
     from .derive.search_index import derive_search_indexes
     from .fqid_slugs import populate_slugs, populate_variable_slugs
+    from .source_files import _progress
 
     base_db = base_db.expanduser().resolve()
     db_dir = db_dir.expanduser().resolve()

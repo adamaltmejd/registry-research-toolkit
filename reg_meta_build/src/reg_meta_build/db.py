@@ -1,4 +1,4 @@
-"""Catalog schema, source-file IO, search indexes and atomic publication.
+"""Catalog schema, search indexes and atomic publication.
 
 The three-stage driver lives in pipeline.py. Steward extension uses the small
 IR graph inserter here; global builds write resolved_catalog directly.
@@ -12,24 +12,19 @@ import re
 import sqlite3
 import struct
 import sys
-import time
-from contextlib import closing, contextmanager
+from contextlib import closing
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from reg_core_py import fold_identity
 
+from ._resolved_common import _PROVIDER_SEED, _provider_id_for
 from .errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
 SCHEMA_VERSION = "10.0.0"
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
-
-    from .input_snapshot import (
-        ScbSnapshotReader,
-    )
     from .ir import (
         IRRegister,
         IRVariable,
@@ -39,51 +34,9 @@ if TYPE_CHECKING:
         IRVariant,
     )
 
-# Built-in data providers. `provider_id` values are stable: rows reference them
-# from `register.provider_id`. Add new providers by appending — never renumber.
-PROVIDER_ID_SCB = 1
-PROVIDER_ID_SOS = 2
-PROVIDER_ID_FOHM = 3
-PROVIDER_ID_FK = 4
-PROVIDER_ID_LV = 5
-PROVIDER_ID_PLIKT = 6
-PROVIDER_ID_RA = 7
-PROVIDER_ID_UMU = 8
-_PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
-    (PROVIDER_ID_SCB, "scb", "Statistiska Centralbyrån"),
-    (PROVIDER_ID_SOS, "sos", "Socialstyrelsen"),
-    (PROVIDER_ID_FOHM, "fohm", "Folkhälsomyndigheten"),
-    (PROVIDER_ID_FK, "fk", "Försäkringskassan"),
-    (PROVIDER_ID_LV, "lakemedelsverket", "Läkemedelsverket"),
-    (PROVIDER_ID_PLIKT, "pliktverket", "Pliktverket"),
-    (PROVIDER_ID_RA, "riksarkivet", "Riksarkivet"),
-    (PROVIDER_ID_UMU, "umu", "Umeå universitet"),
-)
-
-# Thin CURATED global providers (#422): public agencies with no machine-readable
-# native export — their catalog content is a maintainer-authored TOML read by the
-# shared `CuratedAdapter` (sources/curated.py). Each entry is
-# (provider_slug, input_data subdir holding `<provider_slug>.toml`). Unlike the
-# untracked SCB/SOS seed, this TOML is committed, so the subdir always exists on
-# any checkout — which requires a per-agency `.gitignore` un-ignore line (the
-# `input_data/*` rule otherwise hides it). See DESIGN.md → Curated thin providers.
-_CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (
-    ("fohm", "Folkhalsomyndigheten"),
-    ("fk", "Forsakringskassan"),
-    ("lakemedelsverket", "Lakemedelsverket"),
-    ("pliktverket", "Pliktverket"),
-    ("riksarkivet", "Riksarkivet"),
-    ("umu", "UMU"),
-)
-
 # Committed canonical-SCB seed (#444) — SCB registers SWECOV holds but SCB's
 # machine export lacks. Both the #556 stale-seed preflight and the adapter guard
 # resolve the seed from here so the two can't drift apart.
-
-# Exact SCB type tokens shared by source cleaning and the standalone source audit.
-# They are not enumerated codes when code == version == level. Source cleaning
-# preserves their rows as non-membership evidence (sources/scb_values.py).
-_VARDEMANGDER_SENTINELS = frozenset({"Tal", "Beskrivande text"})
 
 # value_code label-search stoplist (#352). Junk labels excluded from the
 # value_code_fts INDEX ONLY at population time — the leaf value_code / value_set
@@ -128,85 +81,6 @@ def _value_set_hash(pairs: list[tuple[str, str]]) -> bytes:
         h.update(struct.pack(">I", len(lb)))
         h.update(lb)
     return h.digest()
-
-
-# Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
-# Map to their cp850 equivalents rather than rejecting.
-_CP850_FIXUP = {0x8F: "Å", 0x90: "É", 0x9D: "Ø", 0x81: "ü", 0x8D: "ì"}
-
-
-EXPECTED_HEADERS: dict[str, list[str]] = {
-    "Registerinformation.csv": [
-        "Registernamn",
-        "Registerrubrik",
-        "Registersyfte",
-        "Registervariantrubrik",
-        "Registervariantnamn",
-        "Registervariantbeskrivning",
-        "RegistervariantSekretess",
-        "Registerversionnamn",
-        "Registerversionbeskrivning",
-        "Registerversionmätinformation",
-        "Registerversion_DocStaus",
-        "Registerversion_ForstaGodkannandeDatum",
-        "Registerversion_SenastGodkandDatum",
-        "Populationnamn",
-        "Populationdefinition",
-        "Populationkommentar",
-        "Populationdatum",
-        "Objekttypnamn",
-        "Objekttypdefinition",
-        "Variabelnamn",
-        "Variabeldefinition",
-        "Variabelbeskrivning",
-        "VariabelOperationell_definition",
-        "VariabelReferenstid",
-        "VariabelHämtadFrån",
-        "VariabelRegister_Källa",
-        "VariabelExtern_kommentar",
-        "Mattenhet",
-        "Kolumnnamn",
-        "Datatyp",
-        "Datalängd",
-        "CVID",
-        "RegisterId",
-        "RegVarID",
-        "RegVerID",
-        "VarId",
-    ],
-    "UnikaRegisterOchVariabler.csv": [
-        "Registernamn",
-        "Registerrubrik",
-        "Registervariantnamn",
-        "Registervariantrubrik",
-        "Variabelnamn",
-        "Kolumnnamn",
-        "VersionForsta",
-        "VersionSista",
-        "KansligVariabel",
-        "KansligVariabelIbland",
-        "Identitetsvariabel",
-    ],
-    "Identifierare.csv": ["VarID", "Variabelnamn", "Variabeldefinition"],
-    "Timeseries.csv": [
-        "Namn",
-        "Handelse",
-        "Beskrivning",
-        "Entitet",
-        "ID1",
-        "ID2",
-        "FilID",
-    ],
-    "Vardemangder.csv": [
-        "Värdemängdsversion",
-        "Värdemängdsnivå",
-        "Värdekod",
-        "Värdebenämning",
-        "CVID",
-        "ItemId",
-    ],
-    "VardemangderValidDates.csv": ["ItemID", "ValidFrom", "ValidTo"],
-}
 
 
 def _py_lower(value: str | None) -> str | None:
@@ -1988,189 +1862,6 @@ def publish_db(tmp_path: Path, final_path: Path) -> None:
     tmp_path.replace(final_path)
 
 
-# ---------------------------------------------------------------------------
-# CSV reading
-# ---------------------------------------------------------------------------
-
-
-def _scb_snapshot_error(exc: Exception) -> RegMetaError:
-    from .input_snapshot import SnapshotMaterializationError
-
-    if isinstance(exc, SnapshotMaterializationError):
-        return RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="scb_snapshot_materialization_required",
-            error_class="configuration",
-            message=str(exc),
-            remediation=exc.hydration_action,
-        )
-    return RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code="scb_snapshot_invalid",
-        error_class="configuration",
-        message=f"Selected SCB input snapshot is invalid: {exc}",
-        remediation=(
-            "Run the explicit snapshot verifier. If the selected identity changed "
-            "or is unsupported, prepare, verify, and accept a new snapshot, then "
-            "pass its exact Git commit and manifest SHA-256."
-        ),
-    )
-
-
-def _paths_overlap(destinations: set[Path], inputs: set[Path]) -> bool:
-    # The report temporary file is opened before replacement; a symlink or hard
-    # link there must not turn a distinct-looking report into an input overwrite.
-    return any(
-        destination == input_path
-        or (input_path.is_dir() and destination.is_relative_to(input_path))
-        or (
-            destination.exists()
-            and input_path.exists()
-            and destination.samefile(input_path)
-        )
-        for destination in destinations
-        for input_path in inputs
-    )
-
-
-def _file_sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(1 << 16), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-
-@contextmanager
-def _open_scb_source_raw(
-    path: Path, snapshot: ScbSnapshotReader
-) -> Iterator[tuple[list[str], Iterator[list[str | None]]]]:
-    from .input_snapshot import SnapshotError
-
-    try:
-        with snapshot.open_csv(path.name) as (raw_header, raw_rows):
-            header = ["" if value is None else value for value in raw_header]
-
-            yield header, raw_rows
-    except SnapshotError as exc:
-        raise _scb_snapshot_error(exc) from exc
-
-
-@contextmanager
-def _open_scb_csv_rows(
-    path: Path,
-    snapshot: ScbSnapshotReader,
-) -> Iterator[tuple[list[str], Iterator[tuple[int, list[str | None]]]]]:
-    """Share SCB header and row-width validation before cell interpretation."""
-    with _open_scb_source_raw(path, snapshot) as (raw_header, reader):
-        header = _validated_scb_header(path.name, raw_header)
-        ncols = len(header)
-
-        def rows() -> Iterator[tuple[int, list[str | None]]]:
-            for row_number, fields in enumerate(reader, start=2):
-                if len(fields) != ncols:
-                    raise RegMetaError(
-                        exit_code=EXIT_CONFIG,
-                        code="csv_bad_row",
-                        error_class="configuration",
-                        message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {ncols}.",
-                        remediation="Re-export the file from mikrometadata.scb.se.",
-                    )
-                yield row_number, fields
-
-        yield header, rows()
-
-
-def _validated_scb_header(filename: str, raw_header: Sequence[str]) -> list[str]:
-    """Decode and validate one SCB CSV header at the interpretation boundary."""
-    header = [_decode_cp1252(value) for value in raw_header]
-    expected = EXPECTED_HEADERS.get(filename)
-    if expected and header != expected:
-        raise RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="csv_bad_header",
-            error_class="configuration",
-            message=f"Unexpected header in {filename}.",
-            remediation="Ensure the file is an unmodified SCB metadata export.",
-        )
-    return header
-
-
-@contextmanager
-def _open_scb_csv_prepared(
-    path: Path,
-    snapshot: ScbSnapshotReader,
-) -> Iterator[
-    tuple[list[str], Iterator[tuple[int, dict[str, tuple[bool, str | None, str]]]]]
-]:
-    """Yield lossless prepared cells through the normal SCB validation traversal.
-
-    Each cell is ``(present, raw, interpreted)``.  ``present`` distinguishes a
-    prepared NULL from a supplied empty scalar; interpreted values use the same
-    cp1252 repair as :func:`_decode_cp1252`.
-    """
-    with _open_scb_csv_rows(path, snapshot) as (header, raw_rows):
-
-        def rows() -> Iterator[tuple[int, dict[str, tuple[bool, str | None, str]]]]:
-            for row_number, fields in raw_rows:
-                yield (
-                    row_number,
-                    {
-                        name: (
-                            value is not None,
-                            value,
-                            _decode_cp1252(value or ""),
-                        )
-                        for name, value in zip(header, fields, strict=True)
-                    },
-                )
-
-        yield header, rows()
-
-
-def _decode_cp1252(raw: str) -> str:
-    """Decode a latin-1-read string to proper cp1252.
-
-    Bytes undefined in cp1252 but present as DOS cp850 remnants are mapped
-    to their cp850 equivalents instead of rejecting the whole import.
-
-    ASCII fast path: for a pure-ASCII string (the overwhelmingly common case
-    across every SCB CSV), latin-1, cp1252, and the read string all agree on
-    0x00–0x7F and none of the DOS-remnant fixup bytes (all >= 0x81) can occur —
-    so the input is already correct and the encode + per-byte scan are skipped.
-    """
-    if raw.isascii():
-        return raw
-    raw_bytes = raw.encode("latin-1")
-    if not any(b in _CP850_FIXUP for b in raw_bytes):
-        return raw_bytes.decode("cp1252")
-    return "".join(
-        _CP850_FIXUP[b] if b in _CP850_FIXUP else bytes([b]).decode("cp1252")
-        for b in raw_bytes
-    )
-
-
-def _progress(msg: str) -> None:
-    sys.stderr.write(msg + "\n")
-    sys.stderr.flush()
-
-
-def _timing_enabled() -> bool:
-    """True when per-stage build timing should be emitted.
-
-    Opt-in via ``--timing`` (build-db) / ``REG_META_BUILD_TIMING=1`` — off by
-    default so normal builds stay quiet. Checked at call time, not import, so the
-    CLI flag (which sets the env var) takes effect.
-    """
-    return os.environ.get("REG_META_BUILD_TIMING") == "1"
-
-
-def _emit_timing(label: str, t0: float) -> None:
-    """Emit a greppable ``[timing] <label>: <s>`` stderr line if timing is on."""
-    if _timing_enabled():
-        _progress(f"[timing] {label}: {time.perf_counter() - t0:.1f}s")
-
-
 def seed_providers(conn: sqlite3.Connection) -> None:
     """Insert the built-in `provider` rows.
 
@@ -2386,20 +2077,6 @@ def _insert_core_graph_from_ir(
             )
             for w in alias_windows
         ],
-    )
-
-
-def _provider_id_for(provider: str) -> int:
-    """Map an IR provider slug to its stable `provider.provider_id` seed value."""
-    for pid, slug, _name in _PROVIDER_SEED:
-        if slug == provider:
-            return pid
-    raise RegMetaError(
-        exit_code=EXIT_CONFIG,
-        code="unknown_provider",
-        error_class="configuration",
-        message=f"No provider_id seed for provider {provider!r}.",
-        remediation="Add the provider to _PROVIDER_SEED.",
     )
 
 

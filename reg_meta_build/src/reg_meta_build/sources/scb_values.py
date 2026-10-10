@@ -6,14 +6,14 @@ from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import TYPE_CHECKING
 
-from reg_meta_build.db import (
+from reg_meta_build.errors import SourceFormatError
+from reg_meta_build.input_snapshot import SnapshotError
+from reg_meta_build.normalization import normalize_text, normalize_token
+from reg_meta_build.source_files import (
     _VARDEMANGDER_SENTINELS,
     _decode_cp1252,
     _validated_scb_header,
 )
-from reg_meta_build.errors import SourceFormatError
-from reg_meta_build.input_snapshot import SnapshotError
-from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_value_periods import value_window
 from reg_meta_build.source_values import (
     SourceValue,

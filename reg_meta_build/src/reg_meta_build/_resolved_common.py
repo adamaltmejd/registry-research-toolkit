@@ -11,6 +11,7 @@ from pydantic import (
     model_validator,
 )
 
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.id import mint, mint_canonical_scb
 
 if TYPE_CHECKING:
@@ -130,3 +131,55 @@ def covers_window(
 ) -> bool:
     """Whether known inclusive ISO intervals cover a window without a gap."""
     return not remaining_windows(intervals, valid_from, valid_to)
+
+
+# Built-in data providers. `provider_id` values are stable: rows reference them
+# from `register.provider_id`. Add new providers by appending — never renumber.
+PROVIDER_ID_SCB = 1
+PROVIDER_ID_SOS = 2
+PROVIDER_ID_FOHM = 3
+PROVIDER_ID_FK = 4
+PROVIDER_ID_LV = 5
+PROVIDER_ID_PLIKT = 6
+PROVIDER_ID_RA = 7
+PROVIDER_ID_UMU = 8
+_PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
+    (PROVIDER_ID_SCB, "scb", "Statistiska Centralbyrån"),
+    (PROVIDER_ID_SOS, "sos", "Socialstyrelsen"),
+    (PROVIDER_ID_FOHM, "fohm", "Folkhälsomyndigheten"),
+    (PROVIDER_ID_FK, "fk", "Försäkringskassan"),
+    (PROVIDER_ID_LV, "lakemedelsverket", "Läkemedelsverket"),
+    (PROVIDER_ID_PLIKT, "pliktverket", "Pliktverket"),
+    (PROVIDER_ID_RA, "riksarkivet", "Riksarkivet"),
+    (PROVIDER_ID_UMU, "umu", "Umeå universitet"),
+)
+
+# Thin CURATED global providers (#422): public agencies with no machine-readable
+# native export — their catalog content is a maintainer-authored TOML read by the
+# shared `CuratedAdapter` (sources/curated.py). Each entry is
+# (provider_slug, input_data subdir holding `<provider_slug>.toml`). Unlike the
+# untracked SCB/SOS seed, this TOML is committed, so the subdir always exists on
+# any checkout — which requires a per-agency `.gitignore` un-ignore line (the
+# `input_data/*` rule otherwise hides it). See DESIGN.md → Curated thin providers.
+_CURATED_PROVIDERS: tuple[tuple[str, str], ...] = (
+    ("fohm", "Folkhalsomyndigheten"),
+    ("fk", "Forsakringskassan"),
+    ("lakemedelsverket", "Lakemedelsverket"),
+    ("pliktverket", "Pliktverket"),
+    ("riksarkivet", "Riksarkivet"),
+    ("umu", "UMU"),
+)
+
+
+def _provider_id_for(provider: str) -> int:
+    """Map an IR provider slug to its stable `provider.provider_id` seed value."""
+    for pid, slug, _name in _PROVIDER_SEED:
+        if slug == provider:
+            return pid
+    raise RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code="unknown_provider",
+        error_class="configuration",
+        message=f"No provider_id seed for provider {provider!r}.",
+        remediation="Add the provider to _PROVIDER_SEED.",
+    )

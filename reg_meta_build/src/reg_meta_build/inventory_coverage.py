@@ -83,7 +83,8 @@ from typing import TYPE_CHECKING, Literal
 # leaf, so a stanza reads like every other candidate emitter's. `_PROVIDER` is the
 # ONE provider `curation/registers/scb/<slug>.toml` accepts, imported rather than restated so the
 # partition here cannot drift from the loader's own refusal.
-from reg_meta_build.db import _CURATED_PROVIDERS, catalog_coordinate_ids
+from reg_meta_build._resolved_common import _CURATED_PROVIDERS
+from reg_meta_build.db import catalog_coordinate_ids
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.fqid_slugs import _toml_str
 from reg_meta_build.scb_errata import _PROVIDER, ERRATA_COLUMN_SOURCE_LABEL

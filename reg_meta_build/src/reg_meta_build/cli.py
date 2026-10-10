@@ -30,9 +30,7 @@ from .concept_groups import load_concept_groups
 from .db import (
     DB_FILENAME,
     SCHEMA_VERSION,
-    _paths_overlap,
     _reject_input_repository_destination,
-    _scb_snapshot_error,
     db_path_from_args,
     default_db_dir,
     open_built_db,
@@ -86,6 +84,7 @@ from .input_snapshot import (
     prepare_input_bundle,
     verify_input_bundle,
 )
+from .source_files import _paths_overlap, _scb_snapshot_error
 from .source_inspection import (
     inspect_bundle_source_records,
     report_semantic_sha256,
