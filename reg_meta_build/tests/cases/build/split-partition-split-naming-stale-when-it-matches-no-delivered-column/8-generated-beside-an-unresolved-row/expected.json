@@ -1,0 +1,38 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": [
+        "code",
+        "subject",
+        "locator"
+      ],
+      "rows": [
+        [
+          "unresolved_catalog_identity",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)",
+          null
+        ]
+      ],
+      "note": "No stale row: only LEFT's null provider key, as in the pending sibling case."
+    },
+    {
+      "table": "states",
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "rows": [
+        [
+          "kon",
+          "Kon"
+        ],
+        [
+          "kon",
+          "KON"
+        ]
+      ]
+    }
+  ]
+}

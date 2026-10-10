@@ -2714,7 +2714,10 @@ def compile_partitions(
                     if ambiguity is not None:
                         ambiguities[scope_key].append(ambiguity)
                     # An explicit map owns columns by literal, not by suffix; a
-                    # failed map is already reported stale above.
+                    # failed map is already reported stale above. A generated
+                    # pin is written on first sight and never recomputed, so it
+                    # may outlive what it matched (`fqid_slugs`): only an
+                    # authored pin goes stale, a generated one stays unused.
                     if not partitions:
                         diagnostics.extend(
                             _stale_partition(
@@ -2725,6 +2728,7 @@ def compile_partitions(
                                 f"suffix {entry.entry.source_id.rsplit('.', 1)[1]!r}",
                             )
                             for entry in unmatched
+                            if entry.origin == "authored"
                         )
             elif native[1] == "sos":
                 if len(sos_splits) + len(sos_renames) != 1:
