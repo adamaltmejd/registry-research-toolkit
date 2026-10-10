@@ -464,10 +464,6 @@ def _reconciled_segment(
                 diagnostic_conflicts,
             )
         )
-    # Every reader states availability as true, and resolution leaves unsupported
-    # any occurrence without it, so the winners always agree on it.
-    availability = fields.availability
-    assert availability is not None and availability.status == "value"
     return SourceSegment(
         lower,
         upper,
@@ -544,7 +540,7 @@ def resolve_occurrence_intervals(
             missing.append("column_name")
         if periods is None and not is_independent:
             missing.append("period")
-        if availability is None or availability.status == "unknown":
+        if availability is None:
             missing.append("availability")
         if missing:
             unsupported.extend(record.evidence)

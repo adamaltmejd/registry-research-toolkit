@@ -34,7 +34,6 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
-from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import SourceFields
 
 if TYPE_CHECKING:
@@ -131,40 +130,6 @@ def resolve_representation_cases(
     for case, evaluation in zip(ordered, evaluations, strict=True):
         decision = case.decision
         assert isinstance(decision, (RepresentationDecision, DeliveryMetadataDecision))
-        scope_changed = []
-        if isinstance(decision, DeliveryMetadataDecision):
-            for column in decision.columns:
-                if column.source_scope is None:
-                    continue
-                key = column_identity(
-                    decision.variable_key, column.variant_key, column.column
-                )
-                scopes = (
-                    evidence.effective_scopes.get(key, frozenset())
-                    if evidence.effective_scopes is not None
-                    else frozenset(
-                        record.edition_period_scope
-                        if record.edition_period_scope.kind != "not_applicable"
-                        else record.edition_scope
-                        for record in evidence.records
-                        if source_occurrence(record).column_key == key
-                    )
-                )
-                if scopes != {column.source_scope}:
-                    scope_changed.append(column.column)
-        if scope_changed:
-            diagnostics.append(
-                ResolutionDiagnostic(
-                    code="stale_delivery_metadata_scope",
-                    severity="error",
-                    case_id=case.case_id,
-                    subject=repr(decision.variable_key),
-                    detail=f"Exact supplied delivery metadata scope changed for columns {scope_changed!r}.",
-                    refs=tuple(target.ref for target in case.targets),
-                    fields=("period",),
-                    withheld_output=("representations",),
-                )
-            )
         coding_changed = []
         if (
             isinstance(decision, DeliveryMetadataDecision)
@@ -212,11 +177,7 @@ def resolve_representation_cases(
                     withheld_output=("representations",),
                 )
             )
-        if (
-            evaluation.status == "applicable"
-            and not coding_changed
-            and not scope_changed
-        ):
+        if evaluation.status == "applicable" and not coding_changed:
             applicable.append(case)
         for issue in evaluation.issues:
             diagnostics.append(
@@ -482,27 +443,16 @@ def form_representations(
                     next(iter(alternatives)) if len(alternatives) == 1 else None
                 )
                 if first.column_metadata == "per_column":
+                    # Formation cuts each variant column into disjoint states and
+                    # the slices cut at every state bound, so exactly one state of
+                    # each column covers this slice.
                     for column in sorted(columns):
-                        observed_values = {
+                        (value,) = {
                             getattr(s, field)
                             for s in represented
                             if s.delivery_column_name == column
                         }
-                        column_facts[column][field] = (
-                            next(iter(observed_values))
-                            if len(observed_values) == 1
-                            else None
-                        )
-                        if len(observed_values) != 1:
-                            report(
-                                "conflicting_representation_fact",
-                                (field,),
-                                (f"representation.{column}.{field}",),
-                                f"The literal column {column!r} has conflicting column facts; no source was selected.",
-                            )
-                            fact_conflicts.append(
-                                (variant.slug, column, field, start, end)
-                            )
+                        column_facts[column][field] = value
                     continue
                 if field == "definition":
                     # Shared definition conflicts retain the existing variable-level error.
