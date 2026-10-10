@@ -1,0 +1,20 @@
+[register]
+provider = "sos"
+slug = "par"
+name = "Patientregistret"
+native_id = "5891427617861710725"
+[[variant]]
+native_id = "5891427617861710725.5623677195158740599"
+slug = "par-ov"
+[[variable]]
+native_id = "5891427617861710725.NUM"
+slug = "num"
+[[variable]]
+native_id = "5891427617861710725.ALF"
+slug = "alf"
+[[variable]]
+native_id = "5891427617861710725.CHR"
+slug = "chr"
+[[variable]]
+native_id = "5891427617861710725.OPN"
+slug = "opn"
