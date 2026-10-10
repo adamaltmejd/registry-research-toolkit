@@ -1,0 +1,17 @@
+{
+  "status": "blocked",
+  "result": {"database": null},
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "locator"],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "error",
+          "curation/registers/scb/sample.toml#variable/1.5.other"
+        ]
+      ]
+    }
+  ]
+}

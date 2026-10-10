@@ -3,7 +3,7 @@
   "replaces": "test_scb_reference_records.py::test_join_key_unknown_workbook_contract_fails[options0]",
   "fails_if": "the join-key reader reads the first worksheet of a workbook that has others",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "scb_join_keys_layout_unsupported",
     "type": "ScbReferenceSourceError",
     "locator": "expected one ID-kolumner worksheet"
   }

@@ -171,31 +171,24 @@ class SourceFields(_SourceModel):
     @staticmethod
     def require_typed_field(field_name: str, observation: SourceField) -> None:
         """Validate a known field's meaning after SourceField validates its shape."""
-        if observation.status == "value":
+        if field_name == "availability":
+            # Every reader states availability as true; no source reports
+            # nonavailability or an unknown availability, so a stated
+            # availability is exactly true and an occurrence without it is absent.
+            if observation.status != "value" or observation.value is not True:
+                raise ValueError(
+                    "availability values must be true; omit the field when a source "
+                    "does not state availability"
+                )
+        elif observation.status == "value":
             value = observation.value
-            if field_name == "availability":
-                if value is not True:
-                    raise ValueError(
-                        "availability values must be true; use negative status for "
-                        "explicit nonavailability"
-                    )
-            elif field_name == "sensitivity":
-                if type(value) is not bool and value != "conditional":
-                    raise ValueError(
-                        "sensitivity must carry a boolean or the conditional marker"
-                    )
-            elif field_name in {"identifier", "conditional_sensitivity"}:
+            if field_name in {"identifier", "sensitivity", "conditional_sensitivity"}:
                 if type(value) is not bool:
                     raise ValueError(f"{field_name} must carry a boolean")
             elif not isinstance(value, str):
                 raise ValueError(f"{field_name} must carry a string value")
-        if observation.status == "negative" and field_name not in {
-            "availability",
-            "column_name",
-        }:
-            raise ValueError(
-                "explicit negative is supported only for availability and column_name"
-            )
+        elif observation.status == "negative" and field_name != "column_name":
+            raise ValueError("explicit negative is supported only for column_name")
 
     @model_validator(mode="after")
     def _typed_fields(self) -> Self:

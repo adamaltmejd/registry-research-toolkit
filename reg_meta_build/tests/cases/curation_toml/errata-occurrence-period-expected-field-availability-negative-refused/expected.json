@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "fails_if": "`SourceFields.require_typed_field` (reg_meta_build/src/reg_meta_build/source_records.py) accepts a stated availability other than exactly true again (here an explicit negative, which no reader or curation correction produces), so a negative availability guard loads",
+  "note": "The twin of errata-occurrence-period-expected-field-availability-not-true-refused with the availability guard stated as an explicit negative instead of the integer 1. Before the tightening, negative was a permitted availability status, so this guard reached only the prose-guard rule (availability is never a permitted [[errata.occurrence_period]] guard), whose message does not contain this text; the message is the boundary signal that the typed availability check refused it. The code and locator are the twin's located register-entry refusal.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.occurrence_period.expected_fields]] entry 1",
+    "message_contains": [
+      "availability values must be true"
+    ]
+  }
+}

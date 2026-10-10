@@ -1,0 +1,16 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/sample/value"
+to = "scb/sample/two"
+from_column = "VALUE"
+to_column = "TWO"
+variant = "people"
+effective_year = 2020
+[[edge]]
+type = "replaced_by"
+from = "scb/sample/two"
+to = "scb/sample/value"
+from_column = "TWO"
+to_column = "VALUE"
+variant = "people"
+effective_year = 2020

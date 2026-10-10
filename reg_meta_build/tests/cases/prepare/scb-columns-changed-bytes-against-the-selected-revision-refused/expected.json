@@ -7,8 +7,8 @@
   "replaces": "test_scb_reference_records.py::test_side_readers_require_exact_revision[read_scb_column_types-_sql]",
   "fails_if": "the SQL column-type reader reads a file without checking its bytes against the selected revision",
   "error": {
-    "code": "source_preparation_failed",
-    "type": "ScbReferenceSourceError",
+    "code": "source_revision_changed",
+    "type": "SourceFormatError",
     "locator": "source differs from its declared revision: catalog/SCB/Tabelldefinitioner.sql"
   }
 }

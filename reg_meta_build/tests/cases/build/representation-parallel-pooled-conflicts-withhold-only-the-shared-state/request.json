@@ -1,10 +1,12 @@
 {
   "replaces": [
     "test_curation_compile_pooled_parallel.py::test_pooled_parallel_reconciliation_preserves_outer_windows_and_conflicts[fact]",
-    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_reconciliation_preserves_outer_windows_and_conflicts[coding]"
+    "test_curation_compile_pooled_parallel.py::test_pooled_parallel_reconciliation_preserves_outer_windows_and_conflicts[coding]",
+    "test_source_representations.py::test_conflicting_parallel_fact_nulls_only_that_claimed_fact",
+    "test_source_representations.py::test_coding_disagreement_is_withheld_without_a_representation_coding_pin"
   ],
-  "note": "One build carries both conflicts: Second's data type (text against First's int) and its code list (02 against First's 01). Only the shared 2022 state withholds the conflicting fact and coding; the outer states keep their own.",
-  "fails_if": "`form_representations` selects one sibling's data type or code list for the shared 2022 state instead of withholding it, or withholds the outer First 2020-2021 (`integer`, 01) or Second 2023-2024 (`text`, 02) facts too",
+  "note": "One build carries both conflicts: Second's data type (text against First's int) and its code list (02 against First's 01). Only the shared 2022 state withholds the conflicting fact and coding; the outer states keep their own. The shared window stays owed to the delivery-coverage guard with only the disputed fact and coding dropped from its claims, so the build reports no unexplained_delivery_* issue (the replaced test's passing check_delivery_coverage call).",
+  "fails_if": "`form_representations` selects one sibling's data type or code list for the shared 2022 state instead of withholding it, or withholds the outer First 2020-2021 (`integer`, 01) or Second 2023-2024 (`text`, 02) facts too; or formation stops dropping the disputed data type or coding from the shared window's coverage claims, or drops the window from them, so the build reports unexplained_delivery_fact_change or unexplained_delivery_coverage_loss",
   "sources": {
     "description": "Variable 1 (Income): First is pooled 2020-2022 (CVID 100, int, code 01), Second 2022-2024 (CVID 101, text, code 02).",
     "scb": {

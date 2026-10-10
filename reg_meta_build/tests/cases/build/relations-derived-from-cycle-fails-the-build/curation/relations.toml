@@ -1,0 +1,10 @@
+[[edge]]
+type = "derived_from"
+derived = "class/sni2020"
+source = "class/sni2000"
+note = "Specialization"
+
+[[edge]]
+type = "derived_from"
+derived = "class/sni2000"
+source = "class/sni2020"

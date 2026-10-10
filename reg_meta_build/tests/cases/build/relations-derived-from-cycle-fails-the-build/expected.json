@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "derived_from_cycle",
+    "message_contains": ["relations derived_from forms a derivation cycle: 'sni2020' -> 'sni2000' -> 'sni2020'"]
+  }
+}

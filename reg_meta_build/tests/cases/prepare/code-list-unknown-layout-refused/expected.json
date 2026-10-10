@@ -4,7 +4,7 @@
   "fails_if": "the code-list reader accepts a header naming the known columns in another order, or another header than the three known layouts",
   "note": "The hardest of the replaced test's layout inputs: every column name is known. An empty file, an extra column, a prefix of the extended layout, a semicolon delimiter and a repeated column reach the same guard.",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "code_list_layout_unsupported",
     "type": "CodeListSourceError",
     "locator": "unsupported code-list CSV layout ['label', 'code']"
   }

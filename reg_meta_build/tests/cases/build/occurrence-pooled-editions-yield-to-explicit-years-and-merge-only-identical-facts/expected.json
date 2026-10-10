@@ -1,0 +1,71 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "where": {"variable": ["pool", "lasaren", "proj"]},
+      "fields": ["variable", "valid_from", "valid_to", "pooled"],
+      "rows": [
+        ["pool", "2012-01-01", "2014-12-31", true],
+        ["lasaren", "1977-07-01", "2025-06-30", true]
+      ],
+      "note": "test_pooled_scope_forms_one_marked_state_over_the_whole_range: one marked state over 2012-2014. test_lasaren_school_year_hull_forms_one_marked_pooled_state: one marked state from the first school year's 1 July to the last one's 30 June, no annual states. test_pooled_scope_without_a_carried_range_stays_unsupported: proj forms no state."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["annual-wins", "annual-full", "adjacent"]},
+      "fields": ["variable", "valid_from", "valid_to", "pooled"],
+      "rows": [
+        ["annual-wins", "2012-01-01", "2012-12-31", true],
+        ["annual-wins", "2013-01-01", "2013-12-31", false],
+        ["annual-wins", "2014-01-01", "2014-12-31", true],
+        ["annual-full", "2012-01-01", "2012-12-31", false],
+        ["annual-full", "2013-01-01", "2013-12-31", false],
+        ["annual-full", "2014-01-01", "2014-12-31", false],
+        ["adjacent", "2012-01-01", "2014-12-31", true],
+        ["adjacent", "2015-01-01", "2015-12-31", false]
+      ],
+      "note": "test_explicit_annual_coverage_wins_over_pooled: the explicit 2013 cuts the pooled range and is not marked pooled. test_fully_annual_covered_pooled_range_forms_no_pooled_state: three explicit years leave no pooled state. test_pooled_segment_adjacent_to_explicit_does_not_merge: the pooled 2012-2014 and the explicit 2015 stay two states."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["annual-facts", "annual-facts-conflict"]},
+      "fields": ["variable", "valid_from", "valid_to", "pooled", "data_type"],
+      "rows": [
+        ["annual-facts", "2012-01-01", "2012-12-31", true, "integer"],
+        ["annual-facts", "2013-01-01", "2013-12-31", false, "text"],
+        ["annual-facts", "2014-01-01", "2014-12-31", true, "integer"],
+        ["annual-facts-conflict", "2012-01-01", "2012-12-31", true, "date"],
+        ["annual-facts-conflict", "2013-01-01", "2013-12-31", false, "integer"],
+        ["annual-facts-conflict", "2014-01-01", "2014-12-31", true, "date"]
+      ],
+      "note": "test_explicit_annual_facts_override_pooled_facts_without_conflict: the middle state carries the annual member's type (annual-facts: text, the old test's value; annual-facts-conflict: integer, the annual member's Datatyp in the fixture) and each flank keeps the pooled member's."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["overlap-same", "overlap-diff"]},
+      "fields": ["variable", "valid_from", "valid_to", "pooled", "data_type"],
+      "rows": [
+        ["overlap-same", "2016-01-01", "2020-12-31", true, "integer"],
+        ["overlap-diff", "2016-01-01", "2017-12-31", true, "integer"],
+        ["overlap-diff", "2018-01-01", "2018-12-31", true, "text"],
+        ["overlap-diff", "2019-01-01", "2020-12-31", true, "text"]
+      ],
+      "note": "test_overlapping_pooled_editions_with_identical_fields_merge_into_one_state: the three cuts of 2016-2018 and 2018-2020 re-join into one marked state over the hull. test_overlapping_pooled_editions_with_differing_facts_stay_split: with the second edition typed text they stay three marked states, integer then text then text."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "conflicting_occurrence_facts",
+          "conflicting_occurrence_scope",
+          "omitted_columnless_occurrence",
+          "unsupported_occurrence"
+        ]
+      },
+      "fields": ["subject", "code", "fields", "withheld_output", "valid_from", "valid_to"],
+      "rows": [["scb/projection/proj", "unsupported_occurrence", ["period"], ["occurrence"], null, null]],
+      "note": "Every code occurrence resolution reports. Each old pooled test asserted `result.issues == ()` except the range-less one, whose only issue names the period and withholds its occurrence. annual-facts-conflict's empty conflict is the filter's claim: reconciled with its pooled date, the 2013 integer would conflict."
+    }
+  ]
+}

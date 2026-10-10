@@ -21,7 +21,6 @@ from reg_meta_build.source_classification_bindings import apply_classification_c
 from reg_meta_build.source_coding import coding_source_sha256
 from reg_meta_build.source_coding_choices import (
     apply_coding_choices,
-    coding_expectations,
 )
 from reg_meta_build.source_coordinates import (
     native_column_key,
@@ -31,12 +30,9 @@ from reg_meta_build.source_coordinates import (
 )
 from reg_meta_build.source_curation import (
     AcknowledgeDecision,
-    ApplicabilityIssue,
-    CheckedIdentityChange,
     ClassificationDecision,
     CodingDecision,
     DeliveryMetadataDecision,
-    OccurrenceCorrectionDecision,
     RepresentationDecision,
     ResolutionDiagnostic,
     SourceEvidence,
@@ -56,7 +52,6 @@ from reg_meta_build.source_naming import check_naming_target, native_provider_ke
 from reg_meta_build.source_representations import resolve_representation_cases
 from reg_meta_build.source_siblings import SiblingResolution, resolve_sibling_pairs
 from reg_meta_build.source_value_bindings import (
-    bind_copied_coding,
     bind_occurrence_code_lists,
 )
 
@@ -182,12 +177,9 @@ def resolve_source_scope(
     formation's per-column state overlaps, which a diagnostic build withholds.
 
     Missing mappings and unsupported decisions are implementation failures, with
-    two diagnostic exceptions treated as an explicit None provider key (unresolved
-    catalog identity): an unmapped key that is the unsplit base of a non-applied
-    partition case's exact split set, with every split key mapped, so a stale
-    partition decision withholds its family instead of aborting the build; and a
-    partition split whose pin converted no naming, which withholds that split.
-    Strict mode still fails fast, the unconverted split with its located code
+    one diagnostic exception treated as an explicit None provider key (unresolved
+    catalog identity): a partition split whose pin converted no naming, which
+    withholds that split. Strict mode fails fast with its located code
     (naming_partition_unconverted).
 
     An explicit None provider key records an unresolved catalog identity; coding and
@@ -346,8 +338,7 @@ def resolve_source_scope(
     occurrence_cases = tuple(
         c for c in cases if c.decision.kind == "correct_occurrences"
     )
-    copied_coding = bind_copied_coding(evidence, occurrence_cases, value_sessions)
-    corrected = apply_occurrence_cases(evidence, occurrence_cases, coding=copied_coding)
+    corrected = apply_occurrence_cases(evidence, occurrence_cases)
     enumerated_columns = {
         entry.column
         for register in coding_registers
@@ -677,21 +668,6 @@ def resolve_source_scope(
         late[key].append(case)
     variables = {}
     coverage: list[CoverageObligation] = []
-    stale_splits: list[tuple[NativeKey, ...]] = []
-    if diagnostic:
-        for entry in corrected.accounting:
-            if entry.disposition == "applied":
-                continue
-            decision = entry.case.decision
-            if not isinstance(decision, OccurrenceCorrectionDecision):
-                continue
-            splits = tuple(
-                tuple(effect.variable_key)
-                for effect in decision.effects
-                if isinstance(effect, CheckedIdentityChange)
-            )
-            if splits:
-                stale_splits.append(splits)
     for key, items in sorted(groups.items(), key=lambda item: repr(item[0])):
         occurrences = tuple(items)
         refs = tuple(
@@ -702,22 +678,7 @@ def resolve_source_scope(
             # pin, or one whose slug a reviewed owner already takes) is a curation
             # outcome, not an implementation failure.
             unconverted_split = len(key) > 2 and key[-2] == "accepted-partition"
-            if not (
-                diagnostic
-                and (
-                    unconverted_split
-                    or any(
-                        all(
-                            len(split) > len(key) and split[: len(key)] == key
-                            for split in splits
-                        )
-                        and all(
-                            provider_keys.get(split) is not None for split in splits
-                        )
-                        for splits in stale_splits
-                    )
-                )
-            ):
+            if not (diagnostic and unconverted_split):
                 if unconverted_split:
                     raise curation_error(
                         "naming_partition_unconverted",
@@ -786,26 +747,6 @@ def resolve_source_scope(
             warning_cases, evaluate_cases(warning_cases, coding_evidence), strict=True
         ):
             decision = case.decision
-            observed = coding_expectations(
-                tuple(claims.get(decision.column_key, ())),
-                decision.valid_from,
-                decision.valid_to,
-            )
-            if set(observed) != set(decision.expected_codings):
-                evaluation = evaluation.model_copy(
-                    update={
-                        "status": "stale",
-                        "decision": None,
-                        "issues": (
-                            *evaluation.issues,
-                            ApplicabilityIssue(
-                                code="copied_coding_evidence_changed",
-                                subject=case.case_id,
-                                detail="The source coding evidence changed; no warning was applied.",
-                            ),
-                        ),
-                    }
-                )
             evaluations.append(evaluation)
             if evaluation.status != "applicable":
                 emit(
@@ -1134,18 +1075,10 @@ def _attribute_unresolved_names(
                 f"ambiguous naming bridge is stale or belongs to another family: {key!r}"
             )
         if not unresolved.get(key):
-            # simplify: aborts a diagnostic build too. The same unmatched split
-            # beside an unresolved row is silently unused, so withholding only here
-            # would be asymmetric. Upgrade when the compile (`_partition_ambiguity`)
-            # reports an unmatched split itself, in both shapes.
-            entries = ", ".join(e.entry_id for e in ambiguity.entries)
-            raise curation_error(
-                "naming_split_unmatched",
-                f"Accepted split naming {entries} "
-                f"of native variable {key!r} matches no delivered column, and every "
-                "delivered column of the variable is already bound to a split.",
-                "Remove the unmatched split entry, or point it at a delivered "
-                "column spelling.",
+            # The compile reports a split no delivered column matches as a stale
+            # entry instead of minting it (`_partition_ambiguity`).
+            raise ValueError(
+                f"ambiguous naming lacks an unresolved native row: {key!r}"
             )
         assert family.register_key is not None
         register = register_fqids.get(family.register_key)

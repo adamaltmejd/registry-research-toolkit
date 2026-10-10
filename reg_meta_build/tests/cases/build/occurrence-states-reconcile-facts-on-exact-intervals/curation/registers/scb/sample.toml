@@ -1,0 +1,149 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+steward_table_prefixes = ["CIS"]
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.201"
+slug = "u01"
+[[variable]]
+native_id = "1.202"
+slug = "u02"
+[[variable]]
+native_id = "1.203"
+slug = "u03"
+[[variable]]
+native_id = "1.204"
+slug = "u04"
+[[variable]]
+native_id = "1.205"
+slug = "u05"
+[[variable]]
+native_id = "1.206"
+slug = "u06"
+[[variable]]
+native_id = "1.207"
+slug = "u07"
+[[variable]]
+native_id = "1.208"
+slug = "u08"
+[[variable]]
+native_id = "1.209"
+slug = "u09"
+[[variable]]
+native_id = "1.210"
+slug = "u10"
+[[variable]]
+native_id = "1.211"
+slug = "u11"
+[[variable]]
+native_id = "1.221"
+slug = "x01"
+[[variable]]
+native_id = "1.222"
+slug = "x02"
+[[variable]]
+native_id = "1.223"
+slug = "x03"
+[[variable]]
+native_id = "1.224"
+slug = "x04"
+[[variable]]
+native_id = "1.225"
+slug = "x05"
+[[variable]]
+native_id = "1.231"
+slug = "l00"
+[[variable]]
+native_id = "1.232"
+slug = "l01"
+[[variable]]
+native_id = "1.233"
+slug = "l02"
+[[variable]]
+native_id = "1.235"
+slug = "l04"
+[[variable]]
+native_id = "1.236"
+slug = "l05"
+[[variable]]
+native_id = "1.237"
+slug = "l06"
+[[variable]]
+native_id = "1.241"
+slug = "w00"
+[[variable]]
+native_id = "1.242"
+slug = "w01"
+[[variable]]
+native_id = "1.243"
+slug = "w02"
+[[variable]]
+native_id = "1.244"
+slug = "w03"
+[[variable]]
+native_id = "1.245"
+slug = "w04"
+[[variable]]
+native_id = "1.246"
+slug = "w05"
+[[variable]]
+native_id = "1.261"
+slug = "d-src"
+[[variable]]
+native_id = "1.262"
+slug = "d-opdef"
+[[variable]]
+native_id = "1.263"
+slug = "d-ref"
+[[variable]]
+native_id = "1.267"
+slug = "d-def"
+[[variable]]
+native_id = "1.264"
+slug = "a-widen"
+[[variable]]
+native_id = "1.265"
+slug = "a-same"
+[[variable]]
+native_id = "1.266"
+slug = "opt"
+[[variable]]
+native_id = "1.271"
+slug = "p-month"
+[[variable]]
+native_id = "1.273"
+slug = "p-gap"
+[[variable]]
+native_id = "1.275"
+slug = "p-lasar"
+[[variable]]
+native_id = "1.278"
+slug = "p-komvux"
+[[variable]]
+native_id = "1.281"
+slug = "c-unknown-beside"
+[[variable]]
+native_id = "1.282"
+slug = "c-blank-beside"
+[[variable]]
+native_id = "1.283"
+slug = "c-blank-only"
+[[variable]]
+native_id = "1.284"
+slug = "c-unknown-only"
+[[variable]]
+native_id = "1.291"
+slug = "st-dec"
+[[variable]]
+native_id = "1.292"
+slug = "st-text"
+[[variable]]
+native_id = "1.293"
+slug = "st-none"
+[[variable]]
+native_id = "1.296"
+slug = "sd-one"

@@ -1,0 +1,71 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variant]]
+native_id = "1.11"
+slug = "households"
+[[variable]]
+native_id = "1.11"
+slug = "def"
+[[variable]]
+native_id = "1.12"
+slug = "name"
+[[variable]]
+native_id = "1.13"
+slug = "desc"
+[[variable]]
+native_id = "1.21"
+slug = "u1"
+[[variable]]
+native_id = "1.22"
+slug = "u2"
+[[variable]]
+native_id = "1.23"
+slug = "u3"
+[[variable]]
+native_id = "1.24"
+slug = "u4"
+[[variable]]
+native_id = "1.25"
+slug = "u5"
+[[variable]]
+native_id = "1.26"
+slug = "u6"
+[[variable]]
+native_id = "1.27"
+slug = "u7"
+[[variable]]
+native_id = "1.28"
+slug = "u8"
+[[variable]]
+native_id = "1.29"
+slug = "u9"
+[[variable]]
+native_id = "1.30"
+slug = "u10"
+[[variable]]
+native_id = "1.31"
+slug = "period"
+[[variable]]
+native_id = "1.41"
+slug = "variant"
+[[variable]]
+native_id = "1.51"
+slug = "stable"
+[[variable]]
+native_id = "1.61"
+slug = "compop"
+[[variable]]
+native_id = "1.62"
+slug = "compsrc"
+[[variable]]
+native_id = "1.71"
+slug = "checked"
+[[identity.partition]]
+variable = "1.71"
+columns = { OLD = "1.71", NEW = "1.71" }
+columns_ref = "reviewed shared identity"

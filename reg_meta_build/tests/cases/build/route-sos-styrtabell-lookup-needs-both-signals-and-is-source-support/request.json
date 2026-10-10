@@ -1,9 +1,10 @@
 {
   "replaces": [
     "test_curation_sos_route_boundary.py::test_styrtabell_lookup_needs_both_label_and_aggregation_signals",
-    "test_curation_sos_route_boundary.py::test_lookup_subset_and_its_routed_variables_are_source_support"
+    "test_curation_sos_route_boundary.py::test_lookup_subset_and_its_routed_variables_are_source_support",
+    "test_resolved_writer_variables.py::test_independent_parent_metadata_survives_without_variables_or_editions"
   ],
-  "note": "A subset is a styrtabell lookup only when its label starts with 'Styrtabell' and its aggregation level is 'Ej relevant'; one signal alone is an error. The lookup subset row, its own variable and the variable routed only to it are support records, so SYL publishes no variable state.",
-  "fails_if": "`_compile_sos_register` stops reporting `invalid_sos_lookup_signals` for a subset with only one styrtabell signal, or stops marking SYL's lookup subset row and the variables routed only to it as source support, so SYL publishes states",
+  "note": "A subset is a styrtabell lookup only when its label starts with 'Styrtabell' and its aggregation level is 'Ej relevant'; one signal alone is an error. The lookup subset row, its own variable and the variable routed only to it are support records, so SYL publishes no variable state. Its register and both variants are still written, though no variant carries a state or an edition (an SOS subset has none): the old resolved-writer test's parent register and variant without variables or editions, in a diagnostic catalog.",
+  "fails_if": "`_compile_sos_register` stops reporting `invalid_sos_lookup_signals` for a subset with only one styrtabell signal, or stops marking SYL's lookup subset row and the variables routed only to it as source support, so SYL publishes states; or the build or the writer (`write_resolved_catalog`) writes only the registers and variants that carry a published variable or an edition, so SYL or its variants are missing",
   "sources": "sos-routes"
 }
