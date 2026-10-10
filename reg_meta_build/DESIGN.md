@@ -1268,6 +1268,13 @@ window; errata annotations follow the actual added occurrence, not its supportin
 anchor. The writer validates each complete warning payload and stores it in an indexed
 `data_warning` table. No assumption is discovered by parsing evidence prose.
 
+The build report (`events.jsonl.gz`, kind `data_warning`) keeps every warning the build
+forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CODES`
+(identity and lineage bookkeeping, set-aside item validity, columnless occurrences and
+curator identity rationale; maintainer decision, #1296) never reach `data_warning`, and
+`validate_built_db` refuses an artifact that holds one or whose row does not hash to its
+`warning_id`.
+
 ## Strict and diagnostic builds
 
 Strict publication is the default. Every unhandled source discrepancy requiring a

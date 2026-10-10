@@ -53,10 +53,12 @@ from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
+from pydantic import ValidationError
 from reg_core_py import fold_search
 
 from reg_meta_build._resolved_common import remaining_windows
 from reg_meta_build.artifact_identity import search_pins_sha256
+from reg_meta_build.data_warnings import BUILD_ONLY_CODES, stored_data_warnings
 from reg_meta_build.db import (
     _PROVIDER_SEED,
     _VALID_TO_SENTINEL,
@@ -266,6 +268,7 @@ def validate_built_db(
         check_chains(conn, result, tables)
         check_coded(conn, result, tables)
         _check_search_pins(conn, result, tables)
+        _check_data_warnings(conn, result, tables)
         result.section("[compiled holdings]")
         from .holdings_validation import validate_compiled_holdings
 
@@ -1655,6 +1658,34 @@ def _check_search_pins(
         result.fail("manifest search_pins_sha256 does not hash the search_pin rows")
     if len(result.failures) == failures:
         result.ok(f"search_pin consistent ({len(rows):,} rows)")
+
+
+def _check_data_warnings(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Each ``data_warning`` row reconstructs a valid warning whose content hashes to
+    its ``warning_id``, and no build-only code reaches the catalog."""
+    result.section("[data_warning]")
+    if "data_warning" not in tables:
+        return  # _check_schema_shape already failed.
+    try:
+        warnings = stored_data_warnings(conn)
+    except ValidationError as exc:
+        result.fail(f"data_warning row disagrees with its identity: {exc}")
+        return
+    # The reconstruction inner-joins owner and text rows, so a dangling id would
+    # drop a row from it rather than fail it.
+    (stored,) = conn.execute("SELECT COUNT(*) FROM data_warning").fetchone()
+    if stored != len(warnings):
+        result.fail(
+            f"{stored - len(warnings)} data_warning rows do not reconstruct "
+            "(dangling owner or text id)"
+        )
+        return
+    if leaked := sorted({w.code for w in warnings} & BUILD_ONLY_CODES):
+        result.fail(f"build-only warning codes in the catalog: {', '.join(leaked)}")
+        return
+    result.ok(f"data_warning consistent ({len(warnings):,} rows)")
 
 
 def _check_tags(

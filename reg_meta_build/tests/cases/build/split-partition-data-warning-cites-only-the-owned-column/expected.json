@@ -1,7 +1,7 @@
 {
   "projections": [
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {
         "variable": "answer"
       },

@@ -46,7 +46,11 @@ from reg_meta_build.curation_compile import (
     validate_sentinels,
 )
 from reg_meta_build.curation_tree import CLASSIFICATION_INVALID, load_curation_tree
-from reg_meta_build.data_warnings import acknowledged_data_warnings, scope_data_warnings
+from reg_meta_build.data_warnings import (
+    BUILD_ONLY_CODES,
+    acknowledged_data_warnings,
+    scope_data_warnings,
+)
 from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
@@ -1722,6 +1726,10 @@ def _run_pipeline(
                         registers=sorted(set(registers)),
                         corpus_validation="not_applicable",
                     )
+                # The build report keeps every warning; the catalog only the
+                # user-facing ones (#1296 item 4).
+                for key in sorted(data_warnings):
+                    event("data_warning", data_warnings[key].model_dump(mode="json"))
                 if diagnostic or not counts["error"]:
                     phase_started = time.perf_counter()
                     identity = {}
@@ -1754,7 +1762,9 @@ def _run_pipeline(
                         classification_successions=successions,
                         metadata=final_metadata,
                         data_warnings=tuple(
-                            data_warnings[k] for k in sorted(data_warnings)
+                            data_warnings[k]
+                            for k in sorted(data_warnings)
+                            if data_warnings[k].code not in BUILD_ONLY_CODES
                         ),
                         search_pins=search_pins,
                     )

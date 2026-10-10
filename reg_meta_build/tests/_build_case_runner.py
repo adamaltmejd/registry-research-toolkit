@@ -820,56 +820,36 @@ def _value_sets(outcome: Outcome) -> list[dict]:
     ]
 
 
-def _stored(row_value, json_value):
-    """A coordinate both the `data_warning` row and its `warning_json` hold: the
-    value when they agree, else both, so a disagreement fails any case naming it."""
-    if row_value == json_value:
-        return row_value
-    return {"row": row_value, "json": json_value}
-
-
 def _sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def _warnings(outcome: Outcome) -> list[dict]:
+def _warning_rows(outcome: Outcome, warnings: list[dict]) -> list[dict]:
+    """Warnings in the `DataWarning` shape, projected with their coordinates as slugs
+    and `detail_hash_of` naming what `diagnostic_detail_sha256` hashes."""
     issue_hashes = {
-        (event["code"], str(event["subject"]), _sha256(event.get("detail") or ""))
+        (event["code"], _sha256(event.get("detail") or ""))
         for event in outcome.events
         if event["kind"] == "issue"
     }
     rows = []
-    for row in outcome._sql(
-        "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
-        "w.delivery_column_name, w.valid_from, w.valid_to, w.warning_json "
-        "FROM data_warning w JOIN register r USING (register_id) "
-        "LEFT JOIN variable v ON v.variable_id = w.variable_id "
-        "LEFT JOIN register_variant rv "
-        "ON rv.register_variant_id = w.register_variant_id"
-    ):
-        payload = json.loads(row["warning_json"])
+    for payload in warnings:
         variable = payload.get("variable_fqid")
         digest = payload["diagnostic_detail_sha256"]
         rows.append(
             {
-                "register": _stored(
-                    row["register"], payload["register_fqid"].split("/")[-1]
-                ),
-                "variable": _stored(
-                    row["variable"], variable.split("/")[-1] if variable else None
-                ),
-                "variant": _stored(row["variant"], payload.get("variant")),
-                "column": _stored(
-                    row["delivery_column_name"], payload.get("delivery_column_name")
-                ),
-                "valid_from": _stored(row["valid_from"], payload.get("valid_from")),
-                "valid_to": _stored(row["valid_to"], payload.get("valid_to")),
+                "register": payload["register_fqid"].split("/")[-1],
+                "variable": variable.split("/")[-1] if variable else None,
+                "variant": payload.get("variant"),
+                "column": payload.get("delivery_column_name"),
+                "valid_from": payload.get("valid_from"),
+                "valid_to": payload.get("valid_to"),
                 "code": payload["code"],
                 "severity": payload["severity"],
                 "detail": payload["detail"],
                 "summary": payload.get("summary"),
                 "detail_hash_of": "issue"
-                if (payload["code"], payload["source_subject"], digest) in issue_hashes
+                if (payload["code"], digest) in issue_hashes
                 else "detail"
                 if _sha256(payload["detail"]) == digest
                 else None,
@@ -877,11 +857,40 @@ def _warnings(outcome: Outcome) -> list[dict]:
                 "refs": _refs(payload.get("refs")),
                 "withheld_output": payload.get("withheld_output"),
                 "acknowledged_by": payload.get("acknowledged_by"),
-                "source_subject": payload["source_subject"],
                 "case_id": payload.get("case_id"),
             }
         )
     return rows
+
+
+def _warnings(outcome: Outcome) -> list[dict]:
+    return _warning_rows(
+        outcome,
+        [
+            row | json.loads(row["evidence_json"])
+            for row in outcome._sql(
+                "SELECT p.slug || '/' || r.slug AS register_fqid, "
+                "p.slug || '/' || r.slug || '/' || v.slug AS variable_fqid, "
+                "rv.slug AS variant, w.delivery_column_name, w.valid_from, "
+                "w.valid_to, w.code, w.severity, st.text AS summary, "
+                "dt.text AS detail, w.evidence_json FROM data_warning w "
+                "JOIN register r USING (register_id) "
+                "JOIN provider p USING (provider_id) "
+                "LEFT JOIN variable v ON v.variable_id = w.variable_id "
+                "LEFT JOIN register_variant rv "
+                "ON rv.register_variant_id = w.register_variant_id "
+                "JOIN data_warning_text st ON st.text_id = w.summary_id "
+                "JOIN data_warning_text dt ON dt.text_id = w.detail_id"
+            )
+        ],
+    )
+
+
+def _report_warnings(outcome: Outcome) -> list[dict]:
+    return _warning_rows(
+        outcome,
+        [event for event in outcome.events if event["kind"] == "data_warning"],
+    )
 
 
 def _alias_windows(outcome: Outcome) -> list[dict]:
@@ -1133,6 +1142,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     ),
     "group_members": _group_members,
     "warnings": _warnings,
+    "report_warnings": _report_warnings,
     "search_pins": lambda o: o._sql(
         "SELECT key AS query, type, position, entity FROM search_pin"
     ),
@@ -1282,7 +1292,10 @@ FIELDS: dict[str, frozenset[str]] = {
         "group_members": "group_key register variable column facets",
         "warnings": "register variable variant column valid_from valid_to code "
         "severity detail summary detail_hash_of fields refs withheld_output "
-        "acknowledged_by source_subject case_id",
+        "acknowledged_by case_id",
+        "report_warnings": "register variable variant column valid_from valid_to "
+        "code severity detail summary detail_hash_of fields refs withheld_output "
+        "acknowledged_by case_id",
         "search_pins": "query type position entity",
         "search_text": "register variable name definition description "
         "delivery_column_names",

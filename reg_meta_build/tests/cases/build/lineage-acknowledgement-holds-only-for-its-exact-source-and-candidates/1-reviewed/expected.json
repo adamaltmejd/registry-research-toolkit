@@ -47,8 +47,8 @@
       ]
     },
     {
-      "table": "warnings",
-      "where": {"source_subject": ["scb/example/exact", "scb/example/two-origins"]},
+      "table": "report_warnings",
+      "where": {"acknowledged_by": ["curation/registers/scb/example.toml#/acknowledge/1", "curation/registers/scb/example.toml#/acknowledge/6"]},
       "fields": ["register", "variable", "valid_from", "valid_to", "code", "acknowledged_by", "detail"],
       "rows": [
         ["example", null, "2000-01-01", "2000-12-31", "unresolved_lineage_ambiguous_source_variant", "curation/registers/scb/example.toml#/acknowledge/1", "The literal source variant label People names two admitted variants of the exact register."],

@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING, Literal, Self
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
 from reg_core_py import parse_fqid
 
-from reg_meta_build._curation import curation_error
 from reg_meta_build.source_curation import CodingDecision, SourceWarningDecision
 from reg_meta_build.source_intervals import occurrence_bounds
 
@@ -26,8 +25,6 @@ if TYPE_CHECKING:
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_curation import CurationCase, ResolutionDiagnostic
     from reg_meta_build.source_scope import ScopeResolution
-
-    from .errors import RegMetaError
 
 
 class _CatalogModel(BaseModel):
@@ -69,7 +66,6 @@ class DataWarning(_CatalogModel):
     summary: str
     detail: str
     diagnostic_detail_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
-    source_subject: str
     fields: tuple[str, ...] = ()
     refs: tuple[SourceRecordRef, ...] = ()
     withheld_output: tuple[str, ...] = ()
@@ -132,13 +128,32 @@ QUALITY_CODES = frozenset(
         "item_validity_set_aside",
         "supported_erroneous_coding_association",
         "curated_state_omission",
-        "missing_data_type",
-        "unresolved_data_type",
         "omitted_columnless_occurrence",
         "retained_unattached_source_relationship",
     }
 )
 
+
+# Build-side bookkeeping (maintainer decision, #1296 item 4): the build report keeps
+# these, the catalog does not. Every other code is user-facing.
+BUILD_ONLY_CODES = frozenset(
+    {
+        "item_validity_set_aside",
+        "source_identity_assumption",
+        "omitted_columnless_occurrence",
+        "unresolved_catalog_identity",
+        "unresolved_native_identity",
+        "ambiguous_named_identity",
+        "unknown_support_key",
+        "retained_unattached_source_relationship",
+        "unresolved_source_event_endpoint",
+        "supported_erroneous_coding_association",
+        "conflicting_occurrence_facts",
+        "conflicting_variable_fact",
+        "source_metadata_conflict",
+        "unresolved_lineage_ambiguous_source_variant",
+    }
+)
 
 WARNING_SUMMARIES = {
     "retained_unattached_source_relationship": "A source code crosswalk has no established variable link",
@@ -160,8 +175,6 @@ WARNING_SUMMARIES = {
     "item_validity_set_aside": "An explicit source link overrides unreliable code validity dates",
     "supported_erroneous_coding_association": "A conflicting source coding association was retained but not applied",
     "curated_state_omission": "An unsupported delivery interpretation has been withheld",
-    "missing_data_type": "The stored data type is unavailable",
-    "unresolved_data_type": "The stored data type could not be established",
     "omitted_columnless_occurrence": "Some source records cannot be linked to a delivered column",
 }
 
@@ -184,8 +197,6 @@ WARNING_DETAILS = {
     "item_validity_set_aside": "Explicit source associations determine the applied response domain despite conflicting global code validity dates. The original dates are retained.",
     "supported_erroneous_coding_association": "An exact reviewed source coding association is retained as evidence but is not applied to the response domain.",
     "curated_state_omission": "An exact reviewed delivery interpretation lacks sufficient support and has been withheld. The original source records remain available.",
-    "missing_data_type": "The supplied evidence does not establish the stored data type for this delivery.",
-    "unresolved_data_type": "The source data type could not be resolved safely. No unsupported storage type has been selected.",
     "omitted_columnless_occurrence": "The original source records have no usable physical column identity and are retained without attachment to a delivered column.",
 }
 
@@ -220,7 +231,6 @@ def diagnostic_data_warning(
             "An exact reviewed source limitation is acknowledged; the original diagnostic remains in the build report.",
         ),
         "diagnostic_detail_sha256": sha256(issue.detail.encode("utf-8")).hexdigest(),
-        "source_subject": issue.subject,
         "fields": list(issue.fields),
         "refs": [r.model_dump(mode="json") for r in issue.refs],
         "withheld_output": list(issue.withheld_output),
@@ -471,7 +481,6 @@ def scope_data_warnings(
                         "diagnostic_detail_sha256": sha256(
                             detail.encode("utf-8")
                         ).hexdigest(),
-                        "source_subject": case_id,
                         "fields": list(fields),
                         "refs": [],
                         "withheld_output": [],
@@ -498,33 +507,29 @@ def scope_data_warnings(
     return tuple(warnings[k] for k in sorted(warnings))
 
 
-def _unwritten_owner(code: str, warning: DataWarning, owner: str) -> RegMetaError:
-    """A refusal naming the warning and the curation case that produced it."""
-    case = warning.case_id or warning.source_subject
-    return curation_error(
-        code,
-        f"data warning {warning.warning_id} ({warning.code}, case {case!r}): "
-        f"{owner} is not written to the catalog.",
-        f"Correct case {case!r} so its warning names a register and variant "
-        "this build writes.",
-    )
+_EVIDENCE = (
+    "diagnostic_detail_sha256",
+    "fields",
+    "refs",
+    "withheld_output",
+    "acknowledged_by",
+    "case_id",
+)
 
 
 def write_data_warnings(
     conn: sqlite3.Connection, data_warnings: tuple[DataWarning, ...]
 ) -> None:
-    """Write validated warnings using the actual named database IDs.
-
-    A warning whose variable is not written is demoted to its register; one
-    whose register or variant is not written is refused with a located code.
-    """
+    """Write user-facing warnings at the actual named database IDs, clustered by
+    (register, variable). A warning naming an unwritten register, variable or
+    variant is a builder defect: every build warning names what the build forms."""
     warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
         data_warnings, strict=True
     )
     if not warnings:
         return
     registers = {
-        (provider, register): register_id
+        f"{provider}/{register}": register_id
         for provider, register, register_id in conn.execute(
             "SELECT p.slug, r.slug, r.register_id FROM register r "
             "JOIN provider p USING(provider_id)"
@@ -542,46 +547,106 @@ def write_data_warnings(
             "SELECT register_id, slug, register_variant_id FROM register_variant"
         )
     }
-    for value in sorted(warnings, key=lambda w: w.warning_id):
-        warning = DataWarning.model_validate_json(value.model_dump_json())
-        register = parse_fqid(warning.register_fqid)
-        register_id = registers.get((register.provider, register.register))
-        if register_id is None:
-            raise _unwritten_owner(
-                "data_warning_register_unwritten", warning, f"register {register}"
-            )
-        variable_id = None
-        if warning.variable_fqid is not None:
-            variable_id = variables.get(
-                (register_id, parse_fqid(warning.variable_fqid).variable)
-            )
-            if variable_id is None:
-                payload = warning.model_dump(mode="json", exclude={"warning_id"})
-                payload.update(
-                    variable_fqid=None, variant=None, delivery_column_name=None
-                )
-                warning = DataWarning.model_validate_json(
-                    json.dumps({"warning_id": canonical_sha256(payload), **payload})
-                )
-        variant_id = None
-        if warning.variant is not None:
-            variant_id = variants.get((register_id, warning.variant))
-            if variant_id is None:
-                raise _unwritten_owner(
-                    "data_warning_variant_unwritten",
-                    warning,
-                    f"variant {register}/{warning.variant}",
-                )
-        conn.execute(
-            "INSERT INTO data_warning VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    # Text ids start at 1: one call per build writes the whole (empty) table.
+    texts = {
+        text: text_id
+        for text_id, text in enumerate(
+            sorted({t for w in warnings for t in (w.summary, w.detail)}), 1
+        )
+    }
+    conn.executemany(
+        "INSERT INTO data_warning_text VALUES (?, ?)",
+        ((text_id, text) for text, text_id in texts.items()),
+    )
+    rows = []
+    for warning in warnings:
+        register_id = registers[warning.register_fqid]
+        variable_id = (
+            variables[register_id, parse_fqid(warning.variable_fqid).variable]
+            if warning.variable_fqid is not None
+            else None
+        )
+        variant_id = (
+            variants[register_id, warning.variant]
+            if warning.variant is not None
+            else None
+        )
+        rows.append(
             (
-                warning.warning_id,
+                bytes.fromhex(warning.warning_id),
                 register_id,
                 variable_id,
                 variant_id,
                 warning.delivery_column_name,
                 warning.valid_from,
                 warning.valid_to,
-                warning.model_dump_json(),
-            ),
+                warning.code,
+                warning.severity,
+                texts[warning.summary],
+                texts[warning.detail],
+                json.dumps(
+                    warning.model_dump(mode="json", include=set(_EVIDENCE)),
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ),
+            )
         )
+    # Insertion order is physical order: a register's and a variable's warnings
+    # share pages (#1296 item 2c).
+    rows.sort(key=lambda r: (r[1], r[2] is not None, r[2] or 0, r[0]))
+    conn.executemany(
+        "INSERT INTO data_warning VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows
+    )
+
+
+def stored_data_warnings(conn: sqlite3.Connection) -> list[DataWarning]:
+    """Every stored warning, reconstructed from its columns; validating each one
+    re-derives `warning_id` from the reconstructed content."""
+    return [
+        DataWarning.model_validate_json(
+            json.dumps(
+                {
+                    "warning_id": warning_id,
+                    "register_fqid": register_fqid,
+                    "variable_fqid": f"{register_fqid}/{variable}"
+                    if variable is not None
+                    else None,
+                    "variant": variant,
+                    "delivery_column_name": column,
+                    "valid_from": valid_from,
+                    "valid_to": valid_to,
+                    "code": code,
+                    "severity": severity,
+                    "summary": summary,
+                    "detail": detail,
+                    **json.loads(evidence),
+                }
+            )
+        )
+        for (
+            warning_id,
+            register_fqid,
+            variable,
+            variant,
+            column,
+            valid_from,
+            valid_to,
+            code,
+            severity,
+            summary,
+            detail,
+            evidence,
+        ) in conn.execute(
+            "SELECT lower(hex(w.warning_id)), p.slug || '/' || r.slug, v.slug, "
+            "rv.slug, w.delivery_column_name, w.valid_from, w.valid_to, w.code, "
+            "w.severity, st.text, dt.text, w.evidence_json FROM data_warning w "
+            "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
+            "LEFT JOIN variable v ON v.variable_id = w.variable_id "
+            "LEFT JOIN register_variant rv "
+            "ON rv.register_variant_id = w.register_variant_id "
+            "JOIN data_warning_text st ON st.text_id = w.summary_id "
+            "JOIN data_warning_text dt ON dt.text_id = w.detail_id "
+            "ORDER BY w.rowid"
+        )
+    ]

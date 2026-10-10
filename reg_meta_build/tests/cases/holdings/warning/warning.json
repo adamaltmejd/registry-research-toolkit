@@ -1,5 +1,5 @@
 {
-  "warning_id": "b81dacb020d1a5ba7e07098c1e4b64fae2e4fafa513f747b2ab95a6ea33f8de1",
+  "warning_id": "47fdc387188863022c101983719cf6bb4b310f9e6716088436ce8b11d95bc104",
   "register_fqid": "swedbank/transaktioner",
   "variable_fqid": null,
   "variant": null,
@@ -11,7 +11,6 @@
   "summary": "Fixture warning",
   "detail": "Fixture source evidence.",
   "diagnostic_detail_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-  "source_subject": "fixture",
   "fields": [
     "source.validity"
   ],

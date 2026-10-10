@@ -1195,7 +1195,7 @@
       "note": "Same test: the overlap 2020-05-01..2020-08-31 is withheld with an issue; the omitted window is the curated omission."
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {
         "register": "warning"
       },

@@ -37,7 +37,7 @@
       ]
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {"code": "retained_unattached_source_relationship"},
       "fields": ["register", "variable", "detail"],
       "rows": [

@@ -298,7 +298,8 @@ Every key is optional, and only the keys that are present get checked.
   | `concept_groups`             | built concept group                                                            | `variables` (its member slugs, sorted)                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
   | `group_axes`                 | built concept-group axis                                                       | `group_key`, `axis`, `ordinal`, `label`                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
   | `group_members`              | built concept-group variable member                                            | `group_key`, `register`, `variable` (slugs), `column` (the member's literal delivery column, null for a whole-variable member), `facets` (sorted `[axis, value, label]`)                                                                                                                                                                                                                                                                                                                      |
-  | `warnings`                   | built data warning                                                             | `register`, `variable`, `variant` (slugs), `column`, `valid_from`, `valid_to`, `code`, `severity`, `detail`, `summary`, `detail_hash_of`, `fields`, `refs`, `withheld_output`, `acknowledged_by`, `source_subject`, `case_id`                                                                                                                                                                                                                                                                 |
+  | `warnings`                   | built (user-facing) data warning                                               | `register`, `variable`, `variant` (slugs), `column`, `valid_from`, `valid_to`, `code`, `severity`, `detail`, `summary`, `detail_hash_of`, `fields`, `refs`, `withheld_output`, `acknowledged_by`, `case_id`                                                                                                                                                                                                                                                                                   |
+  | `report_warnings`            | build-report data warning, build-only codes included                           | `register`, `variable`, `variant` (slugs), `column`, `valid_from`, `valid_to`, `code`, `severity`, `detail`, `summary`, `detail_hash_of`, `fields`, `refs`, `withheld_output`, `acknowledged_by`, `case_id`                                                                                                                                                                                                                                                                                   |
   | `search_pins`                | built search pin                                                               | `query` (the folded key), `type`, `position`, `entity`                                                                                                                                                                                                                                                                                                                                                                                                                                        |
   | `search_text`                | built variable's search text                                                   | `register`, `variable`, `name`, `definition`, `description`: the unfolded text `variable_fts` indexes, the variable's own or else its state and alias-window texts, distinct and sorted, one per line; `delivery_column_names`: the sorted list of its published spellings (`variable_alias`)                                                                                                                                                                                                 |
   | `manifest`                   | import-manifest entry                                                          | `key`, `value`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
@@ -325,26 +326,25 @@ have no `sentinel_meaning`.
 A `code_index` row is one `code_variable_map` entry: a code reaches a variable through a
 state's value set or an alias window's per-column one.
 
-A `warnings` row's coordinates (`register`, `variable`, `variant`, `column`,
-`valid_from`, `valid_to`) are stored twice: in the `data_warning` columns the reader
-filters on, and in the `warning_json` it returns. When the two agree the field projects
-that value; when they disagree it projects `{"row": ..., "json": ...}`, so any case
-naming the field fails. `detail_hash_of` says what the warning's
-`diagnostic_detail_sha256` hashes: `issue` when it is the detail of a report-ledger
-issue with the warning's `code` and `source_subject` as its subject, else `detail` when
-it is the warning's own `detail`, else null. A case states where a warning's text came
-from without writing a hash.
+The `warnings` rows are the catalog's `data_warning` rows; the `report_warnings` rows
+are every warning the build formed, as the build report records it, so a build-only code
+(`data_warnings.BUILD_ONLY_CODES`) appears only there. `detail_hash_of` says what the
+warning's `diagnostic_detail_sha256` hashes: `issue` when it is the detail of a
+report-ledger issue with the warning's `code`, else `detail` when it is the warning's
+own `detail`, else null. A case states where a warning's text came from without writing
+a hash.
 
-A `refs` value (on `warnings` and `source_issues`) lists source record refs as
-`<source>#<semantic key parts joined by />`. An issue's refs are the `issue_refs` rows,
-so a case can filter and project them one ref at a time.
+A `refs` value (on `warnings`, `report_warnings` and `source_issues`) lists source
+record refs as `<source>#<semantic key parts joined by />`. An issue's refs are the
+`issue_refs` rows, so a case can filter and project them one ref at a time.
 
 A projection's `rows` may state a relation instead of literal values. With
 `"fields": ["ref"]` and `"rows": {"refs_of": {"table": ..., "where": ...}}`, the
 projected refs must equal the refs that the selected rows of another table cite (`ref`
-on `issue_refs`, `refs` on `warnings` and `source_issues`), duplicates included. Both
-sides are read from the same build. Use it when the claim is that two outputs agree on
-their source records, so the case never has to write a semantic-record hash.
+on `issue_refs`, `refs` on `warnings`, `report_warnings` and `source_issues`),
+duplicates included. Both sides are read from the same build. Use it when the claim is
+that two outputs agree on their source records, so the case never has to write a
+semantic-record hash.
 
 In a later step, `"rows": {"step": "<earlier step>"}` expects the rows the same
 projection (its table, `where` and `fields`) reads from that earlier step's build, under

@@ -202,23 +202,25 @@ def build_catalog_fixture_db(db_path: Path) -> None:
 def _seed_data_warnings(conn: sqlite3.Connection) -> None:
     from hashlib import sha256
 
-    from reg_meta_build.data_warnings import DataWarning
+    from reg_meta_build.data_warnings import DataWarning, write_data_warnings
     from reg_meta_build.source_evidence import canonical_sha256
 
-    variable_id = conn.execute(
-        "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = 'forsamling'"
-    ).fetchone()[0]
+    # The fixture variant's literal slug is read rather than assumed.
+    (variant,) = conn.execute(
+        "SELECT slug FROM register_variant WHERE register_variant_id = 10"
+    ).fetchone()
+    warnings = []
     for variable_scope in (False, True):
         payload = {
             "register_fqid": "scb/lisa",
             "variable_fqid": "scb/lisa/forsamling" if variable_scope else None,
-            "variant": "_default" if variable_scope else None,
+            "variant": variant if variable_scope else None,
             "delivery_column_name": "Forsamling" if variable_scope else None,
             "valid_from": "2006-01-01" if variable_scope else None,
             "valid_to": "2019-12-31" if variable_scope else None,
             "code": "nonconforming_classification_codes"
             if variable_scope
-            else "omitted_columnless_occurrence",
+            else "unassigned_original_columns",
             "severity": "warning",
             "summary": "The delivered domain includes nonstandard classification codes."
             if variable_scope
@@ -226,7 +228,6 @@ def _seed_data_warnings(conn: sqlite3.Connection) -> None:
             "detail": "Source codes and labels are retained alongside the claimed classification."
             if variable_scope
             else "Unbound source records are retained; their identifier and sensitivity flags are not assigned to delivered variables.",
-            "source_subject": "synthetic fixture",
             "fields": [],
             "refs": [],
             "withheld_output": [],
@@ -236,30 +237,12 @@ def _seed_data_warnings(conn: sqlite3.Connection) -> None:
         payload["diagnostic_detail_sha256"] = sha256(
             payload["detail"].encode()
         ).hexdigest()
-        warning = DataWarning.model_validate(
-            {"warning_id": canonical_sha256(payload), **payload}
-        )
-        # The fixture variant's literal slug is read rather than assumed.
-        if variable_scope:
-            payload["variant"] = conn.execute(
-                "SELECT slug FROM register_variant WHERE register_variant_id = 10"
-            ).fetchone()[0]
-            warning = DataWarning.model_validate(
+        warnings.append(
+            DataWarning.model_validate(
                 {"warning_id": canonical_sha256(payload), **payload}
             )
-        conn.execute(
-            "INSERT INTO data_warning VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (
-                warning.warning_id,
-                1,
-                variable_id if variable_scope else None,
-                10 if variable_scope else None,
-                warning.delivery_column_name,
-                warning.valid_from,
-                warning.valid_to,
-                warning.model_dump_json(),
-            ),
         )
+    write_data_warnings(conn, tuple(warnings))
 
 
 def _seed_first_provider_register(
