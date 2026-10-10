@@ -16,7 +16,6 @@ from _pipeline_catalog_support import (
     report_issues as _issues,
 )
 from _resolved_catalog_support import resolved_variable
-from _resolved_metadata_support import full_metadata, write_metadata_catalog
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.cli import run
 from reg_meta_build.db import DB_FILENAME, publish_db
@@ -359,40 +358,6 @@ def test_catalog_bytes_do_not_depend_on_writer_input_order(tmp_path: Path) -> No
     write(first, synthetic_manifest() | {"z": "last", "a": "first"}, step=1)
     write(reordered, synthetic_manifest() | {"a": "first", "z": "last"}, step=-1)
     assert reordered.read_bytes() == first.read_bytes()
-
-
-def test_catalog_bytes_do_not_depend_on_metadata_order(tmp_path: Path) -> None:
-    # Fails if the writer inserts the curated metadata rows (groups and their axes,
-    # members and facets, tags, relations, lineage, export facts) in input order.
-    # A build hands them over in curation-file order, and a reordered curation tree
-    # changes the manifest's curation hash, so no build pair can show this.
-    metadata = full_metadata()
-    group = metadata.variable_groups[0]
-    reordered = metadata.model_copy(
-        update={
-            name: tuple(reversed(getattr(metadata, name)))
-            for name in type(metadata).model_fields
-        }
-        | {
-            "variable_groups": (
-                group.model_copy(
-                    update={
-                        "axes": tuple(reversed(group.axes)),
-                        "members": tuple(
-                            member.model_copy(
-                                update={"facets": tuple(reversed(member.facets))}
-                            )
-                            for member in reversed(group.members)
-                        ),
-                    }
-                ),
-            )
-        }
-    )
-    first, second = tmp_path / "first.db", tmp_path / "reordered.db"
-    write_metadata_catalog(first, metadata)
-    write_metadata_catalog(second, reordered)
-    assert second.read_bytes() == first.read_bytes()
 
 
 @pytest.mark.parametrize("where", ["prepared", "curation", "report", "dump"])

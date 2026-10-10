@@ -14,7 +14,8 @@ depth; the written outcomes are the build cases
 resolved model reaches it, because the writer revalidates every instance it is given.
 
 Publication, byte identity and create-only placement are pinned beside the build-db
-contract, in `test_build_db_cli_outputs.py`.
+contract, in `test_build_db_cli_outputs.py`; only the metadata-order byte witness
+sits here, beside the metadata it reorders.
 """
 
 from __future__ import annotations
@@ -34,6 +35,7 @@ from _resolved_metadata_support import (
     full_metadata,
     metadata_classification,
     metadata_variable,
+    write_metadata_catalog,
 )
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.errors import RegMetaError
@@ -688,3 +690,37 @@ def test_unknown_provider_is_a_located_refusal(tmp_path: Path) -> None:
     assert error.value.code == "unknown_provider"
     assert "No provider_id seed" in error.value.message
     assert not any(tmp_path.iterdir())
+
+
+def test_catalog_bytes_do_not_depend_on_metadata_order(tmp_path: Path) -> None:
+    # Fails if the writer inserts the curated metadata rows (groups and their axes,
+    # members and facets, tags, relations, lineage, export facts) in input order.
+    # A build hands them over in curation-file order, and a reordered curation tree
+    # changes the manifest's curation hash, so no build pair can show this.
+    metadata = full_metadata()
+    group = metadata.variable_groups[0]
+    reordered = metadata.model_copy(
+        update={
+            name: tuple(reversed(getattr(metadata, name)))
+            for name in type(metadata).model_fields
+        }
+        | {
+            "variable_groups": (
+                group.model_copy(
+                    update={
+                        "axes": tuple(reversed(group.axes)),
+                        "members": tuple(
+                            member.model_copy(
+                                update={"facets": tuple(reversed(member.facets))}
+                            )
+                            for member in reversed(group.members)
+                        ),
+                    }
+                ),
+            )
+        }
+    )
+    first, second = tmp_path / "first.db", tmp_path / "reordered.db"
+    write_metadata_catalog(first, metadata)
+    write_metadata_catalog(second, reordered)
+    assert second.read_bytes() == first.read_bytes()
