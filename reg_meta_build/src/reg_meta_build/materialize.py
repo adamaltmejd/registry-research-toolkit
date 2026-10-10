@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import gzip
 import json
+import shutil
 import sqlite3
 import time
 from contextlib import closing, contextmanager
@@ -54,9 +55,17 @@ from reg_meta_build.documentary import DocumentaryRelationship
 from reg_meta_build.id import mint
 from reg_meta_build.pipeline import (
     admit_build_paths,
+    admit_catalog_outputs,
     ledger_line,
     resolve_catalog,
     write_summary,
+)
+from reg_meta_build.resolved_bundle import (
+    EVENTS_FILE,
+    admit_bundle_code,
+    admit_bundle_mode,
+    load_resolved_bundle,
+    read_bundle_record,
 )
 from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
@@ -86,7 +95,7 @@ from reg_meta_build.validate import validate_built_db
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
-    from reg_meta_build.pipeline import ResolvedBuild
+    from reg_meta_build.resolved_bundle import ResolvedBuild
 
 _COLUMNS = {
     "concept_group": "group_id,kind,register_id,group_key,label,source",
@@ -1111,13 +1120,15 @@ def build_catalog(
     registers: tuple[str, ...] = (),
     curation_dir: Path | None = None,
     dump_decisions: Path | None = None,
+    resolved_out: Path | None = None,
 ) -> dict[str, object]:
     """Build the compiled curation; failures never replace an active catalog.
 
     Resolves (`pipeline.resolve_catalog`), then materializes. A diagnostic
     completion retains strict errors and returns publication_ready false.
     `registers` builds only the named scopes; its output is never publishable and
-    its corpus volume guards do not apply.
+    its corpus volume guards do not apply. `resolved_out` also writes the
+    resolution as a bundle that `materialize_resolved` places.
     """
     started = time.perf_counter()
     publishable = not diagnostic and not registers
@@ -1132,6 +1143,7 @@ def build_catalog(
         publishable=publishable,
         curation_dir=curation_dir,
         dump_decisions=dump_decisions,
+        resolved_out=resolved_out,
     )
     revision = builder_commit() if publishable else None
     resolved = resolve_catalog(
@@ -1144,10 +1156,51 @@ def build_catalog(
         registers=registers,
         curation_dir=curation_dir,
         dump_decisions=dump_decisions,
+        resolved_out=resolved_out,
     )
     result = materialize_build(resolved, revision=revision)
     # Reported after publication: a failure here keeps the completed-artifact
     # status, as it did when this line sat inside the pipeline's last guard.
+    with _retain_completed_artifact(result, report_dir):
+        _emit_timing("pipeline: total", started)
+    return result
+
+
+def materialize_resolved(
+    bundle: Path,
+    output: Path,
+    report_dir: Path,
+    *,
+    diagnostic: bool = False,
+    registers: tuple[str, ...] = (),
+) -> dict[str, object]:
+    """Place a resolved bundle (`build_catalog(resolved_out=...)`) as the build
+    that wrote it would have.
+
+    The bundle must come from this builder's resolve code, the requested mode and
+    registers must be the bundle's, and a strict bundle must have no errors. The report directory gets the bundle's ledger member,
+    then materialization's, so it reads as the unphased build's report.
+    """
+    started = time.perf_counter()
+    bundle, output, report_dir = (
+        bundle.resolve(),
+        output.resolve(),
+        report_dir.resolve(),
+    )
+    record = read_bundle_record(bundle)
+    admit_bundle_code(record, bundle)
+    admit_bundle_mode(record, bundle, diagnostic=diagnostic, registers=registers)
+    admit_catalog_outputs(output, report_dir, (bundle,), publishable=record.publishable)
+    if report_dir.exists():
+        raise ValueError(f"the report directory must be new: {report_dir}")
+    # Captured before the load, as `build_catalog` captures it before resolving.
+    revision = builder_commit() if record.publishable else None
+    resolved = load_resolved_bundle(
+        bundle, record, output=output, report_dir=report_dir
+    )
+    report_dir.mkdir(parents=True)
+    shutil.copyfile(bundle / EVENTS_FILE, resolved.ledger)
+    result = materialize_build(resolved, revision=revision)
     with _retain_completed_artifact(result, report_dir):
         _emit_timing("pipeline: total", started)
     return result
