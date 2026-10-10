@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_catalog_lineage.py::test_variant_default_resolves_ambiguity_and_unused_dangling_pin_fails"
+  ],
+  "note": "Step 1 with one curation change: lineage.toml also defaults scb/missing, a register no scope declares (old: `defaults = {\"scb/missing\": \"people\"}` raises CatalogDependencyError). No label names scb/missing, so the default is unused. A dangling default is not a diagnostic: the build stops with the located dependency refusal and names the lineage default's output.",
+  "fails_if": "`resolve_catalog_lineage` drops a `[lineage_defaults]` entry whose register or variant is missing instead of requiring it (or stops calling `dependencies.check()` before resolving), so the build completes with the dangling default silently ignored",
+  "sources": "scb-lineage-source-variants"
+}

@@ -1,0 +1,13 @@
+{
+  "replaces": [
+    "test_catalog_lineage.py::test_ambiguous_register_label_does_not_pick_input_order",
+    "test_catalog_lineage.py::test_specific_register_name_wins_over_shared_abbreviation[Original register (ORIG)]",
+    "test_catalog_lineage.py::test_specific_register_name_wins_over_shared_abbreviation[Original register (ORIG) : People]",
+    "test_catalog_lineage.py::test_curated_register_source_label_resolves_shared_abbreviation_by_prefix",
+    "test_catalog_lineage.py::test_abbreviation_resolves_when_full_name_and_prefix_do_not_match",
+    "test_catalog_lineage.py::test_unknown_source_label_remains_unresolved"
+  ],
+  "note": "One consumer variable of register EXAMPLE per replaced test, each linked by an accepted same_as edge to a source variable of the register its label is about, as the old fixture's default `same_as=True` linked scb/example/value to scb/origin/value. CONTESTED: two registers both named Twin register (TWN) (old `duplicate_name`: a second register with the origin's name). BARE and NAMED: the full name Shared register (SHR), bare and with ' : People', beside Other register (SHR) (old `shared_abbreviation`, both params). FORMER: 'Former source (PFX) : People', where neither the label nor its prefix names a register and PFX abbreviates two (the old curated-label test's ambiguous half; its resolved half is step 2). EXTERNAL: 'External source (EXT) : People', resolved by the only register abbreviated EXT. MISSING: 'External source (MISSING) : People', which no register name, prefix or abbreviation matches. From the old tests: CONTESTED and FORMER are attributed to no register and report one ambiguous_source_register error each with no edge; BARE, NAMED and EXTERNAL are attributed with one edge each and no issue; MISSING has no register, no edge and no issue, and its source label stays the literal text.",
+  "fails_if": "`resolve_catalog_lineage` (catalog_lineage.py) settles a label that names several registers on one of them (for example the first by input order) instead of reporting ambiguous_source_register, so CONTESTED gets twin-a; or matches the abbreviation before the full name or the prefix, so BARE and NAMED turn ambiguous between shared and other-shared; or drops the abbreviation fallback, so EXTERNAL is unattributed; or attributes an unknown label to a guessed register or reports it, so MISSING gains a register or an issue",
+  "sources": "scb-lineage-source-labels"
+}

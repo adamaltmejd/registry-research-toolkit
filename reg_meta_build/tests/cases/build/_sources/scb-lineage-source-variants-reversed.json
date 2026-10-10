@@ -1,0 +1,28 @@
+{
+  "description": "scb-lineage-source-variants with its Registerinformation rows in reverse order.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 7003, "var_id": 702, "colname": "FILLER", "year": "2000", "regver_id": 720, "register": ["Thirteenth register (THR)", 7, 72], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 7002, "var_id": 701, "colname": "DOUBLED", "year": "2000", "regver_id": 710, "register": ["Thirteenth register (THR)", 7, 71], "cells": {"Registervariantnamn": "Other"}},
+      {"cvid": 7001, "var_id": 701, "colname": "DOUBLED", "year": "2000", "regver_id": 700, "register": ["Thirteenth register (THR)", 7, 70], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 6002, "var_id": 601, "colname": "UNKNOWN", "year": "2000", "regver_id": 610, "register": ["Twelfth register (TWL)", 6, 61], "cells": {"Registervariantnamn": "Other"}},
+      {"cvid": 6001, "var_id": 601, "colname": "UNKNOWN", "year": "2000", "regver_id": 600, "register": ["Twelfth register (TWL)", 6, 60], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 5003, "var_id": 502, "colname": "FILLER", "year": "2000", "regver_id": 520, "register": ["Eleventh register (ELV)", 5, 52], "cells": {"Registervariantnamn": "Missing delivery"}},
+      {"cvid": 5002, "var_id": 501, "colname": "UNDELIVERED", "year": "2000", "regver_id": 510, "register": ["Eleventh register (ELV)", 5, 51], "cells": {"Registervariantnamn": "Other"}},
+      {"cvid": 5001, "var_id": 501, "colname": "UNDELIVERED", "year": "2000", "regver_id": 500, "register": ["Eleventh register (ELV)", 5, 50], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 4002, "var_id": 401, "colname": "EXPLICIT", "year": "2000", "regver_id": 410, "register": ["Tenth register (TEN)", 4, 41], "cells": {"Registervariantnamn": "Other"}},
+      {"cvid": 4001, "var_id": 401, "colname": "EXPLICIT", "year": "2000", "regver_id": 400, "register": ["Tenth register (TEN)", 4, 40], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 3002, "var_id": 301, "colname": "DEFAULTED", "year": "2000", "regver_id": 310, "register": ["Ninth register (NIN)", 3, 31], "cells": {"Registervariantnamn": "Other"}},
+      {"cvid": 3001, "var_id": 301, "colname": "DEFAULTED", "year": "2000", "regver_id": 300, "register": ["Ninth register (NIN)", 3, 30], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 2003, "var_id": 202, "colname": "FILLER", "year": "2000", "regver_id": 220, "register": ["Gap register (GAP)", 2, 22], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 2002, "var_id": 201, "colname": "GAP", "year": "2000", "regver_id": 210, "register": ["Gap register (GAP)", 2, 21], "cells": {"Registervariantnamn": "Other"}},
+      {"cvid": 2001, "var_id": 201, "colname": "GAP", "year": "2000", "regver_id": 200, "register": ["Gap register (GAP)", 2, 20], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 1006, "var_id": 106, "colname": "DOUBLED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Thirteenth register (THR) : People"},
+      {"cvid": 1005, "var_id": 105, "colname": "UNKNOWN", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Twelfth register (TWL) : Unknown delivery"},
+      {"cvid": 1004, "var_id": 104, "colname": "UNDELIVERED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Eleventh register (ELV) : Missing delivery"},
+      {"cvid": 1003, "var_id": 103, "colname": "EXPLICIT", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Tenth register (TEN) : People"},
+      {"cvid": 1002, "var_id": 102, "colname": "DEFAULTED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Ninth register (NIN)"},
+      {"cvid": 1001, "var_id": 101, "colname": "GAP", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Gap register (GAP) : People"}
+    ]
+  }
+}

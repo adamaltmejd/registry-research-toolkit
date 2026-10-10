@@ -1,0 +1,13 @@
+[register]
+provider = "scb"
+slug = "historical"
+native_id = "5"
+[[variant]]
+native_id = "5.51"
+slug = "other"
+[[variant]]
+native_id = "5.50"
+slug = "people"
+[[variable]]
+native_id = "5.501"
+slug = "historical"

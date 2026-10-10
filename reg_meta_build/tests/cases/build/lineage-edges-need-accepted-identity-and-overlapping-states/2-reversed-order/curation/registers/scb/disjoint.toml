@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "disjoint"
+native_id = "4"
+[[variant]]
+native_id = "4.40"
+slug = "people"
+[[variable]]
+native_id = "4.401"
+slug = "disjoint"

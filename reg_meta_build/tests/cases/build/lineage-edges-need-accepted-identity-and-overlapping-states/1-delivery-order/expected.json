@@ -1,0 +1,51 @@
+{
+  "status": "diagnostic_complete",
+  "rebuilt_identical": true,
+  "projections": [
+    {
+      "table": "variables",
+      "where": {"register": "example", "variable": ["value", "earlier"]},
+      "fields": ["variable", "source_register", "source_label"],
+      "rows": [
+        ["value", "origin", "ORIG"],
+        ["earlier", "earlier", "ERL"]
+      ]
+    },
+    {
+      "note": "Attribution keeps the literal source text beside the resolved register, on the variable and on its state (the delivered VariabelRegister_Källa).",
+      "table": "variables",
+      "where": {"register": "example", "variable": "value"},
+      "fields": ["source_register_text"],
+      "rows": [["Original register (ORIG) : People"]]
+    },
+    {
+      "table": "states",
+      "where": {"register": "example", "variable": "value"},
+      "fields": ["source_register_text"],
+      "rows": [["Original register (ORIG) : People"]]
+    },
+    {
+      "table": "lineage",
+      "fields": ["register", "variable", "variant", "source_register", "source_variable", "source_variant", "valid_from", "valid_to"],
+      "rows": [
+        ["example", "value", "people", "origin", "value", "people", "2000-01-01", "2000-12-31"],
+        ["example", "historical", "people", "historical", "historical", "people", "2000-01-01", "2000-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": {"contains": "scb/example/"}},
+      "fields": ["code", "severity", "subject", "withheld_output"],
+      "rows": [
+        ["unresolved_lineage_no_source_state", "warning", "scb/example/unlinked", ["scb/example/unlinked:lineage"]]
+      ]
+    },
+    {
+      "table": "lineage_warnings",
+      "fields": ["register", "variable", "kind"],
+      "rows": [
+        ["example", "unlinked", "no_source_state"]
+      ]
+    }
+  ]
+}
