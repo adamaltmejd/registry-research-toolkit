@@ -7,9 +7,10 @@ use std::fs;
 use std::path::PathBuf;
 
 use common::Rng;
+use reg_core::project::SourcePeriod;
 use reg_core::{
     Fqid, GrammarError, Period, PeriodToken, Term, next_iso_day, period_token_for_bounds,
-    prev_iso_day,
+    prev_iso_day, render,
 };
 use serde_json::{Value, json};
 
@@ -115,8 +116,9 @@ fn fqid_matches_corpus() {
     assert_corpus::<Fqid>("fqid.jsonl", fqid_json, |_, _| None);
 }
 
-// Fails if a token form, a bound (year, month, day, quarter, half), the range order rule
-// or the year span (`LA2019` touches 2020) changes.
+// Fails if a token form, a bound (year, month, day, quarter, half), the range order rule,
+// the year span (`LA2019` touches 2020) or the days a period covers (`2019-02` ends on
+// the 28th) change.
 #[test]
 fn period_matches_corpus() {
     assert_corpus::<Period>(
@@ -124,7 +126,10 @@ fn period_matches_corpus() {
         |p| period_json(*p),
         |p, case| {
             let (lo, hi) = p.years();
-            (json!([lo, hi]) != case["years"]).then(|| format!("years ({lo}, {hi})"))
+            let (first, last) = p.iso_bounds();
+            let got = json!({"years": [lo, hi], "bounds": [first, last]});
+            let expected = json!({"years": case["years"], "bounds": case["bounds"]});
+            (got != expected).then(|| format!("{got}"))
         },
     );
 }
@@ -297,4 +302,52 @@ fn period_token_edges_and_next_day() {
         assert_eq!(next_iso_day(day), next, "{day}");
     }
     assert_eq!(prev_iso_day("2018-02-29"), "2018-02-29");
+}
+
+// Fails if the wire shaping (`from_wire`, `to_wire`), the one-period structural check,
+// the days a source period requests, its year spans or their render change: a list
+// member read as a range, a grammar year left a string, an unsorted list accepted,
+// day-adjacent members left apart.
+#[test]
+fn source_period_matches_corpus() {
+    let cases = read_cases("source_period.jsonl");
+    let failures: Vec<String> = cases
+        .iter()
+        .enumerate()
+        .filter_map(|(i, case)| {
+            let period = &case["period"];
+            let mut got = serde_json::Map::new();
+            got.insert("period".into(), period.clone());
+            if let Some(wire) = case.get("from_wire") {
+                let shaped = SourcePeriod::from_wire(wire.as_str().expect("a wire string"));
+                got.insert("from_wire".into(), json!(shaped));
+            }
+            let wire = serde_json::from_value::<SourcePeriod>(period.clone())
+                .ok()
+                .and_then(|p| p.to_wire());
+            got.insert("wire".into(), json!(wire));
+            match SourcePeriod::from_value(period).map(|p| (p.intervals(), p.year_spans())) {
+                Ok((Ok(intervals), years)) => {
+                    if let Some(days) = &intervals {
+                        got.insert("render".into(), json!(render(days)));
+                    }
+                    got.insert("intervals".into(), json!(intervals));
+                    got.insert("years".into(), json!(years));
+                }
+                Err(_) | Ok((Err(_), _)) => {
+                    got.insert("error".into(), json!("invalid_period"));
+                }
+            }
+            // `from_wire` is the wire that shapes into `period`.
+            let mut expected = case.as_object().expect("a case object").clone();
+            expected.remove("note");
+            if let Some(wire) = expected.get_mut("from_wire") {
+                *wire = period.clone();
+            }
+            let got = Value::Object(got);
+            (got != Value::Object(expected)).then(|| format!("line {}: got {got}", i + 1))
+        })
+        .collect();
+    assert!(cases.len() > 30, "{} cases", cases.len());
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
 }

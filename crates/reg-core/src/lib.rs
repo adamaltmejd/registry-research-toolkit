@@ -30,7 +30,7 @@ pub use grammar::{
     prev_iso_day,
 };
 pub use interval::{Interval, gaps, intersect, merge, overlap, render};
-pub use structural::{q as quote, quoted_list, validate_structural};
+pub use structural::{q as quote, quoted_list, validate_source_period, validate_structural};
 use unicode_normalization::UnicodeNormalization;
 use unicode_normalization::char::canonical_combining_class;
 use unicode_properties::{GeneralCategory, GeneralCategoryGroup, UnicodeGeneralCategory};

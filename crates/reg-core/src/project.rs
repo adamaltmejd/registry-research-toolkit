@@ -12,7 +12,7 @@
 //! every shape the types would misread (serde reads a struct from a JSON array by
 //! position), and deserializes only an accepted document.
 
-use std::fmt::Write as _;
+use std::fmt::{self, Write as _};
 
 use serde::de::{Deserializer, Error as _};
 use serde::{Deserialize, Serialize, Serializer};
@@ -21,7 +21,7 @@ use sha2::{Digest, Sha256};
 
 use crate::{
     Interval, IssueLevel, Period, PeriodToken, ValidationIssue, ValidationResult, merge, quote,
-    validate_structural,
+    validate_source_period, validate_structural,
 };
 
 /// The `project_data.json` contract this runtime reads, exactly. The SPA seeds a new
@@ -298,6 +298,99 @@ pub enum SourcePeriod {
 }
 
 impl SourcePeriod {
+    /// The period in `value`, or the issues that refuse it
+    /// ([`validate_source_period`]). An accepted period's [`Self::intervals`] and
+    /// [`Self::year_spans`] never panic.
+    ///
+    /// # Errors
+    ///
+    /// The structural validation result, when it has an error.
+    ///
+    /// # Panics
+    ///
+    /// If an accepted period does not deserialize: a validator bug.
+    pub fn from_value(value: &Value) -> Result<Self, ValidationResult> {
+        let result = validate_source_period(value);
+        if !result.ok() {
+            return Err(result);
+        }
+        Ok(Self::deserialize(value).expect("an accepted period deserializes"))
+    }
+
+    /// The period a `?period` wire spells, shaped without validation (the SPA's
+    /// catalog to project hand-off): comma-separated members become a list, a
+    /// `from..to` member a range, and an endpoint that is a grammar year an int; any
+    /// other text stays a string as written, trimmed, for the validator to report.
+    /// A list with a blank member stays the whole trimmed string.
+    #[must_use]
+    pub fn from_wire(wire: &str) -> Self {
+        let value = wire.trim();
+        if value.contains(',') {
+            let members: Vec<&str> = value.split(',').map(str::trim).collect();
+            if !members.iter().any(|m| m.is_empty()) {
+                return Self::List(members.into_iter().map(segment_from_wire).collect());
+            }
+            return Self::Segment(PeriodSegment::Value(PeriodValue::Token(value.to_owned())));
+        }
+        Self::Segment(segment_from_wire(value))
+    }
+
+    /// The `?period` wire of the period ([`Display`](fmt::Display)), or `None` when
+    /// it has none: a blank value or endpoint, an empty list, or a list member whose
+    /// wire holds a comma.
+    #[must_use]
+    pub fn to_wire(&self) -> Option<String> {
+        let segments = match self {
+            Self::Segment(segment) => std::slice::from_ref(segment),
+            Self::List(list) if list.is_empty() => return None,
+            Self::List(list) => list.as_slice(),
+        };
+        let blank = |v: &PeriodValue| matches!(v, PeriodValue::Token(t) if t.trim().is_empty());
+        let unusable = |s: &PeriodSegment| match s {
+            PeriodSegment::Value(v) => blank(v),
+            PeriodSegment::Range(PeriodRange { from, to }) => blank(from) || blank(to),
+        };
+        let listed = matches!(self, Self::List(_));
+        if segments
+            .iter()
+            .any(|s| unusable(s) || (listed && s.to_string().contains(',')))
+        {
+            return None;
+        }
+        Some(self.to_string())
+    }
+
+    /// The calendar-year spans of the requested days ([`Self::intervals`]), when
+    /// every endpoint is a year; `None` for any other token, `"_default"` or a
+    /// period [`Self::intervals`] refuses. `2015..2017` and `2018` are one span.
+    /// Never panics: every endpoint is a year before the days are read.
+    #[must_use]
+    pub fn year_spans(&self) -> Option<Vec<(u16, u16)>> {
+        let segments = match self {
+            Self::Segment(segment) => std::slice::from_ref(segment),
+            Self::List(list) => list.as_slice(),
+        };
+        let year = |v: &PeriodValue| {
+            matches!(
+                PeriodToken::parse(&v.spelling()),
+                Some(PeriodToken::Year(_))
+            )
+        };
+        let years_only = segments.iter().all(|s| match s {
+            PeriodSegment::Value(v) => year(v),
+            PeriodSegment::Range(PeriodRange { from, to }) => year(from) && year(to),
+        });
+        if !years_only {
+            return None;
+        }
+        let year_of = |day: &str| day.get(..4).and_then(|y| y.parse().ok());
+        self.intervals()
+            .ok()??
+            .iter()
+            .map(|(lo, hi)| Some((year_of(lo)?, year_of(hi)?)))
+            .collect()
+    }
+
     /// The requested days, merged ([`merge`]); `None` for `"_default"`, a
     /// year-independent selection.
     ///
@@ -355,6 +448,67 @@ impl PeriodValue {
 
     fn token(&self) -> PeriodToken {
         PeriodToken::parse(&self.spelling()).expect("an accepted project's periods parse")
+    }
+}
+
+/// One wire endpoint: a grammar year as an int, any other text as the trimmed string.
+fn endpoint_from_wire(text: &str) -> PeriodValue {
+    let text = text.trim();
+    match PeriodToken::parse(text) {
+        Some(PeriodToken::Year(year)) => PeriodValue::Year(year.into()),
+        _ => PeriodValue::Token(text.to_owned()),
+    }
+}
+
+/// One wire member: `from..to` with exactly one separator is a range, anything else
+/// a single value.
+fn segment_from_wire(text: &str) -> PeriodSegment {
+    match text.split("..").collect::<Vec<_>>()[..] {
+        [value] => PeriodSegment::Value(endpoint_from_wire(value)),
+        [from, to] => PeriodSegment::Range(PeriodRange {
+            r#from: endpoint_from_wire(from),
+            to: endpoint_from_wire(to),
+        }),
+        _ => PeriodSegment::Value(PeriodValue::Token(text.to_owned())),
+    }
+}
+
+/// The wire spelling: an int year in decimal, a string trimmed.
+impl fmt::Display for PeriodValue {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Year(year) => write!(f, "{year}"),
+            Self::Token(token) => f.write_str(token.trim()),
+        }
+    }
+}
+
+/// The wire spelling: a value, or `from..to`.
+impl fmt::Display for PeriodSegment {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Value(value) => write!(f, "{value}"),
+            Self::Range(PeriodRange { from, to }) => write!(f, "{from}..{to}"),
+        }
+    }
+}
+
+/// The `?period` wire: a segment, or the list's segments comma-joined. Total over
+/// any value; [`SourcePeriod::to_wire`] says when the result is a usable wire.
+impl fmt::Display for SourcePeriod {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Segment(segment) => write!(f, "{segment}"),
+            Self::List(list) => {
+                for (i, segment) in list.iter().enumerate() {
+                    if i > 0 {
+                        f.write_str(",")?;
+                    }
+                    write!(f, "{segment}")?;
+                }
+                Ok(())
+            }
+        }
     }
 }
 

@@ -1,0 +1,41 @@
+{"period": 2018, "from_wire": "2018", "wire": "2018", "intervals": [["2018-01-01", "2018-12-31"]], "years": [[2018, 2018]], "render": "2018"}
+{"period": "2018", "wire": "2018", "intervals": [["2018-01-01", "2018-12-31"]], "years": [[2018, 2018]], "render": "2018", "note": "A year as a string is a year."}
+{"period": "2020-Q1", "from_wire": " 2020-Q1 ", "wire": "2020-Q1", "intervals": [["2020-01-01", "2020-03-31"]], "years": null, "render": "2020-Q1"}
+{"period": "2020-08-15", "wire": "2020-08-15", "intervals": [["2020-08-15", "2020-08-15"]], "years": null, "render": "2020-08-15"}
+{"period": "  2019  ", "wire": "2019", "error": "invalid_period", "note": "The wire trims; the period grammar does not."}
+{"period": "", "from_wire": "", "wire": null, "error": "invalid_period", "note": "The unset period of a fresh source."}
+{"period": "   ", "wire": null, "error": "invalid_period"}
+{"period": {"from": 2018, "to": 2020}, "from_wire": "2018..2020", "wire": "2018..2020", "intervals": [["2018-01-01", "2020-12-31"]], "years": [[2018, 2020]], "render": "2018..2020"}
+{"period": {"from": "2018", "to": "2020"}, "wire": "2018..2020", "intervals": [["2018-01-01", "2020-12-31"]], "years": [[2018, 2020]], "render": "2018..2020"}
+{"period": {"from": 2019, "to": 2019}, "from_wire": "2019..2019", "wire": "2019..2019", "intervals": [["2019-01-01", "2019-12-31"]], "years": [[2019, 2019]], "render": "2019", "note": "A one-year study window as a period."}
+{"period": {"from": "", "to": 2020}, "wire": null, "error": "invalid_period"}
+{"period": {"from": "HT2018", "to": "VT2019"}, "from_wire": "HT2018..VT2019", "wire": "HT2018..VT2019", "intervals": [["2018-07-01", "2019-06-30"]], "years": null, "render": "LA2018", "note": "The coarsest token of the days."}
+{"period": {"from": "2019-03", "to": "2019-06"}, "from_wire": "2019-03..2019-06", "wire": "2019-03..2019-06", "intervals": [["2019-03-01", "2019-06-30"]], "years": null, "render": "2019-03-01..2019-06-30"}
+{"period": {"from": 1992, "to": "2009-06-30"}, "from_wire": "1992..2009-06-30", "wire": "1992..2009-06-30", "intervals": [["1992-01-01", "2009-06-30"]], "years": null, "render": "1992..2009-06-30"}
+{"period": {"from": "VT1992", "to": 2009}, "from_wire": "VT1992..2009", "wire": "VT1992..2009", "intervals": [["1992-01-01", "2009-12-31"]], "years": null, "render": "1992..2009", "note": "VT1992 starts on a year's first day, so the render is a year range."}
+{"period": {"from": "LA2004", "to": "LA2005"}, "from_wire": "LA2004..LA2005", "wire": "LA2004..LA2005", "intervals": [["2004-07-01", "2006-06-30"]], "years": null, "render": "2004-07-01..2006-06-30"}
+{"period": {"from": "2019-02-01", "to": "2019-02-28"}, "from_wire": "2019-02-01..2019-02-28", "wire": "2019-02-01..2019-02-28", "intervals": [["2019-02-01", "2019-02-28"]], "years": null, "render": "2019-02", "note": "A common-year February is its month."}
+{"period": {"from": 2020, "to": 2019}, "from_wire": "2020..2019", "wire": "2020..2019", "error": "invalid_period", "note": "An inverted range requests no days."}
+{"period": "_default", "from_wire": "_default", "wire": "_default", "intervals": null, "years": null, "note": "Year-independent: no days."}
+{"period": "2018..2019..2020", "from_wire": "2018..2019..2020", "wire": "2018..2019..2020", "error": "invalid_period", "note": "Two separators: not a range, kept as written."}
+{"period": "202", "from_wire": "202", "wire": "202", "error": "invalid_period", "note": "Not a grammar year, so not an int."}
+{"period": {"from": "202", "to": 2009}, "from_wire": "202..2009", "wire": "202..2009", "error": "invalid_period"}
+{"period": "3000", "from_wire": "3000", "wire": "3000", "error": "invalid_period"}
+{"period": 1899, "wire": "1899", "error": "invalid_period"}
+{"period": "2018,", "from_wire": "2018,", "wire": "2018,", "error": "invalid_period", "note": "A list with a blank member stays the string."}
+{"period": ",2018", "from_wire": ",2018", "wire": ",2018", "error": "invalid_period"}
+{"period": [{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}], "from_wire": "2005..2010, 2015..2020", "wire": "2005..2010,2015..2020", "intervals": [["2005-01-01", "2010-12-31"], ["2015-01-01", "2020-12-31"]], "years": [[2005, 2010], [2015, 2020]], "render": "2005..2010,2015..2020"}
+{"period": [2018, "HT2020"], "from_wire": "2018, HT2020", "wire": "2018,HT2020", "intervals": [["2018-01-01", "2018-12-31"], ["2020-07-01", "2020-12-31"]], "years": null, "render": "2018,HT2020"}
+{"period": [{"from": 2000, "to": 2005}, {"from": 2006, "to": 2008}, {"from": 2015, "to": 2020}], "wire": "2000..2005,2006..2008,2015..2020", "intervals": [["2000-01-01", "2008-12-31"], ["2015-01-01", "2020-12-31"]], "years": [[2000, 2008], [2015, 2020]], "render": "2000..2008,2015..2020", "note": "Adjacent years are one span."}
+{"period": ["2019-Q1", "2019-Q2"], "from_wire": "2019-Q1,2019-Q2", "wire": "2019-Q1,2019-Q2", "intervals": [["2019-01-01", "2019-06-30"]], "years": null, "render": "VT2019", "note": "Day-adjacent members are one interval."}
+{"period": [{"from": 2015, "to": 2020}, {"from": 2000, "to": 2005}, {"from": 2006, "to": 2008}], "wire": "2015..2020,2000..2005,2006..2008", "error": "invalid_period", "note": "List members must be sorted."}
+{"period": [2020, 2019], "from_wire": "2020,2019", "wire": "2020,2019", "error": "invalid_period"}
+{"period": [{"from": 2010, "to": 2020}, {"from": 2020, "to": 2021}], "from_wire": "2010..2020,2020..2021", "wire": "2010..2020,2020..2021", "error": "invalid_period", "note": "List members must not overlap."}
+{"period": [2004, "LA2004"], "from_wire": "2004,LA2004", "wire": "2004,LA2004", "error": "invalid_period"}
+{"period": [2018, "_default"], "from_wire": "2018,_default", "wire": "2018,_default", "error": "invalid_period", "note": "`_default` is not a list member."}
+{"period": [], "wire": null, "error": "invalid_period"}
+{"period": [2018, ""], "wire": null, "error": "invalid_period"}
+{"period": [{"from": "", "to": 2020}], "wire": null, "error": "invalid_period"}
+{"period": ["2018,2019"], "wire": null, "error": "invalid_period", "note": "A list member's wire may not hold a comma."}
+{"period": {"from": 2018}, "wire": null, "error": "invalid_period", "note": "Not a source period's shape: no wire."}
+{"period": null, "wire": null, "error": "invalid_period"}

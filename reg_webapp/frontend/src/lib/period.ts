@@ -2,20 +2,27 @@
  * Pure period/query helpers for the binding-leaf resolution state (no runes —
  * unit-testable in isolation; `period.test.ts`). The resolution state lives in
  * the URL query (`?period`/`?variant`/`?value_set_version`; see
- * reg_webapp/DESIGN.md → Catalog router structure); these helpers parse the wire
+ * reg_webapp/DESIGN.md → Catalog router structure); these helpers shape the wire
  * period for UI/project behavior and build the query string the router navigates to.
  *
- * The SPA only mirrors the wire grammar (see reg_webapp/DESIGN.md → Pydantic
- * boundary) — the server (`reg-core`) is the CANONICAL validator. `looksLikePeriod` is a LIGHT, ADVISORY client hint
- * only (it must never block submit; a "looks wrong" value is still sent so the
- * server's 422 detail is the authority).
+ * The SPA never parses period grammar or computes a date bound: every period
+ * answer here comes from reg-core through `reg_core.ts` (WASM) — token bounds,
+ * wire shaping, the days a source period requests, merging and rendering. What
+ * stays here is view state and year-integer arithmetic over reg-core's answers.
  */
 
-import type {
-  ProjectPeriodSegment,
-  ProjectSourcePeriod,
-  ProjectStudyWindow,
-} from "./project_data";
+import type { ProjectSourcePeriod, ProjectStudyWindow } from "./project_data";
+import {
+  type Interval,
+  mergeIntervals,
+  overlapIntervals,
+  parsePeriod,
+  renderIntervals,
+  sourcePeriodFromWire,
+  sourcePeriodIntervals,
+  sourcePeriodToWire,
+  sourcePeriodYears,
+} from "./reg_core";
 
 /** The narrowing modifiers carried in the URL query alongside `?period`. */
 export interface ResolutionParams {
@@ -31,568 +38,52 @@ export interface ResolutionParams {
  * `crates/reg-catalog/src/ops/states.rs`. */
 export const VALUE_SET_VERSION_NONE = "_none";
 
-// ── Advisory grammar hint (wire tokens) ──────────────────────────────────────
-// Mirrors reg-core's period grammar (`grammar.rs`; anchored, `\Z`-equivalent — JS `$`
-// already does NOT match before a trailing `\n` the way Python's does, so the
-// trailing-newline footgun the backend guards doesn't exist here; still, the
-// server is the canonical gate). A range is `<endpoint>..<endpoint>`; each
-// endpoint is a single token. The author-supplied day of a `YYYY-MM-DD` token is
-// ALSO calendar-checked (regex can't do leap years, so `2019-02-29` matches the
-// pattern but is rejected by `isRealCalendarDay` — mirrors the reg-core
-// side). ADVISORY ONLY — never gates submit.
+// ── Period answers from reg-core ─────────────────────────────────────────────
 
-const YEAR = "(?:19|20)\\d{2}";
-const MONTH = "(?:0[1-9]|1[0-2])";
-const DAY = "(?:0[1-9]|[12]\\d|3[01])";
-
-const TOKEN_RE = new RegExp(
-  `^(?:${YEAR}|${YEAR}-${MONTH}|${YEAR}-${MONTH}-${DAY}|[HV]T${YEAR}|LA${YEAR}|${YEAR}-Q[1-4]|${YEAR}-H[12])$`,
-);
-
-const FULL_DATE_RE = new RegExp(`^${YEAR}-${MONTH}-${DAY}$`);
-
-/** Is a `YYYY-MM-DD` string a REAL calendar date? The grammar regex only bounds
- * the day 01-31; this rejects calendar-impossible days (`2019-02-29` in a
- * non-leap year, `2018-02-30`). Builds the date in UTC (avoids TZ drift) and
- * checks each component round-trips — `Date` silently rolls a bad day over
- * (Feb 30 → Mar 2), so a mismatch means the day was impossible. */
-function isRealCalendarDay(value: string): boolean {
-  const [y, m, d] = value.split("-").map(Number);
-  const dt = new Date(Date.UTC(y, m - 1, d));
-  return (
-    dt.getUTCFullYear() === y &&
-    dt.getUTCMonth() === m - 1 &&
-    dt.getUTCDate() === d
-  );
+/** The days a `Source.period` (any draft value) requests, merged, or null when
+ * it requests none the SPA can place: the year-independent `_default`, an unset
+ * period, or one reg-core's structural check refuses (all-or-nothing: one bad
+ * list member refuses the whole period). */
+export function datedIntervals(period: unknown): Interval[] | null {
+  const days = sourcePeriodIntervals(period);
+  return "intervals" in days ? days.intervals : null;
 }
 
-/** One period TOKEN (no range, no `_default`): the single-token forms —
- * `YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`/`VTYYYY`, `LA<YYYY>`,
- * `YYYY-Q[1-4]`, `YYYY-H[12]`. A `YYYY-MM-DD` is additionally
- * calendar-validated. */
-function isPeriodToken(value: string): boolean {
-  if (!TOKEN_RE.test(value)) {
-    return false;
-  }
-  return FULL_DATE_RE.test(value) ? isRealCalendarDay(value) : true;
+/** Whether a `?period` wire is a period a source may hold: the year-independent
+ * `_default`, or a dated period reg-core accepts (an unsorted or overlapping list
+ * and an inverted range are refused). Used where a wire is written straight into
+ * project_data. */
+export function periodWireValid(wire: string): boolean {
+  return !("error" in sourcePeriodIntervals(sourcePeriodFromWire(wire)));
 }
 
-const RANGE_SEP = "..";
-const LIST_SEP = ",";
-const DEFAULT_SENTINEL = "_default";
-
-/** One period SEGMENT looks valid: a single token or a `<token>..<token>`
- * range. `_default` is NOT a segment (the catalog `?period` takes the
- * whole-history sentinel whole-value-only — mirrors the period grammar in
- * `crates/reg-core/src/grammar.rs`). */
-function looksLikeSegment(value: string): boolean {
-  if (value.includes(RANGE_SEP)) {
-    const parts = value.split(RANGE_SEP);
-    // Exactly one separator → two endpoints; each must be a single token
-    // (a range of `_default` / nested ranges is not grammar).
-    return parts.length === 2 && parts.every((p) => isPeriodToken(p));
-  }
-  return isPeriodToken(value);
+/** The text as a bare grammar year (19xx/20xx), or null. Stricter than "any
+ * integer" on purpose: a typo like "202" is not a year the wire accepts. */
+function wireYear(raw: string): number | null {
+  const parsed = parsePeriod(raw.trim());
+  return "kind" in parsed && parsed.kind === "year" ? parsed.years[0] : null;
 }
 
-/** ADVISORY: does `raw` look like a period (a single token, a
- * `<token>..<token>` range, the `_default` snapshot sentinel, or a
- * comma-joined LIST of segments — the #307 interrupted-series wire form,
- * e.g. `2005..2010,2015..2020`)? Leading/trailing whitespace is tolerated
- * (the picker trims before sending). Returns `false` for junk so the picker
- * can show an inline "doesn't look like a period" hint — but the caller MUST
- * still allow submit (the server is canonical; it also owns the
- * sorted/non-overlap list rules this hint doesn't check). */
-export function looksLikePeriod(raw: string): boolean {
-  const value = raw.trim();
-  if (value === "") {
-    return false;
-  }
-  if (value === DEFAULT_SENTINEL) {
-    return true;
-  }
-  if (value.includes(LIST_SEP)) {
-    return value
-      .split(LIST_SEP)
-      .every((member) => looksLikeSegment(member.trim()));
-  }
-  return looksLikeSegment(value);
+/** The period that requests exactly `days`: merged, rendered, shaped back from
+ * the rendered wire (each interval its coarsest token, else a range with year
+ * endpoints where they fall on a year's first or last day). */
+function coveragePeriod(days: readonly Interval[]): ProjectSourcePeriod {
+  return sourcePeriodFromWire(renderIntervals(mergeIntervals(days)));
 }
 
-function periodSegmentBounds(segment: string): PeriodBounds | null {
-  const endpoints = periodRangeEndpoints(segment) ?? [
-    segment.trim(),
-    segment.trim(),
-  ];
-  const lo = periodTokenBounds(endpoints[0]);
-  const hi = periodTokenBounds(endpoints[1]);
-  if (!lo || !hi || lo.from > hi.to) {
-    return null;
-  }
-  return { from: lo.from, to: hi.to };
-}
-
-/** Strict client-side mirror for places that write `?period` directly into
- * project_data. Dated members must expand to finite bounds. A whole `_default` wire selects
- * year-independent delivery; the server additionally requires a concrete variant. This
- * also enforces the backend's list-level sorted/non-overlap invariant so
- * grammar-looking values such as `2020,2019` stay presentation-only until the
- * user fixes them. */
-export function isStructurallyValidPeriodWire(raw: string): boolean {
-  const value = raw.trim();
-  if (value === "_default") return true;
-  if (!looksLikePeriod(value)) {
-    return false;
-  }
-  let previousTo: string | null = null;
-  for (const member of value.split(LIST_SEP)) {
-    const bounds = periodSegmentBounds(member.trim());
-    if (!bounds) {
-      return false;
-    }
-    if (previousTo !== null && bounds.from <= previousTo) {
-      return false;
-    }
-    previousTo = bounds.to;
-  }
-  return true;
-}
-
-// ── Token bounds (advisory mirror of reg-core interval semantics) ────
-// The #306 one-click add needs CLIENT-side window math (clip register-variant
-// validity windows to the user's range to tell succession from co-existence).
-// ADVISORY like `looksLikePeriod`: an unparseable token simply degrades to the
-// explicit variant prompt — the server stays the canonical period authority.
-
-/** Inclusive ISO date bounds of one period TOKEN. */
-export interface PeriodBounds {
-  from: string;
-  to: string;
-}
-
-const TERM_BOUNDS: Record<string, [string, string]> = {
-  VT: ["01-01", "06-30"], // spring term
-  HT: ["07-01", "12-31"], // autumn term
-  H1: ["01-01", "06-30"],
-  H2: ["07-01", "12-31"],
-  Q1: ["01-01", "03-31"],
-  Q2: ["04-01", "06-30"],
-  Q3: ["07-01", "09-30"],
-  Q4: ["10-01", "12-31"],
-};
-
-/** Last day of a month, as the 2-digit day string (UTC; day 0 of month+1). */
-function lastDayOfMonth(year: number, month: number): string {
-  return String(new Date(Date.UTC(year, month, 0)).getUTCDate()).padStart(
-    2,
-    "0",
-  );
-}
-
-/** The inclusive ISO date window a single period token denotes (`2020` →
- * 2020-01-01..2020-12-31, `VT2009` → 2009-01-01..2009-06-30, `2020-03` →
- * 2020-03-01..2020-03-31, a day → itself). `null` for anything that isn't a
- * single grammar token (`_default`, ranges, junk). */
-export function periodTokenBounds(token: string): PeriodBounds | null {
-  const value = token.trim();
-  if (!isPeriodToken(value)) {
-    return null;
-  }
-  const schoolYear = /^LA((?:19|20)\d{2})$/.exec(value);
-  if (schoolYear) {
-    return {
-      from: `${schoolYear[1]}-07-01`,
-      to: `${Number(schoolYear[1]) + 1}-06-30`,
-    };
-  }
-  const term = /^([HV]T)((?:19|20)\d{2})$/.exec(value);
-  if (term) {
-    const [mmddFrom, mmddTo] = TERM_BOUNDS[term[1]];
-    return { from: `${term[2]}-${mmddFrom}`, to: `${term[2]}-${mmddTo}` };
-  }
-  const quarterHalf = /^((?:19|20)\d{2})-([QH][1-4])$/.exec(value);
-  if (quarterHalf) {
-    const [mmddFrom, mmddTo] = TERM_BOUNDS[quarterHalf[2]];
-    return {
-      from: `${quarterHalf[1]}-${mmddFrom}`,
-      to: `${quarterHalf[1]}-${mmddTo}`,
-    };
-  }
-  const month = /^((?:19|20)\d{2})-(\d{2})$/.exec(value);
-  if (month) {
-    const y = Number(month[1]);
-    const m = Number(month[2]);
-    return {
-      from: `${month[1]}-${month[2]}-01`,
-      to: `${month[1]}-${month[2]}-${lastDayOfMonth(y, m)}`,
-    };
-  }
-  if (FULL_DATE_RE.test(value)) {
-    return { from: value, to: value };
-  }
-  // A bare year (the only remaining single-token form).
-  return { from: `${value}-01-01`, to: `${value}-12-31` };
-}
-
-/** Render an inclusive ISO interval `[lo, hi]` as the COARSEST period token that
- * `periodTokenBounds` expands back to EXACTLY `(lo, hi)` — the display/diagnostic
- * inverse, mirroring reg-core's `period_token_for_bounds` (#271). A window that no
- * single token covers exactly renders as the explicit `"lo..hi"` range, NEVER
- * rounded to a containing year: two sub-annual sibling spans both reading "2009"
- * would re-create the very ambiguity the interval resolver removes. Month windows
- * use the same `lastDayOfMonth` end as the forward expansion so the two directions
- * stay agreed. Tie-break: VT/HT share bounds with `YYYY-H1`/`-H2`; the term form
- * wins (these windows come from SCB's term registers, and the curated grammar
- * prefers the term spelling) — the `-H` forms are accepted on input but never
- * emitted here. Both `lo`/`hi` must be full ISO `YYYY-MM-DD` (the catalog states'
- * bounds are); a non-ISO/sentinel bound is the caller's concern. */
-export function periodTokenForBounds(lo: string, hi: string): string {
-  const year = lo.slice(0, 4);
-  const loMonth = lo.slice(5, 7);
-  const schoolYear = `LA${year}`;
-  const schoolYearBounds = periodTokenBounds(schoolYear);
-  if (schoolYearBounds?.from === lo && schoolYearBounds.to === hi) {
-    return schoolYear;
-  }
-  if (hi.slice(0, 4) === year) {
-    if (lo === `${year}-01-01` && hi === `${year}-12-31`) {
-      return year;
-    }
-    if (lo === `${year}-${loMonth}-01`) {
-      if (loMonth === "01" && hi === `${year}-06-30`) {
-        return `VT${year}`;
-      }
-      if (loMonth === "07" && hi === `${year}-12-31`) {
-        return `HT${year}`;
-      }
-      // Quarter: lo is the quarter's first month, hi the quarter's last day.
-      for (const q of ["1", "2", "3", "4"] as const) {
-        const bounds = periodTokenBounds(`${year}-Q${q}`);
-        if (bounds && bounds.from === lo && bounds.to === hi) {
-          return `${year}-Q${q}`;
-        }
-      }
-      // Single month: lo on the 1st, hi on the month's last day.
-      const yNum = Number(year);
-      const mNum = Number(loMonth);
-      if (
-        Number.isFinite(yNum) &&
-        Number.isFinite(mNum) &&
-        hi === `${year}-${loMonth}-${lastDayOfMonth(yNum, mNum)}`
-      ) {
-        return `${year}-${loMonth}`;
-      }
-    }
-  }
-  // A single day, or any window no coarser token covers exactly → the explicit
-  // range (a single day collapses to the bare day token).
-  if (lo === hi && isPeriodToken(lo)) {
-    return lo;
-  }
-  return `${lo}..${hi}`;
-}
-
-/** The OUTER inclusive ISO date bounds of a whole wire `?period` — a single token,
- * a `lo..hi` range, or a comma-union LIST (the #307 interrupted form) — at its REAL
- * grain (NOT year-collapsed), or `null` when ANY part fails to parse to a bound
- * (`_default`, junk, OR a partially-invalid wire like `2018,junk` — a single bad
- * segment poisons the whole wire so a partial clamp can't silently invent a valid
- * source period from the good fragments). The union of every part's bounds:
- * `from` = earliest part start, `to` = latest part end. Used to intersect a
- * picker row's span with the active period on
- * Add so a SUB-ANNUAL `?period` (`2020-Q1`) commits at its true grain instead of
- * widening to the outer year (#678 finding). ADVISORY mirror of the wire grammar —
- * the backend stays the canonical period authority. */
-export function periodWireBounds(wire: string): PeriodBounds | null {
-  let from: string | null = null;
-  let to: string | null = null;
-  for (const part of wire.split(LIST_SEP)) {
-    const endpoints = periodRangeEndpoints(part) ?? [part.trim(), part.trim()];
-    const loBounds = periodTokenBounds(endpoints[0]);
-    const hiBounds = periodTokenBounds(endpoints[1]);
-    // ALL-or-nothing: a single unparseable segment (`2018,junk`,
-    // `2010..junk,2015..2020`) makes the WHOLE wire ambiguous. Returning the
-    // valid fragments' clamp would silently turn an invalid user period into a
-    // DIFFERENT valid source period on Add, so refuse the whole wire instead —
-    // the caller falls back to its safe default (the row's own span / window).
-    if (!loBounds || !hiBounds) {
-      return null;
-    }
-    if (from === null || loBounds.from < from) {
-      from = loBounds.from;
-    }
-    if (to === null || hiBounds.to > to) {
-      to = hiBounds.to;
-    }
-  }
-  return from !== null && to !== null ? { from, to } : null;
-}
-
-/** Split a wire period into its two RANGE endpoints (`"2010..2020"` →
- * `["2010", "2020"]`), or `null` when it isn't a 2-endpoint range. */
-export function periodRangeEndpoints(wire: string): [string, string] | null {
-  if (!wire.includes(RANGE_SEP)) {
-    return null;
-  }
-  const parts = wire.split(RANGE_SEP);
-  return parts.length === 2 ? [parts[0].trim(), parts[1].trim()] : null;
-}
-
-/** Convert a structured `Source.period` (int | token-string | {from,to} |
- * segment list) into the wire `?period` string (a bare year, a `from..to`
- * range, a token, or — for the #307 list form — the comma-joined member wires,
- * `2005..2010,2015..2020`). Returns `null` when the period can't form a
- * resolvable query (blank / malformed / a list with a malformed member) — the
- * picker then can't derive-on-pick and shows its "set the period" hint. The ONE
- * wire for display, round-trip, AND resolve: the catalog `?period=` accepts the
- * comma form since #340 (per-segment resolve, state_id-deduped union). ADVISORY
- * shaping only; the backend is the canonical period validator. */
-export function periodToWire(period: ProjectSourcePeriod): string | null {
-  if (Array.isArray(period)) {
-    if (period.length === 0) {
-      return null;
-    }
-    const members = period.map((segment) => periodToWire(segment));
-    return members.some((m) => m === null || m.includes(LIST_SEP))
-      ? null
-      : members.join(LIST_SEP);
-  }
-  if (typeof period === "number") {
-    return String(period);
-  }
-  if (typeof period === "string") {
-    const trimmed = period.trim();
-    return trimmed === "" ? null : trimmed;
-  }
-  if (
-    period != null &&
-    typeof period === "object" &&
-    "from" in period &&
-    "to" in period
-  ) {
-    const from = String(period.from).trim();
-    const to = String(period.to).trim();
-    return from === "" || to === "" ? null : `${from}${RANGE_SEP}${to}`;
-  }
-  return null;
-}
-
-/** The INVERSE of `periodToWire`: shape a wire `?period` string (as the catalog
- * page's PeriodPicker holds it) into a structured `Source.period` (C1 —
- * catalog→project handoff period prefill). The mapping picks the narrowest
- * `Source.period` shape that round-trips the wire:
- *   - a bare integer year (`"2018"`) → the `number` arm (from=to);
- *   - ANY 2-endpoint `from..to` range → the `{from, to}` object, each endpoint
- *     an integer year when it parses as one, else the token string verbatim
- *     (`"VT1992..2009"` → `{from: "VT1992", to: 2009}`). The OBJECT form is the
- *     only range shape `Source.period` accepts — reg-core's string arm is
- *     single-token-only, so a raw `"a..b"` string period would fail
- *     `invalid_period` (bit the #306 succession auto-split, whose clipped
- *     segments routinely carry date/token endpoints);
- *   - a comma-joined LIST wire (`"2005..2010,2015..2020"`, the #307
- *     interrupted-series form) → an array of segments, each member shaped by
- *     the same scalar rules (a blank member rides through as the raw string);
- *   - anything else — a non-year token (`"HT2018"`, `"2019-03"`) or a malformed
- *     multi-`..` string — rides through as the raw single-token string.
- * A null/blank wire string yields `""` (the fresh-source unset period: PR B's
- * unresolved marker + amber hint then guide the user). ADVISORY shaping only — the
- * backend is the canonical period validator. */
-export function periodFromWire(wire: string | null): ProjectSourcePeriod {
-  const value = (wire ?? "").trim();
-  if (value === "") {
-    return "";
-  }
-  if (value.includes(LIST_SEP)) {
-    // #307 list wire (`2005..2010,2015..2020`) → a segment array, each member
-    // shaped like a scalar wire. A blank member means malformed list text —
-    // ride through as the raw string (the server's invalid_period is the
-    // authority, exactly like any other junk token).
-    const members = value.split(LIST_SEP).map((m) => m.trim());
-    if (members.some((m) => m === "")) {
-      return value;
-    }
-    return members.map((m) => segmentFromWire(m));
-  }
-  return segmentFromWire(value);
-}
-
-/** One scalar wire member → its structured segment shape (the pre-#307
- * `periodFromWire` body). */
-function segmentFromWire(value: string): ProjectPeriodSegment {
-  if (value.includes(RANGE_SEP)) {
-    const parts = value.split(RANGE_SEP);
-    if (parts.length === 2) {
-      // ALWAYS the {from, to} object for a 2-endpoint range: int-year endpoints
-      // where they parse, token strings otherwise. Never the raw "a..b" string —
-      // reg-core's string arm is single-token-only, so a raw range string
-      // (scalar OR #307 list member) would fail `invalid_period`.
-      return {
-        from: grammarYear(parts[0]) ?? parts[0].trim(),
-        to: grammarYear(parts[1]) ?? parts[1].trim(),
-      };
-    }
-    return value;
-  }
-  const year = grammarYear(value);
-  // A bare integer year → the single-year `number` arm (from=to in the editor).
-  return year !== null ? year : value;
-}
-
-// ── Period merge (#992 find-or-create by variant) ────────────────────────────
-// Under the #991 data-order model a source is keyed by `register_variant` ALONE
-// (not `(variant, period)`), so a second add of the same variant with a DISJOINT
-// window EXTENDS the source's period into the #307 interrupted-series list form
-// rather than minting a duplicate source. This is pure year-grammar arithmetic;
-// the token/sub-annual grammars are NOT coalesceable here (a mixed-grain sort is
-// undefined — the documented footgun), so a period touching any of those is
-// REPLACED wholesale by the incoming window instead.
-
-/** One year endpoint as an int, accepting BOTH a year `number` and a
- * numeric-string grammar year (`"2020"` → 2020 — the structural grammar +
- * `periodToWire` accept string year endpoints, so `Source.period` validly carries
- * them). A NON-year token string (`"HT2020"`, `"2020-Q3"`) → null.
- * `grammarYear` bounds the string arm to 19xx/20xx so a typo like `"202"` stays
- * disqualifying. */
-function yearEndpointInt(value: number | string): number | null {
-  if (typeof value === "number") {
-    return Number.isInteger(value) ? value : null;
-  }
-  return grammarYear(value);
-}
-
-/** One year interval `[lo, hi]` (inclusive, ascending) a year-only period
- * segment denotes — or `null` when the segment is NOT pure year grammar (a
- * non-year token string, or a range with a non-year endpoint). A bare year
- * int/string → `[y, y]`; a `{from, to}` of two grammar years (int OR
- * numeric-string) → that span. A numeric-string year (`"2020"`) parses like the
- * int form (both are valid `Source.period` year shapes); anything not a
- * 19xx/20xx year disqualifies. */
-function yearIntervalOf(
-  segment: ProjectPeriodSegment,
-): [number, number] | null {
-  if (typeof segment === "number" || typeof segment === "string") {
-    const y = yearEndpointInt(segment);
-    return y === null ? null : [y, y];
-  }
-  if (segment == null || typeof segment !== "object") {
-    return null;
-  }
-  const from = yearEndpointInt(segment.from);
-  const to = yearEndpointInt(segment.to);
-  if (from === null || to === null || from > to) {
-    return null;
-  }
-  return [from, to];
-}
-
-/** The year intervals of a whole period, or `null` when ANY segment is not pure
- * year grammar (so the caller falls back to REPLACE — a single token poisons the
- * coalesce, same all-or-nothing rule as `periodWireBounds`). */
-function yearIntervalsOf(
-  period: ProjectSourcePeriod,
-): [number, number][] | null {
-  const segments = Array.isArray(period) ? period : [period];
-  const intervals: [number, number][] = [];
-  for (const seg of segments) {
-    const interval = yearIntervalOf(seg);
-    if (interval === null) {
-      return null;
-    }
-    intervals.push(interval);
-  }
-  return intervals;
-}
-
-function coalesceYearIntervals(
-  intervals: [number, number][],
-): [number, number][] {
-  const sorted = intervals
-    .map(([lo, hi]): [number, number] => [lo, hi])
-    .sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  const merged: [number, number][] = [];
-  for (const [lo, hi] of sorted) {
-    const open = merged.at(-1);
-    // Adjacency-merge: overlapping OR touching (a gap of 0 years — `2010..2011`
-    // then `2012..2013` fuse) collapse; a real gap (`lo > open.hi + 1`) splits.
-    if (open && lo <= open[1] + 1) {
-      if (hi > open[1]) {
-        open[1] = hi;
-      }
-    } else {
-      merged.push([lo, hi]);
-    }
-  }
-  return merged;
-}
-
-/** The year intervals of a whole `Source.period` when every segment is
- * year-shaped, coalesced and sorted. Token periods (`HT2020`, `2020-Q3`) are
- * intentionally skipped rather than guessed. */
-export function periodYearIntervals(
-  period: ProjectSourcePeriod,
-): ProjectStudyWindow[] | null {
-  const intervals = yearIntervalsOf(period);
-  if (intervals === null || intervals.length === 0) {
-    return null;
-  }
-  return coalesceYearIntervals(intervals).map(([from, to]) => ({ from, to }));
-}
-
-/** One inclusive year interval → its structured segment: a point year (`lo === hi`)
- * collapses to the bare `number` arm, else the `{from, to}` range object (the only
- * range shape `Source.period` accepts — see `segmentFromWire`). */
-function yearIntervalToSegment([lo, hi]: [
-  number,
-  number,
-]): ProjectPeriodSegment {
-  return lo === hi ? lo : { from: lo, to: hi };
+function sameIntervals(a: readonly Interval[], b: readonly Interval[]) {
+  return JSON.stringify(a) === JSON.stringify(b);
 }
 
 /** Whether a period is the UNSET/empty value — the fresh-source no-period marker
- * (`""`, what `periodFromWire(null)` yields) or an empty segment list (`[]`). Blank
- * `{from,to}` endpoints ride the string/number arms, so this only tests the two
- * true "no period" shapes; a set period with a blank endpoint is malformed, not
- * unset, and is left to the caller's grammar handling. */
+ * (`""`, what `sourcePeriodFromWire(null)` yields) or an empty segment list
+ * (`[]`). Blank `{from,to}` endpoints ride the string/number arms, so this only
+ * tests the two true "no period" shapes. */
 function isEmptyPeriod(period: ProjectSourcePeriod): boolean {
   if (Array.isArray(period)) {
     return period.length === 0;
   }
   return typeof period === "string" && period.trim() === "";
-}
-
-/**
- * Merge an `incoming` window into an `existing` source period (#992). When BOTH
- * are pure year grammar (year ints / year ranges, no tokens), coalesce their
- * intervals into a single sorted-ascending, non-overlapping, adjacency-merged
- * list (reg-core requires list periods sorted + disjoint) — a lone surviving
- * interval collapses to a scalar, matching how `periodFromWire` represents a
- * single segment. When EITHER side uses token grammar, a coalesce is undefined
- * (mixed-grain sort), so REPLACE with `incoming` — the user's most recent
- * explicit window wins. Pure — unit-tested in `period.test.ts`.
- */
-export function mergePeriods(
-  existing: ProjectSourcePeriod,
-  incoming: ProjectSourcePeriod,
-): ProjectSourcePeriod {
-  // An UNSET incoming period must not wipe a valid existing one (a catalog row with
-  // no finite `resolvedPeriod` → `periodFromWire(null)` = ""), and a blank existing
-  // period adopts a set incoming one (a fresh/blank source takes the add's window).
-  // Precede the year-grammar coalesce: "" is a non-year string that would otherwise
-  // fall to the REPLACE arm and blank a valid period, invalidating every binding.
-  if (isEmptyPeriod(incoming)) {
-    return existing;
-  }
-  if (isEmptyPeriod(existing)) {
-    return incoming;
-  }
-  const existingYears = yearIntervalsOf(existing);
-  const incomingYears = yearIntervalsOf(incoming);
-  if (existingYears === null || incomingYears === null) {
-    return incoming;
-  }
-  const merged = coalesceYearIntervals([...existingYears, ...incomingYears]);
-  const segments = merged.map(yearIntervalToSegment);
-  return segments.length === 1 ? segments[0] : segments;
 }
 
 /** Two of a Y-101 period-row list's segments that SHARE a year, by their original
@@ -607,15 +98,12 @@ export interface PeriodRowOverlap {
 /**
  * Normalise a Y-101 source-period ROW LIST — one already year-valid window per
  * row (see `resolveYearEntry`), in the order the researcher entered them — into
- * the `Period` `mergePeriods` would write for that same set: sorted ascending,
- * a touching pair collapsed exactly as `mergePeriods` collapses one, a lone
- * survivor a scalar rather than a one-element list. Two windows that actually
- * SHARE a year return their row indices instead: unlike `mergePeriods`'
- * existing+incoming merge (where the newer window winning a real overlap is the
- * point), two rows the researcher is authoring side by side are a replace, and
- * merging across a genuine overlap would erase which row was which — so this
- * refuses rather than coalescing silently. Pure — unit-tested in
- * `period.test.ts`.
+ * the `Period` that requests the same years: sorted ascending, touching rows
+ * merged into one span, a lone survivor a scalar rather than a one-element list.
+ * Two windows that actually SHARE a year return their row indices instead: two
+ * rows the researcher is authoring side by side are a replace, and merging across
+ * a genuine overlap would erase which row was which — so this refuses rather than
+ * coalescing silently. Pure — unit-tested in `period.test.ts`.
  */
 export function normalizePeriodRows(
   windows: ProjectStudyWindow[],
@@ -630,100 +118,43 @@ export function normalizePeriodRows(
       }
     }
   }
-  const merged = coalesceYearIntervals(
-    windows.map(({ from, to }): [number, number] => [from, to]),
-  );
-  const segments = merged.map(yearIntervalToSegment);
-  return { period: segments.length === 1 ? segments[0] : segments };
+  if (windows.length === 0) {
+    return { period: [] };
+  }
+  return {
+    period: coveragePeriod(windows.flatMap((w) => datedIntervals(w) ?? [])),
+  };
 }
 
-export interface BoundedPeriodSegment {
-  wire: string;
-  bounds: PeriodBounds;
-}
-
-/** Extend source-period coverage to include both periods. This keeps
- * `mergePeriods`' token replacement contract for callers that really want
- * "latest explicit period wins", while staged source accumulation can preserve
- * every selected token/list window it resolves bindings against. */
+/** Extend a source's period to cover an incoming one as well (#992: a source is
+ * keyed by `register_variant` alone, so a second add of the same variant extends
+ * its period). The union of the days both request, through reg-core: merged
+ * (overlapping and day-adjacent days join), rendered and shaped back
+ * (`2005..2010,2015..2020`; `2019-Q1` and `2019-Q2` become `VT2019`). An add the
+ * existing period already covers leaves a non-year period as written. An unset
+ * side yields the other; when either side has no days the SPA can place
+ * (`_default`, or a period reg-core refuses) the incoming period wins — the
+ * user's most recent explicit choice. */
 export function periodCoverageUnion(
   existing: ProjectSourcePeriod,
   incoming: ProjectSourcePeriod,
 ): ProjectSourcePeriod {
-  const existingYears = yearIntervalsOf(existing);
-  const incomingYears = yearIntervalsOf(incoming);
-  if (existingYears !== null && incomingYears !== null) {
-    return mergePeriods(existing, incoming);
+  if (isEmptyPeriod(incoming)) {
+    return existing;
   }
-  return (
-    unionBoundedPeriodSegments(existing, incoming) ??
-    mergePeriods(existing, incoming)
-  );
-}
-
-/** Every segment of a `Source.period` paired with the inclusive ISO bounds it
- * denotes, or `null` when the period has no resolvable wire or ANY member fails
- * to expand (the same all-or-nothing rule as `periodWireBounds`). This is the
- * one place the wire-split/segment-bounds walk lives — `staged_picker` reuses
- * it for row-overlap tests. */
-export function boundedPeriodSegments(
-  period: ProjectSourcePeriod,
-): BoundedPeriodSegment[] | null {
-  const wire = periodToWire(period);
-  if (!wire) {
-    return null;
+  if (isEmptyPeriod(existing)) {
+    return incoming;
   }
-  const segments: BoundedPeriodSegment[] = [];
-  for (const raw of wire.split(LIST_SEP)) {
-    const member = raw.trim();
-    const bounds = periodWireBounds(member);
-    if (!member || !bounds) {
-      return null;
-    }
-    segments.push({ wire: member, bounds });
+  const have = datedIntervals(existing);
+  const add = datedIntervals(incoming);
+  if (have === null || add === null) {
+    return incoming;
   }
-  return segments.length > 0 ? segments : null;
-}
-
-function unionBoundedPeriodSegments(
-  existing: ProjectSourcePeriod,
-  incoming: ProjectSourcePeriod,
-): ProjectSourcePeriod | null {
-  const existingSegments = boundedPeriodSegments(existing);
-  const incomingSegments = boundedPeriodSegments(incoming);
-  if (!existingSegments || !incomingSegments) {
-    return null;
+  const merged = mergeIntervals([...have, ...add]);
+  if (sourcePeriodYears(existing) === null && sameIntervals(merged, have)) {
+    return existing;
   }
-  const sorted = [...existingSegments, ...incomingSegments].sort(
-    (a, b) =>
-      a.bounds.from.localeCompare(b.bounds.from) ||
-      a.bounds.to.localeCompare(b.bounds.to) ||
-      a.wire.localeCompare(b.wire),
-  );
-  const merged: BoundedPeriodSegment[] = [];
-  for (const segment of sorted) {
-    const previous = merged.at(-1);
-    if (!previous) {
-      merged.push(segment);
-      continue;
-    }
-    if (previous.bounds.to < segment.bounds.from) {
-      merged.push(segment);
-      continue;
-    }
-    if (segment.bounds.to <= previous.bounds.to) {
-      continue;
-    }
-    previous.bounds = {
-      from: previous.bounds.from,
-      to: segment.bounds.to,
-    };
-    previous.wire = periodTokenForBounds(
-      previous.bounds.from,
-      previous.bounds.to,
-    );
-  }
-  return periodFromWire(merged.map((segment) => segment.wire).join(LIST_SEP));
+  return coveragePeriod(merged);
 }
 
 // ── Query-string builder ─────────────────────────────────────────────────────
@@ -797,54 +228,34 @@ export function yearWindowToWire(window: ProjectStudyWindow): string {
 /** Seed a year-grain `{from, to}` from a wire `?period`, or null when the value
  * isn't a pure YEAR token / uniform year range (a sub-annual token, `_default`,
  * a segment list, or junk — those belong to the "more" expander, never silently
- * snapped onto the year slider). Endpoints must parse as bare grammar years. */
+ * snapped onto the year slider). Endpoints must be bare grammar years. */
 export function yearWindowFromWire(
   wire: string | null | undefined,
 ): ProjectStudyWindow | null {
-  const value = (wire ?? "").trim();
-  if (value === "") {
-    return null;
-  }
-  const endpoints = periodRangeEndpoints(value) ?? [value, value];
-  const from = grammarYear(endpoints[0]);
-  const to = grammarYear(endpoints[1]);
-  if (from === null || to === null || to < from) {
-    return null;
-  }
-  return { from, to };
+  const windows = yearSegmentsFromWire(wire);
+  return windows?.length === 1 ? windows[0] : null;
 }
 
 /** Every segment of a wire `?period` as a year window, in STORED order — the
  * Y-101 list editor's one-row-per-segment seed, generalising `yearWindowFromWire`
  * to the #307 comma list (a single segment is the one-row case). `null` when the
- * wire is blank or ANY segment is not a bare year / uniform-year range — a token
- * segment (`HT2018`) makes the WHOLE period unrepresentable by year rows, the
- * same all-or-nothing rule `periodWireBounds` uses. */
+ * wire is blank or ANY segment is not a bare year / ordered year range — a token
+ * segment (`HT2018`) makes the WHOLE period unrepresentable by year rows. Each
+ * segment is judged on its own (reg-core's year spans of that segment), so the
+ * rows keep the order and grouping they were written in. */
 export function yearSegmentsFromWire(
   wire: string | null | undefined,
 ): ProjectStudyWindow[] | null {
-  const value = (wire ?? "").trim();
-  if (value === "") {
-    return null;
+  const period = sourcePeriodFromWire(wire ?? null);
+  const windows: ProjectStudyWindow[] = [];
+  for (const segment of Array.isArray(period) ? period : [period]) {
+    const years = sourcePeriodYears(segment);
+    if (years?.length !== 1) {
+      return null;
+    }
+    windows.push({ from: years[0][0], to: years[0][1] });
   }
-  const windows = value
-    .split(LIST_SEP)
-    .map((member) => yearWindowFromWire(member));
-  return windows.every((w): w is ProjectStudyWindow => w !== null)
-    ? windows
-    : null;
-}
-
-/** Parse a string as a bare GRAMMAR year (19xx/20xx) → its int, else null. The
- * single spelling of "is this text a year the wire accepts": the wire parsing and
- * seeding here, and the PeriodPicker's exact year fields. Stricter than "any
- * integer" on purpose — an int `Source.period` passes reg-core's int-literal
- * arm unchecked, so coercing a typo like "202" to int 202 would slip a nonsense
- * year past the structural gate; left as a string, the grammar check flags it
- * (review on #308). */
-export function grammarYear(raw: string): number | null {
-  const trimmed = raw.trim();
-  return /^(?:19|20)\d{2}$/.test(trimmed) ? Number.parseInt(trimmed, 10) : null;
+  return windows;
 }
 
 /** Whether a wire `?period` is a pure year window the year slider can hold (a
@@ -1029,14 +440,15 @@ export function yearWindowLabel(window: ProjectStudyWindow): string {
 
 /** A `Source.period` as a reader sees it: each segment of the wire with its range
  * separator as an en dash, the segments comma-separated (`2005–2008, 2012–2015`).
- * Null when the period has no wire (unset / malformed). */
-export function periodLabel(period: ProjectSourcePeriod): string | null {
-  const wire = periodToWire(period);
+ * Null when the period has no wire (unset / malformed). Presentation only: the
+ * wire is reg-core's. */
+export function periodLabel(period: unknown): string | null {
+  const wire = sourcePeriodToWire(period);
   return wire === null
     ? null
     : wire
-        .split(LIST_SEP)
-        .map((segment) => segment.trim().replace(RANGE_SEP, "–"))
+        .split(",")
+        .map((segment) => segment.replace("..", "–"))
         .join(", ");
 }
 
@@ -1048,31 +460,31 @@ export function periodLabel(period: ProjectSourcePeriod): string | null {
  *   - `disjoint` — not one day of it falls inside the window.
  * Null when there is nothing to compare: no window, or a period with no dated
  * bounds (unset, malformed, or the year-independent `_default`, which no window
- * applies to). Disjointness is judged on ISO bounds (`boundedPeriodSegments`), so
- * a sub-annual period is placed at its real grain; sameness on coalesced year
- * intervals, so `2010..2014,2015..2020` is the same as `2010..2020`. */
+ * applies to, or one reg-core refuses). Disjointness is judged on the days
+ * (reg-core's intervals and overlap), so a sub-annual period is placed at its real
+ * grain; sameness on merged year spans, so `2010..2014,2015..2020` is the same as
+ * `2010..2020`. */
 export type WindowRelation = "same" | "differs" | "disjoint";
 
 export function periodWindowRelation(
-  period: ProjectSourcePeriod | null,
+  period: unknown,
   window: ProjectStudyWindow | null,
 ): WindowRelation | null {
-  if (period === null || window === null) {
+  if (period == null || window === null) {
     return null;
   }
-  const segments = boundedPeriodSegments(period);
-  if (segments === null) {
+  const days = datedIntervals(period);
+  // The window is a `{from, to}` of years: a period reg-core places as well.
+  const windowDays = datedIntervals({ from: window.from, to: window.to });
+  if (days === null || windowDays === null) {
     return null;
   }
-  const from = `${window.from}-01-01`;
-  const to = `${window.to}-12-31`;
-  if (!segments.some((s) => s.bounds.from <= to && from <= s.bounds.to)) {
+  if (overlapIntervals(days, windowDays).length === 0) {
     return "disjoint";
   }
-  const years = periodYearIntervals(period);
-  return years !== null &&
-    years.length === 1 &&
-    sameYearWindow(years[0], window)
+  const years = sourcePeriodYears(period);
+  return years?.length === 1 &&
+    sameYearWindow({ from: years[0][0], to: years[0][1] }, window)
     ? "same"
     : "differs";
 }
@@ -1082,7 +494,7 @@ export function periodWindowRelation(
 // editor carry two typed year fields and resolve them the same way; this is
 // the "is this a usable year pair" rule they both call, once.
 
-/** Any four-digit run → its int, else null. WIDER than `grammarYear` (19xx/20xx)
+/** Any four-digit run → its int, else null. WIDER than `wireYear` (19xx/20xx)
  * so a caller with its own selectable band (`YearEntryOptions.selectableYears`)
  * can tell "not a year" from "not a year we hold" — an out-of-band four-digit
  * year (`2100`) is out of RANGE, not badly typed. */
@@ -1100,7 +512,7 @@ export interface YearEntryOptions {
   /** The selectable year band an entry must ALSO fall within — the picker's
    * slider-clamped years (coverage / project window / steward bounds). Omitted
    * for a plain wire-grammar check: `SourceEditor` writes the period itself, so
-   * the wire's own 19xx/20xx rule (`grammarYear`) IS the only band it has. */
+   * the wire's own 19xx/20xx rule (`wireYear`) IS the only band it has. */
   selectableYears?: ProjectStudyWindow;
   /** The clause naming the year rule in the "must be a ___" refusal, e.g.
    * `"four-digit year, like 2015."` (the picker, off the band's first year).
@@ -1118,7 +530,7 @@ export interface YearEntryOptions {
  * yet) — the caller's own "has this been touched" signal, folded in here
  * rather than gated a second time at each call site.
  *
- * Without `selectableYears`, the strict wire grammar (`grammarYear`) is both
+ * Without `selectableYears`, the strict wire grammar (`wireYear`) is both
  * the "is this a year" test and the only band. With it, a WIDER "is this even
  * a year" test (`fourDigitYear`) runs first, so a four-digit year outside the
  * band reports as out of range rather than badly typed, then a second check
@@ -1136,7 +548,7 @@ export function resolveYearEntry(
     return null;
   }
   const { selectableYears, yearRule = DEFAULT_YEAR_RULE } = opts;
-  const parseYear = selectableYears ? fourDigitYear : grammarYear;
+  const parseYear = selectableYears ? fourDigitYear : wireYear;
   const fromYear = parseYear(from);
   const toYear = parseYear(to);
   if (fromYear === null || toYear === null) {
@@ -1148,7 +560,7 @@ export function resolveYearEntry(
   }
   if (selectableYears) {
     const inBand = (raw: string, year: number) =>
-      grammarYear(raw) !== null &&
+      wireYear(raw) !== null &&
       year >= selectableYears.from &&
       year <= selectableYears.to;
     const at = { from: !inBand(from, fromYear), to: !inBand(to, toYear) };
