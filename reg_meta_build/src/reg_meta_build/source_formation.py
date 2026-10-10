@@ -429,35 +429,36 @@ def _slice_of(state: ResolvedState, source: ResolvedState) -> bool:
     )
 
 
+# The obligation claim each fact an accepted representation can dispute travels
+# on. The column texts share one claim, `column_text_claim`.
+_DISPUTED_FACT_CLAIMS = {
+    "data_type": "data_type_claim",
+    "data_length": "data_length_claim",
+    "measurement_unit": "measurement_unit_claim",
+    "coding": "coding_claim",
+}
+_DISPUTED_COLUMN_TEXTS = ("operational_definition", "source_register_text")
+
+
 def _null_conflicting_facts(
     obligations: tuple[CoverageObligation, ...],
     conflicts: tuple[tuple[str, str, str, str, str], ...],
 ) -> tuple[CoverageObligation, ...]:
     """Keep the window but drop the exact fact an accepted representation disputes.
 
-    Type, length and literal unit travel on the obligation. Partial overlaps split the obligation so the safe slice
-    stays fully checked, the same period rule waived delivery already uses.
-    A nulled fact is simply None, which the boundary guard never compares.
+    Type, length, literal unit, coding and the column texts (operational
+    definition, source attribution) travel on the obligation. Partial overlaps
+    split the obligation so the safe slice stays fully checked, the same period
+    rule waived delivery already uses. A nulled fact claim is simply None, which
+    the boundary guard never compares. A disputed column text nulls only its own
+    element of `column_text_claim`: the representation writes None for exactly
+    the disputed field, so the guard still checks the undisputed one.
     """
-    type_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
-    length_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
-    unit_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
-    coding_windows: dict[tuple[str, str], list[tuple[str, str]]] = defaultdict(list)
+    disputes: dict[tuple[str, str], list[tuple[str, str, str]]] = defaultdict(list)
     for variant, column, fact_field, start, end in conflicts:
-        if fact_field == "data_type":
-            type_windows[variant, column].append((start, end))
-        elif fact_field == "data_length":
-            length_windows[variant, column].append((start, end))
-        elif fact_field == "measurement_unit":
-            unit_windows[variant, column].append((start, end))
-        elif fact_field == "coding":
-            coding_windows[variant, column].append((start, end))
-    if (
-        not type_windows
-        and not length_windows
-        and not unit_windows
-        and not coding_windows
-    ):
+        if fact_field in _DISPUTED_FACT_CLAIMS or fact_field in _DISPUTED_COLUMN_TEXTS:
+            disputes[variant, column].append((fact_field, start, end))
+    if not disputes:
         return obligations
     result: list[CoverageObligation] = []
     for claim in obligations:
@@ -465,77 +466,51 @@ def _null_conflicting_facts(
             result.append(claim)
             continue
         assert claim.valid_from is not None and claim.valid_to is not None
-        key = (claim.variant, claim.column)
-        claimed_types = [
-            window
-            for window in type_windows.get(key, ())
-            if window[0] <= claim.valid_to and window[1] >= claim.valid_from
+        claimed = [
+            (fact_field, start, end)
+            for fact_field, start, end in disputes.get(
+                (claim.variant, claim.column), ()
+            )
+            if start <= claim.valid_to and end >= claim.valid_from
         ]
-        claimed_lengths = [
-            window
-            for window in length_windows.get(key, ())
-            if window[0] <= claim.valid_to and window[1] >= claim.valid_from
-        ]
-        claimed_units = [
-            window
-            for window in unit_windows.get(key, ())
-            if window[0] <= claim.valid_to and window[1] >= claim.valid_from
-        ]
-        claimed_coding = [
-            window
-            for window in coding_windows.get(key, ())
-            if window[0] <= claim.valid_to and window[1] >= claim.valid_from
-        ]
-        if (
-            not claimed_types
-            and not claimed_lengths
-            and not claimed_units
-            and not claimed_coding
-        ):
+        if not claimed:
             result.append(claim)
             continue
         cuts = {
             date.fromisoformat(claim.valid_from).toordinal(),
             date.fromisoformat(claim.valid_to).toordinal() + 1,
         }
-        for start, end in (
-            *claimed_types,
-            *claimed_lengths,
-            *claimed_units,
-            *claimed_coding,
-        ):
+        for _, start, end in claimed:
             lower = max(start, claim.valid_from)
             upper = min(end, claim.valid_to)
             cuts.add(date.fromisoformat(lower).toordinal())
             cuts.add(date.fromisoformat(upper).toordinal() + 1)
-        ordered = sorted(cuts)
-        for lo, hi in pairwise(ordered):
+        for lo, hi in pairwise(sorted(cuts)):
             piece_from = date.fromordinal(lo).isoformat()
             piece_to = date.fromordinal(hi - 1).isoformat()
-            null_type = any(
-                start <= piece_from and end >= piece_to for start, end in claimed_types
-            )
-            null_length = any(
-                start <= piece_from and end >= piece_to
-                for start, end in claimed_lengths
-            )
-            null_unit = any(
-                start <= piece_from and end >= piece_to for start, end in claimed_units
-            )
-            null_coding = any(
-                start <= piece_from and end >= piece_to for start, end in claimed_coding
-            )
+            nulled = {
+                fact_field
+                for fact_field, start, end in claimed
+                if start <= piece_from and end >= piece_to
+            }
+            texts = claim.column_text_claim
+            if texts is not None:
+                operational, attribution = texts
+                texts = (
+                    None if "operational_definition" in nulled else operational,
+                    None if "source_register_text" in nulled else attribution,
+                )
             result.append(
                 replace(
                     claim,
                     valid_from=piece_from,
                     valid_to=piece_to,
-                    data_type_claim=None if null_type else claim.data_type_claim,
-                    data_length_claim=None if null_length else claim.data_length_claim,
-                    measurement_unit_claim=None
-                    if null_unit
-                    else claim.measurement_unit_claim,
-                    coding_claim=None if null_coding else claim.coding_claim,
+                    column_text_claim=texts,
+                    **{
+                        claim_field: None
+                        for fact_field, claim_field in _DISPUTED_FACT_CLAIMS.items()
+                        if fact_field in nulled
+                    },
                 )
             )
     return tuple(result)

@@ -3,10 +3,12 @@
     {
       "table": "issues",
       "fields": ["code", "subject", "valid_from", "valid_to"],
-      "note": "Every issue of the build. MIXED and PARTIAL withhold exactly their conflicting overlap; MISSING's 2022 lacks Second, which the omission (its own period, 2022-2024) took away; the untyped column is the only unknown type. No unexplained_delivery_* issue: every withheld or sibling-assigned window is explained, the old allowed check_delivery_coverage calls.",
+      "note": "Every issue of the build. MIXED and PARTIAL withhold exactly their conflicting overlap; MISSING's 2022 lacks Second, which the omission (its own period, 2022-2024) took away; the untyped column is the only unknown type; SIBLING's 2022 is the one disputed shared slice, once per disputed text (the fields below). No unexplained_delivery_* issue: every withheld or sibling-assigned window is explained, the old allowed check_delivery_coverage calls, and a text fact the shared state nulls is explained by its conflicting_representation_fact, not reported again as a delivery fact change.",
       "rows": [
         ["conflicting_representation_decisions", "scb/mixed/income", "2022-01-01", "2022-12-31"],
         ["conflicting_representation_decisions", "scb/partial/income", "2022-07-01", "2022-12-31"],
+        ["conflicting_representation_fact", "scb/sibling/income", "2022-01-01", "2022-12-31"],
+        ["conflicting_representation_fact", "scb/sibling/income", "2022-01-01", "2022-12-31"],
         ["conflicting_variable_fact", "scb/sibling/income", null, null],
         ["curated_state_omission", "scb/missing/income", "2022-01-01", "2024-12-31"],
         ["missing_representation_metadata", "scb/missing/income", "2022-01-01", "2022-12-31"],
@@ -77,14 +79,25 @@
       "rows": [["2022-01-01", "2022-12-31"]]
     },
     {
+      "table": "issues",
+      "where": {"subject": "scb/sibling/income"},
+      "fields": ["code", "fields", "withheld_output", "valid_from", "valid_to"],
+      "note": "The old test's diagnostics: the definitions conflict at the variable level, and Second's operational definition (First's is blank) disputes the shared 2022 state's, which alone loses it. Second's source attribution against First's blank is the same dispute on the other column text.",
+      "rows": [
+        ["conflicting_representation_fact", ["operational_definition"], ["state.operational_definition"], "2022-01-01", "2022-12-31"],
+        ["conflicting_representation_fact", ["source_register_text"], ["state.source_register_text"], "2022-01-01", "2022-12-31"],
+        ["conflicting_variable_fact", ["definition"], ["variable.definition"], null, null]
+      ]
+    },
+    {
       "table": "states",
       "where": {"register": "sibling"},
-      "fields": ["valid_from", "definition"],
-      "note": "The shared state takes neither sibling's definition; each original outside 2022 keeps its own.",
+      "fields": ["valid_from", "definition", "operational_definition", "source_register_text"],
+      "note": "The shared state takes neither sibling's definition, operational definition or source attribution; each original outside 2022 keeps its own (First's blank texts stay null).",
       "rows": [
-        ["2020-01-01", "A generic family label"],
-        ["2022-01-01", null],
-        ["2023-01-01", "Different definition"]
+        ["2020-01-01", "A generic family label", null, null],
+        ["2022-01-01", null, null, null],
+        ["2023-01-01", "Different definition", "Different interpretation", "Second questionnaire"]
       ]
     },
     {
