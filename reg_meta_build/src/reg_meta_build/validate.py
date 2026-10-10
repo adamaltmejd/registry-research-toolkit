@@ -62,8 +62,8 @@ from reg_meta_build._resolved_common import (
     remaining_windows,
 )
 from reg_meta_build.artifact_identity import search_pins_sha256
-from reg_meta_build.data_warnings import BUILD_ONLY_CODES, stored_data_warnings
-from reg_meta_build.db import _VALID_TO_SENTINEL
+from reg_meta_build.data_warnings import BUILD_ONLY_CODES
+from reg_meta_build.db import _VALID_TO_SENTINEL, stored_data_warnings
 from reg_meta_build.derive.browse import check_browse
 from reg_meta_build.derive.chains import CHAIN_TABLES, check_chains
 from reg_meta_build.derive.schema import check_coded
@@ -78,6 +78,7 @@ from reg_meta_build.relations import (
     _REPLACED_BY_NOTE_VINTAGE_LIFT,
     _variable_vintage_stream_key,
 )
+from reg_meta_build.resolved_catalog import column_state_overlap_failure
 
 from .db import classification_succession_as_of_year, open_db
 from .errors import RegMetaError
@@ -629,34 +630,9 @@ def _check_var_year_codes_anchor(
         result.ok(f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} excludes 00/05")
 
 
-# The per-column window checks below, by diagnostic code. Formation reports the
-# same failure before write (`resolved_catalog.column_state_overlaps`).
-_COLUMN_STATE_OVERLAPS = {
-    "overlapping_distinct_value_sets": (
-        "overlapping distinct-value_set state pair(s)",
-        "a period resolves to >1 value set",
-    ),
-    "overlapping_codeless_codebearing_states": (
-        "code-less ↔ code-bearing overlapping state pair(s)",
-        "a code-less window overlaps a code-bearing window",
-    ),
-    "overlapping_pooled_explicit_states": (
-        "pooled ↔ explicit overlapping state pair(s)",
-        "a pooled window overlaps an explicit window",
-    ),
-}
-
-
-def column_state_overlap_failure(
-    code: str, pairs: int, columns: int, sample: str
-) -> str:
-    what, why = _COLUMN_STATE_OVERLAPS[code]
-    return (
-        f"{pairs} {what} on one column across {columns} (variable, column) — "
-        f"{why}: {sample}"
-    )
-
-
+# The per-column window checks below, by diagnostic code, word their failures with
+# `resolved_catalog.column_state_overlap_failure`; formation reports the same
+# failure before write (`resolved_catalog.column_state_overlaps`).
 def _check_one_value_set_per_period(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:

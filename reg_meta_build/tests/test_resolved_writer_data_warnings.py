@@ -15,9 +15,7 @@ import pytest
 from _resolved_catalog_support import resolved_variable as _variable
 from catalog_manifest import synthetic_manifest
 from pydantic import ValidationError
-from reg_meta_build.resolved_catalog import (
-    write_resolved_catalog,
-)
+from reg_meta_build.materialize import write_resolved_catalog
 
 if TYPE_CHECKING:
     from pathlib import Path

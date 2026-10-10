@@ -52,6 +52,7 @@ from reg_meta_build.data_warnings import (
     scope_data_warnings,
 )
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
+from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
@@ -62,7 +63,6 @@ from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
     ResolvedVariant,
-    write_resolved_catalog,
 )
 from reg_meta_build.resolved_metadata import (
     ResolvedMetadata,

@@ -14,7 +14,8 @@ from reg_meta_build.cli import run
 from reg_meta_build.derive import derive_holdings
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.holdings_compile import compile_holdings
-from reg_meta_build.resolved_catalog import ResolvedVariable, write_resolved_catalog
+from reg_meta_build.materialize import write_resolved_catalog
+from reg_meta_build.resolved_catalog import ResolvedVariable
 from reg_meta_build.validate import validate_built_db
 
 from reg_meta_build.fqid_slugs import populate_variable_slugs

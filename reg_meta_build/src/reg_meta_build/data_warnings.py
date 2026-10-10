@@ -12,8 +12,6 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
-    TypeAdapter,
-    ValidationError,
     model_validator,
 )
 from reg_core_py import parse_fqid
@@ -25,7 +23,6 @@ from .slug_grammar import validate_slug
 from .source_evidence import SourceRecordRef, canonical_sha256
 
 if TYPE_CHECKING:
-    import sqlite3
     from collections.abc import Mapping
 
     from reg_meta_build.resolved_catalog import ResolvedRegister
@@ -512,159 +509,3 @@ def scope_data_warnings(
         )
         warnings[warning.warning_id] = warning
     return tuple(warnings[k] for k in sorted(warnings))
-
-
-class _Evidence(_CatalogModel):
-    """A `data_warning` row's `evidence_json`: exactly the warning fields without a
-    column, so stored evidence can never stand in for a column-owned field."""
-
-    diagnostic_detail_sha256: str
-    fields: tuple[str, ...]
-    refs: tuple[SourceRecordRef, ...]
-    withheld_output: tuple[str, ...]
-    acknowledged_by: str | None
-    case_id: str | None
-
-
-def write_data_warnings(
-    conn: sqlite3.Connection, data_warnings: tuple[DataWarning, ...]
-) -> None:
-    """Write user-facing warnings at the actual named database IDs, clustered by
-    (register, variable). A warning naming an unwritten register, variable or
-    variant is a builder defect: every build warning names what the build forms."""
-    warnings = TypeAdapter(tuple[DataWarning, ...]).validate_python(
-        data_warnings, strict=True
-    )
-    if not warnings:
-        return
-    registers = {
-        f"{provider}/{register}": register_id
-        for provider, register, register_id in conn.execute(
-            "SELECT p.slug, r.slug, r.register_id FROM register r "
-            "JOIN provider p USING(provider_id)"
-        )
-    }
-    variables = {
-        (register_id, slug): variable_id
-        for register_id, slug, variable_id in conn.execute(
-            "SELECT register_id, slug, variable_id FROM variable"
-        )
-    }
-    variants = {
-        (register_id, slug): variant_id
-        for register_id, slug, variant_id in conn.execute(
-            "SELECT register_id, slug, register_variant_id FROM register_variant"
-        )
-    }
-    # Text ids start at 1: one call per build writes the whole (empty) table.
-    texts = {
-        text: text_id
-        for text_id, text in enumerate(
-            sorted({t for w in warnings for t in (w.summary, w.detail)}), 1
-        )
-    }
-    conn.executemany(
-        "INSERT INTO data_warning_text VALUES (?, ?)",
-        ((text_id, text) for text, text_id in texts.items()),
-    )
-    rows = []
-    for warning in warnings:
-        register_id = registers[warning.register_fqid]
-        variable_id = (
-            variables[register_id, parse_fqid(warning.variable_fqid).variable]
-            if warning.variable_fqid is not None
-            else None
-        )
-        variant_id = (
-            variants[register_id, warning.variant]
-            if warning.variant is not None
-            else None
-        )
-        rows.append(
-            (
-                bytes.fromhex(warning.warning_id),
-                register_id,
-                variable_id,
-                variant_id,
-                warning.delivery_column_name,
-                warning.valid_from,
-                warning.valid_to,
-                warning.code,
-                warning.severity,
-                texts[warning.summary],
-                texts[warning.detail],
-                json.dumps(
-                    warning.model_dump(
-                        mode="json", include=set(_Evidence.model_fields)
-                    ),
-                    ensure_ascii=False,
-                    sort_keys=True,
-                    separators=(",", ":"),
-                ),
-            )
-        )
-    # Insertion order is physical order: a register's and a variable's warnings
-    # share pages (#1296 item 2c).
-    rows.sort(key=lambda r: (r[1], r[2] is not None, r[2] or 0, r[0]))
-    conn.executemany(
-        "INSERT INTO data_warning VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", rows
-    )
-
-
-def stored_data_warnings(conn: sqlite3.Connection) -> list[DataWarning]:
-    """Every stored warning, reconstructed from its columns; validating each one
-    re-derives `warning_id` from the reconstructed content. A row whose evidence or
-    content is invalid raises `ValueError` naming its `warning_id`."""
-    warnings = []
-    for (
-        warning_id,
-        register_fqid,
-        variable,
-        variant,
-        column,
-        valid_from,
-        valid_to,
-        code,
-        severity,
-        summary,
-        detail,
-        evidence,
-    ) in conn.execute(
-        "SELECT lower(hex(w.warning_id)), p.slug || '/' || r.slug, v.slug, "
-        "rv.slug, w.delivery_column_name, w.valid_from, w.valid_to, w.code, "
-        "w.severity, st.text, dt.text, w.evidence_json FROM data_warning w "
-        "JOIN register r USING(register_id) JOIN provider p USING(provider_id) "
-        "LEFT JOIN variable v ON v.variable_id = w.variable_id "
-        "LEFT JOIN register_variant rv "
-        "ON rv.register_variant_id = w.register_variant_id "
-        "JOIN data_warning_text st ON st.text_id = w.summary_id "
-        "JOIN data_warning_text dt ON dt.text_id = w.detail_id "
-        "ORDER BY w.rowid"
-    ):
-        try:
-            stored = _Evidence.model_validate_json(evidence)
-            warnings.append(
-                DataWarning.model_validate_json(
-                    json.dumps(
-                        {
-                            **stored.model_dump(mode="json"),
-                            "warning_id": warning_id,
-                            "register_fqid": register_fqid,
-                            "variable_fqid": f"{register_fqid}/{variable}"
-                            if variable is not None
-                            else None,
-                            "variant": variant,
-                            "delivery_column_name": column,
-                            "valid_from": valid_from,
-                            "valid_to": valid_to,
-                            "code": code,
-                            "severity": severity,
-                            "summary": summary,
-                            "detail": detail,
-                        }
-                    )
-                )
-            )
-        except ValidationError as exc:
-            raise ValueError(f"data_warning {warning_id}: {exc}") from exc
-    return warnings

@@ -202,7 +202,8 @@ def build_catalog_fixture_db(db_path: Path) -> None:
 def _seed_data_warnings(conn: sqlite3.Connection) -> None:
     from hashlib import sha256
 
-    from reg_meta_build.data_warnings import DataWarning, write_data_warnings
+    from reg_meta_build.data_warnings import DataWarning
+    from reg_meta_build.db import write_data_warnings
     from reg_meta_build.source_evidence import canonical_sha256
 
     # The fixture variant's literal slug is read rather than assumed.

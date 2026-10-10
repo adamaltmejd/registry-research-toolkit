@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from catalog_manifest import synthetic_manifest
+from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedClassification,
@@ -13,7 +14,6 @@ from reg_meta_build.resolved_catalog import (
     ResolvedState,
     ResolvedVariable,
     ResolvedVariant,
-    write_resolved_catalog,
 )
 from reg_meta_build.resolved_metadata import (
     ResolvedClassificationDerivation,

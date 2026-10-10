@@ -17,6 +17,7 @@ from typing import TYPE_CHECKING
 
 from catalog_manifest import synthetic_manifest
 from reg_core_py import fold_search
+from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationCode,
@@ -25,7 +26,6 @@ from reg_meta_build.resolved_catalog import (
     ResolvedState,
     ResolvedVariable,
     ResolvedVariant,
-    write_resolved_catalog,
 )
 
 if TYPE_CHECKING:
