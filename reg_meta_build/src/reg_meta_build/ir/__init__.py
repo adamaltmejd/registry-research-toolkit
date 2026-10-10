@@ -76,7 +76,7 @@ class IRVariant(_IRBase):
 
 
 class IRVariable(_IRBase):
-    # IRVariable is register-scoped (see reg_meta/DESIGN.md → Two-level variable
+    # IRVariable is register-scoped (see crates/DESIGN.md → Two-level variable
     # model) — the "define once" addressable variable. The variant coordinate
     # moved DOWN to IRVariableState.register_variant_id; the A1.3-shipped
     # `variant_id` field is gone. `provider_key` (SCB str(var_id); SOS the merged

@@ -172,8 +172,6 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
     ignore = shutil.ignore_patterns("__pycache__", "target")
     for path in (
         "reg_meta_build/src",
-        "reg_meta/src",
-        "reg_schema/src",
         "crates/reg-core",
         "crates/reg-core-py",
     ):

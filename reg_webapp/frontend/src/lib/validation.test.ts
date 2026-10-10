@@ -10,10 +10,10 @@ import {
   windowCoverageHints,
 } from "./validation";
 
-// The reg_schema structural corpus: the expected issues reg_schema's own tests
-// assert, which the SPA must be able to locate (path) and name (code).
+// The structural corpus: the expected issues reg-core's own tests assert, which the
+// SPA must be able to locate (path) and name (code).
 const SCHEMA_CORPUS = import.meta.glob<{ issues: ValidationIssue[] }>(
-  "../../../../reg_schema/test_corpus/*/expected_ValidationResult.json",
+  "../../../../crates/reg-core/tests/project/corpus/*/expected_ValidationResult.json",
   { eager: true, import: "default" },
 );
 
@@ -220,7 +220,7 @@ describe("windowCoverageHints", () => {
   });
 });
 
-describe("cross-runtime contract (reg_schema corpus)", () => {
+describe("cross-runtime contract (reg-core structural corpus)", () => {
   it("parses every corpus issue's path and labels every corpus code", () => {
     const issues = Object.entries(SCHEMA_CORPUS).flatMap(([file, result]) =>
       result.issues.map((issue) => ({ file, ...issue })),

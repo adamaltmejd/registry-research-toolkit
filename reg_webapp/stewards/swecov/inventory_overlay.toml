@@ -1,6 +1,6 @@
 # SWECOV delivery-inventory curation overlay. Curation rules: reg_meta_build/DESIGN.md
-# → Holdings curation rules. Invariants: reg_meta/DESIGN.md → Holdings resolution
-# invariants.
+# → Holdings curation rules. Invariants: reg_meta_build/DESIGN.md → Holdings
+# resolution invariants.
 #
 # POLICY side of the inventory build: the holdings CSV
 # (input_data/swecov/SWECOV_variables_full_<date>.csv, untracked) is the

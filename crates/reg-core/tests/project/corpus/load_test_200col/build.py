@@ -3,16 +3,16 @@
 Writes ``input.json`` + ``expected_ValidationResult.json`` to this
 directory — ``input.json`` carries a ``project_data.json``-shaped
 payload, but the filename follows the corpus harness contract (see
-``reg_schema/test_corpus/README.md``).
+``crates/reg-core/tests/project/corpus/README.md``).
 
 A realistic-shape SCB project: LISA + LOUISE + RTB across a handful of
 years, ~25 bindings per source, and a panel linking the LISA years.
-Consumed by the structural corpus harness in
-``reg_schema/tests/test_corpus.py``, which picks it up automatically (the
-case directory carries ``input.json`` + ``expected_ValidationResult.json``)
-and pins that the fixture stays structurally valid.
+Consumed by the structural corpus harness in ``crates/reg-core/tests/project.rs``,
+which picks it up automatically and pins that the fixture stays structurally
+valid.
 
-Re-run with ``uv run python reg_schema/test_corpus/load_test_200col/build.py``
+Re-run with
+``uv run python crates/reg-core/tests/project/corpus/load_test_200col/build.py``
 after editing the binding lists; commit the regenerated JSON.
 """
 

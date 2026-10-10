@@ -4,7 +4,7 @@
 # runs G1 on the old and new pin and records any difference. Each run deletes every
 # cached artifact or baseline build that is not pinned here.
 
-# Seeds every query sample (`cases.py`, `served.py`).
+# Seeds every sample (`cases.py`, `served.py`).
 seed = 0
 
 # Named semantic exceptions: accepted differences between the baseline and the reader
@@ -17,9 +17,6 @@ seed = 0
 #   case = "*/search/*"              # fnmatch glob over `<catalog>/<scope>/<command>/<key>`,
 #                                    # or a list of them
 #   paths = ["/results"]             # JSON pointer prefixes or fnmatch globs
-#
-# The fold sweep's one exception, `baseline-ucd-unassigned`, is defined in `folds.py`:
-# its scalar set comes from the baseline interpreter's `unicodedata`.
 
 [[exception]]
 name = "derived-generation"
@@ -28,7 +25,6 @@ case = "*"
 paths = [
   "/meta/generation",
   "/data/next_cursor",
-  "/next_cursor",
   "/provenance/catalog_generation_id",
   "/provenance/catalog_schema_version",
 ]
@@ -39,9 +35,8 @@ reason = "The server's release version and the catalog's schema version are buil
 case = "*/*/context"
 paths = ["/meta/generation", "/data/reg_meta_version", "/data/schema_version"]
 
-# The pinned release: its artifacts, and its tag's code as the baseline (the Python
-# environment for the CLI arms and the fold sweep, the `reg-meta` binary for the served
-# arm), which reads the originals, so code under change never derives what it is
+# The pinned release: its artifacts, and its tag's `reg-meta` binary as the baseline,
+# which reads the originals, so code under change never derives what it is
 # compared against. `sha256` is the GitHub release asset digest (of the `.zst`), checked
 # while the asset streams into the cache.
 [release]

@@ -111,8 +111,7 @@ a clean bill of health.
 ## Shared validator corpus
 
 The structural rules are pinned as data: each case is a directory with an `input.json`
-and its `expected_ValidationResult.json`, readable without code. The corpora are
-`reg_schema/test_corpus/` (moving here with package 4.9a) and
+and its `expected_ValidationResult.json`, readable without code. The corpus is
 `crates/reg-core/tests/project/corpus/`, which also pins the Rust validator's message
 quoting. The SPA's tests import the same expected files, so a drift in the issue shape
 fails both runtimes. There are one or more cases per rule, positive and negative, each a

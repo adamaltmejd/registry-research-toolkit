@@ -39,9 +39,12 @@
 # Leading flag (before the mode), works with every mode:
 #   --fixture-db           serve a DETERMINISTIC SYNTHETIC catalog instead of the
 #                          resolved reg_meta DB: build the fixture DB pair
-#                          (backend/scripts/fixture_db.py) into a temp dir, export it as
-#                          REG_META_DB, and delete it on exit. For a container /
-#                          checkout where no released DB is reachable.
+#                          (fixture_db.py, beside this script) into a temp dir, export
+#                          it as REG_META_DB, and delete it on exit. With
+#                          REG_WEBAPP_STEWARD set, the catalog is a link to the
+#                          synthetic steward artifact (conformance/fixture_cache.py).
+#                          For a container / checkout where no released DB is
+#                          reachable.
 #
 # Ports are automatic (two of these never collide); pin with RUST_PORT /
 # FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
@@ -229,29 +232,36 @@ cleanup() {
 # they never leak a dev server (the failure mode that motivated this mode).
 trap cleanup INT TERM EXIT
 
-# --fixture-db: build the deterministic synthetic reg_meta DB pair (catalog +
-# docs) into a temp dir and point EVERY server at it via REG_META_DB — reg_meta's
-# highest-precedence DB dir, so it wins over whatever the environment resolves.
-# Built AFTER the trap so a failure mid-build still gets the dir removed.
+# --fixture-db: point EVERY server at a deterministic synthetic catalog via
+# REG_META_DB, so it wins over whatever the environment resolves. The global catalog
+# (catalog + docs pair) is built into a temp dir AFTER the trap, so a failure
+# mid-build still gets the dir removed. A steward's catalog is the conformance
+# suite's synthetic steward artifact, looked up in the shared fixture cache (built
+# on a miss) and symlinked into the temp dir beside the same docs DB; cleanup
+# removes only the link.
 if [ -n "$fixture_db" ]; then
-	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture-db.XXXXXX") || exit 1
-	fixture_kind_args=()
+	fixture_catalog_args=()
 	if [ "${REG_WEBAPP_STEWARD:-global}" != "global" ]; then
-		fixture_kind_args=(--kind steward)
+		if ! fixture_catalog=$(.venv/bin/python conformance/fixture_cache.py reader steward); then
+			echo "dev: --fixture-db steward lookup failed — see output above." >&2
+			exit 1
+		fi
+		fixture_catalog_args=(--catalog "$fixture_catalog")
 	fi
+	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture-db.XXXXXX") || exit 1
 	# Match cleanup's empty-array guard for macOS system Bash 3.2 + nounset.
 	if ! (
-		if [ ${#fixture_kind_args[@]} -gt 0 ]; then
-			.venv/bin/python reg_webapp/backend/scripts/fixture_db.py "$fixture_db_dir" "${fixture_kind_args[@]}" >/dev/null
+		if [ ${#fixture_catalog_args[@]} -gt 0 ]; then
+			.venv/bin/python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py "$fixture_db_dir" "${fixture_catalog_args[@]}" >/dev/null
 		else
-			.venv/bin/python reg_webapp/backend/scripts/fixture_db.py "$fixture_db_dir" >/dev/null
+			.venv/bin/python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py "$fixture_db_dir" >/dev/null
 		fi
 	); then
 		echo "dev: --fixture-db build failed — see output above." >&2
 		exit 1
 	fi
 	export REG_META_DB="$fixture_db_dir"
-	echo "dev: --fixture-db serving a synthetic catalog from $fixture_db_dir" >&2
+	echo "dev: --fixture-db serving a synthetic catalog from $REG_META_DB" >&2
 fi
 
 # The Rust server needs its catalog directory explicitly: the fixture's, the

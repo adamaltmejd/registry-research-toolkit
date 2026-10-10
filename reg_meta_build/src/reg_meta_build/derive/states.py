@@ -4,7 +4,8 @@
 and each alias window that participates in it, with its kind, bounds and canonical
 column. `resolver_column` is its SQL projection. The request-dependent rules (the
 window fallback, held and requested clipping, warning attribution) stay in the
-reader over these rows (reg_meta/DESIGN.md, "Compiled states").
+reader over these rows (crates/DESIGN.md, "Compiled states and request-time
+rules").
 """
 
 from __future__ import annotations

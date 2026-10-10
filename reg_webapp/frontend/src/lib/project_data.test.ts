@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-// reg_schema's package version IS the project schema_version it validates, so a new
-// draft must carry exactly that version — read from the package, not re-typed here.
-import regSchemaPyproject from "../../../../reg_schema/pyproject.toml?raw";
+// The server validates exactly reg-core's project SCHEMA_VERSION, so a new draft must
+// carry that version — read from the crate, not re-typed here.
+import regCoreProject from "../../../../crates/reg-core/src/project.rs?raw";
 import {
   newProjectData,
   regMetaReleaseTag,
@@ -18,13 +18,13 @@ function source(over: Partial<Source> = {}): Source {
 }
 
 describe("newProjectData", () => {
-  it("seeds the skeleton at reg_schema's schema version", () => {
-    const regSchemaVersion = /^version = "([^"]+)"$/m.exec(
-      regSchemaPyproject,
+  it("seeds the skeleton at the server's project schema version", () => {
+    const schemaVersion = /^pub const SCHEMA_VERSION: &str = "([^"]+)";$/m.exec(
+      regCoreProject,
     )?.[1];
-    expect(regSchemaVersion).toBeDefined();
+    expect(schemaVersion).toBeDefined();
     expect(newProjectData(SEED)).toEqual({
-      schema_version: regSchemaVersion,
+      schema_version: schemaVersion,
       steward: "global",
       reg_meta_version: "reg_meta/v1.0.0",
       name: "",

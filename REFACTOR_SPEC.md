@@ -249,7 +249,8 @@ codes.
 
 The reserved HTTP-suffix slug rejection (`states`/`predecessors`/…/`variants`) shipped
 in #228 — it is already enforced at curation time and does not need to precede the
-freeze.
+freeze. `RUST_RUNTIME_SPEC.md` package 4.9a dropped every word but `variants`: the Rust
+routes put the operation before the ref, so no other word can shadow one.
 
 ## Remaining test coverage
 

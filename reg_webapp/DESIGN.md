@@ -28,10 +28,8 @@ private data.
 
 ```text
 reg_webapp/
-  backend/                # uv workspace member: dev tooling only (until stage 4)
-    scripts/fixture_db.py  # the synthetic catalog + docs DB pair (dev.sh --fixture-db)
-    scripts/run_search_eval.py  # search relevance vs search_eval.toml
-    tests/                 # the period-grammar parity test
+  .claude/skills/run-reg-webapp/  # dev.sh, the browser flows, fixture_db.py (the
+                                  # synthetic catalog + docs DB pair, dev.sh --fixture-db)
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
     src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
   stewards/               # per-steward branding, read by `reg-meta serve --stewards`
@@ -151,8 +149,9 @@ curated pins first; without it, every arm's hits ranked together, grouped variab
 members hidden. Ranking, curated pins (`reg_meta_build/curation/search_pins.toml`, read
 from the catalog's `search_pin` table), concept-group folding, input limits and cursors
 live in `crates/reg-catalog`. Locally, the Vite dev proxy sends `/api/search` to the
-Rust server. Maintainers measure relevance with `scripts/run_search_eval.py`
-(`search_eval.toml`, #393 item 10) against a running `reg-meta serve`.
+Rust server. Maintainers measure relevance with the repository's
+`scripts/run_search_eval.py` (`scripts/search_eval.toml`, #393 item 10) against a
+running `reg-meta serve`.
 
 The SPA surface: a global `<SearchOmnibox>` in the app header routes to a shareable
 `/search?q=` results page (`SearchView.svelte`) with navigation to catalog nodes. The
