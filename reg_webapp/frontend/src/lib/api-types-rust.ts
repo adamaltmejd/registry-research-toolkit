@@ -927,6 +927,17 @@ export interface components {
             definition?: string | null;
             name: string;
         };
+        /**
+         * @description One blocking finding of `order_blocked`; `source`, `variable` and `period` say
+         *     what it is about, null for a whole-project finding.
+         */
+        OrderBlocking: {
+            code: string;
+            message: string;
+            period: string | null;
+            source: string | null;
+            variable: string | null;
+        };
         /** @description One resolved binding: what was asked for and what the steward delivers. */
         OrderEntry: {
             logical: components["schemas"]["LogicalCoordinate"];
@@ -1007,6 +1018,98 @@ export interface components {
             date_range?: string | null;
             definition?: string | null;
             name: string;
+        };
+        /** @description One variable to extract. */
+        ProjectBinding: {
+            date_format?: string | null;
+            datetime_format?: string | null;
+            display_name?: string | null;
+            id_subtype?: components["schemas"]["ProjectIdSubtype"] | null;
+            numeric_subtype?: components["schemas"]["ProjectNumericSubtype"] | null;
+            representation?: string | null;
+            type: components["schemas"]["ProjectColumnType"];
+            /** @description A classification FQID `class/<slug>`. */
+            value_set?: string | null;
+            /** @description The binding FQID `<provider>/<register>/<slug>`. */
+            variable: string;
+        };
+        /** @enum {string} */
+        ProjectColumnType: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
+        /** @description The top-level `project_data.json` document. */
+        ProjectData: {
+            name: string;
+            panels?: components["schemas"]["ProjectPanel"][];
+            reg_meta_version: string;
+            schema_version: string;
+            sources: components["schemas"]["ProjectSource"][];
+            steward: components["schemas"]["ProjectSteward"];
+            window?: components["schemas"]["ProjectStudyWindow"] | null;
+        };
+        /** @description A panel's entity key: one column, or a composite. */
+        ProjectEntityKey: string | string[];
+        /** @enum {string} */
+        ProjectIdSubtype: "integer" | "string";
+        /** @description `{"period": int | string}`: a literal period, as opposed to a column ref. */
+        ProjectLiteralPeriod: {
+            period: components["schemas"]["ProjectPeriodValue"];
+        };
+        /** @enum {string} */
+        ProjectNumericSubtype: "integer" | "double";
+        /** @description A panel over sources. */
+        ProjectPanel: {
+            comment?: string | null;
+            entity_key?: components["schemas"]["ProjectEntityKey"] | null;
+            members: (string | components["schemas"]["ProjectPanelMember"])[];
+            panel_id: string;
+            time_key?: components["schemas"]["ProjectTimeKey"] | null;
+        };
+        /** @description A panel member; the bare-string shorthand deserializes to `{"source": <name>}`. */
+        ProjectPanelMember: {
+            entity_key?: components["schemas"]["ProjectEntityKey"] | null;
+            source: string;
+            time_key?: components["schemas"]["ProjectTimeKey"] | null;
+        };
+        /** @description The `{"from": ..., "to": ...}` range. */
+        ProjectPeriodRange: {
+            from: components["schemas"]["ProjectPeriodValue"];
+            to: components["schemas"]["ProjectPeriodValue"];
+        };
+        /** @description One contiguous piece of a source period. */
+        ProjectPeriodSegment: components["schemas"]["ProjectPeriodValue"] | components["schemas"]["ProjectPeriodRange"];
+        /**
+         * @description A period endpoint as written: an int year or a period-token string (`"_default"`
+         *     included, which only a scalar [`SourcePeriod`] may hold).
+         */
+        ProjectPeriodValue: number | string;
+        /** @description One logical extraction: a register variant, a requested period and its bindings. */
+        ProjectSource: {
+            bindings: components["schemas"]["ProjectBinding"][];
+            name: string;
+            period: components["schemas"]["ProjectSourcePeriod"];
+            /** @description The 3-part coordinate `<provider>/<register>/<variant>`. */
+            register_variant: string;
+        };
+        /**
+         * @description `Source.period`: one segment, or a sorted, disjoint list of them (an interrupted
+         *     series).
+         */
+        ProjectSourcePeriod: components["schemas"]["ProjectPeriodSegment"][] | components["schemas"]["ProjectPeriodSegment"];
+        /** @enum {string} */
+        ProjectSteward: "global" | "ifau" | "swecov";
+        /** @description The optional study window, in plain int years. */
+        ProjectStudyWindow: {
+            /** Format: int64 */
+            from: number;
+            /** Format: int64 */
+            to: number;
+        };
+        /** @description A panel's time key: one time point, or a composite. */
+        ProjectTimeKey: components["schemas"]["ProjectTimePoint"][] | components["schemas"]["ProjectTimePoint"];
+        /** @description A literal year, a column ref, `{"period": ...}` or `{"range": {...}}`. */
+        ProjectTimePoint: number | string | components["schemas"]["ProjectLiteralPeriod"] | components["schemas"]["ProjectTimeRange"];
+        /** @description `{"range": {"from": ..., "to": ...}}`: a literal period range. */
+        ProjectTimeRange: {
+            range: components["schemas"]["ProjectPeriodRange"];
         };
         /** @description A variable's provenance in its register. */
         Provenance: {

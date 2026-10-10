@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import type { Coverage } from "./period";
-import type { StudyWindow } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 
 // The catalog PeriodPicker. The control is the #615 year-window availability
 // slider (seeded from the project window, over the subject's coverage track).
@@ -33,7 +33,7 @@ describe("PeriodPicker — year-grain UI", () => {
 // (?period > window > full history), a local change writes ?period only (the
 // window is never touched), and the two deviation states.
 describe("PeriodPicker — window slider (#615)", () => {
-  const WINDOW: StudyWindow = { from: 2000, to: 2010 };
+  const WINDOW: ProjectStudyWindow = { from: 2000, to: 2010 };
   const COVERAGE: Coverage = { from: 1995, to: 2008 };
 
   it("open-start coverage + a pre-1960 window seeds From at the window start, not the 1960 floor (Fix 5)", async () => {
@@ -43,7 +43,7 @@ describe("PeriodPicker — window slider (#615)", () => {
     // (which would have silently dropped the covered 1950–1959 years).
     const screen = await render(PeriodPicker, {
       period: null,
-      window: { from: 1950, to: 2005 } as StudyWindow,
+      window: { from: 1950, to: 2005 } as ProjectStudyWindow,
       coverage: { from: null, to: 2008 } as Coverage,
       onsubmit: vi.fn(),
       onclear: vi.fn(),
@@ -310,7 +310,7 @@ describe("PeriodPicker — window slider (#615)", () => {
     // default seed (unlike the within-window narrowing case, which stays silent).
     const screen = await render(PeriodPicker, {
       period: null,
-      window: { from: 2012, to: 2018 } as StudyWindow,
+      window: { from: 2012, to: 2018 } as ProjectStudyWindow,
       coverage: { from: 1995, to: 2008 } as Coverage, // disjoint → seed snaps to 2008
       onsubmit: vi.fn(),
       onclear: vi.fn(),
@@ -468,7 +468,7 @@ describe("PeriodPicker — window slider (#615)", () => {
     // — the cap holds without the default seed ever overrunning it.
     const screen = await render(PeriodPicker, {
       period: null,
-      window: { from: 2000, to: 2026 } as StudyWindow, // stale, past the vintage
+      window: { from: 2000, to: 2026 } as ProjectStudyWindow, // stale, past the vintage
       coverage: { from: 1995, to: null } as Coverage, // open-ended
       vintageYear: 2021,
       onsubmit: vi.fn(),
@@ -557,7 +557,7 @@ describe("PeriodPicker — window slider (#615)", () => {
     const thisYear = new Date().getFullYear();
     const screen = await render(PeriodPicker, {
       period: null,
-      window: { from: 2000, to: 2010 } as StudyWindow,
+      window: { from: 2000, to: 2010 } as ProjectStudyWindow,
       coverage: { from: 1995, to: null } as Coverage,
       onsubmit: vi.fn(),
       onclear: vi.fn(),
@@ -577,7 +577,7 @@ describe("PeriodPicker — window slider (#615)", () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const props = {
       period: null,
-      window: { from: 2000, to: 2010 } as StudyWindow,
+      window: { from: 2000, to: 2010 } as ProjectStudyWindow,
       coverage: { from: 1995, to: null } as Coverage,
       onsubmit,
       onclear: vi.fn(),

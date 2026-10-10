@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { render } from "vitest-browser-svelte";
 import PeriodWindowSlider from "./PeriodWindowSlider.svelte";
 import type { Coverage } from "./period";
-import type { StudyWindow } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 
 // The #615 availability-aware local period slider (the subject page's default
 // period control). Self-contained: bounds + selection + window + coverage in,
@@ -143,7 +143,7 @@ describe("PeriodWindowSlider", () => {
     // From and End on To are rejected by the coverage clamp — so the pending
     // range stays 2018–2018, and the thumbs (what a screen reader announces, and
     // what Apply submits) must say the same.
-    const onchange = vi.fn<(next: StudyWindow) => void>();
+    const onchange = vi.fn<(next: ProjectStudyWindow) => void>();
     const screen = await render(PeriodWindowSlider, {
       ...base,
       min: 1960,

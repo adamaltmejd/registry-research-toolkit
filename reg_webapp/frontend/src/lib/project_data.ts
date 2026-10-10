@@ -1,92 +1,46 @@
 /**
- * Pure project_data.json model helpers (NO runes — unit-tested in isolation;
- * `project_data.test.ts`). The canonical ProjectData root is CLOSED. The SPA's
- * in-memory draft remains deliberately raw enough to hold a malformed upload:
- * FOCUSED authoring scope (A5.3c) edits the top-level fields + `sources[]`
- * (`register_variant`, `period`, `bindings[]`); known `panels[]` and invalid
- * unknown root keys ROUND-TRIP VERBATIM until backend validation reports them.
- * Raw retention is a diagnostic path, not a supported extension mechanism.
+ * Pure project_data.json draft helpers (NO runes — unit-tested in isolation;
+ * `project_data.test.ts`).
  *
- * This is NOT a structural validator — the backend is canonical (see
- * reg_webapp/DESIGN.md → Pydantic boundary). These
- * helpers only construct + immutably edit the shape the SPA posts to
- * `/api/project/validate` / `/order`. The field names mirror
- * `crates/reg-core/src/project.rs` (see crates/reg-core/DESIGN.md → Two
- * layers: types and validator).
+ * The draft is the uploaded or edited JSON as is (`RawDraft`): `/validate` must see
+ * a malformed upload unchanged to diagnose it, so string panel members, unknown
+ * keys and invalid enums survive until the server reports them. Raw retention is a
+ * diagnostic path, not a supported extension mechanism. Reads go through the safe
+ * accessors below; writes build values typed with the `Project*` types, which are
+ * generated from `crates/reg-core/src/project.rs` (`bun run gen:types`). The
+ * accepted model is never written back into the draft.
  *
- * OpenAPI codegen documents the closed canonical request model, but the SPA cannot
- * use that strict type for its in-memory draft because `/validate` must also accept
- * malformed specs to diagnose them. The hand-written draft type therefore keeps an
- * index signature solely to retain invalid uploaded keys until diagnostics are
- * produced.
+ * This is NOT a structural validator — the server is canonical. These helpers only
+ * construct + immutably edit the document the SPA posts to `/api/project/validate`
+ * / `/order`.
  */
 
-/** A binding on a source — one variable to include. Only the fields the
- * A5.3c surface touches are named; any other key (`id_subtype`, `date_format`, …)
- * survives via the index signature. */
-export interface Binding {
-  variable: string;
-  type: string;
-  display_name?: string | null;
-  value_set?: string | null;
-  // The delivery column selecting which REPRESENTATION of the concept to extract
-  // (set only when the concept resolves to >1 column at the source period — the
-  // chooser fills it; the backend semantic check flags an ambiguous binding that
-  // omits it). The job the retired `@version` pin once did, keyed on the column.
-  representation?: string | null;
-  [key: string]: unknown;
-}
+import type { components } from "./api-types-rust";
 
-/** One contiguous piece of a `Source.period`: a bare year, a period-token
- * string, or a `{from, to}` range object. */
-export type PeriodSegment =
-  | number
-  | string
-  | { from: number | string; to: number | string };
+type Schemas = components["schemas"];
 
-/** A `Source.period` value: a segment, or a LIST of segments — an interrupted
- * series (#307; the backend enforces non-empty, sorted ascending,
- * non-overlapping). Kept loose — the server is the canonical period
- * validator. */
-export type Period = PeriodSegment | PeriodSegment[];
+/** The draft: a JSON object, otherwise unchecked. */
+export type RawDraft = Record<string, unknown>;
 
-/** The optional global study window (the "project window", #611 → Period model).
- * A plain year-int pair matching reg-core's `StudyWindow` wire shape (#613:
- * `{from, to}` int years, `to >= from`). NOT the full `Period` grammar — the
- * window is year-granular by design; per-page deviation keeps the rich grammar.
- * Absent = full history (backward-compatible — existing specs serialize
- * unchanged). project_data isn't a response model, so this isn't codegen'd into
- * `api-types` — it's hand-authored here alongside the `ProjectData` shape. */
-export interface StudyWindow {
-  from: number;
-  to: number;
-}
+/** The canonical project document (`reg_core::project::ProjectData`). */
+export type ProjectData = Schemas["ProjectData"];
+/** One logical extraction (`Source`). */
+export type ProjectSource = Schemas["ProjectSource"];
+/** One variable to extract (`Binding`). */
+export type ProjectBinding = Schemas["ProjectBinding"];
+/** `Source.period`: one segment, or a sorted, disjoint list of them. */
+export type ProjectSourcePeriod = Schemas["ProjectSourcePeriod"];
+/** One contiguous piece of a source period: a year, a token or a `{from, to}`. */
+export type ProjectPeriodSegment = Schemas["ProjectPeriodSegment"];
+/** The optional study window, in plain int years (`to >= from`). */
+export type ProjectStudyWindow = Schemas["ProjectStudyWindow"];
 
-/** A data source / table. Open: panel-referenced or future keys survive. */
-export interface Source {
-  name: string;
-  register_variant: string;
-  period: Period;
-  bindings: Binding[];
-  [key: string]: unknown;
-}
-
-/**
- * The top-level project_data.json draft. Canonically closed; the index signature
- * exists only so an invalid uploaded key is not normalized away before validation.
- */
-export interface ProjectData {
-  schema_version: string;
-  steward: string;
-  reg_meta_version: string;
-  name: string;
-  sources: Source[];
-  // The optional global study window (#611). Additive: omitted when unset (the
-  // serializer drops `undefined` keys), so a project with no window round-trips
-  // and validates unchanged.
-  window?: StudyWindow;
-  [key: string]: unknown;
-}
+/** A binding the SPA writes: a `ProjectBinding`, except that an add whose column
+ * type did not resolve writes `type: ""`, for the server to report, rather than a
+ * valid type nobody resolved (`bindingFieldsFromResolution`). */
+export type DraftBinding = Omit<ProjectBinding, "type"> & {
+  type: ProjectBinding["type"] | "";
+};
 
 /** The Model A `schema_version` a NEW draft is seeded with (reg-core 3.0.0). */
 export const MODEL_A_SCHEMA_VERSION = "3.0.0";
@@ -103,7 +57,7 @@ export interface ProjectSeed {
 /** Construct a fresh Model A skeleton. The version fields are seeded from
  * the deployment context; `schema_version` 2.x is the Model A gate, while
  * `reg_meta_version` records the catalog release used by this deployment. */
-export function newProjectData(seed: ProjectSeed): ProjectData {
+export function newProjectData(seed: ProjectSeed): RawDraft {
   return {
     schema_version: MODEL_A_SCHEMA_VERSION,
     steward: seed.steward,
@@ -158,12 +112,12 @@ export function safeSourceSlots(sources: unknown): SafeSource[] {
  * one coercion of it, done once at the `/project` boundary (beside
  * `safeSourceSlots`) and threaded to both readers: the coverage hints and the
  * source card's deviation marker. */
-export function safeStudyWindow(window: unknown): StudyWindow | null {
+export function safeStudyWindow(window: unknown): ProjectStudyWindow | null {
   const safe = isPlainObject(window) ? window : null;
   return safe != null &&
     Number.isInteger(safe.from) &&
     Number.isInteger(safe.to)
-    ? (safe as unknown as StudyWindow)
+    ? (safe as unknown as ProjectStudyWindow)
     : null;
 }
 
@@ -179,14 +133,18 @@ export function safeSourceRegisterVariant(source: unknown): string {
     : "";
 }
 
-export function safeSourcePeriod(source: unknown): Period | null {
+export function safeSourcePeriod(source: unknown): ProjectSourcePeriod | null {
   const safe = asSafeSource(source);
-  return safe != null && "period" in safe ? (safe.period as Period) : null;
+  return safe != null && "period" in safe
+    ? (safe.period as ProjectSourcePeriod)
+    : null;
 }
 
-export function safeSourceBindings(source: unknown): Binding[] {
+export function safeSourceBindings(source: unknown): ProjectBinding[] {
   const safe = asSafeSource(source);
-  return Array.isArray(safe?.bindings) ? (safe.bindings as Binding[]) : [];
+  return Array.isArray(safe?.bindings)
+    ? (safe.bindings as ProjectBinding[])
+    : [];
 }
 
 export function sourceBindingsMalformed(source: unknown): boolean {
@@ -213,10 +171,10 @@ export function sourceSnapshot(source: unknown): string {
 
 /** Replace a top-level scalar field (`name`, `steward`, `reg_meta_version`, …). */
 export function updateField<K extends keyof ProjectData>(
-  draft: ProjectData,
+  draft: RawDraft,
   key: K,
   value: ProjectData[K],
-): ProjectData {
+): RawDraft {
   return { ...draft, [key]: value };
 }
 
@@ -229,7 +187,7 @@ export function updateField<K extends keyof ProjectData>(
  * string into char "sources" or throwing on `.map`/`.filter`. The malformed value is
  * thus REPLACED by a well-formed array on the first structural edit (intentional —
  * the user is fixing the draft via the editor). */
-function sourcesArray(draft: ProjectData): Source[] {
+function sourcesArray(draft: RawDraft): unknown[] {
   return Array.isArray(draft.sources) ? draft.sources : [];
 }
 
@@ -270,7 +228,7 @@ export function uniqueSourceName(
 }
 
 /** Remove the source at `index` (no-op if out of range). */
-export function removeSource(draft: ProjectData, index: number): ProjectData {
+export function removeSource(draft: RawDraft, index: number): RawDraft {
   return {
     ...draft,
     sources: sourcesArray(draft).filter((_, i) => i !== index),
@@ -281,10 +239,10 @@ export function removeSource(draft: ProjectData, index: number): ProjectData {
 
 /** Remove the binding at `bindingIndex` from the source at `sourceIndex`. */
 export function removeBinding(
-  draft: ProjectData,
+  draft: RawDraft,
   sourceIndex: number,
   bindingIndex: number,
-): ProjectData {
+): RawDraft {
   return updateSourceBindings(draft, sourceIndex, (bindings) =>
     bindings.filter((_, i) => i !== bindingIndex),
   );
@@ -294,17 +252,18 @@ export function removeBinding(
  * non-array `sources` / `bindings` to [] (the editors' doctrine) so a structural
  * binding edit never spreads a string or throws on `.map`. */
 function updateSourceBindings(
-  draft: ProjectData,
+  draft: RawDraft,
   sourceIndex: number,
-  fn: (bindings: Binding[]) => Binding[],
-): ProjectData {
+  fn: (bindings: ProjectBinding[]) => ProjectBinding[],
+): RawDraft {
   return {
     ...draft,
     sources: sourcesArray(draft).map((s, i) => {
-      if (i !== sourceIndex || asSafeSource(s) == null) {
+      const safe = asSafeSource(s);
+      if (i !== sourceIndex || safe == null) {
         return s;
       }
-      return { ...s, bindings: fn(safeSourceBindings(s)) };
+      return { ...safe, bindings: fn(safeSourceBindings(safe)) };
     }),
   };
 }
@@ -317,6 +276,6 @@ function updateSourceBindings(
  * structurally faithful to what was opened), which is also what the `dirty`
  * baseline compares against.
  */
-export function serializeProjectData(draft: ProjectData): string {
+export function serializeProjectData(draft: RawDraft): string {
   return JSON.stringify(draft, null, 2);
 }

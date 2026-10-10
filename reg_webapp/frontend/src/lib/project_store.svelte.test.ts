@@ -9,7 +9,12 @@ import {
   setPersistence,
   storeSchemaVersion,
 } from "./project_store.svelte";
-import { add, openFile, SEED } from "./project-store-test-helpers";
+import {
+  add,
+  openFile,
+  SEED,
+  storedProject,
+} from "./project-store-test-helpers";
 
 // The store is a MODULE SINGLETON — each test must establish the state it needs
 // (via newProject / openFile) rather than assume a fresh store.
@@ -319,12 +324,12 @@ describe("stable client-side ids (issue #200)", () => {
         }),
       ).not.toThrow();
 
-      const sources = projectStore.draft?.sources as unknown[];
+      const sources = storedProject()?.sources as unknown[];
       // The null slot survives VERBATIM at its original index (load contract holds).
       expect(sources[0]).toBeNull();
       // The intended mutations all applied: rtb pruned, hst added, lisa's period repinned.
       const byVariant = new Map(
-        (projectStore.draft?.sources ?? [])
+        (storedProject()?.sources ?? [])
           .filter((s): s is NonNullable<typeof s> => s != null)
           .map((s) => [s.register_variant, s]),
       );

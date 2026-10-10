@@ -3435,6 +3435,43 @@
           }
         }
       },
+      "OrderBlocking": {
+        "type": "object",
+        "description": "One blocking finding of `order_blocked`; `source`, `variable` and `period` say\nwhat it is about, null for a whole-project finding.",
+        "required": [
+          "code",
+          "message",
+          "source",
+          "variable",
+          "period"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "variable": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
       "OrderEntry": {
         "type": "object",
         "description": "One resolved binding: what was asked for and what the steward delivers.",
@@ -3654,6 +3691,416 @@
             "type": "string"
           }
         }
+      },
+      "ProjectBinding": {
+        "type": "object",
+        "description": "One variable to extract.",
+        "required": [
+          "variable",
+          "type"
+        ],
+        "properties": {
+          "date_format": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "datetime_format": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id_subtype": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProjectIdSubtype"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "numeric_subtype": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProjectNumericSubtype"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "representation": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type": {
+            "$ref": "#/components/schemas/ProjectColumnType"
+          },
+          "value_set": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A classification FQID `class/<slug>`."
+          },
+          "variable": {
+            "type": "string",
+            "description": "The binding FQID `<provider>/<register>/<slug>`."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectColumnType": {
+        "type": "string",
+        "enum": [
+          "id",
+          "categorical",
+          "numeric",
+          "date",
+          "datetime",
+          "opaque"
+        ]
+      },
+      "ProjectData": {
+        "type": "object",
+        "description": "The top-level `project_data.json` document.",
+        "required": [
+          "schema_version",
+          "steward",
+          "reg_meta_version",
+          "name",
+          "sources"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "panels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectPanel"
+            }
+          },
+          "reg_meta_version": {
+            "type": "string"
+          },
+          "schema_version": {
+            "type": "string"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectSource"
+            }
+          },
+          "steward": {
+            "$ref": "#/components/schemas/ProjectSteward"
+          },
+          "window": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProjectStudyWindow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "ProjectEntityKey": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "description": "A panel's entity key: one column, or a composite."
+      },
+      "ProjectIdSubtype": {
+        "type": "string",
+        "enum": [
+          "integer",
+          "string"
+        ]
+      },
+      "ProjectLiteralPeriod": {
+        "type": "object",
+        "description": "`{\"period\": int | string}`: a literal period, as opposed to a column ref.",
+        "required": [
+          "period"
+        ],
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/ProjectPeriodValue"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectNumericSubtype": {
+        "type": "string",
+        "enum": [
+          "integer",
+          "double"
+        ]
+      },
+      "ProjectPanel": {
+        "type": "object",
+        "description": "A panel over sources.",
+        "required": [
+          "panel_id",
+          "members"
+        ],
+        "properties": {
+          "comment": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "entity_key": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProjectEntityKey"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "$ref": "#/components/schemas/ProjectPanelMember"
+                }
+              ],
+              "description": "A panel member as written: a source name, or a member object."
+            }
+          },
+          "panel_id": {
+            "type": "string"
+          },
+          "time_key": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProjectTimeKey"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectPanelMember": {
+        "type": "object",
+        "description": "A panel member; the bare-string shorthand deserializes to `{\"source\": <name>}`.",
+        "required": [
+          "source"
+        ],
+        "properties": {
+          "entity_key": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProjectEntityKey"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "time_key": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProjectTimeKey"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectPeriodRange": {
+        "type": "object",
+        "description": "The `{\"from\": ..., \"to\": ...}` range.",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "$ref": "#/components/schemas/ProjectPeriodValue"
+          },
+          "to": {
+            "$ref": "#/components/schemas/ProjectPeriodValue"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectPeriodSegment": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectPeriodValue"
+          },
+          {
+            "$ref": "#/components/schemas/ProjectPeriodRange"
+          }
+        ],
+        "description": "One contiguous piece of a source period."
+      },
+      "ProjectPeriodValue": {
+        "oneOf": [
+          {
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "description": "A period endpoint as written: an int year or a period-token string (`\"_default\"`\nincluded, which only a scalar [`SourcePeriod`] may hold)."
+      },
+      "ProjectSource": {
+        "type": "object",
+        "description": "One logical extraction: a register variant, a requested period and its bindings.",
+        "required": [
+          "name",
+          "register_variant",
+          "period",
+          "bindings"
+        ],
+        "properties": {
+          "bindings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectBinding"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/ProjectSourcePeriod"
+          },
+          "register_variant": {
+            "type": "string",
+            "description": "The 3-part coordinate `<provider>/<register>/<variant>`."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectSourcePeriod": {
+        "oneOf": [
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectPeriodSegment"
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ProjectPeriodSegment"
+          }
+        ],
+        "description": "`Source.period`: one segment, or a sorted, disjoint list of them (an interrupted\nseries)."
+      },
+      "ProjectSteward": {
+        "type": "string",
+        "enum": [
+          "global",
+          "ifau",
+          "swecov"
+        ]
+      },
+      "ProjectStudyWindow": {
+        "type": "object",
+        "description": "The optional study window, in plain int years.",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "to": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectTimeKey": {
+        "oneOf": [
+          {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectTimePoint"
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ProjectTimePoint"
+          }
+        ],
+        "description": "A panel's time key: one time point, or a composite."
+      },
+      "ProjectTimePoint": {
+        "oneOf": [
+          {
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "$ref": "#/components/schemas/ProjectLiteralPeriod"
+          },
+          {
+            "$ref": "#/components/schemas/ProjectTimeRange"
+          }
+        ],
+        "description": "A literal year, a column ref, `{\"period\": ...}` or `{\"range\": {...}}`."
+      },
+      "ProjectTimeRange": {
+        "type": "object",
+        "description": "`{\"range\": {\"from\": ..., \"to\": ...}}`: a literal period range.",
+        "required": [
+          "range"
+        ],
+        "properties": {
+          "range": {
+            "$ref": "#/components/schemas/ProjectPeriodRange"
+          }
+        },
+        "additionalProperties": false
       },
       "Provenance": {
         "type": "object",

@@ -33,7 +33,7 @@ import {
   notDeliveredGaps,
   sameYearWindow,
 } from "./period";
-import type { StudyWindow } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 import { Button } from "./ui";
 
 interface Props {
@@ -43,10 +43,10 @@ interface Props {
   max: number;
   // The active selection to seed the thumbs from (the resolved precedence
   // `?period` > window > full history, already year-shaped by the picker).
-  selection: StudyWindow;
+  selection: ProjectStudyWindow;
   // The project window (#614), or null = none set. Drives the user-deviation
   // hint + the "reset to project window" affordance.
-  window: StudyWindow | null;
+  window: ProjectStudyWindow | null;
   // The subject's data-availability span (derived from embedded states), or
   // null = unknown. Sides are INDEPENDENTLY bounded — a null side is open
   // (start/end unknown). The open END ("still delivered") projects to the
@@ -88,7 +88,7 @@ interface Props {
   userChosen: boolean;
   // Emitted with the live selection as the thumbs move (the picker holds it and
   // submits the wire on Apply).
-  onchange: (next: StudyWindow) => void;
+  onchange: (next: ProjectStudyWindow) => void;
   // Emitted when the user clicks "reset to project window" (the picker clears
   // `?period`, falling back to the window).
   onreset: () => void;

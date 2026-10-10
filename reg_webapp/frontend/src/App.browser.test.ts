@@ -4,7 +4,7 @@ import { render } from "vitest-browser-svelte";
 import App from "./App.svelte";
 import type { Context } from "./lib/api";
 import { getContext, getShow, validateProject } from "./lib/api";
-import type { ProjectData } from "./lib/project_data";
+import type { RawDraft } from "./lib/project_data";
 import { projectStore, setPersistence } from "./lib/project_store.svelte";
 import { router } from "./lib/router.svelte";
 
@@ -99,7 +99,7 @@ describe("App owns the draft lifecycle", () => {
     // saves and validates the same edit twice.
     const saves: string[] = [];
     setPersistence({
-      save: (_key: string, draft: ProjectData) => {
+      save: (_key: string, draft: RawDraft) => {
         saves.push(String(draft.name));
         return Promise.resolve();
       },

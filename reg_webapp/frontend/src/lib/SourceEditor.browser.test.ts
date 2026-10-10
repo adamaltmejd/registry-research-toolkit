@@ -2,8 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { getShow, getStates } from "./api";
 import { resetCatalogNames } from "./catalog_names.svelte";
-import type { Source } from "./project_data";
+import type { ProjectSource } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import {
   providerShow,
   registerChild,
@@ -62,7 +63,7 @@ describe("SourceEditor cart card", () => {
       register_variant: "scb/lisa/individer-16plus",
       period: 2020,
       bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-    } as Source;
+    } as ProjectSource;
     await renderCard(source);
 
     await expect
@@ -110,13 +111,13 @@ describe("SourceEditor cart card", () => {
       register_variant: "scb/lisa/individer-16plus",
       period: { from: 1990, to: 2009 },
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     const newer = {
       name: "LISA_2",
       register_variant: "scb/lisa/individer-15plus",
       period: { from: 2010, to: 2020 },
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     const view = await renderCard(older);
     await expect
       .element(page.getByRole("heading", { name: "LISA", exact: true }))
@@ -154,7 +155,7 @@ describe("SourceEditor cart card", () => {
       register_variant: "fk/midas/_default",
       period: 2020,
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(source);
 
     // The catalog's spelling, not the slug uppercased: "MiDAS", never "MIDAS".
@@ -185,7 +186,7 @@ describe("SourceEditor cart card", () => {
       register_variant: "scb/lisa/individer-15plus",
       period: 2020,
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(source, { providerQualified: true });
 
     // The register still HEADS the card, qualified by the variant that names the
@@ -222,7 +223,7 @@ describe("SourceEditor cart card", () => {
       register_variant: "scb/lisa/individer-15plus",
       period: 2020,
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(source);
 
     await expect
@@ -265,7 +266,7 @@ describe("SourceEditor cart card", () => {
       register_variant: "scb/lisa/individer-15plus",
       period: 2020,
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(source);
 
     await expect
@@ -285,7 +286,7 @@ describe("SourceEditor cart card", () => {
       register_variant: "scb/lisa/v1",
       period: null,
       bindings: [],
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(source);
 
     // A missing period is not another grammar — it is what this source lacks, so the
@@ -331,7 +332,7 @@ describe("SourceEditor cart card", () => {
         },
       ],
     });
-    const source = projectStore.draft?.sources?.[0] as Source;
+    const source = storedProject()?.sources?.[0] as ProjectSource;
     await renderCard(source);
 
     await page.getByRole("button", { name: "Remove source" }).click();
@@ -343,10 +344,10 @@ describe("SourceEditor cart card", () => {
         /Remove the source LISA \(LISA, Individer 15\+\) and its 2 columns\?/,
       );
     // Nothing has gone yet — the question is the whole effect of the first click.
-    expect(projectStore.draft?.sources).toHaveLength(2);
+    expect(storedProject()?.sources).toHaveLength(2);
 
     await dialog.getByRole("button", { name: "Cancel" }).click();
-    expect(projectStore.draft?.sources).toHaveLength(2);
+    expect(storedProject()?.sources).toHaveLength(2);
   });
 
   it("removes the source through the store once the removal is confirmed", async () => {
@@ -365,7 +366,7 @@ describe("SourceEditor cart card", () => {
         },
       ],
     });
-    const source = projectStore.draft?.sources?.[0] as Source;
+    const source = storedProject()?.sources?.[0] as ProjectSource;
     await renderCard(source);
 
     await page.getByRole("button", { name: "Remove source" }).click();
@@ -374,9 +375,9 @@ describe("SourceEditor cart card", () => {
     await dialog.getByRole("button", { name: "Remove source" }).click();
 
     // The store dropped source 0 (scb/lisa/v1); scb/rtb/v1 survives.
-    expect(projectStore.draft?.sources?.map((s) => s.register_variant)).toEqual(
-      ["scb/rtb/v1"],
-    );
+    expect(storedProject()?.sources?.map((s) => s.register_variant)).toEqual([
+      "scb/rtb/v1",
+    ]);
   });
 
   it("renders an alert (not a crash) when bindings is a non-array", async () => {
@@ -385,7 +386,7 @@ describe("SourceEditor cart card", () => {
       register_variant: "scb/lisa/v1",
       period: 2020,
       bindings: "oops",
-    } as unknown as Source;
+    } as unknown as ProjectSource;
     await renderCard(source);
 
     const alert = page.getByRole("alert");
@@ -418,7 +419,7 @@ describe("SourceEditor cart card", () => {
           type: "categorical",
         },
       ],
-    } as Source;
+    } as ProjectSource;
     const view = await renderCard(source);
 
     // The mobile breakpoint must be active for the mobile-target regression to be
@@ -481,7 +482,7 @@ describe("SourceEditor cart card", () => {
       register_variant: "scb/lisa/v1",
       period: 2020,
       bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
-    } as Source;
+    } as ProjectSource;
     await renderCard(source, {
       issues: [
         {

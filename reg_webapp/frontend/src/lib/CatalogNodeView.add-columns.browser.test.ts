@@ -17,6 +17,7 @@ import {
   withLisaVariants,
 } from "./catalog-node-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import { windowStore } from "./window.svelte";
 
 // CatalogNodeView reads one node via `getShow(fqidPath)` and switches on
@@ -120,7 +121,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect.element(page.getByText("Applied +2 columns")).toBeVisible();
     // ONE source: both adds land on the same register variant, its period the
     // union of the two window-clipped spans (`Kon` 2018–2023, `ForvErs` 2018–2021).
-    expect(projectStore.draft?.sources).toEqual([
+    expect(storedProject()?.sources).toEqual([
       expect.objectContaining({
         register_variant: "scb/lisa/individer-15plus",
         period: { from: 2018, to: 2023 },
@@ -182,7 +183,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect
       .element(page.getByText(/set the study window in the rail/))
       .toBeVisible();
-    expect(projectStore.draft?.sources).toEqual([]);
+    expect(storedProject()?.sources).toEqual([]);
     // A refusal the researcher's own next move retires, so it is announced
     // politely through `StagedAddStatus`'s status row (Y-106), never an alert.
     const refusal = page.getByText(/Apply a period before adding/).element();
@@ -253,7 +254,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
 
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
     expect(
-      projectStore.draft?.sources.map((source) => source.register_variant),
+      storedProject()?.sources.map((source) => source.register_variant),
     ).toEqual(["scb/lisa/individer-15plus", "scb/lisa/individer-16plus"]);
   });
 
@@ -273,7 +274,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
 
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
     expect(
-      projectStore.draft?.sources.map((source) => source.register_variant),
+      storedProject()?.sources.map((source) => source.register_variant),
     ).toEqual(["scb/lisa/individer-15plus"]);
   });
 
@@ -307,7 +308,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await page.getByRole("button", { name: "Add 1 column to project" }).click();
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
     expect(
-      projectStore.draft?.sources.map((source) => source.register_variant),
+      storedProject()?.sources.map((source) => source.register_variant),
     ).toEqual(["scb/lisa/individer-15plus"]);
   });
 
@@ -332,7 +333,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
 
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
     expect(
-      projectStore.draft?.sources.map((source) => source.register_variant),
+      storedProject()?.sources.map((source) => source.register_variant),
     ).toEqual(["scb/lisa/individer-16plus"]);
   });
 
@@ -366,7 +367,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     // column's own era. Pooled, both sources would span BOTH eras instead.
     expect(
       Object.fromEntries(
-        (projectStore.draft?.sources ?? []).map((source) => [
+        (storedProject()?.sources ?? []).map((source) => [
           source.register_variant,
           source.period,
         ]),
@@ -399,7 +400,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect
       .element(page.getByRole("button", { name: "Adding…" }))
       .not.toBeInTheDocument();
-    expect(projectStore.draft?.sources).toEqual([]);
+    expect(storedProject()?.sources).toEqual([]);
     // Abandoned, not refused — and the tick survives, so the Add the new window
     // asks for is one press.
     await expect.element(page.getByText(/Applied/)).not.toBeInTheDocument();
@@ -432,7 +433,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect
       .element(page.getByRole("button", { name: "Adding…" }))
       .not.toBeInTheDocument();
-    expect(projectStore.draft?.sources).toEqual([]);
+    expect(storedProject()?.sources).toEqual([]);
     // Abandoned, not refused: nothing was authored and nothing is claimed either
     // way, and the tick survives for an Add against the project now open.
     await expect.element(page.getByText(/Applied/)).not.toBeInTheDocument();
@@ -464,7 +465,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect
       .element(page.getByRole("button", { name: "Adding…" }))
       .not.toBeInTheDocument();
-    expect(projectStore.draft?.sources).toEqual([]);
+    expect(storedProject()?.sources).toEqual([]);
     // Nothing is authored and nothing is reported — not a refusal either — on the
     // page the researcher has since opened. `StagedAddStatus` says both through a
     // `status` row, so its absence is the whole claim.

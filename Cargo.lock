@@ -752,6 +752,7 @@ dependencies = [
  "sha2",
  "unicode-normalization",
  "unicode-properties",
+ "utoipa",
 ]
 
 [[package]]

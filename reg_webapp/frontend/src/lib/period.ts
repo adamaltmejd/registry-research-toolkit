@@ -11,7 +11,11 @@
  * server's 422 detail is the authority).
  */
 
-import type { Period, PeriodSegment, StudyWindow } from "./project_data";
+import type {
+  ProjectPeriodSegment,
+  ProjectSourcePeriod,
+  ProjectStudyWindow,
+} from "./project_data";
 
 /** The narrowing modifiers carried in the URL query alongside `?period`. */
 export interface ResolutionParams {
@@ -343,7 +347,7 @@ export function periodRangeEndpoints(wire: string): [string, string] | null {
  * wire for display, round-trip, AND resolve: the catalog `?period=` accepts the
  * comma form since #340 (per-segment resolve, state_id-deduped union). ADVISORY
  * shaping only; the backend is the canonical period validator. */
-export function periodToWire(period: Period): string | null {
+export function periodToWire(period: ProjectSourcePeriod): string | null {
   if (Array.isArray(period)) {
     if (period.length === 0) {
       return null;
@@ -393,7 +397,7 @@ export function periodToWire(period: Period): string | null {
  * A null/blank wire string yields `""` (the fresh-source unset period: PR B's
  * unresolved marker + amber hint then guide the user). ADVISORY shaping only — the
  * backend is the canonical period validator. */
-export function periodFromWire(wire: string | null): Period {
+export function periodFromWire(wire: string | null): ProjectSourcePeriod {
   const value = (wire ?? "").trim();
   if (value === "") {
     return "";
@@ -414,7 +418,7 @@ export function periodFromWire(wire: string | null): Period {
 
 /** One scalar wire member → its structured segment shape (the pre-#307
  * `periodFromWire` body). */
-function segmentFromWire(value: string): PeriodSegment {
+function segmentFromWire(value: string): ProjectPeriodSegment {
   if (value.includes(RANGE_SEP)) {
     const parts = value.split(RANGE_SEP);
     if (parts.length === 2) {
@@ -463,7 +467,9 @@ function yearEndpointInt(value: number | string): number | null {
  * numeric-string) → that span. A numeric-string year (`"2020"`) parses like the
  * int form (both are valid `Source.period` year shapes); anything not a
  * 19xx/20xx year disqualifies. */
-function yearIntervalOf(segment: PeriodSegment): [number, number] | null {
+function yearIntervalOf(
+  segment: ProjectPeriodSegment,
+): [number, number] | null {
   if (typeof segment === "number" || typeof segment === "string") {
     const y = yearEndpointInt(segment);
     return y === null ? null : [y, y];
@@ -482,7 +488,9 @@ function yearIntervalOf(segment: PeriodSegment): [number, number] | null {
 /** The year intervals of a whole period, or `null` when ANY segment is not pure
  * year grammar (so the caller falls back to REPLACE — a single token poisons the
  * coalesce, same all-or-nothing rule as `periodWireBounds`). */
-function yearIntervalsOf(period: Period): [number, number][] | null {
+function yearIntervalsOf(
+  period: ProjectSourcePeriod,
+): [number, number][] | null {
   const segments = Array.isArray(period) ? period : [period];
   const intervals: [number, number][] = [];
   for (const seg of segments) {
@@ -520,7 +528,9 @@ function coalesceYearIntervals(
 /** The year intervals of a whole `Source.period` when every segment is
  * year-shaped, coalesced and sorted. Token periods (`HT2020`, `2020-Q3`) are
  * intentionally skipped rather than guessed. */
-export function periodYearIntervals(period: Period): StudyWindow[] | null {
+export function periodYearIntervals(
+  period: ProjectSourcePeriod,
+): ProjectStudyWindow[] | null {
   const intervals = yearIntervalsOf(period);
   if (intervals === null || intervals.length === 0) {
     return null;
@@ -531,7 +541,10 @@ export function periodYearIntervals(period: Period): StudyWindow[] | null {
 /** One inclusive year interval → its structured segment: a point year (`lo === hi`)
  * collapses to the bare `number` arm, else the `{from, to}` range object (the only
  * range shape `Source.period` accepts — see `segmentFromWire`). */
-function yearIntervalToSegment([lo, hi]: [number, number]): PeriodSegment {
+function yearIntervalToSegment([lo, hi]: [
+  number,
+  number,
+]): ProjectPeriodSegment {
   return lo === hi ? lo : { from: lo, to: hi };
 }
 
@@ -540,7 +553,7 @@ function yearIntervalToSegment([lo, hi]: [number, number]): PeriodSegment {
  * `{from,to}` endpoints ride the string/number arms, so this only tests the two
  * true "no period" shapes; a set period with a blank endpoint is malformed, not
  * unset, and is left to the caller's grammar handling. */
-function isEmptyPeriod(period: Period): boolean {
+function isEmptyPeriod(period: ProjectSourcePeriod): boolean {
   if (Array.isArray(period)) {
     return period.length === 0;
   }
@@ -557,7 +570,10 @@ function isEmptyPeriod(period: Period): boolean {
  * (mixed-grain sort), so REPLACE with `incoming` — the user's most recent
  * explicit window wins. Pure — unit-tested in `period.test.ts`.
  */
-export function mergePeriods(existing: Period, incoming: Period): Period {
+export function mergePeriods(
+  existing: ProjectSourcePeriod,
+  incoming: ProjectSourcePeriod,
+): ProjectSourcePeriod {
   // An UNSET incoming period must not wipe a valid existing one (a catalog row with
   // no finite `resolvedPeriod` → `periodFromWire(null)` = ""), and a blank existing
   // period adopts a set incoming one (a fresh/blank source takes the add's window).
@@ -602,8 +618,8 @@ export interface PeriodRowOverlap {
  * `period.test.ts`.
  */
 export function normalizePeriodRows(
-  windows: StudyWindow[],
-): { period: Period } | PeriodRowOverlap {
+  windows: ProjectStudyWindow[],
+): { period: ProjectSourcePeriod } | PeriodRowOverlap {
   for (let a = 0; a < windows.length; a++) {
     for (let b = a + 1; b < windows.length; b++) {
       if (
@@ -631,9 +647,9 @@ export interface BoundedPeriodSegment {
  * "latest explicit period wins", while staged source accumulation can preserve
  * every selected token/list window it resolves bindings against. */
 export function periodCoverageUnion(
-  existing: Period,
-  incoming: Period,
-): Period {
+  existing: ProjectSourcePeriod,
+  incoming: ProjectSourcePeriod,
+): ProjectSourcePeriod {
   const existingYears = yearIntervalsOf(existing);
   const incomingYears = yearIntervalsOf(incoming);
   if (existingYears !== null && incomingYears !== null) {
@@ -651,7 +667,7 @@ export function periodCoverageUnion(
  * one place the wire-split/segment-bounds walk lives — `staged_picker` reuses
  * it for row-overlap tests. */
 export function boundedPeriodSegments(
-  period: Period,
+  period: ProjectSourcePeriod,
 ): BoundedPeriodSegment[] | null {
   const wire = periodToWire(period);
   if (!wire) {
@@ -670,9 +686,9 @@ export function boundedPeriodSegments(
 }
 
 function unionBoundedPeriodSegments(
-  existing: Period,
-  incoming: Period,
-): Period | null {
+  existing: ProjectSourcePeriod,
+  incoming: ProjectSourcePeriod,
+): ProjectSourcePeriod | null {
   const existingSegments = boundedPeriodSegments(existing);
   const incomingSegments = boundedPeriodSegments(incoming);
   if (!existingSegments || !incomingSegments) {
@@ -763,7 +779,7 @@ export function nextResolutionQuery(
 // ── Year-window slider (#615 availability-aware local period) ────────────────
 // The default subject-page period control is a year-grain dual-thumb slider over
 // the project WINDOW + the subject's data COVERAGE (#611 → Period model). It is
-// year-granular by design (mirrors the header's `StudyWindow`); the rich
+// year-granular by design (mirrors the header's `ProjectStudyWindow`); the rich
 // sub-annual grammar (term/quarter/month/day, segment lists, `_default`, text)
 // stays behind the picker's "more" expander. These pure helpers do the
 // year-int ↔ wire shaping so the slider can be a presentation-only component
@@ -772,7 +788,7 @@ export function nextResolutionQuery(
 /** The `?period` WIRE for a year-grain window: a bare year when `from === to`
  * (`2018`), else the inclusive `from..to` range (`2018..2020`) — exactly the
  * forms the existing range path already round-trips. */
-export function yearWindowToWire(window: StudyWindow): string {
+export function yearWindowToWire(window: ProjectStudyWindow): string {
   return window.from === window.to
     ? String(window.from)
     : `${window.from}..${window.to}`;
@@ -784,7 +800,7 @@ export function yearWindowToWire(window: StudyWindow): string {
  * snapped onto the year slider). Endpoints must parse as bare grammar years. */
 export function yearWindowFromWire(
   wire: string | null | undefined,
-): StudyWindow | null {
+): ProjectStudyWindow | null {
   const value = (wire ?? "").trim();
   if (value === "") {
     return null;
@@ -806,7 +822,7 @@ export function yearWindowFromWire(
  * same all-or-nothing rule `periodWireBounds` uses. */
 export function yearSegmentsFromWire(
   wire: string | null | undefined,
-): StudyWindow[] | null {
+): ProjectStudyWindow[] | null {
   const value = (wire ?? "").trim();
   if (value === "") {
     return null;
@@ -814,7 +830,9 @@ export function yearSegmentsFromWire(
   const windows = value
     .split(LIST_SEP)
     .map((member) => yearWindowFromWire(member));
-  return windows.every((w): w is StudyWindow => w !== null) ? windows : null;
+  return windows.every((w): w is ProjectStudyWindow => w !== null)
+    ? windows
+    : null;
 }
 
 /** Parse a string as a bare GRAMMAR year (19xx/20xx) → its int, else null. The
@@ -843,10 +861,10 @@ export function yearWindowRepresentable(
  * bounds guard for a seed that falls outside the rendered track (an older
  * `?period` predating the current bounds). */
 export function clampYearWindow(
-  window: StudyWindow,
+  window: ProjectStudyWindow,
   min: number,
   max: number,
-): StudyWindow {
+): ProjectStudyWindow {
   const from = Math.min(Math.max(window.from, min), max);
   const to = Math.min(Math.max(window.to, min), max);
   return { from: Math.min(from, to), to: Math.max(from, to) };
@@ -869,7 +887,7 @@ export function clampYearPeriodWire(
 
 /** The subject's data-availability span with INDEPENDENTLY-bounded sides (#615):
  * a `null` side is UNBOUNDED (the start/end is unknown — the `0001`/`9999`
- * sentinels of `coverageFromStates`). Distinct from `StudyWindow` (a hard int
+ * sentinels of `coverageFromStates`). Distinct from `ProjectStudyWindow` (a hard int
  * pair — the wire shape for the window/selection), since a coverage span can be
  * open on one side while finite on the other (`0001..2008` → `{from:null,
  * to:2008}`); a gap fires only against a FINITE side. */
@@ -896,7 +914,7 @@ export function coverageBandEdges(
   min: number,
   max: number,
   vintageYear?: number,
-): StudyWindow | null {
+): ProjectStudyWindow | null {
   if (coverage === null) {
     return null;
   }
@@ -935,10 +953,10 @@ export function coverageBandEdges(
  *     selectable no-data span". */
 export function intersectCoverageWindow(
   coverage: Coverage | null,
-  window: StudyWindow | null,
+  window: ProjectStudyWindow | null,
   fallbackMin: number,
   fallbackMax: number,
-): StudyWindow {
+): ProjectStudyWindow {
   // No coverage — or an INVERTED one, which is no band at all — seeds from the
   // window, else the full bounds: never a manufactured span over no-data years.
   const band = coverageBandEdges(coverage, fallbackMin, fallbackMax);
@@ -967,13 +985,13 @@ export function intersectCoverageWindow(
  * fully covers the selection, the relevant side is unbounded (null = no gap
  * there), or there is no coverage to compare against. Inclusive bounds. */
 export function notDeliveredGaps(
-  selection: StudyWindow,
+  selection: ProjectStudyWindow,
   coverage: Coverage | null,
-): StudyWindow[] {
+): ProjectStudyWindow[] {
   if (coverage === null) {
     return [];
   }
-  const gaps: StudyWindow[] = [];
+  const gaps: ProjectStudyWindow[] = [];
   if (coverage.from !== null && selection.from < coverage.from) {
     gaps.push({
       from: selection.from,
@@ -992,8 +1010,8 @@ export function notDeliveredGaps(
 /** Whether two year windows describe the SAME span (the user-deviation test:
  * `?period` ≠ the project window). Null-safe — two nulls are equal. */
 export function sameYearWindow(
-  a: StudyWindow | null,
-  b: StudyWindow | null,
+  a: ProjectStudyWindow | null,
+  b: ProjectStudyWindow | null,
 ): boolean {
   if (a === null || b === null) {
     return a === b;
@@ -1003,7 +1021,7 @@ export function sameYearWindow(
 
 /** A year window as a reader sees it: a bare year when it is one year wide, else
  * the en-dash range (`2015–2020`). */
-export function yearWindowLabel(window: StudyWindow): string {
+export function yearWindowLabel(window: ProjectStudyWindow): string {
   return window.from === window.to
     ? String(window.from)
     : `${window.from}–${window.to}`;
@@ -1012,7 +1030,7 @@ export function yearWindowLabel(window: StudyWindow): string {
 /** A `Source.period` as a reader sees it: each segment of the wire with its range
  * separator as an en dash, the segments comma-separated (`2005–2008, 2012–2015`).
  * Null when the period has no wire (unset / malformed). */
-export function periodLabel(period: Period): string | null {
+export function periodLabel(period: ProjectSourcePeriod): string | null {
   const wire = periodToWire(period);
   return wire === null
     ? null
@@ -1036,8 +1054,8 @@ export function periodLabel(period: Period): string | null {
 export type WindowRelation = "same" | "differs" | "disjoint";
 
 export function periodWindowRelation(
-  period: Period | null,
-  window: StudyWindow | null,
+  period: ProjectSourcePeriod | null,
+  window: ProjectStudyWindow | null,
 ): WindowRelation | null {
   if (period === null || window === null) {
     return null;
@@ -1083,7 +1101,7 @@ export interface YearEntryOptions {
    * slider-clamped years (coverage / project window / steward bounds). Omitted
    * for a plain wire-grammar check: `SourceEditor` writes the period itself, so
    * the wire's own 19xx/20xx rule (`grammarYear`) IS the only band it has. */
-  selectableYears?: StudyWindow;
+  selectableYears?: ProjectStudyWindow;
   /** The clause naming the year rule in the "must be a ___" refusal, e.g.
    * `"four-digit year, like 2015."` (the picker, off the band's first year).
    * Defaults to `DEFAULT_YEAR_RULE` — the wording a plain grammar-year check
@@ -1111,7 +1129,7 @@ export function resolveYearEntry(
   to: string | null,
   opts: YearEntryOptions = {},
 ):
-  | { years: StudyWindow }
+  | { years: ProjectStudyWindow }
   | { problem: string; at: { from: boolean; to: boolean } }
   | null {
   if (from === null || to === null) {
