@@ -59,11 +59,13 @@ unknown-validity `classification_code` rows.
 
 - Filename: lowercased classification `short_name`, e.g. `sun2000-niva.csv`.
 - Encoding: UTF-8.
-- Header: either `vardekod,vardebenamning` (SCB convention) or `code,label` (universal).
-  Both are accepted; `load_valid_codes` only reads the first two columns — any further
-  columns (`label_en`, `parent_code`, `valid_from`, `valid_to`, …) are silently ignored.
-- One code per row. Whitespace is trimmed on both columns at load time.
-- Duplicate `vardekod`/`code` values → build fails.
+- Header: exactly `vardekod,vardebenamning` (SCB convention), `code,label` (universal),
+  or `code,label,label_en,parent_code,valid_from,valid_to` (the SOS fetch output). The
+  build reads books with `sources/code_lists.py` `read_code_list`, which refuses any
+  other layout.
+- One code per row. Whitespace is trimmed on both columns when the book is read.
+- A repeated row with the same label is one member. A code repeated with another label
+  is left out of the book and reported as a `conflicting_classification_labels` error.
 
 Example (SCB convention):
 

@@ -163,7 +163,6 @@ Each loader reads `files/` as the curation root, or the named file inside it.
   | `provider_slugs`          | `load_provider_toml` of the one `*.toml` file                                                                                                                          |
   | `freeze_states`           | `load_freeze_states(files)`: the zone states in `freeze.toml`, or `slug_state.toml` beside a `registers/` tree                                                         |
   | `matrix_evidence`         | `load_matrix(files/matrix.json)` with `args.source_mode` and `args.expected_selector`                                                                                  |
-  | `valid_codes`             | `load_valid_codes(files/codes.csv)`                                                                                                                                    |
   | `related_documents`       | `load_related_documents(files/related_documents.toml)`                                                                                                                 |
   | `curated_source`          | `read_curated_source(files/<args.file>)` as `args.provider`, its revision from `args.revision_from`                                                                    |
 

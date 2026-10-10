@@ -1,10 +1,14 @@
 """The shipped SEKTORKOD and SEKTOR2000 books keep the code sets a binding relies on."""
 
+import csv
 from pathlib import Path
 
-from reg_meta_build.classifications import load_valid_codes
-
 BOOKS = Path(__file__).resolve().parent.parent / "input_data" / "classifications"
+
+
+def _codes(name: str) -> set[str]:
+    with (BOOKS / name).open(encoding="utf-8", newline="") as fh:
+        return {row["vardekod"] for row in csv.DictReader(fh)}
 
 
 def test_sektorkod_cohort_is_not_a_sektor2000_subset() -> None:
@@ -18,8 +22,8 @@ def test_sektorkod_cohort_is_not_a_sektor2000_subset() -> None:
     `classification-bindings-conform-extend-or-stay-unbound-per-register`. Fails if
     sektorkod.csv changes its codes or 15 or 00 is added to sektor2000.csv.
     """
-    sektorkod = set(load_valid_codes(BOOKS / "sektorkod.csv"))
-    insekt = set(load_valid_codes(BOOKS / "sektor2000.csv"))
+    sektorkod = _codes("sektorkod.csv")
+    insekt = _codes("sektor2000.csv")
     assert sektorkod == {
         "00",
         "11",

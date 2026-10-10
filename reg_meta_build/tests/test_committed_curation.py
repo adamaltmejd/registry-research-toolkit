@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING, get_origin
 from _repo_curation_support import REPO_CURATION, REPO_ROOT
 from pydantic import BaseModel
 from reg_meta_build.cis2016_matrix import load_matrix
-from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.concept_groups import load_worklist_concept_groups
 from reg_meta_build.doc_db import load_doc_sources, load_related_documents
 from reg_meta_build.scb_errata import resolve_scb_errata
@@ -138,11 +137,6 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     )
     assert errata.delivered and errata.columns and errata.versions
 
-    books = REPO_ROOT / "input_data" / "classifications"
-    for entry in tree.classifications:
-        assert load_valid_codes(books / entry.classification.codes_file), (
-            entry.classification.short_name
-        )
     label_rules = {
         label: entry.classification.short_name
         for entry in tree.classifications

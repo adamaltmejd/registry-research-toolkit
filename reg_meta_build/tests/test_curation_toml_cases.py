@@ -26,7 +26,6 @@ from _case_projection import MATCH_MODES, mismatch, unclaimed
 from pydantic import BaseModel
 from reg_core_py import Fqid
 from reg_meta_build.cis2016_matrix import MatrixSelector, load_matrix
-from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.concept_groups import (
     load_concept_groups,
     load_worklist_concept_groups,
@@ -131,7 +130,6 @@ LOADERS: dict[str, Callable[[Path, dict[str, Any]], Any]] = {
         source_mode=args["source_mode"],
         expected_selector=MatrixSelector.model_validate(args["expected_selector"]),
     ),
-    "valid_codes": lambda files, args: load_valid_codes(files / "codes.csv"),
     "related_documents": lambda files, args: load_related_documents(
         files / "related_documents.toml"
     ),
