@@ -1,0 +1,16 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "group_members",
+      "fields": ["group_key", "variable"],
+      "match": "set",
+      "rows": [
+        ["efternamn", "efternamn"],
+        ["efternamn", "fornamn"],
+        ["pair", "other"],
+        ["pair", "value"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "replaces": ["test_variable_edge_groups.py::test_month_group_does_not_silently_replace_curated_membership"],
+  "note": "LONJAN, LONFEB and LONMAR form a month family keyed `lon`, and a curated [[group]] `pay` claims `lonjan` beside `value`. A variable belongs to one group, and the rule keeps this conflict fatal, so the build stops with a located configuration error naming the variable, the curated group and the month family, in a diagnostic build too. Before the fix it stopped with the bare `variable belongs to multiple resolved groups` `ValueError` from the metadata validator.",
+  "fails_if": "`resolve_month_groups` (catalog_dependencies.py) stops checking each month member against the curated groups' members, so the build ends `pipeline_build_failed` on the validator's bare ValueError",
+  "sources": {
+    "description": "SCB register 1 delivers LONJAN, LONFEB and LONMAR, a three-month family named 'Monthly wage <month>', plus VALUE (101).",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1011,
+          "var_id": 111,
+          "colname": "LONJAN",
+          "varname": "Monthly wage january"
+        },
+        {
+          "cvid": 1012,
+          "var_id": 112,
+          "colname": "LONFEB",
+          "varname": "Monthly wage february"
+        },
+        {
+          "cvid": 1013,
+          "var_id": 113,
+          "colname": "LONMAR",
+          "varname": "Monthly wage march"
+        },
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "varname": "ValueVar"
+        },
+        {
+          "cvid": 1002,
+          "var_id": 102,
+          "colname": "OTHER",
+          "varname": "OtherVar"
+        }
+      ]
+    }
+  }
+}

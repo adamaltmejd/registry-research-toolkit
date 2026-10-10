@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "variable_group_key_conflict",
+    "exit_code": 10,
+    "message_contains": ["curated group scb/sample/efternamn", "scb/sample/efternamn, scb/sample/fornamn"]
+  }
+}

@@ -135,7 +135,7 @@ def test_thin_default_variant_carries_panel_fields(tmp_path):
             ),
         ),
     )
-    names, variants, _, diagnostics, _ = compile_native_naming(
+    names, variants, _, diagnostics, _, _ = compile_native_naming(
         load_curation_tree(root),
         cast("Any", SimpleNamespace(records=_naming_reader(Reader()))),
         (scope,),
