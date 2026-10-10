@@ -45,5 +45,55 @@
         "value_set": {"members": [["01", "Stockholms län"], ["03", "Uppsala län"], ["04", "Södermanlands län"]]}
       }
     ]
+  },
+  {
+    "register": {"provider": "scb", "slug": "example", "name": "Example"},
+    "slug": "kommun",
+    "provider_key": "2",
+    "name": "Kommun",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "Kommun",
+        "data_type": "varchar",
+        "data_length": "4",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {"members": [["0114", "Upplands Väsby"], ["0180", "Stockholm"]]},
+        "value_set_version_label": "v1"
+      },
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Kommun",
+        "data_type": "varchar",
+        "data_length": "4",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {"members": [["0114", "Upplands Väsby"], ["0180", "Stockholm"]]},
+        "value_set_version_label": "v2"
+      },
+      {
+        "variant": {"slug": "annual", "name": "Annual"},
+        "valid_from": "2019-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Kommun",
+        "data_type": "varchar",
+        "data_length": "4",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {"members": [["0114", "Upplands Väsby"], ["0180", "Stockholm"]]},
+        "value_set_version_label": "v1"
+      }
+    ]
   }
 ]

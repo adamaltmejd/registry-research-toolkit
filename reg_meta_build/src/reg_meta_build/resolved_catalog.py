@@ -492,11 +492,19 @@ def merge_adjacent_states(
     states have no neighbours and pass through.
     """
     merged: list[ResolvedState | None] = list(states)
-    by_column: dict[tuple[str, str], list[int]] = defaultdict(list)
+    # One lane per value-set version: states of one variant and version never
+    # overlap, so a lane sorted by start is a total order and the result cannot
+    # depend on input order. States of another version may overlap the lane and
+    # never interrupt it.
+    lanes: dict[tuple[str, str, str], list[int]] = defaultdict(list)
     for index, state in enumerate(states):
         if state.period_scope == "intervals":
-            by_column[state.variant.slug, state.delivery_column_name].append(index)
-    for indices in by_column.values():
+            lanes[
+                state.variant.slug,
+                state.delivery_column_name,
+                state.value_set_version_label,
+            ].append(index)
+    for indices in lanes.values():
         head: int | None = None
         for index in sorted(indices, key=lambda i: states[i].valid_from or ""):
             state = states[index]

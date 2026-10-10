@@ -17,5 +17,13 @@
   {
     "status": 404,
     "json": {"/error/code": "not_found", "/error/fields/ref": "2542042442440425880"}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/value_set_version_label": ["v1", "v2"],
+      "/data/items/*/valid_from": ["2018-01-01", "2018-01-01"],
+      "/data/items/*/valid_to": ["2019-12-31", "2019-12-31"]
+    }
   }
 ]
