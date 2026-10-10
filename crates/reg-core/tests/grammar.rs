@@ -9,6 +9,7 @@ use std::path::PathBuf;
 use common::Rng;
 use reg_core::{
     Fqid, GrammarError, Period, PeriodToken, Term, next_iso_day, period_token_for_bounds,
+    prev_iso_day,
 };
 use serde_json::{Value, json};
 
@@ -270,14 +271,14 @@ fn period_token_inverts_bounds() {
     }
 }
 
-// Fails if a window no token spans is rounded to one, a synthesized non-leap `02-29`
-// end stops counting as February's end, or the day after a month's end (or the
-// open-ended sentinel) is miscounted.
+// Fails if a window no token spans is rounded to one, the day after a month's end
+// (or the open-ended sentinel) is miscounted, or a calendar-impossible day
+// (`2018-02-29`) is read as a date: it ends no token and has no next or previous day.
 #[test]
 fn period_token_edges_and_next_day() {
     for (lo, hi, token) in [
         ("2018-02-01", "2018-02-28", "2018-02"),
-        ("2018-02-01", "2018-02-29", "2018-02"),
+        ("2018-02-01", "2018-02-29", "2018-02-01..2018-02-29"),
         ("2020-02-01", "2020-02-29", "2020-02"),
         ("2018-03-01", "2018-04-15", "2018-03-01..2018-04-15"),
         ("2018-01-01", "2019-12-31", "2018-01-01..2019-12-31"),
@@ -288,11 +289,12 @@ fn period_token_edges_and_next_day() {
     }
     for (day, next) in [
         ("2018-02-28", "2018-03-01"),
-        ("2018-02-29", "2018-03-01"),
+        ("2018-02-29", "2018-02-29"),
         ("2020-02-28", "2020-02-29"),
         ("2018-12-31", "2019-01-01"),
         ("9999-12-31", "9999-12-31"),
     ] {
         assert_eq!(next_iso_day(day), next, "{day}");
     }
+    assert_eq!(prev_iso_day("2018-02-29"), "2018-02-29");
 }

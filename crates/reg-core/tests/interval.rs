@@ -22,8 +22,7 @@ fn list(v: &Value) -> Vec<Interval> {
 
 /// Each golden case is the retired Python reader's `reg_meta.inventory` answer (`_intersect`,
 /// `_merge`, `_overlap`, `_render`) or `reg_meta.order` answer (`_gaps`). Fails when
-/// the algebra stops joining day-adjacent intervals (a synthesized non-leap `02-29`
-/// end counting as February's end), keeps a containment or an empty intersection,
+/// the algebra stops joining day-adjacent intervals, keeps a containment or an empty intersection,
 /// renders an interval as another spelling than the coarsest token or year-ended
 /// range, or leaves a phantom gap or misses a real one.
 ///

@@ -16,7 +16,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use reg_core::project::{Binding, ProjectData, Source, version_issue};
 use reg_core::{
     Fqid, Interval, IssueLevel, ValidationIssue, ValidationResult, intersect, merge, overlap,
-    quote, quoted_list, render, snap_month_end,
+    quote, quoted_list, render,
 };
 use rusqlite::{Connection, OptionalExtension, params};
 use serde::Serialize;
@@ -702,7 +702,7 @@ fn reach(
         for e in emitted(conn, Scope::Reference, id, Some(variant), Some(bounds))? {
             let window = (
                 e.valid_from.clone().expect("a dated state has bounds"),
-                snap_month_end(e.valid_to.as_deref().expect("a dated state has bounds")),
+                e.valid_to.clone().expect("a dated state has bounds"),
             );
             let Some(overlap) = intersect(&window, segment) else {
                 continue;

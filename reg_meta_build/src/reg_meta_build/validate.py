@@ -24,6 +24,8 @@ Year projection correctness (two layers):
   - Open-ended window sentinel: every 9999-prefixed `valid_to` in
     `variable_state` / `variable_state_lineage` equals '9999-12-31' exactly
     (`_check_open_ended_sentinel`) — downstream display branches on the literal
+  - Calendar-exact bounds: every TEXT `*valid_from`/`*valid_to` is a real day,
+    never a non-leap `YYYY-02-29` (`_check_calendar_exact_bounds`)
   - PRAGMA foreign_key_check returns no rows
   - Freelist fraction < 1% of pages (`_check_operational`): the build drops
     several large build-only staging tables (`variable_instance`,
@@ -232,6 +234,7 @@ def validate_built_db(
         _check_no_codeless_codebearing_overlap(conn, result, tables, flavored=flavored)
         _check_pooled_state_overlap(conn, result, tables, flavored=flavored)
         _check_open_ended_sentinel(conn, result, tables)
+        _check_calendar_exact_bounds(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_delivery_column_hygiene(conn, result, tables)
         _check_name_field_hygiene(conn, result, tables)
@@ -444,15 +447,12 @@ def _check_state_delivery_scope(
         if scope == "year_independent":
             valid = start is None and end is None and pooled == 0
         elif scope == "intervals" and isinstance(start, str) and isinstance(end, str):
-            try:
-                valid = (
-                    date.fromisoformat(start).isoformat() == start
-                    and date.fromisoformat(end).isoformat() == end
-                    and start <= end
-                    and pooled in (0, 1)
-                )
-            except ValueError:
-                valid = False
+            valid = (
+                _is_calendar_date(start)
+                and _is_calendar_date(end)
+                and start <= end
+                and pooled in (0, 1)
+            )
         else:
             valid = False
         invalid += not valid
@@ -894,6 +894,57 @@ def _check_open_ended_sentinel(
                 f"{table}: all 9999-prefixed valid_to are exactly "
                 f"'{_VALID_TO_SENTINEL}' ({n_open:,} open-ended)"
             )
+
+
+def _is_calendar_date(value: object) -> bool:
+    """`value` is exactly a `YYYY-MM-DD` string naming a real calendar day."""
+    if not isinstance(value, str):
+        return False
+    try:
+        return date.fromisoformat(value).isoformat() == value
+    except ValueError:
+        return False
+
+
+def _check_calendar_exact_bounds(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Every stored ISO-date window bound is a real calendar day.
+
+    The Rust reader's date arithmetic (`reg_core::next_iso_day` and friends)
+    treats a calendar-impossible day such as a non-leap `2019-02-29` as no date
+    at all, so such a bound would stop adjacent windows from merging and render
+    as an explicit range. Checked in Python (`date.fromisoformat` round trip
+    over the distinct values), not with SQLite's `date()`: older SQLite builds
+    (3.40.1) return `date('2019-02-29')` unchanged, so `date(x) IS NOT x` would
+    pass it. Covers every TEXT column named `*valid_from`/`*valid_to`
+    (`classification`'s integer years are out of scope); NULL is skipped.
+    """
+    result.section("[window: calendar-exact date bounds]")
+    bad: list[str] = []
+    for table in sorted(tables):
+        for _, column, declared, *_ in conn.execute(
+            f'PRAGMA table_info("{table}")'
+        ).fetchall():
+            if declared.upper() != "TEXT" or not column.endswith(
+                ("valid_from", "valid_to")
+            ):
+                continue
+            sample = [
+                value
+                for (value,) in conn.execute(
+                    f'SELECT DISTINCT "{column}" FROM "{table}" '
+                    f'WHERE "{column}" IS NOT NULL ORDER BY 1'
+                )
+                if not _is_calendar_date(value)
+            ][:5]
+            if sample:
+                values = ", ".join(repr(v) for v in sample)
+                bad.append(f"{table}.{column}: {values}")
+    if bad:
+        result.fail("calendar-impossible date bounds: " + "; ".join(bad))
+    else:
+        result.ok("all stored date bounds are calendar days")
 
 
 def _check_variable_alias_covers_state_columns(
