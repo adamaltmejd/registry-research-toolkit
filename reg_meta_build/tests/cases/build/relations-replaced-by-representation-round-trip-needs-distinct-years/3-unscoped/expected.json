@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "replaced_by_cycle",
+    "message_contains": ["forms a succession cycle", "'scb/sample/value', 'value', ''"]
+  }
+}
