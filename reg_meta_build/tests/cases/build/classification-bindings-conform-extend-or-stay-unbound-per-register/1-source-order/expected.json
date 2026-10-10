@@ -188,7 +188,6 @@
           "unresolved_classification_reference",
           "unsupported_classification_scope",
           "unknown_classification_declaration",
-          "conflicting_classification_decisions",
           "multiple_classifications_declared",
           "nonconforming_classification_codes",
           "sentinel_classification_codes",

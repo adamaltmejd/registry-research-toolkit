@@ -4077,66 +4077,52 @@ def compile_provider_declarations(
     cases: dict[Any, list[CurationCase]] = {}
     diagnostics: list[ResolutionDiagnostic] = []
     report: dict[str, dict[str, list[str]]] = {}
-    has_selected_provider = any(
-        name in registers
-        and (
-            registers[name].register_info.provider == "sos"
-            or scope.source in thin_sources
-        )
-        for scope in scopes
-        for name, _ in _scope_registers(scope)
-    )
-    with open_value_bindings(
-        prepared.value_sources if has_selected_provider else ()
-    ) as sessions:
-        for scope in sorted(
-            scopes, key=lambda item: (item.source, repr(item.register_key))
-        ):
-            scope_key = scope.source, scope.register_key
-            wanted = tuple(
-                sorted(
-                    (
-                        (registers[name], key)
-                        for name, key in _scope_registers(scope)
-                        if name in registers
-                        and (
-                            registers[name].register_info.provider == "sos"
-                            or scope.source in thin_sources
-                        )
-                    ),
-                    key=lambda item: item[0].source_file,
-                )
+    for scope in sorted(
+        scopes, key=lambda item: (item.source, repr(item.register_key))
+    ):
+        scope_key = scope.source, scope.register_key
+        wanted = tuple(
+            sorted(
+                (
+                    (registers[name], key)
+                    for name, key in _scope_registers(scope)
+                    if name in registers
+                    and (
+                        registers[name].register_info.provider == "sos"
+                        or scope.source in thin_sources
+                    )
+                ),
+                key=lambda item: item[0].source_file,
             )
-            if not wanted:
+        )
+        if not wanted:
+            continue
+        if scope.register_key is None:
+            records = tuple(prepared.records.iter_records(source=scope.source))
+        else:
+            records = tuple(
+                record
+                for _, members in prepared.records.iter_register_slices(
+                    scope.source, (scope.register_key,)
+                )
+                for record in members
+            )
+        for register, register_key in wanted:
+            selected = tuple(
+                record
+                for record in records
+                if source_register_key(record) == register_key
+            )
+            provider = register.register_info.provider
+            if not selected and provider != "sos":
                 continue
-            if scope.register_key is None:
-                records = tuple(prepared.records.iter_records(source=scope.source))
+            if provider == "sos":
+                new_cases, issues, statuses = _compile_sos_register(register, selected)
+                diagnostics.extend(issues)
+                report[f"sos/{register.register_info.slug}"] = statuses
             else:
-                records = tuple(
-                    record
-                    for _, members in prepared.records.iter_register_slices(
-                        scope.source, (scope.register_key,)
-                    )
-                    for record in members
-                )
-            for register, register_key in wanted:
-                selected = tuple(
-                    record
-                    for record in records
-                    if source_register_key(record) == register_key
-                )
-                provider = register.register_info.provider
-                if not selected and provider != "sos":
-                    continue
-                if provider == "sos":
-                    new_cases, issues, statuses = _compile_sos_register(
-                        register, selected
-                    )
-                    diagnostics.extend(issues)
-                    report[f"sos/{register.register_info.slug}"] = statuses
-                else:
-                    new_cases = _compile_thin_register(selected, sessions)
-                cases.setdefault(scope_key, []).extend(new_cases)
+                new_cases = _compile_thin_register(selected)
+            cases.setdefault(scope_key, []).extend(new_cases)
     for register in tree.registers:
         if register.register_info.provider != "sos" or not (
             register.errata.data_type or register.errata.classification_reference
@@ -4699,7 +4685,7 @@ def _compile_sos_register(
 
 
 def _compile_thin_register(
-    records: tuple[SourceRecord, ...], sessions: Any
+    records: tuple[SourceRecord, ...],
 ) -> tuple[CurationCase, ...]:
     register_facts = tuple(
         parent
@@ -4828,7 +4814,6 @@ def _compile_thin_register(
                 period = TemporalScope(
                     kind="intervals", intervals=(ScopeInterval(start=start, end=end),)
                 )
-            copied = record.fields.value_set_declared is not None
             effects.append(
                 CuratedOccurrenceAddition(
                     occurrence_key=f"{case_id}:{name}",
@@ -4841,12 +4826,7 @@ def _compile_thin_register(
                     evidence=(ref,),
                     donor=ref,
                     copied_fields=tuple(SourceFields.model_fields),
-                    copy_coding=copied,
-                    expected_codings=copied_coding_fingerprints(
-                        bind_code_lists(record, sessions, scope=period).claims
-                    )
-                    if copied
-                    else None,
+                    copy_coding=record.fields.value_set_declared is not None,
                 )
             )
         expectations = capture_expectations(
@@ -5353,7 +5333,6 @@ def compile_coding_register(
                                         mode="json"
                                     )
                                 ),
-                                binding_scope="inline_coding",
                                 sentinel_members=tuple(map(tuple, entry.members)),
                                 reason=entry.reason,
                                 provenance=entry.source,
