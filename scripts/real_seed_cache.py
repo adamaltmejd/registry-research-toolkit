@@ -902,7 +902,7 @@ def cmd_build(args: argparse.Namespace) -> int:
         # Held throughout, so concurrent verifications cannot quarantine the same
         # entry twice.
         with real_seed_lock():
-            return verify_build(args, home, key, fields)
+            return verify_build(args, home, key, fields, digest(resolve_fields))
     if record := lookup_build(home, key):
         emit(build_result(home, record, hit=True))
         return 0
@@ -984,8 +984,15 @@ def cmd_build(args: argparse.Namespace) -> int:
     return 0
 
 
-def verify_build(args: argparse.Namespace, home: Path, key: str, fields: dict) -> int:
-    """Rebuild uncached and compare the database and decompressed ledger bytes."""
+def verify_build(
+    args: argparse.Namespace, home: Path, key: str, fields: dict, resolve_key: str
+) -> int:
+    """Rebuild uncached and compare the database and decompressed ledger bytes.
+
+    A mismatch also quarantines the resolve entries that could replay the
+    rejected output: the one this entry was placed from, and the one under the
+    current resolve key (written by the same build when it was not phased).
+    """
     record = lookup_build(home, key)
     if record is None:
         sys.exit("real-seed-cache: nothing stored under this key to verify")
@@ -1020,6 +1027,13 @@ def verify_build(args: argparse.Namespace, home: Path, key: str, fields: dict) -
         shutil.rmtree(quarantine, ignore_errors=True)
         entry.rename(quarantine)
         os.utime(quarantine)
+        resolve_home = cache_dir("resolve")
+        for suspect in {record.get("phased_from"), resolve_key} - {None}:
+            if (resolve_home / suspect).exists():
+                held = resolve_home / f"{STAGING_PREFIX}quarantine-{suspect}"
+                shutil.rmtree(held, ignore_errors=True)
+                (resolve_home / suspect).rename(held)
+                os.utime(held)
     emit(
         {
             "identical": identical,

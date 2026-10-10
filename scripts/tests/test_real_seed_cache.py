@@ -148,9 +148,9 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     # runs again), if the stored report still names the
     # staging directory, if a hit skips the build's admission checks (a changed
     # prepared checkout returns the old entry), if a hit skips the ledger (a truncated
-    # one is returned), if a failed `--verify` leaves its entry reachable (the next
-    # build hits it), or if the key leaves out the curation tree (the edited tree hits
-    # the old entry).
+    # one is returned), if a failed `--verify` leaves its entry or its resolve entry
+    # reachable (the next build hits or rematerializes it), or if the key leaves out
+    # the curation tree (the edited tree hits the old entry).
     curation = tmp_path / "curation"
     (curation / "registers").mkdir(parents=True)
     (curation / "registers/a.toml").write_text("[register]\n")
@@ -221,10 +221,12 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     assert (code, rebuilt["hit"], rebuilt["phased"]) == (0, False, False)
     assert _calls(tmp_path)[4:] == ["materialize-db", "build-db"]
 
+    # Fails if a failed --verify leaves the resolve entry reusable: the next build
+    # would rematerialize the rejected resolution instead of building in full.
     code, verified = build("--verify", drift=True)
     assert (code, Path(verified["quarantined_entry"]).is_dir()) == (1, True)
-    assert build()[1]["phased"] is True
-    assert _calls(tmp_path)[6:] == ["build-db", "materialize-db"]
+    assert build()[1]["phased"] is False
+    assert _calls(tmp_path)[6:] == ["build-db", "build-db"]
 
     # Fails if the resolve key leaves out the curation tree: the edited tree would
     # place the old bundle.
