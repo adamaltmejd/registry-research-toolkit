@@ -114,7 +114,7 @@ describe("BindingEditor read-only cart row", () => {
   });
 
   it("leads with display_name over a pinned representation when a file sets both", async () => {
-    // reg_schema makes `display_name` the binding's OUTPUT column name, so it is
+    // reg-core makes `display_name` the binding's OUTPUT column name, so it is
     // what the extract delivers even where a `representation` also pins the source
     // column the value is taken from.
     const binding = {

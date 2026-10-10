@@ -13,8 +13,8 @@ chooses between sources. reg_meta_build/DESIGN.md → "Holdings resolution
 invariants" is the decision text; the format is documented in
 reg_meta_build/DESIGN.md → "Inventory TOML".
 
-Deliberately reg_schema-free: the contract needs only reg-core's period grammar
-and FQID parser (`reg_core_py`).
+The contract needs only reg-core's period grammar and FQID parser
+(`reg_core_py`).
 This module holds no DB access — it is pure domain code over an authored file.
 """
 
@@ -67,9 +67,7 @@ class EditionRange(_InventoryModel):
 
     Endpoints are period tokens (a bare TOML year int is normalized to its token
     string on the way in). `from` is a Python keyword, so the attr is `from_`
-    with a `"from"` alias — same shape reg_schema's `PeriodRange` uses for a
-    project period; the two converge when the materializer lane takes the
-    `reg_meta → reg_schema` dependency."""
+    with a `"from"` alias."""
 
     from_: str = Field(alias="from")
     to: str
@@ -312,7 +310,7 @@ class ColumnMapping(_InventoryModel):
     @model_validator(mode="after")
     def _check_prefix_match(self) -> ColumnMapping:
         """The variable's `provider/register` prefix must equal the variant
-        coordinate's — same cross-field rule reg_schema's structural validator
+        coordinate's — same cross-field rule reg-core's structural validator
         enforces for a project source's bindings. A mapping that crosses
         registers is an authoring slip, not a legal combined table."""
         prefix = tuple(self.register_variant.split("/")[:2])

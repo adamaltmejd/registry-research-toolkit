@@ -437,7 +437,7 @@ function foldPass(s: string): string {
 const PY_WHITESPACE = /[\p{White_Space}\x1c-\x1f]+/u;
 
 /** Fold a string for diacritic-blind, case-insensitive substring matching: the
- * server's `fold_search` (reg_meta.queries / reg-core), so the client filter and
+ * server's `fold_search` (reg-core), so the client filter and
  * the server search agree. Case fold, NFKD, drop combining marks, repeated until
  * nothing changes (a second pass catches a capital NFKD emits, U+1D2C → A → a);
  * then one space between words, where whitespace is Python's `str.isspace`
@@ -1014,7 +1014,7 @@ export interface PickerRepresentation {
    * ordinary single-column row or a genuinely PARALLEL co-existing column (the author
    * pins which co-existing column they mean). But `null` for a FOLDED SEQUENTIAL RENAME
    * (`renamedColumns.length > 0`): a rename resolves to exactly ONE column per period, so
-   * per the `Binding.representation` contract (reg_schema project_data.py) it must stay
+   * per the `Binding.representation` contract (reg-core `project.rs`) it must stay
    * unset and let resolution pick the right column per year. Pinning the latest column
    * (`DINF86`) over the union window would break the earlier eras — `DINF86` wasn't
    * delivered before 1990, so it would resolve empty / under-cover those years (#902). */
@@ -1135,7 +1135,7 @@ function rowWirePeriod(
  * returning only the spans (no technical-change notes). A continuously-delivered
  * column yields ONE window; an interrupted one yields a window per era.
  *
- * reg_meta applies the same rule per delivery (`catalog.py` `_fuse_windows`), so the
+ * The catalog applies the same rule per delivery, so the
  * register list's `VariableDelivery.windows` arrive already fused; this merges ACROSS
  * deliveries — the several variants that ship one column name, or one variable's
  * states. */
@@ -2923,8 +2923,7 @@ export const OPEN_ENDED_VALID_TO = "9999-12-31";
 
 /** The yearless-fallback `variable_state.valid_from` sentinel — the floor
  * reg_meta_build writes when a state's start year is unknown (`_VALID_FROM_UNKNOWN`
- * in `reg_meta_build/db.py`; the `0001` twin of the `9999` ceiling, per
- * `reg_meta.queries`). Like the ceiling it must NOT read as a literal year:
+ * in `reg_meta_build/db.py`; the `0001` twin of the `9999` ceiling). Like the ceiling it must NOT read as a literal year:
  * coverage `from` is unbounded/unknown for it, never year 1 (which would let the
  * slider emit out-of-grammar wires like `1..2026`). */
 export const YEARLESS_VALID_FROM = "0001-01-01";

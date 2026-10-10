@@ -5,7 +5,7 @@
  *
  * The input snippet mixes TWO emphasis sources, both spelled with `**`/`*`/`_`:
  *   • the FTS5 `snippet()` highlight delimiter `**…**` wrapping the matched term
- *     (set in `reg_meta/src/reg_meta/doc_queries.py`), and
+ *     (set in `crates/reg-catalog/src/ops/docs.rs`), and
  *   • literal markdown emphasis from the converted source body.
  * Both are tokenized identically here — the CONSUMER decides the element (the panel
  * renders `strong` as a `<mark>` "matched term", `em` as `<em>`).

@@ -363,8 +363,8 @@ _PREPARING_MODULES = (
 def _prepared_inputs_digest() -> str:
     """Everything a prepared entry depends on besides its source spec.
 
-    The reader cache's build inputs (the `reg_meta_build`, `reg_meta` and
-    `reg_schema` sources, the native extension sources, the installed
+    The reader cache's build inputs (the `reg_meta_build` sources, the native
+    extension sources, the installed
     distributions, Python and SQLite), the modules that prepare a spec, and the Git
     that commits and checks the accepted repository.
     """

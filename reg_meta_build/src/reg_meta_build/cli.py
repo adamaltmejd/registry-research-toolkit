@@ -1018,8 +1018,7 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
-    # `reg-meta-build` has no `--examples` handler (the query CLI's `--examples`
-    # interceptor lives in `reg_meta.cli.run`); suppress the epilog so each
+    # `reg-meta-build` has no `--examples` handler; suppress the epilog so each
     # subcommand's --help doesn't point at an unrecognized flag.
     apply_leaf_help(parser, examples_epilog=False)
     return parser
