@@ -217,16 +217,13 @@ def support_join_key(
 
 
 def _endpoints(join: SourceSupportJoin, record: SourceRecord) -> tuple[str, ...] | None:
-    """The row's declared endpoint names; an absent or empty endpoint has none."""
+    """The row's declared endpoint names; an absent or unknown endpoint has none."""
     values = []
     for name in join.discriminator:
         field = getattr(record.fields, name)
         if field is None or field.status != "value" or not isinstance(field.value, str):
             return None
-        token = normalize_token(field.value)
-        if not token:
-            return None
-        values.append(token)
+        values.append(normalize_token(field.value))
     return tuple(values)
 
 
@@ -291,9 +288,9 @@ class SourceSupportBindings:
             self._support[
                 record.source, _key(record, self.joins[record.source])
             ].append(record)
-        self._targets: dict[
-            tuple[str, tuple[str | int, ...]], set[NativeKey | None]
-        ] = defaultdict(set)
+        self._targets: dict[tuple[str, tuple[str | int, ...]], set[NativeKey]] = (
+            defaultdict(set)
+        )
         self._matches: dict[
             tuple[str, tuple[str | int, ...]], tuple[SupportMatch, ...]
         ] = {}
@@ -304,20 +301,6 @@ class SourceSupportBindings:
         self.accounting: tuple[SupportAccounting, ...] = ()
         self.diagnostics: tuple[ResolutionDiagnostic, ...] = ()
 
-    def observe(self, record: SourceRecord) -> None:
-        if self._sealed:
-            raise ValueError("support target collection is already complete")
-        for join in self._by_target.get(record.source, ()):
-            self.observe_target(
-                SupportTarget(
-                    join.source,
-                    record.source,
-                    native_variable_key(record),
-                    _key(record, join),
-                    record.original_period_text,
-                )
-            )
-
     def observe_target(self, target: SupportTarget) -> None:
         if self._sealed:
             raise ValueError("support target collection is already complete")
@@ -326,6 +309,10 @@ class SourceSupportBindings:
             raise ValueError(
                 "support target does not belong to a selected relationship"
             )
+        # Support joins target only SCB Registerinformation rows, whose register
+        # and variable ids are required numeric cells.
+        if target.variable_key is None:
+            raise ValueError("support target has no native variable identity")
         if target.key is not None:
             if len(target.key) != len(join.keys) or any(
                 type(v) not in {str, int} or v == "" for v in target.key
@@ -333,11 +320,7 @@ class SourceSupportBindings:
                 raise ValueError("support target key does not match its join contract")
             if (join.source, target.key) in self._support:
                 self._targets[join.source, target.key].add(target.variable_key)
-                if (
-                    join.discriminator
-                    and target.variable_key is not None
-                    and target.edition_name
-                ):
+                if join.discriminator and target.edition_name:
                     self._editions[join.source, target.key].setdefault(
                         target.variable_key, set()
                     ).add(normalize_token(target.edition_name))
@@ -347,7 +330,7 @@ class SourceSupportBindings:
         join: SourceSupportJoin,
         key: tuple[str | int, ...] | None,
         records: list[SourceRecord],
-        targets: set[NativeKey | None],
+        targets: set[NativeKey],
     ) -> Iterator[_SupportGroup]:
         """Decide one literal key: the join itself, then its declared discriminator."""
         if key is None:
@@ -359,10 +342,8 @@ class SourceSupportBindings:
                 "unreferenced_support",
                 "unreferenced_support_record",
             )
-        elif None in targets or (join.unique_variable and len(targets) != 1):
-            # An unknown native identity among the candidates stays unresolved:
-            # nothing observed its editions, so no partition can exclude it.
-            if not join.discriminator or None in targets:
+        elif join.unique_variable and len(targets) != 1:
+            if not join.discriminator:
                 yield (
                     tuple(records),
                     None,
@@ -413,9 +394,7 @@ class SourceSupportBindings:
             targets = (
                 self._targets.get((source, key), set()) if key is not None else set()
             )
-            known = tuple(
-                sorted((target for target in targets if target is not None), key=repr)
-            )
+            known = tuple(sorted(targets, key=repr))
             for group, family, disposition, code in self._dispositions(
                 join, key, records, targets
             ):
