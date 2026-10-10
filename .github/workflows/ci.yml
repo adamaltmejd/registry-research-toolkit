@@ -123,7 +123,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
-      - run: uv run python -m pytest "${{ matrix.suite }}" -m "not integration"
+      - run: uv run python -m pytest "${{ matrix.suite }}"
         env:
           HYPOTHESIS_PROFILE: ${{ matrix.hypothesis_profile }}
 
