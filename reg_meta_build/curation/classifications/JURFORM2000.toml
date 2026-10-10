@@ -8,7 +8,6 @@ valid_from = 2000
 valid_to = 2019
 codes_file = "jurform2000.csv"
 sentinel_codes = [
-  { code = "", meaning = "Uppgift saknas" },
   { code = "00", meaning = "Uppgift saknas" },
   { code = "0", meaning = "Okänt värde" },
 ]

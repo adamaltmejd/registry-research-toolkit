@@ -11,7 +11,6 @@ codes_file = "lkf1994.csv"
 sentinel_codes = [
   { code = "******", meaning = "Okänd" },
   { code = "0000", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "00", meaning = "Ej aktuellt" },
   { code = "99", meaning = "Utländsk adress" },
   { code = "9999", meaning = "Utländsk adress" },

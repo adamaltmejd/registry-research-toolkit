@@ -21,9 +21,6 @@ publisher = "SCB"
 valid_from = 2000
 description = "Single-letter coarse grouping of education level: F=Förgymnasial, G=Gymnasial, K=Eftergymnasial <3 år, L=Eftergymnasial ≥3 år, U=Okänd. Used across SCB survey/election registers (PSU, ULF, valdeltagande, ...). Stable across SUN 2000 and SUN 2020."
 codes_file = "niva-grov.csv"
-sentinel_codes = [
-  { code = "", meaning = "Uppgift saknas" },
-]
 
 [binding]
 value_set_labels = [

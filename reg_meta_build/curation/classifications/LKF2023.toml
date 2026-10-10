@@ -9,7 +9,6 @@ valid_to = 2023
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 codes_file = "lkf2023.csv"
 sentinel_codes = [
-  { code = "", meaning = "Uppgift saknas" },
   { code = "0000", meaning = "Okänt" },
   { code = "9999", meaning = "Utlandet" },
   { code = "99", meaning = "Utlandet" },

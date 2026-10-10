@@ -17,7 +17,6 @@ sentinel_codes = [
   { code = "99", meaning = "Obefintliga" },
   { code = "9900", meaning = "Okänd kommun" },
   { code = "9999", meaning = "Utländsk adress" },
-  { code = "", meaning = "Kommunkod saknas" },
   { code = "******", meaning = "Okänd" },
 ]
 

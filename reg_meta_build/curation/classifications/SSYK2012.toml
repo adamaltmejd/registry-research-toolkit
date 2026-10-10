@@ -10,7 +10,6 @@ url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard
 codes_file = "ssyk2012.csv"
 sentinel_codes = [
   { code = "****", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "***", meaning = "Uppgift saknas" },
   { code = "9999", meaning = "Uppgift saknas" },
   { code = "9992", meaning = "Uppgift saknas" },
