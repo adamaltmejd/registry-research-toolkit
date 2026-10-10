@@ -1,0 +1,24 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.300.fornamn"
+slug = "fornamn"
+[[variable]]
+native_id = "1.300.efternamn"
+slug = "efternamn"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+[[variable]]
+native_id = "1.102"
+slug = "other"
+[[group]]
+register = "scb/sample"
+key = "pair"
+label = "Curated"
+members = [{ variable = "value" }, { variable = "other" }]

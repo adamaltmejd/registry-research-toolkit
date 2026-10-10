@@ -1,0 +1,19 @@
+[register]
+provider = "scb"
+slug = "innovation-foretag"
+native_id = "257"
+[[variant]]
+native_id = "257.553"
+slug = "_default"
+[[variable]]
+native_id = "257.15662"
+slug = "partner-location"
+[[representation.matrix]]
+source_mode = "documented_blank"
+evidence_file = "registers/scb/innovation-foretag/answers.json"
+selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2012 - 2014", regver_id = 7293, var_id = 15662, cvid = 400684 }
+[[group]]
+register = "scb/innovation-foretag"
+key = "partner"
+label = "Partner"
+members = [{ variable = "answer-sweden" }, { variable = "answer-abroad" }]

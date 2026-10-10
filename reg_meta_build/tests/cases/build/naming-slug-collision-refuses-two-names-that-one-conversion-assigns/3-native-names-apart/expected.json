@@ -1,0 +1,29 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": ["naming_slug_collision", "unresolved_catalog_identity", "withheld_catalog_dependency"]
+      },
+      "fields": ["code", "severity", "subject", "case_id", "locator"],
+      "rows": []
+    },
+    {
+      "table": "tags",
+      "fields": ["slug", "member"],
+      "rows": [
+        ["topic", "scb/sample/two"]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable"],
+      "rows": [
+        ["other"],
+        ["two"],
+        ["value"]
+      ]
+    }
+  ]
+}

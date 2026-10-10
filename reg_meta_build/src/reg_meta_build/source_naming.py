@@ -263,6 +263,9 @@ class NamingConversion(_NamingModel):
     declarations: tuple[NamingDeclaration, ...]
     dispositions: tuple[NamingEntryDisposition, ...]
     diagnostics: tuple[ResolutionDiagnostic, ...]
+    # Declarations a slug collision refused: they form nothing, but their FQID
+    # stays known so a curated reference to it is withheld, not missing.
+    refused: tuple[NamingDeclaration, ...] = ()
 
     @property
     def complete(self) -> bool:
@@ -703,6 +706,7 @@ def convert_naming(
         ),
         dispositions=tuple(dispositions[item.entry_id] for item in selection.entries),
         diagnostics=tuple(diagnostics),
+        refused=tuple(candidates[index] for index in sorted(blocked)),
     )
 
 

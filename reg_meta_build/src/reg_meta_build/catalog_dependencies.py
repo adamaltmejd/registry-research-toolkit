@@ -913,6 +913,7 @@ def resolve_month_groups(
         ),
         reserved_keys=frozenset((g.register_ref, g.key) for g in existing),
     )
+    curated_members = {m.variable: g for g in curated_groups for m in g.members}
     groups, diagnostics = [], []
     for candidate in candidates:
         fqids = tuple(f"{candidate.register}/{slug}" for _, slug in candidate.members)
@@ -939,6 +940,20 @@ def resolve_month_groups(
             )
             continue
         assert candidate.label is not None
+        if claimed_by := [
+            (fqid, curated_members[fqid]) for fqid in fqids if fqid in curated_members
+        ]:
+            fqid, group = claimed_by[0]
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="variable_group_member_conflict",
+                error_class="configuration",
+                message=f"{fqid} is a member of curated group "
+                f"{group.register_ref}/{group.key} and of the month family "
+                f"{candidate.register}/{candidate.key}",
+                remediation="Claim the whole month family in the curated [[group]], "
+                "or remove the month variable from it.",
+            )
         groups.append(
             ResolvedVariableGroup(
                 register=candidate.register,
@@ -1073,8 +1088,14 @@ def resolve_variable_edge_groups(
     for members in sorted(sorted(c) for c in components.components().values()):
         register, key = members[0].rsplit("/", 1)
         if (register, key) in reserved:
-            raise ValueError(
-                f"derived edge-group key conflicts with curated group: {register}/{key}"
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="variable_group_key_conflict",
+                error_class="configuration",
+                message=f"curated group {register}/{key} takes the key the edge "
+                f"group of {', '.join(members)} derives from its first member",
+                remediation="Rename the curated [[group]] key, or claim the edge "
+                "group's members in a curated group so it is not derived.",
             )
         groups.append(
             ResolvedVariableGroup(

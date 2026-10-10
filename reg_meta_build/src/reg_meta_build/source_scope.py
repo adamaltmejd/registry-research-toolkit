@@ -145,6 +145,7 @@ def resolve_source_scope(
     cases: tuple[CurationCase, ...],
     naming: tuple[NamingDeclaration, ...],
     naming_ambiguities: tuple[NamingAmbiguity, ...] = (),
+    refused_naming: tuple[NamingDeclaration, ...] = (),
     provider_keys: Mapping[NativeKey, str | None],
     derive_native_provider_keys: bool = False,
     value_sessions: tuple[ValueBindingSession, ...],
@@ -319,6 +320,11 @@ def resolve_source_scope(
 
     names = {}
     withheld_naming = set()
+    refused = {
+        item.target.source_key: item
+        for item in refused_naming
+        if item.target.kind == "variable"
+    }
     for declaration in naming:
         target = declaration.target
         token = target.kind, target.source_key
@@ -713,6 +719,13 @@ def resolve_source_scope(
             if register_fqid and declaration and declaration.naming.slug
             else None
         )
+        # A slug collision refused this identity's name; dependents of the FQID
+        # it would have taken are withheld with it, not reported missing.
+        withheld_fqid = fqid
+        if declaration is None and (name := refused.get(key)) is not None:
+            register_fqid = register_fqids.get(name.target.register_key)
+            if register_fqid and name.naming.slug:
+                withheld_fqid = f"{register_fqid}/{name.naming.slug}"
         classified = apply_classification_cases(
             coding_evidence,
             tuple(c for c in selected if c.decision.kind == "classification"),
@@ -809,8 +822,8 @@ def resolve_source_scope(
                     withheld_output=("variable",),
                 )
             emit(issue)
-            if fqid is not None:
-                withheld["variable", fqid].append(issue)
+            if withheld_fqid is not None:
+                withheld["variable", withheld_fqid].append(issue)
             for column, coding in classified.coding.items():
                 for issue in coding.issues:
                     emit(

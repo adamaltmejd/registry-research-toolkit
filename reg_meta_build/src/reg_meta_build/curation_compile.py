@@ -211,6 +211,10 @@ class CompiledCuration:
         dict[tuple[str, tuple[str | int, ...] | None], tuple[NamingAmbiguity, ...]]
         | None
     ) = None
+    refused_naming: (
+        dict[tuple[str, tuple[str | int, ...] | None], tuple[NamingDeclaration, ...]]
+        | None
+    ) = None
     partition_bases: (
         dict[tuple[str, tuple[str | int, ...] | None], frozenset[NativeKey]] | None
     ) = None
@@ -2314,6 +2318,7 @@ def compile_partitions(
     dict[Any, set[tuple[str | int, ...]]],
     dict[Any, tuple[tuple[NativeKey, ResolutionDiagnostic], ...]],
     tuple[ResolutionDiagnostic, ...],
+    dict[Any, tuple[NamingDeclaration, ...]],
 ]:
     """Convert accepted native splits and SOS shape/name decisions."""
     states = load_freeze_states(tree.root)
@@ -2980,6 +2985,7 @@ def compile_partitions(
                         )
                     )
     naming = {}
+    refused = {}
     provider_keys = {}
     for scope_key in scope_map:
         entries = tuple(bound_entries[scope_key])
@@ -3005,6 +3011,7 @@ def compile_partitions(
                 key=lambda item: (item.target.kind, repr(item.target.source_key)),
             )
         )
+        refused[scope_key] = conversion.refused
         keys = {
             item.target.source_key: item.naming.source_id.split(".", 1)[1]
             for item in conversion.declarations
@@ -3025,6 +3032,7 @@ def compile_partitions(
         split_bases,
         {key: tuple(value) for key, value in source_diagnostics.items()},
         tuple(diagnostics),
+        refused,
     )
 
 
@@ -3454,6 +3462,7 @@ def compile_native_naming(
     dict[Any, tuple[Any, ...]],
     tuple[ResolutionDiagnostic, ...],
     dict[str, dict[str, list[str]]],
+    dict[Any, tuple[NamingDeclaration, ...]],
 ]:
     """Bind tracked register slugs to exact native families and parent facts."""
     states = load_freeze_states(tree.root)
@@ -3730,6 +3739,7 @@ def compile_native_naming(
                         break
             bindings[scope_key].extend(parents.values())
     compiled_names = {}
+    compiled_refused = {}
     compiled_variants = {}
     compiled_provider_keys = {}
     diagnostics = []
@@ -3888,6 +3898,7 @@ def compile_native_naming(
                 key=lambda item: (item.target.kind, repr(item.target.source_key)),
             )
         )
+        compiled_refused[scope_key] = conversion.refused
         compiled_provider_keys[scope_key] = tuple(
             sorted(
                 native_provider_keys(
@@ -3939,6 +3950,7 @@ def compile_native_naming(
         compiled_provider_keys,
         tuple(diagnostics),
         report,
+        compiled_refused,
     )
 
 
@@ -6987,7 +6999,7 @@ def compile_deferred_naming(
     """Compile only declarations used to classify out-of-slice references."""
     from .pipeline import CompiledScope
 
-    naming, _, _, _, _ = compile_native_naming(tree, prepared, scopes, subset=True)
+    naming, *_ = compile_native_naming(tree, prepared, scopes, subset=True)
     scopes = tuple(
         CompiledScope.model_validate(
             {
@@ -7039,7 +7051,7 @@ def compile_curation(
     """Compile global families, wiring, and exact issue acknowledgements."""
     from .pipeline import CompiledScope
 
-    naming, variants, provider_keys, naming_diagnostics, naming_report = (
+    naming, variants, provider_keys, naming_diagnostics, naming_report, refused = (
         compile_native_naming(tree, prepared, scopes, subset=subset)
     )
     scopes = tuple(
@@ -7302,6 +7314,7 @@ def compile_curation(
         split_bases,
         partition_source_diagnostics,
         partition_diagnostics,
+        partition_refused,
     ) = compile_partitions(tree, prepared, scopes)
     for key, extra in partition_cases.items():
         cases[key].extend(extra)
@@ -7372,12 +7385,21 @@ def compile_curation(
     # Each naming source above converts alone, so only the merged scope sees one
     # slug that two sources assign: a native name beside a split, a matrix answer or
     # an ambiguous family's name. A refused name forms nothing: its identity keeps
-    # an explicit None provider key, an unresolved catalog identity.
+    # an explicit None provider key, an unresolved catalog identity, and its
+    # declaration is kept apart so references to its FQID are withheld, not missing.
+    refused = {
+        key: (*refused.get(key, ()), *partition_refused.get(key, ()))
+        for key in refused.keys() | partition_refused.keys()
+    }
     for key, values in naming.items():
         blocked, collisions = refuse_slug_collisions(values, ambiguities.get(key, ()))
         diagnostics.extend(collisions)
         if not blocked:
             continue
+        refused[key] = (
+            *refused.get(key, ()),
+            *(values[i] for i in sorted(blocked)),
+        )
         naming[key] = tuple(item for i, item in enumerate(values) if i not in blocked)
         unresolved = {
             values[i].target.source_key
@@ -7515,6 +7537,7 @@ def compile_curation(
         variants=variants,
         provider_keys=provider_keys,
         naming_ambiguities=ambiguities,
+        refused_naming=refused,
         partition_bases={key: frozenset(value) for key, value in split_bases.items()},
         source_diagnostics=partition_source_diagnostics,
     )
