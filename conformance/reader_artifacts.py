@@ -267,7 +267,8 @@ def cached_reader_artifact(
     """Return the cached, read-only `reg_meta.db`, building it on first use.
 
     `docs` names a readable docs source (`build_docs`); its `reg_meta_docs.db` is
-    built beside the catalog. Entries are immutable: callers that mutate an
+    built beside the catalog. A source whose `request.json` names a `filler` is
+    expanded first (`replicate_filler`). Entries are immutable: callers that mutate an
     artifact use `build_reader_artifact`, which copies one. A miss builds into a
     private staging directory and renames it into place, so concurrent builders of
     the same key never expose a partial entry; the loser discards its copy.
@@ -282,10 +283,12 @@ def cached_reader_artifact(
     path = entry / "reg_meta.db"
     if path.exists():
         return path
-    with staged(entry) as staging:
-        _build_artifact(
-            staging, fixture_source(fixture), kind, identity_overrides, search_pins
-        )
+    source = fixture_source(fixture)
+    with staged(entry) as staging, tempfile.TemporaryDirectory() as expanded:
+        request = source / "request.json"
+        if request.exists() and "filler" in json.loads(request.read_text()):
+            source = replicate_filler(source, Path(expanded) / "source")
+        _build_artifact(staging, source, kind, identity_overrides, search_pins)
         if docs is not None:
             build_docs(docs, staging).chmod(0o444)
         (staging / "reg_meta.db").chmod(0o444)

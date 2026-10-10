@@ -1,9 +1,8 @@
 """reg-meta-build CLI entrypoint.
 
 Build pipeline for the reg_meta SQLite databases (main + docs) plus the
-slug TOML maintenance subcommands. The query CLI lives in `reg_meta`;
-this binary is the maintainer-side tool that produces the artifacts
-those queries read from.
+slug TOML maintenance subcommands. This binary is the maintainer-side
+tool that produces the artifacts the Rust runtime (`crates/`) reads.
 """
 
 from __future__ import annotations
@@ -1018,8 +1017,7 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
-    # `reg-meta-build` has no `--examples` handler (the query CLI's `--examples`
-    # interceptor lives in `reg_meta.cli.run`); suppress the epilog so each
+    # `reg-meta-build` has no `--examples` handler; suppress the epilog so each
     # subcommand's --help doesn't point at an unrecognized flag.
     apply_leaf_help(parser, examples_epilog=False)
     return parser

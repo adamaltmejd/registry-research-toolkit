@@ -32,7 +32,7 @@ pub const SCHEMA_VERSION: &str = "3.0.0";
 /// The supported-version decision, taken before any other check reads the document
 /// as this contract: a string `schema_version` other than [`SCHEMA_VERSION`] is one
 /// `unsupported_schema_version` issue. An absent or non-string one is the structural
-/// validator's to report. Today's `reg_meta.order.schema_version_issue`.
+/// validator's to report.
 #[must_use]
 pub fn version_issue(raw: &Value) -> Option<ValidationIssue> {
     let version = raw.get("schema_version")?.as_str()?;
@@ -249,7 +249,7 @@ pub enum SourcePeriod {
 
 impl SourcePeriod {
     /// The requested days, merged ([`merge`]); `None` for `"_default"`, a
-    /// year-independent selection. Today's `reg_meta.order.requested_intervals`.
+    /// year-independent selection.
     ///
     /// # Errors
     ///
@@ -426,7 +426,6 @@ pub fn to_json_pretty<T: Serialize>(value: &T) -> String {
 
 /// The project identity of an order manifest: SHA-256, as lowercase hex, of the
 /// project's compact canonical JSON (sorted keys, no whitespace, non-ASCII as is).
-/// Today's `reg_meta.order._project_hash`.
 #[must_use]
 pub fn project_hash(project: &ProjectData) -> String {
     let canonical = tree(project).to_string();

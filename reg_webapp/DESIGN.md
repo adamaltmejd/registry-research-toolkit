@@ -283,8 +283,8 @@ batched Lane R schema bump) are NOT needed. The covering index
   payloads).
 - **Open-ended sentinel**: `coverage_to` is None + `open_ended` True when the latest
   window is the `9999-12-31` DDL sentinel ("ongoing"); a stateless variable is
-  `state_count == 0` with both bounds None (distinct from open-ended). The sentinel
-  constant (`reg_meta.catalog.OPEN_ENDED_VALID_TO`) is now single-sourced in reg_meta.
+  `state_count == 0` with both bounds None (distinct from open-ended). The sentinel is
+  `9999-12-31`.
 - **Cadence DEFERRED**: #351 also lists a per-register "cadence", but reg_meta has no
   cadence attribute and no clean derivation (a modal period-grain is fuzzy for
   mixed-grain registers), and no UI consumes it yet. The load-bearing study-window
@@ -1488,9 +1488,8 @@ artifact's own identity, and a `scope` parameter is `invalid_parameter`.
   card by). The finding shape is declared in `api.ts` (the error catalog types `fields`
   as an open object) and pinned by `conformance/cases/api/order-errors`.
 
-The order pipeline and its findings are `ops/order.rs` (today's
-`reg_meta.order.materialize_order`; see `crates/DESIGN.md` → Order manifest): steward
-holdings on a steward artifact, canonical columns on the global one.
+The order pipeline and its findings are `ops/order.rs` (see `crates/DESIGN.md` → Order
+manifest): steward holdings on a steward artifact, canonical columns on the global one.
 
 ## Semantic validation
 
@@ -1554,7 +1553,7 @@ provider: a fact `App.svelte` reads ONCE and threads down like `steward`. The re
 dialog and the delete button's accessible name say the same thing as SENTENCES ("Remove
 the LISA source (Individer, 16 år och äldre) and its 2 columns?") rather than reciting
 the heading block. The coordinate itself stays on the card, in small mono. A column row
-leads with the delivery column it orders: an explicit `display_name` first (reg_schema
+leads with the delivery column it orders: an explicit `display_name` first (reg-core
 makes it the binding's OUTPUT column name, so it wins even over a pinned
 `representation`), then the pinned `representation`, otherwise the name resolved from
 the catalog at THAT source's `(variant, period)` — where a column was renamed inside the
@@ -1592,9 +1591,9 @@ The one field a pick does NOT write is `display_name`, which it leaves **absent*
 field is optional — an absent one resolves to the reg_meta default from `variable_alias`
 — and stamping the delivery column onto it made two disjoint-era bindings of one
 physical column (`forvink-ers-aktiv` 1990..2021 and `forvink-ers` 2022..2023, both
-`ForvErs`) collide under reg_schema's per-source `display_name_collision`, though the
-two never coexist. The rule is deliberately left as it is rather than made period-aware:
-the structural layer cannot see periods by design, and the rule still earns its place on
+`ForvErs`) collide under reg-core's per-source `display_name_collision`, though the two
+never coexist. The rule is deliberately left as it is rather than made period-aware: the
+structural layer cannot see periods by design, and the rule still earns its place on
 hand-authored specs that set explicit names.
 
 Opened project files are held **verbatim** in the store so serialize/validate see the
@@ -1640,21 +1639,21 @@ status line rather than silently collapsing one; a token period (`HT2018`) is a
 different vocabulary the rows do not author, and is shown as it stands. Where the years
 the period covers differ from the project's `window` (narrower, wider, or holed;
 `periodWindowRelation`) the card MARKS it ("Differs from study window 2005–2020"): the
-window is an authoring seed, not an inheritance (reg_schema puts `period` on `Source`
+window is an authoring seed, not an inheritance (reg-core puts `period` on `Source`
 alone), so divergence is shown rather than warned about. The one divergence that is more
 than shown is a period with no years inside the window at all, which blocks the order
 (see "Common study window").
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant
-(reg_schema makes names unique, not variants), and an edit moves only the one it names.
-It is its own period-only `applyStagedDiff`, never unioned with staged adds, and it
-carries the edited source's complete value plus the draft's `replacementGeneration`.
-Both are re-checked through one store-internal predicate immediately before the write: a
-source that moved, or a project that was replaced, under an open edit refuses the write
-instead of overwriting it, and the card says so. Ordinary browsing still stages nothing
-— changing years, filtering rows or following a `?period` link leaves the draft alone,
-and `RepresentationPicker` has no period-change path at all: a partial leaf/group cannot
+(reg-core makes names unique, not variants), and an edit moves only the one it names. It
+is its own period-only `applyStagedDiff`, never unioned with staged adds, and it carries
+the edited source's complete value plus the draft's `replacementGeneration`. Both are
+re-checked through one store-internal predicate immediately before the write: a source
+that moved, or a project that was replaced, under an open edit refuses the write instead
+of overwriting it, and the card says so. Ordinary browsing still stages nothing —
+changing years, filtering rows or following a `?period` link leaves the draft alone, and
+`RepresentationPicker` has no period-change path at all: a partial leaf/group cannot
 infer a source-wide rewrite from the columns it happens to show, so that rewrite happens
 on the `/project` card only. Coverage and type drift after the edit stay the server
 validator's job, as above. (Y-81 retired the catalog-side Y-15 correction that used to
@@ -1698,9 +1697,9 @@ rune store holding one draft per session.
   `storeSchemaVersion` (distinct from the project's `schema_version`); `load` restores
   only on a match, else discards the stale-schema draft. This is the store's record
   shape, bumped only when the persisted shape changes.
-- **Project-file version gate.** Model A files carry the reg_schema MAJOR — **3** since
-  `Source.period` became finite-only (reg_schema `3.0.0`); the major **2** files written
-  before it are Model A too, but the BACKEND reads `3.0.0` EXACTLY
+- **Project-file version gate.** Model A files carry the reg-core project schema MAJOR —
+  **3** since `Source.period` became finite-only (`3.0.0`); the major **2** files
+  written before it are Model A too, but the BACKEND reads `3.0.0` EXACTLY
   (`order.schema_version_issue`), so it answers them `unsupported_schema_version` like
   any other foreign contract. Plus the deployment's `reg_meta_version` release tag. The
   SPA **hard-rejects** a file whose `schema_version` major is **1** (pre-Model-A) with a
@@ -1810,7 +1809,7 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
 `project_data.json`, and nothing derives a period from the window at read time.
 
 - **Where it lives: the existing `window` field, no schema change.**
-  `ProjectData.window` (reg_schema `StudyWindow`, optional since #611) already persists
+  `ProjectData.window` (reg-core `StudyWindow`, optional since #611) already persists
   the window with the draft, so it survives download, open and the autosave.
 - **The rules are SPA authoring rules; nothing past the SPA enforces them (decision
   2026-10-07).** The window is an authoring default and every source carries its own
@@ -1818,7 +1817,7 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   nor the HTTP `/api/project/order` endpoint reads `window`, and neither refuses a
   project whose source is disjoint from it. The SPA's block is a gate on its own
   download control, not a contract on the file. Enforcing it everywhere would make the
-  window a constraint on the order — a reg_schema structural rule and a `schema_version`
+  window a constraint on the order — a reg-core structural rule and a `schema_version`
   change — which is deliberately not taken.
 - **An add persists the full available intersection.** A catalog Add clips each picked
   column's delivery windows to the add window (the rail's window, or a subject page's

@@ -1,4 +1,4 @@
-//! Today's `scope_predicate` (`reg_meta.holdings`): SQL that admits a provider,
+//! The scope predicate: SQL that admits a provider,
 //! register or variable to the read scope. Reference admits everything; holdings
 //! admits what an authored mapping of a known-scope table holds. Only trusted SQL
 //! (aliases and integers) is spliced in.

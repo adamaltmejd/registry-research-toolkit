@@ -12,10 +12,10 @@
  *    A5.3c-ii inline field-highlighting seam (c-i only groups by level).
  * 2. The `KNOWN_CODES` registry: every stable validation code → a friendly label +
  *    the level it's typically raised at. Hand-maintained from the validator
- *    sources: structural (`reg_schema/structural.py`; see crates/reg-core/DESIGN.md →
+ *    sources: structural (`crates/reg-core/src/structural.rs`; see crates/reg-core/DESIGN.md →
  *    Structural rules and issue codes), semantic (see crates/DESIGN.md →
  *    Project semantic validation) and the ORDER MATERIALIZER's findings
- *    (`reg_meta/order.py`), which the panel renders through the same path. An
+ *    (`crates/reg-catalog/src/ops/order.rs`), which the panel renders through the same path. An
  *    UNKNOWN code degrades gracefully (the issue is still shown with its raw
  *    code + level).
  */
@@ -114,9 +114,9 @@ export interface CodeInfo {
  * The stable validation-code registry. Hand-maintained from the validator sources —
  * new codes are ADDITIVE, so a code missing here is not a bug, it just
  * renders with its raw code (see `codeLabel`). Sourced from:
- * - structural (`reg_schema/structural.py`; see crates/reg-core/DESIGN.md → Structural rules and issue codes)
- * - semantic (`reg_meta/semantic.py`; see crates/DESIGN.md → Project semantic validation)
- * - the order materializer's findings (`reg_meta/order.py`; see crates/DESIGN.md → Order manifest)
+ * - structural (`crates/reg-core/src/structural.rs`; see crates/reg-core/DESIGN.md → Structural rules and issue codes)
+ * - semantic (`crates/reg-catalog/src/ops/validate.rs`; see crates/DESIGN.md → Project semantic validation)
+ * - the order materializer's findings (`crates/reg-catalog/src/ops/order.rs`; see crates/DESIGN.md → Order manifest)
  */
 export const KNOWN_CODES: Record<string, CodeInfo> = {
   // ── structural ────────────────────────────────────────────────────────────
@@ -184,7 +184,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "error",
   },
   // Thin defensive code: a residual ProjectData model-construction failure
-  // structural didn't replicate (frozen `reg_meta.semantic.validate_project`).
+  // structural didn't replicate (the server's `validate`).
   invalid_field: { label: "Invalid field", hint: "error" },
 
   // ── semantic (reg_meta-backed) ────────────────────────────────────────────
@@ -463,7 +463,7 @@ export interface WindowDisjointFinding {
 /** Every source left disjoint from the common study window — what blocks the
  * order download while the source keeps its explicit period. An SPA authoring
  * rule, not a re-implementation of a server one: the backend reads no `window`
- * (reg_schema documents it as an authoring seed), so this is the one place it is
+ * (reg-core documents it as an authoring seed), so this is the one place it is
  * enforced. Located through `findingLocation`, so the panel renders it with the
  * same locate + catalog links a validation issue gets. */
 export function windowDisjointFindings(

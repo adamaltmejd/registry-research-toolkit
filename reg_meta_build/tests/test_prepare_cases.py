@@ -298,7 +298,7 @@ def _scb_events(delivery: Delivery, args: dict[str, Any]) -> Any:
     return read_scb_events(delivery.snapshot, revision)
 
 
-# `reg_meta.errors.EXIT_INTERNAL`, the top-level handler's exit code; no case
+# `reg_meta_build.errors.EXIT_INTERNAL`, the top-level handler's exit code; no case
 # claims it, so it is spelled here rather than imported.
 _EXIT_INTERNAL = 30
 

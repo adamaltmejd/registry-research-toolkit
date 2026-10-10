@@ -34,9 +34,9 @@ webapp-authoring hard-cut — step 7 — shipped 2026-06-11.)
 shipped as compiled holdings (schema 9, released as `reg_meta/v0.41.0` and deployed
 2026-10-06), and its open items followed: the reader defects (#1166), the per-package
 test sweep (#1169), the shared semantic pass in `reg_meta` (#1167) and the SPA common
-study window (#1168). Its decisions live in `reg_meta/DESIGN.md` → "Holdings resolution
-invariants" and "Order materializer and manifest", `reg_meta_build/DESIGN.md` →
-"Holdings curation rules" and `reg_webapp/DESIGN.md` → "Common study window".
+study window (#1168). Its decisions live in `reg_meta_build/DESIGN.md` → "Holdings
+resolution invariants" and "Holdings curation rules", `crates/DESIGN.md` → "Order
+manifest" and `reg_webapp/DESIGN.md` → "Common study window".
 
 ## Sequence
 
@@ -134,10 +134,9 @@ requires a publishable artifact whose manifest steward matches the deployment. A
 artifact cannot substitute for that steward artifact. `reg_meta_swecov.db.zst` remains a
 public GitHub release asset on the same `reg_meta/v*` tag as the global catalog and
 public docs asset. The release skill produces and uploads it; `integration.yml` verifies
-and admits it, and the SWECOV image bakes it through
-`reg-meta update --catalog swecov --tag <tag>` (#1164); boot-time steward admission
-refuses a mismatched artifact. Selected sibling docs preserve the same release identity.
-See `reg_webapp/DESIGN.md` → Deployment.
+and admits it, and the SWECOV image bakes it from that tag (#1164); boot-time steward
+admission refuses a mismatched artifact. Selected sibling docs preserve the same release
+identity. See `reg_webapp/DESIGN.md` → Deployment.
 
 IFAU authoring remains deferred. Before v1, extract SWECOV branding and its delivery
 pipeline into its own steward system and make that system copyable for future stewards.

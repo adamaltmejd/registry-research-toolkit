@@ -1,5 +1,5 @@
 //! `search` (`operations.toml`): its parameters, cursor paging and five arms, ported
-//! from today's `reg_meta.queries.search` (`field="description"` for the register,
+//! from the retired Python reader's search (`field="description"` for the register,
 //! variable and classification arms; `field="value"` split by code owner for the code
 //! arms) and the webapp's per-type groups, pins and best-bets ranking
 //! (`reg_webapp/routes/search.py`). With `type`, one arm's list: its pins, then its

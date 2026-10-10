@@ -1,4 +1,4 @@
-//! `graph`: today's relationship graph (`reg_meta.graph`) of a variable, a
+//! `graph`: the relationship graph of a variable, a
 //! classification or a group ref. Nodes are variables (with their whole state
 //! history folded into representation runs) and classification editions; the one
 //! edge kind is succession. A variable unites its concept group's members, a

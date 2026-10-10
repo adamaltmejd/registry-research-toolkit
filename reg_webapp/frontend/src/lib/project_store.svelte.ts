@@ -188,7 +188,7 @@ let draft = $state<ProjectData | null>(null);
 // #200).
 //
 // Stable ids must NEVER enter the serialized draft: `Source`/`Binding` are closed
-// objects (`extra="forbid"` in reg_schema/structural.py) — an injected `_uid` would
+// objects (`crates/reg-core/src/structural.rs`) — an injected `_uid` would
 // trip `unexpected_field` AND leak into the downloaded project_data.json. So the
 // store owns a PARALLEL id tree, kept in lockstep with every mutator, that the draft
 // (and thus every serialize / validate / order POST, all of which
@@ -496,7 +496,7 @@ export interface StagedRemove {
  * as well as the coordinate, NOT by `registerVariant` alone: a draft may carry
  * several differently named sources on one register variant (an imported spec
  * routinely does), and a period edit must move only the one it names. Source names
- * are structurally unique (reg_schema `duplicate_source_name`); variants are not. */
+ * are structurally unique (reg-core `duplicate_source_name`); variants are not. */
 export interface StagedPeriodChange {
   sourceName: string;
   registerVariant: string;
