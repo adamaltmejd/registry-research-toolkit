@@ -10,7 +10,6 @@ url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-u
 codes_file = "sun2000-inriktning.csv"
 sentinel_codes = [
   { code = "*", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "9", meaning = "Okänd" },
   { code = "[BLANK]", meaning = "Uppgift saknas" },
   { code = "****", meaning = "Uppgift saknas" },

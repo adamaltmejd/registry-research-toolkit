@@ -11,7 +11,6 @@ codes_file = "sni2002.csv"
 sentinel_codes = [
   { code = "00", meaning = "Ej specificerad verksamhet" },
   { code = "00000", meaning = "Okänd" },
-  { code = "", meaning = "Okänd" },
   { code = "XX", meaning = "Partiellt bortfall" },
   { code = "XXXX", meaning = "Partiellt bortfall" },
   { code = "XXXXX", meaning = "Partiellt bortfall" },

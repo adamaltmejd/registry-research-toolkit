@@ -10,7 +10,6 @@ url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regional
 codes_file = "lkf1993.csv"
 sentinel_codes = [
   { code = "0000", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "******", meaning = "Uppgift saknas" },
   { code = "00", meaning = "Ej aktuellt" },
   { code = "99", meaning = "Utländsk adress" },

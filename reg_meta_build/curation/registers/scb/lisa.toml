@@ -5831,7 +5831,7 @@ source_authority = { revision = { revision_id = "scb-registerinformation@sha256:
 kind = "documented"
 label_equivalences = []
 version_label = "StatusSSYK _2014"
-members = [["1", "Yrke från förvärvsarbetande jobb 1"], ["11", "Imputerat yrke med koppling till SSYK4, StatusSSYK, Utbildning eller Licens och Bransch"], ["12", "Imputerat yrke med koppling till SSYK4, Utbildning eller Licens och Bransch"], ["13", "Imputerat yrke med koppling till Utbildning eller Licens och Bransch"], ["14", "Imputerat yrke med koppling till Företagsnamn och Bransch"], ["15", "Imputerat yrke med koppling till Bransch"], ["2", "Yrke från från yrkesverksamma jobb 1"], ["3", "Yrke från förvärvsarbetande jobb 2"], ["30", "Modellimputerad yrkeskod, SSYK 2012."], ["4", "Yrke från yrkesverksamma jobb 2"], ["5", "Yrke från övriga"], ["6", "Saknar uppgift"], ["NULL", "Uppgift saknas"]]
+members = [["1", "Yrke från förvärvsarbetande jobb 1"], ["11", "Imputerat yrke med koppling till SSYK4, StatusSSYK, Utbildning eller Licens och Bransch"], ["12", "Imputerat yrke med koppling till SSYK4, Utbildning eller Licens och Bransch"], ["13", "Imputerat yrke med koppling till Utbildning eller Licens och Bransch"], ["14", "Imputerat yrke med koppling till Företagsnamn och Bransch"], ["15", "Imputerat yrke med koppling till Bransch"], ["2", "Yrke från från yrkesverksamma jobb 1"], ["3", "Yrke från förvärvsarbetande jobb 2"], ["30", "Modellimputerad yrkeskod, SSYK 2012."], ["4", "Yrke från yrkesverksamma jobb 2"], ["5", "Yrke från övriga"], ["6", "Saknar uppgift"]]
 variable = "34.18897.ssykstatus-j16"
 variant = "34.153"
 column = "SsykStatus_J16"
@@ -5844,7 +5844,7 @@ source_authority = { revision = { revision_id = "scb-registerinformation@sha256:
 kind = "documented"
 label_equivalences = []
 version_label = "StatusSSYK _2014"
-members = [["1", "Yrke från förvärvsarbetande jobb 1"], ["11", "Imputerat yrke med koppling till SSYK4, StatusSSYK, Utbildning eller Licens och Bransch"], ["12", "Imputerat yrke med koppling till SSYK4, Utbildning eller Licens och Bransch"], ["13", "Imputerat yrke med koppling till Utbildning eller Licens och Bransch"], ["14", "Imputerat yrke med koppling till Företagsnamn och Bransch"], ["15", "Imputerat yrke med koppling till Bransch"], ["2", "Yrke från från yrkesverksamma jobb 1"], ["3", "Yrke från förvärvsarbetande jobb 2"], ["30", "Modellimputerad yrkeskod, SSYK 2012."], ["4", "Yrke från yrkesverksamma jobb 2"], ["5", "Yrke från övriga"], ["6", "Saknar uppgift"], ["NULL", "Uppgift saknas"]]
+members = [["1", "Yrke från förvärvsarbetande jobb 1"], ["11", "Imputerat yrke med koppling till SSYK4, StatusSSYK, Utbildning eller Licens och Bransch"], ["12", "Imputerat yrke med koppling till SSYK4, Utbildning eller Licens och Bransch"], ["13", "Imputerat yrke med koppling till Utbildning eller Licens och Bransch"], ["14", "Imputerat yrke med koppling till Företagsnamn och Bransch"], ["15", "Imputerat yrke med koppling till Bransch"], ["2", "Yrke från från yrkesverksamma jobb 1"], ["3", "Yrke från förvärvsarbetande jobb 2"], ["30", "Modellimputerad yrkeskod, SSYK 2012."], ["4", "Yrke från yrkesverksamma jobb 2"], ["5", "Yrke från övriga"], ["6", "Saknar uppgift"]]
 variable = "34.18897.ssykstatus-j16"
 variant = "34.153"
 column = "SsykStatus_J16"
