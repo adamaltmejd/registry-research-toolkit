@@ -1,0 +1,39 @@
+{
+  "note": "Maintainer decision 3: a `case_aliases` entry pins its members, so a new member delivered under a declared spelling stales the entry instead of joining the shared state. The curation is representation-parallel-case-aliases-keep-distinct-members (the allowed twin, built from the reviewed delivery), its evidence pin read from that reviewed delivery (members 100 and 101). This build adds CVID 102, a third member of the same variable in the same 2022 edition under the reviewed spelling `first`. It matches a declared column and edition, so the complete-peers check selects it rather than refusing it; only the evidence pin, which covers every member of the declared columns in their declared editions, notices it. The stale issue names all three members, read from the spec. Without the entry, First and first stay two unresolved columns of one variable, as in representation-parallel-case-aliases-stale-when-the-definitions-differ.",
+  "fails_if": "`compile_parallel_representations` hashes the declared columns but not each of their members (for example one original per literal column), or stops comparing `expected_evidence_sha256`, so the new same-spelling member CVID 102 is absorbed into the shared 2022 state instead of staling the entry",
+  "sources": {
+    "description": "scb-income-case-alias-members plus a third member under the reviewed lower-case spelling: variable 1 (Income), edition 2022, First (CVID 100), first (CVID 101) and first (CVID 102).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "First",
+          "cvid": 100,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2022",
+          "versionname": "2022",
+          "regver_id": 110
+        },
+        {
+          "colname": "first",
+          "cvid": 101,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2022",
+          "versionname": "2022",
+          "regver_id": 110
+        },
+        {
+          "colname": "first",
+          "cvid": 102,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2022",
+          "versionname": "2022",
+          "regver_id": 110
+        }
+      ]
+    }
+  },
+  "authored_from": "scb-income-case-alias-members"
+}
