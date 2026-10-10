@@ -27,7 +27,7 @@ use case_folding::CASE_FOLDING;
 pub use case_folding::UNICODE_VERSION;
 pub use grammar::{
     Fqid, GrammarError, Period, PeriodToken, Term, is_slug, next_iso_day, period_token_for_bounds,
-    prev_iso_day, snap_month_end,
+    prev_iso_day,
 };
 pub use interval::{Interval, gaps, intersect, merge, overlap, render};
 pub use structural::{q as quote, quoted_list, validate_structural};

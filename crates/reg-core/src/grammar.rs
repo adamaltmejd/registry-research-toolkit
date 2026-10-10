@@ -288,37 +288,36 @@ fn iso((y, m, d): Date) -> String {
     format!("{y:04}-{m:02}-{d:02}")
 }
 
-/// `YYYY-MM-DD` as a date, without checking the day against its month (stored
-/// bounds may carry a synthesized `YYYY-02-29`).
+/// `YYYY-MM-DD` as a calendar date: the day is checked against its month, so
+/// `2019-02-29` is not a date.
 fn iso_date(text: &str) -> Option<Date> {
     let bytes = text.as_bytes();
     if bytes.len() != 10 || bytes[4] != b'-' || bytes[7] != b'-' {
         return None;
     }
     let year = digits(&text[..4], 4)?;
-    let month = u8::try_from(digits(&text[5..7], 2)?).ok()?;
-    let day = u8::try_from(digits(&text[8..], 2)?).ok()?;
+    let month = ordinal(&text[5..7], 2, 12)?;
+    let day = ordinal(&text[8..], 2, last_day(year, month))?;
     Some((year, month, day))
 }
 
-/// The day after an inclusive ISO upper bound; a day past its month's end (a
-/// synthesized non-leap `YYYY-02-29`) counts as that month's end. The open-ended
-/// `9999-12-31` and an unreadable date are returned as is.
+/// The day after an inclusive ISO upper bound. The open-ended `9999-12-31` and a
+/// string that is not a calendar date are returned as is.
 #[must_use]
 pub fn next_iso_day(s: &str) -> String {
     match iso_date(s) {
         Some((9999, 12, 31)) | None => s.to_owned(),
-        Some((y, 12, d)) if d >= 31 => iso((y + 1, 1, 1)),
-        Some((y, m, d)) if d >= last_day(y, m) => iso((y, m + 1, 1)),
+        Some((y, 12, 31)) => iso((y + 1, 1, 1)),
+        Some((y, m, d)) if d == last_day(y, m) => iso((y, m + 1, 1)),
         Some((y, m, d)) => iso((y, m, d + 1)),
     }
 }
 
-/// The day before an ISO date, snapped first ([`snap_month_end`]); an unreadable
-/// date is returned as is.
+/// The day before an ISO date; a string that is not a calendar date is returned as
+/// is.
 #[must_use]
 pub fn prev_iso_day(s: &str) -> String {
-    match iso_date(&snap_month_end(s)) {
+    match iso_date(s) {
         None => s.to_owned(),
         Some((y, 1, 1)) => iso((y.saturating_sub(1), 12, 31)),
         Some((y, m, 1)) => iso((y, m - 1, last_day(y, m - 1))),
@@ -326,25 +325,12 @@ pub fn prev_iso_day(s: &str) -> String {
     }
 }
 
-/// An ISO date past its month's end (a stored, synthesized non-leap `YYYY-02-29`) as
-/// that month's last day; any other string as is.
-#[must_use]
-pub fn snap_month_end(s: &str) -> String {
-    match iso_date(s) {
-        Some((y, m, d)) if (1..=12).contains(&m) && d > last_day(y, m) => {
-            iso((y, m, last_day(y, m)))
-        }
-        _ => s.to_owned(),
-    }
-}
-
 /// The coarsest period token whose bounds are exactly `lo..hi` (ISO dates), else the
 /// explicit `lo..hi`. A term wins over the half-year it equals. Only the school year
-/// and the day are held to the grammar's years; a synthesized non-leap `YYYY-02-29` end counts as
-/// February's end.
+/// and the day are held to the grammar's years.
 ///
-/// Today's reader ends every February on the 29th, so it renders a non-leap
-/// February window as `YYYY-02-01..YYYY-02-28`; this renders `YYYY-02`, the token
+/// The retired Python reader rendered a non-leap February window as
+/// `YYYY-02-01..YYYY-02-28`; this renders `YYYY-02`, the token
 /// the grammar expands to exactly those bounds (a Rust-only fix, stage 3b–3e
 /// decision 6).
 #[must_use]
@@ -353,13 +339,12 @@ pub fn period_token_for_bounds(lo: &str, hi: &str) -> String {
     let (Some(l), Some(h)) = (iso_date(lo), iso_date(hi)) else {
         return explicit();
     };
-    let h = (h.0, h.1, h.2.min(last_day(h.0, h.1.clamp(1, 12))));
     let (y, in_grammar) = (l.0, (1900..=2099).contains(&l.0));
     let mut candidates = Vec::new();
     if in_grammar {
         candidates.push(PeriodToken::SchoolYear(y));
     }
-    if h.0 == y && (1..=12).contains(&l.1) {
+    if h.0 == y {
         candidates.extend([
             PeriodToken::Year(y),
             PeriodToken::Term {
