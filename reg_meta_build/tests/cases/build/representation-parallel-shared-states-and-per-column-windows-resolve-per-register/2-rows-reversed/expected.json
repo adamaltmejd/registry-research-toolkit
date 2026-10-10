@@ -1,0 +1,19 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject", "valid_from", "valid_to"],
+      "rows": {"step": "1-delivered"}
+    },
+    {
+      "table": "states",
+      "fields": ["register", "column", "valid_from", "valid_to", "provenance", "definition"],
+      "rows": {"step": "1-delivered"}
+    },
+    {
+      "table": "alias_windows",
+      "fields": ["register", "column", "valid_from", "valid_to", "column_metadata", "data_type", "data_length", "provenance"],
+      "rows": {"step": "1-delivered"}
+    }
+  ]
+}

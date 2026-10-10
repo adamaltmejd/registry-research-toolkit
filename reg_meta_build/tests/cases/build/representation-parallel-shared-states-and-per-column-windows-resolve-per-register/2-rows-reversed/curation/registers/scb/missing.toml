@@ -1,0 +1,38 @@
+[register]
+provider = "scb"
+slug = "missing"
+native_id = "9"
+[[variant]]
+native_id = "9.90"
+slug = "people"
+[[variable]]
+native_id = "9.9"
+slug = "income"
+[[identity.partition]]
+variable = "9.9"
+columns = { First = "9.9", Second = "9.9" }
+columns_ref = "reviewed parallel source-native quantity"
+[[representation.parallel]]
+variable = "9.9"
+variant = "9.90"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Reviewed parallel columns"
+noted = "2026-10-10"
+[[representation.parallel.columns]]
+column = "First"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020-2022"]
+[[representation.parallel.columns]]
+column = "Second"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022-2024"]
+[[coding.omit]]
+variable = "9.9"
+variant = "people"
+column = "Second"
+periods = [["2022-01-01", "2024-12-31"]]
+reason = "Accepted omitted delivery state"
+source = "Fixture decision"

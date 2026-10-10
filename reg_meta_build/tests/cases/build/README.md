@@ -247,8 +247,10 @@ Every key is optional, and only the keys that are present get checked.
   shown by a later step that builds the relevant rows reversed and expects the first
   step's projections (that case's step 2,
   `value-native-lists-bind-set-aside-or-withhold-per-register` step 2, and
-  `errata-column-holdings-period-forms-one-pooled-state` step 2, and the reversed-order
-  steps of `lineage-edges-need-accepted-identity-and-overlapping-states` and
+  `errata-column-holdings-period-forms-one-pooled-state` step 2,
+  `representation-parallel-shared-states-and-per-column-windows-resolve-per-register`
+  step 2, and the reversed-order steps of
+  `lineage-edges-need-accepted-identity-and-overlapping-states` and
   `lineage-source-variant-is-named-defaulted-or-left-unresolved`).
 - `error`: the build or check must refuse. Only the keys present are compared:
   - `code` and `exit_code` are the located error the `build-db` and `check-curation`
