@@ -1,0 +1,25 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "LISA_Individ_2019.csv"
+edition = 2019
+[[table.column]]
+name = "Kon"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa"
+representation = "Kon"
+[[table.column]]
+name = "Fek"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/fek/kon"
+representation = "Kon"
+[[table.column]]
+name = "Typo"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kon"
+variabel = "typo"
+representation = "Kon"

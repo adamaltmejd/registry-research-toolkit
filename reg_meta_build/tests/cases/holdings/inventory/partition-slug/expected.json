@@ -1,0 +1,14 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_a_non_slug_partition_label",
+  "note": "A partition label becomes a filename token, so it rides the shared slug grammar (field grammar, `inventory_invalid`).",
+  "fails_if": "load_inventory admits a partition label outside the slug grammar, or does not name the `partition` slot",
+  "error": {
+    "code": "inventory_invalid",
+    "locators": [
+      "table['Arb_AGIIndivid_2021-03.csv'].partition"
+    ],
+    "message_contains": [
+      "invalid slug in partition"
+    ]
+  }
+}

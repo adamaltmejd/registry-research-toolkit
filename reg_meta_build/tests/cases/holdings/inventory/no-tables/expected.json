@@ -1,0 +1,13 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_an_inventory_with_no_tables",
+  "fails_if": "load_inventory accepts an empty `table` array as a steward that delivers nothing",
+  "error": {
+    "code": "inventory_no_tables",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "inventory declares no tables"
+    ]
+  }
+}

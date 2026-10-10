@@ -1,0 +1,8 @@
+{
+  "catalog": "catalog.json",
+  "inventory": "inventory.toml",
+  "census": "census.csv",
+  "holdings_policy": "holdings_policy.toml",
+  "replaces": "reg_meta/tests/test_inventory.py::test_accepts_two_representations_of_one_variable_over_one_period",
+  "fails_if": "the one-to-one resolution check conflates two different resolver-emitted representations of one variable over one edition into one cell"
+}

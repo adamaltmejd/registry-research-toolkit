@@ -1,0 +1,14 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_a_duplicate_mapping_within_one_column",
+  "note": "One column mapping two DIFFERENT variants is the multiple-variants compile case.",
+  "fails_if": "load_inventory accepts the same (register_variant, variable, representation) triple twice under one column",
+  "error": {
+    "code": "inventory_duplicate_mapping",
+    "locators": [
+      "table['LISA_Individ_2019.csv'].column['Kon']"
+    ],
+    "message_contains": [
+      "duplicate mapping scb/lisa/individer-15plus scb/lisa/kon (representation 'Kon')"
+    ]
+  }
+}
