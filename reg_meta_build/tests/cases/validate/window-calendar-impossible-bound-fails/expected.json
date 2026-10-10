@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "calendar-impossible date bounds: variable_alias_window.valid_to: '2020-02-30'"
+  ]
+}

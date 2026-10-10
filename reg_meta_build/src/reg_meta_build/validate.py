@@ -447,15 +447,12 @@ def _check_state_delivery_scope(
         if scope == "year_independent":
             valid = start is None and end is None and pooled == 0
         elif scope == "intervals" and isinstance(start, str) and isinstance(end, str):
-            try:
-                valid = (
-                    date.fromisoformat(start).isoformat() == start
-                    and date.fromisoformat(end).isoformat() == end
-                    and start <= end
-                    and pooled in (0, 1)
-                )
-            except ValueError:
-                valid = False
+            valid = (
+                _is_calendar_date(start)
+                and _is_calendar_date(end)
+                and start <= end
+                and pooled in (0, 1)
+            )
         else:
             valid = False
         invalid += not valid
@@ -899,6 +896,16 @@ def _check_open_ended_sentinel(
             )
 
 
+def _is_calendar_date(value: object) -> bool:
+    """`value` is exactly a `YYYY-MM-DD` string naming a real calendar day."""
+    if not isinstance(value, str):
+        return False
+    try:
+        return date.fromisoformat(value).isoformat() == value
+    except ValueError:
+        return False
+
+
 def _check_calendar_exact_bounds(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
@@ -907,11 +914,11 @@ def _check_calendar_exact_bounds(
     The Rust reader's date arithmetic (`reg_core::next_iso_day` and friends)
     treats a calendar-impossible day such as a non-leap `2019-02-29` as no date
     at all, so such a bound would stop adjacent windows from merging and render
-    as an explicit range. SQLite's `date()` normalizes an impossible day
-    (`date('2019-02-29')` is `2019-03-01`), so `date(x) IS NOT x` finds any
-    text bound that is not exactly a calendar date. Covers every TEXT column
-    named `*valid_from`/`*valid_to` (`classification`'s integer years are out
-    of scope).
+    as an explicit range. Checked in Python (`date.fromisoformat` round trip
+    over the distinct values), not with SQLite's `date()`: older SQLite builds
+    (3.40.1) return `date('2019-02-29')` unchanged, so `date(x) IS NOT x` would
+    pass it. Covers every TEXT column named `*valid_from`/`*valid_to`
+    (`classification`'s integer years are out of scope); NULL is skipped.
     """
     result.section("[window: calendar-exact date bounds]")
     bad: list[str] = []
@@ -923,13 +930,16 @@ def _check_calendar_exact_bounds(
                 ("valid_from", "valid_to")
             ):
                 continue
-            sample = conn.execute(
-                f'SELECT DISTINCT "{column}" FROM "{table}" '
-                f'WHERE "{column}" IS NOT NULL AND date("{column}") IS NOT "{column}" '
-                "LIMIT 5"
-            ).fetchall()
+            sample = [
+                value
+                for (value,) in conn.execute(
+                    f'SELECT DISTINCT "{column}" FROM "{table}" '
+                    f'WHERE "{column}" IS NOT NULL ORDER BY 1'
+                )
+                if not _is_calendar_date(value)
+            ][:5]
             if sample:
-                values = ", ".join(repr(r[0]) for r in sample)
+                values = ", ".join(repr(v) for v in sample)
                 bad.append(f"{table}.{column}: {values}")
     if bad:
         result.fail("calendar-impossible date bounds: " + "; ".join(bad))
