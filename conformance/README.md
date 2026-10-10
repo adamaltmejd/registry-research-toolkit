@@ -41,6 +41,9 @@ provenance included), `order`'s `data` with that document, and a blocked case's
 the comparisons. Keys and lists retain their order. An HTTP response oracle may also pin
 raw bytes: `media_type` (the content type without parameters), `headers` (exact values
 by lower-case name) and `bytes` (a file in the case directory compared byte for byte).
+Where ties have no contract order, a step's `members` (`steps`, `pointer`, `range`,
+`equals`) joins `pointer` over those steps (this one or earlier), slices it to `range`
+and requires no repeats and exactly the `equals` set.
 
   | Surface directory | Boundary and request interpretation                                                |
   | ----------------- | ---------------------------------------------------------------------------------- |

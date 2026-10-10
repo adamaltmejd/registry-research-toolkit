@@ -124,6 +124,23 @@ def assert_http_case(case, tmp_path, servers):
             projection,
             oracle.get("json", {}),
         )
+        if "members" in oracle:
+            assert_members(responses, oracle["members"])
+
+
+def assert_members(responses, members):
+    """A tie-order-free oracle across steps: `pointer` projected from each of
+    `steps` in turn, concatenated and sliced to `range`, holds no repeats and
+    exactly the `equals` set."""
+    rows = [
+        row
+        for index in members["steps"]
+        for row in select_json(responses[index]["body"], members["pointer"])
+    ]
+    start, end = members["range"]
+    window = rows[start:end]
+    assert len(window) == len(set(window)), window
+    assert set(window) == set(members["equals"]), window
 
 
 def case_clients(request, case, servers):
