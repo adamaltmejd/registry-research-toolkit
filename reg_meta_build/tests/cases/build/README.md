@@ -61,7 +61,7 @@ the behavior in plain words. For example,
   | `period-family-`       | `[[representation.period_family]]` calendar-month families and the relations into them                                                                                           |
   | `source-relation-`     | literal source relationships, unbound code lists and source findings                                                                                                             |
   | `value-`               | source code lists bound by native member, member name or declared list name: item and row validity, list references, declared-identifier drops                                   |
-  | `naming-`              | generated and authored slug pins under the zone freeze states                                                                                                                    |
+  | `naming-`              | generated and authored slug pins under the zone freeze states, and slugs two identities collide on                                                                               |
   | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                                                                                     |
   | `dependency-`          | curated groups, tags, panel keys and relations whose catalog dependency is withheld                                                                                              |
   | `coverage-`            | delivery the formed variables owe the catalog, written or explicitly withdrawn                                                                                                   |

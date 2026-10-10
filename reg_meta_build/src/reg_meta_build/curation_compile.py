@@ -135,6 +135,7 @@ from .source_naming import (
     convert_naming,
     native_provider_keys,
     native_scb_naming_id,
+    refuse_slug_collisions,
 )
 from .source_occurrences import EffectiveOccurrence, source_occurrence
 from .source_periods import source_scopes
@@ -7349,6 +7350,25 @@ def compile_curation(
         naming[key] = (*naming.get(key, ()), *extra)
     for key, extra in errata_keys.items():
         provider_keys[key] = (*provider_keys.get(key, ()), *extra)
+    # Each naming source above converts alone, so only the merged scope sees one
+    # slug that two sources assign: a native name beside a split, a matrix answer or
+    # an ambiguous family's name. A refused name forms nothing: its identity keeps
+    # an explicit None provider key, an unresolved catalog identity.
+    for key, values in naming.items():
+        blocked, collisions = refuse_slug_collisions(values, ambiguities.get(key, ()))
+        diagnostics.extend(collisions)
+        if not blocked:
+            continue
+        naming[key] = tuple(item for i, item in enumerate(values) if i not in blocked)
+        unresolved = {
+            values[i].target.source_key
+            for i in blocked
+            if values[i].target.kind == "variable"
+        }
+        provider_keys[key] = tuple(
+            (native, None if native in unresolved else token)
+            for native, token in provider_keys.get(key, ())
+        )
     for key, extra in correction_cases.items():
         cases[key].extend(extra)
     diagnostics.extend(correction_diagnostics)
