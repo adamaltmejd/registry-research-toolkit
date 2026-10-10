@@ -724,6 +724,34 @@ def _concept_groups(outcome: Outcome) -> list[dict]:
     return [{"variables": sorted(slugs)} for slugs in groups.values()]
 
 
+def _editions(outcome: Outcome) -> list[dict]:
+    """Each register version with its prose, populations and object types."""
+    populations: dict[int, list[list]] = {}
+    for row in outcome._sql(
+        "SELECT regver_id, name, definition, comment, date_range FROM population"
+    ):
+        populations.setdefault(row.pop("regver_id"), []).append(list(row.values()))
+    objects: dict[int, list[list]] = {}
+    for row in outcome._sql("SELECT regver_id, name, definition FROM object_type"):
+        objects.setdefault(row.pop("regver_id"), []).append(list(row.values()))
+    rows = outcome._sql(
+        "SELECT e.regver_id, r.slug AS register, rv.slug AS variant, "
+        "e.registerversionnamn AS name, "
+        "e.registerversionbeskrivning AS description, "
+        "e.registerversionmatinformation AS measurement_information, "
+        "e.registerversion_docstaus AS documentation_status, "
+        "e.registerversion_forstagodkannandedatum AS first_approved_at, "
+        "e.registerversion_senastgodkanddatum AS last_approved_at "
+        "FROM register_version e JOIN register_variant rv USING "
+        "(register_variant_id) JOIN register r USING (register_id)"
+    )
+    for row in rows:
+        edition = row.pop("regver_id")
+        row["populations"] = _sorted(populations.get(edition, []))
+        row["object_types"] = _sorted(objects.get(edition, []))
+    return rows
+
+
 def _value_sets(outcome: Outcome) -> list[dict]:
     """Each stored value set: its id, its sorted members and the sorted FQIDs of the
     variables whose states or alias windows carry it."""
@@ -1030,9 +1058,14 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "variables": _variables,
     "variants": lambda o: o._sql(
         "SELECT r.slug AS register, rv.slug AS variant, rv.name, "
-        "rv.panel_entity_key, rv.panel_time_key "
+        "rv.panel_entity_key, rv.panel_time_key, rv.panel_time_grain, "
+        "rv.description, rv.display_group "
         "FROM register_variant rv JOIN register r USING (register_id)"
     ),
+    "registers": lambda o: o._sql(
+        "SELECT slug AS register, name, purpose FROM register"
+    ),
+    "editions": _editions,
     # One row per tag member as its FQID; a tag without members is one null row.
     "tags": lambda o: o._sql(
         "SELECT t.slug, CASE WHEN m.variable_id IS NOT NULL THEN "
@@ -1059,11 +1092,15 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "SELECT key AS query, type, position, entity FROM search_pin"
     ),
     # The unfolded text `variable_fts` indexes, one row per built variable.
-    "search_text": lambda o: o._sql(
-        "SELECT r.slug AS register, v.slug AS variable, t.name, t.definition, "
-        "t.description FROM variable_search_text t JOIN variable v USING (variable_id) "
-        "JOIN register r ON r.register_id = v.register_id"
-    ),
+    "search_text": lambda o: [
+        {**row, "delivery_column_names": json.loads(row["delivery_column_names"])}
+        for row in o._sql(
+            "SELECT r.slug AS register, v.slug AS variable, t.name, t.definition, "
+            "t.description, t.delivery_column_names FROM variable_search_text t "
+            "JOIN variable v USING (variable_id) "
+            "JOIN register r ON r.register_id = v.register_id"
+        )
+    ],
     "manifest": lambda o: o._sql("SELECT key, value FROM import_manifest"),
     "edges": lambda o: o._sql(
         "SELECT 'same_as' AS type, "
@@ -1161,7 +1198,12 @@ FIELDS: dict[str, frozenset[str]] = {
         "variables": "register variable column provider_key definition description "
         "is_identifier is_sensitive deprecated source_register source_label "
         "source_register_text",
-        "variants": "register variant name panel_entity_key panel_time_key",
+        "variants": "register variant name panel_entity_key panel_time_key "
+        "panel_time_grain description display_group",
+        "registers": "register name purpose",
+        "editions": "register variant name description measurement_information "
+        "documentation_status first_approved_at last_approved_at populations "
+        "object_types",
         "tags": "slug member",
         "aliases": "register variable variant column",
         "alias_windows": "register variable variant column valid_from valid_to provenance "
@@ -1173,7 +1215,8 @@ FIELDS: dict[str, frozenset[str]] = {
         "severity detail summary detail_hash_of fields refs withheld_output "
         "acknowledged_by source_subject case_id",
         "search_pins": "query type position entity",
-        "search_text": "register variable name definition description",
+        "search_text": "register variable name definition description "
+        "delivery_column_names",
         "manifest": "key value",
         "edges": "type a b",
         "lineage": "register variable variant column source_register "

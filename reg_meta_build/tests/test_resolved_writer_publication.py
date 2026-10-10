@@ -39,6 +39,7 @@ from reg_meta_build.resolved_catalog import (
     ResolvedCodeSet,
     ResolvedConformance,
     ResolvedEdition,
+    ResolvedState,
     ResolvedVariable,
     write_resolved_catalog,
 )
@@ -61,9 +62,19 @@ def _with_members(members: tuple) -> ResolvedVariable:
     return _with_state(value_set=value_set.model_copy(update={"members": members}))
 
 
+_UNDATED = {"period_scope": "year_independent", "valid_from": None, "valid_to": None}
+
+
 def _year_independent(**update: object) -> ResolvedVariable:
-    undated = {"period_scope": "year_independent", "valid_from": None, "valid_to": None}
-    return _with_state(**(undated | update))
+    return _with_state(**(_UNDATED | update))
+
+
+def _year_independent_beside(
+    *others: ResolvedState, **update: object
+) -> ResolvedVariable:
+    """One year-independent state in the variant, beside ``others``."""
+    independent = _state(2000).model_copy(update=_UNDATED)
+    return _changed(states=(independent, *others), **update)
 
 
 def _with_alias_windows(*windows: ResolvedAliasWindow) -> ResolvedVariable:
@@ -205,6 +216,44 @@ INVALID_VARIABLES: dict[str, tuple[Callable[[], tuple[ResolvedVariable, ...]], s
     "year-independent-pooled": (
         lambda: (_year_independent(pooled=True),),
         "pooled flag",
+    ),
+    # A year-independent state is the variant's only delivery of its code version: a
+    # second one, a dated one beside it (in the same or another code version) or a
+    # dated alias window would give one variant two period scopes.
+    "year-independent-twice": (
+        lambda: (_year_independent_beside(_state(2000).model_copy(update=_UNDATED)),),
+        "duplicate year-independent state in one owner/variant/code version",
+    ),
+    "year-independent-beside-dated": (
+        lambda: (_year_independent_beside(_state(2000)),),
+        "mixed dated and year-independent states in one owner/variant/code version",
+    ),
+    "year-independent-beside-dated-in-another-code-version": (
+        lambda: (
+            _year_independent_beside(
+                _state(2000).model_copy(
+                    update={
+                        "value_set": ResolvedCodeSet(members=(("01", "Label"),)),
+                        "value_set_version_label": "Another list",
+                    }
+                )
+            ),
+        ),
+        "mixed dated and year-independent delivery in one owner/variant",
+    ),
+    "year-independent-with-dated-alias-window": (
+        lambda: (
+            _year_independent_beside(
+                aliases=(
+                    ResolvedAlias(
+                        variant=_state(2000).variant,
+                        delivery_column_name="Old",
+                        windows=(_YEAR,),
+                    ),
+                )
+            ),
+        ),
+        "dated alias windows cannot represent year-independent delivery",
     ),
     "dated-without-end": (
         lambda: (_with_state(valid_to=None),),
