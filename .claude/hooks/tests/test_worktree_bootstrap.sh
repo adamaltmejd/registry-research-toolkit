@@ -14,6 +14,8 @@
 #   3. `--provision <root>` provisions synchronously.
 #   4. Partial install (.venv dir present, marker absent) still needs provisioning.
 #   5. Dependency drift (lockfile changed -> marker stale) re-provisions.
+#   5b. An editable .pth pointing outside the checkout (another checkout's uv run
+#      re-synced this .venv, #1337) re-provisions despite an in-sync marker.
 #   6. SessionStart is NON-BLOCKING: it emits a well-formed JSON advisory (only
 #      that branch writes stdout, so the advisory IS proof of the non-blocking path).
 #   7. Generated pre-commit/post-checkout launchers get a linked-worktree
@@ -33,7 +35,8 @@ fail=0
 note() { printf '%s\n' "$1"; }
 fp() { cksum <"$1" | cut -d' ' -f1; } # mirror the hook's fingerprint()
 
-work=$(mktemp -d)
+# Physical path: the hook compares editable .pth lines with the git toplevel.
+work=$(cd "$(mktemp -d)" && pwd -P)
 trap 'rm -rf "$work"' EXIT
 calls="$work/calls.log"
 repo="$work/repo"
@@ -66,11 +69,13 @@ EOF
 chmod +x "$work/bin/uv" "$work/bin/bun" "$work/bin/pre-commit"
 
 VENV_MARKER="$repo/.venv/.wt-provisioned"
+SITE="$repo/.venv/lib/python3.14/site-packages"
 NODE_MARKER="$repo/reg_webapp/frontend/node_modules/.wt-provisioned"
 HOOK_SHIM_MARKER="registry-research-toolkit linked-worktree GIT_WORK_TREE shim"
 
 mark_provisioned() { # stamp markers with the CURRENT fingerprints
-	mkdir -p "$repo/.venv/bin" "$repo/reg_webapp/frontend/node_modules"
+	mkdir -p "$repo/.venv/bin" "$SITE" "$repo/reg_webapp/frontend/node_modules"
+	printf '%s/reg_meta/src' "$repo" >"$SITE/_editable_impl_reg_meta.pth"
 	fp "$repo/uv.lock" >"$VENV_MARKER"
 	fp "$repo/reg_webapp/frontend/bun.lock" >"$NODE_MARKER"
 }
@@ -238,6 +243,16 @@ printf 'lock-v2-changed\n' >"$repo/uv.lock" # marker now stale vs new fingerprin
 run_event "" >/dev/null
 grep -q '^uv sync --frozen' "$calls" || {
 	note "FAIL[5]: changed uv.lock should re-run 'uv sync'; calls: $(tr '\n' ';' <"$calls")"
+	fail=1
+}
+
+# --- Case 5b: in-sync marker, but an editable install points at another checkout ---
+mark_provisioned
+printf '%s/other-checkout/reg_meta/src' "$work" >"$SITE/_editable_impl_reg_meta.pth"
+: >"$calls"
+run_event "" >/dev/null
+grep -q '^uv sync --frozen' "$calls" || {
+	note "FAIL[5b]: an editable .pth outside the checkout should re-run 'uv sync'; calls: $(tr '\n' ';' <"$calls")"
 	fail=1
 }
 

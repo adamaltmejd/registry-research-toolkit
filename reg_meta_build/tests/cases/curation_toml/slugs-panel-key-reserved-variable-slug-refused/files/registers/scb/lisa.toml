@@ -10,4 +10,4 @@ slug = "first"
 [[variant]]
 native_id = "34.153"
 slug = "x"
-panel_time_key = "states"
+panel_time_key = "variants"

@@ -2,7 +2,7 @@
 
 Global slugs live in register files under ``reg_meta_build/curation/registers/``.
 Steward slugs remain in per-provider files under ``reg_meta_build/fqid_slugs/``.
-This module parses them against the FQID grammar (see reg_meta/DESIGN.md → FQID
+This module parses them against the FQID grammar (see crates/DESIGN.md → FQID
 grammar and DESIGN.md → Slug curation),
 writes the slug columns during build, and ships the seed/precheck/snapshot
 machinery the CLI exposes.
@@ -382,7 +382,7 @@ def _validate_panel_slug_ref(
     JSON-decode, or a non-slug-shaped value) fails LOUDLY at build time, not as a
     runtime decode crash when the webapp serves that variant. Validating against
     the `variable` slot (not the field name) is deliberate: it also rejects a
-    reference to a reserved HTTP-suffix token (`states`/`variants`/…) — no variable
+    reference to a reserved slot token (`variants`) — no variable
     can ever be minted with such a slug, so a panel key naming one is dangling
     metadata (Codex P2 on #228). `field` is kept only for the diagnostic message."""
     try:
@@ -630,7 +630,7 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
             '(e.g. `[registers."..."]` -> `[register."..."]`).',
         )
     entries: list[SlugEntry] = []
-    # Slug uniqueness scope follows the FQID grammar (see reg_meta/DESIGN.md → FQID grammar):
+    # Slug uniqueness scope follows the FQID grammar (see crates/DESIGN.md → FQID grammar):
     # - register: provider-wide (`<provider>/<register>`)
     # - register_variant, variable: per parent register (the register slot in
     #   `<provider>/<register>/<variant>...` already disambiguates them).

@@ -1,0 +1,25 @@
+{
+  "note": "Twin of test_search_ranking.py::test_unfolded_identity_swamp_gate_does_not_depend_on_page_size. 51 `Generic` classifications reach `C12` only through the code arm (`C120`) and their slug prefix (`c12-generic-NN`); `zz-discriminative` (`Grupperat`) is the only name hit. Fails if the swamp gate counts identity matches on the page instead of the whole bounded match set: a 25-row page would then promote the slug-prefix rows ahead of `Grupperat`. The fixture has no groups or successions, so folding is a no-op.",
+  "kind": "catalog",
+  "fixture": "reader/search-identity-swamp-code",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "C12",
+        "type": "classification",
+        "limit": 25
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "C12",
+        "type": "classification",
+        "limit": 60
+      }
+    }
+  ]
+}

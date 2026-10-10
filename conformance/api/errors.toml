@@ -1,28 +1,26 @@
 # Error catalog (RUST_RUNTIME_SPEC.md package 1.1). An error is the document
 # {code, class, message, remediation, fields} (operations.toml, shape.Error). HTTP sends
 # it as `{"error": ..., "meta": ...}` with the code's status; MCP returns the same
-# document as a tool error; a process (startup, `fetch`) prints it on stderr and exits
-# with the code's `exit`. Approved at checkpoint 1.
+# document as a tool error; a process that refuses to start prints it on stderr and
+# exits with the code's `exit`. Approved at checkpoint 1.
 #
 # code       stable; `fields` lists the keys of its `fields` object.
 # class      usage 400/422, not_found 404, conflict 409, order_blocked 422,
-#            unavailable 503, internal 500 (section 7); limit 413/429 (HTTP only);
-#            network (fetch only).
+#            unavailable 503, internal 500 (section 7); limit 413/429 (HTTP only).
 # surface    operation: any operation, either transport. http: the HTTP transport only.
-#            startup: `serve` or `mcp` refuses to start (never listens). fetch: the
-#            `fetch` run mode.
+#            startup: `serve` or `mcp` refuses to start (never listens).
 # status     the HTTP status (operation and http codes).
-# exit       the process exit status (startup and fetch codes): 2 usage, 10
-#            configuration, 25 network, as today's EXIT_* constants. A process run
-#            with a bad argument prints invalid_parameter and exits 2.
+# exit       the process exit status (startup codes): 2 usage, 10 configuration, as
+#            today's EXIT_* constants. A process run with a bad argument prints
+#            invalid_parameter and exits 2.
 # replaces   today's reg_meta codes and webapp HTTP errors it takes over.
 #
 # Not carried over: uv_not_found, upgrade_failed, pypi_lookup_failed (the binary does
-# not upgrade itself); db_exists, doc_db_exists, catalog_bootstrap_required (`fetch`
-# activates atomically and bootstraps); no_match (`resolve` reports a status per
+# not upgrade itself); db_exists, doc_db_exists, catalog_bootstrap_required (the
+# binary installs no catalog); no_match (`resolve` reports a status per
 # column); unknown_search_row_type, state_variant_unresolved,
 # corrupt_concept_group_source (artifact invariants, so internal_error);
-# inventory_toml_unreadable, inventory_invalid (build-side, stay in reg_meta_build).
+# inventory_* codes (build-side, stay in reg_meta_build).
 # Order finding codes and project issue codes are data inside `order_blocked` and
 # `validate` results, owned by the project validator (slice 3e), not error codes.
 
@@ -197,41 +195,3 @@ surface = "startup"
 exit = 10
 replaces = ["doc_schema_incompatible"]
 note = "A docs database is present but incompatible; an absent one is docs_unavailable per request."
-
-[[code]]
-code = "release_not_found"
-class = "unavailable"
-surface = "fetch"
-exit = 10
-replaces = ["release_not_found"]
-
-[[code]]
-code = "download_failed"
-class = "network"
-surface = "fetch"
-exit = 25
-replaces = ["download_failed", "no_releases", "release_lookup_failed"]
-
-[[code]]
-code = "no_db_in_release"
-class = "unavailable"
-surface = "fetch"
-exit = 10
-fields = ["asset"]
-replaces = ["no_db_in_release", "no_docs_in_release"]
-
-[[code]]
-code = "incompatible_db_asset"
-class = "unavailable"
-surface = "fetch"
-exit = 10
-fields = ["asset"]
-replaces = ["incompatible_db_asset", "incompatible_docs_asset"]
-
-[[code]]
-code = "checksum_mismatch"
-class = "network"
-surface = "fetch"
-exit = 25
-fields = ["asset"]
-note = "New: section 8's SHA-256 verification before activation."

@@ -4,7 +4,7 @@
   "fails_if": "load_classifications accepts a book listing one sentinel code twice",
   "note": "The two sentinels differ in meaning, so only the one-entry-per-code rule can refuse them.",
   "error": {
-    "code": "classification_curation_invalid",
+    "code": "classification_entry_invalid",
     "locator": "classifications/A.toml",
     "message_contains": [
       "more than once"

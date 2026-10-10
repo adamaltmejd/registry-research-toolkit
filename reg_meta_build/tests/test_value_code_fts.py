@@ -52,7 +52,11 @@ _MIXED_CODES = [
 ]
 
 
-def _build(tmp_path: Path, classifications: tuple[ResolvedClassification, ...] = ()):
+def _build(
+    tmp_path: Path,
+    classifications: tuple[ResolvedClassification, ...] = (),
+    members: tuple[tuple[str, str], ...] = tuple(_MIXED_CODES),
+):
     variable = ResolvedVariable(
         register=ResolvedRegister(provider="scb", slug="testreg", name="TESTREG"),
         slug="syssstat",
@@ -74,7 +78,7 @@ def _build(tmp_path: Path, classifications: tuple[ResolvedClassification, ...] =
                 data_length="2",
                 operational_definition=None,
                 provenance=None,
-                value_set=ResolvedCodeSet(members=tuple(_MIXED_CODES)),
+                value_set=ResolvedCodeSet(members=members),
             ),
         ),
     )
@@ -218,3 +222,32 @@ def test_classification_owned_code_without_variable_is_indexed(
         )
     finally:
         conn.close()
+
+
+def test_a_leading_space_code_stays_a_distinct_written_member(tmp_path: Path) -> None:
+    """A value set with `" 01"` and `"01"` (same label) is written as two members, and
+    the label search finds both codes.
+
+    No build reaches it: every source reader normalizes the code token at its read
+    boundary (`sources/code_lists.py` `normalize_token`, the SCB reader's trim), so a
+    leading-space code never reaches formation. The source-built members (a labelled
+    blank, two labels for one code, `01` beside `1`) are the `members` rows of
+    `cases/build/classification-bindings-conform-extend-or-stay-unbound-per-register`.
+    Fails if the resolved writer or `value_code` storage trims or folds codes, so the
+    two members collapse into one.
+    """
+    members = (("01", "Participation"), (" 01", "Participation"))
+    conn = _build(tmp_path, members=members)
+    try:
+        written = conn.execute(
+            "SELECT code, label FROM value_set_member JOIN value_code USING (code_id) "
+            "JOIN variable_state USING (value_set_id)"
+        ).fetchall()
+        hits = conn.execute(
+            "SELECT c.code FROM value_code_fts f JOIN value_code c ON c.code_id=f.rowid "
+            "WHERE value_code_fts MATCH 'Participation'"
+        ).fetchall()
+    finally:
+        conn.close()
+    assert sorted(written) == sorted(members)
+    assert sorted(row[0] for row in hits) == [" 01", "01"]

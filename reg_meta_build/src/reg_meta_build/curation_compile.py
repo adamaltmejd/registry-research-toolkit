@@ -431,8 +431,13 @@ def compile_declared_metadata(
         if edge.predecessor.kind == "classification":
             predecessor, successor = a.removeprefix("class/"), b.removeprefix("class/")
             if predecessor not in books or successor not in books:
-                raise ValueError(
-                    f"classification succession names uncompiled book: {a} -> {b}"
+                raise curation_error(
+                    "relations_invalid",
+                    "curation/relations.toml [[edge]] type='replaced_by' "
+                    f"{a} -> {b}: classification succession names uncompiled "
+                    f"book {sorted({predecessor, successor} - books)!r}.",
+                    "Name books declared in curation/classifications/, or add "
+                    "the missing book's file.",
                 )
             class_successions.append(
                 ResolvedClassificationSuccession(
@@ -485,8 +490,13 @@ def compile_declared_metadata(
             str(edge.source).removeprefix("class/"),
         )
         if a not in books or b not in books:
-            raise ValueError(
-                f"classification derivation names uncompiled book: {a} -> {b}"
+            raise curation_error(
+                "relations_invalid",
+                "curation/relations.toml [[edge]] type='derived_from' "
+                f"{edge.derived} -> {edge.source}: classification derivation "
+                f"names uncompiled book {sorted({a, b} - books)!r}.",
+                "Name books declared in curation/classifications/, or add "
+                "the missing book's file.",
             )
         derivations.append(
             ResolvedClassificationDerivation(derived=a, source=b, note=edge.note)
@@ -4682,6 +4692,7 @@ def _compile_thin_register(
     reg_from = _source_text(register.fields.coverage_from)
     reg_to = _source_text(register.fields.coverage_to)
     cases = []
+    columns: dict[str, SourceRecord] = {}
     for record in records:
         variable_key = native_variable_key(record)
         if variable_key is None:
@@ -4692,6 +4703,17 @@ def _compile_thin_register(
         col = record.subject.variable.native_id
         assert isinstance(col, str)
         case_id = f"accepted-authored:{record.source}:{register_key[-1]}:{col}"
+        # Identical repeats are refused earlier (source_rows_duplicated); two
+        # differing declarations of one column would mint one case id twice.
+        if (first := columns.setdefault(col, record)) is not record:
+            raise curation_error(
+                _THIN_DECLARATION,
+                f"{case_id}: column {col!r} is declared twice, at "
+                f"{first.locators[0].physical_record} and "
+                f"{record.locators[0].physical_record}",
+                "Declare each column once per [[register]] in the authored "
+                "provider TOML.",
+            )
         selected = (
             tuple(
                 reference.native_id for reference in record.subject.variant_references

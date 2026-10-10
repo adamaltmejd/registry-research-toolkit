@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "checked"
+native_id = "3"
+[[variant]]
+native_id = "3.30"
+slug = "people"
+[[representation.period_family]]
+register = "scb/checked"
+family_stem = "lonfink"
+label = "Lön per månad"
+slug = "lone-per-manad"
+[representation.period_family.expected_definitions]
+"01" = "Salary paid in month 01; annual business income / 12."
+"02" = "Salary paid in month 02; annual business income / 12."
+"03" = "Salary paid in month 03; annual business income / 12."
+"04" = "Salary paid in month 04; annual business income / 12."
+"05" = "Salary paid in month 05; annual business income / 12."
+"06" = "Salary paid in month 06; annual business income / 12."
+"07" = "Salary paid in month 07; annual business income / 12."
+"08" = "Salary paid in month 08; annual business income / 12."
+"09" = "Salary paid in month 09; annual business income / 12."
+"10" = "Salary paid in month 10; annual business income / 12."
+"11" = "Salary paid in month 11; annual business income / 12."
+"12" = "Salary paid in month 12; annual business income / 12."

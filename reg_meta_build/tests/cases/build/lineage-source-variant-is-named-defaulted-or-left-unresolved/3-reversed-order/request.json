@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_catalog_lineage.py::test_duplicate_source_variant_label_without_variable_identity_stays_a_gap",
+    "test_catalog_lineage.py::test_explicit_source_variant_selects_its_states_over_a_different_default"
+  ],
+  "note": "Step 1 with the Registerinformation rows reversed and every curation entry list reversed: each register file's [[variant]] and [[variable]] entries, the relations.toml [[edge]] entries and the lineage.toml defaults. The two old tests ended by resolving the variables in reversed order and asserting an equal result. The reversal reaches both same-named People variants of gap and thirteenth, which the build meets in the other order. The expected projections are step 1's, copied.",
+  "fails_if": "delivery or entry order starts to choose between same-named source variants: for example the build hands `resolve_catalog_lineage` its variants in delivery order and it keeps the first slug seen per name in `variant_names` instead of the set, so GAP or DOUBLED resolves to one People variant in one order only. That first-seen mutation alone fails step 1 as well, because the variants arrive sorted: no one-site change isolates this step today. It is the decision-1 order witness for variant choice",
+  "sources": "scb-lineage-source-variants-reversed"
+}

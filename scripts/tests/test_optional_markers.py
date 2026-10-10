@@ -13,8 +13,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-
 ROOT_CONFTEST = Path(__file__).resolve().parents[2] / "conftest.py"
 
 GATED_MODULE = """
@@ -45,9 +43,7 @@ def test_module_marked():
 def _outcomes(tmp_path: Path, name: str, *args: str) -> dict[str, str]:
     """Run the root conftest over a suite nested in a directory named `name`."""
     shutil.copy(ROOT_CONFTEST, tmp_path / "conftest.py")
-    (tmp_path / "pytest.ini").write_text(
-        "[pytest]\nmarkers =\n    integration: gated\n    release: gated\n"
-    )
+    (tmp_path / "pytest.ini").write_text("[pytest]\nmarkers =\n    release: gated\n")
     suite = tmp_path / name
     suite.mkdir()
     (suite / f"test_{name}.py").write_text(GATED_MODULE.format(name=name))
@@ -71,11 +67,8 @@ def _outcomes(tmp_path: Path, name: str, *args: str) -> dict[str, str]:
     return outcomes
 
 
-@pytest.mark.parametrize("name", ["integration", "release"])
-def test_only_marked_tests_skip_under_marker_named_directory(
-    tmp_path: Path, name: str
-) -> None:
-    assert _outcomes(tmp_path, name) == {
+def test_only_marked_tests_skip_under_marker_named_directory(tmp_path: Path) -> None:
+    assert _outcomes(tmp_path, "release") == {
         "test_unmarked": "PASSED",
         "test_decorated": "SKIPPED",
         "test_param_marked[1]": "SKIPPED",
@@ -83,9 +76,8 @@ def test_only_marked_tests_skip_under_marker_named_directory(
     }
 
 
-@pytest.mark.parametrize("name", ["integration", "release"])
-def test_opt_in_flag_runs_marked_tests(tmp_path: Path, name: str) -> None:
-    assert _outcomes(tmp_path, name, f"--run-{name}") == {
+def test_opt_in_flag_runs_marked_tests(tmp_path: Path) -> None:
+    assert _outcomes(tmp_path, "release", "--run-release") == {
         "test_unmarked": "PASSED",
         "test_decorated": "PASSED",
         "test_param_marked[1]": "PASSED",

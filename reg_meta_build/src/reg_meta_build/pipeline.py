@@ -13,12 +13,12 @@ from io import TextIOWrapper
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 from reg_meta_build._curation import (
     SEARCH_PINS_FILE,
+    curation_error,
     load_search_pins,
-    printable_error,
 )
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
@@ -45,7 +45,7 @@ from reg_meta_build.curation_compile import (
     tree_sha256,
     validate_sentinels,
 )
-from reg_meta_build.curation_tree import load_curation_tree
+from reg_meta_build.curation_tree import CLASSIFICATION_INVALID, load_curation_tree
 from reg_meta_build.data_warnings import acknowledged_data_warnings, scope_data_warnings
 from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
@@ -245,28 +245,24 @@ def _selected_scopes(
             names[str(register[-1])].add((source, register))
             names[f"{source}:{register[-1]}"].add((source, register))
     if unknown := set(specs) - names.keys():
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="pipeline_registers_unknown",
-                error_class="usage",
-                message=f"--registers names no selected scope: {sorted(unknown)}",
-                remediation="Name each scope by its native register id, SOURCE:ID, "
-                "or a whole source, as the prepared input declares it.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="pipeline_registers_unknown",
+            error_class="usage",
+            message=f"--registers names no selected scope: {sorted(unknown)}",
+            remediation="Name each scope by its native register id, SOURCE:ID, "
+            "or a whole source, as the prepared input declares it.",
         )
     if ambiguous := sorted(
         spec for spec in set(specs) if len({source for source, _ in names[spec]}) > 1
     ):
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_USAGE,
-                code="pipeline_registers_ambiguous",
-                error_class="usage",
-                message="--registers names scopes in several sources, qualify as "
-                f"SOURCE:ID: {ambiguous}",
-                remediation="Qualify each named scope as SOURCE:ID.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="pipeline_registers_ambiguous",
+            error_class="usage",
+            message="--registers names scopes in several sources, qualify as "
+            f"SOURCE:ID: {ambiguous}",
+            remediation="Qualify each named scope as SOURCE:ID.",
         )
     return {key for spec in specs for key in names[spec]}
 
@@ -301,15 +297,13 @@ def _refuse_duplicated_rows(records: Iterable[SourceRecord]) -> None:
             )
             for locator in (seen.locators[0], record.locators[0])
         )
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="source_rows_duplicated",
-                error_class="configuration",
-                message=f"{record.source}: {kept} and {repeat} are identical rows.",
-                remediation="Remove the repeated row from the input bundle (and "
-                "report it to the provider), then prepare a new candidate.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="source_rows_duplicated",
+            error_class="configuration",
+            message=f"{record.source}: {kept} and {repeat} are identical rows.",
+            remediation="Remove the repeated row from the input bundle (and "
+            "report it to the provider), then prepare a new candidate.",
         )
 
 
@@ -998,18 +992,29 @@ def _run_pipeline(
                     withheld[("classification", slug)] = resolved.diagnostics
                     continue
                 metadata = dict(declaration.metadata)
-                book = ResolvedClassification.model_validate(
-                    {
-                        **metadata,
-                        "codes": resolved.codes,
-                        "sentinel_codes": validate_sentinels(
-                            metadata.pop("sentinel_codes", None),
-                            subject=str(declaration.metadata.get("slug")),
-                        ),
-                    }
-                )
-                if book.slug in books:
-                    raise ValueError("duplicate classification identity")
+                try:
+                    book = ResolvedClassification.model_validate(
+                        {
+                            **metadata,
+                            "codes": resolved.codes,
+                            "sentinel_codes": validate_sentinels(
+                                metadata.pop("sentinel_codes", None),
+                                subject=str(declaration.metadata.get("slug")),
+                            ),
+                        }
+                    )
+                except ValidationError as exc:
+                    # The book's own file decides its sentinels and bounds;
+                    # only here do they meet its canonical codes.
+                    raise curation_error(
+                        CLASSIFICATION_INVALID,
+                        f"classifications/{metadata['short_name']}.toml: "
+                        f"{exc.errors(include_url=False)[0]['msg']}",
+                        "Keep sentinel codes out of the book's canonical code "
+                        "set and valid_from at or before valid_to.",
+                    ) from exc
+                # `load_classifications` refuses a slug declared twice, so each
+                # compiled codebook names a distinct book.
                 books[book.slug] = book
                 event(
                     "codebook",

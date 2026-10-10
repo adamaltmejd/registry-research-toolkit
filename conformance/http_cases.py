@@ -124,6 +124,21 @@ def assert_http_case(case, tmp_path, servers):
             projection,
             oracle.get("json", {}),
         )
+        if "members" in oracle:
+            assert_members(responses, oracle["members"])
+
+
+def assert_members(responses, members):
+    """A tie-order-free oracle across steps: `pointer` projected from each of
+    `steps` in turn and concatenated holds no repeats and exactly the `equals`
+    set."""
+    rows = [
+        row
+        for index in members["steps"]
+        for row in select_json(responses[index]["body"], members["pointer"])
+    ]
+    assert len(rows) == len(set(rows)), rows
+    assert set(rows) == set(members["equals"]), rows
 
 
 def case_clients(request, case, servers):
@@ -153,9 +168,16 @@ def case_clients(request, case, servers):
 def assert_startup_refusal(request, refusal, servers, tmp_path):
     """The server refuses the case's artifact: it prints the error document on
     stderr and exits with the code's `exit` status in `api/errors.toml`. The
-    `manifest` and `doc_meta` overrides are written to the private copies."""
+    `manifest` and `doc_meta` overrides are written to the private copies;
+    `serve.db: "absent"` serves an empty directory instead of an artifact."""
     from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 
+    if request["serve"].get("db") == "absent":
+        (tmp_path / "absent").mkdir()
+        _assert_refused(
+            servers, tmp_path / "absent", request["serve"]["catalog"], refusal
+        )
+        return
     path = build_reader_artifact(
         tmp_path / "catalog",
         fixture_source(request),
@@ -171,8 +193,12 @@ def assert_startup_refusal(request, refusal, servers, tmp_path):
             conn.executemany(
                 f"INSERT OR REPLACE INTO {table} VALUES (?, ?)", values.items()
             )
+    _assert_refused(servers, path.parent, request["serve"]["catalog"], refusal)
+
+
+def _assert_refused(servers, db, catalog, refusal):
     completed = subprocess.run(
-        servers.argv(path.parent, request["serve"]["catalog"], _free_port()),
+        servers.argv(db, catalog, _free_port()),
         cwd=CASES.parents[1],
         stdin=subprocess.DEVNULL,
         capture_output=True,

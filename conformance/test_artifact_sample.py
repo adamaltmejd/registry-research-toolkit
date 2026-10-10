@@ -5,19 +5,23 @@ from __future__ import annotations
 import json
 
 import pytest
-from artifact_requests import assert_sampled_agreement, sample_project, server_client
+from artifact_requests import assert_sampled_agreement, server_client
 from reader_artifacts import CASES, FIXTURE_IMPORT_DATE, build_reader_artifact
-from reg_meta.cli import run
-from reg_meta.db import open_db
-from reg_meta.order import materialize_order, project_from_raw
+
+
+def _without_nulls(value):
+    """The oracle spells an absent coordinate by omission."""
+    if isinstance(value, dict):
+        return {k: _without_nulls(v) for k, v in value.items() if v is not None}
+    if isinstance(value, list):
+        return [_without_nulls(item) for item in value]
+    return value
 
 
 @pytest.mark.parametrize(
     "case", sorted((CASES / "artifact_sample").iterdir()), ids=lambda p: p.name
 )
-def test_sampled_order_and_search_contracts(
-    case, tmp_path, monkeypatch, capsys, request
-):
+def test_sampled_order_and_search_contracts(case, tmp_path, request):
     spec = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
     fixture = spec["fixture"]
@@ -29,13 +33,6 @@ def test_sampled_order_and_search_contracts(
         spec["artifact"],
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
-    with open_db(path) as conn:
-        result = materialize_order(project_from_raw(sample_project(conn)), conn)
-    assert result.manifest is not None
-    output = result.manifest.model_dump(mode="json", exclude_none=True)
-    assert {key: output[key] for key in ("entries", "clips")} == {
-        key: expected[key] for key in ("entries", "clips")
-    }
     server = server_client(request, path.parent)
     if absent := expected.get("absent_from_first_search_page"):
         response = server.get(
@@ -45,26 +42,7 @@ def test_sampled_order_and_search_contracts(
         page = response.json()["data"]
         assert page["next_cursor"] is not None
         assert all(hit.get("fqid") != absent for hit in page["items"])
-        assert (
-            run(
-                [
-                    "--db",
-                    str(path.parent),
-                    "--format",
-                    "json",
-                    "search",
-                    "--query",
-                    "Value",
-                    "--type",
-                    "variable",
-                    "--no-fold",
-                    "--limit",
-                    "100",
-                ]
-            )
-            == 0
-        )
-        page = json.loads(capsys.readouterr().out)
-        assert page["has_more"]
-        assert all(hit.get("fqid") != absent for hit in page["results"])
-    assert_sampled_agreement(path.parent, server, tmp_path, capsys)
+    output = _without_nulls(assert_sampled_agreement(path.parent, server))
+    assert {key: output[key] for key in ("entries", "clips")} == {
+        key: expected[key] for key in ("entries", "clips")
+    }

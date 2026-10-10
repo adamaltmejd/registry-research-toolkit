@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "changed"
+native_id = "5"
+[[variant]]
+native_id = "5.50"
+slug = "people"
+[[variant]]
+native_id = "5.51"
+slug = "other"
+[[variant]]
+native_id = "5.52"
+slug = "duplicate"
+[[variable]]
+native_id = "5.501"
+slug = "changed"
+[[variable]]
+native_id = "5.502"
+slug = "filler"
+
+[[enrichment.description]]
+register = "scb/changed"
+variable = "changed"
+description = "Changed source candidate"
+provenance = "delivery list"

@@ -1,0 +1,13 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Holdings_Extract.csv"
+[[table.column]]
+name = "Diagnos"
+
+[[table]]
+id = "Fractional.csv"
+edition = 2019.5
+[[table.column]]
+name = "Diagnos"

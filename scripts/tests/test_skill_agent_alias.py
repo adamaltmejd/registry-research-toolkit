@@ -9,7 +9,7 @@ impossible — the skills in these trees that are still copies have already drif
 Two link directions exist:
 
 - The hand-authored maintenance skills (`upgrade-deps`, `build-db`, `test-audit`,
-  `code-cleanup`) live under `.agents/skills/`, so `.claude/skills/<name>` aliases
+  `code-cleanup`, `release`) live under `.agents/skills/`, so `.claude/skills/<name>` aliases
   `../../.agents/skills/<name>`.
 - The specialized design skills are hand-authored under `.claude/skills/`, so
   `.agents/skills/<name>` is the alias — `.agents/skills/<name>` → `../../.claude/skills/<name>`.
@@ -37,6 +37,7 @@ _SKILLS = {
     "build-db": (".agents", ".claude"),
     "test-audit": (".agents", ".claude"),
     "code-cleanup": (".agents", ".claude"),
+    "release": (".agents", ".claude"),
 }
 
 

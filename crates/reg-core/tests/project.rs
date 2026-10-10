@@ -1,6 +1,6 @@
 //! The project types, the structural validator and the two JSON encodings against
-//! data oracles: the structural corpora ([`CORPORA`]), the project bodies of
-//! `conformance/cases/{api,order}/`, and files frozen Python wrote.
+//! data oracles: the structural corpus ([`CORPUS`]), the project bodies of
+//! `conformance/cases/{api,order}/`, and files the retired Python reader wrote.
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -31,13 +31,10 @@ fn cases(dir: &Path) -> Vec<PathBuf> {
     cases
 }
 
-/// The structural corpora, from the repository root: frozen Python's, and this
-/// crate's cases Python's lacks (the intentional differences named in
-/// `src/structural.rs`, and shapes only the types need).
-const CORPORA: [&str; 2] = [
-    "reg_schema/test_corpus",
-    "crates/reg-core/tests/project/corpus",
-];
+/// The structural corpus, from the repository root: the retired Python validator's
+/// cases, plus the intentional differences named in `src/structural.rs` and shapes
+/// only the types need.
+const CORPUS: &str = "crates/reg-core/tests/project/corpus";
 
 type IssueKey = (String, String, String, String);
 
@@ -67,19 +64,17 @@ fn expected_keys(result: &Value) -> Vec<IssueKey> {
 /// in emission order. Fails when a rule's code, path or message template
 /// changes, or a rule is lost or added.
 #[test]
-fn structural_corpora() {
-    for corpus in CORPORA.map(|c| repo().join(c)) {
-        let cases = cases(&corpus);
-        assert!(!cases.is_empty(), "no cases under {}", corpus.display());
-        for case in cases {
-            let actual = result_keys(&validate_structural(&json(&case.join("input.json"))));
-            let expected = expected_keys(&json(&case.join("expected_ValidationResult.json")));
-            assert_eq!(actual, expected, "{}", case.display());
-        }
+fn structural_corpus() {
+    let cases = cases(&repo().join(CORPUS));
+    assert!(!cases.is_empty(), "no cases under {CORPUS}");
+    for case in cases {
+        let actual = result_keys(&validate_structural(&json(&case.join("input.json"))));
+        let expected = expected_keys(&json(&case.join("expected_ValidationResult.json")));
+        assert_eq!(actual, expected, "{}", case.display());
     }
 }
 
-/// Every project of the corpora that the validator accepts.
+/// Every project of the corpus and the conformance cases that the validator accepts.
 fn valid_projects() -> Vec<(String, Value)> {
     let mut projects = Vec::new();
     let mut add = |key: String, project: &Value| {
@@ -87,11 +82,9 @@ fn valid_projects() -> Vec<(String, Value)> {
             projects.push((key, project.clone()));
         }
     };
-    for corpus in CORPORA {
-        for case in cases(&repo().join(corpus)) {
-            let key = format!("{corpus}/{}/input.json", name(&case));
-            add(key, &json(&case.join("input.json")));
-        }
+    for case in cases(&repo().join(CORPUS)) {
+        let key = format!("{CORPUS}/{}/input.json", name(&case));
+        add(key, &json(&case.join("input.json")));
     }
     for kind in ["api", "order"] {
         for case in cases(&repo().join("conformance/cases").join(kind)) {
@@ -120,19 +113,12 @@ fn name(case: &Path) -> &str {
     case.file_name().unwrap().to_str().unwrap()
 }
 
-/// Every accepted project deserializes into [`ProjectData`] and hashes as frozen
-/// Python's `reg_meta.order._project_hash` did (`tests/project/hashes.json`, keyed by
-/// file and JSON pointer). Fails when the types drop, add or rename a field, stop
-/// writing absent optionals as `null` or expanding panel-member shorthand, or the
-/// canonical encoding changes; and when a corpus gains an accepted project the
-/// golden lacks.
-///
-/// To add a project's hash, from the repository root with frozen Python:
-/// `uv run python -c 'import json, sys; from reg_meta.order import _project_hash;
-/// from reg_schema import ProjectData;
-/// print(_project_hash(ProjectData.model_validate(json.load(sys.stdin))))' < project.json`.
-///
-/// Revisit: regenerate from Rust once the pinned-Rust baseline lands (stage 4, D1).
+/// Every accepted project deserializes into [`ProjectData`] and hashes as the retired
+/// Python reader's `reg_meta.order._project_hash` did (`tests/project/hashes.json`,
+/// keyed by file and JSON pointer). Fails when the types drop, add or rename a field,
+/// stop writing absent optionals as `null` or expanding panel-member shorthand, or the
+/// canonical encoding changes; and when a corpus gains an accepted project the golden
+/// lacks.
 #[test]
 fn project_hashes() {
     let golden = json(&PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/project/hashes.json"));
@@ -177,8 +163,8 @@ fn committed_manifest_bytes() {
     assert!(seen > 0, "no committed manifest bytes");
 }
 
-/// The validation result encodes as frozen Python's `reg_meta.semantic.validation_json`
-/// wrote it for the same input (`tests/project/validation_result/`): `ok`, issues in
+/// The validation result encodes as the retired Python reader's
+/// `reg_meta.semantic.validation_json` wrote it for the same input (`tests/project/validation_result/`): `ok`, issues in
 /// emission order, an explicit `successor_fqid: null`, non-ASCII as is. Fails when
 /// the wire shape, the issue order or the encoding changes.
 #[test]

@@ -32,15 +32,14 @@ jobs:
       - run: uv run ruff format --check
       # Backstop: run the pre-commit-stage hooks that an agent could have
       # bypassed locally with `--no-verify`. Covers panache + ty + ruff. There
-      # is no local pytest hook; the per-suite `test` matrix and
-      # `package-integration` below are the test gate.
+      # is no local pytest hook; the per-suite `test` matrix below is the test
+      # gate.
       - run: uvx --from pre-commit==4.6.2 pre-commit run --all-files
       # Type check via ty (Astral, beta). Pinned via uvx so CI, pre-commit,
       # and cached Codex environments resolve the same checker without making
       # ty a workspace dev dependency. ty moves quickly, so bump this pin
-      # deliberately/frequently. Baseline triage landed (scripts/tests excluded,
-      # structural.py validator-narrow noise suppressed via [tool.ty.overrides]
-      # in pyproject.toml); the check is now blocking.
+      # deliberately/frequently. Baseline triage landed (tests and scripts
+      # excluded in pyproject.toml); the check is now blocking.
       - run: uvx --from ty==0.0.79 ty check
 
   # The Rust workspace (root Cargo.toml, crates/). Latest stable toolchain, no pin:
@@ -72,19 +71,6 @@ jobs:
       # process (RUST_RUNTIME_SPEC.md section 10). `release`: the release-admission
       # run on the synthetic steward artifact. Commands: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py crates rust release
-
-  check-versions:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.0.1
-        with:
-          version: "0.12.11"
-      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2.9.2
-      - run: uv sync --frozen
-      - run: bash scripts/check_versions.sh
 
   # Exit-code and message tests for the repo's Claude Code hooks
   # (.claude/hooks/tests). Plain bash, python3 and git, all preinstalled on the
@@ -122,17 +108,10 @@ jobs:
             budget: 6
             # Hypothesis's full example count (reg_meta_build/tests/conftest.py).
             hypothesis_profile: thorough
-          # The full suite against the in-process Python adapters. The `rust`
-          # job reruns the whole suite against the Rust server:
-          # the same cases, a different implementation under test.
+          # The suite without `--server-cmd`; the `rust` job reruns the whole
+          # suite against the Rust server.
           - suite: conformance
             budget: 4
-          - suite: reg_meta
-            budget: 3
-          - suite: reg_webapp/backend/tests
-            budget: 3
-          - suite: reg_schema
-            budget: 2
           - suite: scripts/tests
             budget: 2
     steps:
@@ -144,40 +123,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
-      - run: uv run python -m pytest "${{ matrix.suite }}" -m "not integration"
+      - run: uv run python -m pytest "${{ matrix.suite }}" -n auto
         env:
           HYPOTHESIS_PROFILE: ${{ matrix.hypothesis_profile }}
-
-  package-integration:
-    runs-on: ubuntu-latest
-    # Successful runs take 33-111 s (median 47 s). The bound sits just above
-    # the test's own 300 s image-build timeout, so a hung build fails with
-    # pytest's located error instead of a bare runner cancellation.
-    timeout-minutes: 8
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.0.1
-        with:
-          version: "0.12.11"
-      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2.9.2
-      - run: uv sync --frozen
-      # The ubuntu-24.04 runner image ships Podman (4.9.3), so there is no
-      # apt step: `apt-get update` only exposed the job to Ubuntu mirror
-      # stalls, which hung it until the timeout on 2026-10-07. If an image
-      # drops Podman, `podman: command not found` fails this step.
-      - name: Check rootless Podman
-        timeout-minutes: 2
-        run: |
-          podman --version
-          podman info
-      # Source coherence only: registry dependencies and release assets have
-      # separate publication gates in publish_reg_meta.yml / integration.yml.
-      - name: Verify workspace wheels install together with Podman
-        run: |
-          uv run python -m pytest reg_meta/tests/test_integration.py \
-            --run-integration --install-mode workspace -m "not release"
 
   changes:
     runs-on: ubuntu-latest
@@ -193,10 +141,11 @@ jobs:
               - 'reg_webapp/frontend/**'
               - 'crates/reg-meta/openapi.json'
               # Oracles the frontend unit tests read: the fold corpus
-              # (catalog.fold.test.ts) and reg_schema's corpus + version
-              # (validation.test.ts, project_data.test.ts).
+              # (catalog.fold.test.ts) and reg-core's project schema version and
+              # structural corpus (project_data.test.ts, validation.test.ts).
               - 'conformance/cases/folds/**'
-              - 'reg_schema/**'
+              - 'crates/reg-core/src/project.rs'
+              - 'crates/reg-core/tests/project/corpus/**'
               - '.github/workflows/ci.yml'
               - 'scripts/gate.py'
 

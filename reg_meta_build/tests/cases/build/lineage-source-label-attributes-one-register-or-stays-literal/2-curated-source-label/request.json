@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_catalog_lineage.py::test_curated_register_source_label_resolves_shared_abbreviation_by_prefix"
+  ],
+  "note": "Step 1 with one curation change: prefix.toml lists 'Former source (PFX)' in [register].source_labels (old: `source_labels = {\"scb/origin\": (\"Former source (PFX)\",)}`). FORMER's label prefix now names exactly one register, so (from the old test) it is attributed to prefix with one edge and no issue. CONTESTED is unchanged and keeps its error, so the issue list differs from step 1 only by FORMER.",
+  "fails_if": "`resolve_catalog_lineage` stops indexing a register's curated `source_labels` among its names (or the pipeline stops passing `[register].source_labels` to it), so FORMER stays ambiguous between prefix and another-prefix",
+  "sources": "scb-lineage-source-labels"
+}

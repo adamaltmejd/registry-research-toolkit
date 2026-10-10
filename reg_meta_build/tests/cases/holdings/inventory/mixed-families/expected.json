@@ -1,0 +1,15 @@
+{
+  "note": "Two rule families fail in one file: an empty table first, a blank unmapped_reason second. Every line is reported; the code is the first line's family. Not a reader test: the reader had one code for every structural refusal.",
+  "fails_if": "load_inventory takes the refusal code from a later line than the first, or stops reporting after the first offending table",
+  "error": {
+    "code": "inventory_table_no_columns",
+    "locators": [
+      "table['LISA_Individ.csv'].column",
+      "table['LISA_Individ_2020.csv'].column['LopNr'].unmapped_reason"
+    ],
+    "message_contains": [
+      "table declares no columns",
+      "unmapped_reason must be nonblank"
+    ]
+  }
+}

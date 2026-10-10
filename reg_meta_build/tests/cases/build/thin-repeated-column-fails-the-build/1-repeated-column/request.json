@@ -1,0 +1,19 @@
+{
+  "note": "Two [[register.variable]] entries of register r declare column COL, under the names Col and Other. They differ, so they are not the identical rows that source_rows_duplicated refuses, but both are the record (register r, variable COL) and would mint one accepted-authored case id twice; before the refusal the build aborted with the bare ValueError `source scope case IDs must be unique` (source_scope.py, found by #1275). The refusal names the case, the column and both entries of the authored TOML, which are the first and second [[register.variable]] of the first [[register]].",
+  "fails_if": "`_compile_thin_register` (curation_compile.py) stops refusing a column that one thin register declares twice, so the build mints the authored case twice and aborts with the unlocated `source scope case IDs must be unique`",
+  "sources": {
+    "description": "Authored FK register r (2000-2020), variant v (2010-2018) and two variables, Col and Other, both on column COL. Plus the SCB sample.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE"
+        }
+      ]
+    },
+    "files": {
+      "Forsakringskassan/fk.toml": "[[register]]\nkey = \"r\"\nname = \"R\"\nvalid_from = \"2000-01-01\"\nvalid_to = \"2020-12-31\"\n[[register.variant]]\nkey = \"v\"\nname = \"V\"\nvalid_from = \"2010-01-01\"\nvalid_to = \"2018-12-31\"\n[[register.variable]]\nname = \"Col\"\ncolumn = \"COL\"\ndata_type = \"int\"\nvariants = [\"v\"]\nvalid_from = \"2005-01-01\"\nvalid_to = \"2019-12-31\"\n[[register.variable]]\nname = \"Other\"\ncolumn = \"COL\"\ndata_type = \"int\"\nvariants = [\"v\"]\nvalid_from = \"2005-01-01\"\nvalid_to = \"2019-12-31\"\n"
+    }
+  }
+}

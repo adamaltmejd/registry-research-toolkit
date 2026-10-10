@@ -258,7 +258,7 @@ pub const DEFAULT_MMAP_SIZE: i64 = 1 << 31;
 
 /// `immutable=1`: the published files never change in place (they are replaced by
 /// rename), so SQLite skips locking and never creates `-wal`/`-shm` sidecars, which
-/// a read-only directory would refuse (as `reg_meta.db.open_db`).
+/// a read-only directory would refuse.
 fn connect(path: &Path, mmap_size: i64) -> rusqlite::Result<Connection> {
     let mut uri = String::from("file:");
     for c in path.to_string_lossy().chars() {

@@ -13,6 +13,7 @@ from _source_formation_support import (
     formation_record as _record,
 )
 from reg_meta_build.catalog_dependencies import check_delivery_coverage
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
@@ -140,7 +141,7 @@ def test_formation_coverage_carries_type_and_refuses_silent_retype() -> None:
         }
     )
     with pytest.raises(
-        ValueError,
+        RegMetaError,
         match="supported delivery facts changed without an explicit source outcome",
     ) as failure:
         check_delivery_coverage((damaged,), result.coverage, withheld={})
@@ -171,7 +172,7 @@ def test_formation_coverage_carries_correction_attributions() -> None:
             )
         }
     )
-    with pytest.raises(ValueError, match="claimed attributions"):
+    with pytest.raises(RegMetaError, match="claimed attributions"):
         check_delivery_coverage((stripped,), result.coverage, withheld={})
 
 

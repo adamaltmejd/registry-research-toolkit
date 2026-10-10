@@ -1,0 +1,10 @@
+{
+  "replaces": [
+    "test_resolved_writer_value_sets.py::test_formation_attributes_exactly_the_column_overlaps_the_writer_refuses[updates1-overlapping_codeless_codebearing_states]"
+  ],
+  "note": "Step 1's sources and curation, built strict over CODELESS alone. The old test asserted that the writer refuses the overlap formation attributes, with the attributed message. In a build, formation refuses it first in strict mode, with that message; the writer's own refusal is the validator's, pinned by cases/validate codeless-overlap-same-column-fails.",
+  "fails_if": "`form_native_variable` (source_formation.py) withholds an overlapping variable in a strict build instead of raising the overlap message, or `column_state_overlaps` (resolved_catalog.py) stops attributing the code-less overlap, so the strict build fails later with the writer's validation message (no `people/First` sample) or not at all",
+  "sources": "scb-sos-value-sets",
+  "registers": ["2"],
+  "diagnostic": false
+}

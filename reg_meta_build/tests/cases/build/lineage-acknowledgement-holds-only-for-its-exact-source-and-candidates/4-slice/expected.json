@@ -1,0 +1,22 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "counts": {"skipped_curation": 6}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"subject": {"contains": "scb/example/"}},
+      "fields": ["code", "subject", "acknowledged_by"],
+      "rows": [
+        ["deferred_out_of_slice_reference", "scb/example/exact", null],
+        ["deferred_out_of_slice_reference", "scb/example/original", null],
+        ["deferred_out_of_slice_reference", "scb/example/added", null],
+        ["deferred_out_of_slice_reference", "scb/example/changed", null],
+        ["deferred_out_of_slice_reference", "scb/example/linked", null],
+        ["deferred_out_of_slice_reference", "scb/example/two-origins", null],
+        ["deferred_out_of_slice_reference", "scb/example/two-origins", null]
+      ]
+    }
+  ]
+}

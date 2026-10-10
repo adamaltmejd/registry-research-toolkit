@@ -157,7 +157,7 @@ for package in ("reg_meta_build",):
     if not origin.is_relative_to(root):
         print(json.dumps({"environment_error": (
             f"uv run imports {package} from {origin}, not from the keyed checkout "
-            f"{root}; unset UV_PROJECT_ENVIRONMENT or run from that checkout"
+            f"{root}; check PYTHONPATH and $REG_REAL_SEED_PYTHON"
         )}))
         sys.exit(0)
 if request.get("curation"):
@@ -913,6 +913,15 @@ def main() -> int:
         help="rebuild uncached and compare with the stored entry",
     )
     args = parser.parse_args()
+    # Checked before any `uv run`: the probe's import check only sees the damage after
+    # `uv run` has synced this checkout's editable packages into that environment, so
+    # another checkout's .venv would run this tree's code until re-synced (#1337).
+    env = os.environ.get("UV_PROJECT_ENVIRONMENT")
+    if env and (ROOT / env).resolve() != (ROOT / ".venv").resolve():
+        sys.exit(
+            f"real-seed-cache: UV_PROJECT_ENVIRONMENT names {env}, not {ROOT}/.venv; "
+            "uv run would install this checkout's packages there. Unset it."
+        )
     # Resolved once, so the key and the builder (run from the repository root) read
     # the same paths.
     for name in ("input_bundle", "output_dir", "prepared", "curation_dir"):

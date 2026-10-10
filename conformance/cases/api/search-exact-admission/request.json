@@ -1,0 +1,25 @@
+{
+  "note": "Twin of test_search_ranking.py::test_exact_name_is_admitted_and_leads_past_full_candidate_prefixes (the folded description row) and ::test_exact_name_without_an_ascii_fold_is_admitted (#1180). `request.json` expands the filler into 1,001 `Annual year` variables in register Filler that outrank the targets by bm25 and sort before them; `Year` (exact name), `Target` (exact column `Year`) and `Place` (exact column `B\u00f8`) are in register Example. Fails if the variable arm applies its bounded candidate prefix before admitting exact name and delivery-column matches, or if an ASCII fold of the query (which deletes `\u00f8`) decides admission. The Python oracle did not order `Year` and `Target`, so the first query pins the register names.",
+  "kind": "catalog",
+  "fixture": "reader/search-exact-admission",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "year",
+        "type": "variable",
+        "limit": 3
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "B\u00f8",
+        "type": "variable",
+        "limit": 2
+      }
+    }
+  ]
+}

@@ -2,14 +2,16 @@
 name: release
 description: >-
   Registry Research Toolkit release workflow. Use when the user explicitly asks to run
-  the release workflow, bump and publish reg_meta, reg_meta_build, or reg_schema, create
-  package tags/releases, upload reg_meta DB assets, or monitor publish workflows.
+  the release workflow, bump and release reg_meta (the `reg-meta` crate and its DB
+  assets) or reg_meta_build, create package tags/releases, upload reg_meta DB assets, or
+  monitor the release workflows. Usage: /release [package] <patch|minor|major>
 ---
 
 # Release pipeline
 
-Create and publish a release for one or more of the packages (reg_meta and reg_schema go
-to PyPI; reg_meta_build does not).
+Create and publish a release for one or more of the packages. Nothing is published to
+PyPI: a `reg_meta` release is a crate version bump, a tag, the DB assets and the
+`reg-meta` binaries; a `reg_meta_build` release is a version bump and a tag.
 
 **Never start a release unless the user explicitly asks for one.** This skill may be
 invoked via `/release` or merely referenced in conversation — either way, do not proceed
@@ -27,14 +29,10 @@ Start from the verified source revision. When a dependency upgrade was also requ
 [upgrade-deps](../upgrade-deps/SKILL.md) owns that upgrade and its compatibility fixes
 first; consume its integrated head and verification evidence. Do not start a new
 dependency refresh as an incidental publication step. Reuse unchanged source/asset
-verification where applicable; the publication, registry installation and shipped-asset
-checks below still apply to each release. If a declared dependency needs an unpublished
-sibling, name the prerequisite package/version before publishing. Obtain authorization
-only if that prerequisite is outside the user's existing release request; do not
-silently expand a package-specific release or repeat approval already given. Preparation
-can continue while a required publication decision is pending.
+verification where applicable; the publication and shipped-asset checks below still
+apply to each release.
 
-Repair blocking packaging or publisher-workflow problems directly within release
+Repair blocking packaging or release-workflow problems directly within release
 preparation. Keep non-bump fixes in separate commits with focused verification and
 independent review; manual PRs retain the maintainer-review and CI requirement.
 Unrelated product changes remain outside the release. Once the repaired source is
@@ -43,57 +41,21 @@ exists, follow Error recovery below first so publication uses the repaired revis
 
 ## Packages
 
-  | Package        | pyproject.toml                  | `__init__.py`                                   | Publish workflow                                                                        |
-  | -------------- | ------------------------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------- |
-  | reg_meta       | `reg_meta/pyproject.toml`       | `reg_meta/src/reg_meta/__init__.py`             | `publish_reg_meta.yml` (unattended — `pypi` environment review gate removed 2026-06-10) |
-  | reg_meta_build | `reg_meta_build/pyproject.toml` | `reg_meta_build/src/reg_meta_build/__init__.py` | none (not published to PyPI; tag and GitHub release only)                               |
-  | reg_schema     | `reg_schema/pyproject.toml`     | `reg_schema/src/reg_schema/__init__.py`         | `publish_reg_schema.yml` (unattended — same gate-free `pypi` environment)               |
+  | Package        | Version files                                                                    | Release workflow                                                                            |
+  | -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+  | reg_meta       | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`)                                  | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
+  | reg_meta_build | `reg_meta_build/pyproject.toml`, `reg_meta_build/src/reg_meta_build/__init__.py` | none (tag and GitHub release only)                                                          |
 
-reg_meta_build is the build pipeline that produces `reg_meta`'s SQLite assets. It is
-**not published to PyPI**: it depends on `reg-core-py`, a PyO3 module that is not on the
-index, and the builder is maintainer-only and runs from a checkout. A reg_meta_build
-release is a version bump, the `reg_meta_build/v*` tag and a GitHub release, with no
-publish workflow and no assets (the DB assets attach to the parallel `reg_meta/v*`
-release).
+`reg_meta` is the Rust runtime: the `reg-meta` binary (`serve` and `mcp`) and the
+catalog DB assets it reads. Its `reg_meta/v*` release carries the three DB assets (step
+8\) and the `reg-meta` binaries for macOS arm64 and Linux x86_64 with SHA-256 checksums
+(step 10).
 
-`reg_schema` is the `project_data.json` schema library. It releases on the
-`reg_schema/v*` tag through `publish_reg_schema.yml` and ships **nothing but the wheel**
-— no DB release assets and no doc DB — so step 8 and the step 11 artifact verification
-do not apply to it. It is **upstream of both `reg_meta`** (a `reg-schema>=` floor in
-reg_meta's pyproject) **and `reg_webapp`**. Read that floor out of the package metadata,
-which is authoritative — never a version quoted in this skill:
-
-```sh
-grep 'reg-schema>=' reg_meta/pyproject.toml
-```
-
-An already-satisfied floor resolves in either order — but when a release raises
-reg_meta's `reg-schema` floor, publish reg_schema **first** and confirm the
-version-specific PyPI JSON is a 200 before publishing reg_meta, or the reg_meta wheel
-lands unresolvable for `uv tool install reg-meta`:
-
-```sh
-curl -s -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/reg-schema/X.Y.Z/json
-```
-
-## Two packaging phases
-
-`main` and PyPI are held to different standards, and the release flow depends on the
-difference:
-
-- **`main` may carry coherent unpublished sibling changes.** A schema bump lands on main
-  with reg_meta's raised floor in the same push, and the schema publisher only runs
-  *after* that push and its GitHub release. So the full-suite run in step 5 includes the
-  reg_meta package integration module in `--install-mode workspace`: it builds this
-  checkout's reg_schema **and** reg_meta wheels in a pinned container and installs both.
-  Green means the two sources are mutually installable. It is **not** evidence that
-  reg-schema is on PyPI.
-- **A dependent package may not reach PyPI until its declared dependencies resolve
-  there.** That is the `registry` mode of the same module (reg_schema kept out of the
-  build context, `uv pip install --no-sources ./reg_meta`), run as a preflight before
-  the reg_meta draft is published (step 8e) and repeated as a blocking step inside
-  `publish_reg_meta.yml` before its upload. The server-side copy can only start once the
-  release is public, so the local preflight is what gates that earlier visibility.
+`reg_meta_build` is the build pipeline that produces the DB assets. It is
+maintainer-only and runs from a checkout (it depends on the workspace-only
+`reg-core-py`). Its release is a version bump, the `reg_meta_build/v*` tag and a GitHub
+release, with no workflow and no assets: the DB assets attach to the parallel
+`reg_meta/v*` release.
 
 ## Validation
 
@@ -103,23 +65,24 @@ Before doing anything, validate and resolve the inputs.
    `major`. If none is provided, stop and ask.
 
 2. **Resolve the package(s)**: if a package name is provided, use it. Otherwise infer
-   from unreleased commits since each package's last `<package>/vX.Y.Z` tag:
+   from unreleased commits since each package's last `<package>/vX.Y.Z` tag. The
+   `reg_meta` sources are `crates/`, `reg_webapp/` and `conformance/`; the
+   `reg_meta_build` sources are `reg_meta_build/`:
 
    ```sh
    git fetch --tags origin
    tag="$(git tag --list '<package>/v*' --sort=-v:refname | head -n 1)"
-   if [ -n "$tag" ]; then git log --oneline "$tag"..HEAD -- '<package>/'; else git log --oneline -- '<package>/'; fi
+   if [ -n "$tag" ]; then git log --oneline "$tag"..HEAD -- <paths>; else git log --oneline -- <paths>; fi
    ```
 
    - If only one package has changes, use it.
    - If multiple have changes, release them sequentially — run the full pipeline below
      for each, one at a time, with separate commits, tags, and releases.
    - **Also compare `reg_meta_build/` changes since the last `reg_meta/v*` tag**, even
-     when no `reg_meta/` code changed: builder content that affects the built DBs
-     (curated TOMLs, provider `sources/`, `db.py` content) requires a matching
-     `reg_meta` release so the prebuilt DB asset is refreshed. When schema-affecting
-     changes touch `reg_meta_build/`, the `reg_meta` release that publishes the rebuilt
-     asset leads.
+     when no `crates/` code changed: builder content that affects the built DBs (curated
+     TOMLs, provider `sources/`, `db.py` content) requires a matching `reg_meta` release
+     so the DB asset is refreshed. When schema-affecting changes touch
+     `reg_meta_build/`, the `reg_meta` release that publishes the rebuilt asset leads.
    - If nothing has changed, tell the user there is nothing to release.
 
 3. If any required input is still ambiguous, stop and ask.
@@ -133,14 +96,14 @@ Run the following steps for each resolved package.
 
 ### 1. Determine new version
 
-- Read the current version from `<package>/pyproject.toml`.
+- Read the current version from the package's version file (table above).
 - Apply the semver bump: patch increments Z; minor increments Y and resets Z; major
   increments X and resets Y.Z.
 
 ### 2. Generate release notes
 
-- Run `git log --oneline <package>/v<current>..HEAD -- <package>/` for commits since the
-  last release tag (all commits touching `<package>/` if no prior tag exists).
+- Run `git log --oneline <package>/v<current>..HEAD -- <paths>` for commits since the
+  last release tag (all commits touching the paths if no prior tag exists).
 - Write a brief grouped bullet list (skip merge commits); link associated PRs/issues
   inline (e.g. `Fix widget crash (#42)`).
 - Credit external contributors: get the last tag's date with
@@ -151,77 +114,55 @@ Run the following steps for each resolved package.
 
 ### 3. Bump version
 
-Update the version string in these files:
+- reg_meta: the `version` line in `crates/reg-meta/Cargo.toml`, then
+  `cargo update -p reg-meta --offline` to refresh `Cargo.lock`. The server reports this
+  version (`/openapi.json`, the ETag) and it names the release.
+- reg_meta_build: the `version = "X.Y.Z"` line in `reg_meta_build/pyproject.toml` and
+  the `__version__ = "X.Y.Z"` line in `reg_meta_build/src/reg_meta_build/__init__.py`,
+  then `uv lock`.
 
-- `<package>/pyproject.toml` — the `version = "X.Y.Z"` line
-- `<package>/src/<package>/__init__.py` — the `__version__ = "X.Y.Z"` line
-- reg_meta only: `crates/reg-meta/Cargo.toml` — the `version` line, then
-  `cargo update -p reg-meta --offline` to refresh `Cargo.lock`. The Rust server ships
-  reg_meta's version, and `scripts/check_versions.sh` fails until they match.
+**reg_meta only — schema version check.** The catalog and docs schemas each have a
+builder constant and a reader gate, and the two move together:
 
-**reg_meta only — main-DB schema version check:** run
-`git diff <tag>..HEAD -- reg_meta_build/src/reg_meta_build/db.py reg_meta/src/reg_meta/db.py`
-and check for changes to `CREATE TABLE`, `CREATE VIRTUAL TABLE`, or column lists (DDL
-lives in `reg_meta_build/src/reg_meta_build/db.py` post-split). If the schema changed
-but `SCHEMA_VERSION` in `reg_meta/src/reg_meta/db.py` was not already bumped, bump it
-now:
+  | Schema  | Builder constant                                                      | Rust reader gate                                 |
+  | ------- | --------------------------------------------------------------------- | ------------------------------------------------ |
+  | catalog | `SCHEMA_VERSION` in `reg_meta_build/src/reg_meta_build/db.py`         | `SCHEMA` in `crates/reg-catalog/src/lib.rs`      |
+  | docs    | `DOC_SCHEMA_VERSION` in `reg_meta_build/src/reg_meta_build/doc_db.py` | `DOC_SCHEMA` in `crates/reg-catalog/src/docs.rs` |
+
+Run
+`git diff <tag>..HEAD -- reg_meta_build/src/reg_meta_build/db.py reg_meta_build/src/reg_meta_build/doc_db.py crates/reg-catalog/src/`
+and check for DDL changes (`CREATE TABLE`, `CREATE VIRTUAL TABLE`, column lists,
+`DOC_DDL`, new `doc_meta` keys) and for reader reads of new tables or columns. A schema
+change lands with its bump in the PR that makes it; if one was missed, stop and land the
+bump through a reviewed PR before this release:
 
 - **Major bump** (breaking): renamed/removed tables or columns, changed column
   semantics.
-- **Minor bump** (new columns the code reads): added columns/tables that queries
-  reference. `open_db` rejects DBs whose minor is < the code's minor, so this forces a
-  DB rebuild before the package release is usable.
+- **Minor bump** (new columns the reader reads): added columns/tables that queries
+  reference. The server refuses to boot on a DB whose minor is behind its gate, so this
+  forces a DB rebuild before the release is usable.
 
-A `SCHEMA_VERSION` bump may require a coordinated `reg_meta_build` release if the
-matching DDL also changes in the builder (so `reg-meta-build build-db` from a checkout
-produces the new schema). Release `reg_meta_build` first in that case.
+A schema bump forces fresh DB assets in step 8 and usually a `reg_meta_build` release
+too (so `reg-meta-build build-db` from a checkout produces the new schema). Release
+`reg_meta_build` first in that case.
 
-**reg_meta only — doc-DB schema version check:** run
-`git diff <tag>..HEAD -- reg_meta_build/src/reg_meta_build/doc_db.py reg_meta/src/reg_meta/doc_db.py`
-for changes to `DOC_DDL` or reads of new `doc_meta` keys (DDL lives in
-`reg_meta_build/src/reg_meta_build/doc_db.py` post-split). If the doc schema changed but
-`DOC_SCHEMA_VERSION` in `reg_meta/src/reg_meta/doc_db.py` was not bumped, bump it now
-(same major/minor rules). A bump forces a fresh doc-DB asset in step 8.
-
-### 4. Update lockfile
+### 4. Verify, test, lint
 
 ```sh
-uv lock
-```
-
-### 5. Verify, test, lint
-
-```sh
-bash scripts/check_versions.sh
-uv run python -m pytest <package>/ -x -q
+uv run --no-project scripts/gate.py all
 uv run ruff check
 uv run ruff format --check
 uvx --from ty==0.0.79 ty check
 ```
 
-The per-package pytest is a fast pre-flight. There is no pre-push test hook, so the
-**full** suite is an explicit gate here, run on the version-bumped tree before the
-commit is pushed to main (#710):
+`gate.py all` is the release's test gate: G0 (conformance, the Python suites,
+`cargo test --workspace`), the Rust HTTP conformance run, release admission on the
+synthetic steward artifact, the Playwright flows and the frontend. There is no pre-push
+test hook, so run it on the version-bumped tree before the commit is pushed to main.
 
-```sh
-uv run python -m pytest -n auto -q --run-integration --install-mode workspace
-```
-
-This runs the whole suite — including the `reg_meta` native container integration test
-as a *hard* gate (`--run-integration`, so its runtime fixture **fails** rather than
-skips). **Apple Container (macOS) or Podman (Linux) must be healthy**; if it is not,
-start it and re-run. The release-marked `test_update_and_query`, which downloads the
-published asset, is not selected (no `--run-release`) and runs only post-publish — see
-step 10.
-
-`--install-mode workspace` (see Two packaging phases) proves this checkout's reg_schema
-and reg_meta wheels install together, so a schema bump can land on main before its
-release. Reaching PyPI is a separate gate — step 8e for reg_meta.
-
-Run it on a **committed** bump: do step 6's content checks and create its bump commit
-locally first, then run the suite, and push only once it is green. On an uncommitted
-bump the builder's clean-tracked-tree guard fails `test_build_db_cli_outputs`'
-strict-build cases.
+Run it on a **committed** bump: create step 5's bump commit locally first, then run the
+gate, and push only once it is green. On an uncommitted bump the builder's
+clean-tracked-tree guard fails its strict-build cases.
 
 If Rust compiles fail with `Operation not permitted` writing `deps/*.d` files, a shared
 `sccache` wrapper (`~/.cargo/config.toml`) is running under another session's sandbox.
@@ -230,22 +171,22 @@ editing the config.
 
 If anything fails, stop and fix. Do not release broken code.
 
-### 6. Commit and push
+### 5. Commit and push
 
 Complete the manual integration handoff above before the first main push. Keep the same
 coordination through subsequent package pushes.
 
 Before committing, verify that all non-bump changes are already committed in their own
-commits. The bump commit must contain **only** version-bump files — `pyproject.toml`,
-`__init__.py`, `uv.lock`, for reg_meta `crates/reg-meta/Cargo.toml` and `Cargo.lock`,
-and (if a schema version was bumped) `db.py` or `doc_db.py`:
+commits. The bump commit must contain **only** version-bump files — for reg_meta
+`crates/reg-meta/Cargo.toml` and `Cargo.lock`; for reg_meta_build its `pyproject.toml`,
+`__init__.py` and `uv.lock`:
 
 ```text
 Bump <package> version to X.Y.Z
 ```
 
 Then push to main and **verify the bump landed on `origin/main`** before tagging (the
-tag in step 7 is created from `origin/main`, not from a possibly-stale local HEAD):
+tag in step 6 is created from `origin/main`, not from a possibly-stale local HEAD):
 
 ```sh
 git push origin HEAD:main
@@ -255,20 +196,17 @@ if [ "$(git rev-parse HEAD)" != "$(git rev-parse origin/main)" ]; then
 fi
 ```
 
-**No hook tests this push.** The step 5 full-suite run is the release's test gate; do
-not push the bump commit until it is green. If you rebased the bump onto a moved
-`origin/main` after step 5, re-run step 5 before pushing. CI re-runs the suite on main
-after the push.
+**No hook tests this push.** The step 4 gate is the release's test gate; do not push the
+bump commit until it is green. If you rebased the bump onto a moved `origin/main` after
+step 4, re-run step 4 before pushing. CI re-runs the suite on main after the push.
 
-### 7. Create draft GitHub release
+### 6. Create draft GitHub release
 
-The publish workflow fires on `release: published`, so the release must be created as a
-**draft** until any required assets (reg_meta only) are uploaded. With no
-environment-approval pause (the review gate was removed 2026-06-10), a
-`release: published` event with missing assets races the workflow's smoke step against
-the upload — the smoke step may walk back to a prior release, pick up an incompatible
-asset, and fail the publish. The draft step is therefore the ONLY thing standing between
-a missing asset and a failed publish.
+`publish_reg_meta.yml` fires on `release: published`, so a reg_meta release must be
+created as a **draft** until all its assets are uploaded. The workflow's artifact
+conformance and image deploy read this release's assets; a published release with a
+missing asset fails both. The draft step is the ONLY thing standing between a missing
+asset and a failed deploy.
 
 Pass the verified `origin/main` commit as `--target` so the tag is created from it. The
 tag is created by this command — do not create it separately.
@@ -281,25 +219,25 @@ gh release create <package>/vX.Y.Z --draft --target "$target" --title "<package>
 The `--draft` flag means no workflow fires yet. If the tag already exists, a prior
 attempt went wrong — see Error recovery.
 
+### 7. (reg_meta_build) Publish and stop
+
+A reg_meta_build release has no assets and no workflow: publish the draft
+(`gh release edit reg_meta_build/vX.Y.Z --draft=false`) and report it done.
+
 ### 8. Build and upload release assets (reg_meta only)
 
-reg_meta ships **three** release assets, and **every release must carry all three before
-it is published** (self-contained releases). Two are consumed by `reg-meta update`: the
-container deploy pipeline (`.github/workflows/container-build.yml`) resolves the newest
-`reg_meta/v*` release into a concrete `reg-meta update --tag`, which fetches
-`reg_meta.db.zst` + `reg_meta_docs.db.zst` from that single tag — a release published
-without them breaks every main-push image build until assets appear (#343, the
-asset-less `reg_meta/v0.11.0`). The **third**, `reg_meta_swecov.db.zst` (8c), is the
-flavored SWECOV DB the same workflow's `build-swecov-image` job bakes as
-`data.swecov.se`'s `REG_META_DB`; a release missing it fails every SWECOV deploy at
-asset resolution (broke v0.36.0–v0.38.0, #1091). The conditions in 8a/8b/8c decide
-whether each asset needs a **fresh build**; one that doesn't is **copied forward** from
-the prior release (8d). Never skip an asset outright.
-
-(`reg-meta update` in `latest` mode still walks backwards through releases to find the
-most recent one carrying each asset — robustness for historical asset-less releases —
-but new releases must not rely on it. The CI smoke step runs `reg-meta update` and fails
-if it can't resolve a compatible pair of assets.)
+reg_meta ships **three** DB assets, and **every release must carry all three before it
+is published** (self-contained releases). The container deploy pipeline
+(`.github/workflows/container-build.yml`) resolves the newest `reg_meta/v*` release and
+bakes its assets into the origin images with curl, a SHA-256 check against the digest
+GitHub records, and zstd (`reg_webapp/Dockerfile`): `reg_meta.db.zst` and
+`reg_meta_docs.db.zst` for the public catalog — a release published without them breaks
+every main-push image build until assets appear (#343, the asset-less
+`reg_meta/v0.11.0`) — and `reg_meta_swecov.db.zst` (8c), the compiled SWECOV steward DB
+the `build-swecov-image` job bakes for `data.swecov.se`; a release missing it fails
+every SWECOV deploy at asset resolution (broke v0.36.0–v0.38.0, #1091). The conditions
+in 8a/8b/8c decide whether each asset needs a **fresh build**; one that doesn't is
+**copied forward** from the prior release (8d). Never skip an asset outright.
 
 The main catalog build requires a complete accepted prepared root and its exact prepared
 acceptance commit and top-level `manifest.json` SHA-256. Raw source capture and
@@ -313,12 +251,12 @@ the separate doc-asset workflow in 8b; private holdings follow 8c.
 
 Build and upload fresh if **any** condition is true:
 
-- `SCHEMA_VERSION` was bumped (already in the commits or by step 3).
+- The catalog schema version was bumped since the prior release.
 - The release is a **major** version bump.
 - The builder or its curated inputs changed since the prior release's asset —
   `git log <prev reg_meta tag>..HEAD -- reg_meta_build/ ':(exclude)reg_meta_build/docs/'`
   is non-empty. Build-side changes (curated TOMLs, `sources/`, `db.py` content, new
-  indexes, errata) alter DB **content** without necessarily bumping `SCHEMA_VERSION`, so
+  indexes, errata) alter DB **content** without necessarily bumping the schema, so
   copying the old asset forward would ship a **stale** DB. The `docs/` exclude matters:
   `build-db` does not consume `reg_meta_build/docs/` (that drives the doc-DB asset in
   8b), so a docs-only release still copies the main DB forward. When this fires only
@@ -369,7 +307,7 @@ in place.
 
 Build and upload fresh if **any** of these is true:
 
-- `DOC_SCHEMA_VERSION` was bumped.
+- The docs schema version was bumped since the prior release.
 - `git diff <tag>..HEAD -- reg_meta_build/docs/` is non-empty (docs content changed).
 - `git diff <tag>..HEAD -- reg_meta_build/related_documents.toml` is non-empty
   (related-document provenance changed; the binaries are gitignored but the doc asset
@@ -408,12 +346,12 @@ rm -rf "$docs_dir" reg_meta_docs.db.zst
 
 The SWECOV steward app (`data.swecov.se`) bakes one **compiled steward artifact** — the
 global catalog, accepted steward provider overlays, and compiled physical holdings — as
-its `REG_META_DB`. `container-build.yml`'s `build-swecov-image` job bakes this asset
-with `reg-meta update --catalog swecov --tag <newest reg_meta/v*>`; **absent, the SWECOV
-image build fails** (exit 10, `release_not_found`) and `deploy-swecov` /
-`edge-deploy-swecov` skip. The consumer side is PR #1014; this producer step must run on
-**every** reg_meta release (#1091 — omitting it broke v0.36.0–v0.38.0's SWECOV deploys
-silently, since the global apps deploy fine without it).
+the DB its `reg-meta serve --catalog swecov` reads. `container-build.yml`'s
+`build-swecov-image` job bakes this asset from the newest `reg_meta/v*` release;
+**absent, the SWECOV image build fails** and `deploy-swecov` / `edge-deploy-swecov`
+skip. This producer step must run on **every** reg_meta release (#1091 — omitting it
+broke v0.36.0–v0.38.0's SWECOV deploys silently, since the global apps deploy fine
+without it).
 
 Build and upload fresh if **any** condition is true:
 
@@ -491,9 +429,9 @@ request.
 A red publication gate requires a reviewed correction at its owning input or curation
 surface, followed by fresh acceptance where input bytes changed and a rebuild. Global
 source corrections go through the global build before steward extension. Do not widen
-windows or change an accepted candidate in place merely to make the gate pass. Runtime
-`open_db` admits only complete, publishable artifacts; webapp boot additionally requires
-the configured steward to match the artifact identity. Those admission checks replace
+windows or change an accepted candidate in place merely to make the gate pass. The
+server admits only complete, publishable artifacts at boot, and `serve --catalog swecov`
+additionally requires the artifact's steward to match. Those admission checks replace
 the deleted runtime inventory reconciliation and drift banner, rather than deferring a
 failed compiler check until deployment.
 
@@ -528,128 +466,96 @@ rm -rf "$cf_dir"
 
 #### 8e. Verify before publishing
 
-Verify **all three** assets are present on the draft release — do not publish without
-them (#343 for the two `reg-meta update` assets; #1091 for `reg_meta_swecov.db.zst`):
+Verify **all three** assets are present on the draft release, each with one SHA-256
+digest — do not publish without them (#343, #1091):
 
 ```sh
-gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name'
+gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[] | [.name, .digest] | @tsv'
 ```
 
-Then run the **registry-install preflight** — the second of the Two packaging phases,
-and the only one that can see PyPI. First confirm the `reg-schema` floor reg_meta
-declares is actually on the index (the version-specific PyPI JSON must be a 200; a
-reg_schema release published minutes ago needs a beat), then build a clean container
-holding reg_meta alone and install it with the registry as the only source:
-
-```sh
-uv run python -m pytest reg_meta/tests/test_integration.py \
-  --run-integration --install-mode registry -m "not release"
-```
-
-**A failure stops the publication.** `--draft=false` is what makes the tag public, and
-`publish_reg_meta.yml` repeats this same check as a blocking step before its upload —
-but a server-side workflow can only start *after* that visibility, so this local run is
-the gate on it. Do not publish past a red one: fix the ordering (publish reg_schema
-first, wait for PyPI) and re-run. A PyPI version is immutable, so an unresolvable
-reg_meta wheel cannot be withdrawn, only superseded.
+Then run the tier-3 artifact conformance on each new catalog (the global one and the
+SWECOV steward), downloaded from the draft and decompressed into its own directory, with
+the command in `CLAUDE.md` → "Lint and test"
+(`--run-release --artifact-dir=... --server-cmd=...`). It admits the artifact and fails
+on an incompatible or non-publishable one. A red run stops the publication: fix the
+asset (step 8) and re-run.
 
 ### 9. Publish the draft release
 
-This is what fires the publish workflow (none for reg_meta_build).
+This is what fires `publish_reg_meta.yml`.
 
 ```sh
-gh release edit <package>/vX.Y.Z --draft=false
+gh release edit reg_meta/vX.Y.Z --draft=false
 ```
 
-### 10. Monitor deployment
+### 10. Monitor the release workflow
 
-If the package has a publish workflow (see table above), find the triggered run, watch
-it, and verify PyPI. **Scope the run lookup to this release** — fetch tags first, then
-filter by `--event release` and the tag's commit. An unfiltered `--limit 1` can match a
-stale completed run, because GitHub may not have queued the new release event yet:
+`publish_reg_meta.yml` runs CI on the tag, then artifact conformance against this
+release's global and SWECOV assets (`integration.yml`, served by the Rust server), and
+dispatches `container-build.yml` on main, which re-resolves the newest `reg_meta/v*`
+release (this one), bakes its assets and deploys. **Scope the run lookup to this
+release** — fetch tags first, then filter by `--event release` and the tag's commit. An
+unfiltered `--limit 1` can match a stale completed run, because GitHub may not have
+queued the new release event yet:
 
 ```sh
 git fetch --tags origin
-target="$(git rev-list -n 1 <package>/vX.Y.Z)"
+target="$(git rev-list -n 1 reg_meta/vX.Y.Z)"
 run_id=""
 while [ -z "$run_id" ]; do
-  run_id="$(gh run list --workflow=<workflow> --event release --commit "$target" --json databaseId --jq '.[0].databaseId // ""')"
+  run_id="$(gh run list --workflow=publish_reg_meta.yml --event release --commit "$target" --json databaseId --jq '.[0].databaseId // ""')"
   [ -n "$run_id" ] || sleep 10
 done
 gh run watch "$run_id" --exit-status
 ```
 
-The run proceeds unattended (the `pypi` environment review gate was removed 2026-06-10).
-Share the run URL with the user for visibility. Then verify the new version is on PyPI
-(its `info.version` lags the workflow finishing by a beat):
+Share the run URL with the user, then watch the dispatched `container-build.yml` run on
+main through its deploys.
+
+If the `integration` job is red, read the step that failed:
+
+- **Asset resolution or digest** — an asset is missing, duplicated, or its recorded and
+  actual SHA-256 disagree. Upload an asset that is missing (step 8); a duplicated or
+  wrong one means a new patch release (Error recovery).
+- **Artifact conformance** — an incompatible, incomplete, nonpublishable, or mismatched
+  artifact, or a conformance case the asset fails. Repair the build or selected input
+  and cut a new patch release; never resurrect loose runtime inventory as a workaround.
+
+Re-validate with `gh workflow run integration.yml --ref main` (then watch that
+dispatched run). Do **not** re-release a working version over a stale check.
+
+**Binaries.** The same run's `binaries` job builds `reg-meta` natively on `macos-latest`
+and `ubuntu-latest` and uploads `reg-meta-aarch64-apple-darwin`,
+`reg-meta-x86_64-unknown-linux-gnu` and a `.sha256` file for each to the release. It
+does not wait on `ci`. Confirm all four assets are on the release:
 
 ```sh
-for _ in $(seq 1 30); do
-  v="$(curl -s https://pypi.org/pypi/<package>/json | python3 -c 'import sys,json; print(json.load(sys.stdin)["info"]["version"])')"
-  [ "$v" = "X.Y.Z" ] && break; sleep 10
-done
+gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' | grep '^reg-meta-'
 ```
 
-**reg_meta post-publish gate:** `publish_reg_meta.yml` calls `integration.yml`
-(`workflow_call`) after publishing. That job runs the **release-marked** container test
-(`test_update_and_query`) against the just-published assets. The workflow also
-provisions `reg_meta_swecov.db.zst` from *this* release and verifies its transport
-digest. That provisioning is not a compiler or webapp admission test; verify compiled
-artifact identity and boot separately below. The deleted runtime inventory suite
-supplies no release gate. It installs the **tagged source** with its dependencies
-resolved from the registry (`--install-mode registry`) — not the wheel just uploaded to
-PyPI — so what it proves is that a registry-resolved reg_meta fetches and queries this
-release's assets. If the `publish` job is green but the `integration` job is red, **the
-PyPI upload succeeded** — and a PyPI version is immutable, so do not delete or
-re-release it over this. Beyond the upload, a green `publish` job certifies only the two
-`reg-meta update` assets its pre-upload smoke test exercises; nothing there looks at
-`reg_meta_swecov.db.zst`. Read the step that actually failed:
+If a binary job failed, fix the cause on main and upload by hand from the release
+commit: `cargo build --release --locked -p reg-meta`, copy to `reg-meta-<target>`, run
+`shasum -a 256 reg-meta-<target> > reg-meta-<target>.sha256` in the same directory, then
+`gh release upload reg_meta/vX.Y.Z reg-meta-<target> reg-meta-<target>.sha256`. To test
+a change to the job without a release, dispatch it on a branch:
+`gh workflow run publish_reg_meta.yml --ref <branch>` builds both binaries as workflow
+artifacts and uploads nothing to a release.
 
-- **Provision the release's flavored SWECOV DB** — `reg_meta_swecov.db.zst` is missing,
-  duplicated, or its recorded/actual SHA-256 disagree. An asset problem: fix the release
-  (step 8) and re-run.
-- **`test_update_and_query`** — the release's `reg-meta update` assets, or a CLI surface
-  a refactor renamed.
-- **Compiled artifact admission or steward boot** — an incompatible, incomplete,
-  nonpublishable, or mismatched artifact. Repair the build or selected asset; never
-  resurrect loose runtime inventory as a workaround.
+### 11. Verify the deployed artifacts
 
-The release-asset test is carved off the full-suite run and ordinary push/PR CI, so a
-CLI-surface change can strand them silently until this gate. Fix the cause — on main, or
-on the release's assets — and re-validate with
-`gh workflow run integration.yml --ref main` (then watch that dispatched run). Do
-**not** re-release a working package over a stale test.
-
-If the package has no publish workflow (reg_meta_build), report the release is done
-after the tag is created and the GitHub release is published (step 9). Skip the PyPI
-verification.
-
-### 11. Verify published compiled artifacts (reg_meta releases)
-
-After publication, download and digest-verify this release's catalog and steward assets.
-Verify them through `reg_meta.db.open_db` and inspect `get_manifest` for artifact kind,
-steward identity, completeness, publishability, full generation, base generation, and
-accepted holdings pins. Confirm each matches the build evidence recorded in step 8. The
-public deployment requires a `catalog` artifact and `global` branding; the named steward
-deployment requires a `steward` artifact naming that exact steward.
-
-Boot the webapp against each selected shipped artifact with its matching configuration
-and run the existing smoke gate. Until package 3a.9 the FastAPI deploy has no
-`/api/context`: the `ETag` of `GET /api/catalog` must carry that artifact's steward id,
-full generation and default read scope (`"<version>-<steward>-<generation>-<scope>-…"`;
-through the Cloudflare edge it arrives weakened as `W/"…"`, with the same fields), and
-on the catalog deployment `GET /api/catalog?scope=holdings` must refuse with
-`scope_unavailable`. From 3a.9 on, `reg-meta serve` answers `/api/context`: its `meta`
-carries the full generation and the default scope, and the same `scope=holdings` refusal
-identifies a catalog artifact. Catalog artifacts default to reference and steward
-artifacts to holdings. Spot-check a scoped catalog or search read and a known order
-through the shared materializer. Record what these checks actually exercised; a digest
-or compiler report alone does not prove deployed HTTP behavior.
+After the deploy, confirm each origin serves this release's artifact. `GET /api/context`
+on `catalog.swecov.se` and `data.swecov.se` carries the full generation and the default
+read scope in its `meta`; it must match the build evidence recorded in step 8. Catalog
+artifacts default to `reference` and steward artifacts to `holdings`, and on the catalog
+deployment `GET /api/catalog?scope=holdings` must refuse with `scope_unavailable`.
+Spot-check a scoped catalog or search read and a known order. Record what these checks
+actually exercised; a digest or compiler report alone does not prove deployed HTTP
+behavior.
 
 Do not regenerate or commit an inventory after publication. Generated inventory is an
-accepted local builder input consumed before compilation, not a webapp deploy file.
-Changed inputs require a fresh accepted candidate and a rebuilt steward asset under the
-normal release workflow. If the private candidate is unavailable when a fresh build is
+accepted local builder input consumed before compilation, not a deploy file. Changed
+inputs require a fresh accepted candidate and a rebuilt steward asset under the normal
+release workflow. If the private candidate is unavailable when a fresh build is
 required, stop publication at step 8c; a runtime drift flag cannot make an old asset
 safe.
 
@@ -657,27 +563,20 @@ safe.
 
 - If the commit was pushed but `gh release create` fails: the commit is on main — just
   retry the release creation.
-- If the release was created but CI fails **before** PyPI publication: delete the
-  release and tag, fix the issue, and start over from the verified bump (step 6).
-- If source changes after draft/tag creation: first verify the version is unpublished on
-  PyPI. Recreate the unpublished release and tag from the verified repaired
-  `origin/main` revision (steps 6–7), refresh the notes, and replace assets invalidated
-  by the repair. Re-run the applicable publication preflights at that same revision. A
-  passing check on a newer worktree does not validate an older release target. If PyPI
-  publication already succeeded, follow the immutable-version rule below instead.
+- If the draft exists and something fails before publication: delete the draft and tag,
+  fix the issue, and start over from the verified bump (step 5).
+- If source changes after draft/tag creation and before publication: recreate the
+  release and tag from the verified repaired `origin/main` revision (steps 5–6), refresh
+  the notes, and replace assets invalidated by the repair. Re-run the applicable checks
+  at that same revision. A passing check on a newer worktree does not validate an older
+  release target.
 - If a tag already exists for the target version: a previous attempt went wrong.
   Investigate before proceeding.
 - If `build-db` or `build-docs` fails: fix the issue before publishing. The draft
-  release exists but `--draft=false` should not run until assets are valid — the CI
-  smoke step blocks the publish if the walker can't resolve them.
+  release exists but `--draft=false` must not run until all three assets are valid.
 - If `gh release upload` fails on a draft: retry the upload. The draft and tag are fine.
-- If the publish workflow fails because assets weren't on the release at trigger time
-  (race between `release: published` and asset upload): re-run the failed job with
-  `gh run rerun <run-id> --failed` once assets are uploaded. This is what the step-7
-  draft prevents — only relevant when recovering from a prior non-draft release.
-- **If PyPI publication already succeeded, the version is immutable** — do not delete
-  the release/tag or restart the same version. Fix downstream failures in place (a
-  deploy-image failure, a stale post-publish integration test), or cut a new patch
-  version if the released package or assets are actually wrong. Before deleting any
-  release/tag, verify PyPI does not already list `X.Y.Z`.
+- **Once a release is published, do not delete, re-cut or re-upload its assets.**
+  Deploys and the G1 baseline pin the tag and its asset digests. Fix downstream failures
+  in place (a deploy failure, a stale artifact check), or cut a new patch version if the
+  released code or assets are wrong.
 - Never force-push or amend commits already on main.

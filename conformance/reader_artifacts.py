@@ -34,7 +34,6 @@ from reg_meta_build.source_evidence import canonical_json, canonical_sha256
 from reg_meta_build.validate import validate_built_db
 
 import reg_meta_build
-import reg_schema
 
 # The digest and staging helpers are shared with the tooling caches.
 sys.path.append(str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -54,9 +53,7 @@ FIXTURE_CACHE_ENV = "REG_FIXTURE_CACHE"
 # marks its generation as used, so a returned path stays valid this long after
 # its last lookup.
 FIXTURE_CACHE_RETENTION_SECONDS = 6 * 3600
-BUILD_PACKAGES = tuple(
-    Path(package.__file__).parent for package in (reg_meta_build, reg_schema)
-)
+BUILD_PACKAGES = (Path(reg_meta_build.__file__).parent,)
 # The sources `reg-core-py` is built from (its uv `cache-keys`): `uv run` rebuilds the
 # extension when they change, and so must the cache.
 NATIVE_SOURCES = tuple(CASES.parents[1] / path for path in _NATIVE_SOURCES)
@@ -177,7 +174,7 @@ def build_inputs_digest(
 ) -> str:
     """Digest of every fixture-independent build input.
 
-    The defaults are the imported `reg_meta_build` and `reg_schema`
+    The defaults are the imported `reg_meta_build`
     sources (file contents, so uncommitted edits count), the Rust sources of
     `reg-core-py`, this builder,
     `installed_distributions()` and `runtime_versions()`: what actually runs,
@@ -270,7 +267,8 @@ def cached_reader_artifact(
     """Return the cached, read-only `reg_meta.db`, building it on first use.
 
     `docs` names a readable docs source (`build_docs`); its `reg_meta_docs.db` is
-    built beside the catalog. Entries are immutable: callers that mutate an
+    built beside the catalog. A source whose `request.json` names a `filler` is
+    expanded first (`replicate_filler`). Entries are immutable: callers that mutate an
     artifact use `build_reader_artifact`, which copies one. A miss builds into a
     private staging directory and renames it into place, so concurrent builders of
     the same key never expose a partial entry; the loser discards its copy.
@@ -285,10 +283,12 @@ def cached_reader_artifact(
     path = entry / "reg_meta.db"
     if path.exists():
         return path
-    with staged(entry) as staging:
-        _build_artifact(
-            staging, fixture_source(fixture), kind, identity_overrides, search_pins
-        )
+    source = fixture_source(fixture)
+    with staged(entry) as staging, tempfile.TemporaryDirectory() as expanded:
+        request = source / "request.json"
+        if request.exists() and "filler" in json.loads(request.read_text()):
+            source = replicate_filler(source, Path(expanded) / "source")
+        _build_artifact(staging, source, kind, identity_overrides, search_pins)
         if docs is not None:
             build_docs(docs, staging).chmod(0o444)
         (staging / "reg_meta.db").chmod(0o444)

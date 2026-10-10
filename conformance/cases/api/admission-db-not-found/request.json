@@ -1,0 +1,13 @@
+{
+  "note": "Twin of selection/docs-missing-catalog and the CLI arm of test_validate.py. Fails if the server starts, or refuses as anything but db_not_found, when --db names a directory without reg_meta.db.",
+  "serve": {
+    "catalog": "global",
+    "db": "absent"
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

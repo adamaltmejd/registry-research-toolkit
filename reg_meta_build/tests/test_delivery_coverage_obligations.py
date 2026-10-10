@@ -28,6 +28,7 @@ from reg_meta_build.catalog_dependencies import (
     CoverageObligation,
     check_delivery_coverage,
 )
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedAliasWindow,
@@ -108,21 +109,21 @@ def _allowed(variables, obligations):
 
 
 def _refusal(variables, obligations, code) -> ResolutionDiagnostic:
-    """The one located error, whose detail is also the strict-mode refusal."""
+    """The one located error, whose code and detail are also the strict-mode refusal."""
     (found,) = check_delivery_coverage(
         variables, obligations, withheld={}, diagnostic=True
     )
     assert (found.code, found.severity) == (code, "error")
-    with pytest.raises(ValueError) as failure:
+    with pytest.raises(RegMetaError) as failure:
         check_delivery_coverage(variables, obligations, withheld={})
-    assert str(failure.value) == found.detail
+    assert (failure.value.code, str(failure.value)) == (code, found.detail)
     return found
 
 
 def test_delivery_fact_change_is_a_located_error_naming_the_coordinate_and_source():
     """Input: the written type "text" against the claimed "integer". Expected: one
     ``unexplained_delivery_fact_change`` error with the obligation's refs, naming
-    the coordinate, the claim and the source; strict mode raises the same text.
+    the coordinate, the claim and the source; strict mode raises the same code and text.
     Fails if the type comparison is dropped, or the diagnostic loses its code,
     severity or refs, or diverges from the strict refusal.
     """
@@ -141,7 +142,8 @@ def test_delivery_fact_change_is_a_located_error_naming_the_coordinate_and_sourc
 def test_delivery_coverage_loss_is_a_located_error_naming_the_lost_window():
     """Input: the 2020 state truncated to 2020-06-30. Expected: one
     ``unexplained_delivery_coverage_loss`` error with the obligation's refs and
-    exactly the lost 2020-07-01..2020-12-31; strict mode raises the same text.
+    exactly the lost 2020-07-01..2020-12-31; strict mode raises the same code and
+    text.
     #1319 deleted its scope-minted twin citing this test. Fails if the guard
     widens periods, reports the hull, or the diagnostic loses its code or refs.
     """
@@ -210,6 +212,37 @@ def test_negative_unit_claim_refuses_a_unit_backfilled_from_a_neighbouring_state
     assert (
         "people/VALUE 2021-01-01..2021-12-31 claimed by fixture/key: "
         "literal delivery unit changed" in found.detail
+    )
+
+
+def test_checked_definition_claim_refuses_a_window_that_lost_its_literal_definition():
+    """Input: a checked month family's claim on Second's per-column window
+    definition, against the window written without it (as a defect in the alias
+    projection would write it). Expected: "literal definition changed" naming
+    people/Second. Fails if the definition claim is not compared with the
+    per-column window's definition. Read from the replaced
+    test_period_family_merges.py::test_checked_month_definitions_keep_literal_text_and_source_scopes.
+    """
+    text = "Salary paid in month 07; annual business income / 12."
+    obligation = replace(
+        _fact_obligation(column="Second", valid_from="2020-07-01"),
+        definition_claim=("value", text),
+    )
+
+    def written(definition):
+        window = _second_window(
+            column_metadata="per_column",
+            data_type="integer",
+            data_length="1",
+            definition=definition,
+        )
+        return _fact_variable(column="First", aliases=(window,))
+
+    _allowed((written(text),), (obligation,))
+    found = _refusal((written(None),), (obligation,), FACT)
+    assert (
+        "people/Second 2020-07-01..2020-12-31 claimed by fixture/key: "
+        "literal definition changed" in found.detail
     )
 
 
@@ -433,5 +466,8 @@ def test_per_column_alias_coding_preserves_exact_delivery_claims(
         (FACT, f"people/{column}") for column in claims
     ]
     assert all(fragment in f.detail for f in found)
-    with pytest.raises(ValueError, match="supported delivery facts changed"):
+    with pytest.raises(
+        RegMetaError, match="supported delivery facts changed"
+    ) as failure:
         check_delivery_coverage((variable,), obligations, withheld={})
+    assert failure.value.code == FACT

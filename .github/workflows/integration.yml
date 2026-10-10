@@ -54,8 +54,8 @@ jobs:
       # `--exclude-drafts`: a draft carries no published assets, and a release
       # sits in draft for the whole of the release skill's step 8. (That flag is
       # a deliberate divergence from container-build's resolver, not drift.) NOT
-      # GitHub's `latest`, which is newest across all three packages and would
-      # hand back a reg_schema/v* or reg_meta_build/v* release.
+      # GitHub's `latest`, which is newest across both release tag prefixes and could
+      # hand back a reg_meta_build/v* release.
       #
       # The SHA-256 digest GitHub records for the asset is verified BEFORE
       # decompression. Admission is then the Rust server's own, at boot with

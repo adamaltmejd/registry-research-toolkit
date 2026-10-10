@@ -17,7 +17,6 @@ from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build._components import DisjointSet
-from reg_meta_build._curation import printable_error
 from reg_meta_build._resolved_common import _ResolvedWindow, remaining_windows
 from reg_meta_build.concept_groups import (
     _MONTH_LABELS,
@@ -307,7 +306,8 @@ def check_delivery_coverage(
 ) -> tuple[ResolutionDiagnostic, ...]:
     """Refuse silent loss of supported delivery coverage before the catalog is placed.
 
-    Strict mode raises on the first unexplained kind found. Diagnostic mode
+    Strict mode raises the first unexplained kind found, facts before losses, as
+    a located error with that kind's diagnostic code. Diagnostic mode
     returns one error diagnostic per obligation and kind instead, so the build
     can report every problem and continue.
 
@@ -673,16 +673,22 @@ def check_delivery_coverage(
                     )
                 )
         return tuple(found)
-    if fact_changes:
-        raise ValueError(
-            "supported delivery facts changed without an explicit source outcome "
-            f"({len(fact_changes)} fact(s)): " + "; ".join(fact_changes[:10])
-        )
-    if losses:
-        raise ValueError(
-            "supported delivery coverage was lost without an explicit source outcome "
-            f"({len(losses)} window(s)): " + "; ".join(losses[:10])
-        )
+    for code, problems, what, unit in (
+        ("unexplained_delivery_fact_change", fact_changes, "facts changed", "fact"),
+        ("unexplained_delivery_coverage_loss", losses, "coverage was lost", "window"),
+    ):
+        if problems:
+            # The same code a diagnostic build records for each obligation.
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code=code,
+                error_class="configuration",
+                message=f"supported delivery {what} without an explicit source "
+                f"outcome ({len(problems)} {unit}(s)): " + "; ".join(problems[:10]),
+                remediation="Supported delivery must reach the catalog "
+                "unchanged: fix the build stage that lost or changed it, or "
+                "curate the explicit source outcome that explains the change.",
+            )
     return ()
 
 
@@ -707,7 +713,6 @@ class CatalogDependencyError(RegMetaError):
             "mints (a curated slug that exists), or remove the curation entry that "
             "names it.",
         )
-        printable_error(self)
 
 
 # Shared inputs: keys of these kinds lie in no register.

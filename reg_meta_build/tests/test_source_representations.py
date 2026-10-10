@@ -13,6 +13,7 @@ from reg_meta_build.catalog_dependencies import (
     check_delivery_coverage,
 )
 from reg_meta_build.db import open_built_db
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.resolved_catalog import (
     ResolvedClassificationLink,
     write_resolved_catalog,
@@ -91,7 +92,7 @@ def test_per_column_storage_survives_formation_coverage_and_catalog_read(
             )
         }
     )
-    with pytest.raises(ValueError, match="claimed data_length"):
+    with pytest.raises(RegMetaError, match="claimed data_length"):
         check_delivery_coverage(
             (
                 variable.model_copy(
@@ -293,7 +294,7 @@ def test_shared_state_keeps_metadata_period_and_query_selects_precise_column(
     ]
     check_delivery_coverage((variable,), formed.coverage, withheld={})
     dropped = variable.model_copy(update={"aliases": variable.aliases[:1]})
-    with pytest.raises(ValueError, match=r"Second 2020-07-01\.\.2020-12-31"):
+    with pytest.raises(RegMetaError, match=r"Second 2020-07-01\.\.2020-12-31"):
         check_delivery_coverage((dropped,), formed.coverage, withheld={})
     assert state.provenance is not None and "representations:" in state.provenance
     output = tmp_path / "reg_meta.db"
@@ -595,7 +596,7 @@ def test_shared_state_facts_reach_both_columns_behind_alias_windows() -> None:
         update={"states": (state.model_copy(update={"data_type": "text"}),)}
     )
     with pytest.raises(
-        ValueError,
+        RegMetaError,
         match="supported delivery facts changed without an explicit source outcome",
     ) as failure:
         check_delivery_coverage((damaged,), formed.coverage, withheld={})

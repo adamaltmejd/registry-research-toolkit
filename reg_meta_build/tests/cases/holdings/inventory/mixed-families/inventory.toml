@@ -1,0 +1,14 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "LISA_Individ.csv"
+edition = 2019
+column = []
+
+[[table]]
+id = "LISA_Individ_2020.csv"
+edition = 2020
+[[table.column]]
+name = "LopNr"
+unmapped_reason = " "

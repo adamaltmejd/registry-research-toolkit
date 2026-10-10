@@ -1,0 +1,18 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "dbo.LISA_Individ"
+edition = [{ from = 2005, to = 2010 }, "2015"]
+[[table.column]]
+name = "Kon"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kon"
+representation = "Kon"
+[[table.column]]
+name = "Kon_recode"
+[[table.column.mapping]]
+register_variant = "scb/lisa/individer-15plus"
+variable = "scb/lisa/kon"
+representation = "Kon"

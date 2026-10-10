@@ -1,0 +1,43 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "where": {"register": "example"},
+      "fields": ["variable", "source_register"],
+      "rows": [
+        ["contested", null],
+        ["specific-bare", "shared"],
+        ["specific-variant", "shared"],
+        ["former", null],
+        ["external", "extra"],
+        ["missing", null]
+      ]
+    },
+    {
+      "note": "An unattributed label stays the literal source text (old: source_label == the label).",
+      "table": "variables",
+      "where": {"variable": "missing", "register": "example"},
+      "fields": ["source_label"],
+      "rows": [["External source (MISSING) : People"]]
+    },
+    {
+      "table": "lineage",
+      "fields": ["variable", "source_register", "source_variable", "valid_from", "valid_to"],
+      "rows": [
+        ["specific-bare", "shared", "specific-bare", "2000-01-01", "2000-12-31"],
+        ["specific-variant", "shared", "specific-variant", "2000-01-01", "2000-12-31"],
+        ["external", "extra", "external", "2000-01-01", "2000-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": {"contains": "scb/example/"}},
+      "fields": ["code", "severity", "subject"],
+      "rows": [
+        ["ambiguous_source_register", "error", "scb/example/contested"],
+        ["ambiguous_source_register", "error", "scb/example/former"]
+      ]
+    }
+  ]
+}

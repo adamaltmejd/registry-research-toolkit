@@ -1,0 +1,17 @@
+{
+  "note": "Twin of selection/missing-kind. Fails if the server admits an artifact whose catalog_artifact_kind is empty, instead of refusing to start with catalog_unpublishable.",
+  "fixture": "reader",
+  "kind": "catalog",
+  "serve": {
+    "catalog": "global"
+  },
+  "manifest": {
+    "catalog_artifact_kind": ""
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

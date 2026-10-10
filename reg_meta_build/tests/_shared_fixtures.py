@@ -1,6 +1,5 @@
-"""Shared pytest fixtures used by both `reg_meta` and `reg_meta_build` test
-suites. Both conftests import these via the on-`sys.path` bare-name path
-(see each conftest's `sys.path.insert`)."""
+"""Shared pytest fixtures for the `reg_meta_build` test suite, imported via the
+on-`sys.path` bare-name path (see the conftest's `sys.path.insert`)."""
 
 from __future__ import annotations
 

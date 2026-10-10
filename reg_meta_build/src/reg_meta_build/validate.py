@@ -1058,12 +1058,11 @@ def _check_nameless_variables_named_per_state(
     """A variable with a NULL common `name` names every one of its states.
 
     `ResolvedVariable` admits a missing common name only when it has at least
-    one delivery state and each state carries a positive name (reg_meta/DESIGN.md:
-    "a variable with no common name requires positive names for every delivered
-    state"); readers and search fall back to those names. This rechecks the
-    writer's output so a regression cannot ship a variable with no name at all,
-    whether it dropped one state's name or every state. A state-less name-less
-    variable is therefore an offender here, for every provider."""
+    one delivery state and each state carries a positive name; readers and search
+    fall back to those names. This rechecks the writer's output so a regression
+    cannot ship a variable with no name at all, whether it dropped one state's
+    name or every state. A state-less name-less variable is therefore an
+    offender here, for every provider."""
     result.section("[name-less variables: per-state names]")
     if not {"variable", "variable_state", "register", "provider"}.issubset(tables):
         result.ok("variable / variable_state / register / provider absent — skipped")
@@ -2859,7 +2858,7 @@ def _check_representation_replaced_by(
     # `str.lower` keys (relations.py): SQLite `LOWER()` is ASCII-only, so a Swedish
     # åäö header (e.g. `Ägare`) would compare unequal here yet resolve in the
     # materializer, falsely flagging the edge. `py_lower` is the shared
-    # delivery_column_name folding convention, registered in `reg_meta.db.open_db`
+    # delivery_column_name folding convention, registered in `db.open_db`
     # (the conn factory this validator runs on), so no local registration is needed.
 
     # A case-only same-column pair on one variable is still a self-loop.

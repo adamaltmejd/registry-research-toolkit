@@ -2,7 +2,7 @@
 """gate — the full verification gate, the regenerate command and the heavy-job lock.
 
     uv run --no-project scripts/gate.py all            # before opening a PR
-    uv run --no-project scripts/gate.py g0 --packages reg_meta
+    uv run --no-project scripts/gate.py g0 --packages reg_meta_build
     uv run --no-project scripts/gate.py regen          # then commit the diff
     uv run --no-project scripts/gate.py heavy -- cargo test -p reg-catalog
     uv run --no-project scripts/gate.py real-seed -- uv run reg-meta-build build-db ...

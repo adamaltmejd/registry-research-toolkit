@@ -16,10 +16,10 @@ one boundary.
 
 The boundaries: the built artifact (`validate_built_db` plus content snapshot), CLI JSON
 and documented library return models, HTTP responses and the `openapi.json` snapshot,
-order-manifest bytes, `project_data.json` validation (`reg_schema/test_corpus/`),
-curation-TOML load or located failure, and the FQID and period grammars with interval
-algebra. In the frontend: rendered DOM, the accessibility tree and the codegen'd API
-types.
+order-manifest bytes, `project_data.json` validation
+(`crates/reg-core/tests/project/corpus/`), curation-TOML load or located failure, and
+the FQID and period grammars with interval algebra. In the frontend: rendered DOM, the
+accessibility tree and the codegen'd API types.
 
 ## At review: the change touches a test
 

@@ -1,0 +1,13 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Arb_AGIIndivid_2021-03.csv"
+edition = "2021-03"
+partition = "Arb Stream"
+[[table.column]]
+name = "Belopp"
+[[table.column.mapping]]
+register_variant = "skv/agi/individuppgifter-agi"
+variable = "skv/agi/utbetalt-belopp"
+representation = "Belopp"

@@ -1,0 +1,16 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"subject": ["scb/example/original", "scb/example/added"]},
+      "fields": ["code", "subject", "severity", "acknowledged_by", "withheld_output"],
+      "rows": [
+        ["unresolved_lineage_ambiguous_source_variant", "scb/example/original", "error", null, ["scb/example/original:lineage"]],
+        ["unresolved_lineage_ambiguous_source_variant", "scb/example/added", "error", null, ["scb/example/added:lineage"]],
+        ["stale_curation_entry", "scb/example/original", "error", null, ["curation/registers/scb/example.toml#/acknowledge/2"]],
+        ["stale_curation_entry", "scb/example/added", "error", null, ["curation/registers/scb/example.toml#/acknowledge/3"]]
+      ]
+    }
+  ]
+}

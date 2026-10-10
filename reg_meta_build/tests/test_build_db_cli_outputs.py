@@ -18,13 +18,17 @@ from _pipeline_catalog_support import (
 from _resolved_catalog_support import resolved_variable
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.cli import run
-from reg_meta_build.db import DB_FILENAME
-from reg_meta_build.errors import EXIT_USAGE
+from reg_meta_build.db import DB_FILENAME, publish_db
+from reg_meta_build.errors import EXIT_USAGE, RegMetaError
 from reg_meta_build.pipeline import (
     build_catalog,
     check_curation,
 )
-from reg_meta_build.resolved_catalog import write_resolved_catalog
+from reg_meta_build.resolved_catalog import (
+    ResolvedCodeSet,
+    ResolvedVariable,
+    write_resolved_catalog,
+)
 
 # The checkout's tracked curation tree and its slug sibling, the defaults that
 # check-curation protects when --curation-dir is omitted.
@@ -291,6 +295,45 @@ def test_rerun_is_byte_identical(catalog: CatalogFixture, tmp_path: Path) -> Non
     assert first_ledger[4:8] == bytes(4)
 
 
+def test_catalog_bytes_do_not_depend_on_writer_input_order(tmp_path: Path) -> None:
+    # Fails if the writer stores registers, variables, states or manifest entries in
+    # the order it receives them (drops a sort before an insert), or stops sorting and
+    # deduplicating a value set's members, so one resolved catalog handed over in
+    # another order, or with a member repeated, changes the artifact's bytes or is
+    # refused. A rebuild replays one order, a build hands the writer members already
+    # sorted and unique, and the build cases' reversed-row steps compare projections,
+    # which ignore order; this is the byte-level witness.
+    members = (("01", "Participation"), ("02", "Employment"))
+
+    def coded(variable: ResolvedVariable, states, given) -> ResolvedVariable:
+        value_set = ResolvedCodeSet(members=given)
+        return variable.model_copy(
+            update={
+                "states": tuple(
+                    s.model_copy(update={"value_set": value_set}) for s in states
+                )
+            }
+        )
+
+    variables = tuple(
+        coded(v, v.states, members)
+        for v in (resolved_variable(), resolved_variable("sos"))
+    )
+    first, reordered = tmp_path / "first.db", tmp_path / "reordered.db"
+    write_resolved_catalog(
+        variables, first, manifest=synthetic_manifest() | {"z": "last", "a": "first"}
+    )
+    write_resolved_catalog(
+        tuple(
+            coded(v, reversed(v.states), (*reversed(members), *members))
+            for v in reversed(variables)
+        ),
+        reordered,
+        manifest=synthetic_manifest() | {"a": "first", "z": "last"},
+    )
+    assert reordered.read_bytes() == first.read_bytes()
+
+
 @pytest.mark.parametrize("where", ["prepared", "curation", "report", "dump"])
 def test_outputs_cannot_alias_inputs_or_each_other(
     catalog: CatalogFixture, tmp_path: Path, where: str
@@ -496,6 +539,70 @@ def test_failed_publication_step_preserves_live_catalog(
     # `.prev` is the weaker promise (publish_db's docstring): only the live catalog
     # must survive, and no staging may remain.
     assert {p.name for p in tmp_path.iterdir()} <= {output.name, prev.name}
+
+
+def test_first_publication_keeps_no_previous_generation(tmp_path: Path) -> None:
+    # Fails if publication links a `.prev` aside when no live catalog exists yet
+    # (drops publish_db's `final_path.exists()` guard, so the link raises on the
+    # absent catalog) or leaves its staging behind.
+    output = tmp_path / "reg_meta.db"
+    write_resolved_catalog(
+        (resolved_variable(),), output, manifest=synthetic_manifest()
+    )
+    assert sorted(p.name for p in tmp_path.iterdir()) == [output.name]
+
+
+def test_publication_refuses_a_diagnostic_catalog(tmp_path: Path) -> None:
+    # Fails if publish_db stops reading the staged catalog's manifest before it
+    # installs it, so a diagnostic catalog could replace the live one. No command
+    # reaches this guard: derive refuses a diagnostic base first, and extend-db and
+    # the writer place a diagnostic catalog create-only, never through publish_db.
+    live = tmp_path / "reg_meta.db"
+    write_resolved_catalog((resolved_variable(),), live, manifest=synthetic_manifest())
+    live_bytes = live.read_bytes()
+    diagnostic = tmp_path / "diagnostic.db"
+    write_resolved_catalog(
+        (resolved_variable(),),
+        diagnostic,
+        manifest=synthetic_manifest(),
+        diagnostic=True,
+    )
+    diagnostic_bytes = diagnostic.read_bytes()
+    with pytest.raises(RegMetaError) as rejected:
+        publish_db(diagnostic, live)
+    assert rejected.value.code == "catalog_not_publishable"
+    assert live.read_bytes() == live_bytes
+    assert diagnostic.read_bytes() == diagnostic_bytes
+    assert sorted(p.name for p in tmp_path.iterdir()) == [diagnostic.name, live.name]
+
+
+@pytest.mark.parametrize("destination", ["existing", "active"])
+def test_diagnostic_build_never_writes_an_existing_or_active_catalog(
+    catalog: CatalogFixture,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    destination: str,
+) -> None:
+    # Fails if a diagnostic build may place its catalog over an existing file (drops
+    # the build's `not publishable and output.exists()` check before compiling) or at
+    # the active catalog path `REG_META_DB` names (drops the writer's
+    # `default_db_dir()` check), or creates anything there before refusing.
+    active = tmp_path / "absent-active"
+    monkeypatch.setenv("REG_META_DB", str(active))
+    if destination == "existing":
+        output = tmp_path / "reg_meta.db"
+        output.write_bytes(b"live catalog")
+        message = "separate from build inputs and each other"
+    else:
+        output = active / DB_FILENAME
+        message = "new explicit path separate from the active catalog"
+    with pytest.raises(ValueError, match=message):
+        catalog.build(output, tmp_path / "report", registers=("1",), diagnostic=True)
+    if destination == "existing":
+        assert output.read_bytes() == b"live catalog"
+        assert not output.with_name("reg_meta.db.prev").exists()
+    else:
+        assert not active.exists()
 
 
 @pytest.mark.parametrize(

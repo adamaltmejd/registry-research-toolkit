@@ -1,5 +1,5 @@
 //! `docs_search`, `docs_get`, `docs_related` and the related-document download over
-//! the docs database: today's `reg_meta.doc_queries` and `reg_webapp/routes/docs.py`.
+//! the docs database.
 
 use reg_core::{fold_search, fts_match_query, normalized_search_query, py_strip};
 use rusqlite::types::Value as Sql;

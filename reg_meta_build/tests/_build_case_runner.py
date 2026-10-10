@@ -363,8 +363,8 @@ _PREPARING_MODULES = (
 def _prepared_inputs_digest() -> str:
     """Everything a prepared entry depends on besides its source spec.
 
-    The reader cache's build inputs (the `reg_meta_build`, `reg_meta` and
-    `reg_schema` sources, the native extension sources, the installed
+    The reader cache's build inputs (the `reg_meta_build` sources, the native
+    extension sources, the installed
     distributions, Python and SQLite), the modules that prepare a spec, and the Git
     that commits and checks the accepted repository.
     """
@@ -696,9 +696,11 @@ def _variables(outcome: Outcome) -> list[dict]:
     """Each built variable's distinct delivery columns; one null row when it has none."""
     rows = outcome._sql(
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
-        "s.delivery_column_name AS column, v.provider_key, v.description, "
-        "v.is_identifier, v.is_sensitive, v.deprecated FROM variable v "
-        "JOIN register r USING (register_id) "
+        "s.delivery_column_name AS column, v.provider_key, v.definition, "
+        "v.description, v.is_identifier, v.is_sensitive, v.deprecated, "
+        "sr.slug AS source_register, v.source_label, v.source_register_text "
+        "FROM variable v JOIN register r USING (register_id) "
+        "LEFT JOIN register sr ON sr.register_id = v.source_register_id "
         "LEFT JOIN variable_state s USING (variable_id)"
     )
     named = {
@@ -720,6 +722,41 @@ def _concept_groups(outcome: Outcome) -> list[dict]:
     ):
         groups.setdefault(row["group_id"], []).append(row["slug"])
     return [{"variables": sorted(slugs)} for slugs in groups.values()]
+
+
+def _value_sets(outcome: Outcome) -> list[dict]:
+    """Each stored value set: its id, its sorted members and the sorted FQIDs of the
+    variables whose states or alias windows carry it."""
+    sets: dict[int, dict] = {}
+    for row in outcome._sql(
+        "SELECT value_set_id, code, label FROM value_set "
+        "LEFT JOIN value_set_member USING (value_set_id) "
+        "LEFT JOIN value_code USING (code_id)"
+    ):
+        entry = sets.setdefault(
+            row["value_set_id"],
+            {"id": str(row["value_set_id"]), "members": [], "variables": set()},
+        )
+        if row["code"] is not None:
+            entry["members"].append([row["code"], row["label"]])
+    for row in outcome._sql(
+        "SELECT u.value_set_id, p.slug || '/' || r.slug || '/' || v.slug AS fqid "
+        "FROM (SELECT variable_id, value_set_id FROM variable_state "
+        "UNION SELECT variable_id, value_set_id FROM variable_alias_window) u "
+        "JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "WHERE u.value_set_id IS NOT NULL"
+    ):
+        sets[row["value_set_id"]]["variables"].add(row["fqid"])
+    return [
+        {
+            **entry,
+            "members": sorted(entry["members"]),
+            "variables": sorted(entry["variables"]),
+        }
+        for entry in sets.values()
+    ]
 
 
 def _stored(row_value, json_value):
@@ -961,6 +998,11 @@ _STATE_JOIN = (
     "JOIN register r ON r.register_id = v.register_id "
     "JOIN register_variant rv ON rv.register_variant_id = s.register_variant_id "
 )
+# Each state's id and coordinates; the lineage tables join it once per edge end.
+_STATE_COORDINATES = (
+    "SELECT s.state_id, r.slug AS register, v.slug AS variable, rv.slug AS variant, "
+    "s.delivery_column_name AS column, s.valid_from, s.valid_to " + _STATE_JOIN
+)
 _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "issues": _issues,
     "issue_refs": _issue_refs,
@@ -1016,6 +1058,12 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "search_pins": lambda o: o._sql(
         "SELECT key AS query, type, position, entity FROM search_pin"
     ),
+    # The unfolded text `variable_fts` indexes, one row per built variable.
+    "search_text": lambda o: o._sql(
+        "SELECT r.slug AS register, v.slug AS variable, t.name, t.definition, "
+        "t.description FROM variable_search_text t JOIN variable v USING (variable_id) "
+        "JOIN register r ON r.register_id = v.register_id"
+    ),
     "manifest": lambda o: o._sql("SELECT key, value FROM import_manifest"),
     "edges": lambda o: o._sql(
         "SELECT 'same_as' AS type, "
@@ -1026,6 +1074,20 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "|| predecessor_variable, "
         "successor_provider || '/' || successor_register || '/' || successor_variable "
         "FROM variable_replaced_by"
+    ),
+    "lineage": lambda o: o._sql(
+        "SELECT c.register, c.variable, c.variant, c.column, "
+        "s.register AS source_register, s.variable AS source_variable, "
+        "s.variant AS source_variant, s.column AS source_column, "
+        "l.valid_from, l.valid_to FROM variable_state_lineage l "
+        f"JOIN ({_STATE_COORDINATES}) c ON c.state_id = l.consumer_state_id "
+        f"JOIN ({_STATE_COORDINATES}) s ON s.state_id = l.source_state_id"
+    ),
+    "lineage_warnings": lambda o: o._sql(
+        "SELECT c.register, c.variable, c.variant, c.column, c.valid_from, "
+        "c.valid_to, w.warning_kind AS kind, w.message "
+        "FROM variable_state_lineage_warning w "
+        f"JOIN ({_STATE_COORDINATES}) c ON c.state_id = w.consumer_state_id"
     ),
     "state_classifications": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, "
@@ -1047,6 +1109,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "JOIN value_code vc USING (code_id) JOIN variable v USING (variable_id) "
         "JOIN register r ON r.register_id = v.register_id"
     ),
+    "value_sets": _value_sets,
     "classifications": lambda o: o._sql(
         "SELECT c.slug, c.short_name, c.name, c.name_en, c.publisher, c.valid_from, "
         "c.valid_to, c.description, c.url, c.code_count, c.valid_code_count, "
@@ -1095,8 +1158,9 @@ FIELDS: dict[str, frozenset[str]] = {
         "name state_name provenance pooled data_length definition measurement_unit "
         "description operational_definition source_register_text",
         "state_codes": "register variable variant column valid_from valid_to code label",
-        "variables": "register variable column provider_key description "
-        "is_identifier is_sensitive deprecated",
+        "variables": "register variable column provider_key definition description "
+        "is_identifier is_sensitive deprecated source_register source_label "
+        "source_register_text",
         "variants": "register variant name panel_entity_key panel_time_key",
         "tags": "slug member",
         "aliases": "register variable variant column",
@@ -1109,8 +1173,13 @@ FIELDS: dict[str, frozenset[str]] = {
         "severity detail summary detail_hash_of fields refs withheld_output "
         "acknowledged_by source_subject case_id",
         "search_pins": "query type position entity",
+        "search_text": "register variable name definition description",
         "manifest": "key value",
         "edges": "type a b",
+        "lineage": "register variable variant column source_register "
+        "source_variable source_variant source_column valid_from valid_to",
+        "lineage_warnings": "register variable variant column valid_from valid_to "
+        "kind message",
         "state_classifications": "register variable column valid_from valid_to "
         "classification provenance",
         "conformance": "register variable column valid_from valid_to window "
@@ -1118,6 +1187,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "conformance_codes": "register variable column valid_from valid_to window "
         "classification code label member_kind sentinel_meaning scoped_windows",
         "code_index": "register variable code label mapping_count",
+        "value_sets": "id members variables",
         "classifications": "slug short_name name name_en publisher valid_from "
         "valid_to description url code_count valid_code_count supersedes",
         "classification_successions": "predecessor successor effective_year note",
@@ -1169,16 +1239,30 @@ def _cited_refs(outcome: Outcome, selector: dict) -> list[str]:
     ]
 
 
-def expected_rows(outcome: Outcome, spec: dict) -> list[list]:
-    """A projection's expected rows: literal, or the refs another projection cites.
+def expected_rows(
+    outcome: Outcome, spec: dict, earlier: dict[str, Outcome] | None = None
+) -> list[list]:
+    """A projection's expected rows: literal, the refs another projection cites, or
+    the same projection of an earlier step of the case.
 
     `{"refs_of": {"table": ..., "where": ...}}` states a relation instead of values:
     the projection's one `ref` field must list exactly the refs those rows cite. Both
     sides are read from the same build, so no source ref is written as a literal.
+    `{"step": "<earlier step>"}` expects the rows this projection (its table, `where`
+    and `fields`) reads from that step's build, so a value a case must not write as a
+    literal, such as a stored id, is still compared across builds.
     """
     rows = spec["rows"]
     if isinstance(rows, list):
         return rows
+    if rows.keys() == {"step"}:
+        if rows["step"] not in (earlier or {}):
+            raise ValueError(f"no earlier step {rows['step']!r} in projection {spec}")
+        found = project(earlier[rows["step"]], {**spec, "match": "exact"})["rows"]
+        if not found and spec.get("match") == "includes":
+            # Nothing to include would compare nothing.
+            raise ValueError(f"earlier step reads no rows for projection {spec}")
+        return found
     if rows.keys() != {"refs_of"} or spec["fields"] != ["ref"]:
         raise ValueError(f"unknown expected rows in projection {spec}")
     return [[ref] for ref in _cited_refs(outcome, rows["refs_of"])]
@@ -1307,8 +1391,17 @@ def _tree_bytes(path: Path) -> dict[str, bytes]:
     return files
 
 
-def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dict]:
-    """Run one case step; return ``(actual, expected)`` in the same shape."""
+def run_step(
+    step: Path,
+    cache: PreparedCache,
+    scratch: Path,
+    earlier: dict[str, Outcome] | None = None,
+) -> tuple[dict, dict]:
+    """Run one case step; return ``(actual, expected)`` in the same shape.
+
+    ``earlier`` maps the case's already-run step names to their builds. A step that
+    builds a catalog joins it, so a later step's `{"step": ...}` rows can read it.
+    """
     request = json.loads((step / "request.json").read_text(encoding="utf-8"))
     # A case states the product change that makes it fail, so a reviewer can check
     # that its oracle can fail at all (cases/build/README.md).
@@ -1379,10 +1472,12 @@ def run_step(step: Path, cache: PreparedCache, scratch: Path) -> tuple[dict, dic
         actual["status"] = result["status"]
     if "result" in expected:
         actual["result"] = _subset(result, expected["result"])
+    outcome = Outcome(result, report_events(report), output, built)
+    if earlier is not None and request.get("mode", "build") == "build":
+        earlier[step.name] = outcome
     if "projections" in expected:
-        outcome = Outcome(result, report_events(report), output, built)
         specs = [
-            {**spec, "rows": expected_rows(outcome, spec)}
+            {**spec, "rows": expected_rows(outcome, spec, earlier)}
             for spec in expected["projections"]
         ]
         actual["projections"] = [project(outcome, spec) for spec in specs]

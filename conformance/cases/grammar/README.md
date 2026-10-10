@@ -2,8 +2,8 @@
 
 The oracle for the FQID and period grammars of `RUST_RUNTIME_SPEC.md` sections 5 and 7,
 read by `crates/reg-core/tests/grammar.rs` (`cargo test --workspace`). Both files are
-hand-written from the grammar in `reg_meta/DESIGN.md` → "FQID grammar", not generated
-from an implementation.
+hand-written from the grammar in `crates/DESIGN.md` → "FQID grammar", not generated from
+an implementation.
 
 ## Format
 
