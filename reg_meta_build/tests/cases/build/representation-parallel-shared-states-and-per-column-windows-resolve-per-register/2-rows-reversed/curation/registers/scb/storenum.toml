@@ -1,0 +1,33 @@
+[register]
+provider = "scb"
+slug = "storenum"
+native_id = "2"
+[[variant]]
+native_id = "2.20"
+slug = "people"
+[[variable]]
+native_id = "2.2"
+slug = "income"
+[[identity.partition]]
+variable = "2.2"
+columns = { First = "2.2", Second = "2.2" }
+columns_ref = "reviewed parallel source-native quantity"
+[[representation.parallel]]
+variable = "2.2"
+variant = "2.20"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+evidence = "Reviewed co-delivered columns"
+noted = "2026-10-10"
+co_delivered = true
+column_metadata = "per_column"
+[[representation.parallel.columns]]
+column = "First"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2020"]
+[[representation.parallel.columns]]
+column = "Second"
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+source_editions = ["2020"]

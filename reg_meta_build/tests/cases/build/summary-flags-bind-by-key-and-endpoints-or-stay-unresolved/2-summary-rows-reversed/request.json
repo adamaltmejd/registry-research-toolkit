@@ -1,0 +1,10 @@
+{
+  "replaces": [
+    "test_source_support.py::test_unika_sensitivity_declarations_ratchet_up_and_keep_evidence[True-False-True]",
+    "test_source_support.py::test_unika_sensitivity_declarations_ratchet_up_and_keep_evidence[False-False-False]",
+    "test_source_support.py::test_unika_sensitivity_declarations_ratchet_up_and_keep_evidence[conditional-False-True]"
+  ],
+  "note": "The same deliveries with the Unika rows in reverse order. The replaced test reconciled the bound rows in reverse and expected the same fields and conflicts; here the whole build must agree with step 1: the same flags, the same withheld variables and the same support issues. Row order within one source file is reachable, unlike the loader-sorted register order.",
+  "fails_if": "a support decision depends on Unika row order: `reconcile_source_fields` keeps the first or the last sensitivity claim instead of ratcheting up, so ratchet or conditional is published non-sensitive in one of the two orders, or `_discriminated` assigns a partition to the first family that observed an endpoint, so shared, unlisted or incomplete binds in one order only",
+  "sources": "scb-summary-flags-reversed"
+}

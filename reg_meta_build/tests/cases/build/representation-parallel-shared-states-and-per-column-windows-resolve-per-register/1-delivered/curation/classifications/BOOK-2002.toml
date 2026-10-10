@@ -1,0 +1,7 @@
+[classification]
+short_name = "BOOK-2002"
+slug = "book-2002"
+name = "BOOK-2002"
+codes_file = "book-2002.csv"
+[binding]
+value_set_labels = ["Shared list"]

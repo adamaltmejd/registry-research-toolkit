@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "keyless"
+native_id = "13"
+[[variant]]
+native_id = "13.130"
+slug = "people"
+[[variable]]
+native_id = "13.1301"
+slug = "value"

@@ -450,6 +450,71 @@ def test_malformed_provider_toml_is_exit_config_through_extend_db(
     assert locator in error.message
 
 
+_PRIVATE = '[provider]\nname = "Private"\nsource_label = "test"\n\n'
+
+
+@pytest.mark.parametrize(
+    "text, locator",
+    [
+        ("register = [1]\n\n" + _PRIVATE, "[[register]]"),
+        (
+            _PRIVATE + '[[register]]\nkey = "r"\nname = "R"\nvariant = [1]\n'
+            '[[register.variable]]\nkey = "v"\nname = "V"\n'
+            '[[register.variable.state]]\ncolumn = "C"\n',
+            "variant",
+        ),
+        (
+            _PRIVATE + '[[register]]\nkey = "r"\nname = "R"\nvariable = [1]\n',
+            "[[register.variable]]",
+        ),
+    ],
+    ids=["register", "variant", "variable"],
+)
+def test_table_array_of_non_tables_is_exit_config_through_extend_db(
+    tmp_path: Path, base_db: Path, text: str, locator: str
+) -> None:
+    # Fails if a `register`, `variant` or `variable` array whose element is not a
+    # table is accepted, crashes, or is refused under another code or without
+    # naming the table array. Read from test_curated_adapter.py::
+    # test_steward_table_arrays_reject_non_table_elements.
+    error = _assert_rejected_without_output(tmp_path, base_db, text)
+    assert locator in error.message
+
+
+@pytest.mark.parametrize(
+    "book, code, fragment",
+    [
+        (
+            "ATC",
+            "curated_toml_invalid",
+            "classification 'ATC' is not a declared classification",
+        ),
+        ("SUN2020", "extend_providers_invalid", "declares classification linkage"),
+    ],
+    ids=["checkout-book", "base-book"],
+)
+def test_classification_reference_resolves_against_the_base_books(
+    tmp_path: Path, base_db: Path, book: str, code: str, fragment: str
+) -> None:
+    # A steward variable's `classification` resolves against the books of the
+    # selected base, never this checkout's: ATC is a checkout book
+    # (curation/classifications/ATC.toml) the base lacks, SUN2020 is the base's
+    # book. The base book passes resolution, and the overlay then refuses the
+    # linkage it does not materialize (extend_db.py, `_load_provider_ir`), so no
+    # build reaches the old adapter test's accepted reference. Fails if references
+    # resolve against the checkout's books (ATC is refused as linkage instead), or
+    # not against the base's (SUN2020 is refused as undeclared), or if the overlay
+    # writes the linkage. Read from test_curated_adapter.py::
+    # test_classification_reference_uses_supplied_books.
+    text = _BASE_TOML.replace(
+        '  variants = ["_default"]\n',
+        f'  classification = "{book}"\n  variants = ["_default"]\n',
+        1,
+    )
+    error = _assert_rejected_without_output(tmp_path, base_db, text, code=code)
+    assert fragment in error.message
+
+
 def test_duplicate_state_key_is_rejected_through_extend_db(
     tmp_path: Path, base_db: Path
 ) -> None:
