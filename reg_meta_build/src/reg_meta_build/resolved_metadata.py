@@ -1,28 +1,25 @@
 """Explicit resolved discovery, relationship and reference metadata.
 
-The preparation below resolves only exact declared references into storage IDs.
-It never derives groups, relations, lineage, source precedence or missing facts.
+The preparation (materialize.py) resolves only exact declared references into
+storage IDs. It never derives groups, relations, lineage, source precedence or
+missing facts.
 """
 
 from __future__ import annotations
 
-import json
 from collections import defaultdict
-from typing import TYPE_CHECKING, Any, Literal, Self
+from typing import Any, Literal, Self
 
 from pydantic import Field, field_validator, model_validator
 from reg_core_py import parse_fqid
 
 from reg_meta_build._resolved_common import (
-    _classification_id,
     _require_trimmed,
     _ResolvedDeliveryScope,
     _ResolvedModel,
     _ResolvedWindow,
-    _storage_id,
 )
 from reg_meta_build.concept_groups import _is_path_safe_key
-from reg_meta_build.id import mint
 from reg_meta_build.relations import (
     _reject_oversized_components,
     _reject_same_as_cycles,
@@ -31,17 +28,10 @@ from reg_meta_build.relations import (
 )
 from reg_meta_build.slug_grammar import validate_slug
 
-from .documentary import DocumentaryRelationship, LiteralSourceRelationship
-
-if TYPE_CHECKING:
-    import sqlite3
-
-    from reg_meta_build.resolved_catalog import (
-        ResolvedClassification,
-        ResolvedRegister,
-        ResolvedVariable,
-        ResolvedVariant,
-    )
+from .documentary import (  # noqa: TC001
+    DocumentaryRelationship,
+    LiteralSourceRelationship,
+)
 
 
 class RetainedDocumentaryRelationship(_ResolvedModel):
@@ -515,302 +505,3 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
 def state_reference_key(ref: ResolvedStateRef) -> tuple[str, str, str, str]:
     coordinate = ref.valid_from if ref.valid_from is not None else "year_independent"
     return ref.variable, ref.variant, coordinate, ref.value_set_version_label
-
-
-_COLUMNS = {
-    "concept_group": "group_id,kind,register_id,group_key,label,source",
-    "concept_group_axis": "group_id,axis,ordinal,label",
-    "concept_group_variable": "member_id,group_id,variable_id,delivery_column_name",
-    "concept_group_variable_facet": "member_id,axis,value,label",
-    "concept_group_classification": "classification_id,group_id,facet_value,facet_label",
-    "tag": "tag_id,slug,label",
-    "tag_member": "tag_id,register_id,variable_id,rank,starred,note",
-    "variable_same_as": "a_provider,a_register,a_variable,b_provider,b_register,b_variable",
-    "register_replaced_by": "predecessor_provider,predecessor_register,successor_provider,successor_register,effective_year,beskrivning",
-    "variable_replaced_by": "predecessor_provider,predecessor_register,predecessor_variable,successor_provider,successor_register,successor_variable,effective_year,note,beskrivning",
-    "variant_replaced_by": "predecessor_provider,predecessor_register,predecessor_variant,successor_provider,successor_register,successor_variant",
-    "representation_replaced_by": "predecessor_provider,predecessor_register,predecessor_variable,predecessor_column,successor_provider,successor_register,successor_variable,successor_column,variant,effective_year,note,beskrivning",
-    "classification_derived_from": "derived_slug,source_slug,note",
-    "variable_state_lineage": "consumer_state_id,source_state_id,valid_from,valid_to",
-    "variable_state_lineage_warning": "consumer_state_id,warning_kind,message",
-    "source_relationship": "relationship_id,owner_variable_id,kind,source_dataset,source_revision_id,declaration_json,binding_status,unresolved_json,provenance",
-}
-
-
-def prepare_resolved_metadata(
-    metadata: ResolvedMetadata,
-    variables: tuple[ResolvedVariable, ...],
-    variable_storage_ids: dict[tuple[str, str, str], int],
-    registers: dict[tuple[str, str], ResolvedRegister],
-    variants: dict[tuple[str, str, str], ResolvedVariant],
-    classifications: tuple[ResolvedClassification, ...],
-) -> dict[str, list[tuple[Any, ...]]]:
-    """Validate exact dependent references before any staged or live DB is touched."""
-    metadata = ResolvedMetadata.model_validate(metadata)
-    validate_metadata_structure(metadata)
-    rows: dict[str, list[tuple[Any, ...]]] = {name: [] for name in _COLUMNS}
-    if not any(getattr(metadata, name) for name in type(metadata).model_fields):
-        return rows
-    register_ids = {
-        "/".join(key): _storage_id(key[0], "register", key[1]) for key in registers
-    }
-    variable_ids = {
-        "/".join(key): variable_id for key, variable_id in variable_storage_ids.items()
-    }
-    variant_keys = {("/".join(key[:2]), key[2]) for key in variants}
-    classification_ids = {
-        item.slug: _classification_id(item.slug) for item in classifications
-    }
-    historical = {item.target: item for item in metadata.historical_predecessors}
-    for target, declaration in historical.items():
-        live = register_ids if declaration.kind == "register" else variable_ids
-        if target in live:
-            raise ValueError(
-                f"obsolete historical predecessor declaration now names a live entity: {target}"
-            )
-    representations = set()
-    states = {}
-    for variable in variables:
-        fqid = f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug}"
-        for state in variable.states:
-            key = (
-                fqid,
-                state.variant.slug,
-                state.valid_from
-                if state.valid_from is not None
-                else "year_independent",
-                state.value_set_version_label,
-            )
-            states[key] = state
-            representations.add((fqid, state.variant.slug, state.delivery_column_name))
-        for alias in variable.aliases:
-            representations.add((fqid, alias.variant.slug, alias.delivery_column_name))
-    literal_representation_columns = {
-        (variable, column) for variable, _, column in representations
-    }
-    # Groups enumerate literal delivered spellings; succession has a separate
-    # case-insensitive endpoint contract. Keep both indexes without merging facts.
-    representations = {
-        (variable, variant, column.lower())
-        for variable, variant, column in representations
-    }
-    representation_columns = {
-        (variable, column) for variable, _, column in representations
-    }
-
-    def require(mapping: Any, key: Any, label: str) -> Any:
-        if key not in mapping:
-            raise ValueError(f"unknown resolved {label}: {key!r}")
-        return mapping[key] if isinstance(mapping, dict) else key
-
-    def representation(variable: str, column: str, variant: str | None = None) -> None:
-        require(variable_ids, variable, "variable")
-        if (
-            (variable, column.lower()) not in representation_columns
-            if variant is None
-            else (variable, variant, column.lower()) not in representations
-        ):
-            raise ValueError(
-                f"unknown resolved representation: {variable}, {column}, {variant}"
-            )
-
-    def state_id(ref: ResolvedStateRef) -> int:
-        key = state_reference_key(ref)
-        state = require(states, key, "state")
-        if (state.valid_to, state.delivery_column_name, state.period_scope) != (
-            ref.valid_to,
-            ref.delivery_column_name,
-            ref.period_scope,
-        ):
-            raise ValueError(
-                "resolved state reference does not match its exact scope/column"
-            )
-        provider, register, variable = ref.variable.split("/")
-        return _storage_id(
-            provider,
-            "state",
-            register,
-            variable,
-            ref.variant,
-            key[2],
-            ref.value_set_version_label,
-        )
-
-    for group in (*metadata.variable_groups, *metadata.classification_groups):
-        is_variable = isinstance(group, ResolvedVariableGroup)
-        scope = group.register_ref if is_variable else ""
-        register_id = require(register_ids, scope, "register") if is_variable else None
-        kind = "variable" if is_variable else "classification"
-        group_id = mint("resolved-catalog", "group", kind, scope, group.key)
-        rows["concept_group"].append(
-            (group_id, kind, register_id, group.key, group.label, group.source)
-        )
-        rows["concept_group_axis"].extend(
-            (group_id, axis.axis, axis.ordinal, axis.label) for axis in group.axes
-        )
-        if isinstance(group, ResolvedVariableGroup):
-            for member in group.members:
-                variable_id = require(variable_ids, member.variable, "group variable")
-                if member.delivery_column_name is not None:
-                    require(
-                        literal_representation_columns,
-                        (member.variable, member.delivery_column_name),
-                        "group representation",
-                    )
-                member_id = mint(
-                    "resolved-catalog",
-                    "group-member",
-                    str(group_id),
-                    member.variable,
-                    member.delivery_column_name or "",
-                )
-                rows["concept_group_variable"].append(
-                    (member_id, group_id, variable_id, member.delivery_column_name)
-                )
-                rows["concept_group_variable_facet"].extend(
-                    (member_id, f.axis, f.value, f.label) for f in member.facets
-                )
-        else:
-            for member in group.members:
-                classification_id = require(
-                    classification_ids, member.classification, "group classification"
-                )
-                rows["concept_group_classification"].append(
-                    (
-                        classification_id,
-                        group_id,
-                        member.facet_value,
-                        member.facet_label,
-                    )
-                )
-    for tag in metadata.tags:
-        tag_id = mint("resolved-catalog", "tag", tag.slug)
-        rows["tag"].append((tag_id, tag.slug, tag.label))
-        for member in tag.members:
-            register_id = variable_id = None
-            if parse_fqid(member.target).kind == "register":
-                register_id = require(register_ids, member.target, "tag register")
-            else:
-                variable_id = require(variable_ids, member.target, "tag variable")
-            rows["tag_member"].append(
-                (
-                    tag_id,
-                    register_id,
-                    variable_id,
-                    member.rank,
-                    member.starred,
-                    member.note,
-                )
-            )
-    for edge in metadata.variable_same_as:
-        require(variable_ids, edge.a, "same_as variable")
-        require(variable_ids, edge.b, "same_as variable")
-        a, b = tuple(edge.a.split("/")), tuple(edge.b.split("/"))
-        rows["variable_same_as"].extend(((*a, *b), (*b, *a)))
-    for edge in metadata.successions:
-        kind = parse_fqid(edge.predecessor).kind
-        targets = register_ids if kind == "register" else variable_ids
-        table = "register_replaced_by" if kind == "register" else "variable_replaced_by"
-        if edge.predecessor not in targets:
-            require(historical, edge.predecessor, "succession predecessor")
-        require(targets, edge.successor, "succession successor")
-        # Only the variable grain stores `note`: validate_built_db selects the
-        # vintage-lift edges by it.
-        note = (edge.note,) if kind == "variable" else ()
-        rows[table].append(
-            (
-                *edge.predecessor.split("/"),
-                *edge.successor.split("/"),
-                edge.effective_year,
-                *note,
-                edge.description,
-            )
-        )
-    for edge in metadata.variant_successions:
-        a, b = edge.predecessor, edge.successor
-        for endpoint in (a, b):
-            require(
-                variant_keys,
-                (endpoint.register_ref, endpoint.variant),
-                "succession variant",
-            )
-        ka, kb = (
-            (*a.register_ref.split("/"), a.variant),
-            (*b.register_ref.split("/"), b.variant),
-        )
-        rows["variant_replaced_by"].append((*ka, *kb))
-    for edge in metadata.representation_successions:
-        a, b = edge.predecessor, edge.successor
-        for endpoint in (a, b):
-            representation(
-                endpoint.variable, endpoint.delivery_column_name, edge.variant
-            )
-        rows["representation_replaced_by"].append(
-            (
-                *a.variable.split("/"),
-                a.delivery_column_name,
-                *b.variable.split("/"),
-                b.delivery_column_name,
-                edge.variant or "",
-                edge.effective_year,
-                edge.note,
-                edge.description,
-            )
-        )
-    for edge in metadata.classification_derivations:
-        require(classification_ids, edge.derived, "derived classification")
-        require(classification_ids, edge.source, "source classification")
-        rows["classification_derived_from"].append(
-            (edge.derived, edge.source, edge.note)
-        )
-    for edge in metadata.state_lineage:
-        consumer, source = state_id(edge.consumer), state_id(edge.source)
-        rows["variable_state_lineage"].append(
-            (consumer, source, edge.valid_from, edge.valid_to)
-        )
-    for warning in metadata.lineage_warnings:
-        consumer = state_id(warning.consumer)
-        rows["variable_state_lineage_warning"].append(
-            (consumer, warning.kind, warning.message)
-        )
-    for relationship in metadata.documentary_relationships:
-        relationship = type(relationship).model_validate_json(
-            relationship.model_dump_json()
-        )
-        if isinstance(relationship, RetainedDocumentaryRelationship):
-            require(
-                register_ids, relationship.register_ref, "retained documentary register"
-            )
-        rows["source_relationship"].append(
-            (
-                relationship.relationship_id,
-                variable_ids[relationship.owner]
-                if isinstance(relationship, DocumentaryRelationship)
-                else None,
-                relationship.declaration.kind,
-                relationship.declaration.revision.dataset,
-                relationship.declaration.revision.revision_id,
-                relationship.declaration.model_dump_json(),
-                relationship.binding_status,
-                json.dumps(
-                    [u.model_dump(mode="json") for u in relationship.unresolved]
-                    if isinstance(relationship, DocumentaryRelationship)
-                    else [],
-                    ensure_ascii=False,
-                    separators=(",", ":"),
-                ),
-                relationship.provenance,
-            )
-        )
-    return rows
-
-
-def write_resolved_metadata(
-    conn: sqlite3.Connection, rows: dict[str, list[tuple[Any, ...]]]
-) -> None:
-    for table, columns in _COLUMNS.items():
-        placeholders = ",".join("?" for _ in columns.split(","))
-        conn.executemany(
-            f"INSERT INTO {table} ({columns}) VALUES ({placeholders})",
-            sorted(rows[table], key=lambda row: json.dumps(row, ensure_ascii=False)),
-        )

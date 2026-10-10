@@ -39,6 +39,7 @@ from _resolved_metadata_support import (
 )
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.errors import RegMetaError
+from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
     ResolvedAlias,
@@ -49,7 +50,6 @@ from reg_meta_build.resolved_catalog import (
     ResolvedEdition,
     ResolvedState,
     ResolvedVariable,
-    write_resolved_catalog,
 )
 from reg_meta_build.resolved_metadata import (
     ResolvedClassificationDerivation,

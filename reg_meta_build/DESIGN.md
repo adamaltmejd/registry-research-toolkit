@@ -48,7 +48,7 @@ Cleaning and input storage below describe step 1. Common curation describes step
 The maintained call path is `pipeline.build_catalog` →
 `prepared_catalog.open_prepared_catalog_sources` → `curation_compile.compile_curation` →
 `source_scope.resolve_source_scope` for each complete source/register scope → catalog
-dependency and lineage resolution → `resolved_catalog.write_resolved_catalog`.
+dependency and lineage resolution → `materialize.write_resolved_catalog`.
 
   | Step | Module family                                                                              | Role                                                                                              |
   | ---- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
@@ -61,7 +61,7 @@ dependency and lineage resolution → `resolved_catalog.write_resolved_catalog`.
   | 3    | `source_curation.py`, `source_effects.py`, `source_naming.py`                              | Applicability, original-evidence corrections and checked naming.                                  |
   | 3    | `source_annotations.py`, `source_representations.py`                                       | Checked aliases and parallel columns.                                                             |
   | 3    | `curation_tree.py`, `curation_compile.py`                                                  | Validate tracked entries and compile scoped decisions in memory.                                  |
-  | 4    | `resolved_catalog.py`, `resolved_metadata.py`, `db.py`                                     | Direct materialization, SQL schema, indexes and atomic publication.                               |
+  | 4    | `materialize.py`, `resolved_catalog.py`, `resolved_metadata.py`, `db.py`                   | Direct materialization, SQL schema, indexes and atomic publication.                               |
   | 4    | `validate.py`, `dbdiff.py`                                                                 | Structural/corpus verification and comparison.                                                    |
   | —    | `extend_db.py`, `sources/curated.py`, `ir/`                                                | Separate steward extension over a released global catalog.                                        |
   | —    | `doc_db.py`                                                                                | Document indexing; independent of source fact resolution.                                         |

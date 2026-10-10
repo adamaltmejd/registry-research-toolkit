@@ -20,6 +20,7 @@ from catalog_manifest import synthetic_manifest
 from reg_meta_build.cli import run
 from reg_meta_build.db import DB_FILENAME, publish_db
 from reg_meta_build.errors import EXIT_USAGE, RegMetaError
+from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.pipeline import (
     build_catalog,
     check_curation,
@@ -31,7 +32,6 @@ from reg_meta_build.resolved_catalog import (
     ResolvedEdition,
     ResolvedObjectType,
     ResolvedPopulation,
-    write_resolved_catalog,
 )
 
 # The checkout's tracked curation tree and its slug sibling, the defaults that

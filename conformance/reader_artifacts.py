@@ -21,13 +21,13 @@ from reg_meta_build.db import SCHEMA_VERSION, open_db
 from reg_meta_build.derive import derive_holdings
 from reg_meta_build.doc_db import DOC_DB_FILENAME, build_doc_db, load_related_documents
 from reg_meta_build.holdings_compile import compile_holdings
+from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.pipeline import load_search_pins  # tests skip private _curation
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
     ResolvedEdition,
     ResolvedVariable,
-    write_resolved_catalog,
 )
 from reg_meta_build.resolved_metadata import ResolvedMetadata
 from reg_meta_build.source_evidence import canonical_json, canonical_sha256

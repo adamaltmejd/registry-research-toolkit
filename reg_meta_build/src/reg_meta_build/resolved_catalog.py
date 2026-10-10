@@ -6,15 +6,10 @@ This writer only assigns storage IDs and builds the normal catalog database.
 
 from __future__ import annotations
 
-import json
-import sqlite3
 from collections import defaultdict
-from contextlib import closing
 from datetime import date
 from graphlib import CycleError, TopologicalSorter
 from itertools import combinations
-from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import (
@@ -25,52 +20,23 @@ from pydantic import (
 )
 
 from reg_meta_build._curation import (
-    SEARCH_PINS_FILE,
-    SearchPin,
     SentinelCode,
     curation_error,
-    resolve_register_id,
 )
 from reg_meta_build._resolved_common import (
-    _classification_id,
     _provider_id_for,
     _require_trimmed,
     _ResolvedDeliveryScope,
     _ResolvedModel,
     _ResolvedWindow,
-    _storage_id,
-)
-from reg_meta_build.artifact_identity import search_pins_sha256
-from reg_meta_build.data_warnings import write_data_warnings
-from reg_meta_build.db import (
-    DDL,
-    SCHEMA_VERSION,
-    _value_set_hash,
-    publish_db,
-    register_py_lower,
-    seed_providers,
-)
-from reg_meta_build.derive import derive
-from reg_meta_build.id import mint
-from reg_meta_build.resolved_metadata import (
-    ResolvedMetadata,
-    prepare_resolved_metadata,
-    write_resolved_metadata,
 )
 from reg_meta_build.slug_grammar import validate_slug
-from reg_meta_build.validate import column_state_overlap_failure, validate_built_db
 
-from .data_warnings import DataWarning  # noqa: TC001
-from .db import (
-    CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
-    CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
-    DB_FILENAME,
-    default_db_dir,
-)
+from .db import CLASSIFICATION_SUCCESSION_AS_OF_YEAR
 from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
-    from collections.abc import Collection, Iterable
+    from collections.abc import Collection
 
 CURATION_TREE_SHA256_KEY = "curation_tree_sha256"
 
@@ -641,6 +607,35 @@ def unresolved_variable_flags(variable: ResolvedVariable) -> tuple[str, ...]:
     )
 
 
+# The wording of the per-column window checks `validate_built_db` runs, by
+# diagnostic code. Formation reports the same failure before write
+# (`column_state_overlaps`).
+_COLUMN_STATE_OVERLAPS = {
+    "overlapping_distinct_value_sets": (
+        "overlapping distinct-value_set state pair(s)",
+        "a period resolves to >1 value set",
+    ),
+    "overlapping_codeless_codebearing_states": (
+        "code-less ↔ code-bearing overlapping state pair(s)",
+        "a code-less window overlaps a code-bearing window",
+    ),
+    "overlapping_pooled_explicit_states": (
+        "pooled ↔ explicit overlapping state pair(s)",
+        "a pooled window overlaps an explicit window",
+    ),
+}
+
+
+def column_state_overlap_failure(
+    code: str, pairs: int, columns: int, sample: str
+) -> str:
+    what, why = _COLUMN_STATE_OVERLAPS[code]
+    return (
+        f"{pairs} {what} on one column across {columns} (variable, column) — "
+        f"{why}: {sample}"
+    )
+
+
 # The conflicting pair of each per-column window check `validate_built_db` runs
 # on written states, by diagnostic code.
 _COLUMN_STATE_CONFLICTS = {
@@ -762,64 +757,6 @@ def validate_resolved_variables(
             variants[variant_key] = variant
 
     return variables, registers, variants
-
-
-def _write_value_sets(
-    conn: sqlite3.Connection,
-    variables: tuple[ResolvedVariable, ...],
-    classifications: tuple[ResolvedClassification, ...],
-) -> tuple[dict[ResolvedCodeSet, int], dict[tuple[str, str], int]]:
-    """Store content-shared memberships without provider or validity inference.
-
-    Returns the value-set IDs and the code IDs. `code_id` is dense in (label,
-    code) order, so codes with one label sit together on disk (#1296).
-    """
-    code_sets = sorted(
-        {
-            state.value_set
-            for variable in variables
-            for state in variable.states
-            if state.value_set is not None
-        }
-        | {
-            window.value_set
-            for variable in variables
-            for alias in variable.aliases
-            for window in alias.windows
-            if window.value_set is not None
-        },
-        key=lambda code_set: code_set.members,
-    )
-    pairs = {pair for code_set in code_sets for pair in code_set.members}
-    pairs.update(
-        (code.code, code.label)
-        for classification in classifications
-        for code in classification.codes
-    )
-    code_ids = {
-        pair: code_id
-        for code_id, pair in enumerate(
-            sorted(pairs, key=lambda pair: (pair[1], pair[0])), start=1
-        )
-    }
-    conn.executemany(
-        "INSERT INTO value_code (code_id, code, label) VALUES (?, ?, ?)",
-        ((code_id, *pair) for pair, code_id in code_ids.items()),
-    )
-    set_ids: dict[ResolvedCodeSet, int] = {}
-    for code_set in code_sets:
-        member_hash = _value_set_hash(list(code_set.members))
-        set_id = mint("resolved-catalog", "value-set", member_hash.hex())
-        conn.execute(
-            "INSERT INTO value_set (value_set_id, member_hash) VALUES (?, ?)",
-            (set_id, member_hash),
-        )
-        conn.executemany(
-            "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
-            ((set_id, code_ids[pair]) for pair in code_set.members),
-        )
-        set_ids[code_set] = set_id
-    return set_ids, code_ids
 
 
 def _validate_catalog_metadata(
@@ -984,637 +921,3 @@ def _prepare_classification_succession(
         ordered.extend(by_slug[slug] for slug in ready if slug in by_slug)
         graph.done(*ready)
     return tuple(ordered), predecessors
-
-
-def _write_editions(
-    conn: sqlite3.Connection, editions: tuple[ResolvedEdition, ...]
-) -> None:
-    for edition in sorted(
-        editions,
-        key=lambda e: (
-            e.register_ref.provider,
-            e.register_ref.slug,
-            e.variant.slug,
-            e.name,
-        ),
-    ):
-        register = edition.register_ref
-        edition_id = _storage_id(
-            register.provider,
-            "edition",
-            register.slug,
-            edition.variant.slug,
-            edition.name,
-        )
-        conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, "
-            "registerversionnamn, registerversionbeskrivning, registerversionmatinformation, "
-            "registerversion_docstaus, registerversion_forstagodkannandedatum, "
-            "registerversion_senastgodkanddatum) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (
-                edition_id,
-                _storage_id(
-                    register.provider, "variant", register.slug, edition.variant.slug
-                ),
-                edition.name,
-                edition.description,
-                edition.measurement_information,
-                edition.documentation_status,
-                edition.first_approved_at,
-                edition.last_approved_at,
-            ),
-        )
-        conn.executemany(
-            "INSERT INTO population (regver_id, name, definition, comment, date_range) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (
-                (
-                    edition_id,
-                    population.name,
-                    population.definition,
-                    population.comment,
-                    population.date_range,
-                )
-                for population in sorted(edition.populations, key=lambda p: p.name)
-            ),
-        )
-        conn.executemany(
-            "INSERT INTO object_type (regver_id, name, definition) VALUES (?, ?, ?)",
-            (
-                (edition_id, item.name, item.definition)
-                for item in sorted(edition.object_types, key=lambda item: item.name)
-            ),
-        )
-
-
-def _write_classifications(
-    conn: sqlite3.Connection,
-    classifications: tuple[ResolvedClassification, ...],
-    predecessors: dict[str, str],
-    code_ids: dict[tuple[str, str], int],
-) -> None:
-    for classification in classifications:
-        classification_id = _classification_id(classification.slug)
-        conn.execute(
-            "INSERT INTO classification (id, short_name, name, name_en, publisher, valid_from, "
-            "valid_to, description, url, supersedes_id, code_count, valid_code_count, slug) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (
-                classification_id,
-                classification.short_name,
-                classification.name,
-                classification.name_en,
-                classification.publisher,
-                classification.valid_from,
-                classification.valid_to,
-                classification.description,
-                classification.url,
-                _classification_id(predecessors[classification.slug])
-                if classification.slug in predecessors
-                else None,
-                len(classification.codes),
-                len({code.code for code in classification.codes}),
-                classification.slug,
-            ),
-        )
-        conn.executemany(
-            "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
-            "VALUES (?, ?, ?, 1)",
-            (
-                (classification_id, code_ids[code.code, code.label], code.level)
-                for code in sorted(
-                    classification.codes, key=lambda c: (c.code, c.label)
-                )
-            ),
-        )
-
-
-def _write_conformance(
-    conn: sqlite3.Connection,
-    state_id: int,
-    conformance: ResolvedConformance,
-    classification: ResolvedClassification,
-    code_ids: dict[tuple[str, str], int],
-) -> None:
-    checked = len(conformance.checked_codes)
-    extensions = set(conformance.nonconforming_members) | set(
-        conformance.sentinel_members
-    )
-    nonconforming = len({code for code, _ in extensions})
-    matched = checked - nonconforming
-    sentinel_pairs = set(conformance.sentinel_members)
-    sentinel_meanings = {
-        sentinel.code: sentinel.meaning for sentinel in classification.sentinel_codes
-    }
-    conn.execute(
-        "INSERT INTO classification_conformance (state_id, declared_classification_id, status, "
-        "checked_code_count, matched_code_count, nonconforming_code_count, overlap) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?)",
-        (
-            state_id,
-            _classification_id(conformance.declared_classification),
-            conformance.status,
-            checked,
-            matched,
-            nonconforming,
-            matched / checked if checked else 1.0,
-        ),
-    )
-    conn.executemany(
-        "INSERT INTO classification_conformance_code "
-        "(state_id, declared_classification_id, code_id, member_kind, sentinel_meaning, scoped_sentinels) "
-        "VALUES (?, ?, ?, ?, ?, ?)",
-        (
-            (
-                state_id,
-                _classification_id(conformance.declared_classification),
-                code_ids[pair],
-                "sentinel" if pair in sentinel_pairs else "nonstandard",
-                sentinel_meanings.get(pair[0]) if pair in sentinel_pairs else None,
-                json.dumps(
-                    [
-                        certificate.model_dump(mode="json")
-                        for certificate in conformance.scoped_sentinels
-                        if pair in certificate.members
-                    ],
-                    sort_keys=True,
-                    separators=(",", ":"),
-                ),
-            )
-            for pair in sorted(extensions)
-        ),
-    )
-
-
-def _write_search_pins(
-    conn: sqlite3.Connection,
-    search_pins: tuple[SearchPin, ...],
-    rows: Iterable[tuple[str, str, int, str]],
-) -> None:
-    """Store `rows`, the pins' rows, after their registers and classifications; a
-    pin that does not resolve fails the build, located by entry and FQID."""
-    for index, pin in enumerate(search_pins, start=1):
-        for fqid in pin.fqids:
-            if pin.type == "register":
-                provider, register = fqid.split("/")
-                resolves = resolve_register_id(conn, provider, register) is not None
-            else:
-                resolves = (
-                    conn.execute(
-                        "SELECT 1 FROM classification WHERE slug = ?",
-                        (fqid.removeprefix("class/"),),
-                    ).fetchone()
-                    is not None
-                )
-            if not resolves:
-                raise curation_error(
-                    "search_pin_unresolved",
-                    f"{SEARCH_PINS_FILE} [[pin]] entry {index}: {fqid} does not "
-                    f"resolve to a {pin.type} in this catalog.",
-                    "Fix the FQID or drop it from the pin.",
-                )
-    conn.executemany(
-        "INSERT INTO search_pin (key, type, position, entity) VALUES (?, ?, ?, ?)",
-        rows,
-    )
-
-
-def write_resolved_catalog(
-    variables: tuple[ResolvedVariable, ...],
-    output: Path,
-    *,
-    manifest: dict[str, str],
-    diagnostic: bool = False,
-    scoped: bool = False,
-    corpus: bool = False,
-    parent_registers: tuple[ResolvedRegister, ...] = (),
-    parent_variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...] = (),
-    editions: tuple[ResolvedEdition, ...] = (),
-    classifications: tuple[ResolvedClassification, ...] = (),
-    classification_successions: tuple[ResolvedClassificationSuccession, ...] = (),
-    metadata: ResolvedMetadata | None = None,
-    data_warnings: tuple[DataWarning, ...] = (),
-    search_pins: tuple[SearchPin, ...] = (),
-) -> Path:
-    """Validate and atomically place a strict catalog or create-only diagnostic.
-
-    No time, source precedence, slug derivation, or state coalescing is inferred.
-    The caller supplies reproducible manifest values; schema-owned keys are fixed.
-    Both modes run the same contract and structural checks. Diagnostic and
-    register-scoped artifacts are marked incomplete/nonpublishable and can never
-    replace an existing file.
-    Independently resolved registers and (register, variant) pairs remain present
-    even when their variable states are withheld. Shared definitions must agree.
-    The complete pipeline additionally requires corpus safeguards before strict
-    publication; partial writer fixtures leave those volume expectations disabled.
-    Only a complete catalog stores `search_pins`, each of which must resolve; a
-    partial one stores none.
-    """
-    diagnostic = TypeAdapter(bool).validate_python(diagnostic, strict=True)
-    partial = diagnostic or TypeAdapter(bool).validate_python(scoped, strict=True)
-    variables, registers, variants = validate_resolved_variables(
-        variables, allow_empty=diagnostic
-    )
-    parent_registers = TypeAdapter(tuple[ResolvedRegister, ...]).validate_python(
-        parent_registers, strict=True
-    )
-    parent_variants = TypeAdapter(
-        tuple[tuple[ResolvedRegister, ResolvedVariant], ...]
-    ).validate_python(parent_variants, strict=True)
-    for register in (*parent_registers, *(r for r, _ in parent_variants)):
-        key = register.provider, register.slug
-        _provider_id_for(register.provider)
-        if key in registers and registers[key] != register:
-            raise ValueError(f"inconsistent resolved parent register: {key!r}")
-        registers[key] = register
-    for register, variant in parent_variants:
-        key = register.provider, register.slug, variant.slug
-        if key in variants and variants[key] != variant:
-            raise ValueError(f"inconsistent resolved parent variant: {key!r}")
-        variants[key] = variant
-    editions = TypeAdapter(tuple[ResolvedEdition, ...]).validate_python(
-        editions, strict=True
-    )
-    classifications = TypeAdapter(tuple[ResolvedClassification, ...]).validate_python(
-        classifications, strict=True
-    )
-    _validate_catalog_metadata(
-        variables, editions, classifications, registers, variants
-    )
-    classification_successions = TypeAdapter(
-        tuple[ResolvedClassificationSuccession, ...]
-    ).validate_python(classification_successions, strict=True)
-    classifications, classification_predecessors = _prepare_classification_succession(
-        classifications, classification_successions
-    )
-    # Internal and dense (1..n) in (provider, register, slug) order, so a
-    # register's variables and their states share pages (#1296 2b). Readers
-    # never order or break ties on it.
-    variable_ids = {
-        key: variable_id
-        for variable_id, key in enumerate(
-            sorted(
-                (v.register_ref.provider, v.register_ref.slug, v.slug)
-                for v in variables
-            ),
-            start=1,
-        )
-    }
-    metadata_rows = prepare_resolved_metadata(
-        ResolvedMetadata() if metadata is None else metadata,
-        variables,
-        variable_ids,
-        registers,
-        variants,
-        classifications,
-    )
-    search_pins = TypeAdapter(tuple[SearchPin, ...]).validate_python(
-        () if partial else search_pins
-    )
-    pin_rows = [
-        (pin.key, pin.type, position, fqid)
-        for pin in search_pins
-        for position, fqid in enumerate(pin.fqids)
-    ]
-    import_metadata = TypeAdapter(dict[str, str]).validate_python(manifest, strict=True)
-    for key in (CURATION_TREE_SHA256_KEY,):
-        if (value := import_metadata.get(key)) is not None and (
-            len(value) != 64 or any(char not in "0123456789abcdef" for char in value)
-        ):
-            raise ValueError(f"manifest {key} must be a lowercase SHA-256 digest")
-    for key, value in {
-        "schema_version": SCHEMA_VERSION,
-        "catalog_artifact_kind": "diagnostic" if diagnostic else "catalog",
-        "catalog_publishable": "false" if partial else "true",
-        "catalog_completeness": "incomplete" if partial else "complete",
-        CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY: str(
-            CLASSIFICATION_SUCCESSION_AS_OF_YEAR
-        ),
-        "search_pins_sha256": search_pins_sha256(pin_rows),
-    }.items():
-        if key in import_metadata and import_metadata[key] != value:
-            raise ValueError(
-                f"manifest conflicts with catalog {key}: {import_metadata[key]!r}"
-            )
-        import_metadata[key] = value
-
-    captured_revision = None
-    if partial:
-        import_metadata.pop("builder_commit", None)
-        import_metadata.pop("generation_id", None)
-    else:
-        from .artifact_identity import builder_commit, generation_id
-
-        if corpus or "builder_commit" not in import_metadata:
-            revision = builder_commit()
-            if "builder_commit" not in import_metadata:
-                captured_revision = revision
-                import_metadata["builder_commit"] = revision
-        expected_generation = generation_id(import_metadata)
-        if (
-            "generation_id" in import_metadata
-            and import_metadata["generation_id"] != expected_generation
-        ):
-            raise ValueError(
-                "manifest generation_id conflicts with canonical semantic inputs"
-            )
-        import_metadata["generation_id"] = expected_generation
-
-    output = Path(output)
-    # An existing destination needs no check here: the create-only hardlink below
-    # refuses any existing path. The active catalog path may not exist yet, so it
-    # is refused explicitly.
-    if partial and output.resolve() == (default_db_dir() / DB_FILENAME).resolve():
-        raise ValueError(
-            "diagnostic or register-scoped output must be a new explicit path separate from the active catalog"
-        )
-    output.parent.mkdir(parents=True, exist_ok=True)
-    with TemporaryDirectory(prefix=f".{output.name}.", dir=output.parent) as temporary:
-        staged = Path(temporary) / output.name
-        with closing(sqlite3.connect(staged)) as conn:
-            conn.execute("PRAGMA foreign_keys = ON")
-            register_py_lower(conn)
-            conn.executescript(DDL)
-            seed_providers(conn)
-            value_set_ids, code_ids = _write_value_sets(
-                conn, variables, classifications
-            )
-            _write_classifications(
-                conn, classifications, classification_predecessors, code_ids
-            )
-            classifications_by_slug = {book.slug: book for book in classifications}
-            conn.executemany(
-                "INSERT INTO classification_replaced_by "
-                "(predecessor_slug, successor_slug, effective_year, note) VALUES (?, ?, ?, ?)",
-                (
-                    (edge.predecessor, edge.successor, edge.effective_year, edge.note)
-                    for edge in sorted(
-                        classification_successions,
-                        key=lambda edge: (edge.predecessor, edge.successor),
-                    )
-                ),
-            )
-            for (provider, slug), register in sorted(registers.items()):
-                conn.execute(
-                    "INSERT INTO register (register_id, provider_id, name, slug, purpose) "
-                    "VALUES (?, ?, ?, ?, ?)",
-                    (
-                        _storage_id(provider, "register", slug),
-                        _provider_id_for(provider),
-                        register.name,
-                        slug,
-                        register.purpose,
-                    ),
-                )
-            for (provider, register_slug, slug), variant in sorted(variants.items()):
-                conn.execute(
-                    "INSERT INTO register_variant "
-                    "(register_variant_id, register_id, name, slug, description, display_group, "
-                    "panel_entity_key, panel_time_key, panel_time_grain) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    (
-                        _storage_id(provider, "variant", register_slug, slug),
-                        _storage_id(provider, "register", register_slug),
-                        variant.name,
-                        slug,
-                        variant.description,
-                        variant.display_group,
-                        json.dumps(variant.panel_entity_key)
-                        if isinstance(variant.panel_entity_key, tuple)
-                        else variant.panel_entity_key,
-                        json.dumps(variant.panel_time_key)
-                        if isinstance(variant.panel_time_key, tuple)
-                        else variant.panel_time_key,
-                        variant.panel_time_grain,
-                    ),
-                )
-            _write_editions(conn, editions)
-            for variable in sorted(
-                variables,
-                key=lambda v: (v.register_ref.provider, v.register_ref.slug, v.slug),
-            ):
-                provider, register_slug = (
-                    variable.register_ref.provider,
-                    variable.register_ref.slug,
-                )
-                variable_id = variable_ids[provider, register_slug, variable.slug]
-                conn.execute(
-                    "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
-                    "name, definition, description, operational_definition, measurement_unit, "
-                    "is_sensitive, is_identifier, deprecated, source_register_id, source_register_text, "
-                    "source_label) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    (
-                        variable_id,
-                        _storage_id(provider, "register", register_slug),
-                        variable.provider_key,
-                        variable.slug,
-                        variable.name,
-                        variable.definition,
-                        variable.description,
-                        variable.operational_definition,
-                        variable.measurement_unit,
-                        variable.is_sensitive,
-                        variable.is_identifier,
-                        variable.deprecated,
-                        _storage_id(
-                            variable.source_register.provider,
-                            "register",
-                            variable.source_register.slug,
-                        )
-                        if variable.source_register is not None
-                        else None,
-                        variable.source_register_text,
-                        variable.source_label,
-                    ),
-                )
-                for state in sorted(
-                    variable.states,
-                    key=lambda s: (
-                        s.variant.slug,
-                        s.period_scope,
-                        s.valid_from or "",
-                        s.value_set_version_label,
-                    ),
-                ):
-                    variant_id = _storage_id(
-                        provider, "variant", register_slug, state.variant.slug
-                    )
-                    state_coordinate = (
-                        state.valid_from
-                        if state.period_scope == "intervals"
-                        else "year_independent"
-                    )
-                    assert state_coordinate is not None
-                    state_id = _storage_id(
-                        provider,
-                        "state",
-                        register_slug,
-                        variable.slug,
-                        state.variant.slug,
-                        state_coordinate,
-                        state.value_set_version_label,
-                    )
-                    conn.execute(
-                        "INSERT INTO variable_state (state_id, variable_id, "
-                        "register_variant_id, valid_from, valid_to, delivery_column_name, "
-                        "data_type, data_length, operational_definition, provenance, pooled, "
-                        "value_set_id, value_set_version_label, source_register_text, period_scope, definition, measurement_unit, name, description) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        (
-                            state_id,
-                            variable_id,
-                            variant_id,
-                            state.valid_from,
-                            state.valid_to,
-                            state.delivery_column_name,
-                            state.data_type,
-                            state.data_length,
-                            state.operational_definition,
-                            state.provenance,
-                            int(state.pooled),
-                            value_set_ids[state.value_set]
-                            if state.value_set is not None
-                            else None,
-                            state.value_set_version_label,
-                            state.source_register_text,
-                            state.period_scope,
-                            state.definition,
-                            state.measurement_unit,
-                            state.name,
-                            state.description,
-                        ),
-                    )
-                    for link in state.classification_links:
-                        conn.execute(
-                            "INSERT INTO state_classification (state_id, classification_id, provenance) VALUES (?, ?, ?)",
-                            (
-                                state_id,
-                                _classification_id(link.classification),
-                                link.provenance,
-                            ),
-                        )
-                        if link.conformance is not None:
-                            _write_conformance(
-                                conn,
-                                state_id,
-                                link.conformance,
-                                classifications_by_slug[link.classification],
-                                code_ids,
-                            )
-                    conn.execute(
-                        "INSERT OR IGNORE INTO variable_alias "
-                        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, ?, ?)",
-                        (variable_id, variant_id, state.delivery_column_name),
-                    )
-                for alias in sorted(
-                    variable.aliases,
-                    key=lambda a: (a.variant.slug, a.delivery_column_name),
-                ):
-                    variant_id = _storage_id(
-                        provider, "variant", register_slug, alias.variant.slug
-                    )
-                    conn.execute(
-                        "INSERT OR IGNORE INTO variable_alias "
-                        "(variable_id, register_variant_id, delivery_column_name) VALUES (?, ?, ?)",
-                        (variable_id, variant_id, alias.delivery_column_name),
-                    )
-                    conn.executemany(
-                        "INSERT INTO variable_alias_window "
-                        "(variable_id, register_variant_id, delivery_column_name, valid_from, valid_to, provenance, column_metadata, data_type, data_length, operational_definition, source_register_text, coding_metadata, value_set_id, value_set_version_label, definition, measurement_unit, name, description) "
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                        (
-                            (
-                                variable_id,
-                                variant_id,
-                                alias.delivery_column_name,
-                                window.valid_from,
-                                window.valid_to,
-                                window.provenance,
-                                window.column_metadata,
-                                window.data_type,
-                                window.data_length,
-                                window.operational_definition,
-                                window.source_register_text,
-                                window.coding_metadata,
-                                value_set_ids[window.value_set]
-                                if window.value_set is not None
-                                else None,
-                                window.value_set_version_label,
-                                window.definition,
-                                window.measurement_unit,
-                                window.name,
-                                window.description,
-                            )
-                            for window in sorted(
-                                alias.windows, key=lambda w: w.valid_from
-                            )
-                        ),
-                    )
-                    for window in sorted(alias.windows, key=lambda w: w.valid_from):
-                        for link in window.classification_links:
-                            conn.execute(
-                                "INSERT INTO alias_window_classification "
-                                "(variable_id, register_variant_id, delivery_column_name, valid_from, classification_id, provenance, conformance) "
-                                "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                                (
-                                    variable_id,
-                                    variant_id,
-                                    alias.delivery_column_name,
-                                    window.valid_from,
-                                    _classification_id(link.classification),
-                                    link.provenance,
-                                    link.conformance.model_dump_json()
-                                    if link.conformance is not None
-                                    else None,
-                                ),
-                            )
-            _write_search_pins(conn, search_pins, pin_rows)
-            write_data_warnings(conn, data_warnings)
-            write_resolved_metadata(conn, metadata_rows)
-            conn.execute(
-                "INSERT INTO code_variable_map (code_id, variable_id) "
-                "SELECT DISTINCT member.code_id, state.variable_id "
-                "FROM variable_state state JOIN value_set_member member "
-                "ON state.value_set_id = member.value_set_id "
-                "UNION SELECT DISTINCT member.code_id, alias.variable_id "
-                "FROM variable_alias_window alias JOIN value_set_member member "
-                "ON alias.value_set_id = member.value_set_id"
-            )
-            conn.execute(
-                "UPDATE value_code SET mapping_count = ("
-                "SELECT COUNT(*) FROM code_variable_map "
-                "WHERE code_id = value_code.code_id)"
-            )
-            conn.executemany(
-                "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
-                sorted(import_metadata.items()),
-            )
-            for table in (
-                "variable_alias_build",
-                "variable_instance",
-                "classification_candidate",
-                "unika_summary",
-            ):
-                conn.execute(f"DROP TABLE {table}")
-            conn.commit()
-            derive(conn)
-            # Last write: readers plan with these statistics. ANALYZE is a pure
-            # function of the table contents, so rebuilds stay byte-identical.
-            conn.execute("ANALYZE")
-            conn.commit()
-            conn.execute("VACUUM")
-        validation = validate_built_db(staged, corpus=corpus)
-        if not validation.passed:
-            raise ValueError(
-                "resolved catalog validation failed: " + "; ".join(validation.failures)
-            )
-        if partial:
-            # Create-only placement is atomic and cannot clobber a normal catalog
-            # even if another process creates the destination during the build.
-            output.hardlink_to(staged)
-        else:
-            if (corpus or captured_revision is not None) and (
-                builder_commit() != import_metadata["builder_commit"]
-            ):
-                raise ValueError("Builder revision changed during compilation")
-            publish_db(staged, output)
-    return output

@@ -13,11 +13,11 @@ from reg_meta_build.catalog_dependencies import (
 )
 from reg_meta_build.concept_groups import CodeLabelPair
 from reg_meta_build.db import open_built_db
+from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_catalog import (
     ResolvedCodeSet,
     ResolvedRegister,
     ResolvedVariant,
-    write_resolved_catalog,
 )
 from reg_meta_build.resolved_metadata import (
     ResolvedGroupVariable,

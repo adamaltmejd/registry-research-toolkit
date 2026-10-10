@@ -11,7 +11,7 @@ from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.catalog_resolution import resolve_parents
 from reg_meta_build.db import open_built_db
-from reg_meta_build.resolved_catalog import write_resolved_catalog
+from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.source_coding import resolve_code_membership
 from reg_meta_build.source_coordinates import (
     native_column_key,

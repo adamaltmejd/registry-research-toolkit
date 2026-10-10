@@ -24,7 +24,8 @@ from catalog_manifest import synthetic_manifest
 from reg_meta_build.errors import EXIT_CONFIG
 from reg_meta_build.extend_db import read_private_holdings_input
 from reg_meta_build.holdings_compile import compile_holdings
-from reg_meta_build.resolved_catalog import ResolvedVariable, write_resolved_catalog
+from reg_meta_build.materialize import write_resolved_catalog
+from reg_meta_build.resolved_catalog import ResolvedVariable
 
 import reg_meta_build
 
