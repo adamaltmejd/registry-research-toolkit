@@ -1,0 +1,97 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "fields": ["register", "variable", "is_identifier", "is_sensitive"],
+      "note": "Every published variable and its flags. Withheld: incomplete/old and /new, shared/first and /second, conflicting/old and /new, unlisted/old, undeclared/id.",
+      "rows": [
+        ["literal", "value", 1, 1],
+        ["renumbered", "old", 0, 0],
+        ["renumbered", "new", 1, 0],
+        ["unlisted", "new", 1, 0],
+        ["ratchet", "value", 0, 1],
+        ["unsensitive", "value", 0, 0],
+        ["conditional", "value", 0, 1],
+        ["identified-a", "id", 1, 0],
+        ["identified-b", "id", 1, 0],
+        ["keyless", "value", 0, 0]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unresolved_flag"},
+      "fields": ["subject", "fields"],
+      "note": "A variable no summary row binds has neither flag; conflicting/old has its sensitivity and loses only the conflicting identifier; undeclared has no identifier declaration.",
+      "rows": [
+        ["scb/incomplete/old", ["is_sensitive", "is_identifier"]],
+        ["scb/incomplete/new", ["is_sensitive", "is_identifier"]],
+        ["scb/shared/first", ["is_sensitive", "is_identifier"]],
+        ["scb/shared/second", ["is_sensitive", "is_identifier"]],
+        ["scb/unlisted/old", ["is_sensitive", "is_identifier"]],
+        ["scb/conflicting/old", ["is_identifier"]],
+        ["scb/conflicting/new", ["is_sensitive", "is_identifier"]],
+        ["scb/undeclared/id", ["is_identifier"]]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": [
+          "ambiguous_support_target",
+          "unknown_support_key",
+          "unreferenced_support_record"
+        ]
+      },
+      "fields": ["code", "severity", "source"],
+      "note": "Every support issue, one row per summary row it cites: incomplete's two rows, shared's one, unlisted's 1997|1999, keyless's blank-column and ABSENT rows. literal, renumbered and conflicting bind every row, so they have none.",
+      "rows": [
+        ["ambiguous_support_target", "error", "scb-unikaregisterochvariabler"],
+        ["ambiguous_support_target", "error", "scb-unikaregisterochvariabler"],
+        ["ambiguous_support_target", "error", "scb-unikaregisterochvariabler"],
+        ["ambiguous_support_target", "error", "scb-unikaregisterochvariabler"],
+        ["unknown_support_key", "error", "scb-unikaregisterochvariabler"],
+        ["unreferenced_support_record", "warning", "scb-unikaregisterochvariabler"]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "ambiguous_support_target",
+        "subject": {"contains": "'AMBREG'"}
+      },
+      "fields": ["severity"],
+      "note": "incomplete: one issue cites both rows.",
+      "rows": [["error"], ["error"]]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "ambiguous_support_target",
+        "subject": {"contains": "'BOTHREG'"}
+      },
+      "fields": ["severity"],
+      "rows": [["error"]]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "ambiguous_support_target",
+        "subject": {"contains": "'UNLREG'"}
+      },
+      "fields": ["severity"],
+      "note": "unlisted: only the 1997|1999 row; the 2003|2003 row binds unlisted/new, which is an identifier.",
+      "rows": [["error"]]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": ["unknown_support_key", "unreferenced_support_record"],
+        "subject": {"contains": "'UNKREG'"}
+      },
+      "fields": ["code", "severity"],
+      "note": "The ABSENT row names its register in the issue subject; the key-less row has no key to name.",
+      "rows": [["unreferenced_support_record", "warning"]]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "fields": ["register", "variable", "is_identifier", "is_sensitive"],
+      "rows": {"step": "1-source-order"}
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unresolved_flag"},
+      "fields": ["subject", "fields"],
+      "rows": {"step": "1-source-order"}
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": [
+          "ambiguous_support_target",
+          "unknown_support_key",
+          "unreferenced_support_record"
+        ]
+      },
+      "fields": ["code", "severity", "ref"],
+      "note": "The same summary rows behind the same issues: a row's ref is its semantic key, which does not depend on its position.",
+      "rows": {"step": "1-source-order"}
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": "ambiguous_support_target",
+        "subject": {"contains": "'UNLREG'"}
+      },
+      "fields": ["ref"],
+      "rows": {"step": "1-source-order"}
+    }
+  ]
+}

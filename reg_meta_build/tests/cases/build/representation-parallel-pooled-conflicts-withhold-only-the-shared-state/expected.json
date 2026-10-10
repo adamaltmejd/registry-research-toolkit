@@ -23,6 +23,20 @@
       ]
     },
     {
+      "table": "issues",
+      "where": {
+        "code": {
+          "contains": "unexplained_delivery"
+        }
+      },
+      "fields": [
+        "code",
+        "subject"
+      ],
+      "rows": [],
+      "note": "Nulling the disputed fact and coding is an explained outcome, not a lost or changed delivery."
+    },
+    {
       "table": "states",
       "where": {
         "variable": "income"

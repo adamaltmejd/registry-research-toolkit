@@ -1,0 +1,48 @@
+[register]
+provider = "scb"
+slug = "partial"
+native_id = "7"
+[[variant]]
+native_id = "7.70"
+slug = "people"
+[[variable]]
+native_id = "7.7"
+slug = "income"
+[[identity.partition]]
+variable = "7.7"
+columns = { First = "7.7", Second = "7.7" }
+columns_ref = "reviewed parallel source-native quantity"
+[[representation.parallel]]
+variable = "7.7"
+variant = "7.70"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Reviewed parallel columns"
+noted = "2026-10-10"
+[[representation.parallel.columns]]
+column = "First"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020-2022"]
+[[representation.parallel.columns]]
+column = "Second"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022-01 - 2022-06", "2022-07 - 2024-12"]
+[[representation.parallel]]
+variable = "7.7"
+variant = "7.70"
+valid_from = "2022-07-01"
+valid_to = "2022-12-31"
+evidence = "Competing finite interpretation"
+noted = "2026-10-10"
+[[representation.parallel.columns]]
+column = "First"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020-2022"]
+[[representation.parallel.columns]]
+column = "Second"
+valid_from = "2022-07-01"
+valid_to = "2024-12-31"
+source_editions = ["2022-07 - 2024-12"]
