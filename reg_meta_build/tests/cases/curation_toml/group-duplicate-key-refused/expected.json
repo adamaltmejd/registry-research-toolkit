@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "Two [[group]] tables of one register share the key family but differ in label and members, so the exact-repeat refusal does not catch them. Before the load refusal the build compiled both and failed unlocated (pipeline_build_failed) on 'duplicate resolved variable group key'.",
+  "fails_if": "the register loader stops treating a [[group]] key as a unique target of its register file, so a second group under the key family loads",
+  "error": {
+    "code": "register_duplicate_entry",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 2",
+    "message_contains": [
+      "duplicate group key 'family'"
+    ]
+  }
+}

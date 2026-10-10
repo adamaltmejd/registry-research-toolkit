@@ -53,7 +53,7 @@ from .fqid_slugs import (
 )
 from .normalization import normalize_text
 from .relations import load_relations
-from .resolved_metadata import _variable
+from .resolved_metadata import ResolvedVariableGroup, _variable
 from .slug_grammar import validate_slug
 from .source_curation import (
     CodeLabelEquivalence,
@@ -902,6 +902,50 @@ class RegisterGroupEntry(_CurationModel):
     members: list[GroupMember]
 
     _names = field_validator("key", "label")(_require_trimmed)
+
+    def resolved(self) -> ResolvedVariableGroup:
+        """This group as the build writes it. The register loader validates it here
+        so a malformed group refuses with its file and entry."""
+        if self.axes is not None:
+            axes = tuple(
+                {"axis": axis.axis, "ordinal": i, "label": axis.label}
+                for i, axis in enumerate(self.axes)
+            )
+        elif self.axis is not None:
+            axes = ({"axis": self.axis, "ordinal": 0, "label": self.axis},)
+        else:
+            axes = ()
+        members = []
+        for member in self.members:
+            if member.coords is not None:
+                facets = tuple(coord.model_dump() for coord in member.coords)
+            elif len(axes) == 1 and member.value is not None:
+                facets = (
+                    {
+                        "axis": axes[0]["axis"],
+                        "value": member.value,
+                        "label": member.label,
+                    },
+                )
+            else:
+                facets = ()
+            members.append(
+                {
+                    "variable": f"{self.register_fqid}/{member.variable}",
+                    "delivery_column_name": member.delivery_column,
+                    "facets": facets,
+                }
+            )
+        return ResolvedVariableGroup.model_validate(
+            {
+                "register": self.register_fqid,
+                "key": self.key,
+                "label": self.label,
+                "source": "curated",
+                "axes": axes,
+                "members": tuple(members),
+            }
+        )
 
 
 class CodeLabelPairEntry(_CurationModel):
@@ -2471,6 +2515,12 @@ _UNIQUE_TARGETS: tuple[tuple[type, Callable[[Any], object], str, str], ...] = (
         "partition map for family",
         "Keep one ownership map per native family.",
     ),
+    (
+        RegisterGroupEntry,
+        lambda row: row.key,
+        "group key",
+        "Keep each [[group]] key once per register.",
+    ),
 )
 
 
@@ -2545,6 +2595,36 @@ def _load_register_file(path: Path, directory: Path) -> RegisterCuration:
                         remediation,
                     )
                 targets.add(target)
+    # A variable belongs to at most one concept group. Every member of a group is
+    # in the group's own register, so one file holds all its claims.
+    group_owners: dict[str, str] = {}
+    for index, group in enumerate(entry.group, start=1):
+        try:
+            group.resolved()
+        except ValidationError as exc:
+            error = exc.errors(include_url=False)[0]
+            field = "".join(
+                f"[{part + 1}]" if isinstance(part, int) else f".{part}"
+                for part in error["loc"]
+            ).lstrip(".")
+            raise curation_error(
+                _REGISTER_INVALID,
+                f"{file} [[group]] entry {index}: group {group.key!r}"
+                f"{f' {field}' if field else ''}: {error['msg']}.",
+                "List at least two distinct members of this register, each with "
+                "one facet per declared axis, naming a variable either whole or "
+                "by delivery column, not both.",
+            ) from exc
+        for variable in dict.fromkeys(member.variable for member in group.members):
+            owner = group_owners.setdefault(variable, group.key)
+            if owner != group.key:
+                raise curation_error(
+                    _REGISTER_DUPLICATE_ENTRY,
+                    f"{file} [[group]] entry {index}: variable {variable!r} of "
+                    f"group {group.key!r} already belongs to group {owner!r}.",
+                    "List each variable in one [[group]]; a variable belongs to "
+                    "at most one concept group.",
+                )
     return entry
 
 

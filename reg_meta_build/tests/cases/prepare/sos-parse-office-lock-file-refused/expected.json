@@ -4,7 +4,7 @@
   "fails_if": "the SOS parser reads an Office lock file (~$ name) as a register workbook, or refuses it only because its bytes are unreadable",
   "note": "The hardest form: the old test named a missing path, which a missing-file check refuses anyway; here the bytes are a valid workbook, so only the name check refuses it.",
   "error": {
-    "code": "sos_parse_error",
+    "code": "source_file_unreadable",
     "type": "SosParseError",
     "locator": "~$Metadata Patientregistret (PAR)_webb.xlsx",
     "message_contains": ["is an Office lock file"]

@@ -1,0 +1,14 @@
+{
+  "note": "Allowed twin of step 1: the same source and the same ambiguous `1.5.kon`, with variable 6 pinned `sex` instead. Distinct slugs never collide, so `sex` publishes and family 5 alone stays withheld.",
+  "fails_if": "`refuse_slug_collisions` (source_naming.py) groups names by register or native family instead of by slug, so variable 6 is refused beside an ambiguous name it does not share a slug with",
+  "sources": {
+    "description": "Variable 5 delivers Kon (CVID 20) and KON (CVID 21) together in 2020; variable 6 delivers SEX (CVID 22) in 2020.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "Kon", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {"colname": "KON", "cvid": 21, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {"colname": "SEX", "cvid": 22, "var_id": 6, "year": "2020", "regver_id": 2020}
+      ]
+    }
+  }
+}

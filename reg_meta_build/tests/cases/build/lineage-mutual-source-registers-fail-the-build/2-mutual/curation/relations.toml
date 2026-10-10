@@ -1,0 +1,4 @@
+[[edge]]
+type = "same_as"
+a = "scb/alpha/value"
+b = "scb/beta/value"

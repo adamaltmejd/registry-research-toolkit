@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from openpyxl import load_workbook
 
 from reg_meta_build.db import EXPECTED_HEADERS, _open_scb_csv_prepared
+from reg_meta_build.errors import SourceFormatError
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_evidence import (
     DeliveredCell,
@@ -51,7 +52,7 @@ _SQL_COL_RE = re.compile(
 )
 
 
-class ScbReferenceSourceError(ValueError):
+class ScbReferenceSourceError(SourceFormatError):
     """A selected SCB reference input has an unsupported source contract."""
 
 
@@ -103,7 +104,9 @@ def clean_timeseries_row(
 ) -> SourceEventDeclaration:
     """Decode event vocabulary without parsing, redirecting or resolving IDs."""
     if list(header) != EXPECTED_HEADERS["Timeseries.csv"] or set(cells) != set(header):
-        raise ScbReferenceSourceError("unsupported Timeseries.csv fields")
+        # Invariant: `_open_scb_csv_prepared` already refuses another header
+        # (csv_bad_header) and a row of another width (csv_bad_row).
+        raise ValueError("unsupported Timeseries.csv fields")
     delivered = _delivered_cells({name: cells[name] for name in header})
     fields = {cell.name: cell for cell in delivered}
     return SourceEventDeclaration(
@@ -152,7 +155,8 @@ def read_scb_events(
         or revision.artifact_size != artifact.raw_size
     ):
         raise ScbReferenceSourceError(
-            "Timeseries.csv differs from its declared revision"
+            "Timeseries.csv differs from its declared revision",
+            code="source_revision_changed",
         )
     with _open_scb_csv_prepared(snapshot.root / filename, snapshot) as (header, rows):
         declarations = tuple(
@@ -211,12 +215,13 @@ def read_scb_column_types(
     path: Path, revision: SourceRevision
 ) -> CleanedSourceReferences:
     """Decode the delivered CREATE TABLE grammar without executing its SQL."""
-    payload = read_selected_bytes(path, revision, error_type=ScbReferenceSourceError)
+    payload = read_selected_bytes(path, revision)
     try:
         raw = payload.decode("cp1252")
     except UnicodeDecodeError as exc:
         raise ScbReferenceSourceError(
-            f"invalid SQL encoding in {revision.artifact_path}: {exc}"
+            f"invalid SQL encoding in {revision.artifact_path}: {exc}",
+            code="scb_column_types_unsupported",
         ) from exc
     # Keep character offsets while excluding SQL-looking text inside comments.
     masked = _SQL_COMMENTS.sub(lambda match: " " * len(match.group()), raw)
@@ -225,20 +230,23 @@ def read_scb_column_types(
     for table in _SQL_CREATE_RE.finditer(masked):
         if not _SQL_OUTSIDE.fullmatch(raw[cursor : table.start()]):
             raise ScbReferenceSourceError(
-                f"unsupported SQL before character {table.start()}"
+                f"unsupported SQL before character {table.start()}",
+                code="scb_column_types_unsupported",
             )
         body = table.group(2)
         body_cursor = 0
         columns = list(_SQL_COL_RE.finditer(body))
         if not columns:
             raise ScbReferenceSourceError(
-                f"SQL table {table.group(1)!r} declares no columns"
+                f"SQL table {table.group(1)!r} declares no columns",
+                code="scb_column_types_unsupported",
             )
         for index, column in enumerate(columns):
             gap = body[body_cursor : column.start()].strip()
             if gap != ("" if index == 0 else ","):
                 raise ScbReferenceSourceError(
-                    f"unsupported SQL column syntax in {table.group(1)!r}"
+                    f"unsupported SQL column syntax in {table.group(1)!r}",
+                    code="scb_column_types_unsupported",
                 )
             offset = table.start(2)
             start, end = offset + column.start(), offset + column.end()
@@ -306,11 +314,15 @@ def read_scb_column_types(
             body_cursor = column.end()
         if body[body_cursor:].strip():
             raise ScbReferenceSourceError(
-                f"unsupported SQL after columns in {table.group(1)!r}"
+                f"unsupported SQL after columns in {table.group(1)!r}",
+                code="scb_column_types_unsupported",
             )
         cursor = table.end()
     if not declarations or not _SQL_OUTSIDE.fullmatch(raw[cursor:]):
-        raise ScbReferenceSourceError("unsupported SQL outside the declared tables")
+        raise ScbReferenceSourceError(
+            "unsupported SQL outside the declared tables",
+            code="scb_column_types_unsupported",
+        )
     document = _sql_cell("sql_text", raw)
     locator = RecordLocator(
         semantic_record_key=("source_document",),
@@ -339,17 +351,26 @@ def read_scb_column_types(
 
 def read_scb_join_keys(path: Path, revision: SourceRevision) -> CleanedSourceReferences:
     """Retain the delivered table/column descriptions without extracting links."""
-    payload = read_selected_bytes(path, revision, error_type=ScbReferenceSourceError)
+    payload = read_selected_bytes(path, revision)
     workbook = load_workbook(io.BytesIO(payload), read_only=False, data_only=False)
     try:
         if len(workbook.sheetnames) != 1:
-            raise ScbReferenceSourceError("expected one ID-kolumner worksheet")
+            raise ScbReferenceSourceError(
+                "expected one ID-kolumner worksheet",
+                code="scb_join_keys_layout_unsupported",
+            )
         sheet = workbook.active
         if sheet is None or sheet.max_column != 3:
-            raise ScbReferenceSourceError("unsupported ID-kolumner column layout")
+            raise ScbReferenceSourceError(
+                "unsupported ID-kolumner column layout",
+                code="scb_join_keys_layout_unsupported",
+            )
         header = tuple(sheet[1])
         if tuple(cell.value for cell in header) != _JOIN_HEADER:
-            raise ScbReferenceSourceError("unsupported ID-kolumner header")
+            raise ScbReferenceSourceError(
+                "unsupported ID-kolumner header",
+                code="scb_join_keys_layout_unsupported",
+            )
         rows = []
         declarations = []
         for row_number, cells in enumerate(sheet.iter_rows(), start=1):

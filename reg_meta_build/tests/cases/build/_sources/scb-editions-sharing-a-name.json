@@ -1,0 +1,10 @@
+{
+  "description": "Register 1 (TESTREG), variant 10. Register versions 1 and 2 are both named '2020': version 1 delivers VALUE (variable 5, CVID 100), version 2 delivers OTHER (variable 6, CVID 101). Version 3, named '2021', delivers VALUE again (CVID 102).",
+  "scb": {
+    "registerinformation": [
+      {"colname": "VALUE", "cvid": 100, "var_id": 5, "year": "2020", "regver_id": 1, "versionname": "2020"},
+      {"colname": "OTHER", "cvid": 101, "var_id": 6, "year": "2020", "regver_id": 2, "versionname": "2020"},
+      {"colname": "VALUE", "cvid": 102, "var_id": 5, "year": "2021", "regver_id": 3, "versionname": "2021"}
+    ]
+  }
+}

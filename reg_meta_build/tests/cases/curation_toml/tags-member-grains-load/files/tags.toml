@@ -1,7 +1,6 @@
 [[tag]]
 slug = "income"
 label = "Income & earnings"
-description = "Income measures"
   [[tag.member]]
   variable = "scb/lisa/dispink04"
   starred = true

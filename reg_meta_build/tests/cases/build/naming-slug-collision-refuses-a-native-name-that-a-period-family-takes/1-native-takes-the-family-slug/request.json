@@ -1,0 +1,6 @@
+{
+  "note": "Maintainer decision 11, period-family form: the April column's native variable 304 is pinned `lonfink`, the slug its own register's `[[representation.period_family]]` mints for the family its twelve months form. This is the shape of the five real pins renamed in this PR (`scb/ekonomiskt-bistand` sbel/ibel, `scb/lisa` agi1-3lonfink). The family's naming joins the scope after the native names convert, so only the merged-scope check sees the shared slug. Both names are refused, each located at its own curation entry, and the family is withheld instead of publishing. Only register 3 (CHECKED) of the shared source is built.",
+  "fails_if": "`compile_curation` (curation_compile.py) stops running `refuse_slug_collisions` over the merged scope after the period-family names join it, so the native pin and the family share `lonfink` with no `naming_slug_collision` and the family publishes",
+  "sources": "scb-month-families",
+  "registers": ["3"]
+}

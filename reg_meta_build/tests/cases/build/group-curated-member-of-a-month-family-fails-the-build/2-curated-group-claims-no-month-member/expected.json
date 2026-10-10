@@ -1,0 +1,17 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "group_members",
+      "fields": ["group_key", "variable"],
+      "match": "set",
+      "rows": [
+        ["lon", "lonfeb"],
+        ["lon", "lonjan"],
+        ["lon", "lonmar"],
+        ["pay", "other"],
+        ["pay", "value"]
+      ]
+    }
+  ]
+}

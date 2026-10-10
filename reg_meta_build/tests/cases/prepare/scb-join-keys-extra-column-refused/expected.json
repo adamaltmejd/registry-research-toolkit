@@ -3,7 +3,7 @@
   "replaces": "test_scb_reference_records.py::test_join_key_unknown_workbook_contract_fails[options2]",
   "fails_if": "the join-key reader reads the three known columns of a sheet that has more",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "scb_join_keys_layout_unsupported",
     "type": "ScbReferenceSourceError",
     "locator": "unsupported ID-kolumner column layout"
   }

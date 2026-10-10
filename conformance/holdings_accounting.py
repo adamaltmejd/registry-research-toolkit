@@ -6,6 +6,7 @@ only counts, digests and contract labels. No compiler/accounting helper is calle
 
 from __future__ import annotations
 
+import calendar
 import csv
 import hashlib
 import json
@@ -101,9 +102,8 @@ def admit_holdings_input(path: Path, artifact_dir: Path) -> Path:
 def period_bounds(token: str | int) -> tuple[str, str]:
     """Expand documented finite period tokens independently of product helpers."""
     token = str(token)
-    # The period grammar synthesizes February29 for month bounds regardless of leap year;
-    # request clipping later snaps synthetic month ends to real dates.
-    ends = (31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+    # Quarter and half-year ends never fall in February; months end on their real day.
+    ends = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
     if match := re.fullmatch(r"(LA|HT|VT)([0-9]{4})", token):
         kind, year = match.groups()
         if kind == "LA":
@@ -121,7 +121,8 @@ def period_bounds(token: str | int) -> tuple[str, str]:
     if len(parts) == 1:
         return f"{token}-01-01", f"{token}-12-31"
     if len(parts) == 2:
-        return f"{token}-01", f"{token}-{ends[int(parts[1]) - 1]}"
+        last = calendar.monthrange(int(parts[0]), int(parts[1]))[1]
+        return f"{token}-01", f"{token}-{last:02d}"
     return token, token
 
 

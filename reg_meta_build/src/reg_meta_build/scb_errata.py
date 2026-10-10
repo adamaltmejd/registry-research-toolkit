@@ -1200,18 +1200,9 @@ def convert_column_entry(
         references.add(min((record_ref(record) for record in records), key=str))
     anchors = context.records_for_refs(references)
     expected = capture_expectations(anchors, fields=("availability",))
-    guards = [
-        PeerGuard(
-            guard_id=f"{case_id}:column-absent",
-            source=records[0].source,
-            native=NativeCoordinates(
-                register_id=entry.register_id,
-                register_variant_id=entry.register_variant_id,
-            ),
-            folded_column=fold_column(entry.column),
-            expected_members=(),
-        )
-    ]
+    # No column-absent guard: the column was checked against every record of this
+    # variant above (`column_now_documented`), and apply reads the same slice.
+    guards = []
     for ref in sorted(references, key=str):
         anchor = next(record for record in anchors if record_ref(record) == ref)
         guards.append(

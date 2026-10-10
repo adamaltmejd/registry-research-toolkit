@@ -1,0 +1,14 @@
+{
+  "status": "blocked",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "naming_slug_collision"},
+      "fields": ["code", "severity", "case_id", "locator"],
+      "rows": [
+        ["naming_slug_collision", "error", "curation/registers/scb/sample.toml#variable/1.5.kon", "curation/registers/scb/sample.toml#variable/1.5.kon"],
+        ["naming_slug_collision", "error", "curation/registers/scb/sample.toml#variable/1.6", "curation/registers/scb/sample.toml#variable/1.6"]
+      ]
+    }
+  ]
+}

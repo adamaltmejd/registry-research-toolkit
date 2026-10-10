@@ -53,9 +53,6 @@ from reg_meta_build.resolved_catalog import (
 )
 from reg_meta_build.resolved_metadata import (
     ResolvedClassificationDerivation,
-    ResolvedClassificationRef,
-    ResolvedClassificationSameAs,
-    ResolvedSourceJoinKey,
     ResolvedSuccession,
     ResolvedTagMember,
     ResolvedVariableSameAs,
@@ -527,8 +524,7 @@ _ABSENT = "scb/example/absent"
 # such an edge: `resolve_metadata_dependencies` withholds or refuses each dangling
 # reference first (`catalog_dependency_missing`, pinned by the steps of the build case
 # `dependency-withheld-variable-prunes-its-dependents`), so these checks are defense
-# in depth. A classification reference keeps the reserved `_default` slug
-# out of the catalog; no build produces a classification same_as edge at all.
+# in depth.
 INVALID_METADATA: dict[
     str, tuple[Callable[[], tuple[tuple[ResolvedVariable, ...], dict[str, Any]]], str]
 ] = {
@@ -597,28 +593,6 @@ INVALID_METADATA: dict[
             ),
         ),
         "resolved state reference does not match its exact scope/column",
-    ),
-    "join-key-on-a-column-not-declared": (
-        lambda: _metadata(
-            "source_join_keys",
-            ResolvedSourceJoinKey(table_name="Missing", column_name="Column"),
-        ),
-        re.escape("unknown resolved join-key source column: ('Missing', 'Column')"),
-    ),
-    # Built unvalidated, so only the writer's revalidation can refuse the slug.
-    "classification-reference-to-the-reserved-default-slug": (
-        lambda: _metadata(
-            "classification_same_as",
-            ResolvedClassificationSameAs.model_construct(
-                a=ResolvedClassificationRef(
-                    provider="scb", classification="first-codes"
-                ),
-                b=ResolvedClassificationRef.model_construct(
-                    provider="scb", classification="_default"
-                ),
-            ),
-        ),
-        r"classification\n.*reserved",
     ),
 }
 

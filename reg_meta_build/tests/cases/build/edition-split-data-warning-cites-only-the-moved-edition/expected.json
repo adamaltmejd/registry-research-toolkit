@@ -34,15 +34,14 @@
     },
     {
       "table": "warnings",
-      "fields": ["code", "source_subject", "case_id"],
+      "fields": ["code", "case_id"],
       "rows": [
         [
           "source_availability_limitation",
-          "curation/registers/scb/sample.toml#/identity.edition_split/1",
           "curation/registers/scb/sample.toml#/identity.edition_split/1"
         ]
       ],
-      "note": "test_resolved_writer_data_warnings.py::test_assumption_warns_on_added_physical_column_not_anchor_identity[fields3-source_availability_limitation]: the availability field publishes a source_availability_limitation whose subject is its curation case."
+      "note": "test_resolved_writer_data_warnings.py::test_assumption_warns_on_added_physical_column_not_anchor_identity[fields3-source_availability_limitation]: the availability field publishes a source_availability_limitation whose case is its curation case."
     }
   ]
 }

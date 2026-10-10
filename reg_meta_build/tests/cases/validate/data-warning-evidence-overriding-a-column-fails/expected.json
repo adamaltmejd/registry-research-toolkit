@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "data_warning row does not reconstruct: data_warning 5d27d80383b0b344d291faf7317f7af35fb22a346ecb53f074b7c1dbf9f50937"
+  ]
+}

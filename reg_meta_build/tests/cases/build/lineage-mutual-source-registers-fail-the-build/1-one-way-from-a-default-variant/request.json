@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "test_resolved_metadata_writes.py::test_default_variant_references_preserve_reserved_slug_scope"
+  ],
+  "note": "The allowed twin of step 2 and the build witness for a state reference in the reserved `_default` variant. ALPHA's VALUE names BETA as its source register; BETA delivers VALUE in its one variant, curated as `_default`; a same_as edge makes the two VALUEs one variable. BETA names no source. The old test's claim, read at the built catalog: a lineage edge keeps the source state's `_default` variant (its ResolvedStateRef leg). The edge covers both states' 2000.",
+  "fails_if": "`ResolvedStateRef` (resolved_metadata.py) validates its variant as a plain slug, so the build refuses BETA's `_default` source state instead of writing the edge; or `validate_metadata_structure` reports a one-way state lineage edge as a cycle",
+  "sources": {
+    "description": "Alpha register (ALP) (1) delivers VALUE in 2000 labelled with Beta register (BET) as its source. Beta register (BET) (2) delivers VALUE in 2000 and names no source.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE", "year": "2000", "regver_id": 100, "register": ["Alpha register (ALP)", 1, 10], "varsource": "Beta register (BET)"},
+        {"cvid": 2001, "var_id": 201, "colname": "VALUE", "year": "2000", "regver_id": 200, "register": ["Beta register (BET)", 2, 20]}
+      ]
+    }
+  }
+}

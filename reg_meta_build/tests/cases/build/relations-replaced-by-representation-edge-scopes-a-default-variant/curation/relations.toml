@@ -1,0 +1,9 @@
+[[edge]]
+type = "replaced_by"
+from = "sos/syd/col"
+to = "sos/syd/neu"
+from_column = "COL"
+to_column = "NEU"
+variant = "_default"
+effective_year = 2010
+note = "Column transition"

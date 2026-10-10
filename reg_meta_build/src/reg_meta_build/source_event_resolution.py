@@ -267,9 +267,16 @@ class SourceEventBindings:
                 # An accepted identity merge already represents this transition.
                 continue
             if a[0] == "variant":
-                if endpoints in existing_variants:
-                    continue
-            elif (a[1], b[1]) in existing:
+                # A variant edge stores endpoints only, so its descriptions are moot.
+                if endpoints not in existing_variants:
+                    variants.append(
+                        ResolvedVariantSuccession(
+                            predecessor=ResolvedVariantRef(register=a[1], variant=a[2]),
+                            successor=ResolvedVariantRef(register=b[1], variant=b[2]),
+                        )
+                    )
+                continue
+            if (a[1], b[1]) in existing:
                 continue
             descriptions = {value for value, _refs in assertions if value is not None}
             description = next(iter(descriptions)) if len(descriptions) == 1 else None
@@ -288,24 +295,14 @@ class SourceEventBindings:
                         withheld_output=("catalog_succession.description",),
                     )
                 )
-            if a[0] == "variant":
-                variants.append(
-                    ResolvedVariantSuccession(
-                        predecessor=ResolvedVariantRef(register=a[1], variant=a[2]),
-                        successor=ResolvedVariantRef(register=b[1], variant=b[2]),
-                        note="auto:timeseries_event",
-                        description=description,
-                    )
+            successions.append(
+                ResolvedSuccession(
+                    predecessor=a[1],
+                    successor=b[1],
+                    note="auto:timeseries_event",
+                    description=description,
                 )
-            else:
-                successions.append(
-                    ResolvedSuccession(
-                        predecessor=a[1],
-                        successor=b[1],
-                        note="auto:timeseries_event",
-                        description=description,
-                    )
-                )
+            )
         combined = metadata.model_copy(
             update={
                 "successions": (*metadata.successions, *successions),
