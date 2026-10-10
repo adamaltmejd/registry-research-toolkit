@@ -41,15 +41,15 @@ exists, follow Error recovery below first so publication uses the repaired revis
 
 ## Packages
 
-  | Package        | Version files                                                                    | Release workflow                                                                  |
-  | -------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-  | reg_meta       | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`)                                  | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy) |
-  | reg_meta_build | `reg_meta_build/pyproject.toml`, `reg_meta_build/src/reg_meta_build/__init__.py` | none (tag and GitHub release only)                                                |
+  | Package        | Version files                                                                    | Release workflow                                                                            |
+  | -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+  | reg_meta       | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`)                                  | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
+  | reg_meta_build | `reg_meta_build/pyproject.toml`, `reg_meta_build/src/reg_meta_build/__init__.py` | none (tag and GitHub release only)                                                          |
 
 `reg_meta` is the Rust runtime: the `reg-meta` binary (`serve` and `mcp`) and the
 catalog DB assets it reads. Its `reg_meta/v*` release carries the three DB assets (step
-8\) and, once package 4.12 of `RUST_RUNTIME_SPEC.md` lands, the `reg-meta` binaries for
-macOS arm64 and Linux x86_64 with SHA-256 checksums (step 10).
+8\) and the `reg-meta` binaries for macOS arm64 and Linux x86_64 with SHA-256 checksums
+(step 10).
 
 `reg_meta_build` is the build pipeline that produces the DB assets. It is
 maintainer-only and runs from a checkout (it depends on the workspace-only
@@ -524,11 +524,22 @@ If the `integration` job is red, read the step that failed:
 Re-validate with `gh workflow run integration.yml --ref main` (then watch that
 dispatched run). Do **not** re-release a working version over a stale check.
 
-**Binaries (once package 4.12 lands).** A matrix workflow on `reg_meta/v*` builds
-`reg-meta` for macOS arm64 and Linux x86_64 and uploads them to the release with SHA-256
-checksums. Watch that run and confirm both binaries and their checksum files are on the
-release. Until 4.12 lands, a release carries no binaries; local `reg-meta mcp` users
-build from a checkout.
+**Binaries.** The same run's `binaries` job builds `reg-meta` natively on `macos-latest`
+and `ubuntu-latest` and uploads `reg-meta-aarch64-apple-darwin`,
+`reg-meta-x86_64-unknown-linux-gnu` and a `.sha256` file for each to the release. It
+does not wait on `ci`. Confirm all four assets are on the release:
+
+```sh
+gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' | grep '^reg-meta-'
+```
+
+If a binary job failed, fix the cause on main and upload by hand from the release
+commit: `cargo build --release --locked -p reg-meta`, copy to `reg-meta-<target>`, run
+`shasum -a 256 reg-meta-<target> > reg-meta-<target>.sha256` in the same directory, then
+`gh release upload reg_meta/vX.Y.Z reg-meta-<target> reg-meta-<target>.sha256`. To test
+a change to the job without a release, dispatch it on a branch:
+`gh workflow run publish_reg_meta.yml --ref <branch>` builds both binaries as workflow
+artifacts and uploads nothing to a release.
 
 ### 11. Verify the deployed artifacts
 
