@@ -32,6 +32,7 @@ from reg_meta_build.source_records import (
     TemporalScope,
 )
 from reg_meta_build.source_values import SourceValueWindow, exact_sheet_pointer
+from reg_meta_build.sources.scb_records import LISA_REGISTER_ID
 
 from .source_evidence import canonical_sha256
 
@@ -468,6 +469,15 @@ class ValueBindingSession:
         claims, bindings = [], []
         outer_bounds_ready = False
         outer_bounds = None
+        # LISA delivers its missing value as the literal code "NULL": in a LISA
+        # list that code is a blank code, never a member (maintainer decision
+        # 2026-10-10). Exact match on the cleaned code; other registers keep it.
+        blank_tokens = (
+            ("", "NULL")
+            if record.subject.provider == "scb"
+            and record.subject.native.register_id == LISA_REGISTER_ID
+            else ("",)
+        )
         for descriptor_key, associations in sorted(groups.items()):
             descriptor = self.session.descriptor(descriptor_key)
             if descriptor.unresolved_members:
@@ -492,7 +502,7 @@ class ValueBindingSession:
             blank_codes = 0
             for association in associations:
                 value = self.session.value(association.value_key)
-                if value.code == "":
+                if value.code in blank_tokens:
                     # A delivered blank code is missing data and never a member,
                     # labelled or not (maintainer decision 2026-10-09). It is no
                     # unknown membership either, so it neither publishes nor

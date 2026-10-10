@@ -139,6 +139,19 @@
         ["versions", "2020-01-01", "2020-12-31", "001", "Label"]
       ],
       "note": "test_exact_codes_labels_duplicates_and_occurrence_evidence_survive and test_non_sheet_annual_label_boundary_keeps_both_labels (DUPS: a Vardemangder list is not a sheet, so two labels of 001 are both kept and the repeated row is one member); test_missing_code_or_label_withholds_complete_list_only_where_member_applies[None-Label] (NOCODE: an undelivered Värdekod is unknown membership and withholds the list for the CVID's year); BLANK (maintainer decision 2026-10-09): a delivered blank code is missing data and never a member, labelled or not, and no unknown membership either, so the list publishes 0 alone, without the empty-label row or the one labelled 'Uppgift saknas', and reports no issue; ALLBLANK (only an empty code with an empty label) and LBLANK (only an empty code labelled 'Uppgift saknas') state no list and no issue, so their states carry no value set; NOCELLS: a row whose code and label are both undelivered is structurally missing, still unknown membership, and withholds the list; test_conflicting_labels_preserve_agreed_codes_without_selecting_a_label (VERSIONS: two version names with equal members keep 001 and report only the label conflict; the withheld version label itself has no projection)."
+    },
+    {
+      "table": "state_codes",
+      "where": {"register": ["lisa", "nullkeep"]},
+      "fields": ["register", "variable", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["lisa", "onlynull", "2020-01-01", "2020-12-31", null, null],
+        ["lisa", "value", "2020-01-01", "2020-12-31", "0", "Label"],
+        ["lisa", "value", "2020-01-01", "2020-12-31", "null", "Lower case"],
+        ["nullkeep", "value", "2020-01-01", "2020-12-31", "0", "Label"],
+        ["nullkeep", "value", "2020-01-01", "2020-12-31", "NULL", "Uppgift saknas"]
+      ],
+      "note": "Maintainer decision 2026-10-10: LISA delivers its missing value as the literal code NULL, so a LISA list treats that exact cleaned code as the blank code above. LISA value publishes 0 and keeps the lower-case null (the match is exact, not case-folded), and onlynull (NULL and a space-padded NULL that cleans to it) states no list and no issue, like ALLBLANK. NULLKEEP is the allowed twin: the same list version and the same 0 and NULL rows from another register keep NULL as a member, so the rule is the LISA register's, not the shared value payload's."
     }
   ]
 }
