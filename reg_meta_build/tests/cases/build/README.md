@@ -71,6 +71,7 @@ the behavior in plain words. For example,
   | `lineage-`             | source register attribution from a delivered source label, and the state lineage edges, lineage warnings and `[[acknowledge]]` entries it resolves                               |
   | `formation-`           | variables formed from delivered rows alone: variable facts versus state texts, unit pairs, and the Unika sensitivity and identifier flags                                        |
   | `occurrence-`          | overlapping occurrences resolved into states: exact period cuts, pooled editions, reconciled types, lengths, units, texts, steward storage, unplaced or columnless members       |
+  | `summary-`             | SCB Unika and `Identifierare.csv` flag declarations bound to the delivered variables their literal key and version endpoints name                                                |
 
 Later stages add their own prefixes to this table.
 

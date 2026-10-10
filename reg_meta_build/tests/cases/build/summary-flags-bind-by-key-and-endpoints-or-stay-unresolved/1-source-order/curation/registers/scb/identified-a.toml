@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "identified-a"
+native_id = "10"
+[[variant]]
+native_id = "10.100"
+slug = "people"
+[[variable]]
+native_id = "10.9001"
+slug = "id"
