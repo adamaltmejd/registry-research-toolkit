@@ -51,7 +51,6 @@ from reg_meta_build.data_warnings import (
     acknowledged_data_warnings,
     scope_data_warnings,
 )
-from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
@@ -82,6 +81,7 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_event_resolution import SourceEventBindings
+from reg_meta_build.source_files import _emit_timing, _paths_overlap
 from reg_meta_build.source_naming import (  # noqa: TC001
     NamingAmbiguity,
     NamingDeclaration,

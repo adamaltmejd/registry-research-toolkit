@@ -33,6 +33,7 @@ from reg_meta_build._curation import (
 )
 from reg_meta_build._resolved_common import (
     _classification_id,
+    _provider_id_for,
     _require_trimmed,
     _ResolvedDeliveryScope,
     _ResolvedModel,
@@ -45,7 +46,6 @@ from reg_meta_build.db import (
     _VALID_TO_SENTINEL,
     DDL,
     SCHEMA_VERSION,
-    _provider_id_for,
     _value_set_hash,
     publish_db,
     register_py_lower,

@@ -34,8 +34,8 @@ from datetime import date, timedelta
 from typing import TYPE_CHECKING
 
 from reg_meta_build._curation import fold_column
-from reg_meta_build.db import _progress
 from reg_meta_build.fqid_slugs import _toml_comment, _toml_str
+from reg_meta_build.source_files import _progress
 
 if TYPE_CHECKING:
     import sqlite3

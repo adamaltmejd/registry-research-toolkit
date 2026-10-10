@@ -28,9 +28,9 @@ from reg_meta_build._accepted_prepared import (
     check_accepted_files,
     read_accepted_manifest,
 )
-from reg_meta_build.db import _file_sha256
 from reg_meta_build.input_snapshot import SnapshotError, _git
 from reg_meta_build.source_coordinates import native_register_key, native_variable_key
+from reg_meta_build.source_files import _file_sha256
 from reg_meta_build.source_records import (
     CodeSetReference,
     NativeCoordinates,

@@ -130,6 +130,7 @@ PREPARE_ROOTS = (
     "reg_meta_build.prepared_catalog",
     "reg_meta_build.input_snapshot",
     "reg_meta_build.db",
+    "reg_meta_build.source_files",
     "reg_meta_build._curation",
 )
 # Keyed by content but not walked: the CLI imports every subcommand's module at load,

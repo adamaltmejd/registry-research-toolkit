@@ -37,9 +37,10 @@ from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
-from .db import _CURATED_PROVIDERS, _file_sha256
+from ._resolved_common import _CURATED_PROVIDERS
 from .dbdiff import TableIgnore, diff_db_content, format_report
 from .source_evidence import SourceRevision
+from .source_files import _file_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Iterator, Mapping, Sequence
