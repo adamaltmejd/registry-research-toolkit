@@ -1,0 +1,41 @@
+{
+  "replaces": [
+    "test_source_interval_populations.py::test_pooled_scope_forms_one_marked_state_over_the_whole_range",
+    "test_source_interval_populations.py::test_pooled_scope_without_a_carried_range_stays_unsupported",
+    "test_source_interval_populations.py::test_lasaren_school_year_hull_forms_one_marked_pooled_state",
+    "test_source_interval_populations.py::test_explicit_annual_coverage_wins_over_pooled",
+    "test_source_interval_populations.py::test_explicit_annual_facts_override_pooled_facts_without_conflict",
+    "test_source_interval_populations.py::test_fully_annual_covered_pooled_range_forms_no_pooled_state",
+    "test_source_interval_populations.py::test_overlapping_pooled_editions_with_identical_fields_merge_into_one_state",
+    "test_source_interval_populations.py::test_overlapping_pooled_editions_with_differing_facts_stay_split",
+    "test_source_interval_populations.py::test_pooled_segment_adjacent_to_explicit_does_not_merge"
+  ],
+  "note": "One variable per old test, each delivering the old test's occurrences as SCB members of real edition labels, so the reader's `source_scopes` forms the pooled scopes the old tests built with `_pooled_record`. Expected values are the old tests' asserted segments. Two translations. (1) test_explicit_annual_facts_override_pooled_facts_without_conflict's fixture (pooled integer, annual text) cannot show the filter: integer and text widen to text without an issue whether or not the pooled facts are reconciled, and the old test's `occurrences == (annual,)` has no artifact projection. annual-facts keeps that fixture; annual-facts-conflict carries its claim (the middle state has exactly the annual occurrence's facts and no conflict) on a pair that conflicts when reconciled (pooled date, annual integer: the same pair conflicts in occurrence-states-reconcile-facts-on-exact-intervals' w02), so its middle state is the annual integer. (2) test_pooled_scope_without_a_carried_range_stays_unsupported built a pooled '2012 - 2014' scope with its range removed; the projection register (native 310, `_PROJECTION_REGISTERS` in scb_records.py) is the reader that produces exactly that scope. The overlap test's per-edition evidence (`effective_occurrences` once each) has no projection.",
+  "fails_if": "`resolve_occurrence_intervals` (source_intervals.py) reconciles pooled occurrences together with an explicit one covering the same span (annual-facts-conflict's 2013 becomes a date/integer conflict), stops cutting a pooled range around explicit years, marks a span an explicit occurrence covers as pooled, or stops marking pooled-only spans; `_merge_adjacent_pooled` stops re-joining adjacent pooled cuts with identical facts, joins cuts whose data_type differs, or joins a pooled cut with an explicit neighbor; `source_scopes` (source_periods.py) stops reading a 'Läsåren' hull as one pooled school-year range; or the projection register's range-less pooled scope is placed on its delivery years",
+  "sources": {
+    "description": "Register TESTREG (1, variant 10). Editions: 1201 '2012 - 2014', 1618 '2016 - 2018', 1820 '2018 - 2020', 1977 'Läsåren 1977/1978 - 2024/2025', and the annual editions 2012..2015. Each variable delivers its members in one column; Datatyp int (integer) unless noted. pool (401): 2012 - 2014 alone. lasaren (402): the Läsåren hull alone. annual-wins (403): 2012 - 2014 and 2013. annual-facts (404): 2012 - 2014 int and 2013 text. annual-facts-conflict (405): 2012 - 2014 date and 2013 int. annual-full (406): 2012 - 2014 and each of 2012, 2013, 2014. overlap-same (407): 2016 - 2018 and 2018 - 2020. overlap-diff (408): the same, the second typed text. adjacent (409): 2012 - 2014 and 2015. Register PROJECTION (310, variant 3100), a projection register: proj (501) delivers edition 3101 '2012 - 2014'.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 4011, "var_id": 401, "colname": "POOL", "year": "2014", "versionname": "2012 - 2014", "regver_id": 1201},
+        {"cvid": 4021, "var_id": 402, "colname": "LASAREN", "year": "2024", "versionname": "Läsåren 1977/1978 - 2024/2025", "regver_id": 1977},
+        {"cvid": 4031, "var_id": 403, "colname": "ANNUAL_WINS", "year": "2014", "versionname": "2012 - 2014", "regver_id": 1201},
+        {"cvid": 4032, "var_id": 403, "colname": "ANNUAL_WINS", "year": "2013", "regver_id": 2013},
+        {"cvid": 4041, "var_id": 404, "colname": "ANNUAL_FACTS", "year": "2014", "versionname": "2012 - 2014", "regver_id": 1201},
+        {"cvid": 4042, "var_id": 404, "colname": "ANNUAL_FACTS", "year": "2013", "regver_id": 2013, "data_type": "text"},
+        {"cvid": 4051, "var_id": 405, "colname": "ANNUAL_FACTS_CONFLICT", "year": "2014", "versionname": "2012 - 2014", "regver_id": 1201, "data_type": "date"},
+        {"cvid": 4052, "var_id": 405, "colname": "ANNUAL_FACTS_CONFLICT", "year": "2013", "regver_id": 2013},
+        {"cvid": 4061, "var_id": 406, "colname": "ANNUAL_FULL", "year": "2014", "versionname": "2012 - 2014", "regver_id": 1201},
+        {"cvid": 4062, "var_id": 406, "colname": "ANNUAL_FULL", "year": "2012", "regver_id": 2012},
+        {"cvid": 4063, "var_id": 406, "colname": "ANNUAL_FULL", "year": "2013", "regver_id": 2013},
+        {"cvid": 4064, "var_id": 406, "colname": "ANNUAL_FULL", "year": "2014", "regver_id": 2014},
+        {"cvid": 4071, "var_id": 407, "colname": "OVERLAP_SAME", "year": "2018", "versionname": "2016 - 2018", "regver_id": 1618},
+        {"cvid": 4072, "var_id": 407, "colname": "OVERLAP_SAME", "year": "2020", "versionname": "2018 - 2020", "regver_id": 1820},
+        {"cvid": 4081, "var_id": 408, "colname": "OVERLAP_DIFF", "year": "2018", "versionname": "2016 - 2018", "regver_id": 1618},
+        {"cvid": 4082, "var_id": 408, "colname": "OVERLAP_DIFF", "year": "2020", "versionname": "2018 - 2020", "regver_id": 1820, "data_type": "text"},
+        {"cvid": 4091, "var_id": 409, "colname": "ADJACENT", "year": "2014", "versionname": "2012 - 2014", "regver_id": 1201},
+        {"cvid": 4092, "var_id": 409, "colname": "ADJACENT", "year": "2015", "regver_id": 2015},
+        {"cvid": 5011, "var_id": 501, "colname": "PROJ", "year": "2014", "versionname": "2012 - 2014", "regver_id": 3101, "register": ["PROJECTION", 310, 3100]}
+      ]
+    }
+  }
+}
