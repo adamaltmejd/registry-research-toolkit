@@ -168,13 +168,10 @@ describe("periodCoverageUnion (#992 find-or-create period extension)", () => {
     ).toEqual({ from: 2019, to: "2020-06-30" });
   });
 
-  it("an add the existing token period already covers leaves it as written", () => {
-    expect(periodCoverageUnion({ from: "LA2004", to: "LA2005" }, 2005)).toEqual(
-      {
-        from: "LA2004",
-        to: "LA2005",
-      },
-    );
+  // Fails if the union respells a segment the merge left untouched (render would
+  // write `2020-H1` as `VT2020`).
+  it("keeps a token segment the merge leaves untouched as written", () => {
+    expect(periodCoverageUnion("2020-H1", 2022)).toEqual(["2020-H1", 2022]);
   });
 
   it("an UNSET side yields the other; an undated side lets the incoming win (Fix 2)", () => {

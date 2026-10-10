@@ -1618,10 +1618,12 @@ multi-select consumer commits through). Find-or-create for a staged add keys on
 the same variant land in the same source regardless of period; a disjoint window is
 folded into the existing source's period via `periodCoverageUnion` (`period.ts`) rather
 than minting a second source: the union of the days both periods request, through
-reg-core (WASM) — merged (overlapping and day-adjacent days join), rendered and shaped
-back into the sorted, disjoint #307 list form (`2005..2010,2015..2020`; `2019-Q1` plus
-`2019-Q2` is `VT2019`, a span no token covers is a range like `2019..2020-06-30`). An
-add an existing non-year period already covers leaves it as written; when either side
+reg-core (WASM) — merged (overlapping and day-adjacent days join) into the sorted,
+disjoint #307 list form. Two year-only periods are rendered whole
+(`2005..2010,2015..2020`). Otherwise a segment whose days the merge leaves untouched
+keeps the spelling it was written in (`2020-H1` plus `2022` is `2020-H1,2022`), and only
+an interval the merge created or changed is rendered (`2019-Q1` plus `2019-Q2` is
+`VT2019`; a span no token covers is a range like `2019..2020-06-30`). When either side
 has no days to place (`_default`, or a period reg-core refuses) the incoming period
 replaces it. `applyStagedDiff` is now the SOLE catalog→project mutation path (the
 store's earlier single-pick `addFromCatalog` handoff was dead since #992/#993 and was
