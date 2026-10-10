@@ -1,4 +1,4 @@
-"""Classification input validation and read-only curation worklists.
+"""Read-only classification curation worklists.
 
 Canonical membership and state bindings resolve in the common pipeline. The
 containment worklist suggests candidates for review; it never changes a catalog.
@@ -6,22 +6,14 @@ containment worklist suggests candidates for review; it never changes a catalog.
 
 from __future__ import annotations
 
-import csv
 import sys
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from ._curation import curation_error, display_path
 from .fqid_slugs import _toml_comment, _toml_str
 
 if TYPE_CHECKING:
     import sqlite3
-    from pathlib import Path
-
-# Accepted first-two-column headers for a valid-codes CSV. SCB CSVs use the
-# native `vardekod,vardebenamning`; the universal `code,label` shape is what
-# the SOS classification CSVs ship (with extra trailing columns we drop).
-_VALID_CODES_HEADERS = (("vardekod", "vardebenamning"), ("code", "label"))
 
 _LEVEL_EXPR = (
     "CASE WHEN {col} GLOB '[0-9]*' AND NOT {col} GLOB '*[^0-9]*' "
@@ -33,74 +25,6 @@ _LEVEL_EXPR = (
 _MIN_CONTAINMENT = 0.90
 _MIN_CODES = 8
 _SAFE_LABEL_AGREE = 0.90
-
-
-def load_valid_codes(path: Path) -> dict[str, str]:
-    """Read a canonical valid-codes CSV and return ``{code: label}``.
-
-    The first two columns must be headed ``vardekod,vardebenamning`` (SCB) or
-    ``code,label`` (universal/SOS). Any further columns (``label_en``,
-    ``parent_code``, validity dates) are ignored — per-code en-labels, validity
-    and hierarchy are a future enhancement, not modeled here. Codes are
-    stripped of leading/trailing whitespace before use (matches the rule used
-    at query time). Duplicate codes raise.
-    """
-    file = display_path(path)
-    try:
-        with path.open(encoding="utf-8", newline="") as fh:
-            reader = csv.reader(fh)
-            header = next(reader, None)
-            if (
-                header is None
-                or tuple(h.strip() for h in header[:2]) not in _VALID_CODES_HEADERS
-            ):
-                raise curation_error(
-                    "classification_csv_invalid",
-                    (
-                        f"{file}: first two columns must be "
-                        f"'vardekod,vardebenamning' or 'code,label' "
-                        f"(got {header!r})."
-                    ),
-                    "Fix the CSV header.",
-                )
-            out: dict[str, str] = {}
-            for lineno, row in enumerate(reader, start=2):
-                if not row or all(not c.strip() for c in row):
-                    continue
-                if len(row) < 2:
-                    raise curation_error(
-                        "classification_csv_invalid",
-                        f"{file}:{lineno}: expected 2 columns, got {len(row)}.",
-                        "Each row must be 'vardekod,vardebenamning'.",
-                    )
-                code = row[0].strip()
-                label = row[1].strip()
-                if not code:
-                    raise curation_error(
-                        "classification_csv_invalid",
-                        f"{file}:{lineno}: empty vardekod.",
-                        "Remove the row or supply a code.",
-                    )
-                if code in out:
-                    raise curation_error(
-                        "classification_csv_invalid",
-                        f"{file}:{lineno}: duplicate vardekod {code!r}.",
-                        "Each vardekod must appear once.",
-                    )
-                out[code] = label
-            if not out:
-                raise curation_error(
-                    "classification_csv_invalid",
-                    f"{file}: no data rows.",
-                    "The CSV must contain at least one code.",
-                )
-            return out
-    except OSError as exc:
-        raise curation_error(
-            "classification_csv_unreadable",
-            f"Could not read {file}: {exc}",
-            "Check the file path and permissions.",
-        ) from exc
 
 
 def _progress(msg: str) -> None:

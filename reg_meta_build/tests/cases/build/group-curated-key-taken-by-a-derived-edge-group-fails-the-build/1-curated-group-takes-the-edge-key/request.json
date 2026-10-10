@@ -1,0 +1,39 @@
+{
+  "note": "FORNAMN and EFTERNAMN are same-shape siblings of one source definition, so the build derives an edge group of them, keyed by its first member: `efternamn`. A curated [[group]] of two other variables already takes that key in the same register. The two groups cannot share a key and neither is the one to drop, so the build stops with a located configuration error naming the curated group and the derived members, in a diagnostic build too. Before the fix it stopped with a bare `ValueError` (`pipeline_build_failed`).",
+  "fails_if": "`resolve_variable_edge_groups` (catalog_dependencies.py) raises a bare `ValueError` again, or stops checking a derived key against the curated keys, so the build ends `pipeline_build_failed` or writes two groups with one key",
+  "sources": {
+    "description": "SCB register 1 delivers FORNAMN and EFTERNAMN as two columns of one source variable (var_id 300), plus VALUE (101) and OTHER (102).",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1004,
+          "var_id": 300,
+          "colname": "FORNAMN",
+          "varname": "Var300",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1005,
+          "var_id": 300,
+          "colname": "EFTERNAMN",
+          "varname": "Var300",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "varname": "ValueVar"
+        },
+        {
+          "cvid": 1002,
+          "var_id": 102,
+          "colname": "OTHER",
+          "varname": "OtherVar"
+        }
+      ]
+    }
+  }
+}

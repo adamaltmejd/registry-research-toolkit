@@ -98,7 +98,7 @@ variant = "89.164"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Man", expected_codings = ["2e7ea2c83b40445f9898286e8ab156ccd6e1203255077575c7f93e78121c3252"], source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Manad", expected_codings = ["2e7ea2c83b40445f9898286e8ab156ccd6e1203255077575c7f93e78121c3252"], source_editions = ["2009"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7c520eb3c0a1301809443ae146290b11f8a44d90495ccbd97a93e25c6d5ee572"
 evidence = "Complete own-native source explicitly defines this as the same month or sickness-period start-date quantity. These exact simultaneously supplied spellings remain independent delivery representations; retain every original operational wording, raw char/varchar/date/datetime type, scope, code association and literal. No storage/value equivalence is assumed. Proof: Batch48-employment-time-source-proof.json."
 noted = "2026-10-01"
 
@@ -111,7 +111,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "ee08734328d203ba685b54a37f7800c1d0f53f0284062e487be4d9ff83d8af26"
+expected_evidence_sha256 = "31ad2b33e20344264150ce2d2bca5754cae37726a1d13a47d8d466f2aa6db129"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -122,7 +122,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "af653fdc1f91b383adcab1060b016187e0b04066e1b307c21610bfd8f5b48b8e"
+expected_evidence_sha256 = "9fcaf68b3ae2b4f820cdd923f7824358f1ce4234a317b80cbeda99c29766b5d6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -133,7 +133,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "1e6b323305ca8f5fdba8804dc08eff2c587e48c4bad00cae87097a4b21cc13ae"
+expected_evidence_sha256 = "29f2408c7bb908c60bd18541f47d62ca2ce3f0824f49774408fb94d77184a058"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -144,7 +144,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "13eaecfe1dafe3524733fc316b7fa86237aaa98bb7ba622867bf8fab110492ac"
+expected_evidence_sha256 = "5e8621d29c3e6b2d9fd7e653cc186ad5d8096eb6dcadb78ed3d9617b391e71ed"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -155,7 +155,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "bba54065facd9d03c05242fee65e9f5fbb54573508be6a590be43fb446bea443"
+expected_evidence_sha256 = "8f1ffcd903fe8c543e915817ff716161d04906112311f7099cf480f4160933d4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -166,7 +166,7 @@ valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "3cf213642e17ccff9a483c9d8841f4e07f1d14f4b343415fd1c535572d33308f"
+expected_evidence_sha256 = "8d63c4605c9e3c4f1571b8b84fb67d533d5a1fac4381cadd53d7f7f10dada6f1"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -177,7 +177,7 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "5504b1bebef64681777a6a3844296b1e6318825cd6e23003ce98f6801ecc8924"
+expected_evidence_sha256 = "edb55f25dba8b7b636d816c701cc562770a3fad61458374423ca253f8f888088"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -188,7 +188,7 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "b1f5ac32a298e1262b2b8d931487e1b5f3800c1751e0e80cb88f135ce3f9aadf"
+expected_evidence_sha256 = "9ba23cc3dc45a1952abb2e9dd90506c7a50c930538b24af3899f1bb90e355c79"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -199,7 +199,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "ab1100c312c1a5d2035c7a38354931790f4381048c41a68f0cde2674066486ab"
+expected_evidence_sha256 = "897c4d4a88c500eaf225ddb1152b862388a8d4f6ead7bc246359055ef7522328"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -210,7 +210,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "1cd5815cb3d84f9b0ee69f8ef962934cd1fe655793d11d9c6ea786715c01635c"
+expected_evidence_sha256 = "6dccd42a3e89348438fbcc30f819226b91e699a9caecb6ffd0f572875fead6be"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -221,7 +221,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "509e44b9670b4d9b187ae6d377ee33f7a89456c4038fd61aa85a4fb8bbe914df"
+expected_evidence_sha256 = "5f0c1c69eb771fc7780335707f9e2f0ae5dbd5937118395b8aca6088aa7a770b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -232,7 +232,7 @@ valid_from = "2019-01-01"
 valid_to = "2019-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "d28212c66785c7b476a7b50b902646941d5b5d48267770d777c55a2353de41bd"
+expected_evidence_sha256 = "5253bdcd49ccb3a92c2781154b53df0dcae7ecb8fabb843e8201c4f63900c1ab"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -243,7 +243,7 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "c5bfbb240b555133ecce9e40d7427b96800fe5b7bd0fd9c1484e8fb14490185b"
+expected_evidence_sha256 = "4ae734e67d49a5c9d5e30dcbdc6cd6c2eb85cfff07b7a72dfcf54c7a342521f6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -254,7 +254,7 @@ valid_from = "2021-01-01"
 valid_to = "2021-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "7f04db6ec89dd40c20e9319774dcd0f5475148abc738b0c873e0fb5180d6779a"
+expected_evidence_sha256 = "40acf33b4dce56bcc4140381fd40c35b6d0a0e074b91f0d88b8b0f82eb462622"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -265,7 +265,7 @@ valid_from = "2022-01-01"
 valid_to = "2022-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "52c1cdbe2ec131ddb5fa3f2aec315ef2a4dd694b5a128693f4633e4f229c9b47"
+expected_evidence_sha256 = "e0b558acda1a2ce3da5c0a88c2364d9f2d424ade06606f884155d27b55c8f2c2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -276,7 +276,7 @@ valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "13d0cfb650ba72e7d7eb46e87f2eb6363844220354d9fdf58835d20170c9b993"
+expected_evidence_sha256 = "ae67234b842c123c58995baa835985d08124b9464f4c881d513308d369832345"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -287,7 +287,7 @@ valid_from = "2024-01-01"
 valid_to = "2024-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "804f9436372c268a68744b8ddbcd47a25cbc6cb82c471eba2f20c3022cb73a5e"
+expected_evidence_sha256 = "28083b670a616a9a2ab735db7d5eb8a14a41a65d1cd9d7508bc46e7431c42287"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -298,7 +298,7 @@ valid_from = "2025-01-01"
 valid_to = "2025-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "4b8135c1735ebdd38dc26327a34c98b472f96812ab95d697a07cd33f4f248f2c"
+expected_evidence_sha256 = "5e39816218f292c3fb9806a01522b5f71e86fc00506febb518d0293d2df18d9c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -309,7 +309,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "fcc044b38d7c7aaf8d85647dd89a47d5728c58891bc78da6d18bccce49f8332b"
+expected_evidence_sha256 = "96c926002533a9cc8088493de52c4cd84d7768566ee1271b945aea1e32ffc4b7"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -320,7 +320,7 @@ valid_from = "2019-01-01"
 valid_to = "2019-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "8edb02242f7548e1cf39914cccc80e7c1badf1536b83f2564ac60ce212b8f6a0"
+expected_evidence_sha256 = "22116320e5ab55bbfcaf00d4264ac9d5e5c6f0354805876b1f4984a36eb7c5bb"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -331,7 +331,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "5d133a8eafebd2491bcbb1bbf27b21a5da012a2d814fdaa74535f9a6d3c2ce36"
+expected_evidence_sha256 = "9ed1b4a5de0da0631daa5733b29c318f6a1fd74df8ebd413ce12ae8b28881315"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -342,7 +342,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "5f6e461059c4ff52746d61ff71d3a9f2d4c688f83d81241f020a2ef8d8019593"
+expected_evidence_sha256 = "6eeac16377e7cf4d3dbc33e14d81ac196032c9bcc797865a5500bcd6c9a671c7"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -353,7 +353,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "c905f74fdd252edadcf8064fce16714c06beefc537d9032c40d09be33fda141d"
+expected_evidence_sha256 = "fbeca3f115412be3d5892135e1991fa0fb75a66c2d617d60c79043c63ecc2751"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -364,7 +364,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "252534b76601bbea4a478bbc4b2257841421e0971186523a696f8a1fa3ff3150"
+expected_evidence_sha256 = "02fcc02539baea42b36c6b32a2c659754a3004d25f4e5c57d9b28fa992f16e57"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -375,7 +375,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "886fb6c6ec34ff5ca23f3b9412e9b4610bb8c8ac7a3f0c196ccce6c44045bad4"
+expected_evidence_sha256 = "1e0a43f97196e342acfbf930f390b9775c75615c4941295a08a3ee5caa846d75"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -386,7 +386,7 @@ valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "a9bc73d72e25146c09705868a4c05d80c5bed937d7e3bfbd0c51cd23a456bdd1"
+expected_evidence_sha256 = "36fddcab8a29b8e44c5160269feead6e989fbbbdf2a02d43e4a5e390d073625e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -397,7 +397,7 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "e23b111444cf7b0b5bb2c33ec41bc1dd78b07ce78a4ccbc5a237cf5331c85844"
+expected_evidence_sha256 = "3d651e71101d3a1a38153c23a1f828c26e140ec6465ca4fe7876e4f3e33e9398"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -408,7 +408,7 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "b1cfc35419ad0291b7ce32395bc839f4b815b98176ad9692c2e6889b76cdffdf"
+expected_evidence_sha256 = "0c7672f6152481784d84d15017461f6490bd6f230574b134b795d811784dab14"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -419,7 +419,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "9c517a2717d7487ef4d527d8a22f060374cc597ec2df11c9416ef89d5436180e"
+expected_evidence_sha256 = "dc5804dce4a35ea602a3db9badb9f44341d7832e7b51b55062070fa1a1b1d97c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -430,7 +430,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "fa5f7c06d46046c4d15f388394efdfff6abd6c25ecaf11221a60f6be97afffc9"
+expected_evidence_sha256 = "ab2de44ee001f6ac016162d4f317ad3b12109f580c90f8e8a535865c84b50bbe"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -441,7 +441,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "888ce9fb405215ffcc7f77dce8853947df9f86b7a5fcab768fb96d8daed64dc0"
+expected_evidence_sha256 = "f9f0182e5b077165349385d49fd7d74c8b7cd3453792c4e98414b05798fc347b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -452,7 +452,7 @@ valid_from = "2019-01-01"
 valid_to = "2019-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "8a52a7ea5b7e99bb38e1dfc95e1404bb4613dcafbf082a4f0c7fe62c938b8df2"
+expected_evidence_sha256 = "9392d76617c8515ea6a233302b2b1e1a18afc7551307cae54d8ba7749a3d42be"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -463,7 +463,7 @@ valid_from = "2020-01-01"
 valid_to = "2020-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "3b5c42348956399105227ca0f4969e58f469af1e55ab648dd7d93c01e8acc49c"
+expected_evidence_sha256 = "d828f4d375ffd9c6f480337cf84290fdb7879fed72f2773bad0ed6fb30c72cd9"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -474,7 +474,7 @@ valid_from = "2021-01-01"
 valid_to = "2021-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "14735a3c03d565a296ffc40d2d6da543f40abf67b9fcd4aec9ef0ccd77086ab9"
+expected_evidence_sha256 = "51f3082af80b57c64fef85f20d2026fc5395915e0bb033df24c90aa5a46118e5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -485,7 +485,7 @@ valid_from = "2022-01-01"
 valid_to = "2022-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "96304459486b18e6f96252ffdd473a7ffc0da02e95d1eb7552de97828074a358"
+expected_evidence_sha256 = "02075d13b11ea4e5bb377748cfebe69a792355e1dadfcccad87a1ac72589cd0b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -496,7 +496,7 @@ valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "952cbdeda761648337f39916c18a4d0ef5892d540d263066b55b9f87424b04d1"
+expected_evidence_sha256 = "14282b5f4fd5a776481703dc11037f512a621981705b00563c2a54ff7a085fc2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -507,7 +507,7 @@ valid_from = "2024-01-01"
 valid_to = "2024-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "52866bef35fb6c6ae6dcf393d82b49ac21af23deee5c9438b1b9e4bdcf9d7767"
+expected_evidence_sha256 = "1f3555e8eb626867039703316ad0044996fd12d6195211373d0e2f103dfd13db"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -518,13 +518,13 @@ valid_from = "2025-01-01"
 valid_to = "2025-12-31"
 reason = "This exact delivery window lacks an own physical-column coding association establishing its stored response values. Preserve all source facts and keep its domain unavailable. No unspecified historical industry classification, stratum or status encoding is inferred from column prefixes, generic definitions or neighboring lists."
 evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "a23e9f75a501fa3b893d14d6da35e005a39316a1f6c5f733bdbb1e884cbaa65a"
+expected_evidence_sha256 = "aa3c7c97f6b737a081472ee0c3da3b52cc2b8ee07efb031f6930250948ef57d7"
 
 [[identity.partition]]
 variable = "89.2543"
 columns = { UtbRetro = "89.2543", Utbretro = "89.2543" }
 columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
-expected_evidence_sha256 = "04504466ff1af3416182096e613a7d7b0e075b3736c8e3ddb462f474c1999000"
+expected_evidence_sha256 = "fc06f3d5be2c41037bed52362c90ae88de1f3ee9c9621cab5ccd3b7e6b6d9123"
 
 [[representation.parallel]]
 valid_from = "2009-01-01"
@@ -535,7 +535,7 @@ variant = "89.164"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "UtbRetro", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Utbretro", source_editions = ["2009"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7b71275b4c2cda698d0e92c8fecc4d4419dea1b5be5017030b3fdf746ce5aa55"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -544,7 +544,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "89.19066"
 columns = { AvtTArM = "89.19066.avttarm", AvtTArML = "89.19066.avttarml" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "8aca90e29c29fddce04323b7b81ad89532686a2e84e66675e651843f87c66b61"
+expected_evidence_sha256 = "cbd356a48577e78a4de024a87ebe9e860bcd3d24df3a29d63080f7ade7c0321b"
 
 [[variable]]
 native_id = "89.19066.avttarm"

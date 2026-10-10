@@ -1422,7 +1422,7 @@ code = "unknown_support_key"
 subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 168)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"c9be972c3ae1c5cdeae2bb5ab0e7bcfce3dc65cd63dfd2f47069a59b532a8727\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"aeedda09961a0d72a7845ef592bde8c36202d367bacb49217f1b9ad225670f01\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"1f16ec88245a2de08267b8329d8e9349d58e42a71fa0f426c1d361198e1160f3\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"60d4379f68a5ce870926ec48f08ceb4b9f140c09a63feb784b8c9ec3cc024d1e\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"04a614c088eb90e30e7f435569e4f967b96c46758d655aee6fa353f8cbaeb820\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"051a93c5cac541ff7992717c78ce3d81113c817d36322cf50472ea59edad62b2\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"685a8ebfb758074c567b311208656254c4d68443c3b29101fde3607760a2a2d6\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"73a4d726e5b3d4ad59024216a4804f60c322204eee8365a3d24d5e15aec31cdc\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"271cedfd10ac7f55e1a72478c1ef624b64a36d6d192cefe9b33501650c9202df\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"b7376e35719f4813aa890ad3f7ec3800e2fa07399ada787fededba4aa35dfd86\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"484e72568638e76443630a86130bde75d4563f842cb49734f6beb5e64fcec71b\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6ca865eaa4878f211b7432584f2b646a1084354a58ee665afa5921532d078094\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"c7d5092ec230ad8e52f55a2444edd24636c097ee135b5624c5f538e124bd275a\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"8db2f3c29b8fe100b3340b572660e6c16f688ddffd859418dc9d826348a96fbe\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"ab88716c50987023052623a9dc51a57fe2906b416893824362d241e511e645c9\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"aaa73ddcc699a9836280f837b2ee8be9c95579da5eecc370ed7af4c2d58f64f3\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"905e73d5c0e816abbc53fe977674b92662a39655e52185bc427e3df839f5ec43\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"e804e697ed8e3bcaed371d414cd8f79e9cf70369648aa8eed8e8bff7dd3459d2\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"72eb21656c3cf81086a00fca8c99c3e372d1c80f5b68cfe1d611a2419ca7da37\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"8379eda632ef12f0bba7553e647b6525685c26f9147f934fd6e33ffbe3daf60d\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"b16058c2aea264b60cf2e235ba1235495c0b4a2c8ad346235d14f0d47f2977d9\"]}"]
-expected_evidence_sha256 = "0755b886185f5f2bd4766ed93457f7fe24e2ba3de0a1939fe8d3217a5dcb9366"
+expected_evidence_sha256 = "c26627a0e047d1c6a4a167e06e9217218ff5fc9d591f91fd966d84b93898fe37"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
 
@@ -1435,7 +1435,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "d3ffd7e55d2811bc373926ce9deb515831ea0b764b7063b45e4214ba89136d99"
+expected_evidence_sha256 = "9ee8dfe08f0e3d8677f9eea2020731df4fc0fd84b2cddf63517350e512e6b882"
 expected_diagnostic_sha256 = "2467ed1ed5a7ca66bafb834f44e7db3904f8c85c164011bd50f32b23df04b6c0"
 
 [[acknowledge]]
@@ -1447,7 +1447,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "c465bab269efce9dc2dca2bcfea7c5722a727cb796bdf9b789726ee7fe532ea3"
+expected_evidence_sha256 = "cc0bbcaa8ec542368b994087172a7c0af911ae6f2f90c9675bf8cebc21a6cb5c"
 expected_diagnostic_sha256 = "a3453389d90885b9d38e38d983152fc1b96159190c14e619750f177a15722d81"
 
 [[acknowledge]]
@@ -1459,7 +1459,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "e7471dbf3b89e6e1851a14baa06c05b46e153869bdb85f3c1c238d548910aa78"
+expected_evidence_sha256 = "943adfab0c77ed20cb2010536359e5188eb32763cecd1d5869b43eac2e1455c7"
 expected_diagnostic_sha256 = "3ef184fcd41de36ac1032d26b0ce41b828dc26313f72264d3f8da260c6fb2fd3"
 
 [[acknowledge]]
@@ -1471,7 +1471,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "cd1d3136f5990f794eed6fb9826e4474b6c1973262bf031cf121a87ca3aa161d"
+expected_evidence_sha256 = "10d50a1aa39f2efa6d5d5247ddd72f7f6e9bda1722a4ccf13157b7f64e0e5bf1"
 expected_diagnostic_sha256 = "f9071837657184a74ce73207e9c437d40eb8413ef52447bc0633ea78fd67f89e"
 
 [[acknowledge]]
@@ -1483,7 +1483,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "febfbc5bdbbfb4b3d4288e4540179dd8a92f1e48bba681edcd23c91830583cde"
+expected_evidence_sha256 = "f4ff27ef0ee31d284926e1affb4455e3e45b3d818f70eea721c185d478ce06ed"
 expected_diagnostic_sha256 = "71dd4e9bada35b36dc47df6a393326b41d6368244beb46b5d91f239068a10aa7"
 
 [[acknowledge]]
@@ -1495,7 +1495,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "a5816737d8ef5cd5c0d05b1a4d1303cf6160d01c0f13d70592191cec749102d4"
+expected_evidence_sha256 = "65984eaf2ddd099e401b8641c52c4a6c659d4d6aaa4efeea807de3804448d6e9"
 expected_diagnostic_sha256 = "4155891e168b08b628eb26a29869b9e77b06946ec55d885d4fe61df30c6e6c35"
 
 [[acknowledge]]
@@ -1507,7 +1507,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "1a3a5265cd97b0dfc3d0a5168bf5a1882cc80d0aba40ad30fe1ea8e11d8550ac"
+expected_evidence_sha256 = "52578215a52c8e1016a1ca9ab9dd318b6c16c93618a803ac9c1e37581314969d"
 expected_diagnostic_sha256 = "efdc42d837663972ece3adfbba0832b5418f90a045897985ed797c7185049eda"
 
 [[acknowledge]]
@@ -1519,7 +1519,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "e216520b9bda7fbaa8280511ad1449dab90b9086d3a05818261709f2d957cdd2"
+expected_evidence_sha256 = "8463b2e2d1cd02c4e38e2cab4746d355417f71e2cea2427691faccb2e33e08a3"
 expected_diagnostic_sha256 = "f06cc4930f5dbd2de9861e90009fb4571f7110608801d8cc895b95773133d04d"
 
 [[acknowledge]]
@@ -1531,7 +1531,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "6358e144847a338aa5dae400db3f2d76b64d39d90345c96a8cc34a8c9b9921fb"
+expected_evidence_sha256 = "31460dd4f25109230242a69b3c783d6f7c276459bdf228afc5c015dd20e3e47b"
 expected_diagnostic_sha256 = "32b22bc6c19b12850c54ad06b39ec4d57bb42e355ab2ee472e131e9f569895a1"
 
 [[acknowledge]]
@@ -1543,7 +1543,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "57bc5b5f5ff0667b882bec693df4af35211588e54b99b9341d0b798caec2591d"
+expected_evidence_sha256 = "393b0efe97b021fc853f59c3329bb57fa5d4309ba0249bf28e030f0595de740c"
 expected_diagnostic_sha256 = "bf01117ea8f21f138913560fc059681fbd26a3eea0cd2794a88e254b04fb4768"
 
 [[acknowledge]]
@@ -1555,7 +1555,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "b2c6eb30a5fbac73a713e55e8ad6c29d67496609cafcbfb8a4d62c80b09b608e"
+expected_evidence_sha256 = "c6ad7a5b681cacdd8c5bc3c08c1e8b1cc5a0f8d3026b988bce5f4f40faef901f"
 expected_diagnostic_sha256 = "00e28561240baac952f6e57389b9ee5013fd9c305601e69d5bed3e015e62d352"
 
 [[acknowledge]]
@@ -1567,7 +1567,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "d8a5e9dc55a16bfdb44a3443acb5f527f47ce3956c156c118f2b2208c1d2ed6c"
+expected_evidence_sha256 = "975cf343efb796e6410605aedba9d64e7369e4776cbd275cd3f57694f5958de4"
 expected_diagnostic_sha256 = "40796f7484c4e6322554fdbb98f8aa24e191fdb9d48c397add248c559e69e964"
 
 [[acknowledge]]
@@ -1579,7 +1579,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "3f5ae35e95721fa055cafed9fd0da9e4e16ee17bb957da362887b311e40f88f6"
+expected_evidence_sha256 = "ee58d699f843463bbcdb359305af465a26bf051339b8dd5cd39dcce2e3031778"
 expected_diagnostic_sha256 = "8a2333b6f8d7885c1363689f53bdd5f18eae0d2c0378b32da9de45b10bcc1208"
 
 [[acknowledge]]
@@ -1591,7 +1591,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "066fb956e91727c17f23fed39d238219ab354cbae3c75790d4ddb7442a580f1e"
+expected_evidence_sha256 = "839c88a1fd4ddf273098ee235b41bad2c81048785c5dd95eab4abd194705ca9e"
 expected_diagnostic_sha256 = "89355947a37ddae4e11c97732d46563ec86c8e76db0f120e7c474ca753c224d0"
 
 [[acknowledge]]
@@ -1603,7 +1603,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "21910b698dd1cf23c6764b0dfacb406fed0fbbbcccf941bf5eff39088cefb0a1"
+expected_evidence_sha256 = "89d65d3b87f581d0cb2de4550302a06d3c083470595e5caab4396409501705e7"
 expected_diagnostic_sha256 = "e91b5f8a7b4d6d38defb5e61115826d77b23ec78feaae46806c50dbb1db7a1f3"
 
 [[acknowledge]]
@@ -1615,7 +1615,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "cf46829ff72d9c6b3b24a26310946694d79b3bd94cdd2647cc7b274b07ad433a"
+expected_evidence_sha256 = "a8063a0fac7d501e2e2d6a687905450353d8df2a9bbfc971bd5751f13f29af9c"
 expected_diagnostic_sha256 = "8184e5a37c26e96296a12d0d1862243616aab556945b70b065977497b06125d5"
 
 [[acknowledge]]
@@ -1627,7 +1627,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "122bc40e7e589786da02416f8312385987604539710478ea499ebcd2e445e524"
+expected_evidence_sha256 = "b6441d66993a48361c72620e812bf86906c3bdb07c8b22ec7df2f60a1ed7c84f"
 expected_diagnostic_sha256 = "0fbf9e24203e25015320bb03bba72986b58e4593dbeb27b8cf3e8f17799477b0"
 
 [[acknowledge]]
@@ -1639,7 +1639,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "d11bb69cba82eaa1d912ccd833166030184d2216ef2b01391b45b6674cbcc577"
+expected_evidence_sha256 = "e5ab139b8a280cb7a199e718e7840a1f73918181f975075596c33ca6eadd9366"
 expected_diagnostic_sha256 = "81046c690a2924d64ec233e7be653d986e1c8c9b72befeee7bda25e5a5298646"
 
 [[acknowledge]]
@@ -1651,7 +1651,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "54e2c6a9ba7089dd5dfd9a4c58df126bb4036e0ba2fb32caf5510d26ffffcba1"
+expected_evidence_sha256 = "02a77d2868448aedf23c6ffbd572642c215dcf26b153898cc4ef802dad00f012"
 expected_diagnostic_sha256 = "3d274ba5910ebf32b4b380188b868e876072352a24a06d9681cca18fb78af941"
 
 [[acknowledge]]
@@ -1663,5 +1663,5 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "e3256002b60976df12220bf3f623364dd94e82dc8ff5434760980e525a186cd7"
+expected_evidence_sha256 = "7507cafef174b1e6c7ec5f6d17f7cb1f083a7c45fc192942ae2aff19f4b0d1f6"
 expected_diagnostic_sha256 = "dc3b54f735073d9dec2e3ca821711e06aefbfbee66107ff36b20ab7ff4e16255"

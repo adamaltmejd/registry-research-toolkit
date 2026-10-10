@@ -9,7 +9,6 @@ valid_to = 2017
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 codes_file = "lkf2017.csv"
 sentinel_codes = [
-  { code = "", meaning = "Uppgift saknas" },
   { code = "0000", meaning = "Kommunkod saknas" },
   { code = "00", meaning = "Län okänd" },
   { code = "0199", meaning = "Okänt" },

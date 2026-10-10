@@ -42,12 +42,11 @@ class TagMember:
 
 @dataclass(frozen=True)
 class CuratedTag:
-    """One `[[tag]]` entry: a globally-unique `slug`, a display `label`, an
-    optional `description`, and its members."""
+    """One `[[tag]]` entry: a globally-unique `slug`, a display `label`, and its
+    members."""
 
     slug: str
     label: str
-    description: str | None
     members: tuple[TagMember, ...]
 
 
@@ -78,7 +77,7 @@ def load_tags(path: Path | None) -> tuple[CuratedTag, ...]:
     wheel installs).
 
     Load-time validation (all EXIT_CONFIG, actionable): only `[[tag]]` top-level;
-    `slug`/`label` non-empty strings, `description` optional; tag slugs unique;
+    `slug`/`label` non-empty strings; tag slugs unique;
     each `[[tag.member]]` sets EXACTLY ONE of `variable` (3-seg FQID) / `register`
     (2-seg FQID), with optional `rank` (int) / `starred` (bool) / `note` (str);
     no member appears twice within a tag. Reference RESOLUTION (do the
@@ -99,7 +98,6 @@ def load_tags(path: Path | None) -> tuple[CuratedTag, ...]:
         with located(where):
             slug = _require_str(entry, "slug", "[[tag]]")
             label = _require_str(entry, "label", "[[tag]]")
-            description = _optional_str(entry, "description", f"tag {slug!r}")
             if slug in seen_slugs:
                 raise curation_error(
                     "tags_invalid",
@@ -130,7 +128,6 @@ def load_tags(path: Path | None) -> tuple[CuratedTag, ...]:
             CuratedTag(
                 slug=slug,
                 label=label,
-                description=description,
                 members=tuple(members),
             )
         )

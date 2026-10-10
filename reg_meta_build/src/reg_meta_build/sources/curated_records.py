@@ -61,8 +61,9 @@ class CuratedSourceError(RegMetaError, ValueError):
 
     A located configuration error (``curated_source_invalid``) that stays a
     ``ValueError``: the bundle and pipeline readers catch source-format failures
-    as ``ValueError`` beside the other source adapters' errors. Raised with the
-    message alone, like those siblings, so ``read_selected_bytes`` can build it.
+    as ``ValueError`` beside the other source adapters' errors. A changed or
+    unreadable file is refused earlier by ``read_selected_bytes``, with that rule's
+    own code.
     """
 
     def __init__(self, message: str) -> None:
@@ -364,7 +365,7 @@ def read_curated_source(
     path: Path, revision: SourceRevision, *, provider: str
 ) -> CleanedCuratedSource:
     """Read the selected global TOML layout without catalog interpretation."""
-    payload = read_selected_bytes(path, revision, error_type=CuratedSourceError)
+    payload = read_selected_bytes(path, revision)
     try:
         raw = tomllib.loads(payload.decode("utf-8"))
         _Document.model_validate(raw)

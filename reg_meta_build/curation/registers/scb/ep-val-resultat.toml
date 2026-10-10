@@ -169,7 +169,7 @@ code = "unknown_support_key"
 subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 240)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"2b49cb830ebc2922707be7b1723aa8e8fbfb1068d07cc9aece7157f2e520a53c\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"ef62c2a6ad912a5732dbf1a0e299b1e8872a183597a11c915357d84a48c24faa\"]}"]
-expected_evidence_sha256 = "98f5205f053e22ce2cdd150fb908947e15fcee6b297f6ba1b693dfb1b7c9cb86"
+expected_evidence_sha256 = "4425af0fc5bc6acbb128735c26e180ff40acd6d77fbacba600f52e219833406a"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
 
@@ -178,7 +178,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "240.15145"
 columns = { rostbrsv = "240.15145.rostbrsv", rostbrutl = "240.15145.rostbrutl" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "968b8656b3c74fac472cb8a6af5a09e0948874e90c38567bc61b5cd60508c746"
+expected_evidence_sha256 = "86955a8bf152f7a48198ed9686547940f69f40f53e9adf537c30d5a9280583dd"
 
 [[variable]]
 native_id = "240.15145.rostbrsv"

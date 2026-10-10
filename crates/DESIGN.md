@@ -60,6 +60,16 @@ provider-documented interval and otherwise names an errata correction (with its 
 and exact source editions), a steward row, or `inferred:resolution-gap`. It stays at
 state grain so one corrected edition never relabels a neighboring window.
 
+A state is as long as its facts allow (#1296 2d). Resolution cuts a column wherever the
+set of active source editions or code lists changes, and the builder then merges a run
+of day-adjacent states on one variant, delivery column and value-set version whose facts
+are all identical (value set and version label, classification links, data type and
+length, texts, provenance, pooled flag; population is a variant fact) into one state
+over the run. A gap or any differing fact keeps states apart, and an open-ended state
+never joins a closed run (readers count it as its opening year only), so windows and
+coverage are unchanged. The merged state keeps its earliest segment's `valid_from` and
+so its `state_id`; the IDs of the segments it absorbed no longer resolve.
+
 **The variant is a coordinate, not an identity level.** A variant (SCB
 `registervariant`, SOS `deldatamängd`) is a delivery coordinate. "Kön in LISA" is one
 variable however many variants deliver it; the same variable in variant A or B, or in
@@ -222,18 +232,21 @@ one state. None of this asserts that two source editions are statistically compa
 
 ## Data warnings
 
-Source limitations and explicit interpretation assumptions are catalog data. A warning
-keeps its severity, summary, explanation, diagnostic SHA-256, source references,
-acknowledgement and supplied delivery bounds; its id is the SHA-256 of its canonical
-content. Full diagnostic text stays in the build ledger. A warning attaches to a state
-only when its source references positively witness the state's coordinates and dates;
-unknown and year-independent states never acquire dated warnings through an invented
-interval.
+User-facing source limitations and explicit interpretation assumptions are catalog data;
+build-side bookkeeping codes (identity and lineage resolution, set-aside validity,
+curator rationale) stay in the build report only. A warning keeps its severity, summary,
+explanation, diagnostic SHA-256, source references, acknowledgement and supplied
+delivery bounds; its id is the SHA-256 of its canonical content. Full diagnostic text
+stays in the build ledger. A warning attaches to a state only when its source references
+positively witness the state's coordinates and dates; unknown and year-independent
+states never acquire dated warnings through an invented interval.
 
 Registers and variables expose complete warnings. States carry `warning_ids`, so long
-text is not repeated across annual states. Warnings inform interpretation; they never
-change source values or block selection. Builder accounting such as "temporally
-unassessed" range editions is not a warning.
+text is not repeated across annual states. A `data_warning` row stores each coordinate
+once, as an ID column, shares summary and detail text through `data_warning_text`, and
+is clustered by (register, variable); the reader rebuilds the warning from the row.
+Warnings inform interpretation; they never change source values or block selection.
+Builder accounting such as "temporally unassessed" range editions is not a warning.
 
 ## Read scope and artifact admission
 

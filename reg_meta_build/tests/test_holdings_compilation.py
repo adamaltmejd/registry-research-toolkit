@@ -78,7 +78,7 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
             "warnings": [
                 row[0]
                 for row in conn.execute(
-                    "SELECT json_extract(warning_json, '$.code') FROM data_warning ORDER BY warning_id"
+                    "SELECT code FROM data_warning ORDER BY warning_id"
                 )
             ],
             "tables": [

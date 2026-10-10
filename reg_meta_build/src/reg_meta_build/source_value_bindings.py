@@ -21,14 +21,6 @@ from reg_meta_build.source_coding import (
     has_unknown_code_membership,
     resolve_code_membership,
 )
-from reg_meta_build.source_curation import (
-    CuratedOccurrenceAddition,
-    CurationCase,
-    OccurrenceCorrectionDecision,
-    SourceEvidence,
-    SourceRecordRef,
-)
-from reg_meta_build.source_effects import copied_coding_key
 from reg_meta_build.source_intervals import (
     coding_scope_bounds,
     reconcile_source_fields,
@@ -799,46 +791,12 @@ def bind_occurrence_code_lists(
     )
 
 
-def bind_copied_coding(
-    evidence: SourceEvidence,
-    cases: Iterable[CurationCase],
-    sessions: Iterable[ValueBindingSession],
-) -> dict[tuple[SourceRecordRef, TemporalScope], tuple[CodeListClaim, ...]]:
-    """Bind original copy witnesses before effects, also for offline guard capture.
-
-    This returns evidence only. It never creates or updates an accepted fingerprint.
-    """
-    sessions = tuple(sessions)
-    coding = {}
-    for case in cases:
-        if not isinstance(case.decision, OccurrenceCorrectionDecision):
-            continue
-        for effect in case.decision.effects:
-            if (
-                not isinstance(effect, CuratedOccurrenceAddition)
-                or not effect.copy_coding
-            ):
-                continue
-            key = copied_coding_key(effect)
-            if key not in coding:
-                ref, scope = key
-                coding[key] = tuple(
-                    claim
-                    for record in evidence.grouped.get(
-                        (ref.source, ref.semantic_record_key), ()
-                    )
-                    for claim in bind_code_lists(record, sessions, scope=scope).claims
-                )
-    return coding
-
-
 __all__ = [
     "ValueBindingIssue",
     "ValueBindingResult",
     "ValueBindingSession",
     "ValueListBinding",
     "bind_code_lists",
-    "bind_copied_coding",
     "bind_occurrence_code_lists",
     "open_value_bindings",
 ]

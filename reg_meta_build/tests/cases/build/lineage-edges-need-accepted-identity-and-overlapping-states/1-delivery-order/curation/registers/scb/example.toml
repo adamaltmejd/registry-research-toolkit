@@ -20,3 +20,6 @@ slug = "historical"
 [[variable]]
 native_id = "1.105"
 slug = "earlier"
+[[variable]]
+native_id = "1.106"
+slug = "switch"

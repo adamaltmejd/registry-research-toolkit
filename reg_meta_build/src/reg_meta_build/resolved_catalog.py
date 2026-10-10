@@ -10,6 +10,7 @@ import json
 import sqlite3
 from collections import defaultdict
 from contextlib import closing
+from datetime import date
 from graphlib import CycleError, TopologicalSorter
 from itertools import combinations
 from pathlib import Path
@@ -41,6 +42,7 @@ from reg_meta_build._resolved_common import (
 from reg_meta_build.artifact_identity import search_pins_sha256
 from reg_meta_build.data_warnings import write_data_warnings
 from reg_meta_build.db import (
+    _VALID_TO_SENTINEL,
     DDL,
     SCHEMA_VERSION,
     _provider_id_for,
@@ -459,6 +461,75 @@ class ResolvedAlias(_ResolvedModel):
         return self
 
 
+# Every state fact except its window: two day-adjacent states that agree on all of
+# them are one delivery state.
+_STATE_WINDOW = frozenset({"valid_from", "valid_to"})
+
+
+def _state_facts(state: ResolvedState) -> tuple[object, ...]:
+    return tuple(
+        getattr(state, name)
+        for name in type(state).model_fields
+        if name not in _STATE_WINDOW
+    )
+
+
+def merge_adjacent_states(
+    states: tuple[ResolvedState, ...],
+) -> tuple[ResolvedState, ...]:
+    """Merge day-adjacent dated states whose resolved facts are identical (#1296 2d).
+
+    Occurrence resolution and coding cut a column wherever the set of active
+    source editions or code lists changes, so consecutive editions that state
+    the same facts arrive as separate states. A run of such states on one
+    variant and delivery column, each starting the day after the previous one
+    ends, is one state over the run's hull: same value set and version label,
+    classification links, data type and length, text fields, provenance and
+    pooled flag. Population is a variant fact (LISA carries one per variant,
+    every other reader none), so one variant never mixes two. A gap, or any
+    differing fact, keeps states apart; windows and coverage are unchanged.
+    An open-ended state never merges with a closed run: readers count an
+    open-ended state as its opening year only, so absorbing the closed years
+    into it would drop them from coverage.
+    The merged state keeps its earliest segment's `valid_from` and so its
+    `state_id`; the absorbed segments' IDs stop resolving. Year-independent
+    states have no neighbours and pass through.
+    """
+    merged: list[ResolvedState | None] = list(states)
+    # One lane per value-set version: states of one variant and version never
+    # overlap, so a lane sorted by start is a total order and the result cannot
+    # depend on input order. States of another version may overlap the lane and
+    # never interrupt it.
+    lanes: dict[tuple[str, str, str], list[int]] = defaultdict(list)
+    for index, state in enumerate(states):
+        if state.period_scope == "intervals":
+            lanes[
+                state.variant.slug,
+                state.delivery_column_name,
+                state.value_set_version_label,
+            ].append(index)
+    for indices in lanes.values():
+        head: int | None = None
+        for index in sorted(indices, key=lambda i: states[i].valid_from or ""):
+            state = states[index]
+            current = merged[head] if head is not None else None
+            if (
+                current is not None
+                and current.valid_to is not None
+                and state.valid_from is not None
+                and state.valid_to != _VALID_TO_SENTINEL
+                and date.fromisoformat(current.valid_to).toordinal() + 1
+                == date.fromisoformat(state.valid_from).toordinal()
+                and _state_facts(current) == _state_facts(state)
+            ):
+                assert head is not None
+                merged[head] = current.model_copy(update={"valid_to": state.valid_to})
+                merged[index] = None
+            else:
+                head = index
+    return tuple(state for state in merged if state is not None)
+
+
 class ResolvedVariable(_ResolvedModel):
     register_ref: ResolvedRegister = Field(alias="register")
     slug: str
@@ -483,6 +554,16 @@ class ResolvedVariable(_ResolvedModel):
     @classmethod
     def _name(cls, value: str | None) -> str | None:
         return _require_trimmed(value) if value is not None else None
+
+    @field_validator("states")
+    @classmethod
+    def _merged_states(
+        cls, value: tuple[ResolvedState, ...]
+    ) -> tuple[ResolvedState, ...]:
+        # Every producer (formation, committed fixtures) and every revalidation
+        # passes here, so lineage, warnings, coverage and the writer all see the
+        # merged states.
+        return merge_adjacent_states(value)
 
     @model_validator(mode="after")
     def _resolved_identity_and_states(self) -> Self:
@@ -692,8 +773,12 @@ def _write_value_sets(
     conn: sqlite3.Connection,
     variables: tuple[ResolvedVariable, ...],
     classifications: tuple[ResolvedClassification, ...],
-) -> dict[ResolvedCodeSet, int]:
-    """Store content-shared memberships without provider or validity inference."""
+) -> tuple[dict[ResolvedCodeSet, int], dict[tuple[str, str], int]]:
+    """Store content-shared memberships without provider or validity inference.
+
+    Returns the value-set IDs and the code IDs. `code_id` is dense in (label,
+    code) order, so codes with one label sit together on disk (#1296).
+    """
     code_sets = sorted(
         {
             state.value_set
@@ -716,7 +801,12 @@ def _write_value_sets(
         for classification in classifications
         for code in classification.codes
     )
-    code_ids = {pair: _value_code_id(*pair) for pair in sorted(pairs)}
+    code_ids = {
+        pair: code_id
+        for code_id, pair in enumerate(
+            sorted(pairs, key=lambda pair: (pair[1], pair[0])), start=1
+        )
+    }
     conn.executemany(
         "INSERT INTO value_code (code_id, code, label) VALUES (?, ?, ?)",
         ((code_id, *pair) for pair, code_id in code_ids.items()),
@@ -734,11 +824,7 @@ def _write_value_sets(
             ((set_id, code_ids[pair]) for pair in code_set.members),
         )
         set_ids[code_set] = set_id
-    return set_ids
-
-
-def _value_code_id(code: str, label: str) -> int:
-    return mint("resolved-catalog", "value-code", code, label)
+    return set_ids, code_ids
 
 
 def _validate_catalog_metadata(
@@ -970,6 +1056,7 @@ def _write_classifications(
     conn: sqlite3.Connection,
     classifications: tuple[ResolvedClassification, ...],
     predecessors: dict[str, str],
+    code_ids: dict[tuple[str, str], int],
 ) -> None:
     for classification in classifications:
         classification_id = _classification_id(classification.slug)
@@ -999,7 +1086,7 @@ def _write_classifications(
             "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
             "VALUES (?, ?, ?, 1)",
             (
-                (classification_id, _value_code_id(code.code, code.label), code.level)
+                (classification_id, code_ids[code.code, code.label], code.level)
                 for code in sorted(
                     classification.codes, key=lambda c: (c.code, c.label)
                 )
@@ -1012,6 +1099,7 @@ def _write_conformance(
     state_id: int,
     conformance: ResolvedConformance,
     classification: ResolvedClassification,
+    code_ids: dict[tuple[str, str], int],
 ) -> None:
     checked = len(conformance.checked_codes)
     extensions = set(conformance.nonconforming_members) | set(
@@ -1045,7 +1133,7 @@ def _write_conformance(
             (
                 state_id,
                 _classification_id(conformance.declared_classification),
-                _value_code_id(*pair),
+                code_ids[pair],
                 "sentinel" if pair in sentinel_pairs else "nonstandard",
                 sentinel_meanings.get(pair[0]) if pair in sentinel_pairs else None,
                 json.dumps(
@@ -1164,9 +1252,23 @@ def write_resolved_catalog(
     classifications, classification_predecessors = _prepare_classification_succession(
         classifications, classification_successions
     )
+    # Internal and dense (1..n) in (provider, register, slug) order, so a
+    # register's variables and their states share pages (#1296 2b). Readers
+    # never order or break ties on it.
+    variable_ids = {
+        key: variable_id
+        for variable_id, key in enumerate(
+            sorted(
+                (v.register_ref.provider, v.register_ref.slug, v.slug)
+                for v in variables
+            ),
+            start=1,
+        )
+    }
     metadata_rows = prepare_resolved_metadata(
         ResolvedMetadata() if metadata is None else metadata,
         variables,
+        variable_ids,
         registers,
         variants,
         classifications,
@@ -1224,11 +1326,10 @@ def write_resolved_catalog(
         import_metadata["generation_id"] = expected_generation
 
     output = Path(output)
-    if partial and (
-        output.exists()
-        or output.is_symlink()
-        or output.resolve() == (default_db_dir() / DB_FILENAME).resolve()
-    ):
+    # An existing destination needs no check here: the create-only hardlink below
+    # refuses any existing path. The active catalog path may not exist yet, so it
+    # is refused explicitly.
+    if partial and output.resolve() == (default_db_dir() / DB_FILENAME).resolve():
         raise ValueError(
             "diagnostic or register-scoped output must be a new explicit path separate from the active catalog"
         )
@@ -1240,8 +1341,12 @@ def write_resolved_catalog(
             register_py_lower(conn)
             conn.executescript(DDL)
             seed_providers(conn)
-            value_set_ids = _write_value_sets(conn, variables, classifications)
-            _write_classifications(conn, classifications, classification_predecessors)
+            value_set_ids, code_ids = _write_value_sets(
+                conn, variables, classifications
+            )
+            _write_classifications(
+                conn, classifications, classification_predecessors, code_ids
+            )
             classifications_by_slug = {book.slug: book for book in classifications}
             conn.executemany(
                 "INSERT INTO classification_replaced_by "
@@ -1296,9 +1401,7 @@ def write_resolved_catalog(
                     variable.register_ref.provider,
                     variable.register_ref.slug,
                 )
-                variable_id = _storage_id(
-                    provider, "variable", register_slug, variable.slug
-                )
+                variable_id = variable_ids[provider, register_slug, variable.slug]
                 conn.execute(
                     "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
                     "name, definition, description, operational_definition, measurement_unit, "
@@ -1400,6 +1503,7 @@ def write_resolved_catalog(
                                 state_id,
                                 link.conformance,
                                 classifications_by_slug[link.classification],
+                                code_ids,
                             )
                     conn.execute(
                         "INSERT OR IGNORE INTO variable_alias "

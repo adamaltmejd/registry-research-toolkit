@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "note": "The two members differ in their delivery column, so the member reference does not repeat; only the grain mixes. Allowed twin: group-member-shapes-load, where one variable appears only by delivery column.",
+  "fails_if": "the register loader lets one [[group]] name a variable both whole and by delivery column",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "group 'mixed'",
+      "group mixes whole-variable and representation members"
+    ]
+  }
+}

@@ -188,7 +188,7 @@ fn register(
     };
     let mut stmt =
         conn.prepare("SELECT slug, name FROM register_variant WHERE register_variant_id = ?")?;
-    let variants = by_variant
+    let mut variants = by_variant
         .into_iter()
         .map(|(id, years)| {
             let (variant, variant_name) =
@@ -200,6 +200,9 @@ fn register(
             })
         })
         .collect::<Result<Vec<_>, Error>>()?;
+    // By slug, the unslugged variant last, never by the internal variant id.
+    variants
+        .sort_by(|a, b| (a.variant.is_none(), &a.variant).cmp(&(b.variant.is_none(), &b.variant)));
     Ok(Some(RegisterCoverage {
         fqid,
         register_name,

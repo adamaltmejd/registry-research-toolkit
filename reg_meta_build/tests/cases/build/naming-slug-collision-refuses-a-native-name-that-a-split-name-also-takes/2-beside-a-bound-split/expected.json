@@ -1,0 +1,21 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": ["naming_slug_collision", "unresolved_catalog_identity"]},
+      "fields": ["code", "subject", "case_id", "locator"],
+      "rows": [
+        ["naming_slug_collision", "kon", "curation/registers/scb/sample.toml#variable/1.5.kon", "curation/registers/scb/sample.toml#variable/1.5.kon"],
+        ["naming_slug_collision", "kon", "curation/registers/scb/sample.toml#variable/1.6", "curation/registers/scb/sample.toml#variable/1.6"],
+        ["unresolved_catalog_identity", "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5, 'accepted-partition', '1.5.kon')", null, null],
+        ["unresolved_catalog_identity", "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 6)", null, null]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable"],
+      "rows": []
+    }
+  ]
+}

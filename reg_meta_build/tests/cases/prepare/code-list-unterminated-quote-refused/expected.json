@@ -3,7 +3,7 @@
   "replaces": "test_code_list_source_records.py::test_blank_descriptor_and_malformed_csv_are_explicit_errors",
   "fails_if": "the code-list reader reads an unterminated quote to the end of the file as one label, or reports the CSV error without the file",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "code_list_layout_unsupported",
     "type": "CodeListSourceError",
     "locator": "invalid code CSV catalog/classifications/codes.csv"
   }

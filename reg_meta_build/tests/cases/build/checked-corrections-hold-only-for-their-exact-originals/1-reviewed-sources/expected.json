@@ -116,16 +116,15 @@
       "where": {"register": "par", "variable": ["atc-outpatient", "atc-inpatient", "kva-outpatient", "kva-inpatient"]},
       "fields": ["variable", "variant", "valid_from", "valid_to"],
       "rows": [
-        ["atc-outpatient", "par-ov", "2001-01-01", "2010-12-31"],
-        ["atc-outpatient", "par-ov", "2011-01-01", "2020-12-31"],
+        ["atc-outpatient", "par-ov", "2001-01-01", "2020-12-31"],
         ["atc-inpatient", "par-sv", "2001-01-01", "2020-12-31"],
-        ["kva-outpatient", "par-ov", "2001-01-01", "2010-12-31"],
-        ["kva-outpatient", "par-ov", "2011-01-01", "2020-12-31"],
+        ["kva-outpatient", "par-ov", "2001-01-01", "2020-12-31"],
         ["kva-inpatient", "par-sv", "2001-01-01", "2020-12-31"]
-      ]
+      ],
+      "note": "The outpatient 2001-2010 and 2011-2020 deliveries state identical facts, so they merge into one state (#1296 2d); the report keeps one warning per source period."
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {"register": "par", "code": "source_identity_assumption"},
       "fields": ["variable", "variant", "valid_from", "summary"],
       "rows": [

@@ -4,4 +4,3 @@ from = "scb/lisa"
 from_variant = "individer-16plus"
 to = "scb/lisa"
 to_variant = "individer-15plus"
-effective_year = 2010

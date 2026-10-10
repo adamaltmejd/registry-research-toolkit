@@ -1,0 +1,41 @@
+{
+  "note": "Allowed twin of step 1: the curated group `pay` claims `other` and `value`. The month family `lon` and the curated group both publish.",
+  "fails_if": "`resolve_month_groups` (catalog_dependencies.py) refuses a month family beside any curated group in its register, not only one that claims a month member",
+  "sources": {
+    "description": "SCB register 1 delivers LONJAN, LONFEB and LONMAR, a three-month family named 'Monthly wage <month>', plus VALUE (101).",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1011,
+          "var_id": 111,
+          "colname": "LONJAN",
+          "varname": "Monthly wage january"
+        },
+        {
+          "cvid": 1012,
+          "var_id": 112,
+          "colname": "LONFEB",
+          "varname": "Monthly wage february"
+        },
+        {
+          "cvid": 1013,
+          "var_id": 113,
+          "colname": "LONMAR",
+          "varname": "Monthly wage march"
+        },
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "varname": "ValueVar"
+        },
+        {
+          "cvid": 1002,
+          "var_id": 102,
+          "colname": "OTHER",
+          "varname": "OtherVar"
+        }
+      ]
+    }
+  }
+}

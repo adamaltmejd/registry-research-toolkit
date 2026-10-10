@@ -1,0 +1,39 @@
+{
+  "note": "Allowed twin of step 1: the curated group is keyed `pair`. The derived edge group `efternamn` and the curated group `pair` both publish.",
+  "fails_if": "`resolve_variable_edge_groups` (catalog_dependencies.py) refuses a derived edge group beside any curated group in its register, not only one that takes its key",
+  "sources": {
+    "description": "SCB register 1 delivers FORNAMN and EFTERNAMN as two columns of one source variable (var_id 300), plus VALUE (101) and OTHER (102).",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1004,
+          "var_id": 300,
+          "colname": "FORNAMN",
+          "varname": "Var300",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1005,
+          "var_id": 300,
+          "colname": "EFTERNAMN",
+          "varname": "Var300",
+          "data_type": "int",
+          "data_length": "1"
+        },
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "varname": "ValueVar"
+        },
+        {
+          "cvid": 1002,
+          "var_id": 102,
+          "colname": "OTHER",
+          "varname": "OtherVar"
+        }
+      ]
+    }
+  }
+}

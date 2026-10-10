@@ -2461,7 +2461,7 @@ refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret √∂ver ekonomiskt bist√
 fields = ["coding"]
 reason = "The supplied source coding evidence for this exact field cannot enumerate any associated members. Preserve all identifier/age meaning, original metadata, physical fields, periods and source coding material. Do not invent a finite value domain or interpret a format declaration as an enumerated list; this exact unsupported membership remains unavailable."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
-expected_evidence_sha256 = "24557fa1c9ee2ddd4945d0cc43ce7114f9b9b3be27adad952b889d4834625854"
+expected_evidence_sha256 = "913a3e689ac1e8ae0533c0344cbbb0cac5bf2b88ed2a4f06084f6e02b357d2ad"
 
 [[acknowledge]]
 code = "unresolved_member_list"
@@ -2470,7 +2470,7 @@ refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret √∂ver ekonomiskt bist√
 fields = ["coding"]
 reason = "The supplied source coding evidence for this exact field cannot enumerate any associated members. Preserve all identifier/age meaning, original metadata, physical fields, periods and source coding material. Do not invent a finite value domain or interpret a format declaration as an enumerated list; this exact unsupported membership remains unavailable."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
-expected_evidence_sha256 = "7b950f9695f02cc225391c5666bb21b0fa11273889369585952466aeea298b50"
+expected_evidence_sha256 = "325ac0abd59078fba73cc0390b59b764c20a0c8dc215c8b9b5473f402f40ed45"
 
 [[acknowledge]]
 code = "unresolved_member_list"
@@ -2479,7 +2479,7 @@ refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret √∂ver ekonomiskt bist√
 fields = ["coding"]
 reason = "The supplied source coding evidence for this exact field cannot enumerate any associated members. Preserve all identifier/age meaning, original metadata, physical fields, periods and source coding material. Do not invent a finite value domain or interpret a format declaration as an enumerated list; this exact unsupported membership remains unavailable."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
-expected_evidence_sha256 = "ff8ac23763a1ba3280258f8af408b807a98055aef077581ee4f5309398284469"
+expected_evidence_sha256 = "88dad2b349383e4658f445faea7104e6c806c802d2e7b8036e7e908f91dbf039"
 
 [[acknowledge]]
 code = "unresolved_member_list"
@@ -2488,7 +2488,7 @@ refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret √∂ver ekonomiskt bist√
 fields = ["coding"]
 reason = "The supplied source coding evidence for this exact field cannot enumerate any associated members. Preserve all identifier/age meaning, original metadata, physical fields, periods and source coding material. Do not invent a finite value domain or interpret a format declaration as an enumerated list; this exact unsupported membership remains unavailable."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
-expected_evidence_sha256 = "5f5d67f909001ef74c95ef5b55063e3e306cd1e915ca9c1dcfd10df35f5f0473"
+expected_evidence_sha256 = "19bd4ae6e440027c2022a99a667e32b37e578e89414afd6c0e2824781371337f"
 
 [[acknowledge]]
 code = "unresolved_member_list"
@@ -2497,7 +2497,7 @@ refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret √∂ver ekonomiskt bist√
 fields = ["coding"]
 reason = "The supplied source coding evidence for this exact field cannot enumerate any associated members. Preserve all identifier/age meaning, original metadata, physical fields, periods and source coding material. Do not invent a finite value domain or interpret a format declaration as an enumerated list; this exact unsupported membership remains unavailable."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
-expected_evidence_sha256 = "dc906b661e8f523c2624cf7520edbbf2ae876a2b8a9d8486225c9115efab42da"
+expected_evidence_sha256 = "7533c0788b6471649876950a0822cabc4a25586a178952495412aed25142edfa"
 
 [[acknowledge]]
 code = "unresolved_member_list"
@@ -2506,7 +2506,7 @@ refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret √∂ver ekonomiskt bist√
 fields = ["coding"]
 reason = "The supplied source coding evidence for this exact field cannot enumerate any associated members. Preserve all identifier/age meaning, original metadata, physical fields, periods and source coding material. Do not invent a finite value domain or interpret a format declaration as an enumerated list; this exact unsupported membership remains unavailable."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
-expected_evidence_sha256 = "fcbeb1967b5b86ce066d9f14da906347b26ffeec94f68e1b3fac0843ee87fd6d"
+expected_evidence_sha256 = "b6e51bddf691b64c8ef36d8026c4def3de4ff687ba65b86c9e9cc9bc886d72d5"
 
 [[acknowledge]]
 code = "unresolved_member_list"
@@ -2515,4 +2515,4 @@ refs = ["{\"source\":\"Socialstyrelsen/Metadata Registret √∂ver ekonomiskt bist√
 fields = ["coding"]
 reason = "The supplied source coding evidence for this exact field cannot enumerate any associated members. Preserve all identifier/age meaning, original metadata, physical fields, periods and source coding material. Do not invent a finite value domain or interpret a format declaration as an enumerated list; this exact unsupported membership remains unavailable."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
-expected_evidence_sha256 = "e4f0dcbc993ab9620d41d8addce5520484e92c93b925634d1eb17c289a7f5fe7"
+expected_evidence_sha256 = "5b042766ef5da888294fec874fe19e240669b2f8ab7c917396751207e904af56"

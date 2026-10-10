@@ -134,7 +134,14 @@ changed evidence and block its reuse; it must not refresh the decision's expecta
 
 Adapters implement the formats actually delivered. A changed or ambiguous layout fails
 with retained evidence so the adapter can be repaired. There is no speculative parser
-for hypothetical future formats and no custom adapter per SCB register.
+for hypothetical future formats and no custom adapter per SCB register. Each refusal is
+a `SourceFormatError` whose code names the rule it breaks: `source_revision_changed`
+(the bytes differ from the selected revision), `source_file_unreadable`,
+`code_list_layout_unsupported`, `code_list_name_invalid`, `scb_column_types_unsupported`
+(`Tabelldefinitioner.sql`), `scb_join_keys_layout_unsupported` (`ID-kolumner.xlsx`),
+`scb_value_shape_unsupported`, `lisa_layout_unsupported`, `lisa_value_unsupported` (an
+availability period or sensitivity cell), `sos_variable_sheet_invalid` and
+`sos_worksheet_unsupported`.
 
 `normalization.py` holds the shared mechanical rules. Normalization is idempotent and
 never replaces the original cells:
@@ -203,15 +210,16 @@ associations, validity declarations, disconnected identifiers and duplicates. Mi
 empty and zero stay distinct. A delivered blank code is missing data and never a member,
 labelled or not (SCB's `["", "Uppgift saknas"]` included), as Socialstyrelsen code rows
 already treat it: binding keeps its association as evidence and states no member, so it
-neither publishes nor withholds the list. An undelivered code is structurally missing
-and stays unknown membership, which withholds. A descriptor label is not a global
-code-list ID. Exact validity dates are not truncated to years or silently repaired. An
-edition's explicit item associations establish membership across its finite scope when
-known global item dates would leave gaps. This is the accepted continuity assumption
-when no independent period information is supplied. Original item dates remain evidence
-and every widened association emits a warning. Supplied and section windows still
-restrict membership; unknown or conflicting validity, ambiguous joins and competing
-lists still withhold.
+neither publishes nor withholds the list. Curation cannot author one either: a blank
+(empty or whitespace-only) coding member or classification sentinel code is refused at
+load. An undelivered code is structurally missing and stays unknown membership, which
+withholds. A descriptor label is not a global code-list ID. Exact validity dates are not
+truncated to years or silently repaired. An edition's explicit item associations
+establish membership across its finite scope when known global item dates would leave
+gaps. This is the accepted continuity assumption when no independent period information
+is supplied. Original item dates remain evidence and every widened association emits a
+warning. Supplied and section windows still restrict membership; unknown or conflicting
+validity, ambiguous joins and competing lists still withhold.
 
 The exact `Tal` and `Beskrivande text` rows whose code, version and level agree are type
 declarations, not enumerated codes. Cleaning records that distinction on the descriptor;
@@ -278,7 +286,9 @@ column availability. Register inception may remain unknown when a named delivery
 supplies the bounds. An optional nonblank variable `data_warning` stays in the original
 cells and becomes a warning scoped to its exact variable, variant, column and period
 through the existing checked-occurrence warning contract. These declarations distinguish
-maintainer transcription and sensitivity policy from verified provider meanings.
+maintainer transcription and sensitivity policy from verified provider meanings. A thin
+register that declares one column in two `[[register.variable]]` entries, or repeats a
+variant key, is refused as `thin_declaration_invalid`, naming the repeated entries.
 
 A missing SOS subset sheet does not establish that its variable rows describe one table.
 An authored named-variant topology binds the explicit native subset coordinates on those
@@ -365,7 +375,12 @@ The target layout:
   curation. Generated variable pins live beside it in `<register-slug>.auto.toml`. An
   optional directory holds a register family, e.g. Komvux 248/249/250.
 - `curation/classifications/<short>.toml` holds one classification: its metadata,
-  sentinels, the label list behind the binding rule, and overrides.
+  sentinels, the label list behind the binding rule, and overrides. Its loader refuses
+  with one code per rule family, located at the file: `classification_toml_unreadable`,
+  `classification_unknown_key`, `classification_entry_invalid`,
+  `classification_path_mismatch` (the short name is not the file name),
+  `classification_duplicate` (a slug, reference spelling, binding label or bound
+  variable another book claims) and `classification_family_invalid`.
 - Global files keep the cross-register curation: relations and `same_as`, tags, lineage,
   successions spanning registers, slug freeze state, and search pins.
 - `curation/search_pins.toml` lists, per query and result type (`register` or
@@ -698,7 +713,9 @@ normalization above, their replacement must already occur in a guarded source
 alternative. Exact fields, subjects, scopes and parents remain checked at compilation
 and replay; conditional field effects change only the matching original interpretation.
 This permits punctuation and reference-prose aliases without discarding either physical
-original or inventing a replacement value.
+original or inventing a replacement value. A `column_name` correction cannot list
+`expected_records`: compilation could never apply it, so the loader refuses it
+(`register_entry_invalid`).
 
 A name correction may instead cite `authority_records` from the same native family. The
 replacement must occur literally in those complete remaining source peers. Full target
@@ -745,22 +762,25 @@ checked ownership takes precedence. Missing semantic or physical evidence and co
 columns still require curation. Other case or diacritic twins use the shared
 column-identity fallback only when no edition co-delivers both spellings. An accepted
 name alone cannot establish a partition across ambiguous columns. A partition or
-parallel-column family requires checked ownership and complete relevant membership. An
-implicit split suffix binds case or diacritic twin literals only when their folded
-column key matches and no variant edition co-delivers them. A one-owner partition may
-list a spelling that recurs after an intervening rename (A→B→A). An explicitly reviewed
-complete literal map may retain the base source-native key when its named quantity and
-definition agree across deliveries. Such a map cannot mix split owners or unassigned
-literals. It preserves existing naming, guards all original fields, parent facts, coding
-references and complete family membership, and does not claim statistical equivalence
-across units, calculation methods or delivery levels. Exact source type spellings
-`numerisk`, `alfanumerisk` and `Character` classify as decimal, text and text during
-resolution, including already accepted prepared records. Original type declarations
-remain evidence; classification never uses substring guessing. Blank column records
-remain original evidence without manufacturing a delivered column; a literal claimed by
-two native variables in the same edition needs a split or `native_variable_id`, never a
-fold into one owner. Related but different variables remain connected through groups; a
-shared stem or suffix is not evidence that they are one variable.
+parallel-column family requires checked ownership and complete relevant membership. A
+partition split whose naming pin converted no name (an inactive generated pin in a
+churning zone) is withheld in a diagnostic build as `unresolved_catalog_identity`; a
+strict build stops with `naming_partition_unconverted`. An implicit split suffix binds
+case or diacritic twin literals only when their folded column key matches and no variant
+edition co-delivers them. A one-owner partition may list a spelling that recurs after an
+intervening rename (A→B→A). An explicitly reviewed complete literal map may retain the
+base source-native key when its named quantity and definition agree across deliveries.
+Such a map cannot mix split owners or unassigned literals. It preserves existing naming,
+guards all original fields, parent facts, coding references and complete family
+membership, and does not claim statistical equivalence across units, calculation methods
+or delivery levels. Exact source type spellings `numerisk`, `alfanumerisk` and
+`Character` classify as decimal, text and text during resolution, including already
+accepted prepared records. Original type declarations remain evidence; classification
+never uses substring guessing. Blank column records remain original evidence without
+manufacturing a delivered column; a literal claimed by two native variables in the same
+edition needs a split or `native_variable_id`, never a fold into one owner. Related but
+different variables remain connected through groups; a shared stem or suffix is not
+evidence that they are one variable.
 
 Variant-scoped column owners may select exact source edition labels when the source
 documents a change of measurement basis within one column. Every selected label must
@@ -813,16 +833,16 @@ held somewhere inside the range, never that it exists in every wave, so the entr
 never expanded into per-edition claims. The legacy undated `all_versions` form keeps its
 unknown scope until the curation rewrites those entries with their ranges.
 
-Copied coding pins the original bound donor evidence at the declared occurrence scope
-with explicit `expected_codings`. Missing fingerprints are a contract error; changed
-membership or validity makes the entire occurrence case stale before effects run.
-Unknown and pooled scopes retain their original validity constraints in the fingerprint
-without acquiring dates. Scope fingerprints hash semantic content only — the (kind,
-label, intervals, pooled_start, pooled_end) tuple, with the pooled bounds kept when set
-— never the model dump, so a new optional scope field left as None leaves every existing
-fingerprint unchanged. A fingerprint is captured from prepared evidence in memory during
-each build. Checked value-list field corrections bind using the effective declaration
-while retaining the original source record as evidence.
+Copied coding takes the donor's coding records at the declared occurrence scope. It
+carries no fingerprint of its own: compile and apply bind the same donor record from the
+same prepared value sources in one build, so a pin could only compare the build with
+itself. In a coding fingerprint, unknown and pooled scopes retain their original
+validity constraints without acquiring dates. Scope fingerprints hash semantic content
+only — the (kind, label, intervals, pooled_start, pooled_end) tuple, with the pooled
+bounds kept when set — never the model dump, so a new optional scope field left as None
+leaves every existing fingerprint unchanged. A fingerprint is captured from prepared
+evidence in memory during each build. Checked value-list field corrections bind using
+the effective declaration while retaining the original source record as evidence.
 
 An explicitly open upper bound differs from an unknown period. Resolution can retain a
 known start and explicit open end; the writer uses `9999-12-31` as the storage sentinel.
@@ -856,9 +876,37 @@ scope that carries no range stays unresolvable (an unsupported occurrence, as be
 Coding membership on a pooled edition is bound over the whole pooled range (Y-207). The
 marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0)
 through `ResolvedState`/`IRVariableState` into the DB, and `validate_built_db` fails a
-build whose pooled-marked window overlaps an unmarked window on one column. Adjacent
-pooled segments on one column whose reconciled state-grain facts and coding evidence
-agree merge into one pooled state over their combined window (Y-209).
+build whose pooled-marked window overlaps an unmarked window on one column.
+
+Occurrence resolution and coding cut a column at every change in the active editions or
+code lists, so one state per cut would repeat identical facts edition by edition. One
+rule, `merge_adjacent_states` in `resolved_catalog.py`, runs whenever a
+`ResolvedVariable` is validated: day-adjacent dated states on one variant and delivery
+column whose resolved facts are all identical merge into one state over their hull
+(#1296 2d). The facts compared are every `ResolvedState` field but the window: value set
+and version label, classification links (with their conformance), data type and length,
+texts, provenance and the pooled flag; population is a variant fact, so one variant
+never mixes two. It compares resolved facts, not evidence identity, so two editions that
+state the same thing merge. Adjacent pooled cuts of overlapping pooled editions (Y-209)
+are one case of it, but the interval resolver also re-joins them first
+(`_merge_adjacent_pooled`, on reconciled facts and coding evidence): coding reports
+`missing_coding_period` per resolver segment, before this merge, and curation
+acknowledges those issues over the pooled window, not one per cut. A gap, a pooled state
+beside an explicit one, or any differing fact keeps states apart, and an open-ended
+state never joins a closed run: readers count it as its opening year only, so absorbing
+the closed years would drop them from coverage (a pooled cut is always closed, so the
+resolver's re-join never meets one). Each value-set version is its own lane: states of
+one variant and version never overlap, so the lane sorted by start fixes the result, and
+a state of another version overlapping the lane never interrupts it; the output does not
+depend on input order. The merged state keeps its earliest segment's `valid_from`, hence
+its `state_id`; absorbed segments' IDs stop resolving (pre-v1). It runs after formation
+and representation slicing, so lineage, warnings, coverage and the writer all see the
+merged states; data warnings attach to a state by window overlap at read time, so a
+warning on an absorbed segment attaches to the merged state. A merged consumer state can
+span a change of source variant (2018 through one, 2019 through another); lineage
+resolves it period by period, one edge per source state, and reports an ambiguous source
+variant only where two source variants deliver on one day of the consumer window
+(`_contested_variants` in `catalog_lineage.py`).
 
 Operational definitions and source references are state-grain. Separate resolved periods
 and variants each keep their own exact text and provenance, so differing texts across
@@ -1028,9 +1076,10 @@ A classification may curate an exact-string sentinel list
 `curation/classifications/<short>.toml`) for bulk/missing tokens. These are local source
 extensions with an additional warning naming their curated meaning. Codes match exactly
 (`"00000"` never equals `"0"`); there are no patterns or cross-classification lists.
-Unknown keys, duplicate codes and overlap with canonical members fail fast. Sentinel
-curation does not mutate the official codebook or stale a binding. Original coding
-issues remain visible. Unknown or ambiguous classification identities remain unresolved.
+Unknown keys, duplicate codes and overlap with canonical members fail fast; an overlap
+is `classification_entry_invalid` at the book's file. Sentinel curation does not mutate
+the official codebook or stale a binding. Original coding issues remain visible. Unknown
+or ambiguous classification identities remain unresolved.
 
 Where one literal code has substantive meanings in other source lists, finite
 `coding.sentinel` entries name exact source code-label pairs at one accepted owner,
@@ -1100,17 +1149,18 @@ owner.
 
 An explicit `column_metadata = "per_column"` retains physical type, width, operational
 definition and source attribution on each checked representation window. Each literal
-column is reconciled independently; a conflict within that column remains unknown and
-diagnosed. The shared state retains only agreed facts and never selects a metadata
-donor. The existing `variable_alias_window` carries the mode and these literal fields,
-and selected-column reads project them, including nulls, onto that representation. An
-absent source attribution never inherits a sibling's questionnaire reference. Coverage
-checks compare the source claim with the same column's written window. Names retain the
-shared reconciliation contract; literal definitions require the guarded authoring below.
-Units are delivery facts with a common summary only when they agree; coding has its
-independent mode below. The default `shared` mode retains its existing behavior. Source
-SQL widths and precision remain literal metadata; this mode neither converts them nor
-asserts comparability.
+column is reconciled independently; a conflict within that column is already unknown and
+diagnosed (`conflicting_occurrence_facts`) by source reconciliation, which leaves each
+column one state per period. The shared state retains only agreed facts and never
+selects a metadata donor. The existing `variable_alias_window` carries the mode and
+these literal fields, and selected-column reads project them, including nulls, onto that
+representation. An absent source attribution never inherits a sibling's questionnaire
+reference. Coverage checks compare the source claim with the same column's written
+window. Names retain the shared reconciliation contract; literal definitions require the
+guarded authoring below. Units are delivery facts with a common summary only when they
+agree; coding has its independent mode below. The default `shared` mode retains its
+existing behavior. Source SQL widths and precision remain literal metadata; this mode
+neither converts them nor asserts comparability.
 
 A calendar-month period family may supply an exact `expected_definitions` map for all
 months `01` through `12`. Every original definition must match its month before any
@@ -1192,10 +1242,12 @@ periods it assigns to a sibling column — what it does deliver stays a claim, s
 shared state and the alias windows it promises are themselves checked. Obligations
 travel with the scope result and are checked against the final resolved variables
 immediately before the database is written — in both modes, and whatever else the ledger
-already holds. The strict build stops before any output is placed. The diagnostic build
-records each unexplained fact change and each lost window as an error diagnostic on its
-obligation and completes with a nonpublishable database, so one family's defect no
-longer hides the rest of the cycle.
+already holds. The strict build stops before any output is placed, with the code the
+diagnostic row carries (`unexplained_delivery_fact_change` or
+`unexplained_delivery_coverage_loss`). The diagnostic build records each unexplained
+fact change and each lost window as an error diagnostic on its obligation and completes
+with a nonpublishable database, so one family's defect no longer hides the rest of the
+cycle.
 
 Delivery is established by a final state or a declared representation window on the same
 variable, variant and column. Another column, another variant and a search alias without
@@ -1227,7 +1279,12 @@ Catalog dependencies distinguish a source-backed omission from a missing impleme
 Supported members survive; a group with fewer than two supported members is withheld.
 Relations with unavailable endpoints are withheld with exact reasons. Invalid
 declarations, cycles, duplicate edges and conflicting group ownership remain fatal even
-if some endpoints would later be omitted.
+if some endpoints would later be omitted. Each acyclic relation refuses a loop under its
+own code: `replaced_by_cycle` for register, variable, variant and representation
+succession, `derived_from_cycle` for classification derivation and `lineage_cycle` for
+state lineage. A variable belongs to at most one concept group; the register loader
+refuses a second `[[group]]` that claims one of its variables, or that reuses a group
+key, as `register_duplicate_entry` at that entry.
 
 Groups can attach variables or literal delivery columns and declare multiple facet axes.
 Members must supply every declared facet. A variable cannot mix whole-variable and
@@ -1246,7 +1303,9 @@ rule. Only adjacent recognized editions with matching year-stripped names qualif
 Variable succession lifts adjacent classification editions only within an unambiguous
 register/name and slug stream; variables spanning multiple editions do not qualify.
 Explicit edges retain their provenance. The combined graph is validated before
-materialization.
+materialization. A classification succession or derivation edge that names an uncompiled
+book, restates a derived or curated edge or closes a succession cycle is refused as
+`relations_invalid`, naming the `relations.toml` edge.
 
 `event_sources` explicitly binds each native event namespace to its occurrence dataset.
 Source succession events use already resolved native register, variant, variable or
@@ -1270,7 +1329,8 @@ does not establish a variable endpoint. Missing accepted endpoints retain that w
 even for year-independent deliveries. Only positively linked endpoints reach the
 dated-intersection guard; independent endpoints then require an explicit
 independent-edge contract and currently remain errors. No date hull is inferred from the
-source register's other deliveries.
+source register's other deliveries. Two registers that each name the other as the source
+of one identity-linked variable form a lineage loop, which is refused (`lineage_cycle`).
 
 Panel keys require supported states in the exact variant. Losing one composite-key
 member makes that entire key unknown; it never manufactures a shorter key. Other axes,
@@ -1282,7 +1342,9 @@ support accounting; they do not create public variants or orphan edition childre
 Parent resolution reconciles admitted facts with the same naming, language, coordinate
 and conflict guards as catalog occurrences; `support_only_refs` continues to account for
 the excluded deliveries. Superseded preliminary editions therefore retain their own
-parent prose without recreating preliminary states.
+parent prose without recreating preliminary states. The catalog names an edition by its
+variant and name, so native editions of one variant that share a name are all withheld
+with one `duplicate_edition_name` error; no source order picks the one that keeps it.
 
 ## Persistent data warnings
 
@@ -1303,6 +1365,13 @@ annotated source members; coding annotations use their exact native column and a
 window; errata annotations follow the actual added occurrence, not its supporting native
 anchor. The writer validates each complete warning payload and stores it in an indexed
 `data_warning` table. No assumption is discovered by parsing evidence prose.
+
+The build report (`events.jsonl.gz`, kind `data_warning`) keeps every warning the build
+forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CODES`
+(identity and lineage bookkeeping, set-aside item validity, columnless occurrences and
+curator identity rationale; maintainer decision, #1296) never reach `data_warning`, and
+`validate_built_db` refuses an artifact that holds one or whose row does not hash to its
+`warning_id`.
 
 ## Strict and diagnostic builds
 
@@ -1327,19 +1396,21 @@ resolved, the one matching error is re-emitted as a warning that keeps its code 
 names the acknowledging entry (`acknowledged_by`). The affected output stays withheld,
 and output withheld through it inherits the warning. The build summary counts
 acknowledgements per code. An entry that matches no error is stale, and one that matches
-more than one distinct complete diagnostic is over-broad; both are errors. Identical
-ledger copies remain counted and persisted. An optional `expected_diagnostic_sha256`
-pins the complete original diagnostic when otherwise identical coordinates carry
-different details or withheld outputs. Strict publication accepts acknowledged issues. A
-warning comes from a rule such as `omitted_columnless_occurrence`, a checked explicit
-annotation, or a counted acknowledgement. The compiled `AcknowledgeDecision` reaches
-issues raised while its source scope resolves. An optional `expected_evidence_sha256`
-pins the full original records named by its refs and their bound physical coding
-assertions. The canonical fingerprint (`evidence_sha256` per original and claim) ignores
-content ordering, row positions and the delivery revision but retains multiplicity,
-source fields, parent facts, physical delivered cells, and raw coding associations and
-validity evidence. A changed fingerprint leaves the original error intact and adds a
-stale acknowledgement error. Unguarded entries retain exact issue matching.
+more than one distinct complete diagnostic is over-broad; both are errors. A second
+entry for an issue another entry already acknowledges is `register_duplicate_entry`, the
+code an exact repeat gets at load. Identical ledger copies remain counted and persisted.
+An optional `expected_diagnostic_sha256` pins the complete original diagnostic when
+otherwise identical coordinates carry different details or withheld outputs. Strict
+publication accepts acknowledged issues. A warning comes from a rule such as
+`omitted_columnless_occurrence`, a checked explicit annotation, or a counted
+acknowledgement. The compiled `AcknowledgeDecision` reaches issues raised while its
+source scope resolves. An optional `expected_evidence_sha256` pins the full original
+records named by its refs and their bound physical coding assertions. The canonical
+fingerprint (`evidence_sha256` per original and claim) ignores content ordering, row
+positions and the delivery revision but retains multiplicity, source fields, parent
+facts, physical delivered cells, and raw coding associations and validity evidence. A
+changed fingerprint leaves the original error intact and adds a stale acknowledgement
+error. Unguarded entries retain exact issue matching.
 
 A `[[coding.warning]]` declaration records a reviewed source metadata conflict while
 retaining its type and response domain unchanged. It uses the coding compiler's exact

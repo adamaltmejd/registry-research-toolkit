@@ -575,7 +575,7 @@ variable = "333.24"
 columns = { FamStall = "333.24", FamStall_BarnReg = "333.24" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "aded9f84ec259bd67c9d7826d5e1c74bbee77e21101bd17ec0a2dae399087f20"
+expected_evidence_sha256 = "3c55d1a80e20dfdf526aebcca13f1a3a2b28d0bfef5796343037ca1d1868a970"
 
 [[identity.partition]]
 data_warning = "The separately delivered2000-suffixed field has an explicit source operational definition locating the guardian15 months later. It is retained as a separate source-supported component, never asserted to be the current guardian identity."
@@ -583,7 +583,7 @@ variable = "333.385"
 columns = { PersonNrVard1 = "333.385.current", PersonNrVard1_2000 = "333.385.later", personnrVard1 = "333.385.current" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "6e476d3cd9791bb20ea76fcc1431a16b3478ed19e84284483d77f94c514d45a2"
+expected_evidence_sha256 = "ca095ec4491c90aa7db90eb105d572e8e44a4d7a4a53b1239a65414e0fdf0bd8"
 
 [[identity.partition]]
 data_warning = "The separately delivered2000-suffixed field has an explicit source operational definition locating the guardian15 months later. It is retained as a separate source-supported component, never asserted to be the current guardian identity."
@@ -591,56 +591,56 @@ variable = "333.386"
 columns = { PersonNrVard2 = "333.386.current", PersonNrVard2_2000 = "333.386.later" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "828ff371bf892da5a27660655060d74456eeb6495ca282fe265f4ff36f12f18a"
+expected_evidence_sha256 = "7c308b1e2047fef4b68428a8ab072d4a71481d03ac7b9a4737a3cf63a8f8d8f0"
 
 [[identity.partition]]
 variable = "333.15154"
 columns = { Avlidna = "333.15154", AvlidnaForaldrar = "333.15154", avlidna = "333.15154" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "6db5c2e27e0138830fb476eb0b23214b5836d2d50a679bdbc8f83bba8bebd430"
+expected_evidence_sha256 = "7c4188c7952e6eb7c533a36da2bdb3a2f9ebefbd553bceb8b0d41f3d5b84aa42"
 
 [[identity.partition]]
 variable = "333.15158"
 columns = { AlderSlutAdFar = "333.15158", alderadfar = "333.15158" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "2bd39d27a779daa1d726f1e5c5f17538733726a710fe985753c1e950a1feeba2"
+expected_evidence_sha256 = "6dc1bb5c315f3ae6656616741e2a234f70c72097bfee49e006bd0755c11dc314"
 
 [[identity.partition]]
 variable = "333.15159"
 columns = { AlderSlutAdMor = "333.15159", alderadmor = "333.15159" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "2dbfb43a23f10d92c9c159119ec5b1a6190b1899177b6dee9640b69c3d5f5248"
+expected_evidence_sha256 = "fa981c9b4cdf2ef88a8a61146bd060dbeba23940746f26f9fae34a8dd0898336"
 
 [[identity.partition]]
 variable = "333.15160"
 columns = { AlderSlutFar = "333.15160", alderbiofar = "333.15160" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "800b83d426e1eb5d5707e00f2398a1025601aac8a3b0e16cccaa83963449642d"
+expected_evidence_sha256 = "3bf5c960478d1b9e2438849238b2bad41265008ccbdca74b1ff4219921aa8bb1"
 
 [[identity.partition]]
 variable = "333.15161"
 columns = { AlderSlutMor = "333.15161", alderbiomor = "333.15161" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "90865fe3aebc908f44d457b7ea7f20fa04cda18624fa4a9e768a120f43237681"
+expected_evidence_sha256 = "7cd738706ba4815f2c835f9382a548e23cbc387ef75543c167d52d834bddf25d"
 
 [[identity.partition]]
 variable = "333.15162"
 columns = { AlderSlutBoFar = "333.15162", alderbofar = "333.15162" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "81b705d109885ee5d9ca033908527c35ac960f60ceca40ef976c5b471f9e1f3d"
+expected_evidence_sha256 = "b9c0384c960bc24062988cbcbda598a9b2ecf0ee129b75b85f459e56d2771544"
 
 [[identity.partition]]
 variable = "333.15163"
 columns = { AlderSlutBoMor = "333.15163", alderbomor = "333.15163" }
 unassigned_columns = []
 columns_ref = "Complete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
-expected_evidence_sha256 = "9e8100fa532acf5899a41d0c880fd3654c3a422ececfcd08d0c969c6967807d1"
+expected_evidence_sha256 = "60fee22537cde094d52116e0d16c04933ae650d7347cfa8879907928fadbdc7e"
 
 [[representation.parallel]]
 valid_from = "2014-12-31"
@@ -652,7 +652,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutAdFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderadfar", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8a504ebbeb375812572c9afb495e304cfdad167b03a8b02976e59a7028e977d5"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -666,7 +666,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutAdMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderadmor", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "dc8ca4e6708b9024ff98fa207f4103e18f976a5f91b4d9d96bef33f7878f40ac"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -680,7 +680,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbiofar", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9701cc4e01487fd8869b4f65a0456ea7490b8f2f1b99b973a3f0f7694cab4937"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -694,7 +694,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbiomor", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f9a2ac2515cac59276a071e6bd3b77e1c0b47bea4a675df30158423d01c1eaf1"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -708,7 +708,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbofar", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6dd12c434bd3be19f9971480efd4b3e1aad2be682d162ee81a794cc21b7f72b6"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -722,7 +722,7 @@ variant = "333.1079"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoFar", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbofar", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "4d076b7b02dbe12d76ac9c05b974a8195376c269951a7f900c11bae727aea22b"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -736,7 +736,7 @@ variant = "333.1077"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbomor", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "af3b056b4d885e281adcca353bdc6176b82fd64b75a66fb9c2ae4e14085a103b"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -750,7 +750,7 @@ variant = "333.1079"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "AlderSlutBoMor", source_editions = ["2014-12-31 enligt ny definition"] }, { valid_from = "2014-12-31", valid_to = "2014-12-31", column = "alderbomor", source_editions = ["2014-12-31"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "5355e244c6973bbe8874df2f75af607aa3cde85b2fe4076d8f73599b01bcd825"
 evidence = "The exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
 noted = "2026-10-02"
 
@@ -763,8 +763,8 @@ valid_from = "2014-12-31"
 valid_to = "2014-12-31"
 reason = "The exact own source coding associations contain competing stored domains or contrary code-to-meaning assignments. Supplied dates alone cannot resolve the contradiction; no independently supported unique list establishes this window. Preserve every original list, ordered association, field and date. Leave only the ambiguous effective code membership unavailable; do not pick a vintage, merge domains or manufacture a token."
 evidence = "Complete native-family and physical-peer source review Batch53-six-source-review.json, actual auxiliary/identifier joins and own bound coding. Maintainer-authorized precise retained-unknown policy; exact full-original and ordered coding plus diagnostic guards."
-expected_evidence_sha256 = "2006bc3344d86cf872788e67b02e143728bc009c46aaf7887f3bdf43e074f5d0"
-expected_diagnostic_sha256 = "f7877e67492eb1a8b83bd1a69a54f9aaad21d140aeb9b7ed5b8366293aa85836"
+expected_evidence_sha256 = "275ce5c87a540a5d674ed049e943bff67205278ac2ea1a4f5de516621d11d85a"
+expected_diagnostic_sha256 = "713dc8cafcae23680a188ceb728264545113cee3bd7ef547287fe02e751371f9"
 
 [[acknowledge]]
 code = "unresolved_lineage_ambiguous_source_variant"
@@ -773,7 +773,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = []
 valid_from = "2001-12-31"
 valid_to = "2001-12-31"
-expected_evidence_sha256 = "0e32223a71c825e39f6e37a15d8df9dae50b92b99398a68411c7d88b284cc7f1"
+expected_evidence_sha256 = "ed8d3d59bcad06e9a6ca9714ccb192cb1869f98bd59f2a2fb636bfdbe7519ca1"
 expected_diagnostic_sha256 = "a70325608097611760d0528af82b72615ee439df922e0227349c006366f2a075"
 reason = "The literal RTB source variant label is shared by its annual and quarterly admitted variants. Retain the exact source attribution and accepted variable identity without selecting a delivery variant or manufacturing a lineage edge. The source declaration does not establish which variant supplied this consumer window."
 evidence = "Complete current six-node accepted identity closure reviewed using maintained curation and accepted source originals (prepared commit cdd343ba8a61e6d2e44a2f057ae6677e579db32d; manifest650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa). Batch56-lineage-source-proof.json retains the consumer original, complete source candidate variable states, both annual/quarterly named variants and exact identity edges. Any changed original, candidate, parent distinction or identity edge invalidates this acknowledgement."
@@ -785,7 +785,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = []
 valid_from = "2001-12-31"
 valid_to = "2001-12-31"
-expected_evidence_sha256 = "4d952ed19b62e5d949e5473cb7167e71ea1f2c5e578003ef441fdea42c1fab09"
+expected_evidence_sha256 = "3d04b3deee1d74e3cbf378ce5c18df9e62a0b3224ae4f9fa2416361e57a92889"
 expected_diagnostic_sha256 = "8e7aa3135ae516b7cffcf05e80e8e8c3eb43ad6c7ccf76aade53d482df4c888c"
 reason = "The literal RTB source variant label is shared by its annual and quarterly admitted variants. Retain the exact source attribution and accepted variable identity without selecting a delivery variant or manufacturing a lineage edge. The source declaration does not establish which variant supplied this consumer window."
 evidence = "Complete current six-node accepted identity closure reviewed using maintained curation and accepted source originals (prepared commit cdd343ba8a61e6d2e44a2f057ae6677e579db32d; manifest650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa). Batch56-lineage-source-proof.json retains the consumer original, complete source candidate variable states, both annual/quarterly named variants and exact identity edges. Any changed original, candidate, parent distinction or identity edge invalidates this acknowledgement."

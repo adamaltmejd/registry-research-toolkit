@@ -24,7 +24,6 @@ valid_from = 1993
 codes_file = "sektorkod.csv"
 sentinel_codes = [
   { code = "0", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "99", meaning = "Sektorkod okänd" },
 ]
 

@@ -19,7 +19,6 @@ sentinel_codes = [
   { code = "XXXXX", meaning = "Partiellt bortfall" },
   { code = "xxx", meaning = "Partiellt bortfall" },
   { code = "NULL", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Okänd" },
   { code = "000", meaning = "Uppgift saknas" },
   { code = "0", meaning = "Okänt värde" },
   { code = "000000", meaning = "Okänd" },

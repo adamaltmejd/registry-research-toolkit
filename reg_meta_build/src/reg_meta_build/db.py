@@ -22,7 +22,7 @@ from reg_core_py import fold_identity
 from .errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "9.7.0"
+SCHEMA_VERSION = "10.0.0"
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
@@ -776,8 +776,8 @@ CREATE TABLE provider (
 -- FQID slug columns (`slug` on register / register_variant / classification)
 -- are nullable in 3.1. Curated values land in step 1c; the build refuses to
 -- compile with NULL slugs from then on. The `_default` placeholder for
--- variant-less registers is synthesized at FQID-resolve time (catalog.py),
--- never persisted. See crates/DESIGN.md → FQID grammar and DESIGN.md → Slug curation.
+-- variant-less registers is never persisted: the Rust reader matches it to the
+-- NULL-slug variant (crates/reg-catalog/src/ops/schema.rs). See crates/DESIGN.md → FQID grammar and DESIGN.md → Slug curation.
 CREATE TABLE register (
     register_id INTEGER PRIMARY KEY,
     provider_id INTEGER NOT NULL REFERENCES provider(provider_id),
@@ -856,8 +856,11 @@ CREATE TABLE variable (
     -- per provider. The natural key is (register_id, slug); `provider_key`
     -- (SCB `str(var_id)`; SOS the merged variable name) is demoted from the PK
     -- to a NON-unique join hint — a triage split puts several
-    -- variables under one source key.
-    variable_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- variables under one source key. Internal: dense (1..n) in (provider,
+    -- register, slug) order (#1296 2b), so it carries no provider band and no
+    -- reader orders or breaks ties on it. An extend-db overlay appends its
+    -- minted (high-band) ids after the dense range.
+    variable_id INTEGER PRIMARY KEY,
     register_id INTEGER NOT NULL REFERENCES register(register_id),
     -- SCB str(var_id), TEXT so SOS can key by merged variable name.
     -- NON-unique join hint, not a key: the build-time `variable_instance.var_id`
@@ -956,11 +959,8 @@ CREATE TABLE variable_instance (
     data_length TEXT,
     value_set_version_label TEXT,
     vardemangdsniva TEXT,
-    -- #892: per-cvid carrier for SCB's `VariabelOperationell_definition`. The
-    -- ingest pass writes it here (the per-cvid grain is the right carrier — it
-    -- distinguishes parallel columns of one var_id), then `_coalesce_variable_states`
-    -- aggregates it to each OWNING (post-split-sibling) `variable.operational_definition`
-    -- via the same ground-truth `variable_id` stamp that routes aliases. Dropped
+    -- #892: per-cvid carrier for SCB's `VariabelOperationell_definition` (the
+    -- per-cvid grain distinguishes parallel columns of one var_id). Dropped
     -- with this build-time-only table before ship.
     operational_definition TEXT,
     -- Raw per-cvid source attribution. SCB may use the operational-definition
@@ -976,21 +976,8 @@ CREATE TABLE variable_instance (
     -- excluded by year projection). No reverse index — every consumer reaches
     -- here from the cvid PK side, so the forward path is already optimal.
     value_set_id INTEGER REFERENCES value_set(value_set_id),
-    -- The cvid's OWNING `variable_id` — GROUND TRUTH, stamped by
-    -- `_coalesce_variable_states` AFTER triage (NULL until then). A2.2
-    -- triage can split one source `var_id` into sibling variables that SHARE
-    -- the `(register_id, var_id)` provider key, so `var_id` alone can't name the
-    -- owning variable; but the coalescer builds each `variable_state` FROM these
-    -- cvids and therefore KNOWS the exact cvid→sibling assignment, which it
-    -- records here. `SCBAdapter._emit_variable_aliases` (→ IRVariableAlias →
-    -- materializer) and `_backfill_state_classifications` read it to attribute
-    -- each cvid's delivery columns / classification to the right sibling — no
-    -- post-hoc column-tie heuristic, no skip. No FK: build-time-only (dropped
-    -- with the table, before `PRAGMA foreign_key_check`) and values valid by
-    -- construction. No CREATE-time index: the column is NULL until triage. Once
-    -- stamped, the coalescer creates a transient `variable_id, cvid` scratch index
-    -- for sibling-routed post-stamp readers. Distinct from the natural-key note
-    -- below — that's about the absent `(register_id, var_id)` → `variable` FK.
+    -- The cvid's owning `variable_id`. No FK: build-time-only (dropped with
+    -- the table, before `PRAGMA foreign_key_check`).
     variable_id INTEGER
     -- A2.1.5: no FK on the `(register_id, var_id)` natural key to `variable` —
     -- it moved to the synthetic `variable_id` PK + register-unique `slug`, so
@@ -1014,28 +1001,22 @@ CREATE TABLE variable_alias_build (
     PRIMARY KEY (cvid, delivery_column_name)
 );
 
--- Per-era shape of a variable (see crates/DESIGN.md → Two-level variable model). One row per coalesced
--- `(register_id, register_variant_id, var_id, data_type, data_length, value_set_id,
--- value_set_version_label, grain)` tuple over `variable_instance`; populated
--- by `_coalesce_variable_states` after CSV import. A2.5/A2.6 flipped the
--- resolver onto this table (keyed by `variable_id`); A2.7 drops the now-unused
--- `variable_instance` after the coalescer + downstream build passes consume it.
--- A2.1.5 re-parented this onto the synthetic `variable_id` FK (was FK
--- `(register_id, var_id)` in A2.1) and made `register_variant_id` an explicit
--- delivery coordinate; the coalescer resolves each group's `variable_id` from
--- `(register_id, var_id)` via the promoted `variable` table.
+-- Per-era shape of a variable (see crates/DESIGN.md → Two-level variable model). One row
+-- per resolved delivery state, written by `write_resolved_catalog`. Day-adjacent
+-- states on one variant and delivery column whose facts are all identical are one
+-- row over their hull (`merge_adjacent_states`, #1296 2d); a gap or any differing
+-- fact keeps rows apart.
 --
 -- Interval states carry two full ISO dates, including the existing open-end
 -- sentinel. Explicit year-independent states carry NULL bounds and no pooled
 -- flag; they have physical delivery scope, not calendar availability.
---
--- A `grain` column is intentionally absent — pre-triage rows that differ
--- only on SCB's `vardemangdsniva` are kept distinct in the coalescer's
--- in-memory group key so A2.2 can later promote them into sibling slugs,
--- but grain itself never lands in the universal schema (it becomes part
--- of the variable slug when a split fires).
 CREATE TABLE variable_state (
-    state_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    -- The public state identity, minted from the state's coordinates. Not the
+    -- rowid: rows are written in (variable_id, variant, chronological) order, so
+    -- a variable's states share pages (#1296 2b). A rowid table rather than
+    -- WITHOUT ROWID, because a row carries the state's prose and an index b-tree
+    -- spills rows over ~1 KB to overflow pages where a table b-tree does not.
+    state_id INTEGER NOT NULL UNIQUE,
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
     period_scope TEXT NOT NULL DEFAULT 'intervals' CHECK (period_scope IN ('intervals', 'year_independent')),
@@ -1077,7 +1058,7 @@ CREATE TABLE variable_state (
     value_set_version_label TEXT NOT NULL DEFAULT '',
     -- Full-date contract: ten-character ISO 8601 strings only. Length check
     -- is a cheap structural guard; a stricter regex isn't worth the runtime
-    -- cost because the coalescer is the only writer.
+    -- cost because the resolved writer validates every date first.
     CHECK (
         (period_scope = 'intervals' AND valid_from IS NOT NULL AND valid_to IS NOT NULL
          AND length(valid_from) = 10 AND length(valid_to) = 10 AND valid_to >= valid_from)
@@ -1089,29 +1070,10 @@ CREATE INDEX idx_variable_state_variable
 CREATE INDEX idx_variable_state_register_variant
     ON variable_state(register_variant_id);
 -- State-uniqueness index — UNIQUE(variable_id, register_variant_id,
--- valid_from, value_set_version_label). A4.3b moved it into the base DDL (was
--- created by `_coalesce_variable_states` after SCB triage). Rationale: it is a
--- structural invariant of the universal `variable_state` shape, not an SCB
--- artifact — two adapters (SCB coalescer, SOS reinsert) each CREATE-ing it is a
--- footgun, and with it in the DDL from table creation BOTH the SCB coalescer's
--- post-triage bulk INSERT and the materializer's `_reinsert_core_graph_from_ir`
--- get the loud-collision guarantee with no per-adapter coordination.
---   The invariant only holds POST-triage: `_coalesce_variable_states` emits one
--- PRE-TRIAGE row per (… data_type, data_length, value_set_id,
--- value_set_version_label, grain) group, so a same-year variable with multiple
--- grains / codings / shapes produces several rows that share (variable_id,
--- register_variant_id, valid_from) and carry value_set_version_label = '' — they
--- collide before A2.2 triage folds them (→ value_set_version_label-discriminated
--- states), splits them (→ sibling variable_ids), or collapses drift. SCB triage
--- writes its rows POST-fold/split (collision-free), and SOS emits one state per
--- distinct windowed (variable, variant, valid_from, version_label), so both feed
--- the index collision-free; a CREATE-time collision would surface a residual
--- triage/era bug loudly. value_set_version_label stays NOT NULL DEFAULT '' so the
--- index bites in the common single-version case. Byte-identity: SQLite stores
--- the CREATE text verbatim in sqlite_master.sql, so this statement is kept on a
--- single line to match the exact text the A4.3a SCB coalescer submitted (a
--- reflowed multi-line form is a real dbdiff schema diff even though the index is
--- semantically identical). Confirmed exit-0 vs the A4.3a baseline.
+-- valid_from, value_set_version_label): the coordinates `state_id` is minted from,
+-- so a collision is a resolution bug surfaced loudly. A merged state keeps its
+-- earliest segment's `valid_from` and so its ID. value_set_version_label stays
+-- NOT NULL DEFAULT '' so the index bites in the common single-version case.
 CREATE UNIQUE INDEX idx_variable_state_unique ON variable_state(variable_id, register_variant_id, valid_from, value_set_version_label) WHERE period_scope = 'intervals';
 CREATE UNIQUE INDEX idx_variable_state_independent_unique ON variable_state(variable_id, register_variant_id, value_set_version_label) WHERE period_scope = 'year_independent';
 CREATE INDEX idx_variable_state_value_set
@@ -1174,16 +1136,6 @@ CREATE TABLE source_relationship (
         OR (binding_status = 'retained_unattached' AND owner_variable_id IS NULL AND unresolved_json = '[]'))
 );
 CREATE INDEX idx_source_relationship_owner ON source_relationship(owner_variable_id);
-CREATE TABLE source_relationship_variable (
-    relationship_id INTEGER NOT NULL REFERENCES source_relationship(relationship_id),
-    ordinal INTEGER NOT NULL CHECK (ordinal >= 0),
-    clause_index INTEGER CHECK (clause_index >= 0),
-    operand_index INTEGER CHECK (operand_index >= 0),
-    literal_token TEXT NOT NULL,
-    endpoint_variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
-    CHECK ((clause_index IS NULL) != (operand_index IS NULL)),
-    PRIMARY KEY (relationship_id, ordinal)
-);
 CREATE TABLE variable_alias_window (
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
@@ -1320,6 +1272,8 @@ CREATE INDEX idx_classification_conformance_code_code
 
 -- Enrichment tables
 CREATE TABLE value_code (
+    -- Internal and dense (1..n) in (label, code) order (#1296); readers
+    -- break ties on (code, label), never on code_id.
     code_id INTEGER PRIMARY KEY,
     -- SCB's `värdekod` / `värdebenämning` become universal `code` / `label`.
     -- Values stay provider-native (SCB code strings like "01", "Man", "").
@@ -1350,7 +1304,7 @@ CREATE TABLE value_set_member (
     code_id      INTEGER NOT NULL REFERENCES value_code(code_id),
     PRIMARY KEY (value_set_id, code_id)
 ) WITHOUT ROWID;
-CREATE INDEX idx_value_set_member_code ON value_set_member(code_id);
+-- No `code_id` index: every reader enters through `value_set_id` (#1296).
 
 CREATE TABLE unika_summary (
     register_id INTEGER,
@@ -1363,23 +1317,6 @@ CREATE TABLE unika_summary (
     kanslig_variabel_ibland TEXT,
     identitetsvariabel TEXT,
     PRIMARY KEY (register_id, register_variant_id, kolumnnamn, variabelnamn)
-);
-
-CREATE TABLE identifier_semantics (
-    var_id INTEGER PRIMARY KEY,
-    variabelnamn TEXT,
-    variabeldefinition TEXT
-);
-
-CREATE TABLE timeseries_event (
-    timeseries_event_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    namn TEXT,
-    handelse TEXT,
-    beskrivning TEXT,
-    entitet TEXT,
-    id1 TEXT,
-    id2 TEXT,
-    fil_id TEXT
 );
 
 -- Performance indexes
@@ -1416,7 +1353,7 @@ CREATE TABLE code_variable_map (
 -- `variable_id` lookup. The #352 codes search annotates each code hit with its
 -- owning variables, whose per-variable count correlated-subquery
 -- (`COUNT(*) ... WHERE variable_id = ?`) full-scans this 4.1M-row table without
--- this index (inkomst 286s → 0.51s with it). Mirrors idx_value_set_member_code.
+-- this index (inkomst 286s → 0.51s with it).
 -- Additive index → SCHEMA_VERSION stays 5.4.0 (like #371's covering index): an
 -- old DB works fine without it, just slower, so it's NOT incompatible — the index
 -- lands in the deployed DB at the next reg_meta DB rebuild/release. The released
@@ -1451,17 +1388,6 @@ CREATE TABLE variable_same_as (
 -- No separate a-side index: this is a WITHOUT ROWID table, so the PRIMARY KEY
 -- is the clustered index, and its leading (a_provider, a_register, a_variable)
 -- prefix already serves the resolver's source-side lookup.
-
-CREATE TABLE classification_same_as (
-    a_provider              TEXT NOT NULL,
-    a_classification_slug   TEXT NOT NULL,
-    b_provider              TEXT NOT NULL,
-    b_classification_slug   TEXT NOT NULL,
-    PRIMARY KEY (
-        a_provider, a_classification_slug,
-        b_provider, b_classification_slug
-    )
-) WITHOUT ROWID;
 
 -- Non-temporal classification derivation / variant edges (#779). Directional:
 -- `derived_slug` is the specialized classification (for example KS87-P),
@@ -1621,8 +1547,7 @@ CREATE INDEX idx_concept_group_classification_group
 CREATE TABLE tag (
     tag_id      INTEGER PRIMARY KEY AUTOINCREMENT,
     slug        TEXT NOT NULL UNIQUE,
-    label       TEXT NOT NULL,
-    description TEXT
+    label       TEXT NOT NULL
 );
 
 -- Polymorphic membership: EXACTLY ONE of register_id / variable_id is set (the
@@ -1658,15 +1583,17 @@ CREATE INDEX idx_tag_member_by_register
     ON tag_member(register_id) WHERE register_id IS NOT NULL;
 
 -- Directional succession edges. Auto-derived from SCB
--- `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')` by
--- `_materialize_replaced_by_edges`, PLUS curated `type = "replaced_by"` edges
--- from `curation/relations.toml` by `relations.materialize_curated_replaced_by`
+-- timeseries events with `handelse IN ('Ersatt av', 'Ersätter')` by
+-- `source_event_resolution`, PLUS curated `type = "replaced_by"` edges
+-- from `curation/relations.toml` compiled by `curation_compile`
 -- (#440/#522 — the register/variable grains only). Three sibling tables, one per
 -- entity grain
 -- (register / variant / variable). Slug-anchored so an edge survives rebuilds
--- even if the underlying provider IDs shift. `note` distinguishes the source:
--- `'auto:timeseries_event'` (auto-derived) vs `'curated:slug_toml'` (the
--- cross-provider / dead-predecessor rows `timeseries_event` can't carry).
+-- even if the underlying provider IDs shift. Only the variable grain keeps the
+-- `note` provenance (`'auto:timeseries_event'`, `'curated:slug_toml'` or
+-- `'derived:classification_vintage_lift'`): `validate_built_db` selects the
+-- vintage-lift edges by it. The variant grain is endpoints only (the reader
+-- shows the variant pair; 4.10 dropped its unread year, note and reason).
 --
 -- Unlike `same_as` (an equivalence, stored both ways), `replaced_by` is
 -- DIRECTIONAL: SCB's paired `Ersatt av` / `Ersätter` rows collapse to one
@@ -1678,23 +1605,18 @@ CREATE INDEX idx_tag_member_by_register
 -- A2.5 `.predecessors()` accessor; only the variable grain has an accessor that
 -- needs it, so register/variant stay index-free on the successor side).
 --
--- #142: `beskrivning` carries the human transition reason from
--- `timeseries_event.beskrivning` (e.g. "2001 byttes SUN96 till SUN2000"),
--- alongside the `auto:timeseries_event` provenance in `note` (kept distinct so
--- the #440 TOML-curation path can still tell auto from curated; a curated row's
--- own `note` lands here in `beskrivning`). All three sibling tables carry it so
--- they stay structurally identical and the materializer can resolve it
--- uniformly. `effective_year` is populated for the AktuellVariabel variable
--- grain (the successor edition's year) and for any curated row that declares it;
--- the other auto grains leave it NULL (no edition to derive a year from — see
--- `_materialize_replaced_by_edges`).
+-- #142: `beskrivning` (register and variable grains) carries the human
+-- transition reason from the source timeseries event (e.g. "2001 byttes SUN96
+-- till SUN2000"); a curated row's own `note` lands here in `beskrivning`.
+-- `effective_year` is populated for the AktuellVariabel variable grain (the
+-- successor edition's year) and for any curated row that declares it; the other
+-- auto grains leave it NULL (no edition to derive a year from).
 CREATE TABLE register_replaced_by (
     predecessor_provider TEXT NOT NULL,
     predecessor_register TEXT NOT NULL,
     successor_provider   TEXT NOT NULL,
     successor_register   TEXT NOT NULL,
     effective_year       INTEGER,
-    note                 TEXT,
     beskrivning          TEXT,
     PRIMARY KEY (predecessor_provider, predecessor_register,
                  successor_provider, successor_register)
@@ -1707,9 +1629,6 @@ CREATE TABLE variant_replaced_by (
     successor_provider   TEXT NOT NULL,
     successor_register   TEXT NOT NULL,
     successor_variant    TEXT NOT NULL,
-    effective_year       INTEGER,
-    note                 TEXT,
-    beskrivning          TEXT,
     PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variant,
                  successor_provider, successor_register, successor_variant)
 ) WITHOUT ROWID;
@@ -1756,7 +1675,7 @@ CREATE INDEX idx_variable_replaced_by_successor
 -- exactly like #819's `concept_group_variable.delivery_column_name`.
 --
 -- CURATED-ONLY: there is no auto/event-derived representation grain (SCB's
--- `timeseries_event` succession is entity-grained, never column-level), so every
+-- timeseries-event succession is entity-grained, never column-level), so every
 -- row carries `note = 'curated:slug_toml'` provenance and the human transition
 -- reason lands in `beskrivning` (same convention as the register/variable arms).
 -- BOTH endpoints must be live (a within-build column rename observes both
@@ -1869,36 +1788,36 @@ CREATE TABLE variable_state_lineage_warning (
 );
 CREATE INDEX idx_variable_state_lineage_warning_consumer ON variable_state_lineage_warning(consumer_state_id);
 
+-- User-facing data warnings only; build-only codes (`data_warnings.BUILD_ONLY_CODES`)
+-- stay in the build report. Each row holds its coordinates once: the reader derives
+-- the register and variable FQIDs and the variant slug from the ID columns, and the
+-- repeated summary and detail text lives in `data_warning_text`. `warning_id` is the
+-- SHA-256 of the reconstructed warning, as 32 raw bytes. Rows are inserted in
+-- (register_id, variable_id, warning_id) order, so the rowid clusters a register's
+-- and a variable's warnings on adjacent pages.
+CREATE TABLE data_warning_text (
+    text_id INTEGER PRIMARY KEY,
+    text    TEXT NOT NULL UNIQUE
+);
+
 CREATE TABLE data_warning (
-    warning_id TEXT PRIMARY KEY,
+    warning_id BLOB NOT NULL UNIQUE CHECK(length(warning_id) = 32),
     register_id INTEGER NOT NULL REFERENCES register(register_id),
     variable_id INTEGER REFERENCES variable(variable_id),
     register_variant_id INTEGER REFERENCES register_variant(register_variant_id),
     delivery_column_name TEXT,
     valid_from TEXT,
     valid_to TEXT,
-    warning_json TEXT NOT NULL CHECK(json_valid(warning_json)),
+    code TEXT NOT NULL,
+    severity TEXT NOT NULL CHECK(severity IN ('warning', 'error')),
+    summary_id INTEGER NOT NULL REFERENCES data_warning_text(text_id),
+    detail_id INTEGER NOT NULL REFERENCES data_warning_text(text_id),
+    -- diagnostic_detail_sha256, fields, refs, withheld_output, acknowledged_by, case_id
+    evidence_json TEXT NOT NULL CHECK(json_valid(evidence_json)),
     CHECK(register_variant_id IS NULL OR variable_id IS NOT NULL),
     CHECK(valid_from IS NULL OR valid_to IS NULL OR valid_from <= valid_to)
 );
 CREATE INDEX idx_data_warning_register ON data_warning(register_id, variable_id);
-CREATE INDEX idx_data_warning_variable ON data_warning(variable_id, valid_from, valid_to);
-
--- Reference tables
-CREATE TABLE source_column_type (
-    table_name TEXT NOT NULL,
-    column_name TEXT NOT NULL,
-    sql_type TEXT NOT NULL,
-    nullable INTEGER NOT NULL,
-    PRIMARY KEY (table_name, column_name)
-);
-
-CREATE TABLE source_join_key (
-    table_name TEXT NOT NULL,
-    column_name TEXT NOT NULL,
-    description TEXT,
-    PRIMARY KEY (table_name, column_name)
-);
 
 -- Import metadata
 CREATE TABLE holding_table (
@@ -2361,6 +2280,9 @@ def _insert_core_graph_from_ir(
     # `provider_key` is the NON-unique join hint. `slug` inserts NULL (the
     # populate_variable_slugs UPDATE pass fills it). `source_label` is the
     # resolved source-register display label (IRVariable.source_label).
+    # simplify: overlay variable ids stay minted (high band), appended after the
+    # global build's dense range (#1296 2b); densify them if a steward overlay's
+    # cold reads are measured slow.
     conn.executemany(
         "INSERT INTO variable "
         "(variable_id, register_id, provider_key, slug, name, definition, "

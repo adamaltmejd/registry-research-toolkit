@@ -157,7 +157,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "353.30471"
 columns = { Direkt = "353.30471.direkt", Direkt9 = "353.30471.direkt9" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "ea6dc2450a070da520e4f83579ae9eef1e552f934f1f21b5a6dde269bdbff976"
+expected_evidence_sha256 = "d08cd56ed5466526d4bc69dd6a9638eab21ed5fe3541abe14137c9ac8ac193f8"
 
 [[variable]]
 native_id = "353.30471.direkt"

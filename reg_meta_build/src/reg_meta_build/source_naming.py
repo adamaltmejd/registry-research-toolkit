@@ -9,7 +9,7 @@ from __future__ import annotations
 import tomllib
 from collections import defaultdict
 from dataclasses import asdict
-from typing import TYPE_CHECKING, Any, Literal, Self, cast
+from typing import TYPE_CHECKING, Any, Literal, NamedTuple, Self, cast
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
@@ -38,7 +38,7 @@ from reg_meta_build.source_curation import (
 from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Sequence
     from pathlib import Path
 
     from reg_meta_build.curation_tree import CurationTree, RegisterCuration
@@ -263,6 +263,9 @@ class NamingConversion(_NamingModel):
     declarations: tuple[NamingDeclaration, ...]
     dispositions: tuple[NamingEntryDisposition, ...]
     diagnostics: tuple[ResolutionDiagnostic, ...]
+    # Declarations a slug collision refused: they form nothing, but their FQID
+    # stays known so a curated reference to it is withheld, not missing.
+    refused: tuple[NamingDeclaration, ...] = ()
 
     @property
     def complete(self) -> bool:
@@ -471,6 +474,91 @@ def _effective(
     return SlugEntry(**effective), ordered
 
 
+def _slug_locator(entries: Iterable[AcceptedNamingEntry], slug: str) -> str | None:
+    """The tracked entry whose slug a name took: the authored one over a generated pin."""
+    supplying = sorted(
+        (item for item in entries if item.entry.slug == slug),
+        key=lambda item: (item.origin == "authored", item.entry_id),
+    )
+    return supplying[-1].entry_id if supplying else None
+
+
+class _SlugHolder(NamedTuple):
+    """One name that takes a slug in an FQID scope."""
+
+    identity: NativeKey
+    ambiguous_family: bool
+    locator: str
+    index: int | None  # the declaration's index; None for an ambiguous name
+
+
+def refuse_slug_collisions(
+    declarations: Sequence[NamingDeclaration],
+    ambiguities: Iterable[NamingAmbiguity] = (),
+) -> tuple[set[int], tuple[ResolutionDiagnostic, ...]]:
+    """Refuse every slug that two native identities take in one FQID scope.
+
+    Returns the indices of the colliding declarations, which must form nothing, and
+    one `naming_slug_collision` per colliding name, located at the curation entry
+    that gave it the slug. An ambiguous family's names are declared variables too
+    (`declared_dependency_keys`), so they collide like declarations, except with a
+    declaration inside their own family: that is the family's partial name, not a
+    second identity. Run it over every naming source of a scope at once; a check
+    over one source alone misses a slug that another source also assigns.
+    """
+    holders: defaultdict[
+        tuple[EntityKind, str | None, NativeKey | None, str], list[_SlugHolder]
+    ] = defaultdict(list)
+    for index, declaration in enumerate(declarations):
+        target, slug = declaration.target, declaration.naming.slug
+        if slug is not None:
+            # Matrix answers and period families carry no naming entry; their
+            # source_id starts with the declaring curation entry's locator.
+            locator = (
+                _slug_locator(declaration.contributors, slug)
+                or declaration.naming.source_id
+            )
+            holders[(target.kind, target.provider, target.register_key, slug)].append(
+                _SlugHolder(target.source_key, False, locator, index)
+            )
+    for ambiguity in ambiguities:
+        family = ambiguity.family
+        for name in ambiguity.names:
+            assert name.slug is not None  # NamingAmbiguity requires every slug
+            locator = _slug_locator(ambiguity.entries, name.slug) or name.source_id
+            holders[
+                (family.kind, family.provider, family.register_key, name.slug)
+            ].append(_SlugHolder(family.source_key, True, locator, None))
+
+    def distinct(a: _SlugHolder, b: _SlugHolder) -> bool:
+        if a.ambiguous_family == b.ambiguous_family:
+            return a.identity != b.identity
+        family, declared = (a, b) if a.ambiguous_family else (b, a)
+        return declared.identity[: len(family.identity)] != family.identity
+
+    blocked: set[int] = set()
+    diagnostics: dict[str, ResolutionDiagnostic] = {}
+    for (*_, slug), group in holders.items():
+        for holder in group:
+            peers = sorted(
+                {other.locator for other in group if distinct(holder, other)}
+            )
+            if not peers:
+                continue
+            if holder.index is not None:
+                blocked.add(holder.index)
+            diagnostics[holder.locator] = ResolutionDiagnostic(
+                code="naming_slug_collision",
+                severity="error",
+                case_id=holder.locator,
+                subject=slug,
+                detail=f"{holder.locator}: accepted slug {slug!r} is also used by "
+                f"{', '.join(peers)}; distinct native identities in the same FQID "
+                "scope need distinct slugs",
+            )
+    return blocked, tuple(diagnostics[key] for key in sorted(diagnostics))
+
+
 def convert_naming(
     selection: NamingSelection, bindings: Iterable[LegacyNamingBinding]
 ) -> NamingConversion:
@@ -603,31 +691,8 @@ def convert_naming(
                     ),
                 )
             )
-    by_slug: defaultdict[
-        tuple[EntityKind, str | None, NativeKey | None, str], list[int]
-    ] = defaultdict(list)
-    for index, declaration in enumerate(candidates):
-        if declaration.naming.slug is not None:
-            by_slug[
-                (
-                    declaration.target.kind,
-                    declaration.target.provider,
-                    declaration.target.register_key,
-                    declaration.naming.slug,
-                )
-            ].append(index)
-    blocked: set[int] = set()
-    for indices in by_slug.values():
-        if len({_target_key(candidates[index].target) for index in indices}) > 1:
-            blocked.update(indices)
-            diagnostics.append(
-                ResolutionDiagnostic(
-                    code="naming_slug_collision",
-                    severity="error",
-                    subject=candidates[indices[0]].naming.slug or "",
-                    detail="accepted slug is used by distinct native identities in the same FQID scope",
-                )
-            )
+    blocked, collisions = refuse_slug_collisions(candidates)
+    diagnostics.extend(collisions)
     for index in blocked:
         for entry in candidates[index].contributors:
             dispositions[entry.entry_id] = NamingEntryDisposition(
@@ -641,6 +706,7 @@ def convert_naming(
         ),
         dispositions=tuple(dispositions[item.entry_id] for item in selection.entries),
         diagnostics=tuple(diagnostics),
+        refused=tuple(candidates[index] for index in sorted(blocked)),
     )
 
 

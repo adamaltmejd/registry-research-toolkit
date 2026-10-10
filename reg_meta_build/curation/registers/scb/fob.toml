@@ -496,7 +496,7 @@ periods = [["1975-01-01", "1975-12-31"]]
 reason = "The two complete own active 1975 source domains agree on all 57 shared literal codes and labels. The larger supplied domain explicitly adds only 0 and NULL as Uppgift saknas. Use that exact supplied superset, preserving both alternatives and every association. Do not infer a blank-to-zero conversion, manufacture codes or borrow another census vintage."
 source = "Complete original family and active own lists: Batch52-residual53-own-binding-review.json; exact source-superset review Batch52-residual53-source-choice-review.json."
 data_warning = "The supplied 1975 room-count lists differ by two explicit missing-value tokens. The catalog uses the complete own source superset; both original lists remain evidence."
-expected_evidence_sha256 = "3ac2137f0512356d0524ac36f724d7e03486a87e99ff68485225f6c59175dba6"
+expected_evidence_sha256 = "00d235b6e1547ff1c18097c2c2b6e172e76ed7a4c95dd307ee94be5100b05852"
 keep = "AntRumLghFoB75Hh"
 keep_members = [["0", "Uppgift saknas"], ["00", "Rum saknas"], ["01", "Ett rum"], ["02", "Två rum"], ["03", "Tre rum"], ["04", "Fyra rum"], ["05", "Fem rum"], ["06", "Sex rum"], ["07", "Sju rum"], ["08", "Åtta rum"], ["09", "Nio rum"], ["10", "Tio rum"], ["11", "Elva rum"], ["12", "Tolv rum"], ["13", "Tretton"], ["14", "Fjorton rum"], ["15", "Femton rum"], ["16", "Sexton rum"], ["17", "Sjutton rum"], ["18", "Arton rum"], ["19", "Nitton rum"], ["20", "Tjugo rum"], ["21", "Tjugoen rum"], ["22", "Tjugotvå rum"], ["23", "Tjugotre rum"], ["24", "Tjugofyra rum"], ["25", "Tjugofem rum"], ["26", "Tjugosex rum"], ["27", "Tjugosju rum"], ["28", "Tjugoåtta rum"], ["29", "Tjugonio rum"], ["30", "Trettio rum"], ["31", "Trettioen rum"], ["32", "Trettiotvå rum"], ["33", "Trettiotre rum"], ["34", "Trettiofyra rum"], ["35", "Trettiofem rum"], ["36", "Trettiosex rum"], ["37", "Trettiosju rum"], ["38", "Trettioåtta rum"], ["39", "Trettionio rum"], ["40", "Fyrtio rum"], ["41", "Fyrtioen rum"], ["42", "Fyrtiotvå rum"], ["43", "Fyrtiotre rum"], ["44", "Fyrtiofyra rum"], ["45", "Fyrtiofem rum"], ["46", "Fyrtiosex rum"], ["47", "Fyrtiosju rum"], ["48", "Fyrtioåtta rum"], ["49", "Fyrtionio rum"], ["50", "Femtio rum"], ["51", "Femtioen rum"], ["52", "Femtiotvå rum"], ["53", "Femtiotre rum"], ["54", "Femtiofyra rum"], ["60", "Sextio rum"], ["96", "Nittiosex rum"], ["NULL", "Uppgift saknas"]]
 over = ["AntRumLghFoB75Hh"]
@@ -510,7 +510,7 @@ valid_from = "1985-01-01"
 valid_to = "1985-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "da75da6038204a591833541c10b25abd288246adb6dd463244c8dc88b7294cfc"
+expected_evidence_sha256 = "a4d0ebcc1b7d0bc6e8eaada37552e16503be5a6f8664417e4789a435b741213a"
 expected_diagnostic_sha256 = "fb8b01957e2d100b0e7808974bd22ce81c347cfd9bb917143b7691b9414a771a"
 
 [[acknowledge]]
@@ -522,7 +522,7 @@ valid_from = "1980-01-01"
 valid_to = "1980-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "bc0b6a5a9ea8fa3eb3ef19d66e2392d3302171e6856bd59243fdb9e0f8b7962b"
+expected_evidence_sha256 = "785e76db50debc77d64818a4c9f333b5b85108ccc9101a0ac3c4be95371b8679"
 expected_diagnostic_sha256 = "015c3009425c43aa14dd51ea990e8b001d16452b818a4a8ce3f1e55a4c3f272e"
 
 [[acknowledge]]
@@ -534,7 +534,7 @@ valid_from = "1985-01-01"
 valid_to = "1985-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "08de919b4e72fa5791df2b244d14d395df80c7d1ba88966c67bc68cee6a4e8b3"
+expected_evidence_sha256 = "39bfa3b1bb777d5125a60d47660ccd8231cbc1fc96f62aef95f86657b9b3126b"
 expected_diagnostic_sha256 = "6df2c915a5a24cf90445ad873c948ae50b0a9608f925bbfc2febb6ce1fbfc37f"
 
 [[acknowledge]]
@@ -546,7 +546,7 @@ valid_from = "1990-01-01"
 valid_to = "1990-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "e384fa8c74572e7241d092c77d9dd521493c61364a19d6ab63beab5880126c9d"
+expected_evidence_sha256 = "1178207f3fe584792ea6923bb7954ba4846f331a3d356862f492fdb7ce1abdeb"
 expected_diagnostic_sha256 = "9179d45508074bb72a3973acca36de462db17d5dd9cf9bfcef6cdfa2fc0ca55d"
 
 [[acknowledge]]
@@ -558,7 +558,7 @@ valid_from = "1975-01-01"
 valid_to = "1975-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "d3a072a14b976c373810725867c59c9d080e12aaf59fb3753260204c25d4f7f2"
+expected_evidence_sha256 = "f8648660865e3dcf5bf6910bb318b374a3cd525361f6a68c4beb39b921d5a6bb"
 expected_diagnostic_sha256 = "1e671f8da7d1fcb6cb76fa562aeaf40cd8d9d1b6996f067f8f9644876a8d9a6c"
 
 [[acknowledge]]
@@ -570,7 +570,7 @@ valid_from = "1975-01-01"
 valid_to = "1975-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "eb6e080b5283b939d4953c2c4d31e6fc2bda944989ec2be0678be21736173b46"
+expected_evidence_sha256 = "379890ba444d8f786e9e2d63ffbe218f2fce230b0b82d4cbd4a66acbb8beed68"
 expected_diagnostic_sha256 = "228cea2fbd5a17637f9d847f91cb9265206bce44a2578a77f146cd9e7afd7de6"
 
 [[acknowledge]]
@@ -582,7 +582,7 @@ valid_from = "1965-01-01"
 valid_to = "1965-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "8184fd69dd0768274d1298f4abdab7cefb456176ce2ea9b55cc0a73bf2139e43"
+expected_evidence_sha256 = "0d3ee445cd9c5d5d3f9b26481c7307d8b8fd2a27e443c5984fc4493b1175806b"
 expected_diagnostic_sha256 = "7b6b0701d7f241bb16dd610ae45076e00f454a124ecc07f3ad8ef0a14c836f8c"
 
 [[acknowledge]]
@@ -594,7 +594,7 @@ valid_from = "1965-01-01"
 valid_to = "1965-12-31"
 reason = "This exact historical window has no own bound stored-code domain. Preserve every original field, source period, physical history and known domain outside the window. Later lists and neighbouring fields do not establish this stored encoding; leave only the exact value set unavailable. No codes, missing tokens or classification vintage are inferred."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites; own bound-value audit Batch52-residual53-own-binding-review.json. Standing retained-unavailable source-limit policy, full-original and exact diagnostic guards."
-expected_evidence_sha256 = "a7cf4b18c03312e90eb38f2fdaefd0a8dae4a951eca6f8f4fbfc67340b386e6f"
+expected_evidence_sha256 = "c7c6f7e9c523d5f1efdeaa6ef1bc4a0da1cd4db01f009731ed58fe72a8bc3661"
 expected_diagnostic_sha256 = "46639372c5d1cf843e47678ae35edeb115eb44b365f43d0e64a8d8400fa5e118"
 
 [[identity.partition]]
@@ -602,35 +602,35 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "32.3188"
 columns = { HhTyp = "32.3188.hhtyp", HhTyp1 = "32.3188.hhtyp1", HhTyp2 = "32.3188.hhtyp2", HhTyp3 = "32.3188.hhtyp3", HhTyp4 = "32.3188.hhtyp4", HhTyp5 = "32.3188.hhtyp5", HhTyp6 = "32.3188.hhtyp6", HhTyp7 = "32.3188.hhtyp7" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "d6d4c5734924631af65e3449b91bbbf3f41dbcef1fe4fc53aaa3146d5fcd5de4"
+expected_evidence_sha256 = "fa99e79bde51be2ad62e9ff63187708182d4ef74b17b06def1a2d63e9c571477"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "32.29137"
 columns = { SUN2 = "32.29137.sun2", SUN3 = "32.29137.sun3", SUN5 = "32.29137.sun5" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "25a89bc7687b79ce728ef386dd63c46c47e4b72cb92e3850acb86f5487ed69a2"
+expected_evidence_sha256 = "f94b36f9956ff81fa3a0e628d12dd867045d4c91c5d6fe69d5159744962b8427"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "32.42217"
 columns = { TrangBo = "32.42217.trangbo", TrangBo1 = "32.42217.trangbo1", TrangBo2 = "32.42217.trangbo2", TrangBo3 = "32.42217.trangbo3", TrangBo4 = "32.42217.trangbo4" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "789e43faf20859249af92c5dd735eaa312b5853fc6a9c19d69f13ee22f174e47"
+expected_evidence_sha256 = "cc79917d509ce8596193ce650e966c82065d1597285a222304baebfccb067391"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "32.41534"
 columns = { Yrke = "32.41534.yrke", Yrke80 = "32.41534.yrke80", Yrke85 = "32.41534.yrke85" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "5c8d795a93817772353c65266012fe3aa2bbcebdedf579b57ab9cf426bf9bd4d"
+expected_evidence_sha256 = "317e27f2a29f885062d8ee7582c02455fd16231f25c0454be01aad5d0c0743a3"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "32.4027"
 columns = { Narg = "32.4027.narg", SNI2 = "32.4027.sni2", SNI4 = "32.4027.sni4", SNI5 = "32.4027.sni5" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "a3023e8ddd63302106854af4cbbf517b8a501eea6ad8fda54a89726165cbf122"
+expected_evidence_sha256 = "f055dc2db3cae33ebbfe2d0c0f65cb2576e13d8df1cd98f873cf5e4556f2a80c"
 
 [[variable]]
 native_id = "32.3188.hhtyp1"

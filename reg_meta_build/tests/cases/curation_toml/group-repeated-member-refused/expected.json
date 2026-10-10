@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "note": "The two members differ in their facet value, so the entry-level exact-repeat check cannot catch them; only the member reference repeats. Allowed twin: group-member-shapes-load, where one variable appears twice under different delivery columns.",
+  "fails_if": "the register loader stops refusing a [[group]] that names one (variable, delivery column) member twice",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "group 'twice'",
+      "duplicate resolved group member: ('scb/test/a', None)"
+    ]
+  }
+}

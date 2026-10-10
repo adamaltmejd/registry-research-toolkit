@@ -7,7 +7,7 @@
   "fails_if": "the code-list reader keys a list by a blank name, or parses the file before checking the name",
   "note": "The file is also malformed: the name is checked before the file is parsed.",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "code_list_name_invalid",
     "type": "CodeListSourceError",
     "locator": "code-list name must be non-empty"
   }

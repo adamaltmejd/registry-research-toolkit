@@ -89,7 +89,7 @@ slug = "sarskoleform"
 variable = "194.30480"
 columns = { ElevHem = "194.30480", Elevhem = "194.30480" }
 columns_ref = "Complete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
-expected_evidence_sha256 = "76f539490d57fece87f4789ce456b4f8e08b9d318a101a7776b8aa7749e8366e"
+expected_evidence_sha256 = "38df89de7abadc6e9a1fe098243ce25e02a512c08eccc331be394d5e58876d95"
 
 [[identity.column_owner]]
 data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
@@ -99,7 +99,7 @@ column = "SForm"
 owner = "194.1996.schoolform"
 ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
 source_editions = ["2013", "2014"]
-expected_evidence_sha256 = "2010ec294b43a723690622e0f62a40fd0985a6b31f6cb8ea13390bab20a433b8"
+expected_evidence_sha256 = "02e2705c5a227c743ae80d9f33345296d7fd676482754415b3d29ad1ea8327dd"
 
 [[identity.column_owner]]
 data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
@@ -109,7 +109,7 @@ column = "Sform"
 owner = "194.1996.schoolform"
 ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
 source_editions = ["2013", "2014", "2015"]
-expected_evidence_sha256 = "176502367729d9d4b0e0d46e63c22fe9f92170ba1348d32f8f5030eb94e05454"
+expected_evidence_sha256 = "740da2c1b2e25ffd2e958acf68da3a12936c539a3df463a2af50e25919a4e952"
 
 [[identity.column_owner]]
 data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
@@ -119,7 +119,7 @@ column = "SarForm"
 owner = "194.8702.sarform"
 ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
 source_editions = ["2013", "2014", "2015"]
-expected_evidence_sha256 = "90adab75e757fdc3490100f91c3ccbe06431eb1ddd63af791bb7bf89a453d49f"
+expected_evidence_sha256 = "e455cabc3a1b780edc35fa13b82e3462a9b3fb199d8970ed4251aecff4484233"
 
 [[identity.column_owner]]
 data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
@@ -129,7 +129,7 @@ column = "Sarform"
 owner = "194.8702.sarform"
 ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
 source_editions = ["2014"]
-expected_evidence_sha256 = "77b086f00a4b3296842972670b3bc61dd9c48b0767c7a066466fc927a3f889be"
+expected_evidence_sha256 = "ced635d60c2f8c4cb12c005fc70970097145bc83f94fb94343251dde6b675719"
 
 [[identity.column_owner]]
 data_warning = "Only independently supported literal delivery windows are mapped. Conflicting school-column ownership or indistinguishable waste cost/revenue definitions remain explicitly unavailable; every original source fact is retained."
@@ -139,11 +139,11 @@ column = "ElevFgAr"
 owner = "194.30485.elevfgar"
 ref = "Exact positive native-family/physical-peer review Batch52-directfacts4-source-review.json; every original projection is guarded. School2015 SForm has simultaneous competing general/special source questions and no chosen owner. Uppercase waste Pris2021–2025 has contrary cost/revenue roles and no chosen owner. All other exact positive source literals/windows retain their source-supported identities."
 source_editions = ["2013", "2014", "2015"]
-expected_evidence_sha256 = "b3e8fc19318d019f8c9c6891c776735f368e713137d293c01b5b558a26f14053"
+expected_evidence_sha256 = "6792b34e801128a7e004562d590bcf9675667bdc5d4cccfb887d408123131705"
 
 [[identity.unassigned]]
 variable = "194.14871"
-expected_evidence_sha256 = "00c68de7986e9db4c95aa148d8835e4c24b322e341556b6541de80dce1900aff"
+expected_evidence_sha256 = "e9fb516a4322b760f147978389dc77593a996a51b0d665a0a4c6cf179bff5aab"
 evidence = "All supplied SkElev coordinates also bind native30485 with a different generic pupil-count definition. Retain the full native14871 municipality-specific family without an invented semantic owner. Full physical-peer closure and 32 complete originals: Batch52-directfacts4-source-review.json."
 
 [[variable]]
@@ -158,7 +158,7 @@ variable = "194.30480"
 variant = "194.512"
 column_metadata = "per_column"
 columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "ElevHem", source_editions = ["2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "Elevhem", source_editions = ["2013"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2992b4c1c017f6399c1dc19d33f5f8fc224ee11686efb62569392667ef202790"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -170,7 +170,7 @@ variable = "194.30480"
 variant = "194.512"
 column_metadata = "per_column"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "ElevHem", source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "Elevhem", source_editions = ["2014"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "3f9cf9612b9bf0ecf3cd1799943f448c36c3b681e79003728dc5cfbcb7edda7a"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -182,7 +182,7 @@ variable = "194.30480"
 variant = "194.512"
 column_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "ElevHem", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Elevhem", source_editions = ["2015"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "d35eefa882a6e7b2bada36f4b39e199a840883d12353909736da6c0e6db8e08d"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -194,7 +194,7 @@ variable = "194.1996.schoolform"
 variant = "194.512"
 column_metadata = "per_column"
 columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "SForm", source_editions = ["2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "Sform", source_editions = ["2013"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2e0de815776c0bb6dfd968ad06159e60f515ce5c229de4240cbd719520e720fa"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -206,7 +206,7 @@ variable = "194.1996.schoolform"
 variant = "194.512"
 column_metadata = "per_column"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "SForm", source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "Sform", source_editions = ["2014"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "71eb91bbb87bab4c0e622c66038be93ac293704beefcdc747d1352a64f6f2106"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -218,7 +218,7 @@ variable = "194.8702.sarform"
 variant = "194.512"
 column_metadata = "per_column"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "SarForm", source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "Sarform", source_editions = ["2014"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f959e7bec0c90a8cecebbf3747d16d235d325b10bc69e1bb977777bfd6ba8267"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -229,7 +229,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity"]
 reason = "Only the exact source groups without a supported semantic owner are unavailable. School SkElev and2015 SForm have simultaneous competing source questions; waste Pris2021–2025 has indistinguishable cost versus revenue definitions. Preserve all original facts and own coding, all positive source-owned windows, and explicit physical inventory warnings. No owner, values or statistical equivalence is invented."
 evidence = "Complete native family and physical-peer review Batch52-directfacts4-source-review.json; positive source roles guarded independently, unassigned source groups and ordered own coding guarded here."
-expected_evidence_sha256 = "00c68de7986e9db4c95aa148d8835e4c24b322e341556b6541de80dce1900aff"
+expected_evidence_sha256 = "e9fb516a4322b760f147978389dc77593a996a51b0d665a0a4c6cf179bff5aab"
 expected_diagnostic_sha256 = "1bb2a1d22c99da344988b2ad14fce0efcd29a9abee2a90ae61d9b43fe61bfed3"
 
 [[acknowledge]]
@@ -239,7 +239,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity"]
 reason = "Only the exact source groups without a supported semantic owner are unavailable. School SkElev and2015 SForm have simultaneous competing source questions; waste Pris2021–2025 has indistinguishable cost versus revenue definitions. Preserve all original facts and own coding, all positive source-owned windows, and explicit physical inventory warnings. No owner, values or statistical equivalence is invented."
 evidence = "Complete native family and physical-peer review Batch52-directfacts4-source-review.json; positive source roles guarded independently, unassigned source groups and ordered own coding guarded here."
-expected_evidence_sha256 = "639ce06c9678cb2ecb1a61f18c303b8f480d99a44b4a1b8f166b1f21529212c2"
+expected_evidence_sha256 = "abef742a13051d61ae712ce38ad07d605f3926546c1424cf12cea0230aa4fcd7"
 expected_diagnostic_sha256 = "af7da1236bed241f480e738fcc7f151063862971e1ab380debb482a4a2f51257"
 
 [[acknowledge]]
@@ -249,7 +249,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity"]
 reason = "Only the exact source groups without a supported semantic owner are unavailable. School SkElev and2015 SForm have simultaneous competing source questions; waste Pris2021–2025 has indistinguishable cost versus revenue definitions. Preserve all original facts and own coding, all positive source-owned windows, and explicit physical inventory warnings. No owner, values or statistical equivalence is invented."
 evidence = "Complete native family and physical-peer review Batch52-directfacts4-source-review.json; positive source roles guarded independently, unassigned source groups and ordered own coding guarded here."
-expected_evidence_sha256 = "1abeb807a197c7ddb0326f93f8e38a1b50c3372f2980a9aa5069cd2d54d5ea0e"
+expected_evidence_sha256 = "05a45a608af43cdb03af8c49e5dc67c6e5df8971469cd68991b16303fdb9096c"
 expected_diagnostic_sha256 = "0f86fe066d962898d832dd6e9bfa948a990faab2f08cffb15ec81e3e1caea208"
 
 [[acknowledge]]
@@ -259,5 +259,5 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity"]
 reason = "Only the exact source groups without a supported semantic owner are unavailable. School SkElev and2015 SForm have simultaneous competing source questions; waste Pris2021–2025 has indistinguishable cost versus revenue definitions. Preserve all original facts and own coding, all positive source-owned windows, and explicit physical inventory warnings. No owner, values or statistical equivalence is invented."
 evidence = "Complete native family and physical-peer review Batch52-directfacts4-source-review.json; positive source roles guarded independently, unassigned source groups and ordered own coding guarded here."
-expected_evidence_sha256 = "488c6ea5f3d7d523af4e9faad54ec7af3c7570347e01a1cb1c0d1f60de3eccb8"
+expected_evidence_sha256 = "1db3e110deb133fde90b1bbf780701990763f6482c99efc2b2cb681300503eaa"
 expected_diagnostic_sha256 = "68b989e03f1e1f40c65db8438c9577b62ce9da0c28170f4dbfab6a3fffbcc683"

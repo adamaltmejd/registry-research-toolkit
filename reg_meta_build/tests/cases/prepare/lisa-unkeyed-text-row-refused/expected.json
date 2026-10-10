@@ -3,7 +3,7 @@
   "replaces": "test_lisa_workbook_layout.py::test_lisa_reader_accepts_only_observed_unkeyed_context_rows[B324-arbitrary unkeyed text-Individ!A324:F324]",
   "fails_if": "the LISA reader skips (or attaches as a note) a row without a column name instead of refusing it, so new unkeyed provider text is lost",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "lisa_layout_unsupported",
     "type": "LisaWorkbookError",
     "locator": "Individ!A324:F324",
     "message_contains": ["unsupported LISA row structure"]

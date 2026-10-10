@@ -1,0 +1,15 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key"],
+      "rows": [["answer-sweden", "15662"], ["answer-abroad", "15662"]]
+    }
+  ]
+}

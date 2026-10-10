@@ -179,7 +179,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "304.67"
 columns = { UtlBakGr = "304.67.utlbakgr", UtlBakGr2 = "304.67.utlbakgr2", Utl_BakG = "304.67.utl-bakg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "91a1489560d54de890432d668ba70f4a36a327d458bb52b9f9a7c01eb3fe57af"
+expected_evidence_sha256 = "4a715ff2a202e3be64aa9a2b28e85a036e7ac7c3c2a2a91f7a0f84510825f68e"
 
 [[variable]]
 native_id = "304.67.utlbakgr"

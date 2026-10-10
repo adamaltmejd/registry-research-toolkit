@@ -36,8 +36,8 @@
   ],
   "provenance": {
     "artifact_kind": "steward",
-    "catalog_generation_id": "db7006b3bfe2623b4a1bba6e75ffe62e1cecf9f4af355b7284488abc8e09516d",
-    "catalog_schema_version": "9.7.0",
+    "catalog_generation_id": "72a078e863b4f99549a7b9aaffd9dcf85df5c1cbc8e002b85e9bfcc687cf7958",
+    "catalog_schema_version": "10.0.0",
     "mode": "steward_holdings",
     "project_hash": "5e8e363289df9502e7d4d8357dc7b50999b173fc0df7eaee9c45b601d40d80d9",
     "project_name": "Synthetic rename",

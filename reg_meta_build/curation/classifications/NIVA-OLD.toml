@@ -23,7 +23,6 @@ description = "Single-digit grouping of education level into 7 categories: 1=Fö
 codes_file = "niva-old.csv"
 sentinel_codes = [
   { code = "*", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "9", meaning = "Uppgift saknas" },
   { code = "NULL", meaning = "Ej träff i källan" },
   { code = "0", meaning = "Uppgift saknas" },

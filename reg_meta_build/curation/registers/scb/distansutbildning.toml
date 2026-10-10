@@ -137,7 +137,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - studiemedel (lån och bidrag)” lists multiple column literals in the same 2010 edition (F19_1, F24_01), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "db87096c0e1d66747c9f6689828a6e1d31266a1e7d75dcbf7e1d7709b536bd51"
+expected_evidence_sha256 = "978613f947ecc2c02a06cad69deb3d5d566de91c0865973f756abd7dbe00f4e1"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -146,7 +146,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - studiemedel (bidrag)” lists multiple column literals in the same 2010 edition (F19_2, F24_02), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "8699a1d0fbf46ab966d79d5b86d293f991192d6c8362199be51730a8fb0f444f"
+expected_evidence_sha256 = "77240be177d5d9a1e781be80fff2ad9f5a93c4e0e6dba7f82336fb384110db8b"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -155,7 +155,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - lön” lists multiple column literals in the same 2010 edition (F19_3, F24_03), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "43ef5db8dc756b39625b17fba178c835fb303dc6e31e7c74bbca0936c96d1865"
+expected_evidence_sha256 = "3914e458eddc55d14932f24fef9a8054e7d986ac9d43c1e563082a07a9db4052"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -164,7 +164,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - föräldrapenning” lists multiple column literals in the same 2010 edition (F19_5, F24_05), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "ff5434a7da7f12098e4c84562b93f23bbd1232c270402aaec020f601b5f29f59"
+expected_evidence_sha256 = "454f7b063d0a1c08238bfdfd78a611b111aabb3da122a69bb963008a4d02a9c5"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -173,7 +173,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - barnbidrag” lists multiple column literals in the same 2010 edition (F19_6, F24_06), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "e92e4745f4d3a1ac563b923c2f5deeb5da72c0047bfcde4fa3e6a2be2fe4dc3e"
+expected_evidence_sha256 = "016c82a9bffa7689ebae74dff808a245a2d3f7cc633ebf8e4dafba3d97239d3b"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -182,7 +182,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - bostadsbidrag” lists multiple column literals in the same 2010 edition (F19_7, F24_07), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "344077bbf27aae4371eeafa68cb02585db538d9acb0652d18a254ac7b2f3b1d7"
+expected_evidence_sha256 = "d069a3bf8da179aeec63abff89cea98cc5a49ee3acfcec328fd164fc1599970c"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -191,7 +191,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - sjukpenning” lists multiple column literals in the same 2010 edition (F19_8, F24_08), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "85d02aac0835dbdd551d12024f8d8b5c76ca0a3fd9b00f33a836a3e3fe329210"
+expected_evidence_sha256 = "cc0403704fac4633b4f38ef951cf42628b3fe4367d4859701517086d36ae0859"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -200,7 +200,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - stöd från sambo/make/maka” lists multiple column literals in the same 2010 edition (F19_10, F24_10), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "c92f5c57c1b1adba2647d5ae17ed44a776738c63da7223579695daed0521de1b"
+expected_evidence_sha256 = "1564a498862506c9db374bdacf2b42ad4edb1c1e2c1a3fe2e24c5f4fae7595cf"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -209,7 +209,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - annat” lists multiple column literals in the same 2010 edition (F19, F19_4, F24, F24_04), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "fe6bb552d18059077e459c5d015d67c09a7f5852564f8583b39b337aea2ce4a7"
+expected_evidence_sha256 = "de5e39a5be0202b59e98bb7665eab41705d67370199f823af161ea568f9b7340"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -218,7 +218,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Försörjning - egna sparade pengar” lists multiple column literals in the same 2010 edition (F19_9, F24_09), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "b3aa020652b1bbeef73d338e55882924aa7e29314584bd8090d0a01f69693552"
+expected_evidence_sha256 = "9865644de2ce66e8e7615e662f1f919af95ffafdca5fae39c82f63a0e53ad57d"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -227,7 +227,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Studietid” lists multiple column literals in the same 2010 edition (F07, F08), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "a4e6c2bec129bb6cce7b51567f2fe2680d3402a31983ae714d3df39b6a7cec39"
+expected_evidence_sha256 = "bbe94759b7875b52bda008968a3abf5e1ee602460beec5d8ab3673ef2d056662"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -236,7 +236,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Studietid korrigerad” lists multiple column literals in the same 2010 edition (F07_korr, F08_korr), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "9a770e14a3f9a707550b01997dfb2773927215b62c2edfb02f257b0d73f82e9b"
+expected_evidence_sha256 = "dbda92120dd227cc1d8fbc415747c70d5fba9f302e3210fc3cb309f04eec6463"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -245,7 +245,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med kursinnehåll” lists multiple column literals in the same 2010 edition (F08_01, F09_01), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "11a8537538a19680bb65b9bc10dea9bed24887ca82ddc0fafc98a47985e94906"
+expected_evidence_sha256 = "2f70a0ff364c90570a65462d9c8787336c3251d8093dca54515aa97d46237e65"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -254,7 +254,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med kursens svårighetsgrad” lists multiple column literals in the same 2010 edition (F08_02, F09_02), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "7bbde230bd3db68a81f55aeafec72878a15d224ceb60eec86da99917227fd533"
+expected_evidence_sha256 = "4e244f7b8fb59b4bebdaa495e82fdd8b40a8d73cf23f840f5257e25debeb5761"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -263,7 +263,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med kursens utformning/upplägg” lists multiple column literals in the same 2010 edition (F08_03, F09_03), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "6e93530c66fca2fc0579e703ffd178a290cb1b70c5f839aa47cf77dc716c8422"
+expected_evidence_sha256 = "57edde9c5e529d0fddf53ab7bc549fe04dc7be8716538277f40ba43467876b0a"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -272,7 +272,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med möjlighet att påverka kursupplägg” lists multiple column literals in the same 2010 edition (F08_04, F09_04), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "53a79ad27fc86f6df372a8f765b0c82badb9f694cb959a1671fdafdcf19f0840"
+expected_evidence_sha256 = "a3d888a1988d72ec6b0f284888a099a1f2a33f0c8b98fa62eeeb0d0aa0c3472b"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -281,7 +281,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med form av examination” lists multiple column literals in the same 2010 edition (F08_05, F09_05), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "d11398f4170fa6704e0944099831127cc9ec85358e092863ba56d774114a0a3f"
+expected_evidence_sha256 = "19f6c35eced9392b74f6e0d3c6d339b6d48c06be87838bd4ae63344fb1339a45"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -290,7 +290,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med kurslitteraturens innehåll” lists multiple column literals in the same 2010 edition (F08_06, F09_06), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "18eda9f816a628ed0f5517829e2cfde197c4337ef5767aaab746f8f2e866c685"
+expected_evidence_sha256 = "4cd349068d44d45987412b8115ef6a89b98bd5a5e0f6dfe688f72dd6430bf7f4"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -299,7 +299,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med den studietid som krävdes” lists multiple column literals in the same 2010 edition (F08_07, F09_07), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "9f0603a70b89f4fa9544afe2f719fe255df4adbe5173dd17edd952e9e0ab6e93"
+expected_evidence_sha256 = "620ddd9811b984a275e45b85d17f5c7b346df1409782901a0d594e80686782ce"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -308,7 +308,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med stöd från lärare” lists multiple column literals in the same 2010 edition (F08_08, F09_08), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "07e9581790bcee7ec84d633cf40384c1c97962ae183d8b81936d01e30011dcf5"
+expected_evidence_sha256 = "6c0b4e0926d5b1d9b773763e5eeaae2e979ed7103f47e8ac9acbb8b709cf50e2"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -317,7 +317,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med stödresurser för studierna” lists multiple column literals in the same 2010 edition (F08_09, F09_09), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "d708f994f0fb24868f386d1903626f5258920df2710724dfe81b91e4225073b4"
+expected_evidence_sha256 = "8f4c48d2b1acaa4ee86b9538f20e61224ebb5f5c2653650e5f26d3daab4e949c"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -326,7 +326,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med det studiesociala stödet” lists multiple column literals in the same 2010 edition (F08_10, F09_10), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "614c0ad21ecb0b0ca0a41506c0b0b482ecc4e23629c04fb3614bb7703446e303"
+expected_evidence_sha256 = "65f0221a0846686d7d84633913db27927a25c7d3baba3d45e2b51dca92f7a47c"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -335,7 +335,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Tekniska stöd” lists multiple column literals in the same 2010 edition (F09, F11), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "eec4acbc01dee0b9a8ee8a855492f863caf4a84a2f4c26f1d4d2d05da9af487c"
+expected_evidence_sha256 = "b7c08b205ceea2ee7659a1de073af34f49b10467196af4101a1315dedbbe92ef"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -344,7 +344,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Lärplattformens funktioner” lists multiple column literals in the same 2010 edition (F10_1, F12_1), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "c938b17b66a45d099aff360997cdfd80339a4be603622f27f6a76eefbb64572d"
+expected_evidence_sha256 = "6634106a110af4b8cfcde2f33cfa6526844b13a924ecfbff09bbc749c9587e5d"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -353,7 +353,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Tekniska baskunskaper” lists multiple column literals in the same 2010 edition (F10_2, F12_2), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "a27e6cfe1b56a7f269a24338bd61362b678dcfa2e127c5005132d4435f524fbc"
+expected_evidence_sha256 = "bef97cb98b94b4f844b38b2006f1b47d866452c1796e8e290124b32d95f812f9"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -362,7 +362,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Kommunikationsfunktioner” lists multiple column literals in the same 2010 edition (F10_3, F12_3), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "ec045490d6eea6355e11f359cf856410fcc5dd5a2125b542788c35ef2a29ccfc"
+expected_evidence_sha256 = "b01aec145209f3c33505bf68805b3ef04a42656f0d9e1f53bd20d01b6ba57862"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -371,7 +371,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Nytta av tekniska stöd” lists multiple column literals in the same 2010 edition (F10_4, F12_4), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "58dd96f8324fe268be03290d297280433b04861ed3ca02906c252e747ee55516"
+expected_evidence_sha256 = "492e0b6b46e450f2bfe722a2e89e6cf055b4f419c1568018cc68b0cb196ce3b8"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -380,7 +380,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Nöjdhet med lärplattformens information” lists multiple column literals in the same 2010 edition (F11_1, F13_1), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "c151c39661f074164b6e32f7c8db7d60f46dbfb78b3b43ffefb2e4bbb9abd05d"
+expected_evidence_sha256 = "84908e2e5d2c2aeb62152f1da38b4b646f84d27b6c7b09c1a13498781ab3f1f3"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -389,7 +389,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Nöjdhet med lärplattformens kursmaterial” lists multiple column literals in the same 2010 edition (F11_2, F13_2), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "c53790275ca7fc9e6149154b82099a419e9c1024f6300ed20dc4317d0ae246bd"
+expected_evidence_sha256 = "fb42b4f52fe9bc0e231c31bf8947edd8e538467cdf52d01c8ffe655742a85b36"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -398,7 +398,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Nöjdhet med lärplattformens föreläsningar” lists multiple column literals in the same 2010 edition (F11_3, F13_3), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "cd899c6364cb0d454abf1c5e4e2cf0bbc46120bde913c736be6e322f94434372"
+expected_evidence_sha256 = "a2b8aba45a7e1fb12b7115a155ba60c656321065a7c743de8391f0f659e8164a"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -407,7 +407,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Nöjdhet med lärplattformens möjlighet att skicka material” lists multiple column literals in the same 2010 edition (F11_4, F13_4), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "deadfd9736a1374bb83aaa3df0e378a881db1e7b5567fe8b78b09e0eb652c094"
+expected_evidence_sha256 = "5890ffb289276f0be742d2d0d31d0fbc388278cdf50dc4f60fbcf80273070e7f"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -416,7 +416,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Nöjdhet med lärplattformens diskussionsmöjligheter” lists multiple column literals in the same 2010 edition (F11_5, F13_5), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "ab41ab8fa3ed2506c72a439a169718eea545a741e53bf2b9139967d80da83d7a"
+expected_evidence_sha256 = "12bbc602859d37699b1b8e168ff4faa5e09af19f7fedd7ab2067427e39cf6e83"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -425,7 +425,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Nöjdhet med lärplattformens kommunikationsmöjligheter” lists multiple column literals in the same 2010 edition (F11_6, F13_6), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "a8faf3dabd78fd9f963ddf41c6079ce906174e3b88e1fa98d36bcc819bdbad4e"
+expected_evidence_sha256 = "5a1dfc78708482658f03f65528c37203e1ec93ab4b975b43b60b72f6fc3e381b"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -434,7 +434,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Obligatorisk samarbete” lists multiple column literals in the same 2010 edition (F12, F17), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "fdf8120f9791a65c94a3b6bf40f6b8e2af3d26452e9a156a3df342c02f14e956"
+expected_evidence_sha256 = "a88e5e9625038318c39cc87252e4e45756abaa96d5fb299994016163477495e7"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -443,7 +443,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Obligatoriskt samarbete genom fysisk träff” lists multiple column literals in the same 2010 edition (F13_1, F18_1), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "56d543b5e4571091f69e04979fe54a4d165495cbc1fb037f2ce66ba8016e77ff"
+expected_evidence_sha256 = "acf51e2fbd9d3c550c24641c743e2f512c6051a21620bae6f84850c73e116d29"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -452,7 +452,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Obligatoriskt samarbete genom e-post” lists multiple column literals in the same 2010 edition (F13_2, F18_2), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "018a211c74884512f6eba060bc90879de366e2a25abf2f998c502ec1a10e6b28"
+expected_evidence_sha256 = "389b7b31cfe31dba3cb41aba4947b4494b18ae32ae4f450cb3b3b5535082ec8f"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -461,7 +461,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Obligatoriskt samarbete genom diskussionsforum” lists multiple column literals in the same 2010 edition (F13_3, F18_3), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "69ddab0c664c42d5bddd936c5527760f7a1241ef02c21ed08b3c32aa25c7c83a"
+expected_evidence_sha256 = "786ef1df7f6f1c7edae51a8c1b5bfdc050f020fa3a6c7194ebe55a16bce5ed27"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -470,7 +470,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Obligatoriskt samarbete genom videolänk/-konferens” lists multiple column literals in the same 2010 edition (F13_4, F18_4), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "800ddf8df113ccc3093900dd0b604393100a3151d6c712064a891b0e82776f87"
+expected_evidence_sha256 = "90ce6382b9f4a4bed4aa0b5fe9e05a301e98a37c7f372df96152db5e1306a2ff"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -479,7 +479,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Obligatoriskt samarbete genom samtal via telefon” lists multiple column literals in the same 2010 edition (F13_5, F18_5), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "099c3c7491cefd08794b57da5d4ce8ac854678b0438858b639ac20bab7c2b73a"
+expected_evidence_sha256 = "6934a883685d6ff33ce67058d5284df4d76439d03813ef634380c73b773451f8"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -488,7 +488,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Obligatoriskt samarbete på annat sätt” lists multiple column literals in the same 2010 edition (F13_txt, F18_txt), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "45ed6c6b8c9d08f24fc53c370ebfdd3555265aea41928563d191759c64039295"
+expected_evidence_sha256 = "0ec6b98216bf704aba9e5dc1f6a2173db3d47a33fe2d2b5bd6820bde43059b37"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -497,7 +497,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med lärarens tillgänglighet via e-post” lists multiple column literals in the same 2010 edition (F14_1, F19_1), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "fe4051c848c62d4e8ec7d3efa086fc3ba915125a1752702017685b6a0e6bf1e5"
+expected_evidence_sha256 = "4bd0de9502abb7dfa7aa95027a751d4eb1c5aa589676cc879d7294ec8e239462"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -506,7 +506,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med lärarens tillgänglighet via diskussionsforum” lists multiple column literals in the same 2010 edition (F14_2, F19_2), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "6654bc666d90f8e5a77edc0e279380f7f3bc920aafed2d777c6d56429cb73cda"
+expected_evidence_sha256 = "c805161c92e71c47e02423dea0579aa5d015e19557bf594a89e76fdeb28e557a"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -515,7 +515,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med lärarens tillgänglighet via telefon” lists multiple column literals in the same 2010 edition (F14_3, F19_3), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "a75c7dc62b77c19d4aff0ea3ab0fa355376e33826910cfd6ce7f587367ba7031"
+expected_evidence_sha256 = "cd727a8dc00abe09ab1ecba0e072bbfbea726698d5c9bd652a5751700c221224"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -524,7 +524,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Grad av nöjdhet med lärarens tillgänglighet på campus” lists multiple column literals in the same 2010 edition (F14_4, F19_4), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "8288fae95489b3d7a4e9b39b5a3891e67b899795c2ef273d00653fe1978c479a"
+expected_evidence_sha256 = "30a4e77cb77a75a6ed47ff2847356e5855526add63f814b9ccc735fba188b503"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -533,7 +533,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Färdighetsträning i skriftliga presentationer” lists multiple column literals in the same 2010 edition (F15_1, F20_1), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "b8c78a30ab3ed16b4a8839952b1921032a729d46021deee92d04fc9eb27d9e11"
+expected_evidence_sha256 = "9b9fda3172864d390be0f903cc4fa03961371dc1d89a634380c68542754e8eb6"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -542,7 +542,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Färdighetsträning i muntliga presentationer” lists multiple column literals in the same 2010 edition (F15_2, F20_2), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "44d986d668ef31e63a6e0eacd8cc7796a5147212577c720c6c4de622ddac6516"
+expected_evidence_sha256 = "44927b0e5270ff8996bbd29df32ded22faf8d8c4648ede49e4408e08836a19ee"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -551,7 +551,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Färdighetsträning i att samarbeta med andra” lists multiple column literals in the same 2010 edition (F15_3, F20_3), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "cf1e5696642b86c22af89bed0a7dc0ceb77e41d5e5cf5fafafa3682e87b521ac"
+expected_evidence_sha256 = "c847c6d0e99b363fca89e9cabc93d2449dd9011eed5cf95d88e58eba6bf64b93"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -560,7 +560,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Färdighetsträning i problemlösning” lists multiple column literals in the same 2010 edition (F15_4, F20_4), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "8469be4e4f775a3c571b6e91644236ddc267ba43459f5eca316e900f96b8f9b0"
+expected_evidence_sha256 = "93782f1ffae8bf7d5fd56b398b4d2981d00a77b6a51fe33240d41c40e771f1b6"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -569,7 +569,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Färdighetsträning i förmåga till kritiskt tänkande” lists multiple column literals in the same 2010 edition (F15_5, F20_5), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "013efdcb1ad15768df6f08c07c96516b3a123f4c681063a31c888f12fc1bf6c8"
+expected_evidence_sha256 = "d1622bb83edbda88dc25e5418047f6098be6381e1d0cc727fcafd305541e5707"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -578,7 +578,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Helhetsintryck av kurs” lists multiple column literals in the same 2010 edition (F16, F21), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "f7b8c167c3eb88a9ac5f8b48e111b5a8f1ba7237a90db0afc8bb12076d302b98"
+expected_evidence_sha256 = "1ba2e67553276578167008c74e61f33450efe286d1a96b3d94c0d53ceec6307d"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -587,7 +587,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Retrospektivt val” lists multiple column literals in the same 2010 edition (F17, F22), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "edd23f4d3934821e2c4ff3feaa5ae03b26e5d9659b8978d51428959fbe73e950"
+expected_evidence_sha256 = "18084360b67ee9474137673c79b3f06036ee06c6fe90bdf81d86a610d3b4ec7d"
 
 [[acknowledge]]
 code = "unresolved_native_identity"
@@ -596,4 +596,4 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity", "column_name"]
 reason = "The source question “Sysselsättningstyp” lists multiple column literals in the same 2010 edition (F18, F18_1, F18_2, F18_3, F18_4, F18_5, F18_6, F18_7, F23, F23_1, F23_2, F23_3, F23_4, F23_5, F23_6, F23_7), but does not establish how the columns are routed across questionnaire forms or populations. Several literals in this edition name different questions and domains. Original question descriptions, component meanings, domains and physical column evidence are retained; this question is unavailable in the public catalog because no safe delivery mapping is established."
 evidence = "Reviewed all185 source originals, complete114 native families, actual primary/summary/identifier support and172 own-bound code-list claims. Campus and distance populations are both described, without exact literal-to-form routing. Same native member and matching wording do not prove co-delivery or value equivalence. No invented form, population, period, column role or encoding. Review: Batch48-Distansutbildning-complete-source-review.json and Batch48-Distansutbildning-own-domains.json."
-expected_evidence_sha256 = "75595253b679b2ac5ac14cf87d343626abb300f37e53af2fcb4e3842a5f672cf"
+expected_evidence_sha256 = "fada890b27ba0f23c87eccfb380d99a74d2ef93d032afd9231fc73a387d9c14f"

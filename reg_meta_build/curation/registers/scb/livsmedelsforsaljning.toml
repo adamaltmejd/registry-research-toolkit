@@ -182,7 +182,7 @@ slug = "naringsgren"
 variable = "176.56"
 columns = { peorgnr = "176.56", PeorgNr = "176.56", PeOrgNr = "176.56" }
 columns_ref = "Complete native family and full physical-column peer census reviewed. Yrkesreg keeps source SNI histories and literal-case SNI2007 variants; Företagsreg separates explicitly named Avdelning, Underavdelning and Detaljgrupp operations; Livsmedelsförsäljning retains the same explicitly identified legal-unit identity across literal case spellings. No suffix-only semantics or storage/coding equivalence is inferred. Batch52-native3-source-review.json."
-expected_evidence_sha256 = "22ea74d97ad70527323117077e98e6102dc3bd5ce9bd364cfb8d1c09445a87a0"
+expected_evidence_sha256 = "f3a58a94bec1b74f151d0727310e0bbdcab82ca59d5382cf2134cf3eb5fada0c"
 
 [[representation.parallel]]
 valid_from = "2015-01-01"
@@ -192,7 +192,7 @@ variable = "176.56"
 variant = "176.242"
 column_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "PeorgNr", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "peorgnr", source_editions = ["2015"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "5ecb663411e9e171cf3e20c7fec623b84db840591dde471de9115a37ae83eebe"
 evidence = "The same supplied member names both literal case fields as this exact legal-unit identifier. Preserve every field, raw type and width, including contradictory12/255 declarations. Per-column metadata does not establish equal observed values or correct a storage declaration. Complete source peer census Batch52-native3-source-review.json."
 noted = "2026-10-02"
 
@@ -204,7 +204,7 @@ variable = "176.56"
 variant = "176.242"
 column_metadata = "per_column"
 columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "PeorgNr", source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "peorgnr", source_editions = ["2016"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b1acb126e96278294a79ed21087c4ccf72b027684d3b34ff9e7a8967fde0f815"
 evidence = "The same supplied member names both literal case fields as this exact legal-unit identifier. Preserve every field, raw type and width, including contradictory12/255 declarations. Per-column metadata does not establish equal observed values or correct a storage declaration. Complete source peer census Batch52-native3-source-review.json."
 noted = "2026-10-02"
 
@@ -216,7 +216,7 @@ variable = "176.56"
 variant = "176.242"
 column_metadata = "per_column"
 columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "PeorgNr", source_editions = ["2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "peorgnr", source_editions = ["2017"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ea8c93d122d40cc38f735f68366f683e8e58d6697f749778349bace6a8a39ddd"
 evidence = "The same supplied member names both literal case fields as this exact legal-unit identifier. Preserve every field, raw type and width, including contradictory12/255 declarations. Per-column metadata does not establish equal observed values or correct a storage declaration. Complete source peer census Batch52-native3-source-review.json."
 noted = "2026-10-02"
 
@@ -228,7 +228,7 @@ variable = "176.56"
 variant = "176.242"
 column_metadata = "per_column"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "PeorgNr", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "peorgnr", source_editions = ["2018"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6d0c7644c2caa822c14ad2c4061ca0d488e5325f57a133cf9ef4b732bafd4fe9"
 evidence = "The same supplied member names both literal case fields as this exact legal-unit identifier. Preserve every field, raw type and width, including contradictory12/255 declarations. Per-column metadata does not establish equal observed values or correct a storage declaration. Complete source peer census Batch52-native3-source-review.json."
 noted = "2026-10-02"
 
@@ -240,7 +240,7 @@ variable = "176.56"
 variant = "176.242"
 column_metadata = "per_column"
 columns = [{ valid_from = "2019-01-01", valid_to = "2019-12-31", column = "PeorgNr", source_editions = ["2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "peorgnr", source_editions = ["2019"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "bcd02f1f93435412f698f9c3b95b1e0f333d8f60a06e85b6bd02ea8c8484a23b"
 evidence = "The same supplied member names both literal case fields as this exact legal-unit identifier. Preserve every field, raw type and width, including contradictory12/255 declarations. Per-column metadata does not establish equal observed values or correct a storage declaration. Complete source peer census Batch52-native3-source-review.json."
 noted = "2026-10-02"
 
@@ -252,7 +252,7 @@ variable = "176.56"
 variant = "176.242"
 column_metadata = "per_column"
 columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "PeorgNr", source_editions = ["2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "peorgnr", source_editions = ["2020"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e067d7500360c6288ce6f33ee6a34bf9867c1ae6b5ced205348b4138e9e841a1"
 evidence = "The same supplied member names both literal case fields as this exact legal-unit identifier. Preserve every field, raw type and width, including contradictory12/255 declarations. Per-column metadata does not establish equal observed values or correct a storage declaration. Complete source peer census Batch52-native3-source-review.json."
 noted = "2026-10-02"
 
@@ -265,7 +265,7 @@ valid_from = "2001-01-01"
 valid_to = "2001-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "381b032d2fa5ec072cb0f3b18998e752bb9396d9e173dcacfadd8272db59f28c"
+expected_evidence_sha256 = "5b2310c903b33b03a127efb061c3c436415036ab5ecc571e0f66a2625967a995"
 expected_diagnostic_sha256 = "d5963cf3a6452d0423fb73329047227434fc5ae1ea2765e6bf194d6ed8e8d9c6"
 
 [[acknowledge]]
@@ -277,7 +277,7 @@ valid_from = "2002-01-01"
 valid_to = "2002-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "80d6b15837156397165afbef623277531e0cecb503f7716041de302ea41fc475"
+expected_evidence_sha256 = "4e41394f46f35ccf682d69ef5668a27832dd95fbb86d0e75d8eae9c88f9e542c"
 expected_diagnostic_sha256 = "17f24c4df96b516e070e24b8969c927b1c5c20fd7351480159593ebda8659715"
 
 [[acknowledge]]
@@ -289,7 +289,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "aa15daee320cdc0ca6cabd5c984d6bfd37f524fb8f608d9851cb51a555af6d00"
+expected_evidence_sha256 = "ba146a29cf4aae7471aadc3c8e0fd54857a1a5517ed409ebd66613cb3069e4e5"
 expected_diagnostic_sha256 = "d96515563c1efaba53a858da4e3592afbbb49c1fa5352fd5c8bf7cabe0ec00fa"
 
 [[acknowledge]]
@@ -301,7 +301,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "b4a0af155ec0943d28d294b98236c4ee7a06ae44f4dd392c6541b933c2628256"
+expected_evidence_sha256 = "6db877320e1596e34d788a27bb6e2dce9f21a58899c90a7d93ee6923baa0f618"
 expected_diagnostic_sha256 = "773e8a6a9f9809188ba24880b441d8022ae84f968d2bba96ead04a29f762fc01"
 
 [[acknowledge]]
@@ -313,7 +313,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "fdf06e3821412ff9fc447dad111685b476f449056c79547e704a0ce81c4e35fa"
+expected_evidence_sha256 = "bf28dda34c26b80e5f17246669a950b7cce6531b7666c9953decdce7c77fab73"
 expected_diagnostic_sha256 = "8bcaca78afee1fdbdb06e694ce655e0703e79741ac4e0487aa685305b24aba03"
 
 [[acknowledge]]
@@ -325,7 +325,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "af88340eaba04db7ba468c3638a6ace39f6e107b329f7423a41e20241ab9d57c"
+expected_evidence_sha256 = "bbb32f1f9655748b2d542fb523953c9a64e109c8539d4655519df774624cab84"
 expected_diagnostic_sha256 = "f9ef8f0acca28472b1e0614fa8290d194ff007df48228d2ed4ff0c50868640c4"
 
 [[acknowledge]]
@@ -337,7 +337,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "031c88d57196ec151ed10375bff2e52c9b1bca3c135d9130f87d20829a2c0946"
+expected_evidence_sha256 = "0d058b28aa3ea5f57c199cfc8211a39a402535f691296bf74d1f8b2348e70f04"
 expected_diagnostic_sha256 = "9387ccf367bb87a5b36120d7180953fcc5586b6974c739d3c4731ea4b8072760"
 
 [[acknowledge]]
@@ -349,26 +349,26 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "This exact historical source window has no own bound stored-code domain. Retain every source fact and known physical history; only the exact response domain remains unavailable. Later dictionaries and modern books do not establish historical storage encoding or effective classification edition."
 evidence = "Complete source-native family, full physical-column peer closure and own ordered coding audit Batch52-native3-source-review.json; accepted retained-unavailable historical coding policy."
-expected_evidence_sha256 = "f1fd8a3f83d8c33914c54d98d049b5e31e582e654210dac855d44fb1e65ecb5f"
+expected_evidence_sha256 = "2bca0263383e0ab508caad3cab3948f807309f9363f3064549c0497aa5041f58"
 expected_diagnostic_sha256 = "9af2e6f9b069b57171673ce4a623f48dbd402a09ee8fe5d1f7f0cb7dab14b5df"
 
 [[identity.partition]]
 variable = "176.326"
 columns = { Namn = "176.326", namn = "176.326" }
 columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
-expected_evidence_sha256 = "4a4fd0c41c2184c082d206544e186456ff489f312cd2077f2cd104f22e475446"
+expected_evidence_sha256 = "c928c1f784de20e4aa487c04d0b20cf6aa606cd02478fe1b9220b1cd2b95a41a"
 
 [[identity.partition]]
 variable = "176.462"
 columns = { Stratum = "176.462", stratum = "176.462" }
 columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
-expected_evidence_sha256 = "ccda0032917b559550dde86c497eef3c4ed35f0e4e622e3ca88f6175d290985b"
+expected_evidence_sha256 = "23317f342746460fe28e2d1cbf40b35114047a20538728083aa5c3375a856e50"
 
 [[identity.partition]]
 variable = "176.1795"
 columns = { BlankettNr = "176.1795", Blankettnr = "176.1795", blankettnr = "176.1795" }
 columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
-expected_evidence_sha256 = "072ec010e913cb728eb51ea8574ded711fceb2c04985acfb1d44c7011c0d1d94"
+expected_evidence_sha256 = "395d6049ea8775d8d90dce1b2b07ead786fb234c963beaf05eb964a91e67875f"
 
 [[representation.parallel]]
 valid_from = "2012-01-01"
@@ -379,7 +379,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2012-01-01", valid_to = "2012-12-31", column = "BlankettNr", expected_codings = ["ddb26f6525b0b5cf012a1f32d404c4d17968bb541c1cb19c3ccb84ae8073ab9e"], source_editions = ["2012"] }, { valid_from = "2012-01-01", valid_to = "2012-12-31", column = "blankettnr", expected_codings = ["ddb26f6525b0b5cf012a1f32d404c4d17968bb541c1cb19c3ccb84ae8073ab9e"], source_editions = ["2012"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "71d79af86e9c37ea1d3a34cd51d1e3e72b8bed4109047e68e31e70b13df3df99"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -392,7 +392,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "BlankettNr", expected_codings = ["9684fd151e00077e8ffd6f177fcc21176bad2bbb1ded2b163807f090a3eda269"], source_editions = ["2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "blankettnr", expected_codings = ["9684fd151e00077e8ffd6f177fcc21176bad2bbb1ded2b163807f090a3eda269"], source_editions = ["2013"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "3e2125cd654a80ab0c3f4885e8bb9329d038be4e00566fa0e7d5c474746a4a29"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -405,7 +405,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "BlankettNr", expected_codings = ["103e93a74dd56709d3ebc5c7ecc281473ec322f57b977523b338d69bf021301e"], source_editions = ["2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "blankettnr", expected_codings = ["103e93a74dd56709d3ebc5c7ecc281473ec322f57b977523b338d69bf021301e"], source_editions = ["2014"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f28af8ec473abc7b07a88a5d46f0325892f9d2fe55b794b1d6ba02f138e668f3"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -418,7 +418,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "BlankettNr", expected_codings = ["a4b1f99d49ed477e1418379ae0d6a15e0a53b59366cf4919359733e94921239b"], source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Blankettnr", expected_codings = ["a4b1f99d49ed477e1418379ae0d6a15e0a53b59366cf4919359733e94921239b"], source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "blankettnr", expected_codings = ["a4b1f99d49ed477e1418379ae0d6a15e0a53b59366cf4919359733e94921239b"], source_editions = ["2015"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "90d7165910030a4cd8636e4b4bb5e8ef96d5bfba74072f4d36810776fab521d6"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -431,7 +431,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "BlankettNr", expected_codings = ["199762152c35f8094eb9b09a997bbce721430a3dda06bb2fc93fb0e76c0be7b7"], source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "Blankettnr", expected_codings = ["199762152c35f8094eb9b09a997bbce721430a3dda06bb2fc93fb0e76c0be7b7"], source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "blankettnr", expected_codings = ["199762152c35f8094eb9b09a997bbce721430a3dda06bb2fc93fb0e76c0be7b7"], source_editions = ["2016"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "da45fe56438c048d34b45cb56453685416a6d1c53f4ebe97e2b9a3f2360c8fe2"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -444,7 +444,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "BlankettNr", expected_codings = ["a4c73d4cf5c0fc53a79d7f4eacb074e95849e9c3ccc97e287a7a68d0514014df"], source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "Blankettnr", expected_codings = ["a4c73d4cf5c0fc53a79d7f4eacb074e95849e9c3ccc97e287a7a68d0514014df"], source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "blankettnr", expected_codings = ["a4c73d4cf5c0fc53a79d7f4eacb074e95849e9c3ccc97e287a7a68d0514014df"], source_editions = ["2018"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6b1ffab31443acd18438cf4b00e56be982bf09d9289810571ae8dff50246c609"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -457,7 +457,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2019-01-01", valid_to = "2019-12-31", column = "BlankettNr", expected_codings = ["558e7c0e1024a091a5a2ef556362b50acd7b2952b2f0aee2622fa39494bd10ca"], source_editions = ["2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "Blankettnr", expected_codings = ["558e7c0e1024a091a5a2ef556362b50acd7b2952b2f0aee2622fa39494bd10ca"], source_editions = ["2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "blankettnr", expected_codings = ["558e7c0e1024a091a5a2ef556362b50acd7b2952b2f0aee2622fa39494bd10ca"], source_editions = ["2019"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7f726b3b8eb60316ae4c34371291076ebdc3f528e4f3c9ddaba9969108b9be92"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -470,7 +470,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "BlankettNr", expected_codings = ["87cbf157f704d3798d4422c3df3c090c47423888aa1dd7ede5d3c332ff564f8e"], source_editions = ["2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "Blankettnr", expected_codings = ["87cbf157f704d3798d4422c3df3c090c47423888aa1dd7ede5d3c332ff564f8e"], source_editions = ["2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "blankettnr", expected_codings = ["87cbf157f704d3798d4422c3df3c090c47423888aa1dd7ede5d3c332ff564f8e"], source_editions = ["2020"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "502b5a449ef5ab3e519599ee12dc382f97422b06676b9f2d12d66f31b9bd0e2a"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -483,7 +483,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "Namn", source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "namn", source_editions = ["2016"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8f0350c535cbfce8fde120b2d14fd1773181851ed54310de3186d019abec307d"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -496,7 +496,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "Namn", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "namn", source_editions = ["2018"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "3dd99438f5257bb693232e67baa9991d865a6253a2d12594b86c33ed785910de"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -509,7 +509,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2019-01-01", valid_to = "2019-12-31", column = "Namn", source_editions = ["2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "namn", source_editions = ["2019"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "3eaf827d99b28691e00312d077f641a635f0bcd1cb178f1233e600f6aea17605"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -522,7 +522,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "Namn", source_editions = ["2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "namn", source_editions = ["2020"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "57e947ced0a730c1043444b4b798487ddfde8d71d1f4f8cfa5cf0d85d89f81a7"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -535,7 +535,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Stratum", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "stratum", source_editions = ["2015"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6f94954e7bd1f0a0d41234dc87bf618865b11d0832506502ae707b388bab182d"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -548,7 +548,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "Stratum", source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "stratum", source_editions = ["2016"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "4b39eb74b2aa6ca9de8513c5317de94cc949db0852809da63464eaf41da2412c"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -561,7 +561,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "Stratum", source_editions = ["2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "stratum", source_editions = ["2017"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "5a5d8406c4558248000d1ed9a4b5e64538aef39af0749d5cfa30f9481e890f2c"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -574,7 +574,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "Stratum", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "stratum", source_editions = ["2018"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b486ca58831607c38dc8a73a95f06680ffd0161e7d525e6e39c3983791a74af9"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -587,7 +587,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2019-01-01", valid_to = "2019-12-31", column = "Stratum", source_editions = ["2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "stratum", source_editions = ["2019"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "5938bc43fc759091ad715ecc5e63a781a2516be2a928d5681f8263c8a5d3ab17"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -600,7 +600,7 @@ variant = "176.242"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "Stratum", source_editions = ["2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "stratum", source_editions = ["2020"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "68129a20da63d1a5e8473d54786e77d4f12e08b26a7b48afacc7962ef9a5a536"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -609,28 +609,28 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "176.1814"
 columns = { COICOP4 = "176.1814.coicop4", COICOP5 = "176.1814.coicop5" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "b923e9ff005e0e207379eb509f522ed66fbfc6b3b0552158dbc8c29849600e13"
+expected_evidence_sha256 = "e074c6f965f4b19436701d156d8d102374681a00c497d7376ad7a7cdeb349a1e"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "176.1801"
 columns = { RedPerSlut = "176.1801.redperslut", V2Tom = "176.1801.v2tom", redperslut = "176.1801.redperslut" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "64b9e865e9d9f85d09e58e22a624ab325d63648aa9a3fe8b754039914afc2cde"
+expected_evidence_sha256 = "9134c4c02c1c15fcb8dafa086303c1a492b5beeaaf58d15cdce46b8e589375db"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "176.19052"
 columns = { NgS1Je = "176.19052.ngs1je", ngs = "176.19052.ngs" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "e266eb75218ccc42896bf9c30229577d6fe898736b29f5049cbd6b95846a70da"
+expected_evidence_sha256 = "5236a69b469a34e842e8ed25efb832682bc28039f8b26587c5631741ebaf01d3"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "176.1653"
 columns = { Kommentar = "176.1653.kommentar", uppgiftkommentar = "176.1653.uppgiftkommentar" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "66c8abcffc55ad37957a7ca96e6d0873cbecad2dbc545fbd6f07f7c3e4605306"
+expected_evidence_sha256 = "6014a735b2bff5d1e9be35207710e78a8eaebda871b26430efc5bca8c7b6dd21"
 
 [[variable]]
 native_id = "176.1814.coicop4"
@@ -673,7 +673,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "6acbccee1cc1ba7d35f5886ce283b6237723ca3d0fbae99523709d47fd878467"
+expected_evidence_sha256 = "0d533713c937fb2cc3d08711b1f630f1e972dd2af6c607748759b9290e9d06cb"
 expected_diagnostic_sha256 = "6e889096cb59a7ce13b0c43b545039b4b9ee89b9979b796da92ebb374aafcab5"
 
 [[acknowledge]]
@@ -685,7 +685,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "cde806bb92c69202f0ac44fe5ecc759b9c99587f9dfbbc0dfa900c865ff9a260"
+expected_evidence_sha256 = "4508c57d396e927bcf033b0ff22949751e8e93b767bd969ec120c9d8a430ff29"
 expected_diagnostic_sha256 = "e6992846356db3deb6d5396161b03345154f6761414fecf1a12ec98451ffdfe4"
 
 [[acknowledge]]
@@ -697,5 +697,5 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "aec7acf581dc73488e7d34d9015893a93cb567072960425e4e2c11f94c92c41e"
+expected_evidence_sha256 = "efdb756f667ff1b72983ee27a34845336b85e566686f71d43b2ff25f2669b528"
 expected_diagnostic_sha256 = "d0673df6c12f7be5f5f6849d116c88cc0fc2eddeba51845d021838a110fcc261"

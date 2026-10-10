@@ -51,7 +51,7 @@ code = "unknown_support_key"
 subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 156)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"3c103b0c24f736e9aa77b83d59ac1be564aadafece5627ab5b1544bf7ac00d85\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"d74127b868a3a7f5e1e564940c6b969f66129a3bfdd16bc3e6fb961c90f9da01\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"1aa42766c24b1d8f0a872dcf465fef1d87df9b8d1b343d5414b9dda9a991be04\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"5ee8960fec244934c480bbd54e73c7f0a693a9613e162641414645ea70bea608\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"e2f6de69340f7ad9be1194ead2d9e11133c9c652ec3fdd59af5850d236df5fee\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"85ae6e3fa92b86d73f82446e5744f551765408c6f4be93aabbb82ac765addd6d\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"0e1855966de62b6a17448204915b623cda95cd243da8160e02b814ab19707499\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"8dc3c79b4c6fb97f201426098a8a0cf164622228c3a7558b3f6d0fc06a1f329c\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"29aab02f7ce28e986e408653a108da5b1368428bd0184f47ac53ae4253f33ae0\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"606964d914278b6dd845758ce9f02d7399ad5b63038fc19721e2ea29515cdf5b\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"41f4ababcfe6b27c9c578a94f680dd201f8c0079e3419b0ef48a32afd5b44936\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6123a56de3d2ef408baf845c04b9d860a286a3275927dade86994a72c6dbe02f\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"85bc86b5aa0116f9525c48cddf8737ffe21c40ce210795ba7c8bacdd68218e47\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"84f8d3d5fb365401481f33a416c5dd7b91dcd6a1b97d841ae74f955bf2532ed5\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"04a77ce6a204b9ed308e2cd69220ade737a7d8bab1e19bc74cceaed8c55c9c49\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"8163d0cf652b723e31d824e09f2f100d17f935d4ccade5a687c616fa55c00ecb\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"03d681da3c481f12fdfc1962643d52d7c1cb34f3d9808e76ae1e06f44117ee28\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"12577d460994b266a4791d6b863c93ff443acfa1aaaa57c1eec52761c6c4427c\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"d41d96e3e238d1087b5ce641c9f788a800b014dcc47a56859959ed6e0a37b40a\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"42ccd5a64259c03fc35cba6a32c2e44c4711f4f3c0e64b330aa892d8f4fca94e\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"b52d67a1259b2b11a6db7bd42b9dfd9bff482e338716f1c37458f2bff1ca565f\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"da1b539c8a4e5ef25f543c58e30bb5e48456f4a617121ba2b5c325efd97f8664\"]}"]
-expected_evidence_sha256 = "75456da679667a75cd5d9f2ba8e0282a649c5b75f5ac55c5d61c2cf3010710bc"
+expected_evidence_sha256 = "3ca73af7803aafb9a369a1a9660844d25443c6d9a55323faf9203c7235e2f2cb"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
 
@@ -61,7 +61,7 @@ variable = "156.145"
 columns = { FtgId = "156.145", SCBID = "156.145", SCBId = "156.145", SCBid = "156.145" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
-expected_evidence_sha256 = "ead2b4b8636426cbc43f7c46bfe98f1541c6f66882e64cc24305bd73c21d996a"
+expected_evidence_sha256 = "af668f7b6c0e43fcdd37b766394c5592d04dc1cc01d11bab0aa5149e58c1e57a"
 
 [[identity.partition]]
 data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
@@ -69,7 +69,7 @@ variable = "156.1666"
 columns = { AnstS = "156.1666", AntAnst = "156.1666" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
-expected_evidence_sha256 = "f91baf351c876b062a8205d8de354e20bb912d2aa47f534dbff2d1ca29e1d5da"
+expected_evidence_sha256 = "064cf657f23d0798bd16205c5a8f8dce075ff1e7233d54e09e6420730e946f77"
 
 [[identity.partition]]
 data_warning = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
@@ -77,7 +77,7 @@ variable = "156.15938"
 columns = { NgS1 = "156.15938", Verksamhet = "156.15938", verksamhet = "156.15938" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
-expected_evidence_sha256 = "d8a9a7b472965b41087ad501430427b5755249edfcde3f6832a3ce6e62a69256"
+expected_evidence_sha256 = "f7ad682a031cbc2c8416469db02b4b1e8a17da5e77d39fce88610abbd70fdfa7"
 
 [[variable]]
 native_id = "156.6331.invbelopp"
@@ -545,7 +545,7 @@ variable = "156.6331"
 columns = { InvBelopp = "156.6331.invbelopp", InvBelopp101 = "156.6331.invbelopp101", InvBelopp102 = "156.6331.invbelopp102", InvBelopp103 = "156.6331.invbelopp103", InvBelopp104 = "156.6331.invbelopp104", InvBelopp105 = "156.6331.invbelopp105", InvBelopp106 = "156.6331.invbelopp106", InvBelopp107 = "156.6331.invbelopp107", InvBelopp108 = "156.6331.invbelopp108", InvBelopp109 = "156.6331.invbelopp109", InvBelopp110 = "156.6331.invbelopp110", InvTyp = "156.6331.invtyp", MiljoOmrA = "156.6331.miljoomra", MiljoOmrB = "156.6331.miljoomrb", RadNr = "156.6331.radnr" }
 unassigned_columns = []
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "8981bd04d91a58084dd17fdfab94dce4ced314d4c1e549673b9df79e84003c82"
+expected_evidence_sha256 = "ca8096247980990306bdc3e3aa77e3b965b26f85167470156ea1b325b14a1d83"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -553,7 +553,7 @@ variable = "156.6335"
 columns = { Kost311K = "156.6335.kost311k", Kost312A = "156.6335.kost312a", Kost312L = "156.6335.kost312l", Kost312O = "156.6335.kost312o", Kost312Q = "156.6335.kost312q", Kost312V = "156.6335.kost312v" }
 unassigned_columns = []
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "4eaca069d26eaf1ccd56649e744ab210c3ac4602eff7a8835ba7ad276e07f59c"
+expected_evidence_sha256 = "33caa213bc943036f7660d31eb7cb724daaf61529fc93230e5bbfeea0cc0c71c"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -561,7 +561,7 @@ variable = "156.6345"
 columns = { Hus113B = "156.6345.hus113b", Hus113B_Kontroll = "156.6345.hus113b-kontroll", Hus113E = "156.6345.hus113e", Hus113V = "156.6345.hus113v", HusBeskr = "156.6345.husbeskr" }
 unassigned_columns = []
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "ff2f1bc7acbd8cd1abd66bea442e71ca34b5a5bb76312bcf568c0dc8b6974e53"
+expected_evidence_sha256 = "0b50c10d860bcf3a74109fde1b674f71705c819964a0cfbfdd6815a1e7ae3310"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -569,7 +569,7 @@ variable = "156.6332"
 columns = { Inv111A = "156.6332.inv111a", Inv111Komm = "156.6332.inv111komm", Inv111L = "156.6332.inv111l", Inv111O = "156.6332.inv111o", Inv111Q = "156.6332.inv111q", Inv111T = "156.6332.inv111t", Inv111V = "156.6332.inv111v" }
 unassigned_columns = []
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "fd02377e87eafa65ccef62fc10326e8d2e2f55e80a7fa7ca6b3d9f4ad766d82a"
+expected_evidence_sha256 = "83075240dac986f6fc8805d56b447a5ac58f3b92fb9d5f0d2f3e80d888e181b9"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -577,7 +577,7 @@ variable = "156.6333"
 columns = { Inv112A = "156.6333.inv112a", Inv112Komm = "156.6333.inv112komm", Inv112L = "156.6333.inv112l", Inv112O = "156.6333.inv112o", Inv112Q = "156.6333.inv112q", Inv112T = "156.6333.inv112t", Inv112V = "156.6333.inv112v" }
 unassigned_columns = []
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "913a37b2834c9a3d8ac1c0ba194e194065960001443dfd246f1436b29b435bbe"
+expected_evidence_sha256 = "db47e9313bf6fb20efb153738c250156189e587a26f08e5d2a1439d8c24cb75c"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -585,7 +585,7 @@ variable = "156.6253"
 columns = { InvTyp101 = "156.6253.invtyp101", InvTyp102 = "156.6253.invtyp102", InvTyp103 = "156.6253.invtyp103", InvTyp104 = "156.6253.invtyp104", InvTyp105 = "156.6253.invtyp105", InvTyp106 = "156.6253.invtyp106", InvTyp107 = "156.6253.invtyp107", InvTyp108 = "156.6253.invtyp108", InvTyp109 = "156.6253.invtyp109", InvTyp110 = "156.6253.invtyp110" }
 unassigned_columns = []
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "a2ec816fdb50d6b82cf5b7e9ca3a350cf3a6b04dfa20b8553b8c50d48655c066"
+expected_evidence_sha256 = "5ee02cdbc6d16af7884d925ef93442456af6d6e5d0994205d98976df87d21f25"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -593,7 +593,7 @@ variable = "156.1682"
 columns = { MiljoOmrA101 = "156.1682.miljoomra101", MiljoOmrA102 = "156.1682.miljoomra102", MiljoOmrA103 = "156.1682.miljoomra103", MiljoOmrA104 = "156.1682.miljoomra104", MiljoOmrA105 = "156.1682.miljoomra105", MiljoOmrA106 = "156.1682.miljoomra106", MiljoOmrA107 = "156.1682.miljoomra107", MiljoOmrA108 = "156.1682.miljoomra108", MiljoOmrA109 = "156.1682.miljoomra109", MiljoOmrA110 = "156.1682.miljoomra110" }
 unassigned_columns = []
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "36b251f4ec5ee01d9efc125c0572bc02cc4c167fccefb7177da9c5a1e69c191f"
+expected_evidence_sha256 = "e14e6e5eb3e49c93688fbe5476fc904dea41a1f3eaa1a8421a0435e5d1e44608"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -601,7 +601,7 @@ variable = "156.28430"
 columns = { BeskrivKost302A = "156.28430.beskrivkost302a", BeskrivKost302L = "156.28430.beskrivkost302l", BeskrivKost302O = "156.28430.beskrivkost302o", BeskrivKost302V = "156.28430.beskrivkost302v", BeskrivKost303T = "156.28430.beskrivkost303t", BeskrivKost304T = "156.28430.beskrivkost304t", BeskrivKost305T = "156.28430.beskrivkost305t", BeskrivKost312A = "156.28430.beskrivkost312a", BeskrivKost312L = "156.28430.beskrivkost312l", BeskrivKost312O = "156.28430.beskrivkost312o", BeskrivKost312V = "156.28430.beskrivkost312v", BeskrivKost313K = "156.28430.beskrivkost313k", BeskrivKost314K = "156.28430.beskrivkost314k", BeskrivKost315T = "156.28430.beskrivkost315t", Inv111Komm = "156.28430.inv111komm", Inv112Komm = "156.28430.inv112komm" }
 unassigned_columns = []
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "67387f50a0aa3f29f1226c094f8732cee6a10ef0699db5c615d66a03cbac4525"
+expected_evidence_sha256 = "317aa3d1e8d3430e1fa3af10ad8942767cc6ceefd0c477399ad95a72335d2a8f"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -609,7 +609,7 @@ variable = "156.28427"
 columns = { BeskrivInv101 = "156.28427.beskrivinv101", BeskrivInv102 = "156.28427.beskrivinv102", BeskrivInv103 = "156.28427.beskrivinv103", BeskrivInv104 = "156.28427.beskrivinv104", BeskrivInv105 = "156.28427.beskrivinv105", BeskrivInv106 = "156.28427.beskrivinv106", BeskrivInv107 = "156.28427.beskrivinv107", BeskrivInv108 = "156.28427.beskrivinv108", BeskrivInv109 = "156.28427.beskrivinv109", BeskrivInv110 = "156.28427.beskrivinv110" }
 unassigned_columns = []
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "395937599bb519c02c5b51740e6836769b22b0bd8737a53f81c65fc5891951c2"
+expected_evidence_sha256 = "5ed8a3bb6f5f22d49c12db382714c2ae261538c27213ee610bf36b6d3997995c"
 
 [[identity.column_owner]]
 data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
@@ -620,7 +620,7 @@ owner = "156.6334.kost301t"
 ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
 source_editions = ["2006", "2007", "2008", "2009", "2010"]
 expected_fields = []
-expected_evidence_sha256 = "64b6e4ce705ea4eecda68a77a7282c5198f7aa88100333ceeb458577c30b449b"
+expected_evidence_sha256 = "d594df3ad0ff60c943dde4dd27db89fd1d6b19c8d8e7ae5e2b373a3a7a6d733e"
 
 [[identity.column_owner]]
 data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
@@ -631,7 +631,7 @@ owner = "156.6334.kost302a"
 ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
 source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
 expected_fields = []
-expected_evidence_sha256 = "13b7e398cc8b3cf9f4a319cedbf19c78acbe43607ca8f5abfb336f842e2f4316"
+expected_evidence_sha256 = "c938b8b638948f7050c4e1c066cd1b8ca2af1df7da102137ffa7bf683aa3de72"
 
 [[identity.column_owner]]
 data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
@@ -642,7 +642,7 @@ owner = "156.6334.kost302l"
 ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
 source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
 expected_fields = []
-expected_evidence_sha256 = "6c38069d4356ce41631a7224fc5d4c8ad2b9374b34c0ff5cdda75936c0aa0abe"
+expected_evidence_sha256 = "38d489ed5548f0d4954ae948393a70e7c6d94ed52fe0e56a27e6979ac902b1b8"
 
 [[identity.column_owner]]
 data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
@@ -653,7 +653,7 @@ owner = "156.6334.kost302o"
 ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
 source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
 expected_fields = []
-expected_evidence_sha256 = "8f29896aa99ea46d444f3ff3987cee7b0ba4c6e0f5e6aa9e0d80eeb21466f0b9"
+expected_evidence_sha256 = "7a2936782791cafbaa869a5995eaee4e83e5d93e5e5f12f94c1f1b7b6afb3585"
 
 [[identity.column_owner]]
 data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
@@ -664,7 +664,7 @@ owner = "156.6334.kost302q"
 ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
 source_editions = ["2006", "2007", "2008", "2009", "2010"]
 expected_fields = []
-expected_evidence_sha256 = "77afeccea0b30e3030203330ca493e3d5743acdaa912dc1f72e6320ee0e62bc3"
+expected_evidence_sha256 = "762b5f3520c01bb3b3ae4ea12fb167fdf97ecf7777a265d688f33fe3b050e77f"
 
 [[identity.column_owner]]
 data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
@@ -675,7 +675,7 @@ owner = "156.6334.kost302v"
 ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
 source_editions = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]
 expected_fields = []
-expected_evidence_sha256 = "cfa56ec9d92c9bf726449c09a36b971bf80567ff597c1c0a8891c9db7394f615"
+expected_evidence_sha256 = "eb6e8380474bfd89b2eedf4046eef4977c023a1b7fc02c921a9a4c32df293811"
 
 [[identity.column_owner]]
 data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."
@@ -686,7 +686,7 @@ owner = "156.6338.source-positive"
 ref = "Complete native family and full exact variant/edition/literal peer closure reviewed in Batch54-root-complete-collision-closure.json. Preserve established component ownership for every uncontested source history. Simultaneous competing source owners remain unavailable only at their exact witnessed coordinates; no missing table/row discriminator is invented."
 source_editions = ["2006", "2007", "2008", "2009", "2010", "2012", "2013"]
 expected_fields = []
-expected_evidence_sha256 = "dfe250231a23d57828d1910edcdcab9d55b82beb05c491be87709ced86e714b2"
+expected_evidence_sha256 = "ab786506487de9c3defc23c8dc54d40621fda95efde6e7112f70627eb4312da2"
 
 [[acknowledge]]
 code = "unresolved_catalog_identity"
@@ -695,7 +695,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity"]
 reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "6378f32f3fcab58662cb303fbfb8181e32175e72c919db001404e2c841f64487"
+expected_evidence_sha256 = "2fe4a5312d901c94f6861d94d95be016de9ef0f88793a08b2d6777ed2f89eccf"
 expected_diagnostic_sha256 = "c57c9ff95828fa7636e888b0e258dd9e18c218a115c92174a3421eae3208b626"
 
 [[acknowledge]]
@@ -705,7 +705,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["identity"]
 reason = "These exact source coordinates lack unique catalog ownership because the register export simultaneously assigns competing native meanings without a delivered discriminator. Retain every original and own coding association; only the exact contested histories are unavailable. All separately supported histories remain mapped."
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
-expected_evidence_sha256 = "2dbe0a1c42df417a6d0cc7d7a892a97c5a47103955deb91178409ffb0336fedb"
+expected_evidence_sha256 = "5bc30070702cf12d3a248bac2a07b2f6ad28647e61c0ba90d1c8b3cc1f6d3402"
 expected_diagnostic_sha256 = "bc95722b9e401b1164c2ba82fb420a956e0dfef4932851db39a89d1c88b82f7e"
 
 [[variable]]

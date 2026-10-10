@@ -18,8 +18,6 @@ from reg_meta_build.resolved_catalog import (
 from reg_meta_build.resolved_metadata import (
     ResolvedClassificationDerivation,
     ResolvedClassificationGroup,
-    ResolvedClassificationRef,
-    ResolvedClassificationSameAs,
     ResolvedGroupAxis,
     ResolvedGroupClassification,
     ResolvedGroupFacet,
@@ -152,7 +150,6 @@ def full_metadata() -> ResolvedMetadata:
             ResolvedTag(
                 slug="topic",
                 label="Topic",
-                description="Thematic note",
                 members=(
                     ResolvedTagMember(target="scb/example", rank=0, starred=False),
                     ResolvedTagMember(
@@ -163,16 +160,6 @@ def full_metadata() -> ResolvedMetadata:
         ),
         variable_same_as=(
             ResolvedVariableSameAs(a="scb/example/one", b="sos/example/consumer"),
-        ),
-        classification_same_as=(
-            ResolvedClassificationSameAs(
-                a=ResolvedClassificationRef(
-                    provider="scb", classification="first-codes"
-                ),
-                b=ResolvedClassificationRef(
-                    provider="who", classification="second-codes"
-                ),
-            ),
         ),
         successions=(
             ResolvedSuccession(
@@ -198,9 +185,6 @@ def full_metadata() -> ResolvedMetadata:
                 successor=ResolvedVariantRef(
                     register="sos/example", variant="individuals"
                 ),
-                effective_year=2001,
-                note="curated:variant",
-                description="Variant transition",
             ),
         ),
         representation_successions=(

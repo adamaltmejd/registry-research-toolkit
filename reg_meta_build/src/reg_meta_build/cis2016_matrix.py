@@ -264,8 +264,6 @@ def convert_matrix(
     The emitted peer guard checks that same scope on replay. Other editions and
     variables are left untouched.
     """
-    from .source_coding import copied_coding_fingerprints
-
     selector = matrix.selector
     native = NativeCoordinates(
         register_id=selector.register_id,
@@ -313,11 +311,6 @@ def convert_matrix(
         raise ValueError(
             "blank matrix donor requires exactly one complete bound coding list"
         )
-    copied_codings = (
-        copied_coding_fingerprints(coding[donor.ref])
-        if blank and coding is not None
-        else None
-    )
     guard = PeerGuard(
         guard_id=f"{case_id}:complete-partition",
         source=selected[0].source,
@@ -379,7 +372,6 @@ def convert_matrix(
                             if name not in {*authored, "column_name"}
                         ),
                         copy_coding=True,
-                        expected_codings=copied_codings,
                     )
                 )
             else:

@@ -133,7 +133,7 @@ pub(super) fn arm(
          bm25(value_code_fts) + ln(1 + vc.mapping_count) * 0.5 AS rank \
          FROM value_code_fts JOIN value_code vc ON vc.code_id = value_code_fts.rowid \
          WHERE value_code_fts MATCH ?{owner} \
-         ORDER BY rank, vc.mapping_count, vc.code_id LIMIT {HORIZON}"
+         ORDER BY rank, vc.mapping_count, vc.code, vc.label LIMIT {HORIZON}"
     ))?;
     for hit in stmt.query_map(params_from_iter(&args), |row| read(row, row.get(5)?))? {
         let hit = hit?;
@@ -150,7 +150,7 @@ pub(super) fn arm(
             "SELECT vc.code_id, vc.code, vc.label, vc.mapping_count, {code_system} \
              FROM value_code vc WHERE vc.code LIKE ? ESCAPE '\\' \
              AND (vc.mapping_count > 0 OR {classified}){owner} \
-             ORDER BY (vc.code = ? COLLATE NOCASE) DESC, length(vc.code), vc.code, vc.code_id \
+             ORDER BY (vc.code = ? COLLATE NOCASE) DESC, length(vc.code), vc.code, vc.label \
              LIMIT {HORIZON}"
         ))?;
         let rows: Vec<CodeHit> = stmt
@@ -169,7 +169,7 @@ pub(super) fn arm(
     hits.sort_by(|a, b| {
         a.rank
             .total_cmp(&b.rank)
-            .then_with(|| (&a.code, a.id).cmp(&(&b.code, b.id)))
+            .then_with(|| (&a.code, &a.label).cmp(&(&b.code, &b.label)))
     });
     hits.truncate(HORIZON);
     Ok(hits.into_iter().map(Hit::Code).collect())
@@ -230,7 +230,7 @@ pub(super) fn annotate(
          JOIN provider p ON p.provider_id = r.provider_id \
          WHERE cvm.code_id IN (SELECT value FROM json_each(?)){in_register}), \
          ranked AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY code_id ORDER BY n, \
-         variable_slug, provider_slug, register_slug, variable_id) AS rn FROM owners) \
+         variable_slug, provider_slug, register_slug) AS rn FROM owners) \
          SELECT code_id, provider_slug, register_slug, variable_slug, name, register_name \
          FROM ranked WHERE rn <= {OWNERS} ORDER BY code_id, rn"
     ))?;

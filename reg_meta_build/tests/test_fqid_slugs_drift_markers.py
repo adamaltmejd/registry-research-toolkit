@@ -58,9 +58,9 @@ class TestPopulateVariableSlugs(PopulateVariableSlugsHelpers):
         for i, col in enumerate(cols):
             yr = 2000 + i
             conn.execute(
-                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
                 "valid_from, valid_to, data_type, delivery_column_name) "
-                "VALUES (?, 10, ?, ?, 'int', ?)",
+                "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 10, ?, ?, 'int', ?)",
                 (vid, f"{yr}-01-01", f"{yr}-12-31", col),
             )
         conn.commit()
@@ -367,9 +367,9 @@ class TestAutoDerivationMarker:
         for i, col in enumerate(cols):
             yr = 2000 + i
             conn.execute(
-                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
                 "valid_from, valid_to, data_type, delivery_column_name) "
-                "VALUES (?, 10, ?, ?, 'int', ?)",
+                "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 10, ?, ?, 'int', ?)",
                 (vid, f"{yr}-01-01", f"{yr}-12-31", col),
             )
         conn.commit()
@@ -460,9 +460,9 @@ class TestAutoDerivationMarker:
         assert vid is not None
         for yr, col in (("2000", "BefKom"), ("2010", "BefKommun")):
             conn.execute(
-                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
                 "valid_from, valid_to, data_type, delivery_column_name) "
-                "VALUES (?, 10, ?, ?, 'int', ?)",
+                "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 10, ?, ?, 'int', ?)",
                 (vid, f"{yr}-01-01", f"{yr}-12-31", col),
             )
         conn.commit()
@@ -529,9 +529,9 @@ class TestAutoDerivationMarker:
         ).lastrowid
         assert vid is not None
         conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
             "valid_from, valid_to, data_type, delivery_column_name) "
-            "VALUES (?, 10, '2000-01-01', '2000-12-31', 'int', 'FooBar')",
+            "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 10, '2000-01-01', '2000-12-31', 'int', 'FooBar')",
             (vid,),
         )
         conn.commit()

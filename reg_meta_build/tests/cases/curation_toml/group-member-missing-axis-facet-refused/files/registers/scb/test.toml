@@ -1,0 +1,18 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[group]]
+register = "scb/test"
+key = "grid"
+label = "Grid"
+axes = [{ axis = "sex", label = "Sex" }, { axis = "unit", label = "Unit" }]
+[[group.members]]
+variable = "a"
+delivery_column = "A_M"
+coords = [{ axis = "sex", value = "m", label = "Men" }, { axis = "unit", value = "p", label = "Persons" }]
+[[group.members]]
+variable = "a"
+delivery_column = "A_W"
+coords = [{ axis = "sex", value = "w", label = "Women" }]
