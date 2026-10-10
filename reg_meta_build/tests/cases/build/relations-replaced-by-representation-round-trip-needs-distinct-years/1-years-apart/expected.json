@@ -1,0 +1,14 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "successions",
+      "where": {"grain": "representation"},
+      "fields": ["predecessor", "predecessor_column", "successor", "successor_column", "variant", "effective_year"],
+      "rows": [
+        ["scb/sample/two", "TWO", "scb/sample/value", "VALUE", "people", 2021],
+        ["scb/sample/value", "VALUE", "scb/sample/two", "TWO", "people", 2020]
+      ]
+    }
+  ]
+}

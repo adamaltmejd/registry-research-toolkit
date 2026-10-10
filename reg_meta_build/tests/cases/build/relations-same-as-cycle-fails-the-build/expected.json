@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "relations_same_as_cycle",
+    "message_contains": ["variable same_as forms a cycle through"]
+  }
+}

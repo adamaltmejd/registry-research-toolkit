@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "replaced_by_cycle",
+    "message_contains": ["'sni2020' -> 'sni2000' -> 'sni2020'"]
+  }
+}

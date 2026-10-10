@@ -1,0 +1,12 @@
+[[edge]]
+type = "same_as"
+a = "scb/sample/value"
+b = "scb/sample/two"
+[[edge]]
+type = "same_as"
+a = "scb/sample/two"
+b = "scb/sample/else"
+[[edge]]
+type = "same_as"
+a = "scb/sample/else"
+b = "scb/sample/value"
