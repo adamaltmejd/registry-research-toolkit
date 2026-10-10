@@ -10,6 +10,9 @@
       ],
       "rows": [
         [
+          "curation/registers/scb/sample.toml#variable/1.7.unknown"
+        ],
+        [
           "curation/registers/scb/sample.toml#/identity.partition/2"
         ],
         [

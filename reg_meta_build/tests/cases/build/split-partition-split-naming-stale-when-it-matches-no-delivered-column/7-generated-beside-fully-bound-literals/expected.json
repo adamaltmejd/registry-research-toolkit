@@ -1,0 +1,36 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": [
+        "code",
+        "subject",
+        "locator"
+      ],
+      "rows": [],
+      "note": "No stale row and no abort; step 1's states."
+    },
+    {
+      "table": "states",
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "rows": [
+        [
+          "kon",
+          "Kon"
+        ],
+        [
+          "kon",
+          "KON"
+        ],
+        [
+          "left",
+          "LEFT"
+        ]
+      ]
+    }
+  ]
+}
