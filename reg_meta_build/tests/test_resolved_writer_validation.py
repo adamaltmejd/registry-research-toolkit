@@ -95,13 +95,14 @@ def _historical(
 # module's variables (scb/example/one and two, sos/example/consumer) and books, the
 # refusal's message and, for a located refusal, its code.
 INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | None]] = {
-    # Loader twin: worklist-group-axisless-member-facets-refused.
+    # The register loader refuses the same rule (a member missing one of two
+    # declared axes): curation_toml/group-member-missing-axis-facet-refused.
     "group-without-axes-whose-members-carry-facets": (
         lambda: _group_members(*full_metadata().variable_groups[0].members, axes=()),
         "member must supply one facet per declared axis",
         None,
     ),
-    # Loader twin: worklist-group-mixed-member-grain-refused.
+    # Register-loader twin: curation_toml/group-mixed-member-grain-refused.
     "group-mixing-whole-variable-and-column-members": (
         lambda: _group_members(
             _first_member(), _first_member(delivery_column_name=None)
@@ -109,7 +110,7 @@ INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | Non
         "group mixes whole-variable and representation members",
         None,
     ),
-    # Loader twin: worklist-group-duplicate-member-refused.
+    # Register-loader twin: curation_toml/group-repeated-member-refused.
     "group-listing-one-member-twice": (
         lambda: _group_members(_first_member(), _first_member()),
         r"duplicate resolved group member: \('scb/example/one', 'oneColumn'\)",
