@@ -1,0 +1,11 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_a_non_utf8_inventory",
+  "note": "inventory.toml holds the bytes 0xff 0xfe in a comment, so the file is not UTF-8 and therefore not TOML.",
+  "fails_if": "load_inventory lets a UnicodeDecodeError escape uncaught, or reports a mis-encoded file under the field-grammar code instead of the unreadable-file code",
+  "error": {
+    "code": "inventory_toml_unreadable",
+    "message_contains": [
+      "can't decode byte 0xff"
+    ]
+  }
+}

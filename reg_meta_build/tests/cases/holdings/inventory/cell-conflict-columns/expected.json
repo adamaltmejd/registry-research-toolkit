@@ -1,0 +1,14 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_two_columns_of_one_table_serving_one_cell",
+  "note": "A table's one edition always overlaps itself, so the same triple in two of its columns conflicts over the whole interrupted edition.",
+  "fails_if": "load_inventory skips the across-columns arm of the one-to-one resolution check, or renders an interrupted edition other than as its comma-joined tokens",
+  "error": {
+    "code": "inventory_cell_conflict",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "table['dbo.LISA_Individ'].column['Kon'] (representation 'Kon') and table['dbo.LISA_Individ'].column['Kon_recode'] (representation 'Kon') both map scb/lisa/individer-15plus scb/lisa/kon over 2005..2010,2015"
+    ]
+  }
+}

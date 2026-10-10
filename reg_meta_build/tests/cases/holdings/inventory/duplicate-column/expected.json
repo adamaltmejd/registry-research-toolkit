@@ -1,0 +1,14 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_duplicate_physical_column",
+  "note": "The second `Kon` carries no mapping, so the refusal is the repeated physical name, not a repeated cell.",
+  "fails_if": "load_inventory accepts one physical column name declared twice in one table",
+  "error": {
+    "code": "inventory_duplicate_column",
+    "locators": [
+      "table['LISA_Individ.csv']"
+    ],
+    "message_contains": [
+      "duplicate physical column 'Kon'"
+    ]
+  }
+}

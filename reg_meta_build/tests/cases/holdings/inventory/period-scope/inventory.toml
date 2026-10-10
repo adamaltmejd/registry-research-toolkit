@@ -1,0 +1,26 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "SoS_Patientregister.csv"
+edition = "_default"
+[[table.column]]
+name = "Diagnos"
+
+[[table]]
+id = "Catalogue.csv"
+edition = 2019
+period_scope = "year_independent"
+[[table.column]]
+name = "Diagnos"
+
+[[table]]
+id = "Lookup.csv"
+edition = "_default"
+period_scope = "year_independent"
+[[table.column]]
+name = "Kod"
+[[table.column.mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccinationsdatum"
+representation = "Kod"

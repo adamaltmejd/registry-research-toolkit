@@ -1,0 +1,23 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_non_finite_or_malformed_editions (all params but `_default` and 2019.5)",
+  "note": "Every edition-grammar arm, one table each. A list edition must be ascending AND disjoint, so the overlapping list is refused although it is sorted by start. Valid int, string, range and list editions are the annual-series, range and list compile cases.",
+  "fails_if": "load_inventory admits a non-token, inverted, empty, unsorted, overlapping or `_default`-segment edition, or names the table by index",
+  "error": {
+    "code": "inventory_edition_invalid",
+    "locators": [
+      "table['NotAToken.csv'].edition",
+      "table['Inverted.csv'].edition",
+      "table['Empty.csv'].edition",
+      "table['Unsorted.csv'].edition",
+      "table['Overlapping.csv'].edition",
+      "table['DefaultSegment.csv'].edition"
+    ],
+    "message_contains": [
+      "'from' is after 'to'",
+      "edition list must not be empty",
+      "segment starting 2010-01-01 follows a segment ending 2015-12-31",
+      "segment starting 2010-01-01 follows a segment ending 2012-12-31",
+      "never '_default'"
+    ]
+  }
+}

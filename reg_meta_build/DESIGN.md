@@ -1839,6 +1839,16 @@ the slug grammar (`_default`, `class` and period-shaped values are rejected); th
 shards of a delivery, not populations a researcher selects. An unmapped column keeps its
 authored reason where one is given; none is synthesized.
 
+A refusal is a configuration error (exit 10) that names the file and each offending
+`table[...]`, `column[...]` or field, under one code per rule family:
+`inventory_toml_unreadable` (not UTF-8 TOML), `inventory_invalid` (field grammar: types,
+missing or unknown keys, contract version, slug and FQID shape), `inventory_no_tables`,
+`inventory_table_no_columns`, `inventory_duplicate_table`, `inventory_duplicate_column`,
+`inventory_duplicate_mapping`, `inventory_edition_invalid`,
+`inventory_period_scope_invalid`, `inventory_unmapped_reason_invalid` and
+`inventory_cell_conflict` (the one-to-one rule below). When several lines fail, the code
+is the first line's.
+
 ### Holdings resolution invariants
 
 **One-to-one resolution** (decided 2026-09-01). Every admitted
