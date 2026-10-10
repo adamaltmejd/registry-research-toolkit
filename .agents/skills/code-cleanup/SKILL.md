@@ -18,9 +18,9 @@ package. The pass reads the whole tree, not a diff.
 ## 0. Measure
 
 Take the numbers before anything moves, and again at the end. `<tag>` is the release tag
-prefix and `<dir>` the package directory: `reg_meta`, `reg_meta_build` and `reg_schema`
-use their name for both; the web backend is `<dir>` = `reg_webapp/backend` with no
-release tag (the fallback counts from the root).
+prefix and `<dir>` the package directory, both `reg_meta_build` for the one Python
+package. The frontend and Rust counts follow; the Rust runtime releases as `reg_meta`,
+so its commit count uses `<tag>` = `reg_meta` and `<dir>` = `crates`.
 
 ```sh
 last=$(git describe --tags --abbrev=0 --match '<tag>/v*' 2>/dev/null ||
@@ -78,14 +78,14 @@ harness allows (Codex runs three children at a time) and the rest in waves. Wher
 harness lets a call choose its model, set it on every call: the family's mid tier (in
 Claude, Opus) for code, the tier below for docs. Every tracked non-test source file
 (`git ls-files`, minus tests and committed data) belongs to exactly one module; a file
-the split below misses joins its nearest module. Today's split: `reg_meta/src`;
-`reg_meta_build/src` as `sources/`, `ir/` and the top-level modules by size, with
-`input_data/swecov/build_catalog.py`; `reg_schema/src`; `reg_webapp/backend/src` with
-`backend/scripts`; `reg_webapp/frontend` (the app root, `lib/`, config and `scripts/`);
-`reg_webapp/edge` with the Dockerfile and deploy scripts; the repo-local skills' helper
-scripts; `scripts/`; and `crates/` (Rust; while `RUST_RUNTIME_SPEC.md` is open, its
-findings go to that refactor's owner, not to land here). The test trees are the
-`test-audit` skill's: run its sweep in the same waves and merge its list into step 3.
+the split below misses joins its nearest module. Today's split: `reg_meta_build/src` as
+`sources/`, `ir/` and the top-level modules by size, with
+`input_data/swecov/build_catalog.py`; `reg_webapp/frontend` (the app root, `lib/`,
+config and `scripts/`); `reg_webapp/edge` with the Dockerfile and deploy scripts; the
+repo-local skills' helper scripts; `scripts/`; and `crates/` (Rust; while
+`RUST_RUNTIME_SPEC.md` is open, its findings go to that refactor's owner, not to land
+here). The test trees are the `test-audit` skill's: run its sweep in the same waves and
+merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read CLAUDE.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
@@ -102,8 +102,8 @@ One line per finding, no hedging:
 - `yagni:` a protocol with one implementation, a helper with one caller, a layer that
   only delegates. Inline it.
 - `stdlib:` a hand-rolled thing the standard library ships. Name it.
-- `dep:` a hand-rolled thing an installed dependency (Pydantic, FastAPI, Bits UI)
-  already does. Name the feature.
+- `dep:` a hand-rolled thing an installed dependency (Pydantic, Bits UI) already does.
+  Name the feature.
 - `dup:` the same leaf in two modules, the failure mode CLAUDE.md names. Name the home
   it belongs in (`_curation.py`, `db.py`, …).
 - `shrink:` same logic, fewer lines, including a special case that a general fix to the
