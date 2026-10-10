@@ -2,10 +2,15 @@ name: Release reg_meta
 
 # A published reg_meta/v* release ships no package (no PyPI, RUST_RUNTIME_SPEC.md
 # stage 4 decision 3): its DB assets are checked by artifact conformance and baked
-# into the origin images by container-build.yml.
+# into the origin images by container-build.yml. The `binaries` job attaches the
+# `reg-meta` binaries (RUST_RUNTIME_SPEC.md package 4.12).
 on:
   release:
     types: [published]
+  # Build-only: builds and smoke-tests the binaries as workflow artifacts on any ref.
+  # `ci` is gated on a reg_meta/v* release tag, so a dispatch skips it and every job
+  # that needs it (integration, deploy-image), and it uploads no release asset.
+  workflow_dispatch:
 
 jobs:
   ci:
@@ -43,3 +48,66 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run container-build.yml --repo "$GITHUB_REPOSITORY" --ref main
+
+  # `reg-meta` binaries for local `reg-meta mcp` (RUST_RUNTIME_SPEC.md section 8), built
+  # natively on each runner, each with a `shasum -a 256 -c` checksum file. Not gated
+  # on `ci`: the tagged commit already passed CI on main, and gating would skip the
+  # dispatch build. Linux links the runner's glibc, so it runs on Ubuntu 24.04-era
+  # distributions and newer.
+  binaries:
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      || startsWith(github.event.release.tag_name, 'reg_meta/v')
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+    env:
+      ASSET: reg-meta-${{ matrix.target }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: dtolnay/rust-toolchain@stable
+      # A runner image that changes architecture must fail here, not ship a
+      # mislabelled asset.
+      - name: Check the host target
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          test "$(rustc -vV | sed -n 's/^host: //p')" = "$TARGET"
+      # `--locked` asserts Cargo.lock is current, as in the Dockerfile.
+      - run: cargo build --release --locked -p reg-meta
+      - name: Package with checksum
+        run: |
+          mkdir dist
+          cp target/release/reg-meta "dist/$ASSET"
+          cd dist
+          shasum -a 256 "$ASSET" > "$ASSET.sha256"
+          shasum -a 256 -c "$ASSET.sha256"
+      # The binary has no --help; a missing catalog is its documented refusal
+      # (`db_not_found`, exit 10), which proves it loads and parses its arguments.
+      - name: Smoke-test the binary
+        run: |
+          status=0
+          "dist/$ASSET" mcp --db "$RUNNER_TEMP/no-catalog" 2> smoke.err || status=$?
+          cat smoke.err
+          test "$status" -eq 10
+          grep -q '"code":"db_not_found"' smoke.err
+      - name: Upload to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" "dist/$ASSET" "dist/$ASSET.sha256" --repo "$GITHUB_REPOSITORY"
+      - name: Upload as workflow artifact
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: ${{ env.ASSET }}
+          path: dist/
+          if-no-files-found: error
