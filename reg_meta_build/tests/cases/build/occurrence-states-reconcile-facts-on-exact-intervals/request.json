@@ -1,0 +1,332 @@
+{
+  "replaces": [
+    "test_source_intervals.py::test_agreement_retains_physical_duplicates_and_optional_unknowns",
+    "test_source_intervals.py::test_conflicting_type_widens_only_on_exact_intersection",
+    "test_source_intervals.py::test_descriptive_text_disagreement_is_unknown_without_occurrence_issue[source_attribution]",
+    "test_source_intervals.py::test_descriptive_text_disagreement_is_unknown_without_occurrence_issue[operational_definition]",
+    "test_source_intervals.py::test_descriptive_text_disagreement_is_unknown_without_occurrence_issue[reference_period]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[MWh-Megawattimmar]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[Kronor-kronor]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[Kronor (SEK)-kronor]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[Antal m\\xe5nader-M\\xe5nader]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[M\\xe5nader-M\\xe5nad]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[Antal veckor-Veckor]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[Antal minuter-Minuter]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[Antal barn-Antal]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[Antal-Antal elever]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[Dagar-Antal]",
+    "test_source_intervals.py::test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order[\\xc5rtal-\\xc5r]",
+    "test_source_intervals.py::test_unlisted_unit_sets_remain_occurrence_conflicts[units0]",
+    "test_source_intervals.py::test_unlisted_unit_sets_remain_occurrence_conflicts[units1]",
+    "test_source_intervals.py::test_unlisted_unit_sets_remain_occurrence_conflicts[units2]",
+    "test_source_intervals.py::test_unlisted_unit_sets_remain_occurrence_conflicts[units3]",
+    "test_source_intervals.py::test_unlisted_unit_sets_remain_occurrence_conflicts[units4]",
+    "test_source_intervals.py::test_length_maximum_with_type_widening_and_canonical_integers[types0-lengths0-6-expected_fields0]",
+    "test_source_intervals.py::test_length_maximum_with_type_widening_and_canonical_integers[types1-lengths1-None-expected_fields1]",
+    "test_source_intervals.py::test_length_maximum_with_type_widening_and_canonical_integers[types2-lengths2-53-expected_fields2]",
+    "test_source_intervals.py::test_length_maximum_with_type_widening_and_canonical_integers[types4-lengths4-None-expected_fields4]",
+    "test_source_intervals.py::test_length_maximum_with_type_widening_and_canonical_integers[types5-lengths5-None-expected_fields5]",
+    "test_source_intervals.py::test_length_maximum_with_type_widening_and_canonical_integers[types6-lengths6-None-expected_fields6]",
+    "test_source_intervals.py::test_declared_type_widening[types0-decimal-False]",
+    "test_source_intervals.py::test_declared_type_widening[types1-text-False]",
+    "test_source_intervals.py::test_declared_type_widening[types2-None-True]",
+    "test_source_intervals.py::test_declared_type_widening[types3-None-True]",
+    "test_source_intervals.py::test_declared_type_widening[types4-decimal-False]",
+    "test_source_intervals.py::test_declared_type_widening[types5-text-False]",
+    "test_source_intervals.py::test_single_source_type_spelling_is_classified_without_changing_original[numerisk-decimal]",
+    "test_source_intervals.py::test_single_source_type_spelling_is_classified_without_changing_original[alfanumerisk-text]",
+    "test_source_intervals.py::test_single_source_type_spelling_is_classified_without_changing_original[Character-text]",
+    "test_source_intervals.py::test_numeric_storage_caps_only_all_numeric_waves[classes0-decimal]",
+    "test_source_intervals.py::test_numeric_storage_caps_only_all_numeric_waves[classes1-text]",
+    "test_source_intervals.py::test_numeric_storage_caps_only_all_numeric_waves[classes2-text]",
+    "test_source_intervals.py::test_single_declared_type_is_not_rewritten_by_storage",
+    "test_source_intervals.py::test_data_type_widening_absorbs_source_attribution_disagreement",
+    "test_source_intervals.py::test_unanimous_source_attribution_resolves_normally",
+    "test_source_intervals.py::test_real_gaps_and_parallel_column_periods_survive",
+    "test_source_intervals.py::test_annual_edition_cannot_override_unsupported_precise_period[pooled]",
+    "test_source_intervals.py::test_invalid_or_unbounded_dates_are_not_materialized[9999-01-01-9999-12-31]",
+    "test_source_intervals.py::test_lasaret_occurrence_forms_a_state_on_the_school_year_interval",
+    "test_source_intervals.py::test_unplaced_occurrence_does_not_erase_independently_supported_content",
+    "test_source_intervals.py::test_negative_column_omits_the_occurrence_with_a_warning",
+    "test_source_intervals.py::test_all_columnless_occurrences_form_no_state_and_no_error",
+    "test_source_intervals.py::test_unknown_column_still_errors"
+  ],
+  "note": "One variable per old test or parametrize row, so each leg reconciles its own overlapping members and the issues projections can say which legs conflict and which do not. Expected values are the old tests' asserted values, with three translations the delivered sources force. (1) The SCB reader classifies Datatyp at read (scb_records._data_type_field), so an SCB widening's provenance lists the classes it widened ('Documented Datatyp: decimal, integer' for float+integer), where the old tests' hand-built records carried literals; the literal-spelling provenance survives only through SOS, which passes numerisk, alfanumerisk and Character through unclassified (NUM, ALF, CHR). (2) For the same reason a single float member is decimal, not the old test's 'float' (sd-one): what the case keeps is that storage does not rewrite a single declared type. (3) The old fold-level 'in either order' loops are covered by the order-independence property in test_source_intervals.py, not by a reversed build. Every variable slug is this curation's [[variable]] pin.",
+  "fails_if": "`reconcile_source_fields` (source_intervals.py) stops resolving a listed `_UNIT_PAIRS` pair to its published spelling, widens date with integer, takes the maximum length across lengths whose declared types differ, applies the SWECOV numeric storage cap when any storage wave is not numeric or rewrites a single declared type from storage, lets an unknown Datatyp contradict a supplied one, or stops absorbing a source-text disagreement; or `resolve_occurrence_intervals` stops cutting at an occurrence's end (so the March 2018 text runs on through December), stops refusing year 9999 in `scope_bounds`, drops a named member's state because a sibling is unplaced, or reports a literal blank column as `unsupported_occurrence` instead of `omitted_columnless_occurrence`",
+  "sources": {
+    "description": "Register TESTREG (1, variant 10), every row a 2020 member unless noted; each variable delivers its members in one column named after its slug, member CVID = var_id * 10 + 1, 2, 3. Units u01..u11 (vars 201..211): each listed unit pair, published spelling first. x01..x05 (221..225): unlisted unit sets. l00..l06 (231..237, no 234): Datatyp and Datalängd pairs. w00..w05 (241..246): Datatyp pairs. d-src, d-opdef, d-ref (261..263): two members whose source, operational definition or reference period text differs. a-widen (264): source texts Fråga 1 and Fråga 2 with Datatyp integer and text; a-same (265): both Fråga 1. opt (266): integer beside an empty Datatyp. p-month (271): 2018 integer beside the month range 2018-03 - 2018-03 typed text. p-gap (273): 2018 and 2020. p-lasar (275): Läsåret 2014/2015. p-komvux (278): the term-structured pooled label Komvux HT 1988 - VT 2024. c-unknown-beside (281): a named member beside a whitespace-only Kolumnnamn; c-blank-beside (282): beside a literal blank one; c-blank-only (283): two literal blanks; c-unknown-only (284): one whitespace Kolumnnamn. st-dec, st-text, st-none (291..293): Datatyp varchar and float, with SWECOV storage CIS2018/CIS2020 int+float, int+varchar, int+uniqueidentifier; sd-one (296): one float member, storage CIS2018 int. SOS PAR_OV (2001-2020): NUM numerisk, ALF alfanumerisk, CHR Character, and OPN Heltal 2001-9999.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 2011, "var_id": 201, "colname": "U01", "unit": "MWh"},
+        {"cvid": 2012, "var_id": 201, "colname": "U01", "unit": "Megawattimmar"},
+        {"cvid": 2021, "var_id": 202, "colname": "U02", "unit": "Kronor"},
+        {"cvid": 2022, "var_id": 202, "colname": "U02", "unit": "kronor"},
+        {"cvid": 2031, "var_id": 203, "colname": "U03", "unit": "Kronor (SEK)"},
+        {"cvid": 2032, "var_id": 203, "colname": "U03", "unit": "kronor"},
+        {"cvid": 2041, "var_id": 204, "colname": "U04", "unit": "Antal månader"},
+        {"cvid": 2042, "var_id": 204, "colname": "U04", "unit": "Månader"},
+        {"cvid": 2051, "var_id": 205, "colname": "U05", "unit": "Månader"},
+        {"cvid": 2052, "var_id": 205, "colname": "U05", "unit": "Månad"},
+        {"cvid": 2061, "var_id": 206, "colname": "U06", "unit": "Antal veckor"},
+        {"cvid": 2062, "var_id": 206, "colname": "U06", "unit": "Veckor"},
+        {"cvid": 2071, "var_id": 207, "colname": "U07", "unit": "Antal minuter"},
+        {"cvid": 2072, "var_id": 207, "colname": "U07", "unit": "Minuter"},
+        {"cvid": 2081, "var_id": 208, "colname": "U08", "unit": "Antal barn"},
+        {"cvid": 2082, "var_id": 208, "colname": "U08", "unit": "Antal"},
+        {"cvid": 2091, "var_id": 209, "colname": "U09", "unit": "Antal"},
+        {"cvid": 2092, "var_id": 209, "colname": "U09", "unit": "Antal elever"},
+        {"cvid": 2101, "var_id": 210, "colname": "U10", "unit": "Dagar"},
+        {"cvid": 2102, "var_id": 210, "colname": "U10", "unit": "Antal"},
+        {"cvid": 2111, "var_id": 211, "colname": "U11", "unit": "Årtal"},
+        {"cvid": 2112, "var_id": 211, "colname": "U11", "unit": "År"},
+        {"cvid": 2211, "var_id": 221, "colname": "X01", "unit": "Kronor"},
+        {"cvid": 2212, "var_id": 221, "colname": "X01", "unit": "Kronor (SEK)"},
+        {"cvid": 2221, "var_id": 222, "colname": "X02", "unit": "Procent"},
+        {"cvid": 2222, "var_id": 222, "colname": "X02", "unit": "Andel"},
+        {"cvid": 2231, "var_id": 223, "colname": "X03", "unit": "Veckor"},
+        {"cvid": 2232, "var_id": 223, "colname": "X03", "unit": "Antal"},
+        {"cvid": 2233, "var_id": 223, "colname": "X03", "unit": "Antal veckor"},
+        {"cvid": 2241, "var_id": 224, "colname": "X04", "unit": "Antal månader"},
+        {"cvid": 2242, "var_id": 224, "colname": "X04", "unit": "Månader"},
+        {"cvid": 2243, "var_id": 224, "colname": "X04", "unit": "Månad"},
+        {"cvid": 2251, "var_id": 225, "colname": "X05", "unit": "År"},
+        {"cvid": 2252, "var_id": 225, "colname": "X05", "unit": "Datum"},
+        {
+          "cvid": 2311,
+          "var_id": 231,
+          "colname": "L00",
+          "data_type": "varchar",
+          "data_length": "5"
+        },
+        {
+          "cvid": 2312,
+          "var_id": 231,
+          "colname": "L00",
+          "data_type": "varchar",
+          "data_length": "6"
+        },
+        {
+          "cvid": 2321,
+          "var_id": 232,
+          "colname": "L01",
+          "data_type": "varchar",
+          "data_length": "18"
+        },
+        {
+          "cvid": 2322,
+          "var_id": 232,
+          "colname": "L01",
+          "data_type": "float",
+          "data_length": "53"
+        },
+        {
+          "cvid": 2331,
+          "var_id": 233,
+          "colname": "L02",
+          "data_type": "float",
+          "data_length": "53"
+        },
+        {
+          "cvid": 2332,
+          "var_id": 233,
+          "colname": "L02",
+          "data_type": "numeric",
+          "data_length": "18"
+        },
+        {
+          "cvid": 2351,
+          "var_id": 235,
+          "colname": "L04",
+          "data_type": "date",
+          "data_length": "18"
+        },
+        {
+          "cvid": 2352,
+          "var_id": 235,
+          "colname": "L04",
+          "data_type": "integer",
+          "data_length": "53"
+        },
+        {
+          "cvid": 2361,
+          "var_id": 236,
+          "colname": "L05",
+          "data_type": "varchar",
+          "data_length": "5"
+        },
+        {
+          "cvid": 2362,
+          "var_id": 236,
+          "colname": "L05",
+          "data_type": "varchar",
+          "data_length": "8,2"
+        },
+        {
+          "cvid": 2371,
+          "var_id": 237,
+          "colname": "L06",
+          "data_type": "varchar",
+          "data_length": "5"
+        },
+        {"cvid": 2372, "var_id": 237, "colname": "L06", "data_type": "", "data_length": "6"},
+        {"cvid": 2411, "var_id": 241, "colname": "W00", "data_type": "float"},
+        {"cvid": 2412, "var_id": 241, "colname": "W00", "data_type": "integer"},
+        {"cvid": 2421, "var_id": 242, "colname": "W01", "data_type": "integer"},
+        {"cvid": 2422, "var_id": 242, "colname": "W01", "data_type": "text"},
+        {"cvid": 2431, "var_id": 243, "colname": "W02", "data_type": "date"},
+        {"cvid": 2432, "var_id": 243, "colname": "W02", "data_type": "integer"},
+        {"cvid": 2441, "var_id": 244, "colname": "W03", "data_type": "uniqueidentifier"},
+        {"cvid": 2442, "var_id": 244, "colname": "W03", "data_type": "integer"},
+        {"cvid": 2451, "var_id": 245, "colname": "W04", "data_type": "numerisk"},
+        {"cvid": 2452, "var_id": 245, "colname": "W04", "data_type": "numeric"},
+        {"cvid": 2461, "var_id": 246, "colname": "W05", "data_type": "alfanumerisk"},
+        {"cvid": 2462, "var_id": 246, "colname": "W05", "data_type": "Character"},
+        {"cvid": 2611, "var_id": 261, "colname": "D_SRC", "varsource": "First text"},
+        {"cvid": 2612, "var_id": 261, "colname": "D_SRC", "varsource": "Second text"},
+        {"cvid": 2621, "var_id": 262, "colname": "D_OPDEF", "varopdef": "First text"},
+        {"cvid": 2622, "var_id": 262, "colname": "D_OPDEF", "varopdef": "Second text"},
+        {
+          "cvid": 2631,
+          "var_id": 263,
+          "colname": "D_REF",
+          "cells": {"VariabelReferenstid": "First text"}
+        },
+        {
+          "cvid": 2632,
+          "var_id": 263,
+          "colname": "D_REF",
+          "cells": {"VariabelReferenstid": "Second text"}
+        },
+        {
+          "cvid": 2641,
+          "var_id": 264,
+          "colname": "A_WIDEN",
+          "varsource": "Fråga 1",
+          "data_type": "integer"
+        },
+        {
+          "cvid": 2642,
+          "var_id": 264,
+          "colname": "A_WIDEN",
+          "varsource": "Fråga 2",
+          "data_type": "text"
+        },
+        {"cvid": 2651, "var_id": 265, "colname": "A_SAME", "varsource": "Fråga 1"},
+        {"cvid": 2652, "var_id": 265, "colname": "A_SAME", "varsource": "Fråga 1"},
+        {"cvid": 2661, "var_id": 266, "colname": "OPT", "data_type": "integer"},
+        {"cvid": 2662, "var_id": 266, "colname": "OPT", "data_type": ""},
+        {
+          "cvid": 2711,
+          "var_id": 271,
+          "colname": "P_MONTH",
+          "year": "2018",
+          "regver_id": 2018,
+          "data_type": "integer"
+        },
+        {
+          "cvid": 2712,
+          "var_id": 271,
+          "colname": "P_MONTH",
+          "year": "2018",
+          "versionname": "2018-03 - 2018-03",
+          "regver_id": 2183,
+          "data_type": "text"
+        },
+        {"cvid": 2731, "var_id": 273, "colname": "P_GAP", "year": "2018", "regver_id": 2018},
+        {"cvid": 2732, "var_id": 273, "colname": "P_GAP", "year": "2020"},
+        {
+          "cvid": 2751,
+          "var_id": 275,
+          "colname": "P_LASAR",
+          "year": "2014",
+          "versionname": "Läsåret 2014/2015",
+          "regver_id": 2014
+        },
+        {
+          "cvid": 2781,
+          "var_id": 278,
+          "colname": "P_KOMVUX",
+          "year": "2020",
+          "versionname": "Komvux HT 1988 - VT 2024",
+          "regver_id": 1988
+        },
+        {"cvid": 2811, "var_id": 281, "colname": "C_UNKNOWN_BESIDE"},
+        {"cvid": 2812, "var_id": 281, "colname": " "},
+        {"cvid": 2821, "var_id": 282, "colname": "C_BLANK_BESIDE"},
+        {"cvid": 2822, "var_id": 282, "colname": "\"\""},
+        {"cvid": 2831, "var_id": 283, "colname": "\"\""},
+        {"cvid": 2832, "var_id": 283, "colname": "\"\""},
+        {"cvid": 2841, "var_id": 284, "colname": " "},
+        {"cvid": 2911, "var_id": 291, "colname": "ST_DEC", "data_type": "varchar"},
+        {"cvid": 2912, "var_id": 291, "colname": "ST_DEC", "data_type": "float"},
+        {"cvid": 2921, "var_id": 292, "colname": "ST_TEXT", "data_type": "varchar"},
+        {"cvid": 2922, "var_id": 292, "colname": "ST_TEXT", "data_type": "float"},
+        {"cvid": 2931, "var_id": 293, "colname": "ST_NONE", "data_type": "varchar"},
+        {"cvid": 2932, "var_id": 293, "colname": "ST_NONE", "data_type": "float"},
+        {"cvid": 2961, "var_id": 296, "colname": "SD_ONE", "data_type": "float"}
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "PAR",
+        "title": "Patientregistret",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {
+            "name": "PAR_OV",
+            "label": "PAR_OV",
+            "description": "Första vyn",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ],
+        "variables": [
+          {
+            "name": "NUM",
+            "deldatamangd": "PAR_OV",
+            "label": "NUM",
+            "data_type": "numerisk",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "ALF",
+            "deldatamangd": "PAR_OV",
+            "label": "ALF",
+            "data_type": "alfanumerisk",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "CHR",
+            "deldatamangd": "PAR_OV",
+            "label": "CHR",
+            "data_type": "Character",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "OPN",
+            "deldatamangd": "PAR_OV",
+            "label": "OPN",
+            "data_type": "Heltal",
+            "data_from": 2001,
+            "data_to": 9999
+          }
+        ]
+      }
+    ],
+    "files": {
+      "swecov/derived/swecov_column_types.csv": [
+        "table_schema,table_name,table_type,column_name,data_type,character_maximum_length,numeric_precision,numeric_scale,ordinal_position",
+        "dbo,CIS2018,BASE TABLE,ST_DEC,int,,,,1",
+        "dbo,CIS2020,BASE TABLE,ST_DEC,float,,,,2",
+        "dbo,CIS2018,BASE TABLE,ST_TEXT,int,,,,3",
+        "dbo,CIS2020,BASE TABLE,ST_TEXT,varchar,,,,4",
+        "dbo,CIS2018,BASE TABLE,ST_NONE,int,,,,5",
+        "dbo,CIS2020,BASE TABLE,ST_NONE,uniqueidentifier,,,,6",
+        "dbo,CIS2018,BASE TABLE,SD_ONE,int,,,,7"
+      ]
+    }
+  }
+}
