@@ -1,8 +1,0 @@
-{
-  "replaces": [
-    "test_resolved_metadata_writes.py::test_all_explicit_metadata_surfaces_are_written_without_derivation"
-  ],
-  "note": "The old test wrote one resolved fact per export surface; here they come from the SCB reference files that carry them. From the old test: every delivered event row is a row, a repeated one included (old: three rows, two of them equal), and a missing ID1 stays null rather than becoming a blank token (old: id1 None beside '0001'); the column type keeps its width and nullability (old: varchar(12), nullable 0); the join key keeps its description (old: 'Source key'); the identifier keeps its name and a null definition (old: 44, 'Native key', None). The old literals LöpNr and 'Raw\\u00a0name' are ASCII here, because the runner writes these files as UTF-8 and SCB reads them as cp1252. The old blank ID2 ('') is null here: `resolve_export_metadata` reads a blank token as absent, so no build writes ''.",
-  "fails_if": "`prepare_resolved_metadata` drops or deduplicates a timeseries event row, writes an absent token as '', drops the width or flips the nullability of a source column type, drops a join key or its description, or writes an identifier without its name",
-  "sources": "scb-exports"
-}

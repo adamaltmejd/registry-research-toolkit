@@ -26,14 +26,13 @@
     },
     {
       "table": "relationships",
-      "fields": ["kind", "binding_status", "source_dataset", "owner", "endpoints"],
+      "fields": ["kind", "binding_status", "source_dataset", "owner"],
       "rows": [
         [
           "code_crosswalk",
           "retained_unattached",
           "Socialstyrelsen/Metadata Syntetiskt register (SYN)_webb.xlsx",
-          null,
-          0
+          null
         ]
       ]
     },

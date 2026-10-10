@@ -131,13 +131,3 @@ INSERT INTO variable_state_lineage_warning (
     consumer_state_id, warning_kind, message
 ) VALUES
     (7, 'no_source_state', 'No source state in register ''testreg'' for variable slug(s) [''parencol''] (any variant).');
-
-INSERT INTO identifier_semantics (
-    var_id, variabelnamn, variabeldefinition
-) VALUES
-    (303, 'LopNr', 'Objektets identifierare');
-
-INSERT INTO timeseries_event (
-    timeseries_event_id, namn, handelse, beskrivning, entitet, id1, id2, fil_id
-) VALUES
-    (1, 'TESTREG', 'Kodändring', 'Kod 3 ändrad', 'Variabel', '100', '', '1');

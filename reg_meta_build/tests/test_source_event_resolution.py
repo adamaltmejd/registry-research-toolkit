@@ -89,11 +89,11 @@ def test_reciprocal_source_events_coalesce_in_the_same_direction(kind, first, se
             "scb/example/value-5",
             "scb/example/value-6",
         )
-    assert (edge.note, edge.description, edge.effective_year) == (
-        "auto:timeseries_event",
-        "Change",
-        None,
-    )
+        assert (edge.note, edge.description, edge.effective_year) == (
+            "auto:timeseries_event",
+            "Change",
+            None,
+        )
     reversed_bindings, _, _, _ = _observe(reversed(events))
     reversed_bindings.observe_scope(tuple(reversed(originals)), scope, uses)
     assert reversed_bindings.resolve(ResolvedMetadata()) == result

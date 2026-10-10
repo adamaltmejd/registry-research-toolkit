@@ -357,8 +357,8 @@ def seed_tags(conn: sqlite3.Connection, tags: tuple[CuratedTag, ...]) -> None:
     }
     for tag in tags:
         tag_id = conn.execute(
-            "INSERT INTO tag (slug, label, description) VALUES (?, ?, ?)",
-            (tag.slug, tag.label, tag.description),
+            "INSERT INTO tag (slug, label) VALUES (?, ?)",
+            (tag.slug, tag.label),
         ).lastrowid
         for member in tag.members:
             register_id = registers[member.provider, member.register]

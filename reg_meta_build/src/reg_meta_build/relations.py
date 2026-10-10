@@ -564,6 +564,17 @@ def _load_replaced_by(entry: dict) -> CuratedReplacedBy:
             "left and later returned within the variant); the cycle check orders "
             "it by year. Add `effective_year`, or drop `variant`.",
         )
+    # `variant_replaced_by` stores endpoints only (4.10: the reader never read its
+    # year or reason), so refuse them rather than parse-then-drop.
+    if pred_variant is not None and (note is not None or effective_year is not None):
+        raise curation_error(
+            "relations_invalid",
+            "relations [[edge]] type='replaced_by' with `from_variant` / "
+            "`to_variant` does not accept `effective_year` or `note`.",
+            "A variant succession records its endpoints only. Drop "
+            "`effective_year` and `note`; put the transition reason in a `#` "
+            "comment above the edge in reg_meta_build/curation/relations.toml.",
+        )
     if variant is not None and pred_variant is not None:
         raise curation_error(
             "relations_invalid",
