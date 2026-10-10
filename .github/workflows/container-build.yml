@@ -200,11 +200,6 @@ jobs:
           # an f-string/usage of the constant; an empty result fails the helper.
           asset_db=$(git show "$TAG:reg_meta_build/src/reg_meta_build/db.py" | grep -oP '^SCHEMA_VERSION = "\K[^"]+' || true)
           asset_doc=$(git show "$TAG:reg_meta_build/src/reg_meta_build/doc_db.py" | grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+' || true)
-          # simplify: fallback for tags before 4.4; delete it in the first release after 4.4.
-          # Those builders import DOC_SCHEMA_VERSION from reg_meta.doc_db.
-          if [ -z "$asset_doc" ]; then
-            asset_doc=$(git show "$TAG:reg_meta/src/reg_meta/doc_db.py" | grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+' || true)
-          fi
           verdict=$(python3 scripts/schema_pending_bump.py --code-db "$code_db" --code-doc "$code_doc" --asset-db "$asset_db" --asset-doc "$asset_doc")
           # An explicit `reg_meta_tag` dispatch pin is a deliberate operator choice — the
           # "owed release will catch up" rationale only holds for the auto-resolved newest

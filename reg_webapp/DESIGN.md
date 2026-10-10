@@ -1311,8 +1311,7 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   boot on the behind-schema asset and fail its deploy — for a state that is expected
   (the owed reg_meta release ships the matching asset). A standalone `schema-guard` job
   compares the gates against the builder's `SCHEMA_VERSION` / `DOC_SCHEMA_VERSION` at
-  the released tag (`git show <tag>:reg_meta_build/…`; tags before 4.4, which import the
-  docs constant from `reg_meta.doc_db`, fall back to that file) via the pure
+  the released tag (`git show <tag>:reg_meta_build/…`) via the pure
   `scripts/schema_pending_bump.py` helper, which returns a three-way verdict (`break` /
   `pending` / `compatible`). On a detected code-ahead `pending` bump (with both assets
   present) it publishes a `pending_bump=true` job output that defers the bake + deploy

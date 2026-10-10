@@ -235,12 +235,14 @@ it when the new release needs a newer reader: it runs G1 on the old pin (with it
 baseline) and the new pin (with its baseline) and records any difference. Re-pin at
 least at every maintainer checkpoint.
 
-**Current pin** (package 4.1; the data lives in `conformance/differential/config.toml`):
+**Current pin** (package 4.11; the data lives in
+`conformance/differential/config.toml`):
 
-- Release `reg_meta/v0.45.0` (schema 9.7.0, docs schema 1.3.0). Asset SHA-256s: global
-  `reg_meta.db.zst` `7424797d7b94b15f9d28eb323fa6f0811145d8b6220228ad3ea32edde5cce111`;
-  SWECOV `reg_meta_swecov.db.zst`
-  `ff68bc7dceb0bb024f2d5b5c90870de6af1b25cfe2c167100ac149fd46c7870d`; docs
+- Release `reg_meta/v0.46.0` (schema 10.0.0, docs schema 1.3.0; tag commit `6cd6c2a0`).
+  Asset SHA-256s: global `reg_meta.db.zst`
+  `08a92e9f2965b987a065ace4c41c1bf00644d2f2debcee1b47107d4d145fbe52`; SWECOV
+  `reg_meta_swecov.db.zst`
+  `682042a8a32964d01bce2e3dfa470718f7cee2d389264a6e5213ba5effcd1792`; docs
   `reg_meta_docs.db.zst`
   `85a1a6c883fca2ded5203c60c33d8657a438344c39ab088c0b01299a47721f57` (read by `search`
   and `docs`).
@@ -654,8 +656,9 @@ that ports it ships *(decision 15, checkpoint 2)*.
 4. **Retire the Python runtime.** Checkpoint 3 passed 2026-10-09. The agent plugin moves
    to MCP; the Dockerfile and publish workflow drop the CLI; the build's `reg_meta`
    imports move into `reg_meta_build` or `reg-core-py`; the Python `reg_meta` package
-   and `reg_schema` are deleted; schema major 10.0.0 carries #1296's catalog rework.
-   Packages, order and decisions: "Stage 4 packages".
+   and `reg_schema` are deleted; schema major 10.0.0 carries #1296's catalog rework
+   (released 2026-10-10 as `reg_meta/v0.46.0`; G1 re-pinned to it in 4.11). Packages,
+   order and decisions: "Stage 4 packages".
 5. **SPA on WASM.** Replace `period.ts`, `validation.ts` and the hand-written
    `project_data.ts` with `reg-core` compiled to WASM plus generated types. Ends at
    checkpoint 4.
@@ -1989,13 +1992,24 @@ is listed in that PR. Depends on: 4.9a; 4.10b–e also wait for test-audit's
   absorbed ID (`not_found`). Paths: the builder's state writer, `validate.py`,
   `conformance/cases/api/`, the goldens. Acceptance: full gate; byte-identical rebuild.
 
+**4.10 shipped 2026-10-10** (#1389, with the G2 fixes #1390 and #1393), released as
+`reg_meta/v0.46.0` (schema 10.0.0).
+
 **4.11 Re-pin G1 to 10.0.0.** Implements the section 4 re-pin: the artifact pin and the
 baseline binary both move to the 10.0.0 tag; the differences between the old and new
 pins are recorded as the maintainer's G2 found them. Paths:
 `conformance/differential/config.toml`, section 4. It also deletes the pre-4.4
 `asset_doc` fallback in `.github/workflows/container-build.yml` (its `simplify:`
 marker), since the 10.0.0 tag carries `reg_meta_build`'s `doc_db.py`. Acceptance: G1 0
-differences. Depends on: the 10.0.0 release.
+differences. Depends on: the 10.0.0 release. **Shipped 2026-10-10**: pin and baseline
+`reg_meta/v0.46.0` (schema 10.0.0); G1 17,177 cases, 0 differences (only
+`derived-generation` matched; `reader-version` is kept for the next version bump). The
+maintainer's G2 at 4d587d51/b9526573 ran strict to completion; its differential of the
+0.45.0 binary against a fresh 10.0 build compared 18,317 cases with 5,943 differences,
+all attributed (state merging 4,196; warning split 1,095; slug/code tie order 630; the
+post-0.45.0 blank-code removal 22), after two fixes G2 found (#1390 pooled coding-issue
+grain, #1393 a closed run never merges into an open-ended state). Evidence in the
+maintainer's `.local/release-0460/`.
 
 **4.12 Release binaries** (D3). A matrix workflow on `reg_meta/v*` builds `reg-meta` for
 macOS arm64 and Linux x86_64 and uploads them with SHA-256 checksums. The plugin README
