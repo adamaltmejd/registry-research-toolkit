@@ -1616,15 +1616,18 @@ rebuild once per commit rather than once per pick (this is the write path the #9
 multi-select consumer commits through). Find-or-create for a staged add keys on
 `register_variant` **alone** — not `(register_variant, period)` — so two picks against
 the same variant land in the same source regardless of period; a disjoint window is
-folded into the existing source's period via `mergePeriods` (`period.ts`) rather than
-minting a second source: when both periods are pure year grammar it coalesces into the
-sorted, disjoint #307 list form (adjacency-merging touching/overlapping intervals),
-otherwise (either side is token grammar) it REPLACES with the incoming period, since
-mixed-grain union has no defined sort. `applyStagedDiff` is now the SOLE catalog→project
-mutation path (the store's earlier single-pick `addFromCatalog` handoff was dead since
-#992/#993 and was deleted in #1104). `updateField` (the project's own `name` /
-`window`), `removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other
-mutators the cart UI calls — a source's own generated `name` is not editable anywhere.
+folded into the existing source's period via `periodCoverageUnion` (`period.ts`) rather
+than minting a second source: the union of the days both periods request, through
+reg-core (WASM) — merged (overlapping and day-adjacent days join), rendered and shaped
+back into the sorted, disjoint #307 list form (`2005..2010,2015..2020`; `2019-Q1` plus
+`2019-Q2` is `VT2019`, a span no token covers is a range like `2019..2020-06-30`). An
+add an existing non-year period already covers leaves it as written; when either side
+has no days to place (`_default`, or a period reg-core refuses) the incoming period
+replaces it. `applyStagedDiff` is now the SOLE catalog→project mutation path (the
+store's earlier single-pick `addFromCatalog` handoff was dead since #992/#993 and was
+deleted in #1104). `updateField` (the project's own `name` / `window`),
+`removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators
+the cart UI calls — a source's own generated `name` is not editable anywhere.
 
 Bindings, variant and representation are written once at PICK time; a source's
 **period** is the one field the cart edits (Y-81), one From/To row per segment for a
@@ -1637,16 +1640,16 @@ source-wide rewrite has to be looked at against, so that is where it is made. Th
 authors it in the catalog's own period vocabulary — exact-year fields and one Apply, the
 same entry `PeriodPicker` carries beside its slider, plus "Add years" and a per-row
 Remove (hidden at one row) — and writes back through the same wire shaping a pick uses.
-Applying sorts and merges the rows into the disjoint ascending wire `mergePeriods` would
-produce, refusing a within-row disorder or a genuine cross-row overlap in the same
-status line rather than silently collapsing one; a token period (`HT2018`) is a
-different vocabulary the rows do not author, and is shown as it stands. Where the years
-the period covers differ from the project's `window` (narrower, wider, or holed;
-`periodWindowRelation`) the card MARKS it ("Differs from study window 2005–2020"): the
-window is an authoring seed, not an inheritance (reg-core puts `period` on `Source`
-alone), so divergence is shown rather than warned about. The one divergence that is more
-than shown is a period with no years inside the window at all, which blocks the order
-(see "Common study window").
+Applying sorts and merges the rows into the disjoint ascending wire
+`periodCoverageUnion` would produce, refusing a within-row disorder or a genuine
+cross-row overlap in the same status line rather than silently collapsing one; a token
+period (`HT2018`) is a different vocabulary the rows do not author, and is shown as it
+stands. Where the years the period covers differ from the project's `window` (narrower,
+wider, or holed; `periodWindowRelation`) the card MARKS it ("Differs from study window
+2005–2020"): the window is an authoring seed, not an inheritance (reg-core puts `period`
+on `Source` alone), so divergence is shown rather than warned about. The one divergence
+that is more than shown is a period with no years inside the window at all, which blocks
+the order (see "Common study window").
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant
@@ -1710,7 +1713,11 @@ rune store holding one draft per session.
   draft gets those issues as its validation at once and is never POSTed, so a stale
   green answer for an earlier draft is discarded and cannot reopen the order download;
   an accepted draft is POSTed to `/validate` (debounced) for the semantic layer, which
-  needs the catalog. A new draft takes `project_schema_version()`.
+  needs the catalog. A new draft takes `project_schema_version()`. Periods go through
+  the same module: the SPA never parses period grammar or computes a date bound
+  (`period.ts` composes reg-core's answers). The study-window coverage hint stays at
+  year grain (a period with a non-year endpoint gets none); the disjointness finding
+  compares days.
 - **Project-file versions.** Any JSON object opens (the shape is the only ingress
   check): the server reads exactly reg-core's `SCHEMA_VERSION` and answers any other as
   the single `unsupported_schema_version` issue, which the browser now shows on open. No

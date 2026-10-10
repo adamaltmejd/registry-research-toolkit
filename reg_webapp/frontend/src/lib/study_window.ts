@@ -20,7 +20,7 @@ import {
   registerPrefixOf,
   windowsAddPeriod,
 } from "./catalog";
-import { periodFromWire, periodToWire, periodWindowRelation } from "./period";
+import { periodWindowRelation } from "./period";
 import {
   type ProjectSourcePeriod,
   type ProjectStudyWindow,
@@ -30,6 +30,7 @@ import {
   safeSourcePeriod,
   safeSourceRegisterVariant,
 } from "./project_data";
+import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 
 /** One source the plan rewrites: its identity (the store's period-change key) and
  * the period it moves from and to. */
@@ -134,8 +135,8 @@ export function planWindowOverlap(
       plan.misses.push({ sourceName, period, reason: "no-overlap" });
       continue;
     }
-    const next = periodFromWire(wire);
-    if (periodToWire(next) !== periodToWire(period)) {
+    const next = sourcePeriodFromWire(wire);
+    if (sourcePeriodToWire(next) !== sourcePeriodToWire(period)) {
       plan.changes.push({
         sourceName,
         registerVariant,

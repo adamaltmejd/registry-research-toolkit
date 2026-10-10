@@ -12,14 +12,11 @@ import {
   windowsOverlapWindow,
 } from "./catalog";
 import {
-  boundedPeriodSegments,
-  isStructurallyValidPeriodWire,
-  type PeriodBounds,
+  datedIntervals,
   periodCoverageUnion,
-  periodFromWire,
   periodLabel,
-  periodToWire,
   periodWindowRelation,
+  periodWireValid,
   yearWindowLabel,
 } from "./period";
 import {
@@ -39,6 +36,7 @@ import {
   type StagedAdd,
   type StagedRemove,
 } from "./project_store.svelte";
+import { sourcePeriodFromWire, sourcePeriodToWire } from "./reg_core";
 
 export interface StagedPickerBand {
   key: string;
@@ -107,7 +105,9 @@ function bindingRepresentation(binding: unknown): string | null {
     : null;
 }
 
-function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
+function rowWindowBounds(
+  row: PickerRepresentation,
+): { from: string; to: string }[] {
   if (
     row.period_scope === "year_independent" ||
     row.from === null ||
@@ -123,7 +123,8 @@ function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
 }
 
 /** Do these delivery windows reach a COMMITTED source's period? The period side is
- * the #307 comma-union a source can carry, so every segment of it is tried. Exported
+ * the #307 comma-union a source can carry, so every interval of its days (reg-core's)
+ * is tried; a period with no days the SPA can place reaches nothing. Exported
  * because the register list asks it of a delivery column's own eras (Y-104): its
  * rows are the variable's — a #902 rename chain folds into ONE row spanning the
  * whole chain — so only the NAME's windows can say whether the source period
@@ -132,12 +133,8 @@ export function windowsOverlapPeriod(
   windows: readonly { from: string; to: string }[],
   period: ProjectSourcePeriod,
 ): boolean {
-  const segments = boundedPeriodSegments(period);
-  if (!segments) {
-    return false;
-  }
-  return segments.some((segment) =>
-    windowsOverlapWindow(windows, segment.bounds),
+  return (datedIntervals(period) ?? []).some(([from, to]) =>
+    windowsOverlapWindow(windows, { from, to }),
   );
 }
 
@@ -434,7 +431,8 @@ export function nullBindingCommittedRowKeys(
       row.representation === null &&
       row.registerVariant === target.registerVariant &&
       row.variable === target.variable &&
-      periodToWire(row.sourcePeriod) === periodToWire(target.sourcePeriod)
+      sourcePeriodToWire(row.sourcePeriod) ===
+        sourcePeriodToWire(target.sourcePeriod)
     ) {
       keys.push(row.key);
     }
@@ -470,11 +468,11 @@ export function finalAddPeriodWires(
   const scopes = new Map(
     sources.map((source) => [
       source.registerVariant,
-      periodToWire(source.period),
+      sourcePeriodToWire(source.period),
     ]),
   );
   for (const add of adds) {
-    const incoming = periodToWire(add.period);
+    const incoming = sourcePeriodToWire(add.period);
     const current = scopes.get(add.registerVariant);
     if (
       incoming &&
@@ -487,14 +485,16 @@ export function finalAddPeriodWires(
   const periods = finalSourcePeriodsForStagedAdds(sources, adds);
   const wires: string[] = [];
   for (const add of adds) {
-    const wire = periodToWire(periods.get(add.registerVariant) ?? add.period);
+    const wire = sourcePeriodToWire(
+      periods.get(add.registerVariant) ?? add.period,
+    );
     if (
       wire === "_default" &&
       (add.registerVariant.split("/").length !== 3 ||
         add.registerVariant.split("/")[2] === "_default")
     )
       return null;
-    if (wire === null || !isStructurallyValidPeriodWire(wire)) {
+    if (wire === null || !periodWireValid(wire)) {
       return null;
     }
     wires.push(wire);
@@ -620,7 +620,7 @@ export function outsideScopeMessage(
   const names = columnList(columns);
   const verb = columns.length > 1 ? "have" : "has";
   if (scope.period) {
-    return `Not added: ${names} ${verb} no years inside the selected period ${periodLabel(periodFromWire(scope.period)) ?? scope.period}. Untick ${columns.length > 1 ? "them" : "it"}, or change the period above.`;
+    return `Not added: ${names} ${verb} no years inside the selected period ${periodLabel(sourcePeriodFromWire(scope.period)) ?? scope.period}. Untick ${columns.length > 1 ? "them" : "it"}, or change the period above.`;
   }
   const window = scope.window
     ? ` ${yearWindowLabel({ from: scope.window[0], to: scope.window[1] })}`
@@ -672,7 +672,7 @@ export function stagedAddCandidates(
     variant: segment.variant,
     registerVariant: segment.registerVariant,
     periodWire: segment.periodWire,
-    period: periodFromWire(segment.periodWire),
+    period: sourcePeriodFromWire(segment.periodWire),
     outsideScope: segment.outsideScope,
   }));
 }

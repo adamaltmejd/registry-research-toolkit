@@ -27,8 +27,8 @@ import PeriodPicker from "./PeriodPicker.svelte";
 import {
   clampYearPeriodWire,
   clampYearWindow,
-  isStructurallyValidPeriodWire,
   nextResolutionQuery,
+  periodWireValid,
   VALUE_SET_VERSION_NONE,
 } from "./period";
 import { isPlainObject } from "./project_data";
@@ -636,9 +636,7 @@ const boundedProjectWindow = $derived(
     : clampYearWindow(windowStore.value, windowMinYear, windowMaxYear),
 );
 const activePickerPeriod = $derived(
-  boundedPickerPeriod &&
-    !narrowedError &&
-    isStructurallyValidPeriodWire(boundedPickerPeriod)
+  boundedPickerPeriod && !narrowedError && periodWireValid(boundedPickerPeriod)
     ? boundedPickerPeriod
     : null,
 );

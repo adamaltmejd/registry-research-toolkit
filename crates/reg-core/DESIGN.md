@@ -189,6 +189,11 @@ gives (`HT2018` lies inside `2018`). The Python era kept a bound-for-bound copy 
 `reg_schema` and a parity test to hold the two together; with one implementation a
 document that passes the structural gate cannot later fail period resolution over a
 grammar disagreement. FQIDs get only a shape check here (segment count and characters);
-whether a slug is well formed and names something is resolution's job. The SPA keeps
-hand-written mirrors (`period.ts`, `validation.ts`) until it uses this crate through
-WASM.
+whether a slug is well formed and names something is resolution's job. The SPA uses this
+crate through WASM (`crates/reg-core-wasm`) and never parses period grammar or computes
+a date bound itself: one period through the grammar, a `?period` wire shaped into a
+`Source.period` and back (`SourcePeriod::from_wire`, `to_wire`), the days a source
+period requests behind its own structural check (`validate_source_period`,
+`SourcePeriod::from_value`), their year spans, and the interval merge, overlap and
+render. Every export is total: it runs the matching check before a function that can
+panic.
