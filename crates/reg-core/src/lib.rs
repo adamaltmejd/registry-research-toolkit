@@ -14,7 +14,7 @@
 //! case-folding table.
 //!
 //! The oracles are `conformance/cases/folds/`, `conformance/cases/grammar/` and
-//! `reg_schema/test_corpus/`.
+//! `crates/reg-core/tests/project/corpus/`.
 
 mod case_folding;
 mod grammar;

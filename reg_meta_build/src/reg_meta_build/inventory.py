@@ -9,9 +9,9 @@ inventory is committed. Its load-bearing rule is the one-to-one resolution
 invariant: every admitted `(register_variant, variable, representation, period)`
 cell resolves to exactly one physical `(table, column)` — per the
 disjoint-partition arm, per `(cell × partition)` — so the extraction tool never
-chooses between sources. reg_meta/DESIGN.md → "Holdings resolution invariants"
-is the decision text; the format is documented in reg_meta/DESIGN.md →
-"Inventory TOML authoring contract".
+chooses between sources. reg_meta_build/DESIGN.md → "Holdings resolution
+invariants" is the decision text; the format is documented in
+reg_meta_build/DESIGN.md → "Inventory TOML".
 
 Deliberately reg_schema-free: the contract needs only reg-core's period grammar
 and FQID parser (`reg_core_py`).
@@ -536,7 +536,7 @@ class DeliveryInventory(_InventoryModel):
 
 def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     """Enforce the one-to-one resolution invariant (ratified 2026-09-01;
-    reg_meta/DESIGN.md → "Holdings resolution invariants").
+    reg_meta_build/DESIGN.md → "Holdings resolution invariants").
 
     Every admitted `(register_variant, variable, representation, period)` cell
     resolves to exactly one physical `(table, column)`. Two mappings that could
@@ -694,8 +694,8 @@ def load_inventory(path: Path) -> DeliveryInventory:
         raise _inventory_error(
             "inventory_toml_unreadable",
             f"Could not read delivery inventory {path}: {exc}",
-            "The inventory must be UTF-8 TOML (see reg_meta/DESIGN.md → Inventory "
-            "TOML authoring contract for the format).",
+            "The inventory must be UTF-8 TOML (see reg_meta_build/DESIGN.md → "
+            "Inventory TOML for the format).",
         ) from exc
     try:
         return DeliveryInventory.model_validate(raw)
@@ -710,5 +710,5 @@ def load_inventory(path: Path) -> DeliveryInventory:
             f"Invalid delivery inventory {path}:\n{details}",
             "Each `[[table]]` needs an exact `id`, one explicit finite "
             "`edition`, and its literal `[[table.column]]` entries; see "
-            "reg_meta/DESIGN.md → Inventory TOML authoring contract.",
+            "reg_meta_build/DESIGN.md → Inventory TOML.",
         ) from exc

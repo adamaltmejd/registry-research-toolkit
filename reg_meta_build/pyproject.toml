@@ -18,7 +18,6 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "reg-meta>=0.41.0",
     "openpyxl>=3.1",
     "pydantic>=2.13.4",
     "reg-core-py",
@@ -39,7 +38,7 @@ packages = ["src/reg_meta_build"]
 # this package builds databases but does not ship its source corpus.
 # (input_data/) live in this package directory as maintainer-edited assets.
 # They are NOT bundled into the wheel — end users consume the prebuilt
-# reg_meta.db downloaded via `reg-meta update`.
+# reg_meta.db release asset.
 
 [tool.uv.sources]
 reg-core-py = { workspace = true }

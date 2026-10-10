@@ -4,9 +4,7 @@ The case corpus has one home here. It runs against the Rust server (`reg-meta se
 HTTP responses, order manifests, server startup and project validation are the
 boundaries. Cases compare domain outputs or located errors, not object internals or
 query implementation. Product adapters are not added solely for testing. No private
-product imports or internal patches are allowed; outside `differential/` (the G1
-harness, whose baseline arm still runs the pinned Python reader) nothing imports
-`reg_meta`.
+product imports or internal patches are allowed.
 
 ```sh
 uv run python -m pytest conformance -q
@@ -99,14 +97,14 @@ Every synthetic artifact is built once through the real pipeline into a cache:
 directory (writable inside agent sandboxes, cleared on reboot). Worktrees and
 pytest-xdist workers share it. The key hashes the fixture source, the shared
 `cases/reader/fixture` defaults, the kind, identity overrides, a case's search pins, the
-`reg_meta_build`, `reg_meta` and `reg_schema` sources, the builder, the installed
-distributions and the Python and SQLite versions, so any edit is a new entry. Entries
-live under `generations/<build-inputs digest>/`, are read-only, and
-`build_reader_artifact` hands a mutating case its own copy. A miss builds into a staging
-directory and renames it into place. Creating a generation prunes generations idle for 6
-hours, and only those, so a returned path stays valid for 6 hours after its last lookup.
-Deleting the directory between runs is safe. The `reg_meta_build` build cases keep their
-accepted prepared inputs in generations of the same cache, under the same rule
+`reg_meta_build` sources, the builder, the installed distributions and the Python and
+SQLite versions, so any edit is a new entry. Entries live under
+`generations/<build-inputs digest>/`, are read-only, and `build_reader_artifact` hands a
+mutating case its own copy. A miss builds into a staging directory and renames it into
+place. Creating a generation prunes generations idle for 6 hours, and only those, so a
+returned path stays valid for 6 hours after its last lookup. Deleting the directory
+between runs is safe. The `reg_meta_build` build cases keep their accepted prepared
+inputs in generations of the same cache, under the same rule
 (`reg_meta_build/tests/cases/build/README.md`). CI sets no `REG_FIXTURE_CACHE`, so a
 fresh runner starts both caches cold in its temp directory.
 `uv run python conformance/fixture_cache.py reader catalog` builds one entry and prints
@@ -115,19 +113,16 @@ its path for consumers outside pytest.
 Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`; other named
 sources live under `reg_meta_build/tests/cases/holdings`. HTTP fixture names resolve
 under `cases/fixtures` unless they name a reader source. The shared builder is
-`conformance/reader_artifacts.py`; package tests and dev servers use it too. The dev
-script retains its path and consumes these same sources.
+`conformance/reader_artifacts.py`; package tests and the dev server's steward catalog
+(`dev.sh --fixture-db` with `REG_WEBAPP_STEWARD`) use it too.
 
-One inherited standalone oracle retains its consumer until `reg_meta/` goes (package
-4.9a): `selection/doc-cursor-expected.json` is consumed by the package search CLI case
-in `reg_meta/tests/test_doc_commands.py`, and `selection/docs` also feeds
-`reg_meta/tests/test_update.py`. That case has no request file: it builds the `reader`
-catalog artifact and a document database from `selection/docs`, then runs
-`reg-meta search` for "Value" over variable descriptions, unfolded, with limit 2, and
-follows `next_cursor` until `has_more` is false. The oracle pins the first page's result
-types (the document hit ahead of the variable), the catalog FQIDs across all pages in
-order with document rows excluded, and the last page's `has_more`. The source-backed
-case stays in its package; its fixture and oracle have one home here.
+Ten reader sources have no consumer yet and await porting to `api` cases (follow-up
+4.9c, listed with the behaviors to pin in the 4.9a pull request): `cli-code-shape`,
+`cli-display-limits`, `search-alias-relevance`, `search-code-exclusion`,
+`search-exact-admission`, `search-exact-holdings`, `search-identity-swamp`,
+`search-identity-swamp-code`, `search-punctuation-label` and `search-relevance`. The
+retired Python reader's package tests pinned search ranking and display behavior on
+them.
 
 ## API cases
 

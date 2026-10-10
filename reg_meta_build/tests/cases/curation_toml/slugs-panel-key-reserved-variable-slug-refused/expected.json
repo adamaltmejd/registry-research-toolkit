@@ -1,13 +1,13 @@
 {
   "loader": "slug_dir",
   "replaces": "test_fqid_slugs_provider_toml.py::TestProviderToml::test_panel_ref_reserved_slug_rejected",
-  "fails_if": "the slug loader validates a panel key against a slot other than the variable slot, so a reserved HTTP-suffix token passes",
-  "note": "\"states\" is a valid variant slug (slugs-variant-reserved-tokens-load) but no variable can carry it, so a panel key naming it is dangling. The old test also tried panel_entity_key = \"variants\": the same variable-slot check.",
+  "fails_if": "the slug loader validates a panel key against a slot other than the variable slot, so a variable-slot reservation passes",
+  "note": "\"variants\" is a valid variant slug (slugs-variant-reserved-tokens-load) but no variable can carry it, so a panel key naming it is dangling.",
   "error": {
     "code": "slug_toml_invalid",
     "locator": "curation/registers/scb/lisa.toml [[variant]] entry 2",
     "message_contains": [
-      "states",
+      "variants",
       "reserved"
     ]
   }

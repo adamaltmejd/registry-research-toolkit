@@ -2,8 +2,7 @@
 
 Not a runner: the `api` cases run for real once a server exists. This checks that every
 `api` case parses, names operations in the table, uses only catalogued error codes and
-references an existing fixture, and that every `replaced` route or command row in
-`surface.toml` names an operation.
+references an existing fixture.
 """
 
 from __future__ import annotations
@@ -35,13 +34,6 @@ CODES = {
 def test_operations_name_catalogued_codes():
     unknown = {n: set(op.get("errors", [])) - CODES for n, op in OPS.items()}
     assert not any(unknown.values()), unknown
-
-
-def test_replaced_routes_and_commands_name_an_operation():
-    rows = tomllib.loads((API / "surface.toml").read_text(encoding="utf-8"))["row"]
-    for row in rows:
-        if row["kind"] in ("route", "command") and row["disposition"] == "replaced":
-            assert row.get("operation") in OPS, f"{row['kind']} {row['id']!r}"
 
 
 @pytest.mark.parametrize(

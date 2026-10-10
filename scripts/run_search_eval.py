@@ -21,7 +21,7 @@ runner rather than a `tests/` module. Start the server first, for example
     family). A `gap` that becomes a hit is progress (`closed!`), not a failure.
 
 Usage:
-    uv run python reg_webapp/backend/scripts/run_search_eval.py [--url URL] [--limit N]
+    uv run --no-project scripts/run_search_eval.py [--url URL] [--limit N]
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-EVAL_PATH = Path(__file__).resolve().parents[1] / "search_eval.toml"
+EVAL_PATH = Path(__file__).resolve().parent / "search_eval.toml"
 
 # A case's `group` is the arm it searches. `value` is deliberately absent: a code
 # hit has no FQID, so a `value` case could never match. The actionable target is

@@ -1,7 +1,7 @@
 //! The `project_data.json` types and their two JSON encodings (`RUST_RUNTIME_SPEC.md`
 //! section 5, package 3e.1).
 //!
-//! The types are today's `reg_schema.project_data` models. They keep the raw spelling
+//! The types are the retired `reg_schema.project_data` models. They keep the raw spelling
 //! of every value (an int year stays an int, `"2018"` stays a string), and serialize
 //! as Pydantic's `model_dump(mode="json")` does: every optional field present, absent
 //! as `null`, `panels` as `[]`, a bare-string panel member as `{"source": ...}`. That
@@ -24,9 +24,9 @@ use crate::{
     validate_structural,
 };
 
-/// The `project_data.json` contract this runtime reads, exactly: `reg_schema`'s
-/// version, which the frozen Python validator also reads (the two converge in
-/// stage 4).
+/// The `project_data.json` contract this runtime reads, exactly. The SPA seeds a new
+/// draft at this version (`reg_webapp/frontend/src/lib/project_data.test.ts` reads it
+/// from here).
 pub const SCHEMA_VERSION: &str = "3.0.0";
 
 /// The supported-version decision, taken before any other check reads the document

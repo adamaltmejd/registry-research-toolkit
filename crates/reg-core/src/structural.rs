@@ -8,9 +8,9 @@
 //!
 //! Each message is a fixed template filled with the offending values; a quoted value
 //! is a string in single quotes, each character but `"` escaped with Rust's
-//! `char::escape_debug` (not Python `repr`). The oracles are `reg_schema/test_corpus/` and
+//! `char::escape_debug` (not Python `repr`). The oracle is
 //! `crates/reg-core/tests/project/corpus/`, whose cases pin the quoting and these
-//! other intentional differences from the Python validator:
+//! other intentional differences from the retired Python validator:
 //!
 //! - Periods go through the period grammar, so an int year outside 1900..=2099 is an
 //!   `invalid_period`, and list bounds are calendar-exact (February ends on the 28th

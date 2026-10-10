@@ -34,7 +34,6 @@ from reg_meta_build.source_evidence import canonical_json, canonical_sha256
 from reg_meta_build.validate import validate_built_db
 
 import reg_meta_build
-import reg_schema
 
 # The digest and staging helpers are shared with the tooling caches.
 sys.path.append(str(Path(__file__).resolve().parents[1] / "scripts"))
@@ -54,9 +53,7 @@ FIXTURE_CACHE_ENV = "REG_FIXTURE_CACHE"
 # marks its generation as used, so a returned path stays valid this long after
 # its last lookup.
 FIXTURE_CACHE_RETENTION_SECONDS = 6 * 3600
-BUILD_PACKAGES = tuple(
-    Path(package.__file__).parent for package in (reg_meta_build, reg_schema)
-)
+BUILD_PACKAGES = (Path(reg_meta_build.__file__).parent,)
 # The sources `reg-core-py` is built from (its uv `cache-keys`): `uv run` rebuilds the
 # extension when they change, and so must the cache.
 NATIVE_SOURCES = tuple(CASES.parents[1] / path for path in _NATIVE_SOURCES)
@@ -177,7 +174,7 @@ def build_inputs_digest(
 ) -> str:
     """Digest of every fixture-independent build input.
 
-    The defaults are the imported `reg_meta_build` and `reg_schema`
+    The defaults are the imported `reg_meta_build`
     sources (file contents, so uncommitted edits count), the Rust sources of
     `reg-core-py`, this builder,
     `installed_distributions()` and `runtime_versions()`: what actually runs,
