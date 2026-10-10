@@ -278,7 +278,11 @@ def scb_partition_tree(root: Path, extra: str):
 
 
 def pooled_parallel_fixture(tmp_path, *, co_delivered=False):
-    from reg_meta_build.source_curation import PeerGuard, capture_expectations
+    from reg_meta_build.source_curation import (
+        PeerGuard,
+        acknowledgement_evidence_sha256,
+        capture_expectations,
+    )
 
     header = REGISTERINFORMATION_HEADER.split("|")
     records = []
@@ -350,6 +354,7 @@ def pooled_parallel_fixture(tmp_path, *, co_delivered=False):
         'variant = "1.10"\nvalid_from = "2022-01-01"\n'
         'valid_to = "2022-12-31"\nevidence = "Reviewed original boundary"\n'
         'noted = "2026-09-29"\n'
+        f'expected_evidence_sha256 = "{acknowledgement_evidence_sha256(records)}"\n'
         'columns = [{column = "First", valid_from = "2020-01-01", '
         'valid_to = "2022-12-31", source_editions = ["2020-2022"]}, '
         '{column = "Second", valid_from = "2022-01-01", '
