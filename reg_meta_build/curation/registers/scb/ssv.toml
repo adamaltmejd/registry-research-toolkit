@@ -118,7 +118,7 @@ valid_from = "1998-01-01"
 valid_to = "1998-06-30"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "b5a5ca37403122a5ad4ca0d43bf72ad55a31ae41eb506028b6bef1fece83446e"
+expected_evidence_sha256 = "168ac6caad82112d3a930720e32e7955ac62b87d445642ab3dc40deacfc35234"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -129,7 +129,7 @@ valid_from = "1998-07-01"
 valid_to = "1998-12-31"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "c96c05d7a9cf007d79927d1bb54cfbd1899e75003e89d45c9b25b8ad313c035a"
+expected_evidence_sha256 = "8bc603b24fcfbccd6242bb14e0614548e68b1119011ce2f69b0d5d0e6f9750a2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -140,7 +140,7 @@ valid_from = "1999-01-01"
 valid_to = "1999-06-30"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "ac77dbaab7bfe181a5fb528977375285529c6fbf49eb3fbff6ea064e14e0a48c"
+expected_evidence_sha256 = "da57109e2dd693e8537c6c1a8a06da4c22155ad3043ca86525529b810f0869bf"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -151,7 +151,7 @@ valid_from = "1999-07-01"
 valid_to = "1999-12-31"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "9997c70b93ed05f31112ecb32744031e478f18a131229262f2c3aed82a2143e5"
+expected_evidence_sha256 = "23a323527f0b7a65f605324d589d81467e3115eb69cd472ea6a0a931a2c936ad"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -162,7 +162,7 @@ valid_from = "2000-01-01"
 valid_to = "2000-06-30"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "18b30281705f182873143e2ca9b6f9e388b19af0037f23e9f49376dc2f590e37"
+expected_evidence_sha256 = "203b9d5c9e83ef1a651d72a9975bef66f934f2f1641ce6c4698a1bb517ebce6c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -173,7 +173,7 @@ valid_from = "2000-07-01"
 valid_to = "2000-12-31"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "7baa07baf6c3259048fd0b25153ef1736022bb6dcaf02f93e9060b82958ccb73"
+expected_evidence_sha256 = "07f90d76f018b143fb6ea22aac38fed989fb5b050595f5409481cd0200280427"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -184,7 +184,7 @@ valid_from = "2001-01-01"
 valid_to = "2001-06-30"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "d96887b264806697cda47ee996f695c468bb20a6c5441ef0f96fdc4054ff2d85"
+expected_evidence_sha256 = "8fc9043478f968a732e227a3735cb1a1dee78870baaa2104ad95ba2204053134"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -195,7 +195,7 @@ valid_from = "2001-07-01"
 valid_to = "2001-12-31"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "ab0b9b005cfcdb49dee1c0259026c4d4a1f85938febe2aaedd74d42ac64b0a1c"
+expected_evidence_sha256 = "5db702ec0ca7ede9fb2aec97231a87e36947d8264a3690555b2a19bbe362aa35"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -206,7 +206,7 @@ valid_from = "2002-01-01"
 valid_to = "2002-06-30"
 reason = "The source documents a nine-code Utbildningsåtgärd list only for autumn 1997, but supplies no own coding association for this exact later semester. Keep its value set unavailable and retain the known 1997 list and all original fields and dates; do not extend that list."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "c1b4442c2bc3a1e4cee42669efbe5023d4c8ca7bff404c63ef03a57a0b878003"
+expected_evidence_sha256 = "5266e5e63213c8109c9d97e686979fae3c73bc17d5a3e7e7c5a060d2dda33871"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -217,7 +217,7 @@ valid_from = "1997-07-01"
 valid_to = "1997-12-31"
 reason = "The source supplies no own RTB country coding association for this exact historical context. Keep its value set unavailable, retaining every literal field, date and known later year-specific RTB list. Neither the Fodelselandnamn column suffix nor a later classification book establishes the stored historical domain."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "22b5bf076b93fa03c35ba5d3c60d17e0c9560743001627c7d1bbd8a85782a406"
+expected_evidence_sha256 = "4fa2026e7e6b01a2a523b774a80899efae5ed72fcc8303e22bf84af7cfcbc6cc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -228,7 +228,7 @@ valid_from = "1998-01-01"
 valid_to = "1998-06-30"
 reason = "The source supplies no own RTB country coding association for this exact historical context. Keep its value set unavailable, retaining every literal field, date and known later year-specific RTB list. Neither the Fodelselandnamn column suffix nor a later classification book establishes the stored historical domain."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "3aef9084f7f263e6128055db29a18aca1238a9ad56bcf202fb08452777f70e67"
+expected_evidence_sha256 = "a7c274f573b0282fc2bbb44bf37d71fd1e9a1c2174cade77f1db2c05663c062a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -239,7 +239,7 @@ valid_from = "1997-07-01"
 valid_to = "1998-06-30"
 reason = "The source supplies no own RTB country coding association for this exact historical context. Keep its value set unavailable, retaining every literal field, date and known later year-specific RTB list. Neither the Fodelselandnamn column suffix nor a later classification book establishes the stored historical domain."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "6b696909e07903bd5bed1be2393aa957850fd6a834e73cddea583b35fac3c4a3"
+expected_evidence_sha256 = "4366b1fb7fd6cc1af02e4d168380cd3b58b68c554eb52f31349a21c96369cced"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -250,4 +250,4 @@ valid_from = "1997-07-01"
 valid_to = "1998-06-30"
 reason = "The source supplies no own RTB country coding association for this exact historical context. Keep its value set unavailable, retaining every literal field, date and known later year-specific RTB list. Neither the Fodelselandnamn column suffix nor a later classification book establishes the stored historical domain."
 evidence = "Complete accepted native-family review (35 originals across native 14652 and 257), own bound coding absence, all summary and integer-identifier support, and declared books. Exact original/raw-coding fingerprint. Proof: Batch50-KAA-SSV-context-source-proof.json."
-expected_evidence_sha256 = "380391389288365adf51982786f94af905db8315d50edefc54f92dfe7f24d635"
+expected_evidence_sha256 = "4d74b03b762746c330265a2f228d95d9301d9bea9c0d8d0e776998737281f11b"

@@ -334,7 +334,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "cf6cebf5a3ac2e26a57018ce049f0336dadd62fada306b18543c2940d6958b3a"
+expected_evidence_sha256 = "ec8ffb366c2e4f92ab3f591c8af0ac7298ab1199fecaa4335f3dee07aa39af31"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -345,7 +345,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "95c7051addedee7b5f611e485176a8bf243446457d04f4bdbd6e1a5d8484761f"
+expected_evidence_sha256 = "4d9195641b0644559c74ea55f1a3928c4f2b6cb504fde208b9de6754af497e41"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -356,7 +356,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "5c409fad889625d49debf518a5f663bf9a7abd3e93fd2e2650032299d2eb432e"
+expected_evidence_sha256 = "9d52573c128022520c7fb424fd21050224a4bceddeb17d97a375f55991654dba"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -367,7 +367,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "1ca3afaf0ae6903686a5ce08074bf6192ec9d20826bf00a42a1120e628430363"
+expected_evidence_sha256 = "8aa0b54561c8f71509474f4906432fc70cdb0de4916c084705f78f8e0c582621"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -378,7 +378,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "576b85dc57e4e6afb49b5258ec3f79df4c9c18baf1ef49ba390f629985de6904"
+expected_evidence_sha256 = "626a1f346828faa7870ea06959ea603f0c713e3bd4f8c86cdc81fc54c8405c6d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -389,7 +389,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "9a5211c82ebd4f4d8d5da02913510588ef5736aac299fd0bb5b5e100f64a75fd"
+expected_evidence_sha256 = "47903e1bade05f494ead8bacc23952cae6b81338a7aab719e45fe1dbe43e6f65"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -400,7 +400,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "8ca30e730574d03c5540a90f073878bbe453f8bd64af1cc8cb2f0883525faffc"
+expected_evidence_sha256 = "8025e2a1002db1a76edf423c042ebce184b8f117dbab7f871a8bb3ef9944c349"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -411,7 +411,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "18d2646cd7e3f3e0ae449ea46427e90394f025db92c64b49e6fe4b7feca7d027"
+expected_evidence_sha256 = "8c441125b7d06ba70825a38b436cbd576862152f5eef5d9ce5f6a50de9d9f96a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -422,7 +422,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "e5122d330d5c916253b4cdce5a896fa52c6b06d73657df1703900e8b53118e98"
+expected_evidence_sha256 = "1f3602b8b8b86a124a197f1c1e38caf5836eea4b1104e6a853d257128775b814"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -433,7 +433,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "ebd6b481af20ece0a389b8428fb462762bafd3a907524e9c12ca2a86279a00a0"
+expected_evidence_sha256 = "8b74b0031952e81768a1d33e084b93863ef9a63f60012eac4981653b7a5903fa"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -444,7 +444,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "061ded6786ae21f333b0a995f77542e0f850344084d3bba83b5478226f4adfb3"
+expected_evidence_sha256 = "cd9fdbfed3b87a7b61cca0586284ca5b3dbb32c281eb84d453ace2012425b6c5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -455,7 +455,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "7762b40218cbdc2f6b1378b55394425219c14e5d97283075888747f03741f742"
+expected_evidence_sha256 = "a25d25c0d9272f8c7a6a3efa4d998c65ed5e69de78034794b2f53b2b2cdbd99b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -466,7 +466,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "1b162c7c3caee3a06e4f6fe36ea31f3ed2a7daba77fcb6584d8ad78fa3245539"
+expected_evidence_sha256 = "409532e65b10e9ef63c2cf264dc54c7a5a8287296967b6bd7e53d03c3d4574e8"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -477,7 +477,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "b1513a7bec593ed0776c1c9fa951cae6d7146cb4509c9e1efe2d282ec93ca500"
+expected_evidence_sha256 = "2808f1edb285b3f84d08220ab888e8b96fdc09afa8b858974864bf14c5fd9251"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -488,7 +488,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "385041fa9ad1fb0999945ff7ecb5f55d9a09ba1376e56a5e74b178b562685ece"
+expected_evidence_sha256 = "6e35d29787b7e68cf0f771c6cb3a99b125ae0a6de4fc88b240083349b005a739"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -499,7 +499,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "3b51909c51cc40f6a102d40e92ec16e4239b7ed48a9a3561a547108d61ba2eee"
+expected_evidence_sha256 = "b817797b48d48a8befc5f8b8188d152d844bdda563621ea38eb9847c05270aad"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -510,7 +510,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "be39b4707f6f1445c09b52f57128a400d48416d420b8adfa12b7e1c29f8082b9"
+expected_evidence_sha256 = "ffc49863b2a0b1b7338d6284f811617f113524fd05195012e40a9830eda4baf0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -521,7 +521,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "bcd002614809ffa76ecf3bb4100a43717ed5d194d3c343f0cbc25d8f1ea2bd45"
+expected_evidence_sha256 = "5f32dab985eb8c2c60885240d8bc5d9979ee0418a8865caa75e9aa8862db0412"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -532,7 +532,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "4d01b033c46de75056e25c5c81115da67256c47f9338ed662ff9d49eb78779ac"
+expected_evidence_sha256 = "0062034d6d8287e8443c1177bf4fe58c3f1677169564f6de30d7d3f8a557150c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -543,7 +543,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "fab26476e9a82bdf323b56adaa89fb533db91dd1d207b16c5075e3d60f418869"
+expected_evidence_sha256 = "d8a6f4b6683ced0c072185d27f9994e0d196503ca98d84ce05b6fa146ae91765"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -554,7 +554,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "9a30e10d22cdea9386956252f425d570676efd057a56f9286de07c9b4faa8f6a"
+expected_evidence_sha256 = "434d56c4a3dfa48654de3a0ffb57e681dbb9757a166d91befbaafe6b46fc400f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -565,7 +565,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "9172d0ef5ed194693fc275f42c0cca411f12b284bd851fa16afa1f2bba69fa40"
+expected_evidence_sha256 = "9320f4389654570177f218402582bb3bd17762095bdb84500ec9a39ebb2bcbea"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -576,7 +576,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "b26990530a9f86b14539ffadc1a416d45326a1e0ab7d3694a0c8e1dd77c6ff62"
+expected_evidence_sha256 = "02e37b485c1e6b90d97c3be9ba785ad78828d1c49417dee4febedd2ae094a2fb"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -587,7 +587,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "209f0cc61669c86b0fb0e1a67b370054570711671dee7c25fed020322edf372c"
+expected_evidence_sha256 = "9fa52a71a9cbe625c9221ab545aff7850bfb1f1820fb5eaa138b104d7227ec57"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -598,7 +598,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "a67b0f4a501d7dffe806404bbb785f39ed987b50e67a154c1b6a608f79b5d5bf"
+expected_evidence_sha256 = "f8da40154944080c52e4570ddca4a6ae3b8541b6fe95a7e667891c48851b765f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -609,7 +609,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "f7ce70d8c3651cdc2c1e3184bc5c2feea8220972a57c42cb6d2ad5b06d4b991d"
+expected_evidence_sha256 = "82a9dd81a607fb37575723f2bd42069175394b196aacc595944e2746ee2d53d9"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -620,7 +620,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "342e8f3b041a670cce2b8dbb3f7bc20bac43218534c7d7fa9e70b405690ba088"
+expected_evidence_sha256 = "7bda727fcca2095cd0a4a5f83bbb1a800ec079c145966c7dc230243105c5d803"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -631,7 +631,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "8fd7797a1cfcbdcbc486f46807d4382ad1b3df44c221be3510359fc2760d8dcb"
+expected_evidence_sha256 = "02a203333039b7eeb1e6ddd79a5c691e3ceed552142506c2c100b608d69ce44e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -642,7 +642,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "0a132a7663a083d261b5dfc5d6453e78d2560be2c9781b70520940bca6e8b69d"
+expected_evidence_sha256 = "e52814241c05e11790ae29938547b0267c4c8935c8523eec31595e697ed58784"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -653,7 +653,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "This exact generic industry field/window has no own coding association and no declared classification version. Its complete source history uses different SNI92, SNI2002 or SNI2007 lists. The definition and neighbouring year/field cannot identify this window’s standard or stored domain. Preserve every known domain and classification relationship; leave this exact response domain unavailable without selecting a neighbouring standard."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "347df5a4ac2bfe4174596ecad27de28f35511986d19eec709f52c5812c2b6fdf"
+expected_evidence_sha256 = "b284884c831a80793956ba2279af5464d0eb137289a5078fda3c6de9ad14cf21"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -664,7 +664,7 @@ valid_from = "2022-01-01"
 valid_to = "2022-12-31"
 reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "e4b09ebb93eeb8983f0471368288a67399b04b4a136b85bfc4a35078119550cc"
+expected_evidence_sha256 = "9e37e6aef19756a016e6a3241a14267b7f47404d1dc6ed414004460936a510e9"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -675,7 +675,7 @@ valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "69c4a9787165533d23fd0b25e5211cc757a4787c97e2a8496977cef9ab8eb8e8"
+expected_evidence_sha256 = "cad60bf416f600dfe7eb6347de4a58a08d8eca5f53ad9da20980320d9698b4fc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -686,7 +686,7 @@ valid_from = "2024-01-01"
 valid_to = "2024-12-31"
 reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "95fc71f7123a934d16e1c6862108ef0be1863311b38858f403acc9bb5697b610"
+expected_evidence_sha256 = "c7c8c94b0908a58dcd82dc5e568b21eb1b97239add874e1cd524249dc9b6555e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -697,7 +697,7 @@ valid_from = "2025-01-01"
 valid_to = "2025-12-31"
 reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "8bde26485a1b268448daf298fbe85616f1736ec5574e4622beff22a1ce86dcad"
+expected_evidence_sha256 = "4b6e3e8227b8a9f7681f18e7e308f5aea205a9013aacc3fd92e3030e0417bc3c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -708,7 +708,7 @@ valid_from = "2022-01-01"
 valid_to = "2022-12-31"
 reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "b8cf0bc0b82afb2ab2c0ee9dfea6361501bdcf2282afbda340d643df27d8fcec"
+expected_evidence_sha256 = "dbd50887a9699aea6c3c7f5c955a0e19e2e0311ae5e95a7ce78ae120fbc57497"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -719,7 +719,7 @@ valid_from = "2023-01-01"
 valid_to = "2023-12-31"
 reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "591ac3dc27e31f32326f882fc016a8443d49d4ca312199cfe6438837cae0d2d1"
+expected_evidence_sha256 = "93faefd446f2c20ea1e1e02c105b60366b9a4f7f39e697b2a3e54f88743166c1"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -730,7 +730,7 @@ valid_from = "2024-01-01"
 valid_to = "2024-12-31"
 reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "242e81fb09de0124c4983535b62854507007cb9c2c8b3f7c28d706d6bb182075"
+expected_evidence_sha256 = "4a4786214b6bcec78ee8af6e3df2ec434710f297f5d7953d276cf6c7d25f3abb"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -741,4 +741,4 @@ valid_from = "2025-01-01"
 valid_to = "2025-12-31"
 reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
-expected_evidence_sha256 = "4469e96c7a6d14ff373e71f0b9e1549829dbc548149222e3e9c04ac469948373"
+expected_evidence_sha256 = "87dd224707e6af8b1b6bab62447615cea22d5571dd251661d52e7a9c1ea8ae68"

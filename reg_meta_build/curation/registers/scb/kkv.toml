@@ -93,7 +93,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "389.66"
 columns = { SUN2000Niva = "389.66.sun2000niva", SUN2000Niva_OLD = "389.66.sun2000niva-old", SUN2020Niva = "389.66.sun2020niva", SUN2020Niva_OLD = "389.66.sun2020niva-old" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "ea7b5352cda117d500d27d5af2cce5a76b125cce4f40e37e3955a624111b8248"
+expected_evidence_sha256 = "1c81862c2157dc63f77ca4166b8c7a8411422c9df4f1b2cb6aa5e53b1ec0eb4c"
 
 [[variable]]
 native_id = "389.66.sun2000niva"

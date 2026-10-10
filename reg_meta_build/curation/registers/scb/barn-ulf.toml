@@ -494,14 +494,14 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "405.19145"
 columns = { room = "405.19145.room", room_H = "405.19145.room-h", room_alt = "405.19145.room-alt", room_alt2 = "405.19145.room-alt2" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "471d4522775de7d81becfa3e1ac3211bd79a5560a64aad3a3d6143e26c61c351"
+expected_evidence_sha256 = "bb667f633de5e3f7ba801f1b8bc21ef5f187a3fb6cd00558bde8372cfc10b695"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "405.19198"
 columns = { cash4a = "405.19198.cash4a", cash4b = "405.19198.cash4b" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "fa717f1d1d609fc3c60300e79fef5844834b7d7a4ed2eec8ea2bf07785f3aca6"
+expected_evidence_sha256 = "6bfb330b47abc4377b65f5e139ceba7afdc314e7d9d3ba1125febcc396be9f19"
 
 [[variable]]
 native_id = "405.19145.room"

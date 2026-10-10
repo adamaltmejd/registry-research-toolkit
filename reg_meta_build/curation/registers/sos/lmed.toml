@@ -373,5 +373,5 @@ refs = ["{\"source\":\"Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb
 fields = ["description"]
 reason = "The supplied source leaves this exact documentary ambiguity unresolved. Keep all original texts and unknown temporal scope; no common semantic statement is selected or date supplied."
 evidence = "Complete accepted workbook source and own value-join evidence. Exact full-original/ordered coding and diagnostic subject guard includes descriptor revision/hash/count for DORS. Batch53-SOS-final-source-proof.json; Batch53-DORS-unattached-descriptor-review.json."
-expected_evidence_sha256 = "3fe881cb0ce03ed3b848ab0841aaf5d13744af2693a5cc7e8111bbb1d95e9e13"
+expected_evidence_sha256 = "4af5c66dfb3ea680ecb7d4bed12d93af383d1240300c954b9c3e7eecf298bfd7"
 expected_diagnostic_sha256 = "0dba978c1fd687aa7393a00ef580920619f9f812d09369b366cc25337fd49dcd"

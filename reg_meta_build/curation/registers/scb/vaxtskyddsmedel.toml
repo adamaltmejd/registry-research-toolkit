@@ -212,7 +212,7 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["is_sensitive", "is_identifier"]
 reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
 evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
-expected_evidence_sha256 = "2b557c298c52a4b7a7967536daa9f5e19492e101778758273a6441cf9ec86d77"
+expected_evidence_sha256 = "7abdef9f43f285c91d0a59e6479ded23b74c30866b7bb3b12f12a2f4a875d91a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -223,7 +223,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "e32d1df87afef9db508f73005feb39f7e3adbdc7c4a23271816ccc2b4da0bbe8"
+expected_evidence_sha256 = "a833bee745b6f1af9a6a405f9f86e82793f857491f6176e2cb0586ef26687fb1"
 expected_diagnostic_sha256 = "4b50bdd9529f0bbb9dd52fb2c534defa2105fcd956808ac5ab7c7f6947957821"
 
 [[acknowledge]]
@@ -235,7 +235,7 @@ valid_from = "2021-01-01"
 valid_to = "2021-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "ad18e97fab1097122874ac3486df48d77c3b304eb15c058e79940a2219b4735f"
+expected_evidence_sha256 = "4a5eff7ddec71548181446906a13b415e059aa218cad9e4019a6386b5e5f0c26"
 expected_diagnostic_sha256 = "eb076dccf150be30a70042b0947cf983120ccf29929fb548538f58298ae113b5"
 
 [[acknowledge]]
@@ -247,7 +247,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "84f71aea361356b3437633c0fb8a4c36ab66da46082e3d91136f0c6fb9324405"
+expected_evidence_sha256 = "e1bd45105e6a949cc9934c40ab1006447d45fea1d1e94b6c5cd35e0d0d37cc7a"
 expected_diagnostic_sha256 = "eec9fa78c0aacbd9c53e7a867c3c18c8dc3c0e8b299dfb8710fc9102a23a1087"
 
 [[acknowledge]]
@@ -257,8 +257,8 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
-expected_evidence_sha256 = "081b2164f5e84f0a4c5e5c60bbb88b63c258da40a82942a001ed0ef594782953"
-expected_diagnostic_sha256 = "3651560b9a903340e2c5e9be22781df3df79e12b9f41c010d338c2ea033297b2"
+expected_evidence_sha256 = "9d962d5983c5401217b4a36151cefe5ab56813f49cfa00957408e354b11efd25"
+expected_diagnostic_sha256 = "b9616895b18f86bf7b53eac05e5ea68dcc9e616eab13171cbca577449329f249"
 
 [[acknowledge]]
 code = "unknown_code_validity"
@@ -267,8 +267,8 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
-expected_evidence_sha256 = "081b2164f5e84f0a4c5e5c60bbb88b63c258da40a82942a001ed0ef594782953"
-expected_diagnostic_sha256 = "634b63d9bedaaee6a94521bccba4192b6d38a497c3100245b787d33828c0a89c"
+expected_evidence_sha256 = "9d962d5983c5401217b4a36151cefe5ab56813f49cfa00957408e354b11efd25"
+expected_diagnostic_sha256 = "ae72d6a891db9231d808375a27f1ef8b3728f1c9b8334afc78149777569c8d6c"
 
 [[acknowledge]]
 code = "unknown_code_validity"
@@ -277,8 +277,8 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["coding"]
 reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
-expected_evidence_sha256 = "081b2164f5e84f0a4c5e5c60bbb88b63c258da40a82942a001ed0ef594782953"
-expected_diagnostic_sha256 = "d4933d3d0428552d0ece58f82d1e540e298f63c04b3d7ea1ffb979e4fa44dc48"
+expected_evidence_sha256 = "9d962d5983c5401217b4a36151cefe5ab56813f49cfa00957408e354b11efd25"
+expected_diagnostic_sha256 = "7507e643ec3e0526b9498c23b8c3acb71adbb7cc792d7b3b22bf29bb9c381a94"
 
 [[acknowledge]]
 code = "unknown_code_membership"
@@ -289,5 +289,5 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The source list has23named letter-combination codes and one literal empty-code/empty-label row, with unknown member validity. Keep every member and association as evidence, without inventing a meaning for the blank or admitting an unproved effective domain."
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
-expected_evidence_sha256 = "081b2164f5e84f0a4c5e5c60bbb88b63c258da40a82942a001ed0ef594782953"
-expected_diagnostic_sha256 = "a577bf947dcca20e82ff6cc9819fd5eb1f8f6b7646cbb0764024b317cb2543ef"
+expected_evidence_sha256 = "9d962d5983c5401217b4a36151cefe5ab56813f49cfa00957408e354b11efd25"
+expected_diagnostic_sha256 = "4449b823893f492e42be8d295f8571c8d40a6feff4085e7519ae92de40f9cab0"

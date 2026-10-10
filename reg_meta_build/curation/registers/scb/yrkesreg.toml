@@ -347,7 +347,7 @@ slug = "arbetsmarknadsstatus-alt"
 variable = "55.17509"
 columns = { AstSni02 = "55.17509.astsni02", AstSni = "55.17509.astsni", AstSni07 = "55.17509.astsni07", AstSNi07 = "55.17509.astsni07", AstNgS07 = "55.17509.astngs07" }
 columns_ref = "Complete native family and full physical-column peer census reviewed. Yrkesreg keeps source SNI histories and literal-case SNI2007 variants; Företagsreg separates explicitly named Avdelning, Underavdelning and Detaljgrupp operations; Livsmedelsförsäljning retains the same explicitly identified legal-unit identity across literal case spellings. No suffix-only semantics or storage/coding equivalence is inferred. Batch52-native3-source-review.json."
-expected_evidence_sha256 = "55edc9ceb58539d6e5a82b45b5d6bfba870ef6a14466ae559a6e6e61b4e30c28"
+expected_evidence_sha256 = "d742349b3c1d76a6f45c991b274485e791f6d7cf06e90984c1efe50eaa67a4f3"
 
 [[variable]]
 native_id = "55.17509.astsni07"
@@ -361,7 +361,7 @@ periods = [["2002-01-01", "2002-12-31"], ["2003-01-01", "2003-12-31"], ["2004-01
 reason = "Every exact missing delivery explicitly specifies the five-character SNI2002 classification. All supplied own domains agree on its 777 substantive code-label pairs. Extend this same native field’s 2010 classification domain under the approved same-version continuity policy. The Grundregister 2009 source additionally supplies 00000 (Uppgift saknas); keep that original domain, but its applicability in the earlier missing windows is unknown, so no earlier missing token is invented. Retain every original date, operation and raw coding association; statistical equivalence is not asserted."
 source = "Complete same-native SNI2002 witness2010; Batch52-native3-source-review.json; user classification continuity policy"
 data_warning = "Historical SNI2002 classification codes follow the same field’s own 777-code 2010 list. Grundregister 2009 additionally declares 00000 (Uppgift saknas); historical applicability of that missing token is unknown. Original domains and coding gaps remain source evidence."
-expected_evidence_sha256 = "5f66384fb119bc5aa404472ce2d37195ba90c38e55245ce780197fbc8cd9bc19"
+expected_evidence_sha256 = "93e16892678dbea3ca0b6160d30252a6b45d8209055b9e135b7249a965cb5a43"
 list = "Standard för svensk näringsgrensindelning, 2002 Branscher"
 witness = ["2010-01-01", "2010-12-31"]
 
@@ -373,7 +373,7 @@ periods = [["2002-01-01", "2002-12-31"], ["2003-01-01", "2003-12-31"], ["2004-01
 reason = "Every exact missing delivery explicitly specifies the five-character SNI2002 classification. All supplied own domains agree on its 777 substantive code-label pairs. Extend this same native field’s 2010 classification domain under the approved same-version continuity policy. The Grundregister 2009 source additionally supplies 00000 (Uppgift saknas); keep that original domain, but its applicability in the earlier missing windows is unknown, so no earlier missing token is invented. Retain every original date, operation and raw coding association; statistical equivalence is not asserted."
 source = "Complete same-native SNI2002 witness2010; Batch52-native3-source-review.json; user classification continuity policy"
 data_warning = "Historical SNI2002 classification codes follow the same field’s own 777-code 2010 list. Grundregister 2009 additionally declares 00000 (Uppgift saknas); historical applicability of that missing token is unknown. Original domains and coding gaps remain source evidence."
-expected_evidence_sha256 = "46cde67c4c293d13c6d8d3cbf8f8a36355487ebfde2492aa6385f5289644c1ac"
+expected_evidence_sha256 = "e5529a5815786936a2d4409616e519a3f8760f219953a878d424a188923b1b8d"
 list = "Standard för svensk näringsgrensindelning, 2002 Branscher"
 witness = ["2010-01-01", "2010-12-31"]
 
@@ -382,21 +382,21 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "55.66"
 columns = { SUN2020Niva = "55.66.sun2020niva", SUN2020Niva_Old = "55.66.sun2020niva-old", Sun2000Niva = "55.66.sun2000niva", Sun2000Niva_Old = "55.66.sun2000niva-old" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "1f07f8413abcc3dc95c41c50b9dd6293092e6a53bc04e90d0637c123a9814422"
+expected_evidence_sha256 = "5e25958614bf64088727b2bb1ab47928c147029fd50bcc5cbef8c716719fe884"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "55.16221"
 columns = { KU1AstNgS07 = "55.16221.ku1astngs07", KU1AstSNI07 = "55.16221.ku1astsni07", KU1AstSni = "55.16221.ku1astsni", KU1AstSni02 = "55.16221.ku1astsni02", KU1AstSni07 = "55.16221.ku1astsni07" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "7f92ba493832a4c5e4070188e125be7999b2f31eba34f8b2ec6d428d73ce8881"
+expected_evidence_sha256 = "7d218fea5b044d5c20a9a72362c4f8a83f0abeebc446a0e3fcc85de9de33a50a"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "55.1819"
 columns = { KU1SektorKod = "55.1819.ku1sektorkod", SektorKod = "55.1819.sektorkod" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Simultaneous literal source fields are kept as finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "d1a16f5e6f8e026562f2db369090569c91c4b0b5a8e7e78b7320eb83f9babf57"
+expected_evidence_sha256 = "d2027669d999f51d3c6847c57676def8c84ed2512d821eadc2078fdbd3ce951a"
 
 [[variable]]
 native_id = "55.66.sun2020niva"
