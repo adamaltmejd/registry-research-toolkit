@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any, Literal
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 
+from reg_meta_build.errors import SourceFormatError
 from reg_meta_build.input_snapshot import SnapshotError
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_evidence import RecordLocator, SourceField, SourceRevision
@@ -28,7 +29,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-class LisaWorkbookError(SnapshotError):
+class LisaWorkbookError(SourceFormatError, SnapshotError):
     """The selected workbook differs from the one supported delivery layout."""
 
 
@@ -356,7 +357,8 @@ def _cell_text(value: Any) -> str | None:
 def _period_scope(value: Any, coordinate: str) -> TemporalScope:
     if isinstance(value, bool):
         raise LisaWorkbookError(
-            f"unsupported LISA availability period at {coordinate}: {value!r}"
+            f"unsupported LISA availability period at {coordinate}: {value!r}",
+            code="lisa_value_unsupported",
         )
     if isinstance(value, int):
         raw_parts = (str(value),)
@@ -365,27 +367,31 @@ def _period_scope(value: Any, coordinate: str) -> TemporalScope:
     else:
         raise LisaWorkbookError(
             f"missing LISA availability period at {coordinate}; only the explicit "
-            "year-independent sections may omit it"
+            "year-independent sections may omit it",
+            code="lisa_value_unsupported",
         )
     intervals: list[ScopeInterval] = []
     for part in raw_parts:
         match = _PERIOD_PART_RE.fullmatch(part)
         if match is None:
             raise LisaWorkbookError(
-                f"unsupported LISA availability period at {coordinate}: {value!r}"
+                f"unsupported LISA availability period at {coordinate}: {value!r}",
+                code="lisa_value_unsupported",
             )
         start = int(match.group("start"))
         end = int(match.group("end") or start)
         if not 1850 <= start <= end <= 2100:
             raise LisaWorkbookError(
-                f"invalid LISA availability period at {coordinate}: {value!r}"
+                f"invalid LISA availability period at {coordinate}: {value!r}",
+                code="lisa_value_unsupported",
             )
         intervals.append(ScopeInterval(start=str(start), end=str(end)))
     try:
         return TemporalScope(kind="intervals", intervals=tuple(intervals))
     except ValueError as exc:
         raise LisaWorkbookError(
-            f"overlapping or unordered LISA availability period at {coordinate}: {value!r}"
+            f"overlapping or unordered LISA availability period at {coordinate}: {value!r}",
+            code="lisa_value_unsupported",
         ) from exc
 
 
@@ -408,7 +414,8 @@ def _sensitivity_field(value: Any, coordinate: str) -> SourceField | None:
     }
     if normalized not in values:
         raise LisaWorkbookError(
-            f"unsupported LISA sensitivity value at {coordinate}: {value!r}"
+            f"unsupported LISA sensitivity value at {coordinate}: {value!r}",
+            code="lisa_value_unsupported",
         )
     return value_field(values[normalized], raw=text)
 
@@ -473,7 +480,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
         workbook = load_workbook(path, read_only=False, data_only=True)
     except Exception as exc:
         raise LisaWorkbookError(
-            f"cannot open selected LISA workbook {path}: {exc}"
+            f"cannot open selected LISA workbook {path}: {exc}",
+            code="source_file_unreadable",
         ) from exc
     try:
         actual_sheets = tuple(workbook.sheetnames)
@@ -481,7 +489,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
         if actual_sheets != expected_sheets:
             raise LisaWorkbookError(
                 "unsupported LISA workbook sheets: expected "
-                f"{expected_sheets!r}, got {actual_sheets!r}"
+                f"{expected_sheets!r}, got {actual_sheets!r}",
+                code="lisa_layout_unsupported",
             )
 
         records: list[SourceRecord] = []
@@ -492,12 +501,14 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
             if sheet.max_column != len(spec.headers):
                 raise LisaWorkbookError(
                     f"unsupported LISA column structure in {sheet_name}: expected "
-                    f"{len(spec.headers)} columns, got {sheet.max_column}"
+                    f"{len(spec.headers)} columns, got {sheet.max_column}",
+                    code="lisa_layout_unsupported",
                 )
             if _cell_text(sheet["A1"].value) != spec.title:
                 raise LisaWorkbookError(
                     f"unsupported LISA table title at {sheet_name}!A1: expected "
-                    f"{spec.title!r}, got {sheet['A1'].value!r}"
+                    f"{spec.title!r}, got {sheet['A1'].value!r}",
+                    code="lisa_layout_unsupported",
                 )
             actual_header = tuple(
                 _cell_text(sheet.cell(3, column).value)
@@ -507,7 +518,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                 end = get_column_letter(len(spec.headers))
                 raise LisaWorkbookError(
                     f"unsupported LISA header at {sheet_name}!A3:{end}3: expected "
-                    f"{spec.headers!r}, got {actual_header!r}"
+                    f"{spec.headers!r}, got {actual_header!r}",
+                    code="lisa_layout_unsupported",
                 )
             for row_number, expected in spec.text_rows.items():
                 expected_row = (expected,) + (None,) * (len(spec.headers) - 1)
@@ -520,7 +532,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                     raise LisaWorkbookError(
                         f"unsupported LISA section structure at {sheet_name}!"
                         f"A{row_number}:{end}{row_number}: expected "
-                        f"{expected_row!r}, got {actual_row!r}"
+                        f"{expected_row!r}, got {actual_row!r}",
+                        code="lisa_layout_unsupported",
                     )
                 worksheet_context.append(
                     f"worksheet-context {sheet_name}!A{row_number}: {actual_row[0]}"
@@ -535,7 +548,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                     raise LisaWorkbookError(
                         f"unsupported LISA context structure at {sheet_name}!"
                         f"A{row_number}:{end}{row_number}: expected "
-                        f"{context_row.cells!r}, got {actual!r}"
+                        f"{context_row.cells!r}, got {actual!r}",
+                        code="lisa_layout_unsupported",
                     )
 
             population_text = "\n".join(
@@ -571,7 +585,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                             raise LisaWorkbookError(
                                 f"unsupported LISA continuation at {sheet_name}!"
                                 f"A{row_number}: expected preceding declaration "
-                                f"{expected_preceding!r}"
+                                f"{expected_preceding!r}",
+                                code="lisa_layout_unsupported",
                             )
                         preceding = records[last_record_index]
                         preceding_column = (
@@ -589,7 +604,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                             raise LisaWorkbookError(
                                 f"unsupported LISA continuation at {sheet_name}!"
                                 f"A{row_number}: expected preceding declaration "
-                                f"{expected_preceding!r}"
+                                f"{expected_preceding!r}",
+                                code="lisa_layout_unsupported",
                             )
                         _attach_context(
                             records,
@@ -613,13 +629,15 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                     raise LisaWorkbookError(
                         f"unsupported LISA row structure at {sheet_name}!"
                         f"A{row_number}:{end}{row_number}: a declaration requires "
-                        "identity, description, and register"
+                        "identity, description, and register",
+                        code="lisa_layout_unsupported",
                     )
                 if register_text.strip() != "LISA":
                     raise LisaWorkbookError(
                         f"unsupported LISA register at {sheet_name}!"
                         f"{get_column_letter(spec.register_column)}{row_number}: "
-                        f"expected 'LISA', got {register_text!r}"
+                        f"expected 'LISA', got {register_text!r}",
+                        code="lisa_layout_unsupported",
                     )
 
                 original_period = (
@@ -633,7 +651,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                     if not year_independent or seen_dated:
                         raise LisaWorkbookError(
                             f"missing LISA availability period at {sheet_name}!"
-                            f"{get_column_letter(spec.period_column)}{row_number}"
+                            f"{get_column_letter(spec.period_column)}{row_number}",
+                            code="lisa_value_unsupported",
                         )
                     edition_scope = TemporalScope(kind="year_independent")
                 else:
@@ -652,7 +671,8 @@ def read_lisa_source(path: Path, revision: SourceRevision) -> _LisaSourceRead:
                 if semantic_key in semantic_keys:
                     raise LisaWorkbookError(
                         f"duplicate semantic LISA declaration at {sheet_name}!A{row_number}: "
-                        f"{semantic_key!r}"
+                        f"{semantic_key!r}",
+                        code="lisa_layout_unsupported",
                     )
                 semantic_keys.add(semantic_key)
                 end = get_column_letter(len(spec.headers))

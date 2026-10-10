@@ -5,8 +5,8 @@
   "fails_if": "the code-list reader checks only the selected revision's size, or parses a file before checking its bytes against the selected revision",
   "note": "The hardest form: the changed file has the reviewed file's size, so only the content hash tells them apart. The longer replacement of the replaced test is the easy twin.",
   "error": {
-    "code": "source_preparation_failed",
-    "type": "CodeListSourceError",
+    "code": "source_revision_changed",
+    "type": "SourceFormatError",
     "locator": "differs from its declared revision"
   }
 }

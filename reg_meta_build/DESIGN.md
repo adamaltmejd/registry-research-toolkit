@@ -132,7 +132,14 @@ changed evidence and block its reuse; it must not refresh the decision's expecta
 
 Adapters implement the formats actually delivered. A changed or ambiguous layout fails
 with retained evidence so the adapter can be repaired. There is no speculative parser
-for hypothetical future formats and no custom adapter per SCB register.
+for hypothetical future formats and no custom adapter per SCB register. Each refusal is
+a `SourceFormatError` whose code names the rule it breaks: `source_revision_changed`
+(the bytes differ from the selected revision), `source_file_unreadable`,
+`code_list_layout_unsupported`, `code_list_name_invalid`, `scb_column_types_unsupported`
+(`Tabelldefinitioner.sql`), `scb_join_keys_layout_unsupported` (`ID-kolumner.xlsx`),
+`scb_value_shape_unsupported`, `lisa_layout_unsupported`, `lisa_value_unsupported` (an
+availability period or sensitivity cell), `sos_variable_sheet_invalid` and
+`sos_worksheet_unsupported`.
 
 `normalization.py` holds the shared mechanical rules. Normalization is idempotent and
 never replaces the original cells:
@@ -1269,7 +1276,9 @@ support accounting; they do not create public variants or orphan edition childre
 Parent resolution reconciles admitted facts with the same naming, language, coordinate
 and conflict guards as catalog occurrences; `support_only_refs` continues to account for
 the excluded deliveries. Superseded preliminary editions therefore retain their own
-parent prose without recreating preliminary states.
+parent prose without recreating preliminary states. The catalog names an edition by its
+variant and name, so native editions of one variant that share a name are all withheld
+with one `duplicate_edition_name` error; no source order picks the one that keeps it.
 
 ## Persistent data warnings
 

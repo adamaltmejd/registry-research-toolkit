@@ -1224,11 +1224,10 @@ def write_resolved_catalog(
         import_metadata["generation_id"] = expected_generation
 
     output = Path(output)
-    if partial and (
-        output.exists()
-        or output.is_symlink()
-        or output.resolve() == (default_db_dir() / DB_FILENAME).resolve()
-    ):
+    # An existing destination needs no check here: the create-only hardlink below
+    # refuses any existing path. The active catalog path may not exist yet, so it
+    # is refused explicitly.
+    if partial and output.resolve() == (default_db_dir() / DB_FILENAME).resolve():
         raise ValueError(
             "diagnostic or register-scoped output must be a new explicit path separate from the active catalog"
         )

@@ -1,0 +1,13 @@
+{
+  "status": "blocked",
+  "result": {"database": null},
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": [
+        ["duplicate_edition_name"]
+      ]
+    }
+  ]
+}

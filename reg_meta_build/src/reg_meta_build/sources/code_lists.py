@@ -14,6 +14,7 @@ from dataclasses import dataclass, replace
 from types import MappingProxyType
 from typing import TYPE_CHECKING
 
+from reg_meta_build.errors import SourceFormatError
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_evidence import (
     DeliveredCell,
@@ -35,7 +36,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-class CodeListSourceError(ValueError):
+class CodeListSourceError(SourceFormatError):
     """A selected code-list input violates its actual file-format contract."""
 
 
@@ -52,20 +53,22 @@ class CleanedCodeList:
 def read_selected_bytes(
     path: Path,
     revision: SourceRevision,
-    *,
-    error_type: type[ValueError] = CodeListSourceError,
 ) -> bytes:
     """Bind a machine-readable source read to its exact selected artifact bytes."""
     try:
         payload = path.read_bytes()
     except OSError as exc:
-        raise error_type(f"cannot read {revision.artifact_path}: {exc}") from exc
+        raise SourceFormatError(
+            f"cannot read {revision.artifact_path}: {exc}",
+            code="source_file_unreadable",
+        ) from exc
     if (
         len(payload) != revision.artifact_size
         or hashlib.sha256(payload).hexdigest() != revision.artifact_sha256
     ):
-        raise error_type(
-            f"source differs from its declared revision: {revision.artifact_path}"
+        raise SourceFormatError(
+            f"source differs from its declared revision: {revision.artifact_path}",
+            code="source_revision_changed",
         )
     return payload
 
@@ -115,7 +118,9 @@ def read_code_list(
     payload = read_selected_bytes(path, revision)
     descriptor_key = normalize_token(name)
     if not descriptor_key:
-        raise CodeListSourceError("code-list name must be non-empty")
+        raise CodeListSourceError(
+            "code-list name must be non-empty", code="code_list_name_invalid"
+        )
     try:
         reader = csv.reader(
             io.StringIO(payload.decode("utf-8-sig"), newline=""), strict=True
@@ -129,7 +134,8 @@ def read_code_list(
             raise CodeListSourceError(
                 f"{revision.artifact_path}: unsupported code-list CSV layout {header!r}; "
                 "expected code,label; vardekod,vardebenamning; or "
-                "code,label,label_en,parent_code,valid_from,valid_to"
+                "code,label,label_en,parent_code,valid_from,valid_to",
+                code="code_list_layout_unsupported",
             )
         header_cells = _cells(
             tuple(f"column:{index}" for index in range(1, len(header) + 1)), header
@@ -157,7 +163,8 @@ def read_code_list(
             if len(cells) != len(header):
                 raise CodeListSourceError(
                     f"{revision.artifact_path}: row {row_number} has {len(cells)} fields; "
-                    f"expected {len(header)}"
+                    f"expected {len(header)}",
+                    code="code_list_layout_unsupported",
                 )
             delivered = _cells(tuple(header), cells)
             value_key = canonical_sha256(cells)
@@ -211,7 +218,8 @@ def read_code_list(
             )
     except (UnicodeDecodeError, csv.Error) as exc:
         raise CodeListSourceError(
-            f"invalid code CSV {revision.artifact_path}: {exc}"
+            f"invalid code CSV {revision.artifact_path}: {exc}",
+            code="code_list_layout_unsupported",
         ) from exc
     descriptor = SourceValueDescriptor(
         payload_key=descriptor_key,
