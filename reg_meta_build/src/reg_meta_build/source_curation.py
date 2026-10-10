@@ -1079,7 +1079,9 @@ class DocumentedCodingSelection(_CurationModel):
             FiniteCurationWindow(valid_from=self.witness[0], valid_to=self.witness[1])
         if not self.version_label.strip() or not self.members:
             raise ValueError("documented coding needs a label and finite members")
-        # Empty-string codes are literal values; labels must still supply meaning.
+        # A blank code is missing data, never a member, authored or delivered.
+        if any(not code.strip() for code, _ in self.members):
+            raise ValueError("documented member codes must be nonblank")
         if any(not label.strip() for _, label in self.members):
             raise ValueError("documented member labels must be nonempty")
         if len({code for code, _ in self.members}) != len(self.members):

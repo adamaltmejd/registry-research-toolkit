@@ -1,0 +1,7 @@
+[classification]
+short_name = "A"
+slug = "a"
+name = "A"
+codes_file = "a.csv"
+sentinel_codes = [{ code = "99", meaning = "Uppgift saknas" }, { code = "", meaning = "Uppgift saknas" }]
+[binding]

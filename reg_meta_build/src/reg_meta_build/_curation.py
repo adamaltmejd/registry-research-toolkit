@@ -54,6 +54,14 @@ class SentinelCode(BaseModel):
 
     _meaning = field_validator("meaning")(_require_trimmed)
 
+    @field_validator("code")
+    @classmethod
+    def _code(cls, value: str) -> str:
+        # A blank code is missing data, never a member, authored or delivered.
+        if not value.strip():
+            raise ValueError("sentinel code must be nonblank")
+        return value
+
 
 def load_sentinel_codes(
     raw: object,
@@ -85,7 +93,7 @@ def load_sentinel_codes(
                 code,
                 f"Classification {classification!r} has an invalid "
                 f"`sentinel_codes` entry {item!r}: {exc.errors(include_url=False)[0]['msg']}.",
-                "Each entry needs exactly `code` (exact string) and `meaning` "
+                "Each entry needs exactly `code` (exact nonblank string) and `meaning` "
                 "(non-empty string); no other keys, no patterns.",
             ) from exc
         if any(seen.code == sentinel.code for seen in sentinels):
