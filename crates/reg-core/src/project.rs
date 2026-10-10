@@ -29,12 +29,33 @@ use crate::{
 /// from here).
 pub const SCHEMA_VERSION: &str = "3.0.0";
 
+/// The project in `raw`, or the issues that reject it without a catalog: the single
+/// entry point the server's validate and order operations and the SPA (through
+/// `reg-core-wasm`) share.
+///
+/// The supported-version decision runs first and alone ([`version_issue`]); then the
+/// structural validator, through [`ProjectData::from_value`]. Any JSON value is read:
+/// a non-object root is the structural `invalid_root` issue.
+///
+/// # Errors
+///
+/// The rejecting result: the one `unsupported_schema_version` issue, or every
+/// structural issue.
+pub fn check(raw: &Value) -> Result<ProjectData, ValidationResult> {
+    if let Some(issue) = version_issue(raw) {
+        // Alone: every other check reads the document as the contract it rejects.
+        return Err(ValidationResult {
+            issues: vec![issue],
+        });
+    }
+    ProjectData::from_value(raw)
+}
+
 /// The supported-version decision, taken before any other check reads the document
 /// as this contract: a string `schema_version` other than [`SCHEMA_VERSION`] is one
 /// `unsupported_schema_version` issue. An absent or non-string one is the structural
 /// validator's to report.
-#[must_use]
-pub fn version_issue(raw: &Value) -> Option<ValidationIssue> {
+fn version_issue(raw: &Value) -> Option<ValidationIssue> {
     let version = raw.get("schema_version")?.as_str()?;
     (version != SCHEMA_VERSION).then(|| ValidationIssue {
         level: IssueLevel::Error,

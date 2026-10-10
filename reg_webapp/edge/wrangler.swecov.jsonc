@@ -6,7 +6,7 @@
 // and vice versa. It does not set ROUTE_MCP: a steward catalog is never served
 // over hosted MCP (RUST_RUNTIME_SPEC.md decision 12).
 //
-// Deploy (after building the SPA: `bun run gen:types && bun run build` in
+// Deploy (after building the SPA: `bun run gen:wasm && bun run gen:types && bun run build` in
 // reg_webapp/frontend/):
 //
 //   bunx wrangler deploy --config reg_webapp/edge/wrangler.swecov.jsonc \

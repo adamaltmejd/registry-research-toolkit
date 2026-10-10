@@ -180,6 +180,12 @@ if ! cargo build --workspace --locked -q; then
 	echo "dev: 'cargo build --workspace' failed — see output above." >&2
 	exit 1
 fi
+# The SPA's reg-core module, rebuilt every run so a reg-core edit never meets a stale
+# .wasm (the bootstrap needs it before the app mounts).
+if ! (cd reg_webapp/frontend && bun run --silent gen:wasm); then
+	echo "dev: 'bun run gen:wasm' failed — see output above." >&2
+	exit 1
+fi
 
 # The per-invocation shots directory (see the header). Deliberately NOT removed
 # by cleanup() — the pictures outliving the servers is the point.

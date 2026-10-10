@@ -1,7 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { MODEL_A_SCHEMA_VERSION } from "./project_data";
 import {
-  checkVersionGate,
   initDraftLifecycle,
   type ProjectPersistence,
   projectStore,
@@ -15,6 +13,7 @@ import {
   SEED,
   storedProject,
 } from "./project-store-test-helpers";
+import { projectSchemaVersion } from "./reg_core";
 
 // The store is a MODULE SINGLETON — each test must establish the state it needs
 // (via newProject / openFile) rather than assume a fresh store.
@@ -35,28 +34,6 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("checkVersionGate", () => {
-  it("hard-rejects schema_version 1.x (pre-Model-A)", () => {
-    const gate = checkVersionGate({
-      schema_version: "1.2.0",
-      reg_meta_version: "reg_meta/v1.0.0",
-    });
-    expect(gate.ok).toBe(false);
-    expect(gate.reason).toMatch(/Model A|re-author/i);
-  });
-
-  it("is a NEUTRAL no-op (ok:true) for unrecognized in-range-ish versions", () => {
-    // Backend stays canonical: only schema 1.x is hard-rejected, everything else passes.
-    expect(
-      checkVersionGate({
-        schema_version: "3.0.0",
-        reg_meta_version: "reg_meta/v2.0.0",
-      }),
-    ).toEqual({ ok: true });
-    expect(checkVersionGate({})).toEqual({ ok: true });
-  });
-});
-
 describe("newProject", () => {
   it("round-trips a fresh current pre-v1 reg_meta seed through an open", async () => {
     projectStore.newProject({
@@ -68,7 +45,7 @@ describe("newProject", () => {
     openFile(raw);
 
     expect(projectStore.openError).toBeNull();
-    expect(projectStore.draft?.schema_version).toBe(MODEL_A_SCHEMA_VERSION);
+    expect(projectStore.draft?.schema_version).toBe(projectSchemaVersion());
     expect(projectStore.draft?.reg_meta_version).toBe("reg_meta/v0.34.0");
     expect(projectStore.dirty).toBe(false);
   });
@@ -101,9 +78,13 @@ describe("dirty flag", () => {
 });
 
 describe("the file-open ingress + commit", () => {
-  it("loads a malformed file VERBATIM so unknown root keys remain diagnosable", async () => {
+  // Fails when the open normalises the draft (dropping unknown keys) or a draft
+  // reg-core rejects is still POSTed instead of carrying its own issues.
+  it("loads a malformed file VERBATIM and reports its issues without a request", async () => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
     const raw = {
-      schema_version: "2.0.0",
+      schema_version: projectSchemaVersion(),
       steward: "global",
       reg_meta_version: "reg_meta/v1.0.0",
       name: "opened",
@@ -127,34 +108,16 @@ describe("the file-open ingress + commit", () => {
     expect(draft.panels).toEqual(raw.panels);
     expect(draft.typo_object).toEqual(raw.typo_object);
     expect(draft.typo_scalar).toBe(7);
-    let posted: unknown;
-    stubFetch(async (_url, init) => {
-      posted = JSON.parse(init?.body as string);
-      return {
-        ok: true,
-        status: 200,
-        json: async () => ({
-          data: {
-            ok: false,
-            issues: [
-              {
-                level: "error",
-                code: "unexpected_field",
-                path: "/typo_object",
-                message: "unexpected key 'typo_object' on project root",
-              },
-            ],
-          },
-          meta: {},
-        }),
-      };
-    });
-    await projectStore.validate();
-    expect((posted as Record<string, unknown>).typo_object).toEqual(
-      raw.typo_object,
-    );
-    expect((posted as Record<string, unknown>).typo_scalar).toBe(7);
     expect(projectStore.validation?.ok).toBe(false);
+    expect(
+      projectStore.validation?.issues.map((i) => [i.code, i.path]),
+    ).toEqual([
+      ["unexpected_field", "/typo_object"],
+      ["unexpected_field", "/typo_scalar"],
+    ]);
+    expect(projectStore.validationStatus).toBe("errors");
+    await projectStore.validate();
+    expect(fetchSpy).not.toHaveBeenCalled();
     // A freshly-opened draft is clean.
     expect(projectStore.dirty).toBe(false);
   });
@@ -268,8 +231,9 @@ describe("stable client-side ids (issue #200)", () => {
     projectStore.newProject(SEED);
     const adds: StagedAdd[] = [];
     for (let s = 0; s < 3; s++) {
-      adds.push(add(`scb/r${s}/v1`, `s${s}b0`, 2018));
-      adds.push(add(`scb/r${s}/v1`, `s${s}b1`, 2018));
+      // Well-formed FQIDs: a draft reg-core rejects is never POSTed.
+      adds.push(add(`scb/r${s}/v1`, `scb/r${s}/s${s}b0`, 2018));
+      adds.push(add(`scb/r${s}/v1`, `scb/r${s}/s${s}b1`, 2018));
     }
     projectStore.applyStagedDiff({ adds });
   }

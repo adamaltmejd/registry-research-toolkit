@@ -541,8 +541,8 @@ export type ValidationResultModel = RustSchemas["Validation"];
  * `ok:false` — this NEVER throws on `ok:false`; the caller renders the issues.
  * Only a refused REQUEST (`malformed_request`, `payload_too_large`,
  * `rate_limited`) throws an `ApiError` (shown as a banner, distinct from the
- * issue list). No client-side structural validator — the server is canonical;
- * the SPA mirrors codes for presentation.
+ * issue list). The store POSTs only drafts reg-core's structural door accepted in
+ * the browser (`lib/reg_core.ts`); the semantic layer is the server's.
  */
 export async function validateProject(
   draft: RawDraft,

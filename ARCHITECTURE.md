@@ -96,6 +96,7 @@ registry-research-toolkit/
     reg-catalog/    # catalog reader and its operations
     reg-meta/       # binary: `serve` (HTTP API + /mcp) and `mcp` (stdio)
     reg-core-py/    # PyO3 bindings of reg-core for the builder
+    reg-core-wasm/  # WebAssembly bindings of reg-core for the SPA
   conformance/      # cross-adapter contract corpus, run against the Rust server
   plugins/          # the microdata-tools-se agent plugin (hosted MCP)
   reg_webapp/
@@ -116,8 +117,10 @@ Dependency graph (acyclic):
 ```text
 reg-meta       → reg-catalog → reg-core
 reg-core-py    → reg-core
+reg-core-wasm  → reg-core
 reg_meta_build → reg-core-py
 reg_webapp     → reg-meta (HTTP, through the codegen'd OpenAPI types)
+reg_webapp     → reg-core-wasm (built into the SPA by `bun run gen:wasm`)
 ```
 
 Nothing is published to PyPI. The runtime releases on `reg_meta/v*` tags: the `reg-meta`

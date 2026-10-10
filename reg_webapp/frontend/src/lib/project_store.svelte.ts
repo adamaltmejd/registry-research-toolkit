@@ -3,23 +3,19 @@
  * so the compiler processes the runes). One draft per SPA session; the home/new
  * screen is `draft == null`.
  *
- * This file is the A5.4 SEAM. Three deliberately-real-but-minimal mechanisms are
- * wired here so A5.4 is a drop-in extension, never a refactor:
+ * Two mechanisms around the draft:
  *
- *  1. `checkVersionGate` — the version-acceptance function. ACCEPTS Model A
- *     projects by `schema_version` major 2, HARD-rejects schema major 1
- *     (pre-Model-A → a blocking `{ok:false, reason}`, A5.4), and is a NEUTRAL
- *     no-op (`{ok:true}`) for everything else.
- *  2. `ProjectPersistence` — the autosave interface. c-i ships an in-memory Map
- *     stub (`InMemoryPersistence`) with a DEBOUNCED autosave `$effect` over the
- *     draft + a load-at-init (returns null → no restore). A5.4 swaps the impl for
- *     IndexedDB via `setPersistence`; the `storeSchemaVersion` constant gates a
- *     stored-schema mismatch (an A5.4 reject the in-memory stub never trips).
- *  3. `openError` — the blocking open-error channel. c-i sets it on a parse failure
- *     or a schema-version gate failure.
+ *  1. `ProjectPersistence` — the autosave interface. An in-memory Map stub
+ *     (`InMemoryPersistence`) by default, with a DEBOUNCED autosave `$effect` over
+ *     the draft + a load-at-init; `main.ts` swaps in IndexedDB via `setPersistence`.
+ *     The `storeSchemaVersion` constant gates a stored-schema mismatch.
+ *  2. `openError` — the blocking open-error channel, set when a file is not JSON
+ *     or not a JSON object. Any JSON object opens.
  *
- * NOT a structural validator — the backend is canonical (see reg_webapp/DESIGN.md
- * → Pydantic boundary). The store only
+ * Every draft replacement runs the server's structural door, reg-core's
+ * `check_project` (WASM), synchronously: a rejected draft gets those issues as its
+ * validation at once and is never POSTed; an accepted one is POSTed to `/validate`
+ * (debounced), whose semantic layer stays the server's. The store otherwise only
  * constructs / opens / immutably edits / serializes the draft and drives the
  * write endpoints via `lib/api.ts`.
  */
@@ -57,6 +53,7 @@ import {
   uniqueSourceName,
   updateField,
 } from "./project_data";
+import { checkProject } from "./reg_core";
 import { windowDisjointFindings } from "./validation";
 import { windowStore } from "./window.svelte";
 
@@ -72,57 +69,6 @@ const AUTOSAVE_DEBOUNCE_MS = 500;
 
 /** The debounce window for automatic backend validation after a draft edit. */
 const AUTO_VALIDATE_DEBOUNCE_MS = 300;
-
-// ── Version gate (THE A5.4 SEAM) ────────────────────────────────────────────
-
-/** The result of `checkVersionGate`. `ok:true` = load is allowed (the accept path,
- * live in c-i); `ok:false` carries a human `reason` for the blocking open-error
- * banner (A5.4 adds the branches that return this). */
-export interface VersionGateResult {
-  ok: boolean;
-  reason?: string;
-}
-
-/** Pull the integer MAJOR out of a dotted version string (`"2.0.0"` → 2), or
- * `null` when it has no leading integer. */
-function majorOf(version: string): number | null {
-  const match = /^(\d+)\./.exec(version);
-  return match ? Number(match[1]) : null;
-}
-
-/**
- * THE A5.4 SEAM. Decide whether an opened project_data dict is loadable by version.
- *
- * ACCEPTS Model A projects by `schema_version` major 2. HARD-rejects schema major
- * 1 as pre-Model-A — no migration, pre-v1 policy. The reg_meta package may still
- * be `reg_meta/v0.x.y` while the schema is Model A, so reg_meta major is not a
- * pre-Model-A signal. Anything else is a NEUTRAL no-op (`{ok:true}`): it lets
- * unrecognized versions through so the backend remains the canonical authority.
- */
-export function checkVersionGate(parsed: RawDraft): VersionGateResult {
-  const schemaVersion =
-    typeof parsed.schema_version === "string" ? parsed.schema_version : "";
-
-  const schemaMajor = majorOf(schemaVersion);
-
-  // schema_version 1.x hard-reject: pre-Model-A files. No migration — pre-v1 policy.
-  if (schemaMajor === 1) {
-    return {
-      ok: false,
-      reason:
-        "This project predates Model A (v1.0). Please re-author against the current schema.",
-    };
-  }
-
-  // Accept the Model A schema range explicitly (the documented happy path).
-  if (schemaMajor === 2) {
-    return { ok: true };
-  }
-
-  // Neutral no-op for everything else in c-i: do not block. The backend is the
-  // canonical validator; the SPA's version gate only HARD-rejects schema 1.x (A5.4).
-  return { ok: true };
-}
 
 // ── Persistence interface (the A5.4 IndexedDB swap point) ────────────────────
 
@@ -324,6 +270,11 @@ export type ValidationStatus =
   | "errors";
 
 const validationStatus = $derived.by<ValidationStatus>(() => {
+  // Settled the moment it was made, even while a request for an earlier draft
+  // is still in flight (its answer will be discarded as stale).
+  if (draftRejected) {
+    return "errors";
+  }
   if (validationScheduled || validationBusy) {
     return "checking";
   }
@@ -362,13 +313,32 @@ const canDownloadOrder = $derived(
     !orderBusy,
 );
 
-/** Replace the draft, clearing the stale validation (an edit invalidates the last
- * `/validate` result). The mutators below all funnel through here so `dirty` and
- * `validatedClean` recompute on every edit. */
-function setDraft(next: RawDraft): void {
+/** Whether reg-core's structural door rejected the current draft: its issues are
+ * the standing `validation`, and no `/validate` POST is sent for it. Set in the
+ * same step as `draft`. */
+let draftRejected = $state(false);
+
+/** THE draft replacement — every edit, New, Open and the restore. Bumps the
+ * generation (a response for the previous draft is stale) and runs reg-core's
+ * `check_project` synchronously, outside the debounce and the in-flight gate: a
+ * rejection is the validation at once (and supersedes a request error, which
+ * described an earlier draft); an accepted draft's validation is cleared until its
+ * debounced `/validate` answers. */
+function replaceDraft(next: RawDraft): void {
+  const local = checkProject(JSON.stringify(next));
   draft = next;
   validationGeneration += 1;
-  validation = null;
+  draftRejected = !local.ok;
+  validation = draftRejected ? local : null;
+  if (draftRejected) {
+    setRequestError(null);
+  }
+}
+
+/** Replace the draft after an edit. The mutators below all funnel through here so
+ * `dirty` and `validatedClean` recompute on every edit. */
+function setDraft(next: RawDraft): void {
+  replaceDraft(next);
 }
 
 /** Load `next` as the whole current project — the ONE wholesale replacement both
@@ -385,14 +355,12 @@ function setDraft(next: RawDraft): void {
  * differs from our pretty-print. */
 function loadProject(next: RawDraft): void {
   const ids = buildIds(next);
-  draft = next;
-  validationGeneration += 1;
+  replaceDraft(next);
+  setRequestError(null);
   replacementGeneration += 1;
   sourceIds = ids;
   lastDownloaded = serializeProjectData(next);
-  validation = null;
   openError = null;
-  setRequestError(null);
 }
 
 /** Build the fresh Model A draft `newProject` / a New commits — WITHOUT loading it.
@@ -671,13 +639,14 @@ export const projectStore = {
   },
 
   /**
-   * The file ingress: parse → guard non-object → `checkVersionGate`. Takes the
-   * file's TEXT, not the `File`: reading the bytes is asynchronous, and this call
-   * is what raises the blocking `openError`, so the caller has to be able to drop
-   * a superseded read BEFORE it runs. Returns the accepted dict VERBATIM
-   * (including invalid unknown root keys — the backend is the structural
-   * validator, and a structurally broken draft must still open for repair), or
-   * `null` after setting that `openError`.
+   * The file ingress: parse → guard non-object. Takes the file's TEXT, not the
+   * `File`: reading the bytes is asynchronous, and this call is what raises the
+   * blocking `openError`, so the caller has to be able to drop a superseded read
+   * BEFORE it runs. Returns the accepted dict VERBATIM — any JSON object opens,
+   * including one at another `schema_version` or with unknown root keys: a
+   * structurally broken draft must still open for repair, and its issues
+   * (`unsupported_schema_version` alone for a version mismatch) are its validation
+   * once loaded — or `null` after setting that `openError`.
    *
    * Reads NOTHING into the store: a rejected file leaves the current draft and
    * its autosaved recovery copy untouched, and an accepted one only becomes the
@@ -694,11 +663,6 @@ export const projectStore = {
     }
     if (!isPlainObject(parsed)) {
       openError = "project_data.json must be a JSON object at the top level.";
-      return null;
-    }
-    const gate = checkVersionGate(parsed);
-    if (!gate.ok) {
-      openError = gate.reason ?? "This project file cannot be opened.";
       return null;
     }
     return parsed;
@@ -732,10 +696,14 @@ export const projectStore = {
 
   /** POST the serialized draft to `/validate`, storing the 200 `{ok, issues}`.
    * A true 4xx (malformed request) sets `requestError` instead (NEVER on
-   * `ok:false`). Returns the result (null on a request error). */
+   * `ok:false`). Returns the result (null on a request error). A draft reg-core
+   * rejected is not POSTed: its local issues are the result. */
   async validate(): Promise<ValidationResultModel | null> {
     if (draft == null) {
       return null;
+    }
+    if (draftRejected) {
+      return validation;
     }
     if (validationInFlight) {
       validationQueued = true;
@@ -757,6 +725,10 @@ export const projectStore = {
         const targetGeneration = validationGeneration;
         if (target == null) {
           return latestResult;
+        }
+        // A trailing run for a draft edited into one reg-core rejects.
+        if (draftRejected) {
+          return validation;
         }
         setRequestError(null);
         try {
@@ -1110,8 +1082,7 @@ export function initDraftLifecycle(): void {
         // Atomic replacement: compute the mirror before assigning `draft` so a throw
         // can't leave a restored draft with a stale/empty mirror inside this `.then()`.
         const ids = buildIds(loaded);
-        draft = loaded;
-        validationGeneration += 1;
+        replaceDraft(loaded);
         sourceIds = ids;
         // Do NOT reset lastDownloaded here: a restored autosave draft has NOT been
         // downloaded to the durable project_data.json this session, so it must read
@@ -1146,12 +1117,12 @@ export function initDraftLifecycle(): void {
     return () => clearTimeout(timer);
   });
 
-  // Auto-validation: every draft replacement schedules a backend validation of the
-  // current serialized draft. The backend stays canonical; this only retires the
-  // manual "Validate" click from the cart UI.
+  // Auto-validation: every draft replacement reg-core accepted schedules a backend
+  // validation of the current serialized draft (its semantic layer needs the
+  // catalog). A rejected draft already has its issues and sends nothing.
   $effect(() => {
     const current = draft;
-    if (current == null) {
+    if (current == null || draftRejected) {
       validationScheduled = false;
       return;
     }

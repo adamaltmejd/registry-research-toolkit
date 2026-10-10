@@ -13,7 +13,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::project::{Binding, ProjectData, Source, version_issue};
+use reg_core::project::{Binding, ProjectData, Source, check};
 use reg_core::{
     Fqid, Interval, IssueLevel, ValidationIssue, ValidationResult, intersect, merge, overlap,
     quote, quoted_list, render,
@@ -48,8 +48,7 @@ pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value
 }
 
 /// The `project` parameter as a project, or the issues that reject it without the
-/// catalog: the supported-version decision alone, else the structural validator's.
-/// `order` shares this door (today's `project_from_raw`).
+/// catalog ([`check`]). `order` shares this door (today's `project_from_raw`).
 pub(super) fn project(params: &Params) -> Result<Result<ProjectData, ValidationResult>, Error> {
     // The transports hand the body over as JSON text: HTTP after refusing malformed
     // bytes, MCP from its object argument.
@@ -57,13 +56,7 @@ pub(super) fn project(params: &Params) -> Result<Result<ProjectData, ValidationR
         .ok()
         .filter(Value::is_object)
         .ok_or_else(|| Error::invalid_parameter("project"))?;
-    if let Some(issue) = version_issue(&raw) {
-        // Alone: every other check reads the document as the contract it rejects.
-        return Ok(Err(ValidationResult {
-            issues: vec![issue],
-        }));
-    }
-    Ok(ProjectData::from_value(&raw))
+    Ok(check(&raw))
 }
 
 /// The representations the steward holds variable `id` in under `variant`, in

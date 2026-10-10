@@ -119,6 +119,11 @@ export interface CodeInfo {
  * - the order materializer's findings (`crates/reg-catalog/src/ops/order.rs`; see crates/DESIGN.md → Order manifest)
  */
 export const KNOWN_CODES: Record<string, CodeInfo> = {
+  // ── the version decision (`reg_core::project::check`) ─────────────────────
+  unsupported_schema_version: {
+    label: "Project written for another schema version",
+    hint: "error",
+  },
   // ── structural ────────────────────────────────────────────────────────────
   invalid_root: { label: "Root must be a JSON object", hint: "error" },
   missing_required_field: { label: "Missing required field", hint: "error" },

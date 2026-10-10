@@ -10,12 +10,13 @@
  * generated from `crates/reg-core/src/project.rs` (`bun run gen:types`). The
  * accepted model is never written back into the draft.
  *
- * This is NOT a structural validator — the server is canonical. These helpers only
- * construct + immutably edit the document the SPA posts to `/api/project/validate`
- * / `/order`.
+ * No validation here (that is reg-core's, `lib/reg_core.ts`, and the server's).
+ * These helpers only construct + immutably edit the document the SPA posts to
+ * `/api/project/validate` / `/order`.
  */
 
 import type { components } from "./api-types-rust";
+import { projectSchemaVersion } from "./reg_core";
 
 type Schemas = components["schemas"];
 
@@ -42,9 +43,6 @@ export type DraftBinding = Omit<ProjectBinding, "type"> & {
   type: ProjectBinding["type"] | "";
 };
 
-/** The Model A `schema_version` a NEW draft is seeded with (reg-core 3.0.0). */
-export const MODEL_A_SCHEMA_VERSION = "3.0.0";
-
 /** Seed for a new project (from `/api/context`): the canonical reg_meta release
  * tag (derive it from the deployment's bare package version with
  * `regMetaReleaseTag`) + the deployment's steward id. `name` and `sources`
@@ -54,12 +52,12 @@ export interface ProjectSeed {
   steward: string;
 }
 
-/** Construct a fresh Model A skeleton. The version fields are seeded from
- * the deployment context; `schema_version` 2.x is the Model A gate, while
- * `reg_meta_version` records the catalog release used by this deployment. */
+/** Construct a fresh Model A skeleton. `schema_version` is the one reg-core reads
+ * (`projectSchemaVersion`); `reg_meta_version` records the catalog release used by
+ * this deployment (from the deployment context). */
 export function newProjectData(seed: ProjectSeed): RawDraft {
   return {
-    schema_version: MODEL_A_SCHEMA_VERSION,
+    schema_version: projectSchemaVersion(),
     steward: seed.steward,
     reg_meta_version: seed.reg_meta_version,
     name: "",

@@ -133,6 +133,9 @@ describe("browse-time window seeded on draft creation (#629 item 3)", () => {
     if (fallback !== null) {
       storage.set("reg_webapp:project_window", JSON.stringify(fallback));
     }
+    // The reset module graph has a fresh, uninitialised reg-core too: re-run the
+    // unit setup that loads it.
+    await import("../test-setup.unit");
     return {
       projectStore: (await import("./project_store.svelte")).projectStore,
       windowStore: (await import("./window.svelte")).windowStore,

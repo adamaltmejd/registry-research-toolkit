@@ -1701,22 +1701,24 @@ rune store holding one draft per session.
   `storeSchemaVersion` (distinct from the project's `schema_version`); `load` restores
   only on a match, else discards the stale-schema draft. This is the store's record
   shape, bumped only when the persisted shape changes.
-- **Project-file version gate.** Model A files carry the reg-core project schema MAJOR —
-  **3** since `Source.period` became finite-only (`3.0.0`); the major **2** files
-  written before it are Model A too, but the BACKEND reads `3.0.0` EXACTLY
-  (`order.schema_version_issue`), so it answers them `unsupported_schema_version` like
-  any other foreign contract. Plus the deployment's `reg_meta_version` release tag. The
-  SPA **hard-rejects** a file whose `schema_version` major is **1** (pre-Model-A) with a
-  blocking open-error — no migration, pre-v1 policy. The `reg_meta` package may still be
-  `reg_meta/v0.x` while the schema is Model A, so `reg_meta_version` major is not a
-  pre-Model-A signal. (`schema_version` major 1 is the *rejected* pre-Model-A value, not
-  Model A.) Any other version — including the seeded major **3** — is a neutral no-op:
-  the backend stays the canonical validator.
+- **reg-core in the browser.** The server's structural door, `reg_core::project::check`,
+  runs in the SPA as WebAssembly (`crates/reg-core-wasm`, built by `bun run gen:wasm`;
+  `lib/reg_core.ts` is its only importer). `main.ts` loads it before mounting; if it
+  cannot load, `#app` shows a static alert instead of an app that cannot check a draft.
+  Every draft replacement (each edit, New, Open, the restore) runs `check_project`
+  synchronously, outside the validation debounce and the in-flight gate. A rejected
+  draft gets those issues as its validation at once and is never POSTed, so a stale
+  green answer for an earlier draft is discarded and cannot reopen the order download;
+  an accepted draft is POSTed to `/validate` (debounced) for the semantic layer, which
+  needs the catalog. A new draft takes `project_schema_version()`.
+- **Project-file versions.** Any JSON object opens (the shape is the only ingress
+  check): the server reads exactly reg-core's `SCHEMA_VERSION` and answers any other as
+  the single `unsupported_schema_version` issue, which the browser now shows on open. No
+  migration, pre-v1 policy.
 - **Unsaved-changes warning.** A `dirty` flag derives from the draft diverging from the
   last DOWNLOAD baseline (`lastDownloaded`); a `beforeunload` listener prompts on a
   tab/window close with a dirty draft. The store drives the write endpoints (validate /
-  order download) through `lib/api.ts`; it is NOT a structural validator (the backend is
-  canonical).
+  order download) through `lib/api.ts`.
 - **Deliberate replacement of a dirty draft.** `beforeunload` covers leaving the tab; it
   does NOT run for the in-app New and Open, which replace the draft *and* the single
   IndexedDB recovery copy behind it. Both therefore go through one policy
@@ -1725,17 +1727,17 @@ rune store holding one draft per session.
   `AlertDialog`, the app's only modal) offering cancel / download-then-replace / replace
   anyway, and the replacement runs only on a confirm. Nothing about the draft moves
   while that answer is pending, so a cancel leaves the draft and its autosave untouched.
-  Open PARSES first (`parseProjectText` — JSON, top-level object, version gate) and asks
-  only once the file is one that could be loaded: a cancelled file picker, a
-  parse/version rejection, or a refused replacement all leave the current draft exactly
-  as it was. A restored autosave stays dirty (a recovery copy is not a downloaded one),
-  so it gets the same confirmation — the flag is never cleared to skip the policy. The
-  pending project is dropped when `/project` unmounts, so an unanswered question can
-  never outlive the page that asks it. Reading a picked file's bytes is the one
-  asynchronous step, and `/project` carries a generation counter that a New, a newer
-  Open and its own teardown all bump: a read that loses that race is dropped BEFORE the
-  ingress runs, since the ingress is what raises the open-error — otherwise a stale file
-  could still replace a newer decision, or put a stale banner over it.
+  Open PARSES first (`parseProjectText` — JSON, top-level object) and asks only once the
+  file is one that could be loaded: a cancelled file picker, a parse/shape rejection, or
+  a refused replacement all leave the current draft exactly as it was. A restored
+  autosave stays dirty (a recovery copy is not a downloaded one), so it gets the same
+  confirmation — the flag is never cleared to skip the policy. The pending project is
+  dropped when `/project` unmounts, so an unanswered question can never outlive the page
+  that asks it. Reading a picked file's bytes is the one asynchronous step, and
+  `/project` carries a generation counter that a New, a newer Open and its own teardown
+  all bump: a read that loses that race is dropped BEFORE the ingress runs, since the
+  ingress is what raises the open-error — otherwise a stale file could still replace a
+  newer decision, or put a stale banner over it.
 
 Note: v1 is **one draft per SPA session** (a single IndexedDB key), not a multi-project
 list — a new or opened project replaces the current draft, deliberately (above).

@@ -11,6 +11,7 @@
 import { commands } from "vitest/browser";
 import "./tokens.css";
 import "./lib/ui/utilities.css";
+import { initRegCore } from "./lib/reg_core";
 
 declare module "vitest/browser" {
   interface BrowserCommands {
@@ -36,3 +37,7 @@ for (let attempt = 0; ; attempt++) {
     );
   }
 }
+
+// reg-core (WASM) checks every draft synchronously; main.ts loads it before mount,
+// and this suite never evaluates main.ts.
+await initRegCore();
