@@ -1947,17 +1947,26 @@ items from #1296 item 3 are optional: each joins the sub-package that owns its t
 is listed in that PR. Depends on: 4.9a; 4.10b–e also wait for test-audit's
 `reg_meta_build` test rewrite to finish (#1296). 4.1–4.9 do not wait for it.
 
-- **4.10a Major bump and unread tables.** Builder `SCHEMA_VERSION` 10.0.0, Rust `SCHEMA`
-  `(10, 0)`, `FIXTURE_SCHEMA_VERSION` follows. Drop artifact tables and views that the
-  Rust reader, derive and `validate_built_db` all leave unread (known: the always-empty
-  `classification_same_as`, 3d.1), each confirmed against the artifact DDL in
-  `reg_meta_build/db.py`. Regenerate the version-carrying goldens (the set #1305
-  touched). Paths: `reg_meta_build/src/reg_meta_build/{db,validate,derive/}`,
+- **4.10a Major bump.** Builder `SCHEMA_VERSION` 10.0.0, Rust `SCHEMA` `(10, 0)`,
+  `FIXTURE_SCHEMA_VERSION` follows; the version-carrying goldens regenerated (the set
+  #1305 touched). It also carries the February period end deferred from 4.4b (the
+  builder and the holdings accounting end a February period on its real last day, as
+  reg-core does) and repoints the stale `register` DDL comment from the deleted
+  `catalog.py` to the Rust reader. Paths: `reg_meta_build/src/reg_meta_build/db.py`,
   `crates/reg-catalog/src/lib.rs`, the goldens. Acceptance: full gate; byte-identical
-  rebuild. It also carries the February period end deferred from 4.4b (the builder and
-  the holdings accounting end a February period on its real last day, as reg-core does)
-  and repoints the stale `register` DDL comment from the deleted `catalog.py` to the
-  Rust reader. Escalate: dropping anything the PR does not list.
+  rebuild.
+- **4.10 drops: unread artifact tables and columns.** Drops what the Rust reader, derive
+  and `validate_built_db` all leave unread, each confirmed by grep over `crates/`,
+  `derive/`, `validate.py`, `reg_webapp/` and `scripts/`: the tables
+  `classification_same_as` (always empty, 3d.1), `identifier_semantics`,
+  `timeseries_event`, `source_column_type`, `source_join_key` and
+  `source_relationship_variable`; the columns `tag.description`,
+  `register_replaced_by.note` and `variant_replaced_by`'s `effective_year`, `note` and
+  `beskrivning`. Kept: `source_relationship` (the README contract) and
+  `variable_replaced_by.note` (`validate_built_db` selects the vintage-lift edges by
+  it). Paths: the artifact DDL in `reg_meta_build/db.py`, its writer and models, the
+  curation loaders, the cases that pinned the dropped tables. Acceptance: full gate;
+  byte-identical rebuild. Escalate: dropping anything the PR does not list.
 - **4.10b Dense `code_id`** (#1296 2a): renumbered densely in (label, code) order;
   reader tie-breaks move to (code, label). Paths: the builder's ID assignment,
   `crates/reg-catalog/src/ops/search/`, the goldens whose order changes. Acceptance:

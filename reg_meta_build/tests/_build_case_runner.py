@@ -1069,6 +1069,8 @@ _STATE_COORDINATES = (
 _REGISTER = "{0}_provider || '/' || {0}_register"
 _VARIABLE = "{0}_provider || '/' || {0}_register || '/' || {0}_variable"
 _SUCCESSION_FACTS = "effective_year, note, beskrivning AS description"
+# The register grain stores no `note`; the variant grain stores endpoints only.
+_REGISTER_SUCCESSION_FACTS = "effective_year, NULL AS note, beskrivning AS description"
 _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "issues": _issues,
     "issue_refs": _issue_refs,
@@ -1162,12 +1164,13 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         f"{_REGISTER.format('successor')} AS successor, NULL AS predecessor_variant, "
         "NULL AS successor_variant, NULL AS predecessor_column, "
         "NULL AS successor_column, NULL AS variant, "
-        f"{_SUCCESSION_FACTS} FROM register_replaced_by UNION ALL SELECT 'variable', "
+        f"{_REGISTER_SUCCESSION_FACTS} FROM register_replaced_by "
+        "UNION ALL SELECT 'variable', "
         f"{_VARIABLE.format('predecessor')}, {_VARIABLE.format('successor')}, "
         f"NULL, NULL, NULL, NULL, NULL, {_SUCCESSION_FACTS} FROM variable_replaced_by "
         f"UNION ALL SELECT 'variant', {_REGISTER.format('predecessor')}, "
         f"{_REGISTER.format('successor')}, predecessor_variant, successor_variant, "
-        f"NULL, NULL, NULL, {_SUCCESSION_FACTS} FROM variant_replaced_by "
+        "NULL, NULL, NULL, NULL, NULL, NULL FROM variant_replaced_by "
         f"UNION ALL SELECT 'representation', {_VARIABLE.format('predecessor')}, "
         f"{_VARIABLE.format('successor')}, NULL, NULL, predecessor_column, "
         f"successor_column, variant, {_SUCCESSION_FACTS} "
@@ -1176,21 +1179,6 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "classification_derivations": lambda o: o._sql(
         "SELECT derived_slug AS derived, source_slug AS source, note "
         "FROM classification_derived_from"
-    ),
-    "timeseries_events": lambda o: o._sql(
-        "SELECT namn AS name, handelse AS event, beskrivning AS description, "
-        "entitet AS entity, id1 AS first_token, id2 AS second_token, "
-        "fil_id AS file_token FROM timeseries_event"
-    ),
-    "source_columns": lambda o: o._sql(
-        "SELECT table_name, column_name, sql_type, nullable FROM source_column_type"
-    ),
-    "join_keys": lambda o: o._sql(
-        "SELECT table_name, column_name, description FROM source_join_key"
-    ),
-    "identifiers": lambda o: o._sql(
-        "SELECT var_id AS native_variable, variabelnamn AS name, "
-        "variabeldefinition AS definition FROM identifier_semantics"
     ),
     "lineage": lambda o: o._sql(
         "SELECT c.register, c.variable, c.variant, c.column, "
@@ -1244,9 +1232,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "JOIN value_code v ON v.code_id = cc.code_id"
     ),
     "relationships": lambda o: o._sql(
-        "SELECT kind, binding_status, source_dataset, v.slug AS owner, "
-        "(SELECT COUNT(*) FROM source_relationship_variable e "
-        "WHERE e.relationship_id = r.relationship_id) AS endpoints "
+        "SELECT kind, binding_status, source_dataset, v.slug AS owner "
         "FROM source_relationship r "
         "LEFT JOIN variable v ON v.variable_id = r.owner_variable_id"
     ),
@@ -1306,11 +1292,6 @@ FIELDS: dict[str, frozenset[str]] = {
         "successor_variant predecessor_column successor_column variant "
         "effective_year note description",
         "classification_derivations": "derived source note",
-        "timeseries_events": "name event description entity first_token "
-        "second_token file_token",
-        "source_columns": "table_name column_name sql_type nullable",
-        "join_keys": "table_name column_name description",
-        "identifiers": "native_variable name definition",
         "lineage": "register variable variant column source_register "
         "source_variable source_variant source_column valid_from valid_to",
         "lineage_warnings": "register variable variant column valid_from valid_to "
@@ -1327,7 +1308,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "valid_to description url code_count valid_code_count supersedes",
         "classification_successions": "predecessor successor effective_year note",
         "classification_codes": "slug code label level is_valid",
-        "relationships": "kind binding_status source_dataset owner endpoints",
+        "relationships": "kind binding_status source_dataset owner",
         "evidence": "kind disposition",
         "source_issues": "kind severity descriptor_key physical_associations refs",
     }.items()

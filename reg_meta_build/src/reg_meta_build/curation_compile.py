@@ -406,7 +406,6 @@ def compile_declared_metadata(
             ResolvedTag(
                 slug=tag.slug,
                 label=tag.label,
-                description=tag.description,
                 members=tuple(members),
             )
         )
@@ -479,7 +478,6 @@ def compile_declared_metadata(
                     successor=ResolvedVariantRef.model_validate(
                         {"register": b, "variant": edge.successor_variant}
                     ),
-                    **common,
                 )
             )
         else:

@@ -1174,16 +1174,6 @@ CREATE TABLE source_relationship (
         OR (binding_status = 'retained_unattached' AND owner_variable_id IS NULL AND unresolved_json = '[]'))
 );
 CREATE INDEX idx_source_relationship_owner ON source_relationship(owner_variable_id);
-CREATE TABLE source_relationship_variable (
-    relationship_id INTEGER NOT NULL REFERENCES source_relationship(relationship_id),
-    ordinal INTEGER NOT NULL CHECK (ordinal >= 0),
-    clause_index INTEGER CHECK (clause_index >= 0),
-    operand_index INTEGER CHECK (operand_index >= 0),
-    literal_token TEXT NOT NULL,
-    endpoint_variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
-    CHECK ((clause_index IS NULL) != (operand_index IS NULL)),
-    PRIMARY KEY (relationship_id, ordinal)
-);
 CREATE TABLE variable_alias_window (
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
@@ -1365,23 +1355,6 @@ CREATE TABLE unika_summary (
     PRIMARY KEY (register_id, register_variant_id, kolumnnamn, variabelnamn)
 );
 
-CREATE TABLE identifier_semantics (
-    var_id INTEGER PRIMARY KEY,
-    variabelnamn TEXT,
-    variabeldefinition TEXT
-);
-
-CREATE TABLE timeseries_event (
-    timeseries_event_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    namn TEXT,
-    handelse TEXT,
-    beskrivning TEXT,
-    entitet TEXT,
-    id1 TEXT,
-    id2 TEXT,
-    fil_id TEXT
-);
-
 -- Performance indexes
 CREATE INDEX idx_register_variant_register ON register_variant(register_id);
 CREATE INDEX idx_register_version_register_variant ON register_version(register_variant_id);
@@ -1451,17 +1424,6 @@ CREATE TABLE variable_same_as (
 -- No separate a-side index: this is a WITHOUT ROWID table, so the PRIMARY KEY
 -- is the clustered index, and its leading (a_provider, a_register, a_variable)
 -- prefix already serves the resolver's source-side lookup.
-
-CREATE TABLE classification_same_as (
-    a_provider              TEXT NOT NULL,
-    a_classification_slug   TEXT NOT NULL,
-    b_provider              TEXT NOT NULL,
-    b_classification_slug   TEXT NOT NULL,
-    PRIMARY KEY (
-        a_provider, a_classification_slug,
-        b_provider, b_classification_slug
-    )
-) WITHOUT ROWID;
 
 -- Non-temporal classification derivation / variant edges (#779). Directional:
 -- `derived_slug` is the specialized classification (for example KS87-P),
@@ -1621,8 +1583,7 @@ CREATE INDEX idx_concept_group_classification_group
 CREATE TABLE tag (
     tag_id      INTEGER PRIMARY KEY AUTOINCREMENT,
     slug        TEXT NOT NULL UNIQUE,
-    label       TEXT NOT NULL,
-    description TEXT
+    label       TEXT NOT NULL
 );
 
 -- Polymorphic membership: EXACTLY ONE of register_id / variable_id is set (the
@@ -1658,15 +1619,17 @@ CREATE INDEX idx_tag_member_by_register
     ON tag_member(register_id) WHERE register_id IS NOT NULL;
 
 -- Directional succession edges. Auto-derived from SCB
--- `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')` by
--- `_materialize_replaced_by_edges`, PLUS curated `type = "replaced_by"` edges
--- from `curation/relations.toml` by `relations.materialize_curated_replaced_by`
+-- timeseries events with `handelse IN ('Ersatt av', 'Ersätter')` by
+-- `source_event_resolution`, PLUS curated `type = "replaced_by"` edges
+-- from `curation/relations.toml` compiled by `curation_compile`
 -- (#440/#522 — the register/variable grains only). Three sibling tables, one per
 -- entity grain
 -- (register / variant / variable). Slug-anchored so an edge survives rebuilds
--- even if the underlying provider IDs shift. `note` distinguishes the source:
--- `'auto:timeseries_event'` (auto-derived) vs `'curated:slug_toml'` (the
--- cross-provider / dead-predecessor rows `timeseries_event` can't carry).
+-- even if the underlying provider IDs shift. Only the variable grain keeps the
+-- `note` provenance (`'auto:timeseries_event'`, `'curated:slug_toml'` or
+-- `'derived:classification_vintage_lift'`): `validate_built_db` selects the
+-- vintage-lift edges by it. The variant grain is endpoints only (the reader
+-- shows the variant pair; 4.10 dropped its unread year, note and reason).
 --
 -- Unlike `same_as` (an equivalence, stored both ways), `replaced_by` is
 -- DIRECTIONAL: SCB's paired `Ersatt av` / `Ersätter` rows collapse to one
@@ -1678,23 +1641,18 @@ CREATE INDEX idx_tag_member_by_register
 -- A2.5 `.predecessors()` accessor; only the variable grain has an accessor that
 -- needs it, so register/variant stay index-free on the successor side).
 --
--- #142: `beskrivning` carries the human transition reason from
--- `timeseries_event.beskrivning` (e.g. "2001 byttes SUN96 till SUN2000"),
--- alongside the `auto:timeseries_event` provenance in `note` (kept distinct so
--- the #440 TOML-curation path can still tell auto from curated; a curated row's
--- own `note` lands here in `beskrivning`). All three sibling tables carry it so
--- they stay structurally identical and the materializer can resolve it
--- uniformly. `effective_year` is populated for the AktuellVariabel variable
--- grain (the successor edition's year) and for any curated row that declares it;
--- the other auto grains leave it NULL (no edition to derive a year from — see
--- `_materialize_replaced_by_edges`).
+-- #142: `beskrivning` (register and variable grains) carries the human
+-- transition reason from the source timeseries event (e.g. "2001 byttes SUN96
+-- till SUN2000"); a curated row's own `note` lands here in `beskrivning`.
+-- `effective_year` is populated for the AktuellVariabel variable grain (the
+-- successor edition's year) and for any curated row that declares it; the other
+-- auto grains leave it NULL (no edition to derive a year from).
 CREATE TABLE register_replaced_by (
     predecessor_provider TEXT NOT NULL,
     predecessor_register TEXT NOT NULL,
     successor_provider   TEXT NOT NULL,
     successor_register   TEXT NOT NULL,
     effective_year       INTEGER,
-    note                 TEXT,
     beskrivning          TEXT,
     PRIMARY KEY (predecessor_provider, predecessor_register,
                  successor_provider, successor_register)
@@ -1707,9 +1665,6 @@ CREATE TABLE variant_replaced_by (
     successor_provider   TEXT NOT NULL,
     successor_register   TEXT NOT NULL,
     successor_variant    TEXT NOT NULL,
-    effective_year       INTEGER,
-    note                 TEXT,
-    beskrivning          TEXT,
     PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variant,
                  successor_provider, successor_register, successor_variant)
 ) WITHOUT ROWID;
@@ -1756,7 +1711,7 @@ CREATE INDEX idx_variable_replaced_by_successor
 -- exactly like #819's `concept_group_variable.delivery_column_name`.
 --
 -- CURATED-ONLY: there is no auto/event-derived representation grain (SCB's
--- `timeseries_event` succession is entity-grained, never column-level), so every
+-- timeseries-event succession is entity-grained, never column-level), so every
 -- row carries `note = 'curated:slug_toml'` provenance and the human transition
 -- reason lands in `beskrivning` (same convention as the register/variable arms).
 -- BOTH endpoints must be live (a within-build column rename observes both
@@ -1883,22 +1838,6 @@ CREATE TABLE data_warning (
 );
 CREATE INDEX idx_data_warning_register ON data_warning(register_id, variable_id);
 CREATE INDEX idx_data_warning_variable ON data_warning(variable_id, valid_from, valid_to);
-
--- Reference tables
-CREATE TABLE source_column_type (
-    table_name TEXT NOT NULL,
-    column_name TEXT NOT NULL,
-    sql_type TEXT NOT NULL,
-    nullable INTEGER NOT NULL,
-    PRIMARY KEY (table_name, column_name)
-);
-
-CREATE TABLE source_join_key (
-    table_name TEXT NOT NULL,
-    column_name TEXT NOT NULL,
-    description TEXT,
-    PRIMARY KEY (table_name, column_name)
-);
 
 -- Import metadata
 CREATE TABLE holding_table (

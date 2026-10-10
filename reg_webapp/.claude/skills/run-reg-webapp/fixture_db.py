@@ -328,7 +328,6 @@ def _seed_tags(src: sqlite3.Connection) -> None:
             CuratedTag(
                 slug="income",
                 label="Income & earnings",
-                description="Income measures and related recommendations.",
                 members=(
                     TagMember(
                         "scb",
@@ -344,7 +343,6 @@ def _seed_tags(src: sqlite3.Connection) -> None:
             CuratedTag(
                 slug="employment",
                 label="Employment",
-                description=None,
                 members=(
                     TagMember("scb", "rams", None, rank=0, starred=False, note=None),
                 ),
@@ -814,8 +812,8 @@ def _seed_succession_chain(src: sqlite3.Connection) -> None:
     src.executemany(
         "INSERT INTO register_replaced_by "
         "(predecessor_provider, predecessor_register, "
-        "successor_provider, successor_register, note) "
-        "VALUES (?,?,?,?,'auto:test')",
+        "successor_provider, successor_register) "
+        "VALUES (?,?,?,?)",
         [
             # Dead register → live `scb/lisa` (the #412 dead-register 301 case).
             ("scb", "oldreg", "scb", "lisa"),
