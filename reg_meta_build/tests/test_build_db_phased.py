@@ -207,6 +207,14 @@ def test_writer_only_edit_keeps_the_resolve_code_fingerprint(tmp_path: Path) -> 
         package, tmp_path / package.name, ignore=shutil.ignore_patterns("__pycache__")
     )
     before = resolve_code_sha256(tmp_path)
+    # Fails if the fingerprint keys `__version__`: a release bump would miss the
+    # bundle its candidate resolved.
+    init = tmp_path / package.name / "__init__.py"
+    init.write_text(
+        init.read_text(encoding="utf-8").replace(reg_meta_build.__version__, "9.9.9"),
+        encoding="utf-8",
+    )
+    assert resolve_code_sha256(tmp_path) == before
     for module, unchanged in (("materialize.py", True), ("source_intervals.py", False)):
         with (tmp_path / package.name / module).open("a", encoding="utf-8") as stream:
             stream.write("\n# edited\n")

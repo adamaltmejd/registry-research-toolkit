@@ -9,7 +9,8 @@ the writer alone runs, so a writer-only change still reuses a bundle:
   `reg_meta_build.pipeline`: function-local imports count, `if TYPE_CHECKING:` bodies
   do not, and a module that imports by name at run time pulls in its whole package
   (`import_closure`, which the real-seed cache's prepare key also walks), plus the
-  non-Python files beside a walked module;
+  non-Python files beside a walked module. A `__version__ = "..."` value in a source
+  file is normalized away: a release bumps it, and no resolution reads it;
 - every file of the imported native `reg_core_py` package, extension included;
 - the Python version.
 
@@ -22,6 +23,7 @@ import ast
 import functools
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -44,6 +46,7 @@ RESOLVE_EXCLUDED = frozenset(
         "reg_meta_build.validate",
     }
 )
+_VERSION = re.compile(rb'^__version__ = "[^"\n]*"$', re.MULTILINE)
 
 
 def _imports(tree: ast.Module) -> Iterator[ast.Import | ast.ImportFrom]:
@@ -162,6 +165,19 @@ def _sha256(path: Path) -> str:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
+def _source_sha256(path: Path) -> str:
+    """A walked file's digest, with any `__version__` value normalized away.
+
+    A release bumps `reg_meta_build/__init__.py`'s `__version__`, which no resolution
+    reads (only the CLI's help line does), so a release build keeps reusing the
+    bundle its candidate resolved.
+    """
+    data = path.read_bytes()
+    if path.suffix == ".py":
+        data = _VERSION.sub(b'__version__ = ""', data)
+    return hashlib.sha256(data).hexdigest()
+
+
 def resolve_code_digests(source_root: Path | None = None) -> dict[str, object]:
     """The fingerprint's inputs: file digests by relative path, and the Python version.
 
@@ -174,7 +190,7 @@ def resolve_code_digests(source_root: Path | None = None) -> dict[str, object]:
     return {
         "python": sys.version,
         "sources": {
-            path.relative_to(source_root).as_posix(): _sha256(path)
+            path.relative_to(source_root).as_posix(): _source_sha256(path)
             for path in sorted(code_files(modules.values()))
         },
         "native": {

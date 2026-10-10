@@ -243,12 +243,9 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     assert edited["key"] != again["key"]
 
 
-def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
-    # Fails if the prepare key stops covering code prepare runs (an edit to a source
-    # adapter, or to a new module not yet committed, would hit a stale preparation),
-    # grows to cover resolution code (every resolution change would repeat a 1-2 h
-    # preparation) or ignored junk beside a module, or if the walk silently skips a
-    # workspace package it does not key. Edits a copied, committed tree.
+def _copied_tree(tmp_path: Path) -> Path:
+    """The keyed sources and the tool in a new git tree, staged, with an extra
+    workspace member `reg_extra` the keys do not cover."""
     tree = tmp_path / "tree"
     ignore = shutil.ignore_patterns("__pycache__", "target")
     for path in ("reg_meta_build/src", "crates/reg-core", "crates/reg-core-py"):
@@ -265,6 +262,55 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
     (tree / "reg_extra/src/reg_extra/__init__.py").touch()
     subprocess.run(["git", "init", "-q", str(tree)], check=True)
     subprocess.run(["git", "-C", str(tree), "add", "-A"], check=True)
+    return tree
+
+
+def test_resolve_key_ignores_release_version_bumps_only(tmp_path: Path) -> None:
+    # Fails if the resolve key holds a workspace member's own version (a release
+    # bump would miss the bundle its candidate resolved) or drops a third-party pin
+    # (a dependency change would place a stale resolution), or if the build key
+    # stops holding the raw lock (the release build would hit the candidate's entry).
+    tree = _copied_tree(tmp_path)
+    lock = tree / "uv.lock"
+
+    def keys() -> tuple[str, str]:
+        code, out = _tool(
+            tmp_path,
+            "build",
+            "--key",
+            "--prepared",
+            str(tmp_path / "prepared"),
+            "--input-commit",
+            "a" * 40,
+            "--input-manifest-sha256",
+            "b" * 64,
+            "--diagnostic",
+            tool=tree / "scripts/real_seed_cache.py",
+        )
+        assert code == 0, out
+        return out["key"], out["resolve_key"]
+
+    build, resolve = keys()
+    text = lock.read_text()
+    member = 'name = "reg-meta-build"\nversion = "'
+    lock.write_text(text.replace(member, member + "9"))
+    bumped_build, bumped_resolve = keys()
+    third_party = 'name = "openpyxl"\nversion = "'
+    lock.write_text(text.replace(third_party, third_party + "9"))
+    assert (bumped_build != build, bumped_resolve, keys()[1] != resolve) == (
+        True,
+        resolve,
+        True,
+    )
+
+
+def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
+    # Fails if the prepare key stops covering code prepare runs (an edit to a source
+    # adapter, or to a new module not yet committed, would hit a stale preparation),
+    # grows to cover resolution code (every resolution change would repeat a 1-2 h
+    # preparation) or ignored junk beside a module, or if the walk silently skips a
+    # workspace package it does not key. Edits a copied, committed tree.
+    tree = _copied_tree(tmp_path)
     bundle = tmp_path / "repo/bundle"
     bundle.mkdir(parents=True)
     subprocess.run(["git", "init", "-q", str(tmp_path / "repo")], check=True)

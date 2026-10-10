@@ -65,7 +65,8 @@ entries stay, and so does any entry used within 6 hours.
 Resolve key: the builder's own `resolve_code_sha256` (`reg_meta_build.resolve_code`:
 the static import closure of `pipeline`, the `reg_core_py` package files and the
 Python version, reported by the probe), `uv.lock` (third-party versions, which that
-fingerprint leaves out), the `curation_tree_sha256`, the prepared commit and manifest
+fingerprint leaves out; `resolve_lock_sha256` leaves out the workspace members' own
+versions), the `curation_tree_sha256`, the prepared commit and manifest
 digest, the mode, the `--registers` scopes as a sorted set, and the Python, SQLite and
 Rust toolchain versions; never HEAD (`materialize-db` stamps the running commit). A
 resolve entry holds the `bundle` a full miss wrote with `build-db --resolved-out`; it
@@ -592,6 +593,24 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 # -- build -------------------------------------------------------------------------
 
 
+def resolve_lock_sha256() -> str:
+    """`uv.lock` as the resolve key holds it: every third-party pin, without the
+    workspace members' own versions.
+
+    A release bumps a member's version (and `reg_meta_build`'s `__version__`, which
+    the builder's fingerprint normalizes), and no resolution reads it, so the
+    release build keeps reusing the bundle its candidate resolved. The build key
+    still holds the raw file. `Cargo.lock`, which a `reg_meta` release bumps, is not
+    in this key: the fingerprint holds the compiled `reg_core_py` instead.
+    """
+    lock = tomllib.loads((ROOT / "uv.lock").read_text())
+    members = set(lock["manifest"]["members"])
+    for package in lock["package"]:
+        if package["name"] in members:
+            del package["version"]
+    return digest(lock)
+
+
 def build_code(args: argparse.Namespace) -> dict:
     """The builder code a build runs. A publishable build also records the
     checkout's commit in the database, so that commit is keyed too."""
@@ -643,7 +662,7 @@ def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
         "step": "resolve",
         **shared,
         "resolve_code_sha256": resolve_code,
-        "uv_lock": code["code"]["uv.lock"],
+        "uv_lock": resolve_lock_sha256(),
     }
     return {"step": "build", **shared, **code}, resolve
 
