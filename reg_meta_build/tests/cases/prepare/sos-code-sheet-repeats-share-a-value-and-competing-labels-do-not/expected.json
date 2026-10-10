@@ -61,12 +61,6 @@
       "of": "associations",
       "where": {"descriptor_key": "sheet:Kodlista_RAW"},
       "rows": []
-    },
-    {
-      "of": "records",
-      "where": {"code_set_references": {"$contains": [{"$any": true}]}},
-      "note": "Preparation binds no record to a code set.",
-      "rows": []
     }
   ]
 }

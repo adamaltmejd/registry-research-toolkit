@@ -40,7 +40,6 @@ from reg_meta_build.source_naming import (
     read_naming_selection,
 )
 from reg_meta_build.source_records import (
-    CodeSetReference,
     NativeCoordinates,
     SourceFields,
     value_field,
@@ -433,7 +432,7 @@ def test_native_annual_override_rejects_missing_or_unmatched_ownership(
         _native_with_annual_override(records, overrides)
 
 
-@pytest.mark.parametrize("drift", ["field", "coding", "removed", "new_peer"])
+@pytest.mark.parametrize("drift", ["field", "removed", "new_peer"])
 def test_native_annual_override_refuses_original_and_peer_drift(drift: str) -> None:
     from reg_meta_build.source_effects import record_ref
 
@@ -447,19 +446,6 @@ def test_native_annual_override_refuses_original_and_peer_drift(drift: str) -> N
             update={
                 "fields": records[1].fields.model_copy(
                     update={"description": value_field("Changed annual operation")}
-                )
-            }
-        )
-        evidence = (*records[:1], changed)
-    elif drift == "coding":
-        changed = records[1].model_copy(
-            update={
-                "code_set_references": (
-                    CodeSetReference(
-                        reference_id="changed",
-                        content_sha256="0" * 64,
-                        physical_locator="source-cell",
-                    ),
                 )
             }
         )

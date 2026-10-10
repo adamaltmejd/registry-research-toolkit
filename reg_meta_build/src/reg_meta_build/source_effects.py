@@ -110,10 +110,6 @@ def _check_contract(case: CurationCase) -> None:
                 )
             if effect.donor is not None:
                 for alternative in checked[effect.donor].alternatives:
-                    if effect.copy_coding and alternative.code_set_references is None:
-                        raise ValueError(
-                            "copied coding requires checked code-set references"
-                        )
                     if effect.copy_coding and effect.expected_codings is None:
                         raise ValueError(
                             "copied coding requires explicit original coding fingerprints"

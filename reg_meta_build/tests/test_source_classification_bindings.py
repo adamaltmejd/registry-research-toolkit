@@ -99,7 +99,7 @@ def _setup(*, code="01"):
         ),
     )
     coding = {occurrence.column_key: resolve_code_membership(claims)}
-    expected = capture_expectations((record,), fields=("column_name",), coding=True)
+    expected = capture_expectations((record,), fields=("column_name",))
     case = CurationCase(
         case_id="binding",
         targets=expected,
@@ -169,7 +169,7 @@ def _scoped_sentinel_case(setup, *, start="2020-01-01", end="2020-12-31"):
         update={
             "case_id": "scoped-sentinel",
             "targets": capture_expectations(
-                (record,), fields=tuple(SourceFields.model_fields), coding=True
+                (record,), fields=tuple(SourceFields.model_fields)
             ),
             "decision": decision.model_copy(
                 update={
@@ -356,7 +356,7 @@ def test_scoped_sentinel_requires_every_shared_ref_original_projection():
     assert key is not None
     case = _scoped_sentinel_case(setup)
     targets = capture_expectations(
-        (record, twin), fields=tuple(SourceFields.model_fields), coding=True
+        (record, twin), fields=tuple(SourceFields.model_fields)
     )
     assert len(targets) == 1 and len(targets[0].alternatives) == 2
     case = case.model_copy(

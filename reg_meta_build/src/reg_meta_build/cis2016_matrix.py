@@ -298,9 +298,7 @@ def convert_matrix(
     }
     if columns != ({None} if blank else matrix.columns):
         raise ValueError("accepted matrix complete literal column partition changed")
-    expected = capture_expectations(
-        selected, fields=tuple(SourceFields.model_fields), coding=True
-    )
+    expected = capture_expectations(selected, fields=tuple(SourceFields.model_fields))
     if len(expected) != 1:
         raise ValueError("accepted matrix must identify one exact source member")
     donor = expected[0]

@@ -330,7 +330,7 @@ def pooled_parallel_fixture(tmp_path, *, co_delivered=False):
                 source_key=key,
                 register_key=None if kind == "register" else register_key,
                 expectations=(
-                    capture_expectations(records, fields=("column_name",), coding=True)
+                    capture_expectations(records, fields=("column_name",))
                     if kind == "variable"
                     else ()
                 ),

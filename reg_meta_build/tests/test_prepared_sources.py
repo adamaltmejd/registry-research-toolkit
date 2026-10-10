@@ -293,7 +293,6 @@ def test_parent_fields_round_trip_through_prepared_record(tmp_path: Path) -> Non
         fields=original.fields,
         parent_facts=(parent,),
         language=original.language,
-        code_set_references=original.code_set_references,
         original_period_text=original.original_period_text,
         context=original.context,
         delivered_cells=original.delivered_cells[:2],

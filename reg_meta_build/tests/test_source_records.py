@@ -15,7 +15,6 @@ from reg_meta_build.source_evidence import (
     SourceRevision,
 )
 from reg_meta_build.source_records import (
-    CodeSetReference,
     NativeCoordinates,
     SourceCoordinate,
     SourceFields,
@@ -45,7 +44,6 @@ def _record(
     row: int,
     revision: SourceRevision | None = None,
     physical_file: str = "fixture.csv",
-    code_set_locator: str | None = None,
     variable: SourceCoordinate | None = None,
 ) -> SourceRecord:
     return SourceRecord.create(
@@ -80,15 +78,6 @@ def _record(
             column_name=value_field("Signal"),
             data_length=value_field("10"),
         ),
-        code_set_references=(
-            CodeSetReference(
-                reference_id="signal-codes",
-                content_sha256="a" * 64,
-                physical_locator=code_set_locator,
-            ),
-        )
-        if code_set_locator is not None
-        else (),
         original_period_text="2003",
         context=("population",),
         delivered_cells=(
@@ -105,23 +94,20 @@ def _record(
 def test_observation_identity_excludes_revision_and_physical_evidence() -> None:
     # Kept: a reader sees one delivery, so no case can present one observation
     # under two source revisions. Fails if the record id hashes the revision, a
-    # locator or a code set's physical location.
+    # locator.
     first = _record(
         row=2,
         revision=_revision(artifact_path="first.csv"),
         physical_file="first.csv",
-        code_set_locator="first.xlsx!A1:B9",
     )
     relocated = _record(
         row=19,
         revision=_revision(artifact_sha256="1" * 64, artifact_path="reordered.csv"),
         physical_file="reordered.csv",
-        code_set_locator="reordered.xlsx!D4:E12",
     )
 
     assert relocated.source_revision_id != first.source_revision_id
     assert relocated.locators != first.locators
-    assert relocated.code_set_references != first.code_set_references
     assert relocated.record_id == first.record_id
 
 

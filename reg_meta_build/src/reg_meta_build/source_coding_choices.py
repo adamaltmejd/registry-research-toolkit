@@ -950,12 +950,9 @@ def apply_coding_choices(
             ) and any(
                 alternative.edition_scope is None
                 or alternative.edition_period_scope is None
-                or alternative.code_set_references is None
                 for alternative in target.alternatives
             ):
-                raise ValueError(
-                    "documented coding requires checked source scopes and coding references"
-                )
+                raise ValueError("documented coding requires checked source scopes")
             if target.ref not in guarded:
                 raise ValueError("coding decisions require guarded original membership")
     evaluations = evaluate_cases(ordered, records)

@@ -512,7 +512,7 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
     "expected_records": lambda s, a: [
         expectation.model_dump(mode="json")
         for expectation in capture_expectations(
-            _select(s.records(), a), fields=_fields(a), parents=True, coding=True
+            _select(s.records(), a), fields=_fields(a), parents=True
         )
     ],
     "expected_fields": lambda s, a: [

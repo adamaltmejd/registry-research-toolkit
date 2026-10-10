@@ -857,7 +857,6 @@ class ErrataVariantContext:
             self.records,
             fields=tuple(SourceFields.model_fields),
             parents=True,
-            coding=True,
         )
 
     def expectations_for_refs(

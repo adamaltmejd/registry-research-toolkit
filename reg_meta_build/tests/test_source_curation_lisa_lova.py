@@ -66,7 +66,6 @@ def _replacement(
         edition_period_scope=record.edition_period_scope,
         fields=fields or record.fields,
         language=record.language,
-        code_set_references=record.code_set_references,
         original_period_text=record.original_period_text,
         context=record.context,
         delivered_cells=(
