@@ -5,6 +5,10 @@ import { playwright } from "@vitest/browser-playwright";
 // add `test` to vite's own UserConfig, so import the vitest-aware defineConfig directly.
 import { configDefaults, defineConfig } from "vitest/config";
 import type { BrowserCommand } from "vitest/node";
+import {
+  chromiumLaunchArgs,
+  needsSingleProcessChromium,
+} from "./scripts/chromium";
 
 // vite.config.ts runs under Node; read the env via globalThis so we don't pull a
 // @types/node dep for one lookup. REG_META_SERVER_URL repoints the dev /api proxy at
@@ -13,23 +17,11 @@ import type { BrowserCommand } from "vitest/node";
 // reg_webapp/.claude/skills/run-reg-webapp "Parallel instances".
 const runtimeProcess = (
   globalThis as {
-    process?: { env?: Record<string, string | undefined>; platform?: string };
+    process?: { env?: Record<string, string | undefined> };
   }
 ).process;
 const rustServerUrl =
   runtimeProcess?.env?.REG_META_SERVER_URL ?? "http://127.0.0.1:8001";
-const isCodexSeatbeltSandbox =
-  runtimeProcess?.env?.CODEX_SANDBOX === "seatbelt";
-const isMacOS = runtimeProcess?.platform === "darwin";
-const needsSingleProcessChromium = isMacOS && isCodexSeatbeltSandbox;
-
-// Playwright 1.61's Chromium build registers a Mach rendezvous port on macOS. The
-// Codex seatbelt sandbox denies that registration; single-process Chromium avoids
-// the blocked multi-process bootstrap. Normal local runs and Linux CI keep the
-// standard browser path.
-const chromiumLaunchArgs = needsSingleProcessChromium
-  ? ["--single-process"]
-  : [];
 
 // The Playwright provider implements `vi.mock` as a `context.route()` per test
 // file and removes it when the file ends, so request interception switches off

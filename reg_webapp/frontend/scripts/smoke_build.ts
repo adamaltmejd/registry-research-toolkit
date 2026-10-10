@@ -1,5 +1,5 @@
 // The production build's bootstrap, before merge (`scripts/gate.py frontend`, after
-// `bun run build`): `vite preview` serves dist/, and Chromium checks that
+// `bun run build`): Vite's preview server serves dist/, and Chromium checks that
 //   1. the app mounts (its "Sections" navigation renders),
 //   2. the reg-core .wasm answers 200 with `application/wasm`,
 //   3. with the .wasm request aborted, the bootstrap alert renders in #app.
@@ -7,39 +7,11 @@
 // The API is aborted throughout: the bootstrap needs no server.
 //
 //   bun scripts/smoke_build.ts
-import { spawn } from "node:child_process";
-import { createServer } from "node:net";
 import { chromium, type Page } from "playwright";
+import { preview } from "vite";
+import { chromiumLaunchArgs } from "./chromium";
 
 const BOOTSTRAP_ALERT = "The app could not load one of its parts";
-
-function freePort(): Promise<number> {
-  return new Promise((resolve, reject) => {
-    const server = createServer();
-    server.once("error", reject);
-    server.listen(0, "127.0.0.1", () => {
-      const address = server.address();
-      server.close(() =>
-        typeof address === "object" && address
-          ? resolve(address.port)
-          : reject(new Error("no port")),
-      );
-    });
-  });
-}
-
-async function waitForServer(url: string): Promise<void> {
-  const deadline = Date.now() + 30_000;
-  while (Date.now() < deadline) {
-    try {
-      if ((await fetch(url)).ok) return;
-    } catch {
-      // not listening yet
-    }
-    await new Promise((r) => setTimeout(r, 200));
-  }
-  throw new Error(`vite preview did not answer at ${url}`);
-}
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(`smoke: ${what}`);
@@ -51,25 +23,18 @@ async function open(page: Page, base: string): Promise<void> {
   await page.goto(base);
 }
 
-const port = await freePort();
-const base = `http://127.0.0.1:${port}/`;
-const preview = spawn(
-  "bunx",
-  [
-    "vite",
-    "preview",
-    "--host",
-    "127.0.0.1",
-    "--port",
-    `${port}`,
-    "--strictPort",
-  ],
-  { stdio: "ignore" },
-);
-const browser = await chromium.launch();
+// In process, not a child process: closing it in `finally` leaves nothing running.
+const server = await preview({
+  logLevel: "silent",
+  preview: { host: "127.0.0.1", port: 0, strictPort: true, open: false },
+});
+const base = server.resolvedUrls?.local[0];
+if (!base) {
+  await server.close();
+  throw new Error("smoke: vite preview reported no local URL");
+}
+const browser = await chromium.launch({ args: chromiumLaunchArgs });
 try {
-  await waitForServer(base);
-
   const page = await browser.newPage();
   const wasm = page.waitForResponse((r) => r.url().endsWith(".wasm"));
   await open(page, base);
@@ -102,5 +67,5 @@ try {
   );
 } finally {
   await browser.close();
-  preview.kill();
+  await server.close();
 }

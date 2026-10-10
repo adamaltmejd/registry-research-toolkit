@@ -19,7 +19,8 @@ pub fn project_schema_version() -> String {
 
 /// `reg_core::project::check` over JSON text, as the `{ok, issues}` JSON the server's
 /// validate operation writes. Any JSON value is checked (a non-object root is
-/// `invalid_root`); text that is not JSON is one `invalid_json` issue.
+/// `invalid_root`); text `serde_json` cannot read (not JSON, or nested past its
+/// 128-level limit) is one `invalid_json` issue.
 ///
 /// # Panics
 ///
@@ -36,7 +37,9 @@ pub fn check_project(json: &str) -> String {
                 level: IssueLevel::Error,
                 code: "invalid_json",
                 path: String::new(),
-                message: format!("project_data.json is not valid JSON: {e}"),
+                // Not "invalid": from the SPA this is JSON that `JSON.parse` read but
+                // serde_json refuses (nesting past its 128-level limit).
+                message: format!("project_data.json could not be read: {e}"),
                 successor_fqid: None,
             }],
         },

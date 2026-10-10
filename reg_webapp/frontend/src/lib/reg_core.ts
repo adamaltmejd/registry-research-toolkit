@@ -49,7 +49,8 @@ export function projectSchemaVersion(): string {
 
 /** The server's structural door (`reg_core::project::check`) over `json`: the one
  * `unsupported_schema_version` issue, every structural issue, or `ok` with none.
- * Any JSON value is checked; text that is not JSON is one `invalid_json` issue. */
+ * Any JSON value is checked; text serde_json cannot read (not JSON, or nested
+ * past its 128-level limit) is one `invalid_json` issue. */
 export function checkProject(json: string): ValidationResultModel {
   requireReady();
   return JSON.parse(check_project(json)) as ValidationResultModel;
