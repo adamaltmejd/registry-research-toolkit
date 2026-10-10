@@ -1,0 +1,27 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "locator"],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "error",
+          "curation/registers/scb/sample.toml#variable/1.5.other"
+        ]
+      ],
+      "note": "The only issue: the unmatched entry, located at its [[variable]] pin."
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "column"],
+      "rows": [
+        ["kon", "Kon"],
+        ["kon", "KON"],
+        ["left", "LEFT"]
+      ],
+      "note": "The matched splits still take every delivered literal."
+    }
+  ]
+}

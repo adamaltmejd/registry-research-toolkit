@@ -65,6 +65,67 @@
         ["texts", "VALUE", null],
         ["fixunit", "VALUE", null]
       ]
+    },
+    {
+      "table": "search_text",
+      "where": {"register": "texts"},
+      "fields": ["name", "definition", "description", "delivery_column_names"],
+      "note": "texts has no common name or description, so the search index holds both editions' own names and descriptions, distinct and sorted, beside the shared definition and the delivery column.",
+      "rows": [
+        ["Admission\nVisit", "Source supplied income definition", "Admitting facility\nVisited facility", ["VALUE"]]
+      ]
+    },
+    {
+      "table": "registers",
+      "fields": ["register", "name", "purpose"],
+      "note": "Every delivered register is written with its Registernamn and Registersyfte (`Testning`, the `var_row` default), including bare, descriptions, coded and fixname, which form no variable in this diagnostic build.",
+      "rows": [
+        ["units", "UNITS", "Testning"],
+        ["bare", "BARE", "Testning"],
+        ["overlap", "OVERLAP", "Testning"],
+        ["texts", "TEXTS", "Testning"],
+        ["descriptions", "DESCRIPTIONS", "Testning"],
+        ["coded", "CODED", "Testning"],
+        ["fixname", "FIXNAME", "Testning"],
+        ["fixunit", "FIXUNIT", "Testning"]
+      ]
+    },
+    {
+      "table": "variants",
+      "fields": ["register", "variant", "name", "description", "display_group", "panel_entity_key", "panel_time_key", "panel_time_grain"],
+      "note": "Every delivered variant is written with its Registervariantnamn and Registervariantbeskrivning (the `var_row` defaults `Individer` and `Alla individer`), also in the registers without a variable. units' [[variant]] declares a display group, a one-slug panel entity key list (written as a JSON list), a time key and a grain; the others declare none.",
+      "rows": [
+        ["units", "people", "Individer", "Alla individer", "Population tables", "[\"income\"]", "period", "delivery"],
+        ["bare", "people", "Individer", "Alla individer", null, null, null, null],
+        ["overlap", "people", "Individer", "Alla individer", null, null, null, null],
+        ["texts", "people", "Individer", "Alla individer", null, null, null, null],
+        ["descriptions", "people", "Individer", "Alla individer", null, null, null, null],
+        ["coded", "people", "Individer", "Alla individer", null, null, null, null],
+        ["fixname", "people", "Individer", "Alla individer", null, null, null, null],
+        ["fixunit", "people", "Individer", "Alla individer", null, null, null, null]
+      ]
+    },
+    {
+      "table": "editions",
+      "where": {"register": ["units", "bare"]},
+      "fields": ["register", "variant", "name", "description", "measurement_information", "documentation_status", "first_approved_at", "last_approved_at", "populations", "object_types"],
+      "note": "Each edition keeps its Registerversion prose, its population and its object type, all `var_row` defaults: `Version <year>`, `Godkänd`, approval dates on the year's bounds, `Hela befolkningen`/`Alla personer` dated `<year>-12-31`, `Person`/`Fysisk person`. units' 2020 population keeps CVID 101's comment 'Scope note'; a blank mätinformation and a blank population comment are written as null. bare forms no variable and still keeps both editions.",
+      "rows": [
+        ["units", "people", "2020", "Version 2020", null, "Godkänd", "2020-01-01", "2020-12-31", [["Hela befolkningen", "Alla personer", "Scope note", "2020-12-31"]], [["Person", "Fysisk person"]]],
+        ["units", "people", "2021", "Version 2021", null, "Godkänd", "2021-01-01", "2021-12-31", [["Hela befolkningen", "Alla personer", null, "2021-12-31"]], [["Person", "Fysisk person"]]],
+        ["bare", "people", "2020", "Version 2020", null, "Godkänd", "2020-01-01", "2020-12-31", [["Hela befolkningen", "Alla personer", null, "2020-12-31"]], [["Person", "Fysisk person"]]],
+        ["bare", "people", "2021", "Version 2021", null, "Godkänd", "2021-01-01", "2021-12-31", [["Hela befolkningen", "Alla personer", null, "2021-12-31"]], [["Person", "Fysisk person"]]]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "units"},
+      "fields": ["column", "valid_from", "data_length", "operational_definition", "provenance", "pooled"],
+      "note": "Each state keeps its own row's Datalängd and operational definition (CVID 101: length 1, the `var_row` default; CVID 102: length 12). A state formed from the source alone has no provenance, and an annual edition is not pooled.",
+      "rows": [
+        ["VALUE", "2020-01-01", "1", "Income counted in 2020", null, 0],
+        ["VALUE", "2021-01-01", "12", "Income counted in 2021", null, 0]
+      ]
     }
   ]
 }

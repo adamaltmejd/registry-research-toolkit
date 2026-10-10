@@ -20,16 +20,49 @@ import shutil
 import sys
 import tempfile
 import time
+import tomllib
 from contextlib import contextmanager, suppress
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Iterable, Iterator
 
-# The sources `reg-core-py` is built from (its uv `cache-keys`): `uv run` rebuilds the
-# extension when they change, and so must every cache of builder output.
-NATIVE_SOURCES = ("crates/reg-core", "crates/reg-core-py", "Cargo.toml", "Cargo.lock")
+NATIVE_PROJECT = "crates/reg-core-py"
+
+
+def _native_sources() -> tuple[str, ...]:
+    """`NATIVE_PROJECT`'s uv `cache-keys` as repo-relative paths, in their order.
+
+    Each entry must be a `file` key naming one path or a whole directory (`<dir>/**`);
+    any other key or glob is refused rather than dropped, since a dropped source would
+    go unkeyed.
+    """
+    repo = Path(__file__).resolve().parents[1]
+    project = repo / NATIVE_PROJECT
+    keys = tomllib.loads((project / "pyproject.toml").read_text())["tool"]["uv"][
+        "cache-keys"
+    ]
+    sources = []
+    for key in keys:
+        base = (
+            key["file"].removesuffix("**").removesuffix("/")
+            if isinstance(key, dict) and key.keys() == {"file"}
+            else None
+        )
+        if base is None or any(char in base for char in "*?[{"):
+            raise RuntimeError(
+                f"{NATIVE_PROJECT}/pyproject.toml cache-key {key!r} is not a path or "
+                "`<dir>/**`; extend keyed_cache._native_sources to key it"
+            )
+        path = Path(os.path.normpath(project / base))
+        sources.append(path.relative_to(repo).as_posix())
+    return tuple(sources)
+
+
+# The sources `reg-core-py` is built from, read from its uv `cache-keys`: `uv run`
+# rebuilds the extension when they change, and so must every cache of builder output.
+NATIVE_SOURCES = _native_sources()
 # What builder output depends on: the builder, the locked dependencies and the
 # native extension. Repo-relative, in key order.
 BUILDER_SOURCES = ("reg_meta_build/src", "uv.lock", *NATIVE_SOURCES)
@@ -59,21 +92,26 @@ def owned_root(root: Path, marker: str) -> Path:
     return root
 
 
-def tree_digest(root: Path) -> str:
-    """Content digest of a file or directory, independent of where it lives."""
-    files = (
-        [root]
-        if root.is_file()
-        else sorted(
-            path
-            for path in root.rglob("*")
-            if path.is_file()
-            and "__pycache__" not in path.parts
-            and path.suffix != ".pyc"
+def tree_digest(root: Path, files: Iterable[Path] | None = None) -> str:
+    """Content digest of a file or directory, independent of where it lives.
+
+    `files`, the files under `root` to hash, replaces the default walk of every file
+    on disk but byte-code.
+    """
+    if files is None:
+        files = (
+            [root]
+            if root.is_file()
+            else (
+                path
+                for path in root.rglob("*")
+                if path.is_file()
+                and "__pycache__" not in path.parts
+                and path.suffix != ".pyc"
+            )
         )
-    )
     digest = hashlib.sha256()
-    for path in files:
+    for path in sorted(files):
         digest.update(path.relative_to(root).as_posix().encode() + b"\0")
         with path.open("rb") as handle:
             digest.update(hashlib.file_digest(handle, "sha256").digest())
