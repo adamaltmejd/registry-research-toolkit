@@ -12,8 +12,10 @@ unknown panel key before it writes. The metadata refusals a build does reach are
 cases: `relations-same-as-cycle-fails-the-build`,
 `relations-derived-from-cycle-fails-the-build`,
 `relations-replaced-by-representation-round-trip-needs-distinct-years`,
-`group-variable-in-two-groups-fails-the-build` and, for a variable succession cycle,
-`dependency-withheld-variable-prunes-its-dependents/3-cycle`.
+`lineage-mutual-source-registers-fail-the-build` (a two-state lineage loop) and, for a
+variable succession cycle, `dependency-withheld-variable-prunes-its-dependents/3-cycle`.
+A variable in two curated groups is refused earlier, at curation load
+(`group-variable-in-two-groups-fails-curation-load`).
 """
 
 from __future__ import annotations
@@ -113,6 +115,22 @@ INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | Non
         r"duplicate resolved group member: \('scb/example/one', 'oneColumn'\)",
         None,
     ),
+    # The second group shares one member with the first. Load twin, for two curated
+    # groups of one register: group-variable-in-two-groups-fails-curation-load.
+    "variable-in-two-groups": (
+        lambda: full_metadata().model_copy(
+            update={
+                "variable_groups": (
+                    full_metadata().variable_groups[0],
+                    full_metadata()
+                    .variable_groups[0]
+                    .model_copy(update={"key": "other"}),
+                )
+            }
+        ),
+        "variable belongs to multiple resolved groups",
+        None,
+    ),
     # A member column is literal: one's column is oneColumn, so ONECOLUMN names a
     # representation the catalog does not write. Build twin:
     # dependency-withheld-variable-prunes-its-dependents/8-literal-group-column.
@@ -183,8 +201,8 @@ INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | Non
                 update={"consumer": state_ref(), "source": state_ref()}
             ),
         ),
-        "forms a succession cycle",
-        "replaced_by_cycle",
+        "state lineage forms a cycle",
+        "lineage_cycle",
     ),
     # The warning says the consumer has no source state; the edge gives it one.
     "no-source-state-warning-on-a-linked-consumer": (

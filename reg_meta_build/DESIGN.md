@@ -276,7 +276,9 @@ column availability. Register inception may remain unknown when a named delivery
 supplies the bounds. An optional nonblank variable `data_warning` stays in the original
 cells and becomes a warning scoped to its exact variable, variant, column and period
 through the existing checked-occurrence warning contract. These declarations distinguish
-maintainer transcription and sensitivity policy from verified provider meanings.
+maintainer transcription and sensitivity policy from verified provider meanings. A thin
+register that declares one column in two `[[register.variable]]` entries, or repeats a
+variant key, is refused as `thin_declaration_invalid`, naming the repeated entries.
 
 A missing SOS subset sheet does not establish that its variable rows describe one table.
 An authored named-variant topology binds the explicit native subset coordinates on those
@@ -363,7 +365,12 @@ The target layout:
   curation. Generated variable pins live beside it in `<register-slug>.auto.toml`. An
   optional directory holds a register family, e.g. Komvux 248/249/250.
 - `curation/classifications/<short>.toml` holds one classification: its metadata,
-  sentinels, the label list behind the binding rule, and overrides.
+  sentinels, the label list behind the binding rule, and overrides. Its loader refuses
+  with one code per rule family, located at the file: `classification_toml_unreadable`,
+  `classification_unknown_key`, `classification_entry_invalid`,
+  `classification_path_mismatch` (the short name is not the file name),
+  `classification_duplicate` (a slug, reference spelling, binding label or bound
+  variable another book claims) and `classification_family_invalid`.
 - Global files keep the cross-register curation: relations and `same_as`, tags, lineage,
   successions spanning registers, slug freeze state, and search pins.
 - `curation/search_pins.toml` lists, per query and result type (`register` or
@@ -665,7 +672,9 @@ normalization above, their replacement must already occur in a guarded source
 alternative. Exact fields, subjects, scopes, parents and coding references remain
 checked at compilation and replay; conditional field effects change only the matching
 original interpretation. This permits punctuation and reference-prose aliases without
-discarding either physical original or inventing a replacement value.
+discarding either physical original or inventing a replacement value. A `column_name`
+correction cannot list `expected_records`: compilation could never apply it, so the
+loader refuses it (`register_entry_invalid`).
 
 A name correction may instead cite `authority_records` from the same native family. The
 replacement must occur literally in those complete remaining source peers. Full target
@@ -712,22 +721,25 @@ checked ownership takes precedence. Missing semantic or physical evidence and co
 columns still require curation. Other case or diacritic twins use the shared
 column-identity fallback only when no edition co-delivers both spellings. An accepted
 name alone cannot establish a partition across ambiguous columns. A partition or
-parallel-column family requires checked ownership and complete relevant membership. An
-implicit split suffix binds case or diacritic twin literals only when their folded
-column key matches and no variant edition co-delivers them. A one-owner partition may
-list a spelling that recurs after an intervening rename (A→B→A). An explicitly reviewed
-complete literal map may retain the base source-native key when its named quantity and
-definition agree across deliveries. Such a map cannot mix split owners or unassigned
-literals. It preserves existing naming, guards all original fields, parent facts, coding
-references and complete family membership, and does not claim statistical equivalence
-across units, calculation methods or delivery levels. Exact source type spellings
-`numerisk`, `alfanumerisk` and `Character` classify as decimal, text and text during
-resolution, including already accepted prepared records. Original type declarations
-remain evidence; classification never uses substring guessing. Blank column records
-remain original evidence without manufacturing a delivered column; a literal claimed by
-two native variables in the same edition needs a split or `native_variable_id`, never a
-fold into one owner. Related but different variables remain connected through groups; a
-shared stem or suffix is not evidence that they are one variable.
+parallel-column family requires checked ownership and complete relevant membership. A
+partition split whose naming pin converted no name (an inactive generated pin in a
+churning zone) is withheld in a diagnostic build as `unresolved_catalog_identity`; a
+strict build stops with `naming_partition_unconverted`. An implicit split suffix binds
+case or diacritic twin literals only when their folded column key matches and no variant
+edition co-delivers them. A one-owner partition may list a spelling that recurs after an
+intervening rename (A→B→A). An explicitly reviewed complete literal map may retain the
+base source-native key when its named quantity and definition agree across deliveries.
+Such a map cannot mix split owners or unassigned literals. It preserves existing naming,
+guards all original fields, parent facts, coding references and complete family
+membership, and does not claim statistical equivalence across units, calculation methods
+or delivery levels. Exact source type spellings `numerisk`, `alfanumerisk` and
+`Character` classify as decimal, text and text during resolution, including already
+accepted prepared records. Original type declarations remain evidence; classification
+never uses substring guessing. Blank column records remain original evidence without
+manufacturing a delivered column; a literal claimed by two native variables in the same
+edition needs a split or `native_variable_id`, never a fold into one owner. Related but
+different variables remain connected through groups; a shared stem or suffix is not
+evidence that they are one variable.
 
 Variant-scoped column owners may select exact source edition labels when the source
 documents a change of measurement basis within one column. Every selected label must
@@ -996,9 +1008,10 @@ A classification may curate an exact-string sentinel list
 `curation/classifications/<short>.toml`) for bulk/missing tokens. These are local source
 extensions with an additional warning naming their curated meaning. Codes match exactly
 (`"00000"` never equals `"0"`); there are no patterns or cross-classification lists.
-Unknown keys, duplicate codes and overlap with canonical members fail fast. Sentinel
-curation does not mutate the official codebook or stale a binding. Original coding
-issues remain visible. Unknown or ambiguous classification identities remain unresolved.
+Unknown keys, duplicate codes and overlap with canonical members fail fast; an overlap
+is `classification_entry_invalid` at the book's file. Sentinel curation does not mutate
+the official codebook or stale a binding. Original coding issues remain visible. Unknown
+or ambiguous classification identities remain unresolved.
 
 Where one literal code has substantive meanings in other source lists, finite
 `coding.sentinel` entries name exact source code-label pairs at one accepted owner,
@@ -1156,10 +1169,12 @@ periods it assigns to a sibling column — what it does deliver stays a claim, s
 shared state and the alias windows it promises are themselves checked. Obligations
 travel with the scope result and are checked against the final resolved variables
 immediately before the database is written — in both modes, and whatever else the ledger
-already holds. The strict build stops before any output is placed. The diagnostic build
-records each unexplained fact change and each lost window as an error diagnostic on its
-obligation and completes with a nonpublishable database, so one family's defect no
-longer hides the rest of the cycle.
+already holds. The strict build stops before any output is placed, with the code the
+diagnostic row carries (`unexplained_delivery_fact_change` or
+`unexplained_delivery_coverage_loss`). The diagnostic build records each unexplained
+fact change and each lost window as an error diagnostic on its obligation and completes
+with a nonpublishable database, so one family's defect no longer hides the rest of the
+cycle.
 
 Delivery is established by a final state or a declared representation window on the same
 variable, variant and column. Another column, another variant and a search alias without
@@ -1191,7 +1206,12 @@ Catalog dependencies distinguish a source-backed omission from a missing impleme
 Supported members survive; a group with fewer than two supported members is withheld.
 Relations with unavailable endpoints are withheld with exact reasons. Invalid
 declarations, cycles, duplicate edges and conflicting group ownership remain fatal even
-if some endpoints would later be omitted.
+if some endpoints would later be omitted. Each acyclic relation refuses a loop under its
+own code: `replaced_by_cycle` for register, variable, variant and representation
+succession, `derived_from_cycle` for classification derivation and `lineage_cycle` for
+state lineage. A variable belongs to at most one concept group; the register loader
+refuses a second `[[group]]` that claims one of its variables, or that reuses a group
+key, as `register_duplicate_entry` at that entry.
 
 Groups can attach variables or literal delivery columns and declare multiple facet axes.
 Members must supply every declared facet. A variable cannot mix whole-variable and
@@ -1210,7 +1230,9 @@ rule. Only adjacent recognized editions with matching year-stripped names qualif
 Variable succession lifts adjacent classification editions only within an unambiguous
 register/name and slug stream; variables spanning multiple editions do not qualify.
 Explicit edges retain their provenance. The combined graph is validated before
-materialization.
+materialization. A classification succession or derivation edge that names an uncompiled
+book, restates a derived or curated edge or closes a succession cycle is refused as
+`relations_invalid`, naming the `relations.toml` edge.
 
 `event_sources` explicitly binds each native event namespace to its occurrence dataset.
 Source succession events use already resolved native register, variant, variable or
@@ -1234,7 +1256,8 @@ does not establish a variable endpoint. Missing accepted endpoints retain that w
 even for year-independent deliveries. Only positively linked endpoints reach the
 dated-intersection guard; independent endpoints then require an explicit
 independent-edge contract and currently remain errors. No date hull is inferred from the
-source register's other deliveries.
+source register's other deliveries. Two registers that each name the other as the source
+of one identity-linked variable form a lineage loop, which is refused (`lineage_cycle`).
 
 Panel keys require supported states in the exact variant. Losing one composite-key
 member makes that entire key unknown; it never manufactures a shorter key. Other axes,
@@ -1291,19 +1314,20 @@ resolved, the one matching error is re-emitted as a warning that keeps its code 
 names the acknowledging entry (`acknowledged_by`). The affected output stays withheld,
 and output withheld through it inherits the warning. The build summary counts
 acknowledgements per code. An entry that matches no error is stale, and one that matches
-more than one distinct complete diagnostic is over-broad; both are errors. Identical
-ledger copies remain counted and persisted. An optional `expected_diagnostic_sha256`
-pins the complete original diagnostic when otherwise identical coordinates carry
-different details or withheld outputs. Strict publication accepts acknowledged issues. A
-warning comes from a rule such as `omitted_columnless_occurrence`, a checked explicit
-annotation, or a counted acknowledgement. The compiled `AcknowledgeDecision` reaches
-issues raised while its source scope resolves. An optional `expected_evidence_sha256`
-pins the full original records named by its refs and their bound physical coding
-assertions. The canonical fingerprint ignores content ordering but retains multiplicity,
-source fields, parent facts, physical delivered cells, coding references, and raw coding
-associations and validity evidence. A changed fingerprint leaves the original error
-intact and adds a stale acknowledgement error. Unguarded entries retain exact issue
-matching.
+more than one distinct complete diagnostic is over-broad; both are errors. A second
+entry for an issue another entry already acknowledges is `register_duplicate_entry`, the
+code an exact repeat gets at load. Identical ledger copies remain counted and persisted.
+An optional `expected_diagnostic_sha256` pins the complete original diagnostic when
+otherwise identical coordinates carry different details or withheld outputs. Strict
+publication accepts acknowledged issues. A warning comes from a rule such as
+`omitted_columnless_occurrence`, a checked explicit annotation, or a counted
+acknowledgement. The compiled `AcknowledgeDecision` reaches issues raised while its
+source scope resolves. An optional `expected_evidence_sha256` pins the full original
+records named by its refs and their bound physical coding assertions. The canonical
+fingerprint ignores content ordering but retains multiplicity, source fields, parent
+facts, physical delivered cells, coding references, and raw coding associations and
+validity evidence. A changed fingerprint leaves the original error intact and adds a
+stale acknowledgement error. Unguarded entries retain exact issue matching.
 
 A `[[coding.warning]]` declaration records a reviewed source metadata conflict while
 retaining its type and response domain unchanged. It uses the coding compiler's exact
