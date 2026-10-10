@@ -310,14 +310,16 @@ after a byte-identical relocation.
    Each package stays inside its budget below.
 2. **Push / CI.** `ci.yml` runs the Python suites as a `test` matrix, one leg per root
    `testpaths` entry, each with `timeout-minutes` at its CI budget below. The `rust`
-   job's 3-minute timeout is the `crates/` budget, and it also covers the gate's `rust`
-   and `release` steps (`scripts/gate.py`: the workspace build, the whole conformance
-   suite against the Rust server, release admission on the synthetic steward artifact).
-   The `hook-tests` job runs the Claude Code hook tests (`.claude/hooks/tests`, plain
-   bash) with a 2-minute timeout. The `reg-webapp-frontend` job has a 6-minute timeout
-   and includes the codegen drift check; the OpenAPI snapshot is a `crates/reg-meta`
-   test. A job that exceeds its budget fails. The Playwright drivers (`dev.sh smoke`,
-   the gate's `flows` step) are local checks, not CI jobs.
+   job's 4-minute timeout is the 3-minute `crates/` budget plus room for a cold
+   rust-cache after a `Cargo.lock` change and its save, and it also covers the gate's
+   `rust` and `release` steps (`scripts/gate.py`: the workspace build, the whole
+   conformance suite against the Rust server, release admission on the synthetic steward
+   artifact). The `hook-tests` job runs the Claude Code hook tests
+   (`.claude/hooks/tests`, plain bash) with a 2-minute timeout. The
+   `reg-webapp-frontend` job has a 6-minute timeout and includes the codegen drift
+   check; the OpenAPI snapshot is a `crates/reg-meta` test. A job that exceeds its
+   budget fails. The Playwright drivers (`dev.sh smoke`, the gate's `flows` step) are
+   local checks, not CI jobs.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;

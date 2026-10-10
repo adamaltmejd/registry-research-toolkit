@@ -50,8 +50,11 @@ jobs:
     # workspace and runs the gate's `rust` and `release` steps. Measured on #1249
     # (2026-10-08): 1 min 23 s warm. A Cargo.lock change adds about 1 min of
     # dependency compiles (#1231: 71 s warm, 2 min 10 s after one), so expect
-    # about 2 min 40 s of the 3 min then. A fully cold cache is unmeasured.
-    timeout-minutes: 3
+    # about 2 min 40 s then. A new workspace crate changes the rust-cache key: on
+    # #1410 the build was cold, the gate step took 2 min 23 s and the job was
+    # cancelled at 3 min during the cache's post-save, so the cap is 4 min to
+    # cover a cold cache after a Cargo.lock change plus the cache save.
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: dtolnay/rust-toolchain@stable

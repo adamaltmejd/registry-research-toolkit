@@ -35,7 +35,12 @@ if (!base) {
 }
 const browser = await chromium.launch({ args: chromiumLaunchArgs });
 try {
-  const page = await browser.newPage();
+  // One context for both pages: under `--single-process` (the seatbelt sandbox) a
+  // second browser context crashes Chromium. Routes below are page-scoped, and
+  // routed requests bypass the HTTP cache, so the first page's .wasm cannot
+  // satisfy the second page's aborted load.
+  const context = await browser.newContext();
+  const page = await context.newPage();
   const wasm = page.waitForResponse((r) => r.url().endsWith(".wasm"));
   await open(page, base);
   const response = await wasm;
@@ -53,7 +58,7 @@ try {
     `the app mounts (${mountedMs.toFixed(0)} ms after navigation start)`,
   );
 
-  const broken = await browser.newPage();
+  const broken = await context.newPage();
   await broken.route("**/*.wasm", (route) => route.abort());
   await open(broken, base);
   await broken
