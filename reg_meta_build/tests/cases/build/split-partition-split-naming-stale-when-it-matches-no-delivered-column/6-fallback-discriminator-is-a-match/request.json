@@ -1,19 +1,19 @@
 {
-  "note": "A column name that derives no slug (`states`, a reserved word) falls back to the discriminator `x` in the implicit partition, so the pin 1.5.x matches states and STATES. Delivered together in one year they are case twins that bind to no split, so the pin is ambiguous, not stale. Found by the local codex review of this fix.",
+  "note": "A column name that derives no slug (`1A`, which starts with a digit) falls back to the discriminator `x` in the implicit partition, so the pin 1.5.x matches 1A and 1a. Delivered together in one year they are case twins that bind to no split, so the pin is ambiguous, not stale. Found by the local codex review of this fix.",
   "fails_if": "`_partition_ambiguity` (curation_compile.py) drops a column that derives no slug instead of giving it `_column_partition_plan`'s fallback discriminator `x`, so the 1.5.x pin is reported stale although two delivered columns match it",
   "sources": {
-    "description": "Variable 5 delivers states (CVID 20) and STATES (CVID 21) together in 2020.",
+    "description": "Variable 5 delivers 1A (CVID 20) and 1a (CVID 21) together in 2020.",
     "scb": {
       "registerinformation": [
         {
-          "colname": "states",
+          "colname": "1A",
           "cvid": 20,
           "var_id": 5,
           "year": "2020",
           "regver_id": 2020
         },
         {
-          "colname": "STATES",
+          "colname": "1a",
           "cvid": 21,
           "var_id": 5,
           "year": "2020",
