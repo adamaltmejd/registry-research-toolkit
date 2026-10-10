@@ -3,35 +3,14 @@
 Tools for working with Swedish registry microdata on [SCB
 MONA](https://www.scb.se/mona).
 
-  | Package                             | Description                                                             |
-  | ----------------------------------- | ----------------------------------------------------------------------- |
-  | [`reg_meta`](reg_meta/)             | Search and query SCB registry metadata (CLI `reg-meta`)                 |
-  | [`reg_meta_build`](reg_meta_build/) | Build the `reg_meta` metadata DBs from agency exports (maintainer-only) |
-  | [`reg_schema`](reg_schema/)         | `project_data.json` schema and structural validator                     |
-  | [`reg_webapp`](reg_webapp/)         | Web app (Rust server + Svelte): catalog browse + project authoring      |
+  | Package                             | Description                                                                   |
+  | ----------------------------------- | ----------------------------------------------------------------------------- |
+  | [`crates/`](crates/)                | Rust runtime: the `reg-meta` server (HTTP API and MCP) and the catalog reader |
+  | [`reg_meta_build`](reg_meta_build/) | Build the catalog DBs from agency exports (Python, maintainer-only)           |
+  | [`reg_webapp`](reg_webapp/)         | Web app (Svelte SPA over the Rust server): catalog browse + project authoring |
+  | [`plugins/`](plugins/)              | The `microdata-tools-se` agent plugin                                         |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
-
-## Prerequisites
-
-**Python 3.14+** and **uv** (Python package manager).
-
-macOS:
-
-```sh
-brew install python   # or download from python.org
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-Windows:
-
-```powershell
-winget install Python.Python.3.14   # or download from python.org
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-See [uv installation docs](https://docs.astral.sh/uv/getting-started/installation/) for
-other methods.
 
 ## Install
 
@@ -58,24 +37,59 @@ its tools. Nothing else to install.
 
 ## Quick start
 
-### reg_meta
+### Hosted MCP
 
-```bash
-reg-meta update                              # download metadata DB
-reg-meta search --query "kommun"                      # search variables
-reg-meta get register LISA                            # register overview
-reg-meta get schema --register LISA --years 2020      # columns for a year
-reg-meta docs search "disponibel inkomst"             # search documentation
+Point any MCP client at the hosted catalog server:
+
+```text
+https://catalog.swecov.se/mcp
 ```
 
-See the [reg_meta README](reg_meta/README.md) for details.
+The agent plugin above does this for you. The same catalog is browsable at
+<https://catalog.swecov.se>.
+
+### Local server
+
+Build the `reg-meta` binary from a checkout (needs a Rust toolchain; prebuilt binaries
+for macOS arm64 and Linux x86_64 will ship on each `reg_meta/v*` release once the
+release binaries land):
+
+```bash
+cargo build --release -p reg-meta
+```
+
+Download the catalog and documentation DBs of a release, verify them against the SHA-256
+digests GitHub records (`gh release view reg_meta/vX.Y.Z --json assets`), and unpack
+them into one directory:
+
+```bash
+tag=reg_meta/vX.Y.Z
+base="https://github.com/adamaltmejd/registry-research-toolkit/releases/download/${tag/\//%2F}"
+mkdir -p catalog
+curl -fsSL -o reg_meta.db.zst "$base/reg_meta.db.zst"
+curl -fsSL -o reg_meta_docs.db.zst "$base/reg_meta_docs.db.zst"
+shasum -a 256 reg_meta.db.zst reg_meta_docs.db.zst   # compare with the release digests
+zstd -d reg_meta.db.zst -o catalog/reg_meta.db
+zstd -d reg_meta_docs.db.zst -o catalog/reg_meta_docs.db
+```
+
+Then run local stdio MCP, or the HTTP API and `/mcp`:
+
+```bash
+target/release/reg-meta mcp --db catalog
+target/release/reg-meta serve --db catalog --stewards reg_webapp/stewards --port 8000
+```
+
+`serve` answers `/api/*`, `/openapi.json` and `/mcp` on `127.0.0.1` (`--host` changes
+it). The SPA in `reg_webapp/frontend/` runs against it in development; see
+[`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
 
 ## Development
 
 Use isolated branches and reviewed pull requests. Run the relevant lint and test
-commands in [AGENTS.md](AGENTS.md); pull requests require green CI and the maintainer's
-review before merge. Coordinate changes to main so only one integration advances it at a
-time.
+commands in [AGENTS.md](AGENTS.md) and see [CONTRIBUTING.md](CONTRIBUTING.md); pull
+requests require green CI and the maintainer's review before merge. Coordinate changes
+to main so only one integration advances it at a time.
 
 ## License
 

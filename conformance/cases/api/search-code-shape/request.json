@@ -1,0 +1,47 @@
+{
+  "note": "Twin of test_cli_search.py::test_code_matching_needs_a_digit_and_three_characters. The codes ZQX9 and Q71 share no text with their labels, so only the code arm can hit. Fails if that arm matches a query that is not code-shaped once trimmed (`ZQX` has no digit, ` Q7 ` has two characters), or checks the shape before trimming (` ZQX9 `) or rejects the three-character boundary (`Q71`).",
+  "kind": "catalog",
+  "fixture": "reader/cli-code-shape",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "ZQX9",
+        "type": "register_value"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": " ZQX9 ",
+        "type": "register_value"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Q71",
+        "type": "register_value"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "ZQX",
+        "type": "register_value"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": " Q7 ",
+        "type": "register_value"
+      }
+    }
+  ]
+}

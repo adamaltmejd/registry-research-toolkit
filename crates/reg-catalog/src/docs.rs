@@ -8,7 +8,7 @@ use rusqlite::{Connection, OptionalExtension};
 
 use crate::{Code, Error, admits, connect, supported, unavailable};
 
-/// The docs schema gate, as `reg_meta.doc_db.DOC_SCHEMA_VERSION`.
+/// The docs schema gate, as the builder's `DOC_SCHEMA_VERSION` (`reg_meta_build/doc_db.py`).
 const DOC_SCHEMA: (u32, u32) = (1, 3);
 const DOC_DB_FILENAME: &str = "reg_meta_docs.db";
 

@@ -107,8 +107,6 @@ fn fold_search_pass(s: &str) -> String {
 /// combining class, repeated until the text stops changing; then split on whitespace
 /// and join with single spaces. Idempotent.
 ///
-/// `reg_meta.queries.fold_search`.
-///
 /// # Panics
 ///
 /// If the passes reach no fixed point within their cap, which is a bug in this crate's
@@ -127,8 +125,6 @@ pub fn fold_search(s: &str) -> String {
 }
 
 /// The search query normalizer: split on whitespace, join with one space, case fold.
-///
-/// Today's `reg_meta.queries._normalized_search_query`.
 #[must_use]
 pub fn normalized_search_query(s: &str) -> String {
     case_fold(&py_split(s).collect::<Vec<_>>().join(" "))
@@ -137,8 +133,6 @@ pub fn normalized_search_query(s: &str) -> String {
 /// The FTS5 query builder: each whitespace token with an alphanumeric character becomes
 /// a quoted prefix term (`"tok"*`, embedded quotes doubled), space-joined. `None` when
 /// no token qualifies.
-///
-/// Today's `reg_meta.queries._fts_match_query`.
 #[must_use]
 pub fn fts_match_query(raw: &str) -> Option<String> {
     let terms: Vec<String> = py_split(raw)
@@ -150,8 +144,6 @@ pub fn fts_match_query(raw: &str) -> Option<String> {
 
 /// The search terms of a text: the alphanumeric runs (`[^\W_]+`) of its
 /// [`fold_search`] fold, in order.
-///
-/// Today's `reg_meta.queries._fts_terms`.
 #[must_use]
 pub fn fts_terms(s: &str) -> Vec<String> {
     fold_search(s)

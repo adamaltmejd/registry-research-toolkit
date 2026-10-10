@@ -1,5 +1,5 @@
 //! The interval algebra over inclusive ISO date intervals (`RUST_RUNTIME_SPEC.md`
-//! package 3e.2), today's `reg_meta.inventory` algebra: a project period, a state's
+//! package 3e.2): a project period, a state's
 //! window, an availability clip and a co-delivery all expand, intersect, merge and
 //! render through it, so they never disagree about bounds or spelling.
 //!
@@ -42,7 +42,7 @@ pub fn merge(mut intervals: Vec<Interval>) -> Vec<Interval> {
 /// order coverage gate's output. `covered` is merged first, so day-adjacent
 /// contributions leave no phantom gap, and coverage reaching an interval's end
 /// completes it without day arithmetic (the open-ended `9999-12-31` has no
-/// successor). Today's `reg_meta.order._gaps`.
+/// successor).
 #[must_use]
 pub fn gaps(whole: &[Interval], covered: Vec<Interval>) -> Vec<Interval> {
     let covered = merge(covered);

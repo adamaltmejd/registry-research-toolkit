@@ -1,0 +1,38 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "ZQX9"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "ZQX9"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "Q71"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": []
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": []
+    }
+  }
+]

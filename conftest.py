@@ -3,8 +3,8 @@
 Add new markers to OPTIONAL_MARKERS to gate them behind --run-<name> flags.
 Tests decorated with these markers are skipped unless explicitly opted in.
 
-    pytest                          # unit tests only
-    pytest --run-integration        # include integration tests
+    pytest                          # default suite
+    pytest --run-release            # include tests that need a published release asset
 """
 
 from __future__ import annotations
@@ -13,13 +13,9 @@ import pytest
 
 # marker name -> CLI flag description
 OPTIONAL_MARKERS: dict[str, str] = {
-    "integration": "run native container integration tests",
-    # Tests that need a PUBLISHED release asset: either downloaded from GitHub
-    # (a subset of the container integration tests) or already fetched and selected
-    # with --artifact-dir for conformance checks (which need no container).
-    # Gated separately so a run that opts into `integration` as a hard native
-    # container gate (CI's package-integration job) does NOT fail when a release
-    # is merely owed — these belong in a post-release / scheduled CI job.
+    # Tests that need a PUBLISHED release asset, already fetched and selected with
+    # --artifact-dir (conformance artifact checks). They belong in a post-release /
+    # scheduled CI job, so the default run does not fail when a release is owed.
     "release": "run tests that need a published release asset",
 }
 

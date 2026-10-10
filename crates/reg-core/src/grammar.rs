@@ -303,8 +303,7 @@ fn iso_date(text: &str) -> Option<Date> {
 
 /// The day after an inclusive ISO upper bound; a day past its month's end (a
 /// synthesized non-leap `YYYY-02-29`) counts as that month's end. The open-ended
-/// `9999-12-31` and an unreadable date are returned as is. Today's
-/// `reg_meta.inventory._next_day`.
+/// `9999-12-31` and an unreadable date are returned as is.
 #[must_use]
 pub fn next_iso_day(s: &str) -> String {
     match iso_date(s) {
@@ -316,7 +315,7 @@ pub fn next_iso_day(s: &str) -> String {
 }
 
 /// The day before an ISO date, snapped first ([`snap_month_end`]); an unreadable
-/// date is returned as is. Today's `reg_meta.order._prev_day`.
+/// date is returned as is.
 #[must_use]
 pub fn prev_iso_day(s: &str) -> String {
     match iso_date(&snap_month_end(s)) {
@@ -328,8 +327,7 @@ pub fn prev_iso_day(s: &str) -> String {
 }
 
 /// An ISO date past its month's end (a stored, synthesized non-leap `YYYY-02-29`) as
-/// that month's last day; any other string as is. Today's
-/// `reg_meta.fqid.snap_to_real_month_end`.
+/// that month's last day; any other string as is.
 #[must_use]
 pub fn snap_month_end(s: &str) -> String {
     match iso_date(s) {
@@ -341,9 +339,8 @@ pub fn snap_month_end(s: &str) -> String {
 }
 
 /// The coarsest period token whose bounds are exactly `lo..hi` (ISO dates), else the
-/// explicit `lo..hi`; today's `reg_meta.fqid.period_token_for_bounds`. A term wins
-/// over the half-year it equals. As there, only the school year and the day are
-/// held to the grammar's years; a synthesized non-leap `YYYY-02-29` end counts as
+/// explicit `lo..hi`. A term wins over the half-year it equals. Only the school year
+/// and the day are held to the grammar's years; a synthesized non-leap `YYYY-02-29` end counts as
 /// February's end.
 ///
 /// Today's reader ends every February on the 29th, so it renders a non-leap

@@ -7,10 +7,13 @@ Rust runtime and compiled-catalog refactor.
 
 ## Packages
 
-- `reg_meta` (CLI `reg-meta`) — search and query registry metadata.
-- `reg_meta_build` (CLI `reg-meta-build`) — build the reg_meta SQLite DBs from SCB
-  exports (maintainer-only).
-- `reg_schema` (library) — `project_data.json` schema and structural validator.
+- `crates/` — the Rust runtime, released as `reg_meta`: `reg-core` (the
+  `project_data.json` contract and structural validator, the FQID and period grammars),
+  `reg-catalog` (the catalog reader and its operations), `reg-meta` (the binary:
+  `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP) and
+  `reg-core-py` (`reg-core` for the Python builder).
+- `reg_meta_build` (CLI `reg-meta-build`) — build the catalog SQLite DBs from SCB
+  exports (maintainer-only, Python).
 - `reg_webapp` — Svelte SPA over the Rust server (`reg-meta serve`): catalog browse +
   project authoring.
 
@@ -97,11 +100,11 @@ existing boundary case already catches that failure. Two kinds are defects on si
 
 Tests pin **contracts and behavior**, never implementation. The toolkit is a
 deterministic compiler (`reg_meta_build`) that feeds an immutable artifact to stateless
-readers (`reg_meta`, `reg_webapp`), so nearly every behavior is observable at a boundary
-that outlives the code behind it. `ARCHITECTURE.md` → "Testing strategy" names the
-boundaries, the oracles, the tiers and each package's time budget; the rules below are
-what an agent must follow when writing, changing or deleting a test. The `test-audit`
-skill applies them to a change and to a sweep.
+readers (the `crates/` runtime, `reg_webapp`), so nearly every behavior is observable at
+a boundary that outlives the code behind it. `ARCHITECTURE.md` → "Testing strategy"
+names the boundaries, the oracles, the tiers and each package's time budget; the rules
+below are what an agent must follow when writing, changing or deleting a test. The
+`test-audit` skill applies them to a change and to a sweep.
 
 - **End-to-end and integration first.** A test drives the real pipeline, reader or
   server from a boundary and observes its output. A unit test is the exception: allowed
@@ -183,28 +186,24 @@ the cross-package invariants and each `<package>/DESIGN.md` for the detail;
 `REFACTOR_SPEC.md` tracks the remaining work and `RUST_RUNTIME_SPEC.md` the Rust runtime
 refactor.
 
-- **Library packages** (`reg_meta`, `reg_meta_build`):
-  - Modeling: `reg_meta` uses frozen Pydantic v2 (`_CatalogModel` base; adopted #681,
-    2026-06-22, for the since-deleted FastAPI app); `reg_meta_build` uses Pydantic v2
-    `_IRBase` models for the build-time IR core and `@dataclass(frozen=True)` for local
-    value types in feature modules.
+- **Builder** (`reg_meta_build`, Python):
+  - Modeling: Pydantic v2 `_IRBase` models for the build-time IR core and
+    `@dataclass(frozen=True)` for local value types in feature modules.
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
     constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
     is read-mostly, single-backend; an ORM would add overhead with no benefit.
   - CLI: argparse. No click/typer.
-- **`reg_schema`** (authoring/validation surface): Pydantic v2. Reasons: (1) it's the
-  canonical structural validator for `project_data.json` — Pydantic's declarative
-  field/model validators are the right tool; (2) `model_json_schema()` gives a free,
-  always-correct schema source. Frozen until stage 4 of `RUST_RUNTIME_SPEC.md` (the Rust
-  server validates projects). See `reg_schema/DESIGN.md`.
+- **Runtime** (`crates/`, Rust): the reader, the `project_data.json` validator, the
+  order materializer and the MCP tools. See `crates/DESIGN.md` and
+  `crates/reg-core/DESIGN.md`.
 - **Web server**: the Rust `reg-meta serve` (`crates/reg-meta/`) answers every `/api`
-  route and `/mcp`; there is no Python web backend (`RUST_RUNTIME_SPEC.md` package F
-  deleted the FastAPI app). `reg_webapp/backend/` keeps only dev tooling: the synthetic
-  fixture DB, the search eval and the period-grammar parity test.
+  route and `/mcp`; there is no Python web backend. The synthetic fixture DB is built
+  through `conformance/fixture_cache.py`; the search eval is
+  `scripts/run_search_eval.py`.
 - **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed.
   TS types codegen'd from the Rust server's `crates/reg-meta/openapi.json`.
-- **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into Apple Container
-  (macOS) or Podman (Linux) tests; `@pytest.mark.release` opts into real-artifact tests.
+- **Tests**: pytest + pytest-xdist for the builder and the conformance suite;
+  `cargo test` for the crates; `@pytest.mark.release` opts into real-artifact tests.
   Build/parse coverage is fully synthetic (no gitignored real SCB/SOS data) and runs the
   full structural validator (`validate_built_db(corpus=False)`); strict builds require
   `corpus=True`. Hypothesis (dev-only) covers invariant-heavy grammars. Rules for what a
@@ -258,7 +257,8 @@ refactor.
   admission (fixture-bound goldens still use synthetic sources)
 - `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject
   `testpaths`)
-- `uv run python -m pytest reg_meta/` — narrow to a single package
+- `uv run python -m pytest reg_meta_build/` — narrow to a single package
+- `cargo test --workspace` — the crates' tests
 - `reg_meta_build/docs/lisa/*.md` are build artifacts — fix
   `scripts/parse_lisa_docs.py`, not the output
 
@@ -271,9 +271,9 @@ match: extend or comment on it rather than opening a duplicate.
 **Title** — mirror the commit convention: `<type>(<package>): <imperative summary>`
 (e.g. `feat(reg_meta_build): …`, `fix(reg_webapp): …`).
 
-**Labels** — exactly **one area label** — a package (`reg_meta`, `reg_meta_build`,
-`reg_schema`, `reg_monabundle`, `reg_webapp`, `mock_data_wizard`) or `cross-package` —
-plus a **type**: `enhancement`, `bug`, or `documentation`.
+**Labels** — exactly **one area label** — a package (`reg_meta` for the Rust runtime,
+`reg_meta_build`, `reg_monabundle`, `reg_webapp`, `mock_data_wizard`) or `cross-package`
+— plus a **type**: `enhancement`, `bug`, or `documentation`.
 
 **Ingestion trust gate** — this repo is public, so automation reads issue/PR content
 **only** through `scripts/gh_issue.py`, a fail-closed maintainer-author trust gate:
@@ -295,8 +295,8 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
 
 # Layout
 
-For per-package design rationale, see `<package>/DESIGN.md` (the reg_meta object model
-lives in `reg_meta/DESIGN.md`; per-provider source-delivery shapes in
+For per-package design rationale, see `<package>/DESIGN.md` (the catalog object model
+lives in `crates/DESIGN.md`; per-provider source-delivery shapes in
 `reg_meta_build/DESIGN.md`). For the cross-package design (topology, dependency graph,
 repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see
 `REFACTOR_SPEC.md`; for the Rust runtime refactor, see `RUST_RUNTIME_SPEC.md`.

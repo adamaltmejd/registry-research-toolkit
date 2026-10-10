@@ -1,0 +1,18 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/type": [
+        "group"
+      ],
+      "/data/items/0/label": "Inkomst -- brutto/netto"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [],
+      "/data/next_cursor": null
+    }
+  }
+]

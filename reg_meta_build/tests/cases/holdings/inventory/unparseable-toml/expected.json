@@ -1,0 +1,11 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_unreadable_toml",
+  "note": "An unquoted string value: the file is not TOML.",
+  "fails_if": "load_inventory reports a TOML syntax error under another code, or without the line it sits on",
+  "error": {
+    "code": "inventory_toml_unreadable",
+    "message_contains": [
+      "line 2"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "reg_meta/tests/test_inventory.py::test_rejects_two_tables_sharing_one_partition_label",
+    "reg_meta/tests/test_inventory.py::test_rejects_a_partition_label_opposite_an_unlabelled_table"
+  ],
+  "note": "Two shards labelled alike (`Belopp`), and a labelled shard opposite an unlabelled table (`Avdrag`). The `Belopp` line ends at its period: the same shard twice is a supersession, so it carries no label hint. Distinct labels are the partitions compile case.",
+  "fails_if": "a partition label separates two tables that carry the SAME label or only one label, or the half-labelled conflict loses its label hint while the equal-label one gains it",
+  "error": {
+    "code": "inventory_cell_conflict",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "table['Arb_AGIIndivid_2021-03.csv'].column['Belopp'] (representation 'Belopp') and table['Soc_AGIIndivid_2021-03.csv'].column['Belopp'] (representation 'Belopp') both map skv/agi/individuppgifter-agi skv/agi/utbetalt-belopp over 2021-03\n",
+      "table['Arb_AGIAvdrag_2021-03.csv'].column['Avdrag'] (representation 'Avdrag') and table['AGIAvdrag_2021-03.csv'].column['Avdrag'] (representation 'Avdrag') both map skv/agi/individuppgifter-agi skv/agi/skatteavdrag over 2021-03 — only one of these carries a `partition` label"
+    ]
+  }
+}

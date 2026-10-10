@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 // The fold corpus the server's `fold_search` is generated from and checked against
-// (reg_meta, reg-core). Read as the oracle, not copied: the client filter and the
+// (reg-core). Read as the oracle, not copied: the client filter and the
 // server search must fold every case the same way.
 import corpus from "../../../../conformance/cases/folds/fold_search.jsonl?raw";
 import { foldText } from "./catalog";

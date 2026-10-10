@@ -43,7 +43,7 @@ argument list after its program name:
 
 A command directory named in `_CHECKOUT_COMMANDS` (`inspect-source-records`) runs
 `python -m reg_meta_build` with its argument list in a subprocess, from a committed copy
-of the imported `reg_meta` and `reg_meta_build` packages
+of the imported `reg_meta_build` package
 (`_source_inspection_fixtures.InterpreterCheckout`). The command pins the commit of the
 code that interprets its sources and refuses a working tree with uncommitted changes, so
 it cannot run in-process from a developer's checkout. The copy is made once per xdist
