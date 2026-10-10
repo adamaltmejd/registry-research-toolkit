@@ -120,9 +120,9 @@ def build_slugged_db(
         # kolumnnamn to fold. The resolver itself reads variable.slug (above).
         conn.execute(
             "INSERT INTO variable_state "
-            "(variable_id, register_variant_id, valid_from, valid_to, "
+            "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
             "data_type, delivery_column_name) "
-            "VALUES (?, ?, '2018-01-01', '9999-12-31', 'int', ?)",
+            "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, ?, '2018-01-01', '9999-12-31', 'int', ?)",
             (variable_id, variant[2], kol),
         )
 
@@ -250,10 +250,11 @@ def add_state(
             "WHERE register_id = ? AND provider_key = CAST(? AS TEXT)",
             (register_id, var_id),
         ).fetchone()[0]
-    cur = conn.execute(
-        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+    (state_id,) = conn.execute(
+        "INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from, "
         "valid_to, data_type, delivery_column_name, value_set_id, "
-        "value_set_version_label) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        "value_set_version_label) VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 "
+        "FROM variable_state), ?, ?, ?, ?, ?, ?, ?, ?) RETURNING state_id",
         (
             vid,
             register_variant_id,
@@ -264,13 +265,13 @@ def add_state(
             value_set_id,
             value_set_version_label,
         ),
-    )
+    ).fetchone()
     if classification_id is not None:
         conn.execute(
             "INSERT INTO state_classification (state_id, classification_id) VALUES (?, ?)",
-            (cur.lastrowid, classification_id),
+            (state_id, classification_id),
         )
-    return cur.lastrowid
+    return state_id
 
 
 def add_value_set(
@@ -333,9 +334,9 @@ def add_binding(
             (vid_row[0], register_variant_id, delivery_column_name),
         )
         conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
             "valid_from, valid_to, data_type, delivery_column_name) "
-            "VALUES (?, ?, '0001-01-01', '9999-12-31', 'int', ?)",
+            "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, ?, '0001-01-01', '9999-12-31', 'int', ?)",
             (vid_row[0], register_variant_id, delivery_column_name),
         )
 

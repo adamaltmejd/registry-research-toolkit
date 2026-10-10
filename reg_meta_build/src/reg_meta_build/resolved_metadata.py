@@ -540,6 +540,7 @@ _COLUMNS = {
 def prepare_resolved_metadata(
     metadata: ResolvedMetadata,
     variables: tuple[ResolvedVariable, ...],
+    variable_storage_ids: dict[tuple[str, str, str], int],
     registers: dict[tuple[str, str], ResolvedRegister],
     variants: dict[tuple[str, str, str], ResolvedVariant],
     classifications: tuple[ResolvedClassification, ...],
@@ -554,10 +555,7 @@ def prepare_resolved_metadata(
         "/".join(key): _storage_id(key[0], "register", key[1]) for key in registers
     }
     variable_ids = {
-        f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}": _storage_id(
-            v.register_ref.provider, "variable", v.register_ref.slug, v.slug
-        )
-        for v in variables
+        "/".join(key): variable_id for key, variable_id in variable_storage_ids.items()
     }
     variant_keys = {("/".join(key[:2]), key[2]) for key in variants}
     classification_ids = {

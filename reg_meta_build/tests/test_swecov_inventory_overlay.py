@@ -165,9 +165,9 @@ def _overlay_db(
                 "'different-quantity')"
             )
             conn.execute(
-                "INSERT INTO variable_state(variable_id,register_variant_id,"
+                "INSERT INTO variable_state(state_id, variable_id,register_variant_id,"
                 "valid_from,valid_to,delivery_column_name) "
-                "VALUES (910,902,'2019-01-01','2019-12-31','T_kolumn')"
+                "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 910,902,'2019-01-01','2019-12-31','T_kolumn')"
             )
     return db
 
