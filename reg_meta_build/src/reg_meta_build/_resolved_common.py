@@ -17,6 +17,14 @@ from reg_meta_build.id import mint, mint_canonical_scb
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
+CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY = "classification_succession_as_of_year"
+# Release-time policy for future-dated classification succession. Bump deliberately
+# when a new DB release should activate a future classification hand-off.
+CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
+
+# The open-ended `variable_state.valid_to` the DDL defaults to (db.py).
+_VALID_TO_SENTINEL = "9999-12-31"
+
 
 class _ResolvedModel(BaseModel):
     model_config = ConfigDict(

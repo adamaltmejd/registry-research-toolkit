@@ -18,7 +18,7 @@ from _csv_fixtures import (
 )
 from _prepared_fixtures import accept_prepared
 from reg_meta_build.input_snapshot import prepare_input_bundle
-from reg_meta_build.pipeline import build_catalog
+from reg_meta_build.materialize import build_catalog
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,

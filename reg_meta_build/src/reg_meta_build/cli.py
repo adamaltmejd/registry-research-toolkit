@@ -1054,7 +1054,7 @@ def _pipeline_report_failure(
 
 
 def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .pipeline import CompletedArtifactError, build_catalog
+    from .materialize import CompletedArtifactError, build_catalog
 
     if args.timing:
         os.environ["REG_META_BUILD_TIMING"] = "1"

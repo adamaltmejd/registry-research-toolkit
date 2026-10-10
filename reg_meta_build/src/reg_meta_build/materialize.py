@@ -6,9 +6,12 @@ and resolved_metadata.py; this module only materializes them.
 
 from __future__ import annotations
 
+import gzip
 import json
 import sqlite3
-from contextlib import closing
+import time
+from contextlib import closing, contextmanager
+from io import TextIOWrapper
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING, Any
@@ -23,15 +26,19 @@ from reg_meta_build._curation import (
     resolve_register_id,
 )
 from reg_meta_build._resolved_common import (
+    CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
+    CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
     _classification_id,
     _provider_id_for,
     _storage_id,
 )
-from reg_meta_build.artifact_identity import search_pins_sha256
+from reg_meta_build.artifact_identity import (
+    builder_commit,
+    generation_id,
+    search_pins_sha256,
+)
 from reg_meta_build.data_warnings import DataWarning  # noqa: TC001
 from reg_meta_build.db import (
-    CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
-    CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
     DB_FILENAME,
     DDL,
     SCHEMA_VERSION,
@@ -45,6 +52,12 @@ from reg_meta_build.db import (
 from reg_meta_build.derive import derive
 from reg_meta_build.documentary import DocumentaryRelationship
 from reg_meta_build.id import mint
+from reg_meta_build.pipeline import (
+    admit_build_paths,
+    ledger_line,
+    resolve_catalog,
+    write_summary,
+)
 from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
     ResolvedClassification,
@@ -67,10 +80,13 @@ from reg_meta_build.resolved_metadata import (
     state_reference_key,
     validate_metadata_structure,
 )
+from reg_meta_build.source_files import _emit_timing
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Iterator
+
+    from reg_meta_build.pipeline import ResolvedBuild
 
 _COLUMNS = {
     "concept_group": "group_id,kind,register_id,group_key,label,source",
@@ -746,8 +762,6 @@ def write_resolved_catalog(
         import_metadata.pop("builder_commit", None)
         import_metadata.pop("generation_id", None)
     else:
-        from .artifact_identity import builder_commit, generation_id
-
         if corpus or "builder_commit" not in import_metadata:
             revision = builder_commit()
             if "builder_commit" not in import_metadata:
@@ -1061,3 +1075,153 @@ def write_resolved_catalog(
                 raise ValueError("Builder revision changed during compilation")
             publish_db(staged, output)
     return output
+
+
+class CompletedArtifactError(Exception):
+    """Report finalization failed after the catalog reached its destination."""
+
+    def __init__(
+        self, cause: Exception, result: dict[str, object], report_dir: Path
+    ) -> None:
+        super().__init__(str(cause))
+        self.result = dict(result)
+        self.report_dir = report_dir
+
+
+@contextmanager
+def _retain_completed_artifact(
+    result: dict[str, object], report_dir: Path
+) -> Iterator[None]:
+    try:
+        yield
+    except Exception as exc:
+        if result.get("database"):
+            raise CompletedArtifactError(exc, result, report_dir) from exc
+        raise
+
+
+def build_catalog(
+    prepared_path: Path,
+    input_commit: str,
+    input_manifest_sha256: str,
+    output: Path,
+    report_dir: Path,
+    *,
+    diagnostic: bool = False,
+    registers: tuple[str, ...] = (),
+    curation_dir: Path | None = None,
+    dump_decisions: Path | None = None,
+) -> dict[str, object]:
+    """Build the compiled curation; failures never replace an active catalog.
+
+    Resolves (`pipeline.resolve_catalog`), then materializes. A diagnostic
+    completion retains strict errors and returns publication_ready false.
+    `registers` builds only the named scopes; its output is never publishable and
+    its corpus volume guards do not apply.
+    """
+    started = time.perf_counter()
+    publishable = not diagnostic and not registers
+    # Refuse bad paths and an unclean publishable builder before resolving.
+    # `resolve_catalog` admits the paths again; the checks are cheap and pure.
+    admit_build_paths(
+        prepared_path,
+        input_commit,
+        input_manifest_sha256,
+        output,
+        report_dir,
+        publishable=publishable,
+        curation_dir=curation_dir,
+        dump_decisions=dump_decisions,
+    )
+    revision = builder_commit() if publishable else None
+    resolved = resolve_catalog(
+        prepared_path,
+        input_commit,
+        input_manifest_sha256,
+        output,
+        report_dir,
+        diagnostic=diagnostic,
+        registers=registers,
+        curation_dir=curation_dir,
+        dump_decisions=dump_decisions,
+    )
+    result = materialize_build(resolved, revision=revision)
+    _emit_timing("pipeline: total", started)
+    return result
+
+
+def materialize_build(
+    resolved: ResolvedBuild, *, revision: str | None
+) -> dict[str, object]:
+    """Place a resolved build and finish its report.
+
+    A strict build with errors places nothing. `revision` is the builder commit
+    captured before resolution; a publishable build refuses one that moved.
+    Events go to the ledger as a second gzip member, written only if any.
+    """
+    build_result = dict(resolved.build_result)
+    output = resolved.output
+    with _retain_completed_artifact(build_result, resolved.report_dir):
+        try:
+            if resolved.diagnostic or build_result["status"] != "blocked":
+                phase_started = time.perf_counter()
+                identity = {}
+                if resolved.publishable:
+                    assert revision is not None
+                    if builder_commit() != revision:
+                        raise ValueError("Builder revision changed during compilation")
+                    identity = {
+                        "builder_commit": revision,
+                    }
+                write_resolved_catalog(
+                    resolved.variables,
+                    output,
+                    diagnostic=resolved.diagnostic,
+                    scoped=resolved.scoped,
+                    corpus=resolved.publishable,
+                    manifest={**identity, **resolved.manifest},
+                    parent_registers=resolved.parent_registers,
+                    parent_variants=resolved.parent_variants,
+                    editions=resolved.editions,
+                    classifications=resolved.classifications,
+                    classification_successions=resolved.classification_successions,
+                    metadata=resolved.metadata,
+                    data_warnings=resolved.data_warnings,
+                    search_pins=resolved.search_pins,
+                )
+                build_result.update(
+                    status="diagnostic_complete" if resolved.diagnostic else "complete",
+                    database=str(output),
+                )
+                _emit_timing("pipeline: database materialization", phase_started)
+                if resolved.diagnostic and not resolved.scoped:
+                    # Structural validation already passed before placement. Keep
+                    # the unchanged corpus safeguards visible on partial output.
+                    validation = validate_built_db(output, corpus=True)
+                    corpus_report: dict[str, object] = {
+                        "passed": validation.passed,
+                        "failures": validation.failures,
+                    }
+                    build_result["corpus_validation"] = corpus_report
+                    with (
+                        resolved.ledger.open("ab") as raw_events,
+                        gzip.GzipFile(
+                            filename="", mode="wb", fileobj=raw_events, mtime=0
+                        ) as compressed_events,
+                        TextIOWrapper(compressed_events, encoding="utf-8") as events,
+                    ):
+                        events.write(ledger_line("corpus_validation", corpus_report))
+        except Exception as exc:
+            if build_result.get("database"):
+                raise
+            write_summary(
+                resolved.report_dir,
+                {
+                    "status": "engineering_failure",
+                    "error": str(exc),
+                    "counts": build_result["counts"],
+                },
+            )
+            raise
+        write_summary(resolved.report_dir, build_result)
+    return build_result

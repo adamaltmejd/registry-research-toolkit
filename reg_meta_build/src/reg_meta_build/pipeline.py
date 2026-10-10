@@ -1,4 +1,4 @@
-"""Compile tracked curation against prepared sources and build the catalog."""
+"""Compile tracked curation against prepared sources and resolve the catalog."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ import gzip
 import json
 import time
 from collections import Counter, defaultdict
-from contextlib import ExitStack, contextmanager
-from dataclasses import asdict
+from contextlib import ExitStack
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from io import TextIOWrapper
 from pathlib import Path
@@ -52,7 +52,6 @@ from reg_meta_build.data_warnings import (
     scope_data_warnings,
 )
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
-from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
@@ -110,43 +109,26 @@ from reg_meta_build.sources.swecov_column_types import (
     SWECOV_COLUMN_TYPES_PATH,
     index_steward_column_storage,
 )
-from reg_meta_build.validate import validate_built_db
 
 from .errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
 from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Iterable
 
+    from reg_meta_build._curation import SearchPin
     from reg_meta_build.curation_tree import CurationTree
+    from reg_meta_build.data_warnings import DataWarning
+    from reg_meta_build.resolved_catalog import (
+        ResolvedEdition,
+        ResolvedRegister,
+        ResolvedVariable,
+    )
     from reg_meta_build.source_records import SourceRecord
     from reg_meta_build.source_value_bindings import (
         ValueBindingIssue,
         ValueBindingSession,
     )
-
-
-class CompletedArtifactError(Exception):
-    """Report finalization failed after the catalog reached its destination."""
-
-    def __init__(
-        self, cause: Exception, result: dict[str, object], report_dir: Path
-    ) -> None:
-        super().__init__(str(cause))
-        self.result = dict(result)
-        self.report_dir = report_dir
-
-
-@contextmanager
-def _retain_completed_artifact(
-    result: dict[str, object], report_dir: Path
-) -> Iterator[None]:
-    try:
-        yield
-    except Exception as exc:
-        if result.get("database"):
-            raise CompletedArtifactError(exc, result, report_dir) from exc
-        raise
 
 
 class _Model(BaseModel):
@@ -357,81 +339,59 @@ def _value_source_issue(
     ), evidence
 
 
-def build_catalog(
-    prepared_path: Path,
-    input_commit: str,
-    input_manifest_sha256: str,
-    output: Path,
-    report_dir: Path,
-    *,
-    diagnostic: bool = False,
-    registers: tuple[str, ...] = (),
-    curation_dir: Path | None = None,
-    dump_decisions: Path | None = None,
-) -> dict[str, object]:
-    """Build the compiled curation; failures never replace an active catalog.
+@dataclass(frozen=True)
+class ResolvedBuild:
+    """A resolved build handed to materialization: the writer's inputs, the mode
+    and the report so far. Its ledger member is closed."""
 
-    A diagnostic completion retains strict errors and returns publication_ready
-    false. Malformed prepared inputs or declarations raise normally.
-    The single event stream accounts for source records, cases and diagnostics;
-    it references prepared evidence instead of copying every source projection.
-    `registers` forms only the named scopes, with shared inputs still complete,
-    skips curation touching none of them and defers references into registers
-    that exist but were not selected. Its output is never publishable and its
-    corpus volume guards do not apply.
-    """
-    return _run_pipeline(
-        prepared_path,
-        input_commit,
-        input_manifest_sha256,
-        output,
-        report_dir,
-        diagnostic=diagnostic,
-        registers=registers,
-        curation_dir=curation_dir,
-        dump_decisions=dump_decisions,
-    )
+    output: Path
+    report_dir: Path
+    ledger: Path
+    diagnostic: bool
+    scoped: bool
+    publishable: bool
+    # Copied, never mutated, by `materialize_build`.
+    build_result: dict[str, object]
+    variables: tuple[ResolvedVariable, ...]
+    parent_registers: tuple[ResolvedRegister, ...]
+    parent_variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...]
+    editions: tuple[ResolvedEdition, ...]
+    classifications: tuple[ResolvedClassification, ...]
+    classification_successions: tuple[ResolvedClassificationSuccession, ...]
+    metadata: ResolvedMetadata
+    # Only the catalog's: `BUILD_ONLY_CODES` stay in the ledger.
+    data_warnings: tuple[DataWarning, ...]
+    search_pins: tuple[SearchPin, ...]
+    # Without `builder_commit`, which materialization rechecks and adds.
+    manifest: dict[str, str]
 
 
-def check_curation(
-    prepared_path: Path,
-    input_commit: str,
-    input_manifest_sha256: str,
-    report_dir: Path,
-    *,
-    registers: tuple[str, ...],
-    curation_dir: Path | None = None,
-    dump_decisions: Path | None = None,
-) -> dict[str, object]:
-    """Check complete selected scopes before catalog assembly, without a database."""
-    if not registers or not all(registers):
-        raise ValueError("--registers requires nonempty comma-separated scope names")
-    return _run_pipeline(
-        prepared_path,
-        input_commit,
-        input_manifest_sha256,
-        None,
-        report_dir,
-        diagnostic=True,
-        registers=registers,
-        curation_dir=curation_dir,
-        dump_decisions=dump_decisions,
-    )
+@dataclass(frozen=True)
+class BuildPaths:
+    """A build's admitted absolute paths: inputs, outputs and reports never overlap."""
+
+    prepared: Path
+    output: Path | None
+    report_dir: Path
+    curation_dir: Path
+    dump_decisions: Path | None
+    # The catalog and its backup.
+    output_paths: frozenset[Path]
 
 
-def _run_pipeline(
+def admit_build_paths(
     prepared_path: Path,
     input_commit: str,
     input_manifest_sha256: str,
     output: Path | None,
     report_dir: Path,
     *,
-    diagnostic: bool,
-    registers: tuple[str, ...],
+    publishable: bool,
     curation_dir: Path | None,
     dump_decisions: Path | None,
-) -> dict[str, object]:
-    check = output is None
+) -> BuildPaths:
+    """Refuse malformed input identities and overlapping paths before any input
+    is read. The prepared manifest's own files are checked once it is open."""
     if len(input_commit) != 40 or any(
         ch not in "0123456789abcdef" for ch in input_commit
     ):
@@ -440,10 +400,6 @@ def _run_pipeline(
         ch not in "0123456789abcdef" for ch in input_manifest_sha256
     ):
         raise ValueError("--input-manifest-sha256 must be a lowercase SHA-256")
-    from .artifact_identity import builder_commit
-
-    started = time.perf_counter()
-    publishable = not diagnostic and not registers
     prepared_path = prepared_path.resolve()
     output = output.resolve() if output is not None else None
     report_dir = report_dir.resolve()
@@ -488,9 +444,124 @@ def _run_pipeline(
         raise ValueError(
             "build outputs must be separate from build inputs and each other"
         )
-    revision = None
-    if publishable and output is not None:
-        revision = builder_commit()
+    return BuildPaths(
+        prepared=prepared_path,
+        output=output,
+        report_dir=report_dir,
+        curation_dir=curation_dir,
+        dump_decisions=dump_decisions,
+        output_paths=frozenset(output_paths),
+    )
+
+
+def ledger_line(kind: str, value: dict[str, object]) -> str:
+    """One `events.jsonl.gz` event; every phase writes this shape."""
+    return (
+        json.dumps({"kind": kind, **value}, ensure_ascii=False, sort_keys=True) + "\n"
+    )
+
+
+def write_summary(report_dir: Path, summary: dict[str, object]) -> None:
+    (report_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+
+
+def resolve_catalog(
+    prepared_path: Path,
+    input_commit: str,
+    input_manifest_sha256: str,
+    output: Path,
+    report_dir: Path,
+    *,
+    diagnostic: bool = False,
+    registers: tuple[str, ...] = (),
+    curation_dir: Path | None = None,
+    dump_decisions: Path | None = None,
+) -> ResolvedBuild:
+    """Resolve the compiled curation up to the writer; nothing is placed.
+
+    The single event stream accounts for source records, cases and diagnostics;
+    it references prepared evidence instead of copying every source projection.
+    `registers` forms only the named scopes, with shared inputs still complete,
+    skips curation touching none of them and defers references into registers
+    that exist but were not selected. Malformed prepared inputs or declarations
+    raise normally, after an `engineering_failure` summary once the report
+    directory exists. `materialize.build_catalog` places the result.
+    """
+    resolved = _resolve(
+        prepared_path,
+        input_commit,
+        input_manifest_sha256,
+        output,
+        report_dir,
+        diagnostic=diagnostic,
+        registers=registers,
+        curation_dir=curation_dir,
+        dump_decisions=dump_decisions,
+    )
+    assert isinstance(resolved, ResolvedBuild)
+    return resolved
+
+
+def check_curation(
+    prepared_path: Path,
+    input_commit: str,
+    input_manifest_sha256: str,
+    report_dir: Path,
+    *,
+    registers: tuple[str, ...],
+    curation_dir: Path | None = None,
+    dump_decisions: Path | None = None,
+) -> dict[str, object]:
+    """Check complete selected scopes before catalog assembly, without a database."""
+    if not registers or not all(registers):
+        raise ValueError("--registers requires nonempty comma-separated scope names")
+    started = time.perf_counter()
+    result = _resolve(
+        prepared_path,
+        input_commit,
+        input_manifest_sha256,
+        None,
+        report_dir,
+        diagnostic=True,
+        registers=registers,
+        curation_dir=curation_dir,
+        dump_decisions=dump_decisions,
+    )
+    assert isinstance(result, dict)
+    write_summary(report_dir.resolve(), result)
+    _emit_timing("pipeline: total", started)
+    return result
+
+
+def _resolve(
+    prepared_path: Path,
+    input_commit: str,
+    input_manifest_sha256: str,
+    output: Path | None,
+    report_dir: Path,
+    *,
+    diagnostic: bool,
+    registers: tuple[str, ...],
+    curation_dir: Path | None,
+    dump_decisions: Path | None,
+) -> ResolvedBuild | dict[str, object]:
+    """A catalog's resolution, or with no `output` the local check's report."""
+    check = output is None
+    started = time.perf_counter()
+    publishable = not diagnostic and not registers
+    paths = admit_build_paths(
+        prepared_path,
+        input_commit,
+        input_manifest_sha256,
+        output,
+        report_dir,
+        publishable=publishable,
+        curation_dir=curation_dir,
+        dump_decisions=dump_decisions,
+    )
+    prepared_path, output, report_dir = paths.prepared, paths.output, paths.report_dir
+    curation_dir, dump_decisions = paths.curation_dir, paths.dump_decisions
+    output_paths = set(paths.output_paths)
     input_started = time.perf_counter()
     prepared = open_prepared_catalog_sources(
         prepared_path,
@@ -780,18 +851,18 @@ def _run_pipeline(
     lineage_registers = {}
     sibling_pairs, slice_keys = set(), set()
     build_result: dict[str, object] = {}
-    with _retain_completed_artifact(build_result, report_dir), ExitStack() as stack:
-        raw_events = stack.enter_context((report_dir / "events.jsonl.gz").open("xb"))
+    handoff: ResolvedBuild | None = None
+    ledger = report_dir / "events.jsonl.gz"
+    # Materialization appends its events as a second gzip member.
+    with ExitStack() as stack:
+        raw_events = stack.enter_context(ledger.open("xb"))
         compressed_events = stack.enter_context(
             gzip.GzipFile(filename="", mode="wb", fileobj=raw_events, mtime=0)
         )
         events = stack.enter_context(TextIOWrapper(compressed_events, encoding="utf-8"))
 
         def event(kind: str, value: dict[str, object]) -> None:
-            events.write(
-                json.dumps({"kind": kind, **value}, ensure_ascii=False, sort_keys=True)
-                + "\n"
-            )
+            events.write(ledger_line(kind, value))
 
         def issue(value: ResolutionDiagnostic) -> None:
             counts[value.severity] += 1
@@ -1734,77 +1805,42 @@ def _run_pipeline(
                 # user-facing ones (#1296 item 4).
                 for key in sorted(data_warnings):
                     event("data_warning", data_warnings[key].model_dump(mode="json"))
-                if diagnostic or not counts["error"]:
-                    phase_started = time.perf_counter()
-                    identity = {}
-                    if publishable:
-                        assert revision is not None
-                        if builder_commit() != revision:
-                            raise ValueError(
-                                "Builder revision changed during compilation"
-                            )
-                        identity = {
-                            "builder_commit": revision,
-                        }
-                    write_resolved_catalog(
-                        lineage.variables,
-                        output,
-                        diagnostic=diagnostic,
-                        scoped=bool(registers),
-                        corpus=publishable,
-                        manifest={
-                            **identity,
-                            "import_date": import_date,
-                            "prepared_commit": input_commit,
-                            "prepared_manifest_sha256": input_manifest_sha256,
-                            CURATION_TREE_SHA256_KEY: curation_hash,
-                        },
-                        parent_registers=panel.registers,
-                        parent_variants=panel.variants,
-                        editions=panel.editions,
-                        classifications=tuple(books.values()),
-                        classification_successions=successions,
-                        metadata=final_metadata,
-                        data_warnings=tuple(
-                            data_warnings[k]
-                            for k in sorted(data_warnings)
-                            if data_warnings[k].code not in BUILD_ONLY_CODES
-                        ),
-                        search_pins=search_pins,
-                    )
-                    build_result.update(
-                        status="diagnostic_complete" if diagnostic else "complete",
-                        database=str(output),
-                    )
-                    _emit_timing("pipeline: database materialization", phase_started)
-                    if diagnostic and not registers:
-                        # Structural validation already passed before placement. Keep
-                        # the unchanged corpus safeguards visible on partial output.
-                        validation = validate_built_db(output, corpus=True)
-                        corpus_report: dict[str, object] = {
-                            "passed": validation.passed,
-                            "failures": validation.failures,
-                        }
-                        build_result["corpus_validation"] = corpus_report
-                        event("corpus_validation", corpus_report)
-        except Exception as exc:
-            if build_result.get("database"):
-                raise
-            (report_dir / "summary.json").write_text(
-                json.dumps(
-                    {
-                        "status": "engineering_failure",
-                        "error": str(exc),
-                        "counts": dict(counts),
+                handoff = ResolvedBuild(
+                    output=output,
+                    report_dir=report_dir,
+                    ledger=ledger,
+                    diagnostic=diagnostic,
+                    scoped=bool(registers),
+                    publishable=publishable,
+                    build_result=build_result,
+                    variables=lineage.variables,
+                    parent_registers=panel.registers,
+                    parent_variants=panel.variants,
+                    editions=panel.editions,
+                    classifications=tuple(books.values()),
+                    classification_successions=successions,
+                    metadata=final_metadata,
+                    data_warnings=tuple(
+                        data_warnings[k]
+                        for k in sorted(data_warnings)
+                        if data_warnings[k].code not in BUILD_ONLY_CODES
+                    ),
+                    search_pins=search_pins,
+                    manifest={
+                        "import_date": import_date,
+                        "prepared_commit": input_commit,
+                        "prepared_manifest_sha256": input_manifest_sha256,
+                        CURATION_TREE_SHA256_KEY: curation_hash,
                     },
-                    indent=2,
                 )
-                + "\n"
+        except Exception as exc:
+            write_summary(
+                report_dir,
+                {
+                    "status": "engineering_failure",
+                    "error": str(exc),
+                    "counts": dict(counts),
+                },
             )
             raise
-    with _retain_completed_artifact(build_result, report_dir):
-        (report_dir / "summary.json").write_text(
-            json.dumps(build_result, indent=2) + "\n"
-        )
-        _emit_timing("pipeline: total", started)
-    return build_result
+    return build_result if handoff is None else handoff
