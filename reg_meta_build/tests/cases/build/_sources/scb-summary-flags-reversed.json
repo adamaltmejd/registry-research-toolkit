@@ -1,0 +1,61 @@
+{
+  "description": "One register per support-join claim, each delivering its variables' editions in Registerinformation and summarizing them in Unika (VersionForsta|VersionSista|KansligVariabel|KansligVariabelIbland|Identitetsvariabel). LITREG: one variable (2020, 2021), two rows whose endpoints name none of its editions. AMBREG: two renumbered variables (2003; 2020) under one literal key, rows with a blank endpoint. RENREG: 301 (1997, 2001) and 302 (2003), rows 1997|2001 twice and 2003|2003. BOTHREG: 401 and 402 both (1997, 2001), one row 1997|2001. UNLREG: 501 (1997) and 502 (2003), rows 1997|1999 and 2003|2003. CNFREG: 601 (2003) and 602 (2020), two 2003|2003 rows disagreeing on Identitetsvariabel. SUPREG, SNOREG, SCDREG: one variable (2003), rows 1990|2009 and 2010|2023 with sensitive 1/0, 0/0 and conditionally sensitive 1/0. IDAREG and IDBREG deliver VarID 9001 (IDCOL, OTHERID), which Identifierare.csv declares an identifier, and IDCREG VarID 9002, which it does not; their Unika rows leave Identitetsvariabel blank. UNKREG: a blank-column row and a row for an undelivered ABSENT column. The Unika rows are delivered in reverse order.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 100101, "var_id": 101, "colname": "VALUE", "varname": "Litvar", "year": "2020", "regver_id": 10101, "register": ["LITREG", 1, 10]},
+      {"cvid": 100102, "var_id": 101, "colname": "VALUE", "varname": "Litvar", "year": "2021", "regver_id": 10102, "register": ["LITREG", 1, 10]},
+      {"cvid": 100201, "var_id": 201, "colname": "VALUE", "varname": "Ambvar", "year": "2003", "regver_id": 10201, "register": ["AMBREG", 2, 20]},
+      {"cvid": 100202, "var_id": 202, "colname": "VALUE", "varname": "Ambvar", "year": "2020", "regver_id": 10202, "register": ["AMBREG", 2, 20]},
+      {"cvid": 100301, "var_id": 301, "colname": "VALUE", "varname": "Renvar", "year": "1997", "regver_id": 10301, "register": ["RENREG", 3, 30]},
+      {"cvid": 100302, "var_id": 301, "colname": "VALUE", "varname": "Renvar", "year": "2001", "regver_id": 10302, "register": ["RENREG", 3, 30]},
+      {"cvid": 100303, "var_id": 302, "colname": "VALUE", "varname": "Renvar", "year": "2003", "regver_id": 10303, "register": ["RENREG", 3, 30]},
+      {"cvid": 100401, "var_id": 401, "colname": "VALUE", "varname": "Bothvar", "year": "1997", "regver_id": 10401, "register": ["BOTHREG", 4, 40]},
+      {"cvid": 100402, "var_id": 401, "colname": "VALUE", "varname": "Bothvar", "year": "2001", "regver_id": 10402, "register": ["BOTHREG", 4, 40]},
+      {"cvid": 100403, "var_id": 402, "colname": "VALUE", "varname": "Bothvar", "year": "1997", "regver_id": 10401, "register": ["BOTHREG", 4, 40]},
+      {"cvid": 100404, "var_id": 402, "colname": "VALUE", "varname": "Bothvar", "year": "2001", "regver_id": 10402, "register": ["BOTHREG", 4, 40]},
+      {"cvid": 100501, "var_id": 501, "colname": "VALUE", "varname": "Unlvar", "year": "1997", "regver_id": 10501, "register": ["UNLREG", 5, 50]},
+      {"cvid": 100502, "var_id": 502, "colname": "VALUE", "varname": "Unlvar", "year": "2003", "regver_id": 10502, "register": ["UNLREG", 5, 50]},
+      {"cvid": 100601, "var_id": 601, "colname": "VALUE", "varname": "Cnfvar", "year": "2003", "regver_id": 10601, "register": ["CNFREG", 6, 60]},
+      {"cvid": 100602, "var_id": 602, "colname": "VALUE", "varname": "Cnfvar", "year": "2020", "regver_id": 10602, "register": ["CNFREG", 6, 60]},
+      {"cvid": 100701, "var_id": 701, "colname": "VALUE", "varname": "Supvar", "year": "2003", "regver_id": 10701, "register": ["SUPREG", 7, 70]},
+      {"cvid": 100801, "var_id": 801, "colname": "VALUE", "varname": "Snovar", "year": "2003", "regver_id": 10801, "register": ["SNOREG", 8, 80]},
+      {"cvid": 100901, "var_id": 901, "colname": "VALUE", "varname": "Scdvar", "year": "2003", "regver_id": 10901, "register": ["SCDREG", 9, 90]},
+      {"cvid": 101001, "var_id": 9001, "colname": "IDCOL", "varname": "Idvar", "year": "2020", "regver_id": 11001, "register": ["IDAREG", 10, 100]},
+      {"cvid": 101101, "var_id": 9001, "colname": "OTHERID", "varname": "Idvar", "year": "2020", "regver_id": 11101, "register": ["IDBREG", 11, 110]},
+      {"cvid": 101201, "var_id": 9002, "colname": "IDCOL", "varname": "Idcvar", "year": "2020", "regver_id": 11201, "register": ["IDCREG", 12, 120]},
+      {"cvid": 101301, "var_id": 1301, "colname": "VALUE", "varname": "Unkvar", "year": "2020", "regver_id": 11301, "register": ["UNKREG", 13, 130]}
+    ],
+    "unika": [
+      "UNKREG|Testregistret|Individer|Individer|Unkvar|ABSENT|2020|2020|0|0|0",
+      "UNKREG|Testregistret|Individer|Individer|Unkvar||2020|2020|0|0|0",
+      "UNKREG|Testregistret|Individer|Individer|Unkvar|VALUE|2020|2020|0|0|0",
+      "IDCREG|Testregistret|Individer|Individer|Idcvar|IDCOL|2020|2020|0|0|",
+      "IDBREG|Testregistret|Individer|Individer|Idvar|OTHERID|2020|2020|0|0|",
+      "IDAREG|Testregistret|Individer|Individer|Idvar|IDCOL|2020|2020|0|0|",
+      "SCDREG|Testregistret|Individer|Individer|Scdvar|VALUE|2010|2023|0|0|0",
+      "SCDREG|Testregistret|Individer|Individer|Scdvar|VALUE|1990|2009|0|1|0",
+      "SNOREG|Testregistret|Individer|Individer|Snovar|VALUE|2010|2023|0|0|0",
+      "SNOREG|Testregistret|Individer|Individer|Snovar|VALUE|1990|2009|0|0|0",
+      "SUPREG|Testregistret|Individer|Individer|Supvar|VALUE|2010|2023|0|0|0",
+      "SUPREG|Testregistret|Individer|Individer|Supvar|VALUE|1990|2009|1|0|0",
+      "CNFREG|Testregistret|Individer|Individer|Cnfvar|VALUE|2003|2003|0|0|1",
+      "CNFREG|Testregistret|Individer|Individer|Cnfvar|VALUE|2003|2003|0|0|0",
+      "UNLREG|Testregistret|Individer|Individer|Unlvar|VALUE|2003|2003|0|0|1",
+      "UNLREG|Testregistret|Individer|Individer|Unlvar|VALUE|1997|1999|0|0|0",
+      "BOTHREG|Testregistret|Individer|Individer|Bothvar|VALUE|1997|2001|0|0|0",
+      "RENREG|Testregistret|Individer|Individer|Renvar|VALUE|2003|2003|0|0|1",
+      "RENREG|Testregistret|Individer|Individer|Renvar|VALUE|1997|2001|0|0|0",
+      "RENREG|Testregistret|Individer|Individer|Renvar|VALUE|1997|2001|0|0|0",
+      "AMBREG|Testregistret|Individer|Individer|Ambvar|VALUE|||0|0|1",
+      "AMBREG|Testregistret|Individer|Individer|Ambvar|VALUE|2003||0|0|1",
+      "LITREG|Testregistret|Individer|Individer|Litvar|VALUE|2003|2003|0|0|1",
+      "LITREG|Testregistret|Individer|Individer|Litvar|VALUE|1997|2001|1|0|"
+    ]
+  },
+  "files": {
+    "SCB/Identifierare.csv": [
+      "VarID|Variabelnamn|Variabeldefinition",
+      "9001|Idvar|Objektets identifierare"
+    ]
+  }
+}

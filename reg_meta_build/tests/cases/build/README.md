@@ -70,6 +70,7 @@ the behavior in plain words. For example,
   | `value-sets-`          | stored value sets: one per distinct membership, its id kept across builds, and the per-column state overlaps formation withholds                                                 |
   | `lineage-`             | source register attribution from a delivered source label, and the state lineage edges, lineage warnings and `[[acknowledge]]` entries it resolves                               |
   | `occurrence-`          | overlapping source occurrences resolved into states: cuts at exact period bounds, reconciled types, lengths, units and texts, steward storage, unplaced or columnless members    |
+  | `summary-`             | SCB Unika and `Identifierare.csv` flag declarations bound to the delivered variables their literal key and version endpoints name                                                |
 
 Later stages add their own prefixes to this table.
 

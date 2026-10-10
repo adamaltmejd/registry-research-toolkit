@@ -1,0 +1,28 @@
+{
+  "replaces": [
+    "test_source_support.py::test_source_support_unknown_context_is_not_deferred[unknown]",
+    "test_source_support.py::test_source_support_unknown_context_is_not_deferred[unobserved]",
+    "test_source_support.py::test_source_support_unknown_context_is_not_deferred[ambiguous]"
+  ],
+  "note": "All four key-less rows form one support source issue (unknown_support_key, an error), which the slice routes ref by ref. Only a row whose register name matches exactly one delivered register can be placed out of the slice: TESTREG's row becomes the one deferred_out_of_slice_reference warning, the allowed twin (scope-support-errors-keep-their-source-event shows it alone). The rows whose register is unknown (a blank name, the old 'unknown'), undelivered (NOSUCHREG, the old 'unobserved') or delivered twice (TWINREG, the old 'ambiguous') have no one register to be out of, so each stays an unknown_support_key error, although the slice selects none of them. The old test selected nothing; here the slice selects register 2, whose own row is supported. Refs are semantic hashes, so the case counts them per code and ties them to the source issue's refs.",
+  "fails_if": "`scope_support_diagnostics` places a ref whose register name matches several delivered registers in one of them (`next(iter(possibilities)) if possibilities else None`), or defers a ref it cannot place (`context is None`) as out of slice, so TWINREG's row, or all three unplaced rows, become deferred_out_of_slice_reference warnings",
+  "sources": {
+    "description": "Register 2 (OTHERREG) is the slice and has a summary row for its OTHER column. TESTREG (register 1) is delivered once; TWINREG is delivered twice, as registers 3 and 4. Four Unika rows leave their column blank, so none supports a column: one for TESTREG, one with a blank Registernamn, one for the undelivered NOSUCHREG and one for TWINREG.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {"cvid": 2001, "var_id": 201, "colname": "OTHER", "varname": "OtherVar", "register": ["OTHERREG", 2, 20]},
+        {"cvid": 3001, "var_id": 301, "colname": "TWIN", "varname": "TwinVar", "regver_id": 310, "register": ["TWINREG", 3, 30]},
+        {"cvid": 4001, "var_id": 401, "colname": "TWIN", "varname": "TwinVar", "regver_id": 410, "register": ["TWINREG", 4, 40]}
+      ],
+      "unika": [
+        "OTHERREG|Testregistret|Individer|Individer|OtherVar|OTHER|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|GenericVar||2020|2020|0|0|0",
+        "|Testregistret|Individer|Individer|BlankVar||2020|2020|0|0|0",
+        "NOSUCHREG|Testregistret|Individer|Individer|NoSuchVar||2020|2020|0|0|0",
+        "TWINREG|Testregistret|Individer|Individer|TwinVar||2020|2020|0|0|0"
+      ]
+    }
+  },
+  "registers": ["2"]
+}
