@@ -42,6 +42,7 @@ from reg_meta_build._resolved_common import (
 from reg_meta_build.artifact_identity import search_pins_sha256
 from reg_meta_build.data_warnings import write_data_warnings
 from reg_meta_build.db import (
+    _VALID_TO_SENTINEL,
     DDL,
     SCHEMA_VERSION,
     _provider_id_for,
@@ -487,6 +488,9 @@ def merge_adjacent_states(
     pooled flag. Population is a variant fact (LISA carries one per variant,
     every other reader none), so one variant never mixes two. A gap, or any
     differing fact, keeps states apart; windows and coverage are unchanged.
+    An open-ended state never merges with a closed run: readers count an
+    open-ended state as its opening year only, so absorbing the closed years
+    into it would drop them from coverage.
     The merged state keeps its earliest segment's `valid_from` and so its
     `state_id`; the absorbed segments' IDs stop resolving. Year-independent
     states have no neighbours and pass through.
@@ -513,6 +517,7 @@ def merge_adjacent_states(
                 current is not None
                 and current.valid_to is not None
                 and state.valid_from is not None
+                and state.valid_to != _VALID_TO_SENTINEL
                 and date.fromisoformat(current.valid_to).toordinal() + 1
                 == date.fromisoformat(state.valid_from).toordinal()
                 and _state_facts(current) == _state_facts(state)
