@@ -1024,7 +1024,8 @@ Implements section 4 (G1 independence).
 4. **`reg_meta_build` stops publishing to PyPI** (`publish_reg_meta_build.yml` and the
    release skill's step go); the builder runs from a checkout.
 5. **`fetch` moves to stage 4** with local binary distribution (`surface.toml` owner);
-   3a.12 is withdrawn.
+   3a.12 is withdrawn. Superseded by stage 4 decision 3: binaries plus hosted MCP, no
+   `fetch` run mode.
 6. **Release:** the maintainer cuts `reg_meta` at schema 9.3.0 now (G2 and release).
 7. **G1 baseline:** package 3a.2a merges; the baseline reads reference copies derived by
    a pinned builder.

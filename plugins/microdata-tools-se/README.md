@@ -33,6 +33,25 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 Then open the Codex plugin marketplace, find `microdata-tools-se` under
 `registry-research-toolkit`, and install it.
 
+## Local catalog
+
+To query the catalog without the hosted server, run it locally over stdio with
+`reg-meta mcp --db <dir>`, where `<dir>` holds an unpacked `reg_meta.db` (and optionally
+`reg_meta_docs.db`). The `reg-meta` binary for macOS arm64 and Linux x86_64 and the
+catalog DBs ship on each `reg_meta/v*` GitHub release; the download, SHA-256 check and
+`zstd` unpack recipe is in the [repository README's Local server
+section](https://github.com/adamaltmejd/registry-research-toolkit#local-server).
+
+Then register the local server with your agent host, for example:
+
+```bash
+claude mcp add catalog-local -- /path/to/reg-meta mcp --db /path/to/catalog
+codex mcp add catalog-local -- /path/to/reg-meta mcp --db /path/to/catalog
+```
+
+The local server answers the same tools from your machine; no query is sent to the
+hosted server.
+
 ## Scope
 
 The toolkit targets Swedish register-based work generally — research, report writing,
