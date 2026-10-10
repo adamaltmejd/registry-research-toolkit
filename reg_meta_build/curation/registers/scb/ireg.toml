@@ -176,6 +176,7 @@ variant = "131.177"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2006-01-01", valid_to = "2006-12-31", column = "Kommentar", source_editions = ["2006"] }, { valid_from = "2006-01-01", valid_to = "2006-12-31", column = "kommentar", source_editions = ["2006"] }]
+expected_evidence_sha256 = "962021c04f7d0c4f96b582feaed29d6f4ed11c9a53a6723396ff61cc46e821a4"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 

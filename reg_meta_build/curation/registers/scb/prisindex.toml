@@ -504,6 +504,7 @@ variant = "296.980"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2014-01-01", valid_to = "2014-12-31", column = "BeskrivnSv", expected_codings = ["6ba34515be72b12171971a715d54cd950ae6d682543905c970d6d967c67f8484"], source_editions = ["Indata 2014"] }, { valid_from = "2014-01-01", valid_to = "2014-12-31", column = "NamnSV", expected_codings = ["6ba34515be72b12171971a715d54cd950ae6d682543905c970d6d967c67f8484"], source_editions = ["Utdata 2014"] }]
+expected_evidence_sha256 = "7cafb2ccebd37f0702ee32c6a58d0ae3c923e92bbf658ff1556c184901f02cb1"
 evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
 noted = "2026-10-02"
 
@@ -846,6 +847,7 @@ variant = "296.1085"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "BeskrivnSv", source_editions = ["Indata 2017"] }]
+expected_evidence_sha256 = "92eb59940c2a131c8f0c09aa7146fea7b3ce83b46c0c31f1b2f55969353e3f91"
 evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
 noted = "2026-10-02"
 
@@ -858,6 +860,7 @@ variant = "296.1085"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "BeskrivnSv", source_editions = ["Indata 2020"] }]
+expected_evidence_sha256 = "851929238d44b522cba1e04039697241d58b4267863a07f689da4ca0db761232"
 evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
 noted = "2026-10-02"
 
@@ -870,6 +873,7 @@ variant = "296.1085"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "BeskrivnSv", source_editions = ["Indata 2021"] }]
+expected_evidence_sha256 = "807b6aa3e32e65ea4ce9aa044a6120643cbdb74eeb42afefdac568ed01e00c1f"
 evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
 noted = "2026-10-02"
 
@@ -882,6 +886,7 @@ variant = "296.1085"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2022-01-01", valid_to = "2022-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2022"] }, { valid_from = "2022-01-01", valid_to = "2022-12-31", column = "BeskrivnSv", source_editions = ["Indata 2022"] }]
+expected_evidence_sha256 = "7b5786d3ce5346745b2e42e7644a20a02ee6dbe2f8b00c9b10a8508e4a147700"
 evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
 noted = "2026-10-02"
 
@@ -894,6 +899,7 @@ variant = "296.1085"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2023-01-01", valid_to = "2023-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2023"] }, { valid_from = "2023-01-01", valid_to = "2023-12-31", column = "BeskrivnSv", source_editions = ["Indata 2023"] }]
+expected_evidence_sha256 = "641ea6c88dfb3f28444141d7b0313dea7ef5122f463350af703745b2576fac1f"
 evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
 noted = "2026-10-02"
 
@@ -906,6 +912,7 @@ variant = "296.1085"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2024-01-01", valid_to = "2024-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2024"] }, { valid_from = "2024-01-01", valid_to = "2024-12-31", column = "BeskrivnSv", source_editions = ["Indata 2024"] }]
+expected_evidence_sha256 = "225f9b39e7fdb7b3c170813bc6bc5e98b03c037eb7dcc50439d25855f3917c84"
 evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
 noted = "2026-10-02"
 
@@ -918,6 +925,7 @@ variant = "296.1085"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2025-01-01", valid_to = "2025-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2025"] }, { valid_from = "2025-01-01", valid_to = "2025-12-31", column = "BeskrivnSv", source_editions = ["Indata 2025"] }]
+expected_evidence_sha256 = "22f1d3e2e78db1d55e9d756a376d011590f8f72d50df9efadcfade4904f6d6d3"
 evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
 noted = "2026-10-02"
 
@@ -930,6 +938,7 @@ variant = "296.1085"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "BeskrivnSv", source_editions = ["Indata 2018"] }]
+expected_evidence_sha256 = "d26fd97a48bb62aa11ef1d5eae440bd0313ae9c5bdf5b66476cf93c6f6f10cf2"
 evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
 noted = "2026-10-02"
 
@@ -942,6 +951,7 @@ variant = "296.1085"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2019-01-01", valid_to = "2019-12-31", column = "BeskrivnSV", source_editions = ["Utdata 2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "BeskrivnSv", source_editions = ["Indata 2019"] }]
+expected_evidence_sha256 = "e8e156578edad282b69cf9650fd5d1fe143dee9e41438b0780b8c3c8bb9ad220"
 evidence = "The finite case-onlyBeskrivnSV/Sv literals share the same native name and definition and identify source descriptions of the product-group code. Retain all per-column wording, periods and distinct original attached coding fingerprints, without same-member co-delivery or equality of observed values. Both documented text components are uncoded; raw books remain source evidence."
 noted = "2026-10-02"
 

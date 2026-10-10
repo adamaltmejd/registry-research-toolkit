@@ -20,6 +20,7 @@ slug = "v99"
 variant = "people"
 column = "VALUE"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:10,member:20}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -27,5 +28,6 @@ noted = "2026-09-25"
 variant = "people"
 column = "PAIR"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:11,member:21}}
 evidence = "accepted delivery"
 noted = "2026-09-25"

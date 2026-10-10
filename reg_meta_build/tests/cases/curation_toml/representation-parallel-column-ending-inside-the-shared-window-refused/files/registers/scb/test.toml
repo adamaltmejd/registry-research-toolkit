@@ -6,6 +6,7 @@ native_id = "1"
 [[representation.parallel]]
 variable = "1.1"
 variant = "1.10"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Reviewed original boundary"
 noted = "2026-09-29"
 valid_from = "2022-01-01"

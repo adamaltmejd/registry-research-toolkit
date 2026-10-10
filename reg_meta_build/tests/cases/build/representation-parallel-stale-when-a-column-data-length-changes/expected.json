@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/representation.parallel/1"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "income",
+        "provenance": {
+          "contains": "#/representation.parallel/1"
+        }
+      },
+      "fields": [
+        "valid_from"
+      ],
+      "rows": []
+    }
+  ]
+}

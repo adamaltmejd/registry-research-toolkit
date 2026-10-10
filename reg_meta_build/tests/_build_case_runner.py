@@ -425,6 +425,7 @@ def _column(record: SourceRecord) -> str:
 
 _FILTERS: dict[str, Callable[[SourceRecord], object]] = {
     "source": lambda r: r.source,
+    "register": lambda r: str(r.subject.native.register_id),
     "key": lambda r: r.locators[0].semantic_record_key[-1],
     "column": _column,
     "member": lambda r: r.subject.member.name,
@@ -560,14 +561,23 @@ def _variant_key(record: SourceRecord) -> list:
     return list(key)
 
 
-def render_curation(source: Path, target: Path, authored: PreparedSet) -> Path:
-    """Copy a case's curation tree, resolving each `{{directive arg=value}}`."""
+def render_curation(
+    source: Path, target: Path, authored: PreparedSet, built: PreparedSet
+) -> Path:
+    """Copy a case's curation tree, resolving each `{{directive arg=value}}`.
+
+    A directive reads ``authored`` unless it says ``read=built``.
+    """
 
     def resolve(match: re.Match[str]) -> str:
         name, raw = match.group(1), match.group(2).split()
         args = dict(item.split("=", 1) for item in raw)
         assert name in _DIRECTIVES, f"unknown curation placeholder: {name}"
-        return toml_inline(_DIRECTIVES[name](authored, args))
+        read = args.pop("read", "authored")
+        assert read in {"authored", "built"}, f"unknown placeholder read: {read}"
+        return toml_inline(
+            _DIRECTIVES[name](built if read == "built" else authored, args)
+        )
 
     for path in source.rglob("*"):
         if path.is_file():
@@ -1540,7 +1550,7 @@ def run_step(
     expected = json.loads((step / "expected.json").read_text(encoding="utf-8"))
     built = cache.get(source_spec(request["sources"]))
     authored = cache.get(source_spec(request.get("authored_from", request["sources"])))
-    curation = render_curation(step / "curation", scratch / "curation", authored)
+    curation = render_curation(step / "curation", scratch / "curation", authored, built)
     output, report = scratch / "reg_meta.db", scratch / "report"
     registers = tuple(request.get("registers", ()))
     rebuild = bool(expected.get("rebuilt_identical"))

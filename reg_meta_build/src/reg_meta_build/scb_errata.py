@@ -678,6 +678,9 @@ class ErrataConversion:
     case: CurationCase | None
     blockers: tuple[str, ...]
     identity_refs: tuple[SourceRecordRef, ...]
+    # The refs a delivered entry's evidence pin covers: the documented column and
+    # the native rows it rewrites or keeps, not the edition support.
+    evidence_refs: tuple[SourceRecordRef, ...] = ()
 
 
 def edition_bindings(
@@ -1123,21 +1126,19 @@ def convert_delivered_entry(
         )
     if blockers:
         return ErrataConversion(None, tuple(sorted(set(blockers))), references)
-    required = (
-        targets
-        | set(references)
-        | retained_blank_refs
-        | {
-            ref
-            for edition in editions
-            if edition.name in entry.versions
-            for ref in edition.support
-        }
-    )
+    relied = targets | set(references) | retained_blank_refs
     if additional_physical_column:
-        required.update(
+        relied.update(
             record_ref(r) for r in context.by_variable.get(native.variable_id, ())
         )
+    # A declared edition's support is the whole variant slice: it guards the
+    # date assertion below, but would stale the pin on any unrelated delivery.
+    required = relied | {
+        ref
+        for edition in editions
+        if edition.name in entry.versions
+        for ref in edition.support
+    }
     # Ownership depends on the complete supplied meaning and source bindings.
     # Capturing flags/coding guards them; it does not copy them across editions.
     expected = context.expectations_for_refs(required)
@@ -1153,7 +1154,7 @@ def convert_delivered_entry(
             provenance=provenance,
         ),
     )
-    return ErrataConversion(case, (), references)
+    return ErrataConversion(case, (), references, tuple(sorted(relied, key=str)))
 
 
 def convert_column_entry(

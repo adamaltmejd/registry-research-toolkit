@@ -7,6 +7,7 @@ native_id = "1"
 variant = "v"
 column = "VALUE"
 versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "source"
 noted = "2026-09-24"
 upstream = "additional-physical-column-in-version"

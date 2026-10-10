@@ -27,6 +27,7 @@ variant = "360.1291"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2011-01-01", valid_to = "2011-12-31", column = "REGNR", source_editions = ["2011"] }, { valid_from = "2011-01-01", valid_to = "2011-12-31", column = "RegNr", source_editions = ["2011"] }]
+expected_evidence_sha256 = "cb3c57b5f2a63ea807de7090b054554107b3e4f69a2c52c812e5a2a2caa7493c"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -40,6 +41,7 @@ variant = "360.1291"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2012-01-01", valid_to = "2012-12-31", column = "REGNR", source_editions = ["2012"] }, { valid_from = "2012-01-01", valid_to = "2012-12-31", column = "RegNr", source_editions = ["2012"] }]
+expected_evidence_sha256 = "8028533149c1a1e09f02d98f739aae2976c47b88c8cf5a97699fc44557fe9eaa"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 

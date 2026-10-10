@@ -16,6 +16,7 @@ slug = "v6"
 variant = "people"
 column = "A"
 versions = ["2021"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=18 key=member:1801,member:1802}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -23,5 +24,6 @@ noted = "2026-09-25"
 variant = "people"
 column = "A"
 versions = ["2022"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=18 key=member:1801}}
 evidence = "accepted missing-edition delivery"
 noted = "2026-09-25"

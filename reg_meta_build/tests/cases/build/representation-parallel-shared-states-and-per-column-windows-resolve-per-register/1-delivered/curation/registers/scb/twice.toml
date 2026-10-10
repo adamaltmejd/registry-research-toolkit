@@ -17,6 +17,7 @@ variable = "5.5"
 variant = "5.50"
 valid_from = "2022-01-01"
 valid_to = "2022-12-31"
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=5 key=member:500,member:501}}
 evidence = "Reviewed parallel columns"
 noted = "2026-10-10"
 [[representation.parallel.columns]]
@@ -34,6 +35,7 @@ variable = "5.5"
 variant = "5.50"
 valid_from = "2022-01-01"
 valid_to = "2022-12-31"
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=5 key=member:500,member:501}}
 evidence = "Second review of the same columns"
 noted = "2026-10-10"
 [[representation.parallel.columns]]

@@ -8,6 +8,7 @@ steward_table_prefixes = ["AKU_"]
 variant = "aku-april-2005-dec-2020"
 column = "IVECK"
 versions = ["2020"]
+expected_evidence_sha256 = "143b24709f79046b75c281ea00c5402c5d4fbd78e4ad4f847b2818cd0ee4f7a1"
 evidence = "SWECOV_variables_full_2026-06-15.csv row208 AKU_2020 contains exact IVECK; raw SCB VarId6631 documents Veckonummer för intervju under året / Kalendervecka through2019."
 noted = "2026-09-13"
 

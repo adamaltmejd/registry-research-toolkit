@@ -470,6 +470,7 @@ variable = "105.14815.skolkommun"
 variant = "105.1557"
 column_metadata = "per_column"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "SkolKommun", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-06-30", column = "Skolkommun", source_editions = ["2018 vårterminen"] }]
+expected_evidence_sha256 = "e699b422b4599b11de1af7a7991b1e566468ddfb2d7984bba55881d784ecdd08"
 evidence = "Complete native and physical-peer census: these supplied columns differ only by letter case and declare the same native member and definition. Keep each source field and coding, without manufacturing observations or correcting storage. Exact original edition witnesses bound only this alias overlap. Batch53-case-alias-proof.json."
 noted = "2026-10-02"
 
@@ -481,6 +482,7 @@ variable = "105.257"
 variant = "105.1557"
 column_metadata = "per_column"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "FodelseLandNamn", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-06-30", column = "FodelseLandnamn", source_editions = ["2018 vårterminen"] }]
+expected_evidence_sha256 = "e5e32b60dca6bfe0978a10728759037efeb3cabf1b0482965dcb0eb4c073349b"
 evidence = "Complete native and physical-peer census: these supplied columns differ only by letter case and declare the same native member and definition. Keep each source field and coding, without manufacturing observations or correcting storage. Exact original edition witnesses bound only this alias overlap. Batch53-case-alias-proof.json."
 noted = "2026-10-02"
 
@@ -492,5 +494,6 @@ variable = "105.32738.skollan"
 variant = "105.1557"
 column_metadata = "per_column"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "SkolLan", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-06-30", column = "Skollan", source_editions = ["2018 vårterminen"] }]
+expected_evidence_sha256 = "7e9939c14bb57c33f9013c2032623a6bbf94e5c383c80f02aec6a3ca2a1be3bf"
 evidence = "Complete native and physical-peer census: these supplied columns differ only by letter case and declare the same native member and definition. Keep each source field and coding, without manufacturing observations or correcting storage. Exact original edition witnesses bound only this alias overlap. Batch53-case-alias-proof.json."
 noted = "2026-10-02"

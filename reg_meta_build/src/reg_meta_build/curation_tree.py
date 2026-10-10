@@ -359,6 +359,9 @@ class ErrataDeliveredEntry(_CurationModel):
     upstream: str | None = None
     native_variable_id: int | None = None
     storage_column: str | None = None
+    # Full originals of the documented column and the rows the entry rewrites or
+    # keeps beside its additions; a drifted definition makes the entry stale.
+    expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
     @model_validator(mode="after")
     def _additional_delivery_anchor(self) -> ErrataDeliveredEntry:
@@ -1032,6 +1035,8 @@ class ParallelRepresentationEntry(FiniteCurationWindow):
     column_metadata: Literal["shared", "per_column"] = "shared"
     coding_metadata: Literal["shared", "per_column"] = "shared"
     columns: list[ParallelRepresentationColumn] = Field(min_length=2)
+    # Full originals of every declared column's members in its declared editions.
+    expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     evidence: str
     noted: str
 

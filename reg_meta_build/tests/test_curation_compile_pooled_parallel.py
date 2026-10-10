@@ -9,6 +9,7 @@ from _curation_compile_support import (
 from reg_meta_build.curation_tree import (
     load_register_files,
 )
+from reg_meta_build.source_curation import acknowledgement_evidence_sha256
 from reg_meta_build.source_records import value_field
 
 
@@ -23,7 +24,7 @@ def _compile_pooled_parallel(path, records, naming):
 # identifier field, and every committed parallel entry is SCB.
 @pytest.mark.parametrize("defect", ["identifier"])
 def test_co_delivered_parallel_refuses_unsupported_common_quantity(tmp_path, defect):
-    path, records, naming = _pooled_parallel_fixture(tmp_path, co_delivered=True)
+    path, original, naming = _pooled_parallel_fixture(tmp_path, co_delivered=True)
     records = tuple(
         record.model_copy(
             update={
@@ -32,7 +33,14 @@ def test_co_delivered_parallel_refuses_unsupported_common_quantity(tmp_path, def
                 )
             }
         )
-        for index, record in enumerate(records)
+        for index, record in enumerate(original)
+    )
+    # Pinned to the records as compiled, so only the identifier rule refuses.
+    path.write_text(
+        path.read_text().replace(
+            acknowledgement_evidence_sha256(original),
+            acknowledgement_evidence_sha256(records),
+        )
     )
     cases, diagnostics = _compile_pooled_parallel(path, records, naming)
     assert cases == ()
