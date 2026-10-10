@@ -41,10 +41,10 @@ exists, follow Error recovery below first so publication uses the repaired revis
 
 ## Packages
 
-  | Package        | Version files                                                                    | Release workflow                                                                  |
-  | -------------- | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-  | reg_meta       | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`)                                  | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy) |
-  | reg_meta_build | `reg_meta_build/pyproject.toml`, `reg_meta_build/src/reg_meta_build/__init__.py` | none (tag and GitHub release only)                                                |
+  | Package        | Version files                                                                    | Release workflow                                                                            |
+  | -------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+  | reg_meta       | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`)                                  | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
+  | reg_meta_build | `reg_meta_build/pyproject.toml`, `reg_meta_build/src/reg_meta_build/__init__.py` | none (tag and GitHub release only)                                                          |
 
 `reg_meta` is the Rust runtime: the `reg-meta` binary (`serve` and `mcp`) and the
 catalog DB assets it reads. Its `reg_meta/v*` release carries the three DB assets (step
