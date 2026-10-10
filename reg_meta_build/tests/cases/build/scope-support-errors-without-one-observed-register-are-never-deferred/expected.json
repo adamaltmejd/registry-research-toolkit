@@ -1,0 +1,49 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": ["unknown_support_key", "deferred_out_of_slice_reference"]
+      },
+      "fields": ["code", "severity", "source"],
+      "note": "Three unplaced rows stay errors; only TESTREG's row is deferred.",
+      "rows": [
+        ["unknown_support_key", "error", "scb-unikaregisterochvariabler"],
+        ["unknown_support_key", "error", "scb-unikaregisterochvariabler"],
+        ["unknown_support_key", "error", "scb-unikaregisterochvariabler"],
+        [
+          "deferred_out_of_slice_reference",
+          "warning",
+          "scb-unikaregisterochvariabler"
+        ]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {
+        "code": ["unknown_support_key", "deferred_out_of_slice_reference"]
+      },
+      "fields": ["ref"],
+      "note": "Routing splits the one source issue's refs; it drops or adds none.",
+      "rows": {
+        "refs_of": {
+          "table": "source_issues",
+          "where": {"kind": "support_source_issue"}
+        }
+      }
+    },
+    {
+      "table": "source_issues",
+      "where": {"kind": "support_source_issue"},
+      "fields": ["severity"],
+      "rows": [["error"]]
+    },
+    {
+      "table": "variables",
+      "fields": ["register", "variable", "is_identifier", "is_sensitive"],
+      "note": "The slice builds only register 2, from its own summary row.",
+      "rows": [["other", "value", 0, 0]]
+    }
+  ]
+}

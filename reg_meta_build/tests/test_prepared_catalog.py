@@ -216,6 +216,23 @@ def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> Non
         prepared_catalog.PreparedCatalogManifest.model_validate_json(
             json.dumps(missing_join)
         )
+    # A support join read back from the manifest keeps its own contract. Fails if
+    # `SourceSupportJoin._explicit` stops refusing a join without keys, one that
+    # targets its own source, a repeated endpoint, or endpoints on a source-wide
+    # join (the Unika join discriminates; Identifierare's is source-wide).
+    for tamper, message in (
+        ({"keys": []}, "unique nonempty source keys"),
+        ({"target_sources": ["scb-unikaregisterochvariabler"]}, "distinct source"),
+        ({"discriminator": ["coverage_from", "coverage_from"]}, "unique endpoints"),
+        ({"unique_variable": False}, "unique endpoints"),
+    ):
+        document = json.loads(manifest.model_dump_json())
+        join = next(item for item in document["support_joins"] if item["discriminator"])
+        join.update(tamper)
+        with pytest.raises(ValueError, match=message):
+            prepared_catalog.PreparedCatalogManifest.model_validate_json(
+                json.dumps(document)
+            )
     assert all(
         item.record_usage == "none" for item in manifest.inputs if not item.present
     )
