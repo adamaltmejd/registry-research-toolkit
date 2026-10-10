@@ -1,8 +1,9 @@
 """The resolve phase's output as a bundle directory that `materialize-db` places.
 
 A bundle is a cache artifact keyed by the exact resolve code (the import walk from
-`pipeline`, which includes this module), never a public contract: a reader of another
-builder revision refuses it rather than migrating it. `pipeline` imports this module,
+`pipeline`, which includes this module), never a public contract: `bundle.json`
+records the resolve code's fingerprint (`resolve_code`), and a builder whose resolve
+code differs refuses the bundle rather than migrating it. `pipeline` imports this module,
 so it must not import `db`, `derive`, `validate` or `materialize`.
 
 Layout:
@@ -36,6 +37,7 @@ from pydantic import (
     model_validator,
 )
 
+from reg_meta_build.resolve_code import resolve_code_sha256
 from reg_meta_build.resolved_catalog import ResolvedCodeSet, ResolvedVariable
 from reg_meta_build.source_files import _file_sha256
 
@@ -55,7 +57,7 @@ if TYPE_CHECKING:
     )
     from reg_meta_build.resolved_metadata import ResolvedMetadata
 
-FORMAT_VERSION = 1
+FORMAT_VERSION = 2
 BUNDLE_FILE = "bundle.json"
 CODE_SETS_FILE = "code_sets.pickle.zst"
 HANDOFF_FILE = "handoff.pickle.zst"
@@ -68,6 +70,7 @@ BUNDLE_GLOBAL_REFUSED = "resolved_bundle_global_refused"
 BUNDLE_COUNT_MISMATCH = "resolved_bundle_count_mismatch"
 BUNDLE_MODE_MISMATCH = "resolved_bundle_mode_mismatch"
 BUNDLE_BLOCKED = "resolved_bundle_blocked"
+BUNDLE_CODE_MISMATCH = "resolved_bundle_code_mismatch"
 
 
 @dataclass(frozen=True)
@@ -129,7 +132,9 @@ class BundlePayloads(_Record):
 class BundleRecord(_Record):
     """`bundle.json`: what was resolved, from which pins, and the payload digests."""
 
-    format_version: Literal[1]
+    format_version: Literal[2]
+    # `resolve_code.resolve_code_sha256()` of the builder that resolved.
+    resolve_code_sha256: str = Field(pattern=_SHA256)
     mode: Literal["strict", "diagnostic"]
     # The `--registers` selection as a sorted set; empty for a full build.
     registers: tuple[str, ...]
@@ -232,8 +237,13 @@ class _Unpickler(pickle.Unpickler):
         return self._code_sets[pid]
 
 
-def write_resolved_bundle(resolved: ResolvedBuild, directory: Path) -> None:
-    """Write `resolved` as a new bundle directory; `bundle.json` comes last."""
+def write_resolved_bundle(
+    resolved: ResolvedBuild, directory: Path, *, resolve_code_sha256: str
+) -> None:
+    """Write `resolved` as a new bundle directory; `bundle.json` comes last.
+
+    `resolve_code_sha256` is the fingerprint of the code that resolved it.
+    """
     result = resolved.build_result
     states = sum(len(variable.states) for variable in resolved.variables)
     if (len(resolved.variables), states) != (result["variables"], result["states"]):
@@ -256,6 +266,7 @@ def write_resolved_bundle(resolved: ResolvedBuild, directory: Path) -> None:
     manifest = resolved.manifest
     record = BundleRecord(
         format_version=FORMAT_VERSION,
+        resolve_code_sha256=resolve_code_sha256,
         mode="diagnostic" if resolved.diagnostic else "strict",
         registers=tuple(registers),
         publishable=resolved.publishable,
@@ -292,6 +303,23 @@ def read_bundle_record(directory: Path) -> BundleRecord:
             f"{path}: not a resolved bundle of format {FORMAT_VERSION}: {exc}",
             _REBUILD,
         ) from exc
+
+
+def admit_bundle_code(record: BundleRecord, directory: Path) -> None:
+    """Refuse a bundle resolved by other resolve code than this builder's.
+
+    Its resolutions would be stale, yet a publishable materialization would stamp
+    them with this builder's commit.
+    """
+    current = resolve_code_sha256()
+    if record.resolve_code_sha256 != current:
+        raise _refusal(
+            BUNDLE_CODE_MISMATCH,
+            f"{directory / BUNDLE_FILE}: resolved by resolve code "
+            f"{record.resolve_code_sha256}, but this builder's is {current}",
+            "Resolve again with build-db --resolved-out from this builder; a bundle "
+            "is reusable only by the resolve code that wrote it.",
+        )
 
 
 def admit_bundle_mode(

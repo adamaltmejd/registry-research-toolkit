@@ -64,9 +64,10 @@ report are unchanged. `materialize-db --resolved DIR` places it with
 `materialize.materialize_resolved`, so a builder change that touches only the writer,
 the DDL, derive or validation can skip resolution. The bundle holds:
 
-- `bundle.json`, a strict record: format version, mode, the `--registers` selection,
-  publishability, the prepared pins, the curation tree hash, the pre-write build result,
-  variable/state/code-set counts and each payload's SHA-256 and size;
+- `bundle.json`, a strict record: format version, the resolve-code fingerprint, mode,
+  the `--registers` selection, publishability, the prepared pins, the curation tree
+  hash, the pre-write build result, variable/state/code-set counts and each payload's
+  SHA-256 and size;
 - `handoff.pickle.zst`, the writer's inputs: one frame holding every `ResolvedBuild`
   field that is neither a path nor recorded in `bundle.json`, then one frame per
   variable, which bounds the pickle memo;
@@ -76,15 +77,26 @@ the DDL, derive or validation can skip resolution. The bundle holds:
   would dominate the bundle;
 - `events.jsonl.gz`, a copy of the resolve ledger member.
 
-The pickle is a cache artifact keyed by the exact resolve code (the import walk from
-`pipeline`, which includes `resolved_bundle`), never a public contract: there is no
-migration between format versions, and a bundle from other resolve code is rebuilt, not
-read. Loading refuses, each with a located error code: a `bundle.json` that fails strict
-validation (`resolved_bundle_invalid`); a requested mode or register selection other
-than the bundle's (`resolved_bundle_mode_mismatch`); a strict bundle with resolution
-errors (`resolved_bundle_blocked`), the same publication guard as a strict build; a
-payload whose size or SHA-256 differs (`resolved_bundle_digest_mismatch`); any pickled
-global that is not a Pydantic model defined in a `reg_meta_build` module
+The pickle is a cache artifact keyed by the exact resolve code, never a public contract:
+there is no migration between format versions, and a bundle from other resolve code is
+rebuilt, not read. The builder enforces this itself.
+`resolve_code.resolve_code_sha256()` fingerprints the content of every `reg_meta_build`
+source file in the static import closure of `reg_meta_build.pipeline` (function-local
+imports included, `TYPE_CHECKING` bodies excluded, the walk of
+`scripts/real_seed_cache.py`), the non-Python files beside them, every file of the
+imported `reg_core_py` package (its extension included) and the Python version. A build
+records it before resolving, and `materialize-db` recomputes it before reading any
+payload. A replay by other resolve code would place stale resolutions under the current
+builder commit, so it is refused. The walk must not reach the writer modules
+(`materialize`, `db`, `derive`, `validate`, `artifact_identity`); the fingerprint raises
+if it does, so a writer-only change keeps reusing bundles. Loading refuses, each with a
+located error code: a `bundle.json` that fails strict validation
+(`resolved_bundle_invalid`); other resolve code (`resolved_bundle_code_mismatch`); a
+requested mode or register selection other than the bundle's
+(`resolved_bundle_mode_mismatch`); a strict bundle with resolution errors
+(`resolved_bundle_blocked`), the same publication guard as a strict build; a payload
+whose size or SHA-256 differs (`resolved_bundle_digest_mismatch`); any pickled global
+that is not a Pydantic model defined in a `reg_meta_build` module
 (`resolved_bundle_global_refused`); unreadable frames (`resolved_bundle_invalid`); and
 loaded counts that differ from the build result (`resolved_bundle_count_mismatch`). The
 writer then revalidates every model strictly. A publishable materialization captures and

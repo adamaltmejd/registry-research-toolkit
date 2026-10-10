@@ -62,6 +62,7 @@ from reg_meta_build.pipeline import (
 )
 from reg_meta_build.resolved_bundle import (
     EVENTS_FILE,
+    admit_bundle_code,
     admit_bundle_mode,
     load_resolved_bundle,
     read_bundle_record,
@@ -1176,8 +1177,8 @@ def materialize_resolved(
     """Place a resolved bundle (`build_catalog(resolved_out=...)`) as the build
     that wrote it would have.
 
-    The requested mode and registers must be the bundle's, and a strict bundle
-    must have no errors. The report directory gets the bundle's ledger member,
+    The bundle must come from this builder's resolve code, the requested mode and
+    registers must be the bundle's, and a strict bundle must have no errors. The report directory gets the bundle's ledger member,
     then materialization's, so it reads as the unphased build's report.
     """
     started = time.perf_counter()
@@ -1187,6 +1188,7 @@ def materialize_resolved(
         report_dir.resolve(),
     )
     record = read_bundle_record(bundle)
+    admit_bundle_code(record, bundle)
     admit_bundle_mode(record, bundle, diagnostic=diagnostic, registers=registers)
     admit_catalog_outputs(output, report_dir, (bundle,), publishable=record.publishable)
     if report_dir.exists():

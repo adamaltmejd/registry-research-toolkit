@@ -12,6 +12,9 @@ import pytest
 from _pipeline_catalog_support import CatalogFixture
 from reg_meta_build.cli import run
 from reg_meta_build.errors import EXIT_CONFIG
+from reg_meta_build.resolve_code import resolve_code_sha256
+
+import reg_meta_build
 
 if TYPE_CHECKING:
     from _build_case_runner import PreparedCache
@@ -114,14 +117,16 @@ def test_rerun_is_byte_identical(
     [
         ("blocked", "resolved_bundle_blocked"),
         ("altered", "resolved_bundle_digest_mismatch"),
+        ("stale", "resolved_bundle_code_mismatch"),
     ],
 )
-def test_materialize_refuses_a_blocked_or_altered_bundle(
+def test_materialize_refuses_a_blocked_altered_or_stale_bundle(
     catalog: CatalogFixture, tmp_path: Path, capsys, bundle: str, code: str
 ) -> None:
     # Fails if a strict bundle with resolution errors is placed (the publication
-    # guard a strict build-db applies), or if a payload whose bytes no longer match
-    # bundle.json is unpickled.
+    # guard a strict build-db applies), if a payload whose bytes no longer match
+    # bundle.json is unpickled, or if a bundle another resolve code wrote is placed
+    # (its stale resolutions would carry this builder's commit).
     if bundle == "blocked":
         register = catalog.curation / "registers" / "scb" / "sample.toml"
         register.write_text(
@@ -131,7 +136,7 @@ def test_materialize_refuses_a_blocked_or_altered_bundle(
         )
     mode = (
         ["--diagnostic", "--diagnostic-db-path", str(tmp_path / "built.db")]
-        if bundle == "altered"
+        if bundle != "blocked"
         else []
     )
     prefix = [] if mode else ["--db", str(tmp_path / "built")]
@@ -161,6 +166,11 @@ def test_materialize_refuses_a_blocked_or_altered_bundle(
         data = bytearray(handoff.read_bytes())
         data[-1] ^= 1
         handoff.write_bytes(bytes(data))
+    if bundle == "stale":
+        record = tmp_path / "bundle" / "bundle.json"
+        fields = json.loads(record.read_text(encoding="utf-8"))
+        fields["resolve_code_sha256"] = "0" * 64
+        record.write_text(json.dumps(fields), encoding="utf-8")
     output = (
         ["--diagnostic", "--diagnostic-db-path", str(tmp_path / "placed.db")]
         if mode
@@ -186,3 +196,18 @@ def test_materialize_refuses_a_blocked_or_altered_bundle(
     assert json.loads(capsys.readouterr().out)["error"]["code"] == code
     assert not (tmp_path / "placed-report").exists()
     assert not list(tmp_path.glob("placed*"))
+
+
+def test_writer_only_edit_keeps_the_resolve_code_fingerprint(tmp_path: Path) -> None:
+    # Fails if the fingerprint covers a writer module (a schema- or derive-only
+    # change would then never reuse a bundle) or misses a resolve module (a stale
+    # bundle would be accepted). Edits a copy of the package, never the checkout.
+    package = Path(reg_meta_build.__file__).resolve().parent
+    shutil.copytree(
+        package, tmp_path / package.name, ignore=shutil.ignore_patterns("__pycache__")
+    )
+    before = resolve_code_sha256(tmp_path)
+    for module, unchanged in (("materialize.py", True), ("source_intervals.py", False)):
+        with (tmp_path / package.name / module).open("a", encoding="utf-8") as stream:
+            stream.write("\n# edited\n")
+        assert (resolve_code_sha256(tmp_path) == before) is unchanged

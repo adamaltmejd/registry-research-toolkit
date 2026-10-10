@@ -57,6 +57,7 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
 )
 from reg_meta_build.prepared_values import _DESCRIPTOR
+from reg_meta_build.resolve_code import resolve_code_sha256
 from reg_meta_build.resolved_bundle import ResolvedBuild, write_resolved_bundle
 from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
@@ -498,6 +499,8 @@ def resolve_catalog(
     `resolved_out` names a new directory for the result as a resolved bundle
     (`resolved_bundle`), written once the resolve ledger member is closed.
     """
+    # Fingerprinted before resolving, so the bundle names the code that ran.
+    code = resolve_code_sha256() if resolved_out is not None else ""
     resolved = _resolve(
         prepared_path,
         input_commit,
@@ -513,7 +516,9 @@ def resolve_catalog(
     assert isinstance(resolved, ResolvedBuild)
     if resolved_out is not None:
         try:
-            write_resolved_bundle(resolved, resolved_out.resolve())
+            write_resolved_bundle(
+                resolved, resolved_out.resolve(), resolve_code_sha256=code
+            )
         except Exception as exc:
             write_summary(
                 resolved.report_dir,
