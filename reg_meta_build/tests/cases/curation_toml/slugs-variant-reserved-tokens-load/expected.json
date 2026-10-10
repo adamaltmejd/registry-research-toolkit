@@ -6,7 +6,7 @@
     "test_fqid_slugs_provider_toml.py::TestProviderToml::test_default_slug_allowed_for_variant"
   ],
   "fails_if": "the slug loader applies the register/variable reserved-token or _default ban to the register_variant slot",
-  "note": "A variant slug rides a ?variant= query value, never a path segment, so the HTTP-suffix reservation does not apply, and only the variant slot takes the synthetic _default slug.",
+  "note": "The variable slot's reserved `variants` does not apply to the variant slot, and only the variant slot takes the synthetic _default slug.",
   "loads": [
     {
       "$any": true
@@ -19,7 +19,7 @@
     {
       "kind": "register_variant",
       "source_id": "34.1",
-      "slug": "states"
+      "slug": "variants"
     }
   ]
 }

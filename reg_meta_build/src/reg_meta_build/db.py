@@ -19,7 +19,6 @@ from typing import TYPE_CHECKING
 
 from reg_core_py import fold_identity
 
-from ._curation import printable_error
 from .errors import EXIT_CONFIG, RegMetaError
 
 # Produced catalog schema; readers gate their independently supported version.
@@ -262,7 +261,7 @@ def db_path_from_args(
             remediation="Select one catalog name or database directory.",
         )
     if catalog is not None:
-        from .fqid import validate_slug
+        from .slug_grammar import validate_slug
 
         try:
             validate_slug(catalog, "catalog")
@@ -293,7 +292,7 @@ def validate_catalog_selection(
         and re.fullmatch(r"[0-9a-f]{64}", manifest.get("generation_id", "")) is not None
     )
     if kind == "steward":
-        from .fqid import validate_slug
+        from .slug_grammar import validate_slug
 
         try:
             validate_slug(manifest.get("steward", ""), "steward")
@@ -430,7 +429,7 @@ def open_db(
     #
     # Locking trade-off (the gotcha): disabling locking means a reader racing an
     # in-place writer is unprotected. Acceptable here because nothing writes this
-    # inode in place — `reg-meta update` installs via tmp-file + atomic rename
+    # inode in place — an installed release DB is replaced whole, never edited
     # (a reader holding the old inode keeps reading a consistent, now-unlinked
     # file), and the only other writer, maintainer-local `reg-meta-build build-db`,
     # ALSO writes a `.db.tmp` and replaces the default path with it
@@ -491,26 +490,22 @@ def open_built_db(db_path: Path, *, older_minor: bool = False) -> sqlite3.Connec
         try:
             version = get_manifest(conn).get("schema_version")
         except sqlite3.OperationalError as exc:
-            raise printable_error(
-                RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="schema_incompatible",
-                    error_class="configuration",
-                    message=f"Catalog manifest is missing or unreadable: {db_path}.",
-                    remediation=f"Rebuild with reg-meta-build to produce schema {SCHEMA_VERSION}.",
-                )
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="schema_incompatible",
+                error_class="configuration",
+                message=f"Catalog manifest is missing or unreadable: {db_path}.",
+                remediation=f"Rebuild with reg-meta-build to produce schema {SCHEMA_VERSION}.",
             ) from exc
         if version != SCHEMA_VERSION and not (
             older_minor and _admits_older_minor(version)
         ):
-            raise printable_error(
-                RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="schema_incompatible",
-                    error_class="configuration",
-                    message=f"Catalog schema {version!r} is incompatible with builder schema {SCHEMA_VERSION}: {db_path}.",
-                    remediation="Use the matching builder or rebuild from pinned prepared sources.",
-                )
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="schema_incompatible",
+                error_class="configuration",
+                message=f"Catalog schema {version!r} is incompatible with builder schema {SCHEMA_VERSION}: {db_path}.",
+                remediation="Use the matching builder or rebuild from pinned prepared sources.",
             )
     except BaseException:
         conn.close()
@@ -771,7 +766,7 @@ DDL = (
 -- Core tables (all IDs stored as INTEGER for compact storage)
 
 -- Data providers (publishers): scb, sos, ... See _PROVIDER_SEED for the seed.
--- Promoted to first-class in schema v3.1 for FQID grammar (see reg_meta/DESIGN.md → FQID grammar).
+-- Promoted to first-class in schema v3.1 for FQID grammar (see crates/DESIGN.md → FQID grammar).
 CREATE TABLE provider (
     provider_id INTEGER PRIMARY KEY,
     slug        TEXT NOT NULL UNIQUE,
@@ -782,7 +777,7 @@ CREATE TABLE provider (
 -- are nullable in 3.1. Curated values land in step 1c; the build refuses to
 -- compile with NULL slugs from then on. The `_default` placeholder for
 -- variant-less registers is synthesized at FQID-resolve time (catalog.py),
--- never persisted. See reg_meta/DESIGN.md → FQID grammar and DESIGN.md → Slug curation.
+-- never persisted. See crates/DESIGN.md → FQID grammar and DESIGN.md → Slug curation.
 CREATE TABLE register (
     register_id INTEGER PRIMARY KEY,
     provider_id INTEGER NOT NULL REFERENCES provider(provider_id),
@@ -819,7 +814,7 @@ CREATE TABLE register_variant (
 );
 
 -- Register-version metadata. The FQID grammar has no version segment (see
--- reg_meta/DESIGN.md → FQID grammar), so this table carries NO `slug` column:
+-- crates/DESIGN.md → FQID grammar), so this table carries NO `slug` column:
 -- period is a delivery coordinate, not identity. The coalescer also reads
 -- `registerversionnamn` for the variable_state valid_from/to year fallback, and
 -- the lineage linkers derive a per-edition period from it. Since #799, the
@@ -1019,7 +1014,7 @@ CREATE TABLE variable_alias_build (
     PRIMARY KEY (cvid, delivery_column_name)
 );
 
--- Per-era shape of a variable (see reg_meta/DESIGN.md → Two-level variable model). One row per coalesced
+-- Per-era shape of a variable (see crates/DESIGN.md → Two-level variable model). One row per coalesced
 -- `(register_id, register_variant_id, var_id, data_type, data_length, value_set_id,
 -- value_set_version_label, grain)` tuple over `variable_instance`; populated
 -- by `_coalesce_variable_states` after CSV import. A2.5/A2.6 flipped the
@@ -1429,7 +1424,7 @@ CREATE TABLE code_variable_map (
 -- meanwhile.
 CREATE INDEX idx_code_variable_map_variable ON code_variable_map(variable_id);
 
--- Curated cross-register / cross-provider equivalence edges (see reg_meta/DESIGN.md → Composite registers and source tracking).
+-- Curated cross-register / cross-provider equivalence edges (see crates/DESIGN.md → Edges and lineage).
 -- **Variable grain**: endpoints are `(provider, register, variable)` slug
 -- triples. Slug-anchored (not cvid-anchored), so the link survives rebuilds
 -- even if provider IDs shift. Each TOML same_as entry becomes two rows
@@ -2022,14 +2017,12 @@ def _require_publishable_catalog(conn: sqlite3.Connection, db_path: Path) -> Non
         or manifest.get("catalog_publishable", "true") != "true"
         or manifest.get("catalog_completeness", "complete") != "complete"
     ):
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="catalog_not_publishable",
-                error_class="configuration",
-                message=f"Diagnostic or incomplete catalog cannot be installed: {db_path}",
-                remediation="Use an explicit local inspection path; resolve its blockers and run a strict build before publication.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_not_publishable",
+            error_class="configuration",
+            message=f"Diagnostic or incomplete catalog cannot be installed: {db_path}",
+            remediation="Use an explicit local inspection path; resolve its blockers and run a strict build before publication.",
         )
 
 
@@ -2085,27 +2078,23 @@ def _scb_snapshot_error(exc: Exception) -> RegMetaError:
     from .input_snapshot import SnapshotMaterializationError
 
     if isinstance(exc, SnapshotMaterializationError):
-        return printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="scb_snapshot_materialization_required",
-                error_class="configuration",
-                message=str(exc),
-                remediation=exc.hydration_action,
-            )
-        )
-    return printable_error(
-        RegMetaError(
+        return RegMetaError(
             exit_code=EXIT_CONFIG,
-            code="scb_snapshot_invalid",
+            code="scb_snapshot_materialization_required",
             error_class="configuration",
-            message=f"Selected SCB input snapshot is invalid: {exc}",
-            remediation=(
-                "Run the explicit snapshot verifier. If the selected identity changed "
-                "or is unsupported, prepare, verify, and accept a new snapshot, then "
-                "pass its exact Git commit and manifest SHA-256."
-            ),
+            message=str(exc),
+            remediation=exc.hydration_action,
         )
+    return RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code="scb_snapshot_invalid",
+        error_class="configuration",
+        message=f"Selected SCB input snapshot is invalid: {exc}",
+        remediation=(
+            "Run the explicit snapshot verifier. If the selected identity changed "
+            "or is unsupported, prepare, verify, and accept a new snapshot, then "
+            "pass its exact Git commit and manifest SHA-256."
+        ),
     )
 
 
@@ -2161,14 +2150,12 @@ def _open_scb_csv_rows(
         def rows() -> Iterator[tuple[int, list[str | None]]]:
             for row_number, fields in enumerate(reader, start=2):
                 if len(fields) != ncols:
-                    raise printable_error(
-                        RegMetaError(
-                            exit_code=EXIT_CONFIG,
-                            code="csv_bad_row",
-                            error_class="configuration",
-                            message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {ncols}.",
-                            remediation="Re-export the file from mikrometadata.scb.se.",
-                        )
+                    raise RegMetaError(
+                        exit_code=EXIT_CONFIG,
+                        code="csv_bad_row",
+                        error_class="configuration",
+                        message=f"Row {row_number} in {path.name} has {len(fields)} fields, expected {ncols}.",
+                        remediation="Re-export the file from mikrometadata.scb.se.",
                     )
                 yield row_number, fields
 
@@ -2180,14 +2167,12 @@ def _validated_scb_header(filename: str, raw_header: Sequence[str]) -> list[str]
     header = [_decode_cp1252(value) for value in raw_header]
     expected = EXPECTED_HEADERS.get(filename)
     if expected and header != expected:
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="csv_bad_header",
-                error_class="configuration",
-                message=f"Unexpected header in {filename}.",
-                remediation="Ensure the file is an unmodified SCB metadata export.",
-            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="csv_bad_header",
+            error_class="configuration",
+            message=f"Unexpected header in {filename}.",
+            remediation="Ensure the file is an unmodified SCB metadata export.",
         )
     return header
 
@@ -2335,14 +2320,12 @@ def _insert_core_graph_from_ir(
         try:
             return provider_ids[provider]
         except KeyError as exc:
-            raise printable_error(
-                RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="unknown_provider",
-                    error_class="configuration",
-                    message=f"No provider_id for provider {provider!r}.",
-                    remediation="Declare the provider before inserting its register IR.",
-                )
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="unknown_provider",
+                error_class="configuration",
+                message=f"No provider_id for provider {provider!r}.",
+                remediation="Declare the provider before inserting its register IR.",
             ) from exc
 
     conn.executemany(
@@ -2489,14 +2472,12 @@ def _provider_id_for(provider: str) -> int:
     for pid, slug, _name in _PROVIDER_SEED:
         if slug == provider:
             return pid
-    raise printable_error(
-        RegMetaError(
-            exit_code=EXIT_CONFIG,
-            code="unknown_provider",
-            error_class="configuration",
-            message=f"No provider_id seed for provider {provider!r}.",
-            remediation="Add the provider to _PROVIDER_SEED.",
-        )
+    raise RegMetaError(
+        exit_code=EXIT_CONFIG,
+        code="unknown_provider",
+        error_class="configuration",
+        message=f"No provider_id seed for provider {provider!r}.",
+        remediation="Add the provider to _PROVIDER_SEED.",
     )
 
 
@@ -2510,14 +2491,12 @@ def _reject_input_repository_destination(
 ) -> None:
     """Reject a build output that would dirty the accepted input checkout."""
     if path == repository or path.is_relative_to(repository):
-        raise printable_error(
-            RegMetaError(
-                exit_code=EXIT_CONFIG,
-                code="catalog_input_output_conflict",
-                error_class="configuration",
-                message=f"{label} must stay outside the accepted input repository: {path}",
-                remediation=(
-                    "Choose a scratch/output path outside the catalog-inputs Git checkout."
-                ),
-            )
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="catalog_input_output_conflict",
+            error_class="configuration",
+            message=f"{label} must stay outside the accepted input repository: {path}",
+            remediation=(
+                "Choose a scratch/output path outside the catalog-inputs Git checkout."
+            ),
         )

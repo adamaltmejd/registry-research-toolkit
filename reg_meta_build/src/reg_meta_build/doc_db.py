@@ -1,9 +1,8 @@
 """Build pipeline for the reg_meta doc index.
 
 Parses frontmatter + markdown bodies under a curated docs directory and
-writes the FTS5-indexed `reg_meta_docs.db`. Connection management and
-schema-compat checks live in `reg_meta.doc_db`; this module imports the
-shared constants and supplies the build entry point.
+writes the FTS5-indexed `reg_meta_docs.db`. This module also owns the docs
+schema constants, connection management and the schema-compat check.
 """
 
 from __future__ import annotations
@@ -111,8 +110,8 @@ def open_doc_db(db_path: Path, *, check_schema: bool = True) -> sqlite3.Connecti
     # cannot occur here — applied for symmetry with `db.open_db` and to
     # future-proof against the builder ever switching journal modes. Same locking
     # trade-off and same safety argument (see db.open_db): the doc DB is only ever
-    # replaced via `reg-meta update`'s atomic tmp-file + rename, never mutated in
-    # place under a reader.
+    # replaced whole (an installed release asset or a new build's atomic rename),
+    # never mutated in place under a reader.
     conn = sqlite3.connect(f"file:{db_path}?mode=ro&immutable=1", uri=True)
     conn.row_factory = sqlite3.Row
     if check_schema:
@@ -380,7 +379,7 @@ def repo_docs_dir() -> Path | None:
     """Return the in-repo source-markdown directory, for dev-time builds only.
 
     Runtime NEVER reads from this — users receive the prebuilt doc DB as a
-    release asset via ``reg-meta update``. Only ``reg-meta-build build-docs``
+    release asset. Only ``reg-meta-build build-docs``
     uses this, so a maintainer working from a checkout can rebuild the doc DB
     from ``reg_meta_build/docs/`` without passing ``--docs-dir`` every time.
     """

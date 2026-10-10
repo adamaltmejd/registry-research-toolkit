@@ -524,7 +524,7 @@ def test_inventory_does_not_fold_case_spellings_across_variants_or_owners(
     (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
     assert (
         sorted(
-            (m.register_variant, m.variable.variable, m.representation)
+            (m.register_variant, m.variable.rsplit("/", 1)[1], m.representation)
             for m in column.mappings
         )
         == expected

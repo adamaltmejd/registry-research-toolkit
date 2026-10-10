@@ -100,6 +100,6 @@ def test_every_build_input_class_changes_the_key(tmp_path):
         # Cumulative edits: each must move the key off every earlier one.
         _perturb(path)
         changed[label] = key(build_inputs=inputs())
-    assert len(changed) == 9
+    assert len(changed) == 8
     assert baseline not in changed.values()
     assert len(set(changed.values())) == len(changed)

@@ -31,7 +31,7 @@ const variable = $derived(strField("variable"));
 
 // The row LEADS with the delivery column — that is what the researcher ordered and
 // what lands in the extract. Where the FILE names it, the file wins: an explicit
-// `display_name` first (reg_schema makes it the binding's OUTPUT column name, so it
+// `display_name` first (reg-core makes it the binding's OUTPUT column name, so it
 // wins even over a pinned `representation`), then the `representation` a pick pins
 // when it chose between co-existing columns.
 //

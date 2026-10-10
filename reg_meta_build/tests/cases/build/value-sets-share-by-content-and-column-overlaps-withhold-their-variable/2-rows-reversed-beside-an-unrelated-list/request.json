@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_resolved_writer_value_sets.py::test_shared_memberships_have_stable_ids_and_deterministic_replay"
+  ],
+  "note": "Step 1's sources with every Registerinformation, Vardemangder and SOS code-list row reversed, the Shared list's 01 Participation delivered twice in 2000, and an unrelated register OTHER whose list (0 Other) sorts before every other membership. The old test reversed variables, states and members, repeated every member, and then added an unrelated membership. A build cannot hand the writer reversed variables or states (formation orders them), nor a member list in row order or with a repeat (the value binding sorts and collapses them before `ResolvedCodeSet` does; its own canonicalization is pinned by classification-bindings-conform-extend-or-stay-unbound-per-register and coding-checked-entries-apply-then-go-stale-on-drift); row order within a source is what reaches it. The step-1 rows are read from step 1's build, so the stored value_set ids are compared without being written down.",
+  "fails_if": "`_write_value_sets` (resolved_catalog.py) numbers value sets by position (an insertion counter, or the order rows arrive in) instead of minting each id from its member hash, so OTHER's list (sorting first) renumbers every step-1 set; or a membership comes to depend on row order or on how often a member is delivered, so the reversed rows or the twice-delivered 01 Participation split the shared set or change a state's codes",
+  "sources": "scb-sos-value-sets-reversed-beside-an-unrelated-list"
+}

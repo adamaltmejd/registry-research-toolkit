@@ -2,8 +2,7 @@
 
 Not a runner: the `api` cases run for real once a server exists. This checks that every
 `api` case parses, names operations in the table, uses only catalogued error codes and
-references an existing fixture, and that every `replaced` route or command row in
-`surface.toml` names an operation.
+references an existing fixture.
 """
 
 from __future__ import annotations
@@ -37,13 +36,6 @@ def test_operations_name_catalogued_codes():
     assert not any(unknown.values()), unknown
 
 
-def test_replaced_routes_and_commands_name_an_operation():
-    rows = tomllib.loads((API / "surface.toml").read_text(encoding="utf-8"))["row"]
-    for row in rows:
-        if row["kind"] in ("route", "command") and row["disposition"] == "replaced":
-            assert row.get("operation") in OPS, f"{row['kind']} {row['id']!r}"
-
-
 @pytest.mark.parametrize(
     "case", sorted((CASES / "api").iterdir()), ids=lambda p: p.name
 )
@@ -58,3 +50,10 @@ def test_api_case_is_well_formed(case):
         for o in oracles
     } - {None}
     assert codes <= CODES, codes - CODES
+    for index, oracle in enumerate(oracles):
+        if "members" in oracle:
+            members = oracle["members"]
+            assert set(members) == {"steps", "pointer", "equals"}, members
+            # Evaluated with this step's oracle, so only earlier steps are answered.
+            assert all(0 <= step <= index for step in members["steps"]), members
+            assert len(set(members["equals"])) == len(members["equals"]), members

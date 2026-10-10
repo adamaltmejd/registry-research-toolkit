@@ -142,15 +142,14 @@ Consequences:
 - **Warning attribution is C over compiled `canonical_column`** (corrected by 3b.1,
   stage 3b–3e decision 2). Warning ids are computed per expanded window today, then
   again after clipping to held and requested periods (`_state_warning_ids` calls in
-  `catalog.py`; oracle `conformance/cases/logical/narrowed-state-warnings`). The
-  attribution reduces to a plain predicate over `data_warning` and each emitted
-  representation's clipped bounds and `canonical_column` (written out in
-  `reg_meta/DESIGN.md`, "Compiled states and browse deliveries"; it matched the reader
-  on all 2.28M links of the pinned global artifact). A compiled `state_warning` link
-  table measured 2.28M rows keyed by 64-character ids (about 160 MB), while one
-  variable's warnings read in about 1 ms at worst (420 warnings over 405 states), so the
-  reader evaluates the predicate per request. A join through the source state alone
-  would leak or drop warnings.
+  `catalog.py`; oracle `conformance/cases/api/states-held`). The attribution reduces to
+  a plain predicate over `data_warning` and each emitted representation's clipped bounds
+  and `canonical_column` (written out in `reg_meta/DESIGN.md`, "Compiled states and
+  browse deliveries"; it matched the reader on all 2.28M links of the pinned global
+  artifact). A compiled `state_warning` link table measured 2.28M rows keyed by
+  64-character ids (about 160 MB), while one variable's warnings read in about 1 ms at
+  worst (420 warnings over 405 states), so the reader evaluates the predicate per
+  request. A join through the source state alone would leak or drop warnings.
 - **Browse and resolver eligibility are different contracts.** Browse deliberately keeps
   alias windows that no state contains (`register_variable_deliveries`); holdings
   accepts only resolver-emitted columns (`holdings_compile.py`). `browse_delivery`
@@ -246,11 +245,10 @@ least at every maintainer checkpoint.
   `85a1a6c883fca2ded5203c60c33d8657a438344c39ab088c0b01299a47721f57` (read by `search`
   and `docs`).
 - Baseline: the release tag's own code, from a detached worktree of the tag: its
-  `reg-meta` binary (`cargo build --release`) for the served arm and its locked Python
-  environment for the CLI arms and the fold sweep (until 4.9a). It reads the release
-  originals directly. Both served arms run the same server, so requests go to both
-  unchanged and responses compare as raw bytes; `derived-generation` and
-  `reader-version` are the only exceptions.
+  `reg-meta` binary (`cargo build --release`); 4.9a deleted the Python CLI arms and the
+  fold sweep. It reads the release originals directly. Both arms run the same server, so
+  requests go to both unchanged and responses compare as raw bytes; `derived-generation`
+  and `reader-version` are the only exceptions.
 
 **Three verification gates, with budgets.** They are named G0–G2 so they are not
 confused with the test tiers 1–3 in `ARCHITECTURE.md`.
@@ -1026,7 +1024,8 @@ Implements section 4 (G1 independence).
 4. **`reg_meta_build` stops publishing to PyPI** (`publish_reg_meta_build.yml` and the
    release skill's step go); the builder runs from a checkout.
 5. **`fetch` moves to stage 4** with local binary distribution (`surface.toml` owner);
-   3a.12 is withdrawn.
+   3a.12 is withdrawn. Superseded by stage 4 decision 3: binaries plus hosted MCP, no
+   `fetch` run mode.
 6. **Release:** the maintainer cuts `reg_meta` at schema 9.3.0 now (G2 and release).
 7. **G1 baseline:** package 3a.2a merges; the baseline reads reference copies derived by
    a pinned builder.
@@ -1254,20 +1253,11 @@ in-flight list.
 
 #### Transitional inventory
 
-  | Dual structure                                                                                                                                            | Deleted in                                                                                          |
-  | --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-  | Three-axis schema guard (`scripts/schema_pending_bump.py`: Python main DB, doc DB, Rust minimum)                                                          | stage 4 (Rust axes only)                                                                            |
-  | Python `SCHEMA_VERSION` bumped for tables only Rust reads                                                                                                 | stage 4                                                                                             |
-  | Image DB bake through the Python `reg-meta update` (Dockerfile `regmeta-db` stage)                                                                        | stage 4 (curl, SHA-256, zstd)                                                                       |
-  | G1's two arms: Python-vs-Python CLI cases and the `served` arm                                                                                            | stage 4                                                                                             |
-  | `derived-generation-*` G1 exceptions                                                                                                                      | while the baseline reads the release originals and the checkout its derived copies (all of stage 3) |
-  | `reader-version` G1 exception (the arms' release versions)                                                                                                | stage 4                                                                                             |
-  | `rust-only fix:` G1 exceptions                                                                                                                            | stage 4 (D1)                                                                                        |
-  | Derive calling the reader in place (`from reg_meta.catalog import Catalog` in derive; `reg_meta.queries.get_coded_variables` in `derive/schema.py`)       | stage 4 (moved into `reg_meta_build`)                                                               |
-  | Two project validators and project-schema versions (`reg_schema`, `reg-core`)                                                                             | stage 4                                                                                             |
-  | CLI-era cases and runners (`cli_scope`, `logical`, `coverage`, `reader`, their `test_*.py`)                                                               | stage 4 (proven twins earlier)                                                                      |
-  | Frozen Python `same_as` BFS (`_resolve_*_via_same_as` in `catalog.py`), unreachable since the writer requires live `same_as` endpoints (3d.1); not ported | stage 4 (deleted with the Python runtime)                                                           |
-  | `scripts/check_versions.sh` keeping the `reg-meta` crate and `reg_meta` versions equal                                                                    | stage 4                                                                                             |
+  | Dual structure                                             | Deleted in                                                                                          |
+  | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+  | `derived-generation-*` G1 exceptions                       | while the baseline reads the release originals and the checkout its derived copies (all of stage 3) |
+  | `reader-version` G1 exception (the arms' release versions) | stage 4                                                                                             |
+  | `rust-only fix:` G1 exceptions                             | stage 4 (D1)                                                                                        |
 
 #### Packages
 

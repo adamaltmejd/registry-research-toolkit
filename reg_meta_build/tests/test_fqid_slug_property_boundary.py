@@ -1,8 +1,7 @@
-"""Property cases for populated slugs, asserted on the artifact and the public
-reader: any register's auto-derived `variable.slug` values pass the public slug
+"""Property cases for populated slugs, asserted on the artifact: any register's auto-derived `variable.slug` values pass the public slug
 validator, are unique within the register and rebuild byte-identically; a
 name-derived slug respects the length cap and re-derives to itself; a curated
-panel key survives TOML -> `populate_slugs` -> `Catalog.list_variants`."""
+panel key survives TOML -> `populate_slugs` -> the artifact's `register_variant` row."""
 
 from __future__ import annotations
 
@@ -12,7 +11,6 @@ from pathlib import Path
 
 from _slugged_db import add_state, add_variable, build_slugged_db
 from hypothesis import assume, example, given, settings, strategies as st
-from reg_meta.catalog import Catalog
 from reg_meta_build.slug_grammar import derive_variable_slug, validate_slug
 
 from reg_meta_build.fqid_slugs import (
@@ -118,7 +116,7 @@ _panel_key = st.one_of(_slug, st.lists(_slug, min_size=1, max_size=4, unique=Tru
 # Each example builds and slugs a catalog; under machine load it overruns the default deadline.
 @settings(deadline=None)
 @given(_panel_key, st.one_of(st.just("period"), _panel_key))
-def test_panel_keys_round_trip_to_reader(
+def test_panel_keys_round_trip_to_artifact(
     entity_key: str | list[str], time_key: str | list[str]
 ) -> None:
     conn = build_slugged_db()
@@ -134,10 +132,15 @@ def test_panel_keys_round_trip_to_reader(
             encoding="utf-8",
         )
         populate_slugs(conn, Path(d), strict=True)
-    [variant] = Catalog(conn).list_variants("scb", "lisa")
+    [(stored_entity, stored_time)] = conn.execute(
+        "SELECT panel_entity_key, panel_time_key FROM register_variant "
+        "WHERE register_variant_id = 10"
+    ).fetchall()
 
-    def expect(key: str | list[str]) -> str | tuple[str, ...]:
-        return tuple(key) if isinstance(key, list) else key
+    # The DDL's encoding (`db.py`, `register_variant`): a composite key is a JSON
+    # array, a simple key the bare slug.
+    def decode(raw: str) -> str | list[str]:
+        return json.loads(raw) if raw.startswith("[") else raw
 
-    assert variant.panel_entity_key == expect(entity_key)
-    assert variant.panel_time_key == expect(time_key)
+    assert decode(stored_entity) == entity_key
+    assert decode(stored_time) == time_key

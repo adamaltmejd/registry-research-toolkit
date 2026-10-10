@@ -1,7 +1,7 @@
 //! The `project_data.json` types and their two JSON encodings (`RUST_RUNTIME_SPEC.md`
 //! section 5, package 3e.1).
 //!
-//! The types are today's `reg_schema.project_data` models. They keep the raw spelling
+//! The types are the retired `reg_schema.project_data` models. They keep the raw spelling
 //! of every value (an int year stays an int, `"2018"` stays a string), and serialize
 //! as Pydantic's `model_dump(mode="json")` does: every optional field present, absent
 //! as `null`, `panels` as `[]`, a bare-string panel member as `{"source": ...}`. That
@@ -24,15 +24,15 @@ use crate::{
     validate_structural,
 };
 
-/// The `project_data.json` contract this runtime reads, exactly: `reg_schema`'s
-/// version, which the frozen Python validator also reads (the two converge in
-/// stage 4).
+/// The `project_data.json` contract this runtime reads, exactly. The SPA seeds a new
+/// draft at this version (`reg_webapp/frontend/src/lib/project_data.test.ts` reads it
+/// from here).
 pub const SCHEMA_VERSION: &str = "3.0.0";
 
 /// The supported-version decision, taken before any other check reads the document
 /// as this contract: a string `schema_version` other than [`SCHEMA_VERSION`] is one
 /// `unsupported_schema_version` issue. An absent or non-string one is the structural
-/// validator's to report. Today's `reg_meta.order.schema_version_issue`.
+/// validator's to report.
 #[must_use]
 pub fn version_issue(raw: &Value) -> Option<ValidationIssue> {
     let version = raw.get("schema_version")?.as_str()?;
@@ -249,7 +249,7 @@ pub enum SourcePeriod {
 
 impl SourcePeriod {
     /// The requested days, merged ([`merge`]); `None` for `"_default"`, a
-    /// year-independent selection. Today's `reg_meta.order.requested_intervals`.
+    /// year-independent selection.
     ///
     /// # Errors
     ///
@@ -426,7 +426,6 @@ pub fn to_json_pretty<T: Serialize>(value: &T) -> String {
 
 /// The project identity of an order manifest: SHA-256, as lowercase hex, of the
 /// project's compact canonical JSON (sorted keys, no whitespace, non-ASCII as is).
-/// Today's `reg_meta.order._project_hash`.
 #[must_use]
 pub fn project_hash(project: &ProjectData) -> String {
     let canonical = tree(project).to_string();

@@ -1,0 +1,22 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/aliases/unrelated",
+        "scb/aliases/broad-a",
+        "scb/aliases/broad-b"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "scb/aliases/broad-a",
+        "scb/aliases/broad-b"
+      ],
+      "/data/next_cursor": null
+    }
+  }
+]

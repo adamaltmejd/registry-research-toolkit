@@ -5,18 +5,19 @@ and builds the SQLite catalogs queried by `reg_meta`. It also builds the separat
 `reg_meta_docs.db` document index. It is maintainer tooling, not a runtime dependency of
 the query package.
 
-The dependency direction is `reg_meta_build → reg_meta`. The query package owns the
-public catalog/schema constants and read models. The builder owns input handling,
-curation, materialization and validation. Cross-package constraints live in
+The builder imports nothing from `reg_meta`. It owns the catalog and docs schema
+constants, input handling, curation, materialization and validation; the Rust server
+reads what it writes. Cross-package constraints live in
 [../ARCHITECTURE.md](../ARCHITECTURE.md).
 
 The builder also depends on `reg-core-py` (`crates/reg-core-py`), the Python module of
 the Rust `reg-core` crate: the single home of the contracts the build shares with the
-Rust runtime ([../RUST_RUNTIME_SPEC.md](../RUST_RUNTIME_SPEC.md) section 5). It exposes
-`fold_search` today. It is a uv workspace member built by maturin, so `uv sync` needs a
-Rust toolchain on the maintainer machine and in CI; its uv `cache-keys` rebuild it after
-an edit to `crates/reg-core`, `crates/reg-core-py`, `Cargo.toml` or `Cargo.lock`. It is
-not on PyPI, so a published `reg_meta_build` wheel cannot resolve it.
+Rust runtime ([../RUST_RUNTIME_SPEC.md](../RUST_RUNTIME_SPEC.md) section 5): the FQID,
+slug and period grammar and the text folds. It is a uv workspace member built by
+maturin, so `uv sync` needs a Rust toolchain on the maintainer machine and in CI; its uv
+`cache-keys` rebuild it after an edit to `crates/reg-core`, `crates/reg-core-py`,
+`Cargo.toml` or `Cargo.lock`. It is not on PyPI, so a published `reg_meta_build` wheel
+cannot resolve it.
 
 The four-step pipeline below is the only `build-db` implementation. A diagnostic
 database is incomplete and cannot be activated by builder publication. Input declaration
@@ -1522,9 +1523,9 @@ reader's direct code match applies the same owner predicate.
 **Slug reservations.** The slug grammar (with `class` reserved) is `reg-core`'s, reached
 through `reg-core-py`; `slug_grammar.validate_slug` adds the build's slot policy:
 `_default` only as the register_variant coordinate, and `variants` (variable slot) and
-`group` (provider slot), which SPA routes capture. The former FastAPI suffix words
-(`states`, `graph`, ...) protect no route (the Rust routes put the operation first) but
-stay reserved while `reg_meta`'s reader still refuses them; they go in package 4.9a.
+`group` (provider slot), which SPA routes capture. No other word is reserved: every Rust
+route puts the operation first and the ref last (`/api/states/{ref}`), so a slug such as
+`states` or `graph` cannot shadow a route.
 
 ## Inspection and verification
 
@@ -1837,6 +1838,16 @@ finite or unknown-scope sentinel. Retained unknown tables come from accepted
 the slug grammar (`_default`, `class` and period-shaped values are rejected); they name
 shards of a delivery, not populations a researcher selects. An unmapped column keeps its
 authored reason where one is given; none is synthesized.
+
+A refusal is a configuration error (exit 10) that names the file and each offending
+`table[...]`, `column[...]` or field, under one code per rule family:
+`inventory_toml_unreadable` (not UTF-8 TOML), `inventory_invalid` (field grammar: types,
+missing or unknown keys, contract version, slug and FQID shape), `inventory_no_tables`,
+`inventory_table_no_columns`, `inventory_duplicate_table`, `inventory_duplicate_column`,
+`inventory_duplicate_mapping`, `inventory_edition_invalid`,
+`inventory_period_scope_invalid`, `inventory_unmapped_reason_invalid` and
+`inventory_cell_conflict` (the one-to-one rule below). When several lines fail, the code
+is the first line's.
 
 ### Holdings resolution invariants
 

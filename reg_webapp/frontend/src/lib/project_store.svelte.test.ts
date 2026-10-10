@@ -343,7 +343,7 @@ describe("stable client-side ids (issue #200)", () => {
   });
 
   describe("ids NEVER leak into the serialized draft / POST bodies (the closed-object constraint)", () => {
-    // Source/Binding are extra=forbid in reg_schema — an injected id would both trip
+    // Source/Binding are closed objects in reg-core — an injected id would both trip
     // `unexpected_field` AND end up in the downloaded project_data.json. The ids live
     // only in the store, so neither the serialized text nor any POST body may carry
     // a `_uid`/`_id`/client `c<n>` key.

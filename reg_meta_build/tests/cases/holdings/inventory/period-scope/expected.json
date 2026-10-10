@@ -1,0 +1,18 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_non_finite_or_malformed_editions[edition = \"_default\"]",
+  "note": "Each arm of the period-scope rule: `_default` without the year-independent scope, the scope with a dated edition, and a year-independent mapping onto a `_default` variant. The valid pairing is the year-independent compile case.",
+  "fails_if": "load_inventory admits `_default` as a dated edition, a year-independent table with a dated edition, or a year-independent mapping without a concrete variant",
+  "error": {
+    "code": "inventory_period_scope_invalid",
+    "locators": [
+      "table['SoS_Patientregister.csv']",
+      "table['Catalogue.csv']",
+      "table['Lookup.csv']"
+    ],
+    "message_contains": [
+      "edition='_default' requires year-independent period_scope",
+      "year-independent tables require edition='_default'",
+      "year-independent mappings require a concrete variant"
+    ]
+  }
+}

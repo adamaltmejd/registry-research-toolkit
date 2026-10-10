@@ -1,0 +1,25 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "where": {"variable": "former", "register": "example"},
+      "fields": ["source_register"],
+      "rows": [["prefix"]]
+    },
+    {
+      "table": "lineage",
+      "where": {"variable": "former"},
+      "fields": ["source_register", "source_variable", "valid_from", "valid_to"],
+      "rows": [["prefix", "former", "2000-01-01", "2000-12-31"]]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": {"contains": "scb/example/"}},
+      "fields": ["code", "severity", "subject"],
+      "rows": [
+        ["ambiguous_source_register", "error", "scb/example/contested"]
+      ]
+    }
+  ]
+}

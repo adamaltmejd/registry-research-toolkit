@@ -1,8 +1,8 @@
 # reg_meta_build
 
 Maintainer-only builder for `reg_meta.db` and the separate `reg_meta_docs.db` document
-index. End users install [`reg_meta`](../reg_meta/) and fetch published databases with
-`reg-meta update`.
+index. End users query published databases through the hosted MCP or a local `reg-meta`
+server (see the [root README](../README.md)).
 
 The current builder output uses schema `9.0.0`. Exact reviewed source crosswalks without
 established variable endpoints remain in `source_relationship` as `retained_unattached`,

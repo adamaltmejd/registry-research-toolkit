@@ -17,10 +17,10 @@ const SOURCES = [
   },
 ];
 
-// The materializer's own steward-mismatch copy, verbatim (reg_meta/order.py) —
+// The materializer's own steward-mismatch copy, verbatim (`crates/reg-catalog/src/ops/order.rs`) —
 // this panel is where a researcher reads it, so the fixture is the real sentence
 // rather than a stand-in. The wording itself is pinned in
-// reg_meta/tests/test_order.py; what this file shows is how it renders.
+// conformance/cases/api/order-errors/; what this file shows is how it renders.
 const STEWARD_MISMATCH = {
   code: "steward_mismatch",
   message:

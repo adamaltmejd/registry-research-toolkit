@@ -1,0 +1,45 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Arb_AGIIndivid_2021-03.csv"
+edition = "2021-03"
+partition = "arb"
+[[table.column]]
+name = "Belopp"
+[[table.column.mapping]]
+register_variant = "skv/agi/individuppgifter-agi"
+variable = "skv/agi/utbetalt-belopp"
+representation = "Belopp"
+
+[[table]]
+id = "Soc_AGIIndivid_2021-03.csv"
+edition = "2021-03"
+partition = "arb"
+[[table.column]]
+name = "Belopp"
+[[table.column.mapping]]
+register_variant = "skv/agi/individuppgifter-agi"
+variable = "skv/agi/utbetalt-belopp"
+representation = "Belopp"
+
+[[table]]
+id = "Arb_AGIAvdrag_2021-03.csv"
+edition = "2021-03"
+partition = "arb"
+[[table.column]]
+name = "Avdrag"
+[[table.column.mapping]]
+register_variant = "skv/agi/individuppgifter-agi"
+variable = "skv/agi/skatteavdrag"
+representation = "Avdrag"
+
+[[table]]
+id = "AGIAvdrag_2021-03.csv"
+edition = "2021-03"
+[[table.column]]
+name = "Avdrag"
+[[table.column.mapping]]
+register_variant = "skv/agi/individuppgifter-agi"
+variable = "skv/agi/skatteavdrag"
+representation = "Avdrag"

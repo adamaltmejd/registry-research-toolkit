@@ -39,10 +39,10 @@ returns HEAD as the acceptance commit. A tree not yet committed at HEAD, with it
 payload inventory complete, is reported as awaiting acceptance, without a rerun. Any
 other failed check drops the record and misses.
 
-Build key: the content of `reg_meta_build/src`, `reg_schema/src`,
-`crates/reg-core`, `crates/reg-core-py`, `Cargo.toml`, `Cargo.lock` and `uv.lock`; the
-builder's own `curation_tree_sha256` of the selected curation tree; the prepared
-commit and manifest digest; the mode and `--registers`; the Python and SQLite
+Build key: the content of `reg_meta_build/src`, `crates/reg-core`,
+`crates/reg-core-py`, `Cargo.toml`, `Cargo.lock` and `uv.lock`; the builder's own
+`curation_tree_sha256` of the selected curation tree; the prepared commit and manifest
+digest; the mode and `--registers`; the Python and SQLite
 versions; and for a publishable build the checkout's HEAD, which the database records.
 Every build lookup, hit or miss, first runs the admission checks the builder runs
 before it resolves anything (the prepared tree at the pinned commit and, for a
@@ -104,7 +104,6 @@ EXIT_CONFIG = 10  # reg-meta-build's exit for a diagnostic completion
 EXIT_AWAITING = 3
 PACKAGES = {
     "reg_meta_build": "reg_meta_build/src",
-    "reg_schema": "reg_schema/src",
 }
 # The prepare key's code boundary, as roots of a static import walk
 # (`prepare_code_files`): the preparation entry point, and the modules the CLI's
@@ -115,9 +114,6 @@ PACKAGES = {
 # reading a repository file outside its package (today only `_curation`,
 # `curation_tree` and `fqid_slugs` can read the curation tree, and the prepare path
 # calls none of those readers).
-#
-# Stage 4.9a of RUST_RUNTIME_SPEC.md deletes `reg_schema/`: update `PACKAGES` then;
-# a missing root stops the tool rather than shrinking the key.
 PREPARE_ROOTS = (
     "reg_meta_build.prepared_catalog",
     "reg_meta_build.input_snapshot",
@@ -149,7 +145,7 @@ for package in ("reg_meta_build",):
     if not origin.is_relative_to(root):
         print(json.dumps({"environment_error": (
             f"uv run imports {package} from {origin}, not from the keyed checkout "
-            f"{root}; unset UV_PROJECT_ENVIRONMENT or run from that checkout"
+            f"{root}; check PYTHONPATH and $REG_REAL_SEED_PYTHON"
         )}))
         sys.exit(0)
 if request.get("curation"):
@@ -525,8 +521,7 @@ def build_code(args: argparse.Namespace) -> dict:
     """The builder code a build runs. A publishable build also records the
     checkout's commit in the database, so that commit is keyed too."""
     return {
-        # `reg_schema/src` goes with stage 4.9a; drop it here then.
-        "code": code_digests((*BUILDER_SOURCES, PACKAGES["reg_schema"])),
+        "code": code_digests(BUILDER_SOURCES),
         "builder_commit": (
             git(ROOT, "rev-parse", "HEAD")
             if not args.diagnostic and not args.registers
@@ -834,6 +829,15 @@ def main() -> int:
         help="rebuild uncached and compare with the stored entry",
     )
     args = parser.parse_args()
+    # Checked before any `uv run`: the probe's import check only sees the damage after
+    # `uv run` has synced this checkout's editable packages into that environment, so
+    # another checkout's .venv would run this tree's code until re-synced (#1337).
+    env = os.environ.get("UV_PROJECT_ENVIRONMENT")
+    if env and (ROOT / env).resolve() != (ROOT / ".venv").resolve():
+        sys.exit(
+            f"real-seed-cache: UV_PROJECT_ENVIRONMENT names {env}, not {ROOT}/.venv; "
+            "uv run would install this checkout's packages there. Unset it."
+        )
     # Resolved once, so the key and the builder (run from the repository root) read
     # the same paths.
     for name in ("input_bundle", "output_dir", "prepared", "curation_dir"):

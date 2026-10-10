@@ -1,0 +1,14 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_duplicate_table_identifier",
+  "note": "Disjoint editions, so only the repeated id is wrong; two DIFFERENT ids over disjoint editions is the annual-series compile case.",
+  "fails_if": "load_inventory accepts one table id declared twice (an ambiguous edition), or reports it under another code",
+  "error": {
+    "code": "inventory_duplicate_table",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "duplicate table 'LISA_Individ.csv'"
+    ]
+  }
+}

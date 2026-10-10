@@ -1,0 +1,19 @@
+{
+  "replaces": [
+    "reg_meta/tests/test_inventory.py::test_rejects_two_tables_serving_one_cell",
+    "reg_meta/tests/test_inventory.py::test_school_year_conflict_names_the_period_as_its_token"
+  ],
+  "note": "Two cumulative snapshots overlapping in 2021, and two school-year tables over one LA period. Each conflict line names both locations, the coordinate and only the OVERLAPPING period, rendered as its token. Disjoint editions are the annual-series compile case; distinct representations are the parallel-representations compile case.",
+  "fails_if": "load_inventory admits two tables mapping one cell over overlapping editions, renders the overlap as ISO bounds or the whole editions, or auto-picks a survivor",
+  "error": {
+    "code": "inventory_cell_conflict",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "table['FHM_NVR_Covid_2021-03-15.csv'].column['Vaccinationsdatum'] (representation 'Vaccinationsdatum') and table['FHM_NVR_Covid_2021-06-30.csv'].column['Vaccinationsdatum'] (representation 'Vaccinationsdatum') both map fohm/nvr/_default fohm/nvr/vaccinationsdatum over 2021\n",
+      "table['Grundskola_a.csv'].column['Betyg'] (representation 'Betyg') and table['Grundskola_b.csv'].column['Betyg'] (representation 'Betyg') both map scb/grundskola/elever scb/grundskola/betyg over LA2004\n",
+      "filename date is not proof of supersession"
+    ]
+  }
+}

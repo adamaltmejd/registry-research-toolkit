@@ -6,7 +6,7 @@
  * period for UI/project behavior and build the query string the router navigates to.
  *
  * The SPA only mirrors the wire grammar (see reg_webapp/DESIGN.md → Pydantic
- * boundary) — the server (`reg_meta.fqid`) is the CANONICAL validator. `looksLikePeriod` is a LIGHT, ADVISORY client hint
+ * boundary) — the server (`reg-core`) is the CANONICAL validator. `looksLikePeriod` is a LIGHT, ADVISORY client hint
  * only (it must never block submit; a "looks wrong" value is still sent so the
  * server's 422 detail is the authority).
  */
@@ -28,13 +28,13 @@ export interface ResolutionParams {
 export const VALUE_SET_VERSION_NONE = "_none";
 
 // ── Advisory grammar hint (wire tokens) ──────────────────────────────────────
-// Mirrors `reg_meta.fqid._PERIOD_PATTERNS` (anchored, `\Z`-equivalent — JS `$`
+// Mirrors reg-core's period grammar (`grammar.rs`; anchored, `\Z`-equivalent — JS `$`
 // already does NOT match before a trailing `\n` the way Python's does, so the
 // trailing-newline footgun the backend guards doesn't exist here; still, the
 // server is the canonical gate). A range is `<endpoint>..<endpoint>`; each
 // endpoint is a single token. The author-supplied day of a `YYYY-MM-DD` token is
 // ALSO calendar-checked (regex can't do leap years, so `2019-02-29` matches the
-// pattern but is rejected by `isRealCalendarDay` — mirrors the reg_meta/reg_schema
+// pattern but is rejected by `isRealCalendarDay` — mirrors the reg-core
 // side). ADVISORY ONLY — never gates submit.
 
 const YEAR = "(?:19|20)\\d{2}";
@@ -154,7 +154,7 @@ export function isStructurallyValidPeriodWire(raw: string): boolean {
   return true;
 }
 
-// ── Token bounds (advisory mirror of `reg_meta.fqid` interval semantics) ────
+// ── Token bounds (advisory mirror of reg-core interval semantics) ────
 // The #306 one-click add needs CLIENT-side window math (clip register-variant
 // validity windows to the user's range to tell succession from co-existence).
 // ADVISORY like `looksLikePeriod`: an unparseable token simply degrades to the
@@ -232,7 +232,7 @@ export function periodTokenBounds(token: string): PeriodBounds | null {
 
 /** Render an inclusive ISO interval `[lo, hi]` as the COARSEST period token that
  * `periodTokenBounds` expands back to EXACTLY `(lo, hi)` — the display/diagnostic
- * inverse, mirroring reg_meta's `period_token_for_bounds` (#271). A window that no
+ * inverse, mirroring reg-core's `period_token_for_bounds` (#271). A window that no
  * single token covers exactly renders as the explicit `"lo..hi"` range, NEVER
  * rounded to a containing year: two sub-annual sibling spans both reading "2009"
  * would re-create the very ambiguity the interval resolver removes. Month windows
@@ -381,7 +381,7 @@ export function periodToWire(period: Period): string | null {
  *   - ANY 2-endpoint `from..to` range → the `{from, to}` object, each endpoint
  *     an integer year when it parses as one, else the token string verbatim
  *     (`"VT1992..2009"` → `{from: "VT1992", to: 2009}`). The OBJECT form is the
- *     only range shape `Source.period` accepts — reg_schema's string arm is
+ *     only range shape `Source.period` accepts — reg-core's string arm is
  *     single-token-only, so a raw `"a..b"` string period would fail
  *     `invalid_period` (bit the #306 succession auto-split, whose clipped
  *     segments routinely carry date/token endpoints);
@@ -420,7 +420,7 @@ function segmentFromWire(value: string): PeriodSegment {
     if (parts.length === 2) {
       // ALWAYS the {from, to} object for a 2-endpoint range: int-year endpoints
       // where they parse, token strings otherwise. Never the raw "a..b" string —
-      // reg_schema's string arm is single-token-only, so a raw range string
+      // reg-core's string arm is single-token-only, so a raw range string
       // (scalar OR #307 list member) would fail `invalid_period`.
       return {
         from: grammarYear(parts[0]) ?? parts[0].trim(),
@@ -551,7 +551,7 @@ function isEmptyPeriod(period: Period): boolean {
  * Merge an `incoming` window into an `existing` source period (#992). When BOTH
  * are pure year grammar (year ints / year ranges, no tokens), coalesce their
  * intervals into a single sorted-ascending, non-overlapping, adjacency-merged
- * list (reg_schema requires list periods sorted + disjoint) — a lone surviving
+ * list (reg-core requires list periods sorted + disjoint) — a lone surviving
  * interval collapses to a scalar, matching how `periodFromWire` represents a
  * single segment. When EITHER side uses token grammar, a coalesce is undefined
  * (mixed-grain sort), so REPLACE with `incoming` — the user's most recent
@@ -820,7 +820,7 @@ export function yearSegmentsFromWire(
 /** Parse a string as a bare GRAMMAR year (19xx/20xx) → its int, else null. The
  * single spelling of "is this text a year the wire accepts": the wire parsing and
  * seeding here, and the PeriodPicker's exact year fields. Stricter than "any
- * integer" on purpose — an int `Source.period` passes reg_schema's int-literal
+ * integer" on purpose — an int `Source.period` passes reg-core's int-literal
  * arm unchecked, so coercing a typo like "202" to int 202 would slip a nonsense
  * year past the structural gate; left as a string, the grammar check flags it
  * (review on #308). */

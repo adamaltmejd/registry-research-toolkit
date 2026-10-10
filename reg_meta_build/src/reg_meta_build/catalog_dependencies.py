@@ -17,7 +17,6 @@ from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
 from reg_meta_build._components import DisjointSet
-from reg_meta_build._curation import printable_error
 from reg_meta_build._resolved_common import _ResolvedWindow, remaining_windows
 from reg_meta_build.concept_groups import (
     _MONTH_LABELS,
@@ -680,17 +679,15 @@ def check_delivery_coverage(
     ):
         if problems:
             # The same code a diagnostic build records for each obligation.
-            raise printable_error(
-                RegMetaError(
-                    exit_code=EXIT_CONFIG,
-                    code=code,
-                    error_class="configuration",
-                    message=f"supported delivery {what} without an explicit source "
-                    f"outcome ({len(problems)} {unit}(s)): " + "; ".join(problems[:10]),
-                    remediation="Supported delivery must reach the catalog "
-                    "unchanged: fix the build stage that lost or changed it, or "
-                    "curate the explicit source outcome that explains the change.",
-                )
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code=code,
+                error_class="configuration",
+                message=f"supported delivery {what} without an explicit source "
+                f"outcome ({len(problems)} {unit}(s)): " + "; ".join(problems[:10]),
+                remediation="Supported delivery must reach the catalog "
+                "unchanged: fix the build stage that lost or changed it, or "
+                "curate the explicit source outcome that explains the change.",
             )
     return ()
 
@@ -716,7 +713,6 @@ class CatalogDependencyError(RegMetaError):
             "mints (a curated slug that exists), or remove the curation entry that "
             "names it.",
         )
-        printable_error(self)
 
 
 # Shared inputs: keys of these kinds lie in no register.

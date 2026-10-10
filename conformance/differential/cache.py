@@ -8,7 +8,7 @@ Layout under the cache root (``$REG_META_G1_CACHE``, else
     artifacts/<tag>/swecov/reg_meta.db       + reg_meta_docs.db -> ../global/...
     derived/<key>/global/reg_meta.db         + reg_meta_docs.db (indexed copy)
     derived/<key>/swecov/reg_meta.db         + reg_meta_docs.db -> ../global/...
-    baseline/<tag>/src/                      detached worktree of the tag + .venv
+    baseline/<tag>/src/                      detached worktree of the tag
     baseline/<tag>/reg-meta                  the tag's release build of the server
 
 Each asset is streamed once: hashed against its pinned SHA-256 while it is
@@ -17,10 +17,9 @@ verified asset digest and the file's size and mtime; a later run refetches when 
 no longer match (readers open the files immutable, so they never change).
 
 The baseline is the pinned release's own code: one detached worktree of the release tag
-with its locked environment (``uv sync``, where maturin builds ``reg-core-py``) for the
-Python CLI arm and the fold sweep, and its ``reg-meta`` binary (``cargo build
---release``, the target directory deleted once the binary is copied out) for the served
-arm. It reads the release originals. A derived (candidate) copy is the checkout's ``reg-meta-build
+(for its steward branding) and its ``reg-meta`` binary (``cargo build --release``, the
+target directory deleted once the binary is copied out). It reads the release
+originals. A derived (candidate) copy is the checkout's ``reg-meta-build
 derive`` of an original; the checkout reads it. Its directory's ``<key>`` hashes the
 pinned asset digests and the derive source tree, so checkouts with different
 builders keep separate copies instead of re-deriving over one another's, and a
@@ -43,6 +42,7 @@ import subprocess
 import sys
 import time
 import urllib.request
+from compression import zstd
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
@@ -73,8 +73,8 @@ CHUNK = 1 << 20
 # ~2.6 GB of the tight disk).
 KEEP = 2
 REPO_ROOT = Path(__file__).resolve().parents[2]
-# What a derived copy depends on: the builder, the reader code derive moved, the
-# locked dependencies, and the Rust sources of `reg-core-py` (its uv `cache-keys`).
+# What a derived copy depends on: the builder, the locked dependencies, and the Rust
+# sources of `reg-core-py` (its uv `cache-keys`).
 DERIVE_SOURCES = BUILDER_SOURCES
 
 
@@ -140,8 +140,6 @@ def _stamp_ok(path: Path, asset: Asset) -> bool:
 
 def _download(tag: str, asset: Asset, dest: Path) -> None:
     """Stream, hash and decompress one asset; publish ``dest`` only if it verifies."""
-    import zstandard
-
     url = DOWNLOAD_URL.format(tag=tag, asset=asset.name)
     sys.stderr.write(f"g1: fetching {url}\n")
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -152,7 +150,7 @@ def _download(tag: str, asset: Asset, dest: Path) -> None:
             urllib.request.urlopen(url, timeout=60) as response,
             tmp.open("wb") as out,
         ):
-            decompressor = zstandard.ZstdDecompressor().decompressobj()
+            decompressor = zstd.ZstdDecompressor()
             while chunk := response.read(CHUNK):
                 asset_digest.update(chunk)
                 data = decompressor.decompress(chunk)
@@ -383,8 +381,7 @@ def ensure_server() -> Path:
 
 
 def isolated_env() -> dict[str, str]:
-    """An environment with no path or venv leaks from the caller, for the baseline
-    arm and every derive."""
+    """An environment with no path or venv leaks from the caller, for every derive."""
     env = {
         k: v
         for k, v in os.environ.items()
@@ -395,21 +392,15 @@ def isolated_env() -> dict[str, str]:
     return env
 
 
-def baseline_python(tree: Path) -> Path:
-    """The baseline interpreter in the tree ``ensure_baseline`` returns."""
-    return tree / ".venv" / "bin" / "python"
-
-
 def baseline_server(tree: Path) -> Path:
     """The baseline ``reg-meta`` beside the tree ``ensure_baseline`` returns."""
     return tree.parent / "reg-meta"
 
 
 def ensure_baseline(pins: Pins) -> Path:
-    """Return the baseline tree: a detached worktree of the release tag with its
-    locked environment in ``.venv`` (``uv sync --frozen --no-dev``; maturin builds
-    ``reg-core-py`` from the tag's crates) and, beside it, the tag's ``reg-meta``
-    (``baseline_server``). The tree also holds the tag's steward branding.
+    """Return the baseline tree: a detached worktree of the release tag, holding the
+    tag's steward branding, and beside it the tag's ``reg-meta``
+    (``baseline_server``).
     """
     root = cache_root()
     _prune(root / "baseline", {_tag_dir(pins.tag)})
@@ -439,12 +430,6 @@ def ensure_baseline(pins: Pins) -> Path:
         "--detach",
         str(tree),
         commit,
-    )
-    subprocess.run(
-        ["uv", "sync", "--quiet", "--frozen", "--no-dev"],
-        cwd=tree,
-        env=isolated_env(),
-        check=True,
     )
     # An explicit target directory: a caller's CARGO_TARGET_DIR would build into
     # (and over) the checkout's.

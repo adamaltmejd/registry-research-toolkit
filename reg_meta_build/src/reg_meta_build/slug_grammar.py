@@ -3,8 +3,7 @@
 The grammar is `reg_core_py.check_slug` (`RUST_RUNTIME_SPEC.md` section 5); what this
 module adds is build policy with no Rust consumer: `_default` is the variant-less
 register_variant coordinate, two slugs are reserved in one slot each because an SPA
-route would capture them (`reg_webapp/frontend/src/lib/router.svelte.ts`), and the
-former FastAPI suffix words are reserved while `reg_meta`'s reader still refuses them.
+route would capture them (`reg_webapp/frontend/src/lib/router.svelte.ts`).
 """
 
 from __future__ import annotations
@@ -21,23 +20,6 @@ _RESERVED_VARIABLE_SLUG = "variants"
 # `/catalog/group/<provider>/<register>/<key>` is the SPA's concept-group page and
 # `group/...` the group ref, so no provider may take the slug `group`.
 _RESERVED_PROVIDER_SLUG = "group"
-
-# simplify: no build path reaches reg_meta's reader any more (since 4.2b), so the
-# reader no longer needs these reserved. 4.9a decides whether the Rust server's
-# route suffixes still need them or they are dropped.
-_RESERVED_HTTP_SUFFIX_SLUGS = frozenset(
-    {
-        "states",
-        "predecessors",
-        "successors",
-        "lineage",
-        "lineage_warnings",
-        "data_warnings",
-        "dimensions",
-        "graph",
-    }
-)
-_HTTP_SUFFIX_SLOTS = ("variable", "register", "classification")
 
 _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
 
@@ -58,11 +40,6 @@ def validate_slug(value: str, slot: str, *, allow_default: bool = False) -> None
         check_slug(value)
     except GrammarError as exc:
         raise GrammarError(f"invalid slug in {slot}: {exc}") from None
-    if slot in _HTTP_SUFFIX_SLOTS and value in _RESERVED_HTTP_SUFFIX_SLUGS:
-        raise GrammarError(
-            f"slug in {slot} is a reserved HTTP-suffix: {value!r} (reg_meta's reader "
-            "refuses it)"
-        )
     if (slot, value) in (
         ("variable", _RESERVED_VARIABLE_SLUG),
         ("provider", _RESERVED_PROVIDER_SLUG),

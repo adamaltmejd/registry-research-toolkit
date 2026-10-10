@@ -1,0 +1,18 @@
+{
+  "replaces": [
+    "reg_meta/tests/test_inventory.py::test_rejects_table_without_an_edition",
+    "reg_meta/tests/test_inventory.py::test_rejects_non_finite_or_malformed_editions[edition = 2019.5]"
+  ],
+  "note": "A missing key and a value of the wrong type are field grammar, so they share `inventory_invalid`; the edition-grammar arms are edition-malformed.",
+  "fails_if": "load_inventory defaults a missing edition or coerces a fractional one, or names either table by index",
+  "error": {
+    "code": "inventory_invalid",
+    "locators": [
+      "table['Holdings_Extract.csv'].edition",
+      "table['Fractional.csv'].edition"
+    ],
+    "message_contains": [
+      "table['Holdings_Extract.csv'].edition: Field required"
+    ]
+  }
+}

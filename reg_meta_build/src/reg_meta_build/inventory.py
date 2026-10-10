@@ -9,20 +9,18 @@ inventory is committed. Its load-bearing rule is the one-to-one resolution
 invariant: every admitted `(register_variant, variable, representation, period)`
 cell resolves to exactly one physical `(table, column)` — per the
 disjoint-partition arm, per `(cell × partition)` — so the extraction tool never
-chooses between sources. reg_meta/DESIGN.md → "Holdings resolution invariants"
-is the decision text; the format is documented in reg_meta/DESIGN.md →
-"Inventory TOML authoring contract".
+chooses between sources. reg_meta_build/DESIGN.md → "Holdings resolution
+invariants" is the decision text; the format is documented in
+reg_meta_build/DESIGN.md → "Inventory TOML".
 
-Deliberately reg_schema-free: the contract needs only reg_meta's own period
-grammar (`fqid.period_token_to_bounds`) and FQID parser, so the `reg_meta →
-reg_schema` dependency the materializer takes is not taken here.
+The contract needs only reg-core's period grammar and FQID parser
+(`reg_core_py`).
 This module holds no DB access — it is pure domain code over an authored file.
 """
 
 from __future__ import annotations
 
 import tomllib
-from datetime import date, timedelta
 from typing import TYPE_CHECKING, Literal
 
 from pydantic import (
@@ -33,20 +31,46 @@ from pydantic import (
     field_validator,
     model_validator,
 )
+from reg_core_py import (
+    next_iso_day,
+    parse_fqid,
+    period_bounds,
+    period_token_for_bounds,
+)
 
 from .errors import EXIT_CONFIG, RegMetaError
-from .fqid import (
-    DEFAULT_VARIANT_SLUG,
-    Fqid,
-    FqidKind,
-    period_token_for_bounds,
-    period_token_to_bounds,
-    snap_to_real_month_end,
-    validate_slug,
-)
+from .slug_grammar import DEFAULT_VARIANT_SLUG, validate_slug
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+# Inventory refusals, one code per rule family (as `curation_tree` does for the
+# curation TOMLs) so a curator and a test can tell an empty table from a
+# duplicated one or a cell two tables both serve. `inventory_invalid` stays the
+# code for field grammar Pydantic or a shared grammar reports (wrong type,
+# missing or unknown key, contract version, slug and FQID shape).
+_INVALID = "inventory_invalid"
+_NO_TABLES = "inventory_no_tables"
+_DUPLICATE_TABLE = "inventory_duplicate_table"
+_TABLE_NO_COLUMNS = "inventory_table_no_columns"
+_DUPLICATE_COLUMN = "inventory_duplicate_column"
+_DUPLICATE_MAPPING = "inventory_duplicate_mapping"
+_UNMAPPED_REASON = "inventory_unmapped_reason_invalid"
+_EDITION = "inventory_edition_invalid"
+_PERIOD_SCOPE = "inventory_period_scope_invalid"
+_CELL_CONFLICT = "inventory_cell_conflict"
+
+
+class _InventoryGuardError(ValueError):
+    """A hand-written inventory guard's refusal, carrying its rule family's code.
+
+    A `ValueError` so Pydantic collects it as a located field error and so
+    `validate_inventory_placements`' direct callers still catch a `ValueError`;
+    `load_inventory` reads `code` back off the collected error."""
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(message)
+        self.code = code
 
 
 class _InventoryModel(BaseModel):
@@ -71,9 +95,7 @@ class EditionRange(_InventoryModel):
 
     Endpoints are period tokens (a bare TOML year int is normalized to its token
     string on the way in). `from` is a Python keyword, so the attr is `from_`
-    with a `"from"` alias — same shape reg_schema's `PeriodRange` uses for a
-    project period; the two converge when the materializer lane takes the
-    `reg_meta → reg_schema` dependency."""
+    with a `"from"` alias."""
 
     from_: str = Field(alias="from")
     to: str
@@ -106,8 +128,8 @@ def _year_int_to_token(value: object) -> object:
 
 def _segment_bounds(segment: EditionSegment) -> tuple[str, str]:
     if isinstance(segment, EditionRange):
-        lo, _ = period_token_to_bounds(segment.from_)
-        _, hi = period_token_to_bounds(segment.to)
+        lo, _ = _token_bounds(segment.from_)
+        _, hi = _token_bounds(segment.to)
         if lo > hi:
             raise ValueError(
                 f"edition range 'from' is after 'to': {segment.from_!r}..{segment.to!r}"
@@ -119,7 +141,24 @@ def _segment_bounds(segment: EditionSegment) -> tuple[str, str]:
             "(a table with no edition encoded in its name still needs a curated "
             "edition — see reg_meta_build/DESIGN.md → Holdings curation rules)"
         )
-    return period_token_to_bounds(segment)
+    return _token_bounds(segment)
+
+
+# simplify: keeps reg_meta's always-Feb-29 end so derive agrees with the pinned 0.45.0 artifacts (G1); delete in 4.10 with the 10.0.0 content change, together with conformance/holdings_accounting.py's Feb-29 bound
+# (`_token_bounds` and its inverse `_token_for_bounds` below)
+def _token_bounds(token: str) -> tuple[str, str]:
+    lo, hi = period_bounds(token)
+    if len(token) == 7 and hi.endswith("-02-28"):  # a non-leap `YYYY-02` month
+        hi = hi[:8] + "29"
+    return lo, hi
+
+
+def _token_for_bounds(lo: str, hi: str) -> str:
+    """`period_token_for_bounds` under the Feb-29 convention: `YYYY-02` is
+    `..-02-29`, so a window ending on the 28th is not the whole month."""
+    if lo[5:] == "02-01" and hi == f"{lo[:8]}28":
+        return f"{lo}..{hi}"
+    return period_token_for_bounds(lo, hi)
 
 
 def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
@@ -127,8 +166,8 @@ def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
 
     The finite-period expansion the coverage/materializer lane intersects
     against a requested period. Reuses the shared period grammar
-    (`fqid.period_token_to_bounds`), so an inventory edition and a project
-    period expand identically. Raises `ValueError` (`FqidError` for a malformed
+    (`reg_core_py.period_bounds`), so an inventory edition and a project
+    period expand identically. Raises `ValueError` (`GrammarError` for a malformed
     token) — the inventory validator surfaces it as `inventory_invalid`."""
     segments = edition if isinstance(edition, tuple) else (edition,)
     if not segments:
@@ -149,8 +188,8 @@ def edition_bounds(edition: Edition) -> tuple[tuple[str, str], ...]:
 
 # ── interval algebra and period rendering over inclusive ISO dates ──────────
 #
-# Shared with `order.py` and `catalog.py`, which import these: an inventory
-# edition, a project period, an availability window, a resolution conflict
+# Shared with `inventory_coverage.py` and `derive/browse.py`, which import these: an
+# inventory edition, a project period, an availability window, a resolution conflict
 # and a delivery's windows must all expand and render through ONE grammar, so a
 # clip, an overlap, an edition and a browse row can never disagree about bounds
 # or spelling.
@@ -165,25 +204,12 @@ def _intersect(a: _Interval, b: _Interval) -> _Interval | None:
     return (lo, hi) if lo <= hi else None
 
 
-def _next_day(iso: str) -> str:
-    """The day after an inclusive upper bound. Bounds reaching the open-ended
-    `9999-12-31` sentinel have no successor and stay put (they are always
-    clipped against a finite requested period before the arithmetic runs).
-    Snapped first: the period grammar synthesizes a non-leap `YYYY-02-29` upper
-    bound, which `date` arithmetic would raise on (`snap_to_real_month_end`)."""
-    if iso >= "9999-12-31":
-        return iso
-    return (
-        date.fromisoformat(snap_to_real_month_end(iso)) + timedelta(days=1)
-    ).isoformat()
-
-
 def _merge(intervals: list[_Interval]) -> tuple[_Interval, ...]:
     """Sort and coalesce intervals, joining overlapping AND day-adjacent ones
     (`..2018-12-31` + `2019-01-01..` is one continuous window, not two)."""
     merged: list[_Interval] = []
     for lo, hi in sorted(intervals):
-        if merged and lo <= _next_day(merged[-1][1]):
+        if merged and lo <= next_iso_day(merged[-1][1]):
             if hi > merged[-1][1]:
                 merged[-1] = (merged[-1][0], hi)
         else:
@@ -201,7 +227,7 @@ def _render(intervals: tuple[_Interval, ...]) -> str:
 
 
 def _render_interval(lo: str, hi: str) -> str:
-    token = period_token_for_bounds(lo, hi)
+    token = _token_for_bounds(lo, hi)
     if ".." not in token:
         return token
     # A multi-year span has no single token; render the ENDPOINTS as tokens so
@@ -281,7 +307,7 @@ class ColumnMapping(_InventoryModel):
     representation is a required join discriminator, not an output substitute."""
 
     register_variant: str
-    variable: Fqid
+    variable: str
     representation: str = Field(min_length=1)
 
     @field_validator("register_variant")
@@ -294,30 +320,29 @@ class ColumnMapping(_InventoryModel):
                 f"<provider>/<register>/<variant>; got {value!r}"
             )
         provider, register, variant = parts
-        validate_slug(provider, FqidKind.PROVIDER)
-        validate_slug(register, FqidKind.REGISTER)
+        validate_slug(provider, "provider")
+        validate_slug(register, "register")
         validate_slug(variant, "register_variant", allow_default=True)
         return value
 
     @field_validator("variable")
     @classmethod
-    def _check_binding_fqid(cls, value: Fqid) -> Fqid:
-        if value.kind is not FqidKind.VARIABLE_BINDING:
+    def _check_binding_fqid(cls, value: str) -> str:
+        if (kind := parse_fqid(value).kind) != "variable":
             raise ValueError(
                 "variable must be a 3-segment binding FQID "
-                f"<provider>/<register>/<variable>; got {value!s} "
-                f"({value.kind.value})"
+                f"<provider>/<register>/<variable>; got {value} ({kind})"
             )
         return value
 
     @model_validator(mode="after")
     def _check_prefix_match(self) -> ColumnMapping:
         """The variable's `provider/register` prefix must equal the variant
-        coordinate's — same cross-field rule reg_schema's structural validator
+        coordinate's — same cross-field rule reg-core's structural validator
         enforces for a project source's bindings. A mapping that crosses
         registers is an authoring slip, not a legal combined table."""
         prefix = tuple(self.register_variant.split("/")[:2])
-        if (self.variable.provider, self.variable.register) != prefix:
+        if tuple(self.variable.split("/")[:2]) != prefix:
             raise ValueError(
                 f"variable {self.variable!s} does not belong to register_variant "
                 f"{self.register_variant!r} (prefix mismatch)"
@@ -341,7 +366,9 @@ class InventoryColumn(_InventoryModel):
     @classmethod
     def _nonblank_unmapped_reason(cls, value: str | None) -> str | None:
         if value is not None and not value.strip():
-            raise ValueError("unmapped_reason must be nonblank")
+            raise _InventoryGuardError(
+                _UNMAPPED_REASON, "unmapped_reason must be nonblank"
+            )
         return value
 
     @model_validator(mode="after")
@@ -353,14 +380,17 @@ class InventoryColumn(_InventoryModel):
         `DeliveryInventory._check_one_to_one_resolution`)."""
         seen: set[ColumnMapping] = set()
         if self.unmapped_reason is not None and self.mappings:
-            raise ValueError("unmapped_reason cannot accompany mappings")
+            raise _InventoryGuardError(
+                _UNMAPPED_REASON, "unmapped_reason cannot accompany mappings"
+            )
         for mapping in self.mappings:
             if mapping in seen:
-                raise ValueError(
+                raise _InventoryGuardError(
+                    _DUPLICATE_MAPPING,
                     f"duplicate mapping {mapping.register_variant} "
                     f"{mapping.variable!s} "
                     f"({_representation_label(mapping.representation)}) — state "
-                    "each logical coordinate once per column"
+                    "each logical coordinate once per column",
                 )
             seen.add(mapping)
         return self
@@ -417,7 +447,10 @@ class InventoryTable(_InventoryModel):
         A whole `_default` is admitted only by the year-independent scope
         validator below; it never expands into calendar bounds."""
         if value != "_default":
-            edition_bounds(value)
+            try:
+                edition_bounds(value)
+            except ValueError as exc:
+                raise _InventoryGuardError(_EDITION, str(exc)) from exc
         return value
 
     @field_validator("columns")
@@ -433,9 +466,10 @@ class InventoryTable(_InventoryModel):
         item AFTER validation" — that would fire a second, misleading line
         whenever a table's own fields failed for an unrelated reason."""
         if not value:
-            raise ValueError(
+            raise _InventoryGuardError(
+                _TABLE_NO_COLUMNS,
                 "table declares no columns — list every delivered physical "
-                "column, including the unresolved ones that carry no mapping"
+                "column, including the unresolved ones that carry no mapping",
             )
         return value
 
@@ -443,16 +477,22 @@ class InventoryTable(_InventoryModel):
     def _check_period_scope(self) -> InventoryTable:
         if self.period_scope == "year_independent":
             if self.edition != "_default":
-                raise ValueError("year-independent tables require edition='_default'")
+                raise _InventoryGuardError(
+                    _PERIOD_SCOPE, "year-independent tables require edition='_default'"
+                )
             if any(
                 m.register_variant.split("/")[-1] == "_default"
                 for c in self.columns
                 for m in c.mappings
             ):
-                raise ValueError("year-independent mappings require a concrete variant")
+                raise _InventoryGuardError(
+                    _PERIOD_SCOPE,
+                    "year-independent mappings require a concrete variant",
+                )
         elif self.edition == "_default":
-            raise ValueError(
-                "edition='_default' requires year-independent period_scope"
+            raise _InventoryGuardError(
+                _PERIOD_SCOPE,
+                "edition='_default' requires year-independent period_scope",
             )
         return self
 
@@ -461,9 +501,10 @@ class InventoryTable(_InventoryModel):
         seen: set[str] = set()
         for column in self.columns:
             if column.name in seen:
-                raise ValueError(
+                raise _InventoryGuardError(
+                    _DUPLICATE_COLUMN,
                     f"duplicate physical column {column.name!r} — declare each "
-                    "column once and list all of its mappings under it"
+                    "column once and list all of its mappings under it",
                 )
             seen.add(column.name)
         return self
@@ -504,15 +545,23 @@ class DeliveryInventory(_InventoryModel):
         rather than silently zero out admission, coverage, and browse unions.
         Same `min_length=1` caveat as `InventoryTable.columns`."""
         if not value:
-            raise ValueError(
+            raise _InventoryGuardError(
+                _NO_TABLES,
                 "inventory declares no tables — an inventory is a steward's "
                 "holdings statement, so an empty `table` array is a curation "
-                "error, not a delivery topology"
+                "error, not a delivery topology",
             )
         return value
 
-    @model_validator(mode="after")
-    def _check_unique_tables(self) -> DeliveryInventory:
+    # The cross-table rules are `tables` field validators, not model
+    # validators, so their refusal is located at `table` rather than at the
+    # file root. Same-field after-validators run in definition order and stop
+    # at the first refusal.
+    @field_validator("tables")
+    @classmethod
+    def _check_unique_tables(
+        cls, value: tuple[InventoryTable, ...]
+    ) -> tuple[InventoryTable, ...]:
         """Each physical table is declared once: the identifier is exact, and
         one table carries exactly one edition, so a repeated id is an ambiguous
         edition rather than a second table. Several DIFFERENT tables mapping the
@@ -520,24 +569,28 @@ class DeliveryInventory(_InventoryModel):
         ordinary annual series (`_check_one_to_one_resolution` owns the
         overlapping case)."""
         seen: set[str] = set()
-        for table in self.tables:
+        for table in value:
             if table.id in seen:
-                raise ValueError(
+                raise _InventoryGuardError(
+                    _DUPLICATE_TABLE,
                     f"duplicate table {table.id!r} — a table identifier is exact "
-                    "and carries exactly one edition"
+                    "and carries exactly one edition",
                 )
             seen.add(table.id)
-        return self
+        return value
 
-    @model_validator(mode="after")
-    def _check_one_to_one_resolution(self) -> DeliveryInventory:
-        validate_inventory_placements(self.tables)
-        return self
+    @field_validator("tables")
+    @classmethod
+    def _check_one_to_one_resolution(
+        cls, value: tuple[InventoryTable, ...]
+    ) -> tuple[InventoryTable, ...]:
+        validate_inventory_placements(value)
+        return value
 
 
 def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     """Enforce the one-to-one resolution invariant (ratified 2026-09-01;
-    reg_meta/DESIGN.md → "Holdings resolution invariants").
+    reg_meta_build/DESIGN.md → "Holdings resolution invariants").
 
     Every admitted `(register_variant, variable, representation, period)` cell
     resolves to exactly one physical `(table, column)`. Two mappings that could
@@ -575,7 +628,7 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
             for mapping in column.mappings:
                 key = (
                     mapping.register_variant,
-                    str(mapping.variable),
+                    mapping.variable,
                     table.period_scope,
                 )
                 located.setdefault(key, []).append(
@@ -620,14 +673,15 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                     + _partition_hint(a_part, b_part)
                 )
     if conflicts:
-        raise ValueError(
+        raise _InventoryGuardError(
+            _CELL_CONFLICT,
             "a cell must resolve to exactly one physical (table, column), "
             "but these mappings could each serve the same cell:\n"
             + "\n".join(f"    {line}" for line in conflicts)
             + "\n  An inventory states CURRENT holdings only: discard the "
             "superseded delivery at curation instead of choosing here (a "
             "filename date is not proof of supersession) — reg_meta_build/"
-            "DESIGN.md → Holdings curation rules."
+            "DESIGN.md → Holdings curation rules.",
         )
 
 
@@ -652,9 +706,8 @@ def _error_path(raw: object, loc: tuple[int | str, ...], *, missing: bool) -> st
     index is not a locator.
 
     The path stops at the deepest key that exists in the authored TOML, so a
-    union arm Pydantic appends to the location (`edition.str`,
-    `variable.is-instance[Fqid]`) doesn't masquerade as a key the author can
-    look for. The one absent key worth naming is a `missing` error's own field.
+    union arm Pydantic appends to the location (`edition.str`) doesn't
+    masquerade as a key the author can look for. The one absent key worth naming is a `missing` error's own field.
     """
     node = raw
     parts: list[str] = []
@@ -682,8 +735,11 @@ def load_inventory(path: Path) -> DeliveryInventory:
     """Read and structurally validate a steward delivery-inventory TOML file.
 
     Fail-fast: any malformed table, edition, or mapping raises `RegMetaError`
-    (`inventory_toml_unreadable` / `inventory_invalid`, EXIT_CONFIG) naming
-    every offending table/column — never a partially parsed inventory. Semantic
+    (EXIT_CONFIG) naming every offending table/column — never a partially
+    parsed inventory. The code is `inventory_toml_unreadable` for a file that
+    is not UTF-8 TOML, else the rule family of the FIRST offending line: a
+    hand-written guard's own code (`inventory_cell_conflict`, ...) or
+    `inventory_invalid` for field grammar. Semantic
     consistency against the reg_meta DB (does each mapping's
     `(register_variant, variable, representation)` resolve?) is a separate
     build/CI gate, not this structural pass."""
@@ -696,21 +752,24 @@ def load_inventory(path: Path) -> DeliveryInventory:
         raise _inventory_error(
             "inventory_toml_unreadable",
             f"Could not read delivery inventory {path}: {exc}",
-            "The inventory must be UTF-8 TOML (see reg_meta/DESIGN.md → Inventory "
-            "TOML authoring contract for the format).",
+            "The inventory must be UTF-8 TOML (see reg_meta_build/DESIGN.md → "
+            "Inventory TOML for the format).",
         ) from exc
     try:
         return DeliveryInventory.model_validate(raw)
     except ValidationError as exc:
+        errors = exc.errors()
+        first = errors[0].get("ctx", {}).get("error")
+        code = first.code if isinstance(first, _InventoryGuardError) else _INVALID
         details = "\n".join(
             f"  {_error_path(raw, error['loc'], missing=error['type'] == 'missing')}: "
             f"{error['msg']}"
-            for error in exc.errors()
+            for error in errors
         )
         raise _inventory_error(
-            "inventory_invalid",
+            code,
             f"Invalid delivery inventory {path}:\n{details}",
             "Each `[[table]]` needs an exact `id`, one explicit finite "
             "`edition`, and its literal `[[table.column]]` entries; see "
-            "reg_meta/DESIGN.md → Inventory TOML authoring contract.",
+            "reg_meta_build/DESIGN.md → Inventory TOML.",
         ) from exc

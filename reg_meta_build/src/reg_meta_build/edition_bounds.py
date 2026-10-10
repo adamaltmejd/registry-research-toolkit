@@ -9,7 +9,9 @@ from reg_core_py import is_period, period_bounds
 
 from ._curation import fold_column
 
-_YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
+# A period-grammar year (1900-2099) as a regex fragment.
+YEAR_PATTERN = r"(?:19|20)\d{2}"
+_YEAR_RE = re.compile(rf"(?<!\d){YEAR_PATTERN}(?!\d)")
 
 
 def extract_year(version_name: str) -> int | None:
@@ -19,9 +21,6 @@ def extract_year(version_name: str) -> int | None:
     m = _YEAR_RE.search(version_name)
     return int(m.group()) if m else None
 
-
-# A period-grammar year (1900-2099) as a regex fragment.
-YEAR_PATTERN = r"(?:19|20)\d{2}"
 
 # Term phrase -> HT/VT prefix, year on either side. `hosttermin`/`vartermin`
 # are NFKD-folded Swedish forms; compact `HT2024`/`VT 2024` is covered too.

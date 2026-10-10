@@ -1,5 +1,5 @@
-//! The interval algebra (the testing policy's algebra exception): frozen Python's
-//! answers on hand-picked inputs (`tests/interval/golden.json`), plus one seeded
+//! The interval algebra (the testing policy's algebra exception): the retired Python
+//! reader's answers on hand-picked inputs (`tests/interval/golden.json`), plus one seeded
 //! property loop.
 
 mod common;
@@ -20,23 +20,14 @@ fn list(v: &Value) -> Vec<Interval> {
     v.as_array().expect("a list").iter().map(pair).collect()
 }
 
-/// Each golden case is frozen Python's `reg_meta.inventory` answer (`_intersect`,
+/// Each golden case is the retired Python reader's `reg_meta.inventory` answer (`_intersect`,
 /// `_merge`, `_overlap`, `_render`) or `reg_meta.order` answer (`_gaps`). Fails when
 /// the algebra stops joining day-adjacent intervals (a synthesized non-leap `02-29`
 /// end counting as February's end), keeps a containment or an empty intersection,
 /// renders an interval as another spelling than the coarsest token or year-ended
 /// range, or leaves a phantom gap or misses a real one.
 ///
-/// To check the golden against frozen Python, from the repository root:
-/// `uv run python -c 'import json; from reg_meta.inventory import _intersect, _merge,
-/// _overlap, _render; from reg_meta.order import _gaps; ops = {"intersect": lambda
-/// c: _intersect(c["a"], c["b"]), "merge": lambda c: _merge(c["in"]), "overlap":
-/// lambda c: _overlap(c["a"], c["b"]), "render": lambda c: _render(c["in"]), "gaps":
-/// lambda c: _gaps(tuple(map(tuple, c["whole"])), list(map(tuple,
-/// c["covered"])))}; cases =
-/// json.load(open("crates/reg-core/tests/interval/golden.json")); print([c for c in
-/// cases if json.loads(json.dumps(ops[c["op"]](c))) != c["out"]])'` prints `[]`.
-/// Python renders a non-leap February as `YYYY-02-01..YYYY-02-28`, so no case holds
+/// Python rendered a non-leap February as `YYYY-02-01..YYYY-02-28`, so no case holds
 /// one (the Rust-only fix of `period_token_for_bounds`, pinned in `tests/grammar.rs`).
 #[test]
 fn golden() {

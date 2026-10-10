@@ -1,0 +1,38 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "NotAToken.csv"
+edition = "all"
+[[table.column]]
+name = "Diagnos"
+
+[[table]]
+id = "Inverted.csv"
+edition = { from = 2020, to = 2015 }
+[[table.column]]
+name = "Diagnos"
+
+[[table]]
+id = "Empty.csv"
+edition = []
+[[table.column]]
+name = "Diagnos"
+
+[[table]]
+id = "Unsorted.csv"
+edition = ["2015", "2010"]
+[[table.column]]
+name = "Diagnos"
+
+[[table]]
+id = "Overlapping.csv"
+edition = [{ from = 2005, to = 2012 }, "2010"]
+[[table.column]]
+name = "Diagnos"
+
+[[table]]
+id = "DefaultSegment.csv"
+edition = ["2010", "_default"]
+[[table.column]]
+name = "Diagnos"

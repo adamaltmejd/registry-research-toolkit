@@ -112,16 +112,15 @@ into the directory you name:
 
 ```sh
 db="$(mktemp -d)"
-uv run python reg_webapp/.claude/skills/run-reg-webapp/catalog_fixture_db.py "$db"
+uv run python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py "$db"
 REG_META_DB="$db" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh flows /tmp/project-flows
 ```
 
 The flows assert against the synthetic catalog those two lines set up (`scb/lisa/kon` at
 variant `individer-15plus` → column `Kon`, `scb/rams/syss` → column `Syss` for the
 catalog-draft case's second pick, and `scb/lisa/forsamling` → column `Forsamling` for
-the one it ticks off the register list), which `catalog_fixture_db.py` builds with the
-shared fixture builder (`reg_webapp/backend/scripts/fixture_db.py`, below) — not a
-released DB. A nonzero exit is a failed assertion, an unexpected JS page error,
+the one it ticks off the register list), which `fixture_db.py` (beside `dev.sh`) builds
+— not a released DB. A nonzero exit is a failed assertion, an unexpected JS page error,
 horizontal overflow at some viewport, or a server that never started; the servers are
 torn down either way.
 
@@ -134,15 +133,18 @@ local verification invocation; the names allow focused verification. The repo ga
 `--fixture-db` into a temporary directory, kept only on failure.
 
 **Deterministic UI verification (`--fixture-db`) — the default.** Pass `--fixture-db`
-before the mode and `dev.sh` serves a *synthetic* catalog: it runs
-`reg_webapp/backend/scripts/fixture_db.py` into a temp directory, exports it as
-`REG_META_DB`, and deletes it on exit. Content is fixed — no seed, no clock — so the DB
-pair is byte-identical run to run and a screenshot diff means a code change, not catalog
-drift. It is small but populated enough that every route the design-reviewer skill walks
-renders rows: `/`, `/catalog`, providers `fk` (register `midas`) and `scb` (`lisa` /
-`rams`), bindings like `/catalog/scb/lisa/kon` (value set, succession, lineage), the
-groups `/catalog/group/scb/rams/ink` and `/catalog/group/class/sun`, `/search?q=kon`,
-`/project`, and `/doc/Kon.md`. `smoke` drills it end to end.
+before the mode and `dev.sh` serves a *synthetic* catalog: it runs `fixture_db.py`
+(beside `dev.sh`) into a temp directory, exports it as `REG_META_DB`, and deletes it on
+exit. With `REG_WEBAPP_STEWARD` set the catalog is instead a link to the conformance
+suite's synthetic steward artifact in the shared fixture cache
+(`conformance/fixture_cache.py`), beside the same docs DB. Content is fixed — no seed,
+no clock — so the DB pair is byte-identical run to run and a screenshot diff means a
+code change, not catalog drift. It is small but populated enough that every route the
+design-reviewer skill walks renders rows: `/`, `/catalog`, providers `fk` (register
+`midas`) and `scb` (`lisa` / `rams`), bindings like `/catalog/scb/lisa/kon` (value set,
+succession, lineage), the groups `/catalog/group/scb/rams/ink` and
+`/catalog/group/class/sun`, `/search?q=kon`, `/project`, and `/doc/Kon.md`. `smoke`
+drills it end to end.
 
 ```sh
 bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db          # interactive
@@ -152,15 +154,16 @@ Use it to verify *layout and interaction*, not catalog realism: the fixture has 
 handful of rows, so density/overflow questions want a real or scratch DB instead.
 
 **Alternative: a released or custom `REG_META_DB`.** Without `--fixture-db`, `dev.sh`
-renders against whatever DB `reg_meta` resolves and inherits the caller's `REG_META_DB`
-(a *directory*), which wins over the installed default (see Prerequisites). So a change
+renders against the default DB path and inherits the caller's `REG_META_DB` (a
+*directory*), which wins over the installed default (see Prerequisites). So a change
 whose rendering depends on DB content not yet in the installed/released DB — a
 `build-db` / curation change — is verified by building a scratch DB and pointing the dev
 server at it; **no release required**:
 
 ```sh
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-verify.XXXXXX")"
-reg-meta-build --db "$db_dir" build-db --input-dir <seed>
+reg-meta-build --db "$db_dir" build-db --prepared <accepted-prepared> \
+  --input-commit <sha> --input-manifest-sha256 <sha256> --report-dir "$db_dir/report"
 REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>
 ```
 

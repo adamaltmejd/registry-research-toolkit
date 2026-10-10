@@ -1,0 +1,42 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "FHM_NVR_Covid_2021-03-15.csv"
+edition = { from = 2020, to = 2021 }
+[[table.column]]
+name = "Vaccinationsdatum"
+[[table.column.mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccinationsdatum"
+representation = "Vaccinationsdatum"
+
+[[table]]
+id = "FHM_NVR_Covid_2021-06-30.csv"
+edition = { from = 2021, to = 2022 }
+[[table.column]]
+name = "Vaccinationsdatum"
+[[table.column.mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccinationsdatum"
+representation = "Vaccinationsdatum"
+
+[[table]]
+id = "Grundskola_a.csv"
+edition = "LA2004"
+[[table.column]]
+name = "Betyg"
+[[table.column.mapping]]
+register_variant = "scb/grundskola/elever"
+variable = "scb/grundskola/betyg"
+representation = "Betyg"
+
+[[table]]
+id = "Grundskola_b.csv"
+edition = "LA2004"
+[[table.column]]
+name = "Betyg"
+[[table.column.mapping]]
+register_variant = "scb/grundskola/elever"
+variable = "scb/grundskola/betyg"
+representation = "Betyg"

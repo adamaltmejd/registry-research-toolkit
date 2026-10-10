@@ -1,0 +1,73 @@
+[
+  {
+    "status": 200
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/26/fqid": "class/zz-discriminative",
+      "/data/next_cursor": null
+    },
+    "members": {
+      "steps": [
+        0,
+        1
+      ],
+      "pointer": "/data/items/*/fqid",
+      "equals": [
+        "class/generic-00",
+        "class/generic-01",
+        "class/generic-02",
+        "class/generic-03",
+        "class/generic-04",
+        "class/generic-05",
+        "class/generic-06",
+        "class/generic-07",
+        "class/generic-08",
+        "class/generic-09",
+        "class/generic-10",
+        "class/generic-11",
+        "class/generic-12",
+        "class/generic-13",
+        "class/generic-14",
+        "class/generic-15",
+        "class/generic-16",
+        "class/generic-17",
+        "class/generic-18",
+        "class/generic-19",
+        "class/generic-20",
+        "class/generic-21",
+        "class/generic-22",
+        "class/generic-23",
+        "class/generic-24",
+        "class/generic-25",
+        "class/generic-26",
+        "class/generic-27",
+        "class/generic-28",
+        "class/generic-29",
+        "class/generic-30",
+        "class/generic-31",
+        "class/generic-32",
+        "class/generic-33",
+        "class/generic-34",
+        "class/generic-35",
+        "class/generic-36",
+        "class/generic-37",
+        "class/generic-38",
+        "class/generic-39",
+        "class/generic-40",
+        "class/generic-41",
+        "class/generic-42",
+        "class/generic-43",
+        "class/generic-44",
+        "class/generic-45",
+        "class/generic-46",
+        "class/generic-47",
+        "class/generic-48",
+        "class/generic-49",
+        "class/generic-50",
+        "class/zz-discriminative"
+      ]
+    }
+  }
+]
