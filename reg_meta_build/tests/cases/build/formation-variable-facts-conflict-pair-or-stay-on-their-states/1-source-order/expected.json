@@ -1,0 +1,107 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "conflicting_variable_fact"},
+      "fields": ["subject", "fields", "withheld_output"],
+      "note": "Each register-level text the two editions disagree on is withheld as that one fact (the old test's `(\"conflicting_variable_fact\", (field,), (f\"variable.{field}\",))`). No unit-pair variable is here: an exact unit pair is not a conflict.",
+      "rows": [
+        ["scb/sample/def", ["definition"], ["variable.definition"]],
+        ["scb/sample/name", ["name"], ["variable.name"]],
+        ["scb/sample/desc", ["description"], ["variable.description"]]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {"variable": "def"},
+      "fields": ["variable", "definition"],
+      "note": "The conflicting definition is withheld, not chosen from either edition.",
+      "rows": [["def", null]]
+    },
+    {
+      "table": "states",
+      "where": {"variable": "def"},
+      "fields": ["column", "valid_from", "valid_to"],
+      "note": "The definition conflict keeps both delivery states (the old `len(states) == 2`).",
+      "rows": [
+        ["DEF", "2020-01-01", "2020-12-31"],
+        ["DEF", "2021-01-01", "2021-12-31"]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {"variable": ["u1", "u2", "u3", "u4", "u5", "u6", "u7", "u8", "u9", "u10"]},
+      "fields": ["variable", "measurement_unit"],
+      "note": "Each exact unit pair publishes its first member as the variable's unit, the old test's `published`, whichever edition carries it.",
+      "rows": [
+        ["u1", "SEK"],
+        ["u2", "Kronor"],
+        ["u3", "Kronor (SEK)"],
+        ["u4", "Antal månader"],
+        ["u5", "Månader"],
+        ["u6", "Antal veckor"],
+        ["u7", "Antal minuter"],
+        ["u8", "Antal barn"],
+        ["u9", "Dagar"],
+        ["u10", "Årtal"]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {"variable": ["period", "variant", "stable"]},
+      "fields": ["variable", "operational_definition", "source_register_text"],
+      "note": "State-grain texts summarize the variable only when every state agrees.",
+      "rows": [
+        ["period", null, null],
+        ["variant", null, null],
+        ["stable", "One definition", "Fr171"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["period", "variant", "stable"]},
+      "fields": ["variable", "variant", "valid_from", "valid_to", "operational_definition", "source_register_text"],
+      "note": "Each state keeps its own delivery's texts, per period and per variant.",
+      "rows": [
+        ["period", "people", "2020-01-01", "2020-12-31", "Introductory question text", "Fr171"],
+        ["period", "people", "2021-01-01", "2021-12-31", "Derived-variable definition", "Fr128e"],
+        ["variant", "people", "2020-01-01", "2020-12-31", "Person wording", "Fr171"],
+        ["variant", "households", "2020-01-01", "2020-12-31", "Household wording", "Fr128e"],
+        ["stable", "people", "2020-01-01", "2020-12-31", "One definition", "Fr171"],
+        ["stable", "people", "2021-01-01", "2021-12-31", "One definition", "Fr171"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["compop", "compsrc"]},
+      "fields": ["variable", "valid_from", "valid_to", "operational_definition", "source_register_text"],
+      "note": "Two members of one edition that disagree on a state-grain text leave it unknown on the one state they form.",
+      "rows": [
+        ["compop", "2020-01-01", "2020-12-31", null, null],
+        ["compsrc", "2020-01-01", "2020-12-31", null, null]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": ["scb/sample/period", "scb/sample/variant", "scb/sample/stable", "scb/sample/compop", "scb/sample/compsrc"]},
+      "fields": ["code", "subject"],
+      "note": "State-grain texts that vary or compete raise nothing (the old tests' `result.diagnostics == ()`).",
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"variable": "checked"},
+      "fields": ["column", "valid_from", "valid_to"],
+      "note": "The checked identity keeps NEW where it is the only column, and does not pick NEW for 2020 just because it continues.",
+      "rows": [["NEW", "2021-01-01", "2021-12-31"]]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": "scb/sample/checked"},
+      "fields": ["code", "valid_from", "valid_to", "withheld_output"],
+      "note": "The 2020 parallel pair is the one issue: its state is withheld as unresolved_column_representation.",
+      "rows": [["unresolved_column_representation", "2020-01-01", "2020-12-31", ["state"]]]
+    }
+  ]
+}

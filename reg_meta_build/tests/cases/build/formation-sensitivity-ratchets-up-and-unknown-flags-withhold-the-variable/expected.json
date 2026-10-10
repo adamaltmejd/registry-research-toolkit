@@ -1,0 +1,27 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "variables",
+      "fields": ["variable", "column", "is_sensitive", "is_identifier"],
+      "note": "Every variable the summary flags fully. A sometimes-sensitive claim (KansligVariabelIbland 1, or a cell that is not 0 or 1) makes the variable sensitive whatever the plain claim says; a plain sensitive claim stays sensitive beside a conditional 0; only a plain 0 with a conditional 0 is built non-sensitive. sxc0 and nosum are absent: their sensitivity is unknown, and it is not defaulted to false.",
+      "rows": [
+        ["s0c1", "S0C1", 1, 0],
+        ["s1c1", "S1C1", 1, 0],
+        ["sxc1", "SXC1", 1, 0],
+        ["s0c0", "S0C0", 0, 0],
+        ["s1c0", "S1C0", 1, 0],
+        ["s0cu", "S0CU", 1, 0]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "subject", "fields"],
+      "note": "Every issue of the build. The fully flagged variables raise none (the old ratchet tests' `result.diagnostics == ()`). A conditional 0 beside a blank plain cell supplies no sensitivity, so sxc0 is withheld for is_sensitive alone; nosum has no summary row and is withheld for both flags.",
+      "rows": [
+        ["unresolved_flag", "error", "scb/sample/sxc0", ["is_sensitive"]],
+        ["unresolved_flag", "error", "scb/sample/nosum", ["is_sensitive", "is_identifier"]]
+      ]
+    }
+  ]
+}
