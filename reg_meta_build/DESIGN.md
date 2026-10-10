@@ -852,8 +852,7 @@ Checked coding decisions pin all competing observations in a finite column inter
 They may select an existing complete list, accept an uncoded period or omit a state. A
 separately checked witness can supply a constant complete coding over another period
 only when an existing decision explicitly authorizes that extension. Changed target or
-witness evidence invalidates it. Omitted states retain their evidence and do not become
-negative availability claims.
+witness evidence invalidates it. Omitted states retain their evidence.
 
 Under the reviewed explicit-link policy, a checked choice can select a supplied complete
 superset when every positively linked code is retained and shared code labels agree.
@@ -1172,18 +1171,18 @@ claim the written state must equal, a negative claim the written state must leav
 absent, or no claim, which is never compared. When an alias window delivers an
 obligation's window, the shared states behind the alias must cover that overlap; a slice
 with no written state behind it is refused. A conflicting representation fact clears the
-claim to none. Genuine source gaps, negative availability, unknown scopes, and pooled
-scopes without a carried range claim no delivery in the first place. A range-carrying
-pooled scope claims its whole range as one obligation, discharged by its one marked
-state. A variable — or one of its variants — that the dependency ledger withholds
-outright, with source evidence, answers for its own claim through that entry, whichever
-stage recorded it, and for nothing past that exact coordinate: an exact source-linked
-blocker stays a curation blocker without covering a sibling. Anything else missing is an
-engineering defect, not a curation question: the build names the source records and the
-exact missing window. A strict build stops before any output is placed; a diagnostic
-build records the miss as an error diagnostic and still completes with a nonpublishable
-database. A missing optional field or an unrelated diagnostic is no permission to drop
-the state it belongs to.
+claim to none. Genuine source gaps, unknown scopes, and pooled scopes without a carried
+range claim no delivery in the first place. A range-carrying pooled scope claims its
+whole range as one obligation, discharged by its one marked state. A variable — or one
+of its variants — that the dependency ledger withholds outright, with source evidence,
+answers for its own claim through that entry, whichever stage recorded it, and for
+nothing past that exact coordinate: an exact source-linked blocker stays a curation
+blocker without covering a sibling. Anything else missing is an engineering defect, not
+a curation question: the build names the source records and the exact missing window. A
+strict build stops before any output is placed; a diagnostic build records the miss as
+an error diagnostic and still completes with a nonpublishable database. A missing
+optional field or an unrelated diagnostic is no permission to drop the state it belongs
+to.
 
 ### Groups, relations and dependent output
 
