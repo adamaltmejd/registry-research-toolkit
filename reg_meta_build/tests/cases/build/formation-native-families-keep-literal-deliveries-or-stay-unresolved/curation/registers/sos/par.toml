@@ -12,3 +12,6 @@ slug = "open"
 [[variable]]
 native_id = "5891427617861710725.SPLIT"
 slug = "split"
+[[variable]]
+native_id = "5891427617861710725.OPENRUN"
+slug = "openrun"
