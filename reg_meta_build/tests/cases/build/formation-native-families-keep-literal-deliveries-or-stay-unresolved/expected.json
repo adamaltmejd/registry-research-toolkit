@@ -252,7 +252,7 @@
     },
     {
       "table": "state_codes",
-      "where": {"variable": ["split", "open", "coded", "pooled-coded"]},
+      "where": {"variable": ["split", "open", "openrun", "coded", "pooled-coded"]},
       "fields": ["variable", "valid_from", "valid_to", "code", "label"],
       "rows": [
         ["split", "2019-01-01", "2019-12-31", "0", "No"],
@@ -260,10 +260,12 @@
         ["split", "2020-01-01", "2020-12-31", "1", "Yes"],
         ["split", "2021-01-01", "2021-12-31", "0", "No"],
         ["open", "2004-01-01", "9999-12-31", "01", "One"],
+        ["openrun", "2004-01-01", "2010-12-31", "01", "One"],
+        ["openrun", "2011-01-01", "9999-12-31", "01", "One"],
         ["coded", "2020-01-01", "2020-12-31", "01", "One"],
         ["pooled-coded", "2020-01-01", "2022-12-31", "01", "One"]
       ],
-      "note": "split: a member valid only in 2020 cuts the state into three, carrying one, two and one members. open: the open-ended delivery forms one state through 9999-12-31 with its list (test_explicit_open_ended_coverage_survives_formation_and_storage). pooled-coded: the pooled state carries its list over the whole pooled range, with no coding issue (test_pooled_edition_state_carries_its_value_set)."
+      "note": "split: a member valid only in 2020 cuts the state into three, carrying one, two and one members. open: the open-ended delivery forms one state through 9999-12-31 with its list (test_explicit_open_ended_coverage_survives_formation_and_storage). openrun: its list rows 2004-2006, 2007-2010 and 2011- state the same member, so the two closed cuts merge into one 2004-2010 state, but the open-ended 2011 state stays its own (readers count an open-ended state as its opening year only, so absorbing 2004-2010 into it would drop those years from coverage). pooled-coded: the pooled state carries its list over the whole pooled range, with no coding issue (test_pooled_edition_state_carries_its_value_set)."
     }
   ]
 }
