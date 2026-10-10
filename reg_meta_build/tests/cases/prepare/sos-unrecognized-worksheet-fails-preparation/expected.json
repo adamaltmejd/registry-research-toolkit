@@ -7,8 +7,8 @@
   "fails_if": "the SOS reader prepares a workbook with a worksheet it does not recognize instead of refusing it, or stops naming the sheet in the refusal",
   "note": "A parser issue blocks source cleaning; the unrecognized worksheet is the delivered shape that raises one. sos-parse-unrecognized-worksheet-keeps-its-rows shows the parse keeps the sheet's rows.",
   "error": {
-    "code": "source_preparation_failed",
-    "type": "ValueError",
+    "code": "sos_worksheet_unsupported",
+    "type": "SosParseError",
     "locator": "New source structure: unrecognized worksheet"
   }
 }

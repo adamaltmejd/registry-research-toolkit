@@ -3,6 +3,7 @@
   "projections": [
     {
       "table": "issues",
+      "where": {"code": "overbroad_curation_entry"},
       "fields": ["code", "case_id", "locator"],
       "rows": [
         ["overbroad_curation_entry", "curation/registers/scb/innovation-foretag.toml#/representation.alias_window/1", "curation/registers/scb/innovation-foretag.toml#/representation.alias_window/1"]

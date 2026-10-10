@@ -1,0 +1,20 @@
+{
+  "status": "blocked",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": ["naming_slug_collision", "unresolved_catalog_identity", "withheld_catalog_dependency"]
+      },
+      "fields": ["code", "severity", "subject", "case_id", "locator"],
+      "rows": [
+        ["naming_slug_collision", "error", "two", "curation/registers/scb/sample.toml#variable/1.102", "curation/registers/scb/sample.toml#variable/1.102"],
+        ["naming_slug_collision", "error", "two", "curation/registers/scb/sample.toml#variable/1.103", "curation/registers/scb/sample.toml#variable/1.103"],
+        ["unresolved_catalog_identity", "error", "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 102)", null, null],
+        ["unresolved_catalog_identity", "error", "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 103)", null, null],
+        ["withheld_catalog_dependency", "error", "tag:topic:member:scb/sample/two", null, null],
+        ["withheld_catalog_dependency", "error", "tag:topic:member:scb/sample/two", null, null]
+      ]
+    }
+  ]
+}

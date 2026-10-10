@@ -7,7 +7,7 @@
   "fails_if": "the SCB events reader reads the accepted Timeseries.csv without checking its bytes against the selected revision's digest",
   "note": "The replaced test declared a revision one byte longer than the file with the file's own digest, which pins the size check alone; no delivered bytes can differ only in size. Same-size bytes pin the digest check, the one a changed export can slip past.",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "source_revision_changed",
     "type": "ScbReferenceSourceError",
     "locator": "Timeseries.csv differs from its declared revision"
   }

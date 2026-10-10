@@ -28,6 +28,8 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast
 
+from reg_meta_build.errors import SourceFormatError
+
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
@@ -268,12 +270,8 @@ class SosRegister:
 # ---------------------------------------------------------------------------
 
 
-class SosParseError(ValueError):
-    """Raised when the workbook cannot be read or is missing required sheets.
-
-    A `ValueError`, so `prepare-input-bundle` and `prepare-sources` report it as
-    their configuration error, as they do every other unreadable selected input.
-    """
+class SosParseError(SourceFormatError):
+    """Raised when the workbook cannot be read or is missing required sheets."""
 
 
 # ---------------------------------------------------------------------------
@@ -290,9 +288,14 @@ def parse_register_file(path: Path | str) -> SosRegister:
 
     p = Path(path)
     if p.name.startswith("~$"):
-        raise SosParseError(f"{p.name} is an Office lock file; skip")
+        raise SosParseError(
+            f"{p.name} is an Office lock file; skip", code="source_file_unreadable"
+        )
     if not p.is_file():
-        raise SosParseError(f"{p} is not a regular file (missing or a directory)")
+        raise SosParseError(
+            f"{p} is not a regular file (missing or a directory)",
+            code="source_file_unreadable",
+        )
     try:
         # Normal mode is required for original-source evidence: openpyxl's
         # read-only cells discard hyperlinks, including delivered cells whose
@@ -300,19 +303,23 @@ def parse_register_file(path: Path | str) -> SosRegister:
         # and the existing bounded row iterators still avoid phantom-row work.
         wb = openpyxl.load_workbook(p, read_only=False, data_only=False)
     except zipfile.BadZipFile as exc:
-        raise SosParseError(f"{p.name} is not a valid .xlsx file") from exc
+        raise SosParseError(
+            f"{p.name} is not a valid .xlsx file", code="source_file_unreadable"
+        ) from exc
     except openpyxl.utils.exceptions.InvalidFileException as exc:
         # `.xls`, `.xlsb`, and other formats openpyxl doesn't support.
         raise SosParseError(
             f"{p.name}: openpyxl does not support this file format "
-            "(only .xlsx/.xlsm/.xltx/.xltm)"
+            "(only .xlsx/.xlsm/.xltx/.xltm)",
+            code="source_file_unreadable",
         ) from exc
     except (OSError, ValueError, KeyError) as exc:
         # openpyxl can raise these on partially corrupt files (truncated XML,
         # missing relationships, unexpected schema). Wrap so callers see a
         # uniform error type.
         raise SosParseError(
-            f"{p.name} could not be read as a valid .xlsx file: {exc}"
+            f"{p.name} could not be read as a valid .xlsx file: {exc}",
+            code="source_file_unreadable",
         ) from exc
 
     try:
@@ -335,7 +342,10 @@ def parse_register_file(path: Path | str) -> SosRegister:
         ) or _find_sheet(norm_sheets, ["metadata", "variabler"])
 
         if varsheet is None:
-            raise SosParseError(f"{p.name}: no variable-level sheet found")
+            raise SosParseError(
+                f"{p.name}: no variable-level sheet found",
+                code="sos_variable_sheet_invalid",
+            )
 
         if generell:
             gen, general_evidence = _parse_generell(wb[generell])
@@ -967,7 +977,8 @@ def _parse_variables(
     all_cell_rows = list(_cell_row_iter(ws))
     if not all_cell_rows:
         raise SosParseError(
-            f"variable sheet {ws.title!r} is empty; cannot extract variables"
+            f"variable sheet {ws.title!r} is empty; cannot extract variables",
+            code="sos_variable_sheet_invalid",
         )
     header_cells = all_cell_rows[0]
     header = tuple(cell.value for cell in header_cells)
@@ -986,7 +997,8 @@ def _parse_variables(
                     f"variable sheet {ws.title!r} has ambiguous headers for {stem!r}: "
                     f"{previous.value!r} at {previous.coordinate} and "
                     f"{h!r} at {header_cells[i].coordinate}; "
-                    "expected one column per semantic field"
+                    "expected one column per semantic field",
+                    code="sos_variable_sheet_invalid",
                 )
             col_map[stem] = i
 
@@ -996,7 +1008,8 @@ def _parse_variables(
         header_cols = ", ".join(repr(h) for h in header if h) or "(none)"
         raise SosParseError(
             f"variable sheet {ws.title!r} is missing a 'Variabelnamn' header; "
-            f"found columns: {header_cols}"
+            f"found columns: {header_cols}",
+            code="sos_variable_sheet_invalid",
         )
 
     evidence_rows = [

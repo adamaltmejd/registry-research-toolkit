@@ -9,7 +9,6 @@ url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-u
 codes_file = "sun2020-niva.csv"
 sentinel_codes = [
   { code = "999", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "88", meaning = "Vet ej" },
   { code = "97", meaning = "Okänd" },
   { code = "99", meaning = "Vill ej svara" },

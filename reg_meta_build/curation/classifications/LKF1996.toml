@@ -13,7 +13,6 @@ sentinel_codes = [
   { code = "******", meaning = "Okänd" },
   { code = "999999", meaning = "Utlandet" },
   { code = "00", meaning = "Ej aktuellt" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "2088", meaning = "Okänd" },
   { code = "99", meaning = "Utländsk adress" },
   { code = "9999", meaning = "Utländsk adress" },

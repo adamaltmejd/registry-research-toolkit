@@ -10,7 +10,6 @@ url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard
 codes_file = "sni69.csv"
 sentinel_codes = [
   { code = "00000", meaning = "Okänt" },
-  { code = "", meaning = "Okänt" },
   { code = "000000", meaning = "Okänt värde" },
   { code = "0", meaning = "Okänd" },
   { code = "NULL", meaning = "Ej relevant" },

@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "lineage_cycle",
+    "message_contains": ["state lineage forms a cycle", "scb/alpha/value", "scb/beta/value"]
+  }
+}

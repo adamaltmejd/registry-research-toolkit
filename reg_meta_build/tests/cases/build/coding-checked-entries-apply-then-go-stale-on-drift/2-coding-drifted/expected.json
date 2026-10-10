@@ -134,13 +134,6 @@
           "pdf",
           "2020-01-01",
           "2020-12-31",
-          "",
-          "inte tillfrågad"
-        ],
-        [
-          "pdf",
-          "2020-01-01",
-          "2020-12-31",
           "1",
           "ja"
         ],
@@ -232,7 +225,7 @@
       "note": "docvalid's stale entry leaves its list with unknown validity, so it has no value set; dockeep keeps its documented 1 One. A stale guarded entry withholds its members (null row) or leaves the delivered list (markerlater's new list, support's three source rows); the stale sentinels keep the source list and no longer split the 2020 state."
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {
         "code": [
           "sentinel_classification_codes",
@@ -275,7 +268,7 @@
       "note": "warning, with its 1 One relabelled 'Changed' (the replaced [coding] leg): the [[coding.warning]] is a stale_curation_entry error (the replaced test: diagnostics [(stale_curation_entry, error)], evaluation stale)."
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "where": {
         "register": "warning"
       },

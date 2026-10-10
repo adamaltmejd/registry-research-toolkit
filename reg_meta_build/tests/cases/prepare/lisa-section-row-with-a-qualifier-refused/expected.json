@@ -7,7 +7,7 @@
   "fails_if": "the LISA reader checks only a keyed text row's first cell, so a section heading with an added qualifier (or a renamed heading) passes as the observed layout",
   "note": "The hardest form of the keyed-text-row check: the heading text is intact and only another cell of its row changed. The change-section parametrization (a renamed heading in Individ årsoberoende!A30) is the same check on the first cell, the easy twin.",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "lisa_layout_unsupported",
     "type": "LisaWorkbookError",
     "locator": "Individ!A5:F5",
     "message_contains": ["unsupported LISA section structure"]

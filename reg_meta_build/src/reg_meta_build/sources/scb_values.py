@@ -11,6 +11,7 @@ from reg_meta_build.db import (
     _decode_cp1252,
     _validated_scb_header,
 )
+from reg_meta_build.errors import SourceFormatError
 from reg_meta_build.input_snapshot import SnapshotError
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_value_periods import value_window
@@ -65,10 +66,11 @@ class CleanedScbValues:
                 and code not in _SINGLE_CODE_VERSIONS
                 and code not in descriptor.non_membership_codes
             ):
-                raise SnapshotError(
+                raise SourceFormatError(
                     f"{_VALUE_FILE}: row {row_number} has unsupported code/version "
                     f"shape {code!r} at level {descriptor.level!r}; "
-                    "verify the source format before preparing it"
+                    "verify the source format before preparing it",
+                    code="scb_value_shape_unsupported",
                 )
             yield SourceValueAssociation(
                 row_number=row_number,

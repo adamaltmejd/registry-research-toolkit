@@ -1,0 +1,39 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "withheld_output"],
+      "rows": [
+        ["duplicate_edition_name", "error", ["edition"]]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "duplicate_edition_name"},
+      "fields": ["key"],
+      "match": "set",
+      "rows": [
+        [["register:1", "variant:10", "edition:1", "variable:5", "member:100"]],
+        [["register:1", "variant:10", "edition:2", "variable:6", "member:101"]]
+      ],
+      "note": "The rows of versions 1 and 2, the two editions named '2020'."
+    },
+    {
+      "table": "editions",
+      "fields": ["register", "variant", "name"],
+      "rows": [
+        ["sample", "main", "2021"]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "column"],
+      "match": "set",
+      "rows": [
+        ["other", "OTHER"],
+        ["value", "VALUE"]
+      ]
+    }
+  ]
+}

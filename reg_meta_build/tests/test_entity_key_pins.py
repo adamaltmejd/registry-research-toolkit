@@ -106,9 +106,9 @@ def _db_with_split_sibling_entity_key(
         (entity_key_slug,),
     ).lastrowid
     conn.execute(
-        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+        "INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from, "
         "valid_to, data_type, delivery_column_name) "
-        "VALUES (?, 10, '2000-01-01', '2000-12-31', 'int', 'LopNrNy')",
+        "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 10, '2000-01-01', '2000-12-31', 'int', 'LopNrNy')",
         (ek_vid,),
     )
     # Split sibling sharing provider_key `50`: column `Kon` → disc `kon`.
@@ -118,9 +118,9 @@ def _db_with_split_sibling_entity_key(
         ("kon" if entity_key_slug is not None else None,),
     ).lastrowid
     conn.execute(
-        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+        "INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from, "
         "valid_to, data_type, delivery_column_name) "
-        "VALUES (?, 10, '2000-01-01', '2000-12-31', 'int', 'Kon')",
+        "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?, 10, '2000-01-01', '2000-12-31', 'int', 'Kon')",
         (sib_vid,),
     )
     conn.execute(

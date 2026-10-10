@@ -2355,7 +2355,7 @@
       },
       "DataWarning": {
         "type": "object",
-        "description": "A retained source limitation or interpretation assumption: today's\n`DataWarning`, as the build stored it.",
+        "description": "A retained source limitation or interpretation assumption: the builder's\n`DataWarning`, reconstructed from its `data_warning` row.",
         "required": [
           "warning_id",
           "register_fqid",
@@ -2364,7 +2364,6 @@
           "summary",
           "detail",
           "diagnostic_detail_sha256",
-          "source_subject",
           "fields",
           "refs",
           "withheld_output"
@@ -2416,9 +2415,6 @@
             "type": "string",
             "description": "`warning` or `error`."
           },
-          "source_subject": {
-            "type": "string"
-          },
           "summary": {
             "type": "string"
           },
@@ -2456,8 +2452,7 @@
               "type": "string"
             }
           }
-        },
-        "additionalProperties": false
+        }
       },
       "Delivery": {
         "type": "object",

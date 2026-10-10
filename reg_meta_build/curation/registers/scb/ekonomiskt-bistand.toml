@@ -94,6 +94,18 @@ slug = "antal-barn-0-15-ar"
 native_id = "22.7504"
 slug = "antal-barn-16-17-ar"
 
+# The April columns SBelApr / IBelApr carried the generated fold pins `sbel` / `ibel`,
+# the slugs the `[[representation.period_family]]` variables above take. Two
+# identities may not share a slug (naming_slug_collision), so each takes its own
+# column's slug; its months form the family, so it publishes nothing itself.
+[[variable]]
+native_id = "22.7509"
+slug = "sbelapr"
+
+[[variable]]
+native_id = "22.7521"
+slug = "ibelapr"
+
 [[variable]]
 native_id = "22.7608"
 slug = "antal-barn-0-ar"

@@ -59,7 +59,7 @@ def read_swecov_column_types(
     path: Path, revision: SourceRevision
 ) -> CleanedSourceReferences:
     """Read only schema metadata, preserving typed cells and source locators."""
-    payload = read_selected_bytes(path, revision, error_type=SwecovColumnTypesError)
+    payload = read_selected_bytes(path, revision)
     try:
         rows = csv.reader(io.StringIO(payload.decode("utf-8"), newline=""), strict=True)
         if tuple(next(rows)) != _HEADER:

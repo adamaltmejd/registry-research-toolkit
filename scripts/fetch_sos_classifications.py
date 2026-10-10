@@ -35,8 +35,8 @@ Two upstream mechanisms:
 Normalized output: one CSV per classification under `--out-dir`, columns
 `code,label,label_en,parent_code,valid_from,valid_to` (a faithful superset;
 blank where a source doesn't provide a field). The first two columns match
-the `vardekod,vardebenamning` shape the existing classification loader uses,
-so reducing to that format later is trivial. A `manifest.json` records the
+the `code,label` shape, and the build's book reader (`read_code_list`) accepts
+this six-column layout as is. A `manifest.json` records the
 source URL, raw-file sha256, fetch time, and code counts for provenance.
 
 Run (use `--with xlrd` — the historical ICD sources are legacy .xls):

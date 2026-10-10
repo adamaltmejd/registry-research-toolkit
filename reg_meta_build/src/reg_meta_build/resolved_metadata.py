@@ -26,8 +26,8 @@ from reg_meta_build.id import mint
 from reg_meta_build.relations import (
     _reject_oversized_components,
     _reject_same_as_cycles,
+    reject_cycles,
     reject_nonmonotone_representation_cycles,
-    reject_replaced_by_cycles,
 )
 from reg_meta_build.slug_grammar import validate_slug
 
@@ -203,7 +203,6 @@ class ResolvedTagMember(_ResolvedModel):
 class ResolvedTag(_ResolvedModel):
     slug: str
     label: str
-    description: str | None = None
     members: tuple[ResolvedTagMember, ...] = ()
 
     _slug = field_validator("slug")(_slug)
@@ -220,28 +219,6 @@ class ResolvedVariableSameAs(_ResolvedModel):
     b: str
 
     _refs = field_validator("a", "b")(_variable)
-
-
-class ResolvedClassificationRef(_ResolvedModel):
-    """The same_as table's explicit source namespace, never guessed from publisher."""
-
-    provider: str
-    classification: str
-
-    _slugs = field_validator("provider", "classification")(_slug)
-
-
-class ResolvedClassificationSameAs(_ResolvedModel):
-    a: ResolvedClassificationRef
-    b: ResolvedClassificationRef
-
-    @model_validator(mode="after")
-    def _distinct(self) -> Self:
-        if self.a.classification == self.b.classification:
-            raise ValueError(
-                "classification same_as needs distinct global classifications"
-            )
-        return self
 
 
 class ResolvedSuccession(_ResolvedModel):
@@ -288,9 +265,6 @@ class ResolvedVariantRef(_ResolvedModel):
 class ResolvedVariantSuccession(_ResolvedModel):
     predecessor: ResolvedVariantRef
     successor: ResolvedVariantRef
-    effective_year: int | None = None
-    note: str | None = None
-    description: str | None = None
 
 
 class ResolvedRepresentationRef(_ResolvedModel):
@@ -312,7 +286,7 @@ class ResolvedRepresentationSuccession(_ResolvedModel):
     @model_validator(mode="after")
     def _scope(self) -> Self:
         if self.variant is not None:
-            _slug(self.variant)
+            _variant_slug(self.variant)
             if self.effective_year is None:
                 raise ValueError(
                     "variant-scoped representation succession needs an effective year"
@@ -412,7 +386,6 @@ class ResolvedMetadata(_ResolvedModel):
     classification_groups: tuple[ResolvedClassificationGroup, ...] = ()
     tags: tuple[ResolvedTag, ...] = ()
     variable_same_as: tuple[ResolvedVariableSameAs, ...] = ()
-    classification_same_as: tuple[ResolvedClassificationSameAs, ...] = ()
     successions: tuple[ResolvedSuccession, ...] = ()
     historical_predecessors: tuple[ResolvedHistoricalPredecessor, ...] = ()
     variant_successions: tuple[ResolvedVariantSuccession, ...] = ()
@@ -464,19 +437,10 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
         "classification group membership",
     )
     _unique((tag.slug for tag in metadata.tags), "tag slug")
-    for label, graph in (
-        ("variable same_as", [(e.a, e.b) for e in metadata.variable_same_as]),
-        (
-            "classification same_as",
-            [
-                ((e.a.provider, e.a.classification), (e.b.provider, e.b.classification))
-                for e in metadata.classification_same_as
-            ],
-        ),
-    ):
-        _unique((tuple(sorted(pair)) for pair in graph), label)
-        _reject_same_as_cycles(graph, label=f"resolved {label}")
-        _reject_oversized_components(graph, label=f"resolved {label}")
+    same_as = [(e.a, e.b) for e in metadata.variable_same_as]
+    _unique((tuple(sorted(pair)) for pair in same_as), "variable same_as")
+    _reject_same_as_cycles(same_as, label="resolved variable same_as")
+    _reject_oversized_components(same_as, label="resolved variable same_as")
     graphs = defaultdict(list)
     for edge in metadata.successions:
         graphs[parse_fqid(edge.predecessor).kind].append(
@@ -505,9 +469,13 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
     _unique((*unscoped, *((a, b) for a, b, _ in scoped)), "representation succession")
     graphs["unscoped representation succession"] = unscoped
     reject_nonmonotone_representation_cycles(scoped)
+    relations: dict[str, Literal["derived_from", "lineage"]] = {
+        "classification derivation": "derived_from",
+        "state lineage": "lineage",
+    }
     for label, graph in graphs.items():
         _unique(graph, str(label))
-        reject_replaced_by_cycles(graph)
+        reject_cycles(graph, relation=relations.get(label, "replaced_by"))
     linked = {state_reference_key(e.consumer) for e in metadata.state_lineage}
     for warning in metadata.lineage_warnings:
         if (
@@ -555,29 +523,24 @@ _COLUMNS = {
     "concept_group_variable": "member_id,group_id,variable_id,delivery_column_name",
     "concept_group_variable_facet": "member_id,axis,value,label",
     "concept_group_classification": "classification_id,group_id,facet_value,facet_label",
-    "tag": "tag_id,slug,label,description",
+    "tag": "tag_id,slug,label",
     "tag_member": "tag_id,register_id,variable_id,rank,starred,note",
     "variable_same_as": "a_provider,a_register,a_variable,b_provider,b_register,b_variable",
-    "classification_same_as": "a_provider,a_classification_slug,b_provider,b_classification_slug",
-    "register_replaced_by": "predecessor_provider,predecessor_register,successor_provider,successor_register,effective_year,note,beskrivning",
+    "register_replaced_by": "predecessor_provider,predecessor_register,successor_provider,successor_register,effective_year,beskrivning",
     "variable_replaced_by": "predecessor_provider,predecessor_register,predecessor_variable,successor_provider,successor_register,successor_variable,effective_year,note,beskrivning",
-    "variant_replaced_by": "predecessor_provider,predecessor_register,predecessor_variant,successor_provider,successor_register,successor_variant,effective_year,note,beskrivning",
+    "variant_replaced_by": "predecessor_provider,predecessor_register,predecessor_variant,successor_provider,successor_register,successor_variant",
     "representation_replaced_by": "predecessor_provider,predecessor_register,predecessor_variable,predecessor_column,successor_provider,successor_register,successor_variable,successor_column,variant,effective_year,note,beskrivning",
     "classification_derived_from": "derived_slug,source_slug,note",
     "variable_state_lineage": "consumer_state_id,source_state_id,valid_from,valid_to",
     "variable_state_lineage_warning": "consumer_state_id,warning_kind,message",
-    "source_column_type": "table_name,column_name,sql_type,nullable",
-    "source_join_key": "table_name,column_name,description",
-    "identifier_semantics": "var_id,variabelnamn,variabeldefinition",
-    "timeseries_event": "namn,handelse,beskrivning,entitet,id1,id2,fil_id",
     "source_relationship": "relationship_id,owner_variable_id,kind,source_dataset,source_revision_id,declaration_json,binding_status,unresolved_json,provenance",
-    "source_relationship_variable": "relationship_id,ordinal,clause_index,operand_index,literal_token,endpoint_variable_id",
 }
 
 
 def prepare_resolved_metadata(
     metadata: ResolvedMetadata,
     variables: tuple[ResolvedVariable, ...],
+    variable_storage_ids: dict[tuple[str, str, str], int],
     registers: dict[tuple[str, str], ResolvedRegister],
     variants: dict[tuple[str, str, str], ResolvedVariant],
     classifications: tuple[ResolvedClassification, ...],
@@ -592,10 +555,7 @@ def prepare_resolved_metadata(
         "/".join(key): _storage_id(key[0], "register", key[1]) for key in registers
     }
     variable_ids = {
-        f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}": _storage_id(
-            v.register_ref.provider, "variable", v.register_ref.slug, v.slug
-        )
-        for v in variables
+        "/".join(key): variable_id for key, variable_id in variable_storage_ids.items()
     }
     variant_keys = {("/".join(key[:2]), key[2]) for key in variants}
     classification_ids = {
@@ -725,7 +685,7 @@ def prepare_resolved_metadata(
                 )
     for tag in metadata.tags:
         tag_id = mint("resolved-catalog", "tag", tag.slug)
-        rows["tag"].append((tag_id, tag.slug, tag.label, tag.description))
+        rows["tag"].append((tag_id, tag.slug, tag.label))
         for member in tag.members:
             register_id = variable_id = None
             if parse_fqid(member.target).kind == "register":
@@ -747,16 +707,6 @@ def prepare_resolved_metadata(
         require(variable_ids, edge.b, "same_as variable")
         a, b = tuple(edge.a.split("/")), tuple(edge.b.split("/"))
         rows["variable_same_as"].extend(((*a, *b), (*b, *a)))
-    for edge in metadata.classification_same_as:
-        for endpoint in (edge.a, edge.b):
-            require(
-                classification_ids, endpoint.classification, "same_as classification"
-            )
-        a, b = (
-            (edge.a.provider, edge.a.classification),
-            (edge.b.provider, edge.b.classification),
-        )
-        rows["classification_same_as"].extend(((*a, *b), (*b, *a)))
     for edge in metadata.successions:
         kind = parse_fqid(edge.predecessor).kind
         targets = register_ids if kind == "register" else variable_ids
@@ -764,12 +714,15 @@ def prepare_resolved_metadata(
         if edge.predecessor not in targets:
             require(historical, edge.predecessor, "succession predecessor")
         require(targets, edge.successor, "succession successor")
+        # Only the variable grain stores `note`: validate_built_db selects the
+        # vintage-lift edges by it.
+        note = (edge.note,) if kind == "variable" else ()
         rows[table].append(
             (
                 *edge.predecessor.split("/"),
                 *edge.successor.split("/"),
                 edge.effective_year,
-                edge.note,
+                *note,
                 edge.description,
             )
         )
@@ -785,9 +738,7 @@ def prepare_resolved_metadata(
             (*a.register_ref.split("/"), a.variant),
             (*b.register_ref.split("/"), b.variant),
         )
-        rows["variant_replaced_by"].append(
-            (*ka, *kb, edge.effective_year, edge.note, edge.description)
-        )
+        rows["variant_replaced_by"].append((*ka, *kb))
     for edge in metadata.representation_successions:
         a, b = edge.predecessor, edge.successor
         for endpoint in (a, b):
@@ -822,36 +773,6 @@ def prepare_resolved_metadata(
         rows["variable_state_lineage_warning"].append(
             (consumer, warning.kind, warning.message)
         )
-    source_columns = {
-        (column.table_name, column.column_name) for column in metadata.source_columns
-    }
-    for column in metadata.source_columns:
-        rows["source_column_type"].append(
-            (column.table_name, column.column_name, column.sql_type, column.nullable)
-        )
-    for key in metadata.source_join_keys:
-        require(
-            source_columns, (key.table_name, key.column_name), "join-key source column"
-        )
-        rows["source_join_key"].append(
-            (key.table_name, key.column_name, key.description)
-        )
-    rows["identifier_semantics"].extend(
-        (item.native_variable_id, item.name, item.definition)
-        for item in metadata.identifiers
-    )
-    rows["timeseries_event"].extend(
-        (
-            item.name,
-            item.event,
-            item.description,
-            item.entity,
-            item.first_token,
-            item.second_token,
-            item.file_token,
-        )
-        for item in metadata.timeseries_events
-    )
     for relationship in metadata.documentary_relationships:
         relationship = type(relationship).model_validate_json(
             relationship.model_dump_json()
@@ -879,21 +800,6 @@ def prepare_resolved_metadata(
                     separators=(",", ":"),
                 ),
                 relationship.provenance,
-            )
-        )
-        rows["source_relationship_variable"].extend(
-            (
-                relationship.relationship_id,
-                ordinal,
-                anchor.clause_index,
-                anchor.operand_index,
-                anchor.token,
-                variable_ids[anchor.variable],
-            )
-            for ordinal, anchor in enumerate(
-                relationship.variables
-                if isinstance(relationship, DocumentaryRelationship)
-                else ()
             )
         )
     return rows

@@ -11,9 +11,7 @@ from collections import defaultdict
 from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING, Literal
 
-from reg_meta_build.source_coding import copied_coding_fingerprints
 from reg_meta_build.source_curation import (
-    ApplicabilityIssue,
     CaseEvaluation,
     CheckedEditionRebind,
     CheckedFieldChange,
@@ -43,9 +41,6 @@ from reg_meta_build.source_records import SourceFields, TemporalScope
 from .source_evidence import SourceField
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
-
-    from reg_meta_build.source_coding import CodeListClaim
     from reg_meta_build.source_records import SourceRecord
 
 
@@ -110,14 +105,6 @@ def _check_contract(case: CurationCase) -> None:
                 )
             if effect.donor is not None:
                 for alternative in checked[effect.donor].alternatives:
-                    if effect.copy_coding and alternative.code_set_references is None:
-                        raise ValueError(
-                            "copied coding requires checked code-set references"
-                        )
-                    if effect.copy_coding and effect.expected_codings is None:
-                        raise ValueError(
-                            "copied coding requires explicit original coding fingerprints"
-                        )
                     donor_fields = {field.name: field for field in alternative.fields}
                     for name in effect.copied_fields:
                         expected = donor_fields[name]
@@ -172,55 +159,9 @@ def _check_contract(case: CurationCase) -> None:
             )
 
 
-def copied_coding_key(
-    effect: CuratedOccurrenceAddition,
-) -> tuple[SourceRecordRef, TemporalScope]:
-    """Identify the original donor and the exact scope its copy must check."""
-    if not effect.copy_coding or effect.donor is None:
-        raise ValueError("copied coding evidence requires an explicit donor")
-    scope = effect.edition_period_scope
-    if scope.kind == "not_applicable":
-        scope = effect.edition_scope
-    return effect.donor, scope
-
-
-def _check_copied_coding(
-    case: CurationCase,
-    evaluation: CaseEvaluation,
-    coding: Mapping[tuple[SourceRecordRef, TemporalScope], tuple[CodeListClaim, ...]],
-) -> CaseEvaluation:
-    if evaluation.status == "stale":
-        return evaluation
-    assert isinstance(case.decision, OccurrenceCorrectionDecision)
-    issues = []
-    for effect in case.decision.effects:
-        if not isinstance(effect, CuratedOccurrenceAddition) or not effect.copy_coding:
-            continue
-        key = copied_coding_key(effect)
-        if key not in coding:
-            raise ValueError("copied coding requires original donor binding evidence")
-        observed = copied_coding_fingerprints(coding[key])
-        if set(observed) != set(effect.expected_codings or ()):
-            issues.append(
-                ApplicabilityIssue(
-                    code="copied_coding_evidence_changed",
-                    subject=effect.occurrence_key,
-                    detail=f"Expected original donor codings {effect.expected_codings!r}; observed {observed!r}. No occurrence effects were applied.",
-                )
-            )
-    return (
-        CaseEvaluation(case_id=case.case_id, status="stale", issues=tuple(issues))
-        if issues
-        else evaluation
-    )
-
-
 def apply_occurrence_cases(
     records: tuple[SourceRecord, ...] | SourceEvidence,
     cases: tuple[CurationCase, ...],
-    *,
-    coding: Mapping[tuple[SourceRecordRef, TemporalScope], tuple[CodeListClaim, ...]]
-    | None = None,
 ) -> OccurrenceCorrections:
     """Resolve a complete relevant source slice; never select only expected peers.
 
@@ -232,12 +173,7 @@ def apply_occurrence_cases(
         raise ValueError("occurrence correction case IDs must be unique")
     for case in ordered:
         _check_contract(case)
-    evaluations = tuple(
-        _check_copied_coding(case, evaluation, coding or {})
-        for case, evaluation in zip(
-            ordered, evaluate_cases(ordered, records), strict=True
-        )
-    )
+    evaluations = evaluate_cases(ordered, records)
     if isinstance(records, SourceEvidence):
         records = records.records
     fields = defaultdict(list)

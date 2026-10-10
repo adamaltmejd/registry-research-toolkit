@@ -24,7 +24,6 @@ valid_to = 2019
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
 codes_file = "sun2000-niva.csv"
 sentinel_codes = [
-  { code = "", meaning = "Uppgift saknas" },
   { code = "9", meaning = "Uppgift saknas" },
   { code = "NULL", meaning = "Uppgift om föräldern saknas" },
   { code = "*", meaning = "Uppgift saknas" },

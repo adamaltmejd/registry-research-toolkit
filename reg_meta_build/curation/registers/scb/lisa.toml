@@ -1366,19 +1366,23 @@ native_id = "34.57"
 slug = "personnr"
 
 
+# The April columns AGI1/2/3LonFinkApril carried the fold slugs agi1/2/3lonfink, which
+# the `[[representation.period_family]]` variables take. Two identities may not share a
+# slug (naming_slug_collision), so each takes its own column's slug; its months form
+# the family, so it publishes nothing itself.
 [[variable]]
 native_id = "34.43033"
-slug = "agi1lonfink"
+slug = "agi1lonfinkapril"
 
 
 [[variable]]
 native_id = "34.43049"
-slug = "agi2lonfink"
+slug = "agi2lonfinkapril"
 
 
 [[variable]]
 native_id = "34.43087"
-slug = "agi3lonfink"
+slug = "agi3lonfinkapril"
 
 
 [[variable]]

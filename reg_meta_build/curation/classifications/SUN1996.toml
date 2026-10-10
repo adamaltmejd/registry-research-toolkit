@@ -10,7 +10,6 @@ url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-u
 codes_file = "sun1996.csv"
 sentinel_codes = [
   { code = "*****", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "00000", meaning = "Uppgift saknas" },
   { code = "***", meaning = "Uppgift saknas" },
 ]

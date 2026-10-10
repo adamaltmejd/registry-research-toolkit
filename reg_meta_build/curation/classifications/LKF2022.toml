@@ -11,7 +11,6 @@ codes_file = "lkf2022.csv"
 sentinel_codes = [
   { code = "0000", meaning = "Kommunkod saknas" },
   { code = "9999", meaning = "Utlandet" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "00", meaning = "Okänt" },
   { code = "99", meaning = "Utlandet" },
   { code = "9900", meaning = "Svensk skola i utlandet" },

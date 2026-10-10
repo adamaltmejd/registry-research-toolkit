@@ -46,7 +46,11 @@ from reg_meta_build.curation_compile import (
     validate_sentinels,
 )
 from reg_meta_build.curation_tree import CLASSIFICATION_INVALID, load_curation_tree
-from reg_meta_build.data_warnings import acknowledged_data_warnings, scope_data_warnings
+from reg_meta_build.data_warnings import (
+    BUILD_ONLY_CODES,
+    acknowledged_data_warnings,
+    scope_data_warnings,
+)
 from reg_meta_build.db import _emit_timing, _paths_overlap
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
 from reg_meta_build.prepared_catalog import (
@@ -158,6 +162,7 @@ class CompiledScope(_Model):
     source_diagnostics: tuple[tuple[NativeKey, ResolutionDiagnostic], ...] = ()
     naming: tuple[NamingDeclaration, ...] = ()
     naming_ambiguities: tuple[NamingAmbiguity, ...] = ()
+    refused_naming: tuple[NamingDeclaration, ...] = ()
     provider_keys: tuple[tuple[NativeKey, str | None], ...] = ()
     variants: tuple[tuple[NativeKey, ResolvedVariant], ...] = ()
 
@@ -202,6 +207,7 @@ def _compiled_scope(
         source_diagnostics=(compiled.source_diagnostics or {}).get(key, ()),
         naming=(compiled.naming or {}).get(key, ()),
         naming_ambiguities=(compiled.naming_ambiguities or {}).get(key, ()),
+        refused_naming=(compiled.refused_naming or {}).get(key, ()),
         provider_keys=(compiled.provider_keys or {}).get(key, ()),
         variants=(compiled.variants or {}).get(key, ()),
     )
@@ -567,6 +573,7 @@ def _run_pipeline(
                 compiled.source_diagnostics,
                 compiled.naming,
                 compiled.naming_ambiguities,
+                compiled.refused_naming,
                 compiled.provider_keys,
                 compiled.variants,
             ):
@@ -1225,6 +1232,7 @@ def _run_pipeline(
                         cases=scope.cases,
                         naming=scope.naming,
                         naming_ambiguities=scope.naming_ambiguities,
+                        refused_naming=scope.refused_naming,
                         provider_keys=_unique_pairs(
                             scope.provider_keys, "provider key"
                         ),
@@ -1722,6 +1730,10 @@ def _run_pipeline(
                         registers=sorted(set(registers)),
                         corpus_validation="not_applicable",
                     )
+                # The build report keeps every warning; the catalog only the
+                # user-facing ones (#1296 item 4).
+                for key in sorted(data_warnings):
+                    event("data_warning", data_warnings[key].model_dump(mode="json"))
                 if diagnostic or not counts["error"]:
                     phase_started = time.perf_counter()
                     identity = {}
@@ -1754,7 +1766,9 @@ def _run_pipeline(
                         classification_successions=successions,
                         metadata=final_metadata,
                         data_warnings=tuple(
-                            data_warnings[k] for k in sorted(data_warnings)
+                            data_warnings[k]
+                            for k in sorted(data_warnings)
+                            if data_warnings[k].code not in BUILD_ONLY_CODES
                         ),
                         search_pins=search_pins,
                     )

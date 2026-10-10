@@ -1,7 +1,7 @@
 {
   "installations": [
     "dirty-checkout",
-    "ignored-wheel-in-unrelated-repo",
+    "ignored-copy-in-builder-checkout",
     "outside-checkout"
   ]
 }

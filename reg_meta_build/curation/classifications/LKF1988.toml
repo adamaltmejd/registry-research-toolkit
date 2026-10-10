@@ -9,7 +9,6 @@ valid_to = 1988
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 codes_file = "lkf1988.csv"
 sentinel_codes = [
-  { code = "", meaning = "Uppgift saknas" },
   { code = "******", meaning = "Okänd" },
   { code = "00", meaning = "Okänt värde" },
   { code = "99", meaning = "Utlandet" },
