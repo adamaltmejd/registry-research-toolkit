@@ -1,5 +1,5 @@
 {
-  "description": "One register per code-list shape. SCB: DUPS repeats 001 'Original label' on two items beside 001 'Another label'; NOCODE adds an undelivered code labelled 'Label' to its list; BLANK lists 0 'Label', a row delivering an empty code and an empty label, and an empty code labelled 'Uppgift saknas'; ALLBLANK lists only a row delivering an empty code and an empty label; LBLANK lists only an empty code labelled 'Uppgift saknas'; NOCELLS lists 0 'Label' and a row whose code and label are both undelivered; VERSIONS delivers one CVID under two list versions with equal members; register 34 (LISA) lists 0 'Label', NULL 'Uppgift saknas' and a lower-case null 'Lower case' for LISAVALUE, and only NULL 'Uppgift saknas' plus a space-padded ' NULL ' 'Saknas' for LISANULL; NULLKEEP (register 22) delivers the same list version, 0 and NULL rows as LISAVALUE. SOS (Kodregistret, COD): each variable's Kodlista_<NAME> sheet (and, for EQ and the RIV* variables, a second sheet Kodlista_<NAME>_B naming the same variable) states dated [period, code, label] rows. A blank period is a year-independent row.",
+  "description": "One register per code-list shape. SCB: DUPS repeats 001 'Original label' on two items beside 001 'Another label'; NOCODE adds an undelivered code labelled 'Label' to its list; BLANK lists 0 'Label', a row delivering an empty code and an empty label, and an empty code labelled 'Uppgift saknas'; ALLBLANK lists only a row delivering an empty code and an empty label; LBLANK lists only an empty code labelled 'Uppgift saknas'; NOCELLS lists 0 'Label' and a row whose code and label are both undelivered; VERSIONS delivers one CVID under two list versions with equal members. SOS (Kodregistret, COD): each variable's Kodlista_<NAME> sheet (and, for EQ and the RIV* variables, a second sheet Kodlista_<NAME>_B naming the same variable) states dated [period, code, label] rows. A blank period is a year-independent row.",
   "scb": {
     "registerinformation": [
       {"cvid": 13001, "var_id": 1301, "colname": "DUPS", "varname": "Dups", "register": ["DUPS", 13, 130]},
@@ -8,10 +8,7 @@
       {"cvid": 17001, "var_id": 1701, "colname": "ALLBLANK", "varname": "Allblank", "register": ["ALLBLANK", 17, 170]},
       {"cvid": 21001, "var_id": 2101, "colname": "LBLANK", "varname": "Lblank", "register": ["LBLANK", 21, 210]},
       {"cvid": 18001, "var_id": 1801, "colname": "NOCELLS", "varname": "Nocells", "register": ["NOCELLS", 18, 180]},
-      {"cvid": 19001, "var_id": 1901, "colname": "VERSIONS", "varname": "Versions", "register": ["VERSIONS", 19, 190]},
-      {"cvid": 34001, "var_id": 3401, "colname": "LISAVALUE", "varname": "Value", "register": ["LISA", 34, 340]},
-      {"cvid": 34002, "var_id": 3402, "colname": "LISANULL", "varname": "Onlynull", "register": ["LISA", 34, 340]},
-      {"cvid": 22001, "var_id": 2201, "colname": "NULLKEEP", "varname": "Nullkeep", "register": ["NULLKEEP", 22, 220]}
+      {"cvid": 19001, "var_id": 1901, "colname": "VERSIONS", "varname": "Versions", "register": ["VERSIONS", 19, 190]}
     ],
     "vardemangder": [
       "d|1|001|Original label|13001|1301",
@@ -27,14 +24,7 @@
       "n|1|0|Label|18001|1801",
       "n|1|||18001|1802",
       "First edition|1|001|Label|19001|1901",
-      "Second edition|1|001|Label|19001|1902",
-      "s|1|0|Label|34001|34011",
-      "s|1|NULL|Uppgift saknas|34001|34012",
-      "s|1|null|Lower case|34001|34013",
-      "s|1|NULL|Uppgift saknas|34002|34021",
-      "s|1| NULL |Saknas|34002|34022",
-      "s|1|0|Label|22001|22011",
-      "s|1|NULL|Uppgift saknas|22001|22012"
+      "Second edition|1|001|Label|19001|1902"
     ]
   },
   "sos": [

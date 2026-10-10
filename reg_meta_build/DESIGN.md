@@ -208,19 +208,16 @@ associations, validity declarations, disconnected identifiers and duplicates. Mi
 empty and zero stay distinct. A delivered blank code is missing data and never a member,
 labelled or not (SCB's `["", "Uppgift saknas"]` included), as Socialstyrelsen code rows
 already treat it: binding keeps its association as evidence and states no member, so it
-neither publishes nor withholds the list. LISA (SCB register 34) delivers its missing
-value as the literal code `NULL`, so in a LISA list that exact cleaned code is a blank
-code too; every other register keeps a delivered `NULL` as a member. Curation cannot
-author a blank member either: a blank (empty or whitespace-only) coding member or
-classification sentinel code is refused at load. An undelivered code is structurally
-missing and stays unknown membership, which withholds. A descriptor label is not a
-global code-list ID. Exact validity dates are not truncated to years or silently
-repaired. An edition's explicit item associations establish membership across its finite
-scope when known global item dates would leave gaps. This is the accepted continuity
-assumption when no independent period information is supplied. Original item dates
-remain evidence and every widened association emits a warning. Supplied and section
-windows still restrict membership; unknown or conflicting validity, ambiguous joins and
-competing lists still withhold.
+neither publishes nor withholds the list. Curation cannot author one either: a blank
+(empty or whitespace-only) coding member or classification sentinel code is refused at
+load. An undelivered code is structurally missing and stays unknown membership, which
+withholds. A descriptor label is not a global code-list ID. Exact validity dates are not
+truncated to years or silently repaired. An edition's explicit item associations
+establish membership across its finite scope when known global item dates would leave
+gaps. This is the accepted continuity assumption when no independent period information
+is supplied. Original item dates remain evidence and every widened association emits a
+warning. Supplied and section windows still restrict membership; unknown or conflicting
+validity, ambiguous joins and competing lists still withhold.
 
 The exact `Tal` and `Beskrivande text` rows whose code, version and level agree are type
 declarations, not enumerated codes. Cleaning records that distinction on the descriptor;
