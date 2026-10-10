@@ -1,0 +1,109 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+steward_table_prefixes = ["CIS"]
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variant]]
+native_id = "1.11"
+slug = "second"
+[[variable]]
+native_id = "1.401"
+slug = "seq"
+[[variable]]
+native_id = "1.402"
+slug = "blk"
+[[variable]]
+native_id = "1.403"
+slug = "h56"
+[[variable]]
+native_id = "1.404"
+slug = "case"
+[[variable]]
+native_id = "1.405"
+slug = "dia"
+[[variable]]
+native_id = "1.406"
+slug = "grain"
+[[variable]]
+native_id = "1.411"
+slug = "noname"
+[[variable]]
+native_id = "1.412"
+slug = "nodef"
+[[variable]]
+native_id = "1.413"
+slug = "nocol"
+[[variable]]
+native_id = "1.414"
+slug = "notype"
+[[variable]]
+native_id = "1.415"
+slug = "noperiod"
+[[variable]]
+native_id = "1.416"
+slug = "rename"
+[[variable]]
+native_id = "1.417"
+slug = "redefine"
+[[variable]]
+native_id = "1.418"
+slug = "codeliv"
+[[variable]]
+native_id = "1.419"
+slug = "distinct"
+[[variable]]
+native_id = "1.421"
+slug = "checked"
+[[variable]]
+native_id = "1.422"
+slug = "anchor"
+[[variable]]
+native_id = "1.441"
+slug = "units-seq"
+[[variable]]
+native_id = "1.442"
+slug = "units-same"
+[[variable]]
+native_id = "1.443"
+slug = "units-columnless"
+[[variable]]
+native_id = "1.444"
+slug = "units-missing"
+[[variable]]
+native_id = "1.451"
+slug = "pooled"
+[[variable]]
+native_id = "1.452"
+slug = "pooled-coded"
+[[variable]]
+native_id = "1.461"
+slug = "colless-unplaced"
+[[variable]]
+native_id = "1.471"
+slug = "ty-conflict"
+[[variable]]
+native_id = "1.472"
+slug = "ty-widen"
+[[variable]]
+native_id = "1.481"
+slug = "coded"
+[[variable]]
+native_id = "1.430.gaturest"
+slug = "gaturest"
+[[variable]]
+native_id = "1.430.pgaturest"
+slug = "pgaturest"
+[[identity.partition]]
+variable = "1.430"
+columns = { GatuRest = "1.430.gaturest", Gaturest = "1.430.gaturest", PGaturest = "1.430.pgaturest" }
+columns_ref = "Y-167 fixture reference"
+
+[[errata.delivered]]
+variant = "people"
+column = "X0115"
+versions = ["2002"]
+evidence = "accepted delivery"
+noted = "2026-10-10"

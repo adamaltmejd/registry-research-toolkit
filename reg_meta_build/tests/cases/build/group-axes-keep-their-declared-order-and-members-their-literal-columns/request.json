@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_resolved_metadata_writes.py::test_all_explicit_metadata_surfaces_are_written_without_derivation",
+    "test_resolved_metadata_writes.py::test_group_members_preserve_case_distinct_declared_columns"
+  ],
+  "note": "The source and parallel curation of representation-parallel-case-aliases-keep-distinct-members (income delivered as First and first, kept as two members), plus a [[group]] over both spellings. Its axes are declared unit then rank, against their alphabetical order, so a written ordinal that followed the axis name would be visible (old: [('unit', 0, 'Unit'), ('rank', 1, 'Rank')]). The members keep their case-distinct literal columns (old: ['ONECOLUMN', 'oneColumn']) and each its facets (old: rank 1 and 2, unit person).",
+  "fails_if": "`compile_declared_metadata` numbers group axes other than by their declared order, or `prepare_resolved_metadata` writes an axis ordinal or label other than the declared one, or folds two group members whose columns differ only in case into one (the member id or the representation check lowercasing the column)",
+  "sources": "scb-income-case-alias-members"
+}

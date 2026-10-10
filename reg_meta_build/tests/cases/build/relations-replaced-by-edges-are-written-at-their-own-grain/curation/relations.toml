@@ -1,0 +1,32 @@
+[[edge]]
+type = "replaced_by"
+from = "sos/syd"
+to = "sos/syr"
+effective_year = 2001
+note = "Register transition"
+
+[[edge]]
+type = "replaced_by"
+from = "sos/syd/col"
+to = "sos/syr/col"
+effective_year = 2001
+note = "Variable transition"
+
+[[edge]]
+type = "replaced_by"
+from = "sos/syd"
+to = "sos/syr"
+from_variant = "_default"
+to_variant = "a"
+effective_year = 2001
+note = "Variant transition"
+
+[[edge]]
+type = "replaced_by"
+from = "sos/syr/col"
+to = "sos/syr/halv"
+from_column = "COL"
+to_column = "HALV"
+variant = "a"
+effective_year = 2000
+note = "Column transition"

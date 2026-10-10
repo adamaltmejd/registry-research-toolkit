@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_resolved_metadata_contracts.py::test_invalid_metadata_contracts_fail_before_output[multiple_groups]"
+  ],
+  "note": "Two [[group]] tables of one register, first {value, two} and second {two, else}, share only the member two. Each group loads on its own: the concept-group loader checks members within one group, not across groups. The old test handed the writer two groups with identical members; one shared member is the harder case. From the old test: the build refuses with 'variable belongs to multiple resolved groups' and writes no catalog. The refusal has no located code yet, so it surfaces as pipeline_build_failed (a located-errors finding). The allowed twin, one group per variable, is group-axes-keep-their-declared-order-and-members-their-literal-columns.",
+  "fails_if": "`validate_metadata_structure` (resolved_metadata.py) stops comparing a member variable's owning (register, key) across groups, or keys the owner map per group, so two groups share two and the build completes",
+  "sources": "scb-withheld-key-and-gone"
+}

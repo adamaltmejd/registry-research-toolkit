@@ -798,17 +798,18 @@ A literal source year 9999 is not dated evidence.
 ### Occurrences and coding
 
 Occurrence reconciliation forms exact nonoverlapping column intervals. Conflicting
-optional fields become unknown only over their overlap. Conflicting availability or
-population withholds the unsafe segment. Missing periods/columns remain explicit issues.
-A delivered literally blank column (raw `""`) is not a missing fact: SCB states the
-member has no physical column (aggregate-statistics registers), so the reader carries it
-as an explicit negative column claim and reconciliation omits the occurrence on purpose,
-reporting it once as an `omitted_columnless_occurrence` warning. A variable whose every
-occurrence is columnless is not materialized; its `no_supported_states` outcome is a
-warning for this cause alone. A columnless-only remainder left after checked splits
-likewise warns and is omitted. An undelivered cell, or a delivered cell that is not
-literally blank, stays unknown and keeps the error path. A gap between supported periods
-stays a gap.
+optional fields become unknown only over their overlap. Every reader states availability
+as true, so availability never conflicts; LISA alone carries a population, one per sheet
+and so one per variant, so populations never conflict either. Missing periods/columns
+remain explicit issues. A delivered literally blank column (raw `""`) is not a missing
+fact: SCB states the member has no physical column (aggregate-statistics registers), so
+the reader carries it as an explicit negative column claim and reconciliation omits the
+occurrence on purpose, reporting it once as an `omitted_columnless_occurrence` warning.
+A variable whose every occurrence is columnless is not materialized; its
+`no_supported_states` outcome is a warning for this cause alone. A columnless-only
+remainder left after checked splits likewise warns and is omitted. An undelivered cell,
+or a delivered cell that is not literally blank, stays unknown and keeps the error path.
+A gap between supported periods stays a gap.
 
 Pooled multi-year editions form one marked state (Y-202). A pooled scope carries its
 whole-range bounds from cleaning — the edition's exact interval or its whole-year claim
@@ -823,8 +824,8 @@ Coding membership on a pooled edition is bound over the whole pooled range (Y-20
 marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0)
 through `ResolvedState`/`IRVariableState` into the DB, and `validate_built_db` fails a
 build whose pooled-marked window overlaps an unmarked window on one column. Adjacent
-pooled segments on one column whose reconciled state-grain facts, population, and coding
-evidence agree merge into one pooled state over their combined window (Y-209).
+pooled segments on one column whose reconciled state-grain facts and coding evidence
+agree merge into one pooled state over their combined window (Y-209).
 
 Operational definitions and source references are state-grain. Separate resolved periods
 and variants each keep their own exact text and provenance, so differing texts across
