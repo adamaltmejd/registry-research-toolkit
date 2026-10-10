@@ -25,9 +25,7 @@ def interval_record(
     data_type: str | None = "integer",
     operational_definition: str | None = None,
     source_attribution: str | None = None,
-    negative: bool = False,
     scope: TemporalScope | None = None,
-    population: SourceCoordinate | None = None,
 ) -> SourceRecord:
     return SourceRecord.create(
         revision=SourceRevision.create(
@@ -52,7 +50,7 @@ def interval_record(
             provider="fixture",
             register=SourceCoordinate(status="value", native_id=1, name="Register"),
             variant=SourceCoordinate(status="value", native_id=2, name="Variant"),
-            population=population or SourceCoordinate(status="unknown"),
+            population=SourceCoordinate(status="unknown"),
             variable=SourceCoordinate(status="value", native_id=3, name="Variable"),
             member=SourceCoordinate(status="value", native_id=row),
             native=NativeCoordinates(),
@@ -65,9 +63,7 @@ def interval_record(
             kind="intervals", intervals=(ScopeInterval(start=start, end=end),)
         ),
         fields=SourceFields(
-            availability=SourceField(status="negative")
-            if negative
-            else value_field(True),
+            availability=value_field(True),
             column_name=SourceField(status="negative", raw_value="")
             if column_negative
             else (value_field(column) if column else SourceField(status="unknown")),

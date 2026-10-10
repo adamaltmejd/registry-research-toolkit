@@ -58,7 +58,6 @@
       "where": {
         "code": [
           "conflicting_occurrence_facts",
-          "conflicting_occurrence_population",
           "conflicting_occurrence_scope",
           "omitted_columnless_occurrence",
           "unsupported_occurrence"

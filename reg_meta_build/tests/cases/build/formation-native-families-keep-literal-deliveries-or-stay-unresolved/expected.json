@@ -1,0 +1,271 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "scb/sample/seq", "scb/sample/blk", "scb/sample/h56", "scb/sample/case", "scb/sample/dia", "scb/sample/grain",
+          "scb/sample/noname", "scb/sample/nodef", "scb/sample/nocol", "scb/sample/notype", "scb/sample/noperiod",
+          "scb/sample/rename", "scb/sample/redefine", "scb/sample/codeliv", "scb/sample/distinct",
+          "scb/sample/checked", "scb/sample/anchor", "scb/sample/gaturest", "scb/sample/pgaturest",
+          "scb/sample/units-seq", "scb/sample/units-same", "scb/sample/units-columnless", "scb/sample/units-missing",
+          "scb/sample/pooled", "scb/sample/pooled-coded", "scb/sample/colless-unplaced", "scb/sample/ty-conflict", "scb/sample/ty-widen",
+          "scb/sample/coded", "sos/par/open", "sos/par/split"
+        ]
+      },
+      "fields": ["subject", "code"],
+      "rows": [
+        ["scb/sample/seq", "source_native_identity_retained"],
+        ["scb/sample/blk", "source_native_identity_retained"],
+        ["scb/sample/h56", "source_native_identity_retained"],
+        ["scb/sample/case", "source_native_identity_retained"],
+        ["scb/sample/dia", "source_native_identity_retained"],
+        ["scb/sample/grain", "source_native_identity_retained"],
+        ["scb/sample/grain", "delivery_units_vary"],
+        ["scb/sample/noname", "unresolved_native_identity"],
+        ["scb/sample/nodef", "unresolved_native_identity"],
+        ["scb/sample/nocol", "unresolved_native_identity"],
+        ["scb/sample/notype", "unresolved_native_identity"],
+        ["scb/sample/noperiod", "unresolved_native_identity"],
+        ["scb/sample/rename", "unresolved_native_identity"],
+        ["scb/sample/redefine", "unresolved_native_identity"],
+        ["scb/sample/codeliv", "unresolved_native_identity"],
+        ["scb/sample/distinct", "unresolved_native_identity"],
+        ["scb/sample/checked", "column_spelling_folded"],
+        ["scb/sample/units-seq", "delivery_units_vary"],
+        ["scb/sample/units-same", "delivery_units_vary"],
+        ["scb/sample/units-same", "conflicting_occurrence_facts"],
+        ["scb/sample/units-columnless", "omitted_columnless_occurrence"],
+        ["scb/sample/units-missing", "delivery_units_vary"],
+        ["scb/sample/colless-unplaced", "omitted_columnless_occurrence"],
+        ["scb/sample/colless-unplaced", "unsupported_occurrence"],
+        ["scb/sample/colless-unplaced", "no_supported_states"],
+        ["scb/sample/ty-conflict", "unknown_data_type"],
+        ["scb/sample/ty-conflict", "conflicting_occurrence_facts"]
+      ],
+      "note": "Every issue of every leg. Retained quantities report only source_native_identity_retained (the old tests' `[d.code for d in result.diagnostics] == [...]`); grain adds delivery_units_vary because its two units differ. The refusals report unresolved_native_identity; checked reports the fold and not the retained warning; units-seq and units-missing report delivery_units_vary and no conflicting_variable_fact, units-same adds its measurement_unit occurrence conflict; units-columnless's blank member is omitted with no delivery_units_vary; ty-widen reports neither unknown_data_type nor conflicting_occurrence_facts. The old open-ended, pooled, coded and split tests asserted `result.diagnostics == ()`, and the FDB owners `diagnostics == ()`."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "severity": "error",
+        "subject": [
+          "scb/sample/seq", "scb/sample/blk", "scb/sample/h56", "scb/sample/case", "scb/sample/dia", "scb/sample/grain",
+          "scb/sample/checked", "scb/sample/gaturest", "scb/sample/pgaturest", "scb/sample/units-seq",
+          "scb/sample/units-columnless", "scb/sample/units-missing"
+        ]
+      },
+      "fields": ["subject", "code"],
+      "rows": [],
+      "note": "`not any(d.severity == 'error' ...)`: the retained, folded and FDB legs and the unit summaries raise no error."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": ["scb/sample/codeliv", "scb/sample/colless-unplaced", "scb/sample/case"]
+      },
+      "fields": ["subject", "code", "severity"],
+      "rows": [
+        ["scb/sample/case", "source_native_identity_retained", "warning"],
+        ["scb/sample/codeliv", "unresolved_native_identity", "error"],
+        ["scb/sample/colless-unplaced", "omitted_columnless_occurrence", "warning"],
+        ["scb/sample/colless-unplaced", "unsupported_occurrence", "error"],
+        ["scb/sample/colless-unplaced", "no_supported_states", "error"]
+      ],
+      "note": "Severities the old tests asserted: the FDB pair's retained identity is a warning; co-delivered twins keep the error; a columnless member beside an unsupported one is omitted with a warning while no_supported_states stays an error (it is a warning only when every member is columnless, occurrence-states-reconcile-facts-on-exact-intervals's c-blank-only)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unresolved_native_identity",
+        "detail": {"contains": "an exact partition or alias decision is required"}
+      },
+      "fields": ["subject", "fields"],
+      "rows": [
+        ["scb/sample/noname", ["identity", "column_name"]],
+        ["scb/sample/nodef", ["identity", "column_name"]],
+        ["scb/sample/nocol", ["identity", "column_name"]],
+        ["scb/sample/notype", ["identity", "column_name"]],
+        ["scb/sample/noperiod", ["identity", "column_name"]],
+        ["scb/sample/rename", ["identity", "column_name"]],
+        ["scb/sample/redefine", ["identity", "column_name"]],
+        ["scb/sample/codeliv", ["identity", "column_name"]],
+        ["scb/sample/distinct", ["identity", "column_name"]]
+      ],
+      "note": "test_co_delivered_twins_keep_the_error_and_form_nothing: co-delivered case twins (codeliv) keep the same error, detail and fields as two distinct columns in one edition (distinct); every refusal asks for the same decision. The old test compared the two issues to each other; the shared fields and the remediation clause filtered on here are the issue's own text, pinned so the co-delivered and distinct rows provably share them."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/sample/checked",
+        "code": "column_spelling_folded",
+        "detail": {"contains": ["most recent spelling (x0115)", "identity curation assigns"]}
+      },
+      "fields": ["subject"],
+      "rows": [["scb/sample/checked"]],
+      "note": "test_checked_column_keeps_its_literal_when_twins_fold: the fold names the most recent spelling and the exception it applied to the checked member."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/sample/ty-conflict",
+        "code": "unknown_data_type",
+        "detail": {"contains": ["Documented Datatyp: date, integer", "CIS2020=int"]}
+      },
+      "fields": ["subject"],
+      "rows": [["scb/sample/ty-conflict"]],
+      "note": "test_incompatible_documented_types_retain_detail_and_conflict: the documented types and the storage wave both reach the detail."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unexplained_delivery_coverage_loss"},
+      "fields": ["subject"],
+      "rows": [],
+      "note": "The coverage tests' positive halves: each leg's coverage claim (its type, column and period, and checked's per-origin column) is what the build writes, so the build-wide coverage gate finds no loss."
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "sample",
+        "variable": ["seq", "blk", "h56", "case", "dia", "checked", "gaturest", "pgaturest", "pooled", "pooled-coded"]
+      },
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "pooled"],
+      "rows": [
+        ["seq", "people", "OLD", "2020-01-01", "2020-12-31", 0],
+        ["seq", "people", "NEW", "2021-01-01", "2021-12-31", 0],
+        ["blk", "people", "BLK", "2020-01-01", "2020-12-31", 0],
+        ["blk", "people", "BLKFTG", "2021-01-01", "2021-12-31", 0],
+        ["h56", "people", "H56", "2020-01-01", "2020-12-31", 0],
+        ["h56", "people", "H5_6", "2021-01-01", "2021-12-31", 0],
+        ["case", "people", "v0115", "2004-01-01", "2004-12-31", 0],
+        ["case", "people", "V0115", "2005-01-01", "2005-12-31", 0],
+        ["case", "people", "V0115", "2006-01-01", "2006-12-31", 0],
+        ["dia", "people", "Kön", "2020-01-01", "2020-12-31", 0],
+        ["dia", "people", "Kon", "2021-01-01", "2021-12-31", 0],
+        ["checked", "people", "X0115", "2002-01-01", "2002-12-31", 0],
+        ["checked", "people", "x0115", "2004-01-01", "2004-12-31", 0],
+        ["checked", "people", "x0115", "2005-01-01", "2005-12-31", 0],
+        ["gaturest", "people", "GatuRest", "1999-01-01", "1999-12-31", 0],
+        ["gaturest", "people", "Gaturest", "2005-01-01", "2005-12-31", 0],
+        ["gaturest", "second", "GatuRest", "2010-01-01", "2010-12-31", 0],
+        ["gaturest", "second", "Gaturest", "2015-01-01", "2015-12-31", 0],
+        ["pgaturest", "people", "PGaturest", "2020-01-01", "2020-12-31", 0],
+        ["pgaturest", "second", "PGaturest", "2025-01-01", "2025-12-31", 0],
+        ["pooled", "people", "POOLED", "2012-01-01", "2014-12-31", 1],
+        ["pooled-coded", "people", "POOLED_CODED", "2020-01-01", "2022-12-31", 1]
+      ],
+      "note": "Retained quantities keep each literal delivery column (seq, blk, h56 from the spelling-similarity test, case and dia keep their case and diacritic spellings rather than folding). checked: the 2002 addition keeps X0115 while the unchecked twins take the most recent spelling x0115. FDB: both spellings of gaturest keep their literals across both variants, PGaturest is its own owner. pooled and pooled-coded: one state over the pooled range, marked pooled."
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": [
+          "noname", "nodef", "nocol", "notype", "noperiod", "rename", "redefine", "codeliv", "distinct", "colless-unplaced"
+        ]
+      },
+      "fields": ["variable"],
+      "rows": [],
+      "note": "Each refusal forms nothing (`result.variable is None`)."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["grain", "units-seq", "units-same", "units-columnless", "units-missing"]},
+      "fields": ["variable", "column", "valid_from", "data_type", "measurement_unit", "operational_definition"],
+      "rows": [
+        ["grain", "G_OLD", "2020-01-01", "integer", "SEK", "Survey formula"],
+        ["grain", "G_NEW", "2021-01-01", "decimal", "KSEK", "Register formula"],
+        ["units-seq", "U_SEQ", "2020-01-01", "integer", "Kronor (SEK)", null],
+        ["units-seq", "U_SEQ", "2021-01-01", "integer", "1000-tal kronor (KSEK)", null],
+        ["units-same", "U_SAME", "2020-01-01", "integer", null, null],
+        ["units-columnless", "U_COLLESS", "2020-01-01", "integer", "SEK", null],
+        ["units-missing", "U_MISSING", "2020-01-01", "integer", "SEK", null],
+        ["units-missing", "U_MISSING", "2021-01-01", "integer", null, null]
+      ],
+      "note": "Delivery facts stay on the delivery state: grain's types, units and operational definitions per column; units-seq keeps both scales; units-same's conflicting units leave its one state without a unit; units-missing's 2021 state is not filled from 2020."
+    },
+    {
+      "table": "variables",
+      "where": {"variable": ["seq", "grain", "units-seq", "units-same", "units-columnless", "units-missing"]},
+      "fields": ["variable", "column", "provider_key", "measurement_unit", "operational_definition"],
+      "rows": [
+        ["seq", "OLD", "401", null, null],
+        ["seq", "NEW", "401", null, null],
+        ["grain", "G_OLD", "406", null, null],
+        ["grain", "G_NEW", "406", null, null],
+        ["units-seq", "U_SEQ", "441", null, null],
+        ["units-same", "U_SAME", "442", null, null],
+        ["units-columnless", "U_COLLESS", "443", "SEK", null],
+        ["units-missing", "U_MISSING", "444", null, null]
+      ],
+      "note": "The variable-level summary: no common unit or operational definition where deliveries differ or one lacks a unit; a columnless member's unit (units-columnless's KSEK) does not count. A native family without curation keeps its native variable id as provider_key (test_prepared_native_family_forms_and_writes_without_handwritten_cases)."
+    },
+    {
+      "table": "states",
+      "where": {"variable": "ty-widen"},
+      "fields": ["variable", "data_type", "data_length"],
+      "rows": [["ty-widen", "decimal", null]],
+      "note": "test_widened_segment_records_documented_and_storage_provenance: varchar+float widens, the all-numeric storage caps it to decimal, and the disagreeing lengths leave no length."
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "ty-widen",
+        "provenance": {"contains": ["Documented Datatyp: decimal, text", "CIS2018=int, CIS2020=float"]}
+      },
+      "fields": ["variable"],
+      "rows": [["ty-widen"]],
+      "note": "The documented types and the storage waves both reach the state's provenance."
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": "checked",
+        "valid_from": "2002-01-01",
+        "provenance": {"contains": "errata:omitted-column-in-version\naccepted delivery"}
+      },
+      "fields": ["variable"],
+      "rows": [["checked"]],
+      "note": "test_formation_coverage_carries_correction_attributions: the correction that formed the state is its provenance."
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": ["gaturest", "pgaturest"],
+        "provenance": {"contains": "column ownership: Y-167 fixture reference"}
+      },
+      "fields": ["variable", "valid_from"],
+      "rows": [
+        ["gaturest", "1999-01-01"],
+        ["gaturest", "2005-01-01"],
+        ["gaturest", "2010-01-01"],
+        ["gaturest", "2015-01-01"],
+        ["pgaturest", "2020-01-01"],
+        ["pgaturest", "2025-01-01"]
+      ],
+      "note": "FDB: every owned state carries the partition's column-ownership reference (the old test's `provenance.endswith('column ownership: Y-167 fixture reference')`)."
+    },
+    {
+      "table": "states",
+      "where": {"variable": "coded"},
+      "fields": ["variable", "value_set_version_label"],
+      "rows": [["coded", "Supplied list label"]],
+      "note": "The bound list's version label is written on its state."
+    },
+    {
+      "table": "state_codes",
+      "where": {"variable": ["split", "open", "coded", "pooled-coded"]},
+      "fields": ["variable", "valid_from", "valid_to", "code", "label"],
+      "rows": [
+        ["split", "2019-01-01", "2019-12-31", "0", "No"],
+        ["split", "2020-01-01", "2020-12-31", "0", "No"],
+        ["split", "2020-01-01", "2020-12-31", "1", "Yes"],
+        ["split", "2021-01-01", "2021-12-31", "0", "No"],
+        ["open", "2004-01-01", "9999-12-31", "01", "One"],
+        ["coded", "2020-01-01", "2020-12-31", "01", "One"],
+        ["pooled-coded", "2020-01-01", "2022-12-31", "01", "One"]
+      ],
+      "note": "split: a member valid only in 2020 cuts the state into three, carrying one, two and one members. open: the open-ended delivery forms one state through 9999-12-31 with its list (test_explicit_open_ended_coverage_survives_formation_and_storage). pooled-coded: the pooled state carries its list over the whole pooled range, with no coding issue (test_pooled_edition_state_carries_its_value_set)."
+    }
+  ]
+}
