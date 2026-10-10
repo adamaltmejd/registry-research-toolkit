@@ -54,6 +54,23 @@
       "note": "test_overlapping_pooled_editions_with_identical_fields_merge_into_one_state: the three cuts of 2016-2018 and 2018-2020 re-join into one marked state over the hull. test_overlapping_pooled_editions_with_differing_facts_stay_split: with the second edition typed text they stay three marked states, integer then text then text."
     },
     {
+      "table": "states",
+      "where": {"variable": "overlap-uncoded"},
+      "fields": ["variable", "valid_from", "valid_to", "pooled"],
+      "rows": [
+        ["overlap-uncoded", "2015-01-01", "2015-12-31", false],
+        ["overlap-uncoded", "2016-01-01", "2020-12-31", true]
+      ],
+      "note": "The coded explicit 2015 and the uncoded pooled run stay apart; the pooled run's three cuts are one state."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "missing_coding_period"},
+      "fields": ["subject", "code", "valid_from", "valid_to"],
+      "rows": [["scb/sample/overlap-uncoded", "missing_coding_period", "2016-01-01", "2020-12-31"]],
+      "note": "One issue over the pooled run, the grain an acknowledgement names (scb/innovation-foretag's pooled editions in the real seed), not one per cut."
+    },
+    {
       "table": "issues",
       "where": {
         "code": [

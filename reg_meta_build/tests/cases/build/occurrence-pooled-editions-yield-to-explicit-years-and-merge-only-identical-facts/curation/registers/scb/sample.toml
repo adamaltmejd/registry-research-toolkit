@@ -35,3 +35,6 @@ slug = "adjacent"
 [[variable]]
 native_id = "1.410"
 slug = "gap"
+[[variable]]
+native_id = "1.411"
+slug = "overlap-uncoded"
