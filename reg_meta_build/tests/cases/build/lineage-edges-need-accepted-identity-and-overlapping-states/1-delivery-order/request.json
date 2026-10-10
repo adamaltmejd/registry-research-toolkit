@@ -1,0 +1,12 @@
+{
+  "replaces": [
+    "test_catalog_lineage.py::test_explicit_identity_and_source_claim_generate_intersection_edges",
+    "test_catalog_lineage.py::test_matching_slugs_are_not_identity_evidence",
+    "test_catalog_lineage.py::test_disjoint_validity_keeps_identity_without_inventing_edges_or_errors",
+    "test_catalog_lineage.py::test_historical_source_variant_does_not_make_current_lineage_ambiguous",
+    "test_catalog_lineage.py::test_multiple_disjoint_source_variants_preserve_attribution_without_edges"
+  ],
+  "note": "One consumer variable of register EXAMPLE per replaced test, delivered in 2000 and labelled with its source register. Every source variable has its consumer's slug, as the old fixture's scb/example/value and scb/origin/value did. VALUE: 'Original register (ORIG) : People' with a same_as edge to origin/value (old default fixture); the source state is the pooled 1999-2001 edition, wider than the consumer's 2000, so the edge must carry the intersection (the old test's states were both 2000 and could not tell the intersection from either state's validity). UNLINKED: the same shape with no same_as edge (old `same_as=False`). DISJOINT: the source variable is delivered only in 2001 (old: source states moved to 2001). HISTORICAL: 'Historical register (HST)' names no variant; the source delivers in People in 2000 and in Other in 1999 (old `second_variant`, the second state moved to 1999). EARLIER: the same, with both source variants in 1999. From the old tests: VALUE is attributed to origin, labelled ORIG, and has one edge over the 2000 intersection; UNLINKED has no edge and one unresolved_lineage_no_source_state warning that withholds scb/example/unlinked:lineage, stored as a no_source_state lineage warning; DISJOINT and EARLIER have no edge and no issue, and EARLIER keeps its register; HISTORICAL has one edge from the People state over 2000 and no issue. No other EXAMPLE variable has an issue. The old VALUE test's reversed-input leg is step 2.",
+  "fails_if": "`resolve_catalog_lineage` (catalog_lineage.py) treats equal variable slugs as identity, so UNLINKED gains an edge and loses its warning; or stops intersecting dates, so DISJOINT or EARLIER gains an edge or an error; or counts a non-overlapping source variant as a second candidate, so HISTORICAL turns ambiguous; or writes the consumer's or source's whole validity instead of the intersection",
+  "sources": "scb-lineage-identity-and-dates"
+}

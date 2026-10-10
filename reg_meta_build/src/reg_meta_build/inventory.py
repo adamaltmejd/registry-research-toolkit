@@ -13,8 +13,8 @@ chooses between sources. reg_meta_build/DESIGN.md → "Holdings resolution
 invariants" is the decision text; the format is documented in
 reg_meta_build/DESIGN.md → "Inventory TOML".
 
-Deliberately reg_schema-free: the contract needs only reg-core's period grammar
-and FQID parser (`reg_core_py`).
+The contract needs only reg-core's period grammar and FQID parser
+(`reg_core_py`).
 This module holds no DB access — it is pure domain code over an authored file.
 """
 
@@ -44,6 +44,34 @@ from .slug_grammar import DEFAULT_VARIANT_SLUG, validate_slug
 if TYPE_CHECKING:
     from pathlib import Path
 
+# Inventory refusals, one code per rule family (as `curation_tree` does for the
+# curation TOMLs) so a curator and a test can tell an empty table from a
+# duplicated one or a cell two tables both serve. `inventory_invalid` stays the
+# code for field grammar Pydantic or a shared grammar reports (wrong type,
+# missing or unknown key, contract version, slug and FQID shape).
+_INVALID = "inventory_invalid"
+_NO_TABLES = "inventory_no_tables"
+_DUPLICATE_TABLE = "inventory_duplicate_table"
+_TABLE_NO_COLUMNS = "inventory_table_no_columns"
+_DUPLICATE_COLUMN = "inventory_duplicate_column"
+_DUPLICATE_MAPPING = "inventory_duplicate_mapping"
+_UNMAPPED_REASON = "inventory_unmapped_reason_invalid"
+_EDITION = "inventory_edition_invalid"
+_PERIOD_SCOPE = "inventory_period_scope_invalid"
+_CELL_CONFLICT = "inventory_cell_conflict"
+
+
+class _InventoryGuardError(ValueError):
+    """A hand-written inventory guard's refusal, carrying its rule family's code.
+
+    A `ValueError` so Pydantic collects it as a located field error and so
+    `validate_inventory_placements`' direct callers still catch a `ValueError`;
+    `load_inventory` reads `code` back off the collected error."""
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(message)
+        self.code = code
+
 
 class _InventoryModel(BaseModel):
     """Frozen Pydantic base for the inventory contract — same shape as
@@ -67,9 +95,7 @@ class EditionRange(_InventoryModel):
 
     Endpoints are period tokens (a bare TOML year int is normalized to its token
     string on the way in). `from` is a Python keyword, so the attr is `from_`
-    with a `"from"` alias — same shape reg_schema's `PeriodRange` uses for a
-    project period; the two converge when the materializer lane takes the
-    `reg_meta → reg_schema` dependency."""
+    with a `"from"` alias."""
 
     from_: str = Field(alias="from")
     to: str
@@ -312,7 +338,7 @@ class ColumnMapping(_InventoryModel):
     @model_validator(mode="after")
     def _check_prefix_match(self) -> ColumnMapping:
         """The variable's `provider/register` prefix must equal the variant
-        coordinate's — same cross-field rule reg_schema's structural validator
+        coordinate's — same cross-field rule reg-core's structural validator
         enforces for a project source's bindings. A mapping that crosses
         registers is an authoring slip, not a legal combined table."""
         prefix = tuple(self.register_variant.split("/")[:2])
@@ -340,7 +366,9 @@ class InventoryColumn(_InventoryModel):
     @classmethod
     def _nonblank_unmapped_reason(cls, value: str | None) -> str | None:
         if value is not None and not value.strip():
-            raise ValueError("unmapped_reason must be nonblank")
+            raise _InventoryGuardError(
+                _UNMAPPED_REASON, "unmapped_reason must be nonblank"
+            )
         return value
 
     @model_validator(mode="after")
@@ -352,14 +380,17 @@ class InventoryColumn(_InventoryModel):
         `DeliveryInventory._check_one_to_one_resolution`)."""
         seen: set[ColumnMapping] = set()
         if self.unmapped_reason is not None and self.mappings:
-            raise ValueError("unmapped_reason cannot accompany mappings")
+            raise _InventoryGuardError(
+                _UNMAPPED_REASON, "unmapped_reason cannot accompany mappings"
+            )
         for mapping in self.mappings:
             if mapping in seen:
-                raise ValueError(
+                raise _InventoryGuardError(
+                    _DUPLICATE_MAPPING,
                     f"duplicate mapping {mapping.register_variant} "
                     f"{mapping.variable!s} "
                     f"({_representation_label(mapping.representation)}) — state "
-                    "each logical coordinate once per column"
+                    "each logical coordinate once per column",
                 )
             seen.add(mapping)
         return self
@@ -416,7 +447,10 @@ class InventoryTable(_InventoryModel):
         A whole `_default` is admitted only by the year-independent scope
         validator below; it never expands into calendar bounds."""
         if value != "_default":
-            edition_bounds(value)
+            try:
+                edition_bounds(value)
+            except ValueError as exc:
+                raise _InventoryGuardError(_EDITION, str(exc)) from exc
         return value
 
     @field_validator("columns")
@@ -432,9 +466,10 @@ class InventoryTable(_InventoryModel):
         item AFTER validation" — that would fire a second, misleading line
         whenever a table's own fields failed for an unrelated reason."""
         if not value:
-            raise ValueError(
+            raise _InventoryGuardError(
+                _TABLE_NO_COLUMNS,
                 "table declares no columns — list every delivered physical "
-                "column, including the unresolved ones that carry no mapping"
+                "column, including the unresolved ones that carry no mapping",
             )
         return value
 
@@ -442,16 +477,22 @@ class InventoryTable(_InventoryModel):
     def _check_period_scope(self) -> InventoryTable:
         if self.period_scope == "year_independent":
             if self.edition != "_default":
-                raise ValueError("year-independent tables require edition='_default'")
+                raise _InventoryGuardError(
+                    _PERIOD_SCOPE, "year-independent tables require edition='_default'"
+                )
             if any(
                 m.register_variant.split("/")[-1] == "_default"
                 for c in self.columns
                 for m in c.mappings
             ):
-                raise ValueError("year-independent mappings require a concrete variant")
+                raise _InventoryGuardError(
+                    _PERIOD_SCOPE,
+                    "year-independent mappings require a concrete variant",
+                )
         elif self.edition == "_default":
-            raise ValueError(
-                "edition='_default' requires year-independent period_scope"
+            raise _InventoryGuardError(
+                _PERIOD_SCOPE,
+                "edition='_default' requires year-independent period_scope",
             )
         return self
 
@@ -460,9 +501,10 @@ class InventoryTable(_InventoryModel):
         seen: set[str] = set()
         for column in self.columns:
             if column.name in seen:
-                raise ValueError(
+                raise _InventoryGuardError(
+                    _DUPLICATE_COLUMN,
                     f"duplicate physical column {column.name!r} — declare each "
-                    "column once and list all of its mappings under it"
+                    "column once and list all of its mappings under it",
                 )
             seen.add(column.name)
         return self
@@ -503,15 +545,23 @@ class DeliveryInventory(_InventoryModel):
         rather than silently zero out admission, coverage, and browse unions.
         Same `min_length=1` caveat as `InventoryTable.columns`."""
         if not value:
-            raise ValueError(
+            raise _InventoryGuardError(
+                _NO_TABLES,
                 "inventory declares no tables — an inventory is a steward's "
                 "holdings statement, so an empty `table` array is a curation "
-                "error, not a delivery topology"
+                "error, not a delivery topology",
             )
         return value
 
-    @model_validator(mode="after")
-    def _check_unique_tables(self) -> DeliveryInventory:
+    # The cross-table rules are `tables` field validators, not model
+    # validators, so their refusal is located at `table` rather than at the
+    # file root. Same-field after-validators run in definition order and stop
+    # at the first refusal.
+    @field_validator("tables")
+    @classmethod
+    def _check_unique_tables(
+        cls, value: tuple[InventoryTable, ...]
+    ) -> tuple[InventoryTable, ...]:
         """Each physical table is declared once: the identifier is exact, and
         one table carries exactly one edition, so a repeated id is an ambiguous
         edition rather than a second table. Several DIFFERENT tables mapping the
@@ -519,19 +569,23 @@ class DeliveryInventory(_InventoryModel):
         ordinary annual series (`_check_one_to_one_resolution` owns the
         overlapping case)."""
         seen: set[str] = set()
-        for table in self.tables:
+        for table in value:
             if table.id in seen:
-                raise ValueError(
+                raise _InventoryGuardError(
+                    _DUPLICATE_TABLE,
                     f"duplicate table {table.id!r} — a table identifier is exact "
-                    "and carries exactly one edition"
+                    "and carries exactly one edition",
                 )
             seen.add(table.id)
-        return self
+        return value
 
-    @model_validator(mode="after")
-    def _check_one_to_one_resolution(self) -> DeliveryInventory:
-        validate_inventory_placements(self.tables)
-        return self
+    @field_validator("tables")
+    @classmethod
+    def _check_one_to_one_resolution(
+        cls, value: tuple[InventoryTable, ...]
+    ) -> tuple[InventoryTable, ...]:
+        validate_inventory_placements(value)
+        return value
 
 
 def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
@@ -619,14 +673,15 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                     + _partition_hint(a_part, b_part)
                 )
     if conflicts:
-        raise ValueError(
+        raise _InventoryGuardError(
+            _CELL_CONFLICT,
             "a cell must resolve to exactly one physical (table, column), "
             "but these mappings could each serve the same cell:\n"
             + "\n".join(f"    {line}" for line in conflicts)
             + "\n  An inventory states CURRENT holdings only: discard the "
             "superseded delivery at curation instead of choosing here (a "
             "filename date is not proof of supersession) — reg_meta_build/"
-            "DESIGN.md → Holdings curation rules."
+            "DESIGN.md → Holdings curation rules.",
         )
 
 
@@ -680,8 +735,11 @@ def load_inventory(path: Path) -> DeliveryInventory:
     """Read and structurally validate a steward delivery-inventory TOML file.
 
     Fail-fast: any malformed table, edition, or mapping raises `RegMetaError`
-    (`inventory_toml_unreadable` / `inventory_invalid`, EXIT_CONFIG) naming
-    every offending table/column — never a partially parsed inventory. Semantic
+    (EXIT_CONFIG) naming every offending table/column — never a partially
+    parsed inventory. The code is `inventory_toml_unreadable` for a file that
+    is not UTF-8 TOML, else the rule family of the FIRST offending line: a
+    hand-written guard's own code (`inventory_cell_conflict`, ...) or
+    `inventory_invalid` for field grammar. Semantic
     consistency against the reg_meta DB (does each mapping's
     `(register_variant, variable, representation)` resolve?) is a separate
     build/CI gate, not this structural pass."""
@@ -700,13 +758,16 @@ def load_inventory(path: Path) -> DeliveryInventory:
     try:
         return DeliveryInventory.model_validate(raw)
     except ValidationError as exc:
+        errors = exc.errors()
+        first = errors[0].get("ctx", {}).get("error")
+        code = first.code if isinstance(first, _InventoryGuardError) else _INVALID
         details = "\n".join(
             f"  {_error_path(raw, error['loc'], missing=error['type'] == 'missing')}: "
             f"{error['msg']}"
-            for error in exc.errors()
+            for error in errors
         )
         raise _inventory_error(
-            "inventory_invalid",
+            code,
             f"Invalid delivery inventory {path}:\n{details}",
             "Each `[[table]]` needs an exact `id`, one explicit finite "
             "`edition`, and its literal `[[table.column]]` entries; see "

@@ -125,7 +125,7 @@ jobs:
       # Newest-by-tag is asset-blind, which is safe because every published
       # reg_meta release carries both DB assets — the release flow copies
       # assets forward on code-only releases (self-contained releases,
-      # .claude/skills/release/SKILL.md step 8). A release violating that
+      # .agents/skills/release/SKILL.md step 8). A release violating that
       # invariant fails the bake stage loudly, which is exactly the #343
       # outage mode.
       #

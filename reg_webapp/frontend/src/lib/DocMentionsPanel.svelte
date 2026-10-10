@@ -110,7 +110,7 @@ function sourceLabel(url: string, title?: string | null): string {
                    {@html} (the full body lives at the SCB source; republication
                    policy, see reg_webapp/DESIGN.md → Docs library endpoints). The
                    `**…**` markers are dominantly the FTS highlight delimiter wrapping
-                   the matched term (reg_meta/doc_queries.py), so a `strong` segment
+                   the matched term (crates/reg-catalog/src/ops/docs.rs), so a `strong` segment
                    renders as <mark> ("matched term"); `*…*`/`_…_` render as <em>. -->
               <span class="hit-detail muted"
                 >{#each parseInlineMarkdown(r.snippet) as seg, si (si)}{#if seg.emphasis === "strong"}<mark

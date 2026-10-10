@@ -1,0 +1,10 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_unknown_contract_version",
+  "fails_if": "load_inventory admits an inventory whose `version` is not the supported contract version 1",
+  "error": {
+    "code": "inventory_invalid",
+    "locators": [
+      "version"
+    ]
+  }
+}

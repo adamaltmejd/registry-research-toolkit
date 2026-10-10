@@ -2,8 +2,7 @@
 //! at any depth (last-wins would silently validate the wrong value) or nesting past
 //! `serde_json`'s depth limit (128 levels; frozen Python's recursion limit allowed about
 //! 1,000, so a project nested between the two is refused here and validated there).
-//! Anything else is `malformed_request`. Today's
-//! `reg_meta.order.parse_project`. The HTTP transport applies it to a POST operation's
+//! Anything else is `malformed_request`. The HTTP transport applies it to a POST operation's
 //! body; MCP takes the body as an object argument, already parsed.
 
 use std::fmt;

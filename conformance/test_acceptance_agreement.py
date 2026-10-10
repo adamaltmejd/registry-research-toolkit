@@ -23,12 +23,7 @@ from artifact_requests import (
     sample_project,
     server_client,
 )
-from reader_artifacts import (
-    CASES,
-    FIXTURE_IMPORT_DATE,
-    build_reader_artifact,
-    replicate_filler,
-)
+from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta_build.db import get_manifest, open_db
 
 
@@ -305,10 +300,9 @@ def test_source_built_stratified_boundary_agreement(fixture, tmp_path, request):
 def test_binding_past_search_depth_ceiling_is_reached_by_refinement(tmp_path, request):
     # Unheld fillers sharing the sampled "Year"'s exact name, as many as the depth
     # ceiling, outrank it in reference scope: exact-name matches alone fill it.
-    source = replicate_filler(CASES / "reader/search-ceiling", tmp_path / "source")
     path = build_reader_artifact(
         tmp_path / "artifact",
-        source,
+        "reader/search-ceiling",
         "steward",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )

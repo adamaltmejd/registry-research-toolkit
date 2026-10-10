@@ -1,13 +1,12 @@
-//! `validate`: every issue of a `project_data.json` document (today's
-//! `reg_meta.semantic.validate_project`). The supported-version decision and the
+//! `validate`: every issue of a `project_data.json` document. The supported-version decision and the
 //! structural validator (`reg-core`) run first, without the catalog; the semantic
 //! layer then resolves each source's variant and each binding in reference scope over
 //! the compiled states ([`emitted`]), and on a steward artifact checks each binding
 //! against the steward's holdings. An invalid project is a result (`ok: false`),
 //! never an error.
 //!
-//! Availability is decided once, by [`resolve_binding`] (today's
-//! `reg_meta.order.resolve_binding`, which the order materializer shares): a binding
+//! Availability is decided once, by [`resolve_binding`] (which the order materializer
+//! shares): a binding
 //! is requested wherever it is available inside the source's period, so availability
 //! narrower than the request is an informational clip and only availability empty
 //! everywhere in it blocks.

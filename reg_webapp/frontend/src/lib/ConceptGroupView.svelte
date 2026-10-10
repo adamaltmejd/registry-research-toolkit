@@ -284,7 +284,7 @@ const focusedMemberFqid = $derived.by((): string | null => {
  * the predecessor's rows inside that disclosure, keeping the collapsed presentation
  * while preserving an add path for the covering predecessor.
  *
- * Edge direction (reg_meta `graph.py`): `source` is the PREDECESSOR (older), `target`
+ * Edge direction (`crates/reg-catalog/src/ops/graph.rs`): `source` is the PREDECESSOR (older), `target`
  * the SUCCESSOR (newer), and `effective_year` the year the source was replaced by the
  * target. So a member that is ANY in-group edge's `source` is SUPERSEDED; a member that
  * is only ever a `target` (never a source) is the chain head that leads. Chains of

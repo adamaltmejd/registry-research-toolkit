@@ -1,0 +1,19 @@
+{
+  "description": "Register EXAMPLE (1) delivers five consumer variables in 2000, each labelled with the register it came from. Original register (ORIG) (2) delivers VALUE in one pooled 1999-2001 edition, so its state covers three years. Unlinked register (UNL) (3) delivers UNLINKED in 2000. Disjoint register (DSJ) (4) delivers DISJOINT only in 2001. Historical register (HST) (5) delivers HISTORICAL in variant People in 2000 and in variant Other in 1999. Earlier register (ERL) (6) delivers EARLIER in both its variants only in 1999.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Original register (ORIG) : People"},
+      {"cvid": 1002, "var_id": 102, "colname": "UNLINKED", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Unlinked register (UNL) : People"},
+      {"cvid": 1003, "var_id": 103, "colname": "DISJOINT", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Disjoint register (DSJ) : People"},
+      {"cvid": 1004, "var_id": 104, "colname": "HISTORICAL", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Historical register (HST)"},
+      {"cvid": 1005, "var_id": 105, "colname": "EARLIER", "year": "2000", "register": ["EXAMPLE", 1, 10], "varsource": "Earlier register (ERL)"},
+      {"cvid": 2001, "var_id": 201, "colname": "VALUE", "year": "2000", "versionname": "1999-2001", "regver_id": 200, "register": ["Original register (ORIG)", 2, 20], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 3001, "var_id": 301, "colname": "UNLINKED", "year": "2000", "regver_id": 300, "register": ["Unlinked register (UNL)", 3, 30], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 4001, "var_id": 401, "colname": "DISJOINT", "year": "2001", "regver_id": 400, "register": ["Disjoint register (DSJ)", 4, 40], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 5001, "var_id": 501, "colname": "HISTORICAL", "year": "2000", "regver_id": 500, "register": ["Historical register (HST)", 5, 50], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 5002, "var_id": 501, "colname": "HISTORICAL", "year": "1999", "regver_id": 510, "register": ["Historical register (HST)", 5, 51], "cells": {"Registervariantnamn": "Other"}},
+      {"cvid": 6001, "var_id": 601, "colname": "EARLIER", "year": "1999", "regver_id": 600, "register": ["Earlier register (ERL)", 6, 60], "cells": {"Registervariantnamn": "People"}},
+      {"cvid": 6002, "var_id": 601, "colname": "EARLIER", "year": "1999", "regver_id": 610, "register": ["Earlier register (ERL)", 6, 61], "cells": {"Registervariantnamn": "Other"}}
+    ]
+  }
+}

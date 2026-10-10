@@ -1,0 +1,24 @@
+[[edge]]
+type = "same_as"
+a = "scb/example/contested"
+b = "scb/twin-a/contested"
+[[edge]]
+type = "same_as"
+a = "scb/example/specific-bare"
+b = "scb/shared/specific-bare"
+[[edge]]
+type = "same_as"
+a = "scb/example/specific-variant"
+b = "scb/shared/specific-variant"
+[[edge]]
+type = "same_as"
+a = "scb/example/former"
+b = "scb/prefix/former"
+[[edge]]
+type = "same_as"
+a = "scb/example/external"
+b = "scb/extra/external"
+[[edge]]
+type = "same_as"
+a = "scb/example/missing"
+b = "scb/extra/missing"

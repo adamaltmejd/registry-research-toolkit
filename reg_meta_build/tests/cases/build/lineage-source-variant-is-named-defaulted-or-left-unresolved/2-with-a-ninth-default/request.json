@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_catalog_lineage.py::test_variant_default_resolves_ambiguity_and_unused_dangling_pin_fails"
+  ],
+  "note": "Step 1 with one curation change: lineage.toml also defaults scb/ninth to people (old: `defaults = {\"scb/origin\": \"people\"}`). From the old test: DEFAULTED now has exactly one edge and no issue. The edge comes from ninth's People state, the default.",
+  "fails_if": "`resolve_catalog_lineage` ignores a usable `[lineage_defaults]` entry for a label that names no variant (or the pipeline stops passing `lineage_defaults` to it), so DEFAULTED stays ambiguous; or applies the default after taking every overlapping variant, so DEFAULTED gets an edge from Other too",
+  "sources": "scb-lineage-source-variants"
+}

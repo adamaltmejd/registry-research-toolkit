@@ -1,0 +1,11 @@
+[register]
+provider = "scb"
+slug = "prefix"
+native_id = "6"
+source_labels = ["Former source (PFX)"]
+[[variant]]
+native_id = "6.60"
+slug = "people"
+[[variable]]
+native_id = "6.601"
+slug = "former"

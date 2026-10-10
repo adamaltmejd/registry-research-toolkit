@@ -1,0 +1,17 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_a_table_with_no_columns",
+  "note": "The second table is the allowed twin in the same file: a table with one unmapped column is valid, and only the empty table is named.",
+  "fails_if": "load_inventory accepts a table with an empty `column` array, or names it by array index instead of its id",
+  "error": {
+    "code": "inventory_table_no_columns",
+    "locators": [
+      "table['LISA_Individ.csv'].column"
+    ],
+    "message_contains": [
+      "table declares no columns"
+    ],
+    "message_excludes": [
+      "LISA_Individ_2020.csv"
+    ]
+  }
+}

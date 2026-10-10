@@ -1,0 +1,21 @@
+{
+  "replaces": [
+    "reg_meta/tests/test_inventory.py::test_unmapped_reason_refuses_blank_text",
+    "reg_meta/tests/test_inventory.py::test_unmapped_reason_refuses_active_mappings"
+  ],
+  "note": "An empty, a spaces-only and a tab-only reason, and a reason beside a live mapping. A nonblank reason on a mapping-less column is the unmapped-column compile case.",
+  "fails_if": "load_inventory admits a blank `unmapped_reason`, or one on a column that still carries mappings",
+  "error": {
+    "code": "inventory_unmapped_reason_invalid",
+    "locators": [
+      "table['LISA_Individ_2019.csv'].column['Kon']",
+      "table['LISA_Individ_2019.csv'].column['LopNr'].unmapped_reason",
+      "table['LISA_Individ_2019.csv'].column['Spaces'].unmapped_reason",
+      "table['LISA_Individ_2019.csv'].column['Tab'].unmapped_reason"
+    ],
+    "message_contains": [
+      "unmapped_reason cannot accompany mappings",
+      "unmapped_reason must be nonblank"
+    ]
+  }
+}

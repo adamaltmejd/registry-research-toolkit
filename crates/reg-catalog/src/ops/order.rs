@@ -1,5 +1,4 @@
-//! `order` and its download: a project's order manifest (today's
-//! `reg_meta.order.materialize_order` and `OrderManifest.to_json`). A project the
+//! `order` and its download: a project's order manifest. A project the
 //! supported-version decision or the structural validator rejects is
 //! `project_invalid`, with validate's issues. Then, per binding in declaration
 //! order, availability and representation slicing are [`resolve_binding`]'s, the

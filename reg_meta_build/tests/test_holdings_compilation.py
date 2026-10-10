@@ -12,6 +12,7 @@ from catalog_manifest import synthetic_manifest
 from reg_meta_build.artifact_identity import committed_steward_slugs, generation_id
 from reg_meta_build.cli import run
 from reg_meta_build.derive import derive_holdings
+from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.resolved_catalog import ResolvedVariable, write_resolved_catalog
 from reg_meta_build.validate import validate_built_db
@@ -152,6 +153,39 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
         derive_holdings(conn)
     result = validate_built_db(output)
     assert result.passed, result.format_report()
+
+
+@pytest.mark.parametrize(
+    "case", sorted((CASES / "inventory").iterdir()), ids=lambda path: path.name
+)
+def test_malformed_inventory_refusal_names_its_rule_and_location(
+    case: Path, tmp_path: Path
+) -> None:
+    """A malformed steward inventory stops the steward compile before any read
+    of the catalog, under its rule family's code, naming the file and the
+    table, column or field each offending line points at."""
+    expected = json.loads((case / "expected.json").read_text(encoding="utf-8"))
+    assert expected["fails_if"].strip(), f"{case.name}: name what makes it fail"
+    error = expected["error"]
+    (tmp_path / "policy").mkdir()
+    shutil.copyfile(case / "inventory.toml", tmp_path / "policy/inventory.toml")
+    with sqlite3.connect(":memory:") as conn, pytest.raises(RegMetaError) as refused:
+        compile_holdings(conn, tmp_path, steward="swecov")
+    message = refused.value.message
+    assert (refused.value.code, refused.value.exit_code) == (
+        error["code"],
+        EXIT_CONFIG,
+    ), message
+    assert "policy/inventory.toml" in message
+    # A locator heads its own detail line (`<locator>: <reason>`), so a path
+    # that only appears inside another line's text does not count.
+    heads = {line.strip().partition(": ")[0] for line in message.splitlines()[1:]}
+    for locator in error.get("locators", ()):
+        assert locator in heads, f"{locator!r} heads no line of {message!r}"
+    for part in error.get("message_contains", ()):
+        assert part in message, f"{part!r} not in {message!r}"
+    for part in error.get("message_excludes", ()):
+        assert part not in message, f"{part!r} in {message!r}"
 
 
 @pytest.mark.parametrize(

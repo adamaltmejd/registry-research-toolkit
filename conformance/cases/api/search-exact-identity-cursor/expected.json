@@ -1,0 +1,31 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "class/exact",
+        "class/broad-a"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "class/broad-b"
+      ],
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "class/exact",
+        "class/broad-a",
+        "class/broad-b"
+      ],
+      "/data/next_cursor": null
+    }
+  }
+]

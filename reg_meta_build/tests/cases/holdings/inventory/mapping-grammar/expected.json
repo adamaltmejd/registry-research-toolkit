@@ -1,0 +1,17 @@
+{
+  "replaces": "reg_meta/tests/test_inventory.py::test_rejects_malformed_mappings",
+  "note": "A register-level FQID, a variable from another register, and a misspelled key. Field grammar, so `inventory_invalid`.",
+  "fails_if": "load_inventory admits a mapping whose variable is not a 3-segment binding FQID, crosses registers, or carries an unknown key",
+  "error": {
+    "code": "inventory_invalid",
+    "locators": [
+      "table['LISA_Individ_2019.csv'].column['Kon'].mapping[0].variable",
+      "table['LISA_Individ_2019.csv'].column['Fek'].mapping[0]",
+      "table['LISA_Individ_2019.csv'].column['Typo'].mapping[0].variabel"
+    ],
+    "message_contains": [
+      "3-segment binding FQID",
+      "does not belong to register_variant"
+    ]
+  }
+}

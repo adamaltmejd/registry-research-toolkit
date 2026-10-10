@@ -97,7 +97,7 @@ if TYPE_CHECKING:
 
     from .inventory import DeliveryInventory, InventoryColumn
 
-# An inclusive ISO `(lo, hi)` date interval — `reg_meta.inventory`'s currency.
+# An inclusive ISO `(lo, hi)` date interval — `reg_meta_build.inventory`'s currency.
 _Interval = tuple[str, str]
 # One binding at the DB's own grain: `(variable_id, register_variant_id)`.
 _PairIds = tuple[int, int]
