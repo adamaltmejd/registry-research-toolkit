@@ -98,6 +98,7 @@ variant = "89.164"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Man", expected_codings = ["2e7ea2c83b40445f9898286e8ab156ccd6e1203255077575c7f93e78121c3252"], source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Manad", expected_codings = ["2e7ea2c83b40445f9898286e8ab156ccd6e1203255077575c7f93e78121c3252"], source_editions = ["2009"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete own-native source explicitly defines this as the same month or sickness-period start-date quantity. These exact simultaneously supplied spellings remain independent delivery representations; retain every original operational wording, raw char/varchar/date/datetime type, scope, code association and literal. No storage/value equivalence is assumed. Proof: Batch48-employment-time-source-proof.json."
 noted = "2026-10-01"
 
@@ -534,6 +535,7 @@ variant = "89.164"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "UtbRetro", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Utbretro", source_editions = ["2009"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 

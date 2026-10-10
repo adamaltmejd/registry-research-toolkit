@@ -199,6 +199,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2001-01-01", valid_to = "2001-12-31", column = "FASTK", source_editions = ["2001"] }, { valid_from = "2001-01-01", valid_to = "2001-12-31", column = "fastk", source_editions = ["2001"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -212,6 +213,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2002-01-01", valid_to = "2002-12-31", column = "FastK", source_editions = ["2002"] }, { valid_from = "2002-01-01", valid_to = "2002-12-31", column = "fastk", source_editions = ["2002"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -225,6 +227,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2003-01-01", valid_to = "2003-12-31", column = "FastK", source_editions = ["2003"] }, { valid_from = "2003-01-01", valid_to = "2003-12-31", column = "fastk", source_editions = ["2003"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -238,6 +241,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "FastK", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "fastk", source_editions = ["2004"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -251,6 +255,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "FastK", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "fastk", source_editions = ["2005"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -264,6 +269,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2001-01-01", valid_to = "2001-12-31", column = "FASTM", source_editions = ["2001"] }, { valid_from = "2001-01-01", valid_to = "2001-12-31", column = "fastm", source_editions = ["2001"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -277,6 +283,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2002-01-01", valid_to = "2002-12-31", column = "FastM", source_editions = ["2002"] }, { valid_from = "2002-01-01", valid_to = "2002-12-31", column = "fastm", source_editions = ["2002"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -290,6 +297,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2003-01-01", valid_to = "2003-12-31", column = "FastM", source_editions = ["2003"] }, { valid_from = "2003-01-01", valid_to = "2003-12-31", column = "fastm", source_editions = ["2003"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -303,6 +311,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "FastM", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "fastm", source_editions = ["2004"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -316,6 +325,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "FastM", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "fastm", source_editions = ["2005"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -329,6 +339,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2001-01-01", valid_to = "2001-12-31", column = "TILLK", source_editions = ["2001"] }, { valid_from = "2001-01-01", valid_to = "2001-12-31", column = "tillk", source_editions = ["2001"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -342,6 +353,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2002-01-01", valid_to = "2002-12-31", column = "TillK", source_editions = ["2002"] }, { valid_from = "2002-01-01", valid_to = "2002-12-31", column = "tillk", source_editions = ["2002"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -355,6 +367,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2003-01-01", valid_to = "2003-12-31", column = "TillK", source_editions = ["2003"] }, { valid_from = "2003-01-01", valid_to = "2003-12-31", column = "tillk", source_editions = ["2003"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -368,6 +381,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "TillK", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "tillk", source_editions = ["2004"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -381,6 +395,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "TillK", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "tillk", source_editions = ["2005"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -394,6 +409,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2001-01-01", valid_to = "2001-12-31", column = "TILLM", source_editions = ["2001"] }, { valid_from = "2001-01-01", valid_to = "2001-12-31", column = "tillm", source_editions = ["2001"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -407,6 +423,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2002-01-01", valid_to = "2002-12-31", column = "TillM", source_editions = ["2002"] }, { valid_from = "2002-01-01", valid_to = "2002-12-31", column = "tillm", source_editions = ["2002"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -420,6 +437,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2003-01-01", valid_to = "2003-12-31", column = "TillM", source_editions = ["2003"] }, { valid_from = "2003-01-01", valid_to = "2003-12-31", column = "tillm", source_editions = ["2003"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -433,6 +451,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "TillM", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "tillm", source_editions = ["2004"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -446,6 +465,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "TillM", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "tillm", source_editions = ["2005"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -459,6 +479,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "FrSjK", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "frsjk", source_editions = ["2004"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -472,6 +493,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "FrSjK", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "frsjk", source_editions = ["2005"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -485,6 +507,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2004-01-01", valid_to = "2004-12-31", column = "FrSjM", source_editions = ["2004"] }, { valid_from = "2004-01-01", valid_to = "2004-12-31", column = "frsjm", source_editions = ["2004"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 
@@ -498,6 +521,7 @@ variant = "134.185"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2005-01-01", valid_to = "2005-12-31", column = "FrSjM", source_editions = ["2005"] }, { valid_from = "2005-01-01", valid_to = "2005-12-31", column = "frsjm", source_editions = ["2005"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Finite case-only literal forms have the same source-native name and definition. Every original delivery wording, scope, type, unit and own coding remains separate evidence; no physical same-member or observed-value equivalence is claimed."
 noted = "2026-10-02"
 

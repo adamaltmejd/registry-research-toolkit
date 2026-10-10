@@ -684,6 +684,7 @@ variant = "270.1094"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SSYK4", expected_codings = ["2a848902292644f8d324c9c54f55a262ce37860a2ba668f4b162f427a8f20d93"], source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "ssyk4", expected_codings = ["2a848902292644f8d324c9c54f55a262ce37860a2ba668f4b162f427a8f20d93"], source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -696,6 +697,7 @@ variant = "270.638"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SSYK4", expected_codings = ["2a848902292644f8d324c9c54f55a262ce37860a2ba668f4b162f427a8f20d93"], source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "ssyk4", expected_codings = ["2a848902292644f8d324c9c54f55a262ce37860a2ba668f4b162f427a8f20d93"], source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -708,6 +710,7 @@ variant = "270.1094"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "MedbAr", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Medbar", source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -720,6 +723,7 @@ variant = "270.638"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "MedbAr", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Medbar", source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -732,6 +736,7 @@ variant = "270.1094"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SenInvAr", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "seninvar", source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -744,6 +749,7 @@ variant = "270.638"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SenInvAr", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "seninvar", source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -756,6 +762,7 @@ variant = "270.1094"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SSYK3", expected_codings = ["c173171c6b39913369d7d56dba26f00cc764e10a957d51f360192bf891ec85a0"], source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "ssyk3", expected_codings = ["c173171c6b39913369d7d56dba26f00cc764e10a957d51f360192bf891ec85a0"], source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -768,6 +775,7 @@ variant = "270.638"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SSYK3", expected_codings = ["c173171c6b39913369d7d56dba26f00cc764e10a957d51f360192bf891ec85a0"], source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "ssyk3", expected_codings = ["c173171c6b39913369d7d56dba26f00cc764e10a957d51f360192bf891ec85a0"], source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -780,6 +788,7 @@ variant = "270.1094"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "Parti", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "parti", source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -792,6 +801,7 @@ variant = "270.638"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SKL_Grupp_2011", expected_codings = ["9ae3b5ddf99090efab5ca1243a22486c26de3dcef4314e61f40cf2b8e7fd56eb"], source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SKL_grupp_2011", expected_codings = ["9ae3b5ddf99090efab5ca1243a22486c26de3dcef4314e61f40cf2b8e7fd56eb"], source_editions = ["2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 

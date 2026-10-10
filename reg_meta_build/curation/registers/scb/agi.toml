@@ -10,6 +10,7 @@ variant = "individuppgifter-agi"
 column = "AMBASSAD_ANSTALLD_SVERIGE"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds AMBASSAD_ANSTALLD_SVERIGE in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -18,6 +19,7 @@ variant = "individuppgifter-agi"
 column = "ANDRA_KOSTNADSERS"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds ANDRA_KOSTNADSERS in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -26,6 +28,7 @@ variant = "individuppgifter-agi"
 column = "ANTAL_DAGAR_SJOINKOMST"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds ANTAL_DAGAR_SJOINKOMST in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -34,6 +37,7 @@ variant = "individuppgifter-agi"
 column = "ASTNr"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds ASTNr in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -42,6 +46,7 @@ variant = "individuppgifter-agi"
 column = "AVDRAG_UTGIFT_ARBETET"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds AVDRAG_UTGIFT_ARBETET in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -50,6 +55,7 @@ variant = "individuppgifter-agi"
 column = "AVDR_PREL_SKATT"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds AVDR_PREL_SKATT in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -58,6 +64,7 @@ variant = "individuppgifter-agi"
 column = "AVDR_SKATT_ASINK"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds AVDR_SKATT_ASINK in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -66,6 +73,7 @@ variant = "individuppgifter-agi"
 column = "AVDR_SKATT_SINK"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds AVDR_SKATT_SINK in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -74,6 +82,7 @@ variant = "individuppgifter-agi"
 column = "AVRAKNING_AVGIFTSFRI_ERS"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds AVRAKNING_AVGIFTSFRI_ERS in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -82,6 +91,7 @@ variant = "individuppgifter-agi"
 column = "BILERSATTNING"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds BILERSATTNING in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -90,6 +100,7 @@ variant = "individuppgifter-agi"
 column = "BOSTADSF_EJ_SMAHUS_EJ_ULAG_SA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds BOSTADSF_EJ_SMAHUS_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -98,6 +109,7 @@ variant = "individuppgifter-agi"
 column = "BOSTADSF_EJ_SMAHUS_ULAG_AG"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds BOSTADSF_EJ_SMAHUS_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -106,6 +118,7 @@ variant = "individuppgifter-agi"
 column = "BOSTADSF_EJ_SMAHUS_ULAG_EA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds BOSTADSF_EJ_SMAHUS_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -114,6 +127,7 @@ variant = "individuppgifter-agi"
 column = "BOSTADSF_SMAHUS_EJ_ULAG_SA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds BOSTADSF_SMAHUS_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -122,6 +136,7 @@ variant = "individuppgifter-agi"
 column = "DM_VID_BILFORMAN_EJ_ULAG_SA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds DM_VID_BILFORMAN_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -130,6 +145,7 @@ variant = "individuppgifter-agi"
 column = "DM_VID_BILFORMAN_ULAG_AG"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds DM_VID_BILFORMAN_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -138,6 +154,7 @@ variant = "individuppgifter-agi"
 column = "DM_VID_BILFORMAN_ULAG_EA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds DM_VID_BILFORMAN_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -146,6 +163,7 @@ variant = "individuppgifter-agi"
 column = "EJSKATTEAVDR_EJBESKATTNING_SV"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds EJSKATTEAVDR_EJBESKATTNING_SV in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -154,6 +172,7 @@ variant = "individuppgifter-agi"
 column = "ERS_EJ_SOC_AVG_EJ_JOBBAVD"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds ERS_EJ_SOC_AVG_EJ_JOBBAVD in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -162,6 +181,7 @@ variant = "individuppgifter-agi"
 column = "ERS_FORMAN_BOSTAD_MM_SINK"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds ERS_FORMAN_BOSTAD_MM_SINK in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -170,6 +190,7 @@ variant = "individuppgifter-agi"
 column = "FORMAN_HAR_JUSTERATS"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds FORMAN_HAR_JUSTERATS in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -178,6 +199,7 @@ variant = "individuppgifter-agi"
 column = "FORMAN_SOM_PENSION_EJ_ULAG_SA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds FORMAN_SOM_PENSION_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -186,6 +208,7 @@ variant = "individuppgifter-agi"
 column = "FORSKAR_SKATTE_NAMNDEN"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds FORSKAR_SKATTE_NAMNDEN in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -194,6 +217,7 @@ variant = "individuppgifter-agi"
 column = "HYRESERSATTNING"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds HYRESERSATTNING in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -202,6 +226,7 @@ variant = "individuppgifter-agi"
 column = "KONTANT_ERSATTNING_EJ_ULAG_SA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds KONTANT_ERSATTNING_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -210,6 +235,7 @@ variant = "individuppgifter-agi"
 column = "KONTANT_ERSATTNING_ULAG_AG"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds KONTANT_ERSATTNING_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -218,6 +244,7 @@ variant = "individuppgifter-agi"
 column = "KONTANT_ERSATTNING_ULAG_EA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds KONTANT_ERSATTNING_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -226,6 +253,7 @@ variant = "individuppgifter-agi"
 column = "PeOrgNr"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds PeOrgNr in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -234,6 +262,7 @@ variant = "individuppgifter-agi"
 column = "PersonNr"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds PersonNr in the Arb_AGIIndivid<YYYYMM>_Def and Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -242,6 +271,7 @@ variant = "individuppgifter-agi"
 column = "SP_BILFORMAN_EJ_ULAG_SA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds SP_BILFORMAN_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -250,6 +280,7 @@ variant = "individuppgifter-agi"
 column = "SP_BILFORMAN_ULAG_AG"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds SP_BILFORMAN_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -258,6 +289,7 @@ variant = "individuppgifter-agi"
 column = "SP_BILFORMAN_ULAG_EA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds SP_BILFORMAN_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -266,6 +298,7 @@ variant = "individuppgifter-agi"
 column = "SP_OVRIGA_FORMANER_EJ_ULAG_SA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds SP_OVRIGA_FORMANER_EJ_ULAG_SA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -274,6 +307,7 @@ variant = "individuppgifter-agi"
 column = "SP_OVRIGA_FORMANER_ULAG_AG"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds SP_OVRIGA_FORMANER_ULAG_AG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -282,6 +316,7 @@ variant = "individuppgifter-agi"
 column = "SP_OVRIGA_FORMANER_ULAG_EA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds SP_OVRIGA_FORMANER_ULAG_EA in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -290,6 +325,7 @@ variant = "individuppgifter-agi"
 column = "TJANSTEPENSION"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds TJANSTEPENSION in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -298,6 +334,7 @@ variant = "individuppgifter-agi"
 column = "TRAKTAMENTE"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds TRAKTAMENTE in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -306,6 +343,7 @@ variant = "individuppgifter-agi"
 column = "UNDERLAG_ROTARBETE"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds UNDERLAG_ROTARBETE in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -314,6 +352,7 @@ variant = "individuppgifter-agi"
 column = "UNDERLAG_RUTARBETE"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds UNDERLAG_RUTARBETE in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 
@@ -322,6 +361,7 @@ variant = "individuppgifter-agi"
 column = "VISSA_AVDRAG"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds VISSA_AVDRAG in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents the column in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020."
 noted = "2026-09-12"
 

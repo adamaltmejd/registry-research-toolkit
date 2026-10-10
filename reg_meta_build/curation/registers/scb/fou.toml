@@ -13,6 +13,7 @@ variant = "foretagssektorn"
 column = "AnstS"
 versions = ["2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds AnstS in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -21,6 +22,7 @@ variant = "foretagssektorn"
 column = "Ar"
 versions = ["2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds Ar in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2005."
 noted = "2026-09-12"
 
@@ -29,6 +31,7 @@ variant = "foretagssektorn"
 column = "Lillan"
 versions = ["2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds Lillan in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -37,6 +40,7 @@ variant = "foretagssektorn"
 column = "PeorgNr"
 versions = ["2009", "2011", "2013", "2015", "2017", "2019", "2021"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds PeorgNr in ; SCB's Registerinformation export documents FoU Företagssektorn 2009, 2011, 2013, 2015, 2017, 2019, 2021 but names only 0/0/0/1/1/8/8 distinct column(s) there and carries no row for this column; its only named rows are in 2003, 2005, 2007. | SWECOV holds peorgnr in ; SCB's Registerinformation export documents FoU Företagssektorn 2009, 2011, 2013, 2015, 2017, 2019, 2021 but names only 0/0/0/1/1/8/8 distinct column(s) there and carries no row for this column; its only named rows are in 2003, 2005, 2007."
 noted = "2026-09-12"
 
@@ -45,6 +49,7 @@ variant = "foretagssektorn"
 column = "Storan"
 versions = ["2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds Storan in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -53,6 +58,7 @@ variant = "foretagssektorn"
 column = "Stratum"
 versions = ["2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds Stratum in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -61,6 +67,7 @@ variant = "foretagssektorn"
 column = "v011"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v011 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -69,6 +76,7 @@ variant = "foretagssektorn"
 column = "v012"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v012 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -77,6 +85,7 @@ variant = "foretagssektorn"
 column = "v013"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v013 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -85,6 +94,7 @@ variant = "foretagssektorn"
 column = "v014"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v014 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -93,6 +103,7 @@ variant = "foretagssektorn"
 column = "v021"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v021 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -101,6 +112,7 @@ variant = "foretagssektorn"
 column = "v022"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v022 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -109,6 +121,7 @@ variant = "foretagssektorn"
 column = "v023"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v023 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -117,6 +130,7 @@ variant = "foretagssektorn"
 column = "v024"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v024 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -125,6 +139,7 @@ variant = "foretagssektorn"
 column = "v0301"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0301 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -133,6 +148,7 @@ variant = "foretagssektorn"
 column = "v031"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v031 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -141,6 +157,7 @@ variant = "foretagssektorn"
 column = "v0311"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0311 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -149,6 +166,7 @@ variant = "foretagssektorn"
 column = "v032"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v032 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -157,6 +175,7 @@ variant = "foretagssektorn"
 column = "v0321"
 versions = ["2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0321 in FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2013, 2015, 2017 but names only 0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -165,6 +184,7 @@ variant = "foretagssektorn"
 column = "v033"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v033 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -173,6 +193,7 @@ variant = "foretagssektorn"
 column = "v034"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v034 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -181,6 +202,7 @@ variant = "foretagssektorn"
 column = "v0402"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0402 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -189,6 +211,7 @@ variant = "foretagssektorn"
 column = "v041"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v041 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -197,6 +220,7 @@ variant = "foretagssektorn"
 column = "v0411"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0411 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -205,6 +229,7 @@ variant = "foretagssektorn"
 column = "v0412"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0412 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -213,6 +238,7 @@ variant = "foretagssektorn"
 column = "v042"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v042 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -221,6 +247,7 @@ variant = "foretagssektorn"
 column = "v0421"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0421 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -229,6 +256,7 @@ variant = "foretagssektorn"
 column = "v0422"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0422 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -237,6 +265,7 @@ variant = "foretagssektorn"
 column = "v043"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v043 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -245,6 +274,7 @@ variant = "foretagssektorn"
 column = "v0431"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0431 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -253,6 +283,7 @@ variant = "foretagssektorn"
 column = "v0432"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0432 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -261,6 +292,7 @@ variant = "foretagssektorn"
 column = "v044"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v044 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -269,6 +301,7 @@ variant = "foretagssektorn"
 column = "v0441"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0441 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -277,6 +310,7 @@ variant = "foretagssektorn"
 column = "v0442"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0442 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -285,6 +319,7 @@ variant = "foretagssektorn"
 column = "v0451"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0451 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -293,6 +328,7 @@ variant = "foretagssektorn"
 column = "v0452"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0452 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -301,6 +337,7 @@ variant = "foretagssektorn"
 column = "v0461"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0461 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -309,6 +346,7 @@ variant = "foretagssektorn"
 column = "v0462"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0462 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -317,6 +355,7 @@ variant = "foretagssektorn"
 column = "v0471"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0471 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -325,6 +364,7 @@ variant = "foretagssektorn"
 column = "v0472"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0472 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015 but names only 4/3/0/0/0/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -333,6 +373,7 @@ variant = "foretagssektorn"
 column = "v0500"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0500 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -341,6 +382,7 @@ variant = "foretagssektorn"
 column = "v0501"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0501 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -349,6 +391,7 @@ variant = "foretagssektorn"
 column = "v0502"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0502 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -357,6 +400,7 @@ variant = "foretagssektorn"
 column = "v0503"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0503 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -365,6 +409,7 @@ variant = "foretagssektorn"
 column = "v0504"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0504 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -373,6 +418,7 @@ variant = "foretagssektorn"
 column = "v0505"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0505 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -381,6 +427,7 @@ variant = "foretagssektorn"
 column = "v051"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v051 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -389,6 +436,7 @@ variant = "foretagssektorn"
 column = "v052"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v052 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -397,6 +445,7 @@ variant = "foretagssektorn"
 column = "v0523"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0523 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -405,6 +454,7 @@ variant = "foretagssektorn"
 column = "v053"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v053 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -413,6 +463,7 @@ variant = "foretagssektorn"
 column = "v054"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v054 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -421,6 +472,7 @@ variant = "foretagssektorn"
 column = "v0571"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0571 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -429,6 +481,7 @@ variant = "foretagssektorn"
 column = "v0581"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0581 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -437,6 +490,7 @@ variant = "foretagssektorn"
 column = "v0591"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0591 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -445,6 +499,7 @@ variant = "foretagssektorn"
 column = "v0601"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0601 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -453,6 +508,7 @@ variant = "foretagssektorn"
 column = "v061"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v061 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -461,6 +517,7 @@ variant = "foretagssektorn"
 column = "v0611"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0611 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -469,6 +526,7 @@ variant = "foretagssektorn"
 column = "v062"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v062 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -477,6 +535,7 @@ variant = "foretagssektorn"
 column = "v0621"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0621 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -485,6 +544,7 @@ variant = "foretagssektorn"
 column = "v063"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v063 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -493,6 +553,7 @@ variant = "foretagssektorn"
 column = "v0631"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0631 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -501,6 +562,7 @@ variant = "foretagssektorn"
 column = "v064"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v064 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -509,6 +571,7 @@ variant = "foretagssektorn"
 column = "v0641"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0641 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -517,6 +580,7 @@ variant = "foretagssektorn"
 column = "v0651"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0651 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -525,6 +589,7 @@ variant = "foretagssektorn"
 column = "v0661"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0661 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -533,6 +598,7 @@ variant = "foretagssektorn"
 column = "v0671"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0671 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -541,6 +607,7 @@ variant = "foretagssektorn"
 column = "v068"
 versions = ["2015"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v068 in FTG_FOU_2015; SCB's Registerinformation export documents FoU Företagssektorn 2015 but names only 1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -549,6 +616,7 @@ variant = "foretagssektorn"
 column = "v0681"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0681 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -557,6 +625,7 @@ variant = "foretagssektorn"
 column = "v0691"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0691 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -565,6 +634,7 @@ variant = "foretagssektorn"
 column = "v0701"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0701 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -573,6 +643,7 @@ variant = "foretagssektorn"
 column = "v0711"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0711 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -581,6 +652,7 @@ variant = "foretagssektorn"
 column = "v0721"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0721 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -589,6 +661,7 @@ variant = "foretagssektorn"
 column = "v0731"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0731 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -597,6 +670,7 @@ variant = "foretagssektorn"
 column = "v0741"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0741 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -605,6 +679,7 @@ variant = "foretagssektorn"
 column = "v0751"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0751 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -613,6 +688,7 @@ variant = "foretagssektorn"
 column = "v0761"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0761 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -621,6 +697,7 @@ variant = "foretagssektorn"
 column = "v0771"
 versions = ["2005", "2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0771 in FTG_FOU_2005, FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2005, 2007, 2009, 2011, 2013, 2015, 2017 but names only 4/3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -629,6 +706,7 @@ variant = "foretagssektorn"
 column = "v0781"
 versions = ["2007", "2009", "2011", "2013", "2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0781 in FTG_FOU_2007, FTG_FOU_2009, FTG_FOU_2011, FTG_FOU_2013, FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2007, 2009, 2011, 2013, 2015, 2017 but names only 3/0/0/0/1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -637,6 +715,7 @@ variant = "foretagssektorn"
 column = "v0782"
 versions = ["2005"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v0782 in FTG_FOU_2005; SCB's Registerinformation export documents FoU Företagssektorn 2005 but names only 4 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -645,6 +724,7 @@ variant = "foretagssektorn"
 column = "v1256"
 versions = ["2015", "2017"]
 upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "SWECOV holds v1256 in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
@@ -13898,6 +13978,7 @@ variant = "182.441"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "stratum", source_editions = ["2017 Tilläggsfrågor om mobilitet UKÄ"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "Stratum", source_editions = ["2017"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "The complete native Stratum source family names the same positive stratification quantity in two independently authored 2017 editions. Preserve each exact literal, text/decimal source type and its own stratification operation on per-column metadata. Neither source list has a bound coding claim. This does not equate the different stratification methods or their stored values. Complete source review and own-domain bindings: Batch51-Investment-FoU48-own-bound-domain-review.json; proof Batch51-Investment-FoU48-source-proof.json."
 noted = "2026-10-02"
 

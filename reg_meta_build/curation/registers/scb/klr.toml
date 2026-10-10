@@ -167,5 +167,6 @@ variable = "90.2543"
 variant = "90.165"
 column_metadata = "per_column"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "UtbRetro", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Utbretro", source_editions = ["2009"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "The complete SHA-guarded native family has case-equivalent spellings with identical name and definition. Edition 2009 repeats the same native member with both numeric and integer storage declarations. Retain each literal spelling and its storage facts as alternative case aliases; do not assert co-delivery, value equality or one preferred storage type."
 noted = "2026-10-02"

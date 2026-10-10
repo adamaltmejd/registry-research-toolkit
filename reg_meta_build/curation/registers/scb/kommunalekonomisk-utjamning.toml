@@ -1195,6 +1195,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ "valid_from" = "2007-01-01", "valid_to" = "2007-12-31", "column" = "Namn", "source_editions" = ["Utjämningsår 2007"] }, { "valid_from" = "2007-01-01", "valid_to" = "2007-12-31", "column" = "namn", "source_editions" = ["Utjämningsår 2007"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1207,6 +1208,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ "valid_from" = "2008-01-01", "valid_to" = "2008-12-31", "column" = "Namn", "source_editions" = ["Utjämningsår 2008"] }, { "valid_from" = "2008-01-01", "valid_to" = "2008-12-31", "column" = "namn", "source_editions" = ["Utjämningsår 2008"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1219,6 +1221,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ "valid_from" = "2009-01-01", "valid_to" = "2009-12-31", "column" = "Namn", "source_editions" = ["Utjämningsår 2009"] }, { "valid_from" = "2009-01-01", "valid_to" = "2009-12-31", "column" = "namn", "source_editions" = ["Utjämningsår 2009"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1231,6 +1234,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ "valid_from" = "2010-01-01", "valid_to" = "2010-12-31", "column" = "Namn", "source_editions" = ["Utjämningsår 2010"] }, { "valid_from" = "2010-01-01", "valid_to" = "2010-12-31", "column" = "namn", "source_editions" = ["Utjämningsår 2010"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1243,6 +1247,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ "valid_from" = "2011-01-01", "valid_to" = "2011-12-31", "column" = "Namn", "source_editions" = ["Utjämningsår 2011"] }, { "valid_from" = "2011-01-01", "valid_to" = "2011-12-31", "column" = "namn", "source_editions" = ["Utjämningsår 2011"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1255,6 +1260,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ "valid_from" = "2012-01-01", "valid_to" = "2012-12-31", "column" = "Namn", "source_editions" = ["Utjämningsår 2012"] }, { "valid_from" = "2012-01-01", "valid_to" = "2012-12-31", "column" = "namn", "source_editions" = ["Utjämningsår 2012"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1267,6 +1273,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ "valid_from" = "2013-01-01", "valid_to" = "2013-12-31", "column" = "Namn", "source_editions" = ["Utjämningsår 2013"] }, { "valid_from" = "2013-01-01", "valid_to" = "2013-12-31", "column" = "namn", "source_editions" = ["Utjämningsår 2013"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1279,6 +1286,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2014-01-01", "valid_to" = "2014-12-31", "column" = "Namn", "expected_codings" = ["5b59608c4a8a5bc5ede72944f0790c551e472d921262145574e3680d5a3e650c"], "source_editions" = ["Utjämningsår 2014"] }, { "valid_from" = "2014-01-01", "valid_to" = "2014-12-31", "column" = "namn", "expected_codings" = ["5b59608c4a8a5bc5ede72944f0790c551e472d921262145574e3680d5a3e650c"], "source_editions" = ["Utjämningsår 2014"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1291,6 +1299,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2015-01-01", "valid_to" = "2015-12-31", "column" = "Namn", "expected_codings" = ["772abbee52ee8927e49ee4a161121fdb3c2fdc47d331a4b843bbc7b156cc1015"], "source_editions" = ["Utjämningsår 2015"] }, { "valid_from" = "2015-01-01", "valid_to" = "2015-12-31", "column" = "namn", "expected_codings" = ["772abbee52ee8927e49ee4a161121fdb3c2fdc47d331a4b843bbc7b156cc1015"], "source_editions" = ["Utjämningsår 2015"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1303,6 +1312,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2016-01-01", "valid_to" = "2016-12-31", "column" = "Namn", "expected_codings" = ["d72d64e2b8611b8b90a2b73f903ac191b281d1537e2dea0555a1bfffafdd06b6"], "source_editions" = ["Utjämningsår 2016"] }, { "valid_from" = "2016-01-01", "valid_to" = "2016-12-31", "column" = "namn", "expected_codings" = ["d72d64e2b8611b8b90a2b73f903ac191b281d1537e2dea0555a1bfffafdd06b6"], "source_editions" = ["Utjämningsår 2016"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1315,6 +1325,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2017-01-01", "valid_to" = "2017-12-31", "column" = "Namn", "expected_codings" = ["906a66fb6470d2411f380c7acb3ae11ebd31fff76934a72bdd51af08a6e57e3a"], "source_editions" = ["Utjämningsår 2017"] }, { "valid_from" = "2017-01-01", "valid_to" = "2017-12-31", "column" = "namn", "expected_codings" = ["906a66fb6470d2411f380c7acb3ae11ebd31fff76934a72bdd51af08a6e57e3a"], "source_editions" = ["Utjämningsår 2017"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1327,6 +1338,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2018-01-01", "valid_to" = "2018-12-31", "column" = "Namn", "expected_codings" = ["3161323d0931a93cbb38a0256b878e18bb9bbb03c679ac688a721800c345ac01"], "source_editions" = ["Utjämningsår 2018"] }, { "valid_from" = "2018-01-01", "valid_to" = "2018-12-31", "column" = "namn", "expected_codings" = ["3161323d0931a93cbb38a0256b878e18bb9bbb03c679ac688a721800c345ac01"], "source_editions" = ["Utjämningsår 2018"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1339,6 +1351,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2019-01-01", "valid_to" = "2019-12-31", "column" = "Namn", "expected_codings" = ["708290d17d24bbadc81e3b4b18a97b2fd86aab8c514328f2dd04b14ce11c5508"], "source_editions" = ["Utjämningsår 2019"] }, { "valid_from" = "2019-01-01", "valid_to" = "2019-12-31", "column" = "namn", "expected_codings" = ["708290d17d24bbadc81e3b4b18a97b2fd86aab8c514328f2dd04b14ce11c5508"], "source_editions" = ["Utjämningsår 2019"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1351,6 +1364,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2020-01-01", "valid_to" = "2020-12-31", "column" = "Namn", "expected_codings" = ["e431d3ee8d4b704762faa1bddc2b63c59b07d0f3fc6d3d231b9b070cf4d47646"], "source_editions" = ["Utjämningsår 2020"] }, { "valid_from" = "2020-01-01", "valid_to" = "2020-12-31", "column" = "namn", "expected_codings" = ["e431d3ee8d4b704762faa1bddc2b63c59b07d0f3fc6d3d231b9b070cf4d47646"], "source_editions" = ["Utjämningsår 2020"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1363,6 +1377,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2021-01-01", "valid_to" = "2021-12-31", "column" = "Namn", "expected_codings" = ["0013c1cbb44c05f4ed5845995ac7965c1daff2b7d3a2ecb8c308a2e3d3c1eb46"], "source_editions" = ["Utjämningsår 2021"] }, { "valid_from" = "2021-01-01", "valid_to" = "2021-12-31", "column" = "namn", "expected_codings" = ["0013c1cbb44c05f4ed5845995ac7965c1daff2b7d3a2ecb8c308a2e3d3c1eb46"], "source_editions" = ["Utjämningsår 2021"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1375,6 +1390,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2022-01-01", "valid_to" = "2022-12-31", "column" = "Namn", "expected_codings" = ["de400a8b8e11084c42c2c25bae07fa4bf32cee0777573e289c77207d4fa94d71"], "source_editions" = ["Utjämningsår 2022"] }, { "valid_from" = "2022-01-01", "valid_to" = "2022-12-31", "column" = "namn", "expected_codings" = ["de400a8b8e11084c42c2c25bae07fa4bf32cee0777573e289c77207d4fa94d71"], "source_editions" = ["Utjämningsår 2022"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1387,6 +1403,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2007-01-01", "valid_to" = "2007-12-31", "column" = "Ar", "expected_codings" = ["00d40cf383cc05be34eebcf82956ab5d55a701d9f0bec85c7fde581b8e049358"], "source_editions" = ["Utjämningsår 2007"] }, { "valid_from" = "2007-01-01", "valid_to" = "2007-12-31", "column" = "ar", "expected_codings" = ["00d40cf383cc05be34eebcf82956ab5d55a701d9f0bec85c7fde581b8e049358"], "source_editions" = ["Utjämningsår 2007"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1399,6 +1416,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2008-01-01", "valid_to" = "2008-12-31", "column" = "Ar", "expected_codings" = ["a181d296e5364057c37e27468c7e1943e0ece3773fd4568e69c00f8999e1ef79"], "source_editions" = ["Utjämningsår 2008"] }, { "valid_from" = "2008-01-01", "valid_to" = "2008-12-31", "column" = "ar", "expected_codings" = ["a181d296e5364057c37e27468c7e1943e0ece3773fd4568e69c00f8999e1ef79"], "source_editions" = ["Utjämningsår 2008"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1411,6 +1429,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2009-01-01", "valid_to" = "2009-12-31", "column" = "Ar", "expected_codings" = ["7f474a426fc6819de3ecaab33d522b2088eab0918cd62a42463d55477ed28aa2"], "source_editions" = ["Utjämningsår 2009"] }, { "valid_from" = "2009-01-01", "valid_to" = "2009-12-31", "column" = "ar", "expected_codings" = ["7f474a426fc6819de3ecaab33d522b2088eab0918cd62a42463d55477ed28aa2"], "source_editions" = ["Utjämningsår 2009"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1423,6 +1442,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2010-01-01", "valid_to" = "2010-12-31", "column" = "Ar", "expected_codings" = ["fb1b474ca3ce95c65a3dceb174ee7d93216ce8485de21f208ef58c8d0b7a73bc"], "source_editions" = ["Utjämningsår 2010"] }, { "valid_from" = "2010-01-01", "valid_to" = "2010-12-31", "column" = "ar", "expected_codings" = ["fb1b474ca3ce95c65a3dceb174ee7d93216ce8485de21f208ef58c8d0b7a73bc"], "source_editions" = ["Utjämningsår 2010"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1435,6 +1455,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2011-01-01", "valid_to" = "2011-12-31", "column" = "Ar", "expected_codings" = ["cc475af5a8808309fb0ebe9a6b1d453987d8030fd617b6af826c4c7a250bec89"], "source_editions" = ["Utjämningsår 2011"] }, { "valid_from" = "2011-01-01", "valid_to" = "2011-12-31", "column" = "ar", "expected_codings" = ["cc475af5a8808309fb0ebe9a6b1d453987d8030fd617b6af826c4c7a250bec89"], "source_editions" = ["Utjämningsår 2011"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1447,6 +1468,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2013-01-01", "valid_to" = "2013-12-31", "column" = "Ar", "expected_codings" = ["0e1c583ba6c822b8487e250197ada73a0e121a4f57241d53052c2ef529db900b"], "source_editions" = ["Utjämningsår 2013"] }, { "valid_from" = "2013-01-01", "valid_to" = "2013-12-31", "column" = "ar", "expected_codings" = ["0e1c583ba6c822b8487e250197ada73a0e121a4f57241d53052c2ef529db900b"], "source_editions" = ["Utjämningsår 2013"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
@@ -1459,6 +1481,7 @@ variant = "117.132"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ "valid_from" = "2014-01-01", "valid_to" = "2014-12-31", "column" = "Ar", "expected_codings" = ["52f7cfba6ecb760e743448a338e69a99fd9729c54da35f7a2e1489e531984783"], "source_editions" = ["Utjämningsår 2014"] }, { "valid_from" = "2014-01-01", "valid_to" = "2014-12-31", "column" = "ar", "expected_codings" = ["52f7cfba6ecb760e743448a338e69a99fd9729c54da35f7a2e1489e531984783"], "source_editions" = ["Utjämningsår 2014"] }]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete native family and full physical-peer closure establish case-equivalent spellings of this same exported question. Every original literal, field, scope and ordered own code association is preserved. No equality of observed values is asserted. Batch54-five-collision-source-proof.json."
 noted = "2026-10-02"
 
