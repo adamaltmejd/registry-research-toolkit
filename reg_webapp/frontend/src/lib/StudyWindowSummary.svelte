@@ -3,8 +3,8 @@ import { getShow } from "./api";
 import { unmountedFlag } from "./async.svelte";
 import { periodLabel, periodWindowRelation, yearWindowLabel } from "./period";
 import {
+  type ProjectStudyWindow,
   type SafeSource,
-  type StudyWindow,
   safeSourcePeriod,
   safeSourceSlots,
 } from "./project_data";
@@ -29,7 +29,7 @@ const {
 }: {
   sources: readonly SafeSource[];
   /** The draft's coerced window (`safeStudyWindow`), null when none is set. */
-  studyWindow: StudyWindow | null;
+  studyWindow: ProjectStudyWindow | null;
 } = $props();
 
 const relations = $derived(
@@ -181,7 +181,7 @@ function confirm(): void {
 /** The sources the plan left alone, and why — their columns are delivered in no
  * year of the window, or the catalog lists no delivery for one of their columns —
  * and the ways out. One spelling for the status row and the dialog. */
-function missNote(plan: OverlapPlan, window: StudyWindow): string {
+function missNote(plan: OverlapPlan, window: ProjectStudyWindow): string {
   const sentences: string[] = [];
   const noOverlap = plan.misses.filter((m) => m.reason === "no-overlap");
   const unknown = plan.misses.filter((m) => m.reason === "unknown-column");

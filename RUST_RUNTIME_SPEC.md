@@ -235,12 +235,14 @@ it when the new release needs a newer reader: it runs G1 on the old pin (with it
 baseline) and the new pin (with its baseline) and records any difference. Re-pin at
 least at every maintainer checkpoint.
 
-**Current pin** (package 4.1; the data lives in `conformance/differential/config.toml`):
+**Current pin** (package 4.11; the data lives in
+`conformance/differential/config.toml`):
 
-- Release `reg_meta/v0.45.0` (schema 9.7.0, docs schema 1.3.0). Asset SHA-256s: global
-  `reg_meta.db.zst` `7424797d7b94b15f9d28eb323fa6f0811145d8b6220228ad3ea32edde5cce111`;
-  SWECOV `reg_meta_swecov.db.zst`
-  `ff68bc7dceb0bb024f2d5b5c90870de6af1b25cfe2c167100ac149fd46c7870d`; docs
+- Release `reg_meta/v0.46.0` (schema 10.0.0, docs schema 1.3.0; tag commit `6cd6c2a0`).
+  Asset SHA-256s: global `reg_meta.db.zst`
+  `08a92e9f2965b987a065ace4c41c1bf00644d2f2debcee1b47107d4d145fbe52`; SWECOV
+  `reg_meta_swecov.db.zst`
+  `682042a8a32964d01bce2e3dfa470718f7cee2d389264a6e5213ba5effcd1792`; docs
   `reg_meta_docs.db.zst`
   `85a1a6c883fca2ded5203c60c33d8657a438344c39ab088c0b01299a47721f57` (read by `search`
   and `docs`).
@@ -654,11 +656,15 @@ that ports it ships *(decision 15, checkpoint 2)*.
 4. **Retire the Python runtime.** Checkpoint 3 passed 2026-10-09. The agent plugin moves
    to MCP; the Dockerfile and publish workflow drop the CLI; the build's `reg_meta`
    imports move into `reg_meta_build` or `reg-core-py`; the Python `reg_meta` package
-   and `reg_schema` are deleted; schema major 10.0.0 carries #1296's catalog rework.
-   Packages, order and decisions: "Stage 4 packages".
-5. **SPA on WASM.** Replace `period.ts`, `validation.ts` and the hand-written
-   `project_data.ts` with `reg-core` compiled to WASM plus generated types. Ends at
-   checkpoint 4.
+   and `reg_schema` are deleted; schema major 10.0.0 carries #1296's catalog rework
+   (released 2026-10-10 as `reg_meta/v0.46.0`; G1 re-pinned to it in 4.11). Packages,
+   order and decisions: "Stage 4 packages".
+5. **SPA on WASM.** `reg-core` compiled to WASM (`reg-core-wasm`) replaces the period
+   grammar and interval code in `period.ts` and `validation.ts` and the SPA's project
+   version gate, and generated `Project*` types replace the hand-written
+   `project_data.ts` interfaces; reg-core dates become calendar-exact first. Ends at
+   checkpoint 4, which deletes this file. Packages, order and decisions: "Stage 5
+   packages".
 
 The build track (section 11) runs alongside, independent of these stages.
 
@@ -1989,13 +1995,24 @@ is listed in that PR. Depends on: 4.9a; 4.10b–e also wait for test-audit's
   absorbed ID (`not_found`). Paths: the builder's state writer, `validate.py`,
   `conformance/cases/api/`, the goldens. Acceptance: full gate; byte-identical rebuild.
 
+**4.10 shipped 2026-10-10** (#1389, with the G2 fixes #1390 and #1393), released as
+`reg_meta/v0.46.0` (schema 10.0.0).
+
 **4.11 Re-pin G1 to 10.0.0.** Implements the section 4 re-pin: the artifact pin and the
 baseline binary both move to the 10.0.0 tag; the differences between the old and new
 pins are recorded as the maintainer's G2 found them. Paths:
 `conformance/differential/config.toml`, section 4. It also deletes the pre-4.4
 `asset_doc` fallback in `.github/workflows/container-build.yml` (its `simplify:`
 marker), since the 10.0.0 tag carries `reg_meta_build`'s `doc_db.py`. Acceptance: G1 0
-differences. Depends on: the 10.0.0 release.
+differences. Depends on: the 10.0.0 release. **Shipped 2026-10-10**: pin and baseline
+`reg_meta/v0.46.0` (schema 10.0.0); G1 17,177 cases, 0 differences (only
+`derived-generation` matched; `reader-version` is kept for the next version bump). The
+maintainer's G2 at 4d587d51/b9526573 ran strict to completion; its differential of the
+0.45.0 binary against a fresh 10.0 build compared 18,317 cases with 5,943 differences,
+all attributed (state merging 4,196; warning split 1,095; slug/code tie order 630; the
+post-0.45.0 blank-code removal 22), after two fixes G2 found (#1390 pooled coding-issue
+grain, #1393 a closed run never merges into an open-ended state). Evidence in the
+maintainer's `.local/release-0460/`.
 
 **4.12 Release binaries** (D3). A matrix workflow on `reg_meta/v*` builds `reg-meta` for
 macOS arm64 and Linux x86_64 and uploads them with SHA-256 checksums. The plugin README
@@ -2073,6 +2090,220 @@ Waves, at most three packages in flight:
    storage is stable, G1 runs only at releases, not on every derive PR; it can be
    deleted if it stops catching anything. 4.3's period-bound and slug-wording change and
    4.4's Python `canonical_json` stay assumptions.
+
+### Stage 5 packages
+
+Each package follows the execution protocol (section 4) and the package and review
+protocol of stages 3b–3e. Surveyed on `origin/main` at `3bf4bf66`. The maintainer's
+decisions are recorded after the packages ("Stage 5 decisions"); Dn below refers to
+them. No package runs G1 or G2, except 5.0's check of the pinned artifacts.
+
+#### What stage 5 replaces
+
+The rule: the SPA never parses period grammar or computes a date bound.
+
+- **`period.ts`:** the grammar and interval copy goes (`looksLikePeriod`,
+  `isStructurallyValidPeriodWire`, `periodTokenBounds`, `periodTokenForBounds`,
+  `periodWireBounds`, `periodRangeEndpoints`, `periodToWire`/`periodFromWire`,
+  `grammarYear`, `periodYearIntervals`, `mergePeriods`, `periodCoverageUnion`,
+  `boundedPeriodSegments`, `TOKEN_RE`, `isRealCalendarDay`, `TERM_BOUNDS`,
+  `lastDayOfMonth`, the coalescing). The wire helpers it keeps (`yearWindowFromWire`,
+  `yearSegmentsFromWire`, `clampYearPeriodWire`, `yearWindowRepresentable`,
+  `periodWindowRelation`, `periodLabel`) move onto WASM. View state stays
+  (`ResolutionParams`, `queryFromParams`, `nextResolutionQuery`,
+  `VALUE_SET_VERSION_NONE`, `clampYearWindow`, `coverageBandEdges`,
+  `intersectCoverageWindow`, `notDeliveredGaps`, `sameYearWindow`, `yearWindowLabel`,
+  `fourDigitYear`, `normalizePeriodRows`).
+- **`validation.ts`:** only `comparablePeriod*` and `uncoveredStudyWindowIntervals`
+  (with its `periodYearIntervals` and `periodWindowRelation` uses) move.
+  `checkVersionGate` (rejects major 1, admits the rest) goes (D5).
+- **`project_data.ts`:** the interfaces and `MODEL_A_SCHEMA_VERSION` go; the helpers
+  stay. **`api.ts`:** `OrderFinding` and `ProjectDataBody` go.
+
+#### Design
+
+- **Toolchain.** A `wasm-bindgen` crate built with `wasm-bindgen-cli --target web`, the
+  CLI pinned to its `Cargo.lock` version (CI installs it with `taiki-e/install-action`).
+  No wasm-pack, wasm-opt, Vite plugin or `serde-wasm-bindgen`; JSON text crosses the
+  boundary.
+- **`crates/reg-core-wasm`:** a `cdylib` with `test = false`, depending on `reg-core`,
+  `serde_json` and `wasm-bindgen`; a `[profile.wasm]` with `opt-level = "s"`, LTO and
+  one codegen unit. Thin glue. Every export is total: it runs the matching structural
+  check before calling a `reg-core` function that can panic (`from_value`,
+  `SourcePeriod::intervals`, `PeriodValue::token`).
+- **Exports:** `project_schema_version`; `check_project(json)` → `{ok, issues}`;
+  `parse_period(text)` → `{canonical, kind, bounds, years}` or `{error}`;
+  `period_token_for_bounds`; `source_period_from_wire`/`source_period_to_wire`;
+  `source_period_intervals`; `source_period_years` (null unless every endpoint is a
+  year); merge, overlap and render. No gaps export: hints stay at year grain.
+- **Loading.** `src/lib/reg_core.ts` is the only importer. No top-level await: it
+  exports `initRegCore()` and synchronous wrappers that throw if uninitialised.
+  `main.ts` awaits `initRegCore()` before mount; on failure it writes a static
+  `role="alert"` message into `#app`. Unit setup uses `initSync` via `node:fs`; browser
+  setup awaits `init()`.
+- **Build.** `package.json` `gen:wasm` (cargo for `wasm32` plus `wasm-bindgen`) writes
+  `src/lib/reg-core-wasm`, gitignored and excluded from Biome. `gate.py frontend` runs
+  `gen:wasm` under `heavy_lock()` (frontend is not in `HEAVY`); `dev.sh` runs it too.
+  The Dockerfile is unchanged.
+- **CI and deploy.** The `ci.yml` frontend job adds Rust stable, the `wasm32` target,
+  rust-cache and the pinned CLI; its path filter adds `Cargo.toml`, `Cargo.lock`,
+  `crates/reg-core/**`, `crates/reg-core-wasm/**` and `conformance/cases/grammar/**`.
+  `edge-deploy` and `edge-deploy-swecov` get the same setup and run
+  `gen:wasm && gen:types && build`. The container-build edge filter is unchanged (the
+  image filter covers `crates/**`).
+- **Smoke.** Before merge, `gate.py frontend` runs `frontend/scripts/smoke_build.ts`
+  (Playwright against `vite preview` of `dist/`): the app mounts; the `.wasm` answers
+  200 with `application/wasm`; with the `.wasm` request aborted the bootstrap alert
+  renders. After deploy, both edge jobs curl the `.wasm` on `catalog.swecov.se` and
+  `data.swecov.se` (200, `application/wasm`).
+- **Types.** An optional `openapi` feature (utoipa) on `reg-core` gives input-shape
+  schemas for `ProjectData`, `Source`, `Binding`, `PeriodValue`, `PeriodRange`,
+  `PeriodSegment`, `SourcePeriod`, `Panel`, `PanelMember` (object or string),
+  `EntityKey`, `TimeKey`, `TimePoint` and `StudyWindow`, all prefixed `Project*` (to
+  avoid the `Steward`/`PanelKey` collisions; `openapi()` panics on a clash). `str_enum!`
+  emits the schema enum from the same `$wire` list. `ValidationResult` gets a
+  hand-written schema `Validation` with `ok` and `issues` required; in
+  `ValidationIssue`, `successor_fqid` is required and nullable. `Blocking` derives
+  `ToSchema` as `OrderBlocking`, registered with `component::<>`. The `reg-catalog` copy
+  of `Validation`/`Issue`/`Level` and `api.ts` `OrderFinding` are deleted only when
+  `openapi.json` is byte-identical. The validate and order bodies stay free objects;
+  `tools/list` is unchanged.
+- **Raw draft.** The store's draft is the uploaded or edited JSON, typed
+  `RawDraft = Record<string, unknown>`. Reads go through safe accessors; writes build
+  values typed with the generated `Project*` types. The accepted model is never written
+  back, so string panel members, unknown keys and invalid enums survive.
+- **One implementation.** Proved by `git grep` acceptance; `reg_core::project::check` is
+  shared by the server and WASM; jsdom tests run the project corpus, `period.jsonl` and
+  a new `source_period.jsonl` through WASM. `validation.test.ts`'s presentation check
+  stays.
+- **Budgets (D2, provisional).** The `.wasm` stays at or under 150 KB gzipped (a
+  constant in `gate.py frontend`); frontend CI stays at or under 6 minutes. 5.2 records
+  cold and warm build time, raw/gzip/brotli size, the bundle delta and Chromium
+  start-up.
+
+#### Packages
+
+**5.0 Calendar-exact dates in `reg-core`.** Implements D1.
+
+- Changes: `iso_date` checks the day against the month (`grammar.rs:292–303`); delete
+  `snap_month_end` and its caller (`ops/validate.rs:705` reads `valid_to` directly);
+  `next_iso_day`/`prev_iso_day` lose the past-month-end branch;
+  `period_token_for_bounds` loses its day clamp (`:343–350`); `reg-core-py` follows;
+  `validate_built_db` gets a check that no stored bound is calendar-impossible, unless
+  one exists.
+- Oracles (D1): drop the synthesized 02-29 cases (`tests/grammar.rs:273–296` and four in
+  `tests/interval/golden.json`, lines 130, 388, 445 and 516); add one refusal case per
+  function.
+- Paths: `crates/reg-core/`, `crates/reg-core-py/`,
+  `crates/reg-catalog/src/ops/validate.rs`,
+  `reg_meta_build/src/reg_meta_build/validate.py`.
+- Acceptance: full gate; `git grep -E 'snap_month_end|synthesi[sz]ed non-leap'` empty;
+  sqlite over the pinned v0.46.0 global and SWECOV artifacts finds 0 non-leap `-02-29`
+  bounds.
+- Escalate: any such bound found; any `api` golden change. Depends on: nothing; runs
+  alongside 5.1.
+
+**5.1 Generated project types.** Implements "Types" above.
+
+- Changes: the `openapi` feature and the `Project*` and `OrderBlocking` schemas;
+  regenerate `openapi.json` and the SPA types. SPA: `project_data.ts` becomes `RawDraft`
+  plus the `Project*` types; `api.ts` drops `OrderFinding` and `ProjectDataBody`; only
+  the write sites change.
+- Paths: `crates/reg-core/`, `crates/reg-catalog/`, `crates/reg-meta/openapi.json`,
+  `reg_webapp/frontend/src/lib/`.
+- Acceptance: full gate; the `openapi.json` diff only adds `Project*` and
+  `OrderBlocking`, with `Validation`, `ValidationIssue` and `IssueLevel` byte-identical;
+  `git diff --exit-code conformance/cases/mcp/tools-list.json conformance/api/ crates/reg-core/tests/project/hashes.json`;
+  the malformed-upload round-trip tests unchanged.
+- Escalate: any other `openapi.json` or `tools/list` change. Depends on: nothing; runs
+  alongside 5.0.
+
+**5.2 `reg-core-wasm` and the structural validator in the SPA.** Implements "Design"
+above and D5.
+
+- Changes: `reg_core::project::check` as the single entry; the crate with exports
+  `project_schema_version` and `check_project`; the toolchain, `gen:wasm`, the facade
+  and bootstrap path, both edge jobs, the CI filter, the heavy lock, the smoke and the
+  size check. Store: `check_project` runs synchronously on every draft replacement,
+  outside the debounce and in-flight gate; a rejection sets validation locally with no
+  POST; an accepted draft is POSTed debounced as today. `checkVersionGate` goes; new
+  drafts take `project_schema_version()`. The Vite allowlist drops
+  `crates/reg-core/src`.
+- Tests: the project corpus through WASM in jsdom, including a non-object and invalid
+  JSON (replacing the `project.rs?raw` regex test); one `ProjectEditor` browser race
+  case (pending accepted draft → invalid edit → stale green discarded → repaired,
+  asserting findings, the order button's accessibility state and the request count).
+- Paths: `crates/reg-core/`, `crates/reg-core-wasm/`, `Cargo.toml`, `Cargo.lock`,
+  `reg_webapp/frontend/`, `reg_webapp/dev.sh`, `scripts/gate.py`,
+  `.github/workflows/{ci,container-build}.yml`.
+- Acceptance: full gate (`flows` and the smoke);
+  `git diff --exit-code origin/main -- conformance/cases/api conformance/cases/order crates/reg-meta/openapi.json`;
+  the budget numbers recorded. Maintainer: the `.wasm` check on both hosts; a broken
+  draft shows its issues without a request.
+- Escalate: a budget miss. Depends on: 5.1.
+
+**5.3 Period cutover.**
+
+- Changes: `reg-core` gets `SourcePeriod::from_wire` and `Display`, `year_spans` and a
+  public one-period structural check; the remaining exports, each guarded. SPA: delete
+  the duplicated functions; the wire helpers and `periodWindowRelation` run on WASM
+  (intervals plus overlap); the coverage union is intervals → merge → render →
+  `from_wire`. Grain: `windowCoverageHints` stays at year grain (only when
+  `source_period_years` is non-null); the disjointness check keeps day grain.
+- Oracles: a new `conformance/cases/grammar/source_period.jsonl`; `period.jsonl` cases
+  gain bounds (taken from `period.test.ts`); Rust and jsdom WASM tests; the Vite
+  allowlist adds `conformance/cases/grammar`. Each `period.test.ts` case maps to a
+  corpus case or a named difference (expected: day-adjacent segments merge; an explicit
+  range renders as `2019..2020-06-30`).
+- Measures the WASM cost of `foldText` for D3.
+- Paths: `crates/reg-core/`, `crates/reg-core-wasm/`, `conformance/cases/grammar/`,
+  `reg_webapp/frontend/src/`.
+- Acceptance: full gate;
+  `git grep -E 'TOKEN_RE|isRealCalendarDay|TERM_BOUNDS|looksLikePeriod|periodTokenBounds|periodWireBounds|grammarYear' -- reg_webapp/frontend/src`
+  empty; the project corpus and `hashes.json` unchanged; the budget holds. Maintainer:
+  the picker, editor and hints on both hosts.
+- Escalate: a budget miss; the fold above 60 KB gzipped (D3). Depends on: 5.0 and 5.2.
+
+**5.4 Checkpoint 4: delete this file.**
+
+- Changes: delete `RUST_RUNTIME_SPEC.md` after moving what lasts: the section 1 summary,
+  the section 5 table, sections 6 and 7 and decisions 11–13, 16 and 17 to
+  `ARCHITECTURE.md` and `crates/DESIGN.md`; section 3, section 4's base/derive split and
+  section 11 to `reg_meta_build/DESIGN.md`; the G0–G2, pin and G1 procedure to
+  `conformance/README.md` and `ARCHITECTURE.md` "Tiers"; open section 11 items to
+  issues. Drop the protocol, the packages, stage 0, the decision logs and the risks.
+  Repoint about 60 references in about 38 files; `CLAUDE.md` and `AGENTS.md` list only
+  `REFACTOR_SPEC.md`. Write the D4 brief.
+- Acceptance: panache format and lint; full gate; `git grep RUST_RUNTIME_SPEC` empty;
+  `cmp CLAUDE.md AGENTS.md`; the PR lists what moved and what was dropped.
+- Depends on: 5.0–5.3.
+
+#### Order and parallelism
+
+```
+5.0 ─────────┐
+5.1 ─ 5.2 ───┴─ 5.3 ─ 5.4
+```
+
+At most three packages in flight: 5.0 and 5.1 together; 5.2 after 5.1; 5.3 after 5.0 and
+5.2; 5.4 after all.
+
+Risks: a WASM panic; a bootstrap failure; raw-draft normalisation; utoipa drift; the
+toolchain pin and Rust in three CI jobs; a stale dev `.wasm`; the skipped-POST race; UI
+differences; growth of the `reg-core` API.
+
+#### Stage 5 decisions (maintainer, 2026-10-10)
+
+1. **D1: approved.** 5.0 changes the oracles: the synthesized 02-29 cases go and each
+   function gets one refusal case.
+2. **D2: provisional budgets.** The `.wasm` at or under 150 KB gzipped; frontend CI at
+   or under 6 minutes.
+3. **D3: `foldText`.** Move the fold to WASM if it costs at most 60 KB gzipped;
+   otherwise it goes back to the maintainer.
+4. **D4: decision 10** (who the runtime is designed for) is re-evaluated at the fourth
+   checkpoint (5.4).
+5. **D5: any JSON object loads.** A version mismatch shows as the single
+   `unsupported_schema_version` issue.
 
 ### Stage 0 results (2026-10-07)
 

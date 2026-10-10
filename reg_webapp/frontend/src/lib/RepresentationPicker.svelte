@@ -42,7 +42,7 @@ import {
   type YearScale,
   yearScaleOf,
 } from "./picker_graph";
-import type { StudyWindow } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 import { router } from "./router.svelte";
 import {
   committedMarker,
@@ -192,7 +192,7 @@ let {
   /** The project's common study window (null when none is set) — what a committed
    * row's source period is MARKED against (`committedMarker`). Distinct from
    * `window`, which may be this page's own `?period` lens. */
-  studyWindow?: StudyWindow | null;
+  studyWindow?: ProjectStudyWindow | null;
   /** The explicit `?period` value. The picker uses it only as parent-supplied
    * context; partial leaf/group views must not stage source-level period
    * replacements because a source period applies to every binding on the source. */

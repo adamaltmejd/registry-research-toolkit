@@ -1311,8 +1311,7 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   boot on the behind-schema asset and fail its deploy — for a state that is expected
   (the owed reg_meta release ships the matching asset). A standalone `schema-guard` job
   compares the gates against the builder's `SCHEMA_VERSION` / `DOC_SCHEMA_VERSION` at
-  the released tag (`git show <tag>:reg_meta_build/…`; tags before 4.4, which import the
-  docs constant from `reg_meta.doc_db`, fall back to that file) via the pure
+  the released tag (`git show <tag>:reg_meta_build/…`) via the pure
   `scripts/schema_pending_bump.py` helper, which returns a three-way verdict (`break` /
   `pending` / `compatible`). On a detected code-ahead `pending` bump (with both assets
   present) it publishes a `pending_bump=true` job output that defers the bake + deploy
@@ -1603,7 +1602,12 @@ while malformed `sources[]` slots normalize to `null` for rendering/validation-d
 and remain counted so `/sources/{i}` anchors line up with backend issue paths. Store
 mutators that inspect source fields use the same accessors over the raw slots, so an
 untouched malformed slot is preserved until the user deletes it or replaces the source
-array through an explicit structural edit.
+array through an explicit structural edit. The draft is typed `RawDraft`
+(`Record<string, unknown>`); the values the SPA writes into it are typed with the
+`Project*` schemas, which `reg-core`'s `openapi` feature publishes in `openapi.json` (no
+hand-written project types). The accepted model is never written back, so string panel
+members, unknown keys and invalid enums survive. One deliberate gap: an add whose column
+type did not resolve writes `type: ""` (`DraftBinding`) for the server to report.
 
 The commit primitive is `applyStagedDiff({adds, removes, periodChange})` — the
 browse-and-stage flow accumulates a user's picks/removes as a diff and commits it in

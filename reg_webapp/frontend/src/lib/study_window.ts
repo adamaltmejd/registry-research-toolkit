@@ -22,9 +22,9 @@ import {
 } from "./catalog";
 import { periodFromWire, periodToWire, periodWindowRelation } from "./period";
 import {
-  type Period,
+  type ProjectSourcePeriod,
+  type ProjectStudyWindow,
   type SafeSource,
-  type StudyWindow,
   safeSourceBindings,
   safeSourceName,
   safeSourcePeriod,
@@ -36,8 +36,8 @@ import {
 export interface OverlapChange {
   sourceName: string;
   registerVariant: string;
-  from: Period;
-  to: Period;
+  from: ProjectSourcePeriod;
+  to: ProjectSourcePeriod;
 }
 
 /** One dated source the plan leaves alone — it keeps its period (and, when that
@@ -48,7 +48,7 @@ export interface OverlapChange {
  * of the one that was not. */
 export interface OverlapMiss {
   sourceName: string;
-  period: Period;
+  period: ProjectSourcePeriod;
   reason: "no-overlap" | "unknown-column";
 }
 
@@ -61,7 +61,7 @@ export interface OverlapPlan {
  * year-independent or unset period relates to no window, so it is never read). */
 export function overlapRegisters(
   sources: readonly SafeSource[],
-  window: StudyWindow,
+  window: ProjectStudyWindow,
 ): string[] {
   const registers = new Set<string>();
   for (const source of sources) {
@@ -84,7 +84,7 @@ export function overlapRegisters(
  * delivery column (`representation`) contributes that column's eras only. */
 export function planWindowOverlap(
   sources: readonly SafeSource[],
-  window: StudyWindow,
+  window: ProjectStudyWindow,
   childrenByRegister: ReadonlyMap<string, readonly VariableChild[]>,
 ): OverlapPlan {
   const bounds = addWindowBounds(null, [window.from, window.to]);

@@ -20,12 +20,12 @@ from reg_meta_build.documentary import (
     SourceDerivationClause,
     SourceDerivationDeclaration,
 )
+from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_catalog import (
     ResolvedRegister,
     ResolvedState,
     ResolvedVariable,
     ResolvedVariant,
-    write_resolved_catalog,
 )
 from reg_meta_build.resolved_metadata import ResolvedMetadata
 from reg_meta_build.source_coordinates import native_variable_key

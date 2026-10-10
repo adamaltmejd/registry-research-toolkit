@@ -11,6 +11,7 @@ import {
 } from "./catalog";
 import { state } from "./catalog-test-helpers";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import {
   applyStagedPicks,
   type StagedPick,
@@ -239,7 +240,7 @@ describe("applyStagedPicks", () => {
     expect(JSON.stringify(projectStore.draft)).toBe(leafDraft);
     // …and the answer they agree on is the gap-carving one (#307's list form),
     // never the single 1995–2015 span.
-    expect(projectStore.draft?.sources[0]?.period).toEqual([
+    expect(storedProject()?.sources[0]?.period).toEqual([
       { from: 1995, to: 1996 },
       { from: 1998, to: 2015 },
     ]);

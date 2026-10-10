@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from reg_meta_build.db import _open_scb_csv_prepared
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_evidence import (
     RecordLocator,
@@ -17,6 +16,7 @@ from reg_meta_build.source_evidence import (
     SourceRevision,
     canonical_sha256,
 )
+from reg_meta_build.source_files import _open_scb_csv_prepared
 from reg_meta_build.source_records import (
     NativeCoordinates,
     SourceCoordinate,

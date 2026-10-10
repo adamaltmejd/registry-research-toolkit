@@ -7,7 +7,12 @@ import {
   type StagedAdd,
   setPersistence,
 } from "./project_store.svelte";
-import { add, openFile, SEED } from "./project-store-test-helpers";
+import {
+  add,
+  openFile,
+  SEED,
+  storedProject,
+} from "./project-store-test-helpers";
 
 // Split from project_store.svelte.test.ts by contract surface: the cart's commit
 // paths (applyStagedDiff, applySourcePeriodEdit). Sibling: project_store.svelte.test.ts.
@@ -30,13 +35,13 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       ],
     });
     // Both bindings land on ONE source (keyed on the variant), not two.
-    expect(projectStore.draft?.sources).toHaveLength(1);
-    expect(projectStore.draft?.sources[0].register_variant).toBe("scb/lisa/v1");
-    expect(
-      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
-    ).toEqual(["scb/lisa/kon", "scb/lisa/alder"]);
+    expect(storedProject()?.sources).toHaveLength(1);
+    expect(storedProject()?.sources[0].register_variant).toBe("scb/lisa/v1");
+    expect(storedProject()?.sources[0].bindings.map((b) => b.variable)).toEqual(
+      ["scb/lisa/kon", "scb/lisa/alder"],
+    );
     // The #312 name prefill fired on the created source.
-    expect(projectStore.draft?.sources[0].name).toBe("LISA");
+    expect(storedProject()?.sources[0].name).toBe("LISA");
   });
 
   it("commits two disjoint-era picks of ONE physical column with nothing to collide (Y-76)", () => {
@@ -64,8 +69,8 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       ],
     });
 
-    expect(projectStore.draft?.sources).toHaveLength(1);
-    expect(projectStore.draft?.sources[0].bindings).toEqual([
+    expect(storedProject()?.sources).toHaveLength(1);
+    expect(storedProject()?.sources[0].bindings).toEqual([
       {
         variable: "scb/lisa/forvink-ers-aktiv",
         type: "numeric",
@@ -89,7 +94,7 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     projectStore.applyStagedDiff({
       adds: [add("scb/hst/v1", "scb/hst/alder", "VT2021")],
     });
-    expect(projectStore.draft?.sources[0].period).toEqual(["HT2020", "VT2021"]);
+    expect(storedProject()?.sources[0].period).toEqual(["HT2020", "VT2021"]);
   });
 
   it("preserves every same-batch token add window in the committed source period", () => {
@@ -104,15 +109,15 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       ],
     });
 
-    expect(projectStore.draft?.sources).toHaveLength(1);
-    expect(projectStore.draft?.sources[0].period).toEqual([
+    expect(storedProject()?.sources).toHaveLength(1);
+    expect(storedProject()?.sources[0].period).toEqual([
       "2020-Q1",
       "2020-Q2",
       "2020-Q3",
     ]);
-    expect(
-      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
-    ).toEqual(["scb/hst/kon", "scb/hst/alder", "scb/hst/inkomst"]);
+    expect(storedProject()?.sources[0].bindings.map((b) => b.variable)).toEqual(
+      ["scb/hst/kon", "scb/hst/alder", "scb/hst/inkomst"],
+    );
   });
 
   it("a finite add REPLACES an imported `_default` source period", async () => {
@@ -140,8 +145,8 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       adds: [add("scb/lisa/v1", "scb/lisa/alder", { from: 2010, to: 2015 })],
     });
 
-    expect(projectStore.draft?.sources).toHaveLength(1);
-    expect(projectStore.draft?.sources[0].period).toEqual({
+    expect(storedProject()?.sources).toHaveLength(1);
+    expect(storedProject()?.sources[0].period).toEqual({
       from: 2010,
       to: 2015,
     });
@@ -161,11 +166,11 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
         add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
       ],
     });
-    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(storedProject()?.sources).toHaveLength(1);
     // Exactly ONE binding for the variable — the second add collapsed onto it.
-    expect(
-      projectStore.draft?.sources[0].bindings.map((b) => b.variable),
-    ).toEqual(["scb/lisa/ssyk"]);
+    expect(storedProject()?.sources[0].bindings.map((b) => b.variable)).toEqual(
+      ["scb/lisa/ssyk"],
+    );
   });
 
   it("the add-path duplicate guard treats a null-STORED binding as a duplicate of ANY payload representation (null-either-side, no field overwrite)", () => {
@@ -182,7 +187,7 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
         add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk3" }),
       ],
     });
-    const bindings = projectStore.draft?.sources[0].bindings ?? [];
+    const bindings = storedProject()?.sources[0].bindings ?? [];
     expect(bindings).toHaveLength(1);
     expect(bindings[0].variable).toBe("scb/lisa/ssyk");
     // The guard is a no-op, not a replace: the stored binding keeps its original
@@ -203,7 +208,7 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     projectStore.applyStagedDiff({
       adds: [add("scb/lisa/v1", "scb/lisa/ssyk", 2018)],
     });
-    const bindings = projectStore.draft?.sources[0].bindings ?? [];
+    const bindings = storedProject()?.sources[0].bindings ?? [];
     expect(bindings).toHaveLength(1);
     expect(bindings[0].representation).toBe("Ssyk3");
   });
@@ -224,10 +229,10 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
         add("scb/lisa/v1", "scb/lisa/ssyk", 2018, { representation: "Ssyk4" }),
       ],
     });
-    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(storedProject()?.sources).toHaveLength(1);
     // BOTH extractions coexist on the one source, in add order.
     expect(
-      projectStore.draft?.sources[0].bindings.map((b) => b.representation),
+      storedProject()?.sources[0].bindings.map((b) => b.representation),
     ).toEqual(["Ssyk3", "Ssyk4"]);
 
     // Re-adding one of the now-coexisting reps (Ssyk3) DOES match its existing
@@ -239,7 +244,7 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       ],
     });
     expect(
-      projectStore.draft?.sources[0].bindings.map((b) => b.representation),
+      storedProject()?.sources[0].bindings.map((b) => b.representation),
     ).toEqual(["Ssyk3", "Ssyk4"]);
   });
 
@@ -260,11 +265,11 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
       ],
     });
     // Set a user name via the sources mutator (the store's public edit path).
-    const named = (projectStore.draft?.sources ?? []).map((s, i) =>
+    const named = (storedProject()?.sources ?? []).map((s, i) =>
       i === 0 ? { ...s, name: "My cohort" } : s,
     );
     projectStore.updateField("sources", named);
-    expect(projectStore.draft?.sources[0].name).toBe("My cohort");
+    expect(storedProject()?.sources[0].name).toBe("My cohort");
 
     // ONE batch that removes the source's ONLY binding AND adds a binding for the
     // SAME register_variant (a representation swap). Pre-fix the removes phase would
@@ -292,18 +297,18 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     });
 
     // Still ONE source, and it is the SAME source (user name preserved).
-    expect(projectStore.draft?.sources).toHaveLength(1);
-    expect(projectStore.draft?.sources[0].name).toBe("My cohort");
+    expect(storedProject()?.sources).toHaveLength(1);
+    expect(storedProject()?.sources[0].name).toBe("My cohort");
     // Its period MERGED the add's disjoint window into the pre-existing one (the
     // find-or-create found the still-present source), rather than resetting to just
     // the add's window (which a fresh newSource would have done).
-    expect(projectStore.draft?.sources[0].period).toEqual([
+    expect(storedProject()?.sources[0].period).toEqual([
       { from: 2005, to: 2010 },
       { from: 2015, to: 2020 },
     ]);
     // The old binding is gone, the new one landed.
     expect(
-      projectStore.draft?.sources[0].bindings.map((b) => b.representation),
+      storedProject()?.sources[0].bindings.map((b) => b.representation),
     ).toEqual(["Ssyk4"]);
   });
 
@@ -319,7 +324,7 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     projectStore.applyStagedDiff({
       removes: [{ registerVariant: "scb/lisa/v1", variable: "scb/lisa/ssyk" }],
     });
-    expect(projectStore.draft?.sources).toHaveLength(0);
+    expect(storedProject()?.sources).toHaveLength(0);
   });
 
   it("commits the whole batch in ONE mutation (id mirror rebuilt once, autosave fires once)", async () => {
@@ -391,7 +396,7 @@ describe("applySourcePeriodEdit (Y-81 — the cart card's period-only rewrite)",
 
   /** An edit of `sourceName` started from its current value, proposing `period`. */
   function edit(sourceName: string, period: StagedAdd["period"]) {
-    const source = (projectStore.draft?.sources ?? []).find(
+    const source = (storedProject()?.sources ?? []).find(
       (s) => s.name === sourceName,
     );
     return {
@@ -426,7 +431,7 @@ describe("applySourcePeriodEdit (Y-81 — the cart card's period-only rewrite)",
     ]);
 
     expect(projectStore.applySourcePeriodEdit(stale)).toBe(false);
-    expect(projectStore.draft?.sources[0].period).toEqual({
+    expect(storedProject()?.sources[0].period).toEqual({
       from: 2010,
       to: 2015,
     });

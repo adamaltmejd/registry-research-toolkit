@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { OrderFinding, ValidationResultModel } from "./api";
+import type { OrderBlocking, ValidationResultModel } from "./api";
 import type { SafeSource } from "./project_data";
 import type {
   RequestErrorSource,
@@ -48,7 +48,7 @@ const {
   requestErrorSource: RequestErrorSource | null;
   /** A blocked order's findings (`/order`'s 422). Rendered in the SAME per-finding
    * shape as a validation issue — they are findings, not a message. */
-  orderFindings?: readonly OrderFinding[];
+  orderFindings?: readonly OrderBlocking[];
   windowHints: readonly WindowCoverageHint[];
   /** Sources the common study window has left with no years inside it — the SPA's
    * own blocking authoring finding (`windowDisjointFindings`), rendered like a

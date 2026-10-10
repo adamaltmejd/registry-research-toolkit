@@ -36,7 +36,6 @@ from reg_meta_build._accepted_prepared import (
     check_accepted_files,
     read_accepted_manifest,
 )
-from reg_meta_build.db import _file_sha256
 from reg_meta_build.input_snapshot import SnapshotError, _git
 from reg_meta_build.prepared_sources import (
     _COMMIT_RE,
@@ -45,6 +44,7 @@ from reg_meta_build.prepared_sources import (
     _PayloadWriter,
     _readonly,
 )
+from reg_meta_build.source_files import _file_sha256
 from reg_meta_build.source_values import (
     SourceMemberHint,
     SourceValue,

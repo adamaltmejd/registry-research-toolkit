@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 
 from openpyxl import load_workbook
 
-from reg_meta_build.db import EXPECTED_HEADERS, _open_scb_csv_prepared
 from reg_meta_build.errors import SourceFormatError
 from reg_meta_build.normalization import normalize_text, normalize_token
 from reg_meta_build.source_evidence import (
@@ -18,6 +17,7 @@ from reg_meta_build.source_evidence import (
     SourceRevision,
     canonical_sha256,
 )
+from reg_meta_build.source_files import EXPECTED_HEADERS, _open_scb_csv_prepared
 from reg_meta_build.source_records import (
     SourceEvidenceRow,
     SourceEvidenceTable,

@@ -51,7 +51,8 @@ pub fn version_issue(raw: &Value) -> Option<ValidationIssue> {
 }
 
 /// A closed string enum: one list of `(variant, wire name)` pairs gives the serde
-/// encoding and the allowed values the validator reports.
+/// encoding, the allowed values the validator reports and, with the `openapi`
+/// feature, the schema enum.
 macro_rules! str_enum {
     ($(#[$meta:meta])* $name:ident { $($variant:ident = $wire:literal),+ $(,)? }) => {
         $(#[$meta])*
@@ -78,6 +79,24 @@ macro_rules! str_enum {
         impl Serialize for $name {
             fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
                 serializer.serialize_str(self.as_str())
+            }
+        }
+
+        /// The wire spellings, as the schema `Project<name>`.
+        #[cfg(feature = "openapi")]
+        impl utoipa::PartialSchema for $name {
+            fn schema() -> utoipa::openapi::RefOr<utoipa::openapi::schema::Schema> {
+                utoipa::openapi::schema::ObjectBuilder::new()
+                    .schema_type(utoipa::openapi::schema::Type::String)
+                    .enum_values(Some([$($wire),+]))
+                    .into()
+            }
+        }
+
+        #[cfg(feature = "openapi")]
+        impl utoipa::ToSchema for $name {
+            fn name() -> std::borrow::Cow<'static, str> {
+                concat!("Project", stringify!($name)).into()
             }
         }
 
@@ -116,6 +135,8 @@ str_enum!(
 
 /// The top-level `project_data.json` document.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectData))]
+#[serde(deny_unknown_fields)]
 pub struct ProjectData {
     pub schema_version: String,
     pub steward: Steward,
@@ -124,7 +145,9 @@ pub struct ProjectData {
     pub sources: Vec<Source>,
     #[serde(default)]
     pub panels: Vec<Panel>,
+    // An explicit `null` is `invalid_field_type`: absent means no window.
     #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub window: Option<StudyWindow>,
 }
 
@@ -175,6 +198,7 @@ impl ProjectData {
 
 /// One logical extraction: a register variant, a requested period and its bindings.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectSource))]
 #[serde(deny_unknown_fields)]
 pub struct Source {
     pub name: String,
@@ -186,6 +210,7 @@ pub struct Source {
 
 /// One variable to extract.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectBinding))]
 #[serde(deny_unknown_fields)]
 pub struct Binding {
     /// The binding FQID `<provider>/<register>/<slug>`.
@@ -210,8 +235,9 @@ pub struct Binding {
 }
 
 /// A period endpoint as written: an int year or a period-token string (`"_default"`
-/// included, which only a scalar [`SourcePeriod`] may hold).
+/// included, which only a scalar source period may hold).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectPeriodValue))]
 #[serde(untagged)]
 pub enum PeriodValue {
     Year(i64),
@@ -220,6 +246,7 @@ pub enum PeriodValue {
 
 /// The `{"from": ..., "to": ...}` range.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectPeriodRange))]
 #[serde(deny_unknown_fields)]
 pub struct PeriodRange {
     pub r#from: PeriodValue,
@@ -228,6 +255,7 @@ pub struct PeriodRange {
 
 /// One contiguous piece of a source period.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectPeriodSegment))]
 #[serde(untagged)]
 pub enum PeriodSegment {
     Value(PeriodValue),
@@ -236,11 +264,12 @@ pub enum PeriodSegment {
 
 /// `Source.period`: one segment, or a sorted, disjoint list of them (an interrupted
 /// series).
-///
-/// A list variant comes first in each untagged enum: serde also reads a struct from
-/// a JSON array, by position, so `["2018-01", "2018-04"]` would otherwise become a
-/// [`PeriodRange`].
+//
+// A list variant comes first in each untagged enum: serde also reads a struct from a
+// JSON array, by position, so `["2018-01", "2018-04"]` would otherwise become a
+// `PeriodRange`. (A plain comment: a doc comment here is the schema description.)
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectSourcePeriod))]
 #[serde(untagged)]
 pub enum SourcePeriod {
     List(Vec<PeriodSegment>),
@@ -310,10 +339,12 @@ impl PeriodValue {
 
 /// A panel over sources.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectPanel))]
 #[serde(deny_unknown_fields)]
 pub struct Panel {
     pub panel_id: String,
     #[serde(deserialize_with = "members")]
+    #[cfg_attr(feature = "openapi", schema(value_type = Vec<Member>, inline))]
     pub members: Vec<PanelMember>,
     #[serde(default)]
     pub entity_key: Option<EntityKey>,
@@ -325,22 +356,29 @@ pub struct Panel {
 
 /// A panel member; the bare-string shorthand deserializes to `{"source": <name>}`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectPanelMember))]
 #[serde(deny_unknown_fields)]
 pub struct PanelMember {
     pub source: String,
+    // An explicit `null` override is `invalid_field_type`: absent inherits.
     #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub entity_key: Option<EntityKey>,
     #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub time_key: Option<TimeKey>,
 }
 
+/// A panel member as written: a source name, or a member object.
+#[derive(Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
+#[serde(untagged)]
+enum Member {
+    Source(String),
+    Member(PanelMember),
+}
+
 fn members<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Vec<PanelMember>, D::Error> {
-    #[derive(Deserialize)]
-    #[serde(untagged)]
-    enum Member {
-        Source(String),
-        Member(PanelMember),
-    }
     Ok(Vec::<Member>::deserialize(deserializer)?
         .into_iter()
         .map(|m| match m {
@@ -356,6 +394,7 @@ fn members<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Vec<PanelMember
 
 /// A panel's entity key: one column, or a composite.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectEntityKey))]
 #[serde(untagged)]
 pub enum EntityKey {
     Column(String),
@@ -364,6 +403,7 @@ pub enum EntityKey {
 
 /// A panel's time key: one time point, or a composite.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectTimeKey))]
 #[serde(untagged)]
 pub enum TimeKey {
     Composite(Vec<TimePoint>),
@@ -372,6 +412,7 @@ pub enum TimeKey {
 
 /// A literal year, a column ref, `{"period": ...}` or `{"range": {...}}`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectTimePoint))]
 #[serde(untagged)]
 pub enum TimePoint {
     Year(i64),
@@ -382,6 +423,7 @@ pub enum TimePoint {
 
 /// `{"period": int | string}`: a literal period, as opposed to a column ref.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectLiteralPeriod))]
 #[serde(deny_unknown_fields)]
 pub struct LiteralPeriod {
     pub period: PeriodValue,
@@ -389,6 +431,7 @@ pub struct LiteralPeriod {
 
 /// `{"range": {"from": ..., "to": ...}}`: a literal period range.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectTimeRange))]
 #[serde(deny_unknown_fields)]
 pub struct TimeRange {
     pub range: PeriodRange,
@@ -396,6 +439,7 @@ pub struct TimeRange {
 
 /// The optional study window, in plain int years.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectStudyWindow))]
 #[serde(deny_unknown_fields)]
 pub struct StudyWindow {
     pub r#from: i64,

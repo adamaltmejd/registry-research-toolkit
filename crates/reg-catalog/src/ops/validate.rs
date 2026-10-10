@@ -16,81 +16,15 @@ use std::collections::{BTreeMap, BTreeSet};
 use reg_core::project::{Binding, ProjectData, Source, version_issue};
 use reg_core::{
     Fqid, Interval, IssueLevel, ValidationIssue, ValidationResult, intersect, merge, overlap,
-    quote, quoted_list, render, snap_month_end,
+    quote, quoted_list, render,
 };
 use rusqlite::{Connection, OptionalExtension, params};
-use serde::Serialize;
 use serde_json::Value;
-use utoipa::ToSchema;
 
 use super::refs;
 use super::states::{Emitted, emitted, value_set, variant_id};
 use super::{Params, Server};
 use crate::{Error, Scope};
-
-/// The validation result: `ok` when no issue is an error.
-#[derive(Serialize, ToSchema)]
-pub struct Validation {
-    ok: bool,
-    /// In emission order: per source, its variant and period, then per binding.
-    issues: Vec<Issue>,
-}
-
-#[derive(Serialize, ToSchema)]
-#[serde(rename_all = "lowercase")]
-#[schema(as = IssueLevel)]
-enum Level {
-    Error,
-    Warning,
-    Info,
-}
-
-/// One finding about the document.
-#[derive(Serialize, ToSchema)]
-#[schema(as = ValidationIssue)]
-struct Issue {
-    level: Level,
-    /// A stable identifier, such as `period_outside_state_validity`.
-    code: &'static str,
-    /// An RFC 6901 JSON pointer into the document; empty for the whole document.
-    path: String,
-    message: String,
-    /// The successor a `variable_replaced` finding names; null otherwise.
-    #[schema(required = true)]
-    successor_fqid: Option<String>,
-}
-
-impl From<ValidationResult> for Validation {
-    fn from(result: ValidationResult) -> Self {
-        let ok = result.ok();
-        let issues = result
-            .issues
-            .into_iter()
-            .map(|issue| {
-                let ValidationIssue {
-                    level,
-                    code,
-                    path,
-                    message,
-                    successor_fqid,
-                } = issue;
-                let level = match level {
-                    IssueLevel::Error => Level::Error,
-                    IssueLevel::Warning => Level::Warning,
-                    IssueLevel::Info => Level::Info,
-                };
-                Issue {
-                    level,
-                    code,
-                    path,
-                    message,
-                    successor_fqid,
-                }
-            })
-            .collect();
-        Self { ok, issues }
-    }
-}
 
 pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value, Error> {
     let result = match project(params)? {
@@ -110,7 +44,7 @@ pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value
             }
         }
     };
-    Ok(serde_json::to_value(Validation::from(result)).expect("Validation serializes"))
+    Ok(serde_json::to_value(result).expect("ValidationResult serializes"))
 }
 
 /// The `project` parameter as a project, or the issues that reject it without the
@@ -702,7 +636,7 @@ fn reach(
         for e in emitted(conn, Scope::Reference, id, Some(variant), Some(bounds))? {
             let window = (
                 e.valid_from.clone().expect("a dated state has bounds"),
-                snap_month_end(e.valid_to.as_deref().expect("a dated state has bounds")),
+                e.valid_to.clone().expect("a dated state has bounds"),
             );
             let Some(overlap) = intersect(&window, segment) else {
                 continue;

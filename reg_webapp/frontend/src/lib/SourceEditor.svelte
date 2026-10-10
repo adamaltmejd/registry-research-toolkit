@@ -13,9 +13,9 @@ import {
   yearWindowLabel,
 } from "./period";
 import {
-  type Period,
+  type ProjectSourcePeriod,
+  type ProjectStudyWindow,
   type SafeSource,
-  type StudyWindow,
   safeSourceBindings,
   safeSourceName,
   safeSourcePeriod,
@@ -65,7 +65,7 @@ const { sourceIndex, source, issues, providerQualified, studyWindow } = $props<{
    * source's period is MARKED against when the two differ. An authoring seed,
    * never an inheritance (crates/reg-core/DESIGN.md): each source keeps its own
    * concrete period, so divergence is shown rather than hidden. */
-  studyWindow: StudyWindow | null;
+  studyWindow: ProjectStudyWindow | null;
 }>();
 
 /** Instance-scoped ids, so every card's period fields keep real `<label for>`
@@ -126,7 +126,7 @@ const bindingsMalformed = $derived(sourceBindingsMalformed(source));
 // and every per-source control's accessible name.
 const sourceName = $derived(safeSourceName(source) || "(unnamed source)");
 
-const period = $derived(safeSourcePeriod(source) as Period);
+const period = $derived(safeSourcePeriod(source) as ProjectSourcePeriod);
 // The stored period as its WIRE string (list-period aware — `periodToWire` already
 // joins list segments); null when the source carries none or an unshapeable one.
 const periodWire = $derived(periodToWire(period));
@@ -200,7 +200,7 @@ let writeRefused = $state(false);
  * that says nothing on success leaves the researcher to infer it from a greyed
  * button — and where the new period neither crosses the study window nor changes a
  * finding, there is nothing else on the card that moves. */
-let appliedWindows = $state<StudyWindow[] | null>(null);
+let appliedWindows = $state<ProjectStudyWindow[] | null>(null);
 /** The last Apply had nothing to write — the rows named exactly the stored period,
  * or nothing was ever touched. A different thing from `entryRefusal`: the rows ARE
  * usable, there is just no change to make. */
@@ -259,11 +259,11 @@ const rowProblem = $derived.by((): RowsProblem | null => {
  * `normalizePeriodRows` sorts/merges, or refuses on a real overlap. Null while
  * untouched or while any row is individually bad (`rowProblem` already covers
  * that case). */
-const rowWindows = $derived.by((): StudyWindow[] | null => {
+const rowWindows = $derived.by((): ProjectStudyWindow[] | null => {
   if (rows === null || rowProblem !== null) {
     return null;
   }
-  return rowResolutions.map((r) => (r as { years: StudyWindow }).years);
+  return rowResolutions.map((r) => (r as { years: ProjectStudyWindow }).years);
 });
 
 const normalized = $derived(

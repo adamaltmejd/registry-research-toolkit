@@ -10,12 +10,12 @@
  * in-memory — autosave NEVER rejects or crashes the debounced `$effect`.
  */
 
-import type { ProjectData } from "./project_data";
+import type { RawDraft } from "./project_data";
 import type { ProjectPersistence } from "./project_store.svelte";
 
 /** A persisted draft record. Keyed externally (no `keyPath` on the store), so the
  * stamped `schemaVersion` rides alongside the draft for the load-time gate. */
-type StoredDraft = { draft: ProjectData; schemaVersion: number };
+type StoredDraft = { draft: RawDraft; schemaVersion: number };
 
 const DB_NAME = "reg_webapp_projects";
 const STORE_NAME = "drafts";
@@ -29,7 +29,7 @@ const DB_VERSION = 1;
 export function restoredDraft(
   record: StoredDraft | undefined,
   currentSchemaVersion: number,
-): ProjectData | null {
+): RawDraft | null {
   return record && record.schemaVersion === currentSchemaVersion
     ? record.draft
     : null;
@@ -72,7 +72,7 @@ export class IndexedDBPersistence implements ProjectPersistence {
 
   async save(
     key: string,
-    draft: ProjectData,
+    draft: RawDraft,
     schemaVersion: number,
   ): Promise<void> {
     try {
@@ -97,7 +97,7 @@ export class IndexedDBPersistence implements ProjectPersistence {
     }
   }
 
-  async load(): Promise<ProjectData | null> {
+  async load(): Promise<RawDraft | null> {
     try {
       const db = await openDb();
       try {

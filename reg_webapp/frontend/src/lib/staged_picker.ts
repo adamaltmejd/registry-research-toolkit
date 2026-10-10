@@ -24,10 +24,10 @@ import {
 } from "./period";
 import {
   isPlainObject,
-  type Period,
-  type ProjectData,
+  type ProjectSourcePeriod,
+  type ProjectStudyWindow,
+  type RawDraft,
   regMetaReleaseTag,
-  type StudyWindow,
   safeSourceBindings,
   safeSourceName,
   safeSourcePeriod,
@@ -52,18 +52,18 @@ export interface PickerCommittedRow {
   variable: string;
   representation: string | null;
   sourceName: string;
-  sourcePeriod: Period;
+  sourcePeriod: ProjectSourcePeriod;
   removals?: StagedRemove[];
 }
 
 export interface PickerAddPeriod {
   registerVariant: string;
-  period: Period;
+  period: ProjectSourcePeriod;
 }
 
 export interface PickerSourcePeriod {
   registerVariant: string;
-  period: Period;
+  period: ProjectSourcePeriod;
 }
 
 export interface PickerCommitScope {
@@ -91,7 +91,7 @@ export function pickerRowKey(
   ].join("::");
 }
 
-function sourcePeriod(source: unknown): Period {
+function sourcePeriod(source: unknown): ProjectSourcePeriod {
   return safeSourcePeriod(source) ?? "";
 }
 
@@ -130,7 +130,7 @@ function rowWindowBounds(row: PickerRepresentation): PeriodBounds[] {
  * reached the years that name was delivered in. */
 export function windowsOverlapPeriod(
   windows: readonly { from: string; to: string }[],
-  period: Period,
+  period: ProjectSourcePeriod,
 ): boolean {
   const segments = boundedPeriodSegments(period);
   if (!segments) {
@@ -141,7 +141,10 @@ export function windowsOverlapPeriod(
   );
 }
 
-function rowOverlapsPeriod(row: PickerRepresentation, period: Period): boolean {
+function rowOverlapsPeriod(
+  row: PickerRepresentation,
+  period: ProjectSourcePeriod,
+): boolean {
   if (row.period_scope === "year_independent") return period === "_default";
   return windowsOverlapPeriod(rowWindowBounds(row), period);
 }
@@ -270,7 +273,7 @@ export function rowAddSegments(
 function rowMatchesBinding(
   binding: unknown,
   row: PickerRepresentation,
-  sourcePeriod: Period,
+  sourcePeriod: ProjectSourcePeriod,
 ): boolean {
   const representation = bindingRepresentation(binding);
   if (representation !== null) {
@@ -280,7 +283,7 @@ function rowMatchesBinding(
 }
 
 export function committedPickerRows(
-  draft: ProjectData | null,
+  draft: RawDraft | null,
   bands: readonly StagedPickerBand[],
   scope: PickerCommitScope = {},
 ): Map<string, PickerCommittedRow> {
@@ -365,8 +368,8 @@ export interface CommittedMarker {
 }
 
 export function committedMarker(
-  sourcePeriod: Period,
-  studyWindow: StudyWindow | null,
+  sourcePeriod: ProjectSourcePeriod,
+  studyWindow: ProjectStudyWindow | null,
 ): CommittedMarker {
   const relation = periodWindowRelation(sourcePeriod, studyWindow);
   const period = periodLabel(sourcePeriod);
@@ -391,7 +394,7 @@ export function committedMarker(
 }
 
 export function sourcePeriodsFromDraft(
-  draft: ProjectData | null,
+  draft: RawDraft | null,
 ): PickerSourcePeriod[] {
   const out: PickerSourcePeriod[] = [];
   const sources = safeSourceSlots(draft?.sources);
@@ -502,8 +505,8 @@ export function finalAddPeriodWires(
 export function finalSourcePeriodsForStagedAdds(
   existing: Iterable<PickerSourcePeriod>,
   adds: readonly PickerAddPeriod[],
-): Map<string, Period> {
-  const periods = new Map<string, Period>();
+): Map<string, ProjectSourcePeriod> {
+  const periods = new Map<string, ProjectSourcePeriod>();
   for (const source of existing) {
     if (!periods.has(source.registerVariant)) {
       periods.set(source.registerVariant, source.period);
@@ -595,7 +598,7 @@ export type StagedApplyResult =
   | {
       kind: "outside-study-window";
       columns: string[];
-      studyWindow: StudyWindow;
+      studyWindow: ProjectStudyWindow;
     }
   | { kind: "abandoned" };
 
@@ -652,7 +655,7 @@ export interface StagedAddCandidate {
   variant: string;
   registerVariant: string;
   periodWire: string | null;
-  period: Period;
+  period: ProjectSourcePeriod;
   outsideScope: boolean;
 }
 
@@ -728,7 +731,7 @@ export async function applyStagedPicks(
     /** The project's common study window, when one is set. A page's own
      * `?period` can override the add window (`scope`), so it is judged here too:
      * an add wholly outside it would author a source that blocks the order. */
-    studyWindow?: StudyWindow | null;
+    studyWindow?: ProjectStudyWindow | null;
     seed: StagedApplySeed;
     cancelled: () => boolean;
   },

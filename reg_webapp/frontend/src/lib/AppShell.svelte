@@ -4,7 +4,7 @@ import type { Snippet } from "svelte";
 import { catalogHref, DATA_BROWSER_LABEL } from "./catalog";
 import { catalogRootChildren } from "./catalog_names.svelte";
 import {
-  type StudyWindow,
+  type ProjectStudyWindow,
   safeSourceBindings,
   safeSourceSlots,
 } from "./project_data";
@@ -40,8 +40,8 @@ interface Props {
   /** The project-window slider bounds + wiring (App owns the window store). */
   windowMin: number;
   windowMax: number;
-  windowValue: StudyWindow | null;
-  onWindowChange: (next: StudyWindow) => void;
+  windowValue: ProjectStudyWindow | null;
+  onWindowChange: (next: ProjectStudyWindow) => void;
   onWindowClear: () => void;
   /** The route-derived topbar breadcrumb trail (App derives it from the route). */
   breadcrumbs: BreadcrumbItem[];

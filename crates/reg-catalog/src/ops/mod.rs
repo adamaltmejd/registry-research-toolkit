@@ -581,6 +581,11 @@ pub fn openapi(version: &str) -> OpenApi {
     let mut components = Components::new();
     component::<Meta>(&mut components);
     component::<Error>(&mut components);
+    // Referenced by no operation (the validate and order bodies stay free objects,
+    // and `order_blocked`'s fields an open object): published so the SPA's types
+    // are generated, not hand-written.
+    component::<reg_core::project::ProjectData>(&mut components);
+    component::<order::Blocking>(&mut components);
     let mut paths = PathsBuilder::new();
     for op in all() {
         for route in op.paths {

@@ -27,25 +27,26 @@
 import {
   downloadOrderManifest,
   errMessage,
-  type OrderFinding,
+  type OrderBlocking,
   orderFindingsFromError,
-  type ProjectDataBody,
   triggerDownload,
   type ValidationResultModel,
   validateProject,
 } from "./api";
 import { periodCoverageUnion } from "./period";
 import {
-  type Binding,
+  type DraftBinding,
   defaultSourceName,
   isPlainObject,
   newProjectData,
-  type Period,
+  type ProjectBinding,
   type ProjectData,
   type ProjectSeed,
+  type ProjectSource,
+  type ProjectSourcePeriod,
+  type RawDraft,
   removeBinding,
   removeSource,
-  type Source,
   safeSourceBindings,
   safeSourceName,
   safeSourceRegisterVariant,
@@ -98,7 +99,7 @@ function majorOf(version: string): number | null {
  * pre-Model-A signal. Anything else is a NEUTRAL no-op (`{ok:true}`): it lets
  * unrecognized versions through so the backend remains the canonical authority.
  */
-export function checkVersionGate(parsed: ProjectDataBody): VersionGateResult {
+export function checkVersionGate(parsed: RawDraft): VersionGateResult {
   const schemaVersion =
     typeof parsed.schema_version === "string" ? parsed.schema_version : "";
 
@@ -130,26 +131,23 @@ export function checkVersionGate(parsed: ProjectDataBody): VersionGateResult {
  * `storeSchemaVersion` so A5.4's load can hard-reject a mismatched stored draft. */
 export interface ProjectPersistence {
   /** Persist the draft under `key` with the store schema version stamped. */
-  save(key: string, draft: ProjectData, schemaVersion: number): Promise<void>;
+  save(key: string, draft: RawDraft, schemaVersion: number): Promise<void>;
   /** Restore the most-recently-saved draft, or `null` when none/incompatible.
    * c-i's stub always returns `null` (no restore-on-init). */
-  load(): Promise<ProjectData | null>;
+  load(): Promise<RawDraft | null>;
 }
 
 /** The default in-memory stub: a `Map` keyed by project key. `load` returns
  * `null` (no restore at init) — A5.4's IndexedDB impl actually restores. */
 class InMemoryPersistence implements ProjectPersistence {
-  private store = new Map<
-    string,
-    { draft: ProjectData; schemaVersion: number }
-  >();
+  private store = new Map<string, { draft: RawDraft; schemaVersion: number }>();
 
-  save(key: string, draft: ProjectData, schemaVersion: number): Promise<void> {
+  save(key: string, draft: RawDraft, schemaVersion: number): Promise<void> {
     this.store.set(key, { draft, schemaVersion });
     return Promise.resolve();
   }
 
-  load(): Promise<ProjectData | null> {
+  load(): Promise<RawDraft | null> {
     // c-i: no restore-on-init. A5.4's impl reads the most-recent key + gates on
     // `schemaVersion === storeSchemaVersion`.
     return Promise.resolve(null);
@@ -177,7 +175,7 @@ let restored: Promise<void> = Promise.resolve();
 // ── The store ───────────────────────────────────────────────────────────────
 
 /** The draft, or `null` for the home/new screen. */
-let draft = $state<ProjectData | null>(null);
+let draft = $state<RawDraft | null>(null);
 
 // ── Stable client-side ids (issue #200) ──────────────────────────────────────
 //
@@ -221,7 +219,7 @@ function nextId(): string {
  * empty mirror for that slot, matching the editors' coercion (they render such slots
  * as []), so no keyed instance is created against them. NEVER throws: it runs at a
  * draft-replacement boundary where a throw would abort the update mid-assignment. */
-function buildIds(next: ProjectData | null): SourceIds[] {
+function buildIds(next: RawDraft | null): SourceIds[] {
   const sources =
     next != null && Array.isArray(next.sources) ? next.sources : [];
   return sources.map((s) => ({
@@ -262,7 +260,7 @@ let requestErrorSource = $state<RequestErrorSource | null>(null);
  * what set `requestError`. A fail-closed order is not a sentence — it is a finding
  * list, and the panel renders each one like a validation issue. Empty for every
  * other request error (a malformed request, a network failure). */
-let orderFindings = $state<OrderFinding[]>([]);
+let orderFindings = $state<OrderBlocking[]>([]);
 
 /** Move the request-error channel as ONE unit. A standing banner over stale
  * findings, findings with no banner, or a banner whose source names the wrong
@@ -270,7 +268,7 @@ let orderFindings = $state<OrderFinding[]>([]);
 function setRequestError(
   message: string | null,
   source: RequestErrorSource | null = null,
-  findings: readonly OrderFinding[] = [],
+  findings: readonly OrderBlocking[] = [],
 ): void {
   requestError = message;
   requestErrorSource = source;
@@ -307,7 +305,7 @@ let replacementGeneration = 0;
  * DATA (never a callback), so nothing about the current draft moves while it
  * waits and a cancel is just dropping this value. `$state.raw`: it is committed
  * whole by `loadProject`, which proxies it then. */
-let pendingReplacement = $state.raw<ProjectData | null>(null);
+let pendingReplacement = $state.raw<RawDraft | null>(null);
 
 /** The dirty flag: the draft has diverged from the last download. */
 const dirty = $derived(
@@ -367,7 +365,7 @@ const canDownloadOrder = $derived(
 /** Replace the draft, clearing the stale validation (an edit invalidates the last
  * `/validate` result). The mutators below all funnel through here so `dirty` and
  * `validatedClean` recompute on every edit. */
-function setDraft(next: ProjectData): void {
+function setDraft(next: RawDraft): void {
   draft = next;
   validationGeneration += 1;
   validation = null;
@@ -385,7 +383,7 @@ function setDraft(next: ProjectData): void {
  * re-serialized through OUR serializer — never an opened file's raw text — so a
  * freshly loaded, unedited draft is CLEAN even when the file's own formatting
  * differs from our pretty-print. */
-function loadProject(next: ProjectData): void {
+function loadProject(next: RawDraft): void {
   const ids = buildIds(next);
   draft = next;
   validationGeneration += 1;
@@ -410,7 +408,7 @@ function loadProject(next: ProjectData): void {
  * new project starts windowless (full history) unless the user sets one.
  * Open/restore keep their OWN window (they bypass this). A `null` fallback leaves
  * the key absent. */
-function newDraft(seed: ProjectSeed): ProjectData {
+function newDraft(seed: ProjectSeed): RawDraft {
   const next = newProjectData(seed);
   const fromBrowsing = draft === null;
   const seedWindow = windowStore.fallback;
@@ -423,7 +421,7 @@ function newDraft(seed: ProjectSeed): ProjectData {
 /** The deliberate-replacement gate (see the policy section on `projectStore`):
  * commit `next` now when nothing would be lost, otherwise hold it for the
  * researcher's answer. */
-function requestReplacement(next: ProjectData): void {
+function requestReplacement(next: RawDraft): void {
   if (dirty) {
     pendingReplacement = next;
     return;
@@ -446,7 +444,7 @@ function requestReplacement(next: ProjectData): void {
  * rule — it would break the single-rep page-pin dedup (a page pinned R against a
  * different single-rep period). */
 function bindingMatches(
-  b: Binding,
+  b: ProjectBinding,
   variable: string,
   wantRep: string | null,
 ): boolean {
@@ -470,7 +468,7 @@ function bindingMatches(
 /** A binding to add (already-resolved final fields — the #991 write-once model). */
 export interface StagedBinding {
   variable: string;
-  type: string;
+  type: DraftBinding["type"];
   display_name?: string | null;
   representation?: string | null;
 }
@@ -479,7 +477,7 @@ export interface StagedBinding {
  * found source's period to cover `period`. */
 export interface StagedAdd {
   registerVariant: string;
-  period: Period;
+  period: ProjectSourcePeriod;
   binding: StagedBinding;
 }
 
@@ -500,7 +498,7 @@ export interface StagedRemove {
 export interface StagedPeriodChange {
   sourceName: string;
   registerVariant: string;
-  period: Period;
+  period: ProjectSourcePeriod;
 }
 
 /** WHICH source a period edit started from, and when: the named source, its
@@ -519,7 +517,7 @@ export interface SourcePeriodEditTarget {
 /** A CONFIRMED source-period edit: the source it was started from, plus the period
  * it proposes. */
 export interface SourcePeriodEdit extends SourcePeriodEditTarget {
-  period: Period;
+  period: ProjectSourcePeriod;
 }
 
 /** One atomic batch of staged edits (the #995 consumer's commit payload). Applied
@@ -640,7 +638,7 @@ export const projectStore = {
   /** Open, through the policy — `project` is what `parseProjectText` ACCEPTED, so
    * every check that can reject a file has already run and a rejected one never
    * raises the question. */
-  requestOpenProject(project: ProjectData): void {
+  requestOpenProject(project: RawDraft): void {
     requestReplacement(project);
   },
 
@@ -686,7 +684,7 @@ export const projectStore = {
    * draft once `loadProject` commits it — which is what lets the replacement
    * policy sit between the two halves.
    */
-  parseProjectText(text: string): ProjectData | null {
+  parseProjectText(text: string): RawDraft | null {
     let parsed: unknown;
     try {
       parsed = JSON.parse(text);
@@ -698,13 +696,12 @@ export const projectStore = {
       openError = "project_data.json must be a JSON object at the top level.";
       return null;
     }
-    const obj = parsed as ProjectDataBody;
-    const gate = checkVersionGate(obj);
+    const gate = checkVersionGate(parsed);
     if (!gate.ok) {
       openError = gate.reason ?? "This project file cannot be opened.";
       return null;
     }
-    return obj as ProjectData;
+    return parsed;
   },
 
   /** Dismiss the open-error banner. */
@@ -756,14 +753,14 @@ export const projectStore = {
         // edit makes this response stale. Discard it rather than writing
         // validation for a superseded draft — otherwise stale green results would
         // re-enable the order download.
-        const target: ProjectData | null = draft;
+        const target: RawDraft | null = draft;
         const targetGeneration = validationGeneration;
         if (target == null) {
           return latestResult;
         }
         setRequestError(null);
         try {
-          const result = await validateProject(target as ProjectDataBody);
+          const result = await validateProject(target);
           if (draft !== target || validationGeneration !== targetGeneration) {
             latestResult = result;
             continue;
@@ -801,12 +798,12 @@ export const projectStore = {
     // afterwards describes a superseded draft. Its findings point at sources and
     // variables the researcher may already have fixed or removed — discard them
     // rather than banner a block the current draft never earned.
-    const target: ProjectData = draft;
+    const target: RawDraft = draft;
     const targetGeneration = validationGeneration;
     orderBusy = true;
     setRequestError(null);
     try {
-      await downloadOrderManifest(target as ProjectDataBody);
+      await downloadOrderManifest(target);
     } catch (e) {
       if (draft === target && validationGeneration === targetGeneration) {
         setRequestError(errMessage(e), "order", orderFindingsFromError(e));
@@ -831,9 +828,9 @@ export const projectStore = {
     if (draft != null) {
       const next = updateField(draft, key, value);
       setDraft(next);
-      // `K extends keyof ProjectData` admits `"sources"` (and any string via the
-      // open index signature). A wholesale `sources` replacement must rebuild the
-      // mirror or it desyncs from the new array — keep them consistent.
+      // `K extends keyof ProjectData` admits `"sources"`. A wholesale `sources`
+      // replacement must rebuild the mirror or it desyncs from the new array —
+      // keep them consistent.
       if (key === "sources") {
         sourceIds = buildIds(next);
       }
@@ -880,7 +877,11 @@ export const projectStore = {
     if (draft == null) {
       return;
     }
-    let sources: Source[] = Array.isArray(draft.sources) ? draft.sources : [];
+    // The slots as stored. Each spread below is on a slot an accessor matched by a
+    // non-empty `register_variant` or `name`, which only an object has.
+    let sources = (
+      Array.isArray(draft.sources) ? draft.sources : []
+    ) as RawDraft[];
 
     // (a) removes → drop matching bindings, but do NOT prune emptied sources yet.
     //     A single batch may remove a source's last binding AND re-add one for the
@@ -937,7 +938,10 @@ export const projectStore = {
         i === idx
           ? {
               ...s,
-              period: periodCoverageUnion(s.period as Period, add.period),
+              period: periodCoverageUnion(
+                s.period as ProjectSourcePeriod,
+                add.period,
+              ),
               bindings: isDup ? existing : [...existing, binding],
             }
           : s,
@@ -1040,8 +1044,8 @@ function editTargetCurrent(target: SourcePeriodEditTarget): boolean {
 /** A staged/add binding → the stored `Binding` shape, dropping `undefined` optional
  * fields (`display_name`/`representation`) so an unset field never serializes as a
  * literal `undefined` and the closed-object shape stays clean. */
-function stagedToBinding(b: StagedBinding): Binding {
-  const binding: Binding = { variable: b.variable, type: b.type };
+function stagedToBinding(b: StagedBinding): DraftBinding {
+  const binding: DraftBinding = { variable: b.variable, type: b.type };
   if (b.display_name !== undefined) {
     binding.display_name = b.display_name;
   }
@@ -1056,10 +1060,10 @@ function stagedToBinding(b: StagedBinding): Binding {
  * `siblings` is the current source list the new name must be unique among. */
 function newSource(
   registerVariant: string,
-  period: Period,
+  period: ProjectSourcePeriod,
   siblings: readonly unknown[],
-  bindings: Binding[],
-): Source {
+  bindings: DraftBinding[],
+): Omit<ProjectSource, "bindings"> & { bindings: DraftBinding[] } {
   const base = defaultSourceName(registerVariant);
   // uniqueSourceName excludes the source at `excludeIndex`; the new source isn't in
   // `siblings` yet, so an out-of-range index excludes nothing.

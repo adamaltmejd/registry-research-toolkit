@@ -37,9 +37,10 @@ from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
-from .db import _CURATED_PROVIDERS, _file_sha256
+from ._resolved_common import _CURATED_PROVIDERS
 from .dbdiff import TableIgnore, diff_db_content, format_report
 from .source_evidence import SourceRevision
+from .source_files import _file_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Iterator, Mapping, Sequence
@@ -2179,6 +2180,9 @@ def _builder_source_identity() -> tuple[Path, str]:
             module_path.with_name("artifact_identity.py"),
             module_path.with_name("pipeline.py"),
             module_path.with_name("resolved_catalog.py"),
+            module_path.with_name("materialize.py"),
+            module_path.with_name("resolved_bundle.py"),
+            module_path.with_name("resolve_code.py"),
             module_path.with_name("extend_db.py"),
             repo / "scripts" / "prototype_scb_inputs.py",
             repo / "uv.lock",

@@ -481,7 +481,7 @@ def iter_scb_observations(
     A register selection is applied after decoding its required native ID and
     before interpreting the rest of the row or constructing strict models.
     """
-    from reg_meta_build.db import _open_scb_csv_prepared
+    from reg_meta_build.source_files import _open_scb_csv_prepared
 
     path = snapshot.root / "Registerinformation.csv"
     with _open_scb_csv_prepared(path, snapshot) as (header, rows):

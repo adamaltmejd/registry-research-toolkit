@@ -2,10 +2,12 @@
 
 The tool runs as its CLI. Its process boundaries are stubbed: the real-seed
 `reg-meta-build` (`$REG_REAL_SEED_BUILDER`, which logs each call, so a hit is a run that
-never reached it), the project-environment probe (`$REG_REAL_SEED_PYTHON`, which
-reports a content digest of the curation tree and, on request, a failed admission) and
-`rustc` (on `PATH`).
-The keyed code is real source.
+never reached it; it writes a minimal resolved bundle for `build-db --resolved-out` and
+places one with `materialize-db`), the project-environment probe
+(`$REG_REAL_SEED_PYTHON`, which reports a content digest of the curation tree, a fixed
+resolve-code fingerprint and, on request, a failed admission; the prepare case runs
+the real probe on a copied builder instead) and `rustc` (on `PATH`). The keyed code is
+real source.
 """
 
 from __future__ import annotations
@@ -29,7 +31,7 @@ def curation_sha(root):
 BUILDER = (
     CURATION_SHA
     + """
-import gzip, json, os, sys
+import gzip, hashlib, json, os, sys
 from pathlib import Path
 
 argv = sys.argv[1:]
@@ -39,17 +41,45 @@ with open(os.environ["STUB_LOG"], "a") as log:
 def option(name):
     return argv[argv.index(name) + 1]
 
+# A full build writes one ledger member; materialize-db appends its tail to the
+# bundle's member, so the phased ledger is two members with the same text.
+RESOLVED, TAIL = b'{"kind": "issue"}\\n', b'{"kind": "corpus_validation"}\\n'
 report = Path(option("--report-dir"))
-report.mkdir()
+if argv[0] == "materialize-db":
+    bundle = Path(option("--resolved"))
+    record = json.loads((bundle / "bundle.json").read_text())
+    events = (bundle / "events.jsonl.gz").read_bytes()
+    if hashlib.sha256(events).hexdigest() != record["events_sha256"]:
+        print(json.dumps({"error": {"code": "resolved_bundle_digest_mismatch"}}))
+        sys.exit(10)
+    curation = record["curation_tree_sha256"]
+    report.mkdir()
+    (report / "events.jsonl.gz").write_bytes(events + gzip.compress(TAIL, mtime=0))
+else:
+    curation = curation_sha(option("--curation-dir"))
+    report.mkdir()
+    (report / "events.jsonl.gz").write_bytes(gzip.compress(RESOLVED + TAIL, mtime=0))
+    if "--resolved-out" in argv:
+        bundle = Path(option("--resolved-out"))
+        bundle.mkdir()
+        events = gzip.compress(RESOLVED, mtime=0)
+        (bundle / "events.jsonl.gz").write_bytes(events)
+        (bundle / "bundle.json").write_text(json.dumps({
+            "resolve_code_sha256": "stub-resolve",
+            "mode": "diagnostic",
+            "registers": sorted(set(option("--registers").split(","))),
+            "prepared_commit": option("--input-commit"),
+            "prepared_manifest_sha256": option("--input-manifest-sha256"),
+            "curation_tree_sha256": curation,
+            "events_sha256": hashlib.sha256(events).hexdigest(),
+        }))
 Path(option("--diagnostic-db-path")).write_bytes(
     b"drifted" if os.environ.get("STUB_DRIFT") == "1" else b"catalog"
 )
-with gzip.open(report / "events.jsonl.gz", "wt") as events:
-    events.write('{"kind": "issue"}\\n')
 failed = os.environ.get("STUB_FAIL") == "1"
 (report / "summary.json").write_text(json.dumps({
     "status": "engineering_failure" if failed else "diagnostic_complete",
-    "curation_tree_sha256": curation_sha(option("--curation-dir")),
+    "curation_tree_sha256": curation,
     "database": option("--diagnostic-db-path"),
 }))
 print("{}")
@@ -64,6 +94,8 @@ request = json.loads(sys.argv[-1])
 facts = {"python": "stub", "sqlite": "stub"}
 if request.get("curation"):
     facts["curation_tree_sha256"] = curation_sha(request["curation"])
+if request.get("resolve_code"):
+    facts["resolve_code_sha256"] = "stub-resolve"
 if request.get("admit") and os.environ.get("STUB_ADMIT_FAIL") == "1":
     facts["admission_error"] = {"code": "prepared_input_mismatch", "message": "stub"}
 print(json.dumps(facts))
@@ -72,7 +104,11 @@ print(json.dumps(facts))
 
 
 def _tool(
-    tmp_path: Path, *args: str, tool: Path = SCRIPTS / "real_seed_cache.py", **flags
+    tmp_path: Path,
+    *args: str,
+    tool: Path = SCRIPTS / "real_seed_cache.py",
+    environ: dict[str, str] | None = None,
+    **flags,
 ) -> tuple[int, dict]:
     (tmp_path / "builder.py").write_text(BUILDER)
     (tmp_path / "probe.py").write_text(PROBE)
@@ -89,6 +125,7 @@ def _tool(
         "REG_REAL_SEED_PYTHON": f"{sys.executable} {tmp_path / 'probe.py'}",
         "STUB_LOG": str(tmp_path / "calls.jsonl"),
         **{f"STUB_{name.upper()}": "1" for name, on in flags.items() if on},
+        **(environ or {}),
     }
     proc = subprocess.run(
         [sys.executable, str(tool), *args],
@@ -102,9 +139,11 @@ def _tool(
     }
 
 
-def _calls(tmp_path: Path) -> int:
+def _calls(tmp_path: Path) -> list[str]:
+    """The builder subcommands run so far, in order."""
     log = tmp_path / "calls.jsonl"
-    return len(log.read_text().splitlines()) if log.exists() else 0
+    lines = log.read_text().splitlines() if log.exists() else []
+    return [json.loads(line)[0] for line in lines]
 
 
 def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
@@ -115,9 +154,9 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     # runs again), if the stored report still names the
     # staging directory, if a hit skips the build's admission checks (a changed
     # prepared checkout returns the old entry), if a hit skips the ledger (a truncated
-    # one is returned), if a failed `--verify` leaves its entry reachable (the next
-    # build hits it), or if the key leaves out the curation tree (the edited tree hits
-    # the old entry).
+    # one is returned), if a failed `--verify` leaves its entry or its resolve entry
+    # reachable (the next build hits or rematerializes it), or if the key leaves out
+    # the curation tree (the edited tree hits the old entry).
     curation = tmp_path / "curation"
     (curation / "registers").mkdir(parents=True)
     (curation / "registers/a.toml").write_text("[register]\n")
@@ -144,43 +183,69 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     code, failed = build(fail=True)
     assert (code != 0, failed["stored"]) == (True, False)
     assert Path(failed["run_dir"], "report/summary.json").is_file()
+    # A failed run's bundle is never stored: it would place a failed resolution.
+    resolve = tmp_path / "cache/resolve"
+    assert not [p for p in resolve.iterdir() if not p.name.startswith(".")]
 
-    assert build()[1]["hit"] is False
+    built = build()[1]
+    assert (built["hit"], built["phased"]) == (False, False)
     code, again = build(registers="SCB:A,SCB:B")
-    assert (code, again["hit"], _calls(tmp_path)) == (0, True, 2)
+    assert (code, again["hit"], len(_calls(tmp_path))) == (0, True, 2)
     assert Path(again["database"]).read_bytes() == b"catalog"
     summary = json.loads(Path(again["report"], "summary.json").read_text())
     assert summary["database"] == again["database"]
 
     code, refused = build(admit_fail=True)
-    assert (code, refused["error"]["code"], _calls(tmp_path)) == (
+    assert (code, refused["error"]["code"], len(_calls(tmp_path))) == (
         10,
         "prepared_input_mismatch",
         2,
     )
 
+    # Fails if a build miss whose resolve key hits reruns build-db instead of
+    # placing the stored bundle with materialize-db, or if the phased entry's report
+    # still names its staging directory.
     ledger = Path(again["report"], "events.jsonl.gz")
     ledger.write_bytes(ledger.read_bytes()[:-1])
-    code, truncated = build()
-    assert (code, truncated["hit"], _calls(tmp_path)) == (0, False, 3)
+    code, phased = build()
+    assert (code, phased["hit"], phased["phased"]) == (0, False, True)
+    assert _calls(tmp_path)[2:] == ["materialize-db"]
+    summary = json.loads(Path(phased["report"], "summary.json").read_text())
+    assert summary["database"] == phased["database"]
 
+    # Fails if --verify compares compressed ledgers: the phased entry's two gzip
+    # members hold the same events as the full rebuild's one.
+    code, verified = build("--verify")
+    assert (code, verified["identical"]) == (0, True)
+
+    # Fails if a bundle materialize-db refuses is an error, or stays stored (every
+    # later miss would retry it), instead of a full build that stores a fresh one.
+    bundle = next(p for p in resolve.iterdir() if not p.name.startswith("."))
+    (bundle / "bundle/events.jsonl.gz").write_bytes(b"damaged")
+    ledger.write_bytes(ledger.read_bytes()[:-1])
+    code, rebuilt = build()
+    assert (code, rebuilt["hit"], rebuilt["phased"]) == (0, False, False)
+    assert _calls(tmp_path)[4:] == ["materialize-db", "build-db"]
+
+    # Fails if a failed --verify leaves the resolve entry reusable: the next build
+    # would rematerialize the rejected resolution instead of building in full.
     code, verified = build("--verify", drift=True)
     assert (code, Path(verified["quarantined_entry"]).is_dir()) == (1, True)
-    assert build()[1]["hit"] is False
-    assert _calls(tmp_path) == 5
+    assert build()[1]["phased"] is False
+    assert _calls(tmp_path)[6:] == ["build-db", "build-db"]
 
+    # Fails if the resolve key leaves out the curation tree: the edited tree would
+    # place the old bundle.
     (curation / "registers/a.toml").write_text("[register]\nname = 'edited'\n")
     code, edited = build()
-    assert (code, edited["hit"], _calls(tmp_path)) == (0, False, 6)
+    assert (code, edited["hit"], edited["phased"]) == (0, False, False)
+    assert _calls(tmp_path)[8:] == ["build-db"]
     assert edited["key"] != again["key"]
 
 
-def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
-    # Fails if the prepare key stops covering code prepare runs (an edit to a source
-    # adapter, or to a new module not yet committed, would hit a stale preparation),
-    # grows to cover resolution code (every resolution change would repeat a 1-2 h
-    # preparation) or ignored junk beside a module, or if the walk silently skips a
-    # workspace package it does not key. Edits a copied, committed tree.
+def _copied_tree(tmp_path: Path) -> Path:
+    """The keyed sources and the tool in a new git tree, staged, with an extra
+    workspace member `reg_extra` the keys do not cover."""
     tree = tmp_path / "tree"
     ignore = shutil.ignore_patterns("__pycache__", "target")
     for path in ("reg_meta_build/src", "crates/reg-core", "crates/reg-core-py"):
@@ -197,6 +262,55 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
     (tree / "reg_extra/src/reg_extra/__init__.py").touch()
     subprocess.run(["git", "init", "-q", str(tree)], check=True)
     subprocess.run(["git", "-C", str(tree), "add", "-A"], check=True)
+    return tree
+
+
+def test_resolve_key_ignores_release_version_bumps_only(tmp_path: Path) -> None:
+    # Fails if the resolve key holds a workspace member's own version (a release
+    # bump would miss the bundle its candidate resolved) or drops a third-party pin
+    # (a dependency change would place a stale resolution), or if the build key
+    # stops holding the raw lock (the release build would hit the candidate's entry).
+    tree = _copied_tree(tmp_path)
+    lock = tree / "uv.lock"
+
+    def keys() -> tuple[str, str]:
+        code, out = _tool(
+            tmp_path,
+            "build",
+            "--key",
+            "--prepared",
+            str(tmp_path / "prepared"),
+            "--input-commit",
+            "a" * 40,
+            "--input-manifest-sha256",
+            "b" * 64,
+            "--diagnostic",
+            tool=tree / "scripts/real_seed_cache.py",
+        )
+        assert code == 0, out
+        return out["key"], out["resolve_key"]
+
+    build, resolve = keys()
+    text = lock.read_text()
+    member = 'name = "reg-meta-build"\nversion = "'
+    lock.write_text(text.replace(member, member + "9"))
+    bumped_build, bumped_resolve = keys()
+    third_party = 'name = "openpyxl"\nversion = "'
+    lock.write_text(text.replace(third_party, third_party + "9"))
+    assert (bumped_build != build, bumped_resolve, keys()[1] != resolve) == (
+        True,
+        resolve,
+        True,
+    )
+
+
+def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
+    # Fails if the prepare key stops covering code prepare runs (an edit to a source
+    # adapter, or to a new module not yet committed, would hit a stale preparation),
+    # grows to cover resolution code (every resolution change would repeat a 1-2 h
+    # preparation) or ignored junk beside a module, or if the walk silently skips a
+    # workspace package it does not key. Edits a copied, committed tree.
+    tree = _copied_tree(tmp_path)
     bundle = tmp_path / "repo/bundle"
     bundle.mkdir(parents=True)
     subprocess.run(["git", "init", "-q", str(tmp_path / "repo")], check=True)
@@ -218,6 +332,12 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
             "d" * 64,
             "--key",
             tool=tree / "scripts/real_seed_cache.py",
+            # The real probe, importing the copied builder: its import walk is the
+            # one the key uses.
+            environ={
+                "REG_REAL_SEED_PYTHON": sys.executable,
+                "PYTHONPATH": str(tree / "reg_meta_build/src"),
+            },
         )
 
     package = tree / "reg_meta_build/src/reg_meta_build"

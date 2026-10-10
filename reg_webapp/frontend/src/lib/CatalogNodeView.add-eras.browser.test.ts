@@ -15,6 +15,7 @@ import {
   withLisaVariants,
 } from "./catalog-node-view-test-helpers";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import { windowStore } from "./window.svelte";
 
 // CatalogNodeView reads one node via `getShow(fqidPath)` and switches on
@@ -213,7 +214,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
     // The 1997 gap is carved out as the #307 list form — what the variable's own
     // page commits, and NOT the single 1995–2015 span the span would give.
-    expect(projectStore.draft?.sources[0]?.period).toEqual([
+    expect(storedProject()?.sources[0]?.period).toEqual([
       { from: 1995, to: 1996 },
       { from: 1998, to: 2015 },
     ]);
@@ -245,7 +246,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     });
     await expect.element(lan).toBeDisabled();
     await expect.element(lan).not.toBeChecked();
-    expect(projectStore.draft?.sources).toEqual([]);
+    expect(storedProject()?.sources).toEqual([]);
   });
 
   it("commits a sequentially renamed column as the ONE row its variable's page commits", async () => {
@@ -272,7 +273,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     // page commits its folded row. Never one pinned binding per column name: pinning
     // either would break the other's era.
     await expect.element(page.getByText("Applied +2 columns")).toBeVisible();
-    expect(projectStore.draft?.sources).toEqual([
+    expect(storedProject()?.sources).toEqual([
       expect.objectContaining({
         register_variant: "scb/lisa/individer-15plus",
         period: { from: 2015, to: 2022 },
@@ -301,7 +302,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await page.getByRole("button", { name: "Add 1 column to project" }).click();
 
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
-    expect(projectStore.draft?.sources[0]?.period).toEqual({
+    expect(storedProject()?.sources[0]?.period).toEqual({
       from: 2015,
       to: 2022,
     });
@@ -340,7 +341,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await expect
       .element(page.getByRole("button", { name: "Add columns to project" }))
       .toBeDisabled();
-    expect(projectStore.draft?.sources).toEqual([]);
+    expect(storedProject()?.sources).toEqual([]);
   });
 
   it("dates an era that began before the record does (Y-104)", async () => {
@@ -477,7 +478,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await page.getByRole("button", { name: "Add 1 column to project" }).click();
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
     expect(
-      projectStore.draft?.sources.map((source) => source.register_variant),
+      storedProject()?.sources.map((source) => source.register_variant),
     ).toEqual(["scb/lisa/individer-16plus"]);
 
     // Commit 15plus's row too, under the successor's name — the years it really was
@@ -486,7 +487,7 @@ describe("CatalogNodeView register arm: add columns (Y-83)", () => {
     await page.getByRole("button", { name: "Add 1 column to project" }).click();
     await expect.element(page.getByText("Applied +1 column")).toBeVisible();
     expect(
-      projectStore.draft?.sources.map((source) => source.register_variant),
+      storedProject()?.sources.map((source) => source.register_variant),
     ).toEqual(["scb/lisa/individer-16plus", "scb/lisa/individer-15plus"]);
 
     // `CDISP5` reads as in the project. `CDISP` does NOT, though BOTH its rows are

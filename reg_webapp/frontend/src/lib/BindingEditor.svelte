@@ -1,7 +1,7 @@
 <script lang="ts">
 import { catalogHref } from "./catalog";
 import { columnNames, UNASKED } from "./catalog_names.svelte";
-import type { Binding } from "./project_data";
+import type { DraftBinding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import { Button } from "./ui";
@@ -15,7 +15,7 @@ import { bindingAnchorId } from "./validation";
 const { sourceIndex, bindingIndex, binding, variant, period } = $props<{
   sourceIndex: number;
   bindingIndex: number;
-  binding: Binding;
+  binding: DraftBinding;
   /** The owning source's concrete variant slug and its stored period (wire form,
    * null when it has none) — where this column's default name is resolved. */
   variant: string;
@@ -23,7 +23,7 @@ const { sourceIndex, bindingIndex, binding, variant, period } = $props<{
 }>();
 
 // A binding field coerced to a display string (non-string → "").
-function strField(field: keyof Binding): string {
+function strField(field: keyof DraftBinding): string {
   const v = binding[field];
   return typeof v === "string" ? v : "";
 }

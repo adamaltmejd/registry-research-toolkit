@@ -14,8 +14,9 @@ import BindingLeafView from "./BindingLeafView.svelte";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import { state as baseState } from "./catalog-test-helpers";
 import ProjectEditor from "./ProjectEditor.svelte";
-import type { Period, Source } from "./project_data";
+import type { ProjectSource, ProjectSourcePeriod } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -117,8 +118,8 @@ function source(
   name: string,
   registerVariant: string,
   variable: string,
-  period: Period,
-): Source {
+  period: ProjectSourcePeriod,
+): ProjectSource {
   return {
     name,
     register_variant: registerVariant,
@@ -128,7 +129,7 @@ function source(
 }
 
 function loadDraft(
-  sources: Source[],
+  sources: ProjectSource[],
   window: { from: number; to: number },
 ): void {
   projectStore.loadProject({
@@ -140,8 +141,8 @@ function loadDraft(
   });
 }
 
-function sourcePeriods(): Period[] {
-  return (projectStore.draft?.sources ?? []).map((s) => s.period);
+function sourcePeriods(): ProjectSourcePeriod[] {
+  return (storedProject()?.sources ?? []).map((s) => s.period);
 }
 
 beforeEach(() => {
@@ -234,7 +235,7 @@ describe("common study window — catalog picker", () => {
         ),
       )
       .toBeVisible();
-    expect(projectStore.draft?.sources).toEqual([]);
+    expect(storedProject()?.sources).toEqual([]);
   });
 
   it("blocks a page-period add that falls wholly outside the study window", async () => {
@@ -253,7 +254,7 @@ describe("common study window — catalog picker", () => {
         ),
       )
       .toBeVisible();
-    expect(projectStore.draft?.sources).toEqual([]);
+    expect(storedProject()?.sources).toEqual([]);
   });
 
   it("marks a committed column the window has moved off as outside it", async () => {

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  type ProjectData,
-  type StudyWindow,
+  type ProjectStudyWindow,
+  type RawDraft,
   serializeProjectData,
 } from "./project_data";
 import { projectStore } from "./project_store.svelte";
@@ -129,7 +129,7 @@ describe("browse-time window seeded on draft creation (#629 item 3)", () => {
 
   /** Pre-seed the storage fallback (or leave it empty), then import a fresh
    * (no-draft) pair of stores. */
-  async function freshStores(fallback: StudyWindow | null) {
+  async function freshStores(fallback: ProjectStudyWindow | null) {
     if (fallback !== null) {
       storage.set("reg_webapp:project_window", JSON.stringify(fallback));
     }
@@ -178,7 +178,7 @@ describe("browse-time window seeded on draft creation (#629 item 3)", () => {
       }),
     );
     expect(parsed).not.toBeNull();
-    projectStore.loadProject(parsed as ProjectData);
+    projectStore.loadProject(parsed as RawDraft);
     // The opened file's own window wins; the fallback is not seeded over it
     // (an open bypasses the newProject seed entirely).
     expect(projectStore.draft?.window).toEqual({ from: 1995, to: 2005 });

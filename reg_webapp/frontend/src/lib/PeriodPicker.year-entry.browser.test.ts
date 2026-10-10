@@ -3,7 +3,7 @@ import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import PeriodPicker from "./PeriodPicker.svelte";
 import type { Coverage } from "./period";
-import type { StudyWindow } from "./project_data";
+import type { ProjectStudyWindow } from "./project_data";
 
 // Split from PeriodPicker.browser.test.ts by contract surface: exact year entry
 // and keyboard focus across an applied period. Sibling: PeriodPicker.browser.test.ts.
@@ -256,7 +256,7 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
     const onsubmit = vi.fn<(period: string) => void>();
     const screen = await render(PeriodPicker, {
       period: "HT2020",
-      window: { from: 2000, to: 2010 } as StudyWindow,
+      window: { from: 2000, to: 2010 } as ProjectStudyWindow,
       onsubmit,
       onclear: vi.fn(),
     });
@@ -279,7 +279,7 @@ describe("PeriodPicker — exact year entry (Y-16)", () => {
   // authoring may be thrown away.
   const CHURN = {
     period: null,
-    window: { from: 2000, to: 2010 } as StudyWindow,
+    window: { from: 2000, to: 2010 } as ProjectStudyWindow,
     coverage: { from: 1995, to: 2008 } as Coverage,
   };
 

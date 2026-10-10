@@ -202,7 +202,8 @@ def build_catalog_fixture_db(db_path: Path) -> None:
 def _seed_data_warnings(conn: sqlite3.Connection) -> None:
     from hashlib import sha256
 
-    from reg_meta_build.data_warnings import DataWarning, write_data_warnings
+    from reg_meta_build.data_warnings import DataWarning
+    from reg_meta_build.db import write_data_warnings
     from reg_meta_build.source_evidence import canonical_sha256
 
     # The fixture variant's literal slug is read rather than assumed.
@@ -260,7 +261,7 @@ def _seed_first_provider_register(
 
     The binding's state is open-ended from 2018 (same window as ``scb/lisa/kon``)
     so the leaf's period form narrows on any recent year."""
-    from reg_meta_build.db import PROVIDER_ID_FK
+    from reg_meta_build._resolved_common import PROVIDER_ID_FK
 
     add_register(
         src, register_id=3, slug="midas", name="MiDAS", provider_id=PROVIDER_ID_FK

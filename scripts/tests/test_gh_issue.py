@@ -13,8 +13,7 @@ import subprocess
 import types
 
 import pytest
-
-from conftest import load_scripts_module
+from _scripts_support import load_scripts_module
 
 gi = load_scripts_module("gh_issue")
 

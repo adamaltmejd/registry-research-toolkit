@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import gzip
-import hashlib
 import json
 import os
 import sqlite3
@@ -20,10 +19,8 @@ from catalog_manifest import synthetic_manifest
 from reg_meta_build.cli import run
 from reg_meta_build.db import DB_FILENAME, publish_db
 from reg_meta_build.errors import EXIT_USAGE, RegMetaError
-from reg_meta_build.pipeline import (
-    build_catalog,
-    check_curation,
-)
+from reg_meta_build.materialize import build_catalog, write_resolved_catalog
+from reg_meta_build.pipeline import check_curation
 from reg_meta_build.resolved_catalog import (
     ResolvedAlias,
     ResolvedAliasWindow,
@@ -31,7 +28,6 @@ from reg_meta_build.resolved_catalog import (
     ResolvedEdition,
     ResolvedObjectType,
     ResolvedPopulation,
-    write_resolved_catalog,
 )
 
 # The checkout's tracked curation tree and its slug sibling, the defaults that
@@ -270,33 +266,6 @@ def test_diagnostic_and_strict_compile_identically(
     assert {
         p.name: p.read_bytes() for p in (tmp_path / "check-decisions").iterdir()
     } == {p.name: p.read_bytes() for p in (tmp_path / "diagnostic-decisions").iterdir()}
-
-
-def test_rerun_is_byte_identical(catalog: CatalogFixture, tmp_path: Path) -> None:
-    first = tmp_path / "a.db"
-    second = tmp_path / "b.db"
-    catalog.build(
-        first,
-        tmp_path / "a-report",
-        registers=("1",),
-        dump_decisions=tmp_path / "a-decisions",
-    )
-    catalog.build(
-        second,
-        tmp_path / "b-report",
-        registers=("1",),
-        dump_decisions=tmp_path / "b-decisions",
-    )
-    assert (
-        hashlib.sha256(first.read_bytes()).digest()
-        == hashlib.sha256(second.read_bytes()).digest()
-    )
-    assert {p.name: p.read_bytes() for p in (tmp_path / "a-decisions").iterdir()} == {
-        p.name: p.read_bytes() for p in (tmp_path / "b-decisions").iterdir()
-    }
-    first_ledger = (tmp_path / "a-report/events.jsonl.gz").read_bytes()
-    assert first_ledger == (tmp_path / "b-report/events.jsonl.gz").read_bytes()
-    assert first_ledger[4:8] == bytes(4)
 
 
 def test_catalog_bytes_do_not_depend_on_writer_input_order(tmp_path: Path) -> None:

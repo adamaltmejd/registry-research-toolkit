@@ -21,7 +21,7 @@ from reg_meta_build._accepted_prepared import (
     check_accepted_files,
     read_accepted_manifest,
 )
-from reg_meta_build.db import _CURATED_PROVIDERS, _file_sha256
+from reg_meta_build._resolved_common import _CURATED_PROVIDERS
 from reg_meta_build.input_snapshot import (
     LISA_BUNDLE_PATH,
     SCB_CSV_FILES,
@@ -48,6 +48,7 @@ from reg_meta_build.prepared_values import (
     _manifest as _value_manifest,
     prepare_source_values,
 )
+from reg_meta_build.source_files import _file_sha256
 from reg_meta_build.source_records import SourceEvidenceTable, SourceRecord
 from reg_meta_build.source_reference_records import (
     SourceReferenceDeclaration,  # noqa: TC001

@@ -18,6 +18,7 @@ import {
 } from "./binding-leaf-view-test-helpers";
 import { expectStagedAddColumnVisible } from "./picker-test-helpers";
 import { projectStore } from "./project_store.svelte";
+import { storedProject } from "./project-store-test-helpers";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -153,7 +154,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       .click();
 
     await expect.element(page.getByText(/\+2 columns/)).toBeVisible();
-    expect(projectStore.draft?.sources).toEqual(
+    expect(storedProject()?.sources).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           register_variant: "scb/lisa/individer",
@@ -205,7 +206,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       // to reach the mutation — a poll would pass on the first tick, before the
       // continuation it is meant to catch has run.
       await new Promise((r) => setTimeout(r, 100));
-      expect(projectStore.draft?.sources).toHaveLength(0);
+      expect(storedProject()?.sources).toHaveLength(0);
     } finally {
       restoring.mockRestore();
     }
@@ -239,7 +240,7 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
     const sourcesByVariant = new Map(
-      projectStore.draft?.sources?.map((source) => [
+      storedProject()?.sources?.map((source) => [
         source.register_variant,
         source,
       ]),
@@ -306,7 +307,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources[0]).toEqual(
+    expect(storedProject()?.sources[0]).toEqual(
       expect.objectContaining({
         period: [2000, { from: 2010, to: 2015 }],
         bindings: expect.arrayContaining([
@@ -397,7 +398,7 @@ describe("BindingLeafView representation picker (#678)", () => {
 
     await expectStagedAddColumnVisible();
     await expect.element(page.getByText("+1 column")).toBeVisible();
-    expect(projectStore.draft?.sources).toHaveLength(0);
+    expect(storedProject()?.sources).toHaveLength(0);
     expect(projectStore.draft?.name).toBe("edited during apply");
   });
 
@@ -433,7 +434,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     await expect.element(kon).not.toBeChecked();
     await expect.element(page.getByText("Will be removed")).toBeVisible();
     await expect.element(page.getByText("-1 column")).toBeVisible();
-    expect(projectStore.draft?.sources).toHaveLength(1);
+    expect(storedProject()?.sources).toHaveLength(1);
 
     await page
       .getByRole("button", {
@@ -441,7 +442,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       })
       .click();
     await expect.element(page.getByText(/-1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources).toHaveLength(0);
+    expect(storedProject()?.sources).toHaveLength(0);
   });
 
   it("does not clamp staged adds with a structurally invalid ?period", async () => {
@@ -464,7 +465,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       .click();
 
     await expect.element(page.getByText("+1 column")).toBeVisible();
-    expect(projectStore.draft?.sources[0]?.period).toEqual({
+    expect(storedProject()?.sources[0]?.period).toEqual({
       from: 2018,
       to: 2020,
     });
@@ -498,7 +499,7 @@ describe("BindingLeafView representation picker (#678)", () => {
         ),
       )
       .toBeVisible();
-    expect(projectStore.draft?.sources).toHaveLength(0);
+    expect(storedProject()?.sources).toHaveLength(0);
     await expect.element(page.getByText(/^Applied/)).not.toBeInTheDocument();
 
     // Recoverable: resolving the leaf retires the notice, so the researcher is not
@@ -570,7 +571,7 @@ describe("BindingLeafView representation picker (#678)", () => {
       .click();
 
     await expect.element(page.getByText(/\+1 column/)).toBeVisible();
-    expect(projectStore.draft?.sources[0]).toEqual(
+    expect(storedProject()?.sources[0]).toEqual(
       expect.objectContaining({
         period: { from: 2000, to: 2010 },
       }),

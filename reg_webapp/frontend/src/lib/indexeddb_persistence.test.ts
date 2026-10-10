@@ -1,14 +1,14 @@
 import "fake-indexeddb/auto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { IndexedDBPersistence } from "./indexeddb_persistence";
-import { newProjectData, type ProjectData } from "./project_data";
+import { newProjectData, type RawDraft } from "./project_data";
 
 const SEED = {
   reg_meta_version: "reg_meta/v1.0.0",
   steward: "global" as const,
 };
 
-function makeDraft(name: string): ProjectData {
+function makeDraft(name: string): RawDraft {
   const draft = newProjectData(SEED);
   draft.name = name;
   return draft;

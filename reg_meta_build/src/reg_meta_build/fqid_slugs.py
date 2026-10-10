@@ -1352,7 +1352,7 @@ def populate_slugs(
     # Function-level import — `db` imports `populate_slugs` at module top, so
     # importing `db` at our module top would close a cycle. Lazy resolution
     # is safe because by call time both modules are fully loaded.
-    from .db import _progress
+    from .source_files import _progress
 
     entries = load_slug_dir(slug_dir)
     counts = {"register": 0, "register_variant": 0}
@@ -2373,7 +2373,7 @@ def populate_variable_slugs(
 
     Returns ``{"curated": n, "auto_existing": n, "auto_new": n}``.
     """
-    from .db import _progress
+    from .source_files import _progress
 
     _register_slug_fn(conn)
     counts = {"curated": 0, "auto_existing": 0, "auto_new": 0}

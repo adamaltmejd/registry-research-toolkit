@@ -27,7 +27,7 @@ import {
   periodWireBounds,
   VALUE_SET_VERSION_NONE,
 } from "./period";
-import type { Binding } from "./project_data";
+import type { DraftBinding, ProjectBinding } from "./project_data";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
 
@@ -827,7 +827,9 @@ interface TypeDerivationState {
   value_set_summary?: VariableStateModel["value_set_summary"];
 }
 
-export function deriveType(state: TypeDerivationState | undefined): string {
+export function deriveType(
+  state: TypeDerivationState | undefined,
+): ProjectBinding["type"] {
   if (!state) {
     return "opaque";
   }
@@ -2382,7 +2384,7 @@ export function clusterBands<T>(
  * in-window). Precedence mirrors the leaf's resolution: an active `?period` wire
  * wins (parsed to its outer year span — a single token via `periodTokenBounds`,
  * a `lo..hi` range via its endpoints, a `a,b` comma-union via the min/max of its
- * parts); else the global `StudyWindow` (already year ints). A `?period` that
+ * parts); else the global `ProjectStudyWindow` (already year ints). A `?period` that
  * doesn't parse to any bound (e.g. `_default`) falls back to the window, then to
  * null. simplify: year-grain overlap is deliberate — the dim is an at-a-glance
  * relevance cue, not the hard period gate (selection works on any row). */
@@ -3115,7 +3117,7 @@ export type UnresolvedReason = "period-unset" | "no-states";
  *    the chosen representation.
  *  - `unresolved`: resolution impossible (no period / no covering state). */
 export type BindingResolution =
-  | { kind: "derived"; type: string }
+  | { kind: "derived"; type: ProjectBinding["type"] }
   | { kind: "ambiguous"; fqid: string; states: VariableStateModel[] }
   | { kind: "unresolved"; reason: UnresolvedReason };
 
@@ -3182,7 +3184,7 @@ export function bindingFieldsFromResolution(
   resolution: BindingResolution,
   representation: string | null,
   options: BindingFieldOptions = {},
-): Binding {
+): DraftBinding {
   if (resolution.kind === "derived") {
     return {
       variable,

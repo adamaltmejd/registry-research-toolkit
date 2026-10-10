@@ -22,7 +22,7 @@ use utoipa::ToSchema;
 
 use super::refs;
 use super::states::variant_id;
-use super::validate::{self, Finding, Validation, held_representations, resolve_binding};
+use super::validate::{self, Finding, held_representations, resolve_binding};
 use super::{Params, Raw, Server};
 use crate::{Catalog, Code, Error, Scope};
 
@@ -116,12 +116,16 @@ struct Clip {
 
 /// One blocking finding of `order_blocked`; `source`, `variable` and `period` say
 /// what it is about, null for a whole-project finding.
-#[derive(Serialize)]
-struct Blocking {
+#[derive(Serialize, ToSchema)]
+#[schema(as = OrderBlocking)]
+pub(super) struct Blocking {
     code: &'static str,
     message: String,
+    #[schema(required = true)]
     source: Option<String>,
+    #[schema(required = true)]
     variable: Option<String>,
+    #[schema(required = true)]
     period: Option<String>,
 }
 
@@ -201,7 +205,7 @@ fn invalid(rejected: ValidationResult) -> Error {
                 .join("; ")
         ),
     };
-    let mut validation = serde_json::to_value(Validation::from(rejected)).expect("serializes");
+    let mut validation = serde_json::to_value(rejected).expect("serializes");
     Error::new(
         Code::ProjectInvalid,
         message,

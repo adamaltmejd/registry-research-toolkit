@@ -105,6 +105,13 @@ validator first and deserializes only an accepted document, so a deserialization
 after acceptance is validator/type drift, not user error. Enum values come from the same
 list that defines their serde encoding, so the two cannot disagree.
 
+The optional `openapi` feature derives the types' input-shape schemas (`ProjectData` and
+`Project*`, the bare-string panel member included) and the result's `Validation`,
+`ValidationIssue` and `IssueLevel`. `reg-catalog` enables it and publishes them in
+`openapi.json`, where the SPA's TypeScript types are generated from them; the enum
+schemas come from the same wire list. A doc comment on one of these types is its schema
+description.
+
 `ok` is true when no issue is an error. Warnings and infos do not block, so `ok` is not
 a clean bill of health.
 

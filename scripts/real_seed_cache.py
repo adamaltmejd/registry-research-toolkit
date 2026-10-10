@@ -20,24 +20,25 @@ lock, only if the run completed:
   build's `curation_tree_sha256` equals the key's.
 
 A failed run is never stored; its directory is kept for diagnosis and reaped after
-6 hours. `--key` prints a key and its fields. `build --verify` rebuilds uncached and
-compares the database and decompressed event-ledger bytes with the stored entry (exit
-1 on a difference, which moves the entry out of reach of lookups and keeps it beside
-the rebuild for 6 hours): the check that the key covers every input. For a prepare, run
-`reg-meta-build prepare-sources` into a new directory and compare its
-`prepared_manifest_sha256` with the stored one.
+6 hours. `--key` prints a key and its fields (for a build, the build and resolve
+keys). `build --verify` rebuilds uncached and compares the database and decompressed
+event-ledger bytes with the stored entry (exit 1 on a difference, which moves the entry
+out of reach of lookups and keeps it beside the rebuild for 6 hours): the check that
+the key covers every input. For a prepare, run `reg-meta-build prepare-sources` into a
+new directory and compare its `prepared_manifest_sha256` with the stored one.
 
-Both keys hash code as the working-tree content of the files git would commit:
-tracked files, uncommitted edits included, and untracked files `.gitignore` does not
-exclude (a new module the code imports), but not ignored junk (`.DS_Store`, build
-output). The native extension sources are the uv `cache-keys` of `crates/reg-core-py`
-(`keyed_cache.NATIVE_SOURCES`); since the extension is compiled, both keys also hold
-`rustc -V`, run from the repository root.
+The prepare and build keys hash code as the working-tree content of the files git
+would commit: tracked files, uncommitted edits included, and untracked files
+`.gitignore` does not exclude (a new module the code imports), but not ignored junk
+(`.DS_Store`, build output). The native extension sources are the uv `cache-keys` of
+`crates/reg-core-py` (`keyed_cache.NATIVE_SOURCES`); since the extension is compiled,
+every key also holds `rustc -V`, run from the repository root.
 
 Prepare key: the raw bundle commit, `catalog-bundle.json` digest and the bundle's path
 in its repository (the manifest records it); the content of every file in the code
-boundary (`prepare_code_files`: a static import walk, `uv.lock`, and the native
-extension sources because a walked module imports `reg_core_py`); the Python, SQLite
+boundary (`prepare_code_files`: the builder's own static import walk, which the probe
+runs, `uv.lock`, and the native extension sources because a walked module imports
+`reg_core_py`); the Python, SQLite
 and Rust toolchain versions. A prepare entry is an index record (prepared path and
 top-level manifest digest), not a copy of the 14 GB tree the maintainer commits to a
 local acceptance repository. A lookup runs the builder's own warm-build check
@@ -61,6 +62,28 @@ rewritten to the entry's location when it is stored. A hit checks the database's
 the ledger's sizes (not their hashes) against the entry. The `KEEP` most recently used
 entries stay, and so does any entry used within 6 hours.
 
+Resolve key: the builder's own `resolve_code_sha256` (`reg_meta_build.resolve_code`:
+the static import closure of `pipeline`, the `reg_core_py` package files and the
+Python version, reported by the probe), `uv.lock` (third-party versions, which that
+fingerprint leaves out; `resolve_lock_sha256` leaves out the workspace members' own
+versions), the `curation_tree_sha256`, the prepared commit and manifest
+digest, the mode, the `--registers` scopes as a sorted set, and the Python, SQLite and
+Rust toolchain versions; never HEAD (`materialize-db` stamps the running commit). A
+resolve entry holds the `bundle` a full miss wrote with `build-db --resolved-out`; it
+is stored only with its completed build, and only if `bundle.json` records the key's
+resolve fields (`RESOLVE_RECORDED`). A blocked strict build stores neither entry. The
+same `KEEP` and 6-hour rules apply.
+
+A build miss whose resolve key hits runs only `materialize-db --resolved` from that
+bundle, under the lock, and stores the build entry by the rules above, with
+`phased_from` naming the resolve key in its `entry.json`. If `materialize-db` refuses
+the bundle (`resolved_bundle_*`: stale resolve code, damaged payload, invalid
+record), the resolve entry is dropped and the build runs in full; a stale bundle is
+never placed and never an error. Any other failure of a phased run is a failed run
+like a full one (a full build would reach the same writer). `--verify` compares
+decompressed ledger bytes, so it checks a phased entry against a full build even if
+their gzip members differ.
+
 The cache lives in `$REG_REAL_SEED_CACHE`, else `$XDG_CACHE_HOME/reg-meta-real-seed`,
 else `~/.cache/reg-meta-real-seed`. `$REG_REAL_SEED_BUILDER` replaces the
 `uv run reg-meta-build` command line and `$REG_REAL_SEED_PYTHON` the `uv run python`
@@ -71,7 +94,6 @@ Stdlib only, like `gate.py`.
 from __future__ import annotations
 
 import argparse
-import ast
 import functools
 import gzip
 import hashlib
@@ -85,7 +107,6 @@ import tempfile
 import tomllib
 import zlib
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 from gate import real_seed_lock
 from keyed_cache import (
@@ -97,11 +118,9 @@ from keyed_cache import (
     evict,
     file_sha256,
     owned_root,
+    staged,
     tree_digest,
 )
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = ".real-seed-cache"
@@ -113,8 +132,25 @@ KEEP = 2
 EXIT_CONFIG = 10  # reg-meta-build's exit for a diagnostic completion
 EXIT_AWAITING = 3
 EXIT_PROBE = 4
-# The workspace packages the prepare walk follows; it refuses any other one it reaches.
-PACKAGES = {"reg_meta_build": "reg_meta_build/src"}
+# The builder's `resolved_bundle` layout: `bundle.json` names and digests the rest.
+BUNDLE_RECORD = "bundle.json"
+# Resolve-key fields `bundle.json` also records, under the same names; a bundle is
+# stored only if they agree.
+RESOLVE_RECORDED = (
+    "resolve_code_sha256",
+    "mode",
+    "registers",
+    "prepared_commit",
+    "prepared_manifest_sha256",
+    "curation_tree_sha256",
+)
+# `materialize-db`'s refusals of a bundle it will not place (stale code, damaged or
+# invalid payload, another mode): the entry is dropped and the build runs in full.
+BUNDLE_REFUSAL_PREFIX = "resolved_bundle_"
+# The source root of the one workspace package the prepare walk follows (the
+# builder's `resolve_code.import_closure` walks only `reg_meta_build`); the key
+# refuses any other workspace package the walk reaches.
+PACKAGE_SOURCE = "reg_meta_build/src"
 # The prepare key's code boundary, as roots of a static import walk
 # (`prepare_code_files`): the preparation entry point, and the modules the CLI's
 # `prepare-sources` handler and its output-confinement check import from.
@@ -130,6 +166,7 @@ PREPARE_ROOTS = (
     "reg_meta_build.prepared_catalog",
     "reg_meta_build.input_snapshot",
     "reg_meta_build.db",
+    "reg_meta_build.source_files",
     "reg_meta_build._curation",
 )
 # Keyed by content but not walked: the CLI imports every subcommand's module at load,
@@ -138,7 +175,10 @@ PREPARE_ROOTS = (
 PREPARE_ENTRY_FILES = ("reg_meta_build/src/reg_meta_build/cli.py",)
 # What this stdlib-only script needs from the project environment: the interpreter
 # and SQLite the builder runs on, the builder's own curation digest (the value a
-# build records as `curation_tree_sha256`), the builder's warm-build check of an
+# build records as `curation_tree_sha256`), the builder's resolve-code fingerprint
+# (the value a resolved bundle records), the builder's own import walk from the
+# prepare roots (the files it reaches and the other packages it imports), the
+# builder's warm-build check of an
 # accepted prepared tree at its repository's HEAD, and the admission checks a build
 # runs before it resolves anything (the same check of the prepared pins and, for a
 # publishable build, the clean builder source).
@@ -163,6 +203,34 @@ for package in ("reg_meta_build",):
 if request.get("curation"):
     from reg_meta_build.curation_compile import tree_sha256
     facts["curation_tree_sha256"] = tree_sha256(Path(request["curation"]))
+if request.get("resolve_code"):
+    try:
+        from reg_meta_build.resolve_code import resolve_code_sha256
+        facts["resolve_code_sha256"] = resolve_code_sha256()
+    except Exception as exc:
+        # A writer module in the resolve walk, say: `build-db --resolved-out` would
+        # refuse the same way.
+        facts["probe_error"] = {
+            "code": "probe_resolve_code_failed",
+            "message": f"{type(exc).__name__}: {exc}",
+        }
+if request.get("prepare_roots"):
+    from reg_meta_build.resolve_code import code_files, import_closure
+    try:
+        modules, imports = import_closure(
+            Path(request["source_root"]), request["prepare_roots"]
+        )
+        facts["prepare_code"] = {
+            "files": sorted(
+                p.relative_to(root).as_posix() for p in code_files(modules.values())
+            ),
+            "imports": sorted(imports),
+        }
+    except Exception as exc:
+        facts["probe_error"] = {
+            "code": "probe_prepare_code_failed",
+            "message": f"{type(exc).__name__}: {exc}",
+        }
 if request.get("prepared"):
     from reg_meta_build.prepared_catalog import open_prepared_catalog_sources
     prepared = Path(request["prepared"])
@@ -324,105 +392,29 @@ def workspace_packages() -> frozenset[str]:
     )
 
 
-def _module_file(module: str) -> Path | None:
-    """The workspace file of `module`, or None for a stdlib or third-party module
-    (`uv.lock` and the runtime versions key those)."""
-    top = module.split(".")[0]
-    if top not in PACKAGES:
-        if top in workspace_packages():
-            sys.exit(
-                f"real-seed-cache: the prepare walk reaches {module}, in workspace "
-                f"package {top} that PACKAGES does not key; add it"
-            )
-        return None
-    base = ROOT / PACKAGES[top] / Path(*module.split("."))
-    if (base / "__init__.py").is_file():
-        return base / "__init__.py"
-    return base.with_suffix(".py") if base.with_suffix(".py").is_file() else None
+def prepare_code_files(walk: dict) -> list[str]:
+    """The repo-relative files `prepare-sources` runs, generously, from the probe's
+    `prepare_code`.
 
-
-def _imports(tree: ast.Module) -> Iterator[ast.Import | ast.ImportFrom]:
-    """Every import statement, function-local ones included; the bodies of
-    `if TYPE_CHECKING:` blocks are skipped (they never run)."""
-    stack: list[ast.AST] = [tree]
-    while stack:
-        node = stack.pop()
-        if isinstance(node, ast.If) and (
-            getattr(node.test, "id", None) == "TYPE_CHECKING"
-            or getattr(node.test, "attr", None) == "TYPE_CHECKING"
-        ):
-            stack.extend(node.orelse)
-            continue
-        if isinstance(node, (ast.Import, ast.ImportFrom)):
-            yield node
-        stack.extend(ast.iter_child_nodes(node))
-
-
-def _imports_dynamically(tree: ast.Module) -> bool:
-    return any(
-        isinstance(node, ast.Call)
-        and (
-            getattr(node.func, "id", None) in {"import_module", "__import__"}
-            or getattr(node.func, "attr", None) == "import_module"
-        )
-        for node in ast.walk(tree)
-    )
-
-
-def prepare_code_files() -> list[str]:
-    """The repo-relative files `prepare-sources` runs, generously.
-
-    Walks every import from `PREPARE_ROOTS` through the workspace packages, including
-    function-local imports, whether or not the prepare path reaches them. A module
-    that imports by name at run time (`import_module`) pulls in its whole package.
-    Data files beside any walked module count, as do the native extension sources
-    when a walked module imports `reg_core_py`, and `uv.lock` always.
+    The builder's own import walk (`resolve_code.import_closure`) follows every
+    import from `PREPARE_ROOTS` through `reg_meta_build`, including function-local
+    imports, whether or not the prepare path reaches them. A module that imports by
+    name at run time (`import_module`) pulls in its whole package. Data files beside
+    any walked module count, as do the native extension sources when a walked module
+    imports `reg_core_py`, and `uv.lock` always.
     """
-    if missing := [m for m in PREPARE_ROOTS if _module_file(m) is None]:
-        sys.exit(f"real-seed-cache: prepare walk root missing, update it: {missing}")
-    seen: dict[str, Path] = {}
-    native = False
-    pending = list(PREPARE_ROOTS)
-    while pending:
-        module = pending.pop()
-        if module in seen or (path := _module_file(module)) is None:
-            continue
-        seen[module] = path
-        parts = module.split(".")
-        pending += [".".join(parts[:i]) for i in range(1, len(parts))]
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-        package = module if path.name == "__init__.py" else module.rpartition(".")[0]
-        if _imports_dynamically(tree):
-            root = ROOT / PACKAGES[parts[0]]
-            pending += [
-                ".".join(p.relative_to(root).with_suffix("").parts).removesuffix(
-                    ".__init__"
-                )
-                for p in path.parent.rglob("*.py")
-            ]
-        for node in _imports(tree):
-            if isinstance(node, ast.Import):
-                targets = [alias.name for alias in node.names]
-            else:
-                base = package.split(".")[: len(package.split(".")) - node.level + 1]
-                target = (
-                    ".".join([*base, *([node.module] if node.module else [])])
-                    if node.level
-                    else node.module or ""
-                )
-                targets = [target, *(f"{target}.{a.name}" for a in node.names)]
-            native |= any(t.split(".")[0] == "reg_core_py" for t in targets)
-            pending += targets
-    files = {path.relative_to(ROOT).as_posix() for path in seen.values()}
-    directories = {path.parent.relative_to(ROOT).as_posix() for path in seen.values()}
-    files.update(
-        path
-        for path in repo_files(directories)
-        if path.rpartition("/")[0] in directories and not path.endswith(".py")
-    )
+    if unkeyed := sorted(set(walk["imports"]) & workspace_packages()):
+        sys.exit(
+            f"real-seed-cache: the prepare walk reaches workspace packages {unkeyed} "
+            "that it does not key; extend the walk to them"
+        )
+    # A walked module git ignores stays listed, so `code_digests` refuses it; ignored
+    # data beside a module is junk, never keyed.
+    files = {path for path in walk["files"] if path.endswith(".py")}
+    files |= repo_files(walk["files"])
     files.update(PREPARE_ENTRY_FILES)
     files.add("uv.lock")
-    if native:
+    if "reg_core_py" in walk["imports"]:
         files.update(NATIVE_SOURCES)
     return sorted(files)
 
@@ -431,13 +423,16 @@ def prepare_code_files() -> list[str]:
 
 
 def prepare_fields(args: argparse.Namespace) -> dict:
+    facts = probe(source_root=str(ROOT / PACKAGE_SOURCE), prepare_roots=PREPARE_ROOTS)
+    if error := facts.pop("probe_error", None):
+        sys.exit(f"real-seed-cache: {error['code']}: {error['message']}")
     return {
         "step": "prepare",
         "bundle_commit": args.input_commit,
         "bundle_manifest_sha256": args.input_manifest_sha256,
         "bundle_path": git(Path(args.input_bundle), "rev-parse", "--show-prefix"),
-        "code": code_digests(prepare_code_files()),
-        "runtime": {**probe(), "rustc": rustc_version()},
+        "code": code_digests(prepare_code_files(facts.pop("prepare_code"))),
+        "runtime": {**facts, "rustc": rustc_version()},
     }
 
 
@@ -598,6 +593,24 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 # -- build -------------------------------------------------------------------------
 
 
+def resolve_lock_sha256() -> str:
+    """`uv.lock` as the resolve key holds it: every third-party pin, without the
+    workspace members' own versions.
+
+    A release bumps a member's version (and `reg_meta_build`'s `__version__`, which
+    the builder's fingerprint normalizes), and no resolution reads it, so the
+    release build keeps reusing the bundle its candidate resolved. The build key
+    still holds the raw file. `Cargo.lock`, which a `reg_meta` release bumps, is not
+    in this key: the fingerprint holds the compiled `reg_core_py` instead.
+    """
+    lock = tomllib.loads((ROOT / "uv.lock").read_text())
+    members = set(lock["manifest"]["members"])
+    for package in lock["package"]:
+        if package["name"] in members:
+            del package["version"]
+    return digest(lock)
+
+
 def build_code(args: argparse.Namespace) -> dict:
     """The builder code a build runs. A publishable build also records the
     checkout's commit in the database, so that commit is keyed too."""
@@ -611,10 +624,12 @@ def build_code(args: argparse.Namespace) -> dict:
     }
 
 
-def build_fields(args: argparse.Namespace) -> dict:
+def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
+    """The build key's fields and the resolve key's, from one probe."""
     code = build_code(args)
     facts = probe(
         curation=args.curation_dir or str(ROOT / "reg_meta_build/curation"),
+        resolve_code=True,
         # Run on every lookup, hit or miss: a hit must refuse exactly what the build
         # would refuse before it starts.
         admit=None
@@ -632,16 +647,24 @@ def build_fields(args: argparse.Namespace) -> dict:
     if error := facts.pop("admission_error", None):
         emit({"hit": False, "error": error})
         sys.exit(EXIT_CONFIG)
-    return {
-        "step": "build",
+    resolve_code = facts.pop("resolve_code_sha256")
+    shared = {
         "mode": "diagnostic" if args.diagnostic else "strict",
         "registers": sorted(set(args.registers.split(","))) if args.registers else [],
         "prepared_commit": args.input_commit,
         "prepared_manifest_sha256": args.input_manifest_sha256,
-        **code,
         "curation_tree_sha256": facts.pop("curation_tree_sha256"),
         "runtime": {**facts, "rustc": rustc_version()},
     }
+    # No HEAD: `materialize-db` stamps the running builder's commit, so a bundle
+    # serves every commit whose resolve code is the same.
+    resolve = {
+        "step": "resolve",
+        **shared,
+        "resolve_code_sha256": resolve_code,
+        "uv_lock": resolve_lock_sha256(),
+    }
+    return {"step": "build", **shared, **code}, resolve
 
 
 def database_name(args: argparse.Namespace) -> str:
@@ -684,31 +707,60 @@ def build_result(home: Path, record: dict, *, hit: bool) -> dict:
     }
 
 
-def run_build(args: argparse.Namespace, home: Path) -> tuple[Path, int]:
-    """Run build-db in a new staging directory under `home`; it and the exit code."""
+def lookup_resolve(home: Path, key: str) -> Path | None:
+    """The stored bundle, or None on a miss. Its payload digests are checked by
+    `materialize-db`, which refuses a damaged bundle."""
+    entry = home / key
+    if (
+        not (entry / "entry.json").is_file()
+        or not (entry / "bundle" / BUNDLE_RECORD).is_file()
+    ):
+        if entry.exists():
+            sys.stderr.write(f"real-seed-cache: dropping a changed entry: {entry}\n")
+            shutil.rmtree(entry, ignore_errors=True)
+        return None
+    os.utime(entry)
+    return entry / "bundle"
+
+
+def run_build(
+    args: argparse.Namespace,
+    home: Path,
+    *,
+    resolved: Path | None = None,
+    resolved_out: bool = False,
+) -> tuple[Path, int]:
+    """Run build-db in a new staging directory under `home`; it and the exit code.
+
+    With `resolved`, run `materialize-db` from that bundle instead; with
+    `resolved_out`, build-db also writes its bundle to `<run_dir>/resolved`.
+    """
     run_dir = Path(tempfile.mkdtemp(prefix=STAGING_PREFIX, dir=home))
     argv = [*builder()]
     if not args.diagnostic:
         (run_dir / "catalog").mkdir()
         argv += ["--db", str(run_dir / "catalog")]
-    argv += [
-        "build-db",
-        "--prepared",
-        args.prepared,
-        "--input-commit",
-        args.input_commit,
-        "--input-manifest-sha256",
-        args.input_manifest_sha256,
-        "--report-dir",
-        str(run_dir / "report"),
-        "--timing",
-    ]
+    if resolved is None:
+        argv += [
+            "build-db",
+            "--prepared",
+            args.prepared,
+            "--input-commit",
+            args.input_commit,
+            "--input-manifest-sha256",
+            args.input_manifest_sha256,
+        ]
+        if args.curation_dir:
+            argv += ["--curation-dir", args.curation_dir]
+        if resolved_out:
+            argv += ["--resolved-out", str(run_dir / "resolved")]
+    else:
+        argv += ["materialize-db", "--resolved", str(resolved)]
+    argv += ["--report-dir", str(run_dir / "report"), "--timing"]
     if args.diagnostic:
         argv += ["--diagnostic", "--diagnostic-db-path", str(run_dir / "diagnostic.db")]
     if args.registers:
         argv += ["--registers", args.registers]
-    if args.curation_dir:
-        argv += ["--curation-dir", args.curation_dir]
     sys.stderr.write(f"real-seed-cache: running in {run_dir}\n")
     with (run_dir / "result.json").open("w") as out:
         code = subprocess.run(argv, cwd=ROOT, stdout=out, check=False).returncode
@@ -761,32 +813,91 @@ def events_sha256(report: Path) -> str:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
+def refused_bundle(run_dir: Path) -> str | None:
+    """The error code of a `materialize-db` run that refused its bundle, else None."""
+    try:
+        error = json.loads((run_dir / "result.json").read_text()).get("error")
+    except OSError, ValueError, AttributeError:
+        return None
+    code = error.get("code") if isinstance(error, dict) else None
+    if isinstance(code, str) and code.startswith(BUNDLE_REFUSAL_PREFIX):
+        return code
+    return None
+
+
+def store_resolve(home: Path, key: str, fields: dict, bundle: Path) -> None:
+    """Move a completed build's `bundle` into the resolve entry `key`, if the bundle
+    records the resolve inputs the key holds."""
+    try:
+        record = json.loads((bundle / BUNDLE_RECORD).read_text())
+        recorded = {name: record.get(name) for name in RESOLVE_RECORDED}
+    except (OSError, ValueError, AttributeError) as exc:
+        recorded = {"unreadable": str(exc)}
+    if recorded != {name: fields[name] for name in RESOLVE_RECORDED}:
+        sys.stderr.write(
+            "real-seed-cache: resolve entry not stored (the bundle records other "
+            f"resolve inputs than the key: {recorded})\n"
+        )
+        shutil.rmtree(bundle, ignore_errors=True)
+        return
+    entry = home / key
+    with staged(entry) as staging:
+        bundle.rename(staging / "bundle")
+        write_json(staging / "entry.json", {"key": key, "fields": fields})
+    evict(home, entry, KEEP, "real-seed-cache", min_idle=STAGING_RETENTION_SECONDS)
+
+
 def cmd_build(args: argparse.Namespace) -> int:
-    fields = build_fields(args)
+    fields, resolve_fields = build_fields(args)
     key = digest(fields)
     if args.key:
-        emit({"key": key, "fields": fields})
+        emit(
+            {
+                "key": key,
+                "fields": fields,
+                "resolve_key": digest(resolve_fields),
+                "resolve_fields": resolve_fields,
+            }
+        )
         return 0
     home = cache_dir("build")
     if args.verify:
         # Held throughout, so concurrent verifications cannot quarantine the same
         # entry twice.
         with real_seed_lock():
-            return verify_build(args, home, key, fields)
+            return verify_build(args, home, key, fields, digest(resolve_fields))
     if record := lookup_build(home, key):
         emit(build_result(home, record, hit=True))
         return 0
     with real_seed_lock():
         # The inputs or checkout may have changed while this session waited;
         # `build_fields` also reruns admission.
-        fields = build_fields(args)
-        key = digest(fields)
+        fields, resolve_fields = build_fields(args)
+        key, resolve_key = digest(fields), digest(resolve_fields)
         if record := lookup_build(home, key):
             emit(build_result(home, record, hit=True))
             return 0
-        run_dir, code = run_build(args, home)
+        resolve_home = cache_dir("resolve")
+        phased = False
+        if bundle := lookup_resolve(resolve_home, resolve_key):
+            run_dir, code = run_build(args, home, resolved=bundle)
+            phased = True
+            if refusal := refused_bundle(run_dir):
+                # A stale or damaged entry: never an error, never placed.
+                sys.stderr.write(
+                    f"real-seed-cache: materialize-db refused {bundle} ({refusal}); "
+                    "dropping it and building in full\n"
+                )
+                shutil.rmtree(bundle.parent, ignore_errors=True)
+                shutil.rmtree(run_dir, ignore_errors=True)
+                phased = False
+        if not phased:
+            run_dir, code = run_build(args, home, resolved_out=True)
         if reason := incomplete(args, run_dir, code, fields):
             sys.stderr.write(f"real-seed-cache: not stored ({reason})\n")
+            # A bundle of a run that did not complete is never stored, nor needed
+            # to diagnose it (the report holds its events); it is 0.3-0.4 GB.
+            shutil.rmtree(run_dir / "resolved", ignore_errors=True)
             # Reaps failed runs past their retention, so repeated failures cannot
             # fill the disk. This one's retention starts now (its mtime is from
             # creation, and a build can outlast the grace period), so it stays.
@@ -807,6 +918,10 @@ def cmd_build(args: argparse.Namespace) -> int:
                 }
             )
             return code or 1
+        if not phased:
+            store_resolve(
+                resolve_home, resolve_key, resolve_fields, run_dir / "resolved"
+            )
         summary = json.loads((run_dir / "report/summary.json").read_text())
         database = run_dir / database_name(args)
         database.chmod(0o444)
@@ -822,16 +937,25 @@ def cmd_build(args: argparse.Namespace) -> int:
             "events_size": (run_dir / "report/events.jsonl.gz").stat().st_size,
             "status": summary["status"],
             "publication_ready": summary.get("publication_ready"),
+            # The resolve entry a phased run materialized; None for a full build.
+            "phased_from": resolve_key if phased else None,
         }
         write_json(run_dir / "entry.json", record)
         run_dir.rename(entry)
         evict(home, entry, KEEP, "real-seed-cache", min_idle=STAGING_RETENTION_SECONDS)
-    emit(build_result(home, record, hit=False))
+    emit({**build_result(home, record, hit=False), "phased": phased})
     return 0
 
 
-def verify_build(args: argparse.Namespace, home: Path, key: str, fields: dict) -> int:
-    """Rebuild uncached and compare the database and decompressed ledger bytes."""
+def verify_build(
+    args: argparse.Namespace, home: Path, key: str, fields: dict, resolve_key: str
+) -> int:
+    """Rebuild uncached and compare the database and decompressed ledger bytes.
+
+    A mismatch also quarantines the resolve entries that could replay the
+    rejected output: the one this entry was placed from, and the one under the
+    current resolve key (written by the same build when it was not phased).
+    """
     record = lookup_build(home, key)
     if record is None:
         sys.exit("real-seed-cache: nothing stored under this key to verify")
@@ -866,6 +990,13 @@ def verify_build(args: argparse.Namespace, home: Path, key: str, fields: dict) -
         shutil.rmtree(quarantine, ignore_errors=True)
         entry.rename(quarantine)
         os.utime(quarantine)
+        resolve_home = cache_dir("resolve")
+        for suspect in {record.get("phased_from"), resolve_key} - {None}:
+            if (resolve_home / suspect).exists():
+                held = resolve_home / f"{STAGING_PREFIX}quarantine-{suspect}"
+                shutil.rmtree(held, ignore_errors=True)
+                (resolve_home / suspect).rename(held)
+                os.utime(held)
     emit(
         {
             "identical": identical,
