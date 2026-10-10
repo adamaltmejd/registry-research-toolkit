@@ -1,0 +1,10 @@
+{
+  "replaces": [
+    "test_catalog_lineage.py::test_lineage_acknowledgement_refuses_changed_source_or_candidate_distinction[original]",
+    "test_catalog_lineage.py::test_lineage_acknowledgement_refuses_changed_source_or_candidate_distinction[new_candidate]"
+  ],
+  "note": "Step 1's curation (plus the declared variant 4.43 in added.toml) built from a changed delivery: ORIGINAL's consumer row (CVID 1002) gains an external comment (VariabelExtern_kommentar), a cell the catalog does not carry, so only its original record changes (old original: the original's period text changed); Added candidate register (ADD) gains a third variant named People (old new_candidate: another admitted variant named People). The example.toml entries and digests are step 1's, copied. From the old test: both entries stop acknowledging and are reported stale. Not asserted: EXACT, CHANGED, LINKED and TWO_ORIGINS go stale here too. The evidence digest hashes each original record whole, including the delivery file's revision and the row's physical position, so any change to Registerinformation.csv stales every lineage acknowledgement (the whole-delivery digest of maintainer decision 5). For the same reason the new_candidate leg cannot be told apart from a revision change until digests narrow to the guarded records; ORIGINAL's leg can, because its consumer variable is unchanged.",
+  "fails_if": "`lineage_acknowledgement_sha256` stops hashing the original records of the acknowledged issue, so ORIGINAL's entry, whose consumer variable and candidates are unchanged, stays acknowledged; or the guard stops including same-named source variants in the context while the digests narrow to the guarded records, so ADDED stays acknowledged",
+  "sources": "scb-lineage-acknowledged-delivery-changed",
+  "authored_from": "scb-lineage-acknowledged"
+}

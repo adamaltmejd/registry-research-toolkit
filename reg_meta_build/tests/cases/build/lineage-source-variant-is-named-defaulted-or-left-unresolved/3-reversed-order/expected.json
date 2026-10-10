@@ -1,0 +1,71 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "lineage",
+      "fields": ["variable", "source_register", "source_variable", "source_variant", "valid_from", "valid_to"],
+      "rows": [
+        ["explicit", "tenth", "explicit", "people", "2000-01-01", "2000-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": {"contains": "scb/example/"}},
+      "fields": ["code", "severity", "subject"],
+      "rows": [
+        ["unresolved_lineage_no_source_state", "warning", "scb/example/gap"],
+        ["unresolved_lineage_ambiguous_source_variant", "error", "scb/example/defaulted"],
+        ["unresolved_lineage_no_source_state", "warning", "scb/example/undelivered"],
+        ["unresolved_lineage_no_source_state", "warning", "scb/example/unknown-delivery"],
+        ["unresolved_lineage_ambiguous_source_variant", "error", "scb/example/doubled"]
+      ]
+    },
+    {
+      "note": "Each unresolved explicit label cites its own record and says no default or other variant was substituted; GAP's also says no identity is established and that People matches several variants.",
+      "table": "issue_refs",
+      "where": {"subject": ["scb/example/gap", "scb/example/unknown-delivery", "scb/example/doubled"], "detail": {"contains": "no default or other variant has been substituted"}},
+      "fields": ["subject", "ref"],
+      "rows": [
+        ["scb/example/gap", "scb-registerinformation#register:1/variant:10/edition:110/variable:101/member:1001"],
+        ["scb/example/unknown-delivery", "scb-registerinformation#register:1/variant:10/edition:110/variable:105/member:1005"],
+        ["scb/example/doubled", "scb-registerinformation#register:1/variant:10/edition:110/variable:106/member:1006"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": "scb/example/gap", "detail": {"contains": ["No source variable identity is established", "matches multiple admitted source variants"]}},
+      "fields": ["code"],
+      "rows": [["unresolved_lineage_no_source_state"]]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": "scb/example/undelivered", "detail": {"contains": "'Missing delivery'"}},
+      "fields": ["code"],
+      "rows": [["unresolved_lineage_no_source_state"]]
+    },
+    {
+      "table": "states",
+      "where": {"register": "example", "variable": ["gap", "undelivered"]},
+      "fields": ["variable", "source_register_text"],
+      "rows": [
+        ["gap", "Gap register (GAP) : People"],
+        ["undelivered", "Eleventh register (ELV) : Missing delivery"]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {"register": "example", "variable": ["gap", "undelivered"]},
+      "fields": ["variable", "source_register_text"],
+      "rows": [
+        ["gap", "Gap register (GAP) : People"],
+        ["undelivered", "Eleventh register (ELV) : Missing delivery"]
+      ]
+    },
+    {
+      "table": "lineage_warnings",
+      "where": {"variable": "gap"},
+      "fields": ["kind"],
+      "rows": [["no_source_state"]]
+    }
+  ]
+}

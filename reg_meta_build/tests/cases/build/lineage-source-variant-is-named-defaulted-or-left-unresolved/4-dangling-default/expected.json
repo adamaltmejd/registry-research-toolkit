@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "catalog_dependency_missing",
+    "message_contains": ["lineage_default:scb/missing"]
+  }
+}
