@@ -4,9 +4,14 @@ No build reaches these refusals. Formation constructs consistent resolved models
 it withholds a variable whose flags are unresolved (`unresolved_flag`, pinned by the
 build case `dependency-withheld-variable-prunes-its-dependents`) before the writer
 runs. They stay as writer-boundary tests because the writer is the last guard on the
-disclosure flags and on the catalog contract. Each one drives `write_resolved_catalog`,
-the writer `build-db` calls: an unvalidated copy of a resolved model reaches it,
-because the writer revalidates every instance it is given.
+disclosure flags and on the catalog contract. The pipeline also computes every
+classification link, conformance decision and sentinel certificate from the build it
+writes, so the writer's cross-checks of them against the written books are defense in
+depth; the written outcomes are the build cases
+`classification-book-written-with-conformance-sentinels-and-successions` and
+`representation-column-coding-and-books-stay-per-column`. Each one drives
+`write_resolved_catalog`, the writer `build-db` calls: an unvalidated copy of a
+resolved model reaches it, because the writer revalidates every instance it is given.
 
 Publication, byte identity and create-only placement are pinned beside the build-db
 contract, in `test_build_db_cli_outputs.py`.
@@ -18,8 +23,11 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 from _resolved_catalog_support import (
+    classified_alias_variable as _classified_alias_variable,
+    resolved_classification as _classification,
     resolved_state as _state,
     resolved_variable as _variable,
+    scoped_sentinel_variable as _scoped_sentinel_variable,
 )
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.errors import RegMetaError
@@ -27,7 +35,9 @@ from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
     ResolvedAlias,
     ResolvedAliasWindow,
+    ResolvedClassificationLink,
     ResolvedCodeSet,
+    ResolvedConformance,
     ResolvedEdition,
     ResolvedVariable,
     write_resolved_catalog,
@@ -257,21 +267,180 @@ INVALID_ARGUMENTS: dict[str, tuple[Callable[[], dict[str, Any]], str]] = {
 }
 
 
-@pytest.mark.parametrize("row", [*INVALID_VARIABLES, *INVALID_ARGUMENTS])
+def _classified(
+    variable: ResolvedVariable, book: Any
+) -> tuple[tuple[ResolvedVariable, ...], dict[str, Any]]:
+    return (variable,), {"classifications": (book,)}
+
+
+def _linked_state(
+    **update: object,
+) -> tuple[tuple[ResolvedVariable, ...], dict[str, Any]]:
+    return _classified(_with_state(**update), _classification())
+
+
+def _conforming(*codes: str) -> tuple[ResolvedClassificationLink, ...]:
+    book = _classification().slug
+    conformance = ResolvedConformance(
+        declared_classification=book, status="conforming", checked_codes=codes
+    )
+    return (ResolvedClassificationLink(classification=book, conformance=conformance),)
+
+
+def _certified(
+    certificate: dict[str, object] | None,
+    *,
+    recorded: bool = False,
+    delivered: tuple[tuple[str, str], ...] = (),
+) -> tuple[tuple[ResolvedVariable, ...], dict[str, Any]]:
+    """The state certified to deliver sentinel 09350, its certificate changed.
+
+    `certificate` updates the certificate (None drops it). `recorded` also records
+    the changed members as the conformance's sentinels, so the model accepts them
+    and only the state or the book disagrees. `delivered` adds value-set members.
+    """
+    variable, book = _scoped_sentinel_variable()
+    state = variable.states[0]
+    link = state.classification_links[0]
+    conformance = link.conformance
+    assert conformance is not None
+    certificates = (
+        ()
+        if certificate is None
+        else (conformance.scoped_sentinels[0].model_copy(update=certificate),)
+    )
+    sentinels = {"sentinel_members": certificates[0].members} if recorded else {}
+    conformance = conformance.model_copy(
+        update={"scoped_sentinels": certificates} | sentinels
+    )
+    update: dict[str, object] = {
+        "classification_links": (link.model_copy(update={"conformance": conformance}),)
+    }
+    if delivered:
+        assert state.value_set is not None
+        members = (*state.value_set.members, *delivered)
+        update["value_set"] = ResolvedCodeSet(members=members)
+    states = (state.model_copy(update=update),)
+    return _classified(variable.model_copy(update={"states": states}), book)
+
+
+def _alias_window_certified_for_another_book() -> tuple[
+    tuple[ResolvedVariable, ...], dict[str, Any]
+]:
+    # The link sits on a per-column alias window; the backing state has no value
+    # set and no link, so only the window's own check can refuse it.
+    variable, book = _classified_alias_variable()
+    alias = variable.aliases[0]
+    window = alias.windows[0]
+    link = window.classification_links[0]
+    conformance = link.conformance
+    assert conformance is not None
+    certificate = conformance.scoped_sentinels[0].model_copy(
+        update={"classification_sha256": "b" * 64}
+    )
+    conformance = conformance.model_copy(update={"scoped_sentinels": (certificate,)})
+    link = link.model_copy(update={"conformance": conformance})
+    window = window.model_copy(update={"classification_links": (link,)})
+    alias = alias.model_copy(update={"windows": (window,)})
+    return _classified(variable.model_copy(update={"aliases": (alias,)}), book)
+
+
+_CERTIFICATE_DISAGREES = (
+    "scoped sentinel certificate disagrees with source state or canonical book"
+)
+
+# Classification links written beside their books: every link names a written book,
+# a conformance decision checks every distinct code of the state's value set and
+# matches the book, and a scoped sentinel certificate matches the book's fingerprint,
+# the column, the state's window and the state's labels. The fixture book has codes
+# 001 and 002 and no curated sentinels; the certified state delivers 001 and the
+# sentinel 09350 "Okänt".
+INVALID_CLASSIFIED_VARIABLES: dict[
+    str, tuple[Callable[[], tuple[tuple[ResolvedVariable, ...], dict[str, Any]]], str]
+] = {
+    "classification-link-to-an-unwritten-book": (
+        lambda: _linked_state(
+            classification_links=(ResolvedClassificationLink(classification="missing"),)
+        ),
+        "unknown classification reference: missing",
+    ),
+    "conformance-conforming-with-a-code-outside-the-book": (
+        lambda: _linked_state(
+            value_set=ResolvedCodeSet(members=(("999", "Missing"),)),
+            classification_links=_conforming("999"),
+        ),
+        "conformance disagrees with canonical code membership",
+    ),
+    # The blank code is falsy: a partition check that skips falsy codes passes it.
+    "conformance-leaves-the-blank-code-unchecked": (
+        lambda: _linked_state(
+            value_set=ResolvedCodeSet(
+                members=(("", "Source missing"), ("001", "Source label"))
+            ),
+            classification_links=_conforming("001"),
+        ),
+        "conformance must check every distinct code in the value set",
+    ),
+    # Without its certificate the sentinel is an uncertified extension, so the
+    # recorded conformance no longer matches the book.
+    "scoped-sentinel-without-a-certificate": (
+        lambda: _certified(None),
+        "conformance disagrees with canonical code membership",
+    ),
+    "scoped-sentinel-certificate-for-another-book": (
+        lambda: _certified({"classification_sha256": "b" * 64}),
+        _CERTIFICATE_DISAGREES,
+    ),
+    "scoped-sentinel-certificate-for-another-column": (
+        lambda: _certified({"delivery_column_name": "Other"}),
+        _CERTIFICATE_DISAGREES,
+    ),
+    "scoped-sentinel-certificate-not-covering-the-state": (
+        lambda: _certified({"valid_to": "2000-06-30"}),
+        _CERTIFICATE_DISAGREES,
+    ),
+    "scoped-sentinel-certificate-member-not-recorded": (
+        lambda: _certified({"members": (("09350", "Different meaning"),)}),
+        "scoped sentinel certificate members must be recorded sentinels",
+    ),
+    "scoped-sentinel-certificate-for-a-canonical-code": (
+        lambda: _certified({"members": (("001", "Source label"),)}, recorded=True),
+        _CERTIFICATE_DISAGREES,
+    ),
+    # Distinct labels for one code stay distinct: a certificate for 09350 "Okänt"
+    # does not cover the state's 09350 under another label.
+    "scoped-sentinel-certificate-misses-a-label-of-its-code": (
+        lambda: _certified({}, delivered=(("09350", "Different meaning"),)),
+        _CERTIFICATE_DISAGREES,
+    ),
+    "scoped-sentinel-certificate-on-an-alias-window-for-another-book": (
+        _alias_window_certified_for_another_book,
+        _CERTIFICATE_DISAGREES,
+    ),
+}
+
+
+@pytest.mark.parametrize(
+    "row", [*INVALID_VARIABLES, *INVALID_ARGUMENTS, *INVALID_CLASSIFIED_VARIABLES]
+)
 def test_invalid_input_is_refused_before_the_previous_catalog_is_touched(
     tmp_path: Path, row: str
 ) -> None:
     # Fails if the writer drops the rule the row names (a lax or optional flag, a
-    # date, slug, overlap, consistency or manifest check), or runs it only after it
-    # has replaced the previous catalog, linked it aside to `.prev` or left staging
-    # behind.
+    # date, slug, overlap, consistency or manifest check, a classification link or
+    # sentinel certificate check), or runs it only after it has replaced the
+    # previous catalog, linked it aside to `.prev` or left staging behind.
     arguments: dict[str, Any] = {"manifest": synthetic_manifest()}
     if row in INVALID_VARIABLES:
         variables, message = INVALID_VARIABLES[row]
         given = variables()
-    else:
+    elif row in INVALID_ARGUMENTS:
         make, message = INVALID_ARGUMENTS[row]
         arguments, given = arguments | make(), (_variable(),)
+    else:
+        classified, message = INVALID_CLASSIFIED_VARIABLES[row]
+        given, books = classified()
+        arguments |= books
     output = tmp_path / "reg_meta.db"
     output.write_bytes(b"previous catalog")
     with pytest.raises(ValueError, match=message):
