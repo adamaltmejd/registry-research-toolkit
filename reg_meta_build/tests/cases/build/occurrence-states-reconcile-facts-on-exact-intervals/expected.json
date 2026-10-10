@@ -1,0 +1,250 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "variable": ["u01", "u02", "u03", "u04", "u05", "u06", "u07", "u08", "u09", "u10", "u11"]
+      },
+      "fields": ["variable", "measurement_unit"],
+      "rows": [
+        ["u01", "MWh"],
+        ["u02", "Kronor"],
+        ["u03", "Kronor (SEK)"],
+        ["u04", "Antal månader"],
+        ["u05", "Månader"],
+        ["u06", "Antal veckor"],
+        ["u07", "Antal minuter"],
+        ["u08", "Antal barn"],
+        ["u09", "Antal"],
+        ["u10", "Dagar"],
+        ["u11", "Årtal"]
+      ],
+      "note": "test_exact_unit_pair_resolves_at_occurrence_grain_in_either_order: each listed pair resolves to its published spelling."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["x01", "x02", "x03", "x04", "x05"]},
+      "fields": ["variable", "measurement_unit"],
+      "rows": [["x01", null], ["x02", null], ["x03", null], ["x04", null], ["x05", null]],
+      "note": "test_unlisted_unit_sets_remain_occurrence_conflicts: an unlisted unit set leaves the unit unknown."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "conflicting_occurrence_facts"},
+      "fields": ["subject", "fields", "valid_from", "valid_to"],
+      "rows": [
+        ["scb/sample/l04", ["data_length", "data_type"], "2020-01-01", "2020-12-31"],
+        ["scb/sample/l05", ["data_length"], "2020-01-01", "2020-12-31"],
+        ["scb/sample/l06", ["data_length"], "2020-01-01", "2020-12-31"],
+        ["scb/sample/w02", ["data_type"], "2020-01-01", "2020-12-31"],
+        ["scb/sample/w03", ["data_type"], "2020-01-01", "2020-12-31"],
+        ["scb/sample/x01", ["measurement_unit"], "2020-01-01", "2020-12-31"],
+        ["scb/sample/x02", ["measurement_unit"], "2020-01-01", "2020-12-31"],
+        ["scb/sample/x03", ["measurement_unit"], "2020-01-01", "2020-12-31"],
+        ["scb/sample/x04", ["measurement_unit"], "2020-01-01", "2020-12-31"],
+        ["scb/sample/x05", ["measurement_unit"], "2020-01-01", "2020-12-31"]
+      ],
+      "note": "The only occurrence conflicts, each on its 2020 segment: the length table's expected_fields (l04 date+integer, l05 '8,2', l06 an unknown type beside a length), test_declared_type_widening's two conflicts (w02 date+integer, w03 uniqueidentifier+integer) and the five unlisted unit sets. Every other leg asserted `result.issues == ()`: the listed units, the absorbed source texts (d-src, d-opdef, d-ref), a-widen, a-same, opt, the storage legs and p-month raise none."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["l00", "l01", "l02", "l04", "l05", "l06"]},
+      "fields": ["variable", "data_length"],
+      "rows": [["l00", "6"], ["l01", null], ["l02", "53"], ["l04", null], ["l05", null], ["l06", null]],
+      "note": "test_length_maximum_with_type_widening_and_canonical_integers: expected_length per row (None is unknown)."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["w00", "w01", "w02", "w03", "w04", "w05"]},
+      "fields": ["variable", "data_type"],
+      "rows": [
+        ["w00", "decimal"],
+        ["w01", "text"],
+        ["w02", null],
+        ["w03", null],
+        ["w04", "decimal"],
+        ["w05", "text"]
+      ],
+      "note": "test_declared_type_widening: expected widened type, None where the classes cannot widen."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["w00", "w01", "w02", "w03"]},
+      "fields": ["variable", "provenance"],
+      "rows": [
+        ["w00", "Documented Datatyp: decimal, integer"],
+        ["w01", "Documented Datatyp: integer, text"],
+        ["w02", "Documented Datatyp: date, integer"],
+        ["w03", "Documented Datatyp: integer, uniqueidentifier"]
+      ],
+      "note": "test_declared_type_widening's raw_value: 'Documented Datatyp: ' + the sorted documented types, here after the SCB reader's classification (float -> decimal; uniqueidentifier has no class and stays literal). w04/w05 classify to one class at read, so no widening provenance reaches them."
+    },
+    {
+      "table": "states",
+      "where": {"register": "par"},
+      "fields": ["variable", "data_type", "provenance"],
+      "rows": [
+        ["alf", "text", "Documented Datatyp: alfanumerisk"],
+        ["chr", "text", "Documented Datatyp: Character"],
+        ["num", "decimal", "Documented Datatyp: numerisk"]
+      ],
+      "note": "test_single_source_type_spelling_is_classified_without_changing_original: a single delivered spelling is classified, with the literal kept as provenance. OPN has no state (below)."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["st-dec", "st-text", "st-none", "l01", "sd-one"]},
+      "fields": ["variable", "data_type"],
+      "rows": [
+        ["st-dec", "decimal"],
+        ["st-text", "text"],
+        ["st-none", "text"],
+        ["l01", "text"],
+        ["sd-one", "decimal"]
+      ],
+      "note": "test_numeric_storage_caps_only_all_numeric_waves: varchar+float widens to text, and storage caps it to decimal only when every wave is numeric (int+float), not int+varchar or int+uniqueidentifier (no class); l01 is the same varchar+float pair with no storage, text. test_single_declared_type_is_not_rewritten_by_storage: sd-one's single declared type stays (decimal, not the int storage's integer)."
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": ["st-dec"],
+        "provenance": {"contains": ["Documented Datatyp: decimal, text", "CIS2018=int, CIS2020=float"]}
+      },
+      "fields": ["variable"],
+      "rows": [["st-dec"]],
+      "note": "test_numeric_storage_caps_only_all_numeric_waves's provenance asserts: the documented types and the storage waves both reach the state's provenance."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["d-src", "d-opdef", "d-ref", "a-widen", "a-same", "opt"]},
+      "fields": [
+        "variable",
+        "valid_from",
+        "valid_to",
+        "data_type",
+        "operational_definition",
+        "source_register_text"
+      ],
+      "rows": [
+        ["d-src", "2020-01-01", "2020-12-31", "integer", null, null],
+        ["d-opdef", "2020-01-01", "2020-12-31", "integer", null, null],
+        ["d-ref", "2020-01-01", "2020-12-31", "integer", null, null],
+        ["a-widen", "2020-01-01", "2020-12-31", "text", null, null],
+        ["a-same", "2020-01-01", "2020-12-31", "integer", null, "Fråga 1"],
+        ["opt", "2020-01-01", "2020-12-31", "integer", null, null]
+      ],
+      "note": "One state each. test_descriptive_text_disagreement_is_unknown_without_occurrence_issue: differing source (d-src) or operational-definition (d-opdef) text is unknown on the state; reference period (d-ref) is not stored, so its claim is only the absent conflict above. test_data_type_widening_absorbs_source_attribution_disagreement: a-widen widens to text with an unknown source text; test_unanimous_source_attribution_resolves_normally: a-same keeps Fråga 1. test_agreement_retains_physical_duplicates_and_optional_unknowns: opt's empty Datatyp does not contradict integer. Every row's data_type is the fixture's integer default unless noted."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["p-month"]},
+      "fields": ["valid_from", "valid_to", "data_type", "definition"],
+      "rows": [
+        ["2018-01-01", "2018-02-28", "integer", "A generic family label"],
+        ["2018-03-01", "2018-03-31", "text", "A generic family label"],
+        ["2018-04-01", "2018-12-31", "integer", "A generic family label"]
+      ],
+      "note": "test_conflicting_type_widens_only_on_exact_intersection: the text member widens only March, the whole year keeps integer on both sides, and the shared definition (var_row's default vardef) is on every segment."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["p-gap"]},
+      "fields": ["valid_from", "valid_to"],
+      "rows": [["2018-01-01", "2018-12-31"], ["2020-01-01", "2020-12-31"]],
+      "note": "test_real_gaps_and_parallel_column_periods_survive: the 2019 gap stays a gap. Its parallel-column half is representation-parallel-interval-column-keeps-its-states-unpooled."
+    },
+    {
+      "table": "states",
+      "where": {"variable": ["p-lasar"]},
+      "fields": ["valid_from", "valid_to"],
+      "rows": [["2014-07-01", "2015-06-30"]],
+      "note": "test_lasaret_occurrence_forms_a_state_on_the_school_year_interval."
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": [
+          "c-unknown-beside",
+          "c-blank-beside",
+          "c-blank-only",
+          "c-unknown-only",
+          "p-komvux",
+          "opn"
+        ]
+      },
+      "fields": ["variable", "valid_from", "valid_to"],
+      "rows": [
+        ["c-unknown-beside", "2020-01-01", "2020-12-31"],
+        ["c-blank-beside", "2020-01-01", "2020-12-31"]
+      ],
+      "note": "An unplaced (c-unknown-beside) or columnless (c-blank-beside) member does not erase its named sibling's state; the all-columnless, unknown-column, pooled-without-range and year-9999 legs form no state."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unsupported_occurrence"},
+      "fields": ["subject", "fields", "withheld_output", "valid_from", "valid_to"],
+      "rows": [
+        ["scb/sample/c-unknown-beside", ["column_name"], ["occurrence"], null, null],
+        ["scb/sample/c-unknown-only", ["column_name"], ["occurrence"], null, null],
+        ["scb/sample/p-komvux", ["period"], ["occurrence"], null, null],
+        ["sos/par/opn", ["period"], ["occurrence"], null, null]
+      ],
+      "note": "test_unplaced_occurrence_does_not_erase_independently_supported_content and test_unknown_column_still_errors: an unknown column is an unsupported occurrence. test_annual_edition_cannot_override_unsupported_precise_period[pooled]: a pooled scope without a range is not placed on its delivery year. test_invalid_or_unbounded_dates_are_not_materialized[9999-...]: a literal 9999 end is not an open end. The literal blank columns are absent here."
+    },
+    {
+      "table": "issues",
+      "where": {"subject": ["scb/sample/c-blank-beside", "scb/sample/c-blank-only"]},
+      "fields": ["subject", "code", "severity", "fields", "withheld_output", "valid_from", "valid_to"],
+      "rows": [
+        [
+          "scb/sample/c-blank-beside",
+          "omitted_columnless_occurrence",
+          "warning",
+          ["column_name"],
+          ["occurrence"],
+          null,
+          null
+        ],
+        [
+          "scb/sample/c-blank-only",
+          "omitted_columnless_occurrence",
+          "warning",
+          ["column_name"],
+          ["occurrence"],
+          null,
+          null
+        ],
+        [
+          "scb/sample/c-blank-only",
+          "no_supported_states",
+          "warning",
+          ["availability", "period"],
+          ["scb/sample/c-blank-only"],
+          null,
+          null
+        ]
+      ],
+      "note": "test_negative_column_omits_the_occurrence_with_a_warning: a literal blank column is omitted with one undated warning withholding the occurrence. test_all_columnless_occurrences_form_no_state_and_no_error: two blank members form no state and no error (their no_supported_states is a warning)."
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "omitted_columnless_occurrence"},
+      "fields": ["subject", "key"],
+      "rows": [
+        [
+          "scb/sample/c-blank-beside",
+          ["register:1", "variant:10", "edition:110", "variable:282", "member:2822"]
+        ],
+        [
+          "scb/sample/c-blank-only",
+          ["register:1", "variant:10", "edition:110", "variable:283", "member:2831"]
+        ],
+        [
+          "scb/sample/c-blank-only",
+          ["register:1", "variant:10", "edition:110", "variable:283", "member:2832"]
+        ]
+      ],
+      "note": "The warning cites only the blank members (`issue.occurrences == (columnless,)`; `len(issue.occurrences) == 2`): CVID 2822, and 2831 and 2832."
+    }
+  ]
+}
