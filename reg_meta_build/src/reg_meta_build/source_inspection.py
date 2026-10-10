@@ -56,7 +56,6 @@ OutcomeStatus = Literal[
     "agreement",
     "unobserved_counterpart",
     "missing_edition",
-    "conflict",
     "ambiguous_match",
     "unknown_spelling",
     "unknown_applicability",
@@ -892,41 +891,18 @@ def compare_availability_records(
             if assumption is not None and candidates:
                 present = True
                 identities = {_native_identity(item) for item in candidates}
-                source_states = {
-                    field.status
-                    for item in candidates
-                    if (field := _availability(item)) is not None
-                }
-                documented_field = _availability(documented)
-                documented_state = (
-                    documented_field.status
-                    if documented_field is not None
-                    else "unknown"
-                )
                 if len(identities) > 1:
                     status = "ambiguous_match"
                     detail = (
                         "the exact spelling has multiple raw SCB identities; no "
                         "VarId, CVID, population, or variant was merged"
                     )
-                elif not source_states or "unknown" in source_states:
+                elif all(_availability(item) is None for item in candidates):
                     status = "unknown_applicability"
-                    detail = "an applicable availability field is missing or unknown"
-                elif documented_state == "unknown":
+                    detail = "an applicable availability field is missing"
+                elif _availability(documented) is None:
                     status = "unknown_applicability"
-                    detail = "the workbook availability field is missing or unknown"
-                elif documented_state == "negative":
-                    status = (
-                        "agreement" if source_states == {"negative"} else "conflict"
-                    )
-                    detail = (
-                        "both sources explicitly report nonavailability"
-                        if status == "agreement"
-                        else "workbook nonavailability conflicts with an SCB occurrence"
-                    )
-                elif "negative" in source_states:
-                    status = "conflict"
-                    detail = "workbook availability conflicts with explicit SCB nonavailability"
+                    detail = "the workbook availability field is missing"
                 else:
                     status = "agreement"
                     detail = (
@@ -1168,12 +1144,7 @@ def compare_availability_records(
         for record in sorted(
             all_exact.get(column, ()), key=lambda item: item.record_id
         ):
-            availability = _availability(record)
-            if (
-                availability is None
-                or availability.status != "value"
-                or availability.value is not True
-            ):
+            if _availability(record) is None:
                 continue
             years = _scope_years(record.edition_scope)
             variant_id = record.subject.native.register_variant_id
