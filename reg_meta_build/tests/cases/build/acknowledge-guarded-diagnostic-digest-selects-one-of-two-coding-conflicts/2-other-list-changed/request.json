@@ -1,0 +1,85 @@
+{
+  "note": "Step 1's curation and copied digests, built from a delivery whose Vardemangder file changed elsewhere: OTHER's (register 3, not built) only label changed after review; none of PINNED's or UNPINNED's rows or lists changed. A code-list claim id names the list's dataset, not its delivery revision (maintainer decision 5), so both issues keep their details and digests and the outcome is step 1's, unchanged.",
+  "fails_if": "a code-list claim id again hashes the Vardemangder delivery revision (source_value_bindings.py), so an edit to another register's list changes the claim ids in PINNED's details and both copied diagnostic digests go stale",
+  "sources": {
+    "description": "Variable 5 (Income) delivers literals A and B as two members of one 2020 edition in PINNED (register 1: members 800, 801) and UNPINNED (register 2: 810, 811). Each member carries two lists that disagree on its one code's label. OTHER (register 3) delivers VALUE (900) with one list, whose only label changed after review.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 800,
+          "var_id": 5,
+          "varname": "Income",
+          "regver_id": 820,
+          "register": [
+            "PINNED",
+            1,
+            10
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 801,
+          "var_id": 5,
+          "varname": "Income",
+          "regver_id": 820,
+          "register": [
+            "PINNED",
+            1,
+            10
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 810,
+          "var_id": 5,
+          "varname": "Income",
+          "regver_id": 830,
+          "register": [
+            "UNPINNED",
+            2,
+            20
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 811,
+          "var_id": 5,
+          "varname": "Income",
+          "regver_id": 830,
+          "register": [
+            "UNPINNED",
+            2,
+            20
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 900,
+          "var_id": 9,
+          "regver_id": 920,
+          "register": [
+            "OTHER",
+            3,
+            30
+          ]
+        }
+      ],
+      "vardemangder": [
+        "A list|1|01|Label|800|8001",
+        "A rival|1|01|Rival|800|8002",
+        "B list|1|02|Label|801|8011",
+        "B rival|1|02|Rival|801|8012",
+        "A list|1|01|Label|810|8101",
+        "A rival|1|01|Rival|810|8102",
+        "B list|1|02|Label|811|8111",
+        "B rival|1|02|Rival|811|8112",
+        "Other list|1|1|Changed after review|900|9001"
+      ]
+    }
+  },
+  "registers": [
+    "1",
+    "2"
+  ]
+}

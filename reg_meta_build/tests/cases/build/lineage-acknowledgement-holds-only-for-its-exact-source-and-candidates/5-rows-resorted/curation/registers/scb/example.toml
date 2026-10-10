@@ -1,0 +1,91 @@
+[register]
+provider = "scb"
+slug = "example"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "exact"
+[[variable]]
+native_id = "1.102"
+slug = "original"
+[[variable]]
+native_id = "1.103"
+slug = "added"
+[[variable]]
+native_id = "1.104"
+slug = "changed"
+[[variable]]
+native_id = "1.105"
+slug = "linked"
+[[variable]]
+native_id = "1.106"
+slug = "two-origins"
+
+[[acknowledge]]
+code = "unresolved_lineage_ambiguous_source_variant"
+subject = "scb/example/exact"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:101\", \"member:1001\"]}"]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+reason = "The literal source variant label People names two admitted variants of the exact register."
+evidence = "Exact source declaration and complete candidate closure reviewed."
+expected_evidence_sha256 = "b12d8c4b372f98ffdd2db28d565b4a572ace3d77cd6e83fa13138cae8c2e90a7"
+expected_diagnostic_sha256 = "4e08e91e62ed8ef58f2e306cc459626fc0e31d668d2a918f533c8d68000e81f3"
+
+[[acknowledge]]
+code = "unresolved_lineage_ambiguous_source_variant"
+subject = "scb/example/original"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:102\", \"member:1002\"]}"]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+reason = "The literal source variant label People names two admitted variants of the original register."
+evidence = "Exact source declaration and complete candidate closure reviewed."
+expected_evidence_sha256 = "d401a83865b63ff65a8a0b3e53438db6508a25dbc405c14d85ffbef4bc19718d"
+expected_diagnostic_sha256 = "eeb9fb847e8b4f3b19be895e99034216fdfd3a82f00cfc3e860487b9e93dc8b6"
+
+[[acknowledge]]
+code = "unresolved_lineage_ambiguous_source_variant"
+subject = "scb/example/added"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:103\", \"member:1003\"]}"]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+reason = "The literal source variant label People names two admitted variants of the added register."
+evidence = "Exact source declaration and complete candidate closure reviewed."
+expected_evidence_sha256 = "7e506351010dfccfdc5abc47b9cb948824017ae280ada1243b1c7385be405676"
+expected_diagnostic_sha256 = "b8b77b80deea97a80ada7f9dcfe10a8862ba3975086b1039e15f5e106302b631"
+
+[[acknowledge]]
+code = "unresolved_lineage_ambiguous_source_variant"
+subject = "scb/example/changed"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:104\", \"member:1004\"]}"]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+reason = "The literal source variant label People names two admitted variants of the changed register."
+evidence = "Exact source declaration and complete candidate closure reviewed."
+expected_evidence_sha256 = "f363b8b9062e2e793481f8a44a2a8951b5b2d275069a28def2be1715c99f6cf3"
+expected_diagnostic_sha256 = "c93e9b549aa7e9d77ddc4ed4fb3d4462d786ce8c926a357bf06a5a8a34b45a04"
+
+[[acknowledge]]
+code = "unresolved_lineage_ambiguous_source_variant"
+subject = "scb/example/linked"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:105\", \"member:1005\"]}"]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+reason = "The literal source variant label People names two admitted variants of the linked register."
+evidence = "Exact source declaration and complete candidate closure reviewed."
+expected_evidence_sha256 = "07f9e2cf65574ffc7a725a9d5072a2966c262ee77ce06ac0ca3cd154540c3323"
+expected_diagnostic_sha256 = "d83d106176078cbc34fda208c400b45065af739bd3dafc94ca78c520f7820cf2"
+
+[[acknowledge]]
+code = "unresolved_lineage_ambiguous_source_variant"
+subject = "scb/example/two-origins"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:110\", \"variable:106\", \"member:1006\"]}", "{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:111\", \"variable:106\", \"member:1007\"]}"]
+valid_from = "2000-01-01"
+valid_to = "2000-12-31"
+reason = "The 2000 label People names two admitted variants of the first origin."
+evidence = "Exact source declaration and the candidates of both origins reviewed."
+expected_evidence_sha256 = "de648bc2ab5332756d96d7c7e566c12cfa3f285362f45b9ae89bd6c21f1f7e85"
+expected_diagnostic_sha256 = "d8b592aebab3ebfcf51df390f877b0b7d92a7280a24fd62edec040d28c8eaf2e"

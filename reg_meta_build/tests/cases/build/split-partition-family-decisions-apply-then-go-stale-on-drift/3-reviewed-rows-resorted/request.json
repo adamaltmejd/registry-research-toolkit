@@ -1,0 +1,6 @@
+{
+  "note": "Step 1's curation, authored from the reviewed sources, built from the same rows re-sorted within each file (every Registerinformation and Vardemangder row at another physical position). Row order within a source is not evidence: every digest here (the unassigned family 5, the digest-only owners 11-13 and 20-21, the guarded stored text roles 15, 16, 22 and 23 with their bound lists) covers its records' and lists' own content, not their row numbers or the file's revision (maintainer decision 5), so every entry stays fresh and the outcome is step 1's exactly. Expected values are step 1's oracle, unchanged: the claim is that a re-sort changes nothing.",
+  "fails_if": "an evidence digest again covers row positions (the record's physical locators, an association's row number) or the delivery revision, or keeps its originals in delivered order, so a re-sorted delivery stales an owner, unassigned or uncoded entry that step 1 applied",
+  "sources": "scb-partition-families-rows-reversed",
+  "authored_from": "scb-partition-families"
+}

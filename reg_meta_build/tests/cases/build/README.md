@@ -183,7 +183,7 @@ expected_evidence_sha256 = {{coding_evidence_sha256 key=member:1001}}
   | Placeholder              | Renders                                                                                                                    |
   | ------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
   | `evidence_sha256`        | `acknowledgement_evidence_sha256` of the selected records                                                                  |
-  | `coding_evidence_sha256` | the same, plus the bound physical code-list evidence of each record (`coding_source_sha256`)                               |
+  | `coding_evidence_sha256` | the same, plus the bound physical code-list evidence of each record (`evidence_sha256`)                                    |
   | `expected_records`       | `capture_expectations(..., parents=True, coding=True)` of the selected records                                             |
   | `expected_fields`        | the captured fields of one record                                                                                          |
   | `period_text`            | one record's original period text                                                                                          |
@@ -192,13 +192,13 @@ expected_evidence_sha256 = {{coding_evidence_sha256 key=member:1001}}
   | `revision`               | one record's source revision                                                                                               |
   | `locators`               | the locators of the selected records                                                                                       |
   | `marker_bindings`        | one record's marker-binding fingerprints over `from=`..`to=`                                                               |
-  | `raw_codings`            | the sorted distinct `coding_source_sha256` of the code-list claims bound to the selected records                           |
+  | `raw_codings`            | the sorted distinct `evidence_sha256` of the code-list claims bound to the selected records                                |
   | `association`            | the locator of the one source-list association behind member `code=`/`label=` (a blank label when omitted) of those claims |
-  | `association_sha256`     | that association's `coding_source_sha256`                                                                                  |
+  | `association_sha256`     | that association's `evidence_sha256`                                                                                       |
   | `source_codings`         | `copied_coding_fingerprints` of those claims                                                                               |
   | `relationship_row`       | the physical row of the one literal relationship delivered in `table=`                                                     |
-  | `relationship_sha256`    | the content hash of that relationship's declaration                                                                        |
-  | `table_sha256`           | the content hash of the one prepared evidence table named `table=`                                                         |
+  | `relationship_sha256`    | `evidence_sha256` of that relationship's declaration                                                                       |
+  | `table_sha256`           | `evidence_sha256` of the one prepared evidence table named `table=`                                                        |
   | `naming_id`              | `authored_naming_id(kind=, provider=, register_key=, member_key=)`, a thin or SOS native id                                |
   | `variant_key`            | one record's native variant key                                                                                            |
 
@@ -220,8 +220,9 @@ description, operational definition), or a comma-separated list.
 
 `read=built` renders one placeholder from the built `sources` instead of
 `authored_from`: an entry the curator re-reviewed after the drift, beside one they did
-not. Evidence digests cover the whole delivery's source revision, so a digest read from
-the reviewed delivery goes stale on any change to that delivery.
+not. An evidence digest covers its guarded records' own content, not the delivery
+revision, so a digest read from the reviewed delivery goes stale only when one of those
+records changes.
 
 ## `expected.json`
 

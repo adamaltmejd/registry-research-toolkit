@@ -1,0 +1,285 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variant]]
+native_id = "1.11"
+slug = "movers"
+[[variant]]
+native_id = "1.12"
+slug = "workers"
+[[variant]]
+native_id = "1.13"
+slug = "described"
+# 5: an unassigned family withholds its declared native naming.
+[[variable]]
+native_id = "1.5"
+slug = "quantity"
+[[identity.unassigned]]
+variable = "1.5"
+expected_evidence_sha256 = {{evidence_sha256 variable=5}}
+evidence = "complete source review: no supported owner"
+
+# 6: a declared unassigned literal keeps the native family.
+[[variable]]
+native_id = "1.6.owned"
+slug = "owned"
+[[identity.partition]]
+variable = "1.6"
+columns = { PA_OWNED = "1.6.owned" }
+unassigned_columns = ["PA_LEFT"]
+columns_ref = "fixture map"
+
+# 7: an implicit suffix binds KEPT; `unknown` matches no literal.
+[[variable]]
+native_id = "1.7.kept"
+slug = "kept"
+[[variable]]
+native_id = "1.7.unknown"
+slug = "unknown"
+
+# 8: a partition map whose owner has no split naming.
+[[identity.partition]]
+variable = "1.8"
+columns = { MAP_ONE = "1.8.one" }
+unassigned_columns = ["MAP_LEFT"]
+columns_ref = "fixture map"
+
+# 9: one edition-scoped owner names an absent edition (column_owner 1, 2).
+[[variable]]
+native_id = "1.9.old"
+slug = "old"
+[[variable]]
+native_id = "1.9.new"
+slug = "new"
+[[identity.column_owner]]
+variable = "1.9"
+variant = "1.10"
+column = "ED_A"
+owner = "1.9.old"
+ref = "old basis"
+source_editions = ["2020", "absent"]
+[[identity.column_owner]]
+variable = "1.9"
+variant = "1.10"
+column = "ED_A"
+owner = "1.9.new"
+ref = "new basis"
+source_editions = ["2021"]
+
+# 10: two edition-scoped owners claim one edition (column_owner 3, 4).
+[[variable]]
+native_id = "1.10.former"
+slug = "former"
+[[variable]]
+native_id = "1.10.latter"
+slug = "latter"
+[[identity.column_owner]]
+variable = "1.10"
+variant = "1.10"
+column = "ED_B"
+owner = "1.10.former"
+ref = "former basis"
+source_editions = ["2021"]
+[[identity.column_owner]]
+variable = "1.10"
+variant = "1.10"
+column = "ED_B"
+owner = "1.10.latter"
+ref = "latter basis"
+source_editions = ["2021"]
+
+# 11, 12: digest-only owner alternatives (column_owner 5, 6).
+[[variable]]
+native_id = "1.11.removed"
+slug = "removed"
+[[identity.column_owner]]
+variable = "1.11"
+variant = "1.10"
+column = "OA_REMOVE"
+owner = "1.11.removed"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 variable=11}}
+[[variable]]
+native_id = "1.12.added"
+slug = "added"
+[[identity.column_owner]]
+variable = "1.12"
+variant = "1.10"
+column = "OB_ADD"
+owner = "1.12.added"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 variable=12}}
+
+# 14: an exact scoped owner takes one PP_ID occurrence (column_owner 7).
+[[variable]]
+native_id = "1.14.other"
+slug = "other"
+[[variable]]
+native_id = "1.14.supported"
+slug = "supported"
+[[identity.partition]]
+variable = "1.14"
+columns = { PP_OTHER = "1.14.other" }
+unassigned_columns = ["PP_ID"]
+columns_ref = "Retain the contradictory delivery only as unresolved."
+[[identity.column_owner]]
+variable = "1.14"
+variant = "1.11"
+column = "PP_ID"
+owner = "1.14.supported"
+ref = "supported occurrence"
+source_editions = ["2020"]
+
+# 15-17: guarded stored text roles (coding.uncoded 1, 2) and an ordinary entry (3).
+[[variable]]
+native_id = "1.15"
+slug = "text-a"
+[[variable]]
+native_id = "1.16"
+slug = "text-b"
+[[variable]]
+native_id = "1.17"
+slug = "text-c"
+[[coding.uncoded]]
+variable = "1.15"
+variant = "people"
+column = "TXT_A"
+periods = [["2020-01-01", "2020-12-31"]]
+stored_role = "label"
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:151}}
+reason = "The reviewed source documents a stored text component."
+source = "Exact original source and reference-book review"
+data_warning = "The attached numeric book is reference evidence, not the text response domain."
+[[coding.uncoded]]
+variable = "1.16"
+variant = "people"
+column = "TXT_B"
+periods = [["2020-01-01", "2020-12-31"]]
+stored_role = "label"
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:161}}
+reason = "The reviewed source documents a stored text component."
+source = "Exact original source and reference-book review"
+data_warning = "The attached numeric book is reference evidence, not the text response domain."
+[[coding.uncoded]]
+variable = "1.17"
+variant = "people"
+column = "TXT_C"
+periods = [["2020-01-01", "2020-12-31"]]
+reason = "The reviewed source documents a stored text component."
+source = "Exact original source and reference-book review"
+data_warning = "The attached numeric book is reference evidence, not the text response domain."
+
+# 18: descriptions of two partition owners of one record.
+[[variable]]
+native_id = "1.18.a"
+slug = "a"
+[[variable]]
+native_id = "1.18.b"
+slug = "b"
+[[identity.partition]]
+variable = "1.18"
+columns = { EN_A = "1.18.a", EN_B = "1.18.b" }
+columns_ref = "fixture"
+[[enrichment.description]]
+register = "scb/sample"
+variable = "a"
+description = "Accepted prose"
+provenance = "delivery list"
+[[enrichment.description]]
+register = "scb/sample"
+variable = "b"
+description = "Other prose"
+provenance = "delivery list"
+[[enrichment.alias]]
+register = "scb/sample"
+variable = "a"
+delivery_column = "FormerA"
+provenance = "delivery list"
+
+# 19: a description beside a sibling column's source description on one record.
+[[variable]]
+native_id = "1.19.c"
+slug = "c"
+[[variable]]
+native_id = "1.19.d"
+slug = "d"
+[[identity.partition]]
+variable = "1.19"
+columns = { SB_A = "1.19.c", SB_B = "1.19.d" }
+columns_ref = "fixture"
+[[enrichment.description]]
+register = "scb/sample"
+variable = "c"
+description = "Accepted prose"
+provenance = "delivery list"
+
+# 13, 20, 21: digest-only owners (column_owner 8-10) whose own original changes a
+# field (13) or a parent fact (20), or stays unchanged (21).
+[[variable]]
+native_id = "1.13.field"
+slug = "field-owner"
+[[identity.column_owner]]
+variable = "1.13"
+variant = "1.10"
+column = "OC_FIELD"
+owner = "1.13.field"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 variable=13}}
+[[variable]]
+native_id = "1.20.parent"
+slug = "parent-owner"
+[[identity.column_owner]]
+variable = "1.20"
+variant = "1.13"
+column = "OD_PARENT"
+owner = "1.20.parent"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 variable=20}}
+[[variable]]
+native_id = "1.21.kept"
+slug = "kept-owner"
+[[identity.column_owner]]
+variable = "1.21"
+variant = "1.10"
+column = "OE_KEEP"
+owner = "1.21.kept"
+ref = "Same physical amount, retain both source operations"
+source_editions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 variable=21}}
+
+# 22, 23: guarded stored text roles (coding.uncoded 4, 5) whose original's parent
+# fact changes (22) or that stays unchanged (23).
+[[variable]]
+native_id = "1.22"
+slug = "text-d"
+[[variable]]
+native_id = "1.23"
+slug = "text-e"
+[[coding.uncoded]]
+variable = "1.22"
+variant = "described"
+column = "TXT_D"
+periods = [["2020-01-01", "2020-12-31"]]
+stored_role = "label"
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:221}}
+reason = "The reviewed source documents a stored text component."
+source = "Exact original source and reference-book review"
+data_warning = "The attached numeric book is reference evidence, not the text response domain."
+[[coding.uncoded]]
+variable = "1.23"
+variant = "people"
+column = "TXT_E"
+periods = [["2020-01-01", "2020-12-31"]]
+stored_role = "label"
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:231}}
+reason = "The reviewed source documents a stored text component."
+source = "Exact original source and reference-book review"
+data_warning = "The attached numeric book is reference evidence, not the text response domain."

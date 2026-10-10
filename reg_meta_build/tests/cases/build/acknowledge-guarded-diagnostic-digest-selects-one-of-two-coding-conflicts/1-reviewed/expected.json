@@ -1,0 +1,60 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "acknowledged": {
+      "conflicting_code_memberships": 2
+    }
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "conflicting_code_memberships"
+      },
+      "fields": [
+        "subject",
+        "severity",
+        "acknowledged_by"
+      ],
+      "match": "set",
+      "rows": [
+        [
+          "scb/pinned/income",
+          "warning",
+          "curation/registers/scb/pinned.toml#/acknowledge/1"
+        ],
+        [
+          "scb/pinned/income",
+          "warning",
+          "curation/registers/scb/pinned.toml#/acknowledge/2"
+        ],
+        [
+          "scb/unpinned/income",
+          "error",
+          null
+        ]
+      ],
+      "note": "Each PINNED entry acknowledges exactly one of the two issues; UNPINNED's two issues stay errors."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "overbroad_curation_entry",
+          "curation/registers/scb/unpinned.toml#/acknowledge/1"
+        ]
+      ],
+      "note": "UNPINNED's undigested entry matches both issues; PINNED's entries are neither stale nor over-broad."
+    }
+  ]
+}

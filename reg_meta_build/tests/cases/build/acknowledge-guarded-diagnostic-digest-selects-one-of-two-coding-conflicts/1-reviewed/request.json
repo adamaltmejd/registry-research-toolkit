@@ -1,0 +1,88 @@
+{
+  "replaces": [
+    "test_source_scope_acknowledgements.py::test_complete_diagnostic_guard_selects_only_one_distinct_issue[detail]"
+  ],
+  "note": "The detail-only arm of the diagnostic guard, deferred from #1314 until claim ids stopped hashing the code-list revision. PINNED and UNPINNED each map the literals A and B of one 2020 edition to one variable, and each literal's member carries two lists that disagree on its code's label, so formation reports two conflicting_code_memberships errors per register that share code, subject, refs (both members), fields, period and withheld output and differ only in their detail: the claim ids of each literal's two lists. From the old test ([detail]: two issues differing only in detail): an entry without a diagnostic digest matches both and is over-broad, leaving both errors (UNPINNED); one entry per issue, each pinning its issue's complete diagnostic, acknowledges exactly that issue (PINNED; old: `acknowledged == {code: 2}`, each issue acknowledged by its own entry). Each `expected_diagnostic_sha256` is the canonical SHA-256 of the issue as the build's report ledger records it before acknowledgement (severity error, no acknowledged_by), read from this step built without the entries and copied as a curator copies it; the same reconstruction reproduces the committed digests of acknowledge-guarded-diagnostic-digest-selects-one-of-two-issues. Entry 1 pins the issue whose detail sorts first. Step 2 shows the copies survive another delivery.",
+  "fails_if": "`settle_acknowledgements` (source_curation.py) or `resolve_source_scope` leaves `expected_diagnostic_sha256` out of the held issue key or stops hashing the complete diagnostic including its detail, so PINNED's two entries collide on two issues that differ only in detail (one issue acknowledged twice, or both entries stale); or the settle loop stops counting distinct matches, so UNPINNED's undigested entry acknowledges one of its two issues instead of being over-broad",
+  "sources": {
+    "description": "Variable 5 (Income) delivers literals A and B as two members of one 2020 edition in PINNED (register 1: members 800, 801) and UNPINNED (register 2: 810, 811). Each member carries two lists that disagree on its one code's label. OTHER (register 3) delivers VALUE (900) with one list.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 800,
+          "var_id": 5,
+          "varname": "Income",
+          "regver_id": 820,
+          "register": [
+            "PINNED",
+            1,
+            10
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 801,
+          "var_id": 5,
+          "varname": "Income",
+          "regver_id": 820,
+          "register": [
+            "PINNED",
+            1,
+            10
+          ]
+        },
+        {
+          "colname": "A",
+          "cvid": 810,
+          "var_id": 5,
+          "varname": "Income",
+          "regver_id": 830,
+          "register": [
+            "UNPINNED",
+            2,
+            20
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 811,
+          "var_id": 5,
+          "varname": "Income",
+          "regver_id": 830,
+          "register": [
+            "UNPINNED",
+            2,
+            20
+          ]
+        },
+        {
+          "colname": "VALUE",
+          "cvid": 900,
+          "var_id": 9,
+          "regver_id": 920,
+          "register": [
+            "OTHER",
+            3,
+            30
+          ]
+        }
+      ],
+      "vardemangder": [
+        "A list|1|01|Label|800|8001",
+        "A rival|1|01|Rival|800|8002",
+        "B list|1|02|Label|801|8011",
+        "B rival|1|02|Rival|801|8012",
+        "A list|1|01|Label|810|8101",
+        "A rival|1|01|Rival|810|8102",
+        "B list|1|02|Label|811|8111",
+        "B rival|1|02|Rival|811|8112",
+        "Other list|1|1|One|900|9001"
+      ]
+    }
+  },
+  "registers": [
+    "1",
+    "2"
+  ]
+}

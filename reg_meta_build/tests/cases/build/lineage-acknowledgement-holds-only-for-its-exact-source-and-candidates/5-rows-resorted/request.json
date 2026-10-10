@@ -1,0 +1,5 @@
+{
+  "note": "Step 1's curation and copied digests, built from the same Registerinformation rows in reverse order. Each lineage evidence digest covers its originals' own content and the candidate context, not row positions or the file's revision (maintainer decision 5), and each diagnostic digest covers the issue, which names records by semantic key; so all six entries still acknowledge their issues and the outcome is step 1's exactly. Expected values are step 1's oracle, unchanged: the claim is that a re-sort changes nothing.",
+  "fails_if": "`lineage_acknowledgement_sha256` again hashes the originals' physical locators or the delivery revision, or keeps them in delivered order, so a re-sorted Registerinformation stales an acknowledgement step 1 applied",
+  "sources": "scb-lineage-acknowledged-rows-reversed"
+}
