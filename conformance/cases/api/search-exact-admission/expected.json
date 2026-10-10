@@ -1,0 +1,22 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/register_name": [
+        "Example",
+        "Example",
+        "Filler"
+      ],
+      "/data/items/2/name": "Annual year"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/name": [
+        "Place",
+        "Annual year"
+      ]
+    }
+  }
+]

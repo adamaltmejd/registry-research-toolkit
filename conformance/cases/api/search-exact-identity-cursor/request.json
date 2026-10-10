@@ -1,0 +1,38 @@
+{
+  "note": "Twin of test_search_ranking.py::test_exact_identity_leads_relevance_order_across_cursor_pages. `class/exact` (short name `C12`) owns only `C120`, so the code arm ranks it after `broad-a` and `broad-b`, which own `C12` itself and whose names start with it. Fails if the exact identity stops leading the merged order, or if a cursor page continues a different order than one page of the same rows.",
+  "kind": "catalog",
+  "fixture": "reader/search-relevance",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "C12",
+        "type": "classification",
+        "limit": 2
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "C12",
+        "type": "classification",
+        "limit": 2
+      },
+      "cursor_from": [
+        0,
+        "/data/next_cursor"
+      ]
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "C12",
+        "type": "classification",
+        "limit": 3
+      }
+    }
+  ]
+}
