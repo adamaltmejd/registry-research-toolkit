@@ -1,0 +1,16 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key"],
+      "rows": [["lonfink", "period-family:checked:lonfink"]]
+    }
+  ]
+}

@@ -10,16 +10,18 @@ build accepts.
 
 from __future__ import annotations
 
+import hashlib
 from dataclasses import fields
 from typing import TYPE_CHECKING, get_origin
 
 from _repo_curation_support import REPO_CURATION, REPO_ROOT
 from pydantic import BaseModel
 from reg_meta_build.cis2016_matrix import load_matrix
-from reg_meta_build.classifications import load_valid_codes
 from reg_meta_build.concept_groups import load_worklist_concept_groups
 from reg_meta_build.doc_db import load_doc_sources, load_related_documents
 from reg_meta_build.scb_errata import resolve_scb_errata
+from reg_meta_build.source_evidence import SourceRevision
+from reg_meta_build.sources.code_lists import read_code_list
 
 from reg_meta_build.fqid_slugs import (
     diff_snapshot,
@@ -138,11 +140,24 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     )
     assert errata.delivered and errata.columns and errata.versions
 
+    # Every declared book reads through the build's own CSV reader, with members.
     books = REPO_ROOT / "input_data" / "classifications"
     for entry in tree.classifications:
-        assert load_valid_codes(books / entry.classification.codes_file), (
+        path = books / entry.classification.codes_file
+        payload = path.read_bytes()
+        revision = SourceRevision.create(
+            dataset=path.name,
+            publisher="classifications",
+            purpose="Committed classification book",
+            upstream_revision="committed",
+            artifact_path=f"catalog/classifications/{path.name}",
+            artifact_size=len(payload),
+            artifact_sha256=hashlib.sha256(payload).hexdigest(),
+        )
+        assert read_code_list(path, revision, name=path.stem).associations, (
             entry.classification.short_name
         )
+
     label_rules = {
         label: entry.classification.short_name
         for entry in tree.classifications

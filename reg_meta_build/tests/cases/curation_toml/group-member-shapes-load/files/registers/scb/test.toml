@@ -1,0 +1,38 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[group]]
+register = "scb/test"
+key = "umbrella"
+label = "Umbrella"
+members = [{ variable = "a" }, { variable = "b" }]
+
+[[group]]
+register = "scb/test"
+key = "years"
+label = "Years"
+axis = "year"
+[[group.members]]
+variable = "c"
+value = "1"
+label = "One"
+[[group.members]]
+variable = "d"
+value = "2"
+label = "Two"
+
+[[group]]
+register = "scb/test"
+key = "grid"
+label = "Grid"
+axes = [{ axis = "sex", label = "Sex" }, { axis = "unit", label = "Unit" }]
+[[group.members]]
+variable = "e"
+delivery_column = "E_M"
+coords = [{ axis = "sex", value = "m", label = "Men" }, { axis = "unit", value = "p", label = "Persons" }]
+[[group.members]]
+variable = "e"
+delivery_column = "E_W"
+coords = [{ axis = "unit", value = "p", label = "Persons" }, { axis = "sex", value = "w", label = "Women" }]

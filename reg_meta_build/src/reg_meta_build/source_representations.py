@@ -218,7 +218,8 @@ def form_representations(
 ]:
     """Combine agreeing metadata; never select a sibling as the source winner.
 
-    Only applicable cases returned by resolve_representation_cases belong here.
+    Only applicable cases returned by resolve_representation_cases belong here, and
+    only interval states: formation keeps year-independent states apart.
     Every named column must establish metadata over the declared window. Physical
     aliases retain their separate declared periods; these never cut the metadata
     state into months. Missing members or conflicting groupings withhold states.
@@ -276,28 +277,6 @@ def form_representations(
     ):
         members = [s for s in states if s.variant == variant]
         reviewed = by_variant[variant]
-        independent = [s for s in members if s.period_scope == "year_independent"]
-        result.extend(independent)
-        members = [s for s in members if s.period_scope == "intervals"]
-        independent_columns = {s.delivery_column_name for s in independent}
-        dated_reviewed = []
-        for case, decision in reviewed:
-            if independent_columns.intersection(c.column for c in decision.columns):
-                diagnostics.append(
-                    ResolutionDiagnostic(
-                        code="unsupported_representation_scope",
-                        severity="error",
-                        case_id=case.case_id,
-                        subject=subject,
-                        detail="A dated parallel-column decision cannot establish a shared window for a year-independent table.",
-                        refs=tuple(t.ref for t in (*case.targets, *case.support)),
-                        fields=("representations",),
-                        withheld_output=("representations",),
-                    )
-                )
-            else:
-                dated_reviewed.append((case, decision))
-        reviewed = dated_reviewed
         cut_points = set()
         for item in (*members, *(d for _, d in reviewed)):
             if item.valid_from is None or item.valid_to is None:

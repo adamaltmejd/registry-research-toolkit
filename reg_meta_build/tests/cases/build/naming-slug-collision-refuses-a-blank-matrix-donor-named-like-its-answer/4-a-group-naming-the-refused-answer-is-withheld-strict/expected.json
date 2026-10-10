@@ -1,0 +1,19 @@
+{
+  "status": "blocked",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": ["naming_slug_collision", "unresolved_catalog_identity", "withheld_catalog_dependency"]
+      },
+      "fields": ["code", "severity", "subject", "case_id", "locator"],
+      "rows": [
+        ["naming_slug_collision", "error", "answer-sweden", "curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014:sweden", "curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014"],
+        ["naming_slug_collision", "error", "answer-sweden", "curation/registers/scb/innovation-foretag.toml#variable/257.15662", "curation/registers/scb/innovation-foretag.toml#variable/257.15662"],
+        ["unresolved_catalog_identity", "error", "('scb-registerinformation', 'scb', 'register', 'native-int', 257, 'accepted-matrix', 'curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014', 'sweden')", null, null],
+        ["withheld_catalog_dependency", "error", "variable_group:scb/innovation-foretag/partner", null, null],
+        ["withheld_catalog_dependency", "error", "variable_group:scb/innovation-foretag/partner:member:scb/innovation-foretag/answer-sweden:", null, null]
+      ]
+    }
+  ]
+}

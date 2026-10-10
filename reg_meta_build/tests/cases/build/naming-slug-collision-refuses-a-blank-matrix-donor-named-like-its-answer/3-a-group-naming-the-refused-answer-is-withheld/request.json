@@ -1,0 +1,33 @@
+{
+  "note": "Step 1's tree and source, plus a curated [[group]] of both matrix answers. `answer-sweden` is refused, so its FQID is withheld: the group member is withheld, and the group, left with one member, is withheld whole. Both dependents carry the refused answer's source refs. `answer-abroad` still publishes. Before the fix the diagnostic build aborted with `catalog_dependency_missing`.",
+  "fails_if": "`resolve_source_scope` (source_scope.py) stops keying a refused name's unresolved identity under the FQID its slug would have taken (`withheld_fqid`), or `compile_curation` (curation_compile.py) stops keeping the merged-scope refused declarations in `refused_naming`, so the group member is reported `catalog_dependency_missing` and the build aborts",
+  "sources": {
+    "description": "SCB register 257 (variant 553) delivers one blank-column source instance (var_id 15662, CVID 400684, edition '2012 - 2014') whose value set is the single code 1/Yes; no Unika file.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 400684,
+          "var_id": 15662,
+          "colname": "",
+          "varname": "Partner location",
+          "register": [
+            "Innovation",
+            257,
+            553
+          ],
+          "regver_id": 7293,
+          "versionname": "2012 - 2014",
+          "year": "2014",
+          "data_type": "varchar"
+        }
+      ],
+      "vardemangder": [
+        "Svar|1|1|Yes|400684|7001"
+      ],
+      "valid_dates": [
+        "7001|2012-01-01|2014-12-31"
+      ],
+      "unika": null
+    }
+  }
+}

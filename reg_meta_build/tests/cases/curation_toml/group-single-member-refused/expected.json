@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "note": "A group needs two members to fold anything. Before this refusal the loader accepted it and the build failed in compile with an unlocated 'at least 2 items' error. Allowed twin: group-member-shapes-load, whose umbrella has exactly two members.",
+  "fails_if": "the register loader stops validating each [[group]] as the build writes it, so a one-member group loads and the build later fails unlocated (pipeline_build_failed)",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "group 'solo' members",
+      "at least 2 items"
+    ]
+  }
+}

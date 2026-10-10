@@ -162,6 +162,7 @@ class CompiledScope(_Model):
     source_diagnostics: tuple[tuple[NativeKey, ResolutionDiagnostic], ...] = ()
     naming: tuple[NamingDeclaration, ...] = ()
     naming_ambiguities: tuple[NamingAmbiguity, ...] = ()
+    refused_naming: tuple[NamingDeclaration, ...] = ()
     provider_keys: tuple[tuple[NativeKey, str | None], ...] = ()
     variants: tuple[tuple[NativeKey, ResolvedVariant], ...] = ()
 
@@ -206,6 +207,7 @@ def _compiled_scope(
         source_diagnostics=(compiled.source_diagnostics or {}).get(key, ()),
         naming=(compiled.naming or {}).get(key, ()),
         naming_ambiguities=(compiled.naming_ambiguities or {}).get(key, ()),
+        refused_naming=(compiled.refused_naming or {}).get(key, ()),
         provider_keys=(compiled.provider_keys or {}).get(key, ()),
         variants=(compiled.variants or {}).get(key, ()),
     )
@@ -571,6 +573,7 @@ def _run_pipeline(
                 compiled.source_diagnostics,
                 compiled.naming,
                 compiled.naming_ambiguities,
+                compiled.refused_naming,
                 compiled.provider_keys,
                 compiled.variants,
             ):
@@ -1229,6 +1232,7 @@ def _run_pipeline(
                         cases=scope.cases,
                         naming=scope.naming,
                         naming_ambiguities=scope.naming_ambiguities,
+                        refused_naming=scope.refused_naming,
                         provider_keys=_unique_pairs(
                             scope.provider_keys, "provider key"
                         ),

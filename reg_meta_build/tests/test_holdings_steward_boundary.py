@@ -222,9 +222,11 @@ def test_strict_extension_refuses_a_candidate_drifted_from_its_accepted_commit(
     strict_builds: dict,
 ) -> None:
     # A meaning-free byte edit to an accepted file, made after acceptance, with the
-    # commit and manifest pins unchanged. The refusal names the candidate's
-    # repository. Fails if extend-db compiles the candidate's working tree, or
-    # compares parsed content, instead of requiring the accepted commit's bytes.
+    # commit and manifest pins unchanged. The refusal names the drifted file
+    # repo-relative and never the checkout's absolute path. Fails if extend-db
+    # compiles the candidate's working tree, or compares parsed content, instead of
+    # requiring the accepted commit's bytes, or if the refusal prints the
+    # host-specific checkout path.
     directory = strict_builds["directory"]
     candidate = _accepted_candidate(directory / "drifted")
     inventory = candidate[0] / "policy/inventory.toml"
@@ -235,7 +237,8 @@ def test_strict_extension_refuses_a_candidate_drifted_from_its_accepted_commit(
     expected = json.loads((SNAPSHOT / "expected.json").read_text())["drift_error"]
     assert (result.returncode, error["code"]) == (EXIT_CONFIG, expected["code"])
     assert expected["message_contains"] in error["message"]
-    assert str((directory / "drifted").resolve()) in error["message"]
+    assert str(directory.resolve()) not in error["message"]
+    assert str(directory) not in error["message"]
     assert not output.exists()
 
 

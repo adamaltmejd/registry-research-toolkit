@@ -1,0 +1,16 @@
+{
+  "note": "Regression: the thin variable's addition copies its own list's coding (`copy_coding`), and the register file also has a `[[representation.parallel]]` entry. Compiling that entry replays the register's occurrence cases without bound donor coding, so the build used to abort with the bare `ValueError` \"copied coding requires original donor binding evidence\" (pipeline_build_failed). The entry names a COL2 the source never delivers, so it goes stale; COL keeps the sibling case's state and its two members.",
+  "fails_if": "an occurrence-case replay again requires bound donor coding for a copied-coding addition (`apply_occurrence_cases` in source_effects.py), so compiling the parallel entry aborts the build instead of reporting it stale",
+  "sources": {
+    "description": "Authored canonical-SCB register r (open from 2010) whose variable COL names its own list own-list.csv (01 First, 02 Second), as in thin-variable-carries-the-members-of-its-own-declared-list. Plus the SCB sample.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    },
+    "files": {
+      "scb_canonical/scb_canonical.toml": "[[register]]\nkey = \"r\"\nname = \"R\"\nvalid_from = \"2010-01-01\"\n[[register.variable]]\nname = \"Col\"\ncolumn = \"COL\"\ndata_type = \"text\"\nvalue_set = \"own-list\"\n",
+      "scb_canonical/own-list.csv": "code,label\n01,First\n02,Second\n"
+    }
+  }
+}

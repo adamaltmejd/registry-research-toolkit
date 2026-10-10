@@ -1,0 +1,25 @@
+{
+  "note": "Allowed twin of step 1: the same source and matrix, with the donor pinned `partner-location`, a slug no answer takes. Nothing collides, so both answers publish as in `matrix-blank-answers-inherit-the-donor-code-list`, and the named blank donor still publishes no variable of its own.",
+  "fails_if": "`refuse_slug_collisions` (source_naming.py) treats a matrix answer and its own donor as one colliding identity whatever their slugs (for example by grouping on the donor's register or var_id instead of the slug), so a donor named apart still withholds `answer-sweden`",
+  "sources": {
+    "description": "SCB register 257 (variant 553) delivers one blank-column source instance (var_id 15662, CVID 400684, edition '2012 - 2014') whose value set is the single code 1/Yes; no Unika file.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 400684,
+          "var_id": 15662,
+          "colname": "",
+          "varname": "Partner location",
+          "register": ["Innovation", 257, 553],
+          "regver_id": 7293,
+          "versionname": "2012 - 2014",
+          "year": "2014",
+          "data_type": "varchar"
+        }
+      ],
+      "vardemangder": ["Svar|1|1|Yes|400684|7001"],
+      "valid_dates": ["7001|2012-01-01|2014-12-31"],
+      "unika": null
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "note": "Two native variables of one register file, 1.102 and 1.103, are both pinned `two`. One naming conversion refuses both (`convert_naming`), each located at its [[variable]] entry, and each identity is withheld. A tag naming `scb/sample/two` is pruned like a dependent of any other withheld variable: one `withheld_catalog_dependency` per refused identity, carrying its source refs. `value` still publishes. Before the fix the build aborted with `catalog_dependency_missing`.",
+  "fails_if": "`convert_naming` (source_naming.py) stops returning its refused declarations in `NamingConversion.refused`, or `compile_native_naming` (curation_compile.py) stops carrying them into `refused_naming`, so the tag member is reported `catalog_dependency_missing` and the build aborts",
+  "sources": {
+    "description": "SCB register 1 (variant 10) delivers VALUE (var_id 101), ONE (102) and OTHER (103) in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "varname": "ValueVar"
+        },
+        {
+          "cvid": 1002,
+          "var_id": 102,
+          "colname": "ONE",
+          "varname": "OneVar"
+        },
+        {
+          "cvid": 1003,
+          "var_id": 103,
+          "colname": "OTHER",
+          "varname": "OtherVar"
+        }
+      ]
+    }
+  }
+}

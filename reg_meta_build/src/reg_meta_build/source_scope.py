@@ -21,7 +21,6 @@ from reg_meta_build.source_classification_bindings import apply_classification_c
 from reg_meta_build.source_coding import coding_source_sha256
 from reg_meta_build.source_coding_choices import (
     apply_coding_choices,
-    coding_expectations,
 )
 from reg_meta_build.source_coordinates import (
     native_column_key,
@@ -31,12 +30,9 @@ from reg_meta_build.source_coordinates import (
 )
 from reg_meta_build.source_curation import (
     AcknowledgeDecision,
-    ApplicabilityIssue,
-    CheckedIdentityChange,
     ClassificationDecision,
     CodingDecision,
     DeliveryMetadataDecision,
-    OccurrenceCorrectionDecision,
     RepresentationDecision,
     ResolutionDiagnostic,
     SourceEvidence,
@@ -56,7 +52,6 @@ from reg_meta_build.source_naming import check_naming_target, native_provider_ke
 from reg_meta_build.source_representations import resolve_representation_cases
 from reg_meta_build.source_siblings import SiblingResolution, resolve_sibling_pairs
 from reg_meta_build.source_value_bindings import (
-    bind_copied_coding,
     bind_occurrence_code_lists,
 )
 
@@ -150,6 +145,7 @@ def resolve_source_scope(
     cases: tuple[CurationCase, ...],
     naming: tuple[NamingDeclaration, ...],
     naming_ambiguities: tuple[NamingAmbiguity, ...] = (),
+    refused_naming: tuple[NamingDeclaration, ...] = (),
     provider_keys: Mapping[NativeKey, str | None],
     derive_native_provider_keys: bool = False,
     value_sessions: tuple[ValueBindingSession, ...],
@@ -182,12 +178,9 @@ def resolve_source_scope(
     formation's per-column state overlaps, which a diagnostic build withholds.
 
     Missing mappings and unsupported decisions are implementation failures, with
-    two diagnostic exceptions treated as an explicit None provider key (unresolved
-    catalog identity): an unmapped key that is the unsplit base of a non-applied
-    partition case's exact split set, with every split key mapped, so a stale
-    partition decision withholds its family instead of aborting the build; and a
-    partition split whose pin converted no naming, which withholds that split.
-    Strict mode still fails fast, the unconverted split with its located code
+    one diagnostic exception treated as an explicit None provider key (unresolved
+    catalog identity): a partition split whose pin converted no naming, which
+    withholds that split. Strict mode fails fast with its located code
     (naming_partition_unconverted).
 
     An explicit None provider key records an unresolved catalog identity; coding and
@@ -327,6 +320,11 @@ def resolve_source_scope(
 
     names = {}
     withheld_naming = set()
+    refused = {
+        item.target.source_key: item
+        for item in refused_naming
+        if item.target.kind == "variable"
+    }
     for declaration in naming:
         target = declaration.target
         token = target.kind, target.source_key
@@ -346,8 +344,7 @@ def resolve_source_scope(
     occurrence_cases = tuple(
         c for c in cases if c.decision.kind == "correct_occurrences"
     )
-    copied_coding = bind_copied_coding(evidence, occurrence_cases, value_sessions)
-    corrected = apply_occurrence_cases(evidence, occurrence_cases, coding=copied_coding)
+    corrected = apply_occurrence_cases(evidence, occurrence_cases)
     enumerated_columns = {
         entry.column
         for register in coding_registers
@@ -677,21 +674,6 @@ def resolve_source_scope(
         late[key].append(case)
     variables = {}
     coverage: list[CoverageObligation] = []
-    stale_splits: list[tuple[NativeKey, ...]] = []
-    if diagnostic:
-        for entry in corrected.accounting:
-            if entry.disposition == "applied":
-                continue
-            decision = entry.case.decision
-            if not isinstance(decision, OccurrenceCorrectionDecision):
-                continue
-            splits = tuple(
-                tuple(effect.variable_key)
-                for effect in decision.effects
-                if isinstance(effect, CheckedIdentityChange)
-            )
-            if splits:
-                stale_splits.append(splits)
     for key, items in sorted(groups.items(), key=lambda item: repr(item[0])):
         occurrences = tuple(items)
         refs = tuple(
@@ -702,22 +684,7 @@ def resolve_source_scope(
             # pin, or one whose slug a reviewed owner already takes) is a curation
             # outcome, not an implementation failure.
             unconverted_split = len(key) > 2 and key[-2] == "accepted-partition"
-            if not (
-                diagnostic
-                and (
-                    unconverted_split
-                    or any(
-                        all(
-                            len(split) > len(key) and split[: len(key)] == key
-                            for split in splits
-                        )
-                        and all(
-                            provider_keys.get(split) is not None for split in splits
-                        )
-                        for splits in stale_splits
-                    )
-                )
-            ):
+            if not (diagnostic and unconverted_split):
                 if unconverted_split:
                     raise curation_error(
                         "naming_partition_unconverted",
@@ -752,6 +719,13 @@ def resolve_source_scope(
             if register_fqid and declaration and declaration.naming.slug
             else None
         )
+        # A slug collision refused this identity's name; dependents of the FQID
+        # it would have taken are withheld with it, not reported missing.
+        withheld_fqid = fqid
+        if declaration is None and (name := refused.get(key)) is not None:
+            register_fqid = register_fqids.get(name.target.register_key)
+            if register_fqid and name.naming.slug:
+                withheld_fqid = f"{register_fqid}/{name.naming.slug}"
         classified = apply_classification_cases(
             coding_evidence,
             tuple(c for c in selected if c.decision.kind == "classification"),
@@ -786,26 +760,6 @@ def resolve_source_scope(
             warning_cases, evaluate_cases(warning_cases, coding_evidence), strict=True
         ):
             decision = case.decision
-            observed = coding_expectations(
-                tuple(claims.get(decision.column_key, ())),
-                decision.valid_from,
-                decision.valid_to,
-            )
-            if set(observed) != set(decision.expected_codings):
-                evaluation = evaluation.model_copy(
-                    update={
-                        "status": "stale",
-                        "decision": None,
-                        "issues": (
-                            *evaluation.issues,
-                            ApplicabilityIssue(
-                                code="copied_coding_evidence_changed",
-                                subject=case.case_id,
-                                detail="The source coding evidence changed; no warning was applied.",
-                            ),
-                        ),
-                    }
-                )
             evaluations.append(evaluation)
             if evaluation.status != "applicable":
                 emit(
@@ -868,8 +822,8 @@ def resolve_source_scope(
                     withheld_output=("variable",),
                 )
             emit(issue)
-            if fqid is not None:
-                withheld["variable", fqid].append(issue)
+            if withheld_fqid is not None:
+                withheld["variable", withheld_fqid].append(issue)
             for column, coding in classified.coding.items():
                 for issue in coding.issues:
                     emit(
