@@ -1369,8 +1369,8 @@ def _check_minted_id_bands(
     Catches an adapter that forgot to `mint()` (its id would land in the SCB low
     band and risk an id collision) and, symmetrically, an SCB id that overflowed
     into the minted band. value_set/value_code/code_variable_map.code_id are
-    EXCLUDED — they are content-addressed, autoincrement, PROVIDER-SHARED, so
-    they belong to neither band. Self-skips when no minted rows are present (the
+    EXCLUDED — they are content-addressed or dense, PROVIDER-SHARED, so they
+    belong to neither band. Self-skips when no minted rows are present (the
     SCB-only fixture / `--providers=scb` build), so it only bites on a combined
     build.
 

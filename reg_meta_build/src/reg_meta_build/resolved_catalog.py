@@ -692,8 +692,12 @@ def _write_value_sets(
     conn: sqlite3.Connection,
     variables: tuple[ResolvedVariable, ...],
     classifications: tuple[ResolvedClassification, ...],
-) -> dict[ResolvedCodeSet, int]:
-    """Store content-shared memberships without provider or validity inference."""
+) -> tuple[dict[ResolvedCodeSet, int], dict[tuple[str, str], int]]:
+    """Store content-shared memberships without provider or validity inference.
+
+    Returns the value-set IDs and the code IDs. `code_id` is dense in (label,
+    code) order, so codes with one label sit together on disk (#1296).
+    """
     code_sets = sorted(
         {
             state.value_set
@@ -716,7 +720,12 @@ def _write_value_sets(
         for classification in classifications
         for code in classification.codes
     )
-    code_ids = {pair: _value_code_id(*pair) for pair in sorted(pairs)}
+    code_ids = {
+        pair: code_id
+        for code_id, pair in enumerate(
+            sorted(pairs, key=lambda pair: (pair[1], pair[0])), start=1
+        )
+    }
     conn.executemany(
         "INSERT INTO value_code (code_id, code, label) VALUES (?, ?, ?)",
         ((code_id, *pair) for pair, code_id in code_ids.items()),
@@ -734,11 +743,7 @@ def _write_value_sets(
             ((set_id, code_ids[pair]) for pair in code_set.members),
         )
         set_ids[code_set] = set_id
-    return set_ids
-
-
-def _value_code_id(code: str, label: str) -> int:
-    return mint("resolved-catalog", "value-code", code, label)
+    return set_ids, code_ids
 
 
 def _validate_catalog_metadata(
@@ -970,6 +975,7 @@ def _write_classifications(
     conn: sqlite3.Connection,
     classifications: tuple[ResolvedClassification, ...],
     predecessors: dict[str, str],
+    code_ids: dict[tuple[str, str], int],
 ) -> None:
     for classification in classifications:
         classification_id = _classification_id(classification.slug)
@@ -999,7 +1005,7 @@ def _write_classifications(
             "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
             "VALUES (?, ?, ?, 1)",
             (
-                (classification_id, _value_code_id(code.code, code.label), code.level)
+                (classification_id, code_ids[code.code, code.label], code.level)
                 for code in sorted(
                     classification.codes, key=lambda c: (c.code, c.label)
                 )
@@ -1012,6 +1018,7 @@ def _write_conformance(
     state_id: int,
     conformance: ResolvedConformance,
     classification: ResolvedClassification,
+    code_ids: dict[tuple[str, str], int],
 ) -> None:
     checked = len(conformance.checked_codes)
     extensions = set(conformance.nonconforming_members) | set(
@@ -1045,7 +1052,7 @@ def _write_conformance(
             (
                 state_id,
                 _classification_id(conformance.declared_classification),
-                _value_code_id(*pair),
+                code_ids[pair],
                 "sentinel" if pair in sentinel_pairs else "nonstandard",
                 sentinel_meanings.get(pair[0]) if pair in sentinel_pairs else None,
                 json.dumps(
@@ -1240,8 +1247,12 @@ def write_resolved_catalog(
             register_py_lower(conn)
             conn.executescript(DDL)
             seed_providers(conn)
-            value_set_ids = _write_value_sets(conn, variables, classifications)
-            _write_classifications(conn, classifications, classification_predecessors)
+            value_set_ids, code_ids = _write_value_sets(
+                conn, variables, classifications
+            )
+            _write_classifications(
+                conn, classifications, classification_predecessors, code_ids
+            )
             classifications_by_slug = {book.slug: book for book in classifications}
             conn.executemany(
                 "INSERT INTO classification_replaced_by "
@@ -1400,6 +1411,7 @@ def write_resolved_catalog(
                                 state_id,
                                 link.conformance,
                                 classifications_by_slug[link.classification],
+                                code_ids,
                             )
                     conn.execute(
                         "INSERT OR IGNORE INTO variable_alias "
