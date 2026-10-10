@@ -70,6 +70,22 @@ _DELIVERY_POSITION = frozenset(
         "claim_id",
     }
 )
+# Collections gathered from several physical rows, in delivered row order: a re-sort
+# reorders them, so they compare as multisets. Every other list (cells in column
+# order, derivation clauses and operands addressed by position) keeps its order.
+_ROW_ORDERED = frozenset(
+    {
+        "locators",
+        "record_locators",
+        "rows",
+        "members",
+        "associations",
+        "validity",
+        "inactive_associations",
+        "non_membership_associations",
+        "item_validity_set_aside",
+    }
+)
 
 
 def evidence_sha256(value: Any) -> str:
@@ -79,8 +95,8 @@ def evidence_sha256(value: Any) -> str:
     rely on. The whole-delivery revision, row positions and the identities derived
     from them are dropped, and a nested source revision collapses to its dataset, so
     a new delivery or a row re-sort leaves every guard whose own records are unchanged
-    fresh. Repeated objects form a multiset: their order is immaterial, their
-    multiplicity is not.
+    fresh. Objects gathered from several rows form a multiset: their order is
+    immaterial, their multiplicity is not.
     """
     return canonical_sha256(
         _evidence_content(
@@ -91,18 +107,21 @@ def evidence_sha256(value: Any) -> str:
 
 def _evidence_content(value: Any) -> Any:
     if isinstance(value, dict):
-        return {
-            key: item["dataset"]
-            if key == "revision" and isinstance(item, dict)
-            else _evidence_content(item)
-            for key, item in value.items()
-            if key not in _DELIVERY_POSITION
-        }
+        content = {}
+        for key, item in value.items():
+            if key in _DELIVERY_POSITION:
+                continue
+            if key == "revision" and isinstance(item, dict):
+                content[key] = item["dataset"]
+            elif key in _ROW_ORDERED and isinstance(item, list):
+                content[key] = sorted(
+                    (_evidence_content(entry) for entry in item), key=canonical_json
+                )
+            else:
+                content[key] = _evidence_content(item)
+        return content
     if isinstance(value, list):
-        items = [_evidence_content(item) for item in value]
-        if all(isinstance(item, dict) for item in items):
-            items.sort(key=canonical_json)
-        return items
+        return [_evidence_content(item) for item in value]
     return value
 
 

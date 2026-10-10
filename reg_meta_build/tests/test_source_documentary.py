@@ -319,9 +319,20 @@ def test_documentary_json_rejects_invalid_storage_identifiers(wire_id):
 
 
 @pytest.mark.parametrize(
-    "change", ["payload", "peer", "endpoint", "ownership", "missing", "duplicate"]
+    "change",
+    [
+        "payload",
+        "clause_order",
+        "peer",
+        "endpoint",
+        "ownership",
+        "missing",
+        "duplicate",
+    ],
 )
 def test_complete_payload_peer_endpoint_and_ownership_guards_fail_closed(change):
+    # clause_order fails if the payload digest compares derivation clauses as a
+    # multiset: anchors address clauses by position (`clause_index`).
     setup = _setup()
     _tree, d, t, records, _names = setup
     kwargs = {}
@@ -329,6 +340,8 @@ def test_complete_payload_peer_endpoint_and_ownership_guards_fail_closed(change)
         kwargs["declarations"] = (
             d.model_copy(update={"member_name": value_field("other")}),
         )
+    elif change == "clause_order":
+        kwargs["declarations"] = (d.model_copy(update={"clauses": d.clauses[::-1]}),)
     elif change == "peer":
         kwargs["tables"] = (t.model_copy(update={"rows": (*t.rows, t.rows[0])}),)
     elif change == "endpoint":

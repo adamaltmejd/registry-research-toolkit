@@ -614,14 +614,16 @@ digests. It hashes a record's or claim's own content: fields, parent facts, deli
 cells, semantic keys, file and table names, and content-addressed value and descriptor
 keys. It drops what only says where and in which delivery a fact arrived (the delivery
 revision, which a nested revision collapses to its dataset, row numbers, physical record
-and cell coordinates) and the derived record and claim ids, and treats repeated objects
-as a multiset: order is immaterial, multiplicity is not. A new delivery or a row re-sort
-therefore stales only the entries whose own records or lists changed. A code-list claim
-id names its list's dataset rather than its revision, so an `expected_diagnostic_sha256`
-over a coding diagnostic, whose detail lists claim ids, also survives an unrelated
-delivery. Explicit pins stay explicit: a coding `source_authority` still names its
-source revision and physical row locators, and a `[[coding.support]]` association or a
-documentary row names its physical row.
+and cell coordinates) and the derived record and claim ids. Collections gathered from
+several rows (a record's locators, table rows, list members, their associations and
+validity rows) compare as multisets: order is immaterial, multiplicity is not. Cells,
+derivation clauses and operands keep their order, which positions address. A new
+delivery or a row re-sort therefore stales only the entries whose own records or lists
+changed. A code-list claim id names its list's dataset rather than its revision, so an
+`expected_diagnostic_sha256` over a coding diagnostic, whose detail lists claim ids,
+also survives an unrelated delivery. Explicit pins stay explicit: a coding
+`source_authority` still names its source revision and physical row locators, and a
+`[[coding.support]]` association or a documentary row names its physical row.
 
 Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision is
 window-grained. The compiler checks each window against that column's complete source
