@@ -1,5 +1,5 @@
 {
-  "note": "relations.toml declares class/sni2000 derived_from class/sni1990 and no book sni1990 exists. The sibling of classification-succession-to-an-unknown-book-fails-the-build for the other classification edge type; both refuse at compile with the relations file's code. A derivation between two declared books compiles (test_resolved_metadata_writes.py writes one).",
+  "note": "relations.toml declares class/sni2000 derived_from class/sni1990 and no book sni1990 exists. The sibling of classification-succession-to-an-unknown-book-fails-the-build for the other classification edge type; both refuse at compile with the relations file's code. Its allowed twin, a derivation between two declared books, is classification-derivation-between-declared-books-is-written.",
   "fails_if": "`compile_declared_metadata` (curation_compile.py) keeps a classification derived_from edge whose endpoint names no compiled book, or refuses it without the relations file's located code",
   "sources": "scb-classification-books"
 }

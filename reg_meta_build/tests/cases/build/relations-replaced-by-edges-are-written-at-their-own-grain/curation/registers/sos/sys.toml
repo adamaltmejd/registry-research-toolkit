@@ -1,0 +1,14 @@
+[register]
+provider = "sos"
+slug = "sys"
+name = "Signaler"
+native_id = "8680835623164185324"
+[[variant]]
+slug = "a"
+native_id = "8680835623164185324.5149872223979547983"
+[[variant]]
+slug = "b"
+native_id = "8680835623164185324.5180631184941073860"
+[[variable]]
+slug = "kod"
+native_id = "8680835623164185324.KOD"

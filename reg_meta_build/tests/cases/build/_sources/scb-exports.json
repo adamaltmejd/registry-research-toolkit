@@ -1,0 +1,16 @@
+{
+  "description": "TESTREG delivers VALUE, beside SCB's export reference files: Timeseries.csv with one event row delivered twice and a third without its ID1; Tabelldefinitioner.sql declaring RawTable.LopNr as varchar(12) NOT NULL; ID-kolumner.xlsx describing that column as a join key; Identifierare.csv naming identifier 44 without a definition. ASCII only: the runner writes `files` as UTF-8 and SCB reads these files as cp1252.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ],
+    "join_keys": [
+      ["RawTable", "LopNr", "Source key"]
+    ]
+  },
+  "files": {
+    "SCB/Timeseries.csv": "Namn|Handelse|Beskrivning|Entitet|ID1|ID2|FilID\r\nRaw name|Ersatt av||Variabel|0001||\r\nRaw name|Ersatt av||Variabel|0001||\r\nRaw name|Ersatt av||Variabel|||\r\n",
+    "SCB/Tabelldefinitioner.sql": "CREATE TABLE [dbo].[RawTable](\r\n\t[LopNr] [varchar](12) NOT NULL\r\n) ON [PRIMARY]\r\nGO\r\n",
+    "SCB/Identifierare.csv": "VarID|Variabelnamn|Variabeldefinition\r\n44|Native key|\r\n"
+  }
+}

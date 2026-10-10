@@ -1,0 +1,30 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.1"
+slug = "income"
+[[identity.partition]]
+variable = "1.1"
+columns = { First = "1.1", first = "1.1" }
+columns_ref = "reviewed parallel source-native quantity"
+[[representation.parallel]]
+variable = "1.1"
+variant = "1.10"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+evidence = "Reviewed original boundary"
+noted = "2026-09-29"
+columns = [{column = "First", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}, {column = "first", valid_from = "2022-01-01", valid_to = "2022-12-31", source_editions = ["2022"]}]
+case_aliases = true
+column_metadata = "per_column"
+[[group]]
+register = "scb/sample"
+key = "spellings"
+label = "Accepted spellings"
+axes = [{ axis = "unit", label = "Unit" }, { axis = "rank", label = "Rank" }]
+members = [{ variable = "income", delivery_column = "First", coords = [{ axis = "unit", value = "person", label = "Person" }, { axis = "rank", value = "1", label = "Rank 1" }] }, { variable = "income", delivery_column = "first", coords = [{ axis = "unit", value = "person", label = "Person" }, { axis = "rank", value = "2", label = "Rank 2" }] }]

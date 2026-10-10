@@ -1,0 +1,21 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "group_axes",
+      "fields": ["group_key", "axis", "ordinal", "label"],
+      "rows": [
+        ["spellings", "unit", 0, "Unit"],
+        ["spellings", "rank", 1, "Rank"]
+      ]
+    },
+    {
+      "table": "group_members",
+      "fields": ["group_key", "variable", "column", "facets"],
+      "rows": [
+        ["spellings", "income", "First", [["rank", "1", "Rank 1"], ["unit", "person", "Person"]]],
+        ["spellings", "income", "first", [["rank", "2", "Rank 2"], ["unit", "person", "Person"]]]
+      ]
+    }
+  ]
+}

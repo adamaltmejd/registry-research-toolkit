@@ -14,11 +14,13 @@ depth; the written outcomes are the build cases
 resolved model reaches it, because the writer revalidates every instance it is given.
 
 Publication, byte identity and create-only placement are pinned beside the build-db
-contract, in `test_build_db_cli_outputs.py`.
+contract, in `test_build_db_cli_outputs.py`; only the metadata-order byte witness
+sits here, beside the metadata it reorders.
 """
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -28,6 +30,12 @@ from _resolved_catalog_support import (
     resolved_state as _state,
     resolved_variable as _variable,
     scoped_sentinel_variable as _scoped_sentinel_variable,
+)
+from _resolved_metadata_support import (
+    full_metadata,
+    metadata_classification,
+    metadata_variable,
+    write_metadata_catalog,
 )
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.errors import RegMetaError
@@ -42,6 +50,15 @@ from reg_meta_build.resolved_catalog import (
     ResolvedState,
     ResolvedVariable,
     write_resolved_catalog,
+)
+from reg_meta_build.resolved_metadata import (
+    ResolvedClassificationDerivation,
+    ResolvedClassificationRef,
+    ResolvedClassificationSameAs,
+    ResolvedSourceJoinKey,
+    ResolvedSuccession,
+    ResolvedTagMember,
+    ResolvedVariableSameAs,
 )
 
 if TYPE_CHECKING:
@@ -469,16 +486,160 @@ INVALID_CLASSIFIED_VARIABLES: dict[
 }
 
 
+def _metadata(
+    field: str, entry: object
+) -> tuple[tuple[ResolvedVariable, ...], dict[str, Any]]:
+    """The support module's full metadata with `field` replaced by one entry.
+
+    It sits beside the variables scb/example/one and two, sos/example/consumer, and
+    the books first-, second- and third-codes, which every other entry names.
+    """
+    variables = tuple(
+        metadata_variable(slug, provider)
+        for slug, provider in (("one", "scb"), ("two", "scb"), ("consumer", "sos"))
+    )
+    books = tuple(
+        metadata_classification(slug)
+        for slug in ("first-codes", "second-codes", "third-codes")
+    )
+    metadata = full_metadata().model_copy(update={field: (entry,)})
+    return variables, {"metadata": metadata, "classifications": books}
+
+
+def _first(field: str) -> Any:
+    return getattr(full_metadata(), field)[0]
+
+
+def _changed_edge(field: str, end: str, **update: object) -> Any:
+    edge = _first(field)
+    return edge.model_copy(update={end: getattr(edge, end).model_copy(update=update)})
+
+
+def _group_with_unwritten_member() -> Any:
+    group = _first("variable_groups")
+    absent = group.members[1].model_copy(update={"variable": _ABSENT})
+    return group.model_copy(update={"members": (group.members[0], absent)})
+
+
+_ABSENT = "scb/example/absent"
+
+# Metadata that names what the catalog does not write. A build never hands the writer
+# such an edge: `resolve_metadata_dependencies` withholds or refuses each dangling
+# reference first (`catalog_dependency_missing`, pinned by the steps of the build case
+# `dependency-withheld-variable-prunes-its-dependents`), so these checks are defense
+# in depth. A classification reference keeps the reserved `_default` slug
+# out of the catalog; no build produces a classification same_as edge at all.
+INVALID_METADATA: dict[
+    str, tuple[Callable[[], tuple[tuple[ResolvedVariable, ...], dict[str, Any]]], str]
+] = {
+    "group-member-not-written": (
+        lambda: _metadata("variable_groups", _group_with_unwritten_member()),
+        f"unknown resolved group variable: '{_ABSENT}'",
+    ),
+    "tag-member-not-written": (
+        lambda: _metadata(
+            "tags",
+            _first("tags").model_copy(
+                update={
+                    "members": (
+                        ResolvedTagMember(target=_ABSENT, rank=0, starred=False),
+                    )
+                }
+            ),
+        ),
+        f"unknown resolved tag variable: '{_ABSENT}'",
+    ),
+    "same-as-to-a-variable-not-written": (
+        lambda: _metadata(
+            "variable_same_as", ResolvedVariableSameAs(a="scb/example/one", b=_ABSENT)
+        ),
+        f"unknown resolved same_as variable: '{_ABSENT}'",
+    ),
+    "succession-to-a-variable-not-written": (
+        lambda: _metadata(
+            "successions",
+            ResolvedSuccession(predecessor="scb/example/one", successor=_ABSENT),
+        ),
+        f"unknown resolved succession successor: '{_ABSENT}'",
+    ),
+    "variant-succession-to-a-variant-not-written": (
+        lambda: _metadata(
+            "variant_successions",
+            _changed_edge("variant_successions", "successor", variant="absent"),
+        ),
+        re.escape("unknown resolved succession variant: ('sos/example', 'absent')"),
+    ),
+    "representation-succession-from-a-column-not-delivered": (
+        lambda: _metadata(
+            "representation_successions",
+            _changed_edge(
+                "representation_successions",
+                "predecessor",
+                delivery_column_name="Missing",
+            ),
+        ),
+        "unknown resolved representation: scb/example/one, Missing, individuals",
+    ),
+    "derivation-of-a-book-not-written": (
+        lambda: _metadata(
+            "classification_derivations",
+            ResolvedClassificationDerivation(derived="absent", source="first-codes"),
+        ),
+        "unknown resolved derived classification: 'absent'",
+    ),
+    # The state is found by its variable, variant, start and code version; its
+    # column must then match too.
+    "lineage-from-a-state-under-another-column": (
+        lambda: _metadata(
+            "state_lineage",
+            _changed_edge(
+                "state_lineage", "source", delivery_column_name="WrongColumn"
+            ),
+        ),
+        "resolved state reference does not match its exact scope/column",
+    ),
+    "join-key-on-a-column-not-declared": (
+        lambda: _metadata(
+            "source_join_keys",
+            ResolvedSourceJoinKey(table_name="Missing", column_name="Column"),
+        ),
+        re.escape("unknown resolved join-key source column: ('Missing', 'Column')"),
+    ),
+    # Built unvalidated, so only the writer's revalidation can refuse the slug.
+    "classification-reference-to-the-reserved-default-slug": (
+        lambda: _metadata(
+            "classification_same_as",
+            ResolvedClassificationSameAs.model_construct(
+                a=ResolvedClassificationRef(
+                    provider="scb", classification="first-codes"
+                ),
+                b=ResolvedClassificationRef.model_construct(
+                    provider="scb", classification="_default"
+                ),
+            ),
+        ),
+        r"classification\n.*reserved",
+    ),
+}
+
+
 @pytest.mark.parametrize(
-    "row", [*INVALID_VARIABLES, *INVALID_ARGUMENTS, *INVALID_CLASSIFIED_VARIABLES]
+    "row",
+    [
+        *INVALID_VARIABLES,
+        *INVALID_ARGUMENTS,
+        *INVALID_CLASSIFIED_VARIABLES,
+        *INVALID_METADATA,
+    ],
 )
 def test_invalid_input_is_refused_before_the_previous_catalog_is_touched(
     tmp_path: Path, row: str
 ) -> None:
     # Fails if the writer drops the rule the row names (a lax or optional flag, a
     # date, slug, overlap, consistency or manifest check, a classification link or
-    # sentinel certificate check), or runs it only after it has replaced the
-    # previous catalog, linked it aside to `.prev` or left staging behind.
+    # sentinel certificate check, a metadata reference to something it does not
+    # write), or runs it only after it has replaced the previous catalog, linked it
+    # aside to `.prev` or left staging behind.
     arguments: dict[str, Any] = {"manifest": synthetic_manifest()}
     if row in INVALID_VARIABLES:
         variables, message = INVALID_VARIABLES[row]
@@ -487,9 +648,9 @@ def test_invalid_input_is_refused_before_the_previous_catalog_is_touched(
         make, message = INVALID_ARGUMENTS[row]
         arguments, given = arguments | make(), (_variable(),)
     else:
-        classified, message = INVALID_CLASSIFIED_VARIABLES[row]
-        given, books = classified()
-        arguments |= books
+        written, message = (INVALID_CLASSIFIED_VARIABLES | INVALID_METADATA)[row]
+        given, beside = written()
+        arguments |= beside
     output = tmp_path / "reg_meta.db"
     output.write_bytes(b"previous catalog")
     with pytest.raises(ValueError, match=message):
@@ -528,3 +689,37 @@ def test_unknown_provider_is_a_located_refusal(tmp_path: Path) -> None:
     assert error.value.code == "unknown_provider"
     assert "No provider_id seed" in error.value.message
     assert not any(tmp_path.iterdir())
+
+
+def test_catalog_bytes_do_not_depend_on_metadata_order(tmp_path: Path) -> None:
+    # Fails if the writer inserts the curated metadata rows (groups and their axes,
+    # members and facets, tags, relations, lineage, export facts) in input order.
+    # A build hands them over in curation-file order, and a reordered curation tree
+    # changes the manifest's curation hash, so no build pair can show this.
+    metadata = full_metadata()
+    group = metadata.variable_groups[0]
+    reordered = metadata.model_copy(
+        update={
+            name: tuple(reversed(getattr(metadata, name)))
+            for name in type(metadata).model_fields
+        }
+        | {
+            "variable_groups": (
+                group.model_copy(
+                    update={
+                        "axes": tuple(reversed(group.axes)),
+                        "members": tuple(
+                            member.model_copy(
+                                update={"facets": tuple(reversed(member.facets))}
+                            )
+                            for member in reversed(group.members)
+                        ),
+                    }
+                ),
+            )
+        }
+    )
+    first, second = tmp_path / "first.db", tmp_path / "reordered.db"
+    write_metadata_catalog(first, metadata)
+    write_metadata_catalog(second, reordered)
+    assert second.read_bytes() == first.read_bytes()

@@ -1,0 +1,12 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "classification_derivations",
+      "fields": ["derived", "source", "note"],
+      "rows": [
+        ["sni2020", "sni2000", "Specialization"]
+      ]
+    }
+  ]
+}
