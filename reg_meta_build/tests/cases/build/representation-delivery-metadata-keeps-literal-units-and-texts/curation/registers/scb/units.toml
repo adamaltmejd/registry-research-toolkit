@@ -5,6 +5,10 @@ native_id = "1"
 [[variant]]
 native_id = "1.10"
 slug = "people"
+display_group = "Population tables"
+panel_entity_key = ["income"]
+panel_time_key = "period"
+panel_time_grain = "delivery"
 [[variable]]
 native_id = "1.1"
 slug = "income"

@@ -1,9 +1,12 @@
 {
   "replaces": [
     "test_curation_enrichment_target_boundary.py::test_description_and_alias_apply_across_every_variant",
-    "test_source_effect_alias_windows.py::test_search_alias_is_guarded_metadata_without_added_availability"
+    "test_source_effect_alias_windows.py::test_search_alias_is_guarded_metadata_without_added_availability",
+    "test_resolved_writer_variables.py::test_catalog_graph_fts_and_structural_validation[individuals-scb]",
+    "test_resolved_writer_variables.py::test_alias_windows_and_historical_search_aliases_are_explicit"
   ],
-  "fails_if": "`compile_enrichment` collects an alias's variant keys from only one chosen record instead of every record of the variable, so FormerA attaches to only one of the `people` and `others` variants; or `apply_alias_cases` adds availability for a search alias, so FormerA gains a state",
+  "fails_if": "`compile_enrichment` collects an alias's variant keys from only one chosen record instead of every record of the variable, so FormerA attaches to only one of the `people` and `others` variants; or `apply_alias_cases` adds availability for a search alias, so FormerA gains a state; or the writer gives a search alias a window; or `variable_search_text` (derive/search_index.py) stops indexing the variable's own description or any published spelling, the search alias included",
+  "note": "From the resolved-writer tests: the old FTS test found the variable by its description and by a delivery column name, and the old alias test wrote a search-only alias ('HistoricalSearchOnly') to variable_alias with no window. Here FormerA is that search-only alias and A the delivered column.",
   "sources": {
     "description": "Variable 5 delivers A in variant 2 (2020, CVID 20) and variant 3 (2021, CVID 21).",
     "scb": {

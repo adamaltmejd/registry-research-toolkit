@@ -43,6 +43,31 @@
       "where": {"register": "syl"},
       "fields": ["variable", "variant"],
       "rows": []
+    },
+    {
+      "table": "registers",
+      "where": {"register": "syl"},
+      "fields": ["register", "name"],
+      "note": "SYL publishes no variable, yet its register is written, named by its workbook title.",
+      "rows": [
+        ["syl", "Uppslag"]
+      ]
+    },
+    {
+      "table": "variants",
+      "where": {"register": "syl"},
+      "fields": ["variant", "name"],
+      "note": "Both delivered subsets are written as variants, named by their Deldatamängder labels, though neither carries a state and an SOS subset has no edition.",
+      "rows": [
+        ["a", "Styrtabell A"],
+        ["v", "V"]
+      ]
+    },
+    {
+      "table": "editions",
+      "where": {"register": "syl"},
+      "fields": ["variant", "name"],
+      "rows": []
     }
   ]
 }
