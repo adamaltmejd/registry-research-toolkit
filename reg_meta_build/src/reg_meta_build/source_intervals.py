@@ -172,13 +172,15 @@ def _segment_pooled(effective: tuple[EffectiveOccurrence, ...]) -> bool:
 
 # Y-209: the state-grain facts deciding whether adjacent pooled cuts describe
 # one continuous pooled coverage. These are exactly the reconciled facts
-# formation carries onto the state, plus the coding evidence that shapes it.
+# formation carries onto the state (`_state_from_segment`), plus availability
+# and the coding evidence that shapes it. A field added there belongs here.
 _POOLED_MERGE_FIELDS = (
     "name",
     "description",
     "definition",
     "data_type",
     "data_length",
+    "measurement_unit",
     "operational_definition",
     "source_attribution",
     "availability",
@@ -235,11 +237,11 @@ def _merge_adjacent_pooled(segments: list[SourceSegment]) -> list[SourceSegment]
     """Re-join adjacent pooled cuts with identical facts (Y-209).
 
     Overlapping pooled editions fragment at their boundaries into adjacent
-    pooled cuts; where the reconciled facts, population, and coding evidence
-    agree, the cuts document one continuous pooled coverage and merge into a
-    single segment over the run's hull, with the union of occurrences and
-    evidence. Adjacent means the next segment starts the day after the
-    previous ends. An explicit segment never merges — neither with a pooled
+    pooled cuts; where the reconciled facts and coding evidence agree, the
+    cuts document one continuous pooled coverage and merge into a single
+    segment over the run's hull, with the union of occurrences and evidence.
+    Adjacent means the next segment starts the day after the previous ends.
+    An explicit segment never merges — neither with a pooled
     neighbor nor across it — and differing facts stay separate, as before.
     """
     merged: list[SourceSegment] = []
