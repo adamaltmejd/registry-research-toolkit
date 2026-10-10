@@ -135,15 +135,16 @@ local verification invocation; the names allow focused verification. The repo ga
 **Deterministic UI verification (`--fixture-db`) — the default.** Pass `--fixture-db`
 before the mode and `dev.sh` serves a *synthetic* catalog: it runs `fixture_db.py`
 (beside `dev.sh`) into a temp directory, exports it as `REG_META_DB`, and deletes it on
-exit. With `REG_WEBAPP_STEWARD` set it serves the conformance suite's synthetic steward
-artifact instead, from the shared fixture cache (`conformance/fixture_cache.py`).
-Content is fixed — no seed, no clock — so the DB pair is byte-identical run to run and a
-screenshot diff means a code change, not catalog drift. It is small but populated enough
-that every route the design-reviewer skill walks renders rows: `/`, `/catalog`,
-providers `fk` (register `midas`) and `scb` (`lisa` / `rams`), bindings like
-`/catalog/scb/lisa/kon` (value set, succession, lineage), the groups
-`/catalog/group/scb/rams/ink` and `/catalog/group/class/sun`, `/search?q=kon`,
-`/project`, and `/doc/Kon.md`. `smoke` drills it end to end.
+exit. With `REG_WEBAPP_STEWARD` set the catalog is instead a link to the conformance
+suite's synthetic steward artifact in the shared fixture cache
+(`conformance/fixture_cache.py`), beside the same docs DB. Content is fixed — no seed,
+no clock — so the DB pair is byte-identical run to run and a screenshot diff means a
+code change, not catalog drift. It is small but populated enough that every route the
+design-reviewer skill walks renders rows: `/`, `/catalog`, providers `fk` (register
+`midas`) and `scb` (`lisa` / `rams`), bindings like `/catalog/scb/lisa/kon` (value set,
+succession, lineage), the groups `/catalog/group/scb/rams/ink` and
+`/catalog/group/class/sun`, `/search?q=kon`, `/project`, and `/doc/Kon.md`. `smoke`
+drills it end to end.
 
 ```sh
 bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db          # interactive

@@ -1083,14 +1083,19 @@ def build_docs_fixture_db(db_path: Path) -> None:
         conn.close()
 
 
-def build_fixture_db_dir(db_dir: Path) -> Path:
+def build_fixture_db_dir(db_dir: Path, catalog: Path | None = None) -> Path:
     """Build BOTH fixture DBs into ``db_dir`` — the shape ``REG_META_DB`` points at.
 
     The catalog DB is what the app boots on; the docs DB is optional at boot but
     `/doc/<identifier>` renders an empty state without it, so `--fixture-db` always
-    writes the pair."""
+    writes the pair. ``catalog`` (a steward's cached artifact) is symlinked in place
+    of the built global catalog; the docs DB is built either way."""
     db_dir.mkdir(parents=True, exist_ok=True)
-    build_catalog_fixture_db(db_dir / reg_meta_build.db.DB_FILENAME)
+    catalog_path = db_dir / reg_meta_build.db.DB_FILENAME
+    if catalog is None:
+        build_catalog_fixture_db(catalog_path)
+    else:
+        catalog_path.symlink_to(catalog.resolve())
     build_docs_fixture_db(db_dir / reg_meta_build.doc_db.DOC_DB_FILENAME)
     return db_dir
 
@@ -1098,8 +1103,13 @@ def build_fixture_db_dir(db_dir: Path) -> Path:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("db_dir", type=Path, help="directory to write the DB pair into")
+    parser.add_argument(
+        "--catalog",
+        type=Path,
+        help="link this catalog DB instead of building the global one",
+    )
     args = parser.parse_args()
-    print(build_fixture_db_dir(args.db_dir))
+    print(build_fixture_db_dir(args.db_dir, args.catalog))
 
 
 if __name__ == "__main__":
