@@ -698,7 +698,8 @@ def _variables(outcome: Outcome) -> list[dict]:
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
         "s.delivery_column_name AS column, v.provider_key, v.definition, "
         "v.description, v.is_identifier, v.is_sensitive, v.deprecated, "
-        "sr.slug AS source_register, v.source_label, v.source_register_text "
+        "sr.slug AS source_register, v.source_label, v.source_register_text, "
+        "v.measurement_unit, v.operational_definition "
         "FROM variable v JOIN register r USING (register_id) "
         "LEFT JOIN register sr ON sr.register_id = v.source_register_id "
         "LEFT JOIN variable_state s USING (variable_id)"
@@ -1046,7 +1047,7 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "s.delivery_column_name AS column, s.valid_from, s.valid_to, s.data_type, "
         "v.name, s.name AS state_name, s.provenance, s.pooled, s.data_length, "
         "s.definition, s.measurement_unit, s.description, s.operational_definition, "
-        "s.source_register_text " + _STATE_JOIN
+        "s.source_register_text, s.value_set_version_label " + _STATE_JOIN
     ),
     "state_codes": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, rv.slug AS variant, "
@@ -1193,11 +1194,12 @@ FIELDS: dict[str, frozenset[str]] = {
         "case_uses": "case_id source key use variable",
         "states": "register variable variant column valid_from valid_to data_type "
         "name state_name provenance pooled data_length definition measurement_unit "
-        "description operational_definition source_register_text",
+        "description operational_definition source_register_text "
+        "value_set_version_label",
         "state_codes": "register variable variant column valid_from valid_to code label",
         "variables": "register variable column provider_key definition description "
         "is_identifier is_sensitive deprecated source_register source_label "
-        "source_register_text",
+        "source_register_text measurement_unit operational_definition",
         "variants": "register variant name panel_entity_key panel_time_key "
         "panel_time_grain description display_group",
         "registers": "register name purpose",

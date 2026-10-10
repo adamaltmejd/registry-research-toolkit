@@ -43,9 +43,6 @@ VARIANTS: dict[str | int, ResolvedVariant] = {
 }
 
 
-VARIANT = VARIANTS[2]
-
-
 FLAGS = SourceFields(sensitivity=value_field(False), identifier=value_field(False))
 
 
