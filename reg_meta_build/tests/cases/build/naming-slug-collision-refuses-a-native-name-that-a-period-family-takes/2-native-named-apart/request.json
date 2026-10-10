@@ -1,0 +1,6 @@
+{
+  "note": "Allowed twin of step 1: the same source and family, with variable 304 pinned to its own column's slug `lonfinkapr`, as the renamed real pins are. Nothing collides, so the family publishes as `lonfink`, and the native, whose month moved into the family, publishes nothing of its own.",
+  "fails_if": "`refuse_slug_collisions` (source_naming.py) refuses a period family beside any native pin of its own month members, whatever their slugs, so a native pinned apart still withholds the family",
+  "sources": "scb-month-families",
+  "registers": ["3"]
+}

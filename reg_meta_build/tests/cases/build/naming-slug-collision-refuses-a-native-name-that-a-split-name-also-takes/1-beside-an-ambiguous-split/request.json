@@ -1,0 +1,14 @@
+{
+  "note": "Maintainer decision 11 (#1316 finding 3): native variable 6 is pinned `kon`, the slug the split `1.5.kon` of the other native family 5 also takes. Family 5 delivers the case twins Kon and KON together, so `1.5.kon` stays an ambiguous name, not a declaration, and before the fix variable 6 published `kon` beside it. Both names are refused, each located at its own [[variable]] entry; variable 6 is withheld as an unresolved catalog identity, and family 5 stays withheld as before. A split that keeps its own family's slug is the partial name, not a collision: `split-partition-reviewed-owner-sharing-a-generated-name-withholds-only-the-uncovered-variant`.",
+  "fails_if": "`refuse_slug_collisions` (source_naming.py) stops counting an ambiguous family's names as slug holders, or `compile_curation` stops running it over the merged scope, so variable 6 publishes `kon` with no `naming_slug_collision`",
+  "sources": {
+    "description": "Variable 5 delivers Kon (CVID 20) and KON (CVID 21) together in 2020; variable 6 delivers SEX (CVID 22) in 2020.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "Kon", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {"colname": "KON", "cvid": 21, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {"colname": "SEX", "cvid": 22, "var_id": 6, "year": "2020", "regver_id": 2020}
+      ]
+    }
+  }
+}
