@@ -12,10 +12,8 @@ from typing import TYPE_CHECKING
 import pytest
 from _csv_fixtures import write_input_bundle
 from _prepared_fixtures import accept_prepared
-from reg_meta_build.pipeline import (
-    build_catalog,
-    check_curation,
-)
+from reg_meta_build.materialize import build_catalog
+from reg_meta_build.pipeline import check_curation
 from reg_meta_build.prepared_catalog import (
     prepare_catalog_sources,
 )

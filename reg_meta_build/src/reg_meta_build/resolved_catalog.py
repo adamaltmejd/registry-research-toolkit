@@ -24,6 +24,8 @@ from reg_meta_build._curation import (
     curation_error,
 )
 from reg_meta_build._resolved_common import (
+    _VALID_TO_SENTINEL,
+    CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
     _provider_id_for,
     _require_trimmed,
     _ResolvedDeliveryScope,
@@ -32,7 +34,6 @@ from reg_meta_build._resolved_common import (
 )
 from reg_meta_build.slug_grammar import validate_slug
 
-from .db import _VALID_TO_SENTINEL, CLASSIFICATION_SUCCESSION_AS_OF_YEAR
 from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:

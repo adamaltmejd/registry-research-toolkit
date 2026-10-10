@@ -3,7 +3,7 @@
     "test_build_catalog_classification_boundary.py::test_check_curation_defers_unmatched_value_set_label_to_full_build"
   ],
   "note": "The full build reports the same entry stale (classification-value-set-label-stale-when-it-matches-no-descriptor); a register-scoped check cannot see every descriptor, so it passes without an issue.",
-  "fails_if": "`_run_pipeline` (pipeline.py) calls `finalize_classification_bindings` with `subset=False` for a register-scoped check, so the check reports the unmatched label 'No such label' stale and does not pass",
+  "fails_if": "`_resolve` (pipeline.py) calls `finalize_classification_bindings` with `subset=False` for a register-scoped check, so the check reports the unmatched label 'No such label' stale and does not pass",
   "sources": "scb-fk-book-a",
   "mode": "check",
   "registers": ["1"]

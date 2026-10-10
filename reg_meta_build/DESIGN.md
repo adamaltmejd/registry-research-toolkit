@@ -45,10 +45,18 @@ The builder has four steps:
 Cleaning and input storage below describe step 1. Common curation describes steps 2 and
 3 together. Strict and diagnostic builds describes step 4.
 
-The maintained call path is `pipeline.build_catalog` →
+The maintained call path is `materialize.build_catalog`, which admits the paths and then
+runs two phases. `pipeline.resolve_catalog` runs
 `prepared_catalog.open_prepared_catalog_sources` → `curation_compile.compile_curation` →
 `source_scope.resolve_source_scope` for each complete source/register scope → catalog
-dependency and lineage resolution → `materialize.write_resolved_catalog`.
+dependency and lineage resolution, and returns a `ResolvedBuild` (the writer's inputs,
+the mode and the report so far). `materialize.materialize_build` then runs
+`materialize.write_resolved_catalog`, a diagnostic full build's corpus validation, and
+the summary. The resolve phase never imports `materialize`, `db`, `derive` or
+`validate`. The ledger `events.jsonl.gz` has one gzip member per phase; materialization
+appends its member only when it has events (today only `corpus_validation`), so the
+decompressed ledger is unchanged by the split. `check-curation` runs only the resolve
+phase.
 
   | Step | Module family                                                                              | Role                                                                                              |
   | ---- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |

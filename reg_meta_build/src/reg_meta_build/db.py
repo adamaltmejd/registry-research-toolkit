@@ -20,7 +20,13 @@ from typing import TYPE_CHECKING
 from pydantic import TypeAdapter, ValidationError
 from reg_core_py import fold_identity, parse_fqid
 
-from ._resolved_common import _PROVIDER_SEED, _provider_id_for
+from ._resolved_common import (
+    _PROVIDER_SEED,
+    _VALID_TO_SENTINEL,
+    CLASSIFICATION_SUCCESSION_AS_OF_YEAR,
+    CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY,
+    _provider_id_for,
+)
 from .data_warnings import DataWarning, _CatalogModel
 from .errors import EXIT_CONFIG, RegMetaError
 from .source_evidence import SourceRecordRef  # noqa: TC001
@@ -96,11 +102,6 @@ def register_py_lower(conn: sqlite3.Connection) -> None:
     the `delivery_column_name` identity fold (SQLite's `LOWER()` is ASCII-only)."""
     conn.create_function("py_lower", 1, _py_lower, deterministic=True)
 
-
-CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY = "classification_succession_as_of_year"
-# Release-time policy for future-dated classification succession. Bump deliberately
-# when a new DB release should activate a future classification hand-off.
-CLASSIFICATION_SUCCESSION_AS_OF_YEAR = 2026
 
 DB_FILENAME = "reg_meta.db"
 
@@ -2065,8 +2066,8 @@ def seed_providers(conn: sqlite3.Connection) -> None:
 
 # Sentinels the universal DDL applies as NOT NULL DEFAULTs; the IR contract
 # carries None / open-ended, so the materializer reconciles them at the insert
-# site ("None-to-sentinel reconciliation").
-_VALID_TO_SENTINEL = "9999-12-31"  # variable_state.valid_to open-ended
+# site ("None-to-sentinel reconciliation"). `_VALID_TO_SENTINEL` lives in
+# `_resolved_common`, which resolution reads without the DDL.
 _VALID_FROM_UNKNOWN = "0001-01-01"  # variable_state.valid_from start unknown
 
 

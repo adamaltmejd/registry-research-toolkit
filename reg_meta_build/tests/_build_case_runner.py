@@ -52,7 +52,8 @@ from _sos_fixtures import (
 from openpyxl import Workbook, load_workbook
 from reader_artifacts import build_inputs_digest, generation_dir
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
-from reg_meta_build.pipeline import build_catalog, check_curation
+from reg_meta_build.materialize import build_catalog
+from reg_meta_build.pipeline import check_curation
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
@@ -1474,7 +1475,7 @@ def _refusal(error: Exception, expected: dict) -> dict:
 _REBUILD = """
 import json, sys
 from pathlib import Path
-from reg_meta_build.pipeline import build_catalog
+from reg_meta_build.materialize import build_catalog
 a = json.loads(sys.argv[1])
 build_catalog(
     Path(a["prepared"]), a["commit"], a["digest"], Path(a["output"]),
