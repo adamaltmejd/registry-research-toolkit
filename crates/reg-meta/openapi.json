@@ -3808,16 +3808,10 @@
             "$ref": "#/components/schemas/ProjectSteward"
           },
           "window": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ProjectStudyWindow"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/ProjectStudyWindow"
           }
-        }
+        },
+        "additionalProperties": false
       },
       "ProjectEntityKey": {
         "oneOf": [
@@ -3922,27 +3916,13 @@
         ],
         "properties": {
           "entity_key": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ProjectEntityKey"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/ProjectEntityKey"
           },
           "source": {
             "type": "string"
           },
           "time_key": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ProjectTimeKey"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/ProjectTimeKey"
           }
         },
         "additionalProperties": false
@@ -3985,7 +3965,7 @@
             "type": "string"
           }
         ],
-        "description": "A period endpoint as written: an int year or a period-token string (`\"_default\"`\nincluded, which only a scalar [`SourcePeriod`] may hold)."
+        "description": "A period endpoint as written: an int year or a period-token string (`\"_default\"`\nincluded, which only a scalar source period may hold)."
       },
       "ProjectSource": {
         "type": "object",

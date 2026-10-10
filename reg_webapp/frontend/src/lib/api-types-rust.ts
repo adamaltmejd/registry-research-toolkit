@@ -1043,7 +1043,7 @@ export interface components {
             schema_version: string;
             sources: components["schemas"]["ProjectSource"][];
             steward: components["schemas"]["ProjectSteward"];
-            window?: components["schemas"]["ProjectStudyWindow"] | null;
+            window?: components["schemas"]["ProjectStudyWindow"];
         };
         /** @description A panel's entity key: one column, or a composite. */
         ProjectEntityKey: string | string[];
@@ -1065,9 +1065,9 @@ export interface components {
         };
         /** @description A panel member; the bare-string shorthand deserializes to `{"source": <name>}`. */
         ProjectPanelMember: {
-            entity_key?: components["schemas"]["ProjectEntityKey"] | null;
+            entity_key?: components["schemas"]["ProjectEntityKey"];
             source: string;
-            time_key?: components["schemas"]["ProjectTimeKey"] | null;
+            time_key?: components["schemas"]["ProjectTimeKey"];
         };
         /** @description The `{"from": ..., "to": ...}` range. */
         ProjectPeriodRange: {
@@ -1078,7 +1078,7 @@ export interface components {
         ProjectPeriodSegment: components["schemas"]["ProjectPeriodValue"] | components["schemas"]["ProjectPeriodRange"];
         /**
          * @description A period endpoint as written: an int year or a period-token string (`"_default"`
-         *     included, which only a scalar [`SourcePeriod`] may hold).
+         *     included, which only a scalar source period may hold).
          */
         ProjectPeriodValue: number | string;
         /** @description One logical extraction: a register variant, a requested period and its bindings. */

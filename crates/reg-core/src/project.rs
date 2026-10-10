@@ -136,6 +136,7 @@ str_enum!(
 /// The top-level `project_data.json` document.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectData))]
+#[serde(deny_unknown_fields)]
 pub struct ProjectData {
     pub schema_version: String,
     pub steward: Steward,
@@ -144,7 +145,9 @@ pub struct ProjectData {
     pub sources: Vec<Source>,
     #[serde(default)]
     pub panels: Vec<Panel>,
+    // An explicit `null` is `invalid_field_type`: absent means no window.
     #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub window: Option<StudyWindow>,
 }
 
@@ -232,7 +235,7 @@ pub struct Binding {
 }
 
 /// A period endpoint as written: an int year or a period-token string (`"_default"`
-/// included, which only a scalar [`SourcePeriod`] may hold).
+/// included, which only a scalar source period may hold).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectPeriodValue))]
 #[serde(untagged)]
@@ -357,9 +360,12 @@ pub struct Panel {
 #[serde(deny_unknown_fields)]
 pub struct PanelMember {
     pub source: String,
+    // An explicit `null` override is `invalid_field_type`: absent inherits.
     #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub entity_key: Option<EntityKey>,
     #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub time_key: Option<TimeKey>,
 }
 
