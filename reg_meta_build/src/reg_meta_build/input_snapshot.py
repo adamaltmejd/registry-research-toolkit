@@ -2103,9 +2103,16 @@ def _git_config_bool(repo: Path, name: str) -> bool:
 
 def clean_git_commit(repo: Path) -> str:
     repo = repo.resolve()
-    status = _git(repo, "status", "--porcelain", "--untracked-files=all")
+    # Not `_git`: its strip() would eat the first line's leading status column.
+    status = _git_bytes(repo, "status", "--porcelain", "--untracked-files=all")
     if status:
-        raise SnapshotError(f"Git repository must be clean for an exact pin: {repo}")
+        # Porcelain paths are repo-relative; the checkout's absolute path is
+        # host-specific and stays out of the refusal.
+        changed = [line[3:] for line in status.decode("utf-8").splitlines()]
+        raise SnapshotError(
+            "Git repository must be clean for an exact pin; uncommitted changes "
+            f"({len(changed)}): {', '.join(changed[:5])}"
+        )
     return _git(repo, "rev-parse", "HEAD")
 
 

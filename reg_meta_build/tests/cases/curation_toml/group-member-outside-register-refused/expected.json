@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "note": "Members are register-relative variable slugs. A member that names a path ('other/b') points outside the group's register and is not a variable FQID of it. Allowed twin: group-member-shapes-load.",
+  "fails_if": "the register loader stops checking that each [[group]] member is a variable slug of the group's own register, so a path into another register loads",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "group 'reach' members[2].variable",
+      "scb/test/other/b"
+    ]
+  }
+}
