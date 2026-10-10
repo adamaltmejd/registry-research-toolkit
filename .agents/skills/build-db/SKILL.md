@@ -53,11 +53,22 @@ The cache lives under `$REG_REAL_SEED_CACHE`, else
 `${XDG_CACHE_HOME:-~/.cache}/reg-meta-real-seed`. It keeps the two most recently used
 build entries (about 1.4 GB each) and any entry used in the last 6 hours.
 
+A build also has a resolve key: the builder's own resolve-code fingerprint, `uv.lock`,
+the curation digest, the prepared pins, mode, registers and runtime, but not HEAD. A
+full miss stores the resolve bundle beside the build entry (about 0.3–0.4 GB at real
+scale, two kept). A later build miss whose resolve key hits, such as one after a
+schema-, derive-, writer- or validator-only change, runs only `materialize-db` from that
+bundle, and its result says `"phased": true`. If `materialize-db` refuses the bundle,
+the cache drops it and builds in full; a stale bundle is never placed.
+
 `build --verify` rebuilds uncached and compares database bytes and decompressed
 event-ledger bytes with the stored entry. Exit 1 means the key misses an input: report
 it instead of trusting that entry. It costs a full build, so run it at an agreed
-checkpoint. To check a prepare entry the same way, run `prepare-sources` into a new
-directory and compare its `prepared_manifest_sha256` with the stored one.
+checkpoint, and always on the first phased entry after a builder module moves between
+the resolve and writer sides: that is the check that the resolve fingerprint still
+covers everything resolution runs. To check a prepare entry the same way, run
+`prepare-sources` into a new directory and compare its `prepared_manifest_sha256` with
+the stored one.
 
 ## Select inputs
 
@@ -126,8 +137,9 @@ prepared pins and, for a strict full build, a clean checkout) and exits 10 with 
 builder's error if they fail. A project environment that cannot import those checks
 exits 4 with `probe_environment_failed`: repair the environment, not the inputs. The
 result names `database` and `report`. On a miss the cache runs `build-db` in a new
-directory under the cache, with `--report-dir`, `--timing` and, for a diagnostic,
-`--diagnostic --diagnostic-db-path`. A run that did not complete is not stored; the
+directory under the cache, with `--report-dir`, `--timing`, `--resolved-out` and, for a
+diagnostic, `--diagnostic --diagnostic-db-path` (or `materialize-db` with the same
+outputs when the resolve key hits). A run that did not complete is not stored; the
 result's `run_dir` keeps its outputs for diagnosis for 6 hours. Run `build-db` directly
 only for `--dump-decisions`: give it a new scratch directory outside the accepted input
 and curation repositories and an explicit destination, never the active catalog.
