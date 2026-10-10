@@ -123,13 +123,14 @@ uv run --no-project scripts/real_seed_cache.py build --prepared "$prepared" \
 
 Every lookup, a hit included, first runs the builder's own admission checks (the
 prepared pins and, for a strict full build, a clean checkout) and exits 10 with the
-builder's error if they fail. The result names `database` and `report`. On a miss the
-cache runs `build-db` in a new directory under the cache, with `--report-dir`,
-`--timing` and, for a diagnostic, `--diagnostic --diagnostic-db-path`. A run that did
-not complete is not stored; the result's `run_dir` keeps its outputs for diagnosis for 6
-hours. Run `build-db` directly only for `--dump-decisions`: give it a new scratch
-directory outside the accepted input and curation repositories and an explicit
-destination, never the active catalog.
+builder's error if they fail. A project environment that cannot import those checks
+exits 4 with `probe_environment_failed`: repair the environment, not the inputs. The
+result names `database` and `report`. On a miss the cache runs `build-db` in a new
+directory under the cache, with `--report-dir`, `--timing` and, for a diagnostic,
+`--diagnostic --diagnostic-db-path`. A run that did not complete is not stored; the
+result's `run_dir` keeps its outputs for diagnosis for 6 hours. Run `build-db` directly
+only for `--dump-decisions`: give it a new scratch directory outside the accepted input
+and curation repositories and an explicit destination, never the active catalog.
 
 Diagnostic mode retains error severity. Invalid pins, malformed contracts and
 implementation failures still abort. An exit code of 10 alone does not prove a completed

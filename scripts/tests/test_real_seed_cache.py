@@ -1,9 +1,10 @@
 """`scripts/real_seed_cache.py`'s contract: what it reuses, and what it never stores.
 
-The tool runs as its CLI. Its two process boundaries are stubbed: the real-seed
+The tool runs as its CLI. Its process boundaries are stubbed: the real-seed
 `reg-meta-build` (`$REG_REAL_SEED_BUILDER`, which logs each call, so a hit is a run that
-never reached it) and the project-environment probe (`$REG_REAL_SEED_PYTHON`, which
-reports a content digest of the curation tree and, on request, a failed admission).
+never reached it), the project-environment probe (`$REG_REAL_SEED_PYTHON`, which
+reports a content digest of the curation tree and, on request, a failed admission) and
+`rustc` (on `PATH`).
 The keyed code is real source.
 """
 
@@ -75,8 +76,13 @@ def _tool(
 ) -> tuple[int, dict]:
     (tmp_path / "builder.py").write_text(BUILDER)
     (tmp_path / "probe.py").write_text(PROBE)
+    rustc = tmp_path / "bin/rustc"
+    rustc.parent.mkdir(exist_ok=True)
+    rustc.write_text("#!/bin/sh\necho 'rustc stub'\n")
+    rustc.chmod(0o755)
     env = {
         **os.environ,
+        "PATH": f"{rustc.parent}{os.pathsep}{os.environ['PATH']}",
         "XDG_CACHE_HOME": str(tmp_path / "xdg"),
         "REG_REAL_SEED_CACHE": str(tmp_path / "cache"),
         "REG_REAL_SEED_BUILDER": f"{sys.executable} {tmp_path / 'builder.py'}",
@@ -91,7 +97,9 @@ def _tool(
         env=env,
         check=False,
     )
-    return proc.returncode, json.loads(proc.stdout) if proc.stdout else {}
+    return proc.returncode, json.loads(proc.stdout) if proc.stdout else {
+        "stderr": proc.stderr
+    }
 
 
 def _calls(tmp_path: Path) -> int:
@@ -103,7 +111,8 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     tmp_path: Path,
 ) -> None:
     # Fails if a failed run is stored (the next build hits it), if a lookup ignores
-    # the stored entry (the repeat runs again), if the stored report still names the
+    # the stored entry or keys `--registers` in the order given (the reordered repeat
+    # runs again), if the stored report still names the
     # staging directory, if a hit skips the build's admission checks (a changed
     # prepared checkout returns the old entry), if a hit skips the ledger (a truncated
     # one is returned), if a failed `--verify` leaves its entry reachable (the next
@@ -113,7 +122,7 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     (curation / "registers").mkdir(parents=True)
     (curation / "registers/a.toml").write_text("[register]\n")
 
-    def build(*extra: str, **flags) -> tuple[int, dict]:
+    def build(*extra: str, registers: str = "SCB:B,SCB:A", **flags) -> tuple[int, dict]:
         return _tool(
             tmp_path,
             "build",
@@ -127,6 +136,8 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
             "--diagnostic",
             "--curation-dir",
             str(curation),
+            "--registers",
+            registers,
             **flags,
         )
 
@@ -135,7 +146,7 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
     assert Path(failed["run_dir"], "report/summary.json").is_file()
 
     assert build()[1]["hit"] is False
-    code, again = build()
+    code, again = build(registers="SCB:A,SCB:B")
     assert (code, again["hit"], _calls(tmp_path)) == (0, True, 2)
     assert Path(again["database"]).read_bytes() == b"catalog"
     summary = json.loads(Path(again["report"], "summary.json").read_text())
@@ -166,27 +177,37 @@ def test_build_stores_only_completed_runs_and_hits_only_admitted_keys(
 
 def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
     # Fails if the prepare key stops covering code prepare runs (an edit to a source
-    # adapter would hit a stale preparation) or grows to cover resolution code (every
-    # resolution change would repeat a 1-2 h preparation). Edits a copied tree.
+    # adapter, or to a new module not yet committed, would hit a stale preparation),
+    # grows to cover resolution code (every resolution change would repeat a 1-2 h
+    # preparation) or ignored junk beside a module, or if the walk silently skips a
+    # workspace package it does not key. Edits a copied, committed tree.
     tree = tmp_path / "tree"
     ignore = shutil.ignore_patterns("__pycache__", "target")
-    for path in (
-        "reg_meta_build/src",
-        "crates/reg-core",
-        "crates/reg-core-py",
-    ):
+    for path in ("reg_meta_build/src", "crates/reg-core", "crates/reg-core-py"):
         shutil.copytree(REPO / path, tree / path, ignore=ignore)
-    for path in ("uv.lock", "Cargo.toml", "Cargo.lock"):
+    for path in ("uv.lock", "Cargo.toml", "Cargo.lock", ".gitignore"):
         shutil.copy2(REPO / path, tree / path)
     for name in ("real_seed_cache.py", "keyed_cache.py", "gate.py"):
         (tree / "scripts").mkdir(exist_ok=True)
         shutil.copy2(SCRIPTS / name, tree / "scripts" / name)
+    (tree / "pyproject.toml").write_text(
+        '[tool.uv.workspace]\nmembers = ["reg_meta_build", "reg_extra"]\n'
+    )
+    (tree / "reg_extra/src/reg_extra").mkdir(parents=True)
+    (tree / "reg_extra/src/reg_extra/__init__.py").touch()
+    subprocess.run(["git", "init", "-q", str(tree)], check=True)
+    subprocess.run(["git", "-C", str(tree), "add", "-A"], check=True)
     bundle = tmp_path / "repo/bundle"
     bundle.mkdir(parents=True)
     subprocess.run(["git", "init", "-q", str(tmp_path / "repo")], check=True)
 
     def key() -> str:
-        code, out = _tool(
+        code, out = keyed()
+        assert code == 0, out
+        return out["key"]
+
+    def keyed() -> tuple[int, dict]:
+        return _tool(
             tmp_path,
             "prepare",
             "--input-bundle",
@@ -198,14 +219,25 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
             "--key",
             tool=tree / "scripts/real_seed_cache.py",
         )
-        assert code == 0
-        return out["key"]
 
     package = tree / "reg_meta_build/src/reg_meta_build"
     before = key()
+    (package / "sources/_untracked.py").write_text("X = 1\n")
     with (package / "sources/sos.py").open("a") as source:
-        source.write("\n# edited\n")
+        source.write("\nfrom reg_meta_build.sources import _untracked\n")
     adapter_edited = key()
+    (package / "sources/_untracked.py").write_text("X = 2\n")
+    untracked_edited = key()
     with (package / "pipeline.py").open("a") as source:
         source.write("\n# edited\n")
-    assert (adapter_edited != before, key() == adapter_edited) == (True, True)
+    (package / ".DS_Store").write_bytes(b"junk")
+    assert (
+        adapter_edited != before,
+        untracked_edited != adapter_edited,
+        key() == untracked_edited,
+    ) == (True, True, True)
+
+    with (package / "sources/sos.py").open("a") as source:
+        source.write("\nimport reg_extra\n")
+    code, refused = keyed()
+    assert (code, "reg_extra" in refused["stderr"]) == (1, True)
