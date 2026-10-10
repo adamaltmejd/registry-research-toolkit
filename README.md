@@ -73,13 +73,20 @@ zstd -d reg_meta_docs.db.zst -o catalog/reg_meta_docs.db
 
 GitHub records each DB asset's SHA-256 digest
 (`gh release view reg_meta/vX.Y.Z --json assets`). On other platforms, build the binary
-from a checkout with a Rust toolchain (`cargo build --release -p reg-meta`, output in
-`target/release/reg-meta`).
+from a checkout with a Rust toolchain and copy it next to `catalog`
+(`cargo build --release -p reg-meta && cp target/release/reg-meta .`).
 
-Then run local stdio MCP, or the HTTP API and `/mcp`:
+Then run local stdio MCP:
 
 ```bash
 ./reg-meta mcp --db catalog
+```
+
+The HTTP API and `/mcp` (`serve`) need a checkout, because `serve` loads the steward
+branding under `reg_webapp/stewards`. Run it from the checkout root, with `reg-meta` and
+`catalog` placed there:
+
+```bash
 ./reg-meta serve --db catalog --stewards reg_webapp/stewards --port 8000
 ```
 
