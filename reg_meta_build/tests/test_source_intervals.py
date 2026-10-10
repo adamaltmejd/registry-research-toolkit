@@ -3,9 +3,8 @@
 What a build shows of it (cuts at exact bounds, reconciled facts, unplaced and
 columnless members, pooled editions) is the `occurrence-` build cases. These tests pin
 what no build case reaches: that the fold does not depend on the order its occurrences
-arrive in, the fail-fast guard on its input, and the two inputs only the LISA reader
-supplies (a population coordinate and a year-independent scope), which the build cases
-have no source for.
+arrive in, the fail-fast guard on its input, and the year-independent scope only the
+LISA reader supplies, which the build cases have no source for.
 """
 
 from __future__ import annotations
@@ -57,7 +56,6 @@ def _occurrence(draw: Callable, row: int) -> SourceRecord:
         column_negative=column == "",
         data_type=draw(st.sampled_from(("integer", "text", "float", "date", None))),
         source_attribution=draw(st.sampled_from((None, "Fråga 1", "Fråga 2"))),
-        negative=draw(st.sampled_from((False, False, False, False, False, True))),
         scope=scope,
     )
     unit = draw(st.sampled_from((None, "MWh", "Megawattimmar")))
@@ -112,7 +110,6 @@ def _canonical(records: tuple[SourceRecord, ...]) -> tuple:
     )
     return (
         segments(result.segments),
-        segments(result.negative_segments),
         issues,
         _rows(result.unsupported_occurrences),
     )
@@ -152,42 +149,6 @@ def test_unrelated_native_subjects_cannot_enter_one_ordinary_resolution() -> Non
     )
     with pytest.raises(ValueError, match="one source variable and variant"):
         resolve_occurrence_intervals((first, unrelated))
-
-
-def test_population_conflict_withholds_only_its_exact_intersection() -> None:
-    """Two concrete populations withhold only the segment where both apply; an unknown
-    population beside a concrete one is no conflict.
-
-    Only the LISA reader supplies a population, one per sheet, and a sheet is one
-    variant, so no build case reaches a disagreement. Fails if `_reconciled_segment`
-    stops withholding a segment with two populations, widens the withheld window past
-    the intersection, or counts an unknown population as a rival.
-    """
-    first = interval_record(
-        1, population=SourceCoordinate(status="value", name="Adults")
-    )
-    rival = interval_record(
-        2,
-        "2021-04-01",
-        "2021-06-30",
-        population=SourceCoordinate(status="value", name="All residents"),
-    )
-    result = resolve_occurrence_intervals((first, rival))
-    assert [(s.valid_from, s.valid_to) for s in result.segments] == [
-        ("2021-01-01", "2021-03-31"),
-        ("2021-07-01", "2021-12-31"),
-    ]
-    (issue,) = result.issues
-    assert issue.code == "conflicting_occurrence_population"
-    assert issue.fields == ("subject.population",)
-    assert issue.withheld == ("column_segment",)
-    assert (issue.valid_from, issue.valid_to) == ("2021-04-01", "2021-06-30")
-    assert issue.occurrences == (first, rival)
-
-    unknown = interval_record(2)
-    allowed = resolve_occurrence_intervals((first, unknown))
-    assert allowed.issues == allowed.unsupported_occurrences == ()
-    assert [s.occurrences for s in allowed.segments] == [(first, unknown)]
 
 
 def test_year_independent_occurrences_form_one_undated_state() -> None:
