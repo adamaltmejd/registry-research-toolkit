@@ -50,21 +50,19 @@ The agent plugin above does this for you. The same catalog is browsable at
 
 ### Local server
 
-Build the `reg-meta` binary from a checkout (needs a Rust toolchain; prebuilt binaries
-for macOS arm64 and Linux x86_64 will ship on each `reg_meta/v*` release once the
-release binaries land):
-
-```bash
-cargo build --release -p reg-meta
-```
-
-Download the catalog and documentation DBs of a release, verify them against the SHA-256
-digests GitHub records (`gh release view reg_meta/vX.Y.Z --json assets`), and unpack
-them into one directory:
+Each `reg_meta/v*` release carries a `reg-meta` binary for macOS arm64
+(`aarch64-apple-darwin`) and Linux x86_64 (`x86_64-unknown-linux-gnu`), each with a
+SHA-256 checksum file, and the catalog and documentation DBs. Download the binary for
+your platform and the DBs, verify them, and unpack the DBs into one directory:
 
 ```bash
 tag=reg_meta/vX.Y.Z
+target=aarch64-apple-darwin   # or x86_64-unknown-linux-gnu
 base="https://github.com/adamaltmejd/registry-research-toolkit/releases/download/${tag/\//%2F}"
+curl -fsSLO "$base/reg-meta-$target"
+curl -fsSLO "$base/reg-meta-$target.sha256"
+shasum -a 256 -c "reg-meta-$target.sha256"
+install -m 755 "reg-meta-$target" reg-meta
 mkdir -p catalog
 curl -fsSL -o reg_meta.db.zst "$base/reg_meta.db.zst"
 curl -fsSL -o reg_meta_docs.db.zst "$base/reg_meta_docs.db.zst"
@@ -73,11 +71,23 @@ zstd -d reg_meta.db.zst -o catalog/reg_meta.db
 zstd -d reg_meta_docs.db.zst -o catalog/reg_meta_docs.db
 ```
 
-Then run local stdio MCP, or the HTTP API and `/mcp`:
+GitHub records each DB asset's SHA-256 digest
+(`gh release view reg_meta/vX.Y.Z --json assets`). On other platforms, build the binary
+from a checkout with a Rust toolchain and copy it next to `catalog`
+(`cargo build --release -p reg-meta && cp target/release/reg-meta .`).
+
+Then run local stdio MCP:
 
 ```bash
-target/release/reg-meta mcp --db catalog
-target/release/reg-meta serve --db catalog --stewards reg_webapp/stewards --port 8000
+./reg-meta mcp --db catalog
+```
+
+The HTTP API and `/mcp` (`serve`) need a checkout, because `serve` loads the steward
+branding under `reg_webapp/stewards`. Run it from the checkout root, with `reg-meta` and
+`catalog` placed there:
+
+```bash
+./reg-meta serve --db catalog --stewards reg_webapp/stewards --port 8000
 ```
 
 `serve` answers `/api/*`, `/openapi.json` and `/mcp` on `127.0.0.1` (`--host` changes
