@@ -1146,7 +1146,10 @@ def build_catalog(
         dump_decisions=dump_decisions,
     )
     result = materialize_build(resolved, revision=revision)
-    _emit_timing("pipeline: total", started)
+    # Reported after publication: a failure here keeps the completed-artifact
+    # status, as it did when this line sat inside the pipeline's last guard.
+    with _retain_completed_artifact(result, report_dir):
+        _emit_timing("pipeline: total", started)
     return result
 
 
