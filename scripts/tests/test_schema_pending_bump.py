@@ -12,8 +12,7 @@ import sys
 from pathlib import Path
 
 import pytest
-
-from conftest import load_scripts_module
+from _scripts_support import load_scripts_module
 
 _MODULE = Path(__file__).resolve().parents[1] / "schema_pending_bump.py"
 spb = load_scripts_module("schema_pending_bump")

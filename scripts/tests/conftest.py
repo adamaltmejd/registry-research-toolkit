@@ -1,46 +1,22 @@
-"""Shared spec-loader for the `scripts/` unit tests.
+"""Shared fixtures for the `scripts/` unit tests.
 
-The `scripts/` tooling is standalone files, not an installed package, so a test loads its
-target by `importlib` spec rather than a plain `import` — the same way the scripts run
-under `uv run --no-project python scripts/<name>.py`, regardless of what's on sys.path.
-
-`load_scripts_module` is the one idiom every test file uses. Kept here (not re-pasted per
-file) so the pattern can't drift.
+Helpers that test files import live in `_scripts_support.py`, never here: a bare
+`from conftest import ...` resolves to another suite's `conftest` when several test trees
+share one pytest session (#1401).
 """
 
 from __future__ import annotations
 
-import importlib.util
 import subprocess
-import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import pytest
 
-if TYPE_CHECKING:
-    from types import ModuleType
-
-_SCRIPTS = Path(__file__).resolve().parents[1]
-
-
-def load_scripts_module(name: str) -> ModuleType:
-    """Load `scripts/<name>.py` as module `name`.
-
-    Registers in `sys.modules` before exec so a self-referential `@dataclass` that
-    resolves `sys.modules[__module__]` during class build sees the module.
-    """
-    spec = importlib.util.spec_from_file_location(name, _SCRIPTS / f"{name}.py")
-    assert spec and spec.loader
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[name] = module
-    spec.loader.exec_module(module)
-    return module
+_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _repo_files(pathspec: str) -> list[Path]:
     """Tracked and unignored files matching a git pathspec (`*` crosses `/`)."""
-    root = _SCRIPTS.parent
     names = subprocess.check_output(
         [
             "git",
@@ -51,20 +27,19 @@ def _repo_files(pathspec: str) -> list[Path]:
             "--",
             pathspec,
         ],
-        cwd=root,
+        cwd=_ROOT,
         text=True,
     ).splitlines()
-    return sorted({root / name for name in names if (root / name).is_file()})
+    return sorted({_ROOT / name for name in names if (_ROOT / name).is_file()})
 
 
 @pytest.fixture(scope="session")
 def python_test_files() -> list[Path]:
     """Discover tracked and unignored Python test/support files once per scan."""
-    root = _SCRIPTS.parent
     return [
         path
         for path in _repo_files("*.py")
-        if {"tests", "conformance"} & set(path.relative_to(root).parts)
+        if {"tests", "conformance"} & set(path.relative_to(_ROOT).parts)
     ]
 
 
