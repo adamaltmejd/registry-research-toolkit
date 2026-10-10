@@ -1063,17 +1063,18 @@ owner.
 
 An explicit `column_metadata = "per_column"` retains physical type, width, operational
 definition and source attribution on each checked representation window. Each literal
-column is reconciled independently; a conflict within that column remains unknown and
-diagnosed. The shared state retains only agreed facts and never selects a metadata
-donor. The existing `variable_alias_window` carries the mode and these literal fields,
-and selected-column reads project them, including nulls, onto that representation. An
-absent source attribution never inherits a sibling's questionnaire reference. Coverage
-checks compare the source claim with the same column's written window. Names retain the
-shared reconciliation contract; literal definitions require the guarded authoring below.
-Units are delivery facts with a common summary only when they agree; coding has its
-independent mode below. The default `shared` mode retains its existing behavior. Source
-SQL widths and precision remain literal metadata; this mode neither converts them nor
-asserts comparability.
+column is reconciled independently; a conflict within that column is already unknown and
+diagnosed (`conflicting_occurrence_facts`) by source reconciliation, which leaves each
+column one state per period. The shared state retains only agreed facts and never
+selects a metadata donor. The existing `variable_alias_window` carries the mode and
+these literal fields, and selected-column reads project them, including nulls, onto that
+representation. An absent source attribution never inherits a sibling's questionnaire
+reference. Coverage checks compare the source claim with the same column's written
+window. Names retain the shared reconciliation contract; literal definitions require the
+guarded authoring below. Units are delivery facts with a common summary only when they
+agree; coding has its independent mode below. The default `shared` mode retains its
+existing behavior. Source SQL widths and precision remain literal metadata; this mode
+neither converts them nor asserts comparability.
 
 A calendar-month period family may supply an exact `expected_definitions` map for all
 months `01` through `12`. Every original definition must match its month before any
