@@ -946,12 +946,12 @@ fn matched_columns(
 }
 
 /// Sort an arm's rows into today's order: display score descending, then rank, then
-/// the identity string (today's `_search_display_score` sort, per `type`).
+/// the tie key (today's `_search_display_score` sort, per `type`).
 fn rank(q: &str, hits: Vec<Hit>) -> Vec<Hit> {
     let folded = fold_search(q);
     let scores: Vec<i64> = hits.iter().map(|h| identity_score(&folded, h)).collect();
     let promote = scores.iter().filter(|&&s| s > 0).count() <= MAX_PROMOTED;
-    let mut keyed: Vec<(i64, f64, String, Hit)> = hits
+    let mut keyed: Vec<(i64, f64, (String, String), Hit)> = hits
         .into_iter()
         .zip(scores)
         .map(|(hit, score)| {
@@ -962,7 +962,7 @@ fn rank(q: &str, hits: Vec<Hit>) -> Vec<Hit> {
             } else {
                 0
             };
-            (-display, hit.rank(), identity(&hit), hit)
+            (-display, hit.rank(), tie_key(&hit), hit)
         })
         .collect();
     keyed.sort_by(|a, b| {
@@ -1189,8 +1189,17 @@ fn fqid_leaf(value: &str) -> Option<&str> {
     Some(leaf(value)).filter(|l| !l.is_empty())
 }
 
-/// The deterministic final tie-breaker of an arm, and what a typed cursor records of
-/// the row before the page (today's `_search_result_identity`).
+/// The deterministic final tie-breaker of an arm: a code's (code, label) as a tuple,
+/// so code `1` sorts before `10`; any other hit's identity.
+fn tie_key(hit: &Hit) -> (String, String) {
+    match hit {
+        Hit::Code(c) => (c.code.clone(), c.label.clone()),
+        _ => (identity(hit), String::new()),
+    }
+}
+
+/// What a typed cursor records of the row before the page (today's
+/// `_search_result_identity`), and every non-code hit's tie key.
 fn identity(hit: &Hit) -> String {
     match hit {
         Hit::Register(RegisterHit {
@@ -1220,7 +1229,8 @@ fn identity(hit: &Hit) -> String {
             "classification_succession:{}",
             s.fqid.as_deref().unwrap_or("None")
         ),
-        Hit::Code(c) => format!("code:{}:{}", c.code, c.label),
+        // JSON, so a `:` inside a code or label cannot make two codes collide.
+        Hit::Code(c) => format!("code:{}", json!([c.code, c.label])),
     }
 }
 
