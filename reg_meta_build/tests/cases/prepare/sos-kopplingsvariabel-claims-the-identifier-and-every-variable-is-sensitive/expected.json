@@ -5,7 +5,7 @@
     "test_sos_source_records.py::test_sos_flag_claims_form_without_unresolved_flag"
   ],
   "fails_if": "the SOS reader stops declaring every workbook variable sensitive, reads a delivered blank Kopplingsvariabel as an unknown identifier claim, or drops the claimed cell from the record's delivered cells",
-  "note": "Disclosure guard: SOS health and social-services microdata is sensitive whatever the workbook says. A blank Kopplingsvariabel is an explicit false identifier claim, a marker an explicit true one, and each claim stays traceable to its delivered cell. That such flags form without unresolved_flag is test_source_formation_facts.py::test_conditional_sensitivity_ratchets_up_without_changing_plain_values[True-False-True].",
+  "note": "Disclosure guard: SOS health and social-services microdata is sensitive whatever the workbook says. A blank Kopplingsvariabel is an explicit false identifier claim, a marker an explicit true one, and each claim stays traceable to its delivered cell. That such flags form without unresolved_flag is the build case formation-sensitivity-ratchets-up-and-unknown-flags-withhold-the-variable (s1c0).",
   "projections": [
     {
       "of": "records",

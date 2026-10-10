@@ -1,0 +1,15 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {"table": "issues", "where": {"code": "conflicting_variable_fact"}, "fields": ["subject", "fields", "withheld_output"], "rows": {"step": "1-source-order"}},
+    {"table": "variables", "where": {"variable": "def"}, "fields": ["variable", "definition"], "rows": {"step": "1-source-order"}},
+    {"table": "states", "where": {"variable": "def"}, "fields": ["column", "valid_from", "valid_to"], "rows": {"step": "1-source-order"}},
+    {"table": "variables", "where": {"variable": ["u1", "u2", "u3", "u4", "u5", "u6", "u7", "u8", "u9", "u10"]}, "fields": ["variable", "measurement_unit"], "rows": {"step": "1-source-order"}},
+    {"table": "variables", "where": {"variable": ["period", "variant", "stable"]}, "fields": ["variable", "operational_definition", "source_register_text"], "rows": {"step": "1-source-order"}},
+    {"table": "states", "where": {"variable": ["period", "variant", "stable"]}, "fields": ["variable", "variant", "valid_from", "valid_to", "operational_definition", "source_register_text"], "rows": {"step": "1-source-order"}},
+    {"table": "states", "where": {"variable": ["compop", "compsrc"]}, "fields": ["variable", "valid_from", "valid_to", "operational_definition", "source_register_text"], "rows": {"step": "1-source-order"}},
+    {"table": "issues", "where": {"subject": ["scb/sample/period", "scb/sample/variant", "scb/sample/stable", "scb/sample/compop", "scb/sample/compsrc"]}, "fields": ["code", "subject"], "rows": {"step": "1-source-order"}},
+    {"table": "states", "where": {"variable": "checked"}, "fields": ["column", "valid_from", "valid_to"], "rows": {"step": "1-source-order"}},
+    {"table": "issues", "where": {"subject": "scb/sample/checked"}, "fields": ["code", "valid_from", "valid_to", "withheld_output"], "rows": {"step": "1-source-order"}}
+  ]
+}

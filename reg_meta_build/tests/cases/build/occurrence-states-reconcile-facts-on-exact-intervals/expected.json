@@ -34,6 +34,7 @@
       "where": {"code": "conflicting_occurrence_facts"},
       "fields": ["subject", "fields", "valid_from", "valid_to"],
       "rows": [
+        ["scb/sample/d-def", ["definition"], "2020-01-01", "2020-12-31"],
         ["scb/sample/l04", ["data_length", "data_type"], "2020-01-01", "2020-12-31"],
         ["scb/sample/l05", ["data_length"], "2020-01-01", "2020-12-31"],
         ["scb/sample/l06", ["data_length"], "2020-01-01", "2020-12-31"],
@@ -45,7 +46,7 @@
         ["scb/sample/x04", ["measurement_unit"], "2020-01-01", "2020-12-31"],
         ["scb/sample/x05", ["measurement_unit"], "2020-01-01", "2020-12-31"]
       ],
-      "note": "The only occurrence conflicts, each on its 2020 segment: the length table's expected_fields (l04 date+integer, l05 '8,2', l06 an unknown type beside a length), test_declared_type_widening's two conflicts (w02 date+integer, w03 uniqueidentifier+integer) and the five unlisted unit sets. Every other leg asserted `result.issues == ()`: the listed units, the absorbed source texts (d-src, d-opdef, d-ref), a-widen, a-same, opt, the storage legs and p-month raise none."
+      "note": "The only occurrence conflicts, each on its 2020 segment: test_same_column_definition_conflict_is_not_absorbed (d-def: one conflict naming only the definition), the length table's expected_fields (l04 date+integer, l05 '8,2', l06 an unknown type beside a length), test_declared_type_widening's two conflicts (w02 date+integer, w03 uniqueidentifier+integer) and the five unlisted unit sets. Every other leg asserted `result.issues == ()`: the listed units, the absorbed source texts (d-src, d-opdef, d-ref), a-widen, a-same, opt, the storage legs and p-month raise none."
     },
     {
       "table": "states",
@@ -137,6 +138,13 @@
     },
     {
       "table": "states",
+      "where": {"variable": ["d-def"]},
+      "fields": ["valid_from", "valid_to", "definition"],
+      "rows": [["2020-01-01", "2020-12-31", null]],
+      "note": "test_same_column_definition_conflict_is_not_absorbed: the state still forms, with the disputed definition unknown."
+    },
+    {
+      "table": "states",
       "where": {"variable": ["p-month"]},
       "fields": ["valid_from", "valid_to", "data_type", "definition"],
       "rows": [
@@ -189,7 +197,7 @@
         ["scb/sample/p-komvux", ["period"], ["occurrence"], null, null],
         ["sos/par/opn", ["period"], ["occurrence"], null, null]
       ],
-      "note": "test_unplaced_occurrence_does_not_erase_independently_supported_content and test_unknown_column_still_errors: an unknown column is an unsupported occurrence. test_annual_edition_cannot_override_unsupported_precise_period[pooled]: a pooled scope without a range is not placed on its delivery year. test_invalid_or_unbounded_dates_are_not_materialized[9999-...]: a literal 9999 end is not an open end. The literal blank columns are absent here."
+      "note": "test_unplaced_occurrence_does_not_erase_independently_supported_content and test_unknown_column_still_errors: an unknown column is an unsupported occurrence. test_annual_edition_cannot_override_unsupported_precise_period[pooled] and test_term_structured_pooled_label_stays_unsupported: a pooled scope without a range (the term-structured Komvux label) is not placed on its delivery year. test_invalid_or_unbounded_dates_are_not_materialized[9999-...]: a literal 9999 end is not an open end. The literal blank columns are absent here."
     },
     {
       "table": "issues",
