@@ -1,0 +1,20 @@
+[[edge]]
+type = "same_as"
+a = "scb/example/doubled"
+b = "scb/thirteenth/doubled"
+[[edge]]
+type = "same_as"
+a = "scb/example/unknown-delivery"
+b = "scb/twelfth/unknown-delivery"
+[[edge]]
+type = "same_as"
+a = "scb/example/undelivered"
+b = "scb/eleventh/undelivered"
+[[edge]]
+type = "same_as"
+a = "scb/example/explicit"
+b = "scb/tenth/explicit"
+[[edge]]
+type = "same_as"
+a = "scb/example/defaulted"
+b = "scb/ninth/defaulted"

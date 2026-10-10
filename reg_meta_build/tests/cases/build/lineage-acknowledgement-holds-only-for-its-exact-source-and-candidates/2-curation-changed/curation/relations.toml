@@ -1,0 +1,36 @@
+[[edge]]
+type = "same_as"
+a = "scb/example/exact"
+b = "scb/exact/exact"
+[[edge]]
+type = "same_as"
+a = "scb/example/original"
+b = "scb/original/original"
+[[edge]]
+type = "same_as"
+a = "scb/example/added"
+b = "scb/added/added"
+[[edge]]
+type = "same_as"
+a = "scb/example/changed"
+b = "scb/changed/changed"
+[[edge]]
+type = "same_as"
+a = "scb/example/linked"
+b = "scb/linked/linked"
+[[edge]]
+type = "same_as"
+a = "scb/example/linked"
+b = "scb/linked/new-source"
+[[edge]]
+type = "same_as"
+a = "scb/original/original"
+b = "scb/exact/filler"
+[[edge]]
+type = "same_as"
+a = "scb/example/two-origins"
+b = "scb/first/two-origins"
+[[edge]]
+type = "same_as"
+a = "scb/example/two-origins"
+b = "scb/second/two-origins"

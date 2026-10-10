@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_catalog_lineage.py::test_explicit_identity_and_source_claim_generate_intersection_edges"
+  ],
+  "note": "Step 1 with the Registerinformation rows reversed and every curation entry list reversed: each register file's [[variant]] and [[variable]] entries and the relations.toml [[edge]] entries. Row order inside a source and TOML entry order are both reachable inputs. The old test's last assertion: lineage resolved from the variables in reversed order equals the first result. The expected projections are step 1's, copied.",
+  "fails_if": "lineage starts to depend on delivery or curation-entry order: for example source formation keeps a variable's states in delivery order instead of sorting them, while `resolve_catalog_lineage` takes the first overlapping source state, so the reversed delivery loses HISTORICAL's People edge. No one-site change isolates this step today, because formation sorts states before lineage sees them (a first-state-only lineage mutation already fails step 1). The step is the decision-1 order witness, like `errata-column-holdings-period-forms-one-pooled-state` step 2",
+  "sources": "scb-lineage-identity-and-dates-reversed"
+}

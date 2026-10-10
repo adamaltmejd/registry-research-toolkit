@@ -697,8 +697,10 @@ def _variables(outcome: Outcome) -> list[dict]:
     rows = outcome._sql(
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
         "s.delivery_column_name AS column, v.provider_key, v.definition, "
-        "v.description, v.is_identifier, v.is_sensitive, v.deprecated FROM variable v "
-        "JOIN register r USING (register_id) "
+        "v.description, v.is_identifier, v.is_sensitive, v.deprecated, "
+        "sr.slug AS source_register, v.source_label, v.source_register_text "
+        "FROM variable v JOIN register r USING (register_id) "
+        "LEFT JOIN register sr ON sr.register_id = v.source_register_id "
         "LEFT JOIN variable_state s USING (variable_id)"
     )
     named = {
@@ -996,6 +998,11 @@ _STATE_JOIN = (
     "JOIN register r ON r.register_id = v.register_id "
     "JOIN register_variant rv ON rv.register_variant_id = s.register_variant_id "
 )
+# Each state's id and coordinates; the lineage tables join it once per edge end.
+_STATE_COORDINATES = (
+    "SELECT s.state_id, r.slug AS register, v.slug AS variable, rv.slug AS variant, "
+    "s.delivery_column_name AS column, s.valid_from, s.valid_to " + _STATE_JOIN
+)
 _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "issues": _issues,
     "issue_refs": _issue_refs,
@@ -1068,6 +1075,20 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "successor_provider || '/' || successor_register || '/' || successor_variable "
         "FROM variable_replaced_by"
     ),
+    "lineage": lambda o: o._sql(
+        "SELECT c.register, c.variable, c.variant, c.column, "
+        "s.register AS source_register, s.variable AS source_variable, "
+        "s.variant AS source_variant, s.column AS source_column, "
+        "l.valid_from, l.valid_to FROM variable_state_lineage l "
+        f"JOIN ({_STATE_COORDINATES}) c ON c.state_id = l.consumer_state_id "
+        f"JOIN ({_STATE_COORDINATES}) s ON s.state_id = l.source_state_id"
+    ),
+    "lineage_warnings": lambda o: o._sql(
+        "SELECT c.register, c.variable, c.variant, c.column, c.valid_from, "
+        "c.valid_to, w.warning_kind AS kind, w.message "
+        "FROM variable_state_lineage_warning w "
+        f"JOIN ({_STATE_COORDINATES}) c ON c.state_id = w.consumer_state_id"
+    ),
     "state_classifications": lambda o: o._sql(
         "SELECT r.slug AS register, v.slug AS variable, "
         "s.delivery_column_name AS column, s.valid_from, s.valid_to, "
@@ -1138,7 +1159,8 @@ FIELDS: dict[str, frozenset[str]] = {
         "description operational_definition source_register_text",
         "state_codes": "register variable variant column valid_from valid_to code label",
         "variables": "register variable column provider_key definition description "
-        "is_identifier is_sensitive deprecated",
+        "is_identifier is_sensitive deprecated source_register source_label "
+        "source_register_text",
         "variants": "register variant name panel_entity_key panel_time_key",
         "tags": "slug member",
         "aliases": "register variable variant column",
@@ -1154,6 +1176,10 @@ FIELDS: dict[str, frozenset[str]] = {
         "search_text": "register variable name definition description",
         "manifest": "key value",
         "edges": "type a b",
+        "lineage": "register variable variant column source_register "
+        "source_variable source_variant source_column valid_from valid_to",
+        "lineage_warnings": "register variable variant column valid_from valid_to "
+        "kind message",
         "state_classifications": "register variable column valid_from valid_to "
         "classification provenance",
         "conformance": "register variable column valid_from valid_to window "

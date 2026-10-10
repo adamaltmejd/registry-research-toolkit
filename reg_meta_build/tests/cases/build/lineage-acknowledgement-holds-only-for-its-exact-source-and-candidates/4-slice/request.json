@@ -1,0 +1,9 @@
+{
+  "replaces": [
+    "test_catalog_lineage.py::test_scoped_lineage_acknowledgement_defers_only_positively_unselected_source"
+  ],
+  "note": "Step 1's delivery and curation in a slice of register 1 (EXAMPLE), so every labelled source register is a declared but unselected scope (old: the source register in `unselected`, its name in `unselected_names`, `slice_registers={\"scb/example\"}`). From the old test: every issue of an acknowledged subject is a deferred reference, none is acknowledged, and each lineage acknowledgement whose subject's label names an unselected register is skipped rather than reported stale (old: `skipped == 1` for its one entry; here all six entries). The old test's other half, slice_registers None while the source is still unselected, has no build: a build without a slice selects every register. Its claim, that only a slice skips an entry, is step 1, where the complete build evaluates every entry.",
+  "fails_if": "`resolve_catalog_lineage` evaluates an acknowledgement whose subject's source register is unselected instead of skipping it (drops the `slice_registers` deferral check), so the six entries are reported stale; or it attributes a label naming an unselected register, so the deferred references disappear",
+  "sources": "scb-lineage-acknowledged",
+  "registers": ["1"]
+}

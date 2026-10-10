@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "example"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "contested"
+[[variable]]
+native_id = "1.102"
+slug = "specific-bare"
+[[variable]]
+native_id = "1.103"
+slug = "specific-variant"
+[[variable]]
+native_id = "1.104"
+slug = "former"
+[[variable]]
+native_id = "1.105"
+slug = "external"
+[[variable]]
+native_id = "1.106"
+slug = "missing"

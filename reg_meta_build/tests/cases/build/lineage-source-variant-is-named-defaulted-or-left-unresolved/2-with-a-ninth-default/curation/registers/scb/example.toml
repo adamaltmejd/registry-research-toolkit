@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "example"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "gap"
+[[variable]]
+native_id = "1.102"
+slug = "defaulted"
+[[variable]]
+native_id = "1.103"
+slug = "explicit"
+[[variable]]
+native_id = "1.104"
+slug = "undelivered"
+[[variable]]
+native_id = "1.105"
+slug = "unknown-delivery"
+[[variable]]
+native_id = "1.106"
+slug = "doubled"
