@@ -2001,7 +2001,15 @@ pins are recorded as the maintainer's G2 found them. Paths:
 `conformance/differential/config.toml`, section 4. It also deletes the pre-4.4
 `asset_doc` fallback in `.github/workflows/container-build.yml` (its `simplify:`
 marker), since the 10.0.0 tag carries `reg_meta_build`'s `doc_db.py`. Acceptance: G1 0
-differences. Depends on: the 10.0.0 release.
+differences. Depends on: the 10.0.0 release. **Shipped 2026-10-10**: pin and baseline
+`reg_meta/v0.46.0` (schema 10.0.0); G1 17,177 cases, 0 differences (only
+`derived-generation` matched; `reader-version` is kept for the next version bump). The
+maintainer's G2 at 4d587d51/b9526573 ran strict to completion; its differential of the
+0.45.0 binary against a fresh 10.0 build compared 18,317 cases with 5,943 differences,
+all attributed (state merging 4,196; warning split 1,095; slug/code tie order 630; the
+post-0.45.0 blank-code removal 22), after two fixes G2 found (#1390 pooled coding-issue
+grain, #1393 a closed run never merges into an open-ended state). Evidence in the
+maintainer's `.local/release-0460/`.
 
 **4.12 Release binaries** (D3). A matrix workflow on `reg_meta/v*` builds `reg-meta` for
 macOS arm64 and Linux x86_64 and uploads them with SHA-256 checksums. The plugin README
