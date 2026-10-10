@@ -150,6 +150,14 @@ cannot prove a complete global base for steward extension. There is no validatio
 bypass. Reports contain `summary.json` and `events.jsonl.gz`, with source references,
 applicability failures and withheld output.
 
+A build can also keep its resolution: `build-db --resolved-out NEW_DIR` writes a
+resolved bundle after resolving, without changing the catalog or report.
+`materialize-db --resolved DIR --report-dir NEW_DIR` then places the same catalog bytes
+and ledger without resolving again, with the bundle's own mode and `--registers` (a
+strict one only when it has no errors). Use it when a change touches only the writer,
+the DDL, derive or validation. A bundle belongs to the resolve code that wrote it; never
+keep or share one across resolver changes.
+
 `--timing` reports phase wall time, not host CPU time or a profiler result. Capture
 those separately during an agreed verification run when required; concurrent audits are
 not isolated performance evidence.

@@ -57,6 +57,7 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
 )
 from reg_meta_build.prepared_values import _DESCRIPTOR
+from reg_meta_build.resolved_bundle import ResolvedBuild, write_resolved_bundle
 from reg_meta_build.resolved_catalog import (
     CURATION_TREE_SHA256_KEY,
     ResolvedClassification,
@@ -116,14 +117,7 @@ from .source_evidence import canonical_sha256
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from reg_meta_build._curation import SearchPin
     from reg_meta_build.curation_tree import CurationTree
-    from reg_meta_build.data_warnings import DataWarning
-    from reg_meta_build.resolved_catalog import (
-        ResolvedEdition,
-        ResolvedRegister,
-        ResolvedVariable,
-    )
     from reg_meta_build.source_records import SourceRecord
     from reg_meta_build.source_value_bindings import (
         ValueBindingIssue,
@@ -340,33 +334,6 @@ def _value_source_issue(
 
 
 @dataclass(frozen=True)
-class ResolvedBuild:
-    """A resolved build handed to materialization: the writer's inputs, the mode
-    and the report so far. Its ledger member is closed."""
-
-    output: Path
-    report_dir: Path
-    ledger: Path
-    diagnostic: bool
-    scoped: bool
-    publishable: bool
-    # Copied, never mutated, by `materialize_build`.
-    build_result: dict[str, object]
-    variables: tuple[ResolvedVariable, ...]
-    parent_registers: tuple[ResolvedRegister, ...]
-    parent_variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...]
-    editions: tuple[ResolvedEdition, ...]
-    classifications: tuple[ResolvedClassification, ...]
-    classification_successions: tuple[ResolvedClassificationSuccession, ...]
-    metadata: ResolvedMetadata
-    # Only the catalog's: `BUILD_ONLY_CODES` stay in the ledger.
-    data_warnings: tuple[DataWarning, ...]
-    search_pins: tuple[SearchPin, ...]
-    # Without `builder_commit`, which materialization rechecks and adds.
-    manifest: dict[str, str]
-
-
-@dataclass(frozen=True)
 class BuildPaths:
     """A build's admitted absolute paths: inputs, outputs and reports never overlap."""
 
@@ -375,6 +342,7 @@ class BuildPaths:
     report_dir: Path
     curation_dir: Path
     dump_decisions: Path | None
+    resolved_out: Path | None
     # The catalog and its backup.
     output_paths: frozenset[Path]
 
@@ -389,6 +357,7 @@ def admit_build_paths(
     publishable: bool,
     curation_dir: Path | None,
     dump_decisions: Path | None,
+    resolved_out: Path | None = None,
 ) -> BuildPaths:
     """Refuse malformed input identities and overlapping paths before any input
     is read. The prepared manifest's own files are checked once it is open."""
@@ -414,32 +383,39 @@ def admit_build_paths(
         raise ValueError(f"curation directory does not exist: {curation_dir}")
     slug_dir = (curation_dir.parent / "fqid_slugs").resolve()
     dump_decisions = dump_decisions.resolve() if dump_decisions is not None else None
-    output_paths = {output, Path(str(output) + ".prev")} if output else set()
+    resolved_out = resolved_out.resolve() if resolved_out is not None else None
     protected_dirs = (prepared_path, curation_dir, slug_dir)
-    if dump_decisions is not None and (
-        dump_decisions.exists()
-        or any(
-            dump_decisions.is_relative_to(path) or path.is_relative_to(dump_decisions)
-            for path in (*protected_dirs, report_dir, *output_paths)
-        )
+    for flag, directory in (
+        ("--dump-decisions", dump_decisions),
+        ("--resolved-out", resolved_out),
     ):
-        raise ValueError(
-            "--dump-decisions must be a new directory separate from inputs and outputs"
-        )
+        others = {
+            other
+            for other in (dump_decisions, resolved_out)
+            if other is not None and other is not directory
+        }
+        if directory is not None and (
+            directory.exists()
+            or any(
+                directory.is_relative_to(path) or path.is_relative_to(directory)
+                for path in (
+                    *protected_dirs,
+                    report_dir,
+                    *_catalog_paths(output),
+                    *others,
+                )
+            )
+        ):
+            raise ValueError(
+                f"{flag} must be a new directory separate from inputs and outputs"
+            )
+    output_paths = admit_catalog_outputs(
+        output, report_dir, protected_dirs, publishable=publishable
+    )
     if (
-        any(
-            path.is_relative_to(directory) or directory.is_relative_to(path)
-            for path in (*output_paths, report_dir)
-            for directory in protected_dirs
-        )
-        or (
-            output is not None
-            and slug_dir.is_dir()
-            and slug_dir.is_relative_to(output.parent)
-        )
-        or (output is not None and output.is_relative_to(report_dir))
-        or (output is not None and not publishable and output.exists())
-        or (output is not None and output.exists() and not output.is_file())
+        output is not None
+        and slug_dir.is_dir()
+        and slug_dir.is_relative_to(output.parent)
     ):
         raise ValueError(
             "build outputs must be separate from build inputs and each other"
@@ -450,8 +426,40 @@ def admit_build_paths(
         report_dir=report_dir,
         curation_dir=curation_dir,
         dump_decisions=dump_decisions,
-        output_paths=frozenset(output_paths),
+        resolved_out=resolved_out,
+        output_paths=output_paths,
     )
+
+
+def _catalog_paths(output: Path | None) -> set[Path]:
+    """The catalog and its backup."""
+    return {output, Path(str(output) + ".prev")} if output else set()
+
+
+def admit_catalog_outputs(
+    output: Path | None,
+    report_dir: Path,
+    protected_dirs: tuple[Path, ...],
+    *,
+    publishable: bool,
+) -> frozenset[Path]:
+    """The catalog and its backup, refused unless separate from `protected_dirs`,
+    the report and each other. Only a publishable catalog replaces a file."""
+    output_paths = _catalog_paths(output)
+    if (
+        any(
+            path.is_relative_to(directory) or directory.is_relative_to(path)
+            for path in (*output_paths, report_dir)
+            for directory in protected_dirs
+        )
+        or (output is not None and output.is_relative_to(report_dir))
+        or (output is not None and not publishable and output.exists())
+        or (output is not None and output.exists() and not output.is_file())
+    ):
+        raise ValueError(
+            "build outputs must be separate from build inputs and each other"
+        )
+    return frozenset(output_paths)
 
 
 def ledger_line(kind: str, value: dict[str, object]) -> str:
@@ -476,6 +484,7 @@ def resolve_catalog(
     registers: tuple[str, ...] = (),
     curation_dir: Path | None = None,
     dump_decisions: Path | None = None,
+    resolved_out: Path | None = None,
 ) -> ResolvedBuild:
     """Resolve the compiled curation up to the writer; nothing is placed.
 
@@ -486,6 +495,8 @@ def resolve_catalog(
     that exist but were not selected. Malformed prepared inputs or declarations
     raise normally, after an `engineering_failure` summary once the report
     directory exists. `materialize.build_catalog` places the result.
+    `resolved_out` names a new directory for the result as a resolved bundle
+    (`resolved_bundle`), written once the resolve ledger member is closed.
     """
     resolved = _resolve(
         prepared_path,
@@ -497,8 +508,22 @@ def resolve_catalog(
         registers=registers,
         curation_dir=curation_dir,
         dump_decisions=dump_decisions,
+        resolved_out=resolved_out,
     )
     assert isinstance(resolved, ResolvedBuild)
+    if resolved_out is not None:
+        try:
+            write_resolved_bundle(resolved, resolved_out.resolve())
+        except Exception as exc:
+            write_summary(
+                resolved.report_dir,
+                {
+                    "status": "engineering_failure",
+                    "error": str(exc),
+                    "counts": resolved.build_result["counts"],
+                },
+            )
+            raise
     return resolved
 
 
@@ -544,6 +569,7 @@ def _resolve(
     registers: tuple[str, ...],
     curation_dir: Path | None,
     dump_decisions: Path | None,
+    resolved_out: Path | None = None,
 ) -> ResolvedBuild | dict[str, object]:
     """A catalog's resolution, or with no `output` the local check's report."""
     check = output is None
@@ -558,6 +584,7 @@ def _resolve(
         publishable=publishable,
         curation_dir=curation_dir,
         dump_decisions=dump_decisions,
+        resolved_out=resolved_out,
     )
     prepared_path, output, report_dir = paths.prepared, paths.output, paths.report_dir
     curation_dir, dump_decisions = paths.curation_dir, paths.dump_decisions

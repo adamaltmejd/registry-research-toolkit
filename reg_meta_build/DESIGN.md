@@ -58,6 +58,40 @@ appends its member only when it has events (today only `corpus_validation`), so 
 decompressed ledger is unchanged by the split. `check-curation` runs only the resolve
 phase.
 
+`build-db --resolved-out DIR` also writes the resolution as a bundle
+(`resolved_bundle.py`) after the resolve ledger member closes; the build's catalog and
+report are unchanged. `materialize-db --resolved DIR` places it with
+`materialize.materialize_resolved`, so a builder change that touches only the writer,
+the DDL, derive or validation can skip resolution. The bundle holds:
+
+- `bundle.json`, a strict record: format version, mode, the `--registers` selection,
+  publishability, the prepared pins, the curation tree hash, the pre-write build result,
+  variable/state/code-set counts and each payload's SHA-256 and size;
+- `handoff.pickle.zst`, the writer's inputs: one frame holding every `ResolvedBuild`
+  field that is neither a path nor recorded in `bundle.json`, then one frame per
+  variable, which bounds the pickle memo;
+- `code_sets.pickle.zst`, each distinct `ResolvedCodeSet` once, referenced from the
+  handoff by persistent id. Equal value sets recur across states and alias windows
+  (about 3.3 inlined member pairs per stored one in the 6.7.0 catalog), so inlining
+  would dominate the bundle;
+- `events.jsonl.gz`, a copy of the resolve ledger member.
+
+The pickle is a cache artifact keyed by the exact resolve code (the import walk from
+`pipeline`, which includes `resolved_bundle`), never a public contract: there is no
+migration between format versions, and a bundle from other resolve code is rebuilt, not
+read. Loading refuses, each with a located error code: a `bundle.json` that fails strict
+validation (`resolved_bundle_invalid`); a requested mode or register selection other
+than the bundle's (`resolved_bundle_mode_mismatch`); a strict bundle with resolution
+errors (`resolved_bundle_blocked`), the same publication guard as a strict build; a
+payload whose size or SHA-256 differs (`resolved_bundle_digest_mismatch`); any pickled
+global that is not a Pydantic model defined in a `reg_meta_build` module
+(`resolved_bundle_global_refused`); unreadable frames (`resolved_bundle_invalid`); and
+loaded counts that differ from the build result (`resolved_bundle_count_mismatch`). The
+writer then revalidates every model strictly. A publishable materialization captures and
+stamps the builder commit as `build_catalog` does, at materialization time. The report
+starts from the bundle's ledger member, so the materialized report's ledger is
+byte-identical to the unphased build's.
+
   | Step | Module family                                                                              | Role                                                                                              |
   | ---- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
   | 1    | `sources/*_records.py`, `sources/*_values.py`, source reference readers                    | Actual-format decoding.                                                                           |
@@ -1644,6 +1678,8 @@ reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-man
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--curation-dir DIR]
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --diagnostic --diagnostic-db-path NEW.db
 reg-meta-build --db NEW_DIR build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --registers SPEC[,SPEC...]
+reg-meta-build build-db ... --resolved-out NEW_DIR
+reg-meta-build materialize-db --resolved DIR --report-dir NEW_DIR [--diagnostic --diagnostic-db-path NEW.db] [--registers SPEC[,SPEC...]]
 reg-meta-build check-curation --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --registers SPEC[,SPEC...] --report-dir NEW_DIR
 reg-meta-build inspect-source-records --input-bundle DIR ...
 reg-meta-build extend-db --base-db DB --providers-dir DIR --steward NAME ...

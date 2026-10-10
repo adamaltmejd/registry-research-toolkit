@@ -421,6 +421,53 @@ def _build_parser() -> argparse.ArgumentParser:
             "warnings."
         ),
     )
+    build_p.add_argument(
+        "--resolved-out",
+        metavar="DIR",
+        help=(
+            "Also write the resolution as a bundle in this new directory, after "
+            "resolving and before placing the catalog; materialize-db places it."
+        ),
+    )
+
+    materialize_p = sub.add_parser(
+        "materialize-db",
+        help="Place the catalog from a resolved bundle written by build-db --resolved-out.",
+        description=(
+            "Load a resolved bundle (build-db --resolved-out) and place its catalog "
+            "exactly as that build would have: same database bytes, same report. "
+            "The mode and --registers must be the bundle's, and a strict bundle must "
+            "have no resolution errors. A bundle is a cache artifact of the builder "
+            "revision that wrote it, not a public format."
+        ),
+    )
+    materialize_p.add_argument(
+        "--resolved", required=True, metavar="DIR", help="Resolved bundle directory."
+    )
+    materialize_p.add_argument(
+        "--report-dir",
+        required=True,
+        help="New directory for the build report: the bundle's events, then this run's.",
+    )
+    materialize_p.add_argument(
+        "--diagnostic",
+        action="store_true",
+        help="Place a diagnostic bundle's nonpublishable catalog.",
+    )
+    materialize_p.add_argument(
+        "--diagnostic-db-path",
+        help="New explicit SQLite path required with --diagnostic.",
+    )
+    materialize_p.add_argument(
+        "--registers",
+        metavar="SPEC[,SPEC...]",
+        help="The register subset the bundle was resolved for, as given to build-db.",
+    )
+    materialize_p.add_argument(
+        "--timing",
+        action="store_true",
+        help="Emit phase durations to stderr.",
+    )
 
     check_p = sub.add_parser(
         "check-curation",
@@ -1053,9 +1100,9 @@ def _pipeline_report_failure(
     }
 
 
-def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .materialize import CompletedArtifactError, build_catalog
-
+def _catalog_request(args: argparse.Namespace) -> tuple[Path, tuple[str, ...]]:
+    """The catalog path and register selection `build-db` and `materialize-db`
+    request; their mode and destination flags are the same."""
     if args.timing:
         os.environ["REG_META_BUILD_TIMING"] = "1"
     if args.diagnostic != bool(args.diagnostic_db_path) or (
@@ -1082,18 +1129,16 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         if args.diagnostic
         else Path(args.db or default_db_dir()) / DB_FILENAME
     )
+    return output, registers
+
+
+def _run_catalog_build(
+    args: argparse.Namespace, build: Callable[[], dict[str, Any]]
+) -> tuple[dict[str, Any], int]:
+    from .materialize import CompletedArtifactError
+
     try:
-        result = build_catalog(
-            Path(args.prepared),
-            args.input_commit,
-            args.input_manifest_sha256,
-            output,
-            Path(args.report_dir),
-            diagnostic=args.diagnostic,
-            registers=registers,
-            curation_dir=Path(args.curation_dir) if args.curation_dir else None,
-            dump_decisions=Path(args.dump_decisions) if args.dump_decisions else None,
-        )
+        result = build()
     except CompletedArtifactError as exc:
         return _pipeline_report_failure(
             exc.result,
@@ -1116,6 +1161,43 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     return result, EXIT_CONFIG if result[
         "status"
     ] == "blocked" or args.diagnostic else 0
+
+
+def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .materialize import build_catalog
+
+    output, registers = _catalog_request(args)
+    return _run_catalog_build(
+        args,
+        lambda: build_catalog(
+            Path(args.prepared),
+            args.input_commit,
+            args.input_manifest_sha256,
+            output,
+            Path(args.report_dir),
+            diagnostic=args.diagnostic,
+            registers=registers,
+            curation_dir=Path(args.curation_dir) if args.curation_dir else None,
+            dump_decisions=Path(args.dump_decisions) if args.dump_decisions else None,
+            resolved_out=Path(args.resolved_out) if args.resolved_out else None,
+        ),
+    )
+
+
+def _cmd_materialize_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .materialize import materialize_resolved
+
+    output, registers = _catalog_request(args)
+    return _run_catalog_build(
+        args,
+        lambda: materialize_resolved(
+            Path(args.resolved),
+            output,
+            Path(args.report_dir),
+            diagnostic=args.diagnostic,
+            registers=registers,
+        ),
+    )
 
 
 def _cmd_check_curation(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -2198,6 +2280,7 @@ COMMAND_DISPATCH: dict[
     str, Callable[[argparse.Namespace], tuple[dict[str, Any], int]]
 ] = {
     "build-db": _cmd_build_db,
+    "materialize-db": _cmd_materialize_db,
     "check-curation": _cmd_check_curation,
     "prepare-sources": _cmd_prepare_sources,
     "prepare-input-bundle": _cmd_prepare_input_bundle,
@@ -2230,8 +2313,13 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     ),
     (
         "build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
-        "[--registers SPEC[,SPEC...]] [--curation-dir DIR] [--dump-decisions DIR]",
+        "[--registers SPEC[,SPEC...]] [--curation-dir DIR] [--dump-decisions DIR] [--resolved-out DIR]",
         "Build from prepared sources and common curation; strict publication is the default.",
+    ),
+    (
+        "materialize-db --resolved DIR --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
+        "[--registers SPEC[,SPEC...]]",
+        "Place the catalog from a build-db --resolved-out bundle.",
     ),
     (
         "check-curation --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --registers SPEC[,SPEC...] --report-dir DIR",
@@ -2353,6 +2441,39 @@ def _confined_bundle_output_path(
             message="CLI JSON --output must be outside the prepared source artifact.",
             remediation="Choose a separate summary path or use stdout.",
         )
+    if args.command == "materialize-db":
+        report_paths = {
+            resolved_output,
+            resolved_output.with_suffix(resolved_output.suffix + ".tmp").resolve(),
+        }
+        database = (
+            Path(args.diagnostic_db_path)
+            if args.diagnostic_db_path
+            else Path(args.db or default_db_dir()) / DB_FILENAME
+        )
+        directories = {
+            Path(args.resolved).expanduser().resolve(),
+            Path(args.report_dir).expanduser().resolve(),
+        }
+        if (
+            (resolved_output.exists() and not resolved_output.is_file())
+            or any(
+                path.is_relative_to(directory)
+                for path in report_paths
+                for directory in directories
+            )
+            or _paths_overlap(
+                report_paths, _database_paths(database.expanduser().resolve())
+            )
+        ):
+            raise RegMetaError(
+                exit_code=EXIT_USAGE,
+                code="pipeline_report_output_conflict",
+                error_class="usage",
+                message="CLI JSON --output must be separate from the resolved bundle, event reports and catalog files.",
+                remediation="Choose a separate summary path or use stdout.",
+            )
+        return output_path
     if args.command in {"build-db", "check-curation"} and args.prepared:
         from .prepared_catalog import prepared_catalog_paths
 
@@ -2376,6 +2497,8 @@ def _confined_bundle_output_path(
                 directories.add((curation_dir.parent / "fqid_slugs").resolve())
         if args.dump_decisions:
             directories.add(Path(args.dump_decisions).expanduser().resolve())
+        if getattr(args, "resolved_out", None):
+            directories.add(Path(args.resolved_out).expanduser().resolve())
         if args.report_dir:
             directories.add(Path(args.report_dir).expanduser().resolve())
         if args.command == "build-db":
@@ -2508,7 +2631,7 @@ def run(argv: list[str] | None = None) -> int:
                 write_json(payload.get("data", payload), output_path, storage_ids=False)
         except Exception as exc:
             data = payload.get("data", payload)
-            if args.command == "build-db" and (
+            if args.command in {"build-db", "materialize-db"} and (
                 data.get("database") or data.get("error", {}).get("artifact_complete")
             ):
                 sys.stderr.write(

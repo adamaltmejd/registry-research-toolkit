@@ -2181,6 +2181,7 @@ def _builder_source_identity() -> tuple[Path, str]:
             module_path.with_name("pipeline.py"),
             module_path.with_name("resolved_catalog.py"),
             module_path.with_name("materialize.py"),
+            module_path.with_name("resolved_bundle.py"),
             module_path.with_name("extend_db.py"),
             repo / "scripts" / "prototype_scb_inputs.py",
             repo / "uv.lock",
