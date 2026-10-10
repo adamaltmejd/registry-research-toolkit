@@ -170,6 +170,20 @@ def _segment_pooled(effective: tuple[EffectiveOccurrence, ...]) -> bool:
     return all(_occurrence_pooled(occurrence) for occurrence in effective)
 
 
+# Y-209: the state-grain facts deciding whether adjacent pooled cuts describe
+# one continuous pooled coverage. These are exactly the reconciled facts
+# formation carries onto the state, plus the coding evidence that shapes it.
+_POOLED_MERGE_FIELDS = (
+    "name",
+    "description",
+    "definition",
+    "data_type",
+    "data_length",
+    "operational_definition",
+    "source_attribution",
+    "availability",
+)
+
 # These source texts can drift between overlapping editions without establishing
 # a conflicting occurrence fact. Reconciliation still marks them unknown.
 _ABSORBED_OCCURRENCE_CONFLICT_FIELDS = frozenset(
@@ -191,6 +205,75 @@ _UNIT_PAIRS = (
     ("Dagar", "Antal"),
     ("Årtal", "År"),
 )
+
+
+def _ordered_union[T](first: tuple[T, ...], second: tuple[T, ...]) -> tuple[T, ...]:
+    """Set-union preserving order: every contributor appears exactly once."""
+    merged = list(first)
+    for record in second:
+        if record not in merged:
+            merged.append(record)
+    return tuple(merged)
+
+
+def _pooled_merge_key(
+    segment: SourceSegment,
+) -> tuple[tuple[SourceField | None, ...], frozenset]:
+    """Identity for the Y-209 merge: reconciled state-grain facts and
+    value-set/coding evidence."""
+    return (
+        tuple(getattr(segment.fields, name) for name in _POOLED_MERGE_FIELDS),
+        frozenset(
+            (record.source, record.locators[0].semantic_record_key)
+            for occurrence in segment.effective_occurrences
+            for record in occurrence.coding_records
+        ),
+    )
+
+
+def _merge_adjacent_pooled(segments: list[SourceSegment]) -> list[SourceSegment]:
+    """Re-join adjacent pooled cuts with identical facts (Y-209).
+
+    Overlapping pooled editions fragment at their boundaries into adjacent
+    pooled cuts; where the reconciled facts, population, and coding evidence
+    agree, the cuts document one continuous pooled coverage and merge into a
+    single segment over the run's hull, with the union of occurrences and
+    evidence. Adjacent means the next segment starts the day after the
+    previous ends. An explicit segment never merges — neither with a pooled
+    neighbor nor across it — and differing facts stay separate, as before.
+
+    `merge_adjacent_states` (resolved_catalog.py) later joins the same states,
+    but coding reports its issues (`missing_coding_period`) per segment before
+    then; this merge keeps those issues on the pooled window that curation
+    acknowledges rather than one per cut.
+    """
+    merged: list[SourceSegment] = []
+    for segment in segments:
+        previous = merged[-1] if merged else None
+        if (
+            previous is not None
+            and previous.pooled
+            and segment.pooled
+            and segment.valid_from is not None
+            and previous.valid_to is not None
+            and date.fromisoformat(segment.valid_from).toordinal()
+            == date.fromisoformat(previous.valid_to).toordinal() + 1
+            and _pooled_merge_key(previous) == _pooled_merge_key(segment)
+        ):
+            merged[-1] = SourceSegment(
+                valid_from=previous.valid_from,
+                valid_to=segment.valid_to,
+                delivery_column_name=previous.delivery_column_name,
+                fields=previous.fields,
+                occurrences=_ordered_union(previous.occurrences, segment.occurrences),
+                effective_occurrences=_ordered_union(
+                    previous.effective_occurrences, segment.effective_occurrences
+                ),
+                pooled=True,
+            )
+        else:
+            merged.append(segment)
+    return merged
 
 
 def _column(record: EffectiveOccurrence) -> str | None:
@@ -411,10 +494,9 @@ def resolve_occurrence_intervals(
     occurrence covers; where an explicit occurrence covers the span, pooled
     evidence is filtered out before field reconciliation so the explicit facts
     win outright); pooled scopes without a range, and unknown scopes, stay
-    unplaced. Adjacent cuts stay separate segments here: the facts that decide
-    whether they are one state include coding, which is cut later, so
-    `merge_adjacent_states` (resolved_catalog.py) joins them on the resolved
-    states. Unplaced occurrences stay in the result and block
+    unplaced. Adjacent pooled cuts whose reconciled facts and coding evidence
+    agree re-join into one pooled segment over their combined
+    window (Y-209). Unplaced occurrences stay in the result and block
     strict publication. An occurrence whose column claim is negative (a delivered
     blank column: the member has no physical column) is omitted on purpose and
     reported as an `omitted_columnless_occurrence` warning; formation aggregates
@@ -524,6 +606,7 @@ def resolve_occurrence_intervals(
         issues.extend(segment_issues)
         segments.append(segment)
     for column, periods in sorted(by_column.items()):
+        column_segments: list[SourceSegment] = []
         changes: dict[int, list[tuple[int, int]]] = defaultdict(list)
         for start, end, ordinal in periods:
             changes[start].append((ordinal, 1))
@@ -557,5 +640,6 @@ def resolve_occurrence_intervals(
                 winners, column, lower, upper, storage
             )
             issues.extend(segment_issues)
-            segments.append(segment)
+            column_segments.append(segment)
+        segments.extend(_merge_adjacent_pooled(column_segments))
     return OccurrenceResolution(tuple(segments), tuple(issues), tuple(unsupported))
