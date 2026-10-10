@@ -30,6 +30,12 @@ together, reading actual files rather than a saved version list:
 - Runtime/tool/image pins in `.github/workflows/`, `.pre-commit-config.yaml`,
   `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
   dependencies. Include related version references in agent guidance/skills.
+- `wasm-bindgen`, pinned in four places that move together: the `=` pin in
+  `crates/reg-core-wasm/Cargo.toml` (and so `Cargo.lock`), the `wasm-bindgen@` tool in
+  `ci.yml`'s frontend job, and the same tool in both edge-deploy jobs of
+  `container-build.yml`. The CLI must equal the crate version (a mismatch fails
+  `gen:wasm`); the local install command in CLAUDE.md/AGENTS.md and the run-reg-webapp
+  skill names the version too.
 
 Verify current stable versions and compatibility from package registries and upstream
 release documentation. Distinguish latest stable, latest compatible and a requested LTS

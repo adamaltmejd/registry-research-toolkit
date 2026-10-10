@@ -233,6 +233,10 @@ refactor.
   packages (the `rust` step is G0's Rust HTTP run)
 - `cargo machete` (in `crates` and `g0`) is a local prerequisite:
   `cargo install cargo-machete --locked`
+- `bun run gen:wasm` (in `gate.py frontend` and the run-reg-webapp `dev.sh`) needs two
+  local prerequisites: `rustup target add wasm32-unknown-unknown` and
+  `cargo install wasm-bindgen-cli --version 0.2.129 --locked` (the version
+  `crates/reg-core-wasm/Cargo.toml` pins)
 - `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
   files; after a rebase, commit the diff separately
 - `uv run --no-project scripts/gate.py g1` — G1, under the heavy-job lock the Rust steps

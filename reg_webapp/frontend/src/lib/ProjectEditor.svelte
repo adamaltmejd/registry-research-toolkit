@@ -65,7 +65,7 @@ function onNew(): void {
   readGeneration += 1;
   // c-i: a new project seeds this deployment's reg_meta release tag + its own
   // steward id (both from /api/context); the steward PICKER is c-ii. The
-  // Model A schema gate is baked into the skeleton (`MODEL_A_SCHEMA_VERSION`);
+  // skeleton takes reg-core's project schema version (`projectSchemaVersion`);
   // the release tag records the deployment's current catalog package.
   projectStore.requestNewProject({
     reg_meta_version: regMetaReleaseTag(regMetaVersion),

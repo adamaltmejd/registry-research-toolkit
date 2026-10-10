@@ -16,3 +16,11 @@ pedantic = { level = "warn", priority = -1 }
 # The every-scalar sweeps take ~11 s unoptimized; opt-level 1 keeps G0 fast.
 [profile.test]
 opt-level = 1
+
+# `reg-core-wasm` for the SPA (`bun run gen:wasm`): size over speed, under the
+# gzipped budget `scripts/gate.py` checks.
+[profile.wasm]
+inherits = "release"
+opt-level = "s"
+lto = true
+codegen-units = 1
