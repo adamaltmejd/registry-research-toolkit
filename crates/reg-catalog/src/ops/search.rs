@@ -1220,7 +1220,7 @@ fn identity(hit: &Hit) -> String {
             "classification_succession:{}",
             s.fqid.as_deref().unwrap_or("None")
         ),
-        Hit::Code(c) => format!("code:{}:{}:{}", c.id, c.code, c.label),
+        Hit::Code(c) => format!("code:{}:{}", c.code, c.label),
     }
 }
 

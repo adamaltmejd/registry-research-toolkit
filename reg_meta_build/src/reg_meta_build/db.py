@@ -1310,6 +1310,8 @@ CREATE INDEX idx_classification_conformance_code_code
 
 -- Enrichment tables
 CREATE TABLE value_code (
+    -- Internal and dense (1..n) in (label, code) order (#1296); readers
+    -- break ties on (code, label), never on code_id.
     code_id INTEGER PRIMARY KEY,
     -- SCB's `värdekod` / `värdebenämning` become universal `code` / `label`.
     -- Values stay provider-native (SCB code strings like "01", "Man", "").
@@ -1340,7 +1342,7 @@ CREATE TABLE value_set_member (
     code_id      INTEGER NOT NULL REFERENCES value_code(code_id),
     PRIMARY KEY (value_set_id, code_id)
 ) WITHOUT ROWID;
-CREATE INDEX idx_value_set_member_code ON value_set_member(code_id);
+-- No `code_id` index: every reader enters through `value_set_id` (#1296).
 
 CREATE TABLE unika_summary (
     register_id INTEGER,
@@ -1389,7 +1391,7 @@ CREATE TABLE code_variable_map (
 -- `variable_id` lookup. The #352 codes search annotates each code hit with its
 -- owning variables, whose per-variable count correlated-subquery
 -- (`COUNT(*) ... WHERE variable_id = ?`) full-scans this 4.1M-row table without
--- this index (inkomst 286s → 0.51s with it). Mirrors idx_value_set_member_code.
+-- this index (inkomst 286s → 0.51s with it).
 -- Additive index → SCHEMA_VERSION stays 5.4.0 (like #371's covering index): an
 -- old DB works fine without it, just slower, so it's NOT incompatible — the index
 -- lands in the deployed DB at the next reg_meta DB rebuild/release. The released
