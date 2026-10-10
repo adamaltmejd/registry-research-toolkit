@@ -14,3 +14,7 @@ b = "scb/historical/historical"
 type = "same_as"
 a = "scb/example/earlier"
 b = "scb/earlier/earlier"
+[[edge]]
+type = "same_as"
+a = "scb/example/switch"
+b = "scb/switch/switch"

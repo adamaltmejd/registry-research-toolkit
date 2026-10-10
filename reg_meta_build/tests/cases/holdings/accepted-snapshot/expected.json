@@ -12,5 +12,9 @@
       "Value",
       "Value"
     ]
-  ]
+  ],
+  "drift_error": {
+    "code": "private_holdings_invalid",
+    "message_contains": "Git repository must be clean for an exact pin; uncommitted changes (1): candidate/policy/inventory.toml"
+  }
 }

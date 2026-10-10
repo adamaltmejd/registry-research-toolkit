@@ -1,0 +1,13 @@
+{
+  "note": "Step 1 with BETA's VALUE also labelled with ALPHA as its source register: each register claims the other as the source of the one same_as variable. Lineage resolution forms an edge per consumer state, ALPHA's from BETA's and BETA's from ALPHA's, and nothing in it looks at the reverse direction, so the two edges close a loop. Probe for the plan's item 4: a build reaches the state-lineage cycle refusal from source labels alone. The refusal names the lineage graph and both state keys; no catalog is written.",
+  "fails_if": "`validate_metadata_structure` (resolved_metadata.py) drops the `state lineage` graph from its cycle check, so the build writes both lineage edges; or reports the loop under another relation's code, such as replaced_by_cycle",
+  "sources": {
+    "description": "Alpha register (ALP) (1) delivers VALUE in 2000 labelled with Beta register (BET) as its source. Beta register (BET) (2) delivers VALUE in 2000 labelled with Alpha register (ALP) as its source.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE", "year": "2000", "regver_id": 100, "register": ["Alpha register (ALP)", 1, 10], "varsource": "Beta register (BET)"},
+        {"cvid": 2001, "var_id": 201, "colname": "VALUE", "year": "2000", "regver_id": 200, "register": ["Beta register (BET)", 2, 20], "varsource": "Alpha register (ALP)"}
+      ]
+    }
+  }
+}

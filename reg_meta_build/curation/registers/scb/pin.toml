@@ -1908,7 +1908,7 @@ variable = "382.2846"
 variant = "382.372"
 column_metadata = "per_column"
 columns = [{ "valid_from" = "2019-01-01", "valid_to" = "2019-12-31", "column" = "SCBID", "source_editions" = ["2019"] }, { "valid_from" = "2019-01-01", "valid_to" = "2019-12-31", "column" = "SCBId", "source_editions" = ["2019"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "20ecb01ea6e0a3da7a7f2c697ef73f6a4ccb6f0d362e5e179c43107aeb135a30"
 evidence = "The same explicit source-native construct and own operational definition has literal case variants on the same explicitly supplied native member. Keep both original storage widths, wording, source periods and spellings on their own representation; no value correction, equality of observed values is asserted."
 noted = "2026-10-02"
 
@@ -1920,7 +1920,7 @@ variable = "382.4027.source-positive"
 variant = "382.372"
 column_metadata = "per_column"
 columns = [{ "valid_from" = "2019-01-01", "valid_to" = "2019-12-31", "column" = "CU_BranschText", "source_editions" = ["2019"] }, { "valid_from" = "2019-01-01", "valid_to" = "2019-12-31", "column" = "cu_branschtext", "source_editions" = ["2019"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "fa03d35591119d3bdb4de284ec0472fef622757c7282a7059696a4a117f972b3"
 evidence = "The same explicit source-native construct and own operational definition has literal case variants on the same explicitly supplied native member. Keep both original storage widths, wording, source periods and spellings on their own representation; no value correction, equality of observed values is asserted."
 noted = "2026-10-02"
 

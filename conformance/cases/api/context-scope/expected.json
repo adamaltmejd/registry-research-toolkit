@@ -6,7 +6,7 @@
       "/data/sizes": {"providers": 1, "registers": 1, "variables": 2},
       "/meta": {
         "contract_version": "4.0.0",
-        "generation": "aa93b80a926f9282de9ebf2e0bdcfd0dc91b9a1caf3cea7f662f0551358fd121",
+        "generation": "9088583248c6579f08d2ce8d4066f923ef4dfa641435bb4a6026ae2cc132ec9b",
         "scope": "holdings"
       }
     }

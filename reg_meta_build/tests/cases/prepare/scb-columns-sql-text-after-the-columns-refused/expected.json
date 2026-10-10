@@ -4,7 +4,7 @@
   "fails_if": "the SQL column-type reader skips text it cannot read after the last column, such as a precision and scale, a DEFAULT, a constraint or a trailing comma",
   "note": "The hardest of the replaced test's after-the-columns inputs: `(9,2)` looks like a width. DEFAULT 0, a PRIMARY KEY constraint and a trailing comma reach the same guard.",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "scb_column_types_unsupported",
     "type": "ScbReferenceSourceError",
     "locator": "unsupported SQL after columns in 'Delivery'"
   }

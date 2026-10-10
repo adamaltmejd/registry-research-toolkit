@@ -1,0 +1,12 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "successions",
+      "fields": ["grain", "predecessor", "successor", "predecessor_column", "successor_column", "variant", "effective_year", "note", "description"],
+      "rows": [
+        ["representation", "sos/syd/col", "sos/syd/neu", "COL", "NEU", "_default", 2010, "curated:slug_toml", "Column transition"]
+      ]
+    }
+  ]
+}

@@ -136,7 +136,7 @@ variable = "355.145"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SCBid", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "scbid", source_editions = ["2015"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "5db52cc818d6e8a17b7113920029353b4834ff712f2bce87345e1e01723f4a07"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -148,7 +148,7 @@ variable = "355.145"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2016-01-01", valid_to = "2016-12-31", column = "SCBid", source_editions = ["2016"] }, { valid_from = "2016-01-01", valid_to = "2016-12-31", column = "scbid", source_editions = ["2016"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "16b3e5d7126bf71782a0f0cfb427c179741954fdc5e5738d8fdc610d45edc550"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -160,7 +160,7 @@ variable = "355.145"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "SCBid", source_editions = ["2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "scbid", source_editions = ["2017"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "dc7917cd3b065bb4e34e64c8497eabf55398c506e06ca0a26335d266baa9715e"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -172,7 +172,7 @@ variable = "355.145"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "SCBid", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "scbid", source_editions = ["2018"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "155021ec1b5bbd75867039d093dd471ed8d6eef394d4b2f7ec6c8b88875dff30"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -184,7 +184,7 @@ variable = "355.145"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2019-01-01", valid_to = "2019-12-31", column = "SCBid", source_editions = ["2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "scbid", source_editions = ["2019"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b3937a5ab742e75071cb0f507f686309621c4a0a5a8d636dd9b980dd731cc3e6"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -196,7 +196,7 @@ variable = "355.1839.peorgnr"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "PeOrgNr", source_editions = ["2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "PeorgNr", source_editions = ["2020"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6b75c65ac93dfc720255e83383f43f297bbee7235359c25d8091f23375c50f60"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -208,7 +208,7 @@ variable = "355.1839.peorgnr"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "PeOrgNr", source_editions = ["2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "PeorgNr", source_editions = ["2021"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b18d8aa17ce3868c5e78edc6bd70827875f7e0e6e9bbb27f77c2ebcb4957f444"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -220,7 +220,7 @@ variable = "355.1839.peorgnr"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2022-01-01", valid_to = "2022-12-31", column = "PeOrgNr", source_editions = ["2022"] }, { valid_from = "2022-01-01", valid_to = "2022-12-31", column = "PeorgNr", source_editions = ["2022"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b50c89dd25e08edc30d60d0bde6e1e6fca00adddfd50b33ecce2edb39f1516aa"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -232,7 +232,7 @@ variable = "355.1839.peorgnr"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2023-01-01", valid_to = "2023-12-31", column = "PeOrgNr", source_editions = ["2023"] }, { valid_from = "2023-01-01", valid_to = "2023-12-31", column = "PeorgNr", source_editions = ["2023"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "68a2e7a7c554068e79b7f00b4561696c2a1ddabca6de5b8a60afeafcf479d3ed"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -244,7 +244,7 @@ variable = "355.1839.peorgnr"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2024-01-01", valid_to = "2024-12-31", column = "PeOrgNr", source_editions = ["2024"] }, { valid_from = "2024-01-01", valid_to = "2024-12-31", column = "PeorgNr", source_editions = ["2024"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2efc6e2d3717af26ff84af03ec25e9c253ab51260c890999046e8f66c7d93945"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 
@@ -256,7 +256,7 @@ variable = "355.1839.peorgnr"
 variant = "355.1229"
 column_metadata = "per_column"
 columns = [{ valid_from = "2025-01-01", valid_to = "2025-12-31", column = "PeOrgNr", source_editions = ["2025"] }, { valid_from = "2025-01-01", valid_to = "2025-12-31", column = "PeorgNr", source_editions = ["2025"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a39472f97c95ed338633a9a06120210d2020caf1aac58a4a7e1de7b9ed36c706"
 evidence = "Exact finite case-only source spellings share the same explicitly supplied source-native name and definition. Keep both literal delivery forms and their per-column metadata; no physical same-member co-delivery or observed-value equivalence is asserted. Complete native-family and physical-peer closure: Batch52-directfacts4-source-review.json."
 noted = "2026-10-02"
 

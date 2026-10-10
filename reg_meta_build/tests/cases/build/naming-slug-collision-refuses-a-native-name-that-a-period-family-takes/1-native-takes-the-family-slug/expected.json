@@ -1,0 +1,19 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject", "case_id", "locator"],
+      "rows": [
+        ["naming_slug_collision", "lonfink", "curation/registers/scb/checked.toml#/representation.period_family/1", "curation/registers/scb/checked.toml#/representation.period_family/1"],
+        ["naming_slug_collision", "lonfink", "curation/registers/scb/checked.toml#variable/3.304", "curation/registers/scb/checked.toml#variable/3.304"],
+        ["unresolved_catalog_identity", "('curation', 'period-family', 'scb', 'checked', 'lonfink')", null, null]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key"],
+      "rows": []
+    }
+  ]
+}

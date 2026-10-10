@@ -20,7 +20,7 @@ use sha2::{Digest, Sha256};
 use utoipa::ToSchema;
 
 use super::refs::{self, Target, VAR_ID, fqid, invalid_kind};
-use super::{Params, Server, cursor};
+use super::{Params, Server, cursor, states};
 use crate::held;
 use crate::{Code, Error, Scope, hex};
 
@@ -391,12 +391,14 @@ fn representations(
          AND w.valid_from = es.window_valid_from \
          WHERE v.register_id = ?1 AND (?2 IS NULL OR v.variable_id = ?2) \
          AND (?3 IS NULL OR rv.slug = ?3 OR (?3 = '_default' AND rv.slug IS NULL)) AND es.kind != 'base_fallback' \
-         ORDER BY es.expanded_state_id",
+         ORDER BY v.slug, rv.slug, vs.valid_from, vs.valid_to, \
+         vs.value_set_version_label, {}",
         per_column("data_type"),
         per_column("data_length"),
         per_column("source_register_text"),
         per_column("definition"),
         per_column("measurement_unit"),
+        states::within_state("es"),
     );
     let mut stmt = conn.prepare(&sql)?;
     let reps = stmt

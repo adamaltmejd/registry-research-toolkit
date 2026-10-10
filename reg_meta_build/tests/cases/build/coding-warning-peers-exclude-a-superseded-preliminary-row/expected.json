@@ -2,7 +2,7 @@
   "status": "diagnostic_complete",
   "projections": [
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "fields": ["valid_from", "valid_to"],
       "rows": [
         ["2020-01-01", "2020-12-31"]

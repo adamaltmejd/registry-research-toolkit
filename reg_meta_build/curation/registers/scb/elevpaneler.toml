@@ -287,7 +287,7 @@ variable = "104.466"
 variant = "104.840"
 column_metadata = "per_column"
 columns = [{ valid_from = "2008-01-01", valid_to = "2008-06-30", column = "Elevvikt", source_editions = ["Vårterminen 2008"] }, { valid_from = "2008-01-01", valid_to = "2008-06-30", column = "ViktAK3", source_editions = ["Vårterminen 2008"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "433295ebf80036cc1df7eca7d2be4af3584efdfee88cd4f39f834d6f708e6f69"
 evidence = "Exact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
 noted = "2026-10-02"
 
@@ -299,7 +299,7 @@ variable = "104.466"
 variant = "104.840"
 column_metadata = "per_column"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-06-30", column = "Elevvikt", source_editions = ["Vårterminen 2009"] }, { valid_from = "2009-01-01", valid_to = "2009-06-30", column = "ViktAK4", source_editions = ["Vårterminen 2009"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e931031e5bcf70121610fa4c5633bc80e3dfaf130afacb0ccd654297f786ad93"
 evidence = "Exact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
 noted = "2026-10-02"
 
@@ -311,7 +311,7 @@ variable = "104.466"
 variant = "104.840"
 column_metadata = "per_column"
 columns = [{ valid_from = "2010-01-01", valid_to = "2010-06-30", column = "Elevvikt", source_editions = ["Vårterminen 2010"] }, { valid_from = "2010-01-01", valid_to = "2010-06-30", column = "ViktAK5", source_editions = ["Vårterminen 2010"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9688a672a202b7e77041a5f9a32beaff460d8cdf6e4e437ad1a96a74d4e0819a"
 evidence = "Exact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
 noted = "2026-10-02"
 
@@ -323,7 +323,7 @@ variable = "104.466"
 variant = "104.840"
 column_metadata = "per_column"
 columns = [{ valid_from = "2012-01-01", valid_to = "2012-06-30", column = "Elevvikt", source_editions = ["Vårterminen 2012"] }, { valid_from = "2012-01-01", valid_to = "2012-06-30", column = "ViktAK7", source_editions = ["Vårterminen 2012"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9452dac3db8512356b857f1e05384fa6908377ece0a4af7486260c64847bed8d"
 evidence = "Exact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
 noted = "2026-10-02"
 
@@ -336,7 +336,7 @@ variant = "104.840"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2013-01-01", valid_to = "2013-06-30", column = "PersonNr", source_editions = ["Vårterminen 2013 - betyg"] }, { valid_from = "2013-01-01", valid_to = "2013-06-30", column = "Personnr", source_editions = ["Vårterminen 2013"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9e02bae9324f9dac376f48638a4a86bf42713d8128ee0a7d18797d1bf519e0f8"
 evidence = "Exact separate source editions Vårterminen 2013 and Vårterminen 2013 - betyg identify the same native quantity with two literal column forms. Preserve each source width, operation and own coding; no inferred physical equivalence or encoding correction."
 noted = "2026-10-02"
 
@@ -349,7 +349,7 @@ variant = "104.840"
 column_metadata = "per_column"
 coding_metadata = "per_column"
 columns = [{ valid_from = "2013-01-01", valid_to = "2013-06-30", column = "SkoliD", expected_codings = ["d6979426c46f6a64ee1ce356c25f6bcb0e743413a9f9924198288d08b82efde4"], source_editions = ["Vårterminen 2013"] }, { valid_from = "2013-01-01", valid_to = "2013-06-30", column = "Skolid", expected_codings = ["d6979426c46f6a64ee1ce356c25f6bcb0e743413a9f9924198288d08b82efde4"], source_editions = ["Vårterminen 2013 - betyg"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "08d0470974dd3e40c3371678f357fadab3b6fd1c7a286280ae09f8eec65deaef"
 evidence = "Exact separate source editions Vårterminen 2013 and Vårterminen 2013 - betyg identify the same native quantity with two literal column forms. Preserve each source width, operation and own coding; no inferred physical equivalence or encoding correction."
 noted = "2026-10-02"
 

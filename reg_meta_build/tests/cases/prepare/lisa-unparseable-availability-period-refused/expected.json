@@ -3,7 +3,7 @@
   "replaces": "test_lisa_workbook_layout.py::test_lisa_reader_rejects_changed_actual_layout_with_coordinates[bad-period-Individ!C600]",
   "fails_if": "the LISA reader keeps the year tokens of a period it cannot parse (reading '1990 till 2024' as 1990 and 2024) or drops the period instead of refusing at its cell",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "lisa_value_unsupported",
     "type": "LisaWorkbookError",
     "locator": "Individ!C600",
     "message_contains": ["unsupported LISA availability period"]

@@ -56,7 +56,10 @@ register = "scb/test"
 key = "family"
 label = "Family"
 axis = "rank"
-members = [{ variable = "v", value = "1", label = "One" }]
+members = [
+  { variable = "v", value = "1", label = "One" },
+  { variable = "w", value = "2", label = "Two" },
+]
 
 [[code_label_pair]]
 code = "scb/test/code"

@@ -9,7 +9,6 @@ valid_to = 2006
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 codes_file = "lkf2006.csv"
 sentinel_codes = [
-  { code = "", meaning = "Uppgift saknas" },
   { code = "0000", meaning = "Uppgift saknas" },
   { code = "0199", meaning = "Ej svensk hemortskommun" },
   { code = "NULL", meaning = "Okänt värde" },

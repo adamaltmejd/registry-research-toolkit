@@ -7,7 +7,6 @@ import gzip
 import hashlib
 import io
 import json
-import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
@@ -203,10 +202,6 @@ def test_selected_csv_is_prepared_as_typed_reference_evidence(tmp_path: Path) ->
         and event["disposition"] == "source_context"
         for event in events
     )
-    with sqlite3.connect(output) as conn:
-        assert conn.execute("SELECT COUNT(*) FROM source_column_type").fetchone() == (
-            0,
-        )
 
 
 @pytest.mark.parametrize(

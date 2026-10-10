@@ -27,8 +27,17 @@
       "fields": ["register", "variable", "variant", "source_register", "source_variable", "source_variant", "valid_from", "valid_to"],
       "rows": [
         ["example", "value", "people", "origin", "value", "people", "2000-01-01", "2000-12-31"],
-        ["example", "historical", "people", "historical", "historical", "people", "2000-01-01", "2000-12-31"]
+        ["example", "historical", "people", "historical", "historical", "people", "2000-01-01", "2000-12-31"],
+        ["example", "switch", "people", "switch", "switch", "other", "2001-01-01", "2001-12-31"],
+        ["example", "switch", "people", "switch", "switch", "people", "2000-01-01", "2000-12-31"]
       ]
+    },
+    {
+      "note": "SWITCH's 2000 and 2001 deliveries state identical facts, so they are one consumer state (#1296 2d); its source delivers through People in 2000 and Other in 2001, so the one state takes one edge per source variant over that variant's period and is not ambiguous.",
+      "table": "states",
+      "where": {"register": "example", "variable": "switch"},
+      "fields": ["valid_from", "valid_to"],
+      "rows": [["2000-01-01", "2001-12-31"]]
     },
     {
       "table": "issues",

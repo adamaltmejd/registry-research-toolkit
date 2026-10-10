@@ -1,0 +1,13 @@
+{
+  "loader": "classifications",
+  "replaces": [],
+  "fails_if": "`SentinelCode` tests the sentinel code for emptiness instead of blankness, so `\" \"` loads as a sentinel member",
+  "note": "Maintainer decision 9: a blank code, empty or whitespace-only, is never a member, authored or delivered. A delivered blank never reaches conformance, so a blank sentinel could never match. Allowed twin: classification-books-and-family-load (sentinel 99).",
+  "error": {
+    "code": "classification_entry_invalid",
+    "locator": "classifications/A.toml",
+    "message_contains": [
+      "sentinel code must be nonblank"
+    ]
+  }
+}

@@ -13,7 +13,7 @@
       "table": "issues",
       "where": {"severity": "error"},
       "fields": ["subject", "code", "case_id"],
-      "note": "Neither compile (stale_curation_entry) nor the runtime scope check (stale_delivery_metadata_scope) refuses the entry.",
+      "note": "Compile's source-scope equality (stale_curation_entry) does not refuse the entry.",
       "rows": []
     },
     {

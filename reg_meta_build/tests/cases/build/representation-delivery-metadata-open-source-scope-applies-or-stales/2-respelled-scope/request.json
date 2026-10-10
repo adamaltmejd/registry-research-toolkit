@@ -2,7 +2,7 @@
   "replaces": [
     "test_source_representation_delivery_metadata.py::test_delivery_metadata_exact_open_scope_is_not_a_finite_window_exemption"
   ],
-  "note": "Step 1's entry with `source_scope` respelled as the literal interval 2005-01-01-. It derives the same dates as the supplied 2005- scope, so the window still equals the hull, but it is not the scope SOS supplied. This is the replaced test's respelled-scope leg (old: the column is refused, stale_delivery_metadata_scope at the runtime). Compile now refuses it first, so the one error is stale_curation_entry at the entry, the entry's case is never evaluated, and ALDER still publishes from its source row without the entry.",
-  "fails_if": "`compile_delivery_metadata` (curation_compile.py) drops its `source_scope` equality (`supplied_scopes[coordinate] != {column.source_scope}`), so the respelled entry compiles and the error row becomes the runtime stale_delivery_metadata_scope from `resolve_representation_cases`; or both the compile and the runtime scope checks are dropped, so the entry applies with no error",
+  "note": "Step 1's entry with `source_scope` respelled as the literal interval 2005-01-01-. It derives the same dates as the supplied 2005- scope, so the window still equals the hull, but it is not the scope SOS supplied. This is the replaced test's respelled-scope leg (old: the column is refused, stale_delivery_metadata_scope at the runtime; that runtime check is deleted, since compile's equality always refused first). Compile refuses it, so the one error is stale_curation_entry at the entry, the entry's case is never evaluated, and ALDER still publishes from its source row without the entry.",
+  "fails_if": "`compile_delivery_metadata` (curation_compile.py) drops its `source_scope` equality (`supplied_scopes[coordinate] != {column.source_scope}`), so the respelled entry compiles and applies with no error",
   "sources": "sos-alder-open"
 }

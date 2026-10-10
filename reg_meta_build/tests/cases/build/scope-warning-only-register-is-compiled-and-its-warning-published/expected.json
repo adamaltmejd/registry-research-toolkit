@@ -7,7 +7,7 @@
       "rows": []
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "fields": ["code", "variant", "column", "valid_from", "valid_to", "refs"],
       "rows": [
         [
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "table": "warnings",
+      "table": "report_warnings",
       "fields": ["fields"],
       "rows": [
         [["data_type", "coding"]]

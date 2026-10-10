@@ -1,0 +1,15 @@
+{
+  "note": "The same refusal in the partition conversion: native families 5 and 7 each deliver the case twins Kon and KON in different years, so `1.5.kon` and `1.7.kon` bind as split declarations, and both are pinned `kon`. The partition conversion refuses both, each located at its [[variable]] entry, and the tag naming `scb/sample/kon` is withheld with both identities' source refs, as in step 1.",
+  "fails_if": "`compile_partitions` (curation_compile.py) stops carrying its conversion's refused declarations into `refused_naming`, so the tag member is reported `catalog_dependency_missing` and the build aborts",
+  "sources": {
+    "description": "Variables 5 and 7 each deliver Kon in 2020 and KON in 2021 (CVIDs 20/21 and 30/31).",
+    "scb": {
+      "registerinformation": [
+        {"colname": "Kon", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {"colname": "KON", "cvid": 21, "var_id": 5, "year": "2021", "regver_id": 2021},
+        {"colname": "Kon", "cvid": 30, "var_id": 7, "year": "2020", "regver_id": 2020},
+        {"colname": "KON", "cvid": 31, "var_id": 7, "year": "2021", "regver_id": 2021}
+      ]
+    }
+  }
+}

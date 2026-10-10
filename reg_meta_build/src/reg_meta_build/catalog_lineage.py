@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 from dataclasses import dataclass
+from itertools import combinations
 from typing import TYPE_CHECKING
 
 from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE, CatalogDependencies
@@ -86,6 +87,30 @@ def lineage_acknowledgement_sha256(
         ),
     }
     return acknowledgement_evidence_sha256(originals, (canonical_sha256(context),))
+
+
+def _contested_variants(state: ResolvedState, sources: list[ResolvedState]) -> bool:
+    """Whether two source variants deliver on one day of the consumer's window.
+
+    Several source variants alone are no ambiguity: a consumer state spanning a
+    source variant change (2018 the old variant, 2019 the new one, as a merged
+    state does, #1296 2d) resolves period by period, one edge per source state.
+    Year-independent delivery has no days to tell apart, so any second variant
+    contests it.
+    """
+    if len({item.variant.slug for item in sources}) < 2:
+        return False
+    if state.period_scope == "year_independent" or any(
+        item.period_scope == "year_independent" for item in sources
+    ):
+        return True
+    assert state.valid_from is not None and state.valid_to is not None
+    return any(
+        a.variant.slug != b.variant.slug
+        and max(a.valid_from or "", b.valid_from or "", state.valid_from)
+        <= min(a.valid_to or "", b.valid_to or "", state.valid_to)
+        for a, b in combinations(sources, 2)
+    )
 
 
 def resolve_catalog_lineage(
@@ -327,8 +352,11 @@ def resolve_catalog_lineage(
                 ]
                 if not source_states:
                     continue
-            kinds = {item.variant.slug for _, item in source_states}
-            if unresolved_variant is not None or not source_states or len(kinds) > 1:
+            if (
+                unresolved_variant is not None
+                or not source_states
+                or (_contested_variants(state, [item for _, item in source_states]))
+            ):
                 kind = (
                     "no_source_state"
                     if not source_states and not ambiguous_variant

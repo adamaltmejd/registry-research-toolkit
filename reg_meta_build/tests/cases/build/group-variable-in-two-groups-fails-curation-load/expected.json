@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "register_duplicate_entry",
+    "message_contains": [
+      "curation/registers/scb/sample.toml [[group]] entry 2: variable 'two' of group 'second' already belongs to group 'first'."
+    ]
+  }
+}

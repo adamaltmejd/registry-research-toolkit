@@ -15,7 +15,7 @@
     "status": 409,
     "json": {
       "/error/code": "stale_cursor",
-      "/error/fields/generation": "ddb5499577608df94f55c96792b7c39f79b08849977b5c6e95057d82e1fd1005"
+      "/error/fields/generation": "7ccf4ee55d79473bbefbe3abfbf6e1631c56aeae3cc3efeaecbdcdd588b8fa65"
     }
   },
   {

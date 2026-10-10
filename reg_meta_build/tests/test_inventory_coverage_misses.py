@@ -56,10 +56,11 @@ def test_year_independent_inventory_requires_exact_physical_column(
         # The fixture's `kon` (variable 1, variant 10) gains a year-independent
         # delivery of column Foo beside its dated states.
         state = conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "INSERT INTO variable_state (state_id, variable_id, register_variant_id, "
             "period_scope, delivery_column_name) "
-            "VALUES (1, 10, 'year_independent', 'Foo')"
-        ).lastrowid
+            "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 1, 10, 'year_independent', 'Foo') "
+            "RETURNING state_id"
+        ).fetchone()[0]
         assert not coverage_misses(conn, inventory).misses
         conn.execute(
             "UPDATE variable_state SET delivery_column_name = 'Other' "

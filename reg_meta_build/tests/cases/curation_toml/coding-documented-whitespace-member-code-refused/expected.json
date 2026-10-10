@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": [],
+  "fails_if": "`DocumentedCodingSelection._finite_members` tests the member code for emptiness instead of blankness, so the whitespace-only code `\"  \"` loads as a documented member",
+  "note": "Maintainer decision 9: a blank code, empty or whitespace-only, is never a member. Allowed twin: coding-documented-own-certificate-loads.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.documented]] entry 1",
+    "message_contains": [
+      "documented member codes must be nonblank"
+    ]
+  }
+}

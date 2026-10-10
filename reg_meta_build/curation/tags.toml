@@ -8,7 +8,6 @@
 [[tag]]
 slug = "income"
 label = "Income"
-description = "Income, earnings, transfers, and economic resources."
 
 [[tag.member]]
 variable = "scb/iot/disponibel-inkomst"
@@ -39,7 +38,6 @@ rank = 110
 [[tag]]
 slug = "economic-assistance-amount"
 label = "Economic assistance amount"
-description = "Amount variables for economic assistance across registers."
 
 [[tag.member]]
 variable = "scb/ekonomiskt-bistand/utbetalt-belopp-till-hushallet"
@@ -56,7 +54,6 @@ note = "SOS EKB economic-assistance amount."
 [[tag]]
 slug = "economic-assistance-months"
 label = "Economic assistance months"
-description = "Month-count variables for economic assistance across registers."
 
 [[tag.member]]
 variable = "scb/ekonomiskt-bistand/antmanad"
@@ -73,7 +70,6 @@ note = "SOS EKB count of months with economic assistance."
 [[tag]]
 slug = "earned-income"
 label = "Earned income"
-description = "Earned-income measures across longitudinal labor registers."
 
 [[tag.member]]
 variable = "scb/lisa/sammanraknad-forvarvsinkomst"
@@ -90,7 +86,6 @@ note = "RAMS earned-income measure."
 [[tag]]
 slug = "employment"
 label = "Employment"
-description = "Employment status, labor-market activity, occupation, and workplaces."
 
 [[tag.member]]
 variable = "scb/lisa/arbetsmarknadsstatus"
@@ -121,7 +116,6 @@ rank = 110
 [[tag]]
 slug = "education"
 label = "Education"
-description = "Educational attainment, education programs, study records, and degrees."
 
 [[tag.member]]
 variable = "scb/ureg/sun2020niva"
@@ -156,7 +150,6 @@ rank = 120
 [[tag]]
 slug = "family-household"
 label = "Family & household"
-description = "Family composition, household structure, and children in the household."
 
 [[tag.member]]
 variable = "scb/iot/familjetyp"
@@ -193,7 +186,6 @@ rank = 110
 [[tag]]
 slug = "geography"
 label = "Geography & place"
-description = "Residence, workplace, municipality, county, and education-place fields."
 
 [[tag.member]]
 variable = "scb/lisa/kommun-for-bostaden"

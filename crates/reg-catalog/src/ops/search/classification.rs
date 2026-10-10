@@ -92,7 +92,7 @@ pub(super) fn arm(
     let mut stmt = conn.prepare(&format!(
         "SELECT c.id, c.short_name, c.name, c.slug, cf.rank FROM classification_fts cf \
          JOIN classification c ON c.id = cf.rowid WHERE classification_fts MATCH ? \
-         AND {UNPINNED} ORDER BY cf.rank, c.id LIMIT {HORIZON}"
+         AND {UNPINNED} ORDER BY cf.rank, c.slug LIMIT {HORIZON}"
     ))?;
     let mut hits: Vec<ClassificationHit> = stmt
         .query_map((fts, &key), |row| read(row, row.get(4)?))?
@@ -111,7 +111,7 @@ pub(super) fn arm(
              WHERE vc.code LIKE ?2 ESCAPE '\\' \
              AND c.id NOT IN (SELECT value FROM json_each(?3)) AND {} \
              GROUP BY c.id, c.short_name, c.name, c.slug \
-             ORDER BY has_exact DESC, c.short_name, c.id LIMIT {HORIZON}",
+             ORDER BY has_exact DESC, c.short_name, c.slug LIMIT {HORIZON}",
             UNPINNED.replace('?', "?4")
         ))?;
         let rows: Vec<ClassificationHit> = stmt

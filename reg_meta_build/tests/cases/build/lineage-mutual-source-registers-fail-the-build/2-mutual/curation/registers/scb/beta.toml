@@ -1,0 +1,10 @@
+[register]
+provider = "scb"
+slug = "beta"
+native_id = "2"
+[[variant]]
+native_id = "2.20"
+slug = "_default"
+[[variable]]
+native_id = "2.201"
+slug = "value"

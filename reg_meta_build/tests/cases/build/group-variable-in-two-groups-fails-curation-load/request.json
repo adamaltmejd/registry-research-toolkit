@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_resolved_metadata_contracts.py::test_invalid_metadata_contracts_fail_before_output[multiple_groups]"
+  ],
+  "note": "Two [[group]] tables of one register, first {value, two} and second {two, else}, share only the member two. Each group is valid on its own; the register loader compares members across the file's groups and refuses the second group's claim on two at its entry, so the build writes no catalog. The old test handed the writer two groups with identical members; one shared member is the harder case. From the old test: the build refuses with 'variable belongs to multiple resolved groups'. That structural check stays behind this refusal, and the load refusal gives the build a located code instead of pipeline_build_failed. The allowed twin, one group per variable, is group-axes-keep-their-declared-order-and-members-their-literal-columns.",
+  "fails_if": "`_load_register_file` (curation_tree.py) stops comparing a member variable's owning group across the file's [[group]] tables, or keys the owner map per group, so the second group's claim on two loads and the build fails later, unlocated, as pipeline_build_failed",
+  "sources": "scb-withheld-key-and-gone"
+}

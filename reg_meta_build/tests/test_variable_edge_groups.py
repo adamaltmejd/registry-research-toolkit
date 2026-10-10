@@ -198,22 +198,6 @@ def test_month_group_collision_keeps_exact_source_evidence(collision):
     }
 
 
-def test_month_group_does_not_silently_replace_curated_membership():
-    variables = _month_variables()
-    curated = ResolvedVariableGroup(
-        register="scb/example",
-        key="other",
-        label="Other",
-        source="curated",
-        members=(
-            ResolvedGroupVariable(variable="scb/example/inkjan"),
-            ResolvedGroupVariable(variable="scb/example/another"),
-        ),
-    )
-    with pytest.raises(ValueError, match="multiple resolved groups"):
-        _month_resolution(variables, curated_groups=(curated,))
-
-
 def test_month_group_requires_evidence_and_valid_input_references():
     variables = _month_variables()
     with pytest.raises(ValueError, match="lacks source evidence"):

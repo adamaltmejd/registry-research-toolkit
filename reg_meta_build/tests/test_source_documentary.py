@@ -566,12 +566,6 @@ def test_retained_literal_writer_preserves_raw_evidence_without_endpoints(tmp_pa
             SourceCodeCrosswalkDeclaration.model_validate_json(row["declaration_json"])
             == setup[1]
         )
-        assert (
-            conn.execute(
-                "SELECT COUNT(*) FROM source_relationship_variable"
-            ).fetchone()[0]
-            == 0
-        )
         assert conn.execute("pragma integrity_check").fetchone()[0] == "ok"
         assert not conn.execute("pragma foreign_key_check").fetchall()
     import sqlite3

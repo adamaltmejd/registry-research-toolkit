@@ -433,7 +433,7 @@ co_delivered = true
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ column = "antrost", valid_from = "1998-01-01", valid_to = "1998-12-31", source_editions = ["1998"] }, { column = "giltig_antrost", valid_from = "1998-01-01", valid_to = "1998-12-31", source_editions = ["1998"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "fa2ac8d95ac161e2414c25060be4da2bdc20246d9f7fba29e2ffb4a43c779cfc"
 evidence = "Every complete own source member explicitly includes both literal forms of the same reviewed quantity; underlying operation/definition agrees. Retain per-column physical facts and own domain, without claiming equal stored values or collapsing independently present vote/mandate roles. Batch52-election-complete-source-review.json."
 noted = "2026-10-02"
 

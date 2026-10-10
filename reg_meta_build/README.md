@@ -4,12 +4,13 @@ Maintainer-only builder for `reg_meta.db` and the separate `reg_meta_docs.db` do
 index. End users query published databases through the hosted MCP or a local `reg-meta`
 server (see the [root README](../README.md)).
 
-The current builder output uses schema `9.0.0`. Exact reviewed source crosswalks without
-established variable endpoints remain in `source_relationship` as `retained_unattached`,
-with raw declarations and register-scoped warnings. This builder format is separate from
-reader query behavior; publication requires the coordinated consumer adaptation. State
-classification extensions retain their known sentinel roles and meanings, including
-exact scoped certificates, without changing source labels or the official codebook.
+The current builder output uses schema `10.0.0`. Exact reviewed source crosswalks
+without established variable endpoints remain in `source_relationship` as
+`retained_unattached`, with raw declarations and register-scoped warnings. This builder
+format is separate from reader query behavior; publication requires the coordinated
+consumer adaptation. State classification extensions retain their known sentinel roles
+and meanings, including exact scoped certificates, without changing source labels or the
+official codebook.
 
 Private extension requires `extend-db --holdings-input` and exact `--input-commit` /
 `--input-manifest-sha256` pins. Providers, inventory, policies and raw census come from

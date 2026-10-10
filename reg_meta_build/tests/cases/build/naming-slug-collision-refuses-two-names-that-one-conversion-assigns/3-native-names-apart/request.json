@@ -1,0 +1,29 @@
+{
+  "note": "Allowed twin of step 1: 1.103 is pinned `other`. Nothing collides, so all three variables publish and the tag keeps its member `two`.",
+  "fails_if": "`refuse_slug_collisions` (source_naming.py) refuses names in one register whatever their slugs, so `two` and `other` are withheld and the tag loses its member",
+  "sources": {
+    "description": "SCB register 1 (variant 10) delivers VALUE (var_id 101), ONE (102) and OTHER (103) in 2020.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "varname": "ValueVar"
+        },
+        {
+          "cvid": 1002,
+          "var_id": 102,
+          "colname": "ONE",
+          "varname": "OneVar"
+        },
+        {
+          "cvid": 1003,
+          "var_id": 103,
+          "colname": "OTHER",
+          "varname": "OtherVar"
+        }
+      ]
+    }
+  }
+}

@@ -4,7 +4,7 @@
   "fails_if": "an unreadable SOS workbook escapes `prepare-sources` as an internal error (SosParseError no longer a ValueError), or the parser returns zero variables for a variable sheet without a Variabelnamn header",
   "note": "Before this case SosParseError was a bare Exception, so prepare-sources and prepare-input-bundle reported a malformed SOS workbook as internal_error (exit 30) instead of their configuration error. sos-parse-variable-sheet-without-variabelnamn-refused is the parse-sos twin.",
   "error": {
-    "code": "source_preparation_failed",
+    "code": "sos_variable_sheet_invalid",
     "type": "SosParseError",
     "locator": "Variabelnamn"
   }

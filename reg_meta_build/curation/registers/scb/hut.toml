@@ -1149,7 +1149,7 @@ variant = "86.1664"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "HUT_del", source_editions = ["2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "UNDNR", source_editions = ["2021"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "559ae1e977476022b3bf27b4c44d4040c5a0084913d55b1820181363fc3d4e23"
 evidence = "Both supplied fields explicitly mean collection part, with the same six own supplied codes/labels and operation. Preserve both literal columns and source associations; shared coding is justified by complete own-domain equality. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
 noted = "2026-10-02"
 

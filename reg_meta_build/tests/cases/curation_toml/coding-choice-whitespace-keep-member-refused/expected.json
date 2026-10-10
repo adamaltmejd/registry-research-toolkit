@@ -1,0 +1,13 @@
+{
+  "loader": "register_files",
+  "replaces": "test_source_coding_choice_application.py::test_choice_keeps_a_documented_blank_sentinel_member",
+  "fails_if": "`CodingChoiceEntry` lets `keep_members` hold a blank code again (the removed `allow_empty_code` exemption), or `_coding_members` tests codes for emptiness instead of blankness, so `\" \" Not applicable` loads as a kept member",
+  "note": "Maintainer decision 9 reverses the replaced test: a blank code is never a member, authored or delivered, so a kept member list cannot name one. Allowed twin: the `[[coding.choice]]` of coding-every-table-loads.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[coding.choice.keep_members]] entry 1",
+    "message_contains": [
+      "member codes must be nonblank"
+    ]
+  }
+}

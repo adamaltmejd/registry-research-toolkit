@@ -1,0 +1,25 @@
+{
+  "note": "Maintainer decision 11 (#1306 finding 1): the blank donor (variable 15662) is pinned `answer-sweden`, the slug its documented-blank `[[representation.matrix]]` gives the answer variable it converts. The matrix answers join the scope's naming after the native names convert, so before the fix no `naming_slug_collision` was raised and the only symptom was an overbroad alias window (`representation-alias-window-overbroad-when-its-slug-names-two-compiled-variables`). Both names are refused, each located at its curation entry: the donor's [[variable]] entry and the matrix answer (case id `<matrix>:<answer key>`, located at the matrix). The refused answer is withheld; `answer-abroad`, whose slug nobody else takes, still publishes. Source shared with `matrix-blank-answers-inherit-the-donor-code-list`.",
+  "fails_if": "`compile_curation` (curation_compile.py) runs `refuse_slug_collisions` before the matrix answers join the scope's naming, or not at all, so the donor and the answer share `answer-sweden` with no `naming_slug_collision` and the answer publishes",
+  "sources": {
+    "description": "SCB register 257 (variant 553) delivers one blank-column source instance (var_id 15662, CVID 400684, edition '2012 - 2014') whose value set is the single code 1/Yes; no Unika file.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 400684,
+          "var_id": 15662,
+          "colname": "",
+          "varname": "Partner location",
+          "register": ["Innovation", 257, 553],
+          "regver_id": 7293,
+          "versionname": "2012 - 2014",
+          "year": "2014",
+          "data_type": "varchar"
+        }
+      ],
+      "vardemangder": ["Svar|1|1|Yes|400684|7001"],
+      "valid_dates": ["7001|2012-01-01|2014-12-31"],
+      "unika": null
+    }
+  }
+}

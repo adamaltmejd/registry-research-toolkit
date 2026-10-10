@@ -327,7 +327,7 @@ variant = "118.135"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AvkSk27", source_editions = ["Taxeringsår 2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AvkSk30", source_editions = ["Deklarationsår 2014 (beskattningsår 2013)"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "1cbb85cd50d8998a20be675c87aceac20dfadd63ef23c3d7ee09f76180660555"
 evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
 noted = "2026-10-02"
 
@@ -340,7 +340,7 @@ variant = "118.135"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AvgSyrOrt", source_editions = ["Taxeringsår 2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AvgSyrOrtPat", source_editions = ["Deklarationsår 2014 (beskattningsår 2013)"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "dce30cf4f97d61c4ee711736fa7b4aec1a2cfb9d986514e4482b9af5ee495f9a"
 evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
 noted = "2026-10-02"
 
@@ -353,7 +353,7 @@ variant = "118.135"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AntBeskInkSyrOrt", source_editions = ["Taxeringsår 2013"] }, { valid_from = "2013-01-01", valid_to = "2013-12-31", column = "AntBeskInkSyrOrtPat", source_editions = ["Deklarationsår 2014 (beskattningsår 2013)"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b1f787d606593089bdcb771e4958355da418d4cde97f64e6cdfbe8deabdc5294"
 evidence = "Same complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
 noted = "2026-10-02"
 
@@ -410,7 +410,7 @@ variant = "118.135"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ "valid_from" = "2013-01-01", "valid_to" = "2013-12-31", "column" = "UlagAvkSkUtlKap27", "source_editions" = ["Taxeringsår 2013"] }, { "valid_from" = "2013-01-01", "valid_to" = "2013-12-31", "column" = "UlagAvkSkUtlKap30", "source_editions" = ["Deklarationsår 2014 (beskattningsår 2013)"] }]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a27d12bc9962612631c1f287b1b009935e97fdca48b8f92214cc1e80ba451beb"
 evidence = "The same complete native source heading and definition apply to these positively owned noncollided histories. Retain both source literal labels, storage widths, periods and source facts; no suffix-derived rate reinterpretation, simultaneous routing or value equivalence is asserted."
 noted = "2026-10-02"
 

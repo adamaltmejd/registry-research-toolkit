@@ -8,8 +8,7 @@
       {
         "predecessor": "scb/lisa",
         "predecessor_variant": "individer-16plus",
-        "successor_variant": "individer-15plus",
-        "effective_year": 2010
+        "successor_variant": "individer-15plus"
       }
     ]
   }

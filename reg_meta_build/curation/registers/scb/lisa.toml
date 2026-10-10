@@ -49,7 +49,7 @@ variant = "individer-15plus"
 column = "DispInkKE"
 versions = ["2010", "2011", "2012"]
 upstream = "omitted-column-in-version"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ddd11cb76577472fd28a83b857a439f920463415f7d588ac22607fc078183ff3"
 evidence = "SCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See reg_meta_build/docs/lisa/DispInkKE.md."
 noted = "2026-09-11"
 
@@ -58,7 +58,7 @@ variant = "individer-15plus"
 column = "DispInkKE04"
 versions = ["2010", "2011", "2012"]
 upstream = "omitted-column-in-version"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "4f6e5b01c1e4cb2dd53818a472bfc0afaac68effe2741020a180bf4743640311"
 evidence = "The 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See reg_meta_build/docs/lisa/DispInkKE.md for the family's delivery span."
 noted = "2026-09-11"
 
@@ -70,7 +70,7 @@ noted = "2026-09-11"
 variant = "arbetsstallen"
 column = "Ast_SektorKod"
 versions = ["2022"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9ec6d2a76a4cbc324f524c763155bd1bb2645d5ce2b855a0d08790a21c220b31"
 evidence = "SWECOV holds Ast_SektorKod in Arbst_2022; SCB documents it 1990..2021 and 2023 with no row in 2022 — a one-year documentation hole in a continuing column."
 noted = "2026-09-12"
 
@@ -78,7 +78,7 @@ noted = "2026-09-12"
 variant = "foretag"
 column = "Org_SektorKod"
 versions = ["2022"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "587d6e1edac985a4af75a21dcfb1b8ef4e3886007948b9baf0a0fdde1dcb5be9"
 evidence = "SWECOV holds Org_SektorKod in Ftg_2022; SCB documents it 2003..2021 and 2023 with no row in 2022 — a one-year documentation hole in a continuing column."
 noted = "2026-09-12"
 
@@ -86,7 +86,7 @@ noted = "2026-09-12"
 variant = "individer-15plus"
 column = "AmPol"
 versions = ["2016"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f8be43e921b56cc48abe5d216fdacf3be2a0fabdbe67572c795b179b2204f03d"
 evidence = "SWECOV holds AmPol in Individ_2016 (LISA individer-15plus); SCB's Registerinformation export documents the column in every LISA version 2010..2015 and 2017..2023 but carries no row for it in 2016 — a one-year documentation hole in a continuing column."
 noted = "2026-09-12"
 
@@ -95,7 +95,7 @@ variant = "individer-15plus"
 column = "AmPolTyp"
 versions = ["2011", "2012", "2013", "2014", "2015", "2016", "2017"]
 upstream = "blank-column-name-in-version"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "4b9739889ec520586b02ffe451a208a7e593e6b9a040475d56368bd66d6511f8"
 evidence = "SCB LISA bakgrundsfakta 1990–2017, Bilaga 9 printed page 470 (PDF page 471), marks AmPolTyp for each year 1990–2017; the AmPolTyp narrative describes occurrence of compensation for labour-market-policy measures. PDF sha256 76dc7ef8f1cbdfae05f40ff8628c3fc698f8b54478793e3125410686a5ee0ddc. Registerinformation.csv RegisterId 34, RegVarID 153, VarId 31619 has one unnamed original CVID in each edition 2011–2017, with name, definition and operational definition identical to the same-variant named AmPolTyp source. Name those original targets while retaining their own metadata and coding; this evidence does not authorize 2018–2019."
 noted = "2026-09-14"
 
@@ -103,7 +103,7 @@ noted = "2026-09-14"
 variant = "individer-15plus"
 column = "BAS"
 versions = ["2020", "2021"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a92a6964e71e49239c8bec9e950a8325b4fe24fc3e3733848dc408ba4fbf47d2"
 evidence = "SWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
 noted = "2026-09-12"
 
@@ -111,7 +111,7 @@ noted = "2026-09-12"
 variant = "individer-15plus"
 column = "TPENSAU"
 versions = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "51070910f7fb6dfe00e174350fc83f889d7e9b26b4bd60c3c8c2814d7ffbadeb"
 evidence = "SCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
 noted = "2026-09-13"
 
@@ -119,7 +119,7 @@ noted = "2026-09-13"
 variant = "individer-15plus"
 column = "TTJLONU"
 versions = ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28c0fd01407420d97de23f82dc00c70c575586075a81b8148658767605be387d"
 evidence = "SCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TTJLONU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TTJLONU."
 noted = "2026-09-13"
 
@@ -1366,19 +1366,23 @@ native_id = "34.57"
 slug = "personnr"
 
 
+# The April columns AGI1/2/3LonFinkApril carried the fold slugs agi1/2/3lonfink, which
+# the `[[representation.period_family]]` variables take. Two identities may not share a
+# slug (naming_slug_collision), so each takes its own column's slug; its months form
+# the family, so it publishes nothing itself.
 [[variable]]
 native_id = "34.43033"
-slug = "agi1lonfink"
+slug = "agi1lonfinkapril"
 
 
 [[variable]]
 native_id = "34.43049"
-slug = "agi2lonfink"
+slug = "agi2lonfinkapril"
 
 
 [[variable]]
 native_id = "34.43087"
-slug = "agi3lonfink"
+slug = "agi3lonfinkapril"
 
 
 [[variable]]
@@ -5603,7 +5607,7 @@ source_authority = { revision = { revision_id = "scb-registerinformation@sha256:
 variant = "foretag"
 column = "Org_Typ"
 versions = ["2022"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b0fe6c5fb45f37929f999aef07e33f2c32c4eb394035d343293c1286ed52cf19"
 evidence = "ExactholdingFtg2022 Org_Typ, native4963 definition company havingoneormultipleworkplaces; actualpositive samevariant2022 Org_TypBAS supplies BAS operation/provenance and2023 Org_Typ alsoBAS. Proposed bounded physicaldelivery onlyafter explicit current quantity-role review; do not borrow oldRAMS regime book/type or project Org_TypBAS literal operation into holding. Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
@@ -5613,7 +5617,7 @@ native_variable_id = 4963
 variant = "individer-15plus"
 column = "CfarNr_LISA"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "4fece6d99937bc51350a2b38d99685173e8470ceca6b35d74a84de3be4dc383c"
 evidence = "Positive exact-named LISA documentary identity, holdings2010–15 and actual post2016 same-native LISA column establish exactphysical role. Preserve source-role owner scb/lisa/cfar-nummer-2; no generic PeOrg/Cfar sibling merge or copied storage metadata. PrefixP1105 is existing inventory pseudonym representation, not identity inference. Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
@@ -5624,7 +5628,7 @@ storage_column = "P1105_LopNr_CfarNr_LISA"
 variant = "individer-15plus"
 column = "PeOrgNr_LISA"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "bf973b16d9795980d6d0a0e5d33b461bef0116b5d6610be68ba5470a4df5eb8c"
 evidence = "Positive exact-named LISA documentary identity, holdings2010–15 and actual post2016 same-native LISA column establish exactphysical role. Preserve source-role owner scb/lisa/person-orgnr-2; no generic PeOrg/Cfar sibling merge or copied storage metadata. PrefixP1105 is existing inventory pseudonym representation, not identity inference. Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
@@ -5635,7 +5639,7 @@ storage_column = "P1105_LopNr_PeOrgNr_LISA"
 variant = "individer-15plus"
 column = "SjukP_Bdag_MiDAS"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2fc0fe74521b6706df70f4381373900c72c8c509fef505fcfb7bdb1aee44cf09"
 evidence = "Positive documentary distinct MiDAS basis: retarget holding from non-MiDAS owner to scb/lisa/sjukpenning-bruttodagar-midas and add only missing2010–15 physical deliveries with exact source authority; no STORE→MiDAS equivalence or metadata copy Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
@@ -5645,7 +5649,7 @@ native_variable_id = 31532
 variant = "individer-15plus"
 column = "SjukP_Belopp_MiDAS"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "37c036b90baa947cab9d071574abb4c3532a927cd8b1567ebcc047ad2f164db3"
 evidence = "Positive documentary distinct MiDAS basis: retarget holding from non-MiDAS owner to scb/lisa/sjukpenning-ersattningsbelopp-midas and add only missing2010–15 physical deliveries with exact source authority; no STORE→MiDAS equivalence or metadata copy Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
@@ -5655,7 +5659,7 @@ native_variable_id = 31534
 variant = "individer-15plus"
 column = "SjukP_Ndag_MiDAS"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e45973bfb9c434ea6e51a8934cb3eaba97a333b07da93f6cf171b8ca7331e42c"
 evidence = "Positive documentary distinct MiDAS basis: retarget holding from non-MiDAS owner to scb/lisa/sjukpenning-nettodagar-midas and add only missing2010–15 physical deliveries with exact source authority; no STORE→MiDAS equivalence or metadata copy Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
@@ -5665,7 +5669,7 @@ native_variable_id = 31533
 variant = "individer-15plus"
 column = "SsykAr_J16"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b86871fd2e9c390f351f1dac1899387360b717f2fd66ca0ce0d8a40d6bcfb64c"
 evidence = "Positive exact named documentary J16 backcast coverage: missing holdings2010–15 or2014–15 belong to existing J16 owner, never non-J16 predecessor; no copied width/codes Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
@@ -5675,7 +5679,7 @@ native_variable_id = 1930
 variant = "individer-15plus"
 column = "SsykStatus_J16"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "94cb1485c3e74053720501512f568892e10acfa705977d513e84b60c3d7f0297"
 evidence = "Positive exact named documentary J16 backcast coverage: missing holdings2010–15 or2014–15 belong to existing J16 owner, never non-J16 predecessor; no copied width/codes Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
@@ -5685,7 +5689,7 @@ native_variable_id = 18897
 variant = "individer-15plus"
 column = "Ssyk3_2012_J16"
 versions = ["2014", "2015"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f78ad75ef5ed0cc6bc745f35ddb6873259039f16ac1baff3042cfb18178a101f"
 evidence = "Positive exact named documentary J16 backcast coverage: missing holdings2010–15 or2014–15 belong to existing J16 owner, never non-J16 predecessor; no copied width/codes Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
@@ -5695,7 +5699,7 @@ native_variable_id = 510
 variant = "individer-15plus"
 column = "Ssyk4_2012_J16"
 versions = ["2014", "2015"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "66f25d7c7b088ea13692c3ccb5cd37b4a527c31c4d0d441e1d25ec78351e668e"
 evidence = "Positive exact named documentary J16 backcast coverage: missing holdings2010–15 or2014–15 belong to existing J16 owner, never non-J16 predecessor; no copied width/codes Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"

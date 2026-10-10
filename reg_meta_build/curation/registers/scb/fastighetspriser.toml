@@ -535,7 +535,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealSkogsImpLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealSkogsimp", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "70b1899810c404f5dc3fc38a622d8d1545a647d36652af70bc7a665a33c8d546"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -548,7 +548,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealSkog", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealSkogLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "5c1d6344cd7e00cbea4e86a19530db633af05902e6730c33e017be1ddd48c353"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -561,7 +561,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealAker", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealAkerLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "587306c0574e434b190d64fd54b58a0b0eda36f929ff8c2e690b4a35fac960ed"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -574,7 +574,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealOmark", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealOmarkLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "becd9a8a06a29e374b2422ccd25f7b3f1e3539e97cf755009b6d68867b5c9df9"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -587,7 +587,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2017-12-31", "column" = "YtaBost", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"]}, {"valid_from" = "2008-01-01", "valid_to" = "2017-12-31", "column" = "YtaBostSma", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8f2b030f8eddd05d3edb665f2d570393d14b296d5a286844c9610061a2960b76"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -600,7 +600,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "YtaVarde", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "YtaVardeSma", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "0446b0e93419f235fbf1e73cd5b7caf6dd14deffe24f91d9ea41b51e695c21e8"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -613,7 +613,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "VardeBete", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "VardeBeteLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8d78d4786fa56ee1727b2ddff6ff8d015d44ca3ecb994ba80980c6febdd2385a"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -626,7 +626,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "VardeBygg", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}, {"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "VardeByggLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f24bb6d5962e0c575c1d037bdb63eb9d0156324182218dd60beb46b2585743fd"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -639,7 +639,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "VardeEkbygg", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "VardeEkbyggLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "696816d16bd8e44f15eaf163143cf55bb677dc6e038c01714a230de8c0865be9"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -652,7 +652,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2012-12-31", "column" = "VardeMark", "source_editions" = ["2008", "2009", "2010", "2011", "2012"]}, {"valid_from" = "2008-01-01", "valid_to" = "2012-12-31", "column" = "VardeMarkLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f6703c195fe51243184dca5c6a89bea0140b4f9848b264834dd30bab950a3563"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -665,7 +665,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2018-01-01", "valid_to" = "2020-12-31", "column" = "VardeMark", "source_editions" = ["2018", "2019", "2020"]}, {"valid_from" = "2018-01-01", "valid_to" = "2020-12-31", "column" = "VardeMarkLant", "source_editions" = ["2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "fdb44c9b2ea1db4bbff5d05feb6153991bd57ff1768e1975f133ab774eb86b50"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -678,7 +678,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "VardeSkogsImpLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "VardeSkogsimp", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "313261cc6fa289f678e0ed5957bcae835bf235978f4c306a3bac0be132c76ecd"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -691,7 +691,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "VardeSkog", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "VardeSkogLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "523d969924d88758869349d7a3d0e3683d4354376573e0836daaab8a48deb556"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -704,7 +704,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2012-12-31", "column" = "VardeAker", "source_editions" = ["2008", "2009", "2010", "2011", "2012"]}, {"valid_from" = "2008-01-01", "valid_to" = "2012-12-31", "column" = "VardeAkerLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "38505f68f97a84872fd8e762b8b5d68557562aa0776899f3c4d7b3e196f84f24"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -717,7 +717,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2018-01-01", "valid_to" = "2020-12-31", "column" = "VardeAker", "source_editions" = ["2018", "2019", "2020"]}, {"valid_from" = "2018-01-01", "valid_to" = "2020-12-31", "column" = "VardeAkerLant", "source_editions" = ["2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "cc67971f7734d7e49447ffdd1d2c70515a301d4ef7766be87c96b8271ed800bc"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -730,7 +730,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "ArVarde", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}, {"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "ArVardeHyr", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}, {"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "ArVardeSma", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "f5f0843dfd2bb69f82968046df9a11d6ce73dcb9d5a47f75d24ecf38f344d522"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -743,7 +743,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealBete", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ArealBeteLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28056de799aac1a994ad7ca80803ebbe53b755e55ac148cf00eda2e05c504bfd"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -756,7 +756,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "Glesbygd", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "GlesbygdLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "bacbf7e310d6e77a7cb78d82c60de4723b54c887985caeb99ce611d95239b310"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -769,7 +769,7 @@ variant = "71.334"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2026-12-31", "column" = "Namn", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"]}, {"valid_from" = "2008-01-01", "valid_to" = "2026-12-31", "column" = "namn", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a0b9e5ef7782f321d0158bc4b6a0e12c1f67f7dbc4b1c19090533e83e0bb38a7"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -782,7 +782,7 @@ variant = "71.333"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2026-12-31", "column" = "Namn", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"]}, {"valid_from" = "2008-01-01", "valid_to" = "2026-12-31", "column" = "namn", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "94a19a53c7d3d078aebdfc6ead6eab0704522ad866991b41941f6152ac287a2f"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -795,7 +795,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2006-01-01", "valid_to" = "2007-12-31", "column" = "KodUBygg", "source_editions" = ["2006", "2007"]}, {"valid_from" = "2006-01-01", "valid_to" = "2007-12-31", "column" = "KodUbygg", "source_editions" = ["2006", "2007"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "51f810c9b8f88b4b528d4ede72a377f0b266089ead28152bca1e93c563ff653c"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -808,7 +808,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2017-12-31", "column" = "KodUBygg", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"]}, {"valid_from" = "2008-01-01", "valid_to" = "2017-12-31", "column" = "KodUByggHyr", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"]}, {"valid_from" = "2008-01-01", "valid_to" = "2017-12-31", "column" = "KodUByggSma", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"]}, {"valid_from" = "2008-01-01", "valid_to" = "2017-12-31", "column" = "KodUbygg", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "0900af13395445bd2e305197ad3e7917cb82e86fa80d3391025114291031ba8f"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -821,7 +821,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2018-01-01", "valid_to" = "2020-12-31", "column" = "KodUBygg", "source_editions" = ["2018", "2019", "2020"]}, {"valid_from" = "2018-01-01", "valid_to" = "2020-12-31", "column" = "KodUByggHyr", "source_editions" = ["2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a3d0c5fd43a5a3e54838f2f1f2afcb8987949578216a981e7d355bf48117f893"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -834,7 +834,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "TypBebyggN", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "TypBebyggNSma", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "c09115fdd523f0938b9d121ab5838525dd278fd3beebe59fe244c46201f949d8"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -847,7 +847,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "StdSum", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "StdSumSma", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b64b2d9f6f219a9296dc4f14f121e42d5665de3c6c79269df3e76d5e384928ea"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -860,7 +860,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeBete", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeBeteLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "1678c1052c38eef33f2b465819cd8d61e5854432fb20314c4356e6d5474d6199"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -873,7 +873,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeEkbygg", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeEkbyggLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "d3bf59a50d2d297999b782b19adf3fa05bc2ca54eef31ff5836844afa2787b42"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -886,7 +886,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeSmamarkL", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeSmamarkLLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8c384304a9bd45a468090d38e773098da499f868b2b347c3c52f7cbc3faefd1a"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -899,7 +899,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeSkogsImp", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeSkogsImpLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8d2f3a4c26a3e6da242ad410e193226417451879bda10e3460100dfc18eb9e04"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -912,7 +912,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeSkog", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeSkogLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b4ba95dcf632940bb364b108702f5efeaff1943e6e733d5706755c5b0589b36c"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -925,7 +925,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeSmabyggL", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeSmabyggLLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "9a22b53de17638d70fdddf287ab5e49c26b3d4b52899af7d8449e9ba3cab15d1"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -938,7 +938,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeAker", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "AntVeAkerLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "ab8565706edc14bbe6605f044fd5efd13458b186b05516595b6cfb129e379a91"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -951,7 +951,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "ArBygg", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}, {"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "ArByggHyr", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}, {"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "ArByggSma", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6b4f01c52736306e8779fa1c9c38358f34bd7ee1976efc566c18156b82a4dc4d"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -964,7 +964,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2017-01-01", "valid_to" = "2017-12-31", "column" = "ArBygg", "source_editions" = ["2017"]}, {"valid_from" = "2017-01-01", "valid_to" = "2017-12-31", "column" = "ArByggSma", "source_editions" = ["2017"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a578c39c4742dda9bba9835dff182a685362b9ecee782b641bab8fe9a82e21f3"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -977,7 +977,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2018-01-01", "valid_to" = "2019-12-31", "column" = "ArVarde", "source_editions" = ["2018", "2019"]}, {"valid_from" = "2018-01-01", "valid_to" = "2019-12-31", "column" = "ArVardeSma", "source_editions" = ["2018", "2019"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7a2129476bbf5e95afa5c41562567e691e8e4f3c0d09097552bdd6d44c40576c"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -990,7 +990,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "ArTillb", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}, {"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "ArTillbHyr", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}, {"valid_from" = "2008-01-01", "valid_to" = "2016-12-31", "column" = "ArTillbSma", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "95a0c77740b5de7999cb75eb2e298f0cc44fdc2aa2a59066e8e261df2dd0f2f2"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -1003,7 +1003,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2017-01-01", "valid_to" = "2017-12-31", "column" = "ArTillb", "source_editions" = ["2017"]}, {"valid_from" = "2017-01-01", "valid_to" = "2017-12-31", "column" = "ArTillbSma", "source_editions" = ["2017"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "90c3619f8cb44e115bd8c7467297a9fb5badd6edcb820614d802db1b51a7d7a3"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -1016,7 +1016,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ProdOmr", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "ProdOmrLant", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "2c02c8b28d5f3a4930fc176b2793305b7b1260edb82e75bb0e5fe99798fb5ebb"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 
@@ -1029,7 +1029,7 @@ variant = "71.193"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "YtaBi", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}, {"valid_from" = "2008-01-01", "valid_to" = "2020-12-31", "column" = "YtaBiSma", "source_editions" = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"]}]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "22d8698a8fdd471027724de97f739e8569d5245c5e0806a910ed55a5da4f3938"
 evidence = "Exact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 noted = "2026-10-02"
 

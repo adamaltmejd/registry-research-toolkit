@@ -18,7 +18,6 @@ sentinel_codes = [
   { code = "999", meaning = "Partiellt bortfall" },
   { code = "99", meaning = "Uppgift saknas" },
   { code = "****", meaning = "Uppgift saknas" },
-  { code = "", meaning = "Uppgift saknas" },
   { code = "XXXX", meaning = "Partiellt bortfall" },
   { code = "XX", meaning = "Partiellt bortfall" },
   { code = "***", meaning = "Uppgift saknas" },

@@ -10,7 +10,6 @@ from reg_meta_build.cis2016_matrix import Cis2014Matrix, Cis2016Matrix, convert_
 from reg_meta_build.source_coding import (
     CodeListClaim,
     CodeMembershipClaim,
-    copied_coding_fingerprints,
 )
 from reg_meta_build.source_curation import OccurrenceCorrectionDecision, evaluate_case
 from reg_meta_build.source_effects import apply_occurrence_cases, record_ref
@@ -163,8 +162,7 @@ def test_blank_source_is_retained_and_only_declared_answers_are_added() -> None:
             provenance="pinned input",
             coding={donor: (claims[0], claims[0])},
         )
-    witness = {(donor, records[0].edition_period_scope): claims}
-    result = apply_occurrence_cases(records, (converted.case,), coding=witness)
+    result = apply_occurrence_cases(records, (converted.case,))
     assert not result.diagnostics
     assert len([o for o in result.occurrences if o.use == "support"]) == 2
     added = [o for o in result.occurrences if o.use == "catalog"]
@@ -190,16 +188,6 @@ def test_blank_source_is_retained_and_only_declared_answers_are_added() -> None:
     assert (
         "SCB adjacent wave declares both flags 0" in converted.case.decision.provenance
     )
-    assert all(
-        effect.expected_codings == copied_coding_fingerprints(claims)
-        for effect in converted.case.decision.effects
-        if effect.kind == "addition"
-    )
-    changed = apply_occurrence_cases(
-        records, (converted.case,), coding={next(iter(witness)): ()}
-    )
-    assert changed.accounting[0].disposition == "stale"
-    assert all(item.source_records for item in changed.occurrences)
 
 
 @pytest.mark.parametrize(
