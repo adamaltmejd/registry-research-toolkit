@@ -26,8 +26,8 @@ from reg_meta_build.id import mint
 from reg_meta_build.relations import (
     _reject_oversized_components,
     _reject_same_as_cycles,
+    reject_cycles,
     reject_nonmonotone_representation_cycles,
-    reject_replaced_by_cycles,
 )
 from reg_meta_build.slug_grammar import validate_slug
 
@@ -312,7 +312,7 @@ class ResolvedRepresentationSuccession(_ResolvedModel):
     @model_validator(mode="after")
     def _scope(self) -> Self:
         if self.variant is not None:
-            _slug(self.variant)
+            _variant_slug(self.variant)
             if self.effective_year is None:
                 raise ValueError(
                     "variant-scoped representation succession needs an effective year"
@@ -505,9 +505,13 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
     _unique((*unscoped, *((a, b) for a, b, _ in scoped)), "representation succession")
     graphs["unscoped representation succession"] = unscoped
     reject_nonmonotone_representation_cycles(scoped)
+    relations: dict[str, Literal["derived_from", "lineage"]] = {
+        "classification derivation": "derived_from",
+        "state lineage": "lineage",
+    }
     for label, graph in graphs.items():
         _unique(graph, str(label))
-        reject_replaced_by_cycles(graph)
+        reject_cycles(graph, relation=relations.get(label, "replaced_by"))
     linked = {state_reference_key(e.consumer) for e in metadata.state_lineage}
     for warning in metadata.lineage_warnings:
         if (
