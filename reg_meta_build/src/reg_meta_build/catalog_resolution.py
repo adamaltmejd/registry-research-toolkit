@@ -388,6 +388,7 @@ def resolve_parents(
                     )
                 )
     editions = {}
+    names_in_variant: dict[tuple[NativeKey, str], list[NativeKey]] = defaultdict(list)
     for key, (kind, register_key, variant_key, _edition_key) in ownership.items():
         if (
             kind != "edition"
@@ -421,6 +422,33 @@ def resolve_parents(
             last_approved_at=_text(fields, "last_approved_at"),
             populations=tuple(sorted(populations[key], key=lambda item: item.name)),
             object_types=tuple(sorted(objects[key], key=lambda item: item.name)),
+        )
+        assert variant_key is not None
+        names_in_variant[variant_key, name].append(key)
+    for (variant_key, name), keys in names_in_variant.items():
+        if len(keys) < 2:
+            continue
+        # The catalog names an edition by its variant and name, so no source
+        # order may choose which of the native editions keeps the name.
+        for key in keys:
+            del editions[key]
+        diagnostics.append(
+            ResolutionDiagnostic(
+                code="duplicate_edition_name",
+                severity="error",
+                subject=repr(variant_key),
+                detail=f"{len(keys)} native editions of one variant share the name "
+                f"{name!r}: {', '.join(repr(key[-1]) for key in sorted(keys, key=repr))}.",
+                refs=tuple(
+                    dict.fromkeys(
+                        ref
+                        for key in sorted(keys, key=repr)
+                        for _, ref in claims[key].values()
+                    )
+                ),
+                fields=("name",),
+                withheld_output=("edition",),
+            )
         )
     return ParentResolution(
         registers,
