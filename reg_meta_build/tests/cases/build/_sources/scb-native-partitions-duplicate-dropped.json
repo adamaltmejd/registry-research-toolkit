@@ -1,0 +1,176 @@
+{
+  "description": "scb-native-partitions-reviewed without BASE's second physical OLD row (CVID 101, the copy with the VariabelExtern_kommentar cell); every other row is unchanged.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "OLD",
+        "cvid": 101,
+        "var_id": 5,
+        "register": [
+          "BASE",
+          1,
+          10
+        ],
+        "year": "2020",
+        "regver_id": 120
+      },
+      {
+        "colname": "NEW",
+        "cvid": 102,
+        "var_id": 5,
+        "register": [
+          "BASE",
+          1,
+          10
+        ],
+        "year": "2021",
+        "regver_id": 121
+      },
+      {
+        "colname": "OLD",
+        "cvid": 201,
+        "var_id": 5,
+        "register": [
+          "PARTIAL",
+          2,
+          20
+        ],
+        "year": "2020",
+        "regver_id": 220
+      },
+      {
+        "colname": "OLD",
+        "cvid": 201,
+        "var_id": 5,
+        "register": [
+          "PARTIAL",
+          2,
+          20
+        ],
+        "year": "2020",
+        "regver_id": 220,
+        "cells": {
+          "VariabelExtern_kommentar": "Second physical copy"
+        }
+      },
+      {
+        "colname": "NEW",
+        "cvid": 202,
+        "var_id": 5,
+        "register": [
+          "PARTIAL",
+          2,
+          20
+        ],
+        "year": "2021",
+        "regver_id": 221
+      },
+      {
+        "colname": "ANSWER",
+        "cvid": 301,
+        "var_id": 5,
+        "register": [
+          "WARNING",
+          3,
+          30
+        ],
+        "regver_id": 320
+      },
+      {
+        "colname": "LEFT",
+        "cvid": 302,
+        "var_id": 5,
+        "register": [
+          "WARNING",
+          3,
+          30
+        ],
+        "regver_id": 320
+      },
+      {
+        "colname": "First",
+        "cvid": 401,
+        "var_id": 1,
+        "register": [
+          "APPLIED",
+          4,
+          40
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 410
+      },
+      {
+        "colname": "OldSecond",
+        "cvid": 402,
+        "var_id": 1,
+        "register": [
+          "APPLIED",
+          4,
+          40
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2022-2024",
+        "regver_id": 411
+      },
+      {
+        "colname": "First",
+        "cvid": 501,
+        "var_id": 1,
+        "register": [
+          "DRIFTED",
+          5,
+          50
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 510
+      },
+      {
+        "colname": "OldSecond",
+        "cvid": 502,
+        "var_id": 1,
+        "register": [
+          "DRIFTED",
+          5,
+          50
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2022-2024",
+        "regver_id": 511
+      },
+      {
+        "colname": "First",
+        "cvid": 601,
+        "var_id": 1,
+        "register": [
+          "UNCORRECTED",
+          6,
+          60
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2020-2022",
+        "regver_id": 610
+      },
+      {
+        "colname": "OldSecond",
+        "cvid": 602,
+        "var_id": 1,
+        "register": [
+          "UNCORRECTED",
+          6,
+          60
+        ],
+        "varname": "Income",
+        "year": "2020",
+        "versionname": "2022-2024",
+        "regver_id": 611
+      }
+    ]
+  }
+}

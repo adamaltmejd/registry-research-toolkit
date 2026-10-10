@@ -11,6 +11,18 @@
         ["stale_curation_entry", "scb/example/original", "error", null, ["curation/registers/scb/example.toml#/acknowledge/2"]],
         ["stale_curation_entry", "scb/example/added", "error", null, ["curation/registers/scb/example.toml#/acknowledge/3"]]
       ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": ["scb/example/exact", "scb/example/changed", "scb/example/linked", "scb/example/two-origins"]},
+      "fields": ["code", "severity", "subject", "valid_from", "acknowledged_by"],
+      "rows": [
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/exact", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/1"],
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/changed", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/4"],
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/linked", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/5"],
+        ["unresolved_lineage_ambiguous_source_variant", "warning", "scb/example/two-origins", "2000-01-01", "curation/registers/scb/example.toml#/acknowledge/6"],
+        ["unresolved_lineage_ambiguous_source_variant", "error", "scb/example/two-origins", "2001-01-01", null]
+      ]
     }
   ]
 }

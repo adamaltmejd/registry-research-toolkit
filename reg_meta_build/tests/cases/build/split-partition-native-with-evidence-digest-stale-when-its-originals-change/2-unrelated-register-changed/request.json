@@ -1,0 +1,9 @@
+{
+  "note": "Only another register's row changed (DRIFTED's OldSecond data length), so the delivery revision moved while every BASE original is unchanged. The partition digest covers each guarded original's own content (maintainer decision 5), so base still applies exactly as in step 1: no stale entry, quantity keeps OLD and NEW, and each delivered row is used once (the two OLD copies twice). Expected values are step 1's base projections, unchanged, because the guarded records are unchanged. Steps 3-5 change a BASE original itself.",
+  "fails_if": "the partition digest again covers the delivery's source revision or another record of the same delivery, so base's partition goes stale on a change to an unrelated register",
+  "sources": "scb-native-partitions-data-length-changed",
+  "authored_from": "scb-native-partitions-reviewed",
+  "registers": [
+    "1"
+  ]
+}

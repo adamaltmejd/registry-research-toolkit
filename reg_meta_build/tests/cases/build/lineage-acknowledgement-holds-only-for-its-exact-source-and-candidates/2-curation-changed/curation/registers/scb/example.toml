@@ -32,7 +32,7 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The literal source variant label People names two admitted variants of the exact register."
 evidence = "Exact source declaration and complete candidate closure reviewed."
-expected_evidence_sha256 = "3fe817c16e0a12afaaaf1a9478ad4a4448b70d29e7b4d846d5052f3fb0cc3227"
+expected_evidence_sha256 = "b12d8c4b372f98ffdd2db28d565b4a572ace3d77cd6e83fa13138cae8c2e90a7"
 expected_diagnostic_sha256 = "4e08e91e62ed8ef58f2e306cc459626fc0e31d668d2a918f533c8d68000e81f3"
 
 [[acknowledge]]
@@ -43,7 +43,7 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The literal source variant label People names two admitted variants of the original register."
 evidence = "Exact source declaration and complete candidate closure reviewed."
-expected_evidence_sha256 = "5eb249a34a05ebfb746398abd28b9060151e56abea955bf04d6f4810528941d3"
+expected_evidence_sha256 = "d401a83865b63ff65a8a0b3e53438db6508a25dbc405c14d85ffbef4bc19718d"
 expected_diagnostic_sha256 = "eeb9fb847e8b4f3b19be895e99034216fdfd3a82f00cfc3e860487b9e93dc8b6"
 
 [[acknowledge]]
@@ -54,7 +54,7 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The literal source variant label People names two admitted variants of the added register."
 evidence = "Exact source declaration and complete candidate closure reviewed."
-expected_evidence_sha256 = "d4038c35ae98a55dbe8f9ab428586fa7e01d4e390f7f338a29cfbf8100a699ef"
+expected_evidence_sha256 = "7e506351010dfccfdc5abc47b9cb948824017ae280ada1243b1c7385be405676"
 expected_diagnostic_sha256 = "b8b77b80deea97a80ada7f9dcfe10a8862ba3975086b1039e15f5e106302b631"
 
 [[acknowledge]]
@@ -65,7 +65,7 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The literal source variant label People names two admitted variants of the changed register."
 evidence = "Exact source declaration and complete candidate closure reviewed."
-expected_evidence_sha256 = "6f28c99ddf284cf1120b0034b47ef7561f7f9f95044d149d4db2001ff4f23733"
+expected_evidence_sha256 = "f363b8b9062e2e793481f8a44a2a8951b5b2d275069a28def2be1715c99f6cf3"
 expected_diagnostic_sha256 = "c93e9b549aa7e9d77ddc4ed4fb3d4462d786ce8c926a357bf06a5a8a34b45a04"
 
 [[acknowledge]]
@@ -76,7 +76,7 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The literal source variant label People names two admitted variants of the linked register."
 evidence = "Exact source declaration and complete candidate closure reviewed."
-expected_evidence_sha256 = "ead79d537f4721030d85f39bb5614a61c717cc67751e350f671f17ed60a0e0b8"
+expected_evidence_sha256 = "07f9e2cf65574ffc7a725a9d5072a2966c262ee77ce06ac0ca3cd154540c3323"
 expected_diagnostic_sha256 = "d83d106176078cbc34fda208c400b45065af739bd3dafc94ca78c520f7820cf2"
 
 [[acknowledge]]
@@ -87,5 +87,5 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The 2000 label People names two admitted variants of the first origin."
 evidence = "Exact source declaration and the candidates of both origins reviewed."
-expected_evidence_sha256 = "fb8adbd1165b81d2301bd395eedfba7ae0521d5cbc49b00a64a9bb99317810ce"
+expected_evidence_sha256 = "de648bc2ab5332756d96d7c7e566c12cfa3f285362f45b9ae89bd6c21f1f7e85"
 expected_diagnostic_sha256 = "d8b592aebab3ebfcf51df390f877b0b7d92a7280a24fd62edec040d28c8eaf2e"

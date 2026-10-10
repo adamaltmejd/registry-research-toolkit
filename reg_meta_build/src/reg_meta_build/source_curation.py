@@ -47,6 +47,7 @@ from .source_evidence import (
     SourceField,
     SourceRecordRef,
     canonical_sha256,
+    evidence_sha256,
 )
 
 if TYPE_CHECKING:
@@ -340,14 +341,16 @@ class PeerGuard(_CurationModel):
 def acknowledgement_evidence_sha256(
     records: Iterable[SourceRecord], coding_sha256: Iterable[str] = ()
 ) -> str:
-    """Pin full originals and bound physical coding evidence, including duplicates.
+    """Pin the guarded originals and their bound coding evidence, including duplicates.
 
-    Content ordering is immaterial; multiplicity is not. Coding tokens come from
-    coding_source_sha256, which retains raw associations and validity evidence.
+    Each original contributes its own content (evidence_sha256), so a change to an
+    unrelated record of the same delivery, a new delivery revision or a row re-sort
+    leaves the digest unchanged. Content ordering is immaterial; multiplicity is not.
+    Coding tokens are evidence_sha256 of the bound claims, which retain raw
+    associations and validity evidence.
     """
     return acknowledgement_hashes_sha256(
-        (canonical_sha256(record.model_dump(mode="json")) for record in records),
-        coding_sha256,
+        (evidence_sha256(record) for record in records), coding_sha256
     )
 
 

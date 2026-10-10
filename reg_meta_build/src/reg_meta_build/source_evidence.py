@@ -7,7 +7,7 @@ import json
 import re
 from typing import Any, Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
 
 _HASH_RE = re.compile(r"[0-9a-f]{64}\Z")
 FieldState = Literal["value", "unknown", "negative"]
@@ -51,6 +51,59 @@ def canonical_json(value: Any) -> str:
 
 def canonical_sha256(value: Any) -> str:
     return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
+
+
+_EVIDENCE_JSON = TypeAdapter(object, config=ConfigDict(ser_json_inf_nan="constants"))
+# Where and in which delivery a fact arrived: a new delivery or a row re-sort
+# changes these without changing what a record says. Record and claim ids are
+# derived: a record id hashes facts its record repeats, a claim id names its list.
+# Semantic keys, file and table names, content-addressed value and descriptor
+# keys, and delivered cells stay in the digest.
+_DELIVERY_POSITION = frozenset(
+    {
+        "source_revision_id",
+        "value_revision_id",
+        "row_number",
+        "physical_record",
+        "physical_cells",
+        "record_id",
+        "claim_id",
+    }
+)
+
+
+def evidence_sha256(value: Any) -> str:
+    """Pin delivered evidence by its own content, not by the delivery around it.
+
+    Curation guards hash the records (or code-list claims, declarations, tables) they
+    rely on. The whole-delivery revision, row positions and the identities derived
+    from them are dropped, and a nested source revision collapses to its dataset, so
+    a new delivery or a row re-sort leaves every guard whose own records are unchanged
+    fresh. Repeated objects form a multiset: their order is immaterial, their
+    multiplicity is not.
+    """
+    return canonical_sha256(
+        _evidence_content(
+            _EVIDENCE_JSON.dump_python(value, mode="json", warnings="error")
+        )
+    )
+
+
+def _evidence_content(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: item["dataset"]
+            if key == "revision" and isinstance(item, dict)
+            else _evidence_content(item)
+            for key, item in value.items()
+            if key not in _DELIVERY_POSITION
+        }
+    if isinstance(value, list):
+        items = [_evidence_content(item) for item in value]
+        if all(isinstance(item, dict) for item in items):
+            items.sort(key=canonical_json)
+        return items
+    return value
 
 
 class SourceRevision(_SourceModel):

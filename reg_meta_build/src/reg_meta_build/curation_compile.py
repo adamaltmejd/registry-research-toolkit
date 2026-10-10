@@ -73,7 +73,6 @@ from .scb_errata import (
 )
 from .slug_grammar import derive_variable_slug
 from .source_coding import (
-    coding_source_sha256,
     copied_coding_fingerprints,
     resolve_code_membership,
 )
@@ -120,7 +119,7 @@ from .source_curation import (
     evaluate_source_expectations,
 )
 from .source_effects import apply_occurrence_cases, record_ref
-from .source_evidence import canonical_sha256
+from .source_evidence import canonical_sha256, evidence_sha256
 from .source_intervals import coding_scope_bounds, reconcile_source_fields, scope_bounds
 from .source_naming import (
     AcceptedNamingEntry,
@@ -5113,7 +5112,7 @@ def compile_coding_register(
                         full_originals = tuple(
                             record for record in originals if record_ref(record) in refs
                         )
-                        raw_codings = tuple(coding_source_sha256(c) for c in claims)
+                        raw_codings = tuple(evidence_sha256(c) for c in claims)
                         compact_evidence[column] = (
                             full_originals,
                             raw_codings,
@@ -5204,9 +5203,7 @@ def compile_coding_register(
                             authority.raw_codings is not None
                             and tuple(sorted(authority.raw_codings))
                             != tuple(
-                                sorted(
-                                    {coding_source_sha256(claim) for claim in claims}
-                                )
+                                sorted({evidence_sha256(claim) for claim in claims})
                             )
                         )
                         or tuple(sorted(authority.codings))

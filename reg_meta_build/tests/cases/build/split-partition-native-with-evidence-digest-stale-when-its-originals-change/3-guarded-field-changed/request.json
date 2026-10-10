@@ -1,0 +1,12 @@
+{
+  "replaces": [
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_pins_complete_originals_on_fresh_compile[field]"
+  ],
+  "note": "A guarded original's own field changed: BASE's NEW row (CVID 102) delivers another variable definition. The replaced test's [field] variant (the first original's definition); a field of one family member stales the family's partition, so base is reported stale and quantity is withheld. Expected values are the pre-narrowing step 2 oracle (the stale base partition and no base variables), which a change to a guarded original keeps.",
+  "fails_if": "the partition digest stops covering every field of each guarded original (for example it hashes only semantic keys), so base's partition still applies after its NEW original's definition changed",
+  "sources": "scb-native-partitions-guarded-field-changed",
+  "authored_from": "scb-native-partitions-reviewed",
+  "registers": [
+    "1"
+  ]
+}

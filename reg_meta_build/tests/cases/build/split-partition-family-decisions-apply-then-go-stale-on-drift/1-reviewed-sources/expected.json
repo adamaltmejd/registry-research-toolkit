@@ -397,6 +397,102 @@
           "The attached numeric book is reference evidence, not the text response domain."
         ]
       ]
+    },
+    {
+      "table": "uses",
+      "where": {
+        "column_name": [
+          "OC_FIELD",
+          "OD_PARENT",
+          "OE_KEEP"
+        ]
+      },
+      "fields": [
+        "key",
+        "column_name",
+        "variable"
+      ],
+      "rows": [
+        [
+          "member:131",
+          "OC_FIELD",
+          "scb/sample/field-owner"
+        ],
+        [
+          "member:132",
+          "OC_FIELD",
+          "scb/sample/field-owner"
+        ],
+        [
+          "member:201",
+          "OD_PARENT",
+          "scb/sample/parent-owner"
+        ],
+        [
+          "member:202",
+          "OD_PARENT",
+          "scb/sample/parent-owner"
+        ],
+        [
+          "member:211",
+          "OE_KEEP",
+          "scb/sample/kept-owner"
+        ],
+        [
+          "member:212",
+          "OE_KEEP",
+          "scb/sample/kept-owner"
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "column": [
+          "TXT_D",
+          "TXT_E"
+        ]
+      },
+      "fields": [
+        "column",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "TXT_D",
+          null,
+          null
+        ],
+        [
+          "TXT_E",
+          null,
+          null
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "column": [
+          "TXT_D",
+          "TXT_E"
+        ]
+      },
+      "fields": [
+        "variable",
+        "summary"
+      ],
+      "rows": [
+        [
+          "text-d",
+          "The attached numeric book is reference evidence, not the text response domain."
+        ],
+        [
+          "text-e",
+          "The attached numeric book is reference evidence, not the text response domain."
+        ]
+      ]
     }
   ]
 }

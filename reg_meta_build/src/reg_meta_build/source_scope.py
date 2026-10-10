@@ -18,7 +18,6 @@ from reg_meta_build.catalog_resolution import ParentResolution, resolve_parents
 from reg_meta_build.curation_compile import compile_coding_register
 from reg_meta_build.source_annotations import apply_alias_cases
 from reg_meta_build.source_classification_bindings import apply_classification_cases
-from reg_meta_build.source_coding import coding_source_sha256
 from reg_meta_build.source_coding_choices import (
     apply_coding_choices,
     coding_expectations,
@@ -60,7 +59,7 @@ from reg_meta_build.source_value_bindings import (
     bind_occurrence_code_lists,
 )
 
-from .source_evidence import canonical_sha256
+from .source_evidence import canonical_sha256, evidence_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Mapping
@@ -542,7 +541,7 @@ def resolve_source_scope(
                 ]
             ):
                 # Hash only claims a guard reads; whole-claim digests are costly.
-                tokens = tuple(coding_source_sha256(claim) for claim in bound.claims)
+                tokens = tuple(evidence_sha256(claim) for claim in bound.claims)
                 for ref in guarded:
                     guarded_coding[ref].extend(tokens)
             if (

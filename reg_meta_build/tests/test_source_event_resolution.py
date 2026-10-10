@@ -20,7 +20,11 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_event_resolution import SourceEventBindings
-from reg_meta_build.source_evidence import DeliveredCell, canonical_sha256
+from reg_meta_build.source_evidence import (
+    DeliveredCell,
+    canonical_sha256,
+    evidence_sha256,
+)
 from reg_meta_build.source_records import NativeCoordinates, value_field
 from reg_meta_build.source_reference_records import SourceEventDeclaration
 from test_source_reference_resolution import LOCATOR, REVISION
@@ -194,7 +198,7 @@ def _missing_endpoint_acknowledgement():
             reason="The named successor is absent from the supplied occurrences.",
             evidence="Exact source event and complete positively observed endpoint.",
             expected_evidence_sha256=acknowledgement_hashes_sha256(
-                canonical_sha256(r.model_dump(mode="json")) for r in evidence
+                evidence_sha256(r) for r in evidence
             ),
             expected_diagnostic_sha256=canonical_sha256(issue.model_dump(mode="json")),
         ),
@@ -290,7 +294,7 @@ def test_identical_event_copies_retain_counted_diagnostics_and_evidence_multipli
     decision = case.decision.model_copy(
         update={
             "expected_evidence_sha256": acknowledgement_hashes_sha256(
-                canonical_sha256(r.model_dump(mode="json")) for r in evidence
+                evidence_sha256(r) for r in evidence
             )
         }
     )

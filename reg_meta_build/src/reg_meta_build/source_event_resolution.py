@@ -24,7 +24,7 @@ from reg_meta_build.source_curation import (
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_reference_resolution import ReferenceMetadataResolution
 
-from .source_evidence import canonical_sha256
+from .source_evidence import evidence_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator, Mapping, Sequence
@@ -82,9 +82,7 @@ class SourceEventBindings:
                 semantic_record_key=event.locator.semantic_record_key,
             )
             if event_ref in self.guarded_hashes:
-                self.guarded_hashes[event_ref].append(
-                    canonical_sha256(event.model_dump(mode="json"))
-                )
+                self.guarded_hashes[event_ref].append(evidence_sha256(event))
             if event.revision.dataset not in self.sources:
                 raise ValueError(
                     "succession event source needs an explicit occurrence-source "
@@ -126,9 +124,7 @@ class SourceEventBindings:
         for record in originals:
             ref = record_ref(record)
             if ref in self.guarded_hashes:
-                self.guarded_hashes[ref].append(
-                    canonical_sha256(record.model_dump(mode="json"))
-                )
+                self.guarded_hashes[ref].append(evidence_sha256(record))
                 self.guarded_owners[ref] = source_register_key(record)
                 register_key = source_register_key(record)
                 if register_key in result.parents.registers:

@@ -58,7 +58,6 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
 )
 from reg_meta_build.source_coding import (
-    coding_source_sha256,
     copied_coding_fingerprints,
 )
 from reg_meta_build.source_coordinates import native_variant_key
@@ -66,7 +65,7 @@ from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
     capture_expectations,
 )
-from reg_meta_build.source_evidence import canonical_sha256
+from reg_meta_build.source_evidence import canonical_sha256, evidence_sha256
 from reg_meta_build.source_naming import authored_naming_id
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import SourceFields
@@ -259,7 +258,7 @@ class PreparedSet:
 
     def coding_sha256(self, records: tuple[SourceRecord, ...]) -> list[str]:
         """The bound physical code-list evidence of ``records``, as curators pin it."""
-        return [coding_source_sha256(claim) for claim in self.claims(records)]
+        return [evidence_sha256(claim) for claim in self.claims(records)]
 
     def opened(self):
         return _opened(self.prepared, self.commit, self.digest)
@@ -284,7 +283,7 @@ class PreparedSet:
     def table_sha256(self, table: str) -> str:
         """The content hash of the one prepared evidence table named ``table``."""
         (found,) = (t for t in self.opened().records.iter_tables() if t.name == table)
-        return canonical_sha256(found.model_dump(mode="json"))
+        return evidence_sha256(found)
 
 
 # Authoring reads open a cache entry's accepted sources once per process: an entry
@@ -539,11 +538,9 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
         copied_coding_fingerprints(s.claims(_select(s.records(), a)))
     ),
     "association": lambda s, a: _association(s, a).locator,
-    "association_sha256": lambda s, a: coding_source_sha256(_association(s, a)),
+    "association_sha256": lambda s, a: evidence_sha256(_association(s, a)),
     "relationship_row": lambda s, a: s.relationship(a["table"]).locator.physical_record,
-    "relationship_sha256": lambda s, a: canonical_sha256(
-        s.relationship(a["table"]).model_dump(mode="json")
-    ),
+    "relationship_sha256": lambda s, a: evidence_sha256(s.relationship(a["table"])),
     "table_sha256": lambda s, a: s.table_sha256(a["table"]),
     "naming_id": lambda s, a: authored_naming_id(
         a["kind"],
