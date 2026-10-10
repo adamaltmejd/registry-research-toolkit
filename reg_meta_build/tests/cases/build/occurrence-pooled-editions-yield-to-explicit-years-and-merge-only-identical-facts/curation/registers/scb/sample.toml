@@ -1,0 +1,34 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.401"
+slug = "pool"
+[[variable]]
+native_id = "1.402"
+slug = "lasaren"
+[[variable]]
+native_id = "1.403"
+slug = "annual-wins"
+[[variable]]
+native_id = "1.404"
+slug = "annual-facts"
+[[variable]]
+native_id = "1.405"
+slug = "annual-facts-conflict"
+[[variable]]
+native_id = "1.406"
+slug = "annual-full"
+[[variable]]
+native_id = "1.407"
+slug = "overlap-same"
+[[variable]]
+native_id = "1.408"
+slug = "overlap-diff"
+[[variable]]
+native_id = "1.409"
+slug = "adjacent"

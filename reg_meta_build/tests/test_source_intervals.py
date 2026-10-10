@@ -1,9 +1,11 @@
 """Occurrence resolution as interval algebra: the fold over one variable's occurrences.
 
 What a build shows of it (cuts at exact bounds, reconciled facts, unplaced and
-columnless members) is the `occurrence-` build case. These two tests pin what no build
-reaches: that the fold does not depend on the order its occurrences arrive in, and the
-fail-fast guard on its input.
+columnless members, pooled editions) is the `occurrence-` build cases. These tests pin
+what no build case reaches: that the fold does not depend on the order its occurrences
+arrive in, the fail-fast guard on its input, and the two inputs only the LISA reader
+supplies (a population coordinate and a year-independent scope), which the build cases
+have no source for.
 """
 
 from __future__ import annotations
@@ -15,6 +17,7 @@ from _source_intervals_support import interval_record
 from hypothesis import given, settings, strategies as st
 from reg_meta_build.source_intervals import resolve_occurrence_intervals
 from reg_meta_build.source_records import (
+    ScopeInterval,
     SourceCoordinate,
     SourceRecord,
     TemporalScope,
@@ -149,3 +152,84 @@ def test_unrelated_native_subjects_cannot_enter_one_ordinary_resolution() -> Non
     )
     with pytest.raises(ValueError, match="one source variable and variant"):
         resolve_occurrence_intervals((first, unrelated))
+
+
+def test_population_conflict_withholds_only_its_exact_intersection() -> None:
+    """Two concrete populations withhold only the segment where both apply; an unknown
+    population beside a concrete one is no conflict.
+
+    Only the LISA reader supplies a population, one per sheet, and a sheet is one
+    variant, so no build case reaches a disagreement. Fails if `_reconciled_segment`
+    stops withholding a segment with two populations, widens the withheld window past
+    the intersection, or counts an unknown population as a rival.
+    """
+    first = interval_record(
+        1, population=SourceCoordinate(status="value", name="Adults")
+    )
+    rival = interval_record(
+        2,
+        "2021-04-01",
+        "2021-06-30",
+        population=SourceCoordinate(status="value", name="All residents"),
+    )
+    result = resolve_occurrence_intervals((first, rival))
+    assert [(s.valid_from, s.valid_to) for s in result.segments] == [
+        ("2021-01-01", "2021-03-31"),
+        ("2021-07-01", "2021-12-31"),
+    ]
+    (issue,) = result.issues
+    assert issue.code == "conflicting_occurrence_population"
+    assert issue.fields == ("subject.population",)
+    assert issue.withheld == ("column_segment",)
+    assert (issue.valid_from, issue.valid_to) == ("2021-04-01", "2021-06-30")
+    assert issue.occurrences == (first, rival)
+
+    unknown = interval_record(2)
+    allowed = resolve_occurrence_intervals((first, unknown))
+    assert allowed.issues == allowed.unsupported_occurrences == ()
+    assert [s.occurrences for s in allowed.segments] == [(first, unknown)]
+
+
+def test_year_independent_occurrences_form_one_undated_state() -> None:
+    """Year-independent occurrences of one column form one state with no dates.
+
+    Only the LISA reader produces a year-independent scope. Fails if the fold dates
+    the state, marks it pooled, or reports a year-independent occurrence as unplaced.
+    """
+    scope = TemporalScope(kind="year_independent")
+    records = (interval_record(1, scope=scope), interval_record(2, scope=scope))
+    result = resolve_occurrence_intervals(records)
+    assert result.issues == result.unsupported_occurrences == ()
+    (segment,) = result.segments
+    assert segment.period_scope == "year_independent"
+    assert segment.valid_from is segment.valid_to is None
+    assert segment.pooled is False
+    assert segment.occurrences == records
+
+
+@pytest.mark.parametrize(
+    "scope",
+    [
+        TemporalScope(kind="unknown", label="unresolved source"),
+        TemporalScope(
+            kind="intervals", intervals=(ScopeInterval(start="2021", end="2021"),)
+        ),
+    ],
+    ids=["unknown", "dated"],
+)
+def test_year_independent_occurrence_cannot_absorb_other_temporal_claims(
+    scope: TemporalScope,
+) -> None:
+    """A column claimed both year-independent and otherwise forms no state.
+
+    Only the LISA reader produces a year-independent scope. Fails if
+    `resolve_occurrence_intervals` stops reporting `conflicting_occurrence_scope` for a
+    column that also has a dated or unknown claim, or forms a state for it.
+    """
+    records = (
+        interval_record(1, scope=TemporalScope(kind="year_independent")),
+        interval_record(2, scope=scope),
+    )
+    result = resolve_occurrence_intervals(records)
+    assert result.segments == ()
+    assert "conflicting_occurrence_scope" in {issue.code for issue in result.issues}
