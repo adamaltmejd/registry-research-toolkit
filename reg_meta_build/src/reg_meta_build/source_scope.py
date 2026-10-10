@@ -1134,18 +1134,10 @@ def _attribute_unresolved_names(
                 f"ambiguous naming bridge is stale or belongs to another family: {key!r}"
             )
         if not unresolved.get(key):
-            # simplify: aborts a diagnostic build too. The same unmatched split
-            # beside an unresolved row is silently unused, so withholding only here
-            # would be asymmetric. Upgrade when the compile (`_partition_ambiguity`)
-            # reports an unmatched split itself, in both shapes.
-            entries = ", ".join(e.entry_id for e in ambiguity.entries)
-            raise curation_error(
-                "naming_split_unmatched",
-                f"Accepted split naming {entries} "
-                f"of native variable {key!r} matches no delivered column, and every "
-                "delivered column of the variable is already bound to a split.",
-                "Remove the unmatched split entry, or point it at a delivered "
-                "column spelling.",
+            # The compile reports a split no delivered column matches as a stale
+            # entry instead of minting it (`_partition_ambiguity`).
+            raise ValueError(
+                f"ambiguous naming lacks an unresolved native row: {key!r}"
             )
         assert family.register_key is not None
         register = register_fqids.get(family.register_key)

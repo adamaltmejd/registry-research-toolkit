@@ -1,0 +1,23 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "subject", "locator"],
+      "rows": [
+        ["ambiguous_named_identity", "scb/sample/x", null],
+        [
+          "unresolved_catalog_identity",
+          "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 5)",
+          null
+        ]
+      ],
+      "note": "Step 5's outcome for its ambiguous kon, here on x; no stale entry."
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "column"],
+      "rows": []
+    }
+  ]
+}

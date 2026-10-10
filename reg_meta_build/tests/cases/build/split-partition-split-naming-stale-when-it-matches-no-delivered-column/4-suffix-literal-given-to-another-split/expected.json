@@ -1,0 +1,25 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "locator"],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "error",
+          "curation/registers/scb/sample.toml#variable/1.5.left"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "column"],
+      "rows": [
+        ["kon", "Kon"],
+        ["kon", "KON"],
+        ["kon", "LEFT"]
+      ]
+    }
+  ]
+}

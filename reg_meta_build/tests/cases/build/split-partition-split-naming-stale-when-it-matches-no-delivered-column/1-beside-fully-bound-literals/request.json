@@ -1,0 +1,35 @@
+{
+  "replaces": [
+    "test_source_scope_naming.py::test_ambiguous_naming_cannot_hide_missing_conversion_or_known_identity"
+  ],
+  "note": "The source of split-partition-implicit-case-twins-bind-while-another-split-is-pending, with a split declared for every delivered literal (Kon and KON to 1.5.kon, LEFT to 1.5.left) beside 1.5.other, which no delivered column name derives. The unmatched authored pin is a stale curation entry, as any authored curation entry that matches nothing is (a generated pin stays unused: steps 7 and 8): one stale_curation_entry error located at sample.toml's [[variable]] 1.5.other, while the matched splits keep their states and the diagnostic build completes. The replaced test's second leg refused an ambiguity with no unresolved native row to explain; the compile (`_partition_ambiguity`, curation_compile.py) no longer mints that ambiguity, so the source-scope refusal it pinned is now an implementation invariant that no curation reaches (step 1, or step 4 for a column-owned literal, crashes on it if the compile mints one again). Until this fix the build aborted with `naming_split_unmatched` (before #1346 the bare ValueError `ambiguous naming lacks an unresolved native identity`), even in diagnostic mode, while the pending sibling left the same pin silently unused. Found by #1313.",
+  "fails_if": "`compile_partitions` (curation_compile.py) stops reporting the unbound split pins that `_partition_ambiguity` returns as unmatched, so 1.5.other is silently unused; or reports them at the register file instead of the [[variable]] entry",
+  "sources": {
+    "description": "Variable 5 delivers Kon in 2020 (CVID 20), KON in 2021 (CVID 21) and LEFT in 2021 (CVID 22).",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "Kon",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "KON",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021
+        },
+        {
+          "colname": "LEFT",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021
+        }
+      ]
+    }
+  }
+}
