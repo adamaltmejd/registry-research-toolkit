@@ -100,6 +100,9 @@ slug = "d-opdef"
 native_id = "1.263"
 slug = "d-ref"
 [[variable]]
+native_id = "1.267"
+slug = "d-def"
+[[variable]]
 native_id = "1.264"
 slug = "a-widen"
 [[variable]]

@@ -2,7 +2,7 @@
   "reader": "lisa_workbook",
   "replaces": "test_lisa.py::test_lisa_sensitivity_declarations_keep_raw_evidence",
   "fails_if": "the LISA reader reads the conditional Känslig1 answer 'I vissa fall' as not sensitive (or unknown), or drops the delivered answer text from the sensitivity field",
-  "note": "Disclosure guard: a conditional answer is read as sensitive. The formation half of the replaced test (a true sensitivity forms is_sensitive) is test_source_formation_facts.py::test_conditional_sensitivity_ratchets_up_without_changing_plain_values[True-False-True].",
+  "note": "Disclosure guard: a conditional answer is read as sensitive. The formation half of the replaced test (a true sensitivity forms is_sensitive) is the build case formation-sensitivity-ratchets-up-and-unknown-flags-withhold-the-variable (s1c0).",
   "projections": [
     {
       "of": "records",

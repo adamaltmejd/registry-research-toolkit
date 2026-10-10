@@ -707,8 +707,9 @@ def _variables(outcome: Outcome) -> list[dict]:
     """Each built variable's distinct delivery columns; one null row when it has none."""
     rows = outcome._sql(
         "SELECT DISTINCT r.slug AS register, v.slug AS variable, "
-        "s.delivery_column_name AS column, v.provider_key, v.definition, "
-        "v.description, v.is_identifier, v.is_sensitive, v.deprecated, "
+        "s.delivery_column_name AS column, v.provider_key, v.name, v.definition, "
+        "v.description, v.measurement_unit, v.operational_definition, "
+        "v.is_identifier, v.is_sensitive, v.deprecated, "
         "sr.slug AS source_register, v.source_label, v.source_register_text "
         "FROM variable v JOIN register r USING (register_id) "
         "LEFT JOIN register sr ON sr.register_id = v.source_register_id "
@@ -1274,9 +1275,9 @@ FIELDS: dict[str, frozenset[str]] = {
         "name state_name provenance pooled data_length definition measurement_unit "
         "description operational_definition source_register_text",
         "state_codes": "register variable variant column valid_from valid_to code label",
-        "variables": "register variable column provider_key definition description "
-        "is_identifier is_sensitive deprecated source_register source_label "
-        "source_register_text",
+        "variables": "register variable column provider_key name definition "
+        "description measurement_unit operational_definition is_identifier "
+        "is_sensitive deprecated source_register source_label source_register_text",
         "variants": "register variant name panel_entity_key panel_time_key "
         "panel_time_grain description display_group",
         "registers": "register name purpose",
