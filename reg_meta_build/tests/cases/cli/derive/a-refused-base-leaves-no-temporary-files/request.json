@@ -1,0 +1,15 @@
+{
+  "replaces": "none: derive's failure cleanup had no test (#1449)",
+  "fails_if": "derive stops removing its staging copy `<out>.tmp` when it refuses the base, so a refused derive leaves a partial database beside `--out`",
+  "note": "`base.db` is copied to `out.db.tmp` before the schema gate reads it, so the gate's refusal (`schema_incompatible`, exit 10) is a failure after the staging file exists. The `out.db*` claim covers the sidecars too, though the gate's read-only open creates none. The command needs no catalog artifact, but the runner builds the shared one for every case without an input bundle.",
+  "argv": [
+    "derive",
+    "--base",
+    "{work}/base.db",
+    "--out",
+    "{work}/out.db"
+  ],
+  "databases": {
+    "base.db": "base.sql"
+  }
+}

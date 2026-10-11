@@ -32,7 +32,7 @@ would commit: tracked files, uncommitted edits included, and untracked files
 `.gitignore` does not exclude (a new module the code imports), but not ignored junk
 (`.DS_Store`, build output). The native extension sources are the uv `cache-keys` of
 `crates/reg-core-py` (`keyed_cache.NATIVE_SOURCES`, read by
-`reg_meta_build.native_sources`); since the extension is compiled, every key also holds
+`reg_meta_build.native_sources`), less their documentation (`native_doc`); since the extension is compiled, every key also holds
 `rustc -V`, run from the repository root.
 
 Prepare key: the raw bundle commit, `catalog-bundle.json` digest and the bundle's path
@@ -126,6 +126,7 @@ from keyed_cache import (
     cache_home,
     evict,
     file_sha256,
+    native_doc,
     owned_root,
     staged,
     tree_digest,
@@ -346,7 +347,8 @@ def digest(fields: dict) -> str:
 
 def repo_files(paths) -> set[str]:
     """The files under `paths` that git would commit and that exist on disk: tracked
-    ones and untracked ones not ignored. Repo-relative."""
+    ones and untracked ones not ignored, less documentation under the native sources
+    (`native_doc`). Repo-relative."""
     listed = subprocess.run(
         [
             "git",
@@ -363,7 +365,11 @@ def repo_files(paths) -> set[str]:
         capture_output=True,
         check=True,
     ).stdout.decode()
-    return {path for path in listed.split("\0") if path and (ROOT / path).is_file()}
+    return {
+        path
+        for path in listed.split("\0")
+        if path and (ROOT / path).is_file() and not native_doc(path)
+    }
 
 
 def code_digests(paths) -> dict[str, str]:

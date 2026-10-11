@@ -395,12 +395,7 @@ def extend_db(
                 tmp_path.unlink(missing_ok=True)
                 raise ValueError("Base database changed during selection")
 
-        conn = sqlite3.connect(tmp_path)
-        conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA synchronous=NORMAL")
-        conn.execute("PRAGMA temp_store=MEMORY")
-        conn.execute("PRAGMA foreign_keys=ON")
+        conn: sqlite3.Connection | None = None
         write_failed = True
         counts = {
             "providers": 0,
@@ -410,6 +405,12 @@ def extend_db(
             "states": len(graph.states),
         }
         try:
+            conn = sqlite3.connect(tmp_path)
+            conn.row_factory = sqlite3.Row
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("PRAGMA synchronous=NORMAL")
+            conn.execute("PRAGMA temp_store=MEMORY")
+            conn.execute("PRAGMA foreign_keys=ON")
             _progress(f"extend-db: overlaying steward {steward!r} onto {base_db.name}")
             counts["providers"] = _insert_providers(conn, graph.providers)
             _insert_core_graph_from_ir(
@@ -523,9 +524,11 @@ def extend_db(
             conn.commit()
             write_failed = False
         finally:
-            conn.close()
+            if conn is not None:
+                conn.close()
             if write_failed:
                 tmp_path.unlink(missing_ok=True)
+                _unlink_wal_sidecars(tmp_path)
 
         try:
             if not diagnostic:

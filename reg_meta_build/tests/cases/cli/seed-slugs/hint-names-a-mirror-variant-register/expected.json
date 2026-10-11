@@ -6,8 +6,7 @@
       "`slug = \"_default\"`",
       "'Nybörjare i Komvux'",
       "'Konjunkturstatistik, löner för statlig sektor (KLS)'",
-      "scb/komvux",
-      "scb/other"
+      "scb/komvux   'Nybörjare i Komvux'\n  scb/other   "
     ],
     "excludes": [
       "'Företag'",

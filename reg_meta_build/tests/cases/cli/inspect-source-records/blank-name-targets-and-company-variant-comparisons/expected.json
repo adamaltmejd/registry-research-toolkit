@@ -40,7 +40,7 @@
             {
               "status": "unknown_applicability",
               "workbook_record_ids": ["Företag!row:11"],
-              "scb_edition_present": {"$absent": true},
+              "scb_edition_present": null,
               "scb_record_ids": {"$contains": ["scb:81"]},
               "register_variant_ids": [152],
               "assumption_ids": ["lisa-company-1990-2024-to-scb-variant-152", "unestablished-workbook-to-scb-variant-scope"]

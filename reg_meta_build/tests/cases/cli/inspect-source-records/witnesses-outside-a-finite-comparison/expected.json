@@ -72,7 +72,7 @@
             {
               "status": "unknown_applicability",
               "workbook_record_ids": ["Individ!row:600"],
-              "scb_edition_present": {"$absent": true},
+              "scb_edition_present": null,
               "scb_record_ids": {"$contains": ["scb:4"]}
             },
             {

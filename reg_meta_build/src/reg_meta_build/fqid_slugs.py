@@ -835,10 +835,12 @@ def _git_unreadable(directory: Path, detail: str) -> RegMetaError:
     )
 
 
-def _git_paths_unlike_head(directory: Path) -> tuple[set[str], set[str]] | None:
-    """``(committed, changed)``: paths under ``directory`` (relative to it) in the
-    committed HEAD tree, and those whose working-tree or index copy differs from
-    HEAD (a staged or unstaged edit). ``None`` when no ``.git`` sits at or above
+def _git_paths_unlike_head(directory: Path) -> tuple[set[str], set[str], str] | None:
+    """``(committed, changed, prefix)``: paths under ``directory`` (relative to it)
+    in the committed HEAD tree, those whose working-tree or index copy differs from
+    HEAD (a staged or unstaged edit), and ``directory``'s path from the repository
+    root (``rev-parse --show-prefix``: empty or ending in ``/``), which makes them
+    repo-relative. ``None`` when no ``.git`` sits at or above
     ``directory`` (a wheel install) or HEAD is unborn.
 
     Reads HEAD, not the index: a staged-but-uncommitted file or edit would not
@@ -890,7 +892,10 @@ def _git_paths_unlike_head(directory: Path) -> tuple[set[str], set[str]] | None:
     changed = names(git(*diff, "HEAD", "--", ".")) | names(
         git(*diff, "--cached", "HEAD", "--", ".")
     )
-    return committed, changed
+    prefix = git("rev-parse", "--show-prefix")
+    if prefix.returncode != 0:
+        raise _git_unreadable(directory, prefix.stderr)
+    return committed, changed, prefix.stdout.strip()
 
 
 def _register_auto_path(root: Path, provider: str, register_slug: str) -> Path:
@@ -952,28 +957,32 @@ def _uncommitted_pin_errors(
     head = _git_paths_unlike_head(slug_dir)
     if head is None:
         return []
-    committed, changed = head
+    committed, changed, prefix = head
     errors: list[RegMetaError] = []
     for path in sorted(candidates):
         rel = path.relative_to(slug_dir).as_posix()
+        # Repo-relative, as git prints it: the checkout's absolute path is
+        # host-specific and stays out of the refusal.
+        shown = f"{prefix}{rel}"
         if rel not in committed:
             errors.append(
                 curation_error(
                     "slug_pin_uncommitted",
-                    f"{path}: pinned auto file is not in the committed HEAD tree, "
+                    f"{shown}: pinned auto file is not in the committed HEAD tree, "
                     "so a clean checkout would lose its slugs.",
-                    f"Commit it: `git add -f {path} && git commit`.",
+                    "Commit it from the repository root: "
+                    f"`git add -f {shown} && git commit`.",
                 )
             )
         elif rel in changed:
             errors.append(
                 curation_error(
                     "slug_pin_uncommitted",
-                    f"{path}: pinned auto file differs from the committed HEAD "
+                    f"{shown}: pinned auto file differs from the committed HEAD "
                     "tree, so a clean checkout would restore its old slugs.",
-                    f"Commit the edit (`git add -f {path} && git commit`) or "
-                    f"discard it (`git restore --source=HEAD --staged --worktree "
-                    f"{path}`).",
+                    f"From the repository root, commit the edit (`git add -f {shown} "
+                    "&& git commit`) or discard it (`git restore --source=HEAD "
+                    f"--staged --worktree {shown}`).",
                 )
             )
     return errors
@@ -3164,7 +3173,8 @@ def iter_default_slug_candidates(
         "  SELECT register_id FROM register_variant "
         "  GROUP BY register_id HAVING COUNT(*) = 1"
         ") "
-        "ORDER BY p.slug, r.register_id, rv.register_variant_id"
+        # Slugs, not the surrogate ids a rebuild can renumber; one variant each.
+        "ORDER BY p.slug, r.slug, r.name"
     ).fetchall()
     for provider, register_slug, rname, vname, current_slug in rows:
         cls, reason = classify_default_candidate(rname or "", vname or "")

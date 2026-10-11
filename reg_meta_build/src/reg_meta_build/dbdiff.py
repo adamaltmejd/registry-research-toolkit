@@ -1159,11 +1159,12 @@ def _untag(reference: list) -> object:
 
 
 def _text(value: object) -> object:
-    """A displayed value for the text report: a scalar as it is, a structure as
-    compact JSON."""
-    if isinstance(value, (list, dict)):
-        return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
-    return value
+    """A displayed value for the text report as compact JSON, so it keeps its
+    storage class as `--json` does: text '1' prints quoted, integer 1 bare. NULL
+    stays None and prints as NULL."""
+    if value is None:
+        return None
+    return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
 
 
 def _report_to_dict(report: DiffReport) -> dict[str, object]:
