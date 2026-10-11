@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { bindingFieldsFromResolution } from "./catalog";
-import { sourceSnapshot } from "./project_data";
+import { type ProjectData, sourceSnapshot } from "./project_data";
 import {
   initDraftLifecycle,
   projectStore,
@@ -124,6 +124,34 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
         ],
       },
     ]);
+  });
+
+  it("a period-less add in a widening batch inherits the final source period, in either order (#1462)", () => {
+    // Fails if the period-less add is pinned to the pre-batch 2018 when it comes
+    // before the widening 2020 add (it resolves over both years either way).
+    for (const order of [0, 1]) {
+      projectStore.newProject(SEED);
+      projectStore.applyStagedDiff({
+        adds: [add("scb/lisa/v1", "scb/lisa/kon", 2018)],
+      });
+      const adds = [
+        add("scb/lisa/v1", "scb/lisa/alder", ""),
+        add("scb/lisa/v1", "scb/lisa/sun", 2020),
+      ];
+      projectStore.applyStagedDiff({
+        adds: order === 0 ? adds : adds.reverse(),
+      });
+      const source = storedProject()?.sources[0];
+      expect(source?.period).toEqual([2018, 2020]);
+      const periods = Object.fromEntries(
+        (source?.bindings ?? []).map((b) => [b.variable, b.period]),
+      );
+      expect(periods).toEqual({
+        "scb/lisa/kon": 2018,
+        "scb/lisa/alder": undefined,
+        "scb/lisa/sun": 2020,
+      });
+    }
   });
 
   it("preserves token-grammar add windows as source-period coverage", () => {
@@ -503,6 +531,49 @@ describe("applySourcePeriodEdit (Y-81 — the cart card's period-only rewrite)",
       },
       { variable: "scb/lisa/ssyk", type: "categorical" },
     ]);
+  });
+
+  it("a period edit leaves malformed bindings verbatim (#1462)", () => {
+    // Fails if the binding-period clip rewrites a non-object binding slot (a
+    // string spread into character keys) or replaces non-array `bindings`.
+    projectStore.newProject(SEED);
+    projectStore.updateField("sources", [
+      {
+        name: "LISA",
+        register_variant: "scb/lisa/individer",
+        period: { from: 2010, to: 2020 },
+        bindings: [
+          "bad",
+          {
+            variable: "scb/lisa/alder",
+            type: "numeric",
+            period: { from: 2012, to: 2014 },
+          },
+        ],
+      },
+      {
+        name: "LISA_2",
+        register_variant: "scb/lisa/individer",
+        period: 2009,
+        bindings: "nope",
+      },
+    ] as unknown as ProjectData["sources"]);
+    expect(
+      projectStore.applySourcePeriodEdit(
+        edit("LISA", { from: 2013, to: 2018 }),
+      ),
+    ).toBe(true);
+    expect(projectStore.applySourcePeriodEdit(edit("LISA_2", 2010))).toBe(true);
+    const [lisa, lisa2] = storedProject()?.sources ?? [];
+    expect(lisa.bindings).toEqual([
+      "bad",
+      {
+        variable: "scb/lisa/alder",
+        type: "numeric",
+        period: { from: 2013, to: 2014 },
+      },
+    ]);
+    expect(lisa2.bindings).toBe("nope");
   });
 
   it("refuses an edit from a project that has since been replaced", () => {

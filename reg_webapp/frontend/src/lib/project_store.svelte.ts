@@ -890,7 +890,10 @@ export const projectStore = {
     //     (#1462): an add whose period differs from the source's carries it as the
     //     binding's `period`, and an add reaching beyond the source widens the source
     //     to the union while every binding that inherited the old period is pinned
-    //     to it. An add at the source's period writes no binding period.
+    //     to it. An add at the source's period writes no binding period. A
+    //     period-less add made in this batch is never pinned: it inherits the
+    //     source period the batch ends with, whatever the add order.
+    const inheriting = new Set<unknown>();
     for (const add of diff.adds ?? []) {
       const idx = sources.findIndex(
         (s) => safeSourceRegisterVariant(s) === add.registerVariant,
@@ -901,6 +904,9 @@ export const projectStore = {
           ...sources,
           newSource(add.registerVariant, add.period, sources, [binding]),
         ];
+        if (isEmptyPeriod(add.period)) {
+          inheriting.add(binding);
+        }
         continue;
       }
       const found = sources[idx];
@@ -911,7 +917,9 @@ export const projectStore = {
       // An undated old period (an imported `_default`) has no years to pin.
       const pin = widened && datedIntervals(current) !== null;
       const existing = safeSourceBindings(found).map((b) =>
-        pin && b.period == null ? { ...b, period: current } : b,
+        pin && isPlainObject(b) && b.period == null && !inheriting.has(b)
+          ? { ...b, period: current }
+          : b,
       );
       const dup = existing.findIndex((b) =>
         bindingMatches(
@@ -923,9 +931,13 @@ export const projectStore = {
       const own = isEmptyPeriod(add.period) ? null : add.period;
       // Only the added (or re-added) binding is rewritten; the rest stay as they
       // are, bar the pin above.
+      const added = withBindingPeriod(binding, own, period);
+      if (own === null) {
+        inheriting.add(added);
+      }
       const bindings =
         dup < 0
-          ? [...existing, withBindingPeriod(binding, own, period)]
+          ? [...existing, added]
           : existing.map((b, i) =>
               i === dup && own !== null
                 ? withBindingPeriod(
@@ -955,15 +967,22 @@ export const projectStore = {
           ? {
               ...s,
               period: change.period,
-              bindings: safeSourceBindings(s).map((b) =>
-                withBindingPeriod(
-                  b,
-                  b.period == null
-                    ? b.period
-                    : (clipPeriod(b.period, change.period) ?? b.period),
-                  change.period,
-                ),
-              ),
+              // Only a well-formed binding carrying a period is rewritten; a
+              // malformed slot (or `bindings` itself) stays verbatim.
+              bindings: Array.isArray(s.bindings)
+                ? s.bindings.map((b) =>
+                    isPlainObject(b) && b.period != null
+                      ? withBindingPeriod(
+                          b as DraftBinding,
+                          clipPeriod(
+                            b.period as ProjectSourcePeriod,
+                            change.period,
+                          ) ?? (b.period as ProjectSourcePeriod),
+                          change.period,
+                        )
+                      : b,
+                  )
+                : s.bindings,
             }
           : s,
       );

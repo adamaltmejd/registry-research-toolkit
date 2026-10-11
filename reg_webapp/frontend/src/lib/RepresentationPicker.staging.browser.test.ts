@@ -67,7 +67,7 @@ function committedRowsFor(
         variable: band.key,
         representation: row.representation,
         sourceName: "Source",
-        sourcePeriod: 2000,
+        period: 2000,
       },
     ],
   ]);
@@ -615,7 +615,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
             variable: band.key,
             representation: null,
             sourceName: "Source",
-            sourcePeriod: 2020,
+            period: 2020,
           },
         ];
       }),

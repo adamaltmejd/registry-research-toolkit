@@ -50,7 +50,8 @@ export interface PickerCommittedRow {
   variable: string;
   representation: string | null;
   sourceName: string;
-  sourcePeriod: ProjectSourcePeriod;
+  /** The committed binding's period: its own (#1462), else its source's. */
+  period: ProjectSourcePeriod;
   removals?: StagedRemove[];
 }
 
@@ -331,7 +332,7 @@ export function committedPickerRows(
           variable: band.key,
           representation: bindingRepresentation(binding),
           sourceName: safeSourceName(source),
-          sourcePeriod: period,
+          period: bindingPeriod(binding) ?? period,
         });
       }
       if (matched.length !== segments.length) {
@@ -439,8 +440,7 @@ export function nullBindingCommittedRowKeys(
       row.representation === null &&
       row.registerVariant === target.registerVariant &&
       row.variable === target.variable &&
-      sourcePeriodToWire(row.sourcePeriod) ===
-        sourcePeriodToWire(target.sourcePeriod)
+      sourcePeriodToWire(row.period) === sourcePeriodToWire(target.period)
     ) {
       keys.push(row.key);
     }

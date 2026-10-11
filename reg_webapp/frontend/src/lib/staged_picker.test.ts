@@ -159,9 +159,15 @@ describe("committedPickerRows", () => {
       ],
     };
 
-    expect([...committedPickerRows(draft, [b]).keys()]).toEqual([
-      pickerRowKey(b, newer),
-    ]);
+    const committed = committedPickerRows(draft, [b]);
+    expect([...committed.keys()]).toEqual([pickerRowKey(b, newer)]);
+    // The row carries the binding's own period, which the catalog page checks a
+    // delivery name's eras against. Fails if it carries the source's 2014..2020
+    // (a retired name from 2014..2018 would read "In project").
+    expect(committed.get(pickerRowKey(b, newer))?.period).toEqual({
+      from: 2019,
+      to: 2020,
+    });
   });
 
   it("keys family rows by variant family and removes every concrete source", () => {

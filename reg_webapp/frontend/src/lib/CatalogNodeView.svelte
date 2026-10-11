@@ -772,9 +772,7 @@ const committedColumns = $derived.by((): Map<string, CommittedMarker> => {
         column.rows.every((row) => {
           const match = committedRows.get(pickerRowKey(band, row));
           if (match !== undefined) {
-            markers.push(
-              committedMarker(match.sourcePeriod, boundedProjectWindow),
-            );
+            markers.push(committedMarker(match.period, boundedProjectWindow));
           }
           // THIS VARIANT's eras for the name must be inside what was committed, not
           // just the ROW's: a #902 rename chain is ONE row spanning the whole chain,
@@ -786,7 +784,7 @@ const committedColumns = $derived.by((): Map<string, CommittedMarker> => {
             match !== undefined &&
             windowsOverlapPeriod(
               column.windowsByVariant.get(row.variant) ?? [],
-              match.sourcePeriod,
+              match.period,
             )
           );
         })

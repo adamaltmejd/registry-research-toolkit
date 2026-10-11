@@ -1475,13 +1475,14 @@ column added to a 2014–2020 source must not be ordered for 2014–2018). An ad
 source's period writes no binding `period`, so the common case stays byte-identical. An
 add whose period differs carries it as the binding's `period`; when it reaches beyond
 the source, the source widens to the union and every binding that inherited the old
-period is pinned to it. A re-add of a binding the source already holds extends that
-binding's own years. The add resolves its binding fields at its own period
-(`finalAddPeriodWires`); a period-less add inherits the source's. A source period edit
-(`periodChange`) clips each binding period to the new source period and drops one that
-now equals it; a binding period left with no day inside is kept as written, so reg-core
-reports `binding_period_outside_source` rather than the edit silently widening that
-column to the whole source. The cart's column row shows a binding period ("only
+period is pinned to it (a period-less add of the same batch is not: it inherits the
+period the batch ends with, in any order). A re-add of a binding the source already
+holds extends that binding's own years. The add resolves its binding fields at its own
+period (`finalAddPeriodWires`); a period-less add inherits the source's. A source period
+edit (`periodChange`) clips each binding period to the new source period and drops one
+that now equals it; a binding period left with no day inside is kept as written, so
+reg-core reports `binding_period_outside_source` rather than the edit silently widening
+that column to the whole source. The cart's column row shows a binding period ("only
 2019–2020") only when one is set. `applyStagedDiff` is the SOLE catalog→project mutation
 path. `updateField` (the project's own `name` / `window`),
 `removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators

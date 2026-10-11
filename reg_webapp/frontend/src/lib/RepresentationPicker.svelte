@@ -416,7 +416,7 @@ function committedOutsideWindow(
   return (
     committed !== undefined &&
     !stagedRemoveKeys.has(rowKey(band, row)) &&
-    committedMarker(committed.sourcePeriod, studyWindow).tone === "error"
+    committedMarker(committed.period, studyWindow).tone === "error"
   );
 }
 
@@ -2399,7 +2399,7 @@ function codingsVaryHref(
     <!-- Marked against the common study window: a source period whose years differ
          says so, one outside the window says so at error tone (`committedMarker`). -->
     {@const marker = committed
-      ? committedMarker(committed.sourcePeriod, studyWindow)
+      ? committedMarker(committed.period, studyWindow)
       : null}
     <Tag tone={marker?.tone ?? "info"}>
       {#snippet glyph()}{marker?.glyph ?? rowStageGlyph(stage)}{/snippet}
