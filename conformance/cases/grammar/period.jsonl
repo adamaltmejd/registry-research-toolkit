@@ -1,26 +1,31 @@
-{"in": "2019", "out": {"kind": "year", "year": 2019}, "years": [2019, 2019]}
-{"in": "1900", "out": {"kind": "year", "year": 1900}, "years": [1900, 1900]}
-{"in": "2099", "out": {"kind": "year", "year": 2099}, "years": [2099, 2099]}
-{"in": "2019-03", "out": {"kind": "month", "year": 2019, "month": 3}, "years": [2019, 2019]}
-{"in": "2019-01-01", "out": {"kind": "day", "year": 2019, "month": 1, "day": 1}, "years": [2019, 2019]}
-{"in": "2000-02-29", "out": {"kind": "day", "year": 2000, "month": 2, "day": 29}, "years": [2000, 2000], "note": "2000 is a leap year."}
-{"in": "2024-02-29", "out": {"kind": "day", "year": 2024, "month": 2, "day": 29}, "years": [2024, 2024], "note": "Every fourth year is a leap year."}
-{"in": "2019-04-30", "out": {"kind": "day", "year": 2019, "month": 4, "day": 30}, "years": [2019, 2019]}
-{"in": "HT2020", "out": {"kind": "term", "term": "HT", "year": 2020}, "years": [2020, 2020]}
-{"in": "VT2020", "out": {"kind": "term", "term": "VT", "year": 2020}, "years": [2020, 2020]}
-{"in": "LA2019", "out": {"kind": "school_year", "year": 2019}, "years": [2019, 2020], "note": "July 2019 through June 2020."}
-{"in": "LA2099", "out": {"kind": "school_year", "year": 2099}, "years": [2099, 2100]}
-{"in": "2019-Q1", "out": {"kind": "quarter", "year": 2019, "quarter": 1}, "years": [2019, 2019]}
-{"in": "2019-Q4", "out": {"kind": "quarter", "year": 2019, "quarter": 4}, "years": [2019, 2019]}
-{"in": "2019-H2", "out": {"kind": "half", "year": 2019, "half": 2}, "years": [2019, 2019]}
-{"in": "2015..2019", "out": {"kind": "range", "from": {"kind": "year", "year": 2015}, "to": {"kind": "year", "year": 2019}}, "years": [2015, 2019]}
-{"in": "2019..2019", "out": {"kind": "range", "from": {"kind": "year", "year": 2019}, "to": {"kind": "year", "year": 2019}}, "years": [2019, 2019]}
-{"in": "2019-01-01..2019-06-30", "out": {"kind": "range", "from": {"kind": "day", "year": 2019, "month": 1, "day": 1}, "to": {"kind": "day", "year": 2019, "month": 6, "day": 30}}, "years": [2019, 2019]}
-{"in": "LA2019..LA2020", "out": {"kind": "range", "from": {"kind": "school_year", "year": 2019}, "to": {"kind": "school_year", "year": 2020}}, "years": [2019, 2021]}
-{"in": "HT2019..VT2020", "out": {"kind": "range", "from": {"kind": "term", "term": "HT", "year": 2019}, "to": {"kind": "term", "term": "VT", "year": 2020}}, "years": [2019, 2020]}
-{"in": "2019-12..2020-Q1", "out": {"kind": "range", "from": {"kind": "month", "year": 2019, "month": 12}, "to": {"kind": "quarter", "year": 2020, "quarter": 1}}, "years": [2019, 2020]}
-{"in": "2019-06..2019", "out": {"kind": "range", "from": {"kind": "month", "year": 2019, "month": 6}, "to": {"kind": "year", "year": 2019}}, "years": [2019, 2019], "note": "Ordered by the first day of `from` against the last day of `to`."}
-{"in": "2019-H2..2019-12-31", "out": {"kind": "range", "from": {"kind": "half", "year": 2019, "half": 2}, "to": {"kind": "day", "year": 2019, "month": 12, "day": 31}}, "years": [2019, 2019]}
+{"in": "2019", "out": {"kind": "year", "year": 2019}, "years": [2019, 2019], "bounds": ["2019-01-01", "2019-12-31"]}
+{"in": "1900", "out": {"kind": "year", "year": 1900}, "years": [1900, 1900], "bounds": ["1900-01-01", "1900-12-31"]}
+{"in": "2099", "out": {"kind": "year", "year": 2099}, "years": [2099, 2099], "bounds": ["2099-01-01", "2099-12-31"]}
+{"in": "2019-03", "out": {"kind": "month", "year": 2019, "month": 3}, "years": [2019, 2019], "bounds": ["2019-03-01", "2019-03-31"]}
+{"in": "2019-01-01", "out": {"kind": "day", "year": 2019, "month": 1, "day": 1}, "years": [2019, 2019], "bounds": ["2019-01-01", "2019-01-01"]}
+{"in": "2000-02-29", "out": {"kind": "day", "year": 2000, "month": 2, "day": 29}, "years": [2000, 2000], "bounds": ["2000-02-29", "2000-02-29"], "note": "2000 is a leap year."}
+{"in": "2024-02-29", "out": {"kind": "day", "year": 2024, "month": 2, "day": 29}, "years": [2024, 2024], "bounds": ["2024-02-29", "2024-02-29"], "note": "Every fourth year is a leap year."}
+{"in": "2019-04-30", "out": {"kind": "day", "year": 2019, "month": 4, "day": 30}, "years": [2019, 2019], "bounds": ["2019-04-30", "2019-04-30"]}
+{"in": "HT2020", "out": {"kind": "term", "term": "HT", "year": 2020}, "years": [2020, 2020], "bounds": ["2020-07-01", "2020-12-31"]}
+{"in": "VT2020", "out": {"kind": "term", "term": "VT", "year": 2020}, "years": [2020, 2020], "bounds": ["2020-01-01", "2020-06-30"]}
+{"in": "LA2019", "out": {"kind": "school_year", "year": 2019}, "years": [2019, 2020], "bounds": ["2019-07-01", "2020-06-30"], "note": "July 2019 through June 2020."}
+{"in": "LA2099", "out": {"kind": "school_year", "year": 2099}, "years": [2099, 2100], "bounds": ["2099-07-01", "2100-06-30"]}
+{"in": "2019-Q1", "out": {"kind": "quarter", "year": 2019, "quarter": 1}, "years": [2019, 2019], "bounds": ["2019-01-01", "2019-03-31"]}
+{"in": "2019-Q4", "out": {"kind": "quarter", "year": 2019, "quarter": 4}, "years": [2019, 2019], "bounds": ["2019-10-01", "2019-12-31"]}
+{"in": "2019-H2", "out": {"kind": "half", "year": 2019, "half": 2}, "years": [2019, 2019], "bounds": ["2019-07-01", "2019-12-31"]}
+{"in": "2015..2019", "out": {"kind": "range", "from": {"kind": "year", "year": 2015}, "to": {"kind": "year", "year": 2019}}, "years": [2015, 2019], "bounds": ["2015-01-01", "2019-12-31"]}
+{"in": "2019..2019", "out": {"kind": "range", "from": {"kind": "year", "year": 2019}, "to": {"kind": "year", "year": 2019}}, "years": [2019, 2019], "bounds": ["2019-01-01", "2019-12-31"]}
+{"in": "2019-01-01..2019-06-30", "out": {"kind": "range", "from": {"kind": "day", "year": 2019, "month": 1, "day": 1}, "to": {"kind": "day", "year": 2019, "month": 6, "day": 30}}, "years": [2019, 2019], "bounds": ["2019-01-01", "2019-06-30"]}
+{"in": "LA2019..LA2020", "out": {"kind": "range", "from": {"kind": "school_year", "year": 2019}, "to": {"kind": "school_year", "year": 2020}}, "years": [2019, 2021], "bounds": ["2019-07-01", "2021-06-30"]}
+{"in": "HT2019..VT2020", "out": {"kind": "range", "from": {"kind": "term", "term": "HT", "year": 2019}, "to": {"kind": "term", "term": "VT", "year": 2020}}, "years": [2019, 2020], "bounds": ["2019-07-01", "2020-06-30"]}
+{"in": "2019-12..2020-Q1", "out": {"kind": "range", "from": {"kind": "month", "year": 2019, "month": 12}, "to": {"kind": "quarter", "year": 2020, "quarter": 1}}, "years": [2019, 2020], "bounds": ["2019-12-01", "2020-03-31"]}
+{"in": "2019-06..2019", "out": {"kind": "range", "from": {"kind": "month", "year": 2019, "month": 6}, "to": {"kind": "year", "year": 2019}}, "years": [2019, 2019], "bounds": ["2019-06-01", "2019-12-31"], "note": "Ordered by the first day of `from` against the last day of `to`."}
+{"in": "2019-H2..2019-12-31", "out": {"kind": "range", "from": {"kind": "half", "year": 2019, "half": 2}, "to": {"kind": "day", "year": 2019, "month": 12, "day": 31}}, "years": [2019, 2019], "bounds": ["2019-07-01", "2019-12-31"]}
+{"in": "2019-02", "out": {"kind": "month", "year": 2019, "month": 2}, "years": [2019, 2019], "bounds": ["2019-02-01", "2019-02-28"], "note": "A common-year February ends on the 28th."}
+{"in": "2020-02", "out": {"kind": "month", "year": 2020, "month": 2}, "years": [2020, 2020], "bounds": ["2020-02-01", "2020-02-29"], "note": "A leap-year February ends on the 29th."}
+{"in": "2020-Q3", "out": {"kind": "quarter", "year": 2020, "quarter": 3}, "years": [2020, 2020], "bounds": ["2020-07-01", "2020-09-30"]}
+{"in": "2020-H1", "out": {"kind": "half", "year": 2020, "half": 1}, "years": [2020, 2020], "bounds": ["2020-01-01", "2020-06-30"], "note": "The same days as VT2020."}
+{"in": "2010-Q2..2015-03", "out": {"kind": "range", "from": {"kind": "quarter", "year": 2010, "quarter": 2}, "to": {"kind": "month", "year": 2015, "month": 3}}, "years": [2010, 2015], "bounds": ["2010-04-01", "2015-03-31"], "note": "Each endpoint keeps its grain."}
 {"in": "", "error": "invalid_period"}
 {"in": "1899", "error": "invalid_period"}
 {"in": "2100", "error": "invalid_period"}
@@ -61,3 +66,10 @@
 {"in": "2019\n", "error": "invalid_period"}
 {"in": "20١٩", "error": "invalid_period", "note": "ASCII digits only (Arabic-Indic digits)."}
 {"in": "２０１９", "error": "invalid_period", "note": "ASCII digits only (full-width digits)."}
+{"in": "2018-02-30", "error": "invalid_period", "note": "February never has a 30th."}
+{"in": "2020-2021", "error": "invalid_period", "note": "A dash is not the range separator."}
+{"in": "_default..2020", "error": "invalid_period", "note": "`_default` is not an endpoint."}
+{"in": "LA", "error": "invalid_period"}
+{"in": "abc", "error": "invalid_period"}
+{"in": "2020; DROP TABLE", "error": "invalid_period"}
+{"in": "../etc/passwd", "error": "invalid_period"}
